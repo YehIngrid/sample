@@ -157,17 +157,19 @@ table {
   padding: 0 20px;
   height: 80px;
 }
-.header img {
+.header .picture img{
   height: 59px;
   width: 57px;
+  display: block;
 }
-.header h1 {
+.header .h1 {
   font-family: "Cactus Classical Serif", serif;
   font-weight: 900;
   font-style: normal;
   padding: 15px;
   font-size: 47px;
   color: #21302C;
+  text-decoration: none;
 }
 .header ul li {
   display: flex;
@@ -199,7 +201,6 @@ table {
 }
 .drop-down-menu ul {
   background-color:  #fff;
-  color:#21302C;
   position: absolute;
   z-index: 99;
   left: -1px;
@@ -284,14 +285,14 @@ table {
   display: block;
   -webkit-transform: perspective(1px) translateZ(0);
   transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0);
   -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
   -webkit-transition-property: box-shadow;
   transition-property: box-shadow;
-  background-color: #BDC6B7;
+  background-color:  #CBC5BC;
   text-decoration: none;
-  color:#21302C;
+  color:#E9E9DD;
 }
 .hvr-glow:hover, .hvr-glow:focus, .hvr-glow:active {
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
@@ -366,9 +367,14 @@ table {
 .merchandise h2{
   text-align: left;
   font-size: 25px;
-  padding-left: 20px;
+  padding-left: 18px;
+  padding-right: 18px;
   line-height: 30px;
-  font-weight: 500;
+  font-weight: 600;
+  color:#92754A;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 1500;
+  font-style: normal;
 }
 .merchandise p{
   padding-top: 3px;
@@ -376,10 +382,12 @@ table {
   text-align: left;
   padding-left: 20px;
   font-weight: 400;
+  font-family: 'Times New Roman', Times, serif;
+  color:gray;
 }
 .merchandise .price{
   text-align: right;
-  color:  brown;
+  color:  #21302C;
   font-size: 24px;
   padding-right: 7px;
 }
@@ -484,7 +492,7 @@ body {
 }
 
 .drop-down-menu ul li a:hover {
-  background-color: #21302C;
+  background-color: #769AA2;
   color: #fff;
 }
 
@@ -493,7 +501,6 @@ body {
 }
 
 .content {
-  margin-top: 100px;
   background-color: #E9E9DD;
   padding: 20px;
 }
