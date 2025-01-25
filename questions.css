@@ -506,15 +506,13 @@ body {
     color:#21302C;
 }
 .content h3{
-    text-indent: 2em;
     font-size: 32px;
     color:#769AA2;
     padding-top: 5px;
 }
 .content ol li{
     font-weight: 350;
-    line-height: 28px;
-    text-indent: 5em;
-    font-size:16px;
+    line-height: 38px;
+    font-size:22px;
     color:#7b7872;
 }
