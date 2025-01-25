@@ -212,10 +212,6 @@ table {
   color: #E9E9DD;
   background-color: #21302C;
 } */
-.device ul li {
-  border-bottom: #C9DED4 1px solid;
-  color:#E9E9DD;
-}
 .drop-down-menu ul li:last-child {
   border-bottom: none;
 }
@@ -257,8 +253,8 @@ table {
   height: 3px;
   -webkit-transition-property: left, right;
   transition-property: left, right;
-  -webkit-transition-duration: 0.6s;
-  transition-duration: 0.6s;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
   -webkit-transition-timing-function: ease-out;
   transition-timing-function: ease-out;
 }
@@ -294,7 +290,7 @@ table {
   transition-duration: 0.4s;
   -webkit-transition-property: box-shadow;
   transition-property: box-shadow;
-  background-color:  #CBC5BC;
+  background-color:  #f0e9de;
   text-decoration: none;
   color:#E9E9DD;
 }
@@ -322,7 +318,7 @@ table {
 
 /* header部分 */
 .content{
-  background-color: #E9E9DD;
+  background-color: #fff;
 }
 .ad {
   display: flex;
@@ -358,7 +354,7 @@ table {
   margin-right:  200px;
   margin-top: 10px;
   margin-bottom: 10px;
-  background-color: #C9DED4;
+  
 }
 .merchandise img {
   flex-wrap: wrap;
@@ -398,12 +394,12 @@ table {
 
 .footer {
   background-color: #21302C;
+  margin-top: 100px;
   color:#E9E9DD;
   text-align: center;
-  height: 50px;
+  height: 26px;
 }
-.footer p,
-a {
+.footer p{
   color: #fff;
 }
 /* footer部分 */
@@ -438,7 +434,7 @@ body {
   padding-right: 40px;
 }
 .special i:hover{
-  color:#769AA2;
+  color:#577379;
 }
 .drop-down-menu {
   display: flex;
@@ -486,16 +482,16 @@ body {
 .drop-down-menu ul li a {
   display: block;
   text-decoration: none;
-  padding-bottom: 15px;
+  padding-bottom: 15px; 
   border-bottom: solid 1px #E9E9DD;
-  color: #769AA2;
+  color: #577379;
   transition: background-color 0.3s, color 0.3s;
   height: 100%;
   width: 100%;
 }
 
 .drop-down-menu ul li a:hover {
-  background-color: #769AA2;
+  background-color: #577379;
   color: #fff;
 }
 
@@ -504,7 +500,7 @@ body {
 }
 
 .content {
-  background-color: #E9E9DD;
+  background-color: #fff;
   padding: 20px;
 }
 
@@ -512,19 +508,16 @@ body {
   display: block;
   max-width: 100%;
   height: auto;
-  background-color: #E9E9DD;
 }
 .merchandise {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
-  background-color: #E9E9DD;
   padding: 20px;
 }
 
 .merchandise .uni {
   text-align: center;
-  background-color: #E9E9DD;
   border-radius: 1px;
   padding: 10px;
 }
@@ -579,4 +572,13 @@ body {
   .drop-down-menu ul {
       top: 80%;
   }
+}
+/* line官方 */
+.line {
+  display: flex;
+  justify-content: end;
+}
+.line i{
+  color: #86D97B;
+  font-size: 36px;
 }
