@@ -584,3 +584,35 @@ body {
     color: #86D97B;
     font-size: 36px;
 }
+.content{
+    padding: 120px;
+    display: flex;
+}
+.intro{
+    background-color: rgba(162, 218, 222, 0.4);
+    border-radius: 5%;
+    width: 50%;
+}
+.intro h1{
+    font-size:32px;
+    padding-left: 32px;
+    padding-top: 30px;
+}
+.intro h2{
+    font-size:24px;
+    padding-left: 22px;
+    color:#21302C;
+}
+.intro p{
+    font-size:21px;
+    line-height: 29px;
+    padding-left: 40px;
+    padding-right: 40px;
+    color:#577379;
+}
+.content img{
+    justify-content: center;
+    width: 570px;
+    height: auto;
+    margin-left: 40px;
+}
