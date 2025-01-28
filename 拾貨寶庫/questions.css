@@ -153,7 +153,7 @@ table {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   padding: 0 20px;
   height: 80px;
 }
@@ -163,11 +163,11 @@ table {
   display: block;
 }
 .header .h1 {
-  font-family: "Cactus Classical Serif", serif;
+  font-family: fangsong;
   font-weight: 900;
   font-style: normal;
-  padding: 15px;
-  font-size: 47px;
+  padding: 10px;
+  font-size: 30px;
   color: #21302C;
   text-decoration: none;
 }
@@ -320,14 +320,13 @@ table {
 .content{
   background-color: #fff;
 }
-.ad {
+/* .ad {
   display: flex;
   width: 100%;
   margin-top: 60px;
   justify-content: center;
   align-items: center;
   overflow-x: hidden; /* 防止橫向捲軸 */
-}
 .merchandise .uni{
   position: relative;
 }
@@ -441,6 +440,7 @@ body {
   list-style: none;
   justify-content: center;
   padding: 10px 0;
+  padding-right: 70px;
 }
 
 .drop-down-menu > li {
@@ -504,11 +504,11 @@ body {
   padding: 20px;
 }
 
-.ad img{
+/* .ad img{
   display: block;
   max-width: 100%;
   height: auto;
-}
+} */
 .merchandise {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
