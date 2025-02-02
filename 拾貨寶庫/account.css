@@ -585,43 +585,66 @@ body {
     color: #86D97B;
     font-size: 36px;
 }
-.avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #ccc;
-    cursor: pointer;
-    display: inline-block;
+/* 隱藏 Modal 預設 */
+.modal {
+  display: none; /* 預設隱藏 */
+  position: absolute;
+  left: 60%;
+  top: 10%;
+  display: flex;
 }
-.popup {
-    display: none;
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    width: 250px;
-    padding: 20px;
-    background-color: white;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+
+/* Modal 內部內容 */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow:0px 0px 2px #21302C ;
+  text-align: start;
+  position: relative;
 }
-.popup input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+
+/* 關閉按鈕 */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
 }
-.popup button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+
+/* 表單樣式 */
+input {
+  width: 60%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
-.popup button:hover {
-    background-color: #0056b3;
+.p{
+  font-size:12px ;
+}
+button {
+  background-color: #577379;
+  color: white;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  width: 20%;
+  margin-top: 10px;
+  margin-left: 80%;
+  margin-bottom: 10px;
+  font-size: 13px;
+  border-radius: 2px;
+}
+
+button:hover {
+  background-color: #21302C;
+}
+.modal-content p{
+  font-size: 12px;
+}
+.signup{
+  font-size: 14px;
+  color: blueviolet;
 }

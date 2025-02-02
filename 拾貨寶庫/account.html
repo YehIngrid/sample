@@ -87,7 +87,7 @@
 
         </ul>
         <ul class="special">
-            <li><a class="hvr-shrink" href="account.html"><i class="fa-solid fa-user"></i></a></li>
+            <li><button id="openModal"><i class="fa-solid fa-user"></i></button></li>
             <li><a class="hvr-shrink" href="shoppingcart.html"><i class="fa-solid fa-cart-shopping"></i></a></li>
         </ul>
         <ul class="line">
@@ -98,21 +98,23 @@
         <img src="https://github.com/YehIngrid/sample/blob/main/cropped_image.jpg?raw=true" alt="廣告設計圖">
     </section> -->
     <div class="content">
-        <div class="avatar" onclick="togglePopup()"></div>
-        <div class="popup" id="accountPopup"></div>
-        <input type="text" placeholder="帳號">
-        <input type="password" placeholder="密碼">
-        <button onclick="register()">註冊</button>
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form id="loginForm">
+                    <label for="username" class="p">帳號：</label>
+                    <input type="text" id="username" >
+                    <br>
+                    <label for="password" class="p">密碼：</label>
+                    <input type="password" id="password" >
+                    <button type="submit">登入</button>
+                </form>
+                <p>還沒有加入拾獲寶庫的會員嗎？<a class="signup" href="#">馬上註冊</a></p>
+            </div>
+        </div>
     </div>
-    <script>
-        function togglePopup() {
-            var popup = document.getElementById('accountPopup');
-            popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
-        }
-        function register() {
-            alert('註冊功能尚未實現');
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script src="account.js"></script>
     <div class="footer">
         <p>©2025拾貨寶庫｜All Rights Reserved</p>
     </div>
