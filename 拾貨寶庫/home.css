@@ -67,7 +67,7 @@ table {
     height: 49px;
     width: 47px;
     padding-right: 10px;
-    z-index: 100;
+    border-radius: 50%;
 }
 .header{
     display: flex;
@@ -94,6 +94,7 @@ table {
     justify-content: center;
     align-items: center;
     padding-left: 50px;
+    z-index: 100;
 }
 
 
