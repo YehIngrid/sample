@@ -591,12 +591,13 @@ body {
     padding-top: 10%;
     padding-bottom: 20%;
 }
-.sort ul{
+.sort{
     display: flex;
     justify-content: start;
+    padding-bottom: 30px;
 }
-.sort ul a{
-    display: block;
+.sort button{
+  background-color: #fff;
     text-decoration: none;
     color:#577379;
     padding: 10px;
@@ -605,27 +606,24 @@ body {
     border-right-style: dashed;
     border: #577379 solid 1px;
 }
-.sort ul a:hover{
+.sort button:hover{
     color:#fff;
     background-color:#577379;
 }
 .news{
     padding-top: 50px;
-    display: flex;
     justify-content: center;
+    width: 90%;
 }
-.news th{
+thead th{
     background-color:#577379;
     color: #fff;
     font-weight: bold;
     padding: 10px;
     text-align: center;
-    font-size:20px;
+    font-size:16px;
 }
-table{
-    width: 90%;
-}
-.news td a{
+/* tbody a{
     display: block;
     padding-left: 30px;
     padding-right: 30px;
@@ -635,16 +633,28 @@ table{
     padding-bottom: 8px;
     text-align: left;
     color: black;
-}
-.news td a:hover{
-    color:#577379;
-}
-.news td{
+} */
+tbody td{
     border-bottom: solid 1px #21302C;
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+tbody td a:hover{
+  color:#577379;
 }
 .time{
     color:#577379;
     font-size:14px;
+}
+.name{
+  text-align-last: left;
+}
+thead {
+  display: table-header-group; /* 確保 <th> 保持在表格上方 */
+}
+
+tbody {
+  display: table-row-group; /* 讓 <tr> 在 <th> 下方 */
 }

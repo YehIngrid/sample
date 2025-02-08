@@ -18,15 +18,9 @@
 
 <body>
     <div class="header">
-        <a class="picture" href="homepage.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
-        <a class="h1" href="homepage.html">拾貨寶庫</a></a>
-        <!-- <div class="menu-toggle" onclick="toggleMenu()"></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div> -->
+        <a class="picture" href="home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
+        <a class="h1" href="home.html">拾貨寶庫</a></a>
         <ul class="drop-down-menu">
-          
             <li><a class="hvr-underline-from-center" href="news.html">最新資訊</a></li>
             <li><a class="hvr-underline-from-center" href="homepage.html">全部商品</a>
             <ul class="device">
@@ -68,23 +62,12 @@
                     <li><a class="hvr-fade" href="#">中型</a>
                     <li><a class="hvr-fade" href="#">大型</a>
                 </ul></li>
-                <!-- <li><a class="hvr-fade" href="#">新舊分類</a>
-                    <ul>
-                        <li><a class="hvr-fade" href="#">全新</a>
-                        <li><a class="hvr-fade" href="#">幾乎全新</a>
-                        <li><a class="hvr-fade" href="#">半新</a>
-                        <li><a class="hvr-fade" href="#">適中</a>
-                        <li><a class="hvr-fade" href="#">稍舊</a>
-                        <li><a class="hvr-fade" href="#">全舊</a>
-                    </ul>
-                </li> -->
             </ul>
-          </li>
+            </li>
             <li><a class="hvr-underline-from-center" href="questions.html">常見問題</a></li>
             <li><a class="hvr-underline-from-center" href="introduce.html">團隊介紹</a></li>
             <li><a class="hvr-underline-from-center" href="communication.html">客服諮詢</a></li>
             <!-- <a class="hvr-underline-from-center" href=""><i class="fa-solid fa-bars"></i></a> -->
-
         </ul>
         <ul class="special">
             <li><a class="hvr-shrink" href="account.html"><i class="fa-solid fa-user"></i></a></li>
@@ -94,37 +77,28 @@
             <li><a href="https://page.line.me/889pygzb"><i class="fa-brands fa-line"></i></a></li>
         </ul>
     </div>
-    <!-- <section class="ad">
-        <img src="https://github.com/YehIngrid/sample/blob/main/cropped_image.jpg?raw=true" alt="廣告設計圖">
-    </section> -->
     <div class="content">
         <div class="sort">
-            <ul>
-                <li><a href="">全部公告</a></li>
-                <li><a href="">系統公告</a></li>
-                <li><a href="">店舖公告</a></li>
-            </ul>
+            <button>全部公告</button>
+            <button>系統公告</button>
+            <button>店鋪公告</button>
         </div>
-        <section class="news">
-            <table>
+        <table class="news">
+            <thead>
                 <tr>
                     <th>所屬分類</th>
-                    <th class="space">文章標題</th>
+                    <th>文章標題</th>
                     <th>發佈時間</th>
                 </tr>
-                <tr>
-                    <td>系統公告</td>
-                    <td><a href="">網站會在2025-01-26進行更新</a></td>
-                    <td class="time">2025-01-25</td>
-                </tr>
-                <tr>
-                    <td>店舖公告</td>
-                    <td><a href="">店舖即將開張！趕快來看看新上架的商品吧！</a></td>
-                    <td class="time">2025-01-24</td>
-                </tr>
-            </table>
+            </thead>
+            <tbody>
+                <!-- Rows will be dynamically inserted here -->
+            </tbody>
+        </table>        
         </section>
     </div>
     <div class="footer">
         <p>©2025拾貨寶庫｜All Rights Reserved</p>
     </div>
+    <script src="news.js"></script>
+</body>

@@ -210,7 +210,6 @@ span{
     color: #fff;
     background-color: #21302C;
     position: relative;
-    top: 10000px;
     width: 100%;
     height: 100%;
     padding-top: 10px;
@@ -414,4 +413,45 @@ html {
     padding-top: 150px;
     font-weight: 400;
     font-family:fangsong;
+}
+/* reason */
+.reason{
+    background-color: rgba(35, 31, 32);
+    padding: 70px;
+    color: #fff;
+}
+.reason h2{
+    font-size: 32px;
+    font-weight: 400;
+    text-align: left;
+    padding-bottom: 30px;
+}
+.reason h3{
+    font-size: 24px;
+    font-style: italic;
+    text-align: right;
+}
+.reason ul li::marker {
+    content: "✔ ";  /* Custom marker */
+    color: green;
+    font-size: 1.2em;
+}
+.reason ul{
+    padding-left: 24px;
+}
+.service{
+    background-color: rgba(35, 31, 32);
+    padding: 70px;
+    color: #fff;
+}
+.service h2{
+    font-size: 32px;
+    font-weight: 400;
+    padding-bottom: 30px;
+}
+.service ul{
+    display: flex;
+}
+.service span{
+    font-size: 12px;
 }
