@@ -57,26 +57,31 @@ table {
     z-index: 100;
     letter-spacing: 1px;
 }
-.bg{
-    /* opacity: 80%; */
+/* .bg{
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: -100;
-    /* filter: saturate(1.4) brightness(0.7); */
-}
+} */
 .picture img{
     height: 49px;
     width: 49dpx;
     padding-right: 10px;
     border-radius: 50%;
 }
-.header{
+.header {
     display: flex;
     justify-content: space-between;
+    background: transparent; /* 讓 Header 背景透明 */
+    position: absolute; /* 讓 Header 浮在 Hero 上 */
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10; /* 確保它在最上層 */
 }
+
 .ul{
     display: flex;
     justify-content: space-between;
@@ -110,16 +115,13 @@ h1{
     font-weight: 400;
     font-size: 120px;
     position: relative;
-    top: 150px;
+    top: 32vh;
     text-align: center;
     line-height: 100px;
 }
 span{
     font-size: 78px;
-}
-.center{
-    padding-bottom: 25%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 30%,rgba(35,31,32,30)100%);
+    position: inherit;
 }
 .center a{
     display: block;
@@ -129,7 +131,7 @@ span{
     text-decoration: none;
     letter-spacing: 2px;
     position: relative;
-    top: 200px;
+    top: 39vh;
     border: #fff solid 1px;
     padding-top: 16px;
     padding-bottom: 16px;
@@ -454,4 +456,30 @@ html {
 }
 .service span{
     font-size: 12px;
+}
+.n{
+    font-size: 64px;
+}
+.content {
+    /* opacity: 0; */
+    transform: translateY(10px);
+    animation: fadeInUp 1.0s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        /* opacity: 0; */
+        transform: translateY(10px);
+    }
+    to {
+        /* opacity: 1; */
+        transform: translateY(0);
+    }
+}
+.center {
+    width: 100%;
+    height: 100vh; /* 根据需要调整高度 */
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 30%,rgba(35,31,32,30)100%),
+                url('https://github.com/YehIngrid/sample/blob/main/拾貨寶庫/backgroundimg.jpg?raw=true') no-repeat center center;
+    background-size: cover;
 }

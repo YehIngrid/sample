@@ -35,11 +35,11 @@
           /></a>
           <a class="h1" href="home.html">拾貨寶庫</a>
         </div>
-        <img
+        <!-- <img
           class="bg"
           src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/backgroundimg.jpg?raw=true"
           alt=""
-        />
+        /> -->
         <ul class="ul">
           <li>
             <a class="hvr-underline-from-center" href="news.html">最新資訊</a>
@@ -89,19 +89,8 @@
               <div stats-color="yellow" class="w-layout-grid stats-grid">
                 <div class="stats-item">
                   <div class="w-layout-hflex stats-item-wrap text-color-blue">
-                    <div
-                      fs-numbercount-locale="en-US"
-                      fs-numbercount-element="number"
-                      fs-numbercount-duration="800"
-                      fs-numbercount-threshold="10"
-                      fs-numbercount-start="5"
-                      fs-numbercount-end="11"
-                      class="heading-style-h1"
-                      role="marquee"
-                      aria-roledescription="Number count animation from 5 to 11"
-                      aria-description="Number count animation from 5 to 11"
-                    >
-                      4
+                    <div class="heading-style-h1">
+                      <span class="n" id="trees">0</span>
                     </div>
                     <div class="heading-style-h5">棵</div>
                   </div>
@@ -109,19 +98,8 @@
                 </div>
                 <div class="stats-item">
                   <div class="w-layout-hflex stats-item-wrap text-color-blue">
-                    <div
-                      fs-numbercount-locale="en-US"
-                      fs-numbercount-element="number"
-                      fs-numbercount-duration="800"
-                      fs-numbercount-threshold="10"
-                      fs-numbercount-start="90"
-                      fs-numbercount-end="100"
-                      class="heading-style-h1"
-                      role="marquee"
-                      aria-roledescription="Number count animation from 90 to 100"
-                      aria-description="Number count animation from 90 to 100"
-                    >
-                      86
+                    <div class="heading-style-h1">
+                      <span class="n" id="bags">0</span>
                     </div>
                     <div class="heading-style-h5">個</div>
                   </div>
@@ -129,19 +107,8 @@
                 </div>
                 <div class="stats-item">
                   <div class="w-layout-hflex stats-item-wrap text-color-blue">
-                    <div
-                      fs-numbercount-locale="en-US"
-                      fs-numbercount-element="number"
-                      fs-numbercount-duration="800"
-                      fs-numbercount-threshold="10"
-                      fs-numbercount-start="1"
-                      fs-numbercount-end="1"
-                      class="heading-style-h1"
-                      role="marquee"
-                      aria-roledescription="Number count animation from 1 to 1"
-                      aria-description="Number count animation from 1 to 1"
-                    >
-                      4
+                    <div class="heading-style-h1">
+                      <span class="n" id="co2">0</span>
                     </div>
                     <div class="heading-style-h5">公斤</div>
                   </div>
@@ -297,7 +264,7 @@
                             ></path>
                           </clipPath>
                         </defs>
-                        <g clip-path="url(#__lottie_element_11)">
+                        <!-- <g clip-path="url(#__lottie_element_11)">
                           <g
                             id="precomp_7L55H95LMRPpee-V9Ht7u0"
                             clip-path="url(#__lottie_element_13)"
@@ -643,7 +610,7 @@
                               </g>
                             </g>
                           </g>
-                        </g>
+                        </g> -->
                       </svg>
                     </div>
                   </div>
@@ -1126,9 +1093,10 @@
               </div>
             </div>
           </div>
-        </div>
+    </div>
       </section>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <section class="reason">
         <h2>為什麼選擇拾貨寶庫？</h2>
         <ul>
