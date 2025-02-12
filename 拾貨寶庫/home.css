@@ -118,10 +118,14 @@ h1{
     top: 32vh;
     text-align: center;
     line-height: 100px;
+    font-family: Apple LiGothic Medium;
 }
-span{
-    font-size: 78px;
+.center span{
+    font-size: 64px;
     position: inherit;
+    color: rgb(181, 239, 249);
+    font-weight: 300;
+    font-family: "TimeMachine";
 }
 .center a{
     display: block;
@@ -511,4 +515,10 @@ html {
     transform: rotate(-90deg);
     margin-left: 120px;
     margin-top: 40px;
+}
+@font-face {
+    font-family: "TimeMachine";
+    src: url("fonts/timemachine-wa.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
 }
