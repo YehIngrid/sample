@@ -187,15 +187,14 @@ span{
     padding-bottom: 100px;
 }
 .friend h2{
-    font-size: 30px;
-    font-style: italic;
+    font-size: 50px;
     padding-bottom: 50px;
+    font-weight: 600;
 }
 .friend p{
     padding-top: 80px;
     font-size: 24px;
     padding-right: 10%;
-    font-style: italic;
     line-height: 33px;
 }
 .partner{
@@ -446,7 +445,7 @@ html {
     padding: 10%;
     padding-top: 5%;
     color: #fff;
-    padding-right: 40%;
+    text-align: center;
 }
 .service h2{
     font-size: 32px;
@@ -455,7 +454,7 @@ html {
 }
 .service ul{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 .service span{
     font-size: 12px;
@@ -464,7 +463,8 @@ html {
     font-size: 64px;
 }
 .service li{
-    padding-right: 50px;
+    padding-left: 70px;
+    padding-right: 70px;
 }
 .service p{
     font-size: 18px;
