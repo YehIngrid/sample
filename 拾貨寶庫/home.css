@@ -505,3 +505,10 @@ html {
     border-top-right-radius: 10px;
     margin-bottom: 30px;
 }
+.svg img{
+    width: 200px;
+    height: auto;
+    transform: rotate(-90deg);
+    margin-left: 120px;
+    margin-top: 40px;
+}
