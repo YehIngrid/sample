@@ -1,39 +1,33 @@
-let data = [
-    {
-        image:
-        merName:"中興國文課本第五版",
-        state:"全新",
-        sort:"教科書",
-        price:"300"
-    },
-    {
-        image:
-        merName:"中興鵝娃娃",
-        state:"第五年、有黃漬",
-        sort:"宿舍用品",
-        price:"150"
-    },
-    {
-        image:
-        merName:"中興紀念棒球外套",
-        state:"只穿過一次",
-        sort:"宿舍用品",
-        price:"1000"
-    },
-    {
-        merName:"二手長褲",
-        state:"全新",
-        sort:"宿舍用品",
-        price:"600"
-    },
-];
 
-function init() {
-    const uni = document.querySelectorAll(".uni");
-    let str = "";
-    data.forEach(function(item,index){
-        let content = ``;
-        str += content;
-    })
-    uni.innerHTML = str;
-}
+// function init() {
+//     const uni = document.querySelector(".uni");
+//     let str = "";
+//     data.forEach(function(item){
+//         let content = `<a href="#"><img src=${item.imageURL}><h2>${item.name}</h2><p>${item.category}</p><p>${item.age}</p><p class="price">NT$ ${item.price}</p></a>`;
+//         str += content;
+//     })
+//     uni.innerHTML = str;
+// }
+// init();
+axios.post('http://localhost:3000')
+    .then(function (response) {
+        let ary = response.data;
+        let str = "";
+        const uni = document.querySelector(".uni");
+        ary.forEach(function(ary){
+            let content = `<a class="hvr-glow"><img src=${ary.imageURL}><h2>${ary.name}</h2><p>${ary.category}/${ary.age}</p><p class="price">NT$ ${ary.price}</p></a>`;
+            str += content;
+        })
+        uni.innerHTML = str;
+    });
+
+// js array Map
+// 1.能將原始陣列運算後，重新組合回傳一個新陣列。
+// 2.不會改變原始陣列。
+
+const arr=[1,5,10];
+const newarr=arr.map(function(item){
+    return item*item;
+})
+console.log(newarr);
+console.log(arr);

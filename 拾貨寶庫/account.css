@@ -501,8 +501,14 @@ body {
 }
 
 .content {
-  background-color: #fff;
-  padding: 20px;
+  background-color:#f0e9de;
+  margin-top: 100px;
+  margin: 200px auto;
+  height: 180px;
+  width: 400px;
+  border-radius: 3px;
+  padding: 30px;
+  display:none;
 }
 
 .ad img{
@@ -585,16 +591,16 @@ body {
     color: #86D97B;
     font-size: 36px;
 }
-/* 隱藏 Modal 預設 */
+/* 隱藏 Modal 預設
 .modal {
-  display: none; /* 預設隱藏 */
+  display: none; 預設隱藏 
   position: absolute;
   left: 60%;
   top: 10%;
   display: flex;
 }
 
-/* Modal 內部內容 */
+Modal 內部內容 
 .modal-content {
   background-color: white;
   padding: 20px;
@@ -604,7 +610,7 @@ body {
   position: relative;
 }
 
-/* 關閉按鈕 */
+關閉按鈕 
 .close {
   position: absolute;
   top: 10px;
@@ -613,7 +619,7 @@ body {
   cursor: pointer;
 }
 
-/* 表單樣式 */
+ 表單樣式
 input {
   width: 60%;
   padding: 8px;
@@ -621,6 +627,18 @@ input {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+r: #21302C;
+}
+.modal-content p{
+  font-size: 12px;
+}
+.signup{
+  font-size: 14px;
+  color: blueviolet;
+}*/
+::placeholder {
+  font-size: 10px;
+} 
 .p{
   font-size:12px ;
 }
@@ -641,10 +659,11 @@ button {
 button:hover {
   background-color: #21302C;
 }
-.modal-content p{
-  font-size: 12px;
-}
-.signup{
-  font-size: 14px;
-  color: blueviolet;
+.signuppage{
+  display: none;
+  margin: 200px auto;
+  background-color: #f0e9de;
+  padding: 50px;
+  height: 320px;
+  width: 600px;
 }

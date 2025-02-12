@@ -182,8 +182,7 @@ span{
     color: #fff;
     width: 100%;
     height: 100%;
-    padding-left: 100px;
-    padding-right: 100px;
+    padding-right: 10%;
     padding-top: 80px;
     padding-bottom: 100px;
 }
@@ -195,15 +194,14 @@ span{
 .friend p{
     padding-top: 80px;
     font-size: 24px;
-    padding-right: 300px;
+    padding-right: 10%;
     font-style: italic;
     line-height: 33px;
 }
 .partner{
     display: flex;
     background-color: #231f20;
-    padding-top: 50px;
-    padding-right: 40px;
+    padding: 10%;
     padding-bottom: 100px;
     background-color: rgba(35, 31, 32);
 }
@@ -219,7 +217,7 @@ span{
 }
 .book img{
     padding-top: 60px;
-    height: 70%;
+    height: 100%;
     width: 100%;
 }
 
@@ -234,8 +232,8 @@ span{
     grid-auto-columns: 1fr;
     justify-content: center;
     align-items: flex-start;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding-left: 10%;
+    padding-right: 10%;
     /* background-color: #2E7D32; */
     background-color: rgba(35, 31, 32);
     width: 100%;
@@ -302,7 +300,6 @@ html {
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
-    font-family: sans-serif;
 }
 
 .container-large {
@@ -419,7 +416,7 @@ html {
 /* reason */
 .reason{
     background-color: rgba(35, 31, 32);
-    padding: 70px;
+    padding: 10%;
     color: #fff;
 }
 .reason h2{
@@ -443,22 +440,31 @@ html {
 }
 .service{
     background-color: rgba(35, 31, 32);
-    padding: 70px;
+    padding: 10%;
     color: #fff;
+    padding-right: 40%;
 }
 .service h2{
     font-size: 32px;
     font-weight: 400;
-    padding-bottom: 30px;
+    padding-bottom: 50px;
 }
 .service ul{
     display: flex;
+    justify-content: space-between;
 }
 .service span{
     font-size: 12px;
 }
 .n{
     font-size: 64px;
+}
+.service li{
+    padding-right: 50px;
+}
+.service p{
+    font-size: 18px;
+    padding-top: 20px;
 }
 .content {
     /* opacity: 0; */
@@ -482,4 +488,9 @@ html {
     background: linear-gradient(to bottom, rgba(0,0,0,0) 30%,rgba(35,31,32,30)100%),
                 url('https://github.com/YehIngrid/sample/blob/main/拾貨寶庫/backgroundimg.jpg?raw=true') no-repeat center center;
     background-size: cover;
+}
+.service i{
+    font-family: Font Awesome 5 Pro;
+    font-weight: bold;
+    font-size: 100px;
 }

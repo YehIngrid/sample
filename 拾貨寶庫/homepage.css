@@ -129,12 +129,14 @@ table {
 }
 .header {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: start;
   background-color: white;
   align-items: center;
 }
-/* css reset */
+/* !css reset */
 
+
+/** 從這裡開始看 */
 
 * {
   margin: 0;
@@ -142,7 +144,7 @@ table {
   box-sizing: border-box;
 }
 
-
+/* !頁首部分 */
 .header {
   position: fixed;
   top: 0;
@@ -152,29 +154,59 @@ table {
   z-index: 1000;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px;
+  padding: 0px 150px;
   height: 80px;
+  align-items: self-start;
 }
+/* TODO 拾貨寶庫logo */
 .header .picture img{
-  height: 59px;
-  width: 57px;
+  height: 39px;
+  width: 37px;
   display: block;
 }
+/* TODO 拾貨寶庫字樣 */
 .header .h1 {
   font-family: fangsong;
-  font-weight: 900;
+  font-weight: 700;
   font-style: normal;
   padding: 10px;
-  font-size: 30px;
+  font-size: 20px;
   color: #21302C;
   text-decoration: none;
 }
-.header ul li {
+/* TODO 搜尋框 */
+.search {
   display: flex;
+  align-items: center;
+  width: 50%;
+  max-width: 800px;
+  background: #f5efe3; /* 讓背景顏色統一 */
+  border-radius: 10px;
+  border: 2px solid #ddd;
+  overflow: hidden; /* 讓內部元素不超出邊框 */
 }
 
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent; /* 讓背景與容器一致 */
+  outline: none;
+}
+
+.searchbtn {
+  padding: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* TODO 選單 */
+.header ul li {
+  display: flex;
+  font-size: 12px;
+}
+/* TODO 下拉選單1 */
 .drop-down-menu {
   display: block;
   font-family: "Open Sans", Arial, sans-serif;
@@ -193,9 +225,8 @@ table {
 .drop-down-menu a {
   display: block;
   line-height: 10px;
-  padding: 15px;
+  padding: 10px;
   text-decoration: none;
-  padding-bottom: 20px;
   color:  #21302C;
   text-align: center;
 }
@@ -205,13 +236,9 @@ table {
   z-index: 99;
   left: -1px;
   top: 100%;
-  min-width: 95px;
+  min-width: 70px;
   text-align: center;
 }
-/* .drop-down-menu ul:hover{
-  color: #E9E9DD;
-  background-color: #21302C;
-} */
 .drop-down-menu ul li:last-child {
   border-bottom: none;
 }
@@ -233,9 +260,11 @@ table {
   -webkit-transition-duration: 0.6s;
   transition-duration: 0.6s;
 }
+
+/** 選單效果 */
 .hvr-underline-from-center {
-  display: inline-block;
-  vertical-align: middle;
+  display: block;
+  /* vertical-align: middle; */
   -webkit-transform: perspective(1px) translateZ(0);
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
@@ -264,6 +293,7 @@ table {
   left: 0;
   right: 0;
 }
+/* *下拉選單動態效果 */
 .hvr-fade {
   display: block;
   -webkit-transform: perspective(1px) translateZ(0);
@@ -279,6 +309,8 @@ table {
   background-color:  #21302C;
   color: white;
 }
+
+/** 商品動態效果 */
 /* SHADOW/GLOW TRANSITIONS */
 /* Glow */
 .hvr-glow {
@@ -298,6 +330,7 @@ table {
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
   
 }
+/** special區動態效果 */
 /* Shrink */
 .hvr-shrink {
   display: inline-block;
@@ -316,82 +349,68 @@ table {
   
 }
 
-/* header部分 */
-.content{
-  background-color: #fff;
-}
-.ad {
-  display: flex;
-  width: 100%;
-  margin-top: 60px;
-  justify-content: center;
-  align-items: center;
-  overflow-x: hidden; /* 防止橫向捲軸 */
-}
-.merchandise .uni{
-  position: relative;
-}
-/* .badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: #FFCC00;
-  color: #21302C;
-  font-weight: bold;
-  font-size: 0.8rem;
-  padding: 5px 10px;
-  border-radius: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-} */
 
-.merchandise {
+.content_homepage{
+  background-color: #d6d6d6;
+}
+
+.ad img{
+  display: block;
+  margin-top: 100px;
+  max-width: 60%;
+  height: auto;
+}
+.uni {
+  position: relative;
   display: flex;
   margin: 0 auto;
   flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  margin-left: 200px;
-  margin-right:  200px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  
+
+  /*? display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
 }
-.merchandise img {
+.uni a{
+  width: 150px;
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-bottom: 5px;
+  border-radius: 1px;
+}
+.uni img {
   flex-wrap: wrap;
-  padding: 13px ;
-  padding-left: 17px;
-  padding-right: 17px;
-  padding-bottom: 0px;
+  width: 150px;
+  height: 150px;
 }
-.merchandise h2{
+.uni h2{
   text-align: left;
-  font-size: 25px;
-  padding-left: 18px;
-  padding-right: 18px;
+  font-size: 16px;
   line-height: 30px;
   font-weight: 600;
   color:#92754A;
   font-family: 'Times New Roman', Times, serif;
   font-weight: 1500;
   font-style: normal;
+  text-decoration: none;
+  padding-left: 3px;
 }
-.merchandise p{
-  padding-top: 3px;
+.uni p{
   font-size: 12px;
   text-align: left;
-  padding-left: 20px;
   font-weight: 400;
   font-family: 'Times New Roman', Times, serif;
   color:gray;
+  line-height: 11px;
+  padding-left: 3px;
 }
-.merchandise .price{
+.uni .price{
   text-align: right;
   color:  #21302C;
-  font-size: 24px;
-  padding-right: 7px;
+  font-size: 20px;
+  padding-right: 3px;
+  padding-top: 10px;
 }
-/* content部分 */
-
+/*! content部分 */
+/*! footer部分 */
 .footer {
   background-color: #21302C;
   margin-top: 100px;
@@ -402,46 +421,27 @@ table {
 .footer p{
   color: #fff;
 }
-/* footer部分 */
 
-/* General Reset */
-body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-}
 
-/* .menu-toggle {
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 25px;
-  cursor: pointer;
-}
-
-.menu-toggle div {
-  width: 100%;
-  height: 4px;
-  background-color: #21302C;
-} */
+/*TODO 這是登入頭像跟購物車的logo */
 .special{
   display: flex;
   justify-content: end;
 }
 .special i{
   color:#21302C;
-  font-size: 30px;
-  padding-right: 40px;
+  font-size: 20px;
 }
 .special i:hover{
   color:#577379;
 }
+
+/* ?下拉選單2 */
 .drop-down-menu {
   display: flex;
   list-style: none;
   justify-content: center;
-  padding: 10px 0;
-  padding-right: 70px;
+  padding: 0px 0;
 }
 
 .drop-down-menu > li {
@@ -451,8 +451,6 @@ body {
 
 .drop-down-menu > li > a {
   text-decoration: none;
-  padding-top: 35px;
-  padding-bottom: 35px;
   color: #21302C;
   transition: color 0.3s;
   text-align: center;
@@ -483,7 +481,7 @@ body {
 .drop-down-menu ul li a {
   display: block;
   text-decoration: none;
-  padding-bottom: 15px; 
+  /* padding-bottom: 15px;  */
   border-bottom: solid 1px #E9E9DD;
   color: #577379;
   transition: background-color 0.3s, color 0.3s;
@@ -500,34 +498,7 @@ body {
   display: block;
 }
 
-.content {
-  background-color: #fff;
-  padding: 20px;
-}
-
-.ad img{
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-.merchandise {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
-
-.merchandise .uni {
-  text-align: center;
-  border-radius: 1px;
-  padding: 10px;
-}
-.merchandise .uni img {
-  width: 100%;
-  height: auto;
-}
-
-/* RWD */
+/* TODO RWD */
 @media (max-width: 768px) {
   .menu-toggle {
       display: flex;
@@ -574,12 +545,13 @@ body {
       top: 80%;
   }
 }
-/* line官方 */
+
+/* TODO line官方logo */
 .line {
   display: flex;
   justify-content: end;
 }
 .line i{
   color: #86D97B;
-  font-size: 36px;
+  font-size: 26px;
 }

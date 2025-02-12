@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>拾貨寶庫</title>
+    <title>拾貨寶庫｜二手商店</title>
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB_circular_icon.ico">
     <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
     <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
@@ -18,29 +18,28 @@
 
 <body>
     <div class="header">
-        <a class="picture" href="home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
-        <a class="h1" href="home.html">拾貨寶庫</a></a>
-        <!-- <div class="menu-toggle" onclick="toggleMenu()"></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div> -->
+        <a class="picture" href="home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo"></a>
+        <a class="h1" href="home.html">拾貨寶庫</a>
+        <div class="search">
+            <input type="text" class="searchbar" placeholder="搜尋商品...">
+            <button class="searchbtn"><i class="fa-solid fa-search"></i></button>
+        </div>
         <ul class="drop-down-menu">
           
             <li><a class="hvr-underline-from-center" href="news.html">最新資訊</a></li>
             <li><a class="hvr-underline-from-center" href="homepage.html">全部商品</a>
             <ul class="device">
-                <li><a class="hvr-fade" href="#">品項分類</a>
+                <li><a class="hvr-fade">品項分類</a>
                 <ul>
-                    <li><a class="hvr-fade" href="#">書籍與學籍用品</a>
+                    <li><a class="hvr-fade">書籍與學籍用品</a>
                     <ul>
-                        <li><a class="hvr-fade" href="#">教科書</a></li>
+                        <li><a class="hvr-fade">教科書</a></li>
                         <li><a class="hvr-fade" href="#">參考書</a></li>
                         <li><a class="hvr-fade" href="#">文具用品</a></li>
                         <li><a class="hvr-fade" href="#">學習卡片</a></li>
                         <li><a class="hvr-fade" href="#">筆記/習題集</a></li>
                     </ul></li>
-                    <li><a class="hvr-fade" href="#">宿舍與生活用品</a>
+                    <li><a class="hvr-fade">宿舍與生活用品</a>
                         <ul>
                             <li><a class="hvr-fade" href="#">宿舍用品</a></li>
                             <li><a class="hvr-fade" href="#">小型廚房用品</a></li>
@@ -68,26 +67,14 @@
                     <li><a class="hvr-fade" href="#">中型</a>
                     <li><a class="hvr-fade" href="#">大型</a>
                 </ul></li>
-                <!-- <li><a class="hvr-fade" href="#">新舊分類</a>
-                    <ul>
-                        <li><a class="hvr-fade" href="#">全新</a>
-                        <li><a class="hvr-fade" href="#">幾乎全新</a>
-                        <li><a class="hvr-fade" href="#">半新</a>
-                        <li><a class="hvr-fade" href="#">適中</a>
-                        <li><a class="hvr-fade" href="#">稍舊</a>
-                        <li><a class="hvr-fade" href="#">全舊</a>
-                    </ul>
-                </li> -->
             </ul>
           </li>
             <li><a class="hvr-underline-from-center" href="questions.html">常見問題</a></li>
             <li><a class="hvr-underline-from-center" href="introduce.html">團隊介紹</a></li>
             <li><a class="hvr-underline-from-center" href="communication.html">客服諮詢</a></li>
-            <!-- <a class="hvr-underline-from-center" href=""><i class="fa-solid fa-bars"></i></a> -->
-
         </ul>
         <ul class="special">
-            <li><a class="hvr-shrink" href="#"><i class="fa-solid fa-user"></i></a></li>
+            <li><a id="accountimg" class="hvr-shrink" href="#"><i class="fa-solid fa-user"></i></a></li>
             <li><a class="hvr-shrink" href="shoppingcart.html"><i class="fa-solid fa-cart-shopping"></i></a></li>
         </ul>
         <ul class="line">
@@ -97,95 +84,14 @@
     <section class="ad">
         <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告設計圖">
     </section>
-      <div class="content">
-        
-        <div class="merchandise">
-          <div class="uni">
-            <!-- <span class="badge">SALE</span> -->
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2></h2>
-            <p>全新</p>
-            <p class="price">NT$ 300</p>
-            </a>
-          </div>
-          <div class="uni">
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2>中興鵝娃娃<br><br></h2>
-            <p>第五年、有黃漬</p>
-            <p class="price">NT$ 150</p>
-            </a>
-          </div>
-          <div class="uni">
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2>中興紀念棒球<br>外套</h2>
-            <p>只穿過一次</p>
-            <p class="price">NT$ 1000</p>
-            </a>
-          </div>
-          <div class="uni">
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2>二手長褲（男）<br></h2>
-            <p>不能退貨也不適合、全新</p>
-            <p class="price">NT$ 600</p>
-            </a>
-          </div>
-          <div class="uni">
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2>商品名稱<br><br></h2>
-            <p>商品狀態</p>
-            <p class="price">NT$ 9999</p>
-            </a>
-          </div>
-          <div class="uni">
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2>商品名稱<br><br></h2>
-            <p>商品狀態</p>
-            <p class="price">NT$ 9999</p>
-            </a>
-          </div>
-          <div class="uni">
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2>商品名稱<br><br></h2>
-            <p>商品狀態</p>
-            <p class="price">NT$ 9999</p>
-            </a>
-          </div>
-          <div class="uni">
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2>商品名稱<br><br></h2>
-            <p>商品狀態</p>
-            <p class="price">NT$ 9999</p>
-            </a>
-          </div>
-          <div class="uni">
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2>商品名稱<br><br></h2>
-            <p>商品狀態</p>
-            <p class="price">NT$ 9999</p>
-            </a>
-          </div>
-          <div class="uni">
-            <a href="#" class="hvr-glow">
-            <img src="https://i2.wp.com/cdn03.pinkoi.com/pinkoi.magz/wNqxDNaO/14573159795753.jpg?w=1170&ssl=1" alt="">
-            <h2>商品名稱<br><br></h2>
-            <p>商品狀態</p>
-            <p class="price">NT$ 9999</p>
-            </a>
-          </div>
+      <section class="content_homepage">
+        <div class="uni">
         </div>
-      </div>
+      </section>
       <div class="footer">
         <p>©2025拾貨寶庫｜All Rights Reserved</p>
     </div>
+      <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
       <script src="homepage.js"></script>
 </body>
 </html>
