@@ -53,7 +53,7 @@ table {
     font-size: 19px;
     font-family: fangsong;
     text-decoration: none;
-    color: #17221f;
+    color: #fff;
     z-index: 100;
     letter-spacing: 1px;
 }
@@ -93,7 +93,7 @@ table {
 }
 .ul li a{
     display: block;
-    color: #17221f;
+    color: #000000;
     font-weight: 350;
     text-decoration: none;
     padding-bottom: 20px;
@@ -115,7 +115,8 @@ h1{
     font-weight: 400;
     font-size: 120px;
     position: relative;
-    top: 32vh;
+    top: 28vh;
+    left: 19%;
     text-align: center;
     line-height: 100px;
     font-family: Apple LiGothic Medium;
@@ -123,7 +124,7 @@ h1{
 .center span{
     font-size: 64px;
     position: inherit;
-    color: rgb(181, 239, 249);
+    color: rgb(255, 255, 255);
     font-weight: 300;
     font-family: "TimeMachine";
 }
@@ -135,7 +136,8 @@ h1{
     text-decoration: none;
     letter-spacing: 2px;
     position: relative;
-    top: 39vh;
+    top: 33vh;
+    left: 19%;
     border: #fff solid 1px;
     padding-top: 16px;
     padding-bottom: 16px;
@@ -420,29 +422,46 @@ html {
     font-family:fangsong;
 }
 /* reason */
+.computer img{
+    width: 80%;
+    height: auto;
+    margin-top: 100px;
+    border-radius: 2px;
+}
+.recycle img{
+    width: 80%;
+    height: 60%;
+    border-radius: 2px;
+}
+.reason_right{
+    padding-top: 80px;
+}
 .reason{
     background-color: rgba(35, 31, 32);
     padding: 10%;
     color: #fff;
+    display: flex;
+    justify-content: space-between;
 }
 .reason h2{
     font-size: 32px;
     font-weight: 400;
     text-align: left;
-    padding-bottom: 30px;
+    padding-bottom: 50px;
 }
 .reason h3{
-    font-size: 24px;
-    font-style: italic;
-    text-align: right;
+    font-size: 25px;
+    /* font-style: italic; */
+    text-align: left;
 }
 .reason ul li::marker {
     content: "✔ ";  /* Custom marker */
     color: green;
-    font-size: 1.2em;
+    font-size: 1.3em;
 }
 .reason ul{
     padding-left: 24px;
+    font-size: large;
 }
 .service{
     background-color: rgba(35, 31, 32);
@@ -493,8 +512,8 @@ html {
 .center {
     width: 100%;
     height: 100vh; /* 根据需要调整高度 */
-    background: linear-gradient(to bottom, rgba(0,0,0,0) 30%,rgba(35,31,32,30)100%),
-                url('https://github.com/YehIngrid/sample/blob/main/拾貨寶庫/backgroundimg.jpg?raw=true') no-repeat center center;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgb(35,32,31) 100%), 
+    url('https://github.com/YehIngrid/sample/blob/main/%E6%96%B0%E5%B0%81%E9%9D%A2%E7%85%A7%E7%89%87.png?raw=true') ;
     background-size: cover;
 }
 .service i{
