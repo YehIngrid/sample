@@ -161,17 +161,19 @@ table {
 /* TODO 拾貨寶庫logo */
 .header .picture img{
   height: 39px;
-  width: 37px;
+  width: 40px;
   display: block;
+  border-radius: 50%;
+  margin-right: 5px;
 }
 /* TODO 拾貨寶庫字樣 */
-.header .h1 {
-  font-family: fangsong;
+.header .h1_title {
+  font-family: "fangsong";
   font-weight: 700;
   font-style: normal;
   padding: 10px;
   font-size: 20px;
-  color: #21302C;
+  color: yellowgreen;
   text-decoration: none;
 }
 /* TODO 搜尋框 */
@@ -554,4 +556,8 @@ input[type="text"] {
 .line i{
   color: #86D97B;
   font-size: 26px;
+}
+@font-face {
+  font-family: 'fangsong';
+  src: url('fonts/simfang.ttf') format('truetype');
 }
