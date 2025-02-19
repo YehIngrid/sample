@@ -15,19 +15,14 @@ axios.post('http://localhost:3000')
         let str = "";
         const uni = document.querySelector(".uni");
         ary.forEach(function(ary){
-            let content = `<a class="hvr-glow"><img src=${ary.imageURL}><h2>${ary.name}</h2><p>${ary.category}/${ary.age}</p><p class="price">NT$ ${ary.price}</p></a>`;
+            let content = `<a class="hvr-glow">
+            <img src=${ary.imageURL}>
+            <h2>${ary.name}</h2>
+            <p>${ary.category}/${ary.age}</p>
+            <p class="price">NT$ ${ary.price}</p></a>`;
             str += content;
         })
         uni.innerHTML = str;
     });
 
-// js array Map
-// 1.能將原始陣列運算後，重新組合回傳一個新陣列。
-// 2.不會改變原始陣列。
 
-const arr=[1,5,10];
-const newarr=arr.map(function(item){
-    return item*item;
-})
-console.log(newarr);
-console.log(arr);
