@@ -515,6 +515,7 @@ html, body {
 @media (min-width: 576px) {
     .custom-text {
         font-size: 2.5rem;
+        line-height: 60px;
     }
     .small-text {
         font-size: 1.6rem;
@@ -536,6 +537,7 @@ html, body {
     }
     .custom-text {
         font-size: 64px;
+        line-height: 60px;
     }
     .small-text {
         font-size: 2.2rem;
@@ -552,6 +554,7 @@ html, body {
 @media (min-width: 992px) {
     .custom-text {
         font-size: 7.5rem;
+        line-height: 60px;
     }
     .small-text {
         font-size: 3rem;
