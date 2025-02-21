@@ -103,7 +103,7 @@ table {
     font-weight: 400;
     font-size: 7.5rem;
     position: relative;
-    top: 30vh;
+    top: 35vh;
     text-align: center;
     line-height: 60px;
     font-family: fangsong;
@@ -519,7 +519,7 @@ html, body {
     .small-text {
         font-size: 1.6rem;
         display: flex;
-        justify-content: center;
+        justify-content: start;
     }
     .nav-item {
         background-color: rgba(255, 255, 255, 0.282); /* 設定半透明黑色背景 */
