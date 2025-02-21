@@ -82,36 +82,12 @@ table {
     justify-content: space-between;
     background: transparent; /* 讓 Header 背景透明 */
     width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 10; /* 確保它在最上層 */
+    /* top: 0; */
+    /* left: 0; */
+
 }
 .navbar-toggler-icon {
     filter: invert(100%); /* 變成白色 */
-}
-.nav-item{
-    background-color: rgba(102, 136, 195, 0.524); /* 設定半透明黑色背景 */
-    width: 30%;
-}
-
-.ul{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 40px;
-    padding-bottom: 20px;
-    padding-right: 60px;
-    z-index: 100;
-}
-.ul li a{
-    display: block;
-    color: #000000;
-    font-weight: 350;
-    text-decoration: none;
-    padding-bottom: 20px;
-    padding-right: 10px;
-    padding-left: 10px;
-    font-size: 16px;
 }
 .left{
     padding-top: 26px;
@@ -218,14 +194,13 @@ table {
     background-color: rgba(35, 31, 32);
 }
 .footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
+    font-size: smaller;
     color: #fff;
-    background-color: #21302C;
-    position: relative;
     width: 100%;
-    height: 100%;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 .book img{
     margin-top: 20%;
@@ -264,19 +239,6 @@ div {
     /* background-color: var(--brand--blue); */
     color: var(--white);
 }
-
-body {
-    color: var(--black--700);
-    letter-spacing: 0.5px;
-    font-family: Inter Tight, sans-serif;
-    font-size: 0.9375rem;
-    font-weight: 400;
-    line-height: 1.5;
-    background-color: rgba(59, 64, 64, 0.9) !important;
-    min-height: 100%;
-    margin: 0;
-}
-
 :root {
     --black--700: #4e5d6e;
     --black--900: #1d2f44;
@@ -385,7 +347,7 @@ html {
 }
 .stats-grid {
     grid-column-gap: 2rem;
-    grid-row-gap: 10rem;
+    grid-row-gap: 2rem;
     grid-template-rows: auto;
     grid-template-columns: 1fr 1fr 1fr;
     grid-auto-columns: 1fr;
@@ -473,7 +435,7 @@ html {
 .service h2{
     font-size: 32px;
     font-weight: 400;
-    padding-bottom: 90px;
+    padding-bottom: 60px;
 }
 .service ul{
     display: flex;
@@ -500,8 +462,8 @@ html {
 .center {
     width: 100%;
     height: 100vh; /* 根据需要调整高度 */
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgb(35,32,31) 100%), 
-    url('https://github.com/YehIngrid/sample/blob/main/%E6%96%B0%E5%B0%81%E9%9D%A2%E7%85%A7%E7%89%87.png?raw=true') ;
+    background: linear-gradient(to bottom, rgba(123, 123, 123, 0) 50%, rgb(31, 31, 35) 100%), 
+    url('https://github.com/YehIngrid/sample/blob/main/%E6%96%B0%E5%B0%81%E9%9D%A2%E7%85%A7%E7%89%87.png?raw=true');
     background-size: cover;
 }
 .service i{
@@ -528,12 +490,41 @@ html {
     font-style: normal;
 }
 html, body {
-    overflow-x: hidden; /* 防止橫向滾動條 */
+    overflow-x: hidden; 
     margin: 0;
-    padding: 0;
+    letter-spacing: 0.5px;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    background: linear-gradient(to bottom right, rgba(40, 61, 8, 0.68),rgb(194, 199, 158), #0065c2)!important;
+    min-height: 100%;
 }
 .custom-text {
-    font-size: 30px; /* 預設手機大小 */
+    font-size: 50px; /* 預設手機大小 */
+}
+.small-text {
+    font-size: 1.2rem; /* 預設手機大小 */
+}
+.nav-item{
+    display: block;
+    background-color: rgba(255, 255, 255, 0.282); /* 設定半透明黑色背景 */
+    width: 30%;
+    margin-left: 70%; 
+}
+/* 手機 (≥576px) */
+@media (min-width: 576px) {
+    .custom-text {
+        font-size: 2.5rem;
+    }
+    .small-text {
+        font-size: 1.6rem;
+        display: flex;
+        justify-content: center;
+    }
+    .nav-item {
+        background-color: rgba(255, 255, 255, 0.282); /* 設定半透明黑色背景 */
+        margin-left: 70%;
+        width: 30%;
+    }
 }
 
 /* 平板 (≥768px) */
@@ -546,9 +537,13 @@ html, body {
         font-size: 64px;
     }
     .small-text {
-        font-size: 8rem;
+        font-size: 2.2rem;
         display: flex;
         justify-content: center;
+    }
+    .nav-item {
+        background-color: rgba(255, 255, 255, 0.288); /* 設定半透明黑色背景 */
+        margin: 0%;
     }
 }
 
@@ -558,11 +553,11 @@ html, body {
         font-size: 7.5rem;
     }
     .small-text {
-        font-size: 12rem;
+        font-size: 3rem;
     }
-}
-.small-text {
-    font-size: 1.2rem; /* 預設手機大小 */
+    .nav-item {
+        background-color: rgba(107, 107, 49, 0.282); /* 設定半透明黑色背景 */
+    }
 }
 #circle-btn {
     display: flex;
@@ -619,84 +614,50 @@ button {
 .btn-container:hover svg {
     transform: translateX(5px);
 }
+/* *header效果區 */
 .btn,
-.btn:focus,
-.btn:hover {
+.btn:focus {
     position: relative;
-    /* min-width: 200px; */
-    border: 1px solid #FFFFFF;
+    z-index: 1;
+    min-width: 100px;
+    border: 2px solid #D24D57;
+    border-radius: 0;
     color: #FFFFFF;
     font-size: 1rem;
     font-weight: bold;
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
-    -webkit-font-smoothing: antialiased;
-    /* padding: 10px 20px; */
+    overflow: hidden;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.2);
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+    padding: 10px 20px;
 }
-.btn span:nth-child(1),
-.btn span:nth-child(2),
-.btn span:nth-child(3),
-.btn span:nth-child(4) {
+.btn:after {
     content: "";
-    display: block;
     position: absolute;
-    background-color: #FFFFFF;
-}
-.btn span:nth-child(1) {
-    width: 1px;
-    left: 0;
-    bottom: 0;
-}
-.btn span:nth-child(2) {
-    height: 1px;
-    left: 0;
-    top: 0;
-}
-.btn span:nth-child(3) {
-    width: 1px;
-    right: 0;
-    top: 0;
-}
-.btn span:nth-child(4) {
-    height: 1px;
-    right: 0;
-    bottom: 0;
+    height: 0%;
+    left: 50%;
+    top: 50%;
+    width: 150%;
+    z-index: -1;
+    background: linear-gradient(to bottom right, #ffea00, #00b3ff);
+    -moz-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+    -ms-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+    -webkit-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+    transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+    -webkit-transition: all 0.4s ease 0s;
+    -moz-transition: all 0.4s ease 0s;
+    -o-transition: all 0.4s ease 0s;
+    transition: all 0.4s ease 0s;
 }
 .btn:hover {
-    border: none;
+    color: #FFFFFF;
+    text-shadow: none;
 }
-.btn:hover span:nth-child(1) {
-    animation: move1 1500ms infinite ease;
-}
-.btn:hover span:nth-child(2) {
-    animation: move2 1500ms infinite ease;
-}
-.btn:hover span:nth-child(3) {
-    animation: move3 1500ms infinite ease;
-}
-.btn:hover span:nth-child(4) {
-    animation: move4 1500ms infinite ease;
-}
-@keyframes move1 {
-    0% { height: 100%; bottom: 0; }
-    54% { height: 0; bottom: 100%; }
-    55% { height: 0; bottom: 0; }
-    100% { height: 100%; bottom: 0; }
-}
-@keyframes move2 {
-    0% { width: 0; left: 0; }
-    50% { width: 100%; left: 0; }
-    100% { width: 0; left: 100%; }
-}
-@keyframes move3 {
-    0% { height: 100%; top: 0; }
-    54% { height: 0; top: 100%; }
-    55% { height: 0; top: 0; }
-    100% { height: 100%; top: 0; }
-}
-@keyframes move4 {
-    0% { width: 0; right: 0; }
-    55% { width: 100%; right: 0; }
-    100% { width: 0; right: 100%; }
+.btn:hover:after {
+    height: 450%;
 }
