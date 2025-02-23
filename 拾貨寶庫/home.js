@@ -66,7 +66,7 @@ const slideInElement = document.querySelector('.slide-in');
           target.classList.remove('active');
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.9 });
 
     observer3.observe(target);
 
