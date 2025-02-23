@@ -42,4 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
         observer.observe(target); // 滑動進入時才執行動畫
     }
 });
+function scrollToContent() {
+    // 滾動到下一個視窗高度
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: 'smooth'
+    });
+  }
 
