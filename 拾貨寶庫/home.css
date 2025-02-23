@@ -12,8 +12,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	margin: 0;
@@ -24,7 +24,7 @@ time, mark, audio, video {
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
@@ -169,7 +169,7 @@ table {
     right: 0;
 }
 .friend{
-    
+
     color: black;
     width: 100%;
     height: 100%;
@@ -207,7 +207,7 @@ table {
     margin-top: 5%;
     margin-bottom: 5%;
     width: 80%;
-    
+
 }
 
 /* 清理後的 CSS */
@@ -497,13 +497,13 @@ html {
     font-style: normal;
 }
 html, body {
-    overflow-x: hidden; 
+    overflow-x: hidden;
     margin: 0;
     letter-spacing: 0.5px;
     font-size: 0.9375rem;
     font-weight: 400;
     background: linear-gradient(to bottom right, rgba(62, 119, 73, 0.8) ,rgba(107, 130, 50, 0.8), rgba(36,182,133), #004b97);
-    min-height: 100%; 
+    min-height: 100%;
 }
 .custom-text {
     font-size: 50px; /* 預設手機大小 */
@@ -515,7 +515,7 @@ html, body {
     display: block;
     background-color: rgba(255, 255, 255, 0.282); /* 設定半透明黑色背景 */
     width: 30%;
-    margin-left: 70%; 
+    margin-left: 70%;
 }
 /* 手機 (≥576px) */
 @media (max-width: 576px) {
@@ -678,7 +678,6 @@ ul{
     padding-left: 0 !important;
 }
 /* html, body {
-    margin: 0 !important;   
+    margin: 0 !important;
     padding: 0 !important;
 } */
-  
