@@ -33,8 +33,40 @@
         <!--TODO 響應式選單-->
         <nav class="navbar navbar-expand-lg navbar-color bg-color header_new fixed-top">
             <div class="container-fluid">      
-                <a class="navbar-brand picture" href="home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo"></a>
-                <a class="navbar-brand h1_title col-md-1" href="home.html">拾貨寶庫</a>
+                <a class="navbar-brand picture h1_title col-md-1" href="home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
+                    <svg class="logoo"  xmlns="http://www.w3.org/2000/svg" width="80" height="50" viewBox="0 0 80 50" >
+                        <!-- 定義藍色與綠色漸層 -->
+                        <defs>
+                          <linearGradient id="chineseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#004b97"/>
+                            <stop offset="100%" stop-color="rgb(36,182,133)"/>
+                          </linearGradient>
+                          <linearGradient id="englishGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="rgb(36,182,133)"/>
+                            <stop offset="100%" stop-color="#004b97"/>
+                          </linearGradient>
+                        </defs>
+                      
+                        <!-- 背景 -->
+                        <rect x="600" y="200" fill="none"/>
+                      
+                        <!-- 中文文字：置中，上方 -->
+                        <text x="40" y="20" text-anchor="middle" dominant-baseline="middle"
+                              font-family="TimeMachine" font-size="20"
+                              fill="url(#chineseGradient)" font-weight="bold"
+                              >
+                          拾貨寶庫
+                        </text>
+                      
+                        <!-- 英文文字 (全大寫)：置中於中文下方 -->
+                        <text x="40" y="35" text-anchor="middle" dominant-baseline="middle"
+                              font-family="TimeMachine" font-size="9"
+                              fill="url(#englishGradient)" font-weight="bold"
+                              >
+                          TREASURE HUB
+                        </text>
+                      </svg>
+                </a>
                 <form class="d-flex mx-auto col-md-5">
                     <input class="form-control me-2" type="search" placeholder="搜尋商品..." aria-label="Search">
                     <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-search"></i></button>

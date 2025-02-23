@@ -664,7 +664,7 @@ body {
     font-size: 1rem;
     font-weight: bold;
     color: white;
-    background: #61858d;
+    background: #004b97;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -673,8 +673,8 @@ body {
   
   /* 按鈕懸停效果 */
   .input-group button:hover {
-    background: #ffde4a;
-    color:rgb(95, 95, 95);
+    background: rgb(36,182,133);
+    color:rgb(255, 255, 255);
   }
 .line {
     display: flex;

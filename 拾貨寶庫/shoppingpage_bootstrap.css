@@ -2,6 +2,10 @@
     font-family: 'fangsong';
     src: url(fonts/simfang.ttf);
 }
+@font-face {
+    font-family:'TimeMachine';
+    src: url(fonts/timemachine-wa.ttf);
+}
 html {
     font-size: 62.5%;
 }
@@ -25,6 +29,6 @@ html {
     color: white !important;
 }
 .navbar{
-    background-color: rgb(184, 153, 220); /* 半透明背景 */
+    background-color: rgb(255, 255, 255); /* 半透明背景 */
     padding: 10px;
 }
