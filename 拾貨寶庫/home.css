@@ -112,6 +112,7 @@ table {
     font-weight: 300;
     font-family: "TimeMachine";
     padding-top: 10%;
+    margin-bottom: 0 !important;
 }
 .center a{
     display: block;
@@ -429,7 +430,7 @@ html {
     font-size: 25px;
     color:black;
     font-weight: 550;
-    text-align-last: right;
+    text-align: right;
     /* font-style: italic; */
 }
 .reason ul li {
@@ -632,7 +633,7 @@ html, body {
     justify-content: center;
     /* *margin-top: 20%;
     margin-right: 33%; */
-    height: 100vh;
+    height: 90vh;
 }
 .btn-container {
     position: relative;
@@ -752,3 +753,121 @@ ul{
     40% { transform: translateY(10px); }
     60% { transform: translateY(5px); }
 }
+.typewriter {  
+    overflow: hidden;      /* 隱藏超出部分 */
+    white-space: nowrap;          /* 禁止換行 */ 
+    animation: typing 3s steps(30, end), blink-caret 0.75s step-end infinite;
+  }
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  @keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: black; }
+  }
+  .fade-in {
+    opacity: 0.5;
+    animation: fadeIn 1.8s forwards;
+  }
+  .fade-in.active {
+    opacity: 1;
+}
+  
+
+  .slide-in {
+    /* 初始狀態：文字位於左側且隱藏 */
+    transform: translateY(-1%);
+    opacity: 0;
+    transition: transform 1s ease-out, opacity 1s ease-out;
+  }
+  .slide-in.active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .slide-in1 {
+    /* 初始狀態：文字位於左側且隱藏 */
+    transform: translateX(-1%);
+    opacity: 0;
+    transition: transform 1.5s ease-out, opacity 1s ease-out;
+  }
+  .slide-in1.active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .slide-in2 {
+    /* 初始狀態：文字位於左側且隱藏 */
+    transform: translateX(1%);
+    opacity: 0;
+    transition: transform 1s ease-out, opacity 1.5s ease-out;
+  }
+  .slide-in2.active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .bounce {
+    animation: bounceAnimation 1.8s infinite;
+  }
+  @keyframes bounceAnimation {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(0); }
+    48% { transform: translateX(-1px); }
+    49% { transform: translateX(-1px);}
+    50% { transform: translateX(0px);}
+    51% { transform: translateX(1px);}
+    52% { transform: translateX(2px); }
+  }
+
+  /* 將每個字母包在 span 中並使用 inline-block 方便控制 */
+  .wave span {
+    display: inline-block;
+    animation: wave 1.5s ease-in-out infinite;
+  }
+  /* 每個 span 都有不同的延遲，讓波浪效果更自然 */
+  .wave span:nth-child(1) { animation-delay: 0s; }
+  .wave span:nth-child(2) { animation-delay: 0.1s; }
+  .wave span:nth-child(3) { animation-delay: 0.2s; }
+  .wave span:nth-child(4) { animation-delay: 0.3s; }
+  .wave span:nth-child(5) { animation-delay: 0.4s; }
+  .wave span:nth-child(6) { animation-delay: 0.5s; }
+  /* 根據文字長度調整延遲或用更動態的選擇器 */
+  @keyframes wave {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-10px); }
+  }
+  .container_ul {
+    overflow: hidden;
+    display: inline-block;
+  }
+  .slide-text {
+    transform: translateY(-10%);
+    opacity: 0;
+    transition: transform 1s ease-out, opacity 1s ease-out;
+  }
+  .slide-text.active{
+    transform: translateY(0); 
+    opacity: 1;
+  }
+  /* 目標文字基本樣式 */
+.jitter-text {
+    margin-bottom: 9px;
+  }
+  /* 加入 jitter-active 類別時，啟動抖動動畫 */
+  .jitter-active {
+    animation: jitter 0.5s;
+  }
+  @keyframes jitter {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(1px, -1px); }
+    50% { transform: translate(-1px, 1px); }
+    75% { transform: translate(1px, 1px); }
+    100% { transform: translate(0, 0); }
+  }
+  .scale-up {
+    transform: translateX(0%);
+    opacity: 1;
+    transition: transform 0.5s ease-out, opacity 1.5s ease-out;
+  }
+  .scale-up.active {
+    transform: translateX(0%);
+    opacity: 0;
+  }

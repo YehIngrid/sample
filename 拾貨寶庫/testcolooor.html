@@ -1,53 +1,188 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>CSS 白雲背景範例</title>
+  <title>滑動遮罩轉場效果</title>
   <style>
-    /* 設定背景為天空藍 */
-    body {
-      background: #87CEEB;
+    .mask-container {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      overflow: hidden;
+      background: #f0f0f0;
+    }
+    .mask-content {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #2980b9;
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
+      z-index: 1;
+      transition: transform 1s ease;
     }
-    /* 雲朵主體 */
-    .cloud {
-      position: relative;
-      width: 200px;
-      height: 60px;
-      background: #fff;
-      border-radius: 50px;
-
-    }
-    /* 雲朵上方的圓形1 */
-    .cloud::before {
-      content: '';
+    .mask {
       position: absolute;
-      top: -30px;
-      left: 20px;
-      width: 80px;
-      height: 80px;
-      background: #fff;
-      border-radius: 50%;
-
+      width: 100%;
+      height: 100%;
+      background: #27ae60;
+      z-index: 2;
+      transform: translateX(-100%);
+      transition: transform 1s ease;
     }
-    /* 雲朵上方的圓形2 */
-    .cloud::after {
-      content: '';
-      position: absolute;
-      top: -40px;
-      right: 20px;
-      width: 100px;
-      height: 100px;
-      background: #fff;
-      border-radius: 50%;
+    .mask-container:hover .mask {
+      transform: translateX(0);
     }
   </style>
 </head>
 <body>
-  <div class="cloud"></div>
+  <div class="mask-container">
+    <div class="mask-content">原始內容</div>
+    <div class="mask"></div>
+  </div>
+</body>
+</html> -->
+
+
+<!-- <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>交叉淡入淡出效果</title>
+  <style>
+    .fade-container {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      overflow: hidden;
+    }
+    .fade-container img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .fade-container img.active {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="fade-container">
+    <img src="https://via.placeholder.com/300x200/2980b9/fff?text=第一張" alt="第一張" class="active">
+    <img src="https://via.placeholder.com/300x200/27ae60/fff?text=第二張" alt="第二張">
+  </div>
+
+  <script>
+    const images = document.querySelectorAll('.fade-container img');
+    let current = 0;
+
+    setInterval(() => {
+      images[current].classList.remove('active');
+      current = (current + 1) % images.length;
+      images[current].classList.add('active');
+    }, 3000);
+  </script>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>翻轉轉場效果</title>
+  <style>
+    .flip-card {
+      background-color: transparent;
+      width: 300px;
+      height: 200px;
+      perspective: 1000px; /* 定義 3D 空間 */
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+    .flip-card-front {
+      background-color: #bbb;
+      color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .flip-card-back {
+      background-color: #2980b9;
+      color: white;
+      transform: rotateY(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="flip-card">
+    <div class="flip-card-inner">
+      <div class="flip-card-front">
+        <h1>正面</h1>
+      </div>
+      <div class="flip-card-back">
+        <h1>背面</h1>
+      </div>
+    </div>
+  </div>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>抖動文字效果</title>
+  <style>
+    body {
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .jitter {
+      font-size: 3em;
+      font-weight: bold;
+      color: #333;
+      display: inline-block;
+      animation: jitter 0.5s ;
+    }
+    @keyframes jitter {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(2px, -2px); }
+      50% { transform: translate(-2px, 2px); }
+      75% { transform: translate(2px, 2px); }
+      100% { transform: translate(0, 0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="jitter">抖動文字</div>
 </body>
 </html>
+ -->
