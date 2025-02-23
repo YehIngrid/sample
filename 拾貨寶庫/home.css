@@ -515,6 +515,7 @@ html, body {
 }
 .small-text {
     font-size: 1.2rem; /* 預設手機大小 */
+    padding-top: 25%!important;
 }
 .nav-item{
     display: block;
@@ -531,7 +532,8 @@ html, body {
     .small-text {
         font-size: 1.6rem;
         display: flex;
-        justify-content: start;
+        justify-content: center;
+        align-items: end;
     }
     .nav-item {
         background-color: rgba(255, 255, 255, 0.282); /* 設定半透明黑色背景 */
@@ -556,6 +558,7 @@ html, body {
         font-size: 2.2rem;
         display: flex;
         justify-content: center;
+        padding-top: 10% !important;
     }
     .nav-item {
         background-color: rgba(255, 255, 255, 0.288); /* 設定半透明黑色背景 */
@@ -570,6 +573,7 @@ html, body {
     }
     .small-text {
         font-size: 3rem;
+        padding-top: 5% !important;
     }
     .nav-item {
         background-color:transparent;
