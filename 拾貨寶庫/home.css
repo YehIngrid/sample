@@ -505,7 +505,7 @@ html, body {
     letter-spacing: 0.5px;
     font-size: 0.9375rem;
     font-weight: 400;
-    background: linear-gradient(to bottom right, rgba(62, 119, 73, 0.8) ,rgba(107, 130, 50, 0.8), rgba(228, 221, 101, 0.8), rgba(92,135,240), rgba(172, 35, 240, 0.7));
+    background: linear-gradient(to bottom right, rgba(62, 119, 73, 0.8) ,rgba(107, 130, 50, 0.8), rgba(36,182,133), #004b97);
     min-height: 100%; 
 }
 .custom-text {
@@ -589,7 +589,7 @@ html, body {
     align-items: center;
     padding: 15px 20px 16px 60px;
     border-radius: 50px;
-    background: linear-gradient(to right, rgb(242, 213, 66) 50%,  rgb(81, 134, 247) 50%);
+    background: linear-gradient(to right, rgb(36,182,133) 50%,  #004b97 50%);
     background-size: 200% 100%;
     background-position: right bottom;
     transition: all 0.4s ease-in-out;
@@ -607,7 +607,7 @@ html, body {
     position: absolute;
     left: 0; /* 初始位置在左側 */
     transition: transform 0.4s ease-in-out;
-    background: rgb(242, 213, 66);
+    background: rgb(36,182,133);
     border-radius: 50%;
 }
 
@@ -660,7 +660,7 @@ button {
     top: 50%;
     width: 150%;
     z-index: -1;
-    background: linear-gradient(to bottom right, #ffea00, #00b3ff);
+    background: linear-gradient(to bottom right, rgb(36,182,133), #004b97);
     -moz-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
     -ms-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
     -webkit-transform: translateX(-50%) translateY(-50%) rotate(-25deg);
