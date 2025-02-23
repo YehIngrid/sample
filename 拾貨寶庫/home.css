@@ -223,7 +223,7 @@ table {
     align-items: flex-start;
     /* padding-left: 10%; */
     /* background-color: #2E7D32; */
-    background:linear-gradient(to bottom, #004b97, #031830);
+    background:linear-gradient(to bottom, #004b97, #031830) !important;
     width: 100%;
 }
 
