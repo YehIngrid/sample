@@ -207,7 +207,7 @@ table {
     margin-top: 5%;
     margin-bottom: 5%;
     width: 80%;
-
+    border-radius: 4px;
 }
 
 /* 清理後的 CSS */
@@ -223,7 +223,7 @@ table {
     align-items: flex-start;
     /* padding-left: 10%; */
     /* background-color: #2E7D32; */
-    background-color: rgb(255, 246, 208);
+    background:linear-gradient(to bottom, #004b97, #031830);
     width: 100%;
 }
 
@@ -242,8 +242,8 @@ div {
 }
 :root {
     --black--700: #4e5d6e;
-    --black--900: #ff6f00;
-    --brand--blue: #ff6f00;
+    --black--900: rgb(36,182,133);
+    --brand--blue: rgb(36,182,133);
     --white: white;
     --black--100: #e6e8ea;
     --stroke: var(--black--100);
@@ -393,12 +393,16 @@ html {
 .computer img{
     width: 80%;
     height: auto;
-    border-radius: 2px;
+    border-radius: 40% 7%;
+    border:solid 5px #004b97;
+    border-left: solid 10px rgb(32,82,146);
+    border-bottom: solid 10px #004b97;
 }
 .recycle img{
     width: 98%;
     height: 50%;
-    border-radius: 2px;
+    border-radius: 25% 0% 20% 25%;
+    border-right: dotted 9px rgb(36, 182, 133);
     padding-left: 10%;
 }
 .reason_right{
@@ -424,6 +428,7 @@ html {
     font-size: 25px;
     color:black;
     font-weight: 550;
+    text-align-last: right;
     /* font-style: italic; */
 }
 .reason ul li {
@@ -448,14 +453,11 @@ html {
     justify-content: center;
     /* flex-wrap: wrap; */
 }
-.service span{
-    font-size: 12px;
-}
 .n{
     font-size: 64px;
 }
 .service p{
-    font-size: 18px;
+    font-size: 16px;
     padding-top: 1rem;
     padding-bottom: 2rem;
 }
@@ -464,7 +466,6 @@ html {
     transform: translateY(10px);
     animation: fadeInUp 1.0s ease-out forwards;
 }
-
 .center {
     margin: 0auto;
     width: 100%;
@@ -480,9 +481,12 @@ html {
 .runnumimg{
     width: 220px;
     height: auto;
-    border-bottom-left-radius: 10px;
-    border-top-right-radius: 10px;
+    /* border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px; */
     margin-bottom: 30px;
+    border: white  6px;
+    border-style: solid;
+    box-shadow: 0 0 2px #ffffff;
 }
 .svg img{
     width: 200px;
@@ -537,7 +541,6 @@ html, body {
         min-height: 100vh;
     }
 }
-
 /* 平板 (≥768px) */
 @media (min-width: 768px) {
     .bg-mobile {
@@ -558,7 +561,6 @@ html, body {
         margin: 0%;
     }
 }
-
 /* 桌面 (≥992px) */
 @media (min-width: 992px) {
     .custom-text {
@@ -593,7 +595,6 @@ html, body {
     overflow: hidden; /* 避免 SVG 超出範圍 */
     cursor: pointer;
 }
-
 /* 按鈕內部的 SVG 箭頭 */
 .btnnn{
     width: 55px;

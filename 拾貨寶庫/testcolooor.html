@@ -2,35 +2,52 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>漸進色彩變化示例</title>
+  <title>CSS 白雲背景範例</title>
   <style>
-    /* 讓整個頁面填滿視窗 */
-    html, body {
+    /* 設定背景為天空藍 */
+    body {
+      background: #87CEEB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       margin: 0;
-      padding: 0;
-      height: 100%;
     }
+    /* 雲朵主體 */
+    .cloud {
+      position: relative;
+      width: 200px;
+      height: 60px;
+      background: #fff;
+      border-radius: 50px;
 
-    .color-change {
-      width: 100%;
-      height: 100%;
-      /* 初始的漸層背景 */
-      background: linear-gradient(180deg, #96eade 0%, #bcecff 50%);
-      /* 使用 keyframes 動畫，時間 30 秒，無限次，alternate 會在每次播放完後反向播放 */
-      animation: slowColorChange 30s infinite alternate ease-in-out;
     }
+    /* 雲朵上方的圓形1 */
+    .cloud::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      left: 20px;
+      width: 80px;
+      height: 80px;
+      background: #fff;
+      border-radius: 50%;
 
-    @keyframes slowColorChange {
-      0% {
-        background: linear-gradient(180deg, #96eade 60%, #bcecff);
-      }
-      100% {
-        background: linear-gradient(180deg, #96eade 50%, #bcecff 50%);
-      }
+    }
+    /* 雲朵上方的圓形2 */
+    .cloud::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: 20px;
+      width: 100px;
+      height: 100px;
+      background: #fff;
+      border-radius: 50%;
     }
   </style>
 </head>
 <body>
-  <div class="color-change"></div>
+  <div class="cloud"></div>
 </body>
 </html>
