@@ -23,7 +23,7 @@ let observer = new IntersectionObserver((entries, observer) => {
 
 function startAllAnimations() {
     animateNumber("#trees", 0, 4, 2);
-    animateNumber("#bags", 0, 86, 2.5);
+    animateNumber("#bags", 0, 100, 2.5);
     animateNumber("#co2", 0, 4, 3);
 }
 
