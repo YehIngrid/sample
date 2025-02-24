@@ -186,3 +186,306 @@
 </body>
 </html>
  -->
+
+ <!-- <!DOCTYPE html>
+ <html lang="zh-Hant">
+ <head>
+   <meta charset="UTF-8">
+   <title>無複製無限循環輪播</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <style>
+     /* 基本頁面設定 */
+     body {
+       margin: 0;
+       padding: 0;
+       background: #fafafa;
+       font-family: sans-serif;
+     }
+     /* 輪播容器：設定寬 1200px，能呈現中間幻燈片完整（600px）以及左右各露出 300px */
+     .carousel {
+       position: relative;
+       width: 1200px;
+       margin: 50px auto;
+       overflow: hidden;
+     }
+     /* 內部軌道利用 flex 水平排列 */
+     .carousel-track {
+       display: flex;
+       transition: transform 0.5s ease;
+     }
+     /* 幻燈片寬度固定 600px */
+     .slide {
+       width: 600px;
+       flex-shrink: 0;
+       position: relative;
+       margin-left: 5px;
+       margin-right: 5px;
+     }
+     .slide img {
+       width: 100%;
+       display: block;
+       border-radius: 5px;
+     }
+     .slide .content {
+       position: absolute;
+       bottom: 20px;
+       left: 20px;
+       color: white;
+       background: rgba(0,0,0,0.5);
+       padding: 10px 20px;
+       border-radius: 5px;
+     }
+   </style>
+ </head>
+ <body>
+   輪播容器
+   <div class="carousel">
+     <div class="carousel-track">
+       假設有 5 個廣告幻燈片
+       <div class="slide">
+         <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 1">
+         <div class="content">廣告 1</div>
+       </div>
+       <div class="slide">
+         <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 2">
+         <div class="content">廣告 2</div>
+       </div>
+       <div class="slide">
+         <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 3">
+         <div class="content">廣告 3</div>
+       </div>
+       <div class="slide">
+         <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 4">
+         <div class="content">廣告 4</div>
+       </div>
+       <div class="slide">
+         <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 5">
+         <div class="content">廣告 5</div> 
+       </div>
+     </div>
+   </div>
+ 
+   <script>
+     const track = document.querySelector('.carousel-track');
+     const slideWidth = 900;
+      初始設定：讓第二個幻燈片置中，
+     以便左側露出第一張一半（300px），右側露出第三張一半（300px）
+     track.style.transform = `translateX(-300px)`;
+     
+      每次動畫將整個軌道平移 600px，讓目前中間幻燈片消失，下一張幻燈片進入中心
+     function moveToNext() {
+       track.style.transition = "transform 0.5s ease";
+        從 -300px 平移到 -900px
+       track.style.transform = `translateX(-900px)`;
+     }
+     
+      當動畫結束後，將最左邊的幻燈片移到末端，並重置 transform 到 -300px
+     track.addEventListener('transitionend', () => {
+        將第一個幻燈片移至末端
+       track.appendChild(track.firstElementChild);
+        暫時關閉 transition，重置位置
+       track.style.transition = "none";
+       track.style.transform = `translateX(-300px)`;
+        強制 reflow 確保變更生效
+       void track.offsetWidth;
+     });
+     
+      每隔 3 秒自動切換幻燈片
+     setInterval(moveToNext, 3000);
+   </script>
+ </body>
+ </html>
+  -->
+  <!DOCTYPE html>
+  <html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8">
+    <title>響應式無限輪播 - 箭頭控制（手機全寬照片）</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      /* 基本設定 */
+      body {
+        margin: 0;
+        padding: 0;
+        background: #fafafa;
+        font-family: sans-serif;
+      }
+      /* 輪播容器：桌面版寬 1200px；手機版 (max-width: 800px) 寬 100% */
+      .carousel {
+        position: relative;
+        width: 1200px;
+        margin: 50px auto;
+        overflow: hidden;
+      }
+      @media (max-width: 800px) {
+        .carousel {
+          width: 100%;
+        }
+      }
+      /* 軌道與幻燈片 */
+      .carousel-track {
+        display: flex;
+        transition: transform 0.5s ease;
+      }
+      /* 桌面版每個幻燈片固定 600px 寬；手機版則全寬 */
+      .slide {
+        width: 600px;
+        flex-shrink: 0;
+        position: relative;
+      }
+      @media (max-width: 800px) {
+        .slide {
+          width: 100%;
+        }
+      }
+      .slide img {
+        width: 100%;
+        display: block;
+      }
+      .slide .content {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        color: white;
+        background: rgba(0,0,0,0.5);
+        padding: 10px 20px;
+        border-radius: 5px;
+      }
+      /* 箭頭控制 */
+      .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.5);
+        border: none;
+        color: white;
+        font-size: 2em;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 10;
+      }
+      .arrow-left { left: 10px; }
+      .arrow-right { right: 10px; }
+    </style>
+  </head>
+  <body>
+    <div class="carousel">
+      <div class="carousel-track">
+        <!-- 第一個元素：複製的最後一張 -->
+        <div class="slide">
+          <img src="https://picsum.photos/seed/5/600/400" alt="廣告 5">
+          <div class="content">廣告 5</div>
+        </div>
+        <!-- 原始幻燈片順序 -->
+        <div class="slide">
+          <img src="https://picsum.photos/seed/1/600/400" alt="廣告 1">
+          <div class="content">廣告 1</div>
+        </div>
+        <div class="slide">
+          <img src="https://picsum.photos/seed/2/600/400" alt="廣告 2">
+          <div class="content">廣告 2</div>
+        </div>
+        <div class="slide">
+          <img src="https://picsum.photos/seed/3/600/400" alt="廣告 3">
+          <div class="content">廣告 3</div>
+        </div>
+        <div class="slide">
+          <img src="https://picsum.photos/seed/4/600/400" alt="廣告 4">
+          <div class="content">廣告 4</div>
+        </div>
+        <!-- 最後一個元素：複製的第一張 -->
+        <div class="slide">
+          <img src="https://picsum.photos/seed/1/600/400" alt="廣告 1">
+          <div class="content">廣告 1</div>
+        </div>
+      </div>
+      <!-- 左右箭頭 -->
+      <button class="arrow arrow-left">&#9664;</button>
+      <button class="arrow arrow-right">&#9654;</button>
+    </div>
+  
+    <script>
+      const carousel = document.querySelector('.carousel');
+      const track = document.querySelector('.carousel-track');
+      let containerWidth = carousel.offsetWidth;
+      let slideWidth = 600; // 桌面版預設幻燈片寬度
+      // 初始設定：第一個真實幻燈片在 index 1
+      let currentIndex = 1;
+      
+      // 更新輪播位置，根據容器寬度調整計算
+      function updateCarousel() {
+        containerWidth = carousel.offsetWidth;
+        let offset;
+        if (containerWidth < 800) {
+          // 手機版：幻燈片全寬
+          slideWidth = containerWidth;
+          // currentIndex 從 1 代表第一個真實幻燈片，因此 offset = (currentIndex - 1) * slideWidth
+          offset = (currentIndex - 1) * slideWidth;
+        } else {
+          // 桌面版：幻燈片固定 600px
+          slideWidth = 600;
+          // offset = currentIndex * 600 + 300 - (containerWidth / 2)
+          offset = currentIndex * slideWidth + slideWidth/2 - containerWidth/2;
+        }
+        track.style.transform = `translateX(-${offset}px)`;
+      }
+      updateCarousel();
+      
+      // 前進到下一張
+      function moveToNext() {
+        track.style.transition = "transform 0.5s ease";
+        currentIndex++;
+        updateCarousel();
+      }
+      
+      // 往回上一張
+      function moveToPrev() {
+        track.style.transition = "transform 0.5s ease";
+        currentIndex--;
+        updateCarousel();
+      }
+      
+      // 無縫循環處理：監聽 transitionend 事件
+      track.addEventListener('transitionend', () => {
+        const slides = document.querySelectorAll('.slide');
+        // 如果移動到複製的第一張（最後一張），則重置到第一個真實幻燈片
+        if (currentIndex === slides.length - 1) {
+          track.style.transition = "none";
+          currentIndex = 1;
+          updateCarousel();
+          void track.offsetWidth;
+          track.style.transition = "transform 0.5s ease";
+        }
+        // 如果移動到複製的最後一張（index = 0），則重置到最後一個真實幻燈片
+        else if (currentIndex === 0) {
+          track.style.transition = "none";
+          currentIndex = slides.length - 2;
+          updateCarousel();
+          void track.offsetWidth;
+          track.style.transition = "transform 0.5s ease";
+        }
+      });
+      
+      // 自動輪播，每 3 秒前進一次
+      let autoSlide = setInterval(moveToNext, 3000);
+      
+      // 箭頭點擊事件
+      const arrowLeft = document.querySelector('.arrow-left');
+      const arrowRight = document.querySelector('.arrow-right');
+      arrowLeft.addEventListener('click', () => {
+        clearInterval(autoSlide); // 手動操作時暫停自動輪播
+        moveToPrev();
+        autoSlide = setInterval(moveToNext, 3000);
+      });
+      arrowRight.addEventListener('click', () => {
+        clearInterval(autoSlide);
+        moveToNext();
+        autoSlide = setInterval(moveToNext, 3000);
+      });
+      
+      // 畫面尺寸變化時更新輪播位置
+      window.addEventListener('resize', updateCarousel);
+    </script>
+  </body>
+  </html>
+  

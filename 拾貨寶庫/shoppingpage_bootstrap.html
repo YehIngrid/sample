@@ -33,7 +33,7 @@
         <!--TODO 響應式選單-->
         <nav class="navbar navbar-expand-lg navbar-color bg-color header_new fixed-top">
             <div class="container-fluid">      
-                <a class="navbar-brand picture col-md-1" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
+                <a class="navbar-brand picture col-md-3" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
                     <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="80" height="50" viewBox="0 0 80 50" >
                         <!-- 定義藍色與綠色漸層 -->
                         <defs>
@@ -69,31 +69,66 @@
                 </a>
                 <form class="d-flex mx-auto col-md-4 col-ls-3">
                     <input style="margin-left: 8px;" class="form-control me-2" type="search" placeholder="搜尋商品..." aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-search"></i></button>
+                    <button style="color:rgb(36,182,133)" class="btn btn-outline-color" type="submit"><i class="searchpic fa-solid fa-search"></i></button>
                 </form>                
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto col-md-6">
                         <li class="nav-item"><a class="nav-link" href="home.html">首頁</a></li>
                         <li class="nav-item"><a class="nav-link" href="news.html">最新資訊</a></li>
-                        <li class="nav-item"><a class="nav-link" href="homepage.html">商品</a></li>
+                        <li class="nav-item"><a class="nav-link" href="homepage.html">商品分類</a></li>
                         <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
                         <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
                         <li class="nav-item"><a class="nav-link" href="communication.html">客服諮詢</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto col-md-2">
                         <li class="nav-item"><a class="nav-link" href="account.html">登入</a></li>
-                        <li class="nav-item"><a class="nav-link" href="shoppingcart.html">購物車</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">官方賴</a></li>
+                        <li class="nav-item"><a class="nav-link" href="shoppingcart.html"><i style="font-size: large;color:#004b97;" class="fa-solid fa-cart-shopping"></i></a></li>
+                    </ul>
+                    <ul class="line navbar-nav ms-auto col-md-1">
+                        <li class="nav-item"><a class="nav-link" href="https://page.line.me/889pygzb"><i class="fa-brands fa-line"></i></a></li>
                     </ul>
                 </div>
             </div>
         </nav>        
     </div>
-    <div class="content"></div>
+    <div class="content">
+        <div class="carousel">
+            <div class="carousel-track">
+              <!-- 第一個元素：複製的最後一張 -->
+              <div class="slide">
+                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 5">
+                <div class="content">廣告 5</div>
+              </div>
+              <!-- 原始幻燈片順序 -->
+              <div class="slide">
+                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 1">
+              </div>
+              <div class="slide">
+                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 2">
+              </div>
+              <div class="slide">
+                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 3">
+              </div>
+              <div class="slide">
+                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 4">
+              </div>
+              <!-- 最後一個元素：複製的第一張 -->
+              <div class="slide">
+                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 1">
+              </div>
+            </div>
+            <!-- 左右箭頭 -->
+            <button class="arrow arrow-left">&#9664;</button>
+            <button class="arrow arrow-right">&#9654;</button>
+          </div>
+    </div>
     <div class="footer"></div>
     <!-- script部分-->
     <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
     <script src="bootstrap_jQuery-demo/js/bootstrap.min.js"></script>
+    <script src="shoppingpage_bootstrap.js"></script>
 </body>
 </html>

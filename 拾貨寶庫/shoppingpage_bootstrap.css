@@ -1,8 +1,4 @@
 @font-face {
-    font-family: 'fangsong';
-    src: url(fonts/simfang.ttf);
-}
-@font-face {
     font-family:'TimeMachine';
     src: url(fonts/timemachine-wa.ttf);
 }
@@ -21,8 +17,6 @@ html {
 }
 .navbar{
     color: white !important;
-}
-.navbar{
     background-color: rgb(255, 255, 255); /* 半透明背景 */
     padding: 10px;
 }
@@ -30,3 +24,75 @@ nav{
     position: fixed;
     box-shadow: 0 0 1px rgba(0,0,0,0.1);
 }
+.btn-outline-color {
+    border: 1px solid rgb(36,182,133) !important;
+}
+.btn-outline-color:hover{
+    color: white !important;
+    background-color: rgb(36,182,133) !important;
+}
+.searchpic:hover {
+    color: white !important;
+}
+/* TODO line官方logo */
+.line {
+    display: flex;
+    justify-content: end;
+}
+.line i{
+    color: #86D97B;
+    font-size: 26px;
+}
+/* TODO advertisement */
+/* 輪播容器：桌面版寬 1200px；手機版 (max-width: 800px) 寬 100% */
+.carousel {
+    position: relative;
+    width: 1200px;
+    margin: 7% auto;
+    overflow: hidden;
+  }
+  @media (max-width: 800px) {
+    .carousel {
+      width: 100%;
+    }
+  }
+  /* 軌道與幻燈片 */
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+  /* 桌面版每個幻燈片固定 600px 寬；手機版則全寬 */
+  .slide {
+    width: 600px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  @media (max-width: 800px) {
+    .slide {
+      width: 100%;
+    }
+  }
+  .slide img {
+    width: 100%;
+    display: block;
+    border-radius:10px;
+    padding: 5px;
+  }
+  /* 箭頭控制 */
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    border: none;
+    color: white;
+    font-size: 2em;
+    padding: 9px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .arrow-left { left: 0px; }
+  .arrow-right { right: 0px; }
