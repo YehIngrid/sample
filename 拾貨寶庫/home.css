@@ -106,6 +106,8 @@ table {
     top: 35vh;
     text-align: center;
     line-height: 60px;
+    letter-spacing: 20px;
+    /* TODO 字距 */
 }
 .center p{
     color: rgb(255, 213, 0);
