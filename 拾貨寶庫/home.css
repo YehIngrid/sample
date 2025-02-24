@@ -106,7 +106,7 @@ table {
     top: 35vh;
     text-align: center;
     line-height: 60px;
-    letter-spacing: 20px;
+    letter-spacing: 10px;
     /* TODO 字距 */
 }
 .center p{
@@ -870,6 +870,6 @@ ul{
     transition: transform 0.5s ease-out, opacity 1.5s ease-out;
   }
   .scale-up.active {
-    transform: translateX(0%);
+    transform: translateX(-1%);
     opacity: 0;
   }
