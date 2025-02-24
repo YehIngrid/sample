@@ -10,6 +10,10 @@ function animateNumber(target, start, end, duration) {
         }
     });
 }
+const shoppage = document.getElementById('shopbtn');
+shoppage.addEventListener('click', function(){
+    window.location.href = 'https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/shoppingpage_bootstrap.html';
+})
 
 // 建立 Intersection Observer
 let observer = new IntersectionObserver((entries, observer) => {
