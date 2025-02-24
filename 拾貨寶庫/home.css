@@ -641,7 +641,7 @@ html, body {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 15px 20px 16px 60px;
+    padding: 15px 30px 15px 30px;
     border-radius: 50px;
     background: linear-gradient(to right, rgb(36,182,133) 50%,  #004b97 50%);
     background-size: 200% 100%;
@@ -651,18 +651,6 @@ html, body {
     cursor: pointer;
 }
 /* 按鈕內部的 SVG 箭頭 */
-.btnnn{
-    width: 55px;
-    height: 55px;
-    fill: none;
-    stroke: white;
-    stroke-width: 1;
-    position: absolute;
-    left: 0; /* 初始位置在左側 */
-    transition: transform 0.4s ease-in-out;
-    background: rgb(36, 182, 133);
-    border-radius: 50%;
-}
 
 /* 文字樣式 */
 button {
@@ -671,7 +659,7 @@ button {
     color: white;
     font-size: 16px;
     cursor: pointer;
-    gap: 10px;
+    /* gap: 10px; */
 }
 
 /* 滑鼠懸停時：按鈕變化 */

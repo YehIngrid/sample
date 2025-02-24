@@ -78,3 +78,11 @@ const carousel = document.querySelector('.carousel');
       
       // 畫面尺寸變化時更新輪播位置
       window.addEventListener('resize', updateCarousel);
+      
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          // 當頁籤變回可見時，強制更新狀態
+          updateCarousel();
+        }
+      });
+      

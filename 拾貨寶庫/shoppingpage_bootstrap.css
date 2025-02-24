@@ -21,7 +21,6 @@ html {
     padding: 10px;
 }
 nav{
-    position: fixed;
     box-shadow: 0 0 1px rgba(0,0,0,0.1);
 }
 .btn-outline-color {
@@ -48,7 +47,10 @@ nav{
 .carousel {
     position: relative;
     width: 1200px;
-    margin: 7% auto;
+    margin: 10% auto;
+    /* margin: 10% auto; */
+    margin-top: 2%;
+    margin-bottom: 1%;
     overflow: hidden;
   }
   @media (max-width: 800px) {
@@ -76,7 +78,9 @@ nav{
     width: 100%;
     display: block;
     border-radius:10px;
-    padding: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+
   }
   /* 箭頭控制 */
   .arrow {
@@ -96,3 +100,6 @@ nav{
   }
   .arrow-left { left: 0px; }
   .arrow-right { right: 0px; }
+.header {
+    display: block;
+}
