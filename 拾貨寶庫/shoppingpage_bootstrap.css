@@ -23,6 +23,9 @@ html {
 nav{
     box-shadow: 0 0 1px rgba(0,0,0,0.1);
 }
+.nav-link{
+    font-size: 12px !important;
+}
 .btn-outline-color {
     border: 1px solid rgb(36,182,133) !important;
 }
@@ -102,4 +105,51 @@ nav{
   .arrow-right { right: 0px; }
 .header {
     display: block;
+    background-color: rgba(255, 255, 255);
+}
+/* TODO 功能鈕：許願池等等 */
+ul{
+    padding-left: 0rem !important;
+}
+.seriesofbutton ul{
+    display: flex !important;
+    list-style: none;
+    justify-content: center;
+}
+.seriesofbutton li{
+    display: flex;
+    flex-direction: column !important;
+    font-size: 10px;
+    color:#004b97;
+    text-align: center;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+.seriesofbutton button{
+    border: 1px solid #004b9739 ;
+    border-radius: 15px;
+    width: 40px;
+    background-color: white;
+    font-size: 25px;
+    color:#004b97;
+} 
+/* 如果想要統一控制分類圖片的大小，可以額外設定一個 class */
+.category-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover; /* 視情況使用 contain / cover / fill */
+}
+.sortimg img{
+    width: 40px;
+    height: 40px;
+}
+.sort {
+    background-color: rgba(36,182,133,0.08);
+}
+h4{
+    padding: 4%;
+}
+.container{
+    background-color: #fff;
+    margin: 10% auto !important;
 }
