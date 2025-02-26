@@ -145,11 +145,12 @@ ul{
 }
 .sort {
     background-color: rgba(36,182,133,0.08);
+    padding: 20px !important;
+    padding-left: 40px;
 }
 h4{
-    padding: 4%;
 }
 .container{
     background-color: #fff;
-    margin: 10% auto !important;
+    
 }
