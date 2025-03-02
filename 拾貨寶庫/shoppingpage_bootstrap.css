@@ -135,20 +135,24 @@ ul{
 } 
 /* 如果想要統一控制分類圖片的大小，可以額外設定一個 class */
 .category-img {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     object-fit: cover; /* 視情況使用 contain / cover / fill */
 }
+.sortimg{
+    border-radius: 50px;
+    border: #004b97 solid 1px;
+    border-collapse: collapse !important;
+    align-items: end;
+    padding-top: 30px;
+}
 .sortimg img{
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: auto;
+    
 }
-.sort {
-    background-color: rgba(36,182,133,0.08);
-    padding: 20px !important;
-    padding-left: 40px;
-}
-h4{
+.what {
+    margin: 10px;
 }
 .container{
     background-color: #fff;
