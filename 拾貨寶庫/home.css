@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+    background-color: #fff;
 }
 ol, ul {
 	list-style: none;
@@ -99,19 +100,19 @@ table {
 .h1_school{
     color: #fff;
     z-index: 100;
-    font-weight: 400;
+    font-weight: 700;
     font-size: 7.5rem;
     position: relative;
     top: 35vh;
     text-align: center;
     line-height: 60px;
     letter-spacing: 10px;
+    font-family: 'TimeMachine';
     /* TODO 字距 */
 }
 .center p{
     color: rgb(255, 213, 0);
     font-weight: 400;
-    font-family: "TimeMachine";
     margin-bottom: 0 !important;
 }
 .center a{
@@ -200,7 +201,7 @@ table {
     font-size: smaller;
     color: #fff;
     width: 100%;
-    background: linear-gradient(to right, rgba(36,182,133), #004b97);
+    background-color:  #004b97;
 }
 .book img{
     margin-top: 5%;
@@ -441,11 +442,14 @@ html {
     background-color: rgb(255, 255, 255);
     color: #004b97;
     text-align: center;
+    margin-top: 10%;
+    margin-bottom: 10%;
 }
 .service h2{
     font-size: 30px;
     font-weight: 500;
-    padding-bottom: 5%;
+    padding-bottom: 7%;
+    
 }
 .service ul{
     display: flex;
@@ -458,7 +462,7 @@ html {
 .service p{
     font-size: 16px;
     padding-top: 1rem;
-    padding-bottom: 2rem;
+    padding-bottom: 3rem;
 }
 .content {
     /* opacity: 0; */
@@ -491,7 +495,7 @@ html {
     font-weight: normal;
     font-style: normal;
 }
-body {
+.what {
     overflow-x: hidden;
     margin: 0;
     letter-spacing: 0.5px;
@@ -500,7 +504,7 @@ body {
     min-height: 100%;
     margin: 0auto;
     width: 100%;
-    height: 100vh; /* 根据需要调整高度 */
+    height: 96vh; /* 根据需要调整高度 */
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent),
     url('https://github.com/YehIngrid/sample/blob/main/%E6%96%B0%E5%B0%81%E9%9D%A2%E7%85%A7%E7%89%87.png?raw=true');
     background-size: cover;
@@ -522,9 +526,6 @@ body {
     margin-left: 70%;
 }
 .scroll-down {
-    position: fixed;
-    top: 38%;
-    left: 50%;
     transform: translateX(-50%);
     text-align: center;
     cursor: pointer;
@@ -547,21 +548,9 @@ body {
         margin-left: 70%;
         width: 30%;
     }
-    .section-full-mobile {
-        min-height: 100vh;
-    }
-    .scroll-down {
-        position: fixed;
-        top: 43%;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        cursor: pointer;
-        color: #ffffff;
-    }
 }
 @media (min-width: 576px) {
-    .scroll-down {
+    /* .scroll-down {
         position: fixed;
         top: 59%;
         left: 50%;
@@ -569,12 +558,11 @@ body {
         text-align: center;
         cursor: pointer;
         color: #ffffff;
-    }
+    } */
 }
 /* 平板 (≥768px) */
 @media (min-width: 768px) {
     .bg-mobile {
-        background: url('https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/mobilephoto.png?raw=true') center/cover no-repeat !important;
         height: auto; /* 根據需求調整 */
     }
     .custom-text {
@@ -591,15 +579,6 @@ body {
         background-color: rgba(255, 255, 255, 0.288); /* 設定半透明黑色背景 */
         margin: 0%;
     }
-    .scroll-down {
-        position: fixed;
-        top: 58%;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        cursor: pointer;
-        color: #ffffff;
-    }
 }
 /* 桌面 (≥992px) */
 @media (min-width: 992px) {
@@ -614,24 +593,13 @@ body {
     .nav-item {
         background-color:transparent;
     }
-    .scroll-down {
-        position: fixed;
-        top: 48%;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        cursor: pointer;
-        color: #ffffff;
-    }
 }
 #circle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* *margin-top: 20%;
-    margin-right: 33%; */
-    height: 60vh;
-    margin-bottom: 12vh;
+    margin-top: 30vh;
+
 }
 .btn-container {
     position: relative;
@@ -673,7 +641,6 @@ button {
     position: relative;
     z-index: 1;
     min-width: 100px;
-    border: 2px solid #D24D57;
     border-radius: 0;
     color: #FFFFFF;
     font-size: 1rem;
@@ -730,8 +697,16 @@ ul{
 
 /* 箭頭樣式 */
 .scroll-down .arrow {
-    font-size: 2em;
-    animation: bounce 2s infinite;
+    font-size: 3em;
+    color: #004b97;
+    background-color: #fff;
+}
+.arrow {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 /* 彈跳動畫效果 */
 @keyframes bounce {
@@ -857,3 +832,6 @@ ul{
     transform: translateX(-1%);
     opacity: 0;
   }
+.partner{
+    height: 98vh;
+}
