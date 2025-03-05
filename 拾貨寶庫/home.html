@@ -20,7 +20,95 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   </head>
   <!--TODO body部分 -->
+  <style>
+    #loader {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      background-color: #004b97;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+    }
+    #whatcontent {
+      display: none; /* 初始隱藏內容 */
+    }
+    /* 載入畫面 */
+  .spinner {
+    width: 36.4px;
+    height: 36.4px;
+    animation: spinner-y0fdc1 2.4s infinite ease;
+    transform-style: preserve-3d;
+ }
+ 
+ .spinner > div {
+    background-color: #ffffffb7;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    border: 1.2px solid #24b685b7;
+ }
+ 
+ .spinner div:nth-of-type(1) {
+    transform: translateZ(-18.2px) rotateY(-360deg);
+ }
+ 
+ .spinner div:nth-of-type(2) {
+    transform: rotateY(-270deg) translateX(50%);
+    transform-origin: top right;
+ }
+ 
+ .spinner div:nth-of-type(3) {
+    transform: rotateY(270deg) translateX(-50%);
+    transform-origin: center left;
+ }
+ 
+ .spinner div:nth-of-type(4) {
+    transform: rotateX(90deg) translateY(-50%);
+    transform-origin: top center;
+ }
+ 
+ .spinner div:nth-of-type(5) {
+    transform: rotateX(-90deg) translateY(50%);
+    transform-origin: bottom center;
+ }
+ 
+ .spinner div:nth-of-type(6) {
+    transform: translateZ(18.2px);
+ }
+ 
+ @keyframes spinner-y0fdc1 {
+    0% {
+       transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
+    }
+ 
+    50% {
+       transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+    }
+ 
+    100% {
+       transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+    }
+ }
+ 
+</style>
+
   <body>
+    <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
+      <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div><p style="color: #fff; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;"><br><br>拾獲寶庫加載中... </p></div>
+    </div>
+  <div id="whatcontent" class="d-none">
+    <div class="what">
     <div class="content section-full-mobile">
       <!-- TODO header -->
     <div class="header">
@@ -74,8 +162,7 @@
           </div>
       </nav>        
   </div>
-      </section>
-    
+    </div>
       <div class="center d-flex flex-column align-items-center">
         <h1 class="h1_school col-md-10 col-11 custom-text dynamic-text">校園二手商店</h1>
         <p class="small-text typewriter">舊物翻新 環保先行</p>
@@ -85,22 +172,23 @@
           </div>
         </div>
       </div>
-      <div class="scroll-down" onclick="scrollToContent()">
-        <div class="arrow">↓</div>
+      <div class="scroll-down position-absolute bottom-0 start-50 translate-middle-x" onclick="scrollToContent()">
+        <div class="arrow bg-white rounded-circle">↓</div>
       </div>
-    </body>
+    </div>
+    
       <section class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center">
-        <div class="friend mx-auto col-md-5 ">
+        <div class="friend mx-auto col-md-5 d-flex flex-column justify-content-center">
           <h2 class="fs-2 text-xs-center p-5 p-md-2">你的校園二手交易好夥伴</h2>
           <p class="fs-5 fs-md-4 fs-lg-3 text-xs-center p-5 p-md-2">
             「拾貨寶庫」是專為學生設計的二手交易平台，讓你能輕鬆買賣教科書、生活用品等，享受高性價比的購物體驗！
           </p>
         </div>
-        <div class="book col-md-6 d-none d-md-block">
+        <div class="book col-md-5 d-none d-md-block">
           <img src="https://media-public.canva.com/MADGv9H6-3w/7/screen.jpg" alt=""/>
         </div>
       </section>
-    </div>
+    
     <hr class="separator">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <section class="d-flex section-full-mobile flex-column background-color: rgba(234, 234, 234);">
@@ -127,7 +215,6 @@
         </div>
       </div>
     </section>
-    </div>
     <section class="section_layout292 background-color-blue bg-mobile">
       <div class="padding-global">
           <div class="earth jitter-container">
@@ -193,6 +280,7 @@
     <div class="footer">
       <p>Copyright©2025拾貨寶庫｜All Rights Reserved</p>
     </div>
+  </div>
     <!-- script部分-->
     <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
     <script src="bootstrap_jQuery-demo/js/bootstrap.min.js"></script>
