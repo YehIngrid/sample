@@ -116,11 +116,11 @@
   </div>
   <div id="whatcontent" class="d-none">
     <!-- TODO header -->
-    <div class="header">
+    <div class="header ">
         <!--TODO 響應式選單-->
         <nav class="navbar navbar-expand-lg navbar-color bg-color header_new ">
             <div class="container-fluid">      
-                <a class="navbar-brand picture col-md-2" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
+                <a class="navbar-brand picture " href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
                     <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50" >
                         <!-- 定義藍色與綠色漸層 -->
                         <defs>
@@ -139,7 +139,7 @@
                       
                         <!-- 中文文字：置中，上方 -->
                         <text x="50" y="20" text-anchor="middle" dominant-baseline="middle"
-                              font-family="TimeMachine" font-size="24"
+                              font-family="TimeMachine" font-size="25"
                               fill="url(#chineseGradient)" font-weight="bold"
                               >
                           拾貨寶庫
@@ -154,61 +154,93 @@
                         </text>
                       </svg>
                 </a>
-                <form class="d-flex mx-auto col-md-4 col-ls-3">
-                    <input style="margin-left: 8px;" class="form-control me-2" type="search" placeholder="搜尋商品..." aria-label="Search">
-                    <button style="color:rgb(36,182,133)" class="btn btn-outline-color" type="submit"><i class="searchpic fa-solid fa-search"></i></button>
-                </form>                
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto col-md-6">
-                        <li class="nav-item"><a class="nav-link" href="home.html">首頁</a></li>
-                        <li class="nav-item"><a class="nav-link" href="news.html">最新資訊</a></li>
-                        <li class="nav-item"><a class="nav-link" href="homepage.html">商品分類</a></li>
-                        <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
-                        <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
-                        <li class="nav-item"><a class="nav-link" href="communication.html">客服諮詢</a></li>
-                    </ul>
-                    <ul class="navbar-nav ms-auto col-md-2">
-                        <li class="nav-item"><a class="nav-link" href="account.html">登入</a></li>
-                        <li class="nav-item"><a class="nav-link" href="shoppingcart.html"><i style="font-size: large;color:#004b97;" class="fa-solid fa-cart-shopping"></i></a></li>
-                    </ul>
-                    <ul class="line navbar-nav ms-auto col-md-1">
-                        <li class="nav-item"><a class="nav-link" href="https://page.line.me/889pygzb"><i class="fa-brands fa-line"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav> 
-        <div class="carousel">
-            <div class="carousel-track">
-              <!-- 第一個元素：複製的最後一張 -->
-              <div class="slide">
-                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 5">
-              </div>
-              <!-- 原始幻燈片順序 -->
-              <div class="slide">
-                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 1">
-              </div>
-              <div class="slide">
-                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 2">
-              </div>
-              <div class="slide">
-                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 3">
-              </div>
-              <div class="slide">
-                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 4">
-              </div>
-              <!-- 最後一個元素：複製的第一張 -->
-              <div class="slide">
-                <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 1">
-              </div>
-            </div>
-            <!-- 左右箭頭 -->
-            <button class="arrow arrow-left">&#9664;</button>
-            <button class="arrow arrow-right">&#9654;</button>
-          </div>       
+                <!-- (B) 右側 (手機版): 搜尋圖示在左、漢堡選單在右 -->
+    <div class="d-flex align-items-center ms-auto d-lg-none" style="order:1;">
+      <!-- 手機版搜尋圖示 -->
+      <button id="mobileSearchIcon" class="btn me-2">
+        <i class="fa-solid fa-search" style="color: black;"></i>
+      </button>
+      <!-- 漢堡選單按鈕 -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarNav" aria-controls="navbarNav"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
     </div>
+
+    <!-- (C) 單一搜尋表單：桌面版預設顯示，小螢幕隱藏，點擊圖示後顯示於第二行 -->
+    <form id="searchForm" class="form-search" style="width: 42%;">
+      <input style="margin-left: 8px;" class="form-control me-1 flex-grow-1" type="search"
+             placeholder="搜尋商品..." aria-label="Search">
+      <button style="color: rgb(36,182,133)" class="btn btn-outline-color" type="submit">
+        <i class="searchpic fa-solid fa-search"></i>
+      </button>
+    </form>
+
+    <!-- (D) 導覽選單 (Collapse) -->
+    <div class="collapse navbar-collapse" id="navbarNav" style="order:2;">
+      <ul class="navbar-nav ms-auto align-items-start align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="home.html">首頁</a></li>
+        <li class="nav-item"><a class="nav-link" href="news.html">最新資訊</a></li>
+        <li class="nav-item"><a class="nav-link" href="homepage.html">商品分類</a></li>
+        <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
+        <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
+        <li class="nav-item specialpadding"><a class="nav-link" href="communication.html">客服諮詢</a></li>
+        <li class="nav-item"><a class="nav-link" href="account.html">登入</a></li>
+        <li class="nav-item">
+          <a class="nav-link specialpadding" href="shoppingcart.html">
+            <i style="padding-top: 2px; font-size: 22px; color:#004b97;"
+               class="fa-solid fa-cart-shopping"></i>
+          </a>
+        </li>
+        <li class="nav-item line">
+          <a class="nav-link" href="https://page.line.me/889pygzb">
+            <i class="fa-brands fa-line"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+            </nav>     
+          </div>
+          
+  <div class="my-section">         
+    <div class="carousel">
+      <div class="carousel-track">
+        <!-- 第一個元素：複製的最後一張 -->
+        <div class="slide">
+          <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 5">
+        </div>
+        <!-- 原始幻燈片順序 -->
+        <div class="slide">
+          <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 1">
+        </div>
+        <div class="slide">
+          <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 2">
+        </div>
+        <div class="slide">
+          <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 3">
+        </div>
+        <div class="slide">
+          <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 4">
+        </div>
+        <!-- 最後一個元素：複製的第一張 -->
+        <div class="slide">
+          <img src="https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true" alt="廣告 1">
+        </div>
+      </div>
+      <!-- 左右箭頭 -->
+      <!-- HTML -->
+        <button class="arrow arrow-left">
+          <svg width="24" height="24" viewBox="0 0 24 24">
+            <path d="M15 18l-6-6 6-6" fill="none" stroke="#333" stroke-width="2"/>
+          </svg>
+        </button>
+        <button class="arrow arrow-right">
+          <svg width="24" height="24" viewBox="0 0 24 24">
+            <path d="M9 18l6-6-6-6" fill="none" stroke="#333" stroke-width="2"/>
+          </svg>
+        </button>
+    </div>   
     <div class="seriesofbutton">
         <ul>
             <li><button><i class="ti ti-building-store"></i></button>賣家專區</li>
@@ -219,88 +251,189 @@
             <li><button><i class="ti ti-brand-cashapp"></i></button>我要捐款</li>
         </ul>
     </div>
-    <div class="sort mx-auto" style="max-width:1200px;">
-    <div class="container my-2">
-        <!-- 這裡可以放一個標題或其他說明文字 -->
-        <div class="row">
-          <div class="col-12">
-            <h4>分類</h4>
-          </div>
-        </div>
+  </div>
+   
       
-        <!-- 分類項目區塊 -->
-        <!-- row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 能根據螢幕尺寸自動切換一列要放幾個分類卡片 -->
-        <div class="d-flex what">
-          <!-- 每個分類項目 -->
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" class="img-fluid mb-2" alt="女裝衣著">
-              <p class="mb-0">腳踏車</p>
-            </a>
-          </div>
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" class="img-fluid mb-2" alt="女裝衣著">
-              <p class="mb-0">腳踏車</p>
-            </a>
-          </div>
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" class="img-fluid mb-2" alt="女裝衣著">
-              <p class="mb-0">腳踏車</p>
-            </a>
-          </div>
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/bike.png?raw=true" class="img-fluid mb-2" alt="女裝衣著">
-              <p class="mb-0">腳踏車</p>
-            </a>
-          </div>
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" class="img-fluid mb-2" alt="女裝衣著">
-              <p class="mb-0">腳踏車</p>
-            </a>
-          </div>
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" class="img-fluid mb-2" alt="女裝衣著">
-              <p class="mb-0">腳踏車</p>
-            </a>
-          </div>
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" class="img-fluid mb-2" alt="女裝衣著">
-              <p class="mb-0">腳踏車</p>
-            </a>
-          </div>
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" class="img-fluid mb-2" alt="女裝衣著">
-              <p class="mb-0">腳踏車</p>
-            </a>
-          </div>
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/book.png?raw=true" class="img-fluid mb-2" alt="男裝衣著">
-              <p class="mb-0">原文書</p>
-            </a>
-          </div>
-          <div class="col text-center sortimg">
-            <a href="#" class="text-decoration-none">
-              <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" class="img-fluid mb-2" alt="運動、休閒">
-              <p class="mb-0">宿舍用品</p>
-            </a>
-          </div>
-          <!-- 依照需求繼續增加 ... -->
+        <div class="roofs">
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+          <div class="roof"></div>
+
+
+        </div>
+        
+        
+        
+        <!--TODO 分類項目區塊 -->
+<div class="sort mx-auto" style="max-width:1200px;">
+  <div class="container my-2">
+    <!-- 這裡可以放一個標題或其他說明文字 -->
+    <div class="row">
+      <div class="col-12">
+        <h4>分類</h4>
+      </div>
+    </div>
+    
+    <!-- 單列水平捲動區 -->
+    <div class="d-flex align-items-center justify-content-center my-4">
+      <!-- 左箭頭按鈕 -->
+      <button class="btn btn-primary me-2" id="prevBtn">←</button>
+      
+      <!-- 可水平捲動的容器 -->
+      <div class="scroll-container flex-nowrap" id="scrollContainer">
+        <!-- 以下是每個分類項目（可複製重複） -->
+        <div class="sort-item text-center">
+          <a href="#" class="d-block text-decoration-none">
+            <div class="card border-0">
+              <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true"
+                   class="card-img-top"
+                   alt="腳踏車">
+              <div class="card-body p-2">
+                <p class="card-text mb-0">腳踏車</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        
+        <div class="sort-item text-center">
+          <a href="#" class="d-block text-decoration-none">
+            <div class="card border-0">
+              <img src="https://github.com/YehIngrid/sample/blob/main/bike.png?raw=true"
+                   class="card-img-top"
+                   alt="腳踏車">
+              <div class="card-body p-2">
+                <p class="card-text mb-0">腳踏車</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        
+        <div class="sort-item text-center">
+          <a href="#" class="d-block text-decoration-none">
+            <div class="card border-0">
+              <img src="https://github.com/YehIngrid/sample/blob/main/book.png?raw=true"
+                   class="card-img-top"
+                   alt="原文書">
+              <div class="card-body p-2">
+                <p class="card-text mb-0">原文書</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="sort-item text-center">
+          <a href="#" class="d-block text-decoration-none">
+            <div class="card border-0">
+              <img src="https://github.com/YehIngrid/sample/blob/main/book.png?raw=true"
+                   class="card-img-top"
+                   alt="原文書">
+              <div class="card-body p-2">
+                <p class="card-text mb-0">原文書</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="sort-item text-center">
+          <a href="#" class="d-block text-decoration-none">
+            <div class="card border-0">
+              <img src="https://github.com/YehIngrid/sample/blob/main/book.png?raw=true"
+                   class="card-img-top"
+                   alt="原文書">
+              <div class="card-body p-2">
+                <p class="card-text mb-0">原文書</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="sort-item text-center">
+          <a href="#" class="d-block text-decoration-none">
+            <div class="card border-0">
+              <img src="https://github.com/YehIngrid/sample/blob/main/book.png?raw=true"
+                   class="card-img-top"
+                   alt="原文書">
+              <div class="card-body p-2">
+                <p class="card-text mb-0">原文書</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="sort-item text-center">
+          <a href="#" class="d-block text-decoration-none">
+            <div class="card border-0">
+              <img src="https://github.com/YehIngrid/sample/blob/main/book.png?raw=true"
+                   class="card-img-top"
+                   alt="原文書">
+              <div class="card-body p-2">
+                <p class="card-text mb-0">原文書</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="sort-item text-center">
+          <a href="#" class="d-block text-decoration-none">
+            <div class="card border-0">
+              <img src="https://github.com/YehIngrid/sample/blob/main/book.png?raw=true"
+                   class="card-img-top"
+                   alt="原文書">
+              <div class="card-body p-2">
+                <p class="card-text mb-0">原文書</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="sort-item text-center">
+          <a href="#" class="d-block text-decoration-none">
+            <div class="card border-0">
+              <img src="https://github.com/YehIngrid/sample/blob/main/book.png?raw=true"
+                   class="card-img-top"
+                   alt="原文書">
+              <div class="card-body p-2">
+                <p class="card-text mb-0">原文書</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        
+        <!-- 依需求繼續複製更多分類項目 ... -->
+        
+      </div>
+      
+      <!-- 右箭頭按鈕 -->
+      <button class="btn btn-primary ms-2" id="nextBtn">→</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+  </div>
+</div>
+
         </div>
       </div>
     </div>
-    <div class="footer"><p>Copyright©2025拾貨寶庫｜All Rights Reserved</p></div>
+    <div class="footer">Copyright©2025拾貨寶庫｜All Rights Reserved</div>
   </div>
     <!-- script部分-->
     <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
     <script src="bootstrap_jQuery-demo/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="shoppingpage_bootstrap.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

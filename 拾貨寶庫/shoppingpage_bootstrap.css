@@ -18,13 +18,21 @@ html {
 .navbar{
     color: white !important;
     background-color: rgb(255, 255, 255); /* 半透明背景 */
-    padding: 10px;
+    padding: 8px !important;
 }
 nav{
-    box-shadow: 0 0 1px rgba(0,0,0,0.1);
+    box-shadow: 0 0 2px rgba(0,0,0,0.2);
 }
 .nav-link{
-    font-size: 12px !important;
+    font-size: 14px !important;
+}
+@media (max-width: 1200px) {
+    .nav-link{
+        font-size: 12px !important;
+    }
+    .form-search{
+        width: 25% !important;
+    }
 }
 .btn-outline-color {
     border: 1px solid rgb(36,182,133) !important;
@@ -40,20 +48,22 @@ nav{
 .line {
     display: flex;
     justify-content: end;
+    align-items: center;
+    padding-top: 2px;
 }
 .line i{
     color: #86D97B;
-    font-size: 26px;
+    font-size: 28px;
 }
 /* TODO advertisement */
 /* 輪播容器：桌面版寬 1200px；手機版 (max-width: 800px) 寬 100% */
 .carousel {
     position: relative;
-    width: 1200px;
-    margin: 10% auto;
+    width: 85vw;
+    margin: 10% auto ;
     /* margin: 10% auto; */
-    margin-top: 2%;
-    margin-bottom: 1%;
+    margin-top: 2% ;
+    margin-bottom: 1% ;
     overflow: hidden;
   }
   @media (max-width: 800px) {
@@ -64,6 +74,7 @@ nav{
   /* 軌道與幻燈片 */
   .carousel-track {
     display: flex;
+
     transition: transform 0.5s ease;
   }
   /* 桌面版每個幻燈片固定 600px 寬；手機版則全寬 */
@@ -86,23 +97,45 @@ nav{
 
   }
   /* 箭頭控制 */
-  .arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.5);
-    border: none;
-    color: white;
-    font-size: 2em;
-    padding: 9px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
+/* 假設你的輪播外層容器為 .carousel */
+.carousel {
+    position: relative; /* 讓 .carousel 作為定位參考容器 */
+    overflow: hidden;   /* 可視需求，通常輪播會隱藏超出範圍的內容 */
   }
-  .arrow-left { left: 0px; }
-  .arrow-right { right: 0px; }
+  
+  /* 基本按鈕樣式（可依需求自行調整） */
+  .arrow {
+    position: absolute;        /* 絕對定位 */
+    top: 50%;                  /* 垂直置中 */
+    transform: translateY(-50%); /* 往上移動自身高度的一半，達到置中 */
+    background: rgba(255,255,255,0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 10;               /* 確保按鈕在最前方，可依需求調整 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  
+  /* 左邊箭頭 */
+  .arrow-left {
+    left: 10px; /* 靠左 10px，可依需求調整 */
+  }
+  
+  /* 右邊箭頭 */
+  .arrow-right {
+    right: 10px; /* 靠右 10px，可依需求調整 */
+  }
+  
+  /* 滑鼠懸停時可以做些效果 */
+  .arrow:hover {
+    background: rgba(255,255,255,1);
+  }
+  
 .header {
     display: block;
     background-color: rgba(255, 255, 255);
@@ -119,8 +152,10 @@ ul{
 .seriesofbutton li{
     display: flex;
     flex-direction: column !important;
-    font-size: 10px;
+    font-size: 12px;
     color:#004b97;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     margin-left: 3%;
     margin-right: 3%;
@@ -130,31 +165,164 @@ ul{
     border-radius: 15px;
     width: 40px;
     background-color: white;
-    font-size: 25px;
+    font-size: 26px;
     color:#004b97;
 } 
 /* 如果想要統一控制分類圖片的大小，可以額外設定一個 class */
-.category-img {
+/* .category-img {
     width: 30px;
     height: 30px;
-    object-fit: cover; /* 視情況使用 contain / cover / fill */
-}
-.sortimg{
-    border-radius: 50px;
-    border: #004b97 solid 1px;
-    border-collapse: collapse !important;
-    align-items: end;
-    padding-top: 30px;
-}
-.sortimg img{
-    width: 30px;
-    height: auto;
-    
-}
+    object-fit: cover; /* 視情況使用 contain / cover / fill 
+} */
+
 .what {
-    margin: 10px;
+    margin: 13px;
+    
 }
 .container{
-    background-color: #fff;
+    /* background-color: rgba(36,182,133,0.2); */
     
 }
+.container h4{
+    margin-top: 15px !important;
+}
+.container-fluid{
+    width: 86vw !important;
+}
+.specialpadding{
+    padding-right: 30px;
+}
+@media (max-width:1200px) {
+    .specialpadding{
+        padding-right: 0px !important;
+    }
+}
+.footer{
+    background-color: #004b97;
+    color: #ffffff;
+    text-align: center;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;  
+    font-size: 12px;
+}
+/* 自訂樣式 */
+
+/* 使用 flex-wrap 讓 navbar 內容可換行 */
+.container-fluid.flex-wrap {
+    flex-wrap: wrap;
+  }
+  
+  /* 手機版 (max-width: 991px)：
+     - 搜尋表單預設隱藏，且在換行後佔滿整行 */
+  @media (max-width: 991px) {
+    #searchForm {
+      display: none;
+      order: 2;         /* 放在第二排 */
+      width: 100% !important;
+      margin-top: 10px;
+    }
+    /* 品牌與搜尋圖示維持原有順序 */
+    .navbar-brand {
+      order: 0;
+    }
+    #mobileSearchIcon {
+      order: 1;
+    }
+  }
+  
+  /* 桌面版 (min-width: 992px)：
+     - 搜尋表單直接顯示，並維持原寬度；手機版搜尋圖示隱藏 */
+  @media (min-width: 992px) {
+    #searchForm {
+      display: flex !important;
+      order: 0;
+      width: 42%;
+    }
+    #mobileSearchIcon {
+      display: none !important;
+    }
+  }
+  
+  /* 自訂按鈕邊框色 */
+  .btn-outline-color {
+    border-color: rgb(36,182,133);
+  }
+  .my-section {
+    margin-top: 3px;
+    background-size: cover;      /* 調整背景圖片尺寸 */
+    background-repeat: no-repeat; /* 防止重複 */
+    background-position: center;  /* 置中 */
+    /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' viewBox='0 0 2400 800' opacity='0.75'%3E%3Cdefs%3E%3ClinearGradient x1='50%25' y1='0%25' x2='50%25' y2='100%25' id='sssurf-grad'%3E%3Cstop stop-color='hsla(205, 69%25, 60%25, 0.19)' stop-opacity='1' offset='0%25'%3E%3C/stop%3E%3Cstop stop-color='hsla(0, 0%25, 100%25, 1.00)' stop-opacity='1' offset='100%25'%3E%3C/stop%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23sssurf-grad)' transform='matrix(1,0,0,1,0,-95.37808227539062)'%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,46)' opacity='0.05'%3E%3C/path%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,92)' opacity='0.29'%3E%3C/path%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,138)' opacity='0.53'%3E%3C/path%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,184)' opacity='0.76'%3E%3C/path%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,230)' opacity='1.00'%3E%3C/path%3E%3C/g%3E%3C/svg%3E"); */
+  }
+
+/* 父容器：讓「屋頂」們並排排列 */
+.roofs {
+    display: flex;
+    gap: 5px;             /* 彼此之間的間距 */
+    justify-content: center;
+    align-items: flex-end; /* 讓底部對齊，看起來更像一排小屋頂 */
+    margin-top: 20px;      /* 可依需求調整間距 */
+  }
+  
+  /* 單個「屋頂」的外觀 */
+  .roof {
+    width: 60px;           /* 屋頂的寬度 */
+    height: 40px;          /* 屋頂的高度 */
+    background: #FF6F61;   /* 預設顏色(可自訂) */
+    border: 3px solid #FF6F61;  /* 外框同色，或可換其他顏色 */
+    box-sizing: border-box;
+    border-radius:  0 0 80px 80px; /* 讓上方呈現圓弧，底部是直線 */
+  }
+  
+  /* 偶數項目顏色交錯 */
+  .roof:nth-child(even) {
+    background: #FFD369;
+    border-color: #FFD369;
+  }
+/* 可水平捲動的容器設定 */
+.scroll-container {
+    display: flex;            /* 子項目橫向並排 */
+    flex-wrap: nowrap;        /* 禁止自動換行 */
+    overflow-x: auto;         /* 開啟水平捲動 */
+    scroll-behavior: smooth;  /* 捲動平滑 */
+    max-width: 80vw;          /* 容器寬度，可改成固定 px，例如 1000px */
+    border: 1px solid #ccc;   /* 選擇性：讓容器有邊框 */
+    padding: 10px;
+    margin: 0 auto;           /* 水平置中 */
+  }
+  
+  /* 單一分類項目寬度與外觀 */
+  .sort-item {
+    min-width: 120px;         /* 每個項目最小寬度，視需要調整 */
+    margin-right: 1%;       /* 與下一個項目的間距 */
+  }
+  @media (max-width:700px) {
+    .sort-item{
+        min-width: 24%;
+    }
+  }
+  
+  /* 卡片圖片：若要圓形、固定大小，可以這樣設定 */
+  .card-img-top {
+    width: 20%;              
+    height: auto;             
+    object-fit: cover;        
+    /* border-radius: 50%;        */
+    /* border: 2px solid #ff6f61;  */
+    margin: 0 auto;           /* 讓圖片在 card 內水平置中 */
+  }
+  
+  /* 你也可以針對按鈕做額外的美化 */
+  #prevBtn, #nextBtn {
+    background-color: #004b97;
+    min-width: 40px;          /* 按鈕寬度 */
+    height: 40px;             /* 按鈕高度 */
+    border-radius: 50%;       /* 若想要圓形按鈕 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
