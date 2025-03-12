@@ -65,86 +65,125 @@
 //     })
 //     .catch(error => console.error("錯誤:", error));
 // });
-// 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
+// 當頁面載入完畢後隱藏 loader，顯示內容
 window.onload = function() {
-// 當頁面載入完畢後隱藏載入動畫，顯示內容
-var loader = document.getElementById('loader');
-var content = document.getElementById('whatcontent');
-if (loader && content) {
-  loader.style.setProperty('display', 'none', 'important');
-  content.style.setProperty('display', 'block', 'important');
-}
+  var loader = document.getElementById('loader');
+  var content = document.getElementById('whatcontent');
+  if (loader && content) {
+    loader.style.setProperty('display', 'none', 'important');
+    content.style.setProperty('display', 'block', 'important');
+  }
 };
+
+// DOMContentLoaded 事件：設定手機版搜尋功能
 document.addEventListener('DOMContentLoaded', function() {
   const mobileSearchIcon = document.getElementById('mobileSearchIcon');
   const searchForm = document.getElementById('searchForm');
   
-  // 手機版：點擊黑色搜尋圖示時，隱藏該圖示並顯示搜尋表單（新行出現）
-  mobileSearchIcon.addEventListener('click', function() {
-    mobileSearchIcon.style.display = 'none';
-    searchForm.style.display = 'flex';
-    
-    // 自動將游標焦點移至搜尋輸入框
-    const input = searchForm.querySelector('input');
-    if (input) {
-      input.focus();
-    }
+  if (mobileSearchIcon && searchForm) {
+    mobileSearchIcon.addEventListener('click', function() {
+      mobileSearchIcon.style.display = 'none';
+      searchForm.style.display = 'flex';
+      
+      // 將游標自動移至搜尋輸入框
+      const input = searchForm.querySelector('input');
+      if (input) {
+        input.focus();
+      }
+    });
+  }
+});
+const firebaseConfig = {
+  apiKey: "AIzaSyCtC488RFTmMSoe7lPj6c-rOVVuKOseTAk",
+  authDomain: "store-backend-75fea.firebaseapp.com",
+  projectId: "store-backend-75fea",
+  storageBucket: "store-backend-75fea.firebasestorage.app",
+  messagingSenderId: "585571611965",
+  appId: "1:585571611965:web:65b013617b7877e2904154"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// 使用 jQuery 進行文件就緒處理與事件綁定
+$(document).ready(function(){
+  console.log("文件已加載完成！");
+  
+  // 綁定註冊表單提交事件
+  $('#send').on('click', function(e){
+    e.preventDefault(); // 攔截表單預設提交
+    console.log("表單已提交！");
+    callLogIn();
   });
 });
-const accountimg = document.getElementById('accountimg');
-const signup = document.querySelector('#signup');
-const content = document.querySelector(".content");
-const sighuppage = document.querySelector("#signuppage");
-const test = document.querySelector('#test');
-const sign = document.querySelector('#sign');
-accountimg.addEventListener('click', function(e){
-    content.style.display = "block";
-    sighuppage.style.display = "none";
-})
-signup.addEventListener('click', function(e){
-    content.style.display = "none";
-    sighuppage.style.display = "block";
-})
-test.addEventListener('click', function(e){
-    alert('我們將發送驗證碼至您的學校信箱，請確認學校信箱是否有驗證碼信件');
-})
-sign.addEventListener('click', function(e){
-    alert('註冊成功!請登入重新登入網頁');
-}) 
-axios.get('http://localhost:3000')
-  .then(function (response) {
-    let ary = response.data;
-    const title = document.querySelector(".title");
-    title.textContent = ary[0].name;
-  });
+// const emailInput = document.getElementById('floatingInput');
+// const passwordInput = document.getElementById('floatingPassword');
+// const send = document.getElementById('send');
+
+// send.addEventListener('click', function(e){ 
+//    e.preventDefault();
+//    callLogIn();
+//   })
 
 
-const account = document.querySelector('#account');
-const password = document.querySelector('#password');
-const send = document.querySelector("#send");
-
-send.addEventListener("click", function(e){
-    callSignUp();
-})
-
-
+function callLogIn(){
+  // 取得登入表單欄位
+  
+  // 基本驗證：檢查必填欄位
+  if (!floatingInput.value || !floatingPassword.value) {
+      alert("請填寫所有必填資訊");
+      return;
+  }
+  
+  let obj = {
+      email: floatingInput.value,
+      password: floatingPassword.value
+  };
+  console.log(obj);
+  
+  // 發送 POST 請求（請確認 axios 庫是否有正確引入）
+  firebase.auth().signInWithEmailAndPassword(obj.email, obj.password)
+    .then((userCredential) => {
+      // Signed in
+      var user = userCredential.user;
+      alert('Login successful');
+      console.log(user.getIdToken());
+  })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+// 修改後的註冊函式，使用正確的欄位 id 與基本驗證
 function callSignUp(){
-    // email: 'ingrid171171@gmail.com',
-    // password: '12345678'
-    if (account.value == ""||password.value == ""){
-        alert("請填寫正確資訊");
+    // 取得註冊表單欄位（依照你的 HTML，這裡使用 email、password1、password2 與 name）
+    const emailInput = document.getElementById('email');
+    const passwordInput1 = document.getElementById('password1');
+    const passwordInput2 = document.getElementById('password2');
+    const nameInput = document.getElementById('name');
+    
+    // 基本驗證：檢查必填欄位
+    if (!emailInput.value || !passwordInput1.value || !passwordInput2.value || !nameInput.value) {
+        alert("請填寫所有必填資訊");
         return;
     }
-    let obj = {};
-    obj.email = account.value;
-    obj.password = password.value;
+    // 驗證密碼是否一致
+    if (passwordInput1.value !== passwordInput2.value) {
+        alert("密碼輸入不一致");
+        return;
+    }
+    
+    let obj = {
+        email: emailInput.value,
+        password: passwordInput1.value,
+        name: nameInput.value
+    };
     console.log(obj);
     
-    // axios post 範例
-    
+    // 發送 POST 請求（請確認 axios 庫是否有正確引入）
     axios.post('http://localhost:3000', obj)
       .then(function (response) {
-        if(response.data.message =="帳號註冊成功"){
+        if(response.data.message === "帳號註冊成功"){
             alert("恭喜帳號註冊成功");
         } else {
             alert("此帳號已被註冊");
@@ -154,3 +193,11 @@ function callSignUp(){
         console.log(error);
       });
 }
+$("#checkEye").click(function () {
+  if($(this).hasClass('fa-eye')){
+     $("#floatingPassword").attr('type', 'text');
+  }else{
+     $("#floatingPassword").attr('type', 'password');
+  }
+  $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+}); 

@@ -114,79 +114,75 @@ nav{
     display: none !important;
   }
 }
-/* 隱藏 Modal 預設
-.modal {
-  display: none; 預設隱藏 
-  position: absolute;
-  left: 60%;
-  top: 10%;
+.content{
+  background: linear-gradient(to right bottom, #004b97b7 , #24b685b7);
+  height: 86vh;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-Modal 內部內容 
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow:0px 0px 2px #21302C ;
-  text-align: start;
-  position: relative;
+.modalwhat{
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  min-width: 360px;
 }
-
-關閉按鈕 
-.close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
-}
-
- 表單樣式
-input {
-  width: 60%;
-  padding: 8px;
-  margin: 5px 0;
+.modalwhat button{
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-}
-r: #21302C;
-}
-.modal-content p{
-  font-size: 12px;
-}
-.signup{
-  font-size: 14px;
-  color: blueviolet;
-}*/
-::placeholder {
-  font-size: 10px;
-} 
-.p{
-  font-size:12px ;
-}
-button {
-  background-color: #577379;
-  color: white;
-  padding: 5px;
-  border: none;
+  background-color: #004b97;
+  color: #fff;
+  font-size: 1.5rem;
   cursor: pointer;
-  width: 20%;
-  margin-top: 10px;
-  margin-left: 80%;
-  margin-bottom: 10px;
-  font-size: 13px;
-  border-radius: 2px;
+  margin-top: 40px;
+}
+.modalwhat button:hover{
+  background-color: rgb(36,182,133);
+}
+input::placeholder {
+  opacity: 0.5;
+  font-size: 1.3rem;
+}
+.form-floating input[type="text"]
+{
+    font-size:1.5rem;
+}
+.form-floating input[type="password"]
+{
+    font-size:1.5rem;
+}
+/*眼睛*/
+#checkEye {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
 }
 
-button:hover {
-  background-color: #21302C;
+
+.form-signin .checkbox {
+  font-weight: 400;
 }
-.signuppage{
-  display: none;
-  margin: 200px auto;
-  background-color: #f0e9de;
-  padding: 50px;
-  height: 320px;
-  width: 600px;
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -16px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.p{
+  font-size: 1.5rem;
 }
