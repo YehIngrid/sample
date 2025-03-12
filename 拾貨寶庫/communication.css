@@ -55,6 +55,65 @@ nav{
   color: #86D97B;
   font-size: 28px;
 }
+.container-fluid{
+  width: 86vw !important;
+}
+.specialpadding{
+  padding-right: 30px;
+}
+@media (max-width:1200px) {
+  .specialpadding{
+      padding-right: 0px !important;
+  }
+}
+.footer{
+  background-color: #004b97;
+  color: #ffffff;
+  text-align: center;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;  
+  font-size: 12px;
+}
+/* 自訂樣式 */
+
+/* 使用 flex-wrap 讓 navbar 內容可換行 */
+.container-fluid.flex-wrap {
+  flex-wrap: wrap;
+}
+
+/* 手機版 (max-width: 991px)：
+   - 搜尋表單預設隱藏，且在換行後佔滿整行 */
+@media (max-width: 991px) {
+  #searchForm {
+    display: none;
+    order: 2;         /* 放在第二排 */
+    width: 100% !important;
+    margin-top: 10px;
+  }
+  /* 品牌與搜尋圖示維持原有順序 */
+  .navbar-brand {
+    order: 0;
+  }
+  #mobileSearchIcon {
+    order: 1;
+  }
+}
+
+/* 桌面版 (min-width: 992px)：
+   - 搜尋表單直接顯示，並維持原寬度；手機版搜尋圖示隱藏 */
+@media (min-width: 992px) {
+  #searchForm {
+    display: flex !important;
+    order: 0;
+    width: 42%;
+  }
+  #mobileSearchIcon {
+    display: none !important;
+  }
+}
 
   /* 表單外框 */
   .form-container {
