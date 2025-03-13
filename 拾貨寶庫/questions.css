@@ -114,23 +114,88 @@ nav{
     display: none !important;
   }
 }
-.content{
-    background-color: rgba(100, 100, 25, 0.1);
-    margin: 100px;
-    padding: 40px;
+/* 基本重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.content h2{
-    font-size: 40px;
-    color:#21302C;
+/* 啟用平滑滾動 */
+html {
+  scroll-behavior: smooth;
 }
-.content h3{
-    font-size: 32px;
-    color:#769AA2;
-    padding-top: 5px;
+/* 整體排版採用 Flex */
+.content {
+  font-family: sans-serif;
+  display: flex;
 }
-.content ol li{
-    font-weight: 350;
-    line-height: 38px;
-    font-size:22px;
-    color:#7b7872;
+.all {
+  background: linear-gradient(135deg, rgba(36, 182, 133, 0.4), #004b97aa);
+}
+/* 側邊欄設定 */
+.content nav {
+  width: 23vw;
+  background-color: transparent;
+  color: #000;
+  padding: 20px;
+  padding-left: 6vw;
+  padding-top: 10vh;
+  position: sticky;
+  top: 0;
+  height: 100vh; /* 讓側邊欄撐滿整個視窗高度 */
+  overflow-y: auto;
+}
+.content nav ul {
+  list-style: none !important;
+}
+.content nav ul li {
+  margin-bottom: 20px;
+  transition: transform 0.3s;
+}
+.content nav ul li a {
+  color: #000;
+  text-decoration: none;
+  font-size: 1.4rem;
+}
+/* 當側邊欄 li 處於 active 狀態時放大並顯示小點 */
+.content nav ul li.active {
+  transform: scale(1.1);
+  font-weight: bold;
+}
+.content nav ul li.active::before {
+  content: '●';
+  color: black;
+  margin-right: 8px;
+}
+/* 主內容區 */
+main {
+  flex: 1;
+  padding: 20px;
+}
+/* 每個內容區塊 */
+section {
+  margin-bottom: 100px;
+  border-bottom: #000 2px solid;
+  padding: 20px;
+  background-color: transparent;
+  margin-left: 4vw;
+}
+section h2 {
+  margin-bottom: 10px;
+  background-color: #002346;
+  color: #fff;
+  font-size: 3.2rem;
+  display: inline-block;
+  padding: 2px 4px;
+  border-radius: 3px;
+  margin-left: 1vw;
+  margin-bottom: 3vw;
+  
+}
+section ul{
+  list-style: none;
+}
+section li{
+  font-size: 1.8rem;
+  font-weight: 500;
 }
