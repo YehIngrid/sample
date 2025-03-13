@@ -115,7 +115,7 @@ nav{
   }
 }
 .content{
-  background: linear-gradient(to right bottom, #004b97b7 , #24b685b7);
+  background: linear-gradient(135deg, rgba(36, 182, 133, 0.4), #004b97aa);
   height: 86vh;
   display: flex;
   justify-content: center;
