@@ -43,7 +43,7 @@ const observer = new IntersectionObserver((entries) => {
       }
     }
   });
-}, { threshold: 0.6 }); // 當 60% 的區塊可見時觸發
+}, { threshold: 0.45 }); // 當 60% 的區塊可見時觸發
 
 // 為每個內容區塊啟用觀察
 sections.forEach(section => observer.observe(section));
