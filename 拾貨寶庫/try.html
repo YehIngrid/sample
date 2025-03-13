@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>綜合功能範例</title>
+  <style>
+    /* 基本重置 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    /* 啟用平滑滾動 */
+    html {
+      scroll-behavior: smooth;
+    }
+    /* 整體排版採用 Flex */
+    body {
+      font-family: sans-serif;
+      display: flex;
+    }
+    /* 側邊欄設定 */
+    nav {
+      width: 220px;
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh; /* 讓側邊欄撐滿整個視窗高度 */
+      overflow-y: auto;
+    }
+    nav ul {
+      list-style: none;
+    }
+    nav ul li {
+      margin-bottom: 15px;
+      transition: transform 0.3s;
+    }
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    /* 當側邊欄 li 處於 active 狀態時放大並顯示小點 */
+    nav ul li.active {
+      transform: scale(1.1);
+      font-weight: bold;
+    }
+    nav ul li.active::before {
+      content: '●';
+      color: red;
+      margin-right: 8px;
+    }
+    /* 主內容區 */
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+    /* 每個內容區塊 */
+    section {
+      margin-bottom: 100px;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border: 1px solid #ddd;
+    }
+    section h2 {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 側邊欄：每個連結的 href 指向對應內容區的 id -->
+  <nav>
+    <ul>
+      <li><a href="#section1">消息一</a></li>
+      <li><a href="#section2">消息二</a></li>
+      <li><a href="#section3">消息三</a></li>
+    </ul>
+  </nav>
+
+  <!-- 主內容區：包含多個有唯一 id 的區塊 -->
+  <main>
+    <section id="section1">
+      <h2>消息一</h2>
+      <p>這是第一條消息的詳細內容。內容可以很長，也可以有多段文字，用來測試捲動效果。</p>
+    </section>
+    <section id="section2">
+      <h2>消息二</h2>
+      <p>這是第二條消息的詳細內容。再多一些文字，以便觀察 IntersectionObserver 的效果。</p>
+    </section>
+    <section id="section3">
+      <h2>消息三</h2>
+      <p>這是第三條消息的詳細內容。內容豐富，可以測試錨點、平滑滾動和 scroll spy 效果。</p>
+    </section>
+    <section id="section4">
+        <h2>消息三</h2>
+        <p>這是第三條消息的詳細內容。內容豐富，可以測試錨點、平滑滾動和 scroll spy 效果。</p>
+      </section>
+      <section id="section5">
+        <h2>消息三</h2>
+        <p>這是第三條消息的詳細內容。內容豐富，可以測試錨點、平滑滾動和 scroll spy 效果。</p>
+      </section>
+  </main>
+
+  <!-- JavaScript：使用 IntersectionObserver 監控各個區塊進入視窗，並為對應側邊欄項目加上 active class -->
+  <script>
+    // 取得所有內容區塊與側邊欄 li 項
+    const sections = document.querySelectorAll('main section');
+    const navItems = document.querySelectorAll('nav ul li');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // 當區塊進入視窗時，取得它的 id
+          const id = entry.target.getAttribute('id');
+          // 移除所有 active 狀態
+          navItems.forEach(item => item.classList.remove('active'));
+          // 根據 id 找到對應的側邊欄連結並加上 active
+          const activeLink = document.querySelector(`nav ul li a[href="#${id}"]`);
+          if (activeLink && activeLink.parentElement) {
+            activeLink.parentElement.classList.add('active');
+          }
+        }
+      });
+    }, { threshold: 0.6 }); // 當 60% 的區塊可見時觸發
+
+    // 為每個內容區塊啟用觀察
+    sections.forEach(section => observer.observe(section));
+  </script>
+</body>
+</html>
