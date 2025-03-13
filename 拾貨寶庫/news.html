@@ -2,7 +2,7 @@
     <html lang="zh-TW">
     <head>
         <script>
-            let titles = ["☆ 拾貨寶庫｜二手商店 ☆", "✩ 拾貨寶庫｜二手商店 ✩"];
+            let titles = ["最新消息"];
             let index = 0;
             
             setInterval(() => {
@@ -182,7 +182,7 @@
                     <ul class="navbar-nav ms-auto align-items-start align-items-lg-center">
                       <li class="nav-item"><a class="nav-link" href="home.html">首頁</a></li>
                       <li class="nav-item"><a class="nav-link" href="news.html">最新資訊</a></li>
-                      <li class="nav-item"><a class="nav-link" href="homepage.html">商品分類</a></li>
+                      <li class="nav-item"><a class="nav-link" href="shoppingpage_bootstrap.html">商品分類</a></li>
                       <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
                       <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
                       <li class="nav-item specialpadding"><a class="nav-link" href="communication.html">客服諮詢</a></li>
@@ -206,24 +206,33 @@
         </div>
         <!-- TODO content -->
         <div class="content">
-            <div class="sort">
-                <button>全部公告</button>
-                <button>系統公告</button>
-                <button>店鋪公告</button>
-            </div>
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" id="all" href="#all">全部公告</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" id="system" href="#system">系統公告</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" id="store" href="#store">店鋪公告</a>
+            </li>
+          </ul>
+          <div class="tab-content">
             <table class="news">
-                <thead>
-                    <tr>
-                        <th>所屬分類</th>
-                        <th>文章標題</th>
-                        <th>發佈時間</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Rows will be dynamically inserted here -->
-                </tbody>
-            </table>        
-            </section>
+              <thead>
+                  <tr>
+                      <th style="width: 20%; padding-left: 2vw;">所屬分類</th>
+                      <th style="width: 68%;">文章標題</th>
+                      <th style="width: 12%;">發佈時間</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <!-- Rows will be dynamically inserted here -->
+              </tbody>
+          </table>        
+          </div>
+          <div class="pagechange" id="pagination"></div>
+
         </div>
         
         <div class="footer">Copyright©2025拾貨寶庫｜All Rights Reserved</div>

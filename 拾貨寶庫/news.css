@@ -115,42 +115,25 @@ nav{
   }
 }
 .content{
-    padding-left: 120px;
-    padding-right: 120px;
-    padding-top: 10%;
-    padding-bottom: 20%;
-}
-.sort{
-    display: flex;
-    justify-content: start;
-    padding-bottom: 30px;
-}
-.sort button{
-  background-color: #fff;
-    text-decoration: none;
-    color:#577379;
-    padding: 10px;
-    border-radius: 100px;
-    margin-right: 10px;
-    border-right-style: dashed;
-    border: #577379 solid 1px;
-}
-.sort button:hover{
-    color:#fff;
-    background-color:#577379;
+    height: 100vh;
 }
 .news{
     padding-top: 50px;
-    justify-content: center;
-    width: 90%;
+    width: 100%;
 }
 thead th{
-    background-color:#577379;
+    background-color:#004b97aa;
     color: #fff;
-    font-weight: bold;
-    padding: 10px;
-    text-align: center;
-    font-size:16px;
+    font-weight: 500;
+    font-size:1.6rem;
+    font-family: 'TimeMachine';
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.content{
+    padding-left: 15vw;
+    padding-right: 15vw;
+    padding-top: 50px;
 }
 /* tbody a{
     display: block;
@@ -164,26 +147,142 @@ thead th{
     color: black;
 } */
 tbody td{
-    border-bottom: solid 1px #21302C;
+    border-bottom: solid 1px #004b97aa;
     font-size: 14px;
-    text-align: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
-tbody td a:hover{
-  color:#577379;
+#all td{
+  padding-left: 2vw;
 }
 .time{
-    color:#577379;
-    font-size:14px;
-}
-.name{
-  text-align-last: left;
+    color:#004b97aa;
+    font-size:1.3rem;
 }
 thead {
   display: table-header-group; /* 確保 <th> 保持在表格上方 */
 }
-
 tbody {
   display: table-row-group; /* 讓 <tr> 在 <th> 下方 */
+}
+.content .nav-link{
+  color: #004b97aa !important;
+  border: none !important;
+  margin-bottom: 0px !important;
+  font-size: large !important;
+  font-family: 'TimeMachine' !important;
+  font-weight: 800 !important;
+}
+.content .nav-link.active{
+    background-color: #004b97aa !important;
+    color: white !important;
+}
+.content .nav{
+  border-bottom: none !important;
+}
+.announce{
+  color: rgb(74, 75, 80) !important;
+}
+.name{
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #004b97;
+}
+.name:hover{
+  font-size: 1.6rem;
+  color: #004b97aa;
+}
+.pagechange{
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+.pagechange a{
+  color: #004b97;
+  font-size: 1.6rem;
+  font-weight: 700;
+  /* padding-left: 10px; */
+  /* padding-right: 10px; */
+  text-decoration: none;
+}
+.pagechange a:hover{
+  color: #004b97aa;
+}
+.pagechange .active{
+  color: #dc0000aa;
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+.pagechange button{
+  background-color: #004b97aa;
+  color: white;
+  font-size: 1.6rem;
+  font-weight: 700;
+  border: none;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  font-family: 'TimeMachine';
+  border-radius: 3px;
+}
+@media (max-width: 908px) {
+  .content{
+    padding-left: 5vw;
+    padding-right: 5vw;
+  }
+  .pagechange button{
+    font-size: 1.4rem;
+  }
+  
+}
+@media (max-width: 768px) {
+  .content{
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
+  .pagechange button{
+    font-size: 1.2rem;
+  }
+}
+/* 小螢幕時，改成「卡片」樣式 */
+@media (max-width: 768px) {
+  /* 1. 隱藏表頭 */
+  .news thead {
+    display: none;
+  }
+  /* 2. 每個 tr 改成區塊狀，並加點間距或邊框 */
+  .news tbody tr {
+    display: block;
+    position: relative; /* 讓絕對定位的元素可定位於此 */
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+    padding: 1.5rem 0.8rem; /* 留足空間給左上與右下 */
+  }
+  /* 3. 每個 td 也改成區塊狀，寬度 100% */
+  .news td {
+    display: block;
+    width: 100%;
+    border: none; /* 隱藏小螢幕時格線，可依需求保留 */
+  }
+  /* 4. 將「所屬分類」置於卡片左上 */
+  .news td.announce {
+    position: absolute;
+    top: 0.5rem;
+    left: 1rem;
+    font-weight: bold;
+  }
+  /* 5. 將「發佈時間」置於卡片右下 */
+  .news td.time {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 2rem;
+    color: #004b97aa; /* 可自行調整色彩 */
+    font-size: 0.9rem; /* 可自行調整大小 */
+  }
+  /* 6. 中間標題留出空間，避免和上方/下方重疊 */
+  .news td.name {
+    margin-top: 1.5rem;  /* 留空給 announce */
+    margin-bottom: 1.5rem; /* 留空給 time */
+  }
 }
