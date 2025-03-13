@@ -286,3 +286,8 @@ tbody {
     margin-bottom: 1.5rem; /* 留空給 time */
   }
 }
+.newsimg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
