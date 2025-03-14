@@ -79,7 +79,7 @@ $(document).ready(function(){
   } else {
     authButton.textContent = "登入";
     authButton.onclick = function(e) {
-      e.preventDefault();
+      //e.preventDefault();
       callLogIn();
     };
   }
