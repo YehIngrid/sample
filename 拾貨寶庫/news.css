@@ -15,19 +15,19 @@ html {
   height: 39px;
   border-radius: 50%;
 }
-.navbar{
+.header .navbar{
   color: white !important;
   background-color: rgb(255, 255, 255); /* 半透明背景 */
   padding: 8px !important;
 }
-nav{
+.header nav{
   box-shadow: 0 0 2px rgba(0,0,0,0.2);
 }
-.nav-link{
+.header  .nav-link{
   font-size: 14px !important;
 }
 @media (max-width: 1200px) {
-  .nav-link{
+  .header .nav-link{
       font-size: 12px !important;
   }
   .form-search{
@@ -114,9 +114,9 @@ nav{
     display: none !important;
   }
 }
-.content{
+/* .content{
     height: 100vh;
-}
+} */
 .news{
     padding-top: 50px;
     width: 100%;
@@ -187,6 +187,7 @@ tbody {
   font-size: 1.6rem;
   font-weight: 700;
   color: #004b97;
+  text-decoration: none;
 }
 .name:hover{
   font-size: 1.6rem;
@@ -196,6 +197,7 @@ tbody {
   display: flex;
   justify-content: center;
   padding-top: 20px;
+  margin-bottom: 30vh;
 }
 .pagechange a{
   color: #004b97;
@@ -257,7 +259,7 @@ tbody {
     position: relative; /* 讓絕對定位的元素可定位於此 */
     border: 1px solid #ccc;
     margin-bottom: 1rem;
-    padding: 1.5rem 0.8rem; /* 留足空間給左上與右下 */
+    padding: 2rem 0.8rem; /* 留足空間給左上與右下 */
   }
   /* 3. 每個 td 也改成區塊狀，寬度 100% */
   .news td {
@@ -268,7 +270,7 @@ tbody {
   /* 4. 將「所屬分類」置於卡片左上 */
   .news td.announce {
     position: absolute;
-    top: 0.5rem;
+    top: 0rem;
     left: 1rem;
     font-weight: bold;
   }
@@ -290,4 +292,44 @@ tbody {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+/* 讓兩個區塊擺在同一頁，只顯示其中一個 */
+#newsDetailPage {
+  display: none; /* 預設隱藏 */
+  margin-left: 15vw;
+  margin-right: 15vw;
+  margin-bottom: 30vh;
+}
+.detail-title {
+  font-size: 1.7rem;
+  font-weight: bold;
+  padding-bottom: 1%;
+}
+.detail-info {
+  color: #666;
+  margin-bottom: 10px;
+}
+.detailcontent {
+  padding-top: 40px;
+  line-height: 1.8;
+  border-top: #666 1px solid;
+  font-size: 1.3rem;
+}
+.backbtn{
+  color: #004b97aa;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  font-family: 'TimeMachine' !important;
+  background-color: white;
+  margin-bottom: 3%;
+}
+.btnchi{
+  color: #004b97aa;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-decoration: none;
+  font-family: 'TimeMachine' !important;
+  background-color: white;
 }
