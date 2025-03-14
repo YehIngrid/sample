@@ -25,3 +25,201 @@ window.onload = function() {
       }
     });
   });
+// Firebase 設定
+const firebaseConfig = {
+  apiKey: "AIzaSyCtC488RFTmMSoe7lPj6c-rOVVuKOseTAk",
+  authDomain: "store-backend-75fea.firebaseapp.com",
+  projectId: "store-backend-75fea",
+  storageBucket: "store-backend-75fea.firebasestorage.app",
+  messagingSenderId: "585571611965",
+  appId: "1:585571611965:web:65b013617b7877e2904154"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// 使用 jQuery 進行文件就緒處理與事件綁定
+$(document).ready(function(){
+  console.log("文件已加載完成！");
+  
+  // 綁定 #send 按鈕提交事件，觸發登入
+  $('#send').on('click', function(e){
+    e.preventDefault(); // 攔截表單預設提交
+    console.log("表單已提交！");
+    callLogIn();
+  });
+  
+  // 綁定 #logoutButton 按鈕提交事件，觸發登出
+  $('#logoutButton').on('click', function(e){
+    e.preventDefault();
+    callLogout();
+  });
+});
+
+// 監聽使用者認證狀態變化，更新 loginForm 與 logoutButton 的顯示狀態
+auth.onAuthStateChanged(function(user) {
+  const loginForm = document.getElementById('loginForm');
+  const logoutButton = document.getElementById('logoutButton');
+  
+  if (user) {
+    console.log("使用者已登入：", user);
+    //TODO : 這裡的 loginForm 是什麼？
+  //   if (loginForm) 
+  //     setTimeout(() => {
+  //   loginForm.style.display = "none";
+  // }, 2000);
+    if (logoutButton) logoutButton.style.display = "block";
+  } else {
+    console.log("目前無使用者登入");
+    if (loginForm) loginForm.style.display = "block";
+    if (logoutButton) logoutButton.style.display = "none";
+  }
+});
+
+// 登入函式：取得表單欄位並呼叫 Firebase 登入 API
+function callLogIn(){
+  // 請確認你的 HTML 中 input 的 id 為 floatingInput 與 floatingPassword
+  const floatingInput = document.getElementById('floatingInput');
+  const floatingPassword = document.getElementById('floatingPassword');
+
+  if (!floatingInput || !floatingPassword) {
+    console.error("無法取得登入欄位，請確認元素 id 是否正確");
+    return;
+  }
+  
+  if (!floatingInput.value || !floatingPassword.value) {
+    Swal.fire({
+      title: "請填寫所有必填資訊",
+      icon: "warning"
+    });
+    return;
+  }
+  
+  let obj = {
+    email: floatingInput.value,
+    password: floatingPassword.value
+  };
+  console.log("登入資訊：", obj);
+  
+  auth.signInWithEmailAndPassword(obj.email, obj.password)
+    .then((userCredential) => {
+      // 登入成功
+      var user = userCredential.user;
+      Swal.fire({
+        icon: "success",
+        title: "登入成功",
+        text: "歡迎回來！",
+        showConfirmButton: false,
+        footer: "即將跳轉購物頁面",
+        timer: 1500
+      });
+      return user.getIdToken();
+    })
+    .then((token) => {
+      console.log("使用者 Token：", token);
+      setTimeout(() => {
+        window.location.href = "shoppingpage_bootstrap.html";
+      }, 2000);
+    })
+    .catch(function (error) {
+      console.error("登入錯誤：", error);
+      Swal.fire({
+        icon: "error",
+        title: "登入失敗",
+        text: "請確認帳號密碼是否正確，或註冊新帳號"
+      });
+    });
+}
+
+// 登出函式：使用 Firebase 的 signOut 方法
+function callLogout() {
+  auth.signOut()
+    .then(() => {
+      Swal.fire({
+        icon: "success",
+        title: "登出成功",
+        text: "歡迎再度光臨",
+        showConfirmButton: false,
+        footer: "即將返回登入頁面",
+        timer: 1800
+      });
+      setTimeout(() => {
+        window.location.href = "account.html";
+      }, 2000);
+    })
+    .catch(function(error) {
+      console.error("登出錯誤：", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...登出失敗",
+        text: "系統暫時發生錯誤，請稍後再試"
+      });
+    });
+}
+
+// 註冊函式：取得註冊表單欄位並呼叫後端 API
+function callSignUp(){
+  // 請確認 HTML 中 id 為 email、password1、password2 與 name 的欄位存在
+  const emailInput = document.getElementById('email');
+  const passwordInput1 = document.getElementById('password1');
+  const passwordInput2 = document.getElementById('password2');
+  const nameInput = document.getElementById('name');
+  
+  if (!emailInput.value || !passwordInput1.value || !passwordInput2.value || !nameInput.value) {
+    alert("請填寫所有必填資訊");
+    return;
+  }
+  if (passwordInput1.value !== passwordInput2.value) {
+    alert("密碼輸入不一致");
+    return;
+  }
+  
+  let obj = {
+    email: emailInput.value,
+    password: passwordInput1.value,
+    name: nameInput.value
+  };
+  console.log("註冊資訊：", obj);
+  
+  axios.post('http://localhost:3000', obj)
+    .then(function (response) {
+      if(response.data.message === "帳號註冊成功"){
+        alert("恭喜帳號註冊成功");
+      } else {
+        alert("此帳號已被註冊");
+      }
+    })
+    .catch(function (error) {
+      console.error("註冊錯誤：", error);
+    });
+}
+
+// 動態設定單一按鈕 authButton 根據認證狀態切換「登入」與「登出」
+const authButton = document.getElementById('authButton');
+auth.onAuthStateChanged(function(user) {
+  if (authButton) {
+    if (user) {
+      authButton.textContent = "登出";
+      authButton.onclick = function(e) {
+        e.preventDefault();
+        callLogout();
+      };
+    } else {
+      authButton.textContent = "登入";
+      authButton.onclick = function(e) {
+        e.preventDefault();
+        callLogIn();
+      };
+    }
+  }
+});
+// 切換密碼顯示/隱藏（點擊眼睛圖示）
+$("#checkEye").click(function () {
+  if($(this).hasClass('fa-eye')){
+     $("#floatingPassword").attr('type', 'text');
+  } else {
+     $("#floatingPassword").attr('type', 'password');
+  }
+  $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+});
