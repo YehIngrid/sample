@@ -39,9 +39,28 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// 使用 jQuery 進行文件就緒處理與事件綁定
+// 可設定持久性，確保 Firebase 在刷新時保留登入狀態
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+// 頁面載入時，先根據 localStorage 設定按鈕初始狀態
 $(document).ready(function(){
   console.log("文件已加載完成！");
+  
+  const authButton = document.getElementById('authButton');
+  const storedStatus = localStorage.getItem("isLoggedIn");
+  if (storedStatus === "true") {
+    authButton.textContent = "登出";
+    authButton.onclick = function(e) {
+      e.preventDefault();
+      callLogout();
+    };
+  } else {
+    authButton.textContent = "登入";
+    authButton.onclick = function(e) {
+      //e.preventDefault();
+      callLogIn();
+    };
+  }
   
   // 綁定 #send 按鈕提交事件，觸發登入
   $('#send').on('click', function(e){
@@ -57,29 +76,41 @@ $(document).ready(function(){
   });
 });
 
-// 監聽使用者認證狀態變化，更新 loginForm 與 logoutButton 的顯示狀態
+// 監聽 Firebase 認證狀態變化，並同步更新 localStorage 與介面狀態
 auth.onAuthStateChanged(function(user) {
   const loginForm = document.getElementById('loginForm');
   const logoutButton = document.getElementById('logoutButton');
-  
+  const authButton = document.getElementById('authButton');
+
   if (user) {
     console.log("使用者已登入：", user);
-    //TODO : 這裡的 loginForm 是什麼？
-  //   if (loginForm) 
-  //     setTimeout(() => {
-  //   loginForm.style.display = "none";
-  // }, 2000);
+    localStorage.setItem("isLoggedIn", "true");
+    if (loginForm) loginForm.style.display = "none";
     if (logoutButton) logoutButton.style.display = "block";
+    if (authButton) {
+      authButton.textContent = "登出";
+      authButton.onclick = function(e) {
+        e.preventDefault();
+        callLogout();
+      };
+    }
   } else {
     console.log("目前無使用者登入");
+    localStorage.removeItem("isLoggedIn");
     if (loginForm) loginForm.style.display = "block";
     if (logoutButton) logoutButton.style.display = "none";
+    if (authButton) {
+      authButton.textContent = "登入";
+      authButton.onclick = function(e) {
+        e.preventDefault();
+        callLogIn();
+      };
+    }
   }
 });
 
 // 登入函式：取得表單欄位並呼叫 Firebase 登入 API
 function callLogIn(){
-  // 請確認你的 HTML 中 input 的 id 為 floatingInput 與 floatingPassword
   const floatingInput = document.getElementById('floatingInput');
   const floatingPassword = document.getElementById('floatingPassword');
 
@@ -104,7 +135,6 @@ function callLogIn(){
   
   auth.signInWithEmailAndPassword(obj.email, obj.password)
     .then((userCredential) => {
-      // 登入成功
       var user = userCredential.user;
       Swal.fire({
         icon: "success",
@@ -144,6 +174,8 @@ function callLogout() {
         footer: "即將返回登入頁面",
         timer: 1800
       });
+      // 登出後從 localStorage 移除登入狀態
+      localStorage.removeItem("isLoggedIn");
       setTimeout(() => {
         window.location.href = "account.html";
       }, 2000);
@@ -160,7 +192,6 @@ function callLogout() {
 
 // 註冊函式：取得註冊表單欄位並呼叫後端 API
 function callSignUp(){
-  // 請確認 HTML 中 id 為 email、password1、password2 與 name 的欄位存在
   const emailInput = document.getElementById('email');
   const passwordInput1 = document.getElementById('password1');
   const passwordInput2 = document.getElementById('password2');
@@ -195,25 +226,6 @@ function callSignUp(){
     });
 }
 
-// 動態設定單一按鈕 authButton 根據認證狀態切換「登入」與「登出」
-const authButton = document.getElementById('authButton');
-auth.onAuthStateChanged(function(user) {
-  if (authButton) {
-    if (user) {
-      authButton.textContent = "登出";
-      authButton.onclick = function(e) {
-        e.preventDefault();
-        callLogout();
-      };
-    } else {
-      authButton.textContent = "登入";
-      authButton.onclick = function(e) {
-        e.preventDefault();
-        callLogIn();
-      };
-    }
-  }
-});
 // 切換密碼顯示/隱藏（點擊眼睛圖示）
 $("#checkEye").click(function () {
   if($(this).hasClass('fa-eye')){
