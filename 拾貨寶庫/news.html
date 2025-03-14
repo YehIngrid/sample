@@ -207,15 +207,17 @@
         <img src="https://github.com/YehIngrid/sample/blob/main/newspic.png?raw=true" class="newsimg" alt="news picture">
         <!-- TODO content -->
         <div class="content">
+       <!-- 新聞列表區 -->
+       <div id="newsListPage">
           <ul class="nav nav-tabs">
             <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" id="all" href="#all">全部公告</a>
+              <a class="nav-link tab-link active" data-toggle="tab" id="all" href="#all">全部公告</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" id="system" href="#system">系統公告</a>
+              <a class="nav-link tab-link" data-toggle="tab" id="system" href="#system">系統公告</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" id="store" href="#store">店鋪公告</a>
+              <a class="nav-link tab-link" data-toggle="tab" id="store" href="#store">店鋪公告</a>
             </li>
           </ul>
           <div class="tab-content">
@@ -233,9 +235,18 @@
           </table>        
           </div>
           <div class="pagechange" id="pagination"></div>
-
+          </div>
         </div>
-        
+        <div id="newsDetailPage">
+          <button onclick="showNewsList()" class="backbtn"><i class="fa-solid fa-arrow-left "><span class="btnchi">返回列表</span></i></button>
+          <h2 class="detail-title" id="detailTitle"></h2>
+          <div class="detail-info">
+            <span id="detailFrom"></span> | <span id="detailTime"></span>
+          </div>
+          <div class="detailcontent" id="detailContent"></div>
+          <br>
+        </div>
+      
         <div class="footer">Copyright©2025拾貨寶庫｜All Rights Reserved</div>
       </div>
         <!-- script部分-->
