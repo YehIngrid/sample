@@ -287,8 +287,12 @@ ul{
     border: 1px solid #ccc;   /* 選擇性：讓容器有邊框 */
     padding: 10px;
     margin: 0 auto;           /* 水平置中 */
+    align-items: center;
+    height: 12rem;            /* 容器高度，視需求調整 */
   }
-  
+  .bag{
+    height: 80% !important;
+  }
   /* 單一分類項目寬度與外觀 */
   .sort-item {
     min-width: 120px;         /* 每個項目最小寬度，視需要調整 */
@@ -307,11 +311,6 @@ ul{
     /* border-radius: 50%;        */
     /* border: 2px solid #ff6f61;  */
     margin: 0 auto;           /* 讓圖片在 card 內水平置中 */
-  }
-  .smaller{
-
-    object-fit: fill;
-    margin: 0auto;
   }
   /* 你也可以針對按鈕做額外的美化 */
   #prevBtn, #nextBtn {
