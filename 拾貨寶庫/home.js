@@ -138,7 +138,7 @@ function scrollToContent() {
         scalefunc.classList.remove('active');
       }
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0.1 });
 
   observer5.observe(jitterElement);
   

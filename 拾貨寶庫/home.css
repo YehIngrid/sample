@@ -375,9 +375,7 @@ html {
 .w-layout-hflex {
     flex-direction: row;
 }
-:not(svg) {
-    transform-origin: 0px 0px;
-}
+
 /* path{
     fill: rgb(255, 255, 255);
     fill-opacity: 0;
@@ -697,7 +695,7 @@ ul{
 
 /* 箭頭樣式 */
 .scroll-down .arrow {
-    font-size: 3em;
+    font-size: 2em;
     color: #004b97;
     background-color: #fff;
 }
