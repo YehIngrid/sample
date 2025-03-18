@@ -40,7 +40,7 @@ ps.傻眼...為什麼我的account.css有些樣式沒有套進去==
 3/14
 今天是單身情人節但我javascript寫的比css多了欸超酷
 補充一下：有很多小bug待解決
-1.home.html首頁spinner有xy位移跑動，但是其他頁面套上同樣的程式碼是正常的？
+1.(solved.)
 2.home.html往下的箭頭，他的監聽區域超級小為什麼？
 3.home.html header topic字體為什麼有的有中空？是不是因為不同裝置的font-weight呈現不同而造成這樣的結果呢？
 4.home.html 我們的問題 threshold值要想好，有些裝置做起來會剛好卡到，變成滑到那個區域的時候他就消失了，好的threshold應該要設多少呢？
