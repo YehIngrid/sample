@@ -152,13 +152,19 @@ ul{
 .seriesofbutton li{
     display: flex;
     flex-direction: column !important;
-    font-size: 12px;
+    font-size: 1.3rem;
     color:#004b97;
     justify-content: center;
     align-items: center;
     text-align: center;
     margin-left: 3%;
     margin-right: 3%;
+}
+@media (max-width:380px) {
+    .seriesofbutton li{
+        margin-left: 1%;
+        margin-right: 1%;
+    }
 }
 .seriesofbutton button{
     border: 1px solid #004b9739 ;
@@ -168,19 +174,8 @@ ul{
     font-size: 26px;
     color:#004b97;
 } 
-/* 如果想要統一控制分類圖片的大小，可以額外設定一個 class */
-/* .category-img {
-    width: 30px;
-    height: 30px;
-    object-fit: cover; /* 視情況使用 contain / cover / fill 
-} */
-
 .what {
     margin: 13px;
-    
-}
-.container{
-    /* background-color: rgba(36,182,133,0.2); */
     
 }
 .container h4{
