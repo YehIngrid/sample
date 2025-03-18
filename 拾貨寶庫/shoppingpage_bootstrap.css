@@ -291,7 +291,8 @@ ul{
     height: 12rem;            /* 容器高度，視需求調整 */
   }
   .bag{
-    height: 80% !important;
+    overflow: hidden;
+    object-fit: cover;
   }
   /* 單一分類項目寬度與外觀 */
   .sort-item {
