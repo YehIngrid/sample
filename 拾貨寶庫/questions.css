@@ -258,3 +258,29 @@ section li{
     margin-left: 1vw;
   }
 }
+/* 按鈕樣式 */
+.collapsible {
+  background-color: transparent;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.3s;
+  margin-bottom: 10px;
+}
+/* 當按鈕處於展開狀態時，旋轉倒三角形 180 度 */
+.collapsible.active {
+  transform: rotate(180deg);
+}
+/* 內容區塊預設隱藏 */
+.content-news {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  
+  /* background-color: #f1f1f1; */
+  /* padding: 0 18px; */
+}
+.content-news p {
+  margin: 10px 0;
+}
