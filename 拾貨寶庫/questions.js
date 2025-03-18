@@ -257,3 +257,17 @@ $("#checkEye").click(function () {
   }
   $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
 });
+var coll = document.getElementsByClassName("collapsible");
+for (var i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    // 切換按鈕 active 狀態
+    this.classList.toggle("active");
+    // 取得按鈕所在 li 的下一個 li 元素作為內容區塊
+    var content = this.parentElement.nextElementSibling;
+    if (content.style.maxHeight) {
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+}
