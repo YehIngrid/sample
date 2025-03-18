@@ -200,8 +200,33 @@ $(document).ready(function(){
     e.preventDefault();
     callLogout();
   });
+  
 });
-
+function createCommodity() {
+  const form = document.getElementById('createCommodityForm');
+  const formData = new FormData(form);
+  auth.currentUser.getIdToken().then((idToken) => {
+      return fetch('/api/commodity/create', {
+          method: 'POST',
+          headers: {
+              'idtoken': idToken
+          },
+          body: formData
+      });
+  }).then(response => {
+      if (response.ok) {
+          alert('Commodity created successfully.');
+          form.reset();
+      } else {
+          return response.json().then(data => {
+              throw new Error(data.message || 'Failed to create commodity.');
+          });
+      }
+  }).catch(error => {
+      console.error('Error:', error);
+      alert('Error: ' + error.message);
+  });
+}
 // 監聽 Firebase 認證狀態變化，並同步更新 localStorage 與介面狀態
 auth.onAuthStateChanged(function(user) {
   const loginForm = document.getElementById('loginForm');
@@ -361,3 +386,4 @@ $("#checkEye").click(function () {
   }
   $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
 });
+

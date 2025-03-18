@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Commodity Form with Firebase</title>
+  <style>
+    /* 基本卡片樣式 */
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 1rem;
+      margin: 1rem;
+      width: 300px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
+  <!-- 引入 Firebase SDK，這裡使用 v8 版本 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+  <h1>新增商品</h1>
+  <!-- 表單，這裡簡單包含名稱、價格、庫存 -->
+  <form id="commodityForm">
+    <label for="name">名稱:</label>
+    <input type="text" id="name" name="name" required /><br />
+
+    <label for="price">價格:</label>
+    <input type="number" id="price" name="price" required /><br />
+
+    <label for="stock">庫存:</label>
+    <input type="number" id="stock" name="stock" required /><br />
+
+    <button type="submit">送出</button>
+  </form>
+
+  <!-- 顯示商品卡片的區域 -->
+  <div id="cardContainer">
+    <h2>商品列表</h2>
+  </div>
+
+  <script>
+    // 你的 Firebase 設定 (請注意資料非秘密，只是專案識別資訊)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCtC488RFTmMSoe7lPj6c-rOVVuKOseTAk",
+      authDomain: "store-backend-75fea.firebaseapp.com",
+      projectId: "store-backend-75fea",
+      storageBucket: "store-backend-75fea.firebasestorage.app",
+      messagingSenderId: "585571611965",
+      appId: "1:585571611965:web:65b013617b7877e2904154"
+    };
+
+    // 初始化 Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    // 匿名登入
+auth.signInAnonymously()
+  .then(() => {
+    console.log("Anonymous login successful!");
+  })
+  .catch((error) => {
+    console.error("Anonymous login failed:", error);
+  });
+
+    // 設定登入狀態持久性
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    // 取得 Firestore 服務
+    const db = firebase.firestore();
+
+    // 監聽表單提交
+    document.getElementById('commodityForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // 從表單取得資料
+      const name = document.getElementById('name').value;
+      const price = parseFloat(document.getElementById('price').value);
+      const stock = parseInt(document.getElementById('stock').value);
+
+      // 將資料存入 Firestore 中的 "commodities" 集合
+      db.collection('commodities').add({
+        name: name,
+        price: price,
+        stock: stock,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(docRef => {
+        console.log("文件已加入，ID:", docRef.id);
+        // 清除表單資料
+        document.getElementById('commodityForm').reset();
+      })
+      .catch(error => {
+        console.error("新增文件錯誤: ", error);
+      });
+    });
+
+    // 監聽 Firestore 集合資料的變動，實現即時更新
+    db.collection("commodities")
+      .orderBy("timestamp")
+      .onSnapshot(snapshot => {
+        const cardContainer = document.getElementById('cardContainer');
+        // 清空原有卡片
+        cardContainer.innerHTML = "<h2>商品列表</h2>";
+
+        snapshot.forEach(doc => {
+          const commodity = doc.data();
+
+          // 建立卡片元素
+          const card = document.createElement('div');
+          card.classList.add('card');
+
+          // 商品名稱
+          const title = document.createElement('h3');
+          title.textContent = commodity.name;
+          card.appendChild(title);
+
+          // 價格
+          const priceEl = document.createElement('p');
+          priceEl.textContent = "價格: " + commodity.price;
+          card.appendChild(priceEl);
+
+          // 庫存
+          const stockEl = document.createElement('p');
+          stockEl.textContent = "庫存: " + commodity.stock;
+          card.appendChild(stockEl);
+
+          // 將卡片加入容器中
+          cardContainer.appendChild(card);
+        });
+      });
+  </script>
+</body>
+</html>

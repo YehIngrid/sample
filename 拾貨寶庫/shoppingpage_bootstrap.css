@@ -282,6 +282,7 @@ ul{
     display: flex;            /* 子項目橫向並排 */
     flex-wrap: nowrap;        /* 禁止自動換行 */
     overflow-x: auto;         /* 開啟水平捲動 */
+    overflow-y: hidden;
     scroll-behavior: smooth;  /* 捲動平滑 */
     max-width: 80vw;          /* 容器寬度，可改成固定 px，例如 1000px */
     border: 1px solid #ccc;   /* 選擇性：讓容器有邊框 */
