@@ -43,7 +43,7 @@ ps.傻眼...為什麼我的account.css有些樣式沒有套進去==
 1.(solved.)
 2.home.html往下的箭頭，他的監聽區域超級小為什麼？
 3.home.html header topic字體為什麼有的有中空？是不是因為不同裝置的font-weight呈現不同而造成這樣的結果呢？
-4.home.html 我們的問題 threshold值要想好，有些裝置做起來會剛好卡到，變成滑到那個區域的時候他就消失了，好的threshold應該要設多少呢？
+4.~~home.html 我們的問題 threshold值要想好，有些裝置做起來會剛好卡到，變成滑到那個區域的時候他就消失了，好的threshold應該要設多少呢？~~
 5.home.html 我們的問題 詳細內容和rwd尚未完成
 ------------------------------------------------
 1.shopping_bootstrap.html 分類區待調整，商品區（最新上架與一般區）未製作
