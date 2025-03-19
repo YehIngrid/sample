@@ -171,7 +171,7 @@ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 // 頁面載入時，先根據 localStorage 設定按鈕初始狀態
 $(document).ready(function(){
   console.log("文件已加載完成！");
-  
+  const send = document.getElementById('send');
   const authButton = document.getElementById('authButton');
   const storedStatus = localStorage.getItem("isLoggedIn");
   if (storedStatus === "true") {
@@ -183,8 +183,7 @@ $(document).ready(function(){
   } else {
     authButton.textContent = "登入";
     authButton.onclick = function(e) {
-      //e.preventDefault();
-      callLogIn();
+      $(location).attr('href', 'https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/account.html');
     };
   }
   
@@ -200,34 +199,7 @@ $(document).ready(function(){
     e.preventDefault();
     callLogout();
   });
-  
 });
-function createCommodity() {
-  const form = document.getElementById('createCommodityForm');
-  const formData = new FormData(form);
-  auth.currentUser.getIdToken().then((idToken) => {
-      return fetch('/api/commodity/create', {
-          method: 'POST',
-          headers: {
-              'idtoken': idToken
-          },
-          body: formData
-      });
-  }).then(response => {
-      if (response.ok) {
-          alert('Commodity created successfully.');
-          form.reset();
-      } else {
-          return response.json().then(data => {
-              throw new Error(data.message || 'Failed to create commodity.');
-          });
-      }
-  }).catch(error => {
-      console.error('Error:', error);
-      alert('Error: ' + error.message);
-  });
-}
-// 監聽 Firebase 認證狀態變化，並同步更新 localStorage 與介面狀態
 auth.onAuthStateChanged(function(user) {
   const loginForm = document.getElementById('loginForm');
   const logoutButton = document.getElementById('logoutButton');
@@ -242,8 +214,19 @@ auth.onAuthStateChanged(function(user) {
       authButton.textContent = "登出";
       authButton.onclick = function(e) {
         e.preventDefault();
-        callLogout();
-      };
+        Swal.fire({
+          title: "確定登出？",
+          text: "登出後無法購物與上架商品",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "我要登出"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            callLogout();
+          }
+      })};
     }
   } else {
     console.log("目前無使用者登入");
@@ -252,11 +235,11 @@ auth.onAuthStateChanged(function(user) {
     if (logoutButton) logoutButton.style.display = "none";
     if (authButton) {
       authButton.textContent = "登入";
-      authButton.onclick = function(e) {
-        e.preventDefault();
-        callLogIn();
-      };
     }
+    send.onclick = function(e) {
+      e.preventDefault();
+      callLogIn();
+    };
   }
 });
 
@@ -386,4 +369,221 @@ $("#checkEye").click(function () {
   }
   $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
 });
+const seller = document.querySelector('#seller');
+const sellerbtn = document.querySelector('#sellerbtn');
+const content = document.querySelector('#midcontent');
+sellerbtn.addEventListener('click', function(e){
+  if(!auth.currentUser){
+    Swal.fire({
+      title: "您必須先登入才能進入賣家專區！",
+      text: "請前往登入頁",
+      icon: "info"
+    });
+  } else {
+    content.style.display ="none";
+    seller.style.display = "block";
+  }
+  
+})
+const backbtn = document.querySelector('#back-btn');
+backbtn.addEventListener('click', function(e){
+  content.style.display = 'block';
+  seller.style.display = 'none';
+})
+// 取得元素
+const modal = document.getElementById('myModal');
+const openBtn = document.getElementById('openModal');
+const closeBtn = document.getElementById('closeModal');
 
+// 點擊按鈕時打開模態視窗
+openBtn.addEventListener('click', () => {
+  modal.style.display = 'block';
+});
+
+// 點擊關閉按鈕時關閉模態視窗
+closeBtn.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+
+// 當點擊模態背景也關閉模態視窗
+window.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    modal.style.display = 'none';
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  // 確保所有 DOM 元素都已經載入
+  const form = document.getElementById('createCommodityForm');
+  const openModalBtn = document.getElementById('openModal');
+  console.log('openModal 按鈕:', openModalBtn);
+  
+  // 將 submit 事件綁定到 form 上
+  form.addEventListener('submit', function(e) {
+    e.preventDefault(); // 防止表單預設送出
+    createCommodity();
+  });
+
+  // 將 createCommodity 定義在全域或 DOMContentLoaded 區塊中皆可，
+  // 但注意：如果 HTML 中使用了 inline onsubmit，就必須確保這個函式能在全域中存取
+  function createCommodity() {
+    // 1. 商品名稱檢查（注意：要檢查 value）
+    const productName = document.getElementById('name');
+    if (!productName.value.trim()) {
+      Swal.fire({
+        title: "請輸入商品名稱",
+        icon: "warning"
+      });
+      return;
+    }
+
+    // 2. 商品描述檢查（不得為空，且至少20字以上）
+    const productDesc = document.getElementById('description').value.trim();
+    if (!productDesc) {
+      Swal.fire({
+        title: "請輸入商品描述",
+        icon: "warning"
+      });
+      return;
+    } else if (productDesc.length < 20) {
+      Swal.fire({
+        title: "字數太少",
+        text:"商品狀態描述至少需要 20 字以上，請再補充內容。",
+        icon: "warning"
+      });
+      return;
+    }
+
+    // 3. 售價檢查（不得為空且必須大於等於 0）
+    const price = document.getElementById('price').value.trim();
+    if (!price || price < 0) {
+      Swal.fire({
+        title: "請輸入商品售價",
+        text: "請檢查是否填入商品售價或者確認金額為正數",
+        icon: "warning"
+      });
+      return;
+    }
+
+    // 4. 商品尺寸檢查（至少要選一個）
+    const sizeOptions = document.getElementsByName('size');
+    let sizeSelected = false;
+    for (let i = 0; i < sizeOptions.length; i++) {
+      if (sizeOptions[i].checked) {
+        sizeSelected = true;
+        break;
+      }
+    }
+    if (!sizeSelected) {
+      Swal.fire({
+        title: "請選擇商品尺寸",
+        icon: "warning"
+      });
+      return;
+    }
+
+    // 5. 新舊程度檢查（至少要選一個）
+    const conditionOptions = document.getElementsByName('neworold');
+    let conditionSelected = false;
+    for (let i = 0; i < conditionOptions.length; i++) {
+      if (conditionOptions[i].checked) {
+        conditionSelected = true;
+        break;
+      }
+    }
+    if (!conditionSelected) {
+      Swal.fire({
+        title: "請選擇商品的新舊程度",
+        icon: "warning"
+      });
+      return;
+    }
+
+    // 6. 商品分類檢查（不可為預設值）
+    const category = document.getElementById('category').value;
+    if (!category || category === "notselyet") {
+      Swal.fire({
+        title: "請選擇商品分類",
+        icon: "warning"
+      });
+      return;
+    }
+
+    // 7. 主要照片檢查（至少選一張）
+    const mainPhoto = document.getElementById('mainImage').files;
+    if (mainPhoto.length === 0) {
+      Swal.fire({
+        title: "請上傳主要照片",
+        icon: "warning"
+      });
+      return;
+    }
+    // 8. 其他照片檢查（至少選一張）
+    const otherPhoto = document.getElementById('image').files;
+    if(otherPhoto.length === 0){
+      Swal.fire({
+        title: "請至少上傳一張其他照片",
+        icon: "warning"
+      });
+      return;
+    }
+    // 9.庫存
+    const stock = document.getElementById('stock').value.trim();
+    if(!stock || stock < 0){
+      Swal.fire({
+        title:"請填入庫存數量", 
+        icon:"warning"
+      });
+      return;
+    }
+    //10.物品年齡
+    const age = document.getElementById('age').value.trim();
+    if(!age || age < -1){
+      Swal.fire({
+        title:"請選擇商品年齡",
+        icon:"warning"
+      });
+      return;
+    }
+    // 如果驗證都通過，就建立 formData 並進行後續請求
+    Swal.fire({
+      title: "確定要販賣此商品?",
+      text: "請確認好所有商品資訊，若後續需要更改或移除資料，請至個人檔案內查看。",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "是，我就要賣！"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const formData = new FormData(form);
+    auth.currentUser.getIdToken().then((idToken) => {
+      return fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
+        method: 'POST',
+        headers: {
+          'idtoken': idToken
+        },
+        body: formData
+      });
+    }).then(response => {
+      if (response.ok) {
+        Swal.fire({
+          title: "商品上架成功！",
+          text: "請確認首頁商品欄有無您上架的商品",
+          icon: "success"
+        });
+        form.reset();
+      } else {
+        return response.json().then(data => {
+          throw new Error(data.message || 'Failed to create commodity.');
+        });
+      }
+    }).catch(error => {
+      console.error('Error:', error);
+      alert('Error: ' + error.message);
+    });
+      }
+    });
+    
+  }
+});

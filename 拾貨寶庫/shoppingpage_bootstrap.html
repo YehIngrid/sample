@@ -202,7 +202,7 @@
     </div>
             </nav>     
           </div>
-          
+  <main id="midcontent">
   <div class="my-section">         
     <div class="carousel">
       <div class="carousel-track">
@@ -243,7 +243,7 @@
     </div>   
     <div class="seriesofbutton">
         <ul>
-            <li><button><i class="ti ti-building-store"></i></button>賣家專區</li>
+            <li><button id="sellerbtn"><i class="ti ti-building-store"></i></button>賣家專區</li>
             <li><button><i class="ti ti-fountain"></i></button>許願池</li>
             <li><button><i class="ti ti-brand-my-oppo"></i></button>加入會員</li>
             <li><button><i class="ti ti-gift"></i></button>神秘箱</li>
@@ -370,64 +370,9 @@
       <!-- 右箭頭按鈕 -->
       <button class="btn btn-primary ms-2" id="nextBtn">→</button>
     </div>
-
-    <!-- TODO 商品資訊表單 -->
-     <!-- <div class="form-store">
-    <h1>Create Commodity</h1>
-    <form
-        id="createCommodityForm"
-        onsubmit="createCommodity(); return false;"
-        enctype="multipart/form-data"
-    >
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required /><br />
-
-        <label for="description">Description:</label>
-        <input type="text" id="description" name="description" /><br />
-
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" required /><br />
-
-        <label for="stock">Stock:</label>
-        <input type="number" id="stock" name="stock" required /><br />
-
-        <label for="category">Category:</label>
-        <input
-            type="text"
-            id="category"
-            name="category"
-            value="其他"
-        /><br />
-
-        <label for="size">Size:</label>
-        <input type="text" id="size" name="size" required /><br />
-
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age" required /><br />
-
-        <label for="mainImage">Main Image:</label>
-        <input
-            type="file"
-            id="mainImage"
-            name="mainImage"
-            accept="image/jpeg,image/png,image/gif,image/webp"
-            required/><br/>
-
-        <label for="images">Image:</label>
-        <input
-            type="file"
-            id="image"
-            name="images"
-            accept="image/jpeg,image/png,image/gif,image/webp"
-            multiple
-            required
-        /><br />
-
-        <button id="create" type="submit">Create</button>
-    </form>
-  </div> -->
+    
       <!-- TODO 商品卡片 -->
-    <div class="container-card d-flex flex-wrap my-0">
+    <div class="container-card d-flex flex-wrap justify-content-center">
       <div class="card" style="width: 18rem;">
         <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
         <div class="card-body">
@@ -512,6 +457,113 @@
         </div>
       </div>
     </div>
+  </main>
+  <!-- TODO 商品資訊表單 -->
+  <section class="formsection" id="seller">
+      <button class="back-btn" id="back-btn"><i class="fa-solid fa-arrow-left "></i>返回購物頁</button>
+      <div class="form-store">
+      <h1 class="infortitle">商品資料填寫</h1>
+      <button id="openModal" class="animated-button">請點擊我看詳細資訊！</button>
+      <form
+          id="createCommodityForm"
+          enctype="multipart/form-data" 
+      >
+      <div class="df">
+      <div class="left_form">
+        <label for="name">商品名稱</label>
+          <input type="text" id="name" name="name" placeholder="建議使用正式名稱" /><br />
+  
+          <label for="description">商品狀態描述</label><br>
+          <textarea placeholder="可以說明販售原因、商品瑕疵部位等，建議30字以上" id="description" name="description" rows="10" cols="30"></textarea>
+          <br/>
+  
+          <label for="price">售價</label>
+          <input type="number" id="price" name="price" class="formprice"/><span class="formpricespan">新台幣（元）</span><br />
+          <label for="category">所屬分類</label>
+          <select name="category" id="category">
+            <option value="notselyet">請選擇商品分類</option>
+            <option value="book">書籍與學籍用品</option>
+            <option value="life">宿舍與生活用品</option>
+            <option value="student">學生專用器材</option>
+            <option value="recycle">環保生活用品</option>
+            <option value="clean">儲物與收納用品</option>
+            <option value="other">其他</option>
+          </select><br />
+          <label for="stock">庫存</label>
+          <input type="number" id="stock" name="stock" placeholder="可販賣數量"/><br />
+      </div>
+      
+      <div class="right_form">
+        <label for="size">商品尺寸</label><br>
+          <input type="radio" id="size_big" name="size" value="big"/><label for="size_big" class="formpricespan">大</label>
+          <input type="radio" id="size_medium" name="size" value="medium"/><label for="size_medium" class="formpricespan">中</label>
+          <input type="radio" id="size_small" name="size" value="small"/><label for="size_small" class="formpricespan">小</label>
+          <br />
+          <label for="neworold">新舊程度</label><br>
+          <input type="radio" id="neworold_1" name="neworold" value="1"><label for="neworold_1" class="formpricespan">全新</label>
+          <input type="radio" id="neworold_2" name="neworold" value="2"><label for="neworold_2" class="formpricespan">幾乎全新</label>
+          <input type="radio" id="neworold_3" name="neworold" value="3"><label for="neworold_3" class="formpricespan">半新</label><br>
+          <input type="radio" id="neworold_4" name="neworold" value="4"><label for="neworold_4" class="formpricespan">適中</label>
+          <input type="radio" id="neworold_5" name="neworold" value="5"><label for="neworold_5" class="formpricespan">稍舊</label>
+          <input type="radio" id="neworold_6" name="neworold" value="6"><label for="neworold_6" class="formpricespan">全舊</label><br><br>
+          <label for="age">物品年齡</label>
+          <input type="number" id="age" name="age" placeholder="未知請填-1"/><span class="formpricespan">月</span><br />
+          <label for="mainImage">主要照片</label>
+          <input
+              type="file"
+              id="mainImage"
+              name="mainImage"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              /><br/>
+          <label for="images">其他照片</label>
+          <input
+              type="file"
+              id="image"
+              name="images"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              multiple
+              
+          /><br /><br>
+          <button id="create" type="submit" class="submitbtn">一鍵販賣</button>
+      </div>
+    </div>
+      </form>
+    </div>
+  </section>
+  
+
+  <!-- 模態視窗 -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <p>所屬分類</p>
+      <ol>
+        <li>書籍與學習用品：<br>教科書、參考書、文具用品（如計算機、繪圖工具、筆記本）、學習卡片、筆記/習題集等。</li>
+        <li>宿舍與生活用品：<br>床墊、衣架、燈具等宿舍用品、小型廚房用品（如電鍋、餐具）、風扇、暖風機等生活設備。</li>
+        <li>學生專用器材：<br>實驗器材（護目鏡、手套等）、測量工具（如尺規、測量儀）等。</li>
+        <li>環保生活用品：<br>環保餐具（如可重複使用的餐具組、餐盒、水瓶）、購物袋、手提袋等。</li>
+        <li>儲物與收納用品：<br>收納盒、文件夾、掛鉤、收納架等。</li>
+        <li>其他：<br>若不知道自己販賣的商品類別為何，請選擇其他。</li>
+      </ol>
+      <p>商品尺寸</p>
+      <ol>
+        <li>大型：<br>長度/寬度/高度大於150cm，容量大於5L。</li>
+        <li>中型：<br>長度/寬度/高度30cm到150cm，容量1L到5L。</li>
+        <li>小型：<br>長度/寬度/高度小於30cm，容量小於1L。</li>
+      </ol>
+      <p>新舊程度</p>
+      <ol>
+        <li>全新：完全未使用，包裝完好。</li>
+        <li>幾乎全新：使用過一次或兩次，狀況極佳，幾乎沒有磨損。</li>
+        <li>半新：使用過，狀況良好，可能有輕微磨損。</li>
+        <li>適中：明顯使用過，狀況普通，可能有明顯的使用痕跡，但仍可正常使用。</li>
+        <li>稍舊：使用時間較長，狀況一般，有顯著的磨損或損壞，但仍可使用。</li>
+        <li>全舊：使用過度，可能有重大缺陷或損壞，建議僅用於某些用途或需要修理。</li>
+      </ol>
+      <p>主要照片：一張，且為封面照</p>
+      <p>其他照片：可傳多張（最多5張），會放在商品的詳細資訊內</p>
+    </div>
+  </div>
     <div class="footer">Copyright©2025拾貨寶庫｜All Rights Reserved</div>
   </div>
     <!-- script部分-->

@@ -324,4 +324,163 @@ ul{
     align-items: center;
     justify-content: center;
   }
-  
+#seller{
+  display: none;
+}
+.back-btn{
+  border: none;
+  font-family: 'TimeMachine';
+  color: #004b97;
+  background-color: #fff;
+  font-size: 1.7rem;
+  margin-top: 3rem;
+}
+.back-btn:hover{
+  color: #004b97aa;
+  scale: 1.05;
+}
+.formsection{
+  padding-left: 7%;
+  padding-right: 7%;
+  padding-bottom: 3%;
+}
+.form-store{
+  background-color: #004b9739;
+  margin: 4rem;
+  border-radius: 10px;
+  padding: 4rem;
+  padding-bottom: 7rem;
+}
+/* .infortitle{
+  padding-bottom: 1rem;
+} */
+.form-store label{
+  font-size: 1.6rem;
+  margin-top: 1rem;
+}
+.form-store input{
+  font-size: 1.5rem;
+  border: none;
+  margin-left: 1rem;
+  padding: 1%;
+}
+.form-store textarea{
+  font-size: 1.5rem;
+  border: none;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 2%;
+}
+.form-store select{
+  font-size: 1.5rem;
+  margin-left: 10px;
+}
+.df{
+  display: flex;
+  justify-content: space-evenly;
+}
+@media (max-width:1000px) {
+  .df{
+    display: block;
+  }
+  .formsection{
+    padding-left: 0%;
+    padding-right: 0%;
+    padding-bottom: 3%;
+  }
+  .form-store{
+    background-color: #004b9739;
+    margin: 0rem;
+    border-radius: 5px;
+    padding: 4rem;
+    padding-bottom: 7rem;
+  }
+}
+.formprice{
+  width: 8rem;
+}
+.formpricespan{
+  margin-left: 10px;
+  font-size: 1.3rem;
+}
+/* .right_form{
+  width: 30%;
+}
+.left_form{
+  width: 30%;
+} */
+.submitbtn{
+  border: none;
+  font-size: 1.8rem;
+  font-family: 'TimeMachine';
+  padding: 2%;
+  margin-top: 1rem;
+  color: #fff;
+  background-color: #004b97;
+  border-radius: 5px;
+  font-weight: 700;
+  width: 25vw;
+}
+.submitbtn:hover{
+  background-color: rgb(36,182,133);
+  transition: 0.2s;
+}
+/* 模態視窗的背景覆蓋層 */
+.modal {
+  display: none; /* 初始狀態為隱藏 */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+}
+/* 模態內容 */
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 5px;
+  font-size: 1.4rem;
+}
+.modal-content p{
+  color: #004b97;
+  font-weight: 500;
+  font-size: large;
+  padding-top: 10px;
+}
+/* 關閉按鈕 */
+.close {
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+/* 定義背景色變化的動畫 */
+@keyframes colorChange {
+  0%   { background-color: #ff7f50; }
+  25%  { background-color: #9c8bfbea; }
+  50%  { background-color: rgb(36,182,133); }
+  75%  { background-color: #ffa07a; }
+  100% { background-color: #ff7f50; }
+}
+
+/* 設定按鈕的基本樣式以及綁定動畫 */
+.animated-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  animation: colorChange 4s infinite;
+  transition: transform 0.3s;
+  margin-bottom: 1rem;
+}
+
+/* 滑鼠移到按鈕上時可以加個小效果 */
+.animated-button:hover {
+  transform: scale(1.05);
+}
