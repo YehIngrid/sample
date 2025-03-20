@@ -587,3 +587,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
   }
 });
+fetch('/api/commodity/create', {
+  method: 'POST',
+  body: formData, // 使用 FormData 傳送資料
+  // 如有需要，加上驗證的 header，例如 ID Token
+})
+  .then(response => {
+    // 因為後端回傳的是純文字，所以用 text()
+    return response.text();
+  })
+  .then(commodityId => {
+    console.log('取得的商品 ID：', commodityId);
+    // 接著利用這個 ID 去取得商品詳情 (GET /api/commodity/item/:id)
+    return fetch(`/api/commodity/item/${commodityId}`);
+  })
+  .then(response => {
+    // 這個 API 會回傳 JSON，所以用 json()
+    return response.json();
+  })
+  .then(commodityData => {
+    console.log('商品詳情：', commodityData);
+    // 接下來可以利用 commodityData 做其他事情
+  })
+  .catch(err => {
+    console.error('發生錯誤：', err);
+  });
