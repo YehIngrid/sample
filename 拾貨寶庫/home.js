@@ -141,4 +141,30 @@ function scrollToContent() {
   }, { threshold: 0.1 });
 
   observer5.observe(jitterElement);
+  document.addEventListener('DOMContentLoaded', function() {
+    // 取得所有圖示元素
+    const icons = document.querySelectorAll('.icon');
+  
+    // 右側介紹區中的標題與文字
+    const introTitle = document.getElementById('intro-title');
+    const introDesc = document.getElementById('intro-desc');
+  
+    // 監聽每個圖示的 mouseenter 和 mouseleave 事件
+    icons.forEach(icon => {
+      // 滑鼠移入 -> 顯示該圖示對應介紹
+      icon.addEventListener('mouseenter', function() {
+        // 從 data-* 屬性取得標題與描述
+        const title = icon.getAttribute('data-title');
+        const desc = icon.getAttribute('data-desc');
+        introTitle.textContent = title;
+        introDesc.textContent = desc;
+      });
+  
+      // 滑鼠移出 -> 恢復預設提示
+      icon.addEventListener('mouseleave', function() {
+        introTitle.textContent = '滑鼠移到左側圖示以查看介紹';
+        introDesc.textContent = '';
+      });
+    });
+  });
   
