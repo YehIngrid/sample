@@ -55,16 +55,145 @@ nav{
   color: #86D97B;
   font-size: 28px;
 }
-.container-fluid{
-  width: 86vw !important;
+/* 3. 主要容器：包含側邊欄 + 主內容 */
+.container {
+  display: flex;
+  min-height: 100vh; /* 讓頁面至少撐滿視窗高度 */
 }
-.specialpadding{
-  padding-right: 30px;
+
+/* ---------- 側邊欄區域 ---------- */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  border-right: 1px solid #ccc;
+  padding: 20px;
 }
-@media (max-width:1200px) {
-  .specialpadding{
-      padding-right: 0px !important;
-  }
+
+/* 個人頭像與簡介 */
+.profile-info {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+.profile-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.profile-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* 選單樣式 */
+.nav-menu ul {
+  list-style: none;
+}
+.nav-menu li {
+  padding: 10px;
+  cursor: pointer;
+  color: #333;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+.nav-menu li:hover {
+  background-color: #eee;
+}
+/* 選單 active 狀態 */
+.nav-menu li.active {
+  background-color: #004b97;
+  color: #fff;
+}
+
+/* ---------- 主內容區域 ---------- */
+.content {
+  flex: 1;           /* 撐開剩餘空間 */
+  padding: 20px;
+  background-color: #fafafa;
+}
+
+/* 預設所有 tab-content 都不顯示，只有 active 才顯示 */
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+/* ---------- 表單樣式 ---------- */
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+}
+label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+input {
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #004b97;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ---------- 購物車內子標籤樣式 ---------- */
+.cart-tabs {
+  margin-bottom: 20px;
+}
+.cart-tab-button {
+  background-color: #eee;
+  border: none;
+  padding: 8px 12px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.cart-tab-button.active {
+  background-color: #004b97;
+  color: #fff;
+}
+
+/* 預設隱藏購物車內的各標籤內容，active 時才顯示 */
+.cart-tab-content {
+  display: none;
+}
+.cart-tab-content.active {
+  display: block;
+}
+.login {
+  position: fixed;
+  bottom: 20vh;
+  right: 1vw;
+  z-index: 2000; /* 根據需求調整 z-index，確保不被覆蓋 */
+  background-color: rgba(36,182,133,0.9); /* 如有需要，可調整背景色 */
+  color: #fff;
+  padding: 10px 6px;
+  font-size: 2rem;
+  text-decoration: none;
+}
+.talk {
+  position: fixed;
+  bottom: 14vh;
+  right: 1vw;
+  z-index: 2000;
+  background-color: #004b97;
+  color: #fff;
+  padding: 2px 11px;
+  font-size: 3rem;
+  text-decoration: none;
 }
 .footer{
   background-color: #004b97;
@@ -77,167 +206,6 @@ nav{
   padding-bottom: 0.8rem;  
   font-size: 12px;
 }
-/* 自訂樣式 */
-
-/* 使用 flex-wrap 讓 navbar 內容可換行 */
-.container-fluid.flex-wrap {
-  flex-wrap: wrap;
-}
-
-/* 手機版 (max-width: 991px)：
-   - 搜尋表單預設隱藏，且在換行後佔滿整行 */
-@media (max-width: 991px) {
-  #searchForm {
-    display: none;
-    order: 2;         /* 放在第二排 */
-    width: 100% !important;
-    margin-top: 10px;
-  }
-  /* 品牌與搜尋圖示維持原有順序 */
-  .navbar-brand {
-    order: 0;
-  }
-  #mobileSearchIcon {
-    order: 1;
-  }
-}
-
-/* 桌面版 (min-width: 992px)：
-   - 搜尋表單直接顯示，並維持原寬度；手機版搜尋圖示隱藏 */
-@media (min-width: 992px) {
-  #searchForm {
-    display: flex !important;
-    order: 0;
-    width: 42%;
-  }
-  #mobileSearchIcon {
-    display: none !important;
-  }
-}
-
-.sidebar {
-    width: 200px;
-    background-color: #deefff;
-    border-right: 1px solid #ddd;
-    height: 100vh;
-    position: fixed;
-    top: 80px;
-    left: 0;
-    padding-top: 20px;
-}
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    margin-top: 80px;
-}
-.sidebar ul li {
-    
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-}
-.sidebar ul li a {
-    text-decoration: none;
-    color: #333;
-    display: block;
-    padding: 15px 20px;
-}
-.sidebar ul li a:hover {
-    background-color: #bddcfa;
-    color: #0055ff;
-}
-.content {
-    margin-top: 40px;
-    margin-left: 110px;
-    padding: 20px;
-    width: 90%;
-}
-.state ul{
-    display: flex;
-}
-.state ul li a{
-    display: block;
-    box-sizing: content-box;
-    padding: 13px;
-    padding-left: 30px;
-    padding-right: 30px;
-    text-align: center;
-    color: #577379;
-    font-size:18px;
-    text-decoration: none;
-    border-bottom: #fff 2px solid;
-}
-.state ul li a:hover{
-    border-bottom: #577379 2px solid;
-}
-.order-card {
-    width: 90%;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-top: 15px;
-    margin-bottom: 20px;
-}
-.order-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.order-header h3 {
-    margin: 0;
-    font-size: 18px;
-}
-.order-header .status {
-    color: green;
-    font-size: 14px;
-}
-.order-content {
-    display: flex;
-    margin-top: 20px;
-}
-.order-image {
-    flex: 0 0 100px;
-    margin-right: 20px;
-}
-.order-image img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-.order-details {
-    flex: 1;
-}
-.order-details h4 {
-    margin: 0 0 10px;
-    font-size: 16px;
-}
-.order-details p {
-    margin: 0;
-    color: #555;
-    font-size: 14px;
-}
-.order-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-}
-.order-footer .price {
-    color: #e63946;
-    font-size: 18px;
-    font-weight: bold;
-}
-.order-footer button {
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-.order-footer button:hover {
-    background-color: #e63946;
+.container-fluid{
+  width: 86vw !important;
 }
