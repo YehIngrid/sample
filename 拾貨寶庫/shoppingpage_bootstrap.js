@@ -587,3 +587,75 @@ document.addEventListener('DOMContentLoaded', function() {
     
   }
 });
+// 1. 建立商品
+async function createCommodity() {
+  try {
+    // 準備 FormData，因為後端說要用 FormData 格式
+    const formData = new FormData();
+    formData.append('name', '我的商品');
+    formData.append('description', '這是描述');
+    formData.append('price', '100');
+    formData.append('stock', '10');
+    formData.append('category', '其他');
+    formData.append('size', 'M');
+    formData.append('age', '3');
+    
+    // 這裡示範上傳檔案 mainImage (必填)
+    // 假設前端有個 <input type="file" id="mainImageInput" />
+    const mainImageInput = document.getElementById('mainImageInput');
+    if (mainImageInput.files.length > 0) {
+      formData.append('mainImage', mainImageInput.files[0]);
+    }
+    
+    // 同理，如果要多張圖片 images (最多 2 張)
+    // const imagesInput = document.getElementById('imagesInput');
+    // for (let file of imagesInput.files) {
+    //   formData.append('images', file);
+    // }
+
+    // 發送 POST 請求
+    const createRes = await fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
+      method: 'POST',
+      body: formData,
+      // 注意：因為用 FormData，通常不手動設定 Content-Type，瀏覽器會自動帶 multipart/form-data
+      // 如果後端需要 ID Token，記得在這裡的 headers 帶上 Authorization 或其他憑證
+      headers: {
+        'Authorization': 'Bearer <你的ID Token>'
+      }
+    });
+
+    // 檢查是否建立成功 (201)
+    if (!createRes.ok) {
+      // 後端若失敗會回 400 或 500，通常會有 JSON 錯誤訊息
+      const errorData = await createRes.json();
+      console.error('建立商品失敗：', errorData);
+      return;
+    }
+
+    // 後端說「成功：201 Created 回應商品 ID」
+    // 如果它是純文字，就用 createRes.text()
+    // 如果它是 JSON，則用 createRes.json()
+    // 這要跟後端確定
+    const commodityId = await createRes.text(); 
+    console.log('建立成功，商品 ID：', commodityId);
+
+    // 2. 用商品 ID 取得商品詳情
+    const getRes = await fetch(`https://store-backend-iota.vercel.app/api/commodity/item/${commodityId}`);
+    if (!getRes.ok) {
+      const errorData = await getRes.json();
+      console.error('取得商品詳情失敗：', errorData);
+      return;
+    }
+
+    // 這裡後端回傳「包含商品詳情的 JSON」
+    const commodityData = await getRes.json();
+    console.log('商品詳情：', commodityData);
+
+    // 這裡你就可以把 commodityData 顯示在前端頁面上
+  } catch (err) {
+    console.error('發生錯誤：', err);
+  }
+}
+
+// 呼叫建立商品的函式
+createCommodity();

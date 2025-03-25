@@ -138,7 +138,7 @@ function scrollToContent() {
         scalefunc.classList.remove('active');
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.2 });
 
   observer5.observe(jitterElement);
   document.addEventListener('DOMContentLoaded', function() {

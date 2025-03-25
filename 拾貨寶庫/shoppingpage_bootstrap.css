@@ -484,3 +484,25 @@ ul{
 .animated-button:hover {
   transform: scale(1.05);
 }
+.login {
+  position: fixed;
+  bottom: 20vh;
+  right: 1vw;
+  z-index: 2000; /* 根據需求調整 z-index，確保不被覆蓋 */
+  background-color: rgba(36,182,133,0.9); /* 如有需要，可調整背景色 */
+  color: #fff;
+  padding: 10px 6px;
+  font-size: 2rem;
+  text-decoration: none;
+}
+.talk {
+  position: fixed;
+  bottom: 14vh;
+  right: 1vw;
+  z-index: 2000;
+  background-color: #004b97;
+  color: #fff;
+  padding: 2px 11px;
+  font-size: 3rem;
+  text-decoration: none;
+}
