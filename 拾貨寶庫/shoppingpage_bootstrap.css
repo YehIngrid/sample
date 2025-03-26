@@ -513,3 +513,7 @@ ul{
   font-size: 3rem;
   text-decoration: none;
 }
+.username{
+  text-decoration: none;
+  cursor: pointer;
+}
