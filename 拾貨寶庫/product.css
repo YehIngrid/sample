@@ -1,0 +1,277 @@
+@font-face {
+    font-family:'TimeMachine';
+    src: url(fonts/timemachine-wa.ttf);
+}
+html {
+    font-size: 62.5%;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+.picture img{
+    width: 40px;
+    height: 39px;
+    border-radius: 50%;
+}
+.navbar{
+    /* color: white !important; */
+    background-color: rgb(255, 255, 255); /* 半透明背景 */
+    padding: 0px !important;
+    padding-top: 14px !important;
+    align-items: end;
+}
+.login{
+    box-shadow: 0 0 2px rgba(0,0,0,0.2);
+    text-align: right;
+    font-size: 14px;
+    padding-right: 5vw;
+}
+.nav-link{
+    font-size: 14px !important;
+}
+@media (max-width: 1200px) {
+    .nav-link{
+        font-size: 12px !important;
+    }
+    .form-search{
+        width: 25% !important;
+    }
+}
+.btn-outline-color {
+    border: 1px solid rgb(36,182,133) !important;
+}
+.btn-outline-color:hover{
+    color: white !important;
+    background-color: rgb(36,182,133) !important;
+}
+.searchpic:hover {
+    color: white !important;
+}
+/* TODO line官方logo */
+.line {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-top: 2px;
+}
+.line i{
+    color: #86D97B;
+    font-size: 28px;
+}
+/* TODO advertisement */
+/* 輪播容器：桌面版寬 1200px；手機版 (max-width: 800px) 寬 100% */
+.carousel {
+    position: relative;
+    width: 85vw;
+    margin: 10% auto ;
+    /* margin: 10% auto; */
+    margin-top: 2% ;
+    margin-bottom: 1% ;
+    overflow: hidden;
+  }
+  @media (max-width: 800px) {
+    .carousel {
+      width: 100%;
+    }
+  }
+  /* 軌道與幻燈片 */
+  .carousel-track {
+    display: flex;
+
+    transition: transform 0.5s ease;
+  }
+  /* 桌面版每個幻燈片固定 600px 寬；手機版則全寬 */
+  .slide {
+    width: 600px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  @media (max-width: 800px) {
+    .slide {
+      width: 100%;
+    }
+  }
+  .slide img {
+    width: 100%;
+    display: block;
+    border-radius:10px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+  }
+  /* 箭頭控制 */
+/* 假設你的輪播外層容器為 .carousel */
+.carousel {
+    position: relative; /* 讓 .carousel 作為定位參考容器 */
+    overflow: hidden;   /* 可視需求，通常輪播會隱藏超出範圍的內容 */
+  }
+  
+  /* 基本按鈕樣式（可依需求自行調整） */
+  .arrow {
+    position: absolute;        /* 絕對定位 */
+    top: 50%;                  /* 垂直置中 */
+    transform: translateY(-50%); /* 往上移動自身高度的一半，達到置中 */
+    background: rgba(255,255,255,0.8);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 10;               /* 確保按鈕在最前方，可依需求調整 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  
+  /* 左邊箭頭 */
+  .arrow-left {
+    left: 10px; /* 靠左 10px，可依需求調整 */
+  }
+  
+  /* 右邊箭頭 */
+  .arrow-right {
+    right: 10px; /* 靠右 10px，可依需求調整 */
+  }
+  
+  /* 滑鼠懸停時可以做些效果 */
+  .arrow:hover {
+    background: rgba(255,255,255,1);
+  }
+  
+.header {
+    display: block;
+    background-color: rgba(255, 255, 255);
+}
+/* TODO 功能鈕：許願池等等 */
+ul{
+    padding-left: 0rem !important;
+}
+.seriesofbutton ul{
+    display: flex !important;
+    list-style: none;
+    justify-content: center;
+}
+.seriesofbutton li{
+    display: flex;
+    flex-direction: column !important;
+    font-size: 1.3rem;
+    color:#004b97;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+@media (max-width:380px) {
+    .seriesofbutton li{
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+}
+.seriesofbutton button{
+    border: 1px solid #004b9739 ;
+    border-radius: 15px;
+    width: 40px;
+    background-color: white;
+    font-size: 26px;
+    color:#004b97;
+} 
+.what {
+    margin: 13px;
+    
+}
+.container h4{
+    margin-top: 15px !important;
+}
+.container-fluid{
+    width: 86vw !important;
+}
+.specialpadding{
+    padding-right: 30px;
+}
+@media (max-width:1200px) {
+    .specialpadding{
+        padding-right: 0px !important;
+    }
+}
+.footer{
+    background-color: #004b97;
+    color: #ffffff;
+    text-align: center;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;  
+    font-size: 12px;
+}
+/* 自訂樣式 */
+
+
+
+/* 使用 flex-wrap 讓 navbar 內容可換行 */
+.container-fluid.flex-wrap {
+    flex-wrap: wrap;
+  }
+  
+  /* 手機版 (max-width: 991px)：
+     - 搜尋表單預設隱藏，且在換行後佔滿整行 */
+  @media (max-width: 991px) {
+    #searchForm {
+      display: none;
+      order: 2;         /* 放在第二排 */
+      width: 100% !important;
+      margin-top: 10px;
+    }
+    /* 品牌與搜尋圖示維持原有順序 */
+    .navbar-brand {
+      order: 0;
+    }
+    #mobileSearchIcon {
+      order: 1;
+    }
+  }
+  
+  /* 桌面版 (min-width: 992px)：
+     - 搜尋表單直接顯示，並維持原寬度；手機版搜尋圖示隱藏 */
+  @media (min-width: 992px) {
+    #searchForm {
+      display: flex !important;
+      order: 0;
+      width: 42%;
+    }
+    #mobileSearchIcon {
+      display: none !important;
+    }
+  }
+  
+
+/* .login {
+  position: fixed;
+  bottom: 20vh;
+  right: 1vw;
+  z-index: 2000; /* 根據需求調整 z-index，確保不被覆蓋 
+  background-color: rgba(36,182,133,0.9); /* 如有需要，可調整背景色 
+  color: #fff;
+  padding: 10px 6px;
+  font-size: 2rem;
+  text-decoration: none;
+} */
+.talk {
+  position: fixed;
+  bottom: 14vh;
+  right: 1vw;
+  z-index: 2000;
+  background-color: #004b97;
+  color: #fff;
+  padding: 2px 11px;
+  font-size: 3rem;
+  text-decoration: none;
+}
+.username{
+  text-decoration: none;
+  cursor: pointer;
+}

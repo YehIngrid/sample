@@ -665,3 +665,10 @@ async function createCommodity() {
 
 // 呼叫建立商品的函式
 createCommodity();
+document.querySelectorAll('.card-detail-btn').forEach(btn => {
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    const id = this.closest('.product-card').dataset.id;
+    window.location.href = `product.html?id=${id}`;
+  });
+});
