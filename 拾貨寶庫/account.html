@@ -212,13 +212,13 @@
                 <form id="loginForm">
                   <h1 class="h1">登入<br><br></h1>
                   <div class="form-floating">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="s4113001001@mail.nchu.edu.tw">
-                    <label for="floatingInput p">請輸入中興大學提供的電子信箱</label>
+                    <input type="email" class="form-control form-control-lg" id="floatingInput" placeholder="s4113001001@mail.nchu.edu.tw">
+                    <label for="floatingInput">請輸入中興大學提供的電子信箱</label>
                   </div>
                   <br>
                   <div class="form-floating">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                    <label for="floatingPassword p">請輸入密碼</label>
+                    <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password">
+                    <label for="floatingPassword">請輸入密碼</label>
                     <i id="checkEye" class="fas fa-eye"></i>
                   </div>
                   <button type="submit" id="send">登入</button>
@@ -227,70 +227,48 @@
                   
                 </form>
                 <p class="p"><br>
-                  還沒有加入拾貨寶庫的會員嗎？<a id="signupLink" href="#">馬上註冊</a>
+                  還沒有加入拾貨寶庫的會員嗎？<a id="signupLink" href="#">快速註冊</a>
                 </p>
               </div>
             </div>
-          </div>
-        <!-- <div class="content">
-          <div id="loginModal" class="contentoflogin">
-            <div class="modalwhat">
-              <form id="loginForm">
-                <h1 class="h1">登入<br><br></h1>
-                <div class="form-floating">
-                  <input type="email" class="form-control" id="floatingInput" placeholder="s4113001001@mail.nchu.edu.tw">
-                  <label for="floatingInput">請輸入中興大學提供的電子信箱</label>
-                </div>
-                <br>
-                <div class="form-floating">
-                  <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                  <label for="floatingPassword">請輸入密碼</label>
-                  <i id="checkEye" class="fas fa-eye"></i>
-                </div>
-                <button type="submit" id="send">登入</button>
-                <br>
-                <a href="#" class="p">忘記密碼？</a>
-                
-              </form>
-              <p class="p"><br>
-                還沒有加入拾貨寶庫的會員嗎？<a id="signupLink" href="#">馬上註冊</a>
-              </p>
-            </div> -->
-          </div>
-          
-          <div id="signuppage" class="signuppage">
-            <div id="signupModal" class="modal">
-              <form id="signupForm">
-                <label for="email" class="p">電子郵件：</label>
-                <input type="email" id="email" placeholder="請輸入學校提供的電子郵件">
-                <br>
-                <button type="button" id="sendVerification" class="p">取得驗證碼</button>
-                <br>
-                <label for="vcode" class="p">驗證碼：</label>
-                <input type="text" id="vcode" placeholder="請輸入驗證碼">
-                <br>
-                <label for="password1" class="p">設定您的密碼：</label>
-                <input type="password" id="password1" placeholder="請輸入至少6位以上">
-                <br>
-                <label for="password2" class="p">確認密碼：</label>
-                <input type="password" id="password2" placeholder="請再次輸入密碼">
-                <br>
-                <label for="name" class="p">暱稱：</label>
-                <input type="text" id="name" placeholder="請輸入暱稱">
-                <br>
-                <button type="submit" id="sign" class="p">註冊</button>
-              </form>
+            <div id="signuppage" class="signuppage d-none">
+              <div id="signupModal" class="modalwhat">
+                <form id="signupForm">
+                  <a class="backlogin" id="backlogin">返回登入頁</a>
+                  <h1 class="h1">註冊<br><br></h1>
+                  <div class="form-floating form-signemail">
+                  <input class="form-control" type="email" id="email" placeholder="請使用學校的電子郵件註冊">
+                  <label for="floatingInput">請使用學校的電子郵件註冊</label>
+                  </div>
+                  <div class="form-floating form-signpass">
+                  <input class="form-control" type="password" id="password1" placeholder="請輸入至少6位以上">
+                  <label for="floatingPassword" class="p">設定您的密碼，至少6位英數字混合</label>
+                  <i id="checkEye1" class="fas fa-eye"></i>
+                  </div>
+                  <div class="form-floating form-signpass">
+                  <input class="form-control" type="password" id="password2" placeholder="請再次輸入密碼">
+                  <label for="floatingPassword" class="p">請再次輸入密碼</label>
+                  <i id="checkEye2" class="fas fa-eye"></i>
+                  </div>
+                  <div class="form-floating form-signnick">
+                  <input class="form-control" type="text" id="name" placeholder="請輸入暱稱">
+                  <label for="floatingInput" >請輸入您的暱稱</label>
+                  </div>
+                  <button type="submit" id="sign" class="signbtn">註冊</button>
+                  <p class="policy">註冊即表示您同意<a>服務條款</a>與<a>隱私權政策</a></p>
+                </form>
+              </div>
             </div>
           </div>
-          
         </div>
+          
+        
         <div class="footer">Copyright©2025拾貨寶庫｜All Rights Reserved</div>
       </div>
         <!-- script部分-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
         <script src="account.js"></script>

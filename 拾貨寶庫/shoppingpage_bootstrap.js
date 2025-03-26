@@ -204,12 +204,18 @@ auth.onAuthStateChanged(function(user) {
   const loginForm = document.getElementById('loginForm');
   const logoutButton = document.getElementById('logoutButton');
   const authButton = document.getElementById('authButton');
+  const username = document.getElementById('username');
 
   if (user) {
     console.log("使用者已登入：", user);
+    console.log("username: ", user.displayName);
     localStorage.setItem("isLoggedIn", "true");
     if (loginForm) loginForm.style.display = "none";
     if (logoutButton) logoutButton.style.display = "block";
+    if (username) {
+      username.textContent = `${user.displayName}, 你好！`;
+      // username.style.display = "block";
+    }
     if (authButton) {
       authButton.textContent = "登出";
       authButton.onclick = function(e) {

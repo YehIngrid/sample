@@ -162,7 +162,20 @@ input::placeholder {
   transform: translateY(-50%);
   font-size: 1.5rem;
 }
-
+#checkEye1 {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+}
+#checkEye2 {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+}
 
 .form-signin .checkbox {
   font-weight: 400;
@@ -170,8 +183,15 @@ input::placeholder {
 
 .form-signin .form-floating:focus-within {
   z-index: 2;
+  padding-top: 0.4rem;
+}
+.form-floating label {
+  font-size: 1.2rem; /* 或改成 20px、24px 看你想多大 */
 }
 
+.form-control {
+  font-size: 1.5rem !important;
+}
 .form-signin input[type="email"] {
   margin-bottom: -16px;
   border-bottom-right-radius: 0;
@@ -185,4 +205,50 @@ input::placeholder {
 }
 .p{
   font-size: 1.5rem;
+}
+.signupForm {
+  background-color: #fff;
+  border-radius: 10px;
+  min-width: 330px;
+}
+.backlogin {
+  text-align: right;
+  font-size: 14px;
+  display: block;
+  cursor: pointer;
+}
+.form-signemail input[type="email"]{
+  font-size: 1.5rem;
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signpass input[type="password"] {
+  font-size: 1.5rem;
+  margin-bottom: -3px;
+  border-radius: 0 !important;
+}
+.form-signpass input[type="text"] {
+  font-size: 1.5rem;
+  margin-bottom: -3px;
+  border-radius: 0 !important;
+}
+.form-signnick input[type="text"] {
+  font-size: 1.5rem;
+  margin-bottom: -17px;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+.signbtn{
+  margin-top: 8vh !important;
+  margin-bottom: 4vh !important;
+}
+.policy{
+  color: #b1b1b1;
+  font-size: 14px;
+  text-align: right;
+}
+.policy a{
+  color: rgb(36,182,133) !important;
+  cursor: pointer;
 }
