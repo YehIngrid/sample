@@ -22,97 +22,7 @@ window.onload = function() {
       const img = new Image();
       img.src = url;
     });
-  
-    // 以下為原本的輪播程式碼
-  
-    const carousel = document.querySelector('.carousel');
-    const track = document.querySelector('.carousel-track');
-    let containerWidth = carousel.offsetWidth;
-    let slideWidth = 600; // 桌面版預設幻燈片寬度
-    // 初始設定：第一個真實幻燈片在 index 1
-    let currentIndex = 1;
-    
-    // 更新輪播位置，根據容器寬度調整計算
-    function updateCarousel() {
-      containerWidth = carousel.offsetWidth;
-      let offset;
-      if (containerWidth < 800) {
-        // 手機版：幻燈片全寬
-        slideWidth = containerWidth;
-        // currentIndex 從 1 代表第一個真實幻燈片，因此 offset = (currentIndex - 1) * slideWidth
-        offset = (currentIndex - 1) * slideWidth;
-      } else {
-        // 桌面版：幻燈片固定 600px
-        slideWidth = 600;
-        // offset = currentIndex * 600 + slideWidth/2 - (containerWidth / 2)
-        offset = currentIndex * slideWidth + slideWidth / 2 - containerWidth / 2;
-      }
-      track.style.transform = `translateX(-${offset}px)`;
-    }
-    updateCarousel();
-    
-    // 前進到下一張
-    function moveToNext() {
-      track.style.transition = "transform 0.5s ease";
-      currentIndex++;
-      updateCarousel();
-    }
-    
-    // 往回上一張
-    function moveToPrev() {
-      track.style.transition = "transform 0.5s ease";
-      currentIndex--;
-      updateCarousel();
-    }
-    
-    // 無縫循環處理：監聽 transitionend 事件
-    track.addEventListener('transitionend', () => {
-      const slides = document.querySelectorAll('.slide');
-      // 如果移動到複製的第一張（最後一張），則重置到第一個真實幻燈片
-      if (currentIndex === slides.length - 1) {
-        track.style.transition = "none";
-        currentIndex = 1;
-        updateCarousel();
-        void track.offsetWidth;
-        track.style.transition = "transform 0.5s ease";
-      }
-      // 如果移動到複製的最後一張（index = 0），則重置到最後一個真實幻燈片
-      else if (currentIndex === 0) {
-        track.style.transition = "none";
-        currentIndex = slides.length - 2;
-        updateCarousel();
-        void track.offsetWidth;
-        track.style.transition = "transform 0.5s ease";
-      }
-    });
-    
-    // 自動輪播，每 3 秒前進一次
-    let autoSlide = setInterval(moveToNext, 3000);
-    
-    // 箭頭點擊事件
-    const arrowLeft = document.querySelector('.arrow-left');
-    const arrowRight = document.querySelector('.arrow-right');
-    arrowLeft.addEventListener('click', () => {
-      clearInterval(autoSlide); // 手動操作時暫停自動輪播
-      moveToPrev();
-      autoSlide = setInterval(moveToNext, 2000);
-    });
-    arrowRight.addEventListener('click', () => {
-      clearInterval(autoSlide);
-      moveToNext();
-      autoSlide = setInterval(moveToNext, 2000);
-    });
-    
-    // 畫面尺寸變化時更新輪播位置
-    window.addEventListener('resize', updateCarousel);
-    
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        // 當頁籤變回可見時，強制更新狀態
-        updateCarousel();
-      }
-    });
-  });
+})
   document.addEventListener('DOMContentLoaded', function() {
     const mobileSearchIcon = document.getElementById('mobileSearchIcon');
     const searchForm = document.getElementById('searchForm');
@@ -129,27 +39,6 @@ window.onload = function() {
       }
     });
   });
-  //JavaScript: 控制左右按鈕捲動
-  
-    const scrollContainer = document.getElementById('scrollContainer');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-  
-    // 點擊「←」按鈕，向左捲動
-    prevBtn.addEventListener('click', () => {
-      scrollContainer.scrollBy({
-        left: -200,       // 向左捲動 200px
-        behavior: 'smooth'
-      });
-    });
-  
-    // 點擊「→」按鈕，向右捲動
-    nextBtn.addEventListener('click', () => {
-      scrollContainer.scrollBy({
-        left: 200,        // 向右捲動 200px
-        behavior: 'smooth'
-      });
-    });
   //TODO Firebase 設定
   // Firebase 設定
   const firebaseConfig = {
@@ -187,12 +76,12 @@ window.onload = function() {
       };
     }
     
-    // 綁定 #send 按鈕提交事件，觸發登入
-    $('#send').on('click', function(e){
-      e.preventDefault(); // 攔截表單預設提交
-      console.log("表單已提交！");
-      callLogIn();
-    });
+    // // 綁定 #send 按鈕提交事件，觸發登入
+    // $('#send').on('click', function(e){
+    //   e.preventDefault(); // 攔截表單預設提交
+    //   console.log("表單已提交！");
+    //   callLogIn();
+    // });
     
     // 綁定 #logoutButton 按鈕提交事件，觸發登出
     $('#logoutButton').on('click', function(e){
@@ -366,51 +255,6 @@ window.onload = function() {
       });
   }
   
-  // 切換密碼顯示/隱藏（點擊眼睛圖示）
-  $("#checkEye").click(function () {
-    if($(this).hasClass('fa-eye')){
-       $("#floatingPassword").attr('type', 'text');
-    } else {
-       $("#floatingPassword").attr('type', 'password');
-    }
-    $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
-  });
-  const seller = document.querySelector('#seller');
-  const sellerbtn = document.querySelector('#sellerbtn');
-  const content = document.querySelector('#midcontent');
-  sellerbtn.addEventListener('click', function(e){
-    if(!auth.currentUser){
-      Swal.fire({
-        title: "您必須先登入才能進入賣家專區！",
-        text: "請前往登入頁",
-        icon: "info"
-      });
-    } else {
-      content.style.display ="none";
-      seller.style.display = "block";
-    }
-    
-  })
-  const backbtn = document.querySelector('#back-btn');
-  backbtn.addEventListener('click', function(e){
-    content.style.display = 'block';
-    seller.style.display = 'none';
-  })
-  // 取得元素
-  const modal = document.getElementById('myModal');
-  const openBtn = document.getElementById('openModal');
-  const closeBtn = document.getElementById('closeModal');
-  
-  // 點擊按鈕時打開模態視窗
-  openBtn.addEventListener('click', () => {
-    modal.style.display = 'block';
-  });
-  
-  // 點擊關閉按鈕時關閉模態視窗
-  closeBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
-  
   // 當點擊模態背景也關閉模態視窗
   window.addEventListener('click', (event) => {
     if (event.target === modal) {
@@ -424,11 +268,11 @@ window.onload = function() {
     const openModalBtn = document.getElementById('openModal');
     console.log('openModal 按鈕:', openModalBtn);
     
-    // 將 submit 事件綁定到 form 上
-    form.addEventListener('submit', function(e) {
-      e.preventDefault(); // 防止表單預設送出
-      createCommodity();
-    });
+    // // 將 submit 事件綁定到 form 上
+    // form.addEventListener('submit', function(e) {
+    //   e.preventDefault(); // 防止表單預設送出
+    //   createCommodity();
+    // });
   
     // 將 createCommodity 定義在全域或 DOMContentLoaded 區塊中皆可，
     // 但注意：如果 HTML 中使用了 inline onsubmit，就必須確保這個函式能在全域中存取
@@ -672,4 +516,35 @@ window.onload = function() {
       window.location.href = `product.html?id=${id}`;
     });
   });
-  
+// 取得網址中的商品 ID
+const urlParams = new URLSearchParams(window.location.search);
+const productId = urlParams.get('id');
+
+// 如果沒有 id，跳回首頁
+if (!productId) {
+  alert("找不到商品 ID！");
+  window.location.href = "shoppingpage_bootstrap.html";
+}  
+// 撈取後端資料
+axios.get(`https://store-backend-iota.vercel.app/api/commodity/item/${productId}`)
+  .then(response => {
+    const product = response.data;
+    renderProduct(product);
+  })
+  .catch(error => {
+    console.error("載入商品失敗", error);
+    alert("無法取得商品資訊！");
+  });
+
+// 將商品資料顯示在畫面上
+function renderProduct(product) {
+  document.getElementById('product-img').src = product.image || "default.jpg";
+  document.getElementById('product-name').textContent = product.name || "無商品名稱";
+  document.getElementById('product-category').textContent = `#${product.category || "未分類"}`;
+  document.getElementById('product-price').textContent = `${product.price} NT$`;
+  document.getElementById('product-description').textContent = product.description || "此商品尚無描述。";
+}
+const backbtn = document.querySelector('#back-btn');
+backbtn.addEventListener('click', function(e){
+    window.history.back();
+})
