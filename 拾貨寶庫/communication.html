@@ -1,15 +1,7 @@
 <!DOCTYPE html>
     <html lang="zh-TW">
     <head>
-        <script>
-            let titles = ["客服諮詢"];
-            let index = 0;
-            
-            setInterval(() => {
-                document.title = titles[index];
-                index = (index + 1) % titles.length;
-            }, 1000);
-        </script>
+        <title>客服諮詢</title>
             
         <!-- meta部分 -->
         <meta charset="UTF-8">
@@ -118,7 +110,11 @@
         <!-- TODO header -->
         <div class="header ">
             <!--TODO 響應式選單-->
-            <nav class="navbar navbar-expand-lg navbar-color bg-color header_new ">
+            <nav class="login">
+              <a id="username" class="username"></a>
+              <a class="navbar-brand me-auto" href="account.html" id="authButton">登入</a>
+            </nav>
+            <nav class="navbar navbar-expand-lg navbar-color bg-color header_new " style="box-shadow:0 0 2px rgba(0,0,0,0.2);">
                 <div class="container-fluid">      
                     <a class="navbar-brand picture " href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
                         <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50" >
@@ -184,7 +180,6 @@
                       <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
                       <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
                       <li class="nav-item specialpadding"><a class="nav-link" href="communication.html">客服諮詢</a></li>
-                      <li class="nav-item"><a class="nav-link" href="account.html" id="authButton">登入</a></li>
                       <li class="nav-item">
                         <a class="nav-link specialpadding" href="shoppingcart.html">
                           <i style="padding-top: 2px; font-size: 22px; color:#004b97;"
@@ -203,7 +198,7 @@
           </div>
         </div>
         <!-- TODO content -->
-        <div class="content">
+      <div class="content" style="padding-bottom: 15vh;">
         <div class="form-container">
           <h2>對我們有什麼疑問嗎？<br>歡迎留下您的問題</h2>
           <div class="form-content">
@@ -220,7 +215,21 @@
           </div>
         </div>
       </div>
-        <div class="footer">Copyright©2025拾貨寶庫｜All Rights Reserved
+      <div class="footerunder">
+        Copyright©2025拾貨寶庫｜All Rights Reserved
+    </div> 
+    
+      <section class="footer">
+        <div class="footer-row d-flex justify-content-center">
+              <li><a href="#">關於我們｜</a></li>
+              <li><a href="#">常見問題｜</a></li>
+              <li><a href="#">客服諮詢｜</a></li>
+              <li><a href="#">常見問題｜</a></li>
+              <li><a href="#">隱私政策｜</a></li>
+              <li><a href="#">使用條款｜</a></li>
+              <li><a href="#">退換貨政策</a></li>
+        </div>
+      </section>
       </div>
         <!-- script部分-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

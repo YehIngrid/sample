@@ -252,3 +252,38 @@ input::placeholder {
   color: rgb(36,182,133) !important;
   cursor: pointer;
 }
+.login{
+  box-shadow: 0 ;
+  text-align: right;
+  font-size: 14px;
+  padding-right: 5vw;
+  background: linear-gradient(to right, #004b9759, rgb(36,138,133,0.3));
+  box-shadow:0px !important;
+}
+.footer-row li a{
+  color: #fff;
+  text-decoration: none;
+}
+.footer-row{
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+}
+.footer-row li{
+  list-style: none;
+}
+.footerunder{
+  background-color: #004b97;
+  color: #ffffff;
+  text-align: center;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  padding-top: 1rem;
+  padding-bottom: 1.2rem;  
+  font-size: 12px;
+}
+.footer{
+  background-color: #004b97e0;
+  display: flex;
+  justify-content: center;
+}

@@ -18,7 +18,7 @@ html {
 .navbar{
   color: white !important;
   background-color: rgb(255, 255, 255); /* 半透明背景 */
-  padding: 8px !important;
+  padding: 0px !important;
 }
 nav{
   box-shadow: 0 0 2px rgba(0,0,0,0.2);
@@ -66,18 +66,6 @@ nav{
       padding-right: 0px !important;
   }
 }
-.footer{
-  background-color: #004b97;
-  color: #ffffff;
-  text-align: center;
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  padding-top: 0.8rem;
-  padding-bottom: 0.8rem;  
-  font-size: 12px;
-}
-/* 自訂樣式 */
 
 /* 使用 flex-wrap 讓 navbar 內容可換行 */
 .container-fluid.flex-wrap {
@@ -259,4 +247,39 @@ nav{
     list-style-type: none;
     margin-left: -2rem;
   }
+}
+.login{
+  box-shadow: 0 ;
+  text-align: right;
+  font-size: 14px;
+  padding-right: 5vw;
+  background: linear-gradient(to right, #004b9759, rgb(36,138,133,0.3));
+  box-shadow:0px !important;
+}
+.footer-row li a{
+  color: #fff;
+  text-decoration: none;
+}
+.footer-row{
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+}
+.footer-row li{
+  list-style: none;
+}
+.footerunder{
+  background-color: #004b97;
+  color: #ffffff;
+  text-align: center;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  padding-top: 1rem;
+  padding-bottom: 1.2rem;  
+  font-size: 12px;
+}
+.footer{
+  background-color: #004b97e0;
+  display: flex;
+  justify-content: center;
 }
