@@ -252,9 +252,9 @@ function callSignUp(){
   
   axios.post('https://store-backend-iota.vercel.app/api/account/signup', obj)
     .then(function (response) {
-      console.log(typeof response.data); // "string" 還是 "object"
+      console.log(typeof response.data);
       console.log("回傳資料：", response.data);
-      if(response.data.data == "User created successfully"){
+      if(response.data.message == "User created successfully"){
         Swal.fire({
           icon: "success",
           title: "帳號註冊成功",
@@ -269,7 +269,7 @@ function callSignUp(){
     })
     .catch(function (error) {
       console.error("註冊錯誤：", error);
-      if(error.response.data.data === "User already exists"){
+      if(error.response.data.message === "Email already exists"){
         Swal.fire({
           icon: "error",
           title: "此帳號已被註冊",
