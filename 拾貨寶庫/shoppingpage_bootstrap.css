@@ -628,3 +628,41 @@ ul{
 .card-img-top{
   padding-top: 2vh;
 }
+.wishad{
+  background-color: #ffecada1;
+  width: 80vw;
+  margin: 0 auto;
+  border-radius: 20px;
+  padding: 3vw;
+  margin-bottom: 7vh;
+}
+.wishad h2{
+  background-color: #ff8952;
+  display: inline;
+  color: #ffecad;
+  font-weight: 400;
+  padding: 5px;
+  border-radius: 5px;
+}
+.wishad h1{
+  color:#803c00;
+  font-size: 4rem;
+  font-weight: 700;
+  padding-top: 10px;
+}
+.wishad h3{
+  padding-top: 2rem;
+  color: #803c00;
+  font-size: 2rem;
+}
+.wishad p{
+  color: #803c00;
+  font-size: 1.6rem;
+}
+.contentwish{
+  margin: 0 auto;
+  width: 80vw;
+}
+.contentwish p{
+  font-size: 1.6rem;
+}

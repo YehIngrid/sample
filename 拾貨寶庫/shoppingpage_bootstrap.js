@@ -672,3 +672,27 @@ document.querySelectorAll('.card-detail-btn').forEach(btn => {
     window.location.href = `product.html?id=${id}`;
   });
 });
+const wishpool = document.getElementById('wishpool');
+const backbtn1 = document.getElementById('back-btn1');
+const wishpoolbtn = document.getElementById('wishpoolbtn');
+wishpoolbtn.addEventListener('click', function(e){
+  wishpool.style.display = 'block';
+  console.log('hello');
+  content.style.display = 'none';
+})
+backbtn1.addEventListener('click', function(e){
+  wishpool.style.display = 'none';
+  console.log('hiii');
+  content.style.display = 'block';
+})
+const member = document.getElementById('member');
+const memberbtn = document.getElementById('memberbtn');
+const backbtn2 = document.getElementById('back-btn2');
+memberbtn.addEventListener('click', function(e){
+  member.style.display = 'block';
+  content.style.display = 'none';
+})
+backbtn2.addEventListener('click', function(e){
+  member.style.display = 'none';
+  content.style.display = 'block';
+})

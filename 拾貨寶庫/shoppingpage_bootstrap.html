@@ -249,8 +249,8 @@
     <div class="seriesofbutton">
         <ul>
             <li><button id="sellerbtn"><i class="ti ti-building-store"></i></button>賣家專區</li>
-            <li><button><i class="ti ti-fountain"></i></button>許願池</li>
-            <li><button><i class="ti ti-brand-my-oppo"></i></button>會員專區</li>
+            <li><button id="wishpoolbtn"><i class="ti ti-fountain"></i></button>許願池</li>
+            <li><button id="memberbtn"><i class="ti ti-brand-my-oppo"></i></button>會員專區</li>
             <li><button><i class="ti ti-gift"></i></button>神秘箱</li>
             <li><button><i class="ti ti-calendar-event"></i></button>每日登入</li>
             <li><button><i class="ti ti-brand-cashapp"></i></button>我要捐款</li>
@@ -581,17 +581,45 @@
       <p>其他照片：可傳多張（最多5張），會放在商品的詳細資訊內</p>
     </div>
   </div>
-  <div class="footerunder">
-    Copyright©2025拾貨寶庫｜All Rights Reserved
+  
+<!-- TODO:許願池 -->
+<section class="wishpool" id="wishpool" style="display: none;">
+  <button class="back-btn" id="back-btn1"><i class="fa-solid fa-arrow-left "></i>返回購物頁</button>
+  <div class="wishad">
+    <h2>📣 許願池上線啦！</h2>
+    <h1>買家許願，賣家成真！</h1>
+    <p>你有想找的寶物卻苦無下落？
+      現在只要在許願池寫下你的願望，
+      就有機會讓賣家幫你實現！</p>
+    <h3>📦 賣家也別錯過！</h3>
+    <p>看看買家在找什麼，
+      上架對的東西，就能馬上成交！</p>
+    <h3>💫 許願池是買賣雙方的命運交會點</h3>
+    <p>一起來打造你專屬的寶藏清單吧！</p>
+  </div>
+  <div class="contentwish d-flex">
+    
+    <p>詳細操作辦法：</p>
+    <form action="submit">
+      <label for="subject">我想要許願：</label>
+      <input type="text">
+      <button>送出許願</button>
+    </form>
+  </div>
+  
+</section>
+<section class="member" id="member" style="display: none;">
+  <button class="back-btn" id="back-btn2"><i class="fa-solid fa-arrow-left "></i>返回購物頁</button>
+</section>
+<div class="footerunder">
+  Copyright©2025拾貨寶庫｜All Rights Reserved
 </div> 
-
   <section class="footer">
     <div class="footer-row d-flex justify-content-center">
-          <li><a href="#">關於我們｜</a></li>
-          <li><a href="#">常見問題｜</a></li>
-          <li><a href="#">客服諮詢｜</a></li>
-          <li><a href="#">常見問題｜</a></li>
-          <li><a href="#">隱私政策｜</a></li>
+          <li><a href="introduce.html">關於我們｜</a></li>
+          <li><a href="questions.html">常見問題｜</a></li>
+          <li><a href="communication.html">客服諮詢｜</a></li>
+          <li><a href="policy.html">隱私政策｜</a></li>
           <li><a href="#">使用條款｜</a></li>
           <li><a href="#">退換貨政策</a></li>
     </div>
