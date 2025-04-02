@@ -669,7 +669,7 @@ ul{
 
 .container-card {
   display: flex;
-  justify-content: flex-start; /* 整體置中（只會影響 card-wrapper） */
+  justify-content: center; /* 整體置中（只會影響 card-wrapper） */
 }
 
 .card-wrapper {
