@@ -8,6 +8,21 @@ window.onload = function() {
     content.style.setProperty('display', 'block', 'important');
   }
   };
+  // 當頁面載入完成後，先預加載所有圖片
+  window.addEventListener('load', () => {
+    const imageUrls = [
+      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
+      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
+      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
+      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
+      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
+      
+    ];
+    imageUrls.forEach(url => {
+      const img = new Image();
+      img.src = url;
+    });
+})
   document.addEventListener('DOMContentLoaded', function() {
     const mobileSearchIcon = document.getElementById('mobileSearchIcon');
     const searchForm = document.getElementById('searchForm');
@@ -428,7 +443,8 @@ backbtn.addEventListener('click', function(e){
     window.history.back();
 })
 document.addEventListener('DOMContentLoaded', function () {
-    const id = ;
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id'); // ✅ 必須先宣告，才能使用！
   console.log("id", id);
     if (id) {
       fetch(`https://store-backend-iota.vercel.app/api/commodity/item/${id}`)

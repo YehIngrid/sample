@@ -670,10 +670,7 @@ console.log('productlist:',productList);
     productList.forEach(product => {
       const card = document.createElement('div');
       card.className = 'card product-card';
-      card.dataset.id = product._id || product.id; // 用 ID 填入 data-id
-      console.log('product._id:',product._id );
-      console.log('product.id:', product.id);
-      console.log('card:',card.dataset.id);
+      card.dataset.id = product.id; // 用 ID 填入 data-id
       card.style.width = '17rem';
     // 檢查螢幕寬度是否為手機（小於 768px）
     if (window.innerWidth < 768) {
@@ -699,11 +696,12 @@ console.log('productlist:',productList);
     // 綁定點擊卡片的「詳細資訊」按鈕事件
     document.querySelectorAll('.card-detail-btn').forEach(btn => {
       btn.addEventListener('click', function (e) {
+        e.preventDefault();
         //const id = this.closest('.product-card').dataset.id;
         const id = e.target.closest('.product-card').dataset.id;
         console.log('id', id);
         if (id) {
-          //window.location.href = `product.html?id=${id}`;
+          window.location.href = `product.html?id=${id}`;
         }
       });
     });
