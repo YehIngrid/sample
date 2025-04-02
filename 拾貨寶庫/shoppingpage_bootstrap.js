@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
         icon: "warning"
       });
       return;
-    } else if (productDesc.length < 20) {
+    } else if (productDesc.length < 5) {
       Swal.fire({
         title: "字數太少",
         text:"商品狀態描述至少需要 20 字以上，請再補充內容。",
@@ -581,18 +581,18 @@ document.addEventListener('DOMContentLoaded', function() {
             });
           }
         }).then(result => {
+          console.log('result:', result);
           const newId = result.data; // 拿到商品 ID
-    
+          
           Swal.fire({
             title: "商品上架成功！",
             text: "請確認首頁商品欄有無您上架的商品",
             icon: "success"
           }).then(() => {
-            localStorage.setItem('newProductId', newId);
+            
             // ✅ 成功後跳轉回首頁，帶上商品 ID 當參數
             window.location.href = `shoppingpage_bootstrap.html?id=${newId}`;
           });
-    
           form.reset();
         }).catch(error => {
           console.error('Error:', error);
@@ -602,13 +602,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
   }
-});
-document.querySelectorAll('.card-detail-btn').forEach(btn => {
-  btn.addEventListener('click', function(e){
-    e.preventDefault();
-    const id = this.closest('.product-card').dataset.id;
-    window.location.href = `product.html?id=${id}`;
-  });
 });
 const wishpool = document.getElementById('wishpool');
 const backbtn1 = document.getElementById('back-btn1');
@@ -673,11 +666,14 @@ fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
   .then(result => {
     const productList = result.data;
     const container = document.querySelector('.container-card');
-
+console.log('productlist:',productList);
     productList.forEach(product => {
       const card = document.createElement('div');
       card.className = 'card product-card';
       card.dataset.id = product._id || product.id; // 用 ID 填入 data-id
+      console.log('product._id:',product._id );
+      console.log('product.id:', product.id);
+      console.log('card:',card.dataset.id);
       card.style.width = '17rem';
     // 檢查螢幕寬度是否為手機（小於 768px）
     if (window.innerWidth < 768) {
@@ -700,16 +696,17 @@ fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
       `;
       container.appendChild(card);
     });
-
     // 綁定點擊卡片的「詳細資訊」按鈕事件
     document.querySelectorAll('.card-detail-btn').forEach(btn => {
       btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        const id = this.closest('.product-card').dataset.id;
+        //const id = this.closest('.product-card').dataset.id;
+        const id = e.target.closest('.product-card').dataset.id;
+        console.log('id', id);
         if (id) {
-          window.location.href = `product.html?id=${id}`;
+          //window.location.href = `product.html?id=${id}`;
         }
       });
     });
   })
   .catch(err => console.error('載入商品失敗：', err));
+

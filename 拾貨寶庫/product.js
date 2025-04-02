@@ -8,21 +8,6 @@ window.onload = function() {
     content.style.setProperty('display', 'block', 'important');
   }
   };
-  // 當頁面載入完成後，先預加載所有圖片
-  window.addEventListener('load', () => {
-    const imageUrls = [
-      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
-      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
-      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
-      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
-      'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
-      
-    ];
-    imageUrls.forEach(url => {
-      const img = new Image();
-      img.src = url;
-    });
-})
   document.addEventListener('DOMContentLoaded', function() {
     const mobileSearchIcon = document.getElementById('mobileSearchIcon');
     const searchForm = document.getElementById('searchForm');
@@ -437,114 +422,53 @@ window.onload = function() {
       
     }
   });
-  // 1. 建立商品
-  async function createCommodity() {
-    try {
-      // 準備 FormData，因為後端說要用 FormData 格式
-      const formData = new FormData();
-      formData.append('name', '我的商品');
-      formData.append('description', '這是描述');
-      formData.append('price', '100');
-      formData.append('stock', '10');
-      formData.append('category', '其他');
-      formData.append('size', 'M');
-      formData.append('age', '3');
-      
-      // 這裡示範上傳檔案 mainImage (必填)
-      // 假設前端有個 <input type="file" id="mainImageInput" />
-      const mainImageInput = document.getElementById('mainImageInput');
-      if (mainImageInput.files.length > 0) {
-        formData.append('mainImage', mainImageInput.files[0]);
-      }
-      
-      // 同理，如果要多張圖片 images (最多 2 張)
-      // const imagesInput = document.getElementById('imagesInput');
-      // for (let file of imagesInput.files) {
-      //   formData.append('images', file);
-      // }
-  
-      // 發送 POST 請求
-      const createRes = await fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
-        method: 'POST',
-        body: formData,
-        // 注意：因為用 FormData，通常不手動設定 Content-Type，瀏覽器會自動帶 multipart/form-data
-        // 如果後端需要 ID Token，記得在這裡的 headers 帶上 Authorization 或其他憑證
-        headers: {
-          'Authorization': 'Bearer <你的ID Token>'
-        }
-      });
-  
-      // 檢查是否建立成功 (201)
-      if (!createRes.ok) {
-        // 後端若失敗會回 400 或 500，通常會有 JSON 錯誤訊息
-        const errorData = await createRes.json();
-        console.error('建立商品失敗：', errorData);
-        return;
-      }
-  
-      // 後端說「成功：201 Created 回應商品 ID」
-      // 如果它是純文字，就用 createRes.text()
-      // 如果它是 JSON，則用 createRes.json()
-      // 這要跟後端確定
-      const commodityId = await createRes.text(); 
-      console.log('建立成功，商品 ID：', commodityId);
-  
-      // 2. 用商品 ID 取得商品詳情
-      const getRes = await fetch(`https://store-backend-iota.vercel.app/api/commodity/item/${commodityId}`);
-      if (!getRes.ok) {
-        const errorData = await getRes.json();
-        console.error('取得商品詳情失敗：', errorData);
-        return;
-      }
-  
-      // 這裡後端回傳「包含商品詳情的 JSON」
-      const commodityData = await getRes.json();
-      console.log('商品詳情：', commodityData);
-  
-      // 這裡你就可以把 commodityData 顯示在前端頁面上
-    } catch (err) {
-      console.error('發生錯誤：', err);
-    }
-  }
-  
-  // 呼叫建立商品的函式
-  createCommodity();
-  document.querySelectorAll('.card-detail-btn').forEach(btn => {
-    btn.addEventListener('click', function(e){
-      e.preventDefault();
-      const id = this.closest('.product-card').dataset.id;
-      window.location.href = `product.html?id=${id}`;
-    });
-  });
-// 取得網址中的商品 ID
-const urlParams = new URLSearchParams(window.location.search);
-const productId = urlParams.get('id');
 
-// 如果沒有 id，跳回首頁
-if (!productId) {
-  alert("找不到商品 ID！");
-  window.location.href = "shoppingpage_bootstrap.html";
-}  
-// 撈取後端資料
-axios.get(`https://store-backend-iota.vercel.app/api/commodity/item/${productId}`)
-  .then(response => {
-    const product = response.data;
-    renderProduct(product);
-  })
-  .catch(error => {
-    console.error("載入商品失敗", error);
-    alert("無法取得商品資訊！");
-  });
-
-// 將商品資料顯示在畫面上
-function renderProduct(product) {
-  document.getElementById('product-img').src = product.image || "default.jpg";
-  document.getElementById('product-name').textContent = product.name || "無商品名稱";
-  document.getElementById('product-category').textContent = `#${product.category || "未分類"}`;
-  document.getElementById('product-price').textContent = `${product.price} NT$`;
-  document.getElementById('product-description').textContent = product.description || "此商品尚無描述。";
-}
 const backbtn = document.querySelector('#back-btn');
 backbtn.addEventListener('click', function(e){
     window.history.back();
 })
+document.addEventListener('DOMContentLoaded', function () {
+    const id = ;
+  console.log("id", id);
+    if (id) {
+      fetch(`https://store-backend-iota.vercel.app/api/commodity/item/${id}`)
+        .then(res => res.json())
+        .then(data => {
+          const product = data.data;
+  
+          document.getElementById('product-name').textContent = product.name || '未命名';
+          document.getElementById('product-price').innerHTML = `${product.price || 0}<span>NT$</span>`;
+  
+          const categoryList = document.getElementById('product-category');
+          categoryList.innerHTML = `
+            <li>分類：${product.category || '未分類'}</li>
+            <li>新舊：${product.neworold === 'new' ? '全新' : '二手'}</li>
+            <li>物品年齡：${product.age || '未知'}</li>
+            <li>庫存：${product.stock || '無資料'}</li>
+          `;
+  
+          document.getElementById('product-description').textContent = product.description || '無描述';
+  
+          const imgEl = document.querySelector('.tryimg');
+          if (imgEl && product.mainImage) {
+            imgEl.src = product.mainImage.startsWith('http') ? product.mainImage : `https://store-backend-iota.vercel.app${product.mainImage}`;
+          }
+  
+          const seriesPhoto = document.querySelector('.seriesphoto');
+          seriesPhoto.innerHTML = '';
+          product.imageURL?.forEach(img => {
+            const src = img.startsWith('http') ? img : `https://store-backend-iota.vercel.app${img}`;
+            const imgEl = document.createElement('img');
+            imgEl.src = src;
+            imgEl.alt = '商品照片';
+            seriesPhoto.appendChild(imgEl);
+          });
+  
+          document.querySelector('.usernameinfo').textContent = product.owner || '未知賣家';
+        })
+        .catch(err => {
+          console.error('讀取商品資料失敗：', err);
+        });
+    }
+  });
+  

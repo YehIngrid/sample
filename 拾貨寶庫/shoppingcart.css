@@ -56,17 +56,18 @@ nav{
   font-size: 28px;
 }
 /* 3. 主要容器：包含側邊欄 + 主內容 */
-.container {
+.containerhello {
   display: flex;
+  justify-content: start;
   min-height: 100vh; /* 讓頁面至少撐滿視窗高度 */
 }
 
 /* ---------- 側邊欄區域 ---------- */
 .sidebar {
-  width: 250px;
+  width: 300px;
   background-color: #fff;
   border-right: 1px solid #ccc;
-  padding: 20px;
+  padding: 40px;
 }
 
 /* 個人頭像與簡介 */
@@ -74,17 +75,18 @@ nav{
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 .profile-image {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
+  background-color: #004b97e0;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 10px;
 }
 .profile-name {
-  font-size: 18px;
+  font-size: 1.8rem;
   font-weight: bold;
 }
 
@@ -93,6 +95,7 @@ nav{
   list-style: none;
 }
 .nav-menu li {
+  font-size: 1.4rem;
   padding: 10px;
   cursor: pointer;
   color: #333;
@@ -111,8 +114,8 @@ nav{
 /* ---------- 主內容區域 ---------- */
 .content {
   flex: 1;           /* 撐開剩餘空間 */
-  padding: 20px;
-  background-color: #fafafa;
+  padding: 40px;
+  background-color: #fbfbfbb0;
 }
 
 /* 預設所有 tab-content 都不顯示，只有 active 才顯示 */
@@ -130,14 +133,24 @@ form {
   max-width: 500px;
 }
 label {
-  margin-top: 10px;
+  margin-top: 15px;
   font-weight: bold;
+  font-size: 1.3rem;
 }
 input {
   margin-top: 5px;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+input[type="text"]{
+  font-size: 1.3rem;
+}
+input[type="email"]{
+  font-size: 1.3rem;
+}
+input[type="password"]{
+  font-size: 1.3rem;
 }
 button {
   margin-top: 20px;
@@ -148,18 +161,25 @@ button {
   border-radius: 4px;
   cursor: pointer;
 }
+.change{
+  padding: 10px;
+  font-size:1.4rem;
+  margin-top: 40px;
+}
 
 /* ---------- 購物車內子標籤樣式 ---------- */
 .cart-tabs {
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 .cart-tab-button {
-  background-color: #eee;
+  background-color: #b1b1b1;
   border: none;
   padding: 8px 12px;
   margin-right: 5px;
   cursor: pointer;
   border-radius: 4px;
+  font-size: 1.3rem;
 }
 .cart-tab-button.active {
   background-color: #004b97;
@@ -172,8 +192,8 @@ button {
 }
 .cart-tab-content.active {
   display: block;
+  font-size: 1.4rem;
 }
-
 .container-fluid{
   width: 86vw !important;
 }
@@ -211,4 +231,7 @@ button {
   background-color: #004b97e0;
   display: flex;
   justify-content: center;
+}
+.nav-menu ul{
+  padding-left: 0;
 }

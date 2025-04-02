@@ -111,7 +111,7 @@
     <div class="header ">
         <!--TODO 響應式選單-->
         <nav class="login">
-          <a id="username" class="username"></a>
+          <a class="username"></a>
           <a class="navbar-brand me-auto" href="account.html" id="authButton">登入</a>
       </nav>
         <nav class="navbar navbar-expand-lg navbar-color bg-color header_new ">
@@ -185,13 +185,13 @@
     </nav>  
     </div>
 </div>
-<div class="container">
+<div class="containerhello">
     <!-- 側邊欄 -->
     <aside class="sidebar">
       <!-- 個人簡易頭像與暱稱，可依需求替換圖片或文字 -->
       <div class="profile-info">
         <img src="https://via.placeholder.com/80" alt="Profile" class="profile-image"/>
-        <p class="profile-name">Ingrid</p>
+        <p class="profile-name" id="username"></p>
       </div>
       <!-- 側邊選單 -->
       <nav class="nav-menu">
@@ -215,7 +215,7 @@
           <input type="email" id="email" value="ingrid71717@gmail.com"/>
 
           <label for="nickname">暱稱</label>
-          <input type="text" id="nickname" value="Ingrid"/>
+          <input type="text" id="nickname"/>
 
           <label for="account">帳號</label>
           <input type="text" id="account" value="ingrid71717"/>
@@ -226,7 +226,7 @@
           <label for="status">會員狀態</label>
           <input type="text" id="status" value="VIP"/>
 
-          <button type="submit">儲存變更</button>
+          <button class="change" type="submit">儲存變更</button>
         </form>
       </section>
 
