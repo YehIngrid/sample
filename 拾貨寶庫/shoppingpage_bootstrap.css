@@ -258,31 +258,6 @@ ul{
     background-position: center;  /* 置中 */
     /* background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' viewBox='0 0 2400 800' opacity='0.75'%3E%3Cdefs%3E%3ClinearGradient x1='50%25' y1='0%25' x2='50%25' y2='100%25' id='sssurf-grad'%3E%3Cstop stop-color='hsla(205, 69%25, 60%25, 0.19)' stop-opacity='1' offset='0%25'%3E%3C/stop%3E%3Cstop stop-color='hsla(0, 0%25, 100%25, 1.00)' stop-opacity='1' offset='100%25'%3E%3C/stop%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23sssurf-grad)' transform='matrix(1,0,0,1,0,-95.37808227539062)'%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,46)' opacity='0.05'%3E%3C/path%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,92)' opacity='0.29'%3E%3C/path%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,138)' opacity='0.53'%3E%3C/path%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,184)' opacity='0.76'%3E%3C/path%3E%3Cpath d='M 0 330.9011825808437 Q 85.64258598459385 450 300 329.7869782139 Q 421.84264495210294 450 600 327.39429973422244 Q 785.5026379228632 450 900 323.695470515047 Q 1115.6927174060907 450 1200 328.4966983005088 Q 1379.1740794104458 450 1500 323.1902134749316 Q 1674.418055665206 450 1800 317.79958711588813 Q 1931.1536358734804 450 2100 314.75619918041565 Q 2300.1465954443843 450 2400 329.821143579916 L 2400 800 L 0 800 L 0 331.6625760310596 Z' transform='matrix(1,0,0,1,0,230)' opacity='1.00'%3E%3C/path%3E%3C/g%3E%3C/svg%3E"); */
   }
-
-/* 父容器：讓「屋頂」們並排排列 */
-.roofs {
-    display: flex;
-    gap: 5px;             /* 彼此之間的間距 */
-    justify-content: center;
-    align-items: flex-end; /* 讓底部對齊，看起來更像一排小屋頂 */
-    margin-top: 20px;      /* 可依需求調整間距 */
-  }
-  
-  /* 單個「屋頂」的外觀 */
-  .roof {
-    width: 60px;           /* 屋頂的寬度 */
-    height: 40px;          /* 屋頂的高度 */
-    background: #FF6F61;   /* 預設顏色(可自訂) */
-    border: 3px solid #FF6F61;  /* 外框同色，或可換其他顏色 */
-    box-sizing: border-box;
-    border-radius:  0 0 80px 80px; /* 讓上方呈現圓弧，底部是直線 */
-  }
-  
-  /* 偶數項目顏色交錯 */
-  .roof:nth-child(even) {
-    background: #FFD369;
-    border-color: #FFD369;
-  }
 /* 可水平捲動的容器設定 */
 .scroll-container {
     display: flex;            /* 子項目橫向並排 */
@@ -313,12 +288,13 @@ ul{
   }
   
   /* 卡片圖片：若要圓形、固定大小，可以這樣設定 */
-  .card-img-top {             
+  .sort-item .card-img-top {             
     height: 100%;             
     object-fit:fill;          /* 圖片填滿容器 */     
     /* border-radius: 50%;        */
     /* border: 2px solid #ff6f61;  */
-    margin: 0 auto;           /* 讓圖片在 card 內水平置中 */
+    margin: 0 auto;  
+    padding-top: 2vh;         /* 讓圖片在 card 內水平置中 */
   }
   /* 你也可以針對按鈕做額外的美化 */
   #prevBtn, #nextBtn {
@@ -518,8 +494,6 @@ ul{
 }
 /* TODO:container-card */
 .container-card{
-  padding-left: 4vw;
-  padding-right: 3vw;
   margin-top: 5vh;
   margin-bottom: 10vh;
 }
@@ -625,9 +599,6 @@ ul{
 .footer-row li{
   list-style: none;
 }
-.card-img-top{
-  padding-top: 2vh;
-}
 .wishad{
   background-color: #ffecada1;
   width: 80vw;
@@ -666,3 +637,39 @@ ul{
 .contentwish p{
   font-size: 1.6rem;
 }
+.card.product-card {
+  margin: 1rem;
+  border: 1px solid #eee;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 240px; /* 統一高度 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.card-img-top {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
+  border-bottom: 1px solid #eee;
+}
+
+.card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+@media (max-width:400px) {
+  
+}
+
+
+
+

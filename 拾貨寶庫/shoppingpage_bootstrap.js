@@ -563,108 +563,165 @@ document.addEventListener('DOMContentLoaded', function() {
     }).then((result) => {
       if (result.isConfirmed) {
         const formData = new FormData(form);
-    auth.currentUser.getIdToken().then((idToken) => {
-      return fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
-        method: 'POST',
-        headers: {
-          'idtoken': idToken
-        },
-        body: formData
-      });
-    }).then(response => {
-      if (response.ok) {
-        Swal.fire({
-          title: "商品上架成功！",
-          text: "請確認首頁商品欄有無您上架的商品",
-          icon: "success"
+    
+        auth.currentUser.getIdToken().then((idToken) => {
+          return fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
+            method: 'POST',
+            headers: {
+              'idtoken': idToken
+            },
+            body: formData
+          });
+        }).then(response => {
+          if (response.ok) {
+            return response.json(); // 🔁 先取 JSON 內容
+          } else {
+            return response.json().then(data => {
+              throw new Error(data.message || 'Failed to create commodity.');
+            });
+          }
+        }).then(result => {
+          const newId = result.data; // 拿到商品 ID
+    
+          Swal.fire({
+            title: "商品上架成功！",
+            text: "請確認首頁商品欄有無您上架的商品",
+            icon: "success"
+          }).then(() => {
+            localStorage.setItem('newProductId', newId);
+            // ✅ 成功後跳轉回首頁，帶上商品 ID 當參數
+            window.location.href = `shoppingpage_bootstrap.html?id=${newId}`;
+          });
+    
+          form.reset();
+        }).catch(error => {
+          console.error('Error:', error);
+          alert('Error: ' + error.message);
         });
-        form.reset();
-      } else {
-        return response.json().then(data => {
-          throw new Error(data.message || 'Failed to create commodity.');
-        });
-      }
-    }).catch(error => {
-      console.error('Error:', error);
-      alert('Error: ' + error.message);
-    });
       }
     });
     
   }
 });
-// 1. 建立商品
-async function createCommodity() {
-  try {
-    // 準備 FormData，因為後端說要用 FormData 格式
-    const formData = new FormData();
-    formData.append('name', '我的商品');
-    formData.append('description', '這是描述');
-    formData.append('price', '100');
-    formData.append('stock', '10');
-    formData.append('category', '其他');
-    formData.append('size', 'M');
-    formData.append('age', '3');
+
+
+// // 1. 建立商品
+// async function createCommodity() {
+//   try {
+//     // 準備 FormData，因為後端說要用 FormData 格式
+//     const formData = new FormData();
+//     formData.append('name', '我的商品');
+//     formData.append('description', '這是描述');
+//     formData.append('price', '100');
+//     formData.append('stock', '10');
+//     formData.append('category', '其他');
+//     formData.append('size', 'M');
+//     formData.append('age', '3');
     
-    // 這裡示範上傳檔案 mainImage (必填)
-    // 假設前端有個 <input type="file" id="mainImageInput" />
-    const mainImageInput = document.getElementById('mainImageInput');
-    if (mainImageInput.files.length > 0) {
-      formData.append('mainImage', mainImageInput.files[0]);
-    }
+//     // 這裡示範上傳檔案 mainImage (必填)
+//     // 假設前端有個 <input type="file" id="mainImageInput" />
+//     const mainImageInput = document.getElementById('mainImageInput');
+//     if (mainImageInput.files.length > 0) {
+//       formData.append('mainImage', mainImageInput.files[0]);
+//     }
     
-    // 同理，如果要多張圖片 images (最多 2 張)
-    // const imagesInput = document.getElementById('imagesInput');
-    // for (let file of imagesInput.files) {
-    //   formData.append('images', file);
-    // }
+//     // 同理，如果要多張圖片 images (最多 2 張)
+//     // const imagesInput = document.getElementById('imagesInput');
+//     // for (let file of imagesInput.files) {
+//     //   formData.append('images', file);
+//     // }
 
-    // 發送 POST 請求
-    const createRes = await fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
-      method: 'POST',
-      body: formData,
-      // 注意：因為用 FormData，通常不手動設定 Content-Type，瀏覽器會自動帶 multipart/form-data
-      // 如果後端需要 ID Token，記得在這裡的 headers 帶上 Authorization 或其他憑證
-      headers: {
-        'Authorization': 'Bearer <你的ID Token>'
-      }
-    });
+//     // 發送 POST 請求
+//     const createRes = await fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
+//       method: 'POST',
+//       body: formData,
+//       // 注意：因為用 FormData，通常不手動設定 Content-Type，瀏覽器會自動帶 multipart/form-data
+//       // 如果後端需要 ID Token，記得在這裡的 headers 帶上 Authorization 或其他憑證
+//       headers: {
+//         'Authorization': 'Bearer <你的ID Token>'
+//       }
+//     });
 
-    // 檢查是否建立成功 (201)
-    if (!createRes.ok) {
-      // 後端若失敗會回 400 或 500，通常會有 JSON 錯誤訊息
-      const errorData = await createRes.json();
-      console.error('建立商品失敗：', errorData);
-      return;
-    }
+//     // 檢查是否建立成功 (201)
+//     if (!createRes.ok) {
+//       // 後端若失敗會回 400 或 500，通常會有 JSON 錯誤訊息
+//       const errorData = await createRes.json();
+//       console.error('建立商品失敗：', errorData);
+//       return;
+//     }
 
-    // 後端說「成功：201 Created 回應商品 ID」
-    // 如果它是純文字，就用 createRes.text()
-    // 如果它是 JSON，則用 createRes.json()
-    // 這要跟後端確定
-    const commodityId = await createRes.text(); 
-    console.log('建立成功，商品 ID：', commodityId);
+//     // 後端說「成功：201 Created 回應商品 ID」
+//     // 如果它是純文字，就用 createRes.text()
+//     // 如果它是 JSON，則用 createRes.json()
+//     // 這要跟後端確定
+//     const commodityId = await createRes.text(); 
+//     console.log('建立成功，商品 ID：', commodityId);
 
-    // 2. 用商品 ID 取得商品詳情
-    const getRes = await fetch(`https://store-backend-iota.vercel.app/api/commodity/item/${commodityId}`);
-    if (!getRes.ok) {
-      const errorData = await getRes.json();
-      console.error('取得商品詳情失敗：', errorData);
-      return;
-    }
+//     // 2. 用商品 ID 取得商品詳情
+//     const getRes = await fetch(`https://store-backend-iota.vercel.app/api/commodity/item/${commodityId}`);
+//     if (!getRes.ok) {
+//       const errorData = await getRes.json();
+//       console.error('取得商品詳情失敗：', errorData);
+//       return;
+//     }
 
-    // 這裡後端回傳「包含商品詳情的 JSON」
-    const commodityData = await getRes.json();
-    console.log('商品詳情：', commodityData);
+//     // 這裡後端回傳「包含商品詳情的 JSON」
+//     const commodityData = await getRes.json();
+//     console.log('商品詳情：', commodityData);
 
-    // 這裡你就可以把 commodityData 顯示在前端頁面上
-  } catch (err) {
-    console.error('發生錯誤：', err);
-  }
-}
+//     // 這裡你就可以把 commodityData 顯示在前端頁面上
+//   } catch (err) {
+//     console.error('發生錯誤：', err);
+//   }
+// }
+// // 假設你把商品 ID 存在 localStorage 或透過 URL 傳入
+// const newProductId = localStorage.getItem('newProductId'); // 或者從 URL 抓參數
+
+// if (newProductId) {
+//   fetch(`https://store-backend-iota.vercel.app/api/commodity/item/${newProductId}`)
+//     .then(response => {
+//       if (!response.ok) throw new Error('無法取得商品資料');
+//       return response.json();
+//     })
+//     .then(data => {
+//       renderNewProduct(data);
+//     })
+//     .catch(err => {
+//       console.error('載入新商品失敗：', err);
+//     });
+// }
+
+// function getImageUrl(path) {
+//   return path.startsWith('http') ? path : `https://your-server.com${path}`;
+// }
+
+// function renderNewProduct(product) {
+//   const container = document.getElementById('new-product');
+//   container.innerHTML = `
+//     <div style="border: 1px solid #ccc; padding: 1em; max-width: 400px; border-radius: 8px;">
+//       <h2>🎉 新上架商品</h2>
+//       <img src="${getImageUrl(product.mainImage)}" alt="${product.name}" style="width: 100%; height: auto; margin-bottom: 1em;">
+//       <p><strong>名稱：</strong>${product.name}</p>
+//       <p><strong>價格：</strong>$${product.price}</p>
+//       <p><strong>尺寸：</strong>${product.size}</p>
+//       <p><strong>年齡：</strong>${product.age}</p>
+//       <p><strong>狀態：</strong>${product.neworold === 'new' ? '全新' : '二手'}</p>
+//       <p><strong>分類：</strong>${product.category}</p>
+//       <p><strong>描述：</strong>${product.description || '無'}</p>
+//     </div>
+//   `;
+// }
+// // 在建立成功後（比如 upload.js 裡）
+// const response = await createCommodity(data, idToken);
+// const newId = response.data;
+// localStorage.setItem('newProductId', newId); // 存起來
+// //window.location.href = '/'; // 回首頁
+
 
 // 呼叫建立商品的函式
-createCommodity();
+//createCommodity();
+
+
 document.querySelectorAll('.card-detail-btn').forEach(btn => {
   btn.addEventListener('click', function(e){
     e.preventDefault();
@@ -696,3 +753,134 @@ backbtn2.addEventListener('click', function(e){
   member.style.display = 'none';
   content.style.display = 'block';
 })
+const mystery = document.getElementById('mystery');
+const mysterybtn = document.getElementById('mysterybtn');
+const backbtn3 = document.getElementById('back-btn3');
+mysterybtn.addEventListener('click', function(e){
+  mystery.style.display = 'block';
+  content.style.display = 'none';
+})
+backbtn3.addEventListener('click', function(e){
+  mystery.style.display = 'none';
+  content.style.display = 'block';
+})
+const everyday = document.getElementById('everyday');
+const everydaybtn = document.getElementById('everydaybtn');
+const backbtn4 = document.getElementById('back-btn4');
+everydaybtn.addEventListener('click', function(e){
+  everyday.style.display = 'block';
+  content.style.display = 'none';
+})
+backbtn4.addEventListener('click', function(e){
+  everyday.style.display = 'none';
+  content.style.display = 'block';
+})
+const donate = document.getElementById('donate');
+const donatebtn = document.getElementById('donatebtn');
+const backbtn5 = document.getElementById('back-btn5');
+donatebtn.addEventListener('click', function(e){
+  donate.style.display = 'block';
+  content.style.display = 'none';
+})
+backbtn5.addEventListener('click', function(e){
+  donate.style.display = 'none';
+  content.style.display = 'block';
+})
+// ⏬ 載入全部商品並顯示在首頁卡片區
+fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
+  .then(res => res.json())
+  .then(result => {
+    const productList = result.data;
+    const container = document.querySelector('.container-card');
+
+    productList.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'card product-card';
+      card.dataset.id = product._id || product.id; // 用 ID 填入 data-id
+      card.style.width = '17rem';
+    // 檢查螢幕寬度是否為手機（小於 768px）
+    if (window.innerWidth < 768) {
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.style.width = '15rem';
+        card.style.margin = '10px';
+      });
+    }
+
+      const imgUrl = product.mainImage?.startsWith('http') ? product.mainImage : `https://store-backend-iota.vercel.app${product.mainImage}`;
+
+      card.innerHTML = `
+        <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
+        <div class="card-body">
+          <h5 class="card-title">${product.name || '未命名商品'}</h5>
+          <p class="card-text">＃${product.category || '未分類'}</p>
+          <p class="price">${product.price || 0}<span>NT$</span></p>
+          <a href="#" class="card-detail-btn">詳細資訊</a>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    // 綁定點擊卡片的「詳細資訊」按鈕事件
+    document.querySelectorAll('.card-detail-btn').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const id = this.closest('.product-card').dataset.id;
+        if (id) {
+          window.location.href = `product.html?id=${id}`;
+        }
+      });
+    });
+  })
+  .catch(err => console.error('載入商品失敗：', err));
+
+// // ✅ 顯示新上架商品：從 localStorage 抓 ID → 呼叫 API → 顯示在首頁
+// const newProductId = localStorage.getItem('newProductId');
+
+// if (newProductId) {
+//   fetch(`https://store-backend-iota.vercel.app/api/commodity/item/${newProductId}`)
+//     .then(res => res.json())
+//     .then(product => {
+//       console.log('載入新商品資料：', product);
+//       renderNewProduct(product);
+//       localStorage.removeItem('newProductId'); // ✅ 顯示完就清掉
+//     })
+//     .catch(err => console.error('載入新商品失敗', err));
+// }
+
+// function getImageUrl(path) {
+//   // 如果是空的，就不要顯示圖片
+//   if (!path || typeof path !== 'string') {
+//     return '';
+//   }
+//   return path.startsWith('http') ? path : `https://store-backend-iota.vercel.app${path}`;
+// }
+
+
+// function renderNewProduct(product) {
+//   const container = document.getElementById('new-product');
+
+//   if (!container) {
+//     console.warn('#new-product 區塊找不到');
+//     return;
+//   }
+
+//   const imageUrl = getImageUrl(product.mainImage);
+
+//   container.innerHTML = `
+//     <div class="card mb-3" style="max-width: 400px;">
+//       ${imageUrl ? `<img src="${imageUrl}" class="card-img-top" alt="${product.name}">` : ''}
+//       <div class="card-body">
+//         <h5 class="card-title">${product.data.name || '未命名商品'}</h5>
+//         <p class="card-text">價格：$${product.price || '未填寫'}</p>
+//         <p class="card-text">尺寸：${product.size || '未填寫'}</p>
+//         <p class="card-text">年齡：${product.age || '未填寫'}</p>
+//         <p class="card-text">分類：${product.category || '未分類'}</p>
+//         <p class="card-text">${product.description || '無描述'}</p>
+//         <span class="badge bg-${product.neworold === 'new' ? 'success' : 'secondary'}">
+//           ${product.neworold === 'new' ? '全新' : '二手'}
+//         </span>
+//       </div>
+//     </div>
+//   `;
+// }
+

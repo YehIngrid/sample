@@ -251,9 +251,9 @@
             <li><button id="sellerbtn"><i class="ti ti-building-store"></i></button>賣家專區</li>
             <li><button id="wishpoolbtn"><i class="ti ti-fountain"></i></button>許願池</li>
             <li><button id="memberbtn"><i class="ti ti-brand-my-oppo"></i></button>會員專區</li>
-            <li><button><i class="ti ti-gift"></i></button>神秘箱</li>
-            <li><button><i class="ti ti-calendar-event"></i></button>每日登入</li>
-            <li><button><i class="ti ti-brand-cashapp"></i></button>我要捐款</li>
+            <li><button id="mysterybtn"><i class="ti ti-gift"></i></button>神秘箱</li>
+            <li><button id="everydaybtn"><i class="ti ti-calendar-event"></i></button>每日登入</li>
+            <li><button id="donatebtn"><i class="ti ti-brand-cashapp"></i></button>我要捐款</li>
         </ul>
     </div>
   </div>
@@ -377,89 +377,8 @@
     </div>
   </div>
       <!-- TODO 商品卡片 -->
-    <div class="container-card d-flex flex-wrap mx-3">
-      <div class="card product-card" data-id="123" style="width: 15rem;">
-        <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">中興國文課本</h5>
-          <p class="card-text">＃教科書</p>
-          <p class="price">100<span>NT$</span></p>
-          <a href="#" class="card-detail-btn">詳細資訊</a>
-        </div>
-    </div>
-      <div class="card product-card" data-id="124" style="width: 15rem;">
-        <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">中興國文課本</h5>
-          <p class="card-text">＃教科書</p>
-          <p class="price">100<span>NT$</span></p>
-          <a href="#" class="card-detail-btn">詳細資訊</a>
-        </div>
-    </div>
-      <div class="card product-card" data-id="125" style="width: 15rem;">
-        <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">中興國文課本</h5>
-          <p class="card-text">＃教科書</p>
-          <p class="price">100<span>NT$</span></p>
-          <a href="#" class="card-detail-btn">詳細資訊</a>
-        </div>
-    </div>
-      <div class="card product-card" data-id="126" style="width: 15rem;">
-        <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">中興國文課本</h5>
-          <p class="card-text">＃教科書</p>
-          <p class="price">100<span>NT$</span></p>
-          <a href="#" class="card-detail-btn">詳細資訊</a>
-        </div>
-    </div>
-      <div class="card product-card" data-id="127" style="width: 15rem;">
-          <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">中興國文課本</h5>
-            <p class="card-text">＃教科書</p>
-            <p class="price">100<span>NT$</span></p>
-            <a href="#" class="card-detail-btn">詳細資訊</a>
-          </div>
-      </div>
+    <div class="container-card d-flex flex-wrap mx-3" id="new-product">
       
-      <div class="card product-card" data-id="128" style="width: 15rem;">
-        <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">中興國文課本</h5>
-          <p class="card-text">＃教科書</p>
-          <p class="price">100<span>NT$</span></p>
-          <a href="#" class="card-detail-btn">詳細資訊</a>
-        </div>
-    </div>
-    <div class="card product-card" data-id="129" style="width: 15rem;">
-      <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">中興國文課本</h5>
-        <p class="card-text">＃教科書</p>
-        <p class="price">100<span>NT$</span></p>
-        <a href="#" class="card-detail-btn">詳細資訊</a>
-      </div>
-  </div>
-  <div class="card product-card" data-id="AP63NutS8MxKj2oGQQqM" style="width: 15rem;">
-    <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">中興國文課本</h5>
-      <p class="card-text">＃教科書</p>
-      <p class="price">100<span>NT$</span></p>
-      <a href="#" class="card-detail-btn">詳細資訊</a>
-    </div>
-</div>
-<div class="card product-card" data-id="131" style="width: 15rem;">
-  <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/food_11zon.webp" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">中興國文課本</h5>
-    <p class="card-text">＃教科書</p>
-    <p class="price">100<span>NT$</span></p>
-    <a href="#" class="card-detail-btn">詳細資訊</a>
-  </div>
-</div>
     </div>
     </div>
   </div>
@@ -610,6 +529,15 @@
 </section>
 <section class="member" id="member" style="display: none;">
   <button class="back-btn" id="back-btn2"><i class="fa-solid fa-arrow-left "></i>返回購物頁</button>
+</section>
+<section class="mystery" id="mystery" style="display: none;">
+  <button class="back-btn" id="back-btn3"><i class="fa-solid fa-arrow-left "></i>返回購物頁</button>
+</section>
+<section class="everyday" id="everyday" style="display: none;">
+  <button class="back-btn" id="back-btn4"><i class="fa-solid fa-arrow-left "></i>返回購物頁</button>
+</section>
+<section class="donate" id="donate" style="display: none;">
+  <button class="back-btn" id="back-btn5"><i class="fa-solid fa-arrow-left "></i>返回購物頁</button>
 </section>
 <div class="footerunder">
   Copyright©2025拾貨寶庫｜All Rights Reserved
