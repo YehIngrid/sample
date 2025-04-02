@@ -675,7 +675,7 @@ ul{
 .card-wrapper {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* 卡片從左邊排 */
+  justify-content: space-around; /* 卡片從左邊排 */
   gap: 1rem;
   max-width: 1200px; /* 或你要限制的寬度 */
 }
