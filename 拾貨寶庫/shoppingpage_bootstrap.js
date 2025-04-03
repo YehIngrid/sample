@@ -551,55 +551,63 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       return;
     }
-    // 如果驗證都通過，就建立 formData 並進行後續請求
-    Swal.fire({
-      title: "確定要販賣此商品?",
-      text: "請確認好所有商品資訊，若後續需要更改或移除資料，請至個人檔案內查看。",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "是，我就要賣！"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const formData = new FormData(form);
-    
-        auth.currentUser.getIdToken().then((idToken) => {
-          return fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
-            method: 'POST',
-            headers: {
-              'idtoken': idToken
-            },
-            body: formData
-          });
-        }).then(response => {
-          if (response.ok) {
-            return response.json(); // 🔁 先取 JSON 內容
-          } else {
-            return response.json().then(data => {
-              throw new Error(data.message || 'Failed to create commodity.');
-            });
-          }
-        }).then(result => {
-          console.log('result:', result);
-          const newId = result.data; // 拿到商品 ID
-          
+    const loaderOverlay = document.getElementById('loadingOverlay');
+
+Swal.fire({
+  title: "確定要販賣此商品?",
+  text: "請確認好所有商品資訊，若後續需要更改或移除資料，請至個人檔案內查看。",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "是，我就要賣！"
+}).then((result) => {
+  if (result.isConfirmed) {
+    const formData = new FormData(form);
+
+    // ✅ 顯示 loading 遮罩
+    loaderOverlay.classList.remove('d-none');
+
+    auth.currentUser.getIdToken()
+      .then((idToken) => {
+        return fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
+          method: 'POST',
+          headers: {
+            'idtoken': idToken
+          },
+          body: formData
+        });
+      })
+      .then(response => {
+        if (response.ok) {
           Swal.fire({
             title: "商品上架成功！",
             text: "請確認首頁商品欄有無您上架的商品",
             icon: "success"
-          }).then(() => {
-            
-            // ✅ 成功後跳轉回首頁，帶上商品 ID 當參數
-            window.location.href = `shoppingpage_bootstrap.html?id=${newId}`;
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // ✅ 使用者按下 OK 後跳轉
+              window.location.href = "shoppingpage_bootstrap.html";
+            }
           });
           form.reset();
-        }).catch(error => {
-          console.error('Error:', error);
-          alert('Error: ' + error.message);
-        });
-      }
-    });
+        } else {
+          return response.json().then(data => {
+            throw new Error(data.message || 'Failed to create commodity.');
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error: ' + error.message);
+      })
+      .finally(() => {
+        // ✅ 隱藏 loading
+        loaderOverlay.classList.add('d-none');
+      });
+  }
+});
+
     
   }
 });
