@@ -485,8 +485,8 @@ document.addEventListener('DOMContentLoaded', function () {
     return res.json();
   })
   .then(data => {
-    const sellerName = data.displayName || '匿名賣家';
-    console.log('sellerName:', data);
+    const sellerName = data.data.displayName || '匿名賣家';
+    console.log('sellerName:', data.data.displayName);
     const reputation = data.reputation || 0;
 
     // 加入賣家資訊到畫面上（範例）
