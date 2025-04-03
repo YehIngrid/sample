@@ -39,6 +39,7 @@ window.onload = function() {
       }
     });
   });
+  
   //TODO Firebase 設定
   // Firebase 設定
   const firebaseConfig = {
@@ -50,10 +51,11 @@ window.onload = function() {
     appId: "1:585571611965:web:65b013617b7877e2904154"
   };
   
+
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
-  
+  const db = firebase.firestore();
   // 可設定持久性，確保 Firebase 在刷新時保留登入狀態
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
   
@@ -75,13 +77,6 @@ window.onload = function() {
         $(location).attr('href', 'https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/account.html');
       };
     }
-    
-    // // 綁定 #send 按鈕提交事件，觸發登入
-    // $('#send').on('click', function(e){
-    //   e.preventDefault(); // 攔截表單預設提交
-    //   console.log("表單已提交！");
-    //   callLogIn();
-    // });
     
     // 綁定 #logoutButton 按鈕提交事件，觸發登出
     $('#logoutButton').on('click', function(e){
@@ -451,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(res => res.json())
         .then(data => {
           const product = data.data;
-  
+  console.log('product:', product);
           document.getElementById('product-name').textContent = product.name || '未命名';
           document.getElementById('product-price').innerHTML = `${product.price || 0}<span>NT$</span>`;
   
@@ -459,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
           categoryList.innerHTML = `
             <li>分類：${product.category || '未分類'}</li>
             <li>新舊：${product.neworold === 'new' ? '全新' : '二手'}</li>
-            <li>物品年齡：${product.age || '未知'}</li>
+            <li>物品年齡：${product.age === '-1' ? '未知':product.age+'年'}</li>
             <li>庫存：${product.stock || '無資料'}</li>
           `;
   
@@ -481,10 +476,30 @@ document.addEventListener('DOMContentLoaded', function () {
           });
   
           document.querySelector('.usernameinfo').textContent = product.owner || '未知賣家';
+          
+          const ownerId = product.owner;
+          firebase.firestore().collection('users').doc(ownerId).get()
+            .then(doc => {
+              if (doc.exists) {
+                const seller = doc.data();
+                const sellerName = seller.displayName || '匿名賣家';
+                document.querySelector('.usernameinfo').textContent = sellerName;
+              }
+            })
+            const userRef = db.collection('users').doc(product.owner);
+userRef.get().then(doc => {
+  if (doc.exists) {
+    const seller = doc.data();
+    const sellerName = seller.displayName || '匿名賣家';
+    console.log('賣家名稱：', sellerName);
+  }
+});
+          console.log('owner:', product.owner.displayName);
         })
         .catch(err => {
           console.error('讀取商品資料失敗：', err);
         });
     }
   });
+  
   

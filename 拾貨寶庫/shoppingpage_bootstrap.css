@@ -498,7 +498,7 @@ ul{
 /* TODO:container-card */
 .container-card{
   margin-top: 3vh;
-  margin-bottom: 10vh;
+  margin-bottom: 15vh;
 }
 .card{
   /* border: 1px solid #004b97aa !important; */
@@ -696,6 +696,34 @@ ul{
   margin-top: 5vh !important;
   margin: 0 auto;
   width: 80vw;
+}
+.card {
+  position: relative;
+}
+/* TODO:商品店家標籤 */
+.card-badge {
+  position: absolute;
+  padding: 4px 10px;
+  color: rgb(21, 20, 20);
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 4px;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  background-color: #ffea02;
+}
+
+.badge-first {
+  background-color: #28a745; /* 綠色 */
+  top: 10px;
+  left: 10px;
+}
+
+.badge-trusted {
+  background-color: gold;    /* 金色 */
+  top: 10px;
+  right: 10px;
+  color: black;
 }
 
 

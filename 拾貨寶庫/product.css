@@ -326,7 +326,10 @@ ul{
     margin-right: 30px;
   }
   .tryimg{
-    min-width: 300px;
+    max-width: 330px;
+    padding-bottom: 50px;
+    padding-right: 30px;
+    padding-left: 30px;
   }
   @media (min-width:800px) {
     .tryimg{
@@ -393,7 +396,7 @@ ul{
     max-width: 80vw;
     margin: 0 auto;
     margin-bottom: 10vh;
-    display: flex;
+    /* display: flex; */
   }
 @media (max-width:700px) {
     .mix{
