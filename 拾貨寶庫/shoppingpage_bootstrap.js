@@ -675,7 +675,7 @@ console.log('productlist:',productList);
     // 檢查螢幕寬度是否為手機（小於 768px）
     if (window.innerWidth < 768) {
       document.querySelectorAll('.product-card').forEach(card => {
-        card.style.width = '15rem';
+        card.style.width = '16rem';
         card.style.margin = '10px';
       });
     }
@@ -688,13 +688,13 @@ console.log('productlist:',productList);
           <h5 class="card-title">${product.name || '未命名商品'}</h5>
           <p class="card-text">＃${product.category || '未分類'}</p>
           <p class="price">${product.price || 0}<span>NT$</span></p>
-          <a href="#" class="card-detail-btn">詳細資訊</a>
+          <a href="#" class="card-detail-btn">加入購物車</a>
         </div>
       `;
       container.appendChild(card);
     });
     // 綁定點擊卡片的「詳細資訊」按鈕事件
-    document.querySelectorAll('.card-detail-btn').forEach(btn => {
+    document.querySelectorAll('.card').forEach(btn => {
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         //const id = this.closest('.product-card').dataset.id;

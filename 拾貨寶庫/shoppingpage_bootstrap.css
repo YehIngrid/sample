@@ -147,6 +147,7 @@ ul{
     display: flex !important;
     list-style: none;
     justify-content: center;
+    margin-bottom: 0px !important;
 }
 .seriesofbutton li{
     display: flex;
@@ -163,6 +164,7 @@ ul{
     .seriesofbutton li{
         margin-left: 1%;
         margin-right: 1%;
+        font-size: 1.2rem;
     }
 }
 .seriesofbutton button{
@@ -179,6 +181,7 @@ ul{
 }
 .container h4{
     margin-top: 15px !important;
+    margin-bottom: 0px !important;
 }
 .container-fluid{
     width: 86vw !important;
@@ -494,7 +497,7 @@ ul{
 }
 /* TODO:container-card */
 .container-card{
-  margin-top: 5vh;
+  margin-top: 3vh;
   margin-bottom: 10vh;
 }
 .card{
@@ -544,14 +547,17 @@ ul{
   margin-bottom: 0;
 }
 .price{
-  color: #ff7f50;
+  color: #ff6a50;
   font-size: 3rem;
   margin-bottom: 0;
   text-align: right;
-  padding-right: 2px;
+  padding-right: 5px;
+  font-weight: 600;
 }
 .price span{
   font-size: 1.2rem;
+  font-weight: 500;
+  padding-left: 3px;
 }
 .product-card {
   position: relative;
@@ -678,6 +684,18 @@ ul{
   justify-content: space-around; /* 卡片從左邊排 */
   gap: 1rem;
   max-width: 1200px; /* 或你要限制的寬度 */
+}
+.newsell{
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background-color: rgb(36,182,133,0.3); */
+  border-bottom: rgb(36,182,133) 2px dashed;
+  padding-top: 5px;
+  margin-top: 5vh !important;
+  margin: 0 auto;
+  width: 80vw;
 }
 
 
