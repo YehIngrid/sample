@@ -117,7 +117,7 @@
       <div></div>
       <div></div>
     </div>
-    <div><p style="color: #fff; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;"><br><br>拾獲寶庫加載中... </p></div>
+    <div><p style="color: #fff; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;"><br><br>拾貨寶庫加載中... </p></div>
   </div>
   <div id="whatcontent" class="d-none">
     <!-- TODO header -->
@@ -454,7 +454,7 @@
           <input type="radio" id="neworold_5" name="neworold" value="5"><label for="neworold_5" class="formpricespan">稍舊</label>
           <input type="radio" id="neworold_6" name="neworold" value="6"><label for="neworold_6" class="formpricespan">全舊</label><br><br>
           <label for="age">物品年齡</label>
-          <input type="number" id="age" name="age" placeholder="未知請填-1"/><span class="formpricespan">月</span><br />
+          <input type="number" id="age" name="age" placeholder="未知請填-1"/><span class="formpricespan">年</span><br />
           <label for="mainImage">主要照片</label>
           <input
               type="file"
@@ -462,15 +462,19 @@
               name="mainImage"
               accept="image/jpeg,image/png,image/gif,image/webp"
               /><br/>
+              <div id="mainImagePreview" style="margin-top: 10px;"></div>
           <label for="images">其他照片</label>
+          
           <input
               type="file"
               id="image"
-              name="images"
+              name="images[]"
               accept="image/jpeg,image/png,image/gif,image/webp"
               multiple
               
-          /><br /><br>
+          /><br />
+          <div id="previewArea" class="d-flex flex-wrap"></div>
+<br>
           <button id="create" type="submit" class="submitbtn">一鍵販賣</button>
       </div>
     </div>

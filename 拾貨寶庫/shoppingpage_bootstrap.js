@@ -388,6 +388,10 @@ sellerbtn.addEventListener('click', function(e){
   } else {
     content.style.display ="none";
     seller.style.display = "block";
+    Swal.fire({
+      title: "販賣商品前請務必詳閱販賣資訊！",
+      icon: "info"
+    });
   }
   
 })
@@ -451,10 +455,10 @@ document.addEventListener('DOMContentLoaded', function() {
         icon: "warning"
       });
       return;
-    } else if (productDesc.length < 5) {
+    } else if (productDesc.length < 10) {
       Swal.fire({
         title: "字數太少",
-        text:"商品狀態描述至少需要 20 字以上，請再補充內容。",
+        text:"商品狀態描述至少需要 10 字以上，請再補充內容。",
         icon: "warning"
       });
       return;
@@ -611,6 +615,49 @@ Swal.fire({
     
   }
 });
+document.getElementById('mainImage').addEventListener('change', function (e) {
+  const preview = document.getElementById('mainImagePreview');
+  preview.innerHTML = ''; // 清除舊圖
+
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    const img = document.createElement('img');
+    img.src = event.target.result;
+    img.style.width = '150px';
+    img.style.borderRadius = '8px';
+    img.style.border = '1px solid #ccc';
+    img.style.boxShadow = '0 0 6px rgba(0,0,0,0.1)';
+    preview.appendChild(img);
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('image').addEventListener('change', function (e) {
+  const preview = document.getElementById('previewArea');
+  preview.innerHTML = ''; // 清空舊的
+
+  const files = e.target.files;
+  console.log("共選了", files.length, "張圖片");
+
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const img = document.createElement('img');
+      img.src = event.target.result;
+      img.style.width = '100px';
+      img.style.margin = '5px';
+      img.style.objectFit = 'cover';
+      img.style.border = '1px solid #ccc';
+      img.style.borderRadius = '8px';
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
 const wishpool = document.getElementById('wishpool');
 const backbtn1 = document.getElementById('back-btn1');
 const wishpoolbtn = document.getElementById('wishpoolbtn');

@@ -162,11 +162,20 @@ ul{
 }
 @media (max-width:452px) {
     .seriesofbutton li{
-        margin-left: 1%;
-        margin-right: 1%;
+        margin-left: 2%;
+        margin-right: 2%;
         font-size: 1.2rem;
     }
 }
+#mainImagePreview img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 4px;
+}
+#previewArea img {
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
 .seriesofbutton button{
     border: 1px solid #004b9739 ;
     border-radius: 15px;
