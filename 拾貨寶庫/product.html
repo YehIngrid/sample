@@ -211,10 +211,11 @@
       </ul>
         <p id="product-price">600<span style="font-size: 1.2rem;">NT$</span></p>
     </div>
-    <div class="buybtn d-flex">
+    <div class="buybtn d-none d-sm-flex">
         <button class="buy">直接下單</button>
         <button class="shopcart">加入購物車</button>
     </div>
+    
 </div>
     <div class="otherphoto">
         <h2>其他照片</h2>
@@ -239,7 +240,7 @@
             <img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="">
             </div>
             <div class="d-flex justify-content-center">
-                <h3 class="usernameinfo">sellername</h3>
+                <h3 class="usernameinfo" id="usernameinfo">sellername</h3>
             </div>
             <div class="d-flex justify-content-center">
                 <h6>信譽積分：100</h6>
@@ -251,20 +252,10 @@
     </div>
     </div>
   </div>
-  <div class="footerunder">
-    Copyright©2025拾貨寶庫｜All Rights Reserved
-</div> 
-
-  <section class="footer">
-    <div class="footer-row d-flex justify-content-center">
-          <li><a href="introduce.html">關於我們｜</a></li>
-          <li><a href="questions.html">常見問題｜</a></li>
-          <li><a href="communication.html">客服諮詢｜</a></li>
-          <li><a href="policy.html">隱私政策｜</a></li>
-          <li><a href="#">使用條款｜</a></li>
-          <li><a href="#">退換貨政策</a></li>
-    </div>
-  </section>
+  <div class="phonebuy d-flex d-sm-none fixed-bottom">
+    <button class="buy">直接下單</button>
+    <button class="shopcart">加入購物車</button>
+</div>
   </div>
     <!-- script部分-->
         <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>

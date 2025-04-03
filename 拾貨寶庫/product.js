@@ -475,31 +475,41 @@ document.addEventListener('DOMContentLoaded', function () {
             seriesPhoto.appendChild(imgEl);
           });
   
-          document.querySelector('.usernameinfo').textContent = product.owner || '未知賣家';
-          
-          const ownerId = product.owner;
-          firebase.firestore().collection('users').doc(ownerId).get()
-            .then(doc => {
-              if (doc.exists) {
-                const seller = doc.data();
-                const sellerName = seller.displayName || '匿名賣家';
-                document.querySelector('.usernameinfo').textContent = sellerName;
-              }
-            })
-            const userRef = db.collection('users').doc(product.owner);
-userRef.get().then(doc => {
-  if (doc.exists) {
-    const seller = doc.data();
-    const sellerName = seller.displayName || '匿名賣家';
-    console.log('賣家名稱：', sellerName);
-  }
-});
-          console.log('owner:', product.owner.displayName);
+          console.log('owner:', product.owner);
+          fetch(`https://store-backend-iota.vercel.app/api/account/${product.owner}`)
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("查詢失敗");
+    }
+    console.log(res.ok);
+    return res.json();
+  })
+  .then(data => {
+    const sellerName = data.displayName || '匿名賣家';
+    console.log('sellerName:', data);
+    const reputation = data.reputation || 0;
+
+    // 加入賣家資訊到畫面上（範例）
+    document.getElementById('usernameinfo').innerHTML = `
+      <p>${sellerName}</p>
+      
+    `;
+//<p>信譽分數：${reputation}</p>
+    // ✅ 額外：你可以加標籤
+    // if (reputation >= 100) {
+    //   document.getElementById('userinfo').innerHTML += `
+    //     <div class="card-badge badge-trusted">優良賣家</div>
+    //   `;
+    // }
+  })
+  .catch(err => {
+    console.error("無法取得賣家資訊", err);
+  });
+
         })
         .catch(err => {
           console.error('讀取商品資料失敗：', err);
         });
     }
   });
-  
   
