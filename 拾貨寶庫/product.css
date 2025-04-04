@@ -352,6 +352,14 @@ ul{
     }
     
   }
+  @media (min-width:400px) {
+    .tryimg{
+        width: 100%;
+        margin-left: 50px;
+    margin-right: 50px ;
+    }
+    
+  }
   .buybtn{
     width: 100%;
   }
@@ -398,15 +406,18 @@ ul{
   }
   .otherphoto {
     width: 80vw;
+    height: auto;
     margin: 0 auto;
     margin-bottom: 5vh;
   }
+
 .otherphoto h2{
     margin-bottom: 10px;
 }
   .seriesphoto img{
-    max-width: 200px;
-    margin-right: 5px;
+    max-width: 220px;
+    padding: 5px;
+    margin: 0 auto;
   }
   .mix{
     max-width: 80vw;
@@ -419,6 +430,39 @@ ul{
         display: block;
     }    
 }
+@media (min-width:700px) {
+    .sellerinfo{
+        display: flex;
+    }
+    .lgsellerinfo{
+        padding-right: 30px;
+    }
+    .userinfo{
+        font-size: 1.5rem !important;
+        padding-top: 10px;
+    }
+}
+  .mix img{
+    max-width: 220px;
+    padding: 5px;
+    margin: 0 auto;
+  }
+  .sellerinfo h2{
+    font-size: 2rem;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  .sellerinfo h4{
+    font-size: 1.5rem;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  .sellerinfo p{
+    font-size: 1.3rem;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  
   .sellerinfo{
     /* margin-left: 15px; */
     border-radius: 20px;

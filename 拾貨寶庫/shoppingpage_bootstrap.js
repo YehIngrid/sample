@@ -597,7 +597,11 @@ Swal.fire({
           form.reset();
         } else {
           return response.json().then(data => {
-            throw new Error(data.message || 'Failed to create commodity.');
+            Swal.fire({
+              title: "Oops...發生錯誤，請稍後再試",
+              text: data.message || 'Failed to create commodity.',
+              icon: "error",
+            })
           });
         }
       })
