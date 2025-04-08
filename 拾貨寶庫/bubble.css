@@ -27,7 +27,7 @@ html, body {
   
   .bubble2 {
     width: 140px; height: 140px;
-    background: radial-gradient(circle at 70% 70%, rgba(0,75,151,0.6), rgba(255,182,193,0.08), rgba(153,102,255,0.3));
+    background: radial-gradient(circle at 70% 70%, rgba(0,75,151,0.6),  rgba(171, 102, 255, 0.08));
     top: 60%; left: 60%; animation-delay: 5s;
   }
   
