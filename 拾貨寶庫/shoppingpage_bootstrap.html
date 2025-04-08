@@ -213,7 +213,34 @@
   
           </div>
   <main id="midcontent">
-  <div class="my-section">         
+  <div class="my-section">    
+    <div class="marquee-container">
+      <div id="marquee-text" class="marquee-content"></div>
+    </div>
+    <script>
+      const texts = [
+        "🔥 限時優惠中！全部商品打 8 折！",
+        "📦 全館免運費，趕快下單！",
+        "🕒 今日下單，明天到貨！",
+        "🎁 消費滿千送小禮物！"
+      ];
+    
+      let index1 = 0;
+      const marquee = document.getElementById("marquee-text");
+    
+      function updateText() {
+        marquee.textContent = texts[index1];
+        marquee.style.animation = 'none'; // 重置動畫
+        void marquee.offsetWidth;        // 強制重繪
+        marquee.style.animation = '';    // 重新啟動動畫
+        index1 = (index1 + 1) % texts.length;
+      }
+    
+      updateText(); // 初次啟動
+      setInterval(updateText, 13000); // 每 10 秒換一句
+    </script>
+    
+         
     <div class="carousel">
       <div class="carousel-track">
         <!-- 第一個元素：複製的最後一張 -->
@@ -267,9 +294,7 @@
   <div class="container my-2">
     <!-- 這裡可以放一個標題或其他說明文字 -->
     <div class="row">
-      <div class="col-12">
-        <h4>分類</h4>
-      </div>
+      
     </div>
     
     <!-- 單列水平捲動區 -->
@@ -382,15 +407,14 @@
     </div>
   </div>
   <div class="newsell">
-    <h3>最新上架</h3>
+    <h3 class="blinking-warning">最新上架</h3>
   </div>
   
       <!-- TODO 商品卡片 -->
 
 <!-- Masonry 參考用空白元素 -->
-<div id="product-grid">
-
-</div>
+<div id="product-grid"></div>
+<div id="pagination" style="text-align: center; margin-top: 1rem;"></div>
 
 
 

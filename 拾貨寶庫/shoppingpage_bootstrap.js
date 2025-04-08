@@ -767,92 +767,156 @@ backbtn5.addEventListener('click', function(e){
 //   })
 //   .catch(err => console.error('載入商品失敗：', err));
 
-const grid = document.getElementById('product-grid');
-  
-window.addEventListener('load', () => {
-  document.body.classList.add('grid-ready');
-});
+// const grid = document.getElementById('product-grid');
+// const pagination = document.getElementById('pagination');
 
-fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
-  .then(res => res.json())
-  .then(result => {
-    const grid = document.getElementById('product-grid');
-    const productList = result.data;
-
-    productList.forEach(product => {
-      const card = document.createElement('div');
-      card.className = 'grid-item';
-      card.dataset.id = product.id; // ✅ 加上這行
-    
-      const imgUrl = product.mainImage?.startsWith('http')
-        ? product.mainImage
-        : `https://store-backend-iota.vercel.app${product.mainImage}`;
-    
-      card.innerHTML = `
-        <img src="${imgUrl}" alt="${product.name}">
-        <div class="card-body">
-          <h5>${product.name || '未命名商品'}</h5>
-          <p>＃${product.category || '未分類'}</p>
-          <p class="price">${product.price || 0}<span> NT$</span></p>
-          <p class="tag">คูปอง ส่วนลด 6%</p>
-        </div>
-      `;
-    
-      grid.appendChild(card);
-    
-      // ✅ 綁定點擊事件 → 跳轉 product.html
-      card.addEventListener('click', function () {
-        window.location.href = `product.html?id=${product.id}`;
-      });
-    });
-    
-  });
+// let currentPage = 1;
+// const itemsPerPage = 12;
+// let allProducts = [];
 
 // fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
 //   .then(res => res.json())
 //   .then(result => {
-//     const productList = result.data;
-
-//     productList.forEach(product => {
-//       const card = document.createElement('div');
-//       card.className = 'grid-item card product-card';
-//       card.dataset.id = product.id;
-
-//       const imgUrl = product.mainImage?.startsWith('http')
-//         ? product.mainImage
-//         : `https://store-backend-iota.vercel.app${product.mainImage}`;
-
-//       card.innerHTML = `
-//         <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
-//         <div class="card-body">
-//           <h5 class="card-title">${product.name || '未命名商品'}</h5>
-//           <p class="card-text">＃${product.category || '未分類'}</p>
-//           <p class="price">${product.price || 0}NT$</p>
-//           <p class="extra-info">1.1K 件</p>
-//           <p class="tag">คูปอง ส่วนลด 6%</p>
-//         </div>
-//       `;
-//       grid.appendChild(card);
-//     });
-
-//     if (window.innerWidth <= 768) {
-//       imagesLoaded(grid, () => {
-//         new Masonry(grid, {
-//           itemSelector: '.grid-item',
-//           columnWidth: '.grid-sizer',
-//           percentPosition: true,
-//           gutter: 10
-//         });
-//       });
-//     }
+//     allProducts = result.data;
+//     renderPage(currentPage);
+//     renderPagination();
+//     document.body.classList.add('grid-ready');
 //   });
 
-// window.addEventListener('resize', () => {
-//   location.reload();
-// });
+// function renderPage(page) {
+//   grid.innerHTML = '';
+//   const start = (page - 1) * itemsPerPage;
+//   const end = start + itemsPerPage;
+//   const pageItems = allProducts.slice(start, end);
 
+//   pageItems.forEach(product => {
+//     const card = document.createElement('div');
+//     card.className = 'grid-item';
+//     card.dataset.id = product.id;
 
-  
+//     const imgUrl = product.mainImage?.startsWith('http')
+//       ? product.mainImage
+//       : `https://store-backend-iota.vercel.app${product.mainImage}`;
+
+//     card.innerHTML = `
+//       <img src="${imgUrl}" alt="${product.name}">
+//       <div class="card-body">
+//         <h5>${product.name || '未命名商品'}</h5>
+//         <p>＃${product.category || '未分類'}</p>
+//         <p class="price">${product.price || 0}<span> NT$</span></p>
+//         <p class="extra-info">1.1K 件</p>
+//         <p class="tag">คูปอง ส่วนลด 6%</p>
+//       </div>
+//     `;
+
+//     grid.appendChild(card);
+//   });
+// }
+
+// function renderPagination() {
+//   pagination.innerHTML = '';
+//   const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+
+//   for (let i = 1; i <= totalPages; i++) {
+//     const btn = document.createElement('button');
+//     btn.innerText = i;
+//     btn.style.margin = '0 4px';
+//     btn.style.padding = '6px 12px';
+//     btn.style.borderRadius = '6px';
+//     btn.style.border = 'none';
+//     btn.style.backgroundColor = i === currentPage ? '#004b97' : '#ccc';
+//     btn.style.color = i === currentPage ? '#fff' : '#000';
+
+//     btn.addEventListener('click', () => {
+//       currentPage = i;
+//       renderPage(currentPage);
+//       renderPagination(); // 更新按鈕樣式
+//       window.scrollTo({
+//         top: document.getElementById('product-grid').offsetTop,
+//         behavior: 'smooth'
+//       });
+//     });
+
+//     pagination.appendChild(btn);
+//   }
+// }
+const grid = document.getElementById('product-grid');
+const pagination = document.getElementById('pagination');
+let allProducts = [];
+let currentPage = 1;
+const itemsPerPage = 12;
+
+fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
+  .then(res => res.json())
+  .then(result => {
+    allProducts = result.data;
+    renderPage(currentPage);
+    renderPagination();
+    document.body.classList.add('grid-ready');
+  });
+
+function renderPage(page) {
+  grid.innerHTML = '';
+  const start = (page - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const pageItems = allProducts.slice(start, end);
+
+  pageItems.forEach(product => {
+    const card = document.createElement('div');
+    card.className = 'grid-item';
+    card.dataset.id = product.id;
+
+    const imgUrl = product.mainImage?.startsWith('http')
+      ? product.mainImage
+      : `https://store-backend-iota.vercel.app${product.mainImage}`;
+
+    card.innerHTML = `
+      <img src="${imgUrl}" alt="${product.name}">
+      <div class="card-body">
+        <h5>${product.name || '未命名商品'}</h5>
+        <p>＃${product.category || '未分類'}</p>
+        <p class="price">${product.price || 0}<span> NT$</span></p>
+        <p class="extra-info">1.1K 件</p>
+        <p class="tag">คูปอง ส่วนลด 6%</p>
+      </div>
+    `;
+
+    card.addEventListener('click', () => {
+      window.location.href = `product.html?id=${product.id}`;
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+function renderPagination() {
+  pagination.innerHTML = '';
+  const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement('button');
+    btn.innerText = i;
+    btn.style.margin = '10px 4px';
+    btn.style.padding = '6px 11px';
+    btn.style.borderRadius = '20px 0 20px 0';
+    btn.style.border = 'none';
+    btn.style.backgroundColor = i === currentPage ? 'rgb(36,182,133)' : '#ccc';
+    btn.style.color = i === currentPage ? '#fff' : '#000';
+
+    btn.addEventListener('click', () => {
+      currentPage = i;
+      renderPage(currentPage);
+      renderPagination();
+      window.scrollTo({
+        top: document.getElementById('product-grid').offsetTop,
+        behavior: 'smooth'
+      });
+    });
+
+    pagination.appendChild(btn);
+  }
+}
+
 //TODO:商品店家標籤 
   let badgeHtml = '';
 
@@ -876,4 +940,3 @@ fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
       </div>
     </div>
   `;
-  

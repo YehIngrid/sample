@@ -600,7 +600,7 @@ ul{
   text-align: right;
   font-size: 14px;
   padding-right: 5vw;
-  background: linear-gradient(to right, #004b9759, rgb(36,138,133,0.3));
+  background: linear-gradient(to right, #004b971e, rgb(36,138,133,0.2));
   box-shadow:0px !important;
 }
 .footer-row li a{
@@ -697,12 +697,18 @@ ul{
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background-color: rgb(36,182,133,0.3); */
-  border-bottom: rgb(36,182,133) 2px dashed;
-  padding-top: 5px;
+  font-weight: 700;
+  padding-top: 10px;
   margin-top: 5vh !important;
   margin: 0 auto;
-  width: 80vw;
+  color: #05121f;
+  background-color: rgb(36,182,133, 0.3);
+}
+.newsell h3{
+  font-weight: 700;
+  font-size: 2.3rem;
+  padding: 5px;
+  border-radius: 5px;
 }
 .card {
   position: relative;
@@ -821,7 +827,7 @@ ul{
   padding: 1rem;
   max-width: 1280px;
   margin: 0 auto;
-  background-color: #f5f5f5;
+  background-color: rgb(36,182,133,0.3);
   visibility: hidden; /* 預設先隱藏 */
 }
 
@@ -899,5 +905,54 @@ body.grid-ready #product-grid {
 @media (min-width: 1280px) {
   #product-grid {
     grid-template-columns: repeat(6, 1fr);
+  }
+}
+#page-controls .page-btn {
+  margin: 0 4px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 50px;
+  background-color: #eee;
+  cursor: pointer;
+}
+
+#page-controls .page-btn.active {
+  background-color: #004b97;
+  color: white;
+}
+/* .blinking-warning {
+  animation: jumpBlink 1s step-start infinite;
+  font-weight: bold;
+}
+
+@keyframes jumpBlink {
+  0%, 100% { color: #004b97; }
+  50% { color: rgb(36,182,133); } 
+} */
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  background-color: #ffeaea;
+  padding: 10px;
+  position: relative;
+}
+
+.marquee-content {
+  position: absolute;
+  white-space: nowrap;
+  animation: scroll-left 20s linear infinite;
+  font-weight: bold;
+  color: #e4002b;
+  font-size: 1.2rem;
+  top: 1px;
+}
+
+@keyframes scroll-left {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: -100%;
   }
 }
