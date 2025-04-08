@@ -5,7 +5,7 @@ html, body {
   }  
 /* === Bubble Effect CSS === */
 .bubble {
-    position: absolute;
+    position: fixed;
     border-radius: 50%;
     opacity: 0.55;
     filter: blur(15px) brightness(1.05);

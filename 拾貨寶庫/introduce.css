@@ -103,7 +103,7 @@ nav{
   }
 }
 .img-container {
-  background:linear-gradient(to bottom, rgb(36,182,133,0.4), #ffffff);
+  
   padding-top: 2%;
   margin-bottom: 35vh;
   position: relative; /* 讓 .text-on-image 可以絕對定位 */
