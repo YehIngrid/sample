@@ -11,7 +11,8 @@ html, body {
     filter: blur(15px) brightness(1.05);
     animation: float 20s infinite ease-in-out, fade 10s infinite ease-in-out;
     will-change: transform, opacity;
-    z-index: 0;
+    z-index: -1; /* ✅ 確保在所有內容下面 */
+  pointer-events: none; /* ✅ 不阻擋點擊事件 */
   }
   
   .parallax {
