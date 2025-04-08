@@ -720,52 +720,139 @@ backbtn5.addEventListener('click', function(e){
   content.style.display = 'block';
 })
 // ⏬ 載入全部商品並顯示在首頁卡片區
+// fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
+//   .then(res => res.json())
+//   .then(result => {
+//     const productList = result.data;
+//     const container = document.querySelector('.container-card');
+// console.log('productlist:',productList);
+//     productList.forEach(product => {
+//       const card = document.createElement('div');
+//       card.className = 'card product-card';
+//       card.dataset.id = product.id; // 用 ID 填入 data-id
+//       card.style.width = '17rem';
+//     // 檢查螢幕寬度是否為手機（小於 768px）
+//     if (window.innerWidth < 768) {
+//       document.querySelectorAll('.product-card').forEach(card => {
+//         card.style.width = '16rem';
+//         card.style.margin = '10px';
+//       });
+//     }
+
+//       const imgUrl = product.mainImage?.startsWith('http') ? product.mainImage : `https://store-backend-iota.vercel.app${product.mainImage}`;
+
+//       card.innerHTML = `
+//         <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
+//         <div class="card-body">
+//           <h5 class="card-title">${product.name || '未命名商品'}</h5>
+//           <p class="card-text">＃${product.category || '未分類'}</p>
+//           <p class="price">${product.price || 0}<span>NT$</span></p>
+//           <a href="#" class="card-detail-btn">加入購物車</a>
+//         </div>
+//       `;
+//       container.appendChild(card);
+//     });
+//     // 綁定點擊卡片的「詳細資訊」按鈕事件
+//     document.querySelectorAll('.card').forEach(btn => {
+//       btn.addEventListener('click', function (e) {
+//         e.preventDefault();
+//         //const id = this.closest('.product-card').dataset.id;
+//         const id = e.target.closest('.product-card').dataset.id;
+//         console.log('id', id);
+//         if (id) {
+//           window.location.href = `product.html?id=${id}`;
+//         }
+//       });
+//     });
+//   })
+//   .catch(err => console.error('載入商品失敗：', err));
+
+const grid = document.getElementById('product-grid');
+  
+window.addEventListener('load', () => {
+  document.body.classList.add('grid-ready');
+});
+
 fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
   .then(res => res.json())
   .then(result => {
+    const grid = document.getElementById('product-grid');
     const productList = result.data;
-    const container = document.querySelector('.container-card');
-console.log('productlist:',productList);
+
     productList.forEach(product => {
       const card = document.createElement('div');
-      card.className = 'card product-card';
-      card.dataset.id = product.id; // 用 ID 填入 data-id
-      card.style.width = '17rem';
-    // 檢查螢幕寬度是否為手機（小於 768px）
-    if (window.innerWidth < 768) {
-      document.querySelectorAll('.product-card').forEach(card => {
-        card.style.width = '16rem';
-        card.style.margin = '10px';
-      });
-    }
-
-      const imgUrl = product.mainImage?.startsWith('http') ? product.mainImage : `https://store-backend-iota.vercel.app${product.mainImage}`;
-
+      card.className = 'grid-item';
+      card.dataset.id = product.id; // ✅ 加上這行
+    
+      const imgUrl = product.mainImage?.startsWith('http')
+        ? product.mainImage
+        : `https://store-backend-iota.vercel.app${product.mainImage}`;
+    
       card.innerHTML = `
-        <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
+        <img src="${imgUrl}" alt="${product.name}">
         <div class="card-body">
-          <h5 class="card-title">${product.name || '未命名商品'}</h5>
-          <p class="card-text">＃${product.category || '未分類'}</p>
-          <p class="price">${product.price || 0}<span>NT$</span></p>
-          <a href="#" class="card-detail-btn">加入購物車</a>
+          <h5>${product.name || '未命名商品'}</h5>
+          <p>＃${product.category || '未分類'}</p>
+          <p class="price">${product.price || 0}<span> NT$</span></p>
+          <p class="tag">คูปอง ส่วนลด 6%</p>
         </div>
       `;
-      container.appendChild(card);
-    });
-    // 綁定點擊卡片的「詳細資訊」按鈕事件
-    document.querySelectorAll('.card').forEach(btn => {
-      btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        //const id = this.closest('.product-card').dataset.id;
-        const id = e.target.closest('.product-card').dataset.id;
-        console.log('id', id);
-        if (id) {
-          window.location.href = `product.html?id=${id}`;
-        }
+    
+      grid.appendChild(card);
+    
+      // ✅ 綁定點擊事件 → 跳轉 product.html
+      card.addEventListener('click', function () {
+        window.location.href = `product.html?id=${product.id}`;
       });
     });
-  })
-  .catch(err => console.error('載入商品失敗：', err));
+    
+  });
+
+// fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
+//   .then(res => res.json())
+//   .then(result => {
+//     const productList = result.data;
+
+//     productList.forEach(product => {
+//       const card = document.createElement('div');
+//       card.className = 'grid-item card product-card';
+//       card.dataset.id = product.id;
+
+//       const imgUrl = product.mainImage?.startsWith('http')
+//         ? product.mainImage
+//         : `https://store-backend-iota.vercel.app${product.mainImage}`;
+
+//       card.innerHTML = `
+//         <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
+//         <div class="card-body">
+//           <h5 class="card-title">${product.name || '未命名商品'}</h5>
+//           <p class="card-text">＃${product.category || '未分類'}</p>
+//           <p class="price">${product.price || 0}NT$</p>
+//           <p class="extra-info">1.1K 件</p>
+//           <p class="tag">คูปอง ส่วนลด 6%</p>
+//         </div>
+//       `;
+//       grid.appendChild(card);
+//     });
+
+//     if (window.innerWidth <= 768) {
+//       imagesLoaded(grid, () => {
+//         new Masonry(grid, {
+//           itemSelector: '.grid-item',
+//           columnWidth: '.grid-sizer',
+//           percentPosition: true,
+//           gutter: 10
+//         });
+//       });
+//     }
+//   });
+
+// window.addEventListener('resize', () => {
+//   location.reload();
+// });
+
+
+  
 //TODO:商品店家標籤 
   let badgeHtml = '';
 

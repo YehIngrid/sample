@@ -332,3 +332,12 @@ $("#checkEye2").click(function () {
   }
   $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
 });
+
+  function handleScroll() {
+    const scrollY = window.scrollY;
+    document.querySelectorAll('.parallax').forEach(el => {
+      el.style.setProperty('--scroll', `${scrollY * 0.1}px`);
+    });
+  }
+  window.addEventListener('scroll', handleScroll);
+

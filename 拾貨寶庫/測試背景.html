@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Masonry 商品排版範例</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container-card {
+      display: flex;
+      justify-content: center;
+      margin-top: 5vh;
+    }
+
+    .card-wrapper.grid {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      position: relative;
+    }
+
+    .grid-sizer {
+      width: 48%;
+    }
+
+    .grid-item {
+      width: 48%;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .grid-sizer,
+      .grid-item {
+        width: 100%;
+      }
+    }
+
+    .card.product-card {
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .card-img-top {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .card-text {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .price {
+      color: #ff6a50;
+      font-size: 1.4rem;
+      text-align: right;
+      margin-top: 1rem;
+    }
+
+    .price span {
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container-card">
+    <div class="card-wrapper grid">
+      <div class="grid-sizer"></div>
+      <!-- JS 會自動加上商品卡片 -->
+    </div>
+  </div>
+
+  <!-- CDN Masonry / ImagesLoaded -->
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const grid = document.querySelector('.grid');
+
+      // 模擬生成商品
+      for (let i = 0; i < 12; i++) {
+        const card = document.createElement('div');
+        card.className = 'card product-card grid-item';
+        card.innerHTML = `
+          <img src="https://via.placeholder.com/300x200?text=商品${i + 1}" class="card-img-top" alt="商品圖片">
+          <div class="card-body">
+            <h5 class="card-title">商品 ${i + 1}</h5>
+            <p class="card-text">這是商品簡介</p>
+            <p class="price">${Math.floor(Math.random() * 1000)}<span> NT$</span></p>
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+
+      // 等圖片載入完畢才初始化 Masonry
+      imagesLoaded(grid, function () {
+        new Masonry(grid, {
+          itemSelector: '.grid-item',
+          columnWidth: '.grid-sizer',
+          percentPosition: true,
+          gutter: 10
+        });
+      });
+    });
+  </script>
+</body>
+</html>

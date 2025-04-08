@@ -555,7 +555,7 @@ ul{
   padding-right: 2px;
   margin-bottom: 0;
 }
-.price{
+/* .price{
   color: #ff6a50;
   font-size: 3rem;
   margin-bottom: 0;
@@ -567,21 +567,21 @@ ul{
   font-size: 1.2rem;
   font-weight: 500;
   padding-left: 3px;
-}
-.product-card {
+} */
+/* .product-card {
   position: relative;
   overflow: hidden;
   transition: box-shadow 0.3s ease;
-}
+} */
 
-.product-card:hover {
+/* .product-card:hover {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
-}
-
+} */
+/* 
 .card-detail-btn {
   position: absolute;
   left: 0;
-  bottom: -50px; /* 初始藏在卡片下方 */
+  bottom: -50px; 
   width: 100%;
   background-color: rgb(36,182,133);
   color: white;
@@ -590,11 +590,11 @@ ul{
   font-weight: bold;
   text-decoration: none;
   transition: bottom 0.3s ease;
-}
+} */
 
-.product-card:hover .card-detail-btn {
-  bottom: 0; /* 滑進來 */
-}
+/* .product-card:hover .card-detail-btn {
+  bottom: 0; 
+} */
 .login{
   box-shadow: 0 ;
   text-align: right;
@@ -652,15 +652,15 @@ ul{
 .contentwish p{
   font-size: 1.6rem;
 }
-.card.product-card {
+/* .card.product-card {
   margin: 1rem;
   border: 1px solid #eee;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  min-height: 240px; /* 統一高度 */
+  min-height: 240px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
+} */
 
 .card.product-card:hover {
   transform: translateY(-5px);
@@ -682,21 +682,16 @@ ul{
   justify-content: space-between;
 }
 
-.container-card {
-  display: flex;
-  justify-content: center; /* 整體置中（只會影響 card-wrapper） */
-  
-}
 .card{
   cursor: pointer;
 }
-.card-wrapper {
+/* .card-wrapper {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around; /* 卡片從左邊排 */
+  justify-content: space-around; 
   gap: 1rem;
-  max-width: 1200px; /* 或你要限制的寬度 */
-}
+  max-width: 1200px; 
+} */
 .newsell{
   text-align: center;
   display: flex;
@@ -818,4 +813,91 @@ ul{
   display: none !important;
 }
 
+/* ✅ 1. 讓所有卡片不會錯位，並修正 initial load 閃動問題 */
+#product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  background-color: #f5f5f5;
+  visibility: hidden; /* 預設先隱藏 */
+}
 
+body.grid-ready #product-grid {
+  visibility: visible;
+}
+
+/* ✅ 2. 卡片樣式統一設計 */
+.grid-item {
+  background-color: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+}
+
+.grid-item:hover {
+  transform: translateY(-2px);
+}
+
+.grid-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+/* ✅ 3. 內部內容間距與格式 */
+.grid-item .card-body {
+  padding: 0.75rem;
+}
+
+.card-body h5,
+.card-body p {
+  margin: 0.25rem 0;
+}
+
+.price {
+  font-weight: bold;
+  color: #e4002b;
+}
+
+.tag {
+  font-size: 12px;
+  color: #f63;
+  margin-top: 0.25rem;
+}
+
+/* ✅ 4. 手機版也維持兩欄，卡片自動縮小（不要讓 spacing 擴大） */
+@media (max-width: 767px) {
+  #product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .grid-item {
+    font-size: 14px;
+  }
+}
+
+/* ✅ 5. 平板 768 以上 3 欄，桌面 1024 以上 4 欄，1280px 以上 6 欄 */
+@media (min-width: 768px) {
+  #product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  #product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  #product-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
