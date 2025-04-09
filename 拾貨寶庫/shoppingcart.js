@@ -78,6 +78,8 @@ auth.onAuthStateChanged(function(user) {
   const logoutButton = document.getElementById('logoutButton');
   const authButton = document.getElementById('authButton');
   const username = document.getElementById('username');
+  const avatarImg = document.getElementById('avatar-img');
+
 
   if (user) {
     console.log("使用者已登入：", user);
@@ -88,6 +90,10 @@ auth.onAuthStateChanged(function(user) {
     if (username) {
       username.textContent = `${user.displayName}`;
       // username.style.display = "block";
+    }
+    if(avatarImg) {
+      avatarImg.src = user.photoURL || 'default-avatar.png'; // 預設頭像
+      avatarImg.style.display = "block";
     }
     if (authButton) {
       authButton.textContent = "登出";
@@ -219,26 +225,7 @@ function callSignUp(){
     return;
   }
   
-  let obj = {
-    email: emailInput.value,
-    password: passwordInput1.value,
-    name: nameInput.value
-  };
-  console.log("註冊資訊：", obj);
-  
-  axios.post('http://localhost:3000', obj)
-    .then(function (response) {
-      if(response.data.message === "帳號註冊成功"){
-        alert("恭喜帳號註冊成功");
-      } else {
-        alert("此帳號已被註冊");
-      }
-    })
-    .catch(function (error) {
-      console.error("註冊錯誤：", error);
-    });
 }
-
 // 切換密碼顯示/隱藏（點擊眼睛圖示）
 $("#checkEye").click(function () {
   if($(this).hasClass('fa-eye')){
@@ -296,4 +283,73 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   });
+  document.getElementById('update-profile').addEventListener('click', async () => {
+    const displayName = document.getElementById('display-name').value.trim();
+    const photoInput = document.getElementById('photo');
+    const bio = document.getElementById('bio').value.trim();
+    const loader1 = document.getElementById('loader1');
+
   
+    const formData = new FormData();
+    if (displayName) formData.append('displayName', displayName);
+    if (bio) formData.append('bio', bio);
+    if (photoInput.files.length > 0) formData.append('photo', photoInput.files[0]);
+  
+    try {
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        Swal.fire({
+          icon: "warning",
+          title: "尚未登入",
+          text: "請先登入帳號"
+        });
+        return;
+      }
+  // ✅ 顯示 loader
+  loader1.style.display = 'block';
+      const idToken = await user.getIdToken();
+      const response = await fetch('https://store-backend-iota.vercel.app/api/account/update', {
+        method: 'PUT',
+        headers: {
+          'idtoken': idToken,
+        },
+        body: formData
+      });
+  
+      const text = await response.text();
+      if (response.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "更新成功",
+          text: "個人資料已更新"
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "更新失敗",
+        });
+      }
+  
+    } catch (err) {
+      console.error("更新錯誤：", err);
+      Swal.fire({
+        icon: "error",
+        title: "發生錯誤",
+        text: "請稍後再試"
+      });
+    }finally {
+      // ✅ 不管成功或失敗都隱藏 loader
+      loader1.style.display = 'none';
+    }
+  });
+  document.getElementById('sidebar-toggle').addEventListener('click', function () {
+    document.getElementById('mobile-sidebar').classList.toggle('active');
+    document.getElementById('sidebar-overlay').classList.toggle('active');
+  });
+
+  document.getElementById('sidebar-overlay').addEventListener('click', function () {
+    document.getElementById('mobile-sidebar').classList.remove('active');
+    this.classList.remove('active');
+  });

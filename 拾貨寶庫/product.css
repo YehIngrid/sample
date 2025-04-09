@@ -478,14 +478,18 @@ ul{
     /* margin-left: 15px; */
     border-radius: 20px;
     box-shadow: #616161 0px 0px 1px;
-    padding: 24px;
-    min-width: 210px;
+    padding: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    min-width: 200px;
+    max-width: 500px;
   }
   .sellerinfo img{
-    width: 120px;
-    height: auto;
-    margin: 0 0 auto;
-    border-radius: 50px;
+    width: 160px; /* 或任何你想要的尺寸 */
+  height: 160px;
+  object-fit: cover; /* 保持比例裁切 */
+  border-radius: 50%; /* 圓形 */
+  border: 4px solid #2c5ca2; /* 可選邊框 */
   }
   .sellerinfo h3{
     padding-top: 10px;
@@ -803,4 +807,10 @@ ul{
     object-fit: cover;
     cursor: pointer;
   }
+}
+.sellername{
+    font-size: 1.5rem !important;
+    text-align: center;
+    margin-top: 10px !important;
+    margin-bottom: 0px;
 }

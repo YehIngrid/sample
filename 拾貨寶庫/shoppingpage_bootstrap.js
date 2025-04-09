@@ -213,7 +213,7 @@ auth.onAuthStateChanged(function(user) {
     if (loginForm) loginForm.style.display = "none";
     if (logoutButton) logoutButton.style.display = "block";
     if (username) {
-      username.textContent = `${user.displayName}, 你好！`;
+      username.textContent = `${user.displayName} `;
       // username.style.display = "block";
     }
     if (authButton) {

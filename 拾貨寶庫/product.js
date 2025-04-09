@@ -535,7 +535,8 @@ imageList.forEach((imgUrl, index) => {
 
     // 加入賣家資訊到畫面上（範例）
     document.getElementById('usernameinfo').innerHTML = `
-      <p>${sellerName}</p>
+      <img src="${data.data.photoURL || 'default-avatar.png'}" alt="賣家頭像" class="sellerphoto">
+      <p class="sellername">${sellerName}</p>
       
     `;
 //<p>信譽分數：${reputation}</p>
