@@ -449,11 +449,27 @@ document.addEventListener('DOMContentLoaded', function () {
   console.log('product:', product);
           document.getElementById('product-name').textContent = product.name || '未命名';
           document.getElementById('product-price').innerHTML = `${product.price || 0}<span>NT$</span>`;
-  
+  //TODO:商品分類
+  const categoryMap = {
+    book: '書籍與學籍用品',
+    life: '宿舍與生活用品',
+    student: '學生專用器材',
+    other: '其他',
+    recyle: '環保生活用品',
+    clean: '儲物與收納用品',
+    // ...等等
+  };
+  const neworoldMap = {
+    '-1': '全新',
+    '2': '二手',
+    used: '使用過',
+  };
+  let neworold = neworoldMap[product.neworold] || product.neworold;
+  let category = categoryMap[product.category] || product.category;
           const categoryList = document.getElementById('product-category');
           categoryList.innerHTML = `
-            <li>分類：${product.category || '未分類'}</li>
-            <li>新舊：${product.neworold === 'new' ? '全新' : '二手'}</li>
+            <li>分類：${category || '未分類'}</li>
+            <li>新舊：${neworold}</li>
             <li>物品年齡：${product.age === '-1' ? '未知':product.age+'年'}</li>
             <li>庫存：${product.stock || '無資料'}</li>
           `;

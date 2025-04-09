@@ -281,8 +281,7 @@ ul{
     border: 1px solid #ccc;   /* 選擇性：讓容器有邊框 */
     padding: 10px;
     margin: 0 auto;           /* 水平置中 */
-    align-items: center;
-    height: 12rem;            /* 容器高度，視需求調整 */
+    align-items: center;            /* 容器高度，視需求調整 */
   }
   /* .bag{
     overflow: hidden;
@@ -306,7 +305,7 @@ ul{
     /* border-radius: 50%;        */
     /* border: 2px solid #ff6f61;  */
     margin: 0 auto;  
-    padding-top: 2vh;         /* 讓圖片在 card 內水平置中 */
+    /* padding-top: 2vh;         讓圖片在 card 內水平置中 */
   }
   /* 你也可以針對按鈕做額外的美化 */
   #prevBtn, #nextBtn {
@@ -522,9 +521,6 @@ ul{
 .card:hover{
   scale: 1.01;
   border: 1px solid rgb(36,182,133);
-}
-.card-body{
-  padding: 0 !important;
 }
 .more-link {
   opacity: 0;
@@ -843,6 +839,7 @@ body.grid-ready #product-grid {
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease;
+  cursor: pointer;
 }
 
 .grid-item:hover {
@@ -868,6 +865,8 @@ body.grid-ready #product-grid {
 .price {
   font-weight: bold;
   color: #e4002b;
+  text-align: right;
+  font-size: 1.2rem;
 }
 
 .tag {

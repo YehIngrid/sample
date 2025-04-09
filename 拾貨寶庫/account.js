@@ -250,9 +250,15 @@ function callSignUp(){
   };
   console.log("註冊資訊：", obj);
   
+  
+  // 顯示 loader
+  document.getElementById('loader-wrapper').style.display = 'flex';
+
   axios.post('https://store-backend-iota.vercel.app/api/account/signup', obj)
     .then(function (response) {
-      console.log(typeof response.data);
+      // 隱藏 loader
+      document.getElementById('loader-wrapper').style.display = 'none';
+
       console.log("回傳資料：", response.data);
       if(response.data.message == "User created successfully"){
         Swal.fire({
@@ -268,8 +274,11 @@ function callSignUp(){
       } 
     })
     .catch(function (error) {
+      // 隱藏 loader
+      document.getElementById('loader-wrapper').style.display = 'none';
+
       console.error("註冊錯誤：", error);
-      if(error.response.data.message === "Email already exists"){
+      if(error.response?.data?.message === "Email already exists"){
         Swal.fire({
           icon: "error",
           title: "此帳號已被註冊",
@@ -283,6 +292,7 @@ function callSignUp(){
       }
     });
 }
+
 const signbtn = document.getElementById('sign');
 signbtn.addEventListener('click', function(e){
   e.preventDefault();

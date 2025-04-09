@@ -869,14 +869,29 @@ function renderPage(page) {
     const imgUrl = product.mainImage?.startsWith('http')
       ? product.mainImage
       : `https://store-backend-iota.vercel.app${product.mainImage}`;
-
+    //TODO:商品分類
+    const categoryMap = {
+      book: '書籍與學籍用品',
+      life: '宿舍與生活用品',
+      student: '學生專用器材',
+      other: '其他',
+      recyle: '環保生活用品',
+      clean: '儲物與收納用品',
+      // ...等等
+    };
+    const neworoldMap = {
+      '-1': '全新',
+      '2': '二手',
+      used: '使用過',
+    };
+    let neworold = neworoldMap[product.neworold] || product.neworold;
+    let category = categoryMap[product.category] || product.category;
     card.innerHTML = `
       <img src="${imgUrl}" alt="${product.name}">
       <div class="card-body">
         <h5>${product.name || '未命名商品'}</h5>
-        <p>＃${product.category || '未分類'}</p>
+        <p>＃${category || '未分類'} ＃${neworold}</p>
         <p class="price">${product.price || 0}<span> NT$</span></p>
-        <p class="extra-info">1.1K 件</p>
         <p class="tag">คูปอง ส่วนลด 6%</p>
       </div>
     `;
@@ -936,7 +951,6 @@ function renderPagination() {
         <h5 class="card-title">${product.name || '未命名商品'}</h5>
         <p class="card-text">＃${product.category || '未分類'}</p>
         <p class="price">${product.price || 0}<span>NT$</span></p>
-        <a href="#" class="card-detail-btn">加入購物車</a>
       </div>
     </div>
   `;
