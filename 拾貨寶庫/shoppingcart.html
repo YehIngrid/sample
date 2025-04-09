@@ -96,6 +96,11 @@
 
 </style>
 <body>
+  <div class="bubble bubble1 parallax"></div>
+<div class="bubble bubble2 parallax"></div>
+<div class="bubble bubble3 parallax"></div>
+<div class="bubble bubble4 parallax"></div>
+<div class="bubble bubble5 parallax"></div>
   <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
     <div class="spinner">
       <div></div>
@@ -246,7 +251,13 @@
 
         <!-- 對應的內容區塊 -->
         <div class="cart-tab-content active" id="all">
-          <p>這裡顯示所有訂單</p>
+          <div class="card w-100">
+            <div class="card-body">
+              <h5 class="card-title">Card title</h5>
+              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              <a href="#" class="btn btn-primary">一鍵下訂單</a>
+            </div>
+          </div>
         </div>
         <div class="cart-tab-content" id="pending-payment">
           <p>這裡顯示待付款訂單</p>
@@ -267,8 +278,14 @@
 
       <!-- (3) 我的賣場區塊 -->
       <section id="my-store" class="tab-content">
-        <h2>我的賣場</h2>
-        <p>這裡顯示自己販賣的商品及資訊</p>
+        <h2 style="margin-bottom: 30px;">我的賣場</h2>
+        <div class="card w-100">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">編輯商品</a>
+          </div>
+        </div>
         <!-- 例如列出賣家商品卡片、販賣狀態等 -->
       </section>
 

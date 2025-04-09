@@ -177,6 +177,15 @@ tbody {
   font-weight: 700;
   color: #004b97;
   text-decoration: none;
+  display: block;
+}
+@media (max-width: 400px) {
+  .name{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 8px;
+  }
+  
 }
 .name:hover{
   font-size: 1.6rem;
@@ -186,7 +195,7 @@ tbody {
   display: flex;
   justify-content: center;
   padding-top: 20px;
-  margin-bottom: 30vh;
+  margin-bottom: 3vh;
 }
 .pagechange a{
   color: #004b97;
@@ -288,6 +297,17 @@ tbody {
   margin-left: 15vw;
   margin-right: 15vw;
   margin-bottom: 30vh;
+}
+@media (max-width: 500px) {
+  #newsDetailPage {
+    margin-top: 5vh;
+    margin-left: 5vw;
+    margin-right: 5vw;
+  }
+  .detail-title{
+    padding-top: 20px;
+  }
+  
 }
 .detail-title {
   font-size: 1.7rem;

@@ -117,7 +117,7 @@ window.onload = function() {
     },
 ];
 let filteredData = data;  // 預設為全部資料
-    let itemsPerPage = 5;
+    let itemsPerPage = 7;
     let currentPage = 1;
 
     // 計算總頁數
