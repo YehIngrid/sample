@@ -21,6 +21,7 @@ window.onload = function() {
     imageUrls.forEach(url => {
       const img = new Image();
       img.src = url;
+      
     });
 })
   document.addEventListener('DOMContentLoaded', function() {
@@ -476,20 +477,47 @@ document.addEventListener('DOMContentLoaded', function () {
   
           document.getElementById('product-description').textContent = product.description || '無描述';
   
-          const imgEl = document.querySelector('.tryimg');
-          if (imgEl && product.mainImage) {
-            imgEl.src = product.mainImage.startsWith('http') ? product.mainImage : `https://store-backend-iota.vercel.app${product.mainImage}`;
-          }
-  
-          const seriesPhoto = document.querySelector('.seriesphoto');
-          seriesPhoto.innerHTML = '';
-          product.imageURL?.forEach(img => {
-            const src = img.startsWith('http') ? img : `https://store-backend-iota.vercel.app${img}`;
-            const imgEl = document.createElement('img');
-            imgEl.src = src;
-            imgEl.alt = '商品照片';
-            seriesPhoto.appendChild(imgEl);
-          });
+          const mainImg = document.querySelector('.tryimg');
+const thumbList = document.querySelector('.thumbnail-list');
+let imageList = product.imageURL || [];
+
+
+if (product.mainImage) {
+  const mainImgFullPath = product.mainImage.startsWith('http')
+    ? product.mainImage
+    : `https://store-backend-iota.vercel.app${product.mainImage}`;
+
+  // 如果 imageList 中尚未包含主圖才加入
+  if (!imageList.includes(product.mainImage)) {
+    imageList.unshift(product.mainImage); // 把主圖加到第一個
+  }
+}
+
+// 顯示主圖
+if (mainImg && imageList.length > 0) {
+  const mainSrc = imageList[0].startsWith('http') ? imageList[0] : `https://store-backend-iota.vercel.app${imageList[0]}`;
+  mainImg.src = mainSrc;
+}
+
+// 產生縮圖（包含主圖）
+thumbList.innerHTML = '';
+imageList.forEach((imgUrl, index) => {
+  const src = imgUrl.startsWith('http') ? imgUrl : `https://store-backend-iota.vercel.app${imgUrl}`;
+  const imgEl = document.createElement('img');
+  imgEl.src = src;
+  imgEl.classList.add('thumb-img');
+  if (index === 0) imgEl.classList.add('active');
+
+  imgEl.addEventListener('click', () => {
+    mainImg.src = src;
+    document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
+    imgEl.classList.add('active');
+  });
+
+  thumbList.appendChild(imgEl);
+});
+
+
   
           console.log('owner:', product.owner);
           fetch(`https://store-backend-iota.vercel.app/api/account/${product.owner}`)

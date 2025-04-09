@@ -289,7 +289,7 @@ input::placeholder {
   display: flex;
   justify-content: center;
 }
-#loader-wrapper {
+#loader-wrapper, #loader-wrapper1 {
   position: fixed;
   top: 0;
   left: 0;
@@ -301,6 +301,8 @@ input::placeholder {
   justify-content: center;
   z-index: 9999;
   display: none; /* 預設不顯示 */
+  flex-direction: column;
+  /* TODO 解決display問題 */
 }
 
 .loader {
@@ -312,7 +314,12 @@ input::placeholder {
   color: #fff;
   animation: layers1 1s linear infinite alternate;
 }
-
+.warningsign{
+  color: #fff;
+  font-size: 1.6rem;
+  font-family: 'TimeMachine';
+  margin-top: 10px;
+}
 .loader:after {
   content: '';
   position: absolute;
@@ -330,3 +337,8 @@ input::placeholder {
   0% { transform: translate(0, 0) scale(1); }
   100% { transform: translate(-25px, -25px) scale(1); }
 }
+#send:focus{
+  outline: none;
+}
+
+

@@ -112,15 +112,16 @@ auth.onAuthStateChanged(function(user) {
 });
 
 // 登入函式：取得表單欄位並呼叫 Firebase 登入 API
-function callLogIn(){
+function callLogIn() {
   const floatingInput = document.getElementById('floatingInput');
   const floatingPassword = document.getElementById('floatingPassword');
+  const loader = document.getElementById('loader-wrapper1');
 
   if (!floatingInput || !floatingPassword) {
     console.error("無法取得登入欄位，請確認元素 id 是否正確");
     return;
   }
-  
+
   if (!floatingInput.value || !floatingPassword.value) {
     Swal.fire({
       title: "請填寫所有必填資訊",
@@ -128,16 +129,19 @@ function callLogIn(){
     });
     return;
   }
-  
+
+  // ✅ 顯示 loading
+  loader.style.display = 'flex';
+
   let obj = {
     email: floatingInput.value,
     password: floatingPassword.value
   };
-  console.log("登入資訊：", obj);
-  
+
   auth.signInWithEmailAndPassword(obj.email, obj.password)
     .then((userCredential) => {
       var user = userCredential.user;
+      loader.style.display = 'none';
       Swal.fire({
         icon: "success",
         title: "登入成功",
@@ -146,6 +150,7 @@ function callLogIn(){
         footer: "即將跳轉購物頁面",
         timer: 1500
       });
+
       return user.getIdToken();
     })
     .then((token) => {
@@ -156,6 +161,10 @@ function callLogIn(){
     })
     .catch(function (error) {
       console.error("登入錯誤：", error);
+
+      // ✅ 隱藏 loading
+      loader.style.display = 'none';
+
       Swal.fire({
         icon: "error",
         title: "登入失敗",
@@ -163,6 +172,7 @@ function callLogIn(){
       });
     });
 }
+
 
 // 登出函式：使用 Firebase 的 signOut 方法
 function callLogout() {

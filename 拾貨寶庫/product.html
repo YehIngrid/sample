@@ -198,31 +198,74 @@
     </div>
 </div>
 <button class="back-btn" id="back-btn"><i class="fa-solid fa-arrow-left "></i>返回購物頁</button>
-<div id="product-detail" class="product-container">
-    <img src="" alt="" class="tryimg">
-    <!-- <img id="product-img" src="" alt="商品圖片"> -->
-    <div class="product-info">
-      <h1 id="product-name">商品名稱</h1>
-      <ul id="product-category" class="product-category">
-        <li>分類：</li>
-        <li>新舊：</li>
-        <li>物品年齡：</li>
-        <li>庫存：</li>
-      </ul>
-        <p id="product-price">0<span style="font-size: 1.2rem;">NT$</span></p>
+<!-- <div class="haha d-flex">
+    <!-- 商品主圖 + 縮圖 
+<div class="product-preview">
+  <div class="main-preview">
+    <img src="" alt="主要圖片" class="tryimg">
+  </div>
+  <div class="thumbnail-list"></div> <!-- JS 會填入圖片 
+  <div class="product-container">
+    <!-- 主圖與縮圖 
+    <div class="image-column">
+      <img src="" alt="主要圖片" class="tryimg">
+      <div class="thumbnail-list"></div>
     </div>
-    <div class="buybtn d-none d-sm-flex">
+  
+    <!-- 商品資訊與按鈕 
+    <div class="info-column">
+      <div class="product-info">
+        <h1 id="product-name">商品名稱</h1>
+        <ul id="product-category" class="product-category">
+          <li>分類：</li>
+          <li>新舊：</li>
+          <li>物品年齡：</li>
+          <li>庫存：</li>
+        </ul>
+        <p id="product-price">0<span style="font-size: 1.2rem;">NT$</span></p>
+      </div>
+      <div class="buybtn d-none d-sm-flex">
         <button class="buy">直接下單</button>
         <button class="shopcart">加入購物車</button>
+      </div>
     </div>
-    
+  </div>
+  
 </div>
-    <div class="otherphoto">
-        <h2>其他照片</h2>
-        <div class="d-flex seriesphoto flex-wrap">
-        
+</div>
+     -->
+     <div class="product-container">
+      
+    
+      <!-- 中間：主圖 -->
+      <div class="image-column">
+        <div class="main-thumbnail-wrapper">
+          <div class="main-preview">
+            <img src="" alt="主要圖片" class="tryimg">
+          </div>
+          <div class="thumbnail-list horizontal-thumbnails"></div>
         </div>
+      </div>
+      
+      <!-- 右側：資訊與按鈕 -->
+      <div class="info-column">
+        <div class="product-info">
+          <h1 id="product-name">商品名稱</h1>
+          <ul id="product-category" class="product-category">
+            <li>分類：</li>
+            <li>新舊：</li>
+            <li>物品年齡：</li>
+            <li>庫存：</li>
+          </ul>
+          <p id="product-price">0<span style="font-size: 1.2rem;">NT$</span></p>
+        </div>
+        <div class="buybtn d-sm-flex d-none">
+          <button class="buy">直接下單</button>
+          <button class="shopcart">加入購物車</button>
+        </div>
+      </div>
     </div>
+    <hr style="width: 86vw;  margin: 0 auto;margin-bottom: 5vh;">
     <div class="mix">
         <div class="describe">
             <h2>商品描述</h2>
@@ -273,16 +316,15 @@
     <button class="shopcart">加入購物車</button>
 </div>
   </div>
-    <!-- script部分-->
+        <!-- script部分-->
         <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
         <!-- Firebase Firestore -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-    <script src="product.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+        <script src="product.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
