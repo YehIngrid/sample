@@ -153,7 +153,7 @@ ul{
     display: flex;
     flex-direction: column !important;
     font-size: 1.3rem;
-    color:#004b97;
+    color: #515151;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -177,12 +177,13 @@ ul{
 }
 
 .seriesofbutton button{
-    border: 1px solid #004b9739 ;
-    border-radius: 15px;
+    /* border: 1px solid #004b9739 ; */
+    /* border-radius: 15px; */
     width: 40px;
     background-color: white;
     font-size: 26px;
     color:#004b97;
+    border: none;
 } 
 .what {
     margin: 13px;
@@ -504,6 +505,7 @@ ul{
   color: #004b97;
   font-weight: 500;
   padding-right: 5px;
+
 }
 /* TODO:container-card */
 .container-card{
