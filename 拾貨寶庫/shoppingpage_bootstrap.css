@@ -978,4 +978,6 @@ body.grid-ready #product-grid {
 }
 .wishadd{
   background-image: url('../svg/wishadd.svg');
+  width: 346px;
+  height: 439px;
 }
