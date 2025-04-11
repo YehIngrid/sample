@@ -90,6 +90,8 @@ html {
   .slide img {
     width: 100%;
     display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
     border-radius:10px;
     padding-left: 5px;
     padding-right: 5px;
@@ -264,7 +266,7 @@ ul{
     border-color: rgb(36,182,133);
   }
   .my-section {
-    margin-top: 3px;
+
     background-size: cover;      /* 調整背景圖片尺寸 */
     background-repeat: no-repeat; /* 防止重複 */
     background-position: center;  /* 置中 */
@@ -968,8 +970,9 @@ body.grid-ready #product-grid {
   background-image: url('../svg/backbtn.svg');
   background-size: cover;
   transition: background-image 0.3s ease;
+ /* TODO:未解決padding問題因為他是svg，可能需要直接去改figma */
 }
 
-.icon-button:hover {
+.icon-button:hover, .icon-button:focus {
   background-image: url('../svg/backbtn_hover.svg');
 }

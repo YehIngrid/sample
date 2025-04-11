@@ -814,3 +814,15 @@ ul{
     margin-top: 10px !important;
     margin-bottom: 0px;
 }
+.icon-button {
+  width: 130px; /* 根據你 SVG 的大小調整 */
+  height: 40px;
+  background-image: url('../svg/backbtn.svg');
+  background-size: cover;
+  transition: background-image 0.3s ease;
+ /* TODO:未解決padding問題因為他是svg，可能需要直接去改figma */
+}
+
+.icon-button:hover, .icon-button:focus {
+  background-image: url('../svg/backbtn_hover.svg');
+}
