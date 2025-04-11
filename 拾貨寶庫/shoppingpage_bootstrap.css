@@ -277,7 +277,7 @@ ul{
     overflow-x: auto;         /* 開啟水平捲動 */
     overflow-y: hidden;
     scroll-behavior: smooth;  /* 捲動平滑 */
-    max-width: 80vw;          /* 容器寬度，可改成固定 px，例如 1000px */
+    min-width: 80vw;          /* 容器寬度，可改成固定 px，例如 1000px */
     border: 1px solid #ccc;   /* 選擇性：讓容器有邊框 */
     padding: 10px;
     margin: 0 auto;           /* 水平置中 */
@@ -289,12 +289,14 @@ ul{
   } */
   /* 單一分類項目寬度與外觀 */
   .sort-item {
-    min-width: 120px;         /* 每個項目最小寬度，視需要調整 */
+    min-width: 140px;         /* 每個項目最小寬度，視需要調整 */
     margin-right: 1%;       /* 與下一個項目的間距 */
   }
   @media (max-width:700px) {
     .sort-item{
-        min-width: 24%;
+        min-width: 33%;
+        margin-right: 5px;
+        margin-bottom: 5px !important;
     }
   }
   
@@ -549,7 +551,7 @@ ul{
   padding-top: 10px;
 }
 .card-text{
-  color: #004b97;
+  color: #383838;
   padding-left: 2px;
   padding-right: 2px;
   margin-bottom: 0;
@@ -599,7 +601,6 @@ ul{
   text-align: right;
   font-size: 14px;
   padding-right: 5vw;
-  background: linear-gradient(to right, #004b971e, rgb(36,138,133,0.2));
   box-shadow:0px !important;
 }
 .footer-row li a{
@@ -862,7 +863,10 @@ body.grid-ready #product-grid {
 
 .card-body h5,
 .card-body p {
-  margin: 0.25rem 0;
+  margin: 0rem 0;
+}
+.container{
+  --bs-gutter-x: 0rem !important;
 }
 
 .price {
@@ -935,7 +939,7 @@ body.grid-ready #product-grid {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
-  background-color: #ffeaea;
+  background:linear-gradient(to right, rgba(36,182,133,0.3), #004b9756);
   padding: 10px;
   position: relative;
 }
@@ -945,7 +949,7 @@ body.grid-ready #product-grid {
   white-space: nowrap;
   animation: scroll-left 20s linear infinite;
   font-weight: bold;
-  color: #e4002b;
+  color: #373737;
   font-size: 1.2rem;
   top: 1px;
 }
