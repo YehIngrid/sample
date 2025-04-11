@@ -1092,6 +1092,39 @@
 </section>
 <section class="everyday" id="everyday" style="display: none;">
   <div class="icon-button" id="back-btn4"></div>
+  <div class="wheel-container">
+    <div id="wheel" class="wheel">
+      
+        <div class="sector" style="background-color: #f94144; transform: rotate(0deg) skewY(-30deg);"></div>
+        <div class="sector" style="background-color: #f3722c; transform: rotate(60deg) skewY(-30deg);"></div>
+        <div class="sector" style="background-color: #f9c74f; transform: rotate(120deg) skewY(-30deg);"></div>
+        <div class="sector" style="background-color: #90be6d; transform: rotate(180deg) skewY(-30deg);"></div>
+        <div class="sector" style="background-color: #43aa8b; transform: rotate(240deg) skewY(-30deg);"></div>
+        <div class="sector" style="background-color: #577590; transform: rotate(300deg) skewY(-30deg);"></div>
+        <!-- <img id="wheel" src="./svg/spinwheel.svg"> -->
+
+      
+    </div>
+    <button id="spin">開始旋轉</button>
+  </div> 
+  <script>
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spin");
+    let currentRotation = 0;
+  
+    spinBtn.addEventListener("click", () => {
+      const totalSpins = 5; // 多轉幾圈
+      const segments = 6;
+      const randomSegment = Math.floor(Math.random() * segments);
+      const degreesPerSegment = 360 / segments;
+      const rotation = totalSpins * 360 + (360 - randomSegment * degreesPerSegment);
+  
+      currentRotation += rotation;
+      wheel.style.transition = "transform 4s ease-out";
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+    });
+  </script>
+  
 </section>
 <section class="donate" id="donate" style="display: none;">
   <div class="icon-button" id="back-btn5"></div>

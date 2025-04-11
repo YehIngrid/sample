@@ -981,3 +981,58 @@ body.grid-ready #product-grid {
   width: 346px;
   height: 439px;
 }
+/* 總容器置中 */
+#wheel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+/* 轉盤本體 */
+#wheel {
+  width: 300px;
+  height: 300px;
+  border: 10px solid #004b97;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  transition: transform 4s ease-out;
+  transform: rotate(0deg);
+  transform-origin: center center;
+}
+
+/* 每個扇區（你會需要在 HTML 裡用絕對定位或 clip-path 分段） */
+.sector {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background-color: #f0f0f0;
+  transform-origin: 100% 100%;
+}
+
+/* 中心按鈕 */
+#spin {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #004b97;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* hover 效果 */
+#spin:hover {
+  background-color: #0077cc;
+}
+.sector {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+}
+
