@@ -310,7 +310,7 @@ ul{
   }
   /* 你也可以針對按鈕做額外的美化 */
   #prevBtn, #nextBtn {
-    background-color: #004b97;
+    background-color: #fbfbfb;
     min-width: 40px;          /* 按鈕寬度 */
     height: 40px;             /* 按鈕高度 */
     border-radius: 50%;       /* 若想要圓形按鈕 */
