@@ -15,7 +15,7 @@ window.addEventListener('load', () => {
     'https://github.com/YehIngrid/sample/blob/main/image/ad.png?raw=true',
     'https://github.com/YehIngrid/sample/blob/main/image/cheat.png?raw=true',
     'https://github.com/YehIngrid/sample/blob/main/image/earth.png?raw=true',
-    'https://github.com/YehIngrid/sample/blob/main/%E5%BB%A3%E5%91%8A%E8%A8%AD%E8%A8%88%E9%A0%81%E6%AD%A3%E5%BC%8F%E7%89%88.jpg?raw=true',
+    'https://github.com/YehIngrid/sample/blob/main/image/coupon.png?raw=true',
     
   ];
   imageUrls.forEach(url => {
