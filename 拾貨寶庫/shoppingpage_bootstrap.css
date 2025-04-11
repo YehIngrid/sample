@@ -976,3 +976,6 @@ body.grid-ready #product-grid {
 .icon-button:hover, .icon-button:focus {
   background-image: url('../svg/backbtn_hover.svg');
 }
+.wishadd{
+  background-image: url('../svg/wishadd.svg');
+}
