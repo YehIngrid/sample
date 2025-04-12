@@ -703,13 +703,15 @@ ul{
   margin-top: 5vh !important;
   margin: 0 auto;
   color: #05121f;
-  background-color: rgb(36,182,133, 0.3);
+  
 }
 .newsell h3{
   font-weight: 700;
-  font-size: 2.3rem;
+  font-size: 1.3rem;
   padding: 5px;
   border-radius: 5px;
+  color: #383838;
+  background: linear-gradient(to right, #fcaabd, #ffecad);
 }
 .card {
   position: relative;
@@ -828,8 +830,10 @@ ul{
   padding: 1rem;
   max-width: 1280px;
   margin: 0 auto;
-  background-color: rgb(36,182,133,0.3);
   visibility: hidden; /* 預設先隱藏 */
+}
+#product-grid .card-body{
+  background: linear-gradient(to bottom, rgba(36,182,133,0.25), #004b972d);
 }
 
 body.grid-ready #product-grid {
@@ -845,6 +849,7 @@ body.grid-ready #product-grid {
   flex-direction: column;
   transition: transform 0.2s ease;
   cursor: pointer;
+  color: #383838;
 }
 
 .grid-item:hover {
@@ -864,22 +869,27 @@ body.grid-ready #product-grid {
 
 .card-body h5,
 .card-body p {
-  margin: 0rem 0;
+  margin: 0.5rem 0;
 }
 .container{
   --bs-gutter-x: 0rem !important;
 }
-
+.card-body h5 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #383838;
+}
 .price {
   font-weight: bold;
-  color: #e4002b;
+  color: #004b97;
   text-align: right;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 .tag {
   font-size: 12px;
-  color: #f63;
+  color: rgb(36,182,133);
+  display: none;
   margin-top: 0.25rem;
 }
 
@@ -892,7 +902,7 @@ body.grid-ready #product-grid {
   }
 
   .grid-item {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 
