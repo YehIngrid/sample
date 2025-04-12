@@ -913,9 +913,9 @@ function renderPagination() {
     btn.innerText = i;
     btn.style.margin = '10px 4px';
     btn.style.padding = '6px 11px';
-    btn.style.borderRadius = '20px 0 20px 0';
+    btn.style.borderRadius = '50px';
     btn.style.border = 'none';
-    btn.style.backgroundColor = i === currentPage ? 'rgb(36,182,133)' : '#ccc';
+    btn.style.background = i === currentPage ? 'linear-gradient(to left bottom, rgba(36,182,133,0.4), #004b9750)' : '#fbfbfb';
     btn.style.color = i === currentPage ? '#fff' : '#000';
 
     btn.addEventListener('click', () => {
