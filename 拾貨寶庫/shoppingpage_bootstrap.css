@@ -214,6 +214,23 @@ ul{
 .specialpadding{
     padding-right: 30px;
 }
+.swal2-popup {
+  font-family: 'Noto Sans TC';
+  background: linear-gradient(to left bottom, #c8f5e6, #c4def7);
+}
+
+.swal2-title {
+  color: #383838;
+}
+
+.swal2-confirm {
+  background-color: #004b97;
+}
+
+.swal2-cancel {
+  background-color: #bbb;
+}
+
 @media (max-width:1200px) {
     .specialpadding{
         padding-right: 0px !important;
