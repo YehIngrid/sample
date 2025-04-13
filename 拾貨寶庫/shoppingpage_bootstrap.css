@@ -216,7 +216,7 @@ ul{
 }
 .swal2-popup {
   font-family: 'Noto Sans TC';
-  background: linear-gradient(to left bottom, #c8f5e6, #c4def7);
+  background: #fbfbfb;
 }
 
 .swal2-title {
@@ -224,7 +224,8 @@ ul{
 }
 
 .swal2-confirm {
-  background-color: #004b97;
+  background: linear-gradient(to left bottom, #c8f5e6, #c4def7);
+  color: #383838;
 }
 
 .swal2-cancel {

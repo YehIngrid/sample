@@ -325,7 +325,7 @@ ul{
   }
   
   #product-price {
-    color: #ff5722;
+    color: #383838;
     font-size: 4rem;
     margin-top: 10px;
     font-weight: 600;
@@ -379,7 +379,7 @@ ul{
     width: 50%;
     padding-top: 1vh;
     padding-bottom: 1vh;
-    background-color: rgb(36,182,133);
+    background-color: rgba(36,182,133,0.5);
     font-size: 1.5rem;
     color: #fff;
   }
@@ -391,7 +391,7 @@ ul{
     width: 50%;
     padding-top: 2vh;
     padding-bottom: 2vh;
-    background-color: #004b97;
+    background-color: #004b977e;
     font-size: 1.5rem;
     color: #fff;
   }
@@ -505,7 +505,6 @@ ul{
 .back-btn{
     border: none;
     font-family: 'TimeMachine';
-    color: #004b97;
     background-color: #fff;
     font-size: 1.7rem;
     margin-top: 2rem;
