@@ -190,12 +190,26 @@ ul{
     margin: 13px;
     
 }
+.form-control{
+    border: 1px solid #004b9739 !important;
+    border-radius: 5px !important;
+    font-size: 1.3rem !important;
+}
+.form-control:focus{
+    border: 1px solid rgb(36,182,133) !important;
+    box-shadow: 0 0 2px #004b972d!important;
+}
 .container h4{
     margin-top: 15px !important;
     margin-bottom: 0px !important;
 }
 .container-fluid{
     width: 86vw !important;
+}
+.container-fluid1{
+    background-color: #fbfbfb;
+    margin: 0 auto !important;
+    padding: 5px 5vw !important;
 }
 .specialpadding{
     padding-right: 30px;
@@ -237,7 +251,6 @@ ul{
       display: none;
       order: 2;         /* 放在第二排 */
       width: 100% !important;
-      margin-top: 10px;
     }
     /* 品牌與搜尋圖示維持原有順序 */
     .navbar-brand {
@@ -601,7 +614,6 @@ ul{
   box-shadow: 0 ;
   text-align: right;
   font-size: 14px;
-  padding-right: 5vw;
   box-shadow:0px !important;
 }
 .footer-row li a{
@@ -614,6 +626,10 @@ ul{
 }
 .footer-row li{
   list-style: none;
+}
+.bg-light {
+  --bs-bg-opacity: 0 !important;
+  background-color: transparent !important;
 }
 .wishad{
   background-color: #ffecada1;
