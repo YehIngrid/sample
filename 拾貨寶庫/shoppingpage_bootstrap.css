@@ -991,7 +991,6 @@ body.grid-ready #product-grid {
   height: 439px;
 }
 .wheel-container {
-  position: relative;
   width: 370px;
   height: 370px;
   margin: auto;
@@ -1008,26 +1007,23 @@ button {
   margin-top: 20px;
 }
 
-#spinwheel path {
+#spinwheelnew path {
   transition: all 0.3s ease;
 }
-#spinwheel {
+#spinwheelnew {
   transform-origin: 50% 50%;
   transition: transform 4s ease-out;
 }
 
-#spinwheel path.highlight {
-  stroke: gold;
-  stroke-width: 3;
-  fill-opacity: 0.85;
+#spinwheelnew path.highlight {
+  stroke: #fff;
+  stroke-width: 1;
+  fill-opacity: 0.5;
 }
-
-.pointer {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 24px;
-  color: red;
+.result{
+  height: 800px;
+  width: 100%;
 }
-
+.footerunder{
+  margin-top: 700px;
+}
