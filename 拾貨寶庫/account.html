@@ -13,6 +13,7 @@
         <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
         <link rel="shortcut icon" href="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB_circular_icon.ico">
         <link rel="stylesheet" href="account.css">
+        <link rel="stylesheet" href="demo.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -118,95 +119,146 @@
         <!-- TODO header -->
         <div class="header ">
             <!--TODO 響應式選單-->
-            <nav class="login">
-              <a id="username" class="username"></a>
-              <a class="navbar-brand me-auto" href="account.html" id="authButton">登入</a>
+            <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
+              <div class="container-fluid d-flex align-items-center sticky-top">
+            
+                <!-- (A) LOGO 放在最左邊 -->
+                <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
+                  <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50">
+                    <defs>
+                      <linearGradient id="chineseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#004b97" />
+                        <stop offset="100%" stop-color="rgb(36,182,133)" />
+                      </linearGradient>
+                      <linearGradient id="englishGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="rgb(36,182,133)" />
+                        <stop offset="100%" stop-color="#004b97" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="630" y="250" fill="none" />
+                    <text x="50" y="20" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="25" fill="url(#chineseGradient)" font-weight="bold">拾貨寶庫</text>
+                    <text x="50" y="37" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="12" fill="url(#englishGradient)" font-weight="bold">TREASURE HUB</text>
+                  </svg>
+                </a>
+            
+                <!-- (B) 桌機版導覽選單 -->
+                <div class="d-none d-lg-flex">
+                  <ul class="navbar-nav" >
+                    <li class="nav-item"><a class="nav-link"style="color: #383838;" href="home.html">首頁</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;"href="news.html">最新資訊</a></li>
+                    <li class="nav-item"><a class="nav-link"style="color: #383838;" href="shoppingpage_bootstrap.html">商品分類</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;"href="questions.html">常見問題</a></li>
+                    <li class="nav-item"><a class="nav-link"style="color: #383838;" href="introduce.html">團隊介紹</a></li>
+                    <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;"href="communication.html">客服諮詢</a></li>
+                  </ul>
+                </div>
+            
+                <!-- (C) 右側：登入 + 購物車 -->
+                <div class="d-flex align-items-center ms-auto">
+                  <div class="login">
+                    <a id="username" class="username" href="person.html"></a>
+                    <a class="navbar-brand" href="account.html" id="authButton">登入</a>
+                  </div>
+                  <a class="nav-link specialpadding ms-2" href="shoppingcart.html">
+                    <svg width="42" height="30" viewBox="0 0 42 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <ellipse cx="14.2979" cy="27.3529" rx="2.68085" ry="2.64706" fill="#0D779D"/>
+                      <ellipse cx="25.0213" cy="27.3529" rx="2.68085" ry="2.64706" fill="url(#paint0_linear_8_75)" fill-opacity="0.8"/>
+                      <rect width="28.0279" height="11.9012" transform="matrix(0.999999 -0.00105411 0.00107235 0.999999 7.89775 6.60024)" fill="url(#paint1_linear_8_75)" fill-opacity="0.8"/>
+                      <rect x="8.93617" y="21.1765" width="26.8085" height="2.64706" rx="1" fill="#0D779D"/>
+                      <rect width="2.63091" height="23.3531" rx="1" transform="matrix(0.989465 -0.144771 0.146762 0.989172 5.54836 0.460345)" fill="#0D779D"/>
+                      <rect x="0.893616" width="6.25532" height="2.64706" rx="1" fill="#0D779D"/>
+                      <rect width="7.05514" height="20.4683" transform="matrix(0.976289 0.216471 -0.220037 0.975492 33.9931 4.11319)" fill="white"/>
+                      <path d="M9.82979 12.7941H32.617" stroke="white"/>
+                      <line x1="16.5851" y1="5.29412" x2="16.5851" y2="20.2941" stroke="white"/>
+                      <rect width="0.893617" height="15" transform="translate(23.234 5.29412)" fill="white"/>
+                      <defs>
+                      <linearGradient id="paint0_linear_8_75" x1="27.2553" y1="29.5588" x2="23.285" y2="25.5379" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#004B97"/>
+                      <stop offset="1" stop-color="#24B685" stop-opacity="0.8"/>
+                      </linearGradient>
+                      <linearGradient id="paint1_linear_8_75" x1="28.0279" y1="5.95059" x2="2.03464e-09" y2="5.95059" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#004B97" stop-opacity="0.8"/>
+                      <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
+                      </linearGradient>
+                      </defs>
+                      </svg>
+                  </a>
+                </div>
+              </div>
             </nav>
-            <nav class="navbar navbar-expand-lg navbar-color bg-color header_new ">
-                <div class="container-fluid">      
-                    <a class="navbar-brand picture " href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html"><img src="https://github.com/YehIngrid/sample/blob/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB.jpg?raw=true" alt="拾貨寶庫Logo">
-                        <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50" >
-                            <!-- 定義藍色與綠色漸層 -->
-                            <defs>
-                              <linearGradient id="chineseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#004b97"/>
-                                <stop offset="100%" stop-color="rgb(36,182,133)"/>
-                              </linearGradient>
-                              <linearGradient id="englishGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="rgb(36,182,133)"/>
-                                <stop offset="100%" stop-color="#004b97"/>
-                              </linearGradient>
-                            </defs>
-                          
-                            <!-- 背景 -->
-                            <rect x="630" y="250" fill="none"/>
-                          
-                            <!-- 中文文字：置中，上方 -->
-                            <text x="50" y="20" text-anchor="middle" dominant-baseline="middle"
-                                  font-family="TimeMachine" font-size="25"
-                                  fill="url(#chineseGradient)" font-weight="bold"
-                                  >
-                              拾貨寶庫
-                            </text>
-                          
-                            <!-- 英文文字 (全大寫)：置中於中文下方 -->
-                            <text x="50" y="37" text-anchor="middle" dominant-baseline="middle"
-                                  font-family="TimeMachine" font-size="12"
-                                  fill="url(#englishGradient)" font-weight="bold"
-                                  >
-                              TREASURE HUB
-                            </text>
-                          </svg>
-                    </a>
-                    <!-- (B) 右側 (手機版): 搜尋圖示在左、漢堡選單在右 -->
-                  <div class="d-flex align-items-center ms-auto d-lg-none" style="order:1;">
-                    <!-- 手機版搜尋圖示 -->
-                    <button id="mobileSearchIcon" class="btn me-2">
-                      <i class="fa-solid fa-search" style="color: black;"></i>
-                    </button>
-                    <!-- 漢堡選單按鈕 -->
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarNav" aria-controls="navbarNav"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                      <span class="navbar-toggler-icon"></span>
-                    </button>
-                  </div>
-    
-                  <!-- (C) 單一搜尋表單：桌面版預設顯示，小螢幕隱藏，點擊圖示後顯示於第二行 -->
-                  <!-- <form id="searchForm" class="form-search" style="width: 42%;">
-                    <input style="margin-left: 8px;" class="form-control me-1 flex-grow-1" type="search"
-                          placeholder="搜尋商品..." aria-label="Search">
-                    <button style="color: rgb(36,182,133)" class="btn btn-outline-color" type="submit">
-                      <i class="searchpic fa-solid fa-search"></i>
-                    </button>
-                  </form> -->
-    
-                  <!-- (D) 導覽選單 (Collapse) -->
-                  <div class="collapse navbar-collapse" id="navbarNav" style="order:2;">
-                    <ul class="navbar-nav ms-auto align-items-start align-items-lg-center">
-                      <li class="nav-item"><a class="nav-link" href="home.html">首頁</a></li>
-                      <li class="nav-item"><a class="nav-link" href="news.html">最新資訊</a></li>
-                      <li class="nav-item"><a class="nav-link" href="shoppingpage_bootstrap.html">商品分類</a></li>
-                      <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
-                      <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
-                      <li class="nav-item specialpadding"><a class="nav-link" href="communication.html">客服諮詢</a></li>
-                      <li class="nav-item">
-                        <a class="nav-link specialpadding" href="shoppingcart.html">
-                          <i style="padding-top: 2px; font-size: 22px; color:#004b97;"
-                            class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                      </li>
-                      <li class="nav-item line">
-                        <a class="nav-link" href="https://page.line.me/889pygzb">
-                          <i class="fa-brands fa-line"></i>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </nav>     
+            
+            <!-- 桌機版也顯示的搜尋欄 -->
+            <div class="container-fluid1">
+              <div class="d-flex align-items-center">
+                <!-- 手機版：漢堡選單按鈕放最左邊 -->
+                <button class="navbar-toggler me-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+                    <svg style="padding-right: 7px;" width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 2H22" stroke="#9CBED2" stroke-width="3" stroke-linecap="round"/>
+                      <path d="M2 8H22" stroke="#83ADC5" stroke-width="3" stroke-linecap="round"/>
+                      <path d="M2 14H22" stroke="#689EBE" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                      
+                  </span>
+                </button>
+                <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
+                  <input class="form-control me-2" style="max-width: 730px;" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
+                  <button class="btn" type="submit">
+                    <svg width="28" height="21" viewBox="0 0 28 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10Z" fill="white"/>
+                      <path d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10Z" stroke="url(#paint0_linear_83_152)" stroke-opacity="0.8" stroke-width="3"/>
+                      <path d="M25.1252 20.5166C25.8409 20.9339 26.7593 20.6919 27.1765 19.9762C27.5937 19.2605 27.3518 18.3421 26.6361 17.9249L25.1252 20.5166ZM18.3639 16.5751L25.1252 20.5166L26.6361 17.9249L19.8748 13.9834L18.3639 16.5751Z" fill="url(#paint1_linear_83_152)" fill-opacity="0.6"/>
+                      <defs>
+                      <linearGradient id="paint0_linear_83_152" x1="3" y1="44" x2="3" y2="64" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#24B685" stop-opacity="0.6"/>
+                      <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
+                      </linearGradient>
+                      <linearGradient id="paint1_linear_83_152" x1="22.6763" y1="14.5057" x2="22.4519" y2="17.9985" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#24B685"/>
+                      <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
+                      </linearGradient>
+                      </defs>
+                      </svg>
+                  </button>
+                </form>
+              </div>
+            
+              <!-- 手機版導覽選單展開內容 -->
+              <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item"><a class="nav-link" href="home.html">首頁</a></li>
+                  <li class="nav-item"><a class="nav-link" href="news.html">最新資訊</a></li>
+                  <li class="nav-item"><a class="nav-link" href="shoppingpage_bootstrap.html">商品分類</a></li>
+                  <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
+                  <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
+                  <li class="nav-item specialpadding"><a class="nav-link" href="communication.html">客服諮詢</a></li>
+                </ul>
+              </div>
             </div>
-          </div>
+            
+    
+          <a href="#" class="talk">
+            <svg width="64" height="59" viewBox="0 0 64 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="64" height="59" fill="#FBFBFB"/>
+              <path d="M58 29.5C58 39.165 46.8071 47 33 47C19.1929 47 8 39.165 8 29.5C8 19.835 19.1929 12 33 12C46.8071 12 58 19.835 58 29.5Z" fill="url(#paint0_linear_10_49)" fill-opacity="0.8"/>
+              <ellipse cx="18.3448" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
+              <ellipse cx="45.931" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
+              <ellipse cx="32.1379" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
+              <path d="M12 39C10.9427 41.5701 8.99999 44.5 8.49999 45C7.99999 45.5 12 43.5 12 43.5M12 39C12 39 12 42.6429 12 43.5M12 39L15 41.5714M12 43.5C12 43.5 14 42.4286 15.5 42C17 41.5714 15 41.5714 15 41.5714M15 41.5714L11 43" stroke="#6195BD" stroke-width="2" stroke-linejoin="round"/>
+              <defs>
+              <linearGradient id="paint0_linear_10_49" x1="33" y1="12" x2="33" y2="47" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#24B685" stop-opacity="0.6"/>
+              <stop offset="0.368901" stop-color="#127F8E" stop-opacity="0.702167"/>
+              <stop offset="1" stop-color="#004B97" stop-opacity="0.8"/>
+              </linearGradient>
+              </defs>
+              </svg>
+              
+            </a>
         </div>
+         
+      
+              </div>
         <!-- TODO content -->
         <div class="form-signin">
           <div class="content">
@@ -295,6 +347,7 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+        <script src="demo.js"></script>
         <script src="account.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>

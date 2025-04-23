@@ -1,60 +1,4 @@
-@font-face {
-  font-family:'TimeMachine';
-  src: url(fonts/timemachine-wa.ttf);
-}
-html {
-  font-size: 62.5%;
-}
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-.picture img{
-  width: 40px;
-  height: 39px;
-  border-radius: 50%;
-}
-.navbar{
-  color: white !important;
-  background-color: rgb(255, 255, 255); /* 半透明背景 */
-  padding: 0px !important;
-}
-nav{
-  box-shadow: 0 0 2px rgba(0,0,0,0.2);
-}
-.nav-link{
-  font-size: 14px !important;
-}
-@media (max-width: 1200px) {
-  .nav-link{
-      font-size: 12px !important;
-  }
-  .form-search{
-      width: 25% !important;
-  }
-}
-.btn-outline-color {
-  border: 1px solid rgb(36,182,133) !important;
-}
-.btn-outline-color:hover{
-  color: white !important;
-  background-color: rgb(36,182,133) !important;
-}
-.searchpic:hover {
-  color: white !important;
-}
-/* TODO line官方logo */
-.line {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  padding-top: 2px;
-}
-.line i{
-  color: #86D97B;
-  font-size: 28px;
-}
+
 /* 3. 主要容器：包含側邊欄 + 主內容 */
 .containerhello {
   display: flex;
@@ -80,7 +24,7 @@ nav{
 .profile-image {
   width: 100px;
   height: 100px;
-  background-color: #004b97e0;
+  
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 10px;
@@ -134,41 +78,7 @@ nav{
   display: block;
 }
 
-/* ---------- 表單樣式 ---------- */
-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-}
-label {
-  margin-top: 15px;
-  font-weight: bold;
-  font-size: 1.3rem;
-}
-input {
-  margin-top: 5px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-input[type="text"]{
-  font-size: 1.3rem;
-}
-input[type="email"]{
-  font-size: 1.3rem;
-}
-input[type="password"]{
-  font-size: 1.3rem;
-}
-button {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #004b97;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+
 .change{
   padding: 10px;
   font-size:1.4rem;
@@ -209,47 +119,6 @@ button {
 .cart-tab-content.active {
   display: block;
   font-size: 1.4rem;
-}
-.container-fluid{
-  width: 86vw !important;
-}
-.login{
-  box-shadow: 0 ;
-  text-align: right;
-  font-size: 14px;
-  padding-right: 5vw;
-  background: linear-gradient(to right, #004b9759, rgb(36,138,133,0.3));
-  box-shadow:0px !important;
-}
-.footer-row li a{
-  color: #fff;
-  text-decoration: none;
-}
-.footer-row{
-  padding-top: 0.5rem;
-  padding-bottom: 1rem;
-}
-.footer-row li{
-  list-style: none;
-}
-.footerunder{
-  background-color: #004b97;
-  color: #ffffff;
-  text-align: center;
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  padding-top: 1rem;
-  padding-bottom: 1.2rem;  
-  font-size: 12px;
-}
-.footer{
-  background-color: #004b97e0;
-  display: flex;
-  justify-content: center;
-}
-.nav-menu ul{
-  padding-left: 0;
 }
 .avatar-wrapper {
   width: 120px;
