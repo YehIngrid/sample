@@ -379,9 +379,9 @@ ul{
     width: 50%;
     padding-top: 1vh;
     padding-bottom: 1vh;
-    background-color: rgba(36,182,133,0.5);
+    background-color: rgb(199, 244, 229);
     font-size: 1.5rem;
-    color: #fff;
+    color: rgb(36,182,133);
   }
   .buy:hover{
     scale: 1.005;
@@ -391,9 +391,9 @@ ul{
     width: 50%;
     padding-top: 2vh;
     padding-bottom: 2vh;
-    background-color: #004b977e;
+    background-color: #cadff5;
     font-size: 1.5rem;
-    color: #fff;
+    color: #004b97;
   }
   .shopcart:hover{
     scale: 1.005;

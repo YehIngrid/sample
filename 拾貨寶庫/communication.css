@@ -112,14 +112,25 @@ html {
     padding: 30px;
     background-color: white;
   }
-  
+  @media (max-width: 380px) {
+    .form-container {
+      margin-top: 10vh;
+      padding: 20px;
+      margin: 40px auto;
+    }
+    .form-container h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0;
+      text-align: center;
+    }
+  }
   /* 標題樣式 */
   .form-container h2 {
     text-align: center;
     font-size: 2rem;
     margin-bottom: 20px;
     line-height: 1.6;
-    color:rgb(73, 73, 73);
+    color:#383838
   }
   
   /* 表單內容排版 */
@@ -198,8 +209,7 @@ html {
     font-size: 36px;
 }
 .content{
-  background: linear-gradient(135deg, rgba(36, 182, 133, 0.4), #004b97aa);
-  height: 95vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;

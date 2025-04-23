@@ -930,25 +930,26 @@ function renderPagination() {
   }
 }
 
-//TODO:商品店家標籤 
-  let badgeHtml = '';
+// //TODO:商品店家標籤 
+//   let badgeHtml = '';
 
-  if (product.isFirstProduct) {
-    badgeHtml += `<div class="card-badge badge-first">首次上架</div>`;
-  }
+//   if (product.isFirstProduct) {
+//     badgeHtml += `<div class="card-badge badge-first">首次上架</div>`;
+//   }
   
-  if (product.sellerReputation === 5) {
-    badgeHtml += `<div class="card-badge badge-trusted">優良賣家</div>`;
-  }
+//   if (product.sellerReputation === 5) {
+//     badgeHtml += `<div class="card-badge badge-trusted">優良賣家</div>`;
+//   }
   
-  const cardHtml = `
-    <div class="card product-card">
-      ${badgeHtml}
-      <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
-      <div class="card-body">
-        <h5 class="card-title">${product.name || '未命名商品'}</h5>
-        <p class="card-text">＃${product.category || '未分類'}</p>
-        <p class="price">${product.price || 0}<span>NT$</span></p>
-      </div>
-    </div>
-  `;
+//   const cardHtml = `
+//     <div class="card product-card">
+//       ${badgeHtml}
+//       <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
+//       <div class="card-body">
+//         <h5 class="card-title">${product.name || '未命名商品'}</h5>
+//         <p class="card-text">＃${product.category || '未分類'}</p>
+//         <p class="price">${product.price || 0}<span>NT$</span></p>
+//       </div>
+//     </div>
+//   `;
+
