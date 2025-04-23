@@ -535,7 +535,7 @@ imageList.forEach((imgUrl, index) => {
 
     // 加入賣家資訊到畫面上（範例）
     document.getElementById('usernameinfo').innerHTML = `
-      <img src="${data.data.photoURL || 'default-avatar.png'}" alt="賣家頭像" class="sellerphoto">
+      <img src="${data.data.photoURL || '../image/default-avatar.png'}" alt="賣家頭像" class="sellerphoto">
       <p class="sellername">${sellerName}</p>
       
     `;

@@ -92,7 +92,7 @@ auth.onAuthStateChanged(function(user) {
       // username.style.display = "block";
     }
     if(avatarImg) {
-      avatarImg.src = user.photoURL || '../image/default-avatar.png'; // 預設頭像
+      avatarImg.src = user.photoURL || 'https://github.com/YehIngrid/sample/blob/main/image/default-avatar.png?raw=true'; // 預設頭像
       avatarImg.style.display = "block";
     }
     if (authButton) {
