@@ -880,13 +880,8 @@ ul{
 
 .carousel-indicators [data-bs-target] {
     background-color: #004b97 !important;
+    border-bottom: 0px solid #004b97 !important;
 }
 .carousel-indicators {
-    position: relative !important;
-    display: flex !important;
-    justify-content: center !important;
-    padding: 0 !important;
-    margin-right: 15% !important;
     margin-bottom: 0 !important;
-    margin-left: 15% !important;
 }
