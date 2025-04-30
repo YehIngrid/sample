@@ -16,6 +16,14 @@ window.onload = function() {
 
   
     const formData = new FormData();
+    if(!displayName&&!bio&&!photoInput.files){
+      Swal.fire({
+        icon: "warning",
+        title: "請填寫完整資料",
+        text: "請檢查是否有空白欄位"
+      });
+      return;
+    }
     if (displayName) formData.append('displayName', displayName);
     if (bio) formData.append('bio', bio);
     if (photoInput.files.length > 0) formData.append('photo', photoInput.files[0]);
@@ -64,8 +72,15 @@ window.onload = function() {
         title: "發生錯誤",
         text: "請稍後再試"
       });
-    }finally {
+    } finally {
       // ✅ 不管成功或失敗都隱藏 loader
       loader1.style.display = 'none';
     }
+  });
+
+  document.getElementById('arrowButton').addEventListener('click', function () {
+    const target = document.getElementById('collapseContent');
+    const bsCollapse = new bootstrap.Collapse(target, {
+      toggle: true  // 點一次開、再點一次關
+    });
   });

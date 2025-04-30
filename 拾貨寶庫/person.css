@@ -63,3 +63,44 @@
       transform: rotate(-360deg);
     }
   }  
+.personcontent h1{
+  font-size: 3rem;
+  margin-top: 30px;
+  margin-bottom: 70px;
+  color: #383838;
+}
+.profile-info p{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+#collapseContent{
+  width: 70vw;
+  margin: 0 auto;
+}
+@media (max-width:380px) {
+  #collapseContent{
+    width: 90vw;
+  }
+}
+#arrowButton {
+  cursor: pointer;
+  transition: transform 0.3s;
+  display: block;
+  margin: 0 auto;
+}
+
+#arrowButton:active {
+  color: rgba(36,182,133,0.6);
+}
+#arrowButton {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem 0;
+}
+
+#arrowButton svg {
+  max-width: 100%;
+  height: auto;
+}
+

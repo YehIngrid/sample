@@ -270,6 +270,7 @@
         </a>
     </div>
      <div class="personcontent">
+      <h1>個人資料</h1>
         <div class="profile-info">
             <div class="avatar-wrapper" style="margin-top: 20px;">
               <img src="../image/default-avatar.png" alt="Profile" id="avatar-img">
@@ -280,23 +281,53 @@
             <p><br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus libero a cupiditate nostrum voluptatem id ratione, consequatur necessitatibus enim saepe.<br><br></p>
           </div>
           
-          <hr style="margin-top: 50px;">
-          <p>個人資料更改區</p>
+          <!-- 自定按鈕（你可以用 SVG 或 Figma 匯出的箭頭圖） -->
+<button id="arrowButton" class="btn btn-link">
+  <svg width="863" height="60" viewBox="0 0 863 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="432.5" cy="30" r="30" fill="#FBFBFB"/>
+    <path d="M411.5 25L432.753 45L453.5 25" stroke="#5D8CBD" stroke-width="3"/>
+    <path d="M402 31H2" stroke="#D9D9D9"/>
+    <path d="M863 31H463" stroke="#D9D9D9"/>
+    </svg>
+    
+  </button>
+
+<!-- Collapse 區塊 -->
+<div class="collapse" id="collapseContent" >
+  
+    <p style="font-size: 16px;">個人資料更改區</p>
           <div style="box-shadow: 0 0 5px #3b3a3a; border-radius: 10px; padding: 20px;">
-            <p style="margin-bottom: 0px;margin-top: 15px;">暱稱</p>
+            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 12px;">暱稱</p>
             <input type="text" id="display-name" placeholder="輸入顯示名稱">
         
-            <p style="margin-bottom: 0px; margin-top: 15px;">個人大頭照</p>
+            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 12px;">個人大頭照</p>
             <input type="file" id="photo" accept="image/png, image/jpeg" style="border:none; margin-top: 0px;">
         
-            <p style="margin-bottom: 0px;margin-top: 15px;">個人簡介</p>
-            <textarea id="bio" placeholder="簡單介紹一下自己吧！" style="padding: 5px;font-size: 1.4rem;"></textarea>
+            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 12px;">個人簡介</p>
+            <textarea id="bio" placeholder="簡單介紹一下自己吧！" style="display: block;padding: 5px;font-size: 1.4rem;"></textarea>
         
-            <button style="margin-top: 20px;" id="update-profile">更新個人資料</button>
+            <button style="margin-top: 20px;border:none;font-size: 12px; padding:10px 15px;border-radius: 5px;background: linear-gradient(to left bottom, #004b9743, rgba(36,182,133,0.6));" id="update-profile">更新個人資料</button>
             <span class="loader" id="loader1" style="display: none;"></span>
           </div>
-     </div>
   
+</div>
+
+          
+     </div>
+     <div class="footerunder">
+      Copyright©2025拾貨寶庫｜All Rights Reserved
+  </div> 
+  
+    <section class="footer">
+      <div class="footer-row d-flex justify-content-center">
+            <li><a href="introduce.html">關於我們｜</a></li>
+            <li><a href="questions.html">常見問題｜</a></li>
+            <li><a href="communication.html">客服諮詢｜</a></li>
+            <li><a href="policy.html">隱私政策｜</a></li>
+            <li><a href="#">使用條款｜</a></li>
+            <li><a href="#">退換貨政策</a></li>
+      </div>
+    </section>
           </div>
   
     <!-- script部分-->
