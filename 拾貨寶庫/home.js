@@ -124,23 +124,6 @@ function scrollToContent() {
   }, { threshold: 0.5 });
 
   observer4.observe(jitterElement);
-
-  const scalefunc = document.querySelector('.scale-up');
-
-  // 使用 IntersectionObserver 監控目標元素是否進入 viewport
-  const observer5 = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        
-        scalefunc.classList.add('active');
-      } else {
-        
-        scalefunc.classList.remove('active');
-      }
-    });
-  }, { threshold: 0.2 });
-
-  observer5.observe(jitterElement);
   document.addEventListener('DOMContentLoaded', function() {
     // 取得所有圖示元素
     const icons = document.querySelectorAll('.icon');
