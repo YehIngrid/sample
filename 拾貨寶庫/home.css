@@ -863,6 +863,7 @@ ul{
   .carousel-item p{
     width: 70vw;
     margin: 0 auto;
+    margin-bottom: 20px;
   }
     .carousel-item ul,h4{
         width: 310px;
@@ -874,5 +875,18 @@ ul{
         padding-bottom: 1%;
     }
     .carousel-item li{
-        padding: 5px;
+        padding:5px 0px;
     }
+
+.carousel-indicators [data-bs-target] {
+    background-color: #004b97 !important;
+}
+.carousel-indicators {
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin-right: 15% !important;
+    margin-bottom: 0 !important;
+    margin-left: 15% !important;
+}
