@@ -860,3 +860,19 @@ ul{
     display: flex;
     justify-content: center;
   }
+  .carousel-item p{
+    width: 70vw;
+    margin: 0 auto;
+  }
+    .carousel-item ul,h4{
+        width: 310px;
+        margin: 0 auto;
+    }
+    .carousel-item h4{
+        color: #004b97;
+        padding-top: 1%;
+        padding-bottom: 1%;
+    }
+    .carousel-item li{
+        padding-top: 5px;
+    }
