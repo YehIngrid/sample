@@ -16,7 +16,8 @@ window.onload = function() {
 
   
     const formData = new FormData();
-    if(!displayName&&!bio&&!photoInput.files){
+    if(!displayName && !bio && photoInput.files.length === 0){
+      console.log("沒有任何資料");
       Swal.fire({
         icon: "warning",
         title: "請填寫完整資料",

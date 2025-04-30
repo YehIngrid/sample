@@ -79,7 +79,8 @@
 }
 @media (max-width:380px) {
   #collapseContent{
-    width: 90vw;
+    width: 88vw;
+    margin: 0 auto;
   }
 }
 #arrowButton {
