@@ -213,11 +213,12 @@ ul{
 .icon-button:hover, .icon-button:focus {
   background-image: url('../svg/backbtn_hover.svg');
 }
+
 .chatWindow {
   position: fixed;
   bottom: 8px;
   right: 8px;
-  z-index: 1000;
+  z-index: 3000;
   width: 368px;
   height: 680px;
   background-color: #fbfbfb;
@@ -304,4 +305,30 @@ ul{
 .sender + .timestamp {
   text-align: right;
   padding-right: 8px;
+}
+.closecross:hover {
+  animation: spin2 0.5s linear; 
+  cursor: pointer;
+}
+
+@keyframes spin2 {
+  from {
+    transform: scale(1) rotate(0deg);
+    
+  }
+  to {
+    transform: scale(1.1) rotate(720deg); /* 3 圈 = 360 * 3 = 1080 度 */
+  }
+}
+.backtalk:hover {
+  cursor:pointer;
+}
+@media (max-width: 394px) {
+  .chatWindow {
+    width: 100vw; /* 手機版全寬 */
+    height: 100vh; /* 手機版全高 */
+    bottom: 0; /* 底部對齊 */
+    right: 0; /* 右側對齊 */
+    border-radius: 0; /* 去掉圓角 */
+  }
 }

@@ -360,10 +360,6 @@ const firebaseConfig = {
       // content.style.display ="none";
       seller.style.display = "none";
       chatWindow.style.display = "block";
-      Swal.fire({
-        title: "歡迎來到聊天室！",
-        icon: "info"
-      });
     }
   })
   const sendbtn = document.querySelector('#sendbtn');
@@ -371,6 +367,25 @@ const firebaseConfig = {
     e.preventDefault();
     sendMessage();
   });
+  const input = document.getElementById('messageInput');
+let isComposing = false;
+
+// 注音輸入時的選字階段偵測
+input.addEventListener('compositionstart', () => {
+  isComposing = true;
+});
+
+input.addEventListener('compositionend', () => {
+  isComposing = false;
+});
+
+input.addEventListener('keydown', function (event) {
+  if (event.key === 'Enter' && !isComposing) {
+    event.preventDefault();
+    sendMessage();
+    input.value = ''; // 清空輸入框
+  }
+});
   let lastMessageDate = null;
 
 function getCurrentTime() {
@@ -396,7 +411,7 @@ function getCurrentTime() {
 
 
   function sendMessage() {
-    const input = document.getElementById('messageInput');
+    
     const text = input.value.trim();
     if (!text) return;
 
@@ -419,8 +434,4 @@ const closeChat = document.querySelector('#closebtn');
 closeChat.addEventListener('click', function(e){
   chatWindow.style.display = "none";
   content.style.display = "block";
-  Swal.fire({
-    title: "感謝使用聊天室！",
-    icon: "info"
-  });
 });
