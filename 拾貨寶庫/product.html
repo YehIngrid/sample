@@ -152,7 +152,7 @@
                 <a id="username" class="username" href="person.html"></a>
                 <a class="navbar-brand" href="account.html" id="authButton">登入</a>
               </div>
-              <a class="nav-link specialpadding ms-2" href="shoppingcart.html">
+              <a class="nav-link specialpadding ms-2" href="shoppingcart.html" id="cartIcon">
                 <svg width="42" height="30" viewBox="0 0 42 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <ellipse cx="14.2979" cy="27.3529" rx="2.68085" ry="2.64706" fill="#0D779D"/>
                   <ellipse cx="25.0213" cy="27.3529" rx="2.68085" ry="2.64706" fill="url(#paint0_linear_8_75)" fill-opacity="0.8"/>
@@ -175,6 +175,7 @@
                   </linearGradient>
                   </defs>
                   </svg>
+                  <span id="cartCount" class="cart-count">0</span>
               </a>
             </div>
           </div>
@@ -316,7 +317,7 @@
         </div>
         <div class="buybtn d-sm-flex d-none">
           <button class="buy">直接下單</button>
-          <button class="shopcart">加入購物車</button>
+          <button class="shopcart" onclick="playUfoAnimation(this)">加入購物車</button>
         </div>
       </div>
     </div>

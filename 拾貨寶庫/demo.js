@@ -435,3 +435,100 @@ closeChat.addEventListener('click', function(e){
   chatWindow.style.display = "none";
   content.style.display = "block";
 });
+function flyToCart(button) {
+  const cart = document.getElementById('cartIcon');
+  const icon = document.createElement('div');
+  icon.className = 'flying-icon';
+
+  const startRect = button.getBoundingClientRect();
+  const endRect = cart.getBoundingClientRect();
+
+  icon.style.left = startRect.left + 'px';
+  icon.style.top = startRect.top + 'px';
+  document.body.appendChild(icon);
+
+  setTimeout(() => {
+    icon.style.transition = 'all 0.8s ease-in-out';
+    icon.style.left = endRect.left + 'px';
+    icon.style.top = endRect.top + 'px';
+    icon.style.transform = 'scale(0.3)';
+    icon.style.opacity = '0.2';
+  }, 10);
+
+  setTimeout(() => {
+    document.body.removeChild(icon);
+  }, 900);
+}
+function playUfoAnimation(button) {
+  const cart = document.getElementById('cartIcon');
+  const start = button.getBoundingClientRect();
+  const end = cart.getBoundingClientRect();
+
+  const ufo = document.createElement('div');
+  ufo.className = 'ufo';
+  ufo.style.left = start.left + 'px';
+  ufo.style.top = (start.top - 100) + 'px';
+
+  const beam = document.createElement('div');
+  beam.className = 'beam';
+  beam.style.left = (start.left - 10) + 'px';
+  beam.style.top = (start.top - 10) + 'px';
+
+  const gift = document.createElement('div');
+  gift.className = 'gift';
+  gift.style.left = start.left + 'px';
+  gift.style.top = start.top + 'px';
+
+  document.body.appendChild(ufo);
+  document.body.appendChild(beam);
+  document.body.appendChild(gift);
+
+  setTimeout(() => {
+    beam.style.opacity = 1;
+  }, 200);
+
+  setTimeout(() => {
+    gift.style.top = (start.top - 60) + 'px';
+    gift.style.transform = 'scale(0.6)';
+  }, 500);
+
+  setTimeout(() => {
+    gift.style.transform = 'scale(0)';
+  }, 1100);
+
+  // ❌ 禮物消失後關閉光束
+  setTimeout(() => {
+    beam.style.opacity = 0;
+  }, 1400);
+
+  // ✅ 太空船在光束關閉後才移動
+  setTimeout(() => {
+    ufo.style.left = end.left + 'px';
+    ufo.style.top = end.top + 'px';
+  }, 1700);
+
+  setTimeout(() => {
+    document.body.removeChild(ufo);
+    document.body.removeChild(beam);
+    document.body.removeChild(gift);
+
+    // ✅ 加入購物車數量 +1 並加動畫
+    let count = parseInt(cartCount.textContent, 10);
+    cartCount.textContent = count + 1;
+    cartCount.classList.add('bump');
+
+    // 移除動畫 class（結束縮放）
+    setTimeout(() => {
+      cartCount.classList.remove('bump');
+    }, 300);
+  }, 2400);
+  setTimeout(() => {
+    Swal.fire({
+    title: "商品已加入購物車",
+    icon: "success",
+    showConfirmButton: false,
+    timer: 1800
+  });
+}, 2700);
+
+}
