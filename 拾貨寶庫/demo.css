@@ -162,7 +162,7 @@ ul{
   position: fixed;
   bottom: 14vh;
   right: 1vw;
-  z-index: 2000;
+  z-index: 900;
   color: #fff;
   padding: 2px 11px;
   font-size: 3rem;
@@ -212,4 +212,96 @@ ul{
 
 .icon-button:hover, .icon-button:focus {
   background-image: url('../svg/backbtn_hover.svg');
+}
+.chatWindow {
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  z-index: 1000;
+  width: 368px;
+  height: 680px;
+  background-color: #fbfbfb;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  display: none; /* 初始隱藏 */
+}
+.chatHeader {
+  background-color: #fff;
+  color: #383838;
+  padding: 12px;
+  font-size: 1.5rem;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chatting {
+  padding: 12px;
+  height: calc(100% - 60px); /* 減去標題欄高度 */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column; /* ✅ 垂直方向排列 */
+  /* gap: 6px;                每個訊息間距 */
+}
+.message {
+  display: inline-block;
+  font-size: 1.4rem;
+  line-height: 1.4;
+  padding: 8px 10px;
+  border-radius: 15px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+  max-width: 75%;
+  word-wrap: break-word; /* 讓長字自動換行 */
+  overflow-wrap: break-word; /* 強制讓英文或網址不要超出 */
+}
+.receiver {
+  align-self: flex-start;
+  background-color: #fff;
+}
+.sender {
+  align-self: flex-end;
+  background: linear-gradient(to left bottom, #c8f5e6, #c4def7);
+}
+.inputArea {
+  position: relative;
+  display: flex;
+  align-items: center;
+  top: -50px;
+  padding-top: 12px;
+  padding-left: 8px;
+  margin-right: 8px;
+  background-color: #fff;
+  border-radius: 0 0 8px 8px;
+}
+.sendButton {
+  border: none;
+  background-color: transparent;
+}
+.inputMessage {
+  flex: 1;
+  padding: 9px;
+  font-size: 1.3rem;
+  border: none;
+  border-radius: 20px;
+  box-shadow: inset 0 0 3px #689EBE;
+  margin-left: 6px;
+}
+.inputMessage:focus {
+  outline: none;
+  box-shadow: inset 0 0 4px #5d83ff;
+}
+.sendother {
+  border: none;
+  background-color: transparent;
+}
+.timestamp {
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 2px;
+  margin-bottom: 12px;
+  padding-left: 8px;
+}
+.sender + .timestamp {
+  text-align: right;
+  padding-right: 8px;
 }

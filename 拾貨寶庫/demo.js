@@ -347,4 +347,80 @@ const firebaseConfig = {
     }
     
   })
-  
+  const talkInterface = document.querySelector('#talkInterface');
+  const chatWindow = document.querySelector('#chatWindow');
+  talkInterface.addEventListener('click', function(e){
+    if(!auth.currentUser){
+      Swal.fire({
+        title: "您必須先登入才能進入聊天室！",
+        text: "請前往登入頁",
+        icon: "info"
+      });
+    } else {
+      // content.style.display ="none";
+      seller.style.display = "none";
+      chatWindow.style.display = "block";
+      Swal.fire({
+        title: "歡迎來到聊天室！",
+        icon: "info"
+      });
+    }
+  })
+  const sendbtn = document.querySelector('#sendbtn');
+  sendbtn.addEventListener('click', function(e){
+    e.preventDefault();
+    sendMessage();
+  });
+  let lastMessageDate = null;
+
+function getCurrentTime() {
+  const now = new Date();
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+
+  const currentDate = now.toISOString().slice(0, 10); // 例如：2025-06-18
+
+  let timeString;
+  if (lastMessageDate === currentDate) {
+    timeString = `${hours}:${minutes}`; // 同一天只顯示時間
+  } else {
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    timeString = `${year}/${month}/${day} ${hours}:${minutes}`; // 不同天顯示完整
+    lastMessageDate = currentDate; // 更新為這一筆的日期
+  }
+
+  return timeString;
+}
+
+
+  function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const msg = document.createElement('div');
+    msg.className = 'message sender';
+    msg.innerText = text;
+
+    const time = document.createElement('div');
+    time.className = 'timestamp';
+    time.innerText = getCurrentTime();
+
+    const chat = document.getElementById('chat');
+    chat.appendChild(msg);
+    chat.appendChild(time);
+
+    input.value = '';
+    chat.scrollTop = chat.scrollHeight;
+  }
+const closeChat = document.querySelector('#closebtn');
+closeChat.addEventListener('click', function(e){
+  chatWindow.style.display = "none";
+  content.style.display = "block";
+  Swal.fire({
+    title: "感謝使用聊天室！",
+    icon: "info"
+  });
+});

@@ -243,7 +243,7 @@
         </div>
         
 
-      <a href="#" class="talk">
+      <a href="#" class="talk" id="talkInterface">
         <svg width="64" height="59" viewBox="0 0 64 59" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="64" height="59" fill="#FBFBFB"/>
           <path d="M58 29.5C58 39.165 46.8071 47 33 47C19.1929 47 8 39.165 8 29.5C8 19.835 19.1929 12 33 12C46.8071 12 58 19.835 58 29.5Z" fill="url(#paint0_linear_10_49)" fill-opacity="0.8"/>
@@ -261,6 +261,47 @@
           </svg>
           
         </a>
+
+        <div class="chatWindow" id="chatWindow">
+          <div class="chatHeader d-flex">
+            <img src="" alt="Photo" class="chatPhoto">
+            <div class="sellerName">
+              <span class="name">拾貨寶庫客服</span>
+              <span class="status">線上</span>
+            </div>
+            <div class="set">
+              <svg width="35" height="7" viewBox="0 0 35 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="17.5" cy="3.5" r="3.5" fill="#689EBE"/>
+              <circle cx="31.5" cy="3.5" r="3.5" fill="#689EBE"/>
+              <circle cx="3.5" cy="3.5" r="3.5" fill="#689EBE"/>
+              </svg>
+            </div>
+            <div class="closecross">
+              <img src="../image/closecross.png" alt="close" id="closebtn">
+            </div>
+          </div>
+          <div class="chatting" id="chat">
+            <div class="message receiver">你好～想問一下有貨嗎？</div>
+            <div class="timestamp">2025/06/18 19:21</div>
+            <div class="message sender">有的唷！你要哪個顏色？</div>
+            <div class="timestamp">2025/06/18 19:22</div>
+          </div>
+          <div class="inputArea">
+            <button class="sendother">
+              <svg width="25" height="25" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line y1="15" x2="30" y2="15" stroke="#689EBE" stroke-width="2"/>
+              <line x1="15" x2="15" y2="30" stroke="#689EBE" stroke-width="2"/>
+              </svg>
+            </button>
+            <input type="text" placeholder="輸入訊息..." class="inputMessage" id="messageInput">
+            <button class="sendButton" id="sendbtn">
+              <svg width="37" height="37" viewBox="0 0 37 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.85711 7.28648L22.5481 22.8445L19.2373 36.0369L6.85711 7.28648Z" fill="#88AECE"/>
+              <path d="M6.94753 7.37132L23.9282 21.5105L36.7456 16.9593L6.94753 7.37132Z" fill="#ABDAD5"/>
+              </svg>
+            </button>
+          </div>
+        </div>
     </div>
      
   
