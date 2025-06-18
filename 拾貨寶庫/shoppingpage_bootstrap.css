@@ -928,3 +928,41 @@ button {
 .footerunder{
   margin-top: 700px;
 }
+.ulstep {
+  margin: 40px;
+  margin-top: 28px;
+}
+.listep {
+  list-style: none;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 1.4rem;
+  color: #004b97;
+}
+.step {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #004b97a3;
+  margin-right: 10px;
+}
+.ulmsy {
+  margin-left: 40px;
+  margin-right: 40px;
+  font-size: 1.4rem;
+  list-style: outside;
+}
+.limsy {
+  padding-bottom: 10px;
+}
+.membercontent li {
+  margin-left: 40px;
+  font-size: 1.4rem;
+}
+.membercontent h3 {
+  font-size: 1.6rem;
+  color: #004b97;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
