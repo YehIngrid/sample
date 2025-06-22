@@ -458,6 +458,20 @@ closeChat.addEventListener('click', function(e){
   chatHome.style.display = "none";
   content.style.display = "block";
 });
+//todo手機螢幕切換聊天室大小
+function adjustChatroomSize() {
+  const chatHome = document.getElementById('chatHome');
+  if (window.innerWidth <= 768) {
+    chatHome.classList.add('fullscreen'); // 手機版，全螢幕
+  } else {
+    chatHome.classList.remove('fullscreen'); // 桌機版，固定大小
+  }
+}
+
+// 頁面載入與視窗變化時都執行
+window.addEventListener('load', adjustChatroomSize);
+window.addEventListener('resize', adjustChatroomSize);
+
 function flyToCart(button) {
   const cart = document.getElementById('cartIcon');
   const icon = document.createElement('div');

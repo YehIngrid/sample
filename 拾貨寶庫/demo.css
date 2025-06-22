@@ -367,7 +367,17 @@ ul{
   animation: spin2 0.5s linear; 
   cursor: pointer;
 }
-
+/* 手機切換聊天室大小 */
+/* 手機模式下全螢幕 */
+.chathome.fullscreen {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+}
 @keyframes spin2 {
   from {
     transform: scale(1) rotate(0deg);
