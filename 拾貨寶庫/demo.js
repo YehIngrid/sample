@@ -464,8 +464,15 @@ function playUfoAnimation(button) {
   const start = button.getBoundingClientRect();
   const end = cart.getBoundingClientRect();
 
-  const ufo = document.createElement('div');
+  const ufo = document.createElement('img');
+  ufo.src = '../svg/bigalien.svg';
   ufo.className = 'ufo';
+
+  const gift = document.createElement('img');
+  gift.src = '../svg/bigmystery.svg';
+  gift.className = 'gift';
+
+
   ufo.style.left = start.left + 'px';
   ufo.style.top = (start.top - 100) + 'px';
 
@@ -474,8 +481,6 @@ function playUfoAnimation(button) {
   beam.style.left = (start.left - 10) + 'px';
   beam.style.top = (start.top - 10) + 'px';
 
-  const gift = document.createElement('div');
-  gift.className = 'gift';
   gift.style.left = start.left + 'px';
   gift.style.top = start.top + 'px';
 
