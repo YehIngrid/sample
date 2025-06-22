@@ -455,7 +455,7 @@ function getCurrentTime() {
   }
 const closeChat = document.querySelector('#closebtn');
 closeChat.addEventListener('click', function(e){
-  chatWindow.style.display = "none";
+  chatHome.style.display = "none";
   content.style.display = "block";
 });
 function flyToCart(button) {
