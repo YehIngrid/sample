@@ -259,23 +259,70 @@
           </linearGradient>
           </defs>
           </svg>
-          
         </a>
+<!-- TODO:聊天室 -->
+        <div class="chathome" id="chatHome">
+          <div class="d-flex justify-content-between">
+            <h2>聊天</h2>
+            <div class="closecross">
+              <img src="../image/closecross.png" alt="close" id="closebtn">
+            </div>
+          </div>
+          <input type="text" id="chatSearch" placeholder="搜尋聊天對象..." class="form-control mb-3" style="padding: 5px;">
 
+          <hr>
+          <div class="chat-list">
+            <!-- 多個聊天對象 -->
+            <div class="person d-flex align-items-center" data-uid="service001">
+              <img src="../image/default-avatar.png" alt="頭像" class="avatar">
+              <div class="text-info">
+                <h3>拾貨寶庫客服</h3>
+                <p>最後一則聊天記錄</p>
+              </div>
+              <div class="lasttimestamp">2025/06/18 19:22</div>
+            </div>
+            <!-- ... 更多 person ... -->
+            <div class="person d-flex align-items-center" data-uid="service001">
+              <img src="../image/default-avatar.png" alt="頭像" class="avatar">
+              <div class="text-info">
+                <h3>葉傑宜</h3>
+                <p>最後一則聊天記錄</p>
+              </div>
+              <div class="lasttimestamp">2025/06/18 19:22</div>
+            </div>
+            <div class="person d-flex align-items-center" data-uid="service001">
+              <img src="../image/default-avatar.png" alt="頭像" class="avatar">
+              <div class="text-info">
+                <h3>葉忠祥</h3>
+                <p>最後一則聊天記錄</p>
+              </div>
+              <div class="lasttimestamp">2025/06/18 19:22</div>
+            </div>
+          </div>
+          <div class="person d-flex align-items-center" data-uid="service001">
+            <img src="../image/default-avatar.png" alt="頭像" class="avatar">
+            <div class="text-info">
+              <h3>Ingrid Yeh</h3>
+              <p>最後一則聊天記錄</p>
+            </div>
+            <div class="lasttimestamp">2025/06/18 19:22</div>
+          </div>
+        </div>
+        </div>
         <div class="chatWindow" id="chatWindow">
           <div class="chatHeader d-flex">
             <div class="d-flex">
-              <div class="backtalk" style="margin-right: 10px;">
+              <div class="backtalk" style="margin-right: 10px;" id="backToHome">
                 <svg width="31" height="12" viewBox="0 0 31 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 6L10 11.7735V0.226497L0 6ZM30 7C30.5523 7 31 6.55228 31 6C31 5.44772 30.5523 5 30 5V7ZM9 6V7H30V6V5H9V6Z" fill="#ABDAD5"/>
                 <path d="M0 6L9.75 2.10289L9.75 9.89711L0 6Z" fill="#88AECE"/>
                 </svg>
                   
               </div>
-              <!-- <img src="" alt="Photo" class="chatPhoto"> -->
+
               <div class="sellerName">
-                <span class="name">拾貨寶庫客服</span>
-                <!-- <span class="status">線上</span> -->
+                <span class="name" id="chatTargetName"></span>
+               
               </div>
             </div>
             <div class="d-flex">
@@ -285,9 +332,6 @@
                 <circle cx="23" cy="3" r="3" fill="#689EBE"/>
                 <circle cx="3" cy="3" r="3" fill="#689EBE"/>
                 </svg>
-              </div>
-              <div class="closecross">
-                <img src="../image/closecross.png" alt="close" id="closebtn">
               </div>
             </div>
           </div>

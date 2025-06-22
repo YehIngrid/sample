@@ -347,8 +347,9 @@ const firebaseConfig = {
     }
     
   })
+  // TODO:點擊聊天icon後，進入聊天界面
   const talkInterface = document.querySelector('#talkInterface');
-  const chatWindow = document.querySelector('#chatWindow');
+  const chatHome = document.querySelector('#chatHome');
   talkInterface.addEventListener('click', function(e){
     if(!auth.currentUser){
       Swal.fire({
@@ -357,11 +358,33 @@ const firebaseConfig = {
         icon: "info"
       });
     } else {
-      // content.style.display ="none";
-      seller.style.display = "none";
-      chatWindow.style.display = "block";
+      //content.style.display ="none";
+      chatHome.style.display = "block";
     }
   })
+  // TODO:選擇聊天人物之後
+  // 點選聊天對象時，切換顯示聊天視窗
+  document.querySelectorAll('.person').forEach(person => {
+  person.addEventListener('click', () => {
+    const name = person.querySelector('h3').textContent;
+
+    // 隱藏聊天對象清單，顯示對話區塊
+    document.getElementById('chatHome').style.display = 'none';
+    document.getElementById('chatWindow').style.display = 'block';
+
+    // 更新聊天室上方對象名稱
+    document.getElementById('chatTargetName').textContent = name;
+
+    // TODO: 根據 data-uid 載入對應聊天記錄（可用 AJAX 或 localStorage 模擬）
+  });
+});
+
+// 返回按鈕：切回聊天對象清單
+document.getElementById('backToHome').addEventListener('click', () => {
+  document.getElementById('chatWindow').style.display = 'none';
+  document.getElementById('chatHome').style.display = 'block';
+});
+// 聊天室功能
   const sendbtn = document.querySelector('#sendbtn');
   sendbtn.addEventListener('click', function(e){
     e.preventDefault();
