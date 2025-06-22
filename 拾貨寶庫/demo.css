@@ -380,11 +380,11 @@ ul{
 }
 @keyframes spin2 {
   from {
-    transform: scale(1) rotate(0deg);
+    transform: rotate(0deg);
     
   }
   to {
-    transform: scale(1.1) rotate(180deg); 
+    transform:  rotate(180deg); 
   }
 }
 .backtalk:hover {
