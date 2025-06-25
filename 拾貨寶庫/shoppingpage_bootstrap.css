@@ -932,17 +932,15 @@ button {
   margin-top: 700px;
 }
 .ulstep {
-  margin: 40px;
+  margin: 20px;
   margin-top: 28px;
 }
 .listep {
   list-style: none;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-  padding-top: 10px;
-  padding-bottom: 10px;
   font-size: 1.4rem;
   color: #004b97;
+  padding-bottom: 24px;
+
 }
 .step {
   font-weight: 700;
