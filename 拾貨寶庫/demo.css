@@ -364,7 +364,6 @@ ul{
   padding-right: 8px;
 }
 .closecross:hover {
-  animation: spin2 0.5s linear; 
   cursor: pointer;
 }
 /* 手機切換聊天室大小 */
@@ -378,15 +377,7 @@ ul{
   height: 100vh;
   border-radius: 0;
 }
-@keyframes spin2 {
-  from {
-    transform: rotate(0deg);
-    
-  }
-  to {
-    transform:  rotate(180deg); 
-  }
-}
+
 .backtalk:hover {
   cursor:pointer;
 }
