@@ -1,7 +1,7 @@
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
-    var loader = document.getElementById('loader');
+  var loader = document.getElementById('loader');
   var content = document.getElementById('whatcontent');
   if (loader && content) {
     loader.style.setProperty('display', 'none', 'important');
@@ -278,6 +278,31 @@ const firebaseConfig = {
     // 顯示 loader
     document.getElementById('loader-wrapper').style.display = 'flex';
   
+    let backendService = new BackendService();
+    backendService.signup(obj, 
+      () => {
+        document.getElementById('loader-wrapper').style.display = 'none';
+        console.log("回傳資料：", response.data);
+        Swal.fire({
+          icon: "success",
+          title: "帳號註冊成功",
+          showConfirmButton: false,
+          footer: "即將返回登入頁面",
+          timer: 1800
+        });
+        setTimeout(() => {
+          window.location.href = "account.html";
+        }, 2000);
+    }, (errorMessage) => {
+      document.getElementById('loader-wrapper').style.display = 'none';
+      console.log("回傳資料：", response.data);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errorMessage
+      });
+    });
+
     axios.post('https://store-backend-iota.vercel.app/api/account/signup', obj)
       .then(function (response) {
         // 隱藏 loader
@@ -305,7 +330,8 @@ const firebaseConfig = {
         if(error.response?.data?.message === "Email already exists"){
           Swal.fire({
             icon: "error",
-            title: "此帳號已被註冊",
+            title: "Oops...",
+            text: "此帳號已被註冊"
           });
         } else {
           Swal.fire({
