@@ -198,9 +198,16 @@ ul{
   background-color: transparent !important;
 }
 
-
-
-
+@media (min-width: 768px) {
+  .icon-button-special {
+    display: none; /* 在桌面版隱藏 */
+  }
+}
+@media (max-width: 768px) {
+  .icon-button {
+    display: none; /* 在手機版隱藏 */
+  }
+}
 .icon-button {
   width: 45px; /* 根據你 SVG 的大小調整 */
   height: 45px;
