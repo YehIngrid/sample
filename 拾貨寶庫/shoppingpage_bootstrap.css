@@ -875,12 +875,11 @@ body.grid-ready #product-grid {
   }
 }
 .icon-button {
-  width: 18px; /* 根據你 SVG 的大小調整 */
-  height: 18px;
+  width: 30px; /* 根據你 SVG 的大小調整 */
+  height: 30px;
   background-image: url('../svg/page.svg');
   background-size: cover;
   transition: background-image 0.3s ease;
-  margin-left: 20px;
   margin-right: 16px;
   cursor: pointer !important;
  /* TODO:未解決padding問題因為他是svg，可能需要直接去改figma */
