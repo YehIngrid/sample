@@ -1,8 +1,8 @@
-<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="15" cy="15" r="15" fill="url(#paint0_linear_173_191)"/>
-<path d="M18 7L11 15L18 23" stroke="white" stroke-width="2"/>
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="30" cy="30" r="30" fill="url(#paint0_linear_173_191)"/>
+<path d="M36 14L22 30L36 46" stroke="white" stroke-width="4" stroke-linecap="round"/>
 <defs>
-<linearGradient id="paint0_linear_173_191" x1="0" y1="15" x2="30" y2="15" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint0_linear_173_191" x1="0" y1="30" x2="60" y2="30" gradientUnits="userSpaceOnUse">
 <stop stop-color="#93D9C3"/>
 <stop offset="1" stop-color="#729CBE"/>
 </linearGradient>
