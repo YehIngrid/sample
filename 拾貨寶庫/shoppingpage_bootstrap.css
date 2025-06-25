@@ -880,10 +880,10 @@ body.grid-ready #product-grid {
   background-image: url('../svg/backbtn.svg');
   background-size: cover;
   transition: background-image 0.3s ease;
-  margin-top: 40px;
-  margin-left: 30px;
+  margin-top: 20px;
+  margin-left: 20px;
   margin-bottom: 30px;
-  cursor: pointer;
+  cursor: pointer !important;
  /* TODO:未解決padding問題因為他是svg，可能需要直接去改figma */
 }
 
