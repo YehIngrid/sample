@@ -875,8 +875,6 @@ body.grid-ready #product-grid {
   }
 }
 .icon-button {
-  width: 60px; /* 根據你 SVG 的大小調整 */
-  height: 60px;
   background-image: url('../svg/page.svg');
   background-size: cover;
   transition: background-image 0.3s ease;

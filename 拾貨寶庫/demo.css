@@ -202,8 +202,8 @@ ul{
 
 
 .icon-button {
-  width: 60px; /* 根據你 SVG 的大小調整 */
-  height: 60px;
+  width: 45px; /* 根據你 SVG 的大小調整 */
+  height: 45px;
   background-image: url('../svg/page.svg');
   background-size: cover;
   transition: background-image 0.3s ease;
