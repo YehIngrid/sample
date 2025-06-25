@@ -880,7 +880,7 @@ caption {
 }
 
 thead{
-  background-color: rgb(228,240,245);
+  background-color: #93ddc4;
 }
 
 th,
@@ -894,7 +894,7 @@ td:last-of-type {
 }
 
 tbody > tr:nth-of-type(even) {
-  background-color: rgb(237,238,242);
+  background-color: #94c7fbaa;
 }
 
 @keyframes scroll-left {
