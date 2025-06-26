@@ -896,7 +896,14 @@ td:last-of-type {
 tbody > tr:nth-of-type(even) {
   background-color: #94c7fbaa;
 }
-
+@keyframes fade {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
 @keyframes scroll-left {
   0% {
     left: 100%;
