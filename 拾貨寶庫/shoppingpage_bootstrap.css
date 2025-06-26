@@ -896,7 +896,7 @@ td:last-of-type {
 tbody > tr:nth-of-type(even) {
   background-color: #94c7fbaa;
 }
-.adwishpool_ {
+.adwishpool_ , .admember_ , .admystery_{
   width: 100vw; 
   height: auto; 
   margin: 0 auto; 
