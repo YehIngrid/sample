@@ -897,7 +897,7 @@ tbody > tr:nth-of-type(even) {
   background-color: #94c7fbaa;
 }
 .adwishpool_ {
-  width: 100%; 
+  width: 100vw; 
   height: auto; 
   margin: 0 auto; 
   animation: fade 2s linear 0s;
