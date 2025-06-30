@@ -1131,7 +1131,7 @@
     </ul>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <img src="../svg/adseller.svg" alt="" style="width: 86vw; height: auto; margin: 0 auto;">
+        <img src="../svg/adseller.svg" alt="" class="adseller">
         <hr>
         <div class="contentSeller">
           <!-- TODO導覽頁 -->
@@ -1171,6 +1171,30 @@
                 <li><strong><span class="fontspecial">中</span></strong>如書籍、文具用品等。</li>
                 <li><strong><span class="fontspecial">小</span></strong>如小型電子產品、配件等。</li>
               </ul>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">大型</th>
+                    <th scope="col">中型</th>
+                    <th scope="col">小型</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">長度/寬度/高度</th>
+                    <td>大於150cm</td>
+                    <td>30cm到150cm</td>
+                    <td>小於30cm</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">容量</th>
+                    <td>大於5L</td>
+                    <td>1L到5L</td>
+                    <td>小於1L</td>
+                  </tr>
+                </tbody>
+              </table>
             </section>
             <section id="新舊程度">
               <h2>新舊程度</h2>
@@ -1490,6 +1514,38 @@
         <li class="limsy">可依價位區分（如 NT$99、NT$199、NT$299）</li>
         <li class="limsy">會員可享限定箱內容或加值物品</li>
       </ul>
+    </div>
+  </div>
+  <div class="buyMystery" style="width: 86vw; margin: 0 auto;">
+    <hr style="margin-top: 50px;">
+    <h2 style="margin-top: 30px; margin-left: 20px;">訂購神秘箱</h2>
+    <div class="formMystery">
+      <div class="form-floating">
+        <select class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select">
+          <option selected>請選擇類型</option>
+          <option value="1">書籍與學籍用品</option>
+          <option value="2">宿舍與生活用品</option>
+          <option value="3">學生專用器材</option>
+          <option value="4">環保生活用品</option>
+          <option value="5">儲物與收納用品</option>
+          <option value="6">其他</option>
+        </select>
+        <label for="floatingSelect">選擇神秘箱類型</label>
+      </div>
+      <div class="form-floating">
+        <select class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select">
+          <option selected>請選擇價位</option>
+          <option value="99">NT$99</option>
+          <option value="199">NT$199</option>
+          <option value="299">NT$299</option>
+        </select>
+        <label for="floatingSelect">選擇神秘箱價格</label>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button class="cartMystery">
+          加入購物車
+        </button>
+      </div>
     </div>
   </div>
 </section>

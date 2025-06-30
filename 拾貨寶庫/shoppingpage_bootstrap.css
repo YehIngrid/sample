@@ -896,11 +896,26 @@ td:last-of-type {
 tbody > tr:nth-of-type(even) {
   background-color: #94c7fbaa;
 }
-.adwishpool_ , .admember_ , .admystery_{
+.adwishpool_ , .admystery_{
   width: 100vw; 
   height: auto; 
   margin: 0 auto; 
   animation: fade 2s linear 0s;
+}
+.admember_ {
+  width: 86vw;
+  height: auto;
+  margin: 0 auto;
+  animation: fade 2s linear 0s;
+}
+@media screen and (max-width: 768px) {
+  .adwishpool_, .admember_, .admystery_{
+    width: 100vw; 
+    height: auto; 
+    margin: 0 auto; 
+    animation: fade 2s linear 0s;
+  }
+  
 }
 @keyframes fade {
   from {
@@ -1219,4 +1234,38 @@ button {
 
 .collapsible.active {
   color: #7abafa; /* 點擊後變色，可自行調整 */
+}
+.adseller {
+  width: 86vw; 
+  height: auto; 
+  margin: 0 auto;
+}
+@media screen and (max-width: 768px) {
+  .adseller {
+    width: 100vw; /* 手機版全寬 */
+    padding: 0 10px; /* 增加左右內邊距 */
+  }
+  
+}
+/* TODO 神秘箱表單 */
+.formMystery {
+  background-color: #fbfbfb;
+  margin: 3rem;
+  box-shadow: 0 0 6px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  padding: 3rem;
+  padding-bottom: 7rem;
+}
+.form-floating>.form-select {
+  padding-top: 1.625rem;
+  padding-bottom: 0rem !important;
+}
+.cartMystery {
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(to right, #7abafad0, #6bf5b7c4);
+  color: #383838;
+  font-size: 2rem;
+  padding: 8px 20px;
+  margin-top: 20px;
 }
