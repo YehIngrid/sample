@@ -1046,7 +1046,7 @@ button {
 }
 .contentSeller nav ul li.active::before {
   content: '●';
-  color: #004b97;
+  color: #93a2ff;
   margin-right: 8px;
 }
 /* 主內容區 */
@@ -1057,20 +1057,23 @@ button {
 /* 每個內容區塊 */
 .contentSeller section {
   margin-bottom: 100px;
-  border-bottom: #d0d0d0 2px solid;
-  padding: 20px;
+  border-bottom: #d0d0d0 2px dotted;
+  padding: 10px;
   padding-bottom: 100px;
+  padding-top: 70px;
   background-color: transparent;
   margin-left: 4vw;
 }
 .contentSeller section h2 {
-  background-color: #383838;
+  background-color: #7abafa;
   color: #fff;
   font-size: 2.4rem;
   display: inline-block;
   padding: 2px 4px;
   border-radius: 3px;
   margin-bottom: 3vw;
+  font-weight: lighter;
+  font-family: 'TimeMachine';
   
 }
 .contentSeller section ul{
@@ -1078,13 +1081,15 @@ button {
 }
 .contentSeller section li{
   font-size: 1.8rem;
-  font-weight: 500;
+  padding: 10px;
 }
 .contentSeller h1{
-  font-size: 5rem;
+  font-size: 4rem;
   padding-left: 50px;
   padding-top: 30px;
   padding-bottom: 20px;
+  font-weight: bold;
+  font-family: 'TimeMachine';
   color: transparent; /* 文字顏色設定透明 */
   background-image: linear-gradient(to right, #7abafa, #6bf5b7); /* 設定漸層角度及顏色 */
   -webkit-background-clip: text; /* 背景裁剪成文字的前景色 */
@@ -1092,7 +1097,7 @@ button {
   z-index: 1000;
 }
 .contentSeller nav{
-  border-right: 2px black dotted;
+  border-right: 2px #d2d2d2 dotted;
 }
 @media (max-width: 792px) {
   .contentSeller nav ul li a {
@@ -1137,11 +1142,14 @@ button {
 .collapsible {
   background-color: transparent;
   border: none;
-  font-size: 1.3rem;
+  font-size: 1.8rem;
   cursor: pointer;
   outline: none;
   transition: transform 0.3s;
-  margin-bottom: 10px;
+  
+  /* border-bottom: 1px solid #383838; */
+  /* padding: 3px 10px; */
+  /* border-radius: 6px; */
 }
 /* 當按鈕處於展開狀態時，旋轉倒三角形 180 度 */
 .collapsible.active {
@@ -1149,13 +1157,60 @@ button {
 }
 /* 內容區塊預設隱藏 */
 .content-news {
-  max-height: 0;
+
   overflow: hidden;
   transition: max-height 0.2s ease-out;
   
   /* background-color: #f1f1f1; */
-  /* padding: 0 18px; */
+  padding: 0 18px;
 }
 .content-news p {
   margin: 10px 0;
+  font-size: 1.6rem;
+}
+.contentSeller section p {
+  font-size: 1.6rem;
+  color: #383838;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.fontspecial {
+  border-radius: 50%;
+  background-color: #004b97; 
+  border: 3px solid #7abafa;
+  padding: 2px 8px;
+  font-size: 3rem;
+  margin-right: 10px;
+  color: #fff;
+}
+.specialsort {
+  background-color: #004b97;
+  padding: 3px;
+  color: #fff;
+  font-size: 2rem;
+  border-radius: 5px;
+  margin-right: 30px;
+  border: #7abafa 2px solid;
+}
+#seller .nav-link {
+  color: #000 !important;
+  font-size: 1.6rem !important;
+  font-weight: 500;
+}
+#seller .nav-tabs .nav-link.active {
+  color: #93a2ff !important;
+}
+.content-news {
+  display: none; /* 預設收合 */
+  padding: 10px;
+}
+
+.collapsible {
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.collapsible.active {
+  color: #7abafa; /* 點擊後變色，可自行調整 */
 }

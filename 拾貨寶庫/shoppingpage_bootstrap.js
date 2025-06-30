@@ -58,6 +58,24 @@ window.addEventListener('click', (event) => {
     modal.style.display = 'none';
   }
 });
+const collapsibles = document.querySelectorAll('.collapsible');
+
+collapsibles.forEach(item => {
+  item.addEventListener('click', () => {
+    item.classList.toggle('active');
+
+    // 取得外層 li，再抓下一個 li
+    const parentLi = item.parentElement;
+    const content = parentLi.nextElementSibling;
+
+    if (content.style.display === 'block') {
+      content.style.display = 'none';
+    } else {
+      content.style.display = 'block';
+    }
+  });
+});
+
 
 document.addEventListener('DOMContentLoaded', function() {
   // 確保所有 DOM 元素都已經載入
