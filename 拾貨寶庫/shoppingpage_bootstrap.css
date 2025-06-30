@@ -1106,14 +1106,17 @@ button {
     font-size: 1.2rem;
   }
   .contentSeller h1{
-    font-size: 8rem;
+    font-size: 5rem;
     padding-left: 30px;
-
+    color: transparent; /* 文字顏色設定透明 */
+    background-image: linear-gradient(to right, #7abafa, #6bf5b7); /* 設定漸層角度及顏色 */
+    -webkit-background-clip: text; /* 背景裁剪成文字的前景色 */
+    background-clip: text;
     z-index: 1000;
   }
   .contentSeller section {
     margin-bottom: 100px;
-    border-bottom: #000 2px solid;
+    border-bottom: #d0d0d0 2px dotted;
     padding: 20px;
     background-color: transparent;
     margin-left: 3vw;
@@ -1124,15 +1127,18 @@ button {
     display: none;
   }
   .contentSeller h1{
-    font-size: 6rem;
-    color: #002346;
+    font-size: 3rem;
+    color: transparent; /* 文字顏色設定透明 */
+    background-image: linear-gradient(to right, #7abafa, #6bf5b7); /* 設定漸層角度及顏色 */
+    -webkit-background-clip: text; /* 背景裁剪成文字的前景色 */
+    background-clip: text;
   
     z-index: 1000;
   }
   .contentSeller section {
     margin-bottom: 100px;
-    margin-top: 100px;
-    border-bottom: #000 2px solid;
+    margin-top: 40px;
+    border-bottom: #d0d0d0 2px dotted;
     padding: 20px;
     background-color: transparent;
     margin-left: 1vw;
