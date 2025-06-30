@@ -1131,7 +1131,67 @@
     </ul>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <img src="../svg/adseller.svg" alt="">
+        <img src="../svg/adseller.svg" alt="" style="width: 100vw; height: auto;">
+        <hr>
+        <div class="contentSeller">
+          <!-- TODO導覽頁 -->
+          <nav class="sortSeller">
+            <ul>
+              <li><a href="#所屬分類">所屬分類</a></li>
+              <li><a href="#商品尺寸">商品尺寸</a></li>
+              <li><a href="#新舊程度">新舊程度</a></li>
+              <li><a href="#照片">照片</a></li>
+            </ul>
+          </nav>
+          <!-- TODO 內容 -->
+          <main>
+            <h1>拾貨寶庫商品分類方法</h1>
+            <section id="所屬分類">
+              <h2>所屬分類</h2>
+              <ul>
+                <li><button class="collapsible">書籍與學籍用品▼</button></li>
+                <li class="content-news">教科書、參考書、文具用品（如計算機、繪圖工具、筆記本）、學習卡片、筆記/習題集等。</li>
+                <li><button class="collapsible">宿舍與生活用品▼</button></li>
+                <li class="content-news">床墊、衣架、燈具等宿舍用品、小型廚房用品（如電鍋、餐具）、風扇、暖風機等生活設備。</li>
+                <li><button class="collapsible">學生專用器材▼</button></li>
+                <li class="content-news">實驗器材（護目鏡、手套等）、測量工具（如尺規、測量儀）等。</li>
+                <li><button class="collapsible">環保生活用品▼</button></li>
+                <li class="content-news">環保餐具（如可重複使用的餐具組、餐盒、水瓶）、購物袋、手提袋等。</li>
+                <li><button class="collapsible">儲物與收納用品▼</button></li>
+                <li class="content-news">收納盒、文件夾、掛鉤、收納架等。</li>
+                <li><button class="collapsible">其他▼</button></li>
+                <li class="content-news">若不知道自己販賣的商品類別為何，請選擇其他。</li>
+              </ul>
+            </section>
+            <section id="商品尺寸">
+              <h2>商品尺寸</h2>
+              <p>商品尺寸分為大、中、小三種，請根據商品實際大小選擇。</p>
+              <ul>
+                <li><strong>大：</strong>如大型家具、電器等。</li>
+                <li><strong>中：</strong>如書籍、文具用品等。</li>
+                <li><strong>小：</strong>如小型電子產品、配件等。</li>
+              </ul>
+            </section>
+            <section id="新舊程度">
+              <h2>新舊程度</h2>
+              <p>商品的新舊程度分為六個等級，請根據商品實際狀況選擇：</p>
+              <ul>
+                <li><strong>全新：</strong>未使用過的商品。</li>
+                <li><strong>幾乎全新：</strong>使用次數極少，狀態良好。</li>
+                <li><strong>半新：</strong>使用過，但狀態良好。</li>
+                <li><strong>適中：</strong>有明顯使用痕跡，但仍可正常使用。</li>
+                <li><strong>稍舊：</strong>有較多使用痕跡，可能有輕微損壞。</li>
+                <li><strong>全舊：</strong>明顯使用痕跡，可能有較大損壞或缺陷。</li>
+              </ul>
+            </section>
+            <section id="照片">
+              <h2>主要照片</h2>
+              <p>商品的主要照片，建議使用清晰、明亮的圖片，能夠清楚展示商品的外觀和細節。</p>
+              <h2>次要照片</h2>
+              <p><strong>最多上傳5張</strong>，次要照片可以展示商品的其他角度、細節或使用情境，幫助買家更好地了解商品。</p>
+            </section>
+          </main>
+        </div>
       </div>
       <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         <div class="form-store">
@@ -1766,6 +1826,7 @@ window.addEventListener('load', () => {
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="demo.js"></script>
     <script src="shoppingpage_bootstrap.js"></script>
+    <script src="questions.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

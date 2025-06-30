@@ -1009,3 +1009,153 @@ button {
   margin-top: 20px;
   margin-bottom: 10px;
 }
+/* TODO sellerhomepart */
+.contentSeller {
+  font-family: sans-serif;
+  display: flex;
+}
+/* 側邊欄設定 */
+.contentSeller nav {
+  width: 20vw;
+  background-color: transparent;
+  color: #000;
+  padding: 20px;
+  padding-left: 6vw;
+  padding-top: 10vh;
+  position: sticky;
+  top: 0;
+  height: 100vh; /* 讓側邊欄撐滿整個視窗高度 */
+  overflow-y: auto;
+}
+.contentSeller nav ul {
+  list-style: none !important;
+}
+.contentSeller nav ul li {
+  margin-bottom: 20px;
+  transition: transform 0.3s;
+}
+.contentSeller nav ul li a {
+  color: #000;
+  text-decoration: none;
+  font-size: 1.4rem;
+}
+/* 當側邊欄 li 處於 active 狀態時放大並顯示小點 */
+.contentSeller nav ul li.active {
+  transform: scale(1.05);
+  font-weight: bold;
+}
+.contentSeller nav ul li.active::before {
+  content: '●';
+  color: #004b97;
+  margin-right: 8px;
+}
+/* 主內容區 */
+.contentSeller main {
+  flex: 1;
+  padding: 20px;
+}
+/* 每個內容區塊 */
+.contentSeller section {
+  margin-bottom: 100px;
+  border-bottom: #d0d0d0 2px solid;
+  padding: 20px;
+  padding-bottom: 100px;
+  background-color: transparent;
+  margin-left: 4vw;
+}
+.contentSeller section h2 {
+  background-color: #383838;
+  color: #fff;
+  font-size: 2.4rem;
+  display: inline-block;
+  padding: 2px 4px;
+  border-radius: 3px;
+  margin-bottom: 3vw;
+  
+}
+.contentSeller section ul{
+  list-style: none;
+}
+.contentSeller section li{
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+.contentSeller h1{
+  font-size: 5rem;
+  padding-left: 50px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  color: transparent; /* 文字顏色設定透明 */
+  background-image: linear-gradient(to right, #7abafa, #6bf5b7); /* 設定漸層角度及顏色 */
+  -webkit-background-clip: text; /* 背景裁剪成文字的前景色 */
+  background-clip: text;
+  z-index: 1000;
+}
+.contentSeller nav{
+  border-right: 2px black dotted;
+}
+@media (max-width: 792px) {
+  .contentSeller nav ul li a {
+    color: #000;
+    text-decoration: none;
+    font-size: 1.2rem;
+  }
+  .contentSeller h1{
+    font-size: 8rem;
+    padding-left: 30px;
+
+    z-index: 1000;
+  }
+  .contentSeller section {
+    margin-bottom: 100px;
+    border-bottom: #000 2px solid;
+    padding: 20px;
+    background-color: transparent;
+    margin-left: 3vw;
+  }
+}
+@media (max-width: 430px){
+  .contentSeller nav{
+    display: none;
+  }
+  .contentSeller h1{
+    font-size: 6rem;
+    color: #002346;
+  
+    z-index: 1000;
+  }
+  .contentSeller section {
+    margin-bottom: 100px;
+    margin-top: 100px;
+    border-bottom: #000 2px solid;
+    padding: 20px;
+    background-color: transparent;
+    margin-left: 1vw;
+  }
+}
+/* 按鈕樣式 */
+.collapsible {
+  background-color: transparent;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.3s;
+  margin-bottom: 10px;
+}
+/* 當按鈕處於展開狀態時，旋轉倒三角形 180 度 */
+.collapsible.active {
+  transform: rotate(180deg);
+}
+/* 內容區塊預設隱藏 */
+.content-news {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  
+  /* background-color: #f1f1f1; */
+  /* padding: 0 18px; */
+}
+.content-news p {
+  margin: 10px 0;
+}
