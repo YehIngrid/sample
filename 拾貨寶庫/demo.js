@@ -25,7 +25,7 @@ window.onload = function() {
       }
     });
   });
-
+// TODO 以下要修改的地方：
 // Firebase 設定
 const firebaseConfig = {
     apiKey: "AIzaSyCtC488RFTmMSoe7lPj6c-rOVVuKOseTAk",
@@ -63,14 +63,14 @@ const firebaseConfig = {
       };
     }
     
-    // 綁定 #send 按鈕提交事件，觸發登入
+    // TODO 綁定 #send 按鈕提交事件，觸發登入
     $('#send').on('click', function(e){
       e.preventDefault(); // 攔截表單預設提交
       console.log("表單已提交！");
       callLogIn();
     });
     
-    // 綁定 #logoutButton 按鈕提交事件，觸發登出
+    // TODO 綁定 #logoutButton 按鈕提交事件，觸發登出
     $('#logoutButton').on('click', function(e){
       e.preventDefault();
       callLogout();
@@ -125,7 +125,7 @@ const firebaseConfig = {
       };
     }
   });
-  // 登入函式：取得表單欄位並呼叫 Firebase 登入 API
+  // TODO 登入函式
   function callLogIn() {
     const floatingInput = document.getElementById('floatingInput');
     const floatingPassword = document.getElementById('floatingPassword');
@@ -303,44 +303,44 @@ const firebaseConfig = {
       });
     });
 
-    axios.post('https://store-backend-iota.vercel.app/api/account/signup', obj)
-      .then(function (response) {
-        // 隱藏 loader
-        document.getElementById('loader-wrapper').style.display = 'none';
+    // axios.post('https://store-backend-iota.vercel.app/api/account/signup', obj)
+    //   .then(function (response) {
+    //     // 隱藏 loader
+    //     document.getElementById('loader-wrapper').style.display = 'none';
   
-        console.log("回傳資料：", response.data);
-        if(response.data.message == "User created successfully"){
-          Swal.fire({
-            icon: "success",
-            title: "帳號註冊成功",
-            showConfirmButton: false,
-            footer: "即將返回登入頁面",
-            timer: 1800
-          });
-          setTimeout(() => {
-            window.location.href = "account.html";
-          }, 2000);
-        } 
-      })
-      .catch(function (error) {
-        // 隱藏 loader
-        document.getElementById('loader-wrapper').style.display = 'none';
+    //     console.log("回傳資料：", response.data);
+    //     if(response.data.message == "User created successfully"){
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "帳號註冊成功",
+    //         showConfirmButton: false,
+    //         footer: "即將返回登入頁面",
+    //         timer: 1800
+    //       });
+    //       setTimeout(() => {
+    //         window.location.href = "account.html";
+    //       }, 2000);
+    //     } 
+    //   })
+    //   .catch(function (error) {
+    //     // 隱藏 loader
+    //     document.getElementById('loader-wrapper').style.display = 'none';
   
-        console.error("註冊錯誤：", error);
-        if(error.response?.data?.message === "Email already exists"){
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "此帳號已被註冊"
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text:"系統發生錯誤，請稍後再試"
-          });
-        }
-      });
+    //     console.error("註冊錯誤：", error);
+    //     if(error.response?.data?.message === "Email already exists"){
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "Oops...",
+    //         text: "此帳號已被註冊"
+    //       });
+    //     } else {
+    //       Swal.fire({
+    //         icon: "error",
+    //         title: "Oops...",
+    //         text:"系統發生錯誤，請稍後再試"
+    //       });
+    //     }
+    //   });
   }
   
   
