@@ -3,7 +3,7 @@ class BackendService {
         this.baseUrl = 'https://store-backend-iota.vercel.app/api/';
     }
     signup(userData, fnSuccess, fnError) {
-        return axios.post(`${this.baseUrl}/api/account/signup`, userData)
+        return axios.post(`${this.baseUrl}account/signup`, userData)
             .then(function(response) {
                 fnSuccess();
             })
@@ -21,12 +21,10 @@ class BackendService {
     //             fnSuccess(response.data);
     //         })
     //         .catch(function(error) {
-    //             fnError("登入失敗")
-    //             if (error.response?.data?.message == "Invalid credentials") {
-    //                 fnError("帳號或密碼錯誤");
-    //             } else {
-    //                 fnError("系統發生錯誤，請稍後再試");
-    //             }
+    //             fnError("登入失敗");
     //         });
     // }
+    signout(userData, fnSuccess, fnError) {
+        return axios
+    }
 }
