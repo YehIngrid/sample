@@ -1,9 +1,9 @@
 class BackendService {
     constructor() {
-        this.baseUrl = 'https://store-backend-iota.vercel.app/api/';
+        this.baseUrl = '23.146.248.58:3000';
     }
     signup(userData, fnSuccess, fnError) {
-        return axios.post(`${this.baseUrl}account/signup`, userData)
+        return axios.post(`${this.baseUrl}/api/account/signup`, userData)
             .then(function(response) {
                 fnSuccess();
             })
@@ -16,7 +16,7 @@ class BackendService {
             });
     }
     // login(userData, fnSuccess, fnError) {
-    //     return axios.post(`${this.baseUrl}account/login`, userData)
+    //     return axios.post(`${this.baseUrl}/api/account/login`, userData)
     //         .then(function(response) {
     //             fnSuccess(response.data);
     //         })
