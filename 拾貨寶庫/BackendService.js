@@ -2,6 +2,9 @@ export class BackendService {
     constructor() {
         this.baseUrl = '23.146.248.58:3000';
     }
+    test() {
+        console.log('OK');
+    }
     signup(userData, fnSuccess, fnError) {
         return axios.post(`${this.baseUrl}/api/account/signup`, userData)
             .then(function(response) {

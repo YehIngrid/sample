@@ -90,6 +90,7 @@ import {BackendService} from './BackendService.js';
   document.getElementById('loader-wrapper').style.display = 'flex';
 
   let backendService = new BackendService();
+  backendService.test(); // 測試後端服務是否正常
   backendService.signup(obj, 
     () => {
       document.getElementById('loader-wrapper').style.display = 'none';
