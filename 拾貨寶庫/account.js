@@ -81,7 +81,7 @@ import {BackendService} from './BackendService.js';
   let obj = {
     email: emailInput.value,
     password: passwordInput1.value,
-    name: nameInput.value
+    username: nameInput.value
   };
   console.log("註冊資訊：", obj);
   
@@ -107,7 +107,7 @@ import {BackendService} from './BackendService.js';
       }, 2000);
   }, (errorMessage) => {
     document.getElementById('loader-wrapper').style.display = 'none';
-    console.log("回傳資料：", response.data);
+    console.log("回傳資料：", errorMessage);
     Swal.fire({
       icon: "error",
       title: "Oops...",
