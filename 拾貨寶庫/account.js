@@ -26,8 +26,158 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+import BackendService from './BackendService.js';
+ // 註冊函式：取得註冊表單欄位並呼叫後端 API
+ function callSignUp(){
+  const emailInput = document.getElementById('email');
+  const passwordInput1 = document.getElementById('password1');
+  const passwordInput2 = document.getElementById('password2');
+  const nameInput = document.getElementById('name');
+  
+  if (!emailInput.value || !passwordInput1.value || !passwordInput2.value || !nameInput.value) {
+    Swal.fire({
+      title: "請填寫所有必填資訊",
+      icon: "warning"
+    });
+    return;
+  }
+  //TODO:email's limit
+  // if(!emailInput.value.endsWith('@mail.nchu.edu.tw')){
+  //   Swal.fire({
+  //     title:"帳號不符合註冊要求",
+  //     icon:"warning", 
+  //     text:"請使用 @mail.nchu.edu.tw 結尾的學校帳號註冊！"
+  //   });
+  //   return;
+  // }
+  const pwd = passwordInput1.value;
+  const isValid = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/.test(pwd);
 
+  if (!isValid) {
+    Swal.fire({
+      title: "密碼不符合最低要求",
+      icon: "warning",
+      text: "密碼需至少6位，且同時包含英文字母與數字"
+    });
+    return;
+  }
 
+  // if(passwordInput1.value.length < 6 || /[a-zA-Z]/.test(passwordInput1.value)|| /[0-9]/.test(passwordInput1.value)){
+  //   Swal.fire({
+  //     title: "密碼不符合最低要求",
+  //     icon: "warning",
+  //     text: "請重新設定一組新密碼"
+  //   });
+  //   return;
+  // }
+  if (passwordInput1.value !== passwordInput2.value) {
+    Swal.fire({
+      title: "密碼輸入不一致",
+      icon: "warning"
+    });
+    return;
+  }
+  
+  let obj = {
+    email: emailInput.value,
+    password: passwordInput1.value,
+    name: nameInput.value
+  };
+  console.log("註冊資訊：", obj);
+  
+  
+  // 顯示 loader
+  document.getElementById('loader-wrapper').style.display = 'flex';
+
+  let backendService = new BackendService();
+  backendService.signup(obj, 
+    () => {
+      document.getElementById('loader-wrapper').style.display = 'none';
+      console.log("回傳資料：", response.data);
+      Swal.fire({
+        icon: "success",
+        title: "帳號註冊成功",
+        showConfirmButton: false,
+        footer: "即將返回登入頁面",
+        timer: 1800
+      });
+      setTimeout(() => {
+        window.location.href = "account.html";
+      }, 2000);
+  }, (errorMessage) => {
+    document.getElementById('loader-wrapper').style.display = 'none';
+    console.log("回傳資料：", response.data);
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: errorMessage
+    });
+  });
+  
+  // axios.post('https://store-backend-iota.vercel.app/api/account/signup', obj)
+  //   .then(function (response) {
+  //     // 隱藏 loader
+  //     document.getElementById('loader-wrapper').style.display = 'none';
+
+  //     console.log("回傳資料：", response.data);
+  //     if(response.data.message == "User created successfully"){
+  //       Swal.fire({
+  //         icon: "success",
+  //         title: "帳號註冊成功",
+  //         showConfirmButton: false,
+  //         footer: "即將返回登入頁面",
+  //         timer: 1800
+  //       });
+  //       setTimeout(() => {
+  //         window.location.href = "account.html";
+  //       }, 2000);
+  //     } 
+  //   })
+  //   .catch(function (error) {
+  //     // 隱藏 loader
+  //     document.getElementById('loader-wrapper').style.display = 'none';
+
+  //     console.error("註冊錯誤：", error);
+  //     if(error.response?.data?.message === "Email already exists"){
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Oops...",
+  //         text: "此帳號已被註冊"
+  //       });
+  //     } else {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Oops...",
+  //         text:"系統發生錯誤，請稍後再試"
+  //       });
+  //     }
+  //   });
+}
+
+const signbtn = document.getElementById('sign');
+  signbtn.addEventListener('click', function(e){
+    e.preventDefault();
+    console.log("hi");
+    callSignUp();
+  })
+  //TODO : 切換登入與註冊頁面
+  const signup = document.getElementById('signupLink');
+  const backlogin = document.getElementById('backlogin');
+  const signuppage = document.getElementById('signuppage');
+  const loginpage = document.getElementById('loginModal');
+  signup.addEventListener('click', function(e){
+  
+    if (signuppage && loginpage) {
+      signuppage.style.setProperty('display', 'block', 'important');
+      loginpage.style.setProperty('display', 'none', 'important');
+    }
+  })
+  backlogin.addEventListener('click', function(e){
+    if (signuppage && loginpage) {
+      signuppage.style.setProperty('display', 'none', 'important');
+      loginpage.style.setProperty('display', 'block', 'important');
+    }
+  })
 // const signbtn = document.getElementById('sign');
 // signbtn.addEventListener('click', function(e){
 //   e.preventDefault();
