@@ -1,4 +1,4 @@
-class BackendService {
+export class BackendService {
     constructor() {
         this.baseUrl = '23.146.248.58:3000';
     }
