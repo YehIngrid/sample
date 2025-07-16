@@ -28,29 +28,29 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-const signbtn = document.getElementById('sign');
-signbtn.addEventListener('click', function(e){
-  e.preventDefault();
-  console.log("hi");
-  callSignUp();
-})
-const signup = document.getElementById('signupLink');
-const backlogin = document.getElementById('backlogin');
-const signuppage = document.getElementById('signuppage');
-const loginpage = document.getElementById('loginModal');
-signup.addEventListener('click', function(e){
+// const signbtn = document.getElementById('sign');
+// signbtn.addEventListener('click', function(e){
+//   e.preventDefault();
+//   console.log("hi");
+//   callSignUp();
+// })
+// const signup = document.getElementById('signupLink');
+// const backlogin = document.getElementById('backlogin');
+// const signuppage = document.getElementById('signuppage');
+// const loginpage = document.getElementById('loginModal');
+// signup.addEventListener('click', function(e){
 
-  if (signuppage && loginpage) {
-    signuppage.style.setProperty('display', 'block', 'important');
-    loginpage.style.setProperty('display', 'none', 'important');
-  }
-})
-backlogin.addEventListener('click', function(e){
-  if (signuppage && loginpage) {
-    signuppage.style.setProperty('display', 'none', 'important');
-    loginpage.style.setProperty('display', 'block', 'important');
-  }
-})
+//   if (signuppage && loginpage) {
+//     signuppage.style.setProperty('display', 'block', 'important');
+//     loginpage.style.setProperty('display', 'none', 'important');
+//   }
+// })
+// backlogin.addEventListener('click', function(e){
+//   if (signuppage && loginpage) {
+//     signuppage.style.setProperty('display', 'none', 'important');
+//     loginpage.style.setProperty('display', 'block', 'important');
+//   }
+// })
 
 // 切換密碼顯示/隱藏（點擊眼睛圖示）
 $("#checkEye").click(function () {
