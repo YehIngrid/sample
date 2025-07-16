@@ -24,7 +24,7 @@ export class BackendService {
     //             fnError("登入失敗");
     //         });
     // }
-    signout(userData, fnSuccess, fnError) {
-        return axios
-    }
+    // signout(userData, fnSuccess, fnError) {
+    //     return axios
+    // }
 }
