@@ -594,7 +594,7 @@ ul{
   gap: 1rem;
   max-width: 1200px; 
 } */
-.newsell{
+.newsell, .top{
   text-align: center;
   display: flex;
   align-items: center;
