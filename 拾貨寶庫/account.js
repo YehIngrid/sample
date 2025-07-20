@@ -155,12 +155,55 @@ import {BackendService} from './BackendService.js';
   //   });
 }
 
+function callLogin() {
+  const email = document.getElementById('floatingInput');
+  const password = document.getElementById('floatingPassword');
+
+
+  // TODO:  Input check 
+
+  const backendService = new BackendService();
+  backendService.login(
+    {
+      email: email.value,
+      password: password.value
+    },
+    (data) => {
+      console.log("回傳資料：", data);
+
+      // TODO: save the jwt token 
+
+      Swal.fire({
+        icon: "success",
+        title: "登入成功",
+        showConfirmButton: false,
+        timer: 1800
+      });
+      // TODO: something after login if needed
+    },
+    (errorMessage) => {
+      console.error("登入錯誤：", errorMessage);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errorMessage
+      });
+    }
+  )
+}
+
 const signbtn = document.getElementById('sign');
-  signbtn.addEventListener('click', function(e){
+signbtn.addEventListener('click', function(e){
     e.preventDefault();
     console.log("hi");
     callSignUp();
   })
+const loginbtn = document.getElementById('send');
+loginbtn.addEventListener('click', function(e){
+    e.preventDefault();
+    callLogin();
+});
+
   //TODO : 切換登入與註冊頁面
   const signup = document.getElementById('signupLink');
   const backlogin = document.getElementById('backlogin');

@@ -4,6 +4,7 @@ export class BackendService {
     }
     test() {
         console.log('OK');
+        // ? 是不是該做連線測試?
     }
     signup(userData, fnSuccess, fnError) {
         return axios.post(`${this.baseUrl}/api/account/signup`, userData)
@@ -18,15 +19,15 @@ export class BackendService {
                 }
             });
     }
-    // login(userData, fnSuccess, fnError) {
-    //     return axios.post(`${this.baseUrl}/api/account/login`, userData)
-    //         .then(function(response) {
-    //             fnSuccess(response.data);
-    //         })
-    //         .catch(function(error) {
-    //             fnError("登入失敗");
-    //         });
-    // }
+    login(userData, fnSuccess, fnError) {
+        return axios.post(`${this.baseUrl}/api/account/login`, userData)
+            .then(function(response) {
+                fnSuccess(response.data);
+            })
+            .catch(function(error) {
+                fnError("登入失敗");
+            });
+    }
     // signout(userData, fnSuccess, fnError) {
     //     return axios
     // }
