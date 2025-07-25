@@ -302,15 +302,18 @@ document.getElementById('image').addEventListener('change', function (e) {
 const wishpool = document.getElementById('wishpool');
 const backbtn1 = document.getElementById('back-btn1');
 const wishpoolbtn = document.getElementById('wishpoolbtn');
+const talkInterface = document.getElementById('talkInterface');
 wishpoolbtn.addEventListener('click', function(e){
   wishpool.style.display = 'block';
   console.log('hello');
   content.style.display = 'none';
+  talkInterface.style.display = 'none';
 })
 backbtn1.addEventListener('click', function(e){
   wishpool.style.display = 'none';
   console.log('hiii');
   content.style.display = 'block';
+  talkInterface.style.display = 'block';
 })
 const member = document.getElementById('member');
 const memberbtn = document.getElementById('memberbtn');
@@ -318,9 +321,11 @@ const backbtn2 = document.getElementById('back-btn2');
 memberbtn.addEventListener('click', function(e){
   member.style.display = 'block';
   content.style.display = 'none';
+  talkInterface.style.display = 'none';
 })
 backbtn2.addEventListener('click', function(e){
   member.style.display = 'none';
+  talkInterface.style.display = 'block';
   content.style.display = 'block';
 })
 const mystery = document.getElementById('mystery');
@@ -329,10 +334,12 @@ const backbtn3 = document.getElementById('back-btn3');
 mysterybtn.addEventListener('click', function(e){
   mystery.style.display = 'block';
   content.style.display = 'none';
+  talkInterface.style.display = 'none';
 })
 backbtn3.addEventListener('click', function(e){
   mystery.style.display = 'none';
   content.style.display = 'block';
+  talkInterface.style.display = 'block';
 })
 const everyday = document.getElementById('everyday');
 const everydaybtn = document.getElementById('everydaybtn');
@@ -340,10 +347,12 @@ const backbtn4 = document.getElementById('back-btn4');
 everydaybtn.addEventListener('click', function(e){
   everyday.style.display = 'block';
   content.style.display = 'none';
+  talkInterface.style.display = 'none';
 })
 backbtn4.addEventListener('click', function(e){
   everyday.style.display = 'none';
   content.style.display = 'block';
+  talkInterface.style.display = 'block';
 })
 const donate = document.getElementById('donate');
 const donatebtn = document.getElementById('donatebtn');
@@ -351,10 +360,12 @@ const backbtn5 = document.getElementById('back-btn5');
 donatebtn.addEventListener('click', function(e){
   donate.style.display = 'block';
   content.style.display = 'none';
+  talkInterface.style.display = 'none';
 })
 backbtn5.addEventListener('click', function(e){
   donate.style.display = 'none';
   content.style.display = 'block';
+  talkInterface.style.display = 'block';
 })
 // ⏬ 載入全部商品並顯示在首頁卡片區
 // fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')

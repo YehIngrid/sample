@@ -981,7 +981,6 @@ button {
   fill-opacity: 0.5;
 }
 .result{
-  height: 800px;
   width: 100%;
 }
 .footerunder{
@@ -1268,4 +1267,13 @@ button {
   font-size: 2rem;
   padding: 8px 20px;
   margin-top: 20px;
+}
+.prize {
+  border: #000 1px solid;
+  padding: 10px 20px;
+  width: 90%;
+  margin: 0 auto;
+}
+.prize li{
+  list-style: none;
 }
