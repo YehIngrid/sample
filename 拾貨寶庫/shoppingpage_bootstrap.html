@@ -161,6 +161,14 @@
         
             <!-- (C) 右側：登入 + 購物車 -->
             <div class="d-flex align-items-center ms-auto">
+              <div class="news-ticker">
+                <div class="news-wrapper">
+                  <ul class="news-list">
+                    <li><a href="#">民主潮聲：#大罷免</a></li>
+                  </ul>
+                </div>
+              </div>
+              
               <div class="login">
                 <a id="username" class="username" href="person.html"></a>
                 <a class="navbar-brand" href="account.html" id="authButton">登入</a>
@@ -361,33 +369,6 @@
           </div>
   <main id="midcontent">
   <div class="my-section">    
-    <div class="marquee-container">
-      <div id="marquee-text" class="marquee-content"></div>
-    </div>
-    <script>
-      const texts = [
-        "🔥 限時優惠中！全部商品打 8 折！",
-        "📦 全館免運費，趕快下單！",
-        "🕒 今日下單，明天到貨！",
-        "🎁 消費滿千送小禮物！"
-      ];
-    
-      let index1 = 0;
-      const marquee = document.getElementById("marquee-text");
-    
-      function updateText() {
-        marquee.textContent = texts[index1];
-        marquee.style.animation = 'none'; // 重置動畫
-        void marquee.offsetWidth;        // 強制重繪
-        marquee.style.animation = '';    // 重新啟動動畫
-        index1 = (index1 + 1) % texts.length;
-      }
-    
-      updateText(); // 初次啟動
-      setInterval(updateText, 13000); // 每 10 秒換一句
-    </script>
-    
-         
     <div class="carousel">
       <div class="carousel-track">
         <!-- 第一個元素：複製的最後一張 -->
@@ -1877,6 +1858,45 @@ window.addEventListener('load', () => {
   </div>
   
 </div>
+<script>
+  const newsItems = [
+    "民主潮聲：#大罷免",
+    "立院衝突：#青島東路",
+    "熱搜話題：#言論自由",
+    "最新公告：#明天放假"
+  ];
+
+  const ul = document.querySelector(".news-list");
+  let currentIndex = 0;
+
+  function showNews() {
+    // 清空現有內容
+    ul.innerHTML = "";
+
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = "#";
+    a.textContent = newsItems[currentIndex];
+    li.appendChild(a);
+
+    li.classList.add("active");
+    ul.appendChild(li);
+
+    currentIndex = (currentIndex + 1) % newsItems.length;
+  }
+
+  showNews();
+  setInterval(() => {
+    const li = ul.querySelector("li");
+    if (li) {
+      li.classList.remove("active");
+      li.style.opacity = "0";
+      li.style.transform = "translateY(-100%)";
+    }
+
+    setTimeout(showNews, 500); // 等動畫跑完後再切換
+  }, 3000);
+</script>
 
     <!-- script部分-->
     <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>

@@ -90,8 +90,8 @@ ul{
     padding-left: 0rem !important;
 }
 .seriesofbutton ul{
-  margin-left: 10vw !important;
-  margin-right: 10vw !important;
+  margin-left: 7vw !important;
+  margin-right: 7vw !important;
     display: grid !important;
     list-style: none;
     justify-content: center;
@@ -1282,4 +1282,46 @@ button {
 }
 .prize li{
   list-style: none;
+}
+.news-ticker {
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  padding: 5px 10px;
+  width: 160px;
+  background-color: #fff;
+  font-family: sans-serif;
+  margin-right: 20px;
+}
+
+.news-wrapper {
+  height: 1.5em;
+  overflow: hidden;
+  position: relative;
+}
+
+.news-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.news-list li {
+  height: 1.5em;
+  line-height: 1.5em;
+  position: absolute;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: all 0.4s ease;
+}
+
+.news-list li.active {
+  opacity: 1;
+  transform: translateY(0%);
+}
+.news-list a {
+  text-decoration: none;
+  color: #004b97;
+  font-weight: bold;
+  font-size: 1.4rem;
 }
