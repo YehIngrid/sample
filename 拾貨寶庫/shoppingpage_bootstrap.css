@@ -90,10 +90,16 @@ ul{
     padding-left: 0rem !important;
 }
 .seriesofbutton ul{
-    display: flex !important;
+  margin-left: 10vw !important;
+  margin-right: 10vw !important;
+    display: grid !important;
     list-style: none;
     justify-content: center;
     margin-bottom: 0px !important;
+    grid-template-columns: repeat(4, 1fr); /* 或 3 欄、4 欄 */
+  gap: 24px 0px; /* 控制間距 */
+  align-items: center;
+  justify-items: center;
 }
 .seriesofbutton li{
     display: flex;
