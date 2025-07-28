@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-import {BackendService} from './BackendService.js';
  // 註冊函式：取得註冊表單欄位並呼叫後端 API
  function callSignUp(){
   const emailInput = document.getElementById('email');

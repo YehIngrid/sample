@@ -1,4 +1,4 @@
-export class BackendService {
+class BackendService {
     constructor() {
         this.baseUrl = 'http://23.146.248.58:3000';
     }
@@ -9,7 +9,7 @@ export class BackendService {
     signup(userData, fnSuccess, fnError) {
         return axios.post(`${this.baseUrl}/api/account/signup`, userData)
             .then(function(response) {
-                fnSuccess();
+                fnSuccess(response);
             })
             .catch(function(error) {
                 if (error.response?.data?.message == "Email already exists") {

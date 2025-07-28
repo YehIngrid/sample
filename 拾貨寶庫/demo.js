@@ -1,4 +1,3 @@
-import { BackendService } from './BackendService.js';
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
@@ -13,36 +12,37 @@ window.onload = function() {
   document.addEventListener('DOMContentLoaded', function() {
     const mobileSearchIcon = document.getElementById('mobileSearchIcon');
     const searchForm = document.getElementById('searchForm');
-    
-    // 手機版：點擊黑色搜尋圖示時，隱藏該圖示並顯示搜尋表單（新行出現）
-    mobileSearchIcon.addEventListener('click', function() {
-      mobileSearchIcon.style.display = 'none';
-      searchForm.style.display = 'flex';
-      
-      // 自動將游標焦點移至搜尋輸入框
-      const input = searchForm.querySelector('input');
-      if (input) {
-        input.focus();
-      }
-    });
+    if(mobileSearchIcon != null) {
+      // 手機版：點擊黑色搜尋圖示時，隱藏該圖示並顯示搜尋表單（新行出現）
+      mobileSearchIcon.addEventListener('click', function() {
+        mobileSearchIcon.style.display = 'none';
+        searchForm.style.display = 'flex';
+        
+        // 自動將游標焦點移至搜尋輸入框
+        const input = searchForm.querySelector('input');
+        if (input) {
+          input.focus();
+        }
+      });
+    }
   });
 // TODO 以下要修改的地方：
 // Firebase 設定
-const firebaseConfig = {
-    apiKey: "AIzaSyCtC488RFTmMSoe7lPj6c-rOVVuKOseTAk",
-    authDomain: "store-backend-75fea.firebaseapp.com",
-    projectId: "store-backend-75fea",
-    storageBucket: "store-backend-75fea.firebasestorage.app",
-    messagingSenderId: "585571611965",
-    appId: "1:585571611965:web:65b013617b7877e2904154"
-  };
+// const firebaseConfig = {
+//     apiKey: "AIzaSyCtC488RFTmMSoe7lPj6c-rOVVuKOseTAk",
+//     authDomain: "store-backend-75fea.firebaseapp.com",
+//     projectId: "store-backend-75fea",
+//     storageBucket: "store-backend-75fea.firebasestorage.app",
+//     messagingSenderId: "585571611965",
+//     appId: "1:585571611965:web:65b013617b7877e2904154"
+//   };
   
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+//   // Initialize Firebase
+//   firebase.initializeApp(firebaseConfig);
+//   const auth = firebase.auth();
   
   // 可設定持久性，確保 Firebase 在刷新時保留登入狀態
-  auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  //auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
   
   // 頁面載入時，先根據 localStorage 設定按鈕初始狀態
   $(document).ready(function(){
@@ -78,54 +78,54 @@ const firebaseConfig = {
     });
   });
   
-  auth.onAuthStateChanged(function(user) {
-    const loginForm = document.getElementById('loginForm');
-    const logoutButton = document.getElementById('logoutButton');
-    const authButton = document.getElementById('authButton');
-    const username = document.getElementById('username');
+  // auth.onAuthStateChanged(function(user) {
+  //   const loginForm = document.getElementById('loginForm');
+  //   const logoutButton = document.getElementById('logoutButton');
+  //   const authButton = document.getElementById('authButton');
+  //   const username = document.getElementById('username');
   
-    if (user) {
-      console.log("使用者已登入：", user);
-      console.log("username: ", user.displayName);
-      localStorage.setItem("isLoggedIn", "true");
-      if (loginForm) loginForm.style.display = "none";
-      if (logoutButton) logoutButton.style.display = "block";
-      if (username) {
-        username.textContent = `${user.displayName} `;
-        // username.style.display = "block";
-      }
-      if (authButton) {
-        authButton.textContent = "登出";
-        authButton.onclick = function(e) {
-          e.preventDefault();
-          Swal.fire({
-            title: "確定登出？",
-            text: "登出後無法購物與上架商品",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "我要登出"
-          }).then((result) => {
-            if (result.isConfirmed) {
-              callLogout();
-            }
-        })};
-      }
-    } else {
-      console.log("目前無使用者登入");
-      localStorage.removeItem("isLoggedIn");
-      if (loginForm) loginForm.style.display = "block";
-      if (logoutButton) logoutButton.style.display = "none";
-      if (authButton) {
-        authButton.textContent = "登入";
-      }
-      send.onclick = function(e) {
-        e.preventDefault();
-        callLogIn();
-      };
-    }
-  });
+  //   if (user) {
+  //     console.log("使用者已登入：", user);
+  //     console.log("username: ", user.displayName);
+  //     localStorage.setItem("isLoggedIn", "true");
+  //     if (loginForm) loginForm.style.display = "none";
+  //     if (logoutButton) logoutButton.style.display = "block";
+  //     if (username) {
+  //       username.textContent = `${user.displayName} `;
+  //       // username.style.display = "block";
+  //     }
+  //     if (authButton) {
+  //       authButton.textContent = "登出";
+  //       authButton.onclick = function(e) {
+  //         e.preventDefault();
+  //         Swal.fire({
+  //           title: "確定登出？",
+  //           text: "登出後無法購物與上架商品",
+  //           icon: "warning",
+  //           showCancelButton: true,
+  //           confirmButtonColor: "#3085d6",
+  //           cancelButtonColor: "#d33",
+  //           confirmButtonText: "我要登出"
+  //         }).then((result) => {
+  //           if (result.isConfirmed) {
+  //             callLogout();
+  //           }
+  //       })};
+  //     }
+  //   } else {
+  //     console.log("目前無使用者登入");
+  //     localStorage.removeItem("isLoggedIn");
+  //     if (loginForm) loginForm.style.display = "block";
+  //     if (logoutButton) logoutButton.style.display = "none";
+  //     if (authButton) {
+  //       authButton.textContent = "登入";
+  //     }
+  //     send.onclick = function(e) {
+  //       e.preventDefault();
+  //       callLogIn();
+  //     };
+  //   }
+  // });
   // TODO 登入函式
   function callLogIn() {
     const floatingInput = document.getElementById('floatingInput');
@@ -153,68 +153,68 @@ const firebaseConfig = {
       password: floatingPassword.value
     };
   
-    auth.signInWithEmailAndPassword(obj.email, obj.password)
-      .then((userCredential) => {
-        var user = userCredential.user;
-        loader.style.display = 'none';
-        Swal.fire({
-          icon: "success",
-          title: "登入成功",
-          text: "歡迎回來！",
-          showConfirmButton: false,
-          footer: "即將跳轉購物頁面",
-          timer: 1500
-        });
+    // auth.signInWithEmailAndPassword(obj.email, obj.password)
+    //   .then((userCredential) => {
+    //     var user = userCredential.user;
+    //     loader.style.display = 'none';
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "登入成功",
+    //       text: "歡迎回來！",
+    //       showConfirmButton: false,
+    //       footer: "即將跳轉購物頁面",
+    //       timer: 1500
+    //     });
   
-        return user.getIdToken();
-      })
-      .then((token) => {
-        console.log("使用者 Token：", token);
-        setTimeout(() => {
-          window.location.href = "shoppingpage_bootstrap.html";
-        }, 2000);
-      })
-      .catch(function (error) {
-        console.error("登入錯誤：", error);
+    //     return user.getIdToken();
+    //   })
+    //   .then((token) => {
+    //     console.log("使用者 Token：", token);
+    //     setTimeout(() => {
+    //       window.location.href = "shoppingpage_bootstrap.html";
+    //     }, 2000);
+    //   })
+    //   .catch(function (error) {
+    //     console.error("登入錯誤：", error);
   
-        // ✅ 隱藏 loading
-        loader.style.display = 'none';
+    //     // ✅ 隱藏 loading
+    //     loader.style.display = 'none';
   
-        Swal.fire({
-          icon: "error",
-          title: "登入失敗",
-          text: "請確認帳號密碼是否正確，或註冊新帳號"
-        });
-      });
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "登入失敗",
+    //       text: "請確認帳號密碼是否正確，或註冊新帳號"
+    //     });
+    //   });
   }
   
   
   // 登出函式：使用 Firebase 的 signOut 方法
   function callLogout() {
-    auth.signOut()
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "登出成功",
-          text: "歡迎再度光臨",
-          showConfirmButton: false,
-          footer: "即將返回登入頁面",
-          timer: 1800
-        });
-        // 登出後從 localStorage 移除登入狀態
-        localStorage.removeItem("isLoggedIn");
-        setTimeout(() => {
-          window.location.href = "account.html";
-        }, 2000);
-      })
-      .catch(function(error) {
-        console.error("登出錯誤：", error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...登出失敗",
-          text: "系統暫時發生錯誤，請稍後再試"
-        });
-      });
+    // auth.signOut()
+    //   .then(() => {
+    //     Swal.fire({
+    //       icon: "success",
+    //       title: "登出成功",
+    //       text: "歡迎再度光臨",
+    //       showConfirmButton: false,
+    //       footer: "即將返回登入頁面",
+    //       timer: 1800
+    //     });
+    //     // 登出後從 localStorage 移除登入狀態
+    //     localStorage.removeItem("isLoggedIn");
+    //     setTimeout(() => {
+    //       window.location.href = "account.html";
+    //     }, 2000);
+    //   })
+    //   .catch(function(error) {
+    //     console.error("登出錯誤：", error);
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "Oops...登出失敗",
+    //       text: "系統暫時發生錯誤，請稍後再試"
+    //     });
+    //   });
   }
   
   // 註冊函式：取得註冊表單欄位並呼叫後端 API
@@ -281,7 +281,7 @@ const firebaseConfig = {
   
     let backendService = new BackendService();
     backendService.signup(obj, 
-      () => {
+      (response) => {
         document.getElementById('loader-wrapper').style.display = 'none';
         console.log("回傳資料：", response.data);
         Swal.fire({
@@ -357,23 +357,24 @@ const firebaseConfig = {
   const seller = document.querySelector('#seller');
   const sellerbtn = document.querySelector('#sellerbtn');
   const content = document.querySelector('#midcontent');
-  sellerbtn.addEventListener('click', function(e){
-    if(!auth.currentUser){
-      Swal.fire({
-        title: "您必須先登入才能進入賣家專區！",
-        text: "請前往登入頁",
-        icon: "info"
-      });
-    } else {
-      content.style.display ="none";
-      seller.style.display = "block";
-      Swal.fire({
-        title: "販賣商品前請務必詳閱販賣資訊！",
-        icon: "info"
-      });
-    }
-    
-  })
+  if(sellerbtn != null) {
+    sellerbtn.addEventListener('click', function(e){
+      if(!auth.currentUser){
+        Swal.fire({
+          title: "您必須先登入才能進入賣家專區！",
+          text: "請前往登入頁",
+          icon: "info"
+        });
+      } else {
+        content.style.display ="none";
+        seller.style.display = "block";
+        Swal.fire({
+          title: "販賣商品前請務必詳閱販賣資訊！",
+          icon: "info"
+        });
+      }
+    });
+  }
   // TODO:點擊聊天icon後，進入聊天界面
   const talkInterface = document.querySelector('#talkInterface');
   const chatHome = document.querySelector('#chatHome');
