@@ -1335,6 +1335,11 @@ button {
   gap: 10px;
   scroll-snap-type: x mandatory;
   padding: 10px 0;
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE 10+ */
+}
+.news-slider::-webkit-scrollbar {
+  display: none;               /* Chrome/Safari */
 }
 
 .news-card {
@@ -1343,10 +1348,10 @@ button {
   padding: 12px 18px;
   background: #fff;
   border-radius: 24px;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   white-space: nowrap;
   color: #004b97;
-  font-weight: 600;
+  font-weight: 700;
   border: 1px solid #004b972d;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
