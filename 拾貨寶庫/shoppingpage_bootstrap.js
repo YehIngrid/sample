@@ -1,14 +1,15 @@
-const content = document.getElementById('midcontent');
-// 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
-window.onload = function() {
-  // 當頁面載入完畢後隱藏載入動畫，顯示內容
-  var loader = document.getElementById('loader');
 
-if (loader && content) {
-  loader.style.setProperty('display', 'none', 'important');
-  content.style.setProperty('display', 'block', 'important');
-}
-};
+// //當整個頁面載入完成後，隱藏 loader 並顯示主要內容
+// window.onload = function() {
+//   // 當頁面載入完畢後隱藏載入動畫，顯示內容
+//   var loader = document.getElementById('loader');
+//   var content = document.getElementById('whatcontent');
+// if (loader && content) {
+//   loader.style.setProperty('display', 'none', 'important');
+//   content.style.setProperty('display', 'block', 'important');
+// }
+// };
+const midcontent = document.getElementById('midcontent');
 //JavaScript: 控制左右按鈕捲動
 
   const scrollContainer = document.getElementById('scrollContainer');
@@ -30,10 +31,11 @@ if (loader && content) {
       behavior: 'smooth'
     });
   });
-
+// TODO seller
+const seller = document.getElementById('seller');
 const backbtn = document.querySelector('#back-btn');
 backbtn.addEventListener('click', function(e){
-  content.style.display = 'block';
+  midcontent.style.display = 'block';
   seller.style.display = 'none';
 })
 // 取得元素
@@ -298,73 +300,77 @@ document.getElementById('image').addEventListener('change', function (e) {
     reader.readAsDataURL(file);
   });
 });
-
+// TODO wishpool
 const wishpool = document.getElementById('wishpool');
 const backbtn1 = document.getElementById('back-btn1');
 const wishpoolbtn = document.getElementById('wishpoolbtn');
-const talkInterface = document.getElementById('talkInterface');
+// const talkInterface = document.getElementById('talkInterface');
 wishpoolbtn.addEventListener('click', function(e){
   wishpool.style.display = 'block';
   console.log('hello');
-  content.style.display = 'none';
+  midcontent.style.display = 'none';
   talkInterface.style.display = 'none';
 })
 backbtn1.addEventListener('click', function(e){
   wishpool.style.display = 'none';
   console.log('hiii');
-  content.style.display = 'block';
+  midcontent.style.display = 'block';
   talkInterface.style.display = 'block';
 })
+// TODO member
 const member = document.getElementById('member');
 const memberbtn = document.getElementById('memberbtn');
 const backbtn2 = document.getElementById('back-btn2');
 memberbtn.addEventListener('click', function(e){
   member.style.display = 'block';
-  content.style.display = 'none';
+  midcontent.style.display = 'none';
   talkInterface.style.display = 'none';
 })
 backbtn2.addEventListener('click', function(e){
   member.style.display = 'none';
   talkInterface.style.display = 'block';
-  content.style.display = 'block';
+  midcontent.style.display = 'block';
 })
+// TODO mystery
 const mystery = document.getElementById('mystery');
 const mysterybtn = document.getElementById('mysterybtn');
 const backbtn3 = document.getElementById('back-btn3');
 mysterybtn.addEventListener('click', function(e){
   mystery.style.display = 'block';
-  content.style.display = 'none';
+  midcontent.style.display = 'none';
   talkInterface.style.display = 'none';
 })
 backbtn3.addEventListener('click', function(e){
   mystery.style.display = 'none';
-  content.style.display = 'block';
+  midcontent.style.display = 'block';
   talkInterface.style.display = 'block';
 })
+// TODO everyday
 const everyday = document.getElementById('everyday');
 const everydaybtn = document.getElementById('everydaybtn');
 const backbtn4 = document.getElementById('back-btn4');
 everydaybtn.addEventListener('click', function(e){
   everyday.style.display = 'block';
-  content.style.display = 'none';
+  midcontent.style.display = 'none';
   talkInterface.style.display = 'none';
 })
 backbtn4.addEventListener('click', function(e){
   everyday.style.display = 'none';
-  content.style.display = 'block';
+  midcontent.style.display = 'block';
   talkInterface.style.display = 'block';
 })
+// TODO donate
 const donate = document.getElementById('donate');
 const donatebtn = document.getElementById('donatebtn');
 const backbtn5 = document.getElementById('back-btn5');
 donatebtn.addEventListener('click', function(e){
   donate.style.display = 'block';
-  content.style.display = 'none';
+  midcontent.style.display = 'none';
   talkInterface.style.display = 'none';
 })
 backbtn5.addEventListener('click', function(e){
   donate.style.display = 'none';
-  content.style.display = 'block';
+  midcontent.style.display = 'block';
   talkInterface.style.display = 'block';
 })
 // ⏬ 載入全部商品並顯示在首頁卡片區

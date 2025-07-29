@@ -354,27 +354,27 @@ window.onload = function() {
     }
     $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
   });
-  const seller = document.querySelector('#seller');
-  const sellerbtn = document.querySelector('#sellerbtn');
-  const content = document.querySelector('#midcontent');
-  if(sellerbtn != null) {
-    sellerbtn.addEventListener('click', function(e){
-      if(!auth.currentUser){
-        Swal.fire({
-          title: "您必須先登入才能進入賣家專區！",
-          text: "請前往登入頁",
-          icon: "info"
-        });
-      } else {
-        content.style.display ="none";
-        seller.style.display = "block";
-        Swal.fire({
-          title: "販賣商品前請務必詳閱販賣資訊！",
-          icon: "info"
-        });
-      }
-    });
-  }
+  // const seller = document.querySelector('#seller');
+  // const sellerbtn = document.querySelector('#sellerbtn');
+  // const content = document.querySelector('#midcontent');
+  // if(sellerbtn != null) {
+  //   sellerbtn.addEventListener('click', function(e){
+  //     if(!auth.currentUser){
+  //       Swal.fire({
+  //         title: "您必須先登入才能進入賣家專區！",
+  //         text: "請前往登入頁",
+  //         icon: "info"
+  //       });
+  //     } else {
+  //       content.style.display ="none";
+  //       seller.style.display = "block";
+  //       Swal.fire({
+  //         title: "販賣商品前請務必詳閱販賣資訊！",
+  //         icon: "info"
+  //       });
+  //     }
+  //   });
+  // }
   // TODO:點擊聊天icon後，進入聊天界面
   const talkInterface = document.querySelector('#talkInterface');
   const chatHome = document.querySelector('#chatHome');

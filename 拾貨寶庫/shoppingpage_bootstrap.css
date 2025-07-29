@@ -5,7 +5,7 @@
     width: 85vw;
     margin: 10% auto ;
     /* margin: 10% auto; */
-    margin-top: 2% ;
+    margin-top: 0% ;
     margin-bottom: 1% ;
     overflow: hidden;
   }
@@ -95,7 +95,6 @@ ul{
     display: grid !important;
     list-style: none;
     justify-content: center;
-    margin-bottom: 0px !important;
     grid-template-columns: repeat(4, 1fr); /* 或 3 欄、4 欄 */
   gap: 24px 0px; /* 控制間距 */
   align-items: center;
@@ -1288,10 +1287,10 @@ button {
   border: 1px solid #ccc;
   border-radius: 999px;
   padding: 5px 10px;
-  width: 160px;
+  width: 157px;
   background-color: #fff;
   font-family: sans-serif;
-  margin-right: 20px;
+  margin-right: 0px;
 }
 
 .news-wrapper {
@@ -1323,5 +1322,41 @@ button {
   text-decoration: none;
   color: #004b97;
   font-weight: bold;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
+}
+/* ==== 手機版：橫向滑動卡片 ==== */
+.mobile-news-slider {
+  display: none; /* 預設不顯示（僅手機顯示） */
+}
+
+.news-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  scroll-snap-type: x mandatory;
+  padding: 10px 0;
+}
+
+.news-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  padding: 12px 18px;
+  background: #fff;
+  border-radius: 24px;
+  font-size: 1.3rem;
+  white-space: nowrap;
+  color: #004b97;
+  font-weight: 600;
+  border: 1px solid #004b972d;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* ==== 響應式切換 ==== */
+@media (max-width: 768px) {
+  .news-ticker {
+    display: none;
+  }
+  .mobile-news-slider {
+    display: block;
+  }
 }
