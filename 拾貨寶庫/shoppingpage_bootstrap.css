@@ -956,8 +956,8 @@ tbody > tr:nth-of-type(even) {
   font-size: 1.6rem;
   position: fixed;
   font-weight: 700;
-  top: 90vh;
-  right: 4vw;
+  bottom: 40px;
+  right: 40px;
   padding: 10px 20px;
 }
 
@@ -1003,7 +1003,7 @@ button {
   width: 100%;
 }
 .footerunder{
-  margin-top: 700px;
+  margin-top: 300px;
 }
 .ulstep {
   margin: 20px;
@@ -1267,25 +1267,18 @@ button {
 }
 /* TODO 神秘箱表單 */
 .formMystery {
-  background-color: #fbfbfb;
+  background: rgba(66, 214, 162, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   margin: 3rem;
   box-shadow: 0 0 6px rgba(0,0,0,0.2);
   border-radius: 10px;
   padding: 3rem;
-  padding-bottom: 7rem;
 }
 .form-floating>.form-select {
   padding-top: 1.625rem;
   padding-bottom: 0rem !important;
-}
-.cartMystery {
-  border: none;
-  border-radius: 50px;
-  background: linear-gradient(to right, #7abafad0, #6bf5b7c4);
-  color: #383838;
-  font-size: 2rem;
-  padding: 8px 20px;
-  margin-top: 20px;
 }
 .prize {
   border: #000 1px solid;
@@ -1304,7 +1297,7 @@ button {
   width: 157px;
   background-color: #fff;
   font-family: sans-serif;
-  margin-right: 0px;
+  margin-right: 10px;
 }
 
 .news-wrapper {
@@ -1385,4 +1378,29 @@ button {
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
+}
+.campuscontent {
+  width: 86vw;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+.thoughts {
+  box-shadow: #383838 0px 0px 1px;
+  width: 40vw;
+}
+@media (max-width: 768px) {
+  .campuscontent {
+    flex-direction: column !important;
+    align-items: center;
+  };
+}
+@media screen and (max-width: 768px) {
+  .campuscontent .thoughts {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  
 }
