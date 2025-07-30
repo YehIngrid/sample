@@ -373,6 +373,21 @@ backbtn5.addEventListener('click', function(e){
   midcontent.style.display = 'block';
   talkInterface.style.display = 'block';
 })
+// TODO 校園攻略站
+const campus = document.getElementById('campus');
+const campusbtn = document.getElementById('campusbtn');
+const backbtn6 = document.getElementById('back-btn6');
+campusbtn.addEventListener('click', function(e){
+  campus.style.display = 'block';
+  midcontent.style.display = 'none';
+  talkInterface.style.display = 'none';
+});
+backbtn6.addEventListener('click', function(e){
+  campus.style.display = 'none';
+  midcontent.style.display = 'block';
+  talkInterface.style.display = 'block';
+});
+// TODO 學力銀行
 // ⏬ 載入全部商品並顯示在首頁卡片區
 // fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
 //   .then(res => res.json())
