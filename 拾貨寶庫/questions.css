@@ -167,3 +167,11 @@ section li{
 .content-news p {
   margin: 10px 0;
 }
+.content-news {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+.content-news.show {
+  max-height: 200px; /* 視內容長度調整，可設大一點 */
+}

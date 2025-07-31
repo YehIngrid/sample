@@ -198,18 +198,18 @@ ul{
   background-color: transparent !important;
 }
 
-.icon-button {
-  width: 45px; /* 根據你 SVG 的大小調整 */
+/* .icon-button {
+  width: 45px; /* 根據你 SVG 的大小調整 
   height: 45px;
   background-image: url('../svg/page.svg');
   background-size: cover;
   transition: background-image 0.3s ease;
- /* TODO:未解決padding問題因為他是svg，可能需要直接去改figma */
-}
+  TODO:未解決padding問題因為他是svg，可能需要直接去改figma 
+} */
 
-.icon-button:hover, .icon-button:focus {
+/* .icon-button:hover, .icon-button:focus {
   background-image: url('../svg/page_focus.svg');
-}
+} */
 .chathome {
   position: fixed;
   bottom: 8px;

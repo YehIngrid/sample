@@ -21,4 +21,10 @@ const observer = new IntersectionObserver((entries) => {
 
 // 為每個內容區塊啟用觀察
 sections.forEach(section => observer.observe(section));
-
+const collapsibles = document.querySelectorAll('.collapsible');
+collapsibles.forEach(button => {
+  button.addEventListener('click', () => {
+    const answer = button.parentElement.nextElementSibling;
+    answer.classList.toggle('show');
+  });
+});

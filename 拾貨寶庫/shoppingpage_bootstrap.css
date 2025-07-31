@@ -5,7 +5,7 @@
     width: 85vw;
     margin: 10% auto ;
     /* margin: 10% auto; */
-    margin-top: 2% ;
+    margin-top: 0% ;
     margin-bottom: 1% ;
     overflow: hidden;
   }
@@ -90,10 +90,15 @@ ul{
     padding-left: 0rem !important;
 }
 .seriesofbutton ul{
-    display: flex !important;
+  margin-left: 7vw !important;
+  margin-right: 7vw !important;
+    display: grid !important;
     list-style: none;
     justify-content: center;
-    margin-bottom: 0px !important;
+    grid-template-columns: repeat(4, 1fr); /* 或 3 欄、4 欄 */
+  gap: 24px 0px; /* 控制間距 */
+  align-items: center;
+  justify-items: center;
 }
 .seriesofbutton li{
     display: flex;
@@ -933,18 +938,32 @@ tbody > tr:nth-of-type(even) {
     left: -100%;
   }
 }
-.icon-button {
+/* .icon-button {
   background-image: url('../svg/page.svg');
   background-size: cover;
   transition: background-image 0.3s ease;
   margin-right: 16px;
   cursor: pointer !important;
- /* TODO:未解決padding問題因為他是svg，可能需要直接去改figma */
+  TODO:未解決padding問題因為他是svg，可能需要直接去改figma 
+} */
+.icon-button {
+  background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(56, 140, 236, 0.4);
+  border-radius: 50px;
+  cursor: pointer !important;
+  font-size: 1.6rem;
+  position: fixed;
+  font-weight: 700;
+  bottom: 40px;
+  right: 40px;
+  padding: 10px 20px;
 }
 
-.icon-button:hover, .icon-button:focus {
+/* .icon-button:hover, .icon-button:focus {
   background-image: url('../svg/page_focus.svg');
-}
+} */
 .wishadd{
   background-image: url('../svg/wishadd.svg');
   width: 346px;
@@ -984,7 +1003,7 @@ button {
   width: 100%;
 }
 .footerunder{
-  margin-top: 700px;
+  margin-top: 300px;
 }
 .ulstep {
   margin: 20px;
@@ -1248,25 +1267,18 @@ button {
 }
 /* TODO 神秘箱表單 */
 .formMystery {
-  background-color: #fbfbfb;
+  background: rgba(66, 214, 162, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   margin: 3rem;
   box-shadow: 0 0 6px rgba(0,0,0,0.2);
   border-radius: 10px;
   padding: 3rem;
-  padding-bottom: 7rem;
 }
 .form-floating>.form-select {
   padding-top: 1.625rem;
   padding-bottom: 0rem !important;
-}
-.cartMystery {
-  border: none;
-  border-radius: 50px;
-  background: linear-gradient(to right, #7abafad0, #6bf5b7c4);
-  color: #383838;
-  font-size: 2rem;
-  padding: 8px 20px;
-  margin-top: 20px;
 }
 .prize {
   border: #000 1px solid;
@@ -1276,4 +1288,119 @@ button {
 }
 .prize li{
   list-style: none;
+}
+.news-ticker {
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  padding: 5px 10px;
+  width: 157px;
+  background-color: #fff;
+  font-family: sans-serif;
+  margin-right: 10px;
+}
+
+.news-wrapper {
+  height: 1.5em;
+  overflow: hidden;
+  position: relative;
+}
+
+.news-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.news-list li {
+  height: 1.5em;
+  line-height: 1.5em;
+  position: absolute;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: all 0.4s ease;
+}
+
+.news-list li.active {
+  opacity: 1;
+  transform: translateY(0%);
+}
+.news-list a {
+  text-decoration: none;
+  color: #004b97;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+/* ==== 手機版：橫向滑動卡片 ==== */
+.mobile-news-slider {
+  display: none; /* 預設不顯示（僅手機顯示） */
+}
+
+.news-slider {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  scroll-snap-type: x mandatory;
+  padding: 10px 0;
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE 10+ */
+}
+.news-slider::-webkit-scrollbar {
+  display: none;               /* Chrome/Safari */
+}
+
+.news-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  padding: 12px 18px;
+  background: #fff;
+  border-radius: 24px;
+  font-size: 1.4rem;
+  white-space: nowrap;
+  color: #004b97;
+  font-weight: 700;
+  border: 1px solid #004b972d;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* ==== 響應式切換 ==== */
+@media (max-width: 768px) {
+  .news-ticker {
+    display: none;
+  }
+  .mobile-news-slider {
+    display: block;
+  }
+}
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+.campuscontent {
+  width: 86vw;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+.thoughts {
+  box-shadow: #383838 0px 0px 1px;
+  width: 40vw;
+}
+@media (max-width: 768px) {
+  .campuscontent {
+    flex-direction: column !important;
+    align-items: center;
+  };
+}
+@media screen and (max-width: 768px) {
+  .campuscontent .thoughts {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  
 }
