@@ -18,9 +18,9 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="bubble.css">
         <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     </head>
     <style>
  #loader {
@@ -34,9 +34,13 @@
     height: 100%;
     z-index: 9999;
   }
-  #whatcontent {
-    display: none; /* 初始隱藏內容 */
-  }
+
+  .hidden {
+    display: none !important;
+  } 
+  /* #whatcontent {
+    display: none;
+  } */
   /* 載入畫面 */
 .spinner {
   width: 36.4px;
@@ -98,11 +102,6 @@
     
     </style>
     <body>
-      <div class="bubble bubble1 parallax"></div>
-<div class="bubble bubble2 parallax"></div>
-<div class="bubble bubble3 parallax"></div>
-<div class="bubble bubble4 parallax"></div>
-<div class="bubble bubble5 parallax"></div>
       <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
         <div class="spinner">
           <div></div>
@@ -114,7 +113,7 @@
         </div>
         <div><p style="color: #383838; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;"><br><br>拾貨寶庫加載中... </p></div>
       </div>
-      <div id="whatcontent" class="d-none">
+      <div id="whatcontentok" style="display: none;">
         <!-- TODO header -->
         <div class="header ">
             <!--TODO 響應式選單-->
@@ -235,21 +234,21 @@
           </div>
         </div>
     </div>
-     
-  
-          </div>
+
         <!-- TODO content -->
         <div class="content">  
             <div class="infor">
-              <h1 class="topic">團隊介紹</h1>
-              <h2 class="undertopic">首頁 > 團隊介紹</h2>
+              <h1 class="topic" data-aos="fade-up" data-aos-delay="100" data-aos-duration="3000">團隊介紹</h1>
+              <h2 class="undertopic" data-aos="fade-up" data-aos-delay="200" data-aos-duration="3000">首頁 > 團隊介紹</h2>
+              <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="3000">
                 <h2 class="goal">拾獲寶物，交由寶庫；二手翻新，環保先行。</h2>
                 <p>拾貨寶庫致力於結合校園需求與環保意識，透過打造專屬學生的二手交易平台，實現資源共享、物品翻新與永續經營。</p> 
                 <p>從學長姐的舊物到新生的必需品，我們提供實惠、便利且值得信任的交易環境。</p>
                 <p>每一次交易，都是對校園環境的友善承諾，共同打造綠色、永續的校園文化。</p>
-              <h2 class="topic">團隊成員</h2>
-              <p style="margin-top: 20px;">我們是一支充滿創新與多元背景的團隊，來自不同領域的年輕創業者，致力於打造可持續發展的二手交易平台 「拾貨寶庫」。</p>
-                <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 86vw; margin: 0 auto;">
+              </div>
+              <h2 class="topic" data-aos="fade-up" data-aos-delay="600" data-aos-duration="3000">團隊成員</h2>
+              <p style="margin-top: 20px;" data-aos="fade-up" data-aos-delay="700" data-aos-duration="3000">我們是一支充滿創新與多元背景的團隊，來自不同領域的年輕創業者，致力於打造可持續發展的二手交易平台 「拾貨寶庫」。</p>
+                <div class="row row-cols-1 row-cols-md-3 g-4" data-aos="fade-up" data-aos-delay="800" data-aos-duration="3000" style="width: 86vw; margin: 0 auto;">
                   <div class="col">
                     <div class="card" style="background: rgba(87, 248, 103, 0.1);
                     backdrop-filter: blur(10px);
@@ -302,7 +301,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col" style="margin-bottom: 20px;">
                     <div class="card" style="background: rgba(76, 235, 250, 0.1);
                     backdrop-filter: blur(10px);
                     -webkit-backdrop-filter: blur(10px);
@@ -316,105 +315,15 @@
                     </div>
                   </div>
                 </div>
-                <h2 class="topic">團隊經歷</h2>
-                <p style="margin-top: 20px;">我們的團隊成員擁有豐富的競賽經驗，並在多項創新創業比賽中獲得佳績。</p>
-                
-                <ul class="listdecnone">
-                    <li><svg style="margin-right: 10px;" width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g clip-path="url(#clip0_115_67)">
-                      <path d="M9.96891 12L11.1236 15.2727L13.4689 16V18H6.46891L6.50481 16L8.81421 15.2727L9.96891 12Z" fill="#004B97" fill-opacity="0.4"/>
-                      <ellipse cx="10" cy="4.5" rx="6" ry="7.5" fill="url(#paint0_linear_115_67)" fill-opacity="0.7"/>
-                      <path d="M4.50001 3C0.52348 1.94625 -2.38419e-07 4.5 4.50001 8C9.00002 11.5 -0.500001 9 3.50001 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      <path d="M15.5583 3C19.5348 1.94625 20.0583 4.5 15.5583 8C11.0583 11.5 20.5583 9 16.5583 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      </g>
-                      <defs>
-                      <linearGradient id="paint0_linear_115_67" x1="16" y1="4.5" x2="4" y2="4.5" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="#24B685" stop-opacity="0.6"/>
-                      <stop offset="0.5" stop-color="#004B97" stop-opacity="0.7"/>
-                      <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
-                      </linearGradient>
-                      <clipPath id="clip0_115_67">
-                      <rect width="20" height="18" fill="white"/>
-                      </clipPath>
-                      </defs>
-                      </svg>111年度 海大創課社競賽 獲獎</li>
-                    <li><svg style="margin-right: 10px;"  width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g clip-path="url(#clip0_115_67)">
-                      <path d="M9.96891 12L11.1236 15.2727L13.4689 16V18H6.46891L6.50481 16L8.81421 15.2727L9.96891 12Z" fill="#004B97" fill-opacity="0.4"/>
-                      <ellipse cx="10" cy="4.5" rx="6" ry="7.5" fill="url(#paint0_linear_115_67)" fill-opacity="0.7"/>
-                      <path d="M4.50001 3C0.52348 1.94625 -2.38419e-07 4.5 4.50001 8C9.00002 11.5 -0.500001 9 3.50001 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      <path d="M15.5583 3C19.5348 1.94625 20.0583 4.5 15.5583 8C11.0583 11.5 20.5583 9 16.5583 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      </g>
-                      <defs>
-                      <linearGradient id="paint0_linear_115_67" x1="16" y1="4.5" x2="4" y2="4.5" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="#24B685" stop-opacity="0.6"/>
-                      <stop offset="0.5" stop-color="#004B97" stop-opacity="0.7"/>
-                      <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
-                      </linearGradient>
-                      <clipPath id="clip0_115_67">
-                      <rect width="20" height="18" fill="white"/>
-                      </clipPath>
-                      </defs>
-                      </svg>111年度 海洋夢想家培育計畫 獲獎</li>
-                    <li><svg style="margin-right: 10px;"  width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g clip-path="url(#clip0_115_67)">
-                      <path d="M9.96891 12L11.1236 15.2727L13.4689 16V18H6.46891L6.50481 16L8.81421 15.2727L9.96891 12Z" fill="#004B97" fill-opacity="0.4"/>
-                      <ellipse cx="10" cy="4.5" rx="6" ry="7.5" fill="url(#paint0_linear_115_67)" fill-opacity="0.7"/>
-                      <path d="M4.50001 3C0.52348 1.94625 -2.38419e-07 4.5 4.50001 8C9.00002 11.5 -0.500001 9 3.50001 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      <path d="M15.5583 3C19.5348 1.94625 20.0583 4.5 15.5583 8C11.0583 11.5 20.5583 9 16.5583 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      </g>
-                      <defs>
-                      <linearGradient id="paint0_linear_115_67" x1="16" y1="4.5" x2="4" y2="4.5" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="#24B685" stop-opacity="0.6"/>
-                      <stop offset="0.5" stop-color="#004B97" stop-opacity="0.7"/>
-                      <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
-                      </linearGradient>
-                      <clipPath id="clip0_115_67">
-                      <rect width="20" height="18" fill="white"/>
-                      </clipPath>
-                      </defs>
-                      </svg>111年度「原漾U-start計畫」第一階晉級</li>
-                    <li><svg style="margin-right: 10px;"  width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g clip-path="url(#clip0_115_67)">
-                      <path d="M9.96891 12L11.1236 15.2727L13.4689 16V18H6.46891L6.50481 16L8.81421 15.2727L9.96891 12Z" fill="#004B97" fill-opacity="0.4"/>
-                      <ellipse cx="10" cy="4.5" rx="6" ry="7.5" fill="url(#paint0_linear_115_67)" fill-opacity="0.7"/>
-                      <path d="M4.50001 3C0.52348 1.94625 -2.38419e-07 4.5 4.50001 8C9.00002 11.5 -0.500001 9 3.50001 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      <path d="M15.5583 3C19.5348 1.94625 20.0583 4.5 15.5583 8C11.0583 11.5 20.5583 9 16.5583 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      </g>
-                      <defs>
-                      <linearGradient id="paint0_linear_115_67" x1="16" y1="4.5" x2="4" y2="4.5" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="#24B685" stop-opacity="0.6"/>
-                      <stop offset="0.5" stop-color="#004B97" stop-opacity="0.7"/>
-                      <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
-                      </linearGradient>
-                      <clipPath id="clip0_115_67">
-                      <rect width="20" height="18" fill="white"/>
-                      </clipPath>
-                      </defs>
-                      </svg>111年度 桃園新創之星 X 創天下競賽 銀獎</li>
-                    <li><svg style="margin-right: 10px;"  width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <g clip-path="url(#clip0_115_67)">
-                      <path d="M9.96891 12L11.1236 15.2727L13.4689 16V18H6.46891L6.50481 16L8.81421 15.2727L9.96891 12Z" fill="#004B97" fill-opacity="0.4"/>
-                      <ellipse cx="10" cy="4.5" rx="6" ry="7.5" fill="url(#paint0_linear_115_67)" fill-opacity="0.7"/>
-                      <path d="M4.50001 3C0.52348 1.94625 -2.38419e-07 4.5 4.50001 8C9.00002 11.5 -0.500001 9 3.50001 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      <path d="M15.5583 3C19.5348 1.94625 20.0583 4.5 15.5583 8C11.0583 11.5 20.5583 9 16.5583 8.5" stroke="#24B685" stroke-opacity="0.4"/>
-                      </g>
-                      <defs>
-                      <linearGradient id="paint0_linear_115_67" x1="16" y1="4.5" x2="4" y2="4.5" gradientUnits="userSpaceOnUse">
-                      <stop stop-color="#24B685" stop-opacity="0.6"/>
-                      <stop offset="0.5" stop-color="#004B97" stop-opacity="0.7"/>
-                      <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
-                      </linearGradient>
-                      <clipPath id="clip0_115_67">
-                      <rect width="20" height="18" fill="white"/>
-                      </clipPath>
-                      </defs>
-                      </svg>113年度 桃園青創力 優選</li>
-                </ul>
-                <p><br>我們相信，結合資訊科技、產業經營、運籌管理與護理行政專業的跨領域優勢，能為社會帶來更具影響力的創新解決方案，推動綠色消費與循環經濟的發展！</p>
+                <h2 class="topic" data-aos="fade-up" data-aos-duration="3000" style="margin-top: 50px;">團隊經歷</h2>
+                <p style="margin-top: 20px;" data-aos="fade-up">我們的團隊成員擁有豐富的競賽經驗，並在多項創新創業比賽中獲得佳績。</p>
+                <img data-aos="fade-up"  src="../svg/history.svg" alt="" class="d-flex justify-content-center d-none d-lg-block" style="width: 70%; margin: 0 auto; margin-top: 20px;">
+                <img data-aos="fade-up"  src="../svg/historyphone.svg" alt="" class="d-flex justify-content-start d-block d-lg-none" style="width: 100%; margin: 0 auto; margin-top: 20px;">
+                <p data-aos="fade-up"><br>我們相信，結合資訊科技、產業經營、運籌管理與護理行政專業的跨領域優勢，能為社會帶來更具影響力的創新解決方案，推動綠色消費與循環經濟的發展！</p>
             </div>
             </div>
         </div>
+</div>
         <!-- TODO footer -->
         <div class="footerunder">
           Copyright©2025拾貨寶庫｜All Rights Reserved
@@ -436,8 +345,35 @@
         <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="demo.js"></script>
-        <script src="introduce.js"></script>
+        <!-- <script src="introduce.js"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  console.debug('hi!!!');
+  window.onload = function () {
+    const loader = document.getElementById('loader');
+    const contentok = document.getElementById('whatcontentok');
+    console.debug('onload:', loader, contentok);
+    if (loader && contentok) {
+      // 1. 顯示主內容
+      //loader.style.display = 'none';
+      loader.style.setProperty('display', 'none', 'important');
+     // loader.classList.add('hidden'); // 隱藏載入畫面
+      contentok.style.display = 'block';
+      
+      // 2. 啟動 AOS
+      AOS.init({
+        disable: false,     // ✅ 手機也開啟動畫
+        duration: 800,      // ✅ 動畫時間
+        once: false,        // ✅ 是否只播放一次
+        offset: 0           // ✅ 滑到一進畫面就觸發
+      });
+
+      // 3. 刷新 AOS 確保載入後的內容有動畫
+      AOS.refresh();
+    }
+  };
+</script>
     </body>
     </html>
     

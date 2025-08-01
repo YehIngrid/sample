@@ -376,229 +376,229 @@ window.onload = function() {
   //   });
   // }
   // TODO:點擊聊天icon後，進入聊天界面
-  const talkInterface = document.querySelector('#talkInterface');
-  const chatHome = document.querySelector('#chatHome');
-  talkInterface.addEventListener('click', function(e){
-    if(!auth.currentUser){
-      Swal.fire({
-        title: "您必須先登入才能進入聊天室！",
-        text: "請前往登入頁",
-        icon: "info"
-      });
-    } else {
-      //content.style.display ="none";
-      chatHome.style.display = "block";
-    }
-  })
-  // TODO:選擇聊天人物之後
-  // 點選聊天對象時，切換顯示聊天視窗
-  document.querySelectorAll('.person').forEach(person => {
-  person.addEventListener('click', () => {
-    const name = person.querySelector('h3').textContent;
+//   const talkInterface = document.querySelector('#talkInterface');
+//   const chatHome = document.querySelector('#chatHome');
+//   talkInterface.addEventListener('click', function(e){
+//     if(!auth.currentUser){
+//       Swal.fire({
+//         title: "您必須先登入才能進入聊天室！",
+//         text: "請前往登入頁",
+//         icon: "info"
+//       });
+//     } else {
+//       //content.style.display ="none";
+//       chatHome.style.display = "block";
+//     }
+//   })
+//   // TODO:選擇聊天人物之後
+//   // 點選聊天對象時，切換顯示聊天視窗
+//   document.querySelectorAll('.person').forEach(person => {
+//   person.addEventListener('click', () => {
+//     const name = person.querySelector('h3').textContent;
 
-    // 隱藏聊天對象清單，顯示對話區塊
-    document.getElementById('chatHome').style.display = 'none';
-    document.getElementById('chatWindow').style.display = 'block';
+//     // 隱藏聊天對象清單，顯示對話區塊
+//     document.getElementById('chatHome').style.display = 'none';
+//     document.getElementById('chatWindow').style.display = 'block';
 
-    // 更新聊天室上方對象名稱
-    document.getElementById('chatTargetName').textContent = name;
+//     // 更新聊天室上方對象名稱
+//     document.getElementById('chatTargetName').textContent = name;
 
-    // TODO: 根據 data-uid 載入對應聊天記錄（可用 AJAX 或 localStorage 模擬）
-  });
-});
+//     // TODO: 根據 data-uid 載入對應聊天記錄（可用 AJAX 或 localStorage 模擬）
+//   });
+// });
 
-// 返回按鈕：切回聊天對象清單
-document.getElementById('backToHome').addEventListener('click', () => {
-  document.getElementById('chatWindow').style.display = 'none';
-  document.getElementById('chatHome').style.display = 'block';
-});
-// 聊天室功能
-  const sendbtn = document.querySelector('#sendbtn');
-  sendbtn.addEventListener('click', function(e){
-    e.preventDefault();
-    sendMessage();
-  });
-  const input = document.getElementById('messageInput');
-let isComposing = false;
+// // 返回按鈕：切回聊天對象清單
+// document.getElementById('backToHome').addEventListener('click', () => {
+//   document.getElementById('chatWindow').style.display = 'none';
+//   document.getElementById('chatHome').style.display = 'block';
+// });
+// // 聊天室功能
+//   const sendbtn = document.querySelector('#sendbtn');
+//   sendbtn.addEventListener('click', function(e){
+//     e.preventDefault();
+//     sendMessage();
+//   });
+//   const input = document.getElementById('messageInput');
+// let isComposing = false;
 
-// 注音輸入時的選字階段偵測
-input.addEventListener('compositionstart', () => {
-  isComposing = true;
-});
+// // 注音輸入時的選字階段偵測
+// input.addEventListener('compositionstart', () => {
+//   isComposing = true;
+// });
 
-input.addEventListener('compositionend', () => {
-  isComposing = false;
-});
+// input.addEventListener('compositionend', () => {
+//   isComposing = false;
+// });
 
-input.addEventListener('keydown', function (event) {
-  if (event.key === 'Enter' && !isComposing) {
-    event.preventDefault();
-    sendMessage();
-    input.value = ''; // 清空輸入框
-  }
-});
-  let lastMessageDate = null;
+// input.addEventListener('keydown', function (event) {
+//   if (event.key === 'Enter' && !isComposing) {
+//     event.preventDefault();
+//     sendMessage();
+//     input.value = ''; // 清空輸入框
+//   }
+// });
+//   let lastMessageDate = null;
 
-function getCurrentTime() {
-  const now = new Date();
-  const hours = now.getHours().toString().padStart(2, '0');
-  const minutes = now.getMinutes().toString().padStart(2, '0');
+// function getCurrentTime() {
+//   const now = new Date();
+//   const hours = now.getHours().toString().padStart(2, '0');
+//   const minutes = now.getMinutes().toString().padStart(2, '0');
 
-  const currentDate = now.toISOString().slice(0, 10); // 例如：2025-06-18
+//   const currentDate = now.toISOString().slice(0, 10); // 例如：2025-06-18
 
-  let timeString;
-  if (lastMessageDate === currentDate) {
-    timeString = `${hours}:${minutes}`; // 同一天只顯示時間
-  } else {
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    timeString = `${year}/${month}/${day} ${hours}:${minutes}`; // 不同天顯示完整
-    lastMessageDate = currentDate; // 更新為這一筆的日期
-  }
+//   let timeString;
+//   if (lastMessageDate === currentDate) {
+//     timeString = `${hours}:${minutes}`; // 同一天只顯示時間
+//   } else {
+//     const year = now.getFullYear();
+//     const month = (now.getMonth() + 1).toString().padStart(2, '0');
+//     const day = now.getDate().toString().padStart(2, '0');
+//     timeString = `${year}/${month}/${day} ${hours}:${minutes}`; // 不同天顯示完整
+//     lastMessageDate = currentDate; // 更新為這一筆的日期
+//   }
 
-  return timeString;
-}
+//   return timeString;
+// }
 
 
-  function sendMessage() {
+//   function sendMessage() {
     
-    const text = input.value.trim();
-    if (!text) return;
+//     const text = input.value.trim();
+//     if (!text) return;
 
-    const msg = document.createElement('div');
-    msg.className = 'message sender';
-    msg.innerText = text;
+//     const msg = document.createElement('div');
+//     msg.className = 'message sender';
+//     msg.innerText = text;
 
-    const time = document.createElement('div');
-    time.className = 'timestamp';
-    time.innerText = getCurrentTime();
+//     const time = document.createElement('div');
+//     time.className = 'timestamp';
+//     time.innerText = getCurrentTime();
 
-    const chat = document.getElementById('chat');
-    chat.appendChild(msg);
-    chat.appendChild(time);
+//     const chat = document.getElementById('chat');
+//     chat.appendChild(msg);
+//     chat.appendChild(time);
 
-    input.value = '';
-    chat.scrollTop = chat.scrollHeight;
-  }
-const closeChat = document.querySelector('#closebtn');
-closeChat.addEventListener('click', function(e){
-  chatHome.style.display = "none";
-  content.style.display = "block";
-});
-//todo手機螢幕切換聊天室大小
-function adjustChatroomSize() {
-  const chatHome = document.getElementById('chatHome');
-  if (window.innerWidth <= 768) {
-    chatHome.classList.add('fullscreen'); // 手機版，全螢幕
-  } else {
-    chatHome.classList.remove('fullscreen'); // 桌機版，固定大小
-  }
-}
+//     input.value = '';
+//     chat.scrollTop = chat.scrollHeight;
+//   }
+// const closeChat = document.querySelector('#closebtn');
+// closeChat.addEventListener('click', function(e){
+//   chatHome.style.display = "none";
+//   content.style.display = "block";
+// });
+// //todo手機螢幕切換聊天室大小
+// function adjustChatroomSize() {
+//   const chatHome = document.getElementById('chatHome');
+//   if (window.innerWidth <= 768) {
+//     chatHome.classList.add('fullscreen'); // 手機版，全螢幕
+//   } else {
+//     chatHome.classList.remove('fullscreen'); // 桌機版，固定大小
+//   }
+// }
 
-// 頁面載入與視窗變化時都執行
-window.addEventListener('load', adjustChatroomSize);
-window.addEventListener('resize', adjustChatroomSize);
+// // 頁面載入與視窗變化時都執行
+// window.addEventListener('load', adjustChatroomSize);
+// window.addEventListener('resize', adjustChatroomSize);
 
-function flyToCart(button) {
-  const cart = document.getElementById('cartIcon');
-  const icon = document.createElement('div');
-  icon.className = 'flying-icon';
+// function flyToCart(button) {
+//   const cart = document.getElementById('cartIcon');
+//   const icon = document.createElement('div');
+//   icon.className = 'flying-icon';
 
-  const startRect = button.getBoundingClientRect();
-  const endRect = cart.getBoundingClientRect();
+//   const startRect = button.getBoundingClientRect();
+//   const endRect = cart.getBoundingClientRect();
 
-  icon.style.left = startRect.left + 'px';
-  icon.style.top = startRect.top + 'px';
-  document.body.appendChild(icon);
+//   icon.style.left = startRect.left + 'px';
+//   icon.style.top = startRect.top + 'px';
+//   document.body.appendChild(icon);
 
-  setTimeout(() => {
-    icon.style.transition = 'all 0.8s ease-in-out';
-    icon.style.left = endRect.left + 'px';
-    icon.style.top = endRect.top + 'px';
-    icon.style.transform = 'scale(0.3)';
-    icon.style.opacity = '0.2';
-  }, 10);
+//   setTimeout(() => {
+//     icon.style.transition = 'all 0.8s ease-in-out';
+//     icon.style.left = endRect.left + 'px';
+//     icon.style.top = endRect.top + 'px';
+//     icon.style.transform = 'scale(0.3)';
+//     icon.style.opacity = '0.2';
+//   }, 10);
 
-  setTimeout(() => {
-    document.body.removeChild(icon);
-  }, 900);
-}
-function playUfoAnimation(button) {
-  const cart = document.getElementById('cartIcon');
-  const start = button.getBoundingClientRect();
-  const end = cart.getBoundingClientRect();
+//   setTimeout(() => {
+//     document.body.removeChild(icon);
+//   }, 900);
+// }
+// function playUfoAnimation(button) {
+//   const cart = document.getElementById('cartIcon');
+//   const start = button.getBoundingClientRect();
+//   const end = cart.getBoundingClientRect();
 
-  const ufo = document.createElement('img');
-  ufo.src = '../svg/bigalien.svg';
-  ufo.className = 'ufo';
+//   const ufo = document.createElement('img');
+//   ufo.src = '../svg/bigalien.svg';
+//   ufo.className = 'ufo';
 
-  const gift = document.createElement('img');
-  gift.src = '../svg/bigmystery.svg';
-  gift.className = 'gift';
+//   const gift = document.createElement('img');
+//   gift.src = '../svg/bigmystery.svg';
+//   gift.className = 'gift';
 
 
-  ufo.style.left = start.left + 'px';
-  ufo.style.top = (start.top - 100) + 'px';
+//   ufo.style.left = start.left + 'px';
+//   ufo.style.top = (start.top - 100) + 'px';
 
-  const beam = document.createElement('div');
-  beam.className = 'beam';
-  beam.style.left = (start.left - 10) + 'px';
-  beam.style.top = (start.top - 10) + 'px';
+//   const beam = document.createElement('div');
+//   beam.className = 'beam';
+//   beam.style.left = (start.left - 10) + 'px';
+//   beam.style.top = (start.top - 10) + 'px';
 
-  gift.style.left = start.left + 'px';
-  gift.style.top = start.top + 'px';
+//   gift.style.left = start.left + 'px';
+//   gift.style.top = start.top + 'px';
 
-  document.body.appendChild(ufo);
-  document.body.appendChild(beam);
-  document.body.appendChild(gift);
+//   document.body.appendChild(ufo);
+//   document.body.appendChild(beam);
+//   document.body.appendChild(gift);
 
-  setTimeout(() => {
-    beam.style.opacity = 1;
-  }, 200);
+//   setTimeout(() => {
+//     beam.style.opacity = 1;
+//   }, 200);
 
-  setTimeout(() => {
-    gift.style.top = (start.top - 60) + 'px';
-    gift.style.transform = 'scale(0.6)';
-  }, 500);
+//   setTimeout(() => {
+//     gift.style.top = (start.top - 60) + 'px';
+//     gift.style.transform = 'scale(0.6)';
+//   }, 500);
 
-  setTimeout(() => {
-    gift.style.transform = 'scale(0)';
-  }, 1100);
+//   setTimeout(() => {
+//     gift.style.transform = 'scale(0)';
+//   }, 1100);
 
-  // ❌ 禮物消失後關閉光束
-  setTimeout(() => {
-    beam.style.opacity = 0;
-  }, 1400);
+//   // ❌ 禮物消失後關閉光束
+//   setTimeout(() => {
+//     beam.style.opacity = 0;
+//   }, 1400);
 
-  // ✅ 太空船在光束關閉後才移動
-  setTimeout(() => {
-    ufo.style.left = end.left + 'px';
-    ufo.style.top = end.top + 'px';
-  }, 1700);
+//   // ✅ 太空船在光束關閉後才移動
+//   setTimeout(() => {
+//     ufo.style.left = end.left + 'px';
+//     ufo.style.top = end.top + 'px';
+//   }, 1700);
 
-  setTimeout(() => {
-    document.body.removeChild(ufo);
-    document.body.removeChild(beam);
-    document.body.removeChild(gift);
+//   setTimeout(() => {
+//     document.body.removeChild(ufo);
+//     document.body.removeChild(beam);
+//     document.body.removeChild(gift);
 
-    // ✅ 加入購物車數量 +1 並加動畫
-    let count = parseInt(cartCount.textContent, 10);
-    cartCount.textContent = count + 1;
-    cartCount.classList.add('bump');
+//     // ✅ 加入購物車數量 +1 並加動畫
+//     let count = parseInt(cartCount.textContent, 10);
+//     cartCount.textContent = count + 1;
+//     cartCount.classList.add('bump');
 
-    // 移除動畫 class（結束縮放）
-    setTimeout(() => {
-      cartCount.classList.remove('bump');
-    }, 300);
-  }, 2400);
-  setTimeout(() => {
-    Swal.fire({
-    title: "商品已加入購物車",
-    icon: "success",
-    showConfirmButton: false,
-    timer: 1800
-  });
-}, 2700);
+//     // 移除動畫 class（結束縮放）
+//     setTimeout(() => {
+//       cartCount.classList.remove('bump');
+//     }, 300);
+//   }, 2400);
+//   setTimeout(() => {
+//     Swal.fire({
+//     title: "商品已加入購物車",
+//     icon: "success",
+//     showConfirmButton: false,
+//     timer: 1800
+//   });
+// }, 2700);
 
-}
+// }
