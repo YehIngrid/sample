@@ -4,17 +4,6 @@ html, body {
     position: relative;
   }  
 /* === Bubble Effect CSS === */
-.bubble {
-    position: fixed;
-    border-radius: 50%;
-    opacity: 0.45;
-    filter: blur(15px) brightness(1.05);
-    animation: float 20s infinite ease-in-out, fade 10s infinite ease-in-out;
-    will-change: transform, opacity;
-    z-index: -1; /* ✅ 確保在所有內容下面 */
-  pointer-events: none; /* ✅ 不阻擋點擊事件 */
-  }
-  
   .parallax {
     transform: translateY(var(--scroll, 0px));
   }
@@ -87,4 +76,23 @@ html, body {
     font-size: 1.1rem;
     font-weight: bold;
   }
-  
+.bubble-container {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute; /* ⚠️ 改成 absolute，不是 fixed */
+  border-radius: 50%;
+  opacity: 0.45;
+  filter: blur(15px) brightness(1.05);
+  animation: float 20s infinite ease-in-out, fade 10s infinite ease-in-out;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
