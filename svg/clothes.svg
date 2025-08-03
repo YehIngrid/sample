@@ -1,0 +1,30 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_10_304)">
+<rect width="100" height="100" fill="white"/>
+<circle cx="50" cy="50" r="50" fill="#FBFBFB"/>
+<rect x="21" y="38" width="26" height="38" fill="#689EBE"/>
+<path d="M49 34L41.5 39.1962H26.5L19 34L26.5 28.8038H41.5L49 34Z" fill="#689EBE"/>
+<rect x="19.9177" y="33.3317" width="8.4" height="14.4746" transform="rotate(35.4631 19.9177 33.3317)" fill="#689EBE"/>
+<rect x="41.2651" y="38.6131" width="9" height="14.1737" transform="rotate(-33.1198 41.2651 38.6131)" fill="#689EBE"/>
+<rect x="57" y="18" width="25" height="60" rx="1" fill="url(#paint0_linear_10_304)" fill-opacity="0.6"/>
+<rect x="69" y="39" width="1" height="40" rx="0.5" fill="white"/>
+<path d="M57.4196 20.7553H82.7129" stroke="white" stroke-linecap="round"/>
+<path d="M65.3949 17.793V20.0717" stroke="white" stroke-linecap="round"/>
+<path d="M73.826 17.793V20.5274" stroke="white" stroke-linecap="round"/>
+<path d="M69.2687 21.211V31.0093" stroke="white" stroke-linecap="round"/>
+<path d="M71.5474 21.211V26.9077" stroke="white" stroke-linecap="round"/>
+<path d="M71.4997 26.8878C71.5962 26.9239 71.5405 27.3561 71.5405 27.459C71.5405 27.5974 71.4021 27.8015 71.3048 27.8988C70.9243 28.2793 70.28 28.2525 69.8268 28.4791" stroke="white" stroke-linecap="round"/>
+<path d="M62.9308 21.2976C62.9308 21.6078 62.7814 21.8681 62.7676 22.1635C62.754 22.4561 62.7125 22.7821 62.6452 23.068C62.5672 23.3996 62.378 23.7259 62.2462 24.0451C62.0986 24.4028 61.9121 24.7024 61.6206 24.9541C60.8718 25.6007 59.8456 25.7203 58.9411 26.0218C58.7632 26.0811 58.5746 26.0852 58.3902 26.1125C58.3014 26.1256 58.2242 26.1941 58.1363 26.1941C58.01 26.1941 57.4439 26.5229 57.3815 26.3981" stroke="white" stroke-linecap="round"/>
+<path d="M75.2129 21.1752C75.3147 21.2995 75.3123 21.5274 75.3331 21.6829C75.3518 21.8234 75.417 21.9335 75.417 22.0774C75.417 22.4107 75.5411 22.8513 75.6414 23.1723C75.7685 23.5791 75.9265 23.9511 76.1106 24.3398C76.191 24.5094 76.3067 24.74 76.428 24.8793C76.53 24.9964 76.5898 25.1453 76.7 25.2556C76.7889 25.3445 76.9312 25.374 77.0083 25.4687C77.1755 25.6739 77.4288 25.8403 77.6431 25.9946C77.8558 26.1478 78.0885 26.1774 78.2937 26.3142C78.6132 26.5272 79.0334 26.6837 79.4339 26.6837C79.6646 26.6837 79.8811 26.7953 80.1095 26.8061C80.2762 26.8141 80.4345 26.8023 80.5991 26.847C80.9787 26.9499 81.3905 26.9694 81.7824 26.9694" stroke="white" stroke-linecap="round"/>
+<path d="M26.5 29C32.4297 33.7146 35.7098 33.4451 41.5 29M12.5 44.5L18.5 48.5M49 48.5L55 45M22 74H45" stroke="white"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_10_304" x1="69.5" y1="18" x2="69.5" y2="78" gradientUnits="userSpaceOnUse">
+<stop stop-color="#24B685" stop-opacity="0.8"/>
+<stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
+</linearGradient>
+<clipPath id="clip0_10_304">
+<rect width="100" height="100" fill="white"/>
+</clipPath>
+</defs>
+</svg>

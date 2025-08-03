@@ -1,0 +1,64 @@
+@font-face {
+    font-family: "TimeMachine";
+    src: url("fonts/timemachine-wa.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+.bg-light {
+    background-color: transparent !important;
+}
+.container-fluid {
+    --bs-gutter-x: 2rem !important;
+}
+.picture {
+    height: 39px;
+    width: 40px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+.h1_school{
+    color: #000;
+    z-index: 100;
+    font-weight: 700;
+    font-size: 7.5rem;
+    position: relative;
+    top: 35vh;
+    text-align: center;
+    line-height: 60px;
+    letter-spacing: 10px;
+    font-family: 'TimeMachine';
+    /* TODO 字距 */
+}
+.titlecenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.titlecenter h1 {
+    font-size: 3rem;
+    color: #004b97;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.titlecenter h2 {
+    font-size: 1.5rem;
+    color: #383838;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+.titlecenter button {
+    background-color: #FFC857;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #F0F6FD;
+}
