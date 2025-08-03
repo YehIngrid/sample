@@ -30,17 +30,20 @@
     /* TODO 字距 */
 }
 .titlecenter {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 90vh;
     text-align: center;
+    padding-top: 5rem;
 }
 .titlecenter h1 {
     font-size: 3rem;
     color: #004b97;
     font-weight: 700;
     margin-bottom: 0.5rem;
+    font-family: 'TimeMachine';
 }
 .titlecenter h2 {
     font-size: 1.5rem;
@@ -52,13 +55,118 @@
     background-color: #FFC857;
     color: white;
     border: none;
-    padding: 0.5rem 1.5rem;
+    padding: 0.7rem 1.5rem;
     font-size: 1rem;
-    border-radius: 0.25rem;
+    border-radius:50px;
     cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+.titlecenter img {
+    width: 84vw;
+    margin-bottom: 1rem;
 }
 body {
     margin: 0;
     padding: 0;
-    background-color: #F0F6FD;
+}
+.titlepage {
+    width: 100%;
+    height: 100vh;
+    background-color: #f0f6fd;
+    background-size: cover;
+    background-position: center;
+}
+.parner {
+    background-color: #fff;
+    height: 100vh;
+}
+section {
+    height: 100vh;
+}
+.halfsection {
+    padding: 2rem;
+    height: 50vh;
+}
+.bookad {
+    width: 20vw;
+    height: auto;
+}
+.schooladgif {
+    width: 30vw;
+    height: auto;
+}
+.icon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+.reason {
+    height: auto;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f6fd;
+}
+.reason h2 {
+    font-size: 2rem;
+    color: #383838;
+    padding-bottom: 2rem;
+}
+.reason p {
+    font-size: 1.1rem;
+    color: #383838;
+    max-width: 800px;
+    text-align: center;
+    padding-top: 1rem;
+}
+.runnumimg {
+    width: 300px;
+    height: 300px;
+    margin-bottom: 10px;
+}
+.row {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 4rem;
+}
+.n {
+    font-size: 3rem;
+    color: #004b97;
+    font-weight: 700;
+    margin-right: 0.5rem;
+}
+.heading-style-h5 {
+    font-size: 1.2rem;
+    color: #383838;
+    font-weight: 500;
+    margin-left: 0.5rem;
+    padding-top: 40px;
+    font-weight: 700;
+}
+.nback {
+    background-color: #FFC857;
+    padding: 10px 16px;
+    border-radius: 30px;
+    max-width: 370px;
+}
+@media screen and (max-width: 768px) {
+    .titlecenter h1 {
+        font-size: 2.1rem;
+    }
+    .titlecenter h2 {
+        font-size: 1rem;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+    .titlecenter button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    .titlecenter img {
+        width: 90vw;
+    }
+    
 }

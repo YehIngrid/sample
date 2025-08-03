@@ -86,20 +86,7 @@ const slideInElement = document.querySelector('.slide-in');
     observer3.observe(target);
 
 // 檢查頁面載入時 `#trees` 是否已經在視窗內
-document.addEventListener("DOMContentLoaded", () => {
-    let target = document.querySelector("#trees");
 
-    if (!target) return; // 確保元素存在
-
-    let rect = target.getBoundingClientRect();
-    let isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-
-    if (isVisible) {
-        startAllAnimations(); // 直接執行動畫
-    } else {
-        observer.observe(target); // 滑動進入時才執行動畫
-    }
-});
 function scrollToContent() {
     // 滾動到下一個視窗高度
     window.scrollTo({
