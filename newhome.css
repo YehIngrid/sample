@@ -4,6 +4,14 @@
     font-weight: normal;
     font-style: normal;
 }
+* {
+  box-sizing: border-box;
+}
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 #loader {
     position: fixed;
     top: 50%;
@@ -139,14 +147,12 @@ border: 1.5px solid #fff
     font-weight: 500;
     transition: background-color 0.3s ease;
 }
+button:hover {
+    background-color: #004b97;
+}
 .titlecenter img {
     width: 84vw;
     margin-bottom: 1rem;
-}
-body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
 }
 .titlepage {
     width: 100%;
@@ -160,7 +166,7 @@ body {
     height: 100vh;
 }
 section {
-    min-height: 100vh;
+    min-height: 90vh;
 }
 .halfsection {
     padding: 2.4rem;
@@ -180,7 +186,7 @@ section {
 }
 .reason {
     height: auto;
-    padding: 3rem;
+    padding: 1.6rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -208,6 +214,11 @@ section {
     padding-left: 2rem;
     padding-right: 2rem;
     padding-top: 4rem;
+    background-color: #004b97;
+}
+.trade {
+    padding: 2rem;
+    background-color:#004b97;
 }
 .n {
     font-size: 3rem;
@@ -230,7 +241,7 @@ section {
     max-width: 370px;
 }
 .service {
-    background-color: #fbfbfb;
+    background-color: #fff;
     padding: 2rem;
 }
 .service .row {
@@ -268,7 +279,7 @@ section {
     padding-bottom: 1.6rem;
 }
 .footer {
-    background-color: #4d81b7;
+    background-color: #004b97;
     color: white;
     padding: 2rem;
     margin-top: 20vh;
@@ -317,7 +328,16 @@ section {
     .titlecenter img {
         display: none;
     }
-    .runnumimg {
+    .reason {
+        height: auto;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #f0f6fd;
+    }
+        .runnumimg {
         width: 200px;
         height: 200px;
     }
