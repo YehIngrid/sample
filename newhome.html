@@ -23,167 +23,337 @@
     <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     <link rel="stylesheet" href="newhome.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 </head>
 <body>
-    <!-- TODO 封面 -->
-    <section class="titlepage">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <!-- ?要改歐 -->
-                <img src="webP/拾貨寶庫_圓形.webp" alt="拾貨寶庫Logo" class="picture">
-                <a class="navbar-brand" href="#">
-                    <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50">
-                        <defs>
-                        <linearGradient id="chineseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#004b97" />
-                            <stop offset="100%" stop-color="rgb(36,182,133)" />
-                        </linearGradient>
-                        <linearGradient id="englishGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="rgb(36,182,133)" />
-                            <stop offset="100%" stop-color="#004b97" />
-                        </linearGradient>
-                        </defs>
-                        <rect x="630" y="250" fill="none" />
-                        <text x="50" y="20" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="25" fill="url(#chineseGradient)" font-weight="bold">拾貨寶庫</text>
-                        <text x="50" y="37" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="12" fill="url(#englishGradient)" font-weight="bold">TREASURE HUB</text>
-                    </svg>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">首頁</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">購物商場</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">最新資訊</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">常見問題</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">團隊介紹</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">客服諮詢</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">校園攻略站</a>
-                    </li>
-                </div>
-            </div>
-        </nav>
-        <div class="titlecenter">
-            <h1>拾貨寶庫</h1>
-            <h2>一個專為大學生打造的二手商場、升學與實習資訊暨整合平台</h2>
-            <button>立即進入網站</button>
-            <img src="svg/people.svg" alt="">
+    <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
+        <div class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-    </section>
-    
-    <section class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center halfsection">
-        <div class="friend mx-auto col-md-5 d-flex flex-column justify-content-center">
-            <h2 class="text-xs-center">你的校園二手交易好夥伴</h2>
-            <p class="text-xs-center">
-                「拾貨寶庫」是專為學生設計的二手交易平台，讓你能輕鬆買賣教科書、生活用品等，享受高性價比的購物體驗！
-            </p>
-            </div>
-            <div class="book col-md-5 d-none d-md-block">
-            <img src="image/bookad.png" alt="" class="bookad"/>
-            
-        </div>
-    </section>
-    <section class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center halfsection">
-        <div class="newfunc mx-auto d-flex flex-row justify-content-center">
-            <div class="col-md-5 d-none d-md-block">
-            <img src="image/schooladgif.gif" alt="" class="schooladgif"/>
-            </div>
-            <div class="d-flex flex-column justify-content-center col-md-5">
-            <h2 class="text-xs-center p-md-2">升學資訊實習機會一把抓</h2>
-            <p class="text-xs-center">
-                「拾貨寶庫」是專為學生設計的二手交易平台，讓你能輕鬆買賣教科書、生活用品等，享受高性價比的購物體驗！
-            </p>
-            </div>
-        </div>
-    </section>
-    <section class="reason">
-        <h2 class="text-center">為什麼選擇拾貨寶庫？</h2>
-        <div class="row">
-            <div class="col-md-3 text-center">
-                <img src="svg/safe.svg" alt="" class="icon">
-                <h3>安全交易</h3>
-                <p>校內身份認證，保障買賣雙方權益。</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <img src="image/recycle.png" alt="" class="icon">
-                <h3>環保永續</h3>
-                <p>推動資源循環，為地球盡一份力。</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <img src="svg/aiad.svg" alt="" class="icon">
-                <h3>智能推薦</h3>
-                <p>快速找到需要的好物，節省時間與金錢。</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <img src="svg/storemoney.svg" alt="" class="icon">
-                <h3>資金暫存</h3>
-                <p>成為買賣雙方橋樑，杜絕詐騙。</p>
-            </div>
-        </div>
-    </section>
-    <section>
-        <div class="padding-global">
-          <div class="earth jitter-container">
-              <h2 class="d-flex justify-content-center" style="font-family: 'Courier New', Courier, monospace; margin-top: 50px;">您的一小步 是地球的一大步</h2>
-          </div>
-          <div class="row">
-            <div class="col-md-4 d-flex flex-column align-items-center text-center">
-                <img class="runnumimg img-fluid d-md-block" src="webP/trees.webp" alt="樹木" />
-                <div class="nback">
-                    <div class="headingstyleh1_5 " style="display: flex; justify-content: center; text-align: center;">
-                        <div class="heading-style-h1">
-                            <span class="n" id="trees">0</span>
-                        </div>
-                        <div class="heading-style-h5" style="text-align: center;">棵</div>
+        <div><p style="color: #383838; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;"><br><br>拾貨寶庫加載中... </p></div>
+    </div>
+    <div id="contentofnewhome" style="display: none;">
+        <!-- TODO 封面 -->
+        <section class="titlepage" data-aos="fade-down">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <!-- ?要改歐 -->
+                    <img src="webP/拾貨寶庫_圓形.webp" alt="拾貨寶庫Logo" class="picture">
+                    <a class="navbar-brand" href="#">
+                        <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50">
+                            <defs>
+                            <linearGradient id="chineseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#004b97" />
+                                <stop offset="100%" stop-color="rgb(36,182,133)" />
+                            </linearGradient>
+                            <linearGradient id="englishGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="rgb(36,182,133)" />
+                                <stop offset="100%" stop-color="#004b97" />
+                            </linearGradient>
+                            </defs>
+                            <rect x="630" y="250" fill="none" />
+                            <text x="50" y="20" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="25" fill="url(#chineseGradient)" font-weight="bold">拾貨寶庫</text>
+                            <text x="50" y="37" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="12" fill="url(#englishGradient)" font-weight="bold">TREASURE HUB</text>
+                        </svg>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">首頁</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">購物商場</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">最新資訊</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="">常見問題</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="">團隊介紹</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="">客服諮詢</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">校園攻略站</a>
+                        </li>
                     </div>
-                    <p>成為會員，相當於種了四棵樹。</p>
+                </div>
+            </nav>
+            <div class="titlecenter">
+                <h1>拾貨寶庫</h1>
+                <h2>一個專為大學生打造的二手商場、資訊交易整合平台</h2>
+                <button>立即進入網站</button>
+                <img src="svg/people.svg" alt="">
+            </div>
+        </section>
+        
+        <section data-aos="fade-right" class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center halfsection">
+            <div class="friend mx-auto col-md-5 d-flex flex-column justify-content-center">
+                <h2 class="text-xs-center">二手交易｜資源循環，從你我開始</h2>
+                <p class="text-xs-center" style="color: #24b685; font-weight: 600; font-size: large;">
+                    不想花大錢買新書？搬宿舍家具沒地方放？
+                </p>
+                <p class="text-xs-center">
+                    在這裡，你可以：
+                </p>
+                <ul class="text-xs-center" style="list-style:square ;">
+                    <li>快速上架二手書、生活用品、家具、電器</li>
+                    <li>限校交易，面交更方便、安全又放心</li>
+                    <li>免抽成，免費上架，資源再利用、生活更省錢</li>
+                </ul>
+                <p class="text-xs-center">
+                    從同學手中接力一份實用，也讓自己的東西找到下一個需要的人！
+                </p>
+                </div>
+                <div class="book col-md-5 d-none d-md-block">
+                <img src="image/bookad.png" alt="" class="bookad"/>
+                
+            </div>
+        </section>
+        <section data-aos="fade-left" class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center halfsection">
+            <div class="newfunc d-flex flex-row justify-content-between">
+                <div class="col-md-6 d-none d-md-block">
+                <img src="image/schooladgif.gif" alt="" class="schooladgif"/>
+                </div>
+                <div class="d-flex flex-column justify-content-center col-md-6">
+                <h2 class="text-xs-center">校園攻略站｜學長姐的經驗，就是你的捷徑</h2>
+                <p class="text-xs-center" style="color: #24b685; font-weight: 600; font-size: large;">
+                    選課踩雷？推甄不知從何開始？
+                </p>
+                <p class="text-xs-center">
+                    這裡是學生間最真實的攻略集散地：
+                </p>
+                <ul class="text-xs-center" style="list-style:square ;">
+                    <li>真實身份認證的學長姐懶人包</li>
+                    <li>主題涵蓋選課、轉學、研究所、實習、租屋</li>
+                    <li>小額付費，省時又安心，讓你少走冤枉路</li>
+                </ul>
+                <p class="text-xs-center">
+                    不只是分享，也能變現。寫一篇好攻略，讓經驗成為你的影響力。
+                </p>
                 </div>
             </div>
-            <div class="col-md-4 d-flex flex-column align-items-center text-center">
-                <img class="runnumimg img-fluid  d-md-block" src="webP/turtle.webp" alt="塑膠袋">
-                <div class="nback">
-                    <div class="headingstyleh1_5" style="display: flex; justify-content: center; text-align: center;">
-                        <div class="heading-style-h1">
-                        <span class="n" id="bags">0</span>
-                        </div>
-                        <div class="heading-style-h5">個</div>
-                    </div>
-                    <p>每筆交易，相當於減了100個塑膠袋。</p>
+        </section>
+        <section class="reason">
+            <h2 class="text-center">為什麼選擇拾貨寶庫？</h2>
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <img src="svg/safe.svg" alt="" class="icon" data-aos="zoom-in" data-aos-duration="500">
+                    <h3>安全交易</h3>
+                    <p>校內身份認證，保障買賣雙方權益。</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <img src="image/recycle.png" alt="" class="icon" data-aos="zoom-in" data-aos-duration="500" data-aos-delay="100">
+                    <h3>環保永續</h3>
+                    <p>推動資源循環，為地球盡一份力。</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <img src="svg/aiad.svg" alt="" class="icon" data-aos="zoom-in" data-aos-duration="500" data-aos-delay="200">
+                    <h3>智能推薦</h3>
+                    <p>快速找到需要的好物，節省時間與金錢。</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <img src="svg/storemoney.svg" alt="" class="icon" data-aos="zoom-in" data-aos-duration="500" data-aos-delay="300">
+                    <h3>資金暫存</h3>
+                    <p>成為買賣雙方橋樑，杜絕詐騙。</p>
                 </div>
             </div>
-            <div class="col-md-4 d-flex flex-column align-items-center text-center">
-                <img class="runnumimg img-fluid  d-md-block" src="webP/co22.webp" alt="CO2煙囪">
-                <div class="nback">
-                    <div class="headingstyleh1_5" style="display: flex; justify-content: center; text-align: center;">
-                        <div class="heading-style-h1">
-                        <span class="n" id="co2">0</span>
+        </section>
+        <section>
+            <div class="padding-global">
+            <div class="earth jitter-container">
+                <h2 class="d-flex justify-content-center" style="margin-top: 80px;">您的一小步 是地球的一大步</h2>
+            </div>
+            <div class="row">
+                <div class="col-md-4 d-flex flex-column align-items-center text-center phonemargin">
+                    <img class="runnumimg img-fluid d-md-block" src="webP/trees.webp" alt="樹木" />
+                    <div class="nback">
+                        <div class="headingstyleh1_5 " style="display: flex; justify-content: center; text-align: center;">
+                            <div class="heading-style-h1">
+                                <span class="n" id="trees">0</span>
+                            </div>
+                            <div class="heading-style-h5" style="text-align: center;">棵</div>
                         </div>
-                        <div class="heading-style-h5">公斤</div>
+                        <p>成為會員，相當於種了四棵樹。</p>
                     </div>
-                    <p>每份支持，相當於吸收了4公斤的二氧化碳。</p>
+                </div>
+                <div class="col-md-4 d-flex flex-column align-items-center text-center phonemargin">
+                    <img class="runnumimg img-fluid  d-md-block" src="webP/turtle.webp" alt="塑膠袋">
+                    <div class="nback">
+                        <div class="headingstyleh1_5" style="display: flex; justify-content: center; text-align: center;">
+                            <div class="heading-style-h1">
+                            <span class="n" id="bags">0</span>
+                            </div>
+                            <div class="heading-style-h5">個</div>
+                        </div>
+                        <p>每筆交易，相當於減了100個塑膠袋。</p>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex flex-column align-items-center text-center phonemargin">
+                    <img class="runnumimg img-fluid  d-md-block" src="webP/co22.webp" alt="CO2煙囪">
+                    <div class="nback">
+                        <div class="headingstyleh1_5" style="display: flex; justify-content: center; text-align: center;">
+                            <div class="heading-style-h1">
+                            <span class="n" id="co2">0</span>
+                            </div>
+                            <div class="heading-style-h5">公斤</div>
+                        </div>
+                        <p>每份支持，相當於吸收了4公斤的二氧化碳。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="service">
+            <h2 style="padding-top: 5%; text-align: center;color: #383838;" >我們的服務</h2>
+            <!-- 電腦版卡片排版 -->
+            <div class="container d-none d-md-block">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card" data-aos="flip-left">
+                            <img src="image/C2C.png" alt="C2C二手交易圖片" style="width: 150px; height: 150px; margin:0 auto; margin-top: 20px;">
+                            <h3>C2C二手交易</h3>
+                            <p>拾貨寶庫提供專為學生設計的 C2C（個人對個人）二手交易平台，透過學生認證、擔保交易，確保買賣雙方的安全與便利，並支援校內面交與未來物流整合，讓交易更順暢。</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" data-aos="flip-left" data-aos-delay="300">
+                            <img src="image/bigwish.png" alt="許願池圖片" style="width: 150px; height: 150px; margin:0 auto;">
+                            <h3 style="margin-top: 40px;">許願池</h3>
+                            <p>買家可在許願池提交自己想要的商品，當有賣家上架相符商品時，系統會自動通知，提高購買成功率，也讓賣家能夠更精準地提供市場需求商品。</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" data-aos="flip-left" data-aos-delay="500">
+                            <img src="image/bigdiamond.png" alt="會員優惠及服務圖片" style="width: 150px; margin:0 auto;margin-top: 30px;">
+                            <h3>會員優惠及服務</h3>
+                            <h4>每月 $100 會員方案，享有：</h4>
+                            <ul class="list-unstyled">
+                                <li><img src="../image/Diamond.png" alt="">
+                                專屬會員標章，提升賣場可信度</li>
+                                <li><img src="../image/top.png" alt=""> 商品置頂功能，提高曝光機會</li>
+                                <li><img src="../image/noad.png" alt=""> 去除廣告，瀏覽更流暢</li>
+                                <li><img src="../image/birth.png" alt=""> 生日購物金，讓消費更划算</li>
+                                <li><img src="../image/lucky.png" alt=""> 專屬抽獎活動，獲得驚喜好禮</li>
+                                <li><img src="../image/leaf.png" alt=""> 部分收益捐贈環保公益，支持永續發展</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card" data-aos="flip-left" data-aos-delay="700">
+                            <img src="image/bigmystery.png" alt="神秘箱圖片" style="width: 150px; height: 150px; margin:0 auto;margin-top: 20px;">
+                            <h3>神秘箱</h3>
+                            <p>拾貨寶庫的「神祕箱」是一項訂閱制驚喜禮盒，每月為會員寄送全新或二手商品，讓用戶以優惠價格獲得高價值的驚喜商品。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 手機版幻燈片 -->
+            <div id="carouselExample" class="carousel slide d-block d-md-none" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                <div class="card">
+                    <img src="image/C2C.png" alt="C2C二手交易圖片" style="width: 150px; height: 150px; margin:0 auto; margin-top: 20px;">
+                    <h3>C2C二手交易</h3>
+                    <p>拾貨寶庫提供專為學生設計的 C2C（個人對個人）二手交易平台，透過學生認證、擔保交易，確保買賣雙方的安全與便利，並支援校內面交與未來物流整合，讓交易更順暢。</p>
+                </div>
+                </div>
+                <div class="carousel-item">
+                <div class="card">
+                    <img src="image/bigwish.png" alt="許願池圖片" style="width: 150px; height: 150px; margin:0 auto;">
+                    <h3 style="margin-top: 40px;">許願池</h3>
+                    <p>買家可在許願池提交自己想要的商品，當有賣家上架相符商品時，系統會自動通知，提高購買成功率，也讓賣家能夠更精準地提供市場需求商品。</p>
+                </div>
+                </div>
+                <div class="carousel-item">
+                <div class="card">
+                    <img src="image/bigdiamond.png" alt="會員優惠及服務圖片" style="width: 150px; margin:0 auto;margin-top: 30px;">
+                    <h3>會員優惠及服務</h3>
+                    <h4>每月 $100 會員方案，享有：</h4>
+                    <ul class="list-unstyled">
+                        <li><img src="../image/Diamond.png" alt="">
+                        專屬會員標章，提升賣場可信度</li>
+                        <li><img src="../image/top.png" alt=""> 商品置頂功能，提高曝光機會</li>
+                        <li><img src="../image/noad.png" alt=""> 去除廣告，瀏覽更流暢</li>
+                        <li><img src="../image/birth.png" alt=""> 生日購物金，讓消費更划算</li>
+                        <li><img src="../image/lucky.png" alt=""> 專屬抽獎活動，獲得驚喜好禮</li>
+                        <li><img src="../image/leaf.png" alt=""> 部分收益捐贈環保公益，支持永續發展</li>
+                    </ul>
+                </div>
+                </div>
+                <div class="carousel-item">
+                <div class="card phoneheight">
+                    <img src="image/bigmystery.png" alt="神秘箱圖片" style="width: 150px; height: 150px; margin:0 auto;margin-top: 20px;">
+                    <h3>神秘箱</h3>
+                    <p>拾貨寶庫的「神祕箱」是一項訂閱制驚喜禮盒，每月為會員寄送全新或二手商品，讓用戶以優惠價格獲得高價值的驚喜商品。</p>
+                </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+            </div>
+        </section>
+        <div class="footer" data-aos="fade-up">
+            <div class="container">
+                <div class="row" style="padding-bottom: 30px;">
+                    <div class="col-md-4" style="padding-left: 30px;">
+                        <h3>聯絡我們</h3>
+                        <p>電子郵件：
+                            <a href="mailto:treasurehub@gmail.com">
+                                treasurehub@gmail.com
+                            </a>
+                        </p>
+                        <p>電話：123-456-7890</p>
+                        <p>地址：台中市南區建國北路123號</p>
+                    </div>
+                    <div class="col-md-4" style="padding-left: 30px;">
+                        <h3>關於我們</h3>
+                        <p>一個專為大學生打造的二手商場、資訊交易整合平台</p>
+                    </div>
+                    <div class="col-md-4" style="padding-left: 30px;"> 
+                        <h3>社交媒體</h3>
+                        <p class="d-flex">
+                            <a href="https://www.facebook.com" target="_blank"><i class="fa-brands fa-facebook" style="font-size: 1.6rem; padding-right: 18px;"></i></a><br>
+                            <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 1.6rem; padding-right: 18px;"></i></a><br>
+                            <a href="#" target="_blank"><i class="fa-brands fa-line" style="font-size: 1.6rem;"></i></a>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <p>Copyright&copy; 2025拾貨寶庫｜All Rights Reserved.</p>
+                        <div class="footer-row d-md-flex justify-content-center d-none">
+                            <li><a href="introduce.html">關於我們</a></li>
+                            <li><a href="questions.html">常見問題</a></li>
+                            <li><a href="communication.html">客服諮詢</a></li>
+                            <li><a href="policy.html">隱私政策</a></li>
+                            <li><a href="#">使用條款</a></li>
+                            <li><a href="#">退換貨政策</a></li>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
     <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
     <script src="bootstrap_jQuery-demo/js/bootstrap.min.js"></script>
     <!-- 放在 body 結尾或 head 中 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script src="newhome.js"></script>
 </body>
 </html>

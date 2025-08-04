@@ -38,3 +38,21 @@ document.addEventListener("DOMContentLoaded", () => {
         observer.observe(target); // 滑動進入時才執行動畫
     }
 });
+window.onload = function() {
+// 當頁面載入完畢後隱藏載入動畫，顯示內容
+var loader = document.getElementById('loader');
+var content = document.getElementById('contentofnewhome');
+if (loader && content) {
+  loader.style.setProperty('display', 'none', 'important');
+  content.style.setProperty('display', 'block', 'important');
+  AOS.init({
+        disable: false,     // ✅ 手機也開啟動畫
+        duration: 2000,      // ✅ 動畫時間
+        once: false,        // ✅ 是否只播放一次
+        offset: 0           // ✅ 滑到一進畫面就觸發
+      });
+
+      // 3. 刷新 AOS 確保載入後的內容有動畫
+      AOS.refresh();
+}
+};
