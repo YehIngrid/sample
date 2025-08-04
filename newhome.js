@@ -47,7 +47,7 @@ if (loader && content) {
   content.style.setProperty('display', 'block', 'important');
   AOS.init({
         disable: false,     // ✅ 手機也開啟動畫
-        duration: 2000,      // ✅ 動畫時間
+        duration: 1000,      // ✅ 動畫時間
         once: false,        // ✅ 是否只播放一次
         offset: 0           // ✅ 滑到一進畫面就觸發
       });
