@@ -46,8 +46,7 @@ if (loader && content) {
   loader.style.setProperty('display', 'none', 'important');
   content.style.setProperty('display', 'block', 'important');
   AOS.init({
-        disable: false,     // ✅ 手機也開啟動畫
-        duration: 1000,      // ✅ 動畫時間
+        disable: false,     // ✅ 手機也開啟動畫     // ✅ 動畫時間
         once: false,        // ✅ 是否只播放一次
         offset: 0           // ✅ 滑到一進畫面就觸發
       });
@@ -56,3 +55,11 @@ if (loader && content) {
       AOS.refresh();
 }
 };
+function scrollCards(direction) {
+const container = document.getElementById('cardContainer');
+const cardWidth = container.querySelector('.cardofscroll').offsetWidth + 16; // 卡片寬＋間距
+container.scrollBy({
+    left: direction * cardWidth,
+    behavior: 'smooth'
+});
+}

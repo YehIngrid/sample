@@ -165,9 +165,9 @@ button:hover {
     background-color: #fff;
     height: 100vh;
 }
-section {
+/* section {
     min-height: 90vh;
-}
+} */
 .halfsection {
     padding: 2.4rem;
 }
@@ -214,6 +214,7 @@ section {
     padding-left: 2rem;
     padding-right: 2rem;
     padding-top: 4rem;
+    padding-bottom: 4rem;
     background-color: #004b97;
 }
 .trade {
@@ -237,8 +238,8 @@ section {
 .nback {
     background-color: #FFC857;
     padding: 10px 16px;
-    border-radius: 30px;
-    max-width: 370px;
+    border-radius: 10px;
+    min-width: 360px;
 }
 .service {
     background-color: #fff;
@@ -309,6 +310,67 @@ section {
     text-decoration: none;
     font-size: 0.7rem;
 }
+.scroll-wrapper {
+position: relative;
+width: 75%;
+margin: 0 auto;
+padding: 40px 80px;
+}
+
+.card-scroll-container {
+display: flex;
+overflow-x: auto;
+gap: 16px;
+scroll-behavior: smooth;
+scrollbar-width: none;
+}
+
+.card-scroll-container::-webkit-scrollbar {
+display: none;
+}
+
+.cardofscroll {
+flex: 0 0 350px;
+background: #fff;
+padding: 20px;
+border-radius: 12px;
+scroll-snap-align: start;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+transition: transform 0.3s ease;
+}
+
+.card:hover {
+transform: scale(1.05);
+}
+
+.scroll-btn {
+position: absolute;
+top: 50%;
+transform: translateY(-50%);
+z-index: 10;
+background: #4D81B7;
+color: white;
+border: none;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+cursor: pointer;
+box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.scroll-left {
+left: 0;
+}
+
+.scroll-right {
+right: 0;
+}
+
+@media (max-width: 768px) {
+.scroll-btn {
+    display: none;
+}
+}
 @media screen and (max-width: 768px) {
     .titlecenter {
         padding-bottom: 5rem;
@@ -337,9 +399,9 @@ section {
         justify-content: center;
         background-color: #f0f6fd;
     }
-        .runnumimg {
-        width: 200px;
-        height: 200px;
+    .runnumimg {
+    width: 200px;
+    height: 200px;
     }
     .phonemargin {
         padding-bottom: 1rem;
