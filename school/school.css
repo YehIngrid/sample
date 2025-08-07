@@ -1,0 +1,31 @@
+.footer {
+    background-color: #004b97;
+    color: white;
+    padding: 2rem;
+    margin-top: 20vh;
+    padding-bottom: 10px;
+    font-size:1rem;
+}
+.footer h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #f0f6fd;
+}
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+.footer-row {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+.footer-row li {
+    margin: 0 10px;
+}
+.footer-row li a {
+    color: white;
+    text-decoration: none;
+    font-size: 0.8rem;
+}

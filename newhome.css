@@ -4,6 +4,7 @@
 html, body {
   overflow-x: hidden;
   width: 100%;
+  scroll-behavior: smooth;
 }
 
 #loader {
@@ -82,12 +83,39 @@ border: 1.5px solid #fff
         transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
     }
 }
+.scroll-down {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    animation: float 2s infinite;
+}
 
+.scroll-down svg {
+    width: 40px;
+    height: 40px;
+    fill: #4D81B7; /* 你的主題色 */
+}
+
+@keyframes float {
+    0%, 100% {
+    transform: translate(-50%, 0px);
+    }
+    50% {
+    transform: translate(-50%, 10px);
+    }
+}
 .bg-light {
     background-color: transparent !important;
 }
 .container-fluid {
     --bs-gutter-x: 2rem !important;
+}
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 .picture {
     height: 39px;

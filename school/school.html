@@ -25,6 +25,92 @@
     <link rel="stylesheet" href="school.css">
 </head>
 <body>
-    
+    <!-- TODO: 這是校園攻略站的首頁，請在此處添加相關內容。 -->
+    <div class="header">
+        <!-- 第一層：logo + 搜尋 + 登入 -->
+        <nav class="navbar navbar-light bg-light sticky-top">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <div class="left d-flex align-items-center">
+                    <!-- Logo 區 -->
+                    <a class="navbar-brand d-flex align-items-center" href="newhome.html">
+                        <img src="../webP/treasurehub.webp" alt="拾貨寶庫 Logo" class="picture me-2" style="height: 40px;">
+                        <img src="../svg/treasurehubblack.svg" alt="treasure hub 校園攻略站" style="height: 24px;">
+                    </a>
+                    <!-- 搜尋按鈕 -->
+                    <form class="d-flex">
+                        <!-- <input class="form-control me-2" type="search" placeholder="搜尋商品" aria-label="Search"> -->
+                        <button class="btn btn-outline-success" type="submit">
+                            <img src="../svg/searchiconblack.svg" alt="搜尋" style="height: 20px;">
+                        </button>
+                    </form>
+                </div>
+            <!-- 登入圖示 -->
+            <a class="nav-link" href="../account/account.html">
+                <img src="../svg/login.svg" alt="登入">
+            </a>
+            </div>
+        </nav>
+
+        <!-- 第二層：主要導覽列（可折疊） -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-top border-bottom">
+            <div class="container-fluid">
+                <!-- 展開按鈕（手機版） -->
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- 導覽項目 -->
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="newhome.html">首頁</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">購物商場</a></li>
+                        <li class="nav-item"><a class="nav-link" href="introduce.html">關於我們</a></li>
+                        <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
+                        <li class="nav-item"><a class="nav-link" href="communication.html">客服諮詢</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- TODO: content -->
+    <div class="contentofschool"></div>
+    <div class="footer">
+        <div class="container" >
+            <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
+                <div class="col-md-4" style="padding-left: 30px;">
+                    <h3>聯絡我們</h3>
+                    <p>電子郵件：
+                        <a href="mailto:treasurehub@gmail.com">
+                            treasurehub@gmail.com
+                        </a>
+                    </p>
+                </div>
+                <div class="col-md-4" style="padding-left: 30px;">
+                    <h3>關於我們</h3>
+                    <p>一個專為大學生打造的二手商場、校園商機、資訊交易整合平台</p>
+                </div>
+                <div class="col-md-4" style="padding-left: 30px;"> 
+                    <h3>社交媒體</h3>
+                    <p class="d-flex">
+                        <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 1.6rem; padding-right: 18px;"></i></a><br>
+                        <a href="#" target="_blank"><i class="fa-brands fa-line" style="font-size: 1.6rem;"></i></a>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <p>Copyright&copy; 2025拾貨寶庫｜All Rights Reserved.</p>
+                    <div class="footer-row d-md-flex justify-content-center d-none">
+                        <li><a href="introduce.html">關於我們</a></li>
+                        <li><a href="questions.html">常見問題</a></li>
+                        <li><a href="communication.html">客服諮詢</a></li>
+                        <li><a href="policy.html">隱私政策</a></li>
+                        <li><a href="#">使用條款</a></li>
+                        <li><a href="#">退換貨政策</a></li>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
