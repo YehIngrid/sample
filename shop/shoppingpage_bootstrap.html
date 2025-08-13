@@ -27,7 +27,7 @@
     <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB_circular_icon.ico">
     <link rel="stylesheet" href="shoppingpage_bootstrap.css">
-    <link rel="stylesheet" href="demo.css">
+    <link rel="stylesheet" href="../demo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -36,7 +36,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     <!-- script部分 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
@@ -64,18 +63,18 @@
         
             <!-- (A) LOGO 放在最左邊 -->
             <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
-              <object type="image/svg+xml" data="svg/texttitle.svg" class="logoo" style="padding-left:4px;margin-top:4px"></object>
+              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" class="logo">
             </a>
         
             <!-- (B) 桌機版導覽選單 -->
             <div class="d-none d-lg-flex">
               <ul class="navbar-nav" >
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="home.html">首頁</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="news.html">最新資訊</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="shoppingpage_bootstrap.html">商品分類</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="questions.html">常見問題</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="introduce.html">團隊介紹</a></li>
-                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="communication.html">客服諮詢</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
+                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
               </ul>
             </div>
         
@@ -90,11 +89,12 @@
               </div>
               
               <div class="login">
-                <a id="username" class="username" href="person.html"></a>
-                <a class="navbar-brand" href="account.html" id="authButton">登入</a>
+                <a id="username" class="username" href="../person/person.html"></a>
+                <!-- TODO 登入登出id -->
+                <a class="navbar-brand" href="../account/account.html" id="authButton">登入</a>
               </div>
               <a class="nav-link specialpadding ms-2" href="shoppingcart.html">
-                <img src="../svg/shoppingcart.svg" alt="購物車">
+                <img src="../webP/shoppingcart.webp" alt="購物車">
               </a>
             </div>
           </div>
@@ -106,13 +106,13 @@
             <!-- 手機版：漢堡選單按鈕放最左邊 -->
             <button class="navbar-toggler me-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon">
-                <img src="../svg/navbar.svg" alt="手機版選單">
+                <img src="../webP/navbar.webp" alt="手機版選單">
               </span>
             </button>
             <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
               <input class="form-control me-2" style="max-width: 730px;" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
               <button class="btn" type="submit">
-                <img src="../svg/searchicon.svg" alt="點擊搜尋">
+                <img src="../webP/searchicon.webp" alt="點擊搜尋">
               </button>
             </form>
           </div>
@@ -120,19 +120,19 @@
           <!-- 手機版導覽選單展開內容 -->
           <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item"><a class="nav-link" href="home.html">首頁</a></li>
-              <li class="nav-item"><a class="nav-link" href="news.html">最新資訊</a></li>
-              <li class="nav-item"><a class="nav-link" href="shoppingpage_bootstrap.html">商品分類</a></li>
-              <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
-              <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
-              <li class="nav-item specialpadding"><a class="nav-link" href="communication.html">客服諮詢</a></li>
+              <li class="nav-item"><a class="nav-link" style="color: #383838;" href="newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="shoppingpage_bootstrap.html">商品分類</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
+                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
           </div>
         </div>
         
 
       <a href="#" class="talk" id="talkInterface">
-        <img src="../svg/talk.svg" alt="聊天室">
+        <img src="../webP/talk.webp" alt="聊天室">
       </a>
 <!-- TODO:聊天室 -->
         <div class="chathome" id="chatHome">
@@ -187,7 +187,7 @@
           <div class="chatHeader d-flex">
             <div class="d-flex">
               <div class="backtalk" style="margin-right: 10px;" id="backToHome">
-                <img src="../svg/backtalk.svg" alt="返回">
+                <img src="../webP/backtalk.webp" alt="返回">
               </div>
               <!-- 姓名 -->
               <div class="sellerName">
@@ -196,7 +196,7 @@
             </div>
             <div class="d-flex">
               <div class="set" style="margin-right: 7px;">
-                <img src="../svg/else.svg" alt="其他">
+                <img src="../webP/else.webp" alt="其他">
               </div>
             </div>
           </div>
@@ -209,11 +209,11 @@
           </div>
           <div class="inputArea">
             <button class="sendother">
-              <img src="../svg/sendother.svg" alt="傳送圖片等">
+              <img src="../webP/sendother.webp" alt="傳送圖片等">
             </button>
             <input type="text" placeholder="輸入訊息..." class="inputMessage" id="messageInput">
             <button class="sendButton" id="sendbtn">
-              <img src="../svg/sendM.svg" alt="傳送">
+              <img src="../webP/sendM.webp" alt="傳送">
             </button>
           </div>
         </div>
@@ -236,30 +236,30 @@
       <div class="carousel-track">
         <!-- 第一個元素：複製的最後一張 -->
         <div class="slide">
-          <img src="../svg/articlead.svg" alt="廣告 5">
+          <img src="../webP/articlead.webp" alt="廣告 5">
         </div>
         <!-- 原始幻燈片順序 -->
         <div class="slide">
-          <img src="../svg/ad.svg" alt="廣告 1">
+          <img src="../webP/ad.webp" alt="廣告 1">
         </div>
         <div class="slide">
-          <img src="../svg/cheat.svg" alt="廣告 2">
+          <img src="../webP/cheat.webp" alt="廣告 2">
         </div>
         <div class="slide">
-          <img src="https://github.com/YehIngrid/sample/blob/main/image/earth.png?raw=true" alt="廣告 3">
+          <img src="../webP/earth.webp" alt="廣告 3">
         </div>
         <div class="slide">
           <img src="../webP/廣告設計頁正式版.webp" alt="廣告 5">
         </div>
         <div class="slide">
-          <img src="https://github.com/YehIngrid/sample/blob/main/image/coupon.png?raw=true" alt="廣告 4">
+          <img src="../webP/coupon.webp" alt="廣告 4">
         </div>
         <div class="slide">
-          <img src="../svg/articlead.svg" alt="廣告 5">
+          <img src="../webP/articlead.webp" alt="廣告 5">
         </div>
         <!-- 最後一個元素：複製的第一張 -->
         <div class="slide">
-          <img src="../svg/ad.svg" alt="廣告 1">
+          <img src="../webP/ad.webp" alt="廣告 1">
         </div>
       </div>
       <!-- 左右箭頭 -->
@@ -281,42 +281,42 @@
         <ul>
             <li>
               <button id="sellerbtn">
-                <img src="../svg/seller.svg" alt="賣家專區">
+                <img src="../webP/seller.webp" alt="賣家專區">
               </button>賣家專區
             </li>
             <li>
               <button id="wishpoolbtn">
-                <img src="../svg/wish.svg" alt="許願池專區">
+                <img src="../webP/wish.webp" alt="許願池專區">
               </button>許願池
             </li>
             <li>
               <button id="memberbtn">
-                <img src="../svg/Diamond.svg" alt="會員專區">
+                <img src="../webP/Diamond.webp" alt="會員專區">
               </button>會員專區
             </li>
             <li>
               <button id="mysterybtn">
-                <img src="../svg/mystery.svg" alt="神秘箱">
+                <img src="../webP/mystery.webp" alt="神秘箱">
               </button>神秘箱
             </li>
             <li>
               <button id="everydaybtn">
-                <img src="../svg/everyday.svg" alt="每日登入">
+                <img src="../webP/everyday.webp" alt="每日登入">
               </button>每日登入
             </li>
             <li>
               <button id="donatebtn">
-                <img src="../svg/donate.svg" alt="我要捐款">
+                <img src="../webP/donate.webp" alt="我要捐款">
               </button>我要捐款
             </li>
             <li>
               <button id="campusbtn">
-                <img src="../svg/article.svg" alt="校園攻略站">
+                <img src="../webP/article.webp" alt="校園攻略站">
               </button>校園攻略站
             </li>
             <li>
               <button>
-                <img src="../svg/cooperate.svg" alt="學力銀行">
+                <img src="../webP/cooperate.webp" alt="學力銀行">
               </button>學力銀行
             </li>
         </ul>
@@ -335,7 +335,7 @@
     <div class="d-flex align-items-center justify-content-center my-4">
       <!-- 左箭頭按鈕 -->
       <button class="btn me-2" id="prevBtn">
-        <img src="../svg/LEFT.svg" alt="左箭頭">
+        <img src="../webP/LEFT.webp" alt="左箭頭">
       </button>
       <!-- 可水平捲動的容器 -->
       <div class="scroll-container flex-nowrap" id="scrollContainer">
@@ -343,7 +343,7 @@
         <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
-              <img src="../svg/bike.svg" alt="腳踏車" class="card-img-top">
+              <img src="../webP/bike.webp" alt="腳踏車" class="card-img-top">
               <div class="card-body p-2">
                 <p class="card-text mb-0">腳踏車</p>
               </div>
@@ -353,7 +353,7 @@
         <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
-              <img src="../svg/book.svg" alt="原文書/書籍類" class="card-img-top">
+              <img src="../webP/book.webp" alt="原文書/書籍類" class="card-img-top">
               <div class="card-body p-2">
                 <p class="card-text mb-0">原文書/書籍類</p>
               </div>
@@ -363,7 +363,7 @@
         <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
-              <img src="../svg/mobile.svg" alt="3C產品" class="card-img-top">
+              <img src="../webP/mobile.webp" alt="3C產品" class="card-img-top">
               <div class="card-body p-2">
                 <p class="card-text mb-0">3C產品</p>
               </div>
@@ -373,7 +373,7 @@
         <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
-              <img src="../svg/sports.svg" alt="運動用品" class="card-img-top">
+              <img src="../webP/sports.webp" alt="運動用品" class="card-img-top">
               <div class="card-body p-2">
                 <p class="card-text mb-0">運動用品</p>
               </div>
@@ -383,7 +383,7 @@
         <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
-              <img src="../svg/clothes.svg" alt="衣物" class="card-img-top">
+              <img src="../webP/clothes.webp" alt="衣物" class="card-img-top">
               <div class="card-body p-2">
                 <p class="card-text mb-0">衣物</p>
               </div>
@@ -393,7 +393,7 @@
         <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
-              <img src="../svg/bag.svg" alt="包包/帆布袋" class="card-img-top">
+              <img src="../webP/bag.webp" alt="包包/帆布袋" class="card-img-top">
               <div class="card-body p-2">
                 <p class="card-text mb-0">包包/帆布袋</p>
               </div>
@@ -403,7 +403,7 @@
         <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
-              <img src="../svg/life.svg" alt="宿舍用品" class="card-img-top">
+              <img src="../webP/life.webp" alt="宿舍用品" class="card-img-top">
               <div class="card-body p-2">
                 <p class="card-text mb-0">宿舍用品</p>
               </div>
@@ -413,7 +413,7 @@
         <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
-              <img src="../svg/food.svg" alt="零食/食物" class="card-img-top">
+              <img src="../webP/food.webp" alt="零食/食物" class="card-img-top">
               <div class="card-body p-2">
                 <p class="card-text mb-0">零食/食物</p>
               </div>
@@ -424,19 +424,19 @@
       </div>
       <!-- 右箭頭按鈕 -->
       <button class="btn ms-2" id="nextBtn">
-        <img src="../svg/RIGHT.svg" alt="右箭頭">
+        <img src="../webP/RIGHT.webp" alt="右箭頭">
       </button>
     </div>
   </div>
   <!-- TODO: 熱賣區-->
   <div class="top">
-    <img src="../svg/toptop.svg" alt="熱賣專區">
+    <img src="../webP/toptop.webp" alt="熱賣專區">
   </div>
   <div class="topnext">
-    <img src="../svg/topunder.svg" alt="分隔線">
+    <img src="../webP/topunder.webp" alt="分隔線">
   </div>
   <div class="newsell">
-    <img src="../svg/new.svg" alt="最新上架">
+    <img src="../webP/new.webp" alt="最新上架">
   </div>
   <!-- TODO 商品卡片 -->
 
@@ -475,7 +475,7 @@
     </ul>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <img src="../svg/adseller.svg" alt="" class="adseller">
+        <img src="../webP/adseller.webp" alt="" class="adseller">
         <hr>
         <div class="contentSeller">
           <!-- TODO導覽頁 -->
@@ -694,7 +694,7 @@
 <!-- TODO:許願池 -->
 <section class="wishpool" id="wishpool" style="display: none;">
   <div style=" margin: 0 auto;">
-    <img src="../svg/adwishpool.svg" alt="" class="adwishpool_">
+    <img src="../webP/adwishpool.webp" alt="" class="adwishpool_">
     <hr>
   </div>
     <div class="icon-button" id="back-btn1">Back</div>
@@ -722,17 +722,17 @@
 </section>
 <!-- TODO member -->
 <section class="member" id="member" style="display: none;">
-  <img src="../svg/admember.svg" class="admember_" alt="" style="margin: 0 auto; margin-top: 20px;">
+  <img src="../webP/admember.webp" class="admember_" alt="" style="margin: 0 auto; margin-top: 20px;">
   <div class="membercontent" style="width:86vw; margin: 0 auto;">
     
-    <img src="../svg/member.svg" alt="" class="d-block d-lg-none" style="margin: 0 auto;">
+    <img src="../webP/member.webp" alt="" class="d-block d-lg-none" style="margin: 0 auto;">
     <hr>
     <div class="d-block d-lg-flex justify-content-between">
       <div class="icon-button" id="back-btn2" style="margin-bottom: 10px;">Back</div>
       <div class="div">
         <!-- TODO 未解決：排版問題 -->
         <button style="border: none; background-color: transparent;">
-          <img src="../svg/memberbtn.svg" alt="立即加入拾貨寶庫會員">
+          <img src="../webP/memberbtn.webp" alt="立即加入拾貨寶庫會員">
         </button>
       </div>
     </div>
@@ -1167,7 +1167,7 @@ document.addEventListener('visibilitychange', () => {
 </section>
 <!-- TODO 校園攻略站 -->
 <section class="campus" id="campus" style="display: none;">
-  <img src="../svg/newschoolad.svg" alt="" style="width: 100vw;">
+  <img src="../webP/newschoolad.webp" alt="" style="width: 100vw;">
   <div class="icon-button" id="back-btn6">Back</div>
   <div class="campuscontent">
     <div class="thoughts">
@@ -1190,10 +1190,10 @@ document.addEventListener('visibilitychange', () => {
 </div> 
   <section class="footer">
     <div class="footer-row d-flex justify-content-center">
-          <li><a href="introduce.html">關於我們｜</a></li>
-          <li><a href="questions.html">常見問題｜</a></li>
-          <li><a href="communication.html">客服諮詢｜</a></li>
-          <li><a href="policy.html">隱私政策｜</a></li>
+          <li><a href="../introduce/introduce.html">關於我們｜</a></li>
+          <li><a href="../questions/questions.html">常見問題｜</a></li>
+          <li><a href="../communication/communication.html">客服諮詢｜</a></li>
+          <li><a href="../policy/policy.html">隱私政策｜</a></li>
           <li><a href="#">使用條款｜</a></li>
           <li><a href="#">退換貨政策</a></li>
           <li class="nav-item line">
@@ -1256,9 +1256,10 @@ document.addEventListener('visibilitychange', () => {
 </script>
 
     <!-- script部分-->
-    <script src="demo.js"></script>
+    <script src="../demo.js"></script>
     <script src="shoppingpage_bootstrap.js"></script>
-    <script src="questions.js"></script>
-    <script src="BackendService.js"></script>
+    <script src="../questions/questions.js"></script>
+    <script src="../BackendService.js"></script>
+    <script src="../LoginService.js"></script>
 </body>
 </html>

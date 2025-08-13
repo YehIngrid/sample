@@ -1,3 +1,14 @@
+.navbar {
+    --bs-navbar-padding-y: 0rem;
+}
+.bg-light {
+    background-color: #fbfbfb !important;
+}
+.nav-link {
+    color: #4D81B7 !important;
+    font-size: 1.1rem;
+    font-family: 'Zen Old Mincho', serif;
+}
 .footer {
     background-color: #004b97;
     color: white;

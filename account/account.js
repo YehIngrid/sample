@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let backendService = new BackendService();
   backendService.test(); // 測試後端服務是否正常
   backendService.signup(obj, 
-    () => {
+    (response) => {
       document.getElementById('loader-wrapper').style.display = 'none';
       console.log("回傳資料：", response.data);
       Swal.fire({
@@ -175,6 +175,7 @@ function callLogin() {
       Swal.fire({
         icon: "success",
         title: "登入成功",
+        text: `歡迎回來，${data.username}！`,
         showConfirmButton: false,
         timer: 1800
       });

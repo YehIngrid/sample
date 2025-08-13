@@ -45,38 +45,38 @@ window.onload = function() {
   //auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
   
   // 頁面載入時，先根據 localStorage 設定按鈕初始狀態
-  $(document).ready(function(){
-    console.log("文件已加載完成！");
-    const send = document.getElementById('send');
-    const authButton = document.getElementById('authButton');
-    const storedStatus = localStorage.getItem("isLoggedIn");
+  // $(document).ready(function(){
+  //   console.log("文件已加載完成！");
+  //   const send = document.getElementById('send');
+  //   const authButton = document.getElementById('authButton');
+  //   const storedStatus = localStorage.getItem("isLoggedIn");
     
-    if (storedStatus === "true") {
-      authButton.textContent = "登出";
-      authButton.onclick = function(e) {
-        e.preventDefault();
-        callLogout();
-      };
-    } else {
-      authButton.textContent = "登入";
-      authButton.onclick = function(e) {
-        $(location).attr('href', 'https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/account.html');
-      };
-    }
+  //   if (storedStatus === "true") {
+  //     authButton.textContent = "登出";
+  //     authButton.onclick = function(e) {
+  //       e.preventDefault();
+  //       callLogout();
+  //     };
+  //   } else {
+  //     authButton.textContent = "登入";
+  //     authButton.onclick = function(e) {
+  //       $(location).attr('href', 'https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/account.html');
+  //     };
+  //   }
     
-    // TODO 綁定 #send 按鈕提交事件，觸發登入
-    $('#send').on('click', function(e){
-      e.preventDefault(); // 攔截表單預設提交
-      console.log("表單已提交！");
-      callLogIn();
-    });
+  //   // TODO 綁定 #send 按鈕提交事件，觸發登入
+  //   $('#send').on('click', function(e){
+  //     e.preventDefault(); // 攔截表單預設提交
+  //     console.log("表單已提交！");
+  //     callLogIn();
+  //   });
     
-    // TODO 綁定 #logoutButton 按鈕提交事件，觸發登出
-    $('#logoutButton').on('click', function(e){
-      e.preventDefault();
-      callLogout();
-    });
-  });
+  //   // TODO 綁定 #logoutButton 按鈕提交事件，觸發登出
+  //   $('#logoutButton').on('click', function(e){
+  //     e.preventDefault();
+  //     callLogout();
+  //   });
+  // });
   
   // auth.onAuthStateChanged(function(user) {
   //   const loginForm = document.getElementById('loginForm');

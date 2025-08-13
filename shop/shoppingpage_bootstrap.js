@@ -1,3 +1,5 @@
+let backendService;
+let loginService;
 
 // //當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 // window.onload = function() {
@@ -62,6 +64,27 @@ window.addEventListener('click', (event) => {
 
 
 document.addEventListener('DOMContentLoaded', function() {
+  backendService = new BackendService();
+  loginService = new LoginService(backendService);
+
+  if (loginService.isLogin()) {
+    Swal.fire({
+      title: "歡迎回來！",
+      text: `你好，${loginService.getCurrentUser().name}！`,
+      icon: "success",
+      confirmButtonText: "繼續" 
+    })
+  } else {
+    Swal.fire({
+      title: "請登入",
+      text: "你尚未登入，請先登入以繼續。",
+      icon: "warning",
+      confirmButtonText: "去登入"
+    }).then(() => {
+      window.location.href = "../account/account.html"; // 導向登入頁面
+    });
+  }
+
   // 確保所有 DOM 元素都已經載入
   const form = document.getElementById('createCommodityForm');
   const openModalBtn = document.getElementById('openModal');
@@ -211,47 +234,47 @@ Swal.fire({
     // ✅ 顯示 loading 遮罩
     loaderOverlay.classList.remove('d-none');
 
-    auth.currentUser.getIdToken()
-      .then((idToken) => {
-        return fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
-          method: 'POST',
-          headers: {
-            'idtoken': idToken
-          },
-          body: formData
-        });
-      })
-      .then(response => {
-        if (response.ok) {
-          Swal.fire({
-            title: "商品上架成功！",
-            text: "請確認首頁商品欄有無您上架的商品",
-            icon: "success"
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // ✅ 使用者按下 OK 後跳轉
-              window.location.href = "shoppingpage_bootstrap.html";
-            }
-          });
-          form.reset();
-        } else {
-          return response.json().then(data => {
-            Swal.fire({
-              title: "Oops...發生錯誤，請稍後再試",
-              text: data.message || 'Failed to create commodity.',
-              icon: "error",
-            })
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Error: ' + error.message);
-      })
-      .finally(() => {
-        // ✅ 隱藏 loading
-        loaderOverlay.classList.add('d-none');
-      });
+    // auth.currentUser.getIdToken()
+    //   .then((idToken) => {
+    //     return fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
+    //       method: 'POST',
+    //       headers: {
+    //         'idtoken': idToken
+    //       },
+    //       body: formData
+    //     });
+    //   })
+    //   .then(response => {
+    //     if (response.ok) {
+    //       Swal.fire({
+    //         title: "商品上架成功！",
+    //         text: "請確認首頁商品欄有無您上架的商品",
+    //         icon: "success"
+    //       }).then((result) => {
+    //         if (result.isConfirmed) {
+    //           // ✅ 使用者按下 OK 後跳轉
+    //           window.location.href = "shoppingpage_bootstrap.html";
+    //         }
+    //       });
+    //       form.reset();
+    //     } else {
+    //       return response.json().then(data => {
+    //         Swal.fire({
+    //           title: "Oops...發生錯誤，請稍後再試",
+    //           text: data.message || 'Failed to create commodity.',
+    //           icon: "error",
+    //         })
+    //       });
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.error('Error:', error);
+    //     alert('Error: ' + error.message);
+    //   })
+    //   .finally(() => {
+    //     // ✅ 隱藏 loading
+    //     loaderOverlay.classList.add('d-none');
+    //   });
   }
 });
 
@@ -515,63 +538,63 @@ let allProducts = [];
 let currentPage = 1;
 const itemsPerPage = 12;
 
-fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
-  .then(res => res.json())
-  .then(result => {
-    allProducts = result.data;
-    renderPage(currentPage);
-    renderPagination();
-    document.body.classList.add('grid-ready');
-  });
+// fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
+//   .then(res => res.json())
+//   .then(result => {
+//     allProducts = result.data;
+//     renderPage(currentPage);
+//     renderPagination();
+//     document.body.classList.add('grid-ready');
+//   });
 
-function renderPage(page) {
-  grid.innerHTML = '';
-  const start = (page - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  const pageItems = allProducts.slice(start, end);
+// function renderPage(page) {
+//   grid.innerHTML = '';
+//   const start = (page - 1) * itemsPerPage;
+//   const end = start + itemsPerPage;
+//   const pageItems = allProducts.slice(start, end);
 
-  pageItems.forEach(product => {
-    const card = document.createElement('div');
-    card.className = 'grid-item';
-    card.dataset.id = product.id;
+//   pageItems.forEach(product => {
+//     const card = document.createElement('div');
+//     card.className = 'grid-item';
+//     card.dataset.id = product.id;
 
-    const imgUrl = product.mainImage?.startsWith('http')
-      ? product.mainImage
-      : `https://store-backend-iota.vercel.app${product.mainImage}`;
-    //TODO:商品分類
-    const categoryMap = {
-      book: '書籍與學籍用品',
-      life: '宿舍與生活用品',
-      student: '學生專用器材',
-      other: '其他',
-      recyle: '環保生活用品',
-      clean: '儲物與收納用品',
-      // ...等等
-    };
-    const neworoldMap = {
-      '-1': '全新',
-      '2': '二手',
-      used: '使用過',
-    };
-    let neworold = neworoldMap[product.neworold] || product.neworold;
-    let category = categoryMap[product.category] || product.category;
-    card.innerHTML = `
-      <img src="${imgUrl}" alt="${product.name}">
-      <div class="card-body">
-        <h5>${product.name || '未命名商品'}</h5>
-        <p>＃${category || '未分類'} ＃${neworold}</p>
-        <p class="price">${product.price || 0}<span> NT$</span></p>
-        <p class="tag">คูปอง ส่วนลด 6%</p>
-      </div>
-    `;
+//     const imgUrl = product.mainImage?.startsWith('http')
+//       ? product.mainImage
+//       : `https://store-backend-iota.vercel.app${product.mainImage}`;
+//     //TODO:商品分類
+//     const categoryMap = {
+//       book: '書籍與學籍用品',
+//       life: '宿舍與生活用品',
+//       student: '學生專用器材',
+//       other: '其他',
+//       recyle: '環保生活用品',
+//       clean: '儲物與收納用品',
+//       // ...等等
+//     };
+//     const neworoldMap = {
+//       '-1': '全新',
+//       '2': '二手',
+//       used: '使用過',
+//     };
+//     let neworold = neworoldMap[product.neworold] || product.neworold;
+//     let category = categoryMap[product.category] || product.category;
+//     card.innerHTML = `
+//       <img src="${imgUrl}" alt="${product.name}">
+//       <div class="card-body">
+//         <h5>${product.name || '未命名商品'}</h5>
+//         <p>＃${category || '未分類'} ＃${neworold}</p>
+//         <p class="price">${product.price || 0}<span> NT$</span></p>
+//         <p class="tag">คูปอง ส่วนลด 6%</p>
+//       </div>
+//     `;
 
-    card.addEventListener('click', () => {
-      window.location.href = `product.html?id=${product.id}`;
-    });
+//     card.addEventListener('click', () => {
+//       window.location.href = `product.html?id=${product.id}`;
+//     });
 
-    grid.appendChild(card);
-  });
-}
+//     grid.appendChild(card);
+//   });
+// }
 
 function renderPagination() {
   pagination.innerHTML = '';
