@@ -45,17 +45,17 @@ mobileSearchIcon.addEventListener('click', function() {
 $(document).ready(function(){
   console.log("文件已加載完成！");
   const send = document.getElementById('send');
-  const authButton = document.getElementById('authButton');
+  const loginornot = document.getElementById('loginornot');
   const storedStatus = localStorage.getItem("isLoggedIn");
   if (storedStatus === "true") {
-    authButton.textContent = "登出";
-    authButton.onclick = function(e) {
+    loginornot.textContent = "登出";
+    loginornot.onclick = function(e) {
       e.preventDefault();
       callLogout();
     };
   } else {
-    authButton.textContent = "登入";
-    authButton.onclick = function(e) {
+    loginornot.textContent = "登入";
+    loginornot.onclick = function(e) {
       $(location).attr('href', 'https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/account.html');
     };
   }
