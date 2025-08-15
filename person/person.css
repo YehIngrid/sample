@@ -1,15 +1,73 @@
-.profile-info {
+.footer {
+    background-color: #004b97;
+    color: white;
+    padding: 2rem;
+    margin-top: 20vh;
+    padding-bottom: 10px;
+    font-size:1.6rem;
+}
+.footer h3 {
+    font-size: 2rem;
+    margin-bottom: 1.2rem;
+    color: #f0f6fd;
+}
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+.footer-row {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+.footer-row li {
+    margin: 0 10px;
+}
+.footer-row li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+.asideicon img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+#mainContent {
+    padding: 20px;
+    /* background-color: #f8f9fa; */
+    border-radius: 8px;
+    margin-bottom: 20px;
+    margin-top: 5vh;
+}
+#profileinfo {
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin: 10px;
   }
-#avatar-img {
+#profileAvatar {
     width: 100px;
     height: 100px;
+    margin: 0 auto;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 10px;
+    margin-top: 20px;
+}
+.editbtn {
+  font-size: 1.6rem; 
+  border: #004b9743 1px solid;
+  background-color: transparent;
+}
+.editbtn:hover {
+  background-color: #004b9743;
+  border: none;
+}
+.list-group-item.active {
+    background-color: #004b97 !important;
+    color: white !important;
 }
   .profile-name {
     font-size: 1.8rem;
@@ -72,16 +130,6 @@
 .profile-info p{
   padding-left: 20px;
   padding-right: 20px;
-}
-#collapseContent{
-  width: 70vw;
-  margin: 0 auto;
-}
-@media (max-width:380px) {
-  #collapseContent{
-    width: 88vw;
-    margin: 0 auto;
-  }
 }
 #arrowButton {
   cursor: pointer;

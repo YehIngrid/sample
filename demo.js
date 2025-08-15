@@ -43,7 +43,7 @@ window.onload = function() {
   
   // 可設定持久性，確保 Firebase 在刷新時保留登入狀態
   //auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-  
+// TODO: 偵測是否已經登入，如果已經登入要顯示登出按鈕，否則顯示登入按鈕
   // 頁面載入時，先根據 localStorage 設定按鈕初始狀態
   // $(document).ready(function(){
   //   console.log("文件已加載完成！");

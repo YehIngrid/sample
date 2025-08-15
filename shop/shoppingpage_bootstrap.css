@@ -426,10 +426,10 @@ ul{
   margin-top: 1px;
   transition: transform 0.4s ease, border 0.4s ease;
 }
-
-.card:hover{
-  scale: 1.01;
-  border: 1px solid rgb(36,182,133);
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border: 1px solid #004b975e !important;
 }
 .more-link {
   opacity: 0;

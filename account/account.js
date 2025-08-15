@@ -175,9 +175,17 @@ function callLogin() {
       Swal.fire({
         icon: "success",
         title: "登入成功",
-        text: `歡迎回來，${data.username}！`,
+        text: `歡迎回來！`,//!越改越錯....破防
         showConfirmButton: false,
         timer: 1800
+      })
+      .then(() => {
+        window.location.href = "../shop/shoppingpage_bootstrap.html"; // 登入成功後跳轉到首頁
+        backendService.getUserData(
+          (response) => {
+          console.log("使用者資料：", response);
+          
+      });
       });
       // TODO: something after login if needed
     },

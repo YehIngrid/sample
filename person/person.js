@@ -8,6 +8,12 @@ window.onload = function() {
     content.style.setProperty('display', 'block', 'important');
   }
   };
+  const profileName = document.getElementById('profileName');
+  const profileInfo = document.getElementById('profileInfo');
+  const profileAvatar = document.getElementById('profileAvatar');
+  console.log("使用者名稱：", localStorage.getItem('username'));
+  console.log("使用者介紹：", localStorage.getItem('intro'));
+  profileName.textContent = localStorage.getItem("username") ||"使用者名稱"; // 替換為實際使用者名稱
   document.getElementById('update-profile').addEventListener('click', async () => {
     const displayName = document.getElementById('display-name').value.trim();
     const photoInput = document.getElementById('photo');
@@ -79,9 +85,22 @@ window.onload = function() {
     }
   });
 
-  document.getElementById('arrowButton').addEventListener('click', function () {
+  document.getElementById('collapsebtn').addEventListener('click', function () {
+    const mainContentArea = document.getElementById('mainContentArea');
+    mainContentArea.classList.toggle('d-none'); // 切換主內容的顯示狀態
     const target = document.getElementById('collapseContent');
-    const bsCollapse = new bootstrap.Collapse(target, {
-      toggle: true  // 點一次開、再點一次關
-    });
+    target.classList.toggle('show'); // 切換折疊內容的顯示狀態
+    const backbtn7 = document.getElementById('back-btn7');
+    if (target.classList.contains('show')) {
+      backbtn7.style.display = 'block'; // 顯示返回按鈕
+    } else {
+      backbtn7.style.display = 'none'; // 隱藏返回按鈕
+    }
+  });
+  document.getElementById('back-btn7').addEventListener('click', function () {
+    const mainContentArea = document.getElementById('mainContentArea');
+    mainContentArea.classList.remove('d-none'); // 顯示主內容
+    const target = document.getElementById('collapseContent');
+    target.classList.remove('show'); // 隱藏折疊內容
+    this.style.display = 'none'; // 隱藏返回按鈕
   });
