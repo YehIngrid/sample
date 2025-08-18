@@ -1,6 +1,6 @@
 class BackendService {
     constructor() {
-        this.baseUrl = 'http://23.146.248.58:3000';
+        this.baseUrl = 'https://23.146.248.58';
     }
     test() {
         console.log('OK');
@@ -8,7 +8,9 @@ class BackendService {
     }
     //在localstorage記住目前是否登入帳號後端，用localstorage記住帳號資訊等
     signup(userData, fnSuccess, fnError) {
-        return axios.post(`${this.baseUrl}/api/account/signup`, userData)
+        return axios.post(`${this.baseUrl}/api/account/signup`, userData, {
+                withCredentials: true
+            })
             .then(function(response) {
                 fnSuccess(response);
             })
@@ -22,13 +24,18 @@ class BackendService {
             });
     }
     login(userData, fnSuccess, fnError) {
-        return axios.post(`${this.baseUrl}/api/account/login`, userData)
+        let _this = this;
+        return axios.post(`${this.baseUrl}/api/account/login`, userData, {
+                withCredentials: true
+            })
             .then(function(response) {
                 let uid = response.data.data.uid;
                 localStorage.setItem('uid', uid); // 儲存使用者ID
                 fnSuccess(response.data);
+                _this.whoami(fnSuccess, fnError);
             })
             .catch(function(error) {
+                console.error(error);
                 fnError("登入失敗");
             });
     }
@@ -51,7 +58,9 @@ class BackendService {
         } else {
         console.log('尚未儲存 UID');
         }
-        return axios.get(`${this.baseUrl}/api/account/${savedUid}`)
+        return axios.get(`${this.baseUrl}/api/account/${savedUid}`, {
+                withCredentials: true
+            })
             .then(function(response) {
                 localStorage.setItem('username', response.data.data.name); 
                 localStorage.setItem('intro', response.data.data.introduction);
@@ -61,12 +70,34 @@ class BackendService {
                 fnError("無法取得使用者資料");
             });
     }
+    updateProfile(userData, fnSuccess, fnError) {
+        let _this = this;
+        return axios.patch(`${this.baseUrl}/api/account/update`, userData, {
+                withCredentials: true
+            })
+            .then(function(response) {
+                fnSuccess(response);
+                // 更新成功後，儲存新的使用者資料到 localStorage
+                _this.getUserData(fnSuccess, fnError);
+            })
+            .catch(function(error) {
+                console.error("更新錯誤：", error);
+                if (error.response?.data?.message == "User not found") {
+                    fnError("使用者不存在");
+                } else {
+                    fnError("更新失敗，請稍後再試");
+                }
+            });
+    }
     whoami(fnSuccess, fnError) {
-        return axios.get(`${this.baseUrl}/api/account/whoami`)
+        return axios.get(`${this.baseUrl}/api/whoami`, {
+                withCredentials: true
+            })
             .then(function(response) {
                 fnSuccess(response.data);
             })
             .catch(function(error) {
+                console.error(error);
                 fnError("無法取得使用者資訊");
             });
     }

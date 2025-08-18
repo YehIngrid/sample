@@ -62,28 +62,7 @@
             <!-- (C) 右側：登入 + 購物車 -->
             <div class="d-flex align-items-center ms-auto">
               <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
-                <svg width="42" height="30" viewBox="0 0 42 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <ellipse cx="14.2979" cy="27.3529" rx="2.68085" ry="2.64706" fill="#0D779D"/>
-                  <ellipse cx="25.0213" cy="27.3529" rx="2.68085" ry="2.64706" fill="url(#paint0_linear_8_75)" fill-opacity="0.8"/>
-                  <rect width="28.0279" height="11.9012" transform="matrix(0.999999 -0.00105411 0.00107235 0.999999 7.89775 6.60024)" fill="url(#paint1_linear_8_75)" fill-opacity="0.8"/>
-                  <rect x="8.93617" y="21.1765" width="26.8085" height="2.64706" rx="1" fill="#0D779D"/>
-                  <rect width="2.63091" height="23.3531" rx="1" transform="matrix(0.989465 -0.144771 0.146762 0.989172 5.54836 0.460345)" fill="#0D779D"/>
-                  <rect x="0.893616" width="6.25532" height="2.64706" rx="1" fill="#0D779D"/>
-                  <rect width="7.05514" height="20.4683" transform="matrix(0.976289 0.216471 -0.220037 0.975492 33.9931 4.11319)" fill="white"/>
-                  <path d="M9.82979 12.7941H32.617" stroke="white"/>
-                  <line x1="16.5851" y1="5.29412" x2="16.5851" y2="20.2941" stroke="white"/>
-                  <rect width="0.893617" height="15" transform="translate(23.234 5.29412)" fill="white"/>
-                  <defs>
-                  <linearGradient id="paint0_linear_8_75" x1="27.2553" y1="29.5588" x2="23.285" y2="25.5379" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#004B97"/>
-                  <stop offset="1" stop-color="#24B685" stop-opacity="0.8"/>
-                  </linearGradient>
-                  <linearGradient id="paint1_linear_8_75" x1="28.0279" y1="5.95059" x2="2.03464e-09" y2="5.95059" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#004B97" stop-opacity="0.8"/>
-                  <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
-                  </linearGradient>
-                  </defs>
-                  </svg>
+                <img src="../webP/shoppingcart.webp" class="d-none d-lg-block" alt="購物車">
               </a>
             </div>
           </div>
@@ -127,8 +106,8 @@
           <div class="card profile-card shadow-sm mb-5">
             <div class="card-body text-center">
               <img src="../image/default-avatar.png" alt="頭像" class="avatar mb-2" id="profileAvatar">
-              <div class="name h2 mb-0" id="profileName"></div>
-              <div class="role" id="profileinfo">Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam id officiis aperiam culpa quaerat reiciendis mollitia laborum soluta expedita deleniti rerum eveniet ipsum, voluptas fuga quo aliquam libero inventore nihil?</div>
+              <div style="margin-top: 20px; margin-bottom: 20px; font-weight: 600;" class="name h2 mb-0" id="profileName"></div>
+              <div class="h4" id="profileInfo" style="margin: 10px 30px; text-align: start;"></div>
               <div class="d-grid gap-2 mt-3">
                 <a id="collapsebtn" class="btn editbtn">編輯個人資料</a>
               </div>
@@ -143,7 +122,7 @@
               <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
               <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
-              <a class="list-group-item list-group-item-action asideicon" id="loginornot" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
+              <a class="list-group-item list-group-item-action asideicon" id="logout" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
             </div>
           </div>
         </div>
@@ -154,14 +133,14 @@
         <div class="row g-3">
           <div class="col-12">
             <div class="alert alert-primary" role="alert" style="background: rgba(77,129,183,.1); border-color: rgba(77,129,183,.2); color:#18456f;">
-              👋 歡迎回來！這裡是主內容區，放你的儀表板、訂單、通知…等。
+              👋 歡迎來到藏寶閣，這裡可以查看個人資訊、收藏與訊息等。
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="card shadow-sm">
               <div class="card-body">
-                <h5 class="card-title">近期通知</h5>
+                <h4 class="card-title">近期通知</h4>
                 <ul class="list-unstyled mb-0">
                   <li class="mb-2">• 你的商品 <strong>#A1234</strong> 已被加入收藏。</li>
                   <li class="mb-2">• 有人對你的商品發出訊息。</li>
@@ -174,11 +153,23 @@
           <div class="col-md-6">
             <div class="card shadow-sm">
               <div class="card-body">
-                <h5 class="card-title">快速動作</h5>
+                <h4 class="card-title">快速動作</h4>
+                <div class="d-flex flex-wrap gap-3 mt-3">
+                  <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/addmerchandiseicon.svg" style="margin-right: 5px;" alt="新增商品button">新增商品</button>
+                  <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/newarticle.svg" style="margin-right: 5px;" alt="新增好文button">撰寫好文</button>
+                  <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/mycoupon.svg" style="margin-right: 5px;" alt="我的優惠券button">優惠券</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card shadow-sm">
+              <div class="card-body">
                 <div class="d-flex flex-wrap gap-2">
-                  <button class="btn btn-outline-secondary">新增商品</button>
-                  <button class="btn btn-outline-secondary">查看訊息</button>
-                  <button class="btn btn-outline-secondary">優惠券</button>
+                  <div>信譽積分</div>
+                  <div>儲值幣金額</div>
+                  <div>會員資格</div>
                 </div>
               </div>
             </div>
@@ -187,7 +178,7 @@
           <div class="col-12">
             <div class="card shadow-sm">
               <div class="card-body">
-                <h5 class="card-title">範例表格</h5>
+                <h4 class="card-title">我的商品</h4>
                 <div class="table-responsive">
                   <table class="table align-middle">
                     <thead>
@@ -213,6 +204,33 @@
 
         </div>
       </main>
+      <!-- 主內容：右（你給的 main 放這裡） -->
+    <main class="col-12 col-lg-9" id="mainContentProfile">
+      <!-- 編輯區（預設隱藏，顯示時一樣會在右邊） -->
+      <section id="collapseContent" class="collapse">
+        <button id="back-btn7" style="margin-bottom: 30px; cursor: pointer; border: none; background-color: #004b9743; color: #383838; font-size: 1.6rem; padding: 5px 10px; border-radius: 20px;" type="button">Back</button>
+        <p style="font-size: 1.8rem;">個人資料更改區</p>
+
+        <div style="margin-top: 30px; margin-bottom: 30px;">
+          <div class="d-flex align-items-end" style="margin-bottom: 10px;">
+            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
+            <input type="file" id="photo" accept="image/png, image/jpeg" style="border:none; margin-top: 3px;font-size: 13px;">
+          </div>
+
+          <div class="d-flex  justify-content-between align-items-center" style="margin-bottom: 10px;">
+            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">暱稱</p>
+            <input type="text" style="width: 90%; padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
+          </div>
+          
+          <div class="d-flex  justify-content-between align-items-end" style="margin-bottom: 10px;">
+            <p style=" margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">個人簡介</p>
+            <textarea id="bio" placeholder="簡單介紹一下自己吧！(至多100字)" style="width: 90%; display: block;padding: 5px;font-size: 1.4rem;"></textarea>
+          </div>
+          <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
+          <span class="loader" id="loader1" style="display: none;"></span>
+        </div>
+      </section>
+    </main>
     </div>
   </div>
 
@@ -224,54 +242,31 @@
     </div>
     <div class="offcanvas-body d-flex flex-column gap-3">
       <div class="d-flex align-items-center gap-3">
-        <img src="https://i.pravatar.cc/120?img=5" alt="頭像" class="avatar" style="width:64px;height:64px;border-radius:50%;border:2px solid var(--brand);" id="mProfileAvatar">
+        <img src="../image/default-avatar.png" alt="頭像" class="avatar" style="width:64px;height:64px;border-radius:50%;border:2px solid var(--brand);" id="mProfileAvatar">
         <div>
-          <div class="fw-bold" id="mProfileName">使用者名稱</div>
-          <div class="small text-muted" id="mProfileEmail">user@example.com</div>
+          <div class="fw-bold" id="mProfileName" style="font-size: 1.6rem; font-weight: 600;">使用者名稱</div>
+          <div class="small text-muted" id="mProfileInfo" style="font-size: 1.2rem;">使用者自介</div>
         </div>
       </div>
+        <a id="mcollapsebtn" class="btn editbtn">編輯個人資料</a>
+      <hr>
       <div class="list-group">
-        <a class="list-group-item list-group-item-action active" href="#">帳戶管理中心</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../svg/sellicon.svg" alt="我的商品icon"> 我的商品</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
+        <a class="list-group-item list-group-item-action active standardfontsize" href="#">帳戶管理中心</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="../shoppingcart/shoppingcart.html"><img src="../webP/shoppingcart.webp" alt="購物車icon"> 我的購物車</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../svg/sellicon.svg" alt="我的商品icon"> 我的商品</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
+      </div>
+      <div class="remind">
+        <p class="text-start" style="font-size: 1.4rem; color: #383838; margin-top: 10px; margin-left: 20px; margin-right: 20px;">小提醒: <br>點擊按鈕後，須將此側邊欄關閉才可見畫面</p>
       </div>
     </div>
   </div>
 
-     <div class="personcontent">
-        <div class="profile-info">
-            <div class="avatar-wrapper" style="margin-top: 20px;">
-              <input type="file" id="avatar-input" accept="image/jpeg, image/png" hidden>
-            </div>
-            <p class="profile-name" style="margin-top: 10px;" id="username"></p>
-            <p id="profile_intro"><br><br><br></p>
-          </div>
-<!-- Collapse 區塊 -->
-<div class="collapse" id="collapseContent">
-  <button id="back-btn7">back</button>
-    <p style="font-size: 16px;">個人資料更改區</p>
-          <div style="margin:0 auto; box-shadow: 0 0 5px #3b3a3a; border-radius: 10px; padding: 20px;">
-            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 12px;">暱稱</p>
-            <input type="text" style="padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
-        
-            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 12px;">個人大頭照</p>
-            <input type="file" id="photo" accept="image/png, image/jpeg" style="border:none; margin-top: 3px;font-size: 13px;">
-        
-            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 12px;">個人簡介</p>
-            <textarea id="bio" placeholder="簡單介紹一下自己吧！" style="display: block;padding: 5px;font-size: 1.4rem;"></textarea>
-        
-            <button style="margin-top: 20px;border:none;font-size: 12px; padding:10px 15px;border-radius: 5px;background: linear-gradient(to left bottom, #004b9743, rgba(36,182,133,0.6));" id="update-profile">更新個人資料</button>
-            <span class="loader" id="loader1" style="display: none;"></span>
-          </div>
-  
-</div>
 
-          
-     </div>
-     
+
   
   <div class="footer">
             <div class="container" >
@@ -319,6 +314,7 @@
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script src="../person/person.js"></script>
+    <script src="../BackendService.js"></script>
     <script src="../shoppingcart/shoppingcart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
