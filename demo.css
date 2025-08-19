@@ -92,21 +92,36 @@ ul{
         padding-right: 0px !important;
     }
 }
-.footerunder{
-  background-color: #004b97;
-  color: #ffffff;
-  text-align: center;
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  padding-top: 1rem;
-  padding-bottom: 1.2rem;  
-  font-size: 12px;
+.footer {
+    background-color: #004b97;
+    color: white;
+    padding: 2rem;
+    margin-top: 20vh;
+    padding-bottom: 10px;
+    font-size:1.6rem;
 }
-.footer{
-  background-color: #004b97e0;
-  display: flex;
-  justify-content: center;
+.footer h3 {
+    font-size: 2rem;
+    margin-bottom: 1.2rem;
+    color: #f0f6fd;
+}
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+.footer-row {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+.footer-row li {
+    margin: 0 10px;
+}
+.footer-row li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
 }
 
 /* 使用 flex-wrap 讓 navbar 內容可換行 */

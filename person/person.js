@@ -1,45 +1,50 @@
-
+let backendService;
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
-    var loader = document.getElementById('loader');
+  var loader = document.getElementById('loader');
   var content = document.getElementById('whatcontent');
   if (loader && content) {
     loader.style.setProperty('display', 'none', 'important');
     content.style.setProperty('display', 'block', 'important');
   }
 }
-  const mProfileName = document.getElementById('mProfileName');
-  const mProfileInfo = document.getElementById('mProfileInfo');
-  const mProfileAvatar = document.getElementById('mProfileAvatar');
-  mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"; // 替換為實際使用者名稱
-  mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
-  if (localStorage.getItem('avatar')) {
-    mProfileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
-  }
-  else { 
-    mProfileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
-  }
-  const profileName = document.getElementById('profileName');
-  const profileInfo = document.getElementById('profileInfo');
-  const profileAvatar = document.getElementById('profileAvatar');
+
+// 判斷是否有 uid，顯示使用者資料
+// 手機版
+const mProfileName = document.getElementById('mProfileName');
+const mProfileInfo = document.getElementById('mProfileInfo');
+const mProfileAvatar = document.getElementById('mProfileAvatar');
+mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"; // 替換為實際使用者名稱
+mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
+if (localStorage.getItem('avatar')) {
+  mProfileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
+}
+else { 
+  mProfileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
+}
+// 桌機版
+const profileName = document.getElementById('profileName');
+const profileInfo = document.getElementById('profileInfo');
+const profileAvatar = document.getElementById('profileAvatar');
   console.log("使用者名稱：", localStorage.getItem('username'));
   console.log("使用者介紹：", localStorage.getItem('intro'));
-  // ?這邊預覽照片部分
-  // if (localStorage.getItem('avatar')) {
-  //   viewavatar.src = localStorage.getItem('avatar');
-  // } else {
-  //   viewavatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
-  // }
-  profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
-  profileName.textContent = localStorage.getItem("username") ||"使用者名稱"; // 替換為實際使用者名稱
-  document.getElementById('update-profile').addEventListener('click', async () => {
+  // console.log(data.data.photoUrl);
+  // // ?這邊預覽照片部分
+if (localStorage.getItem('avatar')) {
+  profileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
+} else {
+  profileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
+}
+profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
+profileName.textContent = localStorage.getItem("username") ||"使用者名稱"; // 替換為實際使用者名稱
+
+//更新資料動作
+document.getElementById('update-profile').addEventListener('click', async () => {
     const displayName = document.getElementById('display-name').value.trim();
     const photoInput = document.getElementById('photo');
     const bio = document.getElementById('bio').value.trim();
     const loader1 = document.getElementById('loader1');
-
-  
     const formData = new FormData();
     if(!displayName && !bio && photoInput.files.length === 0){
       console.log("沒有任何資料");
@@ -53,38 +58,21 @@ window.onload = function() {
     if (displayName) formData.append('name', displayName);
     if (bio) formData.append('introduction', bio);
     if (photoInput.files.length > 0) formData.append('photo', photoInput.files[0]);
-  
     try {
-      // const user = firebase.auth().currentUser;
-      // if (!user) {
-      //   Swal.fire({
-      //     icon: "warning",
-      //     title: "尚未登入",
-      //     text: "請先登入帳號"
-      //   });
-      //   return;
-      // }
-  // ✅ 顯示 loader
-  loader1.style.display = 'block';
-      let backendService = new BackendService();
+      // ✅ 顯示 loader
+      loader1.style.display = 'block';
+      backendService = new BackendService();
       const response = await backendService.updateProfile(formData, (data) => {
         console.log("更新成功：", data);
-        localStorage.setItem('username', data.data.name);
-        localStorage.setItem('intro', data.data.introduction);
         console.log(data.data.introduction);
-        if (data.data.avatar) {
-          localStorage.setItem('avatar', data.data.avatar);
-          profileAvatar.src = data.data.avatar; // 更新顯示的圖片
-        }
-        profileName.textContent = data.data.name; // 更新顯示的名稱
-        profileInfo.textContent = localStorage.getItem('intro'); // 更新顯示的介紹
-        Swal.fire({
-          icon: "success",
-          title: "更新成功",
-          text: "個人資料已更新"
-        }).then(() => {
-          window.location.reload(); // 重新載入頁面以顯示最新資料
-        });
+      // 更新顯示的介紹
+      Swal.fire({
+        icon: "success",
+        title: "更新成功",
+        text: "個人資料已更新"
+      }).then(() => {
+        window.location.reload(); // 重新載入頁面以顯示最新資料
+      });
       }, (errorMessage) => {
         console.error("更新失敗：", errorMessage);
         Swal.fire({
@@ -96,13 +84,22 @@ window.onload = function() {
       loader1.style.display = 'none';
       console.log("更新回傳資料：", response);
       // 更新成功後，重新載入頁面以顯示最新資料
-      profileName.textContent = localStorage.getItem('username') || "使用者名稱";
-      profileInfo.textContent = localStorage.getItem('intro') || "使用者介紹";
+      mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"; // 替換為實際使用者名稱
+      mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
+      if (localStorage.getItem('avatar')) {
+        mProfileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
+      }
+      else { 
+        mProfileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
+      }
+      
       if (localStorage.getItem('avatar')) {
         profileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
       } else {
         profileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
       }
+      profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
+      profileName.textContent = localStorage.getItem("username") ||"使用者名稱"; // 替換為實際使用者名稱
 
     } catch (error) {
       console.error("更新失敗：", error);

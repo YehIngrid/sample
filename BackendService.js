@@ -64,6 +64,7 @@ class BackendService {
             .then(function(response) {
                 localStorage.setItem('username', response.data.data.name); 
                 localStorage.setItem('intro', response.data.data.introduction);
+                localStorage.setItem('avatar', response.data.data.photoURL);
                 fnSuccess(response.data);
             })
             .catch(function(error) {

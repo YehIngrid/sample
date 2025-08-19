@@ -67,3 +67,53 @@ function scrollToNext() {
     const nextSection = document.getElementById('next-section');
     nextSection.scrollIntoView({ behavior: 'smooth' });
 }
+
+
+function initFH() {
+    new FinisherHeader({
+        parent: document.getElementById('hero'),
+  "count": 34,
+  "size": {
+    "min": 1,
+    "max": 20,
+    "pulse": 0
+  },
+  "speed": {
+    "x": {
+      "min": 0,
+      "max": 0.4
+    },
+    "y": {
+      "min": 0,
+      "max": 0.1
+    }
+  },
+  "colors": {
+    "background": "#004b97",
+    "particles": [
+      "#ffffff",
+      "#87ddfe",
+      "#acaaff",
+      "#1bffc2",
+      "#f88aff"
+    ]
+  },
+  "blending": "screen",
+  "opacity": {
+    "center": 0,
+    "edge": 0.4
+  },
+  "skew": -2,
+  "shapes": [
+    "c",
+    "s",
+    "t"
+  ]
+});
+
+}
+
+// 等整個頁面載完再跑，避免高度=0
+window.addEventListener('load', initFH);
+// 視窗大小改變就重建一次
+window.addEventListener('resize', initFH);

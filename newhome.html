@@ -24,6 +24,7 @@
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" /> -->
     <link rel="stylesheet" href="newhome.css">
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
 </head>
 <body>
     <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
@@ -38,6 +39,8 @@
         <div><p style="color: #383838; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;"><br><br>拾貨寶庫加載中... </p></div>
     </div>
     <div id="contentofnewhome" style="display: none;">
+        <div class="header finisher-header" id="hero" style="width: 100%; height: 90vh;">
+        
         <!-- TODO 封面 -->
         <section class="titlepage">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -46,26 +49,11 @@
                     <img src="webP/treasurehub.webp" alt="拾貨寶庫Logo" class="picture">
                     <a class="navbar-brand" href="#">
                         <img src="svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫TREASURE HUB" class="logoo" style="width: 100px; height: 50px; margin-right: 10px;">
-                        <!-- <svg  xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50">
-                            <defs>
-                            <linearGradient id="chineseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#004b97" />
-                                <stop offset="100%" stop-color="rgb(36,182,133)" />
-                            </linearGradient>
-                            <linearGradient id="englishGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="rgb(36,182,133)" />
-                                <stop offset="100%" stop-color="#004b97" />
-                            </linearGradient>
-                            </defs>
-                            <rect x="630" y="250" fill="none" />
-                            <text x="50" y="20" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="25" fill="url(#chineseGradient)" font-weight="bold">拾貨寶庫</text>
-                            <text x="50" y="37" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="12" fill="url(#englishGradient)" font-weight="bold">TREASURE HUB</text>
-                        </svg> -->
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <div class="collapse navbar-collapse" id="navbarNavDropdown" style="color: white;">
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="#">首頁</a>
@@ -94,7 +82,10 @@
             <div class="titlecenter">
                 <h1>拾貨寶庫</h1>
                 <h2>一個專為學生設計的校園共享經濟平台</h2>
-                <button class="hvr-sweep-to-right">立即進入網站</button>
+                <div class="buttontwo d-flex">
+                    <button class="hvr-sweep-to-right shopbtn">立即開始購物</button>
+                    <button class="hvr-sweep-to-right lookbtn">逛逛其他分頁</button>
+                </div>
                 <!-- <img src="webP/people.webp" alt="人裝飾圖片"> -->
                 <div class="scroll-down" onclick="scrollToNext()">
                     <!-- SVG 向下箭頭 -->
@@ -104,6 +95,7 @@
                 </div>
             </div>
         </section>
+        </div>
     </div>
         <section id="next-section" class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center halfsection" style="margin-top: 240px;">
             <div class="friend mx-auto col-md-5 d-flex flex-column justify-content-center"  data-aos="fade-right" >
@@ -187,7 +179,7 @@
                     <p>推動資源循環，為地球盡一份力。</p>
                 </div>
                 <div class="col-md-3 text-center">
-                    <img src="webP/star.webp" alt="校園專屬icon" class="icon" data-aos="zoom-in" data-aos-delay="100" loading="lazy">
+                    <img src="svg/star.svg" alt="校園專屬icon" class="icon" data-aos="zoom-in" data-aos-delay="100" loading="lazy">
                     <h3>校園專屬</h3>
                     <p>精準社群定位，讓交易與資訊更即時貼近。</p>
                 </div>
@@ -448,6 +440,7 @@
         </div>
     <script src="bootstrap_jQuery-demo/js/bootstrap.min.js"></script>
     <!-- 放在 body 結尾或 head 中 -->
+    <script src="finisher-header.es5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script src="newhome.js"></script>
