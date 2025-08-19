@@ -22,9 +22,19 @@ const observer = new IntersectionObserver((entries) => {
 // 為每個內容區塊啟用觀察
 sections.forEach(section => observer.observe(section));
 const collapsibles = document.querySelectorAll('.collapsible');
-collapsibles.forEach(button => {
-  button.addEventListener('click', () => {
-    const answer = button.parentElement.nextElementSibling;
-    answer.classList.toggle('show');
+collapsibles.forEach(btn => {
+  btn.addEventListener('click', function () {
+    const content = this.nextElementSibling;
+    const icon = this.querySelector('.icon');
+
+    content.classList.toggle('show');
+
+    if (content.classList.contains('show')) {
+      icon.classList.remove('fa-plus');
+      icon.classList.add('fa-minus');
+    } else {
+      icon.classList.remove('fa-minus');
+      icon.classList.add('fa-plus');
+    }
   });
 });

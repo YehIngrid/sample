@@ -15,87 +15,13 @@
         <link rel="stylesheet" href="../demo.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW＋ALEwIH" crossorigin="anonymous">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="../bubble.css">
-        <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Cactus＋Classical＋Serif&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     </head>
-    <style>
-#loader {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px;
-    background-color: #fff;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-  }
-  #whatcontent {
-    display: none; /* 初始隱藏內容 */
-  }
-  /* 載入畫面 */
-.spinner {
-  width: 36.4px;
-  height: 36.4px;
-  animation: spinner-y0fdc1 2.4s infinite ease;
-  transform-style: preserve-3d;
-}
 
-.spinner > div {
-  background: linear-gradient(to bottom, #004b9743, #24b6856f);
-  height: 100%;
-  position: absolute;
-  width: 100%;
-  border: 1.5px solid #fff
-  ;
-}
-    
-    .spinner div:nth-of-type(1) {
-      transform: translateZ(-18.2px) rotateY(-360deg);
-    }
-    
-    .spinner div:nth-of-type(2) {
-      transform: rotateY(-270deg) translateX(50%);
-      transform-origin: top right;
-    }
-    
-    .spinner div:nth-of-type(3) {
-      transform: rotateY(270deg) translateX(-50%);
-      transform-origin: center left;
-    }
-    
-    .spinner div:nth-of-type(4) {
-      transform: rotateX(90deg) translateY(-50%);
-      transform-origin: top center;
-    }
-    
-    .spinner div:nth-of-type(5) {
-      transform: rotateX(-90deg) translateY(50%);
-      transform-origin: bottom center;
-    }
-    
-    .spinner div:nth-of-type(6) {
-      transform: translateZ(18.2px);
-    }
-    
-    @keyframes spinner-y0fdc1 {
-      0% {
-         transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
-      }
-    
-      50% {
-         transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
-      }
-    
-      100% {
-         transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
-      }
-    }
-    
-    </style>
     <body>
       <div class="bubble bubble1 parallax"></div>
       <div class="bubble bubble2 parallax"></div>
@@ -116,14 +42,14 @@
       </div>
       <div id="whatcontent" class="d-none">
         <!-- TODO header -->
-        <div class="header ">
+        <div class="header">
             <!--TODO 響應式選單-->
         <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
           <div class="container-fluid d-flex align-items-center sticky-top">
         
             <!-- (A) LOGO 放在最左邊 -->
             <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
-              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫常見問題">
+              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫常見問題" style="width: 100px; border-radius: 0%;">
             </a>
         
             <!-- (B) 桌機版導覽選單 -->
@@ -138,35 +64,14 @@
               </ul>
             </div>
         
-            <!-- (C) 右側：登入 + 購物車 -->
+            <!-- (C) 右側：登入 ＋ 購物車 -->
             <div class="d-flex align-items-center ms-auto">
               <div class="login">
                 <a id="username" class="username" href="../person/person.html"></a>
                 <a class="navbar-brand" href="../account/account.html" id="loginornot">登入</a>
               </div>
               <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
-                <svg width="42" height="30" viewBox="0 0 42 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <ellipse cx="14.2979" cy="27.3529" rx="2.68085" ry="2.64706" fill="#0D779D"/>
-                  <ellipse cx="25.0213" cy="27.3529" rx="2.68085" ry="2.64706" fill="url(#paint0_linear_8_75)" fill-opacity="0.8"/>
-                  <rect width="28.0279" height="11.9012" transform="matrix(0.999999 -0.00105411 0.00107235 0.999999 7.89775 6.60024)" fill="url(#paint1_linear_8_75)" fill-opacity="0.8"/>
-                  <rect x="8.93617" y="21.1765" width="26.8085" height="2.64706" rx="1" fill="#0D779D"/>
-                  <rect width="2.63091" height="23.3531" rx="1" transform="matrix(0.989465 -0.144771 0.146762 0.989172 5.54836 0.460345)" fill="#0D779D"/>
-                  <rect x="0.893616" width="6.25532" height="2.64706" rx="1" fill="#0D779D"/>
-                  <rect width="7.05514" height="20.4683" transform="matrix(0.976289 0.216471 -0.220037 0.975492 33.9931 4.11319)" fill="white"/>
-                  <path d="M9.82979 12.7941H32.617" stroke="white"/>
-                  <line x1="16.5851" y1="5.29412" x2="16.5851" y2="20.2941" stroke="white"/>
-                  <rect width="0.893617" height="15" transform="translate(23.234 5.29412)" fill="white"/>
-                  <defs>
-                  <linearGradient id="paint0_linear_8_75" x1="27.2553" y1="29.5588" x2="23.285" y2="25.5379" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#004B97"/>
-                  <stop offset="1" stop-color="#24B685" stop-opacity="0.8"/>
-                  </linearGradient>
-                  <linearGradient id="paint1_linear_8_75" x1="28.0279" y1="5.95059" x2="2.03464e-09" y2="5.95059" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#004B97" stop-opacity="0.8"/>
-                  <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
-                  </linearGradient>
-                  </defs>
-                  </svg>
+                <img src="../webP/shoppingcart.webp" alt="我的購物車">
               </a>
             </div>
           </div>
@@ -186,25 +91,6 @@
           </div>
         </div>
         
-
-      <a href="#" class="talk">
-        <svg width="64" height="59" viewBox="0 0 64 59" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="64" height="59" fill="#FBFBFB"/>
-          <path d="M58 29.5C58 39.165 46.8071 47 33 47C19.1929 47 8 39.165 8 29.5C8 19.835 19.1929 12 33 12C46.8071 12 58 19.835 58 29.5Z" fill="url(#paint0_linear_10_49)" fill-opacity="0.8"/>
-          <ellipse cx="18.3448" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
-          <ellipse cx="45.931" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
-          <ellipse cx="32.1379" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
-          <path d="M12 39C10.9427 41.5701 8.99999 44.5 8.49999 45C7.99999 45.5 12 43.5 12 43.5M12 39C12 39 12 42.6429 12 43.5M12 39L15 41.5714M12 43.5C12 43.5 14 42.4286 15.5 42C17 41.5714 15 41.5714 15 41.5714M15 41.5714L11 43" stroke="#6195BD" stroke-width="2" stroke-linejoin="round"/>
-          <defs>
-          <linearGradient id="paint0_linear_10_49" x1="33" y1="12" x2="33" y2="47" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#24B685" stop-opacity="0.6"/>
-          <stop offset="0.368901" stop-color="#127F8E" stop-opacity="0.702167"/>
-          <stop offset="1" stop-color="#004B97" stop-opacity="0.8"/>
-          </linearGradient>
-          </defs>
-          </svg>
-          
-        </a>
     </div>
      
   
@@ -217,91 +103,184 @@
     <ul>
       <li><a href="#賣家">賣家</a></li>
       <li><a href="#買家">買家</a></li>
-      <li><a href="#共同問題">共同問題</a></li>
       <li><a href="#會員專區">會員專區</a></li>
+      <li><a href="#校園攻略站-創作者">校園攻略站-創作者</a></li>
+      <li><a href="#校園攻略站-讀者">校園攻略站-讀者</a></li>
     </ul>
   </nav>
 
   <!-- 主內容區：包含多個有唯一 id 的區塊 -->
   <main>
-    <h1>常見問題</h1>
+    <h1 data-shadow='FAQ'>FAQ</h1>
     <!-- <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/qanda.webp" alt="q and a picture"> -->
     <section id="賣家">
       <h2>賣家</h2>
-      <ul>
-        <!-- TODO 修改js -->
-        <li>Q1: 商品上架操作方法為何？<button class="collapsible">▼</button></li>
-        <li class="content-news">A1:（每個步驟圖示）</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q2: 商品售出手續費抽成費用計算方式？<button class="collapsible">▼</button></li>
-        <li class="content-news">A2: 現在是完全免抽成哦！快來上架吧！</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q3: 商品可由拾貨寶庫人員協助上架嗎？<button class="collapsible">▼</button></li>
-        <li class="content-news">A3: 自行賣出之商品須自行上架，上架操作請參考Q1<br></li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q4: 商品收費方式採先付費還是可以提供買家貨到付款？<button class="collapsible">▼</button></li>
-        <li class="content-news">A4: 僅支援面交，除非買賣雙方同意以寄送方式進行交易，否則皆以面交當下付費為主。<br></li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q5: 商品可以同時上架多件嗎？如何管理？<button class="collapsible">▼</button></li>
-        <li class="content-news">A5: 賣家可以同時上架多件商品，每月上限為五樣，超過需付擴增費。並在「我的商品」頁面管理所有上架商品的狀態。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q6: 如何提升商品曝光率？<button class="collapsible">▼</button></li>
-        <li class="content-news">A6: 賣家可以持續登入平台，平台每10分鐘更新一次，以確保商品可以在熱賣區被置頂。<br>或者是購買我們的會員方案，可持續置頂在熱賣區</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q7: 若賣家持續不登入?<button class="collapsible">▼</button></li>
-        <li class="content-news">A7: 若賣家持續不登入商品頁面，我們將傳送電子信箱通知，若賣家仍無回應，本賣場將會在商品上架的30天候下架此商品，以確保買賣家雙方溝通的即時性。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q8: 上架的商品有限制類型嗎?<button class="collapsible">▼</button></li>
-        <li class="content-news">A8: 目前開放販售: 二手書籍、文具、生活用品、家具、電器等校園相關物品。禁止販售違法物品或侵權商品。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q9: 為什麼我要付「擴增費」? 付擴增費划算嗎? 擴增費一個月多少錢? <button class="collapsible">▼</button></li>
-        <li class="content-news">A9: 平台提供免費上架名額 (5件)，為確保品質與平台永續營運，若需上架更多商品，將酌收小額費用 (擴增費)。<br>本平台無任何手續費與上架費，因此在售出商品時不需付出任何費用，只須在一個月內付出擴增費一百元即可。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q10: 可以修改商品的價格或描述嗎？<button class="collapsible">▼</button></li>
-        <li class="content-news">A10: 可以，您可以進入「我的商品」頁面，點擊該商品後選擇「編輯」，即可修改價格、描述或照片。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q11: 賣家可以查看買家的評價嗎？<button class="collapsible">▼</button></li>
-        <li class="content-news">A11: 可以，您可以透過買家的個人檔案查看其過去的交易評價，以確保交易安全。</li>
-        <li><br></li>
-        <li><br></li>
+      <ul class="faq-list">
+        <li class="faq-item">
+          <button class="collapsible">
+            Q1: 商品上架操作方法為何？
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A1: （每個步驟圖示）
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q2: 商品售出手續費抽成費用計算方式？
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A2: 現在是完全免抽成哦！快來上架吧！
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q3: 商品可由拾貨寶庫人員協助上架嗎？
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A3: 自行賣出之商品須自行上架，上架操作請參考Q1
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q4: 商品收費方式採先付費還是可以提供買家貨到付款？
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A4: 僅支援面交，除非買賣雙方同意以寄送方式進行交易，否則皆以面交當下付費為主。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q5: 商品可以同時上架多件嗎？如何管理？
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A5: 賣家可以同時上架多件商品，每月上限為五樣，超過需付擴增費。並在「我的商品」頁面管理所有上架商品的狀態。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q6: 如何提升商品曝光率？
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A6: 賣家可以持續登入平台，平台每10分鐘更新一次，以確保商品可以在熱賣區被置頂。<br>或者是購買我們的會員方案，可持續置頂在熱賣區
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q7: 若賣家持續不登入?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A7: 若賣家持續不登入商品頁面，我們將傳送電子信箱通知，若賣家仍無回應，本賣場將會在商品上架的30天候下架此商品，以確保買賣家雙方溝通的即時性。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q8: 上架的商品有限制類型嗎?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A8: 目前開放販售: 二手書籍、文具、生活用品、家具、電器等校園相關物品。禁止販售違法物品或侵權商品。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q9: 為什麼我要付「擴增費」? 付擴增費划算嗎? 擴增費一個月多少錢?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A9: 平台提供免費上架名額 (5件)，為確保品質與平台永續營運，若需上架更多商品，將酌收小額費用 (擴增費)。<br>本平台無任何手續費與上架費，因此在售出商品時不需付出任何費用，只須在一個月內付出擴增費一百元即可。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q10: 可以修改商品的價格或描述嗎？
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A10: 可以，您可以進入「我的商品」頁面，點擊該商品後選擇「編輯」，即可修改價格、描述或照片。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q11: 賣家可以查看買家的評價嗎？
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A11: 可以，您可以透過買家的個人檔案查看其過去的交易評價，以確保交易安全。
+          </div>
+        </li>
       </ul>
     </section>
     <section id="買家">
       <h2>買家</h2>
-      <ul>
-        <li><br></li>
-        <li>Q1: 取貨方式會提供哪幾個其他物流通道？<button class="collapsible">▼</button></li>
-        <li class="content-news">A1: 目前僅支持校內面交，未來將引入校園物流或合作外部物流，讓交易更便捷！</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q2: 如何評價賣家? <button class="collapsible">▼</button></li>
-        <li class="content-news">A2: 交易完成後，您可以透過「訂單管理」頁面留下評價，您的回饋有助於建立更好的交易環境。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q3: 退貨、退款方式怎麼操作？ 保障消費者權益。<button class="collapsible">▼</button></li>
-        <li class="content-news">A3: 因買賣交易為面交付款，所以沒有退貨與退款功能，因此買家需留意商品狀況再付費。買家亦能在賣家商品頁面進行評分，這將影響到賣家信用。</li>
-        <li><br></li>
-    </ul>
+      <ul class="faq-list">
+        <li class="faq-item">
+          <button class="collapsible">
+            Q1: 取貨方式會提供哪幾個其他物流通道？
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A1: 目前僅支持校內面交，未來將引入校園物流或合作外部物流，讓交易更便捷！
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q2: 如何評價賣家?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A2: 交易完成後，您可以透過「訂單管理」頁面留下評價，您的回饋有助於建立更好的交易環境。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q3: 退貨、退款方式怎麼操作？ 保障消費者權益。
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A3: 因買賣交易為面交付款，所以沒有退貨與退款功能，因此買家需留意商品狀況再付費。買家亦能在賣家商品頁面進行評分，這將影響到賣家信用。
+          </div>
+        </li>
+      </ul>
     </section>
     <section id="會員專區">
         <h2>會員專區</h2>
-        <ul>
-            <li>Q1: 會員費用是多少？<button class="collapsible">▼</button></li>
-            <li class="content-news">A1: 會員費為 200 元/月</li>
-            <li><br></li>
-            <li><br></li>
-            <li>Q2: 會員有什麼優惠?<button class="collapsible">▼</button></li>
-            <li class="content-news">A2: 
+        <ul class="faq-list">
+          <li class="faq-item">
+            <button class="collapsible">
+              Q1: 會員費用是多少？
+              <i class="fas fa-plus icon"></i>
+            </button>
+            <div class="content-news">
+              A1: 會員費為 200 元/月
+            </div>
+          </li>
+
+          <li class="faq-item">
+            <button class="collapsible">
+              Q2: 會員有什麼優惠?
+              <i class="fas fa-plus icon"></i>
+            </button>
+            <div class="content-news">
+              A2: 
                 <ul>
                     <li>•  專屬會員標章，讓您的帳號更具識別度。</li>
                     <li>•  去除廣告，瀏覽體驗更流暢。</li>
@@ -310,88 +289,189 @@
                     <li>•  參加會員專屬抽獎，獲得驚喜好禮。</li>
                     <li>•  可無限擴增上架商品 (但每月最高只能上架十樣商品)。</li>
                 </ul>
-            </li>
+            </div>
+          </li>
         </ul>
     </section>
     <section id="校園攻略站-創作者">
       <h2>校園攻略站-創作者</h2>
-      <ul>
-        <li><br></li>
-        <li>Q1: 我可以投稿什麼內容? <button class="collapsible">▼</button></li>
-        <li class="content-news">A1: 只要是對學生有幫助的資訊都歡迎投稿! 包括選課攻略、轉學經驗、科系分享、推甄心得、租屋技巧、考試讀書法、愛情學分等皆可。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q2: 我要怎麼開始創作? <button class="collapsible">▼</button></li>
-        <li class="content-news">A2: 請先註冊平台帳號並完成學生證驗證，進入「校園攻略站」即可點選「我要投稿」上傳你的文章。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q3: 我要怎麼提升我的文章被看見的機會? <button class="collapsible">▼</button></li>
-        <li class="content-news">A3: <ul><li>加入會員方案可享有推薦曝光位。</li><li>提供具體資訊與有系統的排版更容易吸引讀者。</li></ul></li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q4: 可以匿名投稿嗎? <button class="collapsible">▼</button></li>
-        <li class="content-news">A4: 不可以，平台為保證創作的品質及責任，將公開投稿者的名字 (可以只公開名不公開姓氏)。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q5: 可以上傳圖片或表格嗎? <button class="collapsible">▼</button></li>
-        <li class="content-news">A5: 可以，鼓勵創作者加入表格、截圖或手寫筆記等輔助內容，幫助讀者更快理解，提升文章價值。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q6: 我可以引用 Dcard 或其他平台的資訊嗎? <button class="collapsible">▼</button></li>
-        <li class="content-news">A6: 不建議直接複製他人內容，請以自己真實經驗為主撰寫。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q7: 我的內容如果被抄襲怎麼辦? <button class="collapsible">▼</button></li>
-        <li class="content-news">A7: 平台設有檢舉機制，如發現內容被他站抄襲、或他人抄襲你內容投稿，我們將協助調並保護原創者權益。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q8: 一個帳號可以投稿幾篇? <button class="collapsible">▼</button></li>
-        <li class="content-news">A8: 無限次數，但每月上限為十篇。</li>
-        <li><br></li>
-    </ul>
+      <ul class="faq-list">
+        <li class="faq-item">
+          <button class="collapsible">
+            Q1: 我可以投稿什麼內容?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A1: 只要是對學生有幫助的資訊都歡迎投稿! 包括選課攻略、轉學經驗、科系分享、推甄心得、租屋技巧、考試讀書法、愛情學分等皆可。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q2: 我要怎麼開始創作?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A2: 請先註冊平台帳號並完成學生證驗證，進入「校園攻略站」即可點選「我要投稿」上傳你的文章。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q3: 我要怎麼提升我的文章被看見的機會?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A3: <ul style="list-style: circle; margin-left: 10px;"><li>加入會員方案可享有推薦曝光位。</li><li>提供具體資訊與有系統的排版更容易吸引讀者。</li></ul>
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q4: 可以匿名投稿嗎?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A4: 不可以，平台為保證創作的品質及責任，將公開投稿者的名字 (可以只公開名不公開姓氏)。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q5: 可以上傳圖片或表格嗎?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A5: 可以，鼓勵創作者加入表格、截圖或手寫筆記等輔助內容，幫助讀者更快理解，提升文章價值。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q6: 我可以引用 Dcard 或其他平台的資訊嗎?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A6: 不建議直接複製他人內容，請以自己真實經驗為主撰寫。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q7: 我的內容如果被抄襲怎麼辦?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A7: 平台設有檢舉機制，如發現內容被他站抄襲、或他人抄襲你內容投稿，我們將協助調並保護原創者權益。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q8: 一個帳號可以投稿幾篇?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A8: 無限次數，但每月上限為十篇。
+          </div>
+        </li>
+      </ul>
     </section>
     <section id="校園攻略站-讀者">
       <h2>校園攻略站-創作者</h2>
-      <ul>
-        <li><br></li>
-        <li>Q1: 我怎麼知道文章內容是不是可靠? <button class="collapsible">▼</button></li>
-        <li class="content-news">A1: 每位創作者都經過校內實名認證，平台也會進行審核，並標記系級、獎項或經歷 (如書卷獎、推甄錄取) 來提高可信度。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q2: 要怎麼找到我想看的攻略? <button class="collapsible">▼</button></li>
-        <li class="content-news">A2: 你可以依「學校」、「科系」、「主題」篩選，也可以直接用關鍵字搜尋 (例如:景觀系、政大推甄、師大租屋)。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q3: 可以留言問問題嗎? <button class="collapsible">▼</button></li>
-        <li class="content-news">A3: 可以! 每篇文章下方開放留言，你可以針對內容提問或補充，作者可選擇回覆，讓交流更完整。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q4: 我可以把文章轉傳給別人看嗎? <button class="collapsible">▼</button></li>
-        <li class="content-news">A4: 不行。文章屬於創作者智慧財產，禁止擅自轉傳、截圖、公開分享，如經平台發現違規，將依法處理並停權帳號。</li>
-        <li><br></li>
-        <li><br></li>
-        <li>Q5: 我可以要求創作者寫我想要的主題嗎? <button class="collapsible">▼</button></li>
-        <li class="content-news">A5: 可以! 你可以透過「許願池」功能發布需求，若有創作者感興趣，就可能根據你的需求寫出懶人包，並優先通知你上架。</li>
-        <li><br></li>
-    </ul>
+      <ul class="faq-list">
+        <li class="faq-item">
+          <button class="collapsible">
+            Q1: 我怎麼知道文章內容是不是可靠?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A1: 每位創作者都經過校內實名認證，平台也會進行審核，並標記系級、獎項或經歷 (如書卷獎、推甄錄取) 來提高可信度。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q2: 要怎麼找到我想看的攻略?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A2: 你可以依「學校」、「科系」、「主題」篩選，也可以直接用關鍵字搜尋 (例如:景觀系、政大推甄、師大租屋)。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q3: 可以留言問問題嗎?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A3: 可以! 每篇文章下方開放留言，你可以針對內容提問或補充，作者可選擇回覆，讓交流更完整。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q4: 我可以把文章轉傳給別人看嗎?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A4: 不行。文章屬於創作者智慧財產，禁止擅自轉傳、截圖、公開分享，如經平台發現違規，將依法處理並停權帳號。
+          </div>
+        </li>
+
+        <li class="faq-item">
+          <button class="collapsible">
+            Q5: 我可以要求創作者寫我想要的主題嗎?
+            <i class="fas fa-plus icon"></i>
+          </button>
+          <div class="content-news">
+            A5: 可以! 你可以透過「許願池」功能發布需求，若有創作者感興趣，就可能根據你的需求寫出懶人包，並優先通知你上架。
+          </div>
+        </li>
+      </ul>
     </section>
   </main>
 </div>
 </div>
-</div>
-<div class="footerunder">
-  Copyright©2025拾貨寶庫｜All Rights Reserved
-</div> 
-
 <div class="footer">
-  <div class="footer-row d-flex justify-content-center">
-        <li><a href="../introduce/introduce.html">關於我們｜</a></li>
-        <li><a href="../questions/questions.html">常見問題｜</a></li>
-        <li><a href="../communication/communication.html">客服諮詢｜</a></li>
-        <li><a href="../policy/policy.html">隱私政策｜</a></li>
-        <li><a href="#">使用條款｜</a></li>
-        <li><a href="#">退換貨政策</a></li>
+  <div class="container" >
+      <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
+          <div class="col-md-4" style="padding-left: 30px;">
+              <h3>聯絡我們</h3>
+              <p>電子郵件：
+                  <a href="mailto:treasurehub@gmail.com">
+                      treasurehub@gmail.com
+                  </a>
+              </p>
+          </div>
+          <div class="col-md-4" style="padding-left: 30px;">
+              <h3>關於我們</h3>
+              <p>一個專為大學生打造的二手商場、校園商機、資訊交易整合平台</p>
+          </div>
+          <div class="col-md-4" style="padding-left: 30px;"> 
+              <h3>社交媒體</h3>
+              <p class="d-flex">
+                  <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 3rem; padding-right: 18px;"></i></a><br>
+                  <a href="#" target="_blank"><i class="fa-brands fa-line" style="font-size: 3rem;"></i></a>
+              </p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12 text-center">
+              <p>Copyright&copy; 2025拾貨寶庫｜All Rights Reserved.</p>
+              <div class="footer-row d-md-flex justify-content-center d-none">
+                  <li><a href="../introduce/introduce.html">關於我們</a></li>
+                  <li><a href="../questions/questions.html">常見問題</a></li>
+                  <li><a href="../communication/communication.html">客服諮詢</a></li>
+                  <li><a href="../policy/policy.html">隱私政策</a></li>
+                  <li><a href="#">使用條款</a></li>
+                  <li><a href="#">退換貨政策</a></li>
+              </div>
+          </div>
+      </div>
   </div>
+</div>
 </div>
   
         <!-- script部分-->
