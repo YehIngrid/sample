@@ -345,15 +345,15 @@ window.onload = function() {
   }
   
   
-  // 切換密碼顯示/隱藏（點擊眼睛圖示）
-  $("#checkEye").click(function () {
-    if($(this).hasClass('fa-eye')){
-       $("#floatingPassword").attr('type', 'text');
-    } else {
-       $("#floatingPassword").attr('type', 'password');
-    }
-    $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
-  });
+  // // 切換密碼顯示/隱藏（點擊眼睛圖示）
+  // $("#checkEye").click(function () {
+  //   if($(this).hasClass('fa-eye')){
+  //      $("#floatingPassword").attr('type', 'text');
+  //   } else {
+  //      $("#floatingPassword").attr('type', 'password');
+  //   }
+  //   $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+  // });
   // const seller = document.querySelector('#seller');
   // const sellerbtn = document.querySelector('#sellerbtn');
   // const content = document.querySelector('#midcontent');

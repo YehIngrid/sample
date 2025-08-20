@@ -40,3 +40,181 @@
     text-decoration: none;
     font-size: 0.8rem;
 }
+.typewriterbody {
+    padding-top: 5em;
+    display: flex;
+    justify-content: center;
+}
+/* DEMO-SPECIFIC STYLES */
+.typewriter h1 {
+  font-size:clamp(22px, 4vw, 32px);
+  color: #fff;
+  line-height:1.25;
+  font-family: monospace;
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: .15em solid white; /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  letter-spacing: .15em; /* Adjust as needed */
+  animation: 
+    typing 3.5s steps(30, end),
+    blink-caret .5s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: orange }
+}
+    .wrap{
+      min-height:100%;
+      place-items:center;
+      padding:50px 5vw;
+    }
+    .card{
+      width:100%;
+      background:var(--card);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      padding:32px 24px;
+      overflow:hidden;
+    }
+
+    .hero{
+      text-align:center;
+      padding:8px 8px 0;
+    }
+    .badge{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:999px;
+      font-size:12px;
+      letter-spacing:.06em;
+      background:rgba(77,129,183,.12);
+      color:var(--brand);
+      margin-bottom:8px;
+    }
+    h1{
+      margin:8px 0 6px;
+      font-size:clamp(22px, 4vw, 32px);
+      line-height:1.25;
+    }
+    .subtitle{
+      color:var(--muted);
+      margin:0 auto;
+      max-width:52ch;
+      font-size:clamp(14px, 2.2vw, 16px);
+    }
+
+    .bubbles{
+      margin:28px auto 0;
+      display:grid;
+      grid-template-columns:repeat(12, 1fr);
+      gap:14px;
+      max-width:900px;
+      padding:0 8px;
+      list-style:none;
+    }
+    .bubble{
+      grid-column:span 6;
+      background:var(--bubble);
+      border-radius:18px;
+      padding:12px 16px;
+      font-size:14px;
+      line-height:1.45;
+      position:relative;
+      box-shadow:0 2px 10px rgba(77,129,183,.10);
+      opacity:0;
+      transform:translateY(12px) scale(.98);
+      animation:pop .6s cubic-bezier(.2,.8,.2,1) forwards;
+      border:1px solid rgba(77,129,183,.15);
+    }
+    .bubble::after{
+      content:"";
+      position:absolute;
+      left:24px; bottom:-10px;
+      border:10px solid transparent;
+      border-top-color:var(--bubble);
+      filter:drop-shadow(0 1px 0 rgba(77,129,183,.15));
+    }
+    /* 可用 data-delay 做交錯入場 */
+    .bubble{ animation-delay:calc(var(--i, 0)*120ms + 120ms); }
+
+    /* 讓不同寬度更像對話 */
+    .bubble--w1{ grid-column:span 7; }
+    .bubble--w2{ grid-column:span 5; }
+    .bubble--w3{ grid-column:span 8; }
+    .bubble--w4{ grid-column:span 4; }
+
+    @keyframes pop{
+      0%{opacity:0; transform:translateY(12px) scale(.98)}
+      60%{opacity:1; transform:translateY(0) scale(1.01)}
+      100%{opacity:1; transform:translateY(0) scale(1)}
+    }
+
+    /* 偏好減少動效者：停用動畫 */
+    @media (prefers-reduced-motion: reduce){
+      .bubble{animation:none; opacity:1; transform:none}
+    }
+
+    .tips{
+      margin:26px auto 0;
+      padding:16px 18px;
+      border-radius:16px;
+      background:linear-gradient(0deg, rgba(77,129,183,.06), rgba(77,129,183,.06));
+      width:min(820px, 100%);
+      display:grid;
+      gap:10px;
+      font-size:15px;
+    }
+    .tips b{ color:var(--brand); }
+
+    .actions{
+      margin:22px auto 4px;
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none;
+      border:0;
+      padding:12px 20px;
+      border-radius:999px;
+      font-size:16px;
+      cursor:pointer;
+      transition:transform .08s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .btn-primary{
+      background:var(--brand);
+      color:#fff;
+      box-shadow:0 8px 20px rgba(77,129,183,.35);
+    }
+    .btn-primary:hover{ transform:translateY(-1px) }
+    .btn-ghost{
+      background:transparent;
+      color:var(--brand);
+    }
+
+    .footnote{
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+      margin-top:8px;
+    }
+
+    /* 響應式 */
+    @media (max-width:720px){
+      .card{ padding:24px 16px }
+      .bubble{ grid-column:span 12 }
+      .bubble::after{ left:18px }
+      .tips{ font-size:14px }
+    }

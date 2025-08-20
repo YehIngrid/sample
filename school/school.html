@@ -26,6 +26,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="mainContent">
     <!-- TODO: 這是校園攻略站的首頁，請在此處添加相關內容。 -->
     <div class="header">
         <!-- 第一層：logo + 搜尋 + 登入 -->
@@ -34,7 +35,6 @@
                 <div class="left d-flex align-items-center">
                     <!-- Logo 區 -->
                     <a class="navbar-brand d-flex align-items-center" href="newhome.html">
-                        <img src="../webP/treasurehub.webp" alt="拾貨寶庫 Logo" class="picture me-2" style="height: 40px;">
                         <img src="../svg/treasurehubblack.svg" alt="treasure hub 校園攻略站" style="height: 24px;">
                     </a>
                     <!-- 搜尋按鈕 -->
@@ -46,9 +46,13 @@
                     </form>
                 </div>
             <!-- 登入圖示 -->
+            <button class ="nav-link" id="createbtn">
+                <img src="../svg/createicon.svg" alt="開始創作">
+            </button>
             <a class="nav-link" href="../account/account.html" style="font-family: 'Zen Old Mincho';">
                 登入
             </a>
+            
             </div>
         </nav>
 
@@ -75,6 +79,50 @@
     </div>
     <!-- TODO: content -->
     <div class="contentofschool"></div>
+    </div>
+
+    <div class="header finisher-header" style="width: 100%; height: 110vh; " id ="startCreate">
+        <main id="main" class="wrap" role="main" aria-labelledby="title">
+    <section class="card" aria-label="歡迎創作者">
+      <header class="hero">
+        <div class="badge" aria-hidden="true">CREATOR ONBOARDING</div>
+        <div class="typewriterbody">
+            <div class="typewriter">
+                <h1>🎉 歡迎來到校園攻略站創作平台！</h1>
+            </div>
+        </div>
+        <p class="subtitle">在這裡，你的經驗與故事會成為同學們的寶貴資源。每一篇攻略，都是未來同學的指路燈。</p>
+      </header>
+
+      <!-- 分享對話泡泡 -->
+      <ul class="bubbles" aria-label="同學分享片段">
+        <li class="bubble bubble--w1" style="--i:0">📚 「這門課怎麼選？攻略幫你分析！」</li>
+        <li class="bubble bubble--w2" style="--i:1">💡 「二手教科書這裡超省🔥」</li>
+        <li class="bubble bubble--w3" style="--i:2">🧭 「新生必看：校園踩雷地圖」</li>
+        <li class="bubble bubble--w4" style="--i:3">🚀 「實習面試心得一次看懂」</li>
+        <li class="bubble bubble--w2" style="--i:4">👜 「宿舍收納與生活小技巧」</li>
+        <li class="bubble bubble--w1" style="--i:5">🧾 「二手交易保護自己三步驟」</li>
+      </ul>
+
+      <!-- 創作小提醒 -->
+      <div class="tips" role="note" aria-label="創作小提醒">
+        <div>1️⃣ <b>選主題</b>：學習、生活、實習、交易心得…</div>
+        <div>2️⃣ <b>寫內容</b>：可加入圖片、連結讓資訊更清楚</div>
+        <div>3️⃣ <b>一鍵發布</b>：立刻幫助更多同學少踩坑</div>
+      </div>
+
+      <!-- 行動 -->
+      <div class="actions">
+        <button id="startBtn" class="btn btn-primary" aria-label="開始撰寫">好的，我準備好了 ✍️</button>
+        <button id="skipBtn" class="btn btn-ghost" aria-label="略過介紹">稍後再看</button>
+      </div>
+
+      <p class="footnote">點擊「好的，我準備好了」即可進入編輯器；或選擇「稍後再看」直接開始。</p>
+    </section>
+  </main>
+        
+    </div>
+
     <div class="footer">
         <div class="container" >
             <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
@@ -113,5 +161,9 @@
             </div>
         </div>
     </div>
+    <!-- TODO script -->
+    <script src="../finisher-header.es5.min.js" type="text/javascript"></script>
+    <script src="school.js"></script>
+    
 </body>
 </html>

@@ -62,8 +62,8 @@
           <div class="container-fluid d-flex align-items-center sticky-top">
         
             <!-- (A) LOGO 放在最左邊 -->
-            <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
-              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" class="logo">
+            <a class="navbar-brand picture me-4" href="../newhome.html">
+              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
             </a>
         
             <!-- (B) 桌機版導覽選單 -->
@@ -94,7 +94,7 @@
                 <a class="navbar-brand" href="../account/account.html" id="loginornot">登入</a>
               </div>
               <a class="nav-link specialpadding ms-2" href="shoppingcart.html">
-                <img src="../webP/shoppingcart.webp" alt="購物車">
+                <img src="../svg/shoppingcart.svg" alt="購物車">
               </a>
             </div>
           </div>
@@ -106,7 +106,7 @@
             <!-- 手機版：漢堡選單按鈕放最左邊 -->
             <button class="navbar-toggler me-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon">
-                <img src="../webP/navbar.webp" alt="手機版選單">
+                <img src="../webP/navbar.webp" alt="手機版選單" style="width: 20px;">
               </span>
             </button>
             <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
@@ -132,7 +132,7 @@
         
 
       <a href="#" class="talk" id="talkInterface">
-        <img src="../webP/talk.webp" alt="聊天室">
+        <!-- <img src="../webP/talk.webp" alt="聊天室"> -->
       </a>
 <!-- TODO:聊天室 -->
         <div class="chathome" id="chatHome">
@@ -291,34 +291,34 @@
             </li>
             <li>
               <button id="memberbtn">
-                <img src="../webP/Diamond.webp" alt="會員專區">
-              </button>會員專區
+                <img src="../webP/Diamond.webp" alt="加入會員">
+              </button>加入會員
             </li>
-            <li>
+            <!-- <li>
               <button id="mysterybtn">
                 <img src="../webP/mystery.webp" alt="神秘箱">
               </button>神秘箱
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <button id="everydaybtn">
                 <img src="../webP/everyday.webp" alt="每日登入">
               </button>每日登入
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <button id="donatebtn">
                 <img src="../webP/donate.webp" alt="我要捐款">
               </button>我要捐款
-            </li>
+            </li> -->
             <li>
-              <button id="campusbtn">
+              <button id="campusbtn" onclick="window.open('../school/school.html', '_blank')">
                 <img src="../webP/article.webp" alt="校園攻略站">
               </button>校園攻略站
             </li>
-            <li>
+            <!-- <li>
               <button>
                 <img src="../webP/cooperate.webp" alt="學力銀行">
               </button>學力銀行
-            </li>
+            </li> -->
         </ul>
     </div>
   </div>
@@ -335,7 +335,7 @@
     <div class="d-flex align-items-center justify-content-center my-4">
       <!-- 左箭頭按鈕 -->
       <button class="btn me-2" id="prevBtn">
-        <img src="../webP/LEFT.webp" alt="左箭頭">
+        <img src="../webP/LEFT.webp" alt="左箭頭" style="width: 24px;">
       </button>
       <!-- 可水平捲動的容器 -->
       <div class="scroll-container flex-nowrap" id="scrollContainer">
@@ -353,9 +353,9 @@
         <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
-              <img src="../webP/book.webp" alt="原文書/書籍類" class="card-img-top">
+              <img src="../webP/book.webp" alt="原文書籍" class="card-img-top">
               <div class="card-body p-2">
-                <p class="card-text mb-0">原文書/書籍類</p>
+                <p class="card-text mb-0">原文書籍</p>
               </div>
             </div>
           </a>
@@ -410,7 +410,7 @@
             </div>
           </a>
         </div>
-        <div class="sort-item text-center">
+        <!-- <div class="sort-item text-center">
           <a href="#" class="d-block text-decoration-none">
             <div class="card border-0">
               <img src="../webP/food.webp" alt="零食/食物" class="card-img-top">
@@ -419,12 +419,12 @@
               </div>
             </div>
           </a>
-        </div>
+        </div> -->
         <!-- 依需求繼續複製更多分類項目 ... -->
       </div>
       <!-- 右箭頭按鈕 -->
       <button class="btn ms-2" id="nextBtn">
-        <img src="../webP/RIGHT.webp" alt="右箭頭">
+        <img src="../webP/RIGHT.webp" alt="右箭頭" style="width: 24px;">
       </button>
     </div>
   </div>
@@ -441,22 +441,21 @@
   <!-- TODO 商品卡片 -->
 
 <!-- Masonry 參考用空白元素 -->
-<div id="product-grid"></div>
+<!-- <div id="product-grid"></div>
 <div id="pagination" style="text-align: center; margin-top: 1rem;"></div>
-<div id="productContainer" style="margin-top: 200px;"></div>
+<div id="productContainer" style="margin-top: 200px;"></div> -->
+<!-- 商品列表容器（JS 會把卡片插進來） -->
+<!-- 建議用這個單一容器放卡片 -->
+<div id="product-grid" class="container-card row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-4"></div>
+
+
+<!-- 分頁 -->
+<div id="pagination" class="text-center mt-3"></div>
+
 <!-- ?這邊太多了要整理 -->
 
     </div>
-  </div>
-</div>
 
-  </div>
-</div>
-
-        </div>
-      </div>
-      
-    </div>
     
   </main>
   <!-- TODO 商品資訊表單 -->
@@ -605,12 +604,12 @@
               <input type="radio" id="size_small" name="size" value="small"/><label for="size_small" class="formpricespan">小</label>
               <br />
               <label for="neworold">新舊程度</label><br>
-              <input type="radio" id="neworold_1" name="neworold" value="1"><label for="neworold_1" class="formpricespan">全新</label>
-              <input type="radio" id="neworold_2" name="neworold" value="2"><label for="neworold_2" class="formpricespan">幾乎全新</label>
-              <input type="radio" id="neworold_3" name="neworold" value="3"><label for="neworold_3" class="formpricespan">半新</label><br>
-              <input type="radio" id="neworold_4" name="neworold" value="4"><label for="neworold_4" class="formpricespan">適中</label>
-              <input type="radio" id="neworold_5" name="neworold" value="5"><label for="neworold_5" class="formpricespan">稍舊</label>
-              <input type="radio" id="neworold_6" name="neworold" value="6"><label for="neworold_6" class="formpricespan">全舊</label><br><br>
+              <input type="radio" id="neworold_1" name="new_or_old" value="1"><label for="neworold_1" class="formpricespan">全新</label>
+              <input type="radio" id="neworold_2" name="new_or_old" value="2"><label for="neworold_2" class="formpricespan">幾乎全新</label>
+              <input type="radio" id="neworold_3" name="new_or_old" value="3"><label for="neworold_3" class="formpricespan">半新</label><br>
+              <input type="radio" id="neworold_4" name="new_or_old" value="4"><label for="neworold_4" class="formpricespan">適中</label>
+              <input type="radio" id="neworold_5" name="new_or_old" value="5"><label for="neworold_5" class="formpricespan">稍舊</label>
+              <input type="radio" id="neworold_6" name="new_or_old" value="6"><label for="neworold_6" class="formpricespan">全舊</label><br><br>
               <label for="age">物品年齡</label>
               <input type="number" id="age" name="age" placeholder="未知請填-1"/><span class="formpricespan">年</span><br />
               <label for="mainImage">主要照片</label>
@@ -821,7 +820,7 @@
     </table>
   </div>
 </section>
-<!-- TODO神秘箱 -->
+<!-- TODO神秘箱
 <section class="mystery" id="mystery" style="display: none;">
   <img src="../image/admysterybox.png" alt="" style="width: 100%; height: auto; margin-bottom: 30px;" class="admystery_">
   <div class="d-flex" style="width: 86vw; margin: 0 auto;">
@@ -878,8 +877,8 @@
     </div>
   </div>
 </section>
-  
-    <!-- TODO 日常抽獎 -->
+   -->
+    <!-- TODO 日常抽獎
 <section class="everyday" id="everyday" style="display: none;">
   <div class="icon-button" id="back-btn4">Back</div>
   <div class="wheel-container">
@@ -1052,23 +1051,23 @@ const timer = setInterval(() => {
 });
 
 
-</script>
+</script> -->
 <script>
   // 當頁面載入完成後，先預加載所有圖片
 window.addEventListener('load', () => {
 
-const imageUrls = [
-  '../image/廣告設計頁正式版.jpg',
-  '../svg/ad.svg',
-  '../svg/cheat.svg',
-  'https://github.com/YehIngrid/sample/blob/main/image/earth.png?raw=true',
-  'https://github.com/YehIngrid/sample/blob/main/image/coupon.png?raw=true',
-  '../svg/articlead.svg',
-];
-imageUrls.forEach(url => {
-  const img = new Image();
-  img.src = url;
-});
+// const imageUrls = [
+//   '../image/廣告設計頁正式版.jpg',
+//   '../svg/ad.svg',
+//   '../svg/cheat.svg',
+//   'https://github.com/YehIngrid/sample/blob/main/image/earth.png?raw=true',
+//   'https://github.com/YehIngrid/sample/blob/main/image/coupon.png?raw=true',
+//   '../svg/articlead.svg',
+// ];
+// imageUrls.forEach(url => {
+//   const img = new Image();
+//   img.src = url;
+// });
 
 const carousel = document.querySelector('.carousel');
 const track = document.querySelector('.carousel-track');
@@ -1161,11 +1160,11 @@ document.addEventListener('visibilitychange', () => {
 
 </script>
 
-<!-- TODO donate -->
+<!-- TODO donate
 <section class="donate" id="donate" style="display: none;">
   <div class="icon-button" id="back-btn5">Back</div>
-</section>
-<!-- TODO 校園攻略站 -->
+</section> -->
+<!-- TODO 校園攻略站
 <section class="campus" id="campus" style="display: none;">
   <img src="../webP/newschoolad.webp" alt="" style="width: 100vw;">
   <div class="icon-button" id="back-btn6">Back</div>
@@ -1184,26 +1183,45 @@ document.addEventListener('visibilitychange', () => {
       </ul>
     </div>
   </div>
-</section>
-<div class="footerunder">
-  Copyright©2025拾貨寶庫｜All Rights Reserved
-</div> 
-  <section class="footer">
-    <div class="footer-row d-flex justify-content-center">
-          <li><a href="../introduce/introduce.html">關於我們｜</a></li>
-          <li><a href="../questions/questions.html">常見問題｜</a></li>
-          <li><a href="../communication/communication.html">客服諮詢｜</a></li>
-          <li><a href="../policy/policy.html">隱私政策｜</a></li>
-          <li><a href="#">使用條款｜</a></li>
-          <li><a href="#">退換貨政策</a></li>
-          <li class="nav-item line">
-            <a class="nav-link" href="https://page.line.me/889pygzb">
-              <i class="fa-brands fa-line"></i>
-            </a>
-          </li>
-    </div>
-  </section>
-    
+</section> -->
+<div class="footer">
+            <div class="container" >
+                <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
+                    <div class="col-md-4" style="padding-left: 30px;">
+                        <h3>聯絡我們</h3>
+                        <p>電子郵件：
+                            <a href="mailto:treasurehub@gmail.com">
+                                treasurehub@gmail.com
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-4" style="padding-left: 30px;">
+                        <h3>關於我們</h3>
+                        <p>一個專為大學生打造的二手商場、校園商機、資訊交易整合平台</p>
+                    </div>
+                    <div class="col-md-4" style="padding-left: 30px;"> 
+                        <h3>社交媒體</h3>
+                        <p class="d-flex">
+                            <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 3rem; padding-right: 18px;"></i></a><br>
+                            <a href="#" target="_blank"><i class="fa-brands fa-line" style="font-size: 3rem;"></i></a>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <p>Copyright&copy; 2025拾貨寶庫｜All Rights Reserved.</p>
+                        <div class="footer-row d-md-flex justify-content-center d-none">
+                            <li><a href="../introduce/introduce.html">關於我們</a></li>
+                            <li><a href="../questions/questions.html">常見問題</a></li>
+                            <li><a href="../communication/communication.html">客服諮詢</a></li>
+                            <li><a href="../policy/policy.html">隱私政策</a></li>
+                            <li><a href="#">使用條款</a></li>
+                            <li><a href="#">退換貨政策</a></li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
   </div>
   <!-- Loading 遮罩 -->
 <div id="loadingOverlay" class="loading-overlay d-none">

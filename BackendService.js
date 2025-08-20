@@ -1,3 +1,5 @@
+axios.defaults.withCredentials = true;
+
 class BackendService {
     constructor() {
         this.baseUrl = 'https://23.146.248.58';
@@ -6,6 +8,12 @@ class BackendService {
         console.log('OK');
         // ? 是不是該做連線測試?
     }
+    getCookie(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) return match[2];
+        return null;
+    }
+
     //在localstorage記住目前是否登入帳號後端，用localstorage記住帳號資訊等
     signup(userData, fnSuccess, fnError) {
         return axios.post(`${this.baseUrl}/api/account/signup`, userData, {
@@ -101,6 +109,43 @@ class BackendService {
                 console.error(error);
                 fnError("無法取得使用者資訊");
             });
+    }
+    create(sellData, fnSuccess, fnError) {
+        const token = this.getCookie('idtoken');
+        return axios.post(`${this.baseUrl}/api/commodity/create`, sellData, {
+            withCredentials: true
+        }, {
+            headers: {
+                'idtoken': token
+            }})
+
+        .then(function(response) {
+            fnSuccess(response.data);
+        })
+        .catch(function(error) {
+            console.error(error);
+            fnError("上架商品失敗");
+        })
+    }
+    GetHotItems(fnSuccess, fnError) {
+        return axios.get(`${this.baseUrl}/api/commodity/list/hot`)
+        .then(function(response) {
+            fnSuccess(response.data);
+        })
+        .catch(function(error) {
+            console.error(error);
+            fnError("發生錯誤");
+        })
+    }
+    GetNewItems(fnSuccess, fnError) {
+        return axios.get(`${this.baseUrl}/api/commodity/list/new`)
+        .then(function(response) {
+            fnSuccess(response.data);
+        })
+        .catch(function(error) {
+            console.error(error);
+            fnError("發生錯誤");
+        })
     }
     // logout(userData, fnSuccess, fnError) {
     //     return axios

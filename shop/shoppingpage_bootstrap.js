@@ -35,6 +35,12 @@ const midcontent = document.getElementById('midcontent');
   });
 // TODO seller
 const seller = document.getElementById('seller');
+const sellerbtn = document.getElementById('sellerbtn');
+sellerbtn.addEventListener('click', function(e) {
+  seller.style.display = 'block';
+  midcontent.style.display = 'none';
+})
+
 const backbtn = document.querySelector('#back-btn');
 backbtn.addEventListener('click', function(e){
   midcontent.style.display = 'block';
@@ -67,6 +73,13 @@ document.addEventListener('DOMContentLoaded', function() {
   backendService = new BackendService();
   loginService = new LoginService(backendService);
 
+
+  backendService.GetHotItems((response) => {
+    console.log("gethotitems:", response.data.commodities);
+  }, (errorMessage) => {
+    console.error("gethotitems:",errorMessage);
+  })
+  
   if (loginService.isLogin()) {
     Swal.fire({
       title: "歡迎回來！",
@@ -172,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 5. 新舊程度檢查（至少要選一個）
-    const conditionOptions = document.getElementsByName('neworold');
+    const conditionOptions = document.getElementsByName('new_or_old');
     let conditionSelected = false;
     for (let i = 0; i < conditionOptions.length; i++) {
       if (conditionOptions[i].checked) {
@@ -246,52 +259,37 @@ Swal.fire({
   confirmButtonText: "是，我就要賣！"
 }).then((result) => {
   if (result.isConfirmed) {
-    const formData = new FormData(form);
-
+    const sellData = new FormData(form);
     // ✅ 顯示 loading 遮罩
     loaderOverlay.classList.remove('d-none');
-
-    // auth.currentUser.getIdToken()
-    //   .then((idToken) => {
-    //     return fetch('https://store-backend-iota.vercel.app/api/commodity/create', {
-    //       method: 'POST',
-    //       headers: {
-    //         'idtoken': idToken
-    //       },
-    //       body: formData
-    //     });
-    //   })
-    //   .then(response => {
-    //     if (response.ok) {
-    //       Swal.fire({
-    //         title: "商品上架成功！",
-    //         text: "請確認首頁商品欄有無您上架的商品",
-    //         icon: "success"
-    //       }).then((result) => {
-    //         if (result.isConfirmed) {
-    //           // ✅ 使用者按下 OK 後跳轉
-    //           window.location.href = "shoppingpage_bootstrap.html";
-    //         }
-    //       });
-    //       form.reset();
-    //     } else {
-    //       return response.json().then(data => {
-    //         Swal.fire({
-    //           title: "Oops...發生錯誤，請稍後再試",
-    //           text: data.message || 'Failed to create commodity.',
-    //           icon: "error",
-    //         })
-    //       });
-    //     }
-    //   })
-    //   .catch(error => {
-    //     console.error('Error:', error);
-    //     alert('Error: ' + error.message);
-    //   })
-    //   .finally(() => {
-    //     // ✅ 隱藏 loading
-    //     loaderOverlay.classList.add('d-none');
-    //   });
+    for (let [key, value] of sellData.entries()) {
+      console.log(key, value);
+    }
+    backendService.create(sellData, (
+    response) => {
+      Swal.fire({
+                  title: response,
+                  text: "請確認首頁商品欄有無您上架的商品",
+                  icon: "success"
+                })
+    .then((result) => {
+        if (result.isConfirmed) {
+          // ✅ 使用者按下 OK 後跳轉
+          window.location.href = "shoppingpage_bootstrap.html";
+        }
+      });
+    form.reset();
+    }, (errorMessage) => {
+      Swal.fire({
+              title: "Oops...發生錯誤，請稍後再試",
+              text: errorMessage || 'Failed to create commodity.',
+              icon: "error",
+            })
+    } )
+      .finally(() => {
+        // ✅ 隱藏 loading
+        loaderOverlay.classList.add('d-none');
+      });
   }
 });
 
@@ -372,62 +370,166 @@ backbtn2.addEventListener('click', function(e){
   midcontent.style.display = 'block';
 })
 // TODO mystery
-const mystery = document.getElementById('mystery');
-const mysterybtn = document.getElementById('mysterybtn');
-const backbtn3 = document.getElementById('back-btn3');
-mysterybtn.addEventListener('click', function(e){
-  mystery.style.display = 'block';
-  midcontent.style.display = 'none';
-  talkInterface.style.display = 'none';
-})
-backbtn3.addEventListener('click', function(e){
-  mystery.style.display = 'none';
-  midcontent.style.display = 'block';
-  talkInterface.style.display = 'block';
-})
+// const mystery = document.getElementById('mystery');
+// const mysterybtn = document.getElementById('mysterybtn');
+// const backbtn3 = document.getElementById('back-btn3');
+// mysterybtn.addEventListener('click', function(e){
+//   mystery.style.display = 'block';
+//   midcontent.style.display = 'none';
+//   talkInterface.style.display = 'none';
+// })
+// backbtn3.addEventListener('click', function(e){
+//   mystery.style.display = 'none';
+//   midcontent.style.display = 'block';
+//   talkInterface.style.display = 'block';
+// })
 // TODO everyday
-const everyday = document.getElementById('everyday');
-const everydaybtn = document.getElementById('everydaybtn');
-const backbtn4 = document.getElementById('back-btn4');
-everydaybtn.addEventListener('click', function(e){
-  everyday.style.display = 'block';
-  midcontent.style.display = 'none';
-  talkInterface.style.display = 'none';
-})
-backbtn4.addEventListener('click', function(e){
-  everyday.style.display = 'none';
-  midcontent.style.display = 'block';
-  talkInterface.style.display = 'block';
-})
+// const everyday = document.getElementById('everyday');
+// const everydaybtn = document.getElementById('everydaybtn');
+// const backbtn4 = document.getElementById('back-btn4');
+// everydaybtn.addEventListener('click', function(e){
+//   everyday.style.display = 'block';
+//   midcontent.style.display = 'none';
+//   talkInterface.style.display = 'none';
+// })
+// backbtn4.addEventListener('click', function(e){
+//   everyday.style.display = 'none';
+//   midcontent.style.display = 'block';
+//   talkInterface.style.display = 'block';
+// })
 // TODO donate
-const donate = document.getElementById('donate');
-const donatebtn = document.getElementById('donatebtn');
-const backbtn5 = document.getElementById('back-btn5');
-donatebtn.addEventListener('click', function(e){
-  donate.style.display = 'block';
-  midcontent.style.display = 'none';
-  talkInterface.style.display = 'none';
-})
-backbtn5.addEventListener('click', function(e){
-  donate.style.display = 'none';
-  midcontent.style.display = 'block';
-  talkInterface.style.display = 'block';
-})
+// const donate = document.getElementById('donate');
+// const donatebtn = document.getElementById('donatebtn');
+// const backbtn5 = document.getElementById('back-btn5');
+// donatebtn.addEventListener('click', function(e){
+//   donate.style.display = 'block';
+//   midcontent.style.display = 'none';
+//   talkInterface.style.display = 'none';
+// })
+// backbtn5.addEventListener('click', function(e){
+//   donate.style.display = 'none';
+//   midcontent.style.display = 'block';
+//   talkInterface.style.display = 'block';
+// })
 // TODO 校園攻略站
-const campus = document.getElementById('campus');
-const campusbtn = document.getElementById('campusbtn');
-const backbtn6 = document.getElementById('back-btn6');
-campusbtn.addEventListener('click', function(e){
-  campus.style.display = 'block';
-  midcontent.style.display = 'none';
-  talkInterface.style.display = 'none';
+// const campus = document.getElementById('campus');
+// const campusbtn = document.getElementById('campusbtn');
+// const backbtn6 = document.getElementById('back-btn6');
+// campusbtn.addEventListener('click', function(e){
+//   // window.location.href = '../school/school.html';
+//   // campus.style.display = 'block';
+//   // midcontent.style.display = 'none';
+//   // talkInterface.style.display = 'none';
+// });
+// backbtn6.addEventListener('click', function(e){
+//   campus.style.display = 'none';
+//   midcontent.style.display = 'block';
+//   talkInterface.style.display = 'block';
+// });
+
+// TODO 陳列商品
+document.addEventListener('DOMContentLoaded', () => {
+  backendService.GetNewItems((response) => {
+    const productList = response?.data?.commodities ?? [];
+    console.table(productList.map(p => ({ id: p.id, name: p.name, price: p.price })));
+
+    const container = document.getElementById('product-grid');
+    if (!container) {
+      console.warn('#product-grid 容器不存在');
+      return;
+    }
+
+    // 清空舊內容避免重複
+    container.innerHTML = '';
+
+    productList.forEach((product) => {
+      // Bootstrap column 外層
+      const col = document.createElement('div');
+      col.className = 'col';
+
+      // 卡片
+      const card = document.createElement('div');
+      card.className = 'card product-card h-100';
+      card.dataset.id = product.id;         // 保留你的 data-id
+      card.style.width = '100%';            // 交給格線排版
+
+      // 圖片 URL（直接用你回傳的 mainImage）
+      const imgUrl = product.mainImage || '/img/placeholder.png';
+
+      card.innerHTML = `
+        <img class="card-img-top" src="${imgUrl}" alt="${product.name ?? ''}" loading="lazy">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title mb-1">${product.name ?? ''}</h5>
+          <p class="card-text text-muted mb-2">ID: ${product.id}</p>
+          <p class="card-text flex-grow-1">${product.description ?? ''}</p>
+          <div class="mt-auto">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold">NT$ ${product.price ?? ''}</span>
+              <small class="text-muted">庫存 ${product.stock ?? 0}</small>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // 點卡片導到詳情頁（可保留）
+      card.addEventListener('click', () => {
+        location.href = `../product/product.html?id=${encodeURIComponent(product.id)}`;
+      });
+
+      col.appendChild(card);
+      container.appendChild(col);
+    });
+  });
 });
-backbtn6.addEventListener('click', function(e){
-  campus.style.display = 'none';
-  midcontent.style.display = 'block';
-  talkInterface.style.display = 'block';
-});
+
+
 // TODO 學力銀行
+// backendService.GetHotItems((response) => {
+//     console.log("gethotitems:", response.data.commodities);
+//     const productList = response.data.commodities;
+//     const container = document.querySelector('.container-card');
+//     console.log('productlist:', productList);
+//     productList.forEach(product => {
+//       const card = document.createElement('div');
+//       card.className = 'card product-card';
+//       card.dataset.id = product.id; // 用 ID 填入 data-id
+//       card.style.width = '17rem';
+//     // 檢查螢幕寬度是否為手機（小於 768px）
+//     if (window.innerWidth < 768) {
+//       document.querySelectorAll('.product-card').forEach(card => {
+//         card.style.width = '16rem';
+//         card.style.margin = '10px';
+//       });
+//     }
+
+//       const imgUrl = product.mainImage?.startsWith('http');
+
+//       card.innerHTML = `
+//         <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
+//         <div class="card-body">
+//           <h5 class="card-title">${product.name || '未命名商品'}</h5>
+//           <p class="card-text">＃${product.category || '未分類'}</p>
+//           <p class="price">${product.price || 0}<span>NT$</span></p>
+//           <a href="#" class="card-detail-btn">加入購物車</a>
+//         </div>
+//       `;
+//       container.appendChild(card);
+//     });
+//     // 綁定點擊卡片的「詳細資訊」按鈕事件
+//     document.querySelectorAll('.card').forEach(btn => {
+//       btn.addEventListener('click', function (e) {
+//         e.preventDefault();
+//         //const id = this.closest('.product-card').dataset.id;
+//         const id = e.target.closest('.product-card').dataset.id;
+//         console.log('id', id);
+//         if (id) {
+//           window.location.href = `product.html?id=${id}`;
+//         }
+//       });
+//     });
+//   }, (errorMessage) => {
+//     console.error("getnewitems:",errorMessage);
+//   })
 // ⏬ 載入全部商品並顯示在首頁卡片區
 // fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
 //   .then(res => res.json())
