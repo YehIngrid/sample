@@ -727,7 +727,7 @@ ul{
   display: none !important;
 }
 
-/* ✅ 1. 讓所有卡片不會錯位，並修正 initial load 閃動問題 */
+/* ✅ 1. 讓所有卡片不會錯位，並修正 initial load 閃動問題
 #product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -735,7 +735,7 @@ ul{
   padding: 1rem;
   max-width: 1280px;
   margin: 0 auto;
-  /* visibility: hidden; 預設先隱藏 */
+  visibility: hidden; 預設先隱藏
 }
 #product-grid .card-body{
   background: linear-gradient(to bottom, rgba(36,182,133,0.25), #004b972d);
@@ -745,7 +745,7 @@ body.grid-ready #product-grid {
   visibility: visible;
 }
 
-/* ✅ 2. 卡片樣式統一設計 */
+✅ 2. 卡片樣式統一設計
 .grid-item {
   background-color: #fff;
   border-radius: 20px;
@@ -767,7 +767,7 @@ body.grid-ready #product-grid {
   object-fit: cover;
 }
 
-/* ✅ 3. 內部內容間距與格式 */
+✅ 3. 內部內容間距與格式
 .grid-item .card-body {
   padding: 0.75rem;
 }
@@ -798,7 +798,7 @@ body.grid-ready #product-grid {
   margin-top: 0.25rem;
 }
 
-/* ✅ 4. 手機版也維持兩欄，卡片自動縮小（不要讓 spacing 擴大） */
+✅ 4. 手機版也維持兩欄，卡片自動縮小（不要讓 spacing 擴大）
 @media (max-width: 767px) {
   #product-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -811,7 +811,7 @@ body.grid-ready #product-grid {
   }
 }
 
-/* ✅ 5. 平板 768 以上 3 欄，桌面 1024 以上 4 欄，1280px 以上 6 欄 */
+✅ 5. 平板 768 以上 3 欄，桌面 1024 以上 4 欄，1280px 以上 6 欄
 @media (min-width: 768px) {
   #product-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -841,7 +841,7 @@ body.grid-ready #product-grid {
 #page-controls .page-btn.active {
   background-color: #004b97;
   color: white;
-}
+} */
 /* .blinking-warning {
   animation: jumpBlink 1s step-start infinite;
   font-weight: bold;
@@ -1477,3 +1477,63 @@ button {
   transform: translateZ(18.2px);
 }
 
+/* 正方形縮圖；要 4:3/16:9 就改成 4 / 3、16 / 9 */
+.product-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #f8f9fa; /* 沒圖時的底色 */
+}
+.product-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* 填滿容器、維持比例，必要時裁切 */
+  object-position: center; /* 需要改裁切錨點就改這裡：center top 等 */
+  display: block;
+}
+.mgMobile {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+@media screen and (max-width: 768px) {
+  .mgMobile {
+    margin: 0 10px auto;
+  }
+} 
+.favorite-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: white;
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+  z-index: 2; /* 確保在圖片上面 */
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+}
+
+.favorite-btn i {
+  color: #ff4d4d; /* 預設紅色 */
+  font-size: 18px;
+}
+.card { position: relative; }
+.favorite-btn{
+  position: absolute; top: 10px; right: 10px;
+  border: none; background: #fff; border-radius: 50%;
+  padding: 6px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,.2);
+  z-index: 10; pointer-events: auto;
+}
+.favorite-btn i { font-size: 18px; color: #ff5a5a; }
+
+/* 如果卡片裡有 .stretched-link，避免它吃掉點擊 */
+.card .stretched-link::after { pointer-events: none; z-index: 1; }
+/* 移除 SweetAlert 預設的 icon 背景 */
+.goldborder {
+  border: 3px solid gold !important;
+}

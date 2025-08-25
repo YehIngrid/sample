@@ -13,7 +13,7 @@
     <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB_circular_icon.ico">
     <link rel="stylesheet" href="product.css">
-    <link rel="stylesheet" href="demo.css">
+    <link rel="stylesheet" href="../demo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -21,81 +21,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 </head>
-<style>
-  #loader {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px;
-    background-color: #fff;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-  }
-  #whatcontent {
-    display: none; /* 初始隱藏內容 */
-  }
-  /* 載入畫面 */
-.spinner {
-  width: 36.4px;
-  height: 36.4px;
-  animation: spinner-y0fdc1 2.4s infinite ease;
-  transform-style: preserve-3d;
-}
-
-.spinner > div {
-  background: linear-gradient(to bottom, #004b9743, #24b6856f);
-  height: 100%;
-  position: absolute;
-  width: 100%;
-  border: 1.5px solid #fff
-  ;
-}
-
-.spinner div:nth-of-type(1) {
-  transform: translateZ(-18.2px) rotateY(-360deg);
-}
-
-.spinner div:nth-of-type(2) {
-  transform: rotateY(-270deg) translateX(50%);
-  transform-origin: top right;
-}
-
-.spinner div:nth-of-type(3) {
-  transform: rotateY(270deg) translateX(-50%);
-  transform-origin: center left;
-}
-
-.spinner div:nth-of-type(4) {
-  transform: rotateX(90deg) translateY(-50%);
-  transform-origin: top center;
-}
-
-.spinner div:nth-of-type(5) {
-  transform: rotateX(-90deg) translateY(50%);
-  transform-origin: bottom center;
-}
-
-.spinner div:nth-of-type(6) {
-  transform: translateZ(18.2px);
-}
-
-@keyframes spinner-y0fdc1 {
-  0% {
-     transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
-  }
-
-  50% {
-     transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
-  }
-
-  100% {
-     transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
-  }
-}
-
-</style>
 <body>
   <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
     <div class="spinner">
@@ -116,65 +41,30 @@
           <div class="container-fluid d-flex align-items-center sticky-top">
         
             <!-- (A) LOGO 放在最左邊 -->
-            <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
-              <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50">
-                <defs>
-                  <linearGradient id="chineseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#004b97" />
-                    <stop offset="100%" stop-color="rgb(36,182,133)" />
-                  </linearGradient>
-                  <linearGradient id="englishGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="rgb(36,182,133)" />
-                    <stop offset="100%" stop-color="#004b97" />
-                  </linearGradient>
-                </defs>
-                <rect x="630" y="250" fill="none" />
-                <text x="50" y="20" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="25" fill="url(#chineseGradient)" font-weight="bold">拾貨寶庫</text>
-                <text x="50" y="37" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="12" fill="url(#englishGradient)" font-weight="bold">TREASURE HUB</text>
-              </svg>
+            <a class="navbar-brand picture me-4" href="../newhome.html">
+              <img src="../svg/TREASUREHUBCHEN.svg" alt="">
             </a>
         
             <!-- (B) 桌機版導覽選單 -->
             <div class="d-none d-lg-flex">
               <ul class="navbar-nav" >
-                <li class="nav-item"><a class="nav-link"style="color: #383838;" href="home.html">首頁</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;"href="news.html">最新資訊</a></li>
-                <li class="nav-item"><a class="nav-link"style="color: #383838;" href="shoppingpage_bootstrap.html">商品分類</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;"href="questions.html">常見問題</a></li>
-                <li class="nav-item"><a class="nav-link"style="color: #383838;" href="introduce.html">團隊介紹</a></li>
-                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;"href="communication.html">客服諮詢</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
+                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
               </ul>
             </div>
         
             <!-- (C) 右側：登入 + 購物車 -->
             <div class="d-flex align-items-center ms-auto">
               <div class="login">
-                <a id="username" class="username" href="person.html"></a>
-                <a class="navbar-brand" href="account.html" id="loginornot">登入</a>
+                <a id="username" class="username" href="../person/person.html"></a>
+                <a class="navbar-brand" href="../account/account.html" id="loginornot">登入</a>
               </div>
-              <a class="nav-link specialpadding ms-2" href="shoppingcart.html" id="cartIcon">
-                <svg width="42" height="30" viewBox="0 0 42 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <ellipse cx="14.2979" cy="27.3529" rx="2.68085" ry="2.64706" fill="#0D779D"/>
-                  <ellipse cx="25.0213" cy="27.3529" rx="2.68085" ry="2.64706" fill="url(#paint0_linear_8_75)" fill-opacity="0.8"/>
-                  <rect width="28.0279" height="11.9012" transform="matrix(0.999999 -0.00105411 0.00107235 0.999999 7.89775 6.60024)" fill="url(#paint1_linear_8_75)" fill-opacity="0.8"/>
-                  <rect x="8.93617" y="21.1765" width="26.8085" height="2.64706" rx="1" fill="#0D779D"/>
-                  <rect width="2.63091" height="23.3531" rx="1" transform="matrix(0.989465 -0.144771 0.146762 0.989172 5.54836 0.460345)" fill="#0D779D"/>
-                  <rect x="0.893616" width="6.25532" height="2.64706" rx="1" fill="#0D779D"/>
-                  <rect width="7.05514" height="20.4683" transform="matrix(0.976289 0.216471 -0.220037 0.975492 33.9931 4.11319)" fill="white"/>
-                  <path d="M9.82979 12.7941H32.617" stroke="white"/>
-                  <line x1="16.5851" y1="5.29412" x2="16.5851" y2="20.2941" stroke="white"/>
-                  <rect width="0.893617" height="15" transform="translate(23.234 5.29412)" fill="white"/>
-                  <defs>
-                  <linearGradient id="paint0_linear_8_75" x1="27.2553" y1="29.5588" x2="23.285" y2="25.5379" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#004B97"/>
-                  <stop offset="1" stop-color="#24B685" stop-opacity="0.8"/>
-                  </linearGradient>
-                  <linearGradient id="paint1_linear_8_75" x1="28.0279" y1="5.95059" x2="2.03464e-09" y2="5.95059" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#004B97" stop-opacity="0.8"/>
-                  <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
-                  </linearGradient>
-                  </defs>
-                  </svg>
+              <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html" id="cartIcon">
+                <img src="../svg/shoppingcart.svg" alt="">
                   <span id="cartCount" class="cart-count">0</span>
               </a>
             </div>
@@ -220,40 +110,22 @@
           <!-- 手機版導覽選單展開內容 -->
           <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item"><a class="nav-link" href="home.html">首頁</a></li>
-              <li class="nav-item"><a class="nav-link" href="news.html">最新資訊</a></li>
-              <li class="nav-item"><a class="nav-link" href="shoppingpage_bootstrap.html">商品分類</a></li>
-              <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
-              <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
-              <li class="nav-item specialpadding"><a class="nav-link" href="communication.html">客服諮詢</a></li>
+              <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
+              <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
+              <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+              <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
+              <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
+              <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
           </div>
         </div>
-        
-
-      <a href="#" class="talk">
-        <svg width="64" height="59" viewBox="0 0 64 59" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="64" height="59" fill="#FBFBFB"/>
-          <path d="M58 29.5C58 39.165 46.8071 47 33 47C19.1929 47 8 39.165 8 29.5C8 19.835 19.1929 12 33 12C46.8071 12 58 19.835 58 29.5Z" fill="url(#paint0_linear_10_49)" fill-opacity="0.8"/>
-          <ellipse cx="18.3448" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
-          <ellipse cx="45.931" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
-          <ellipse cx="32.1379" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
-          <path d="M12 39C10.9427 41.5701 8.99999 44.5 8.49999 45C7.99999 45.5 12 43.5 12 43.5M12 39C12 39 12 42.6429 12 43.5M12 39L15 41.5714M12 43.5C12 43.5 14 42.4286 15.5 42C17 41.5714 15 41.5714 15 41.5714M15 41.5714L11 43" stroke="#6195BD" stroke-width="2" stroke-linejoin="round"/>
-          <defs>
-          <linearGradient id="paint0_linear_10_49" x1="33" y1="12" x2="33" y2="47" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#24B685" stop-opacity="0.6"/>
-          <stop offset="0.368901" stop-color="#127F8E" stop-opacity="0.702167"/>
-          <stop offset="1" stop-color="#004B97" stop-opacity="0.8"/>
-          </linearGradient>
-          </defs>
-          </svg>
-          
-        </a>
     </div>
      
   
           </div>
-<div class="icon-button" id="back-btn"></div>
+<div class="icon-button" id="back-btn">
+  <img src="../svg/page.svg" alt="返回上一頁" style="cursor: pointer; margin-top: 10px; margin-left: 20px;">
+</div>
 <!-- <div class="haha d-flex">
     <!-- 商品主圖 + 縮圖 
 <div class="product-preview">
@@ -307,11 +179,7 @@
       <div class="info-column">
         <div class="product-info">
           <h1 id="product-name">商品名稱</h1>
-          <ul id="product-category" class="product-category">
-            <li>分類：</li>
-            <li>新舊：</li>
-            <li>物品年齡：</li>
-            <li>庫存：</li>
+          <ul style="font-size: 1.6rem; " id="product-category" class="product-category">
           </ul>
           <p id="product-price">0<span style="font-size: 1.2rem;">NT$</span></p>
         </div>
@@ -323,61 +191,45 @@
     </div>
     <hr style="width: 86vw;  margin: 0 auto;margin-bottom: 5vh;">
     <div class="mix">
-        <div class="describe">
-            <h2>商品描述</h2>
-            <p id="product-description" class="description-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas nemo perspiciatis fugiat consectetur, nobis consequuntur placeat veritatis tenetur obcaecati explicabo ad id tempore! Vel consequuntur, cumque iure repellendus odit consectetur inventore sint? Alias cupiditate accusantium cum numquam nam sunt magnam aspernatur, incidunt doloribus quidem fugiat, nisi adipisci odio porro consectetur nulla id obcaecati ab expedita neque earum? Eaque, officiis. Earum, sequi consequuntur ex eveniet molestias suscipit maxime aperiam! Quasi suscipit ea alias. Necessitatibus, laboriosam! Officia modi dolore aperiam blanditiis, similique nostrum ex temporibus et quia laborum non saepe perspiciatis, doloremque dolorem doloribus consequuntur ab quo accusamus repellat, eaque hic porro?</p>
-        </div>
-        
-        <div>
+      <div class="describe">
+          <h2>商品描述</h2>
+          <p id="product-description" class="description-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas nemo perspiciatis fugiat consectetur, nobis consequuntur placeat veritatis tenetur obcaecati explicabo ad id tempore! Vel consequuntur, cumque iure repellendus odit consectetur inventore sint? Alias cupiditate accusantium cum numquam nam sunt magnam aspernatur, incidunt doloribus quidem fugiat, nisi adipisci odio porro consectetur nulla id obcaecati ab expedita neque earum? Eaque, officiis. Earum, sequi consequuntur ex eveniet molestias suscipit maxime aperiam! Quasi suscipit ea alias. Necessitatibus, laboriosam! Officia modi dolore aperiam blanditiis, similique nostrum ex temporibus et quia laborum non saepe perspiciatis, doloremque dolorem doloribus consequuntur ab quo accusamus repellat, eaque hic porro?</p>
+      </div>
+      
+      <div>
         <h2 class="sellertopic">賣家資訊</h2>
-        <div class="sellerinfo">
-            <div class="lgsellerinfo">
-              <img src="https://github.com/YehIngrid/sample/blob/main/image/default-avatar.png?raw=true" alt="賣家頭像" class="sellerphoto">
-            <div class="d-flex justify-content-center">
-            </div>
-            <div class="d-flex justify-content-center">
-                <h3 class="usernameinfo" id="usernameinfo">sellername</h3>
-            </div>
-            <div class="d-flex justify-content-center">
-                <h6>信譽積分：100</h6>
-            </div>
-          </div>
-            
-            <p class="userinfo">Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita dolorem quae sapiente est tempora perferendis assumenda laboriosam officia reiciendis earum?</p>
-            
-        </div>
+        <div id="sellerInfo"></div>
+      </div>
     </div>
-    <div>
-      <h2 style="margin-top: 40px; margin-bottom: 20px;">其他資訊</h2>
-      <p style="font-size: 1.4rem;color: rgb(36,182,133);">商品尺寸</p>
-  <ol style="font-size: 1.2rem;color: #4f4f4f;margin-bottom: 30px;">
-    <li>大型：<br>長度/寬度/高度大於150cm，容量大於5L。</li>
-    <li>中型：<br>長度/寬度/高度30cm到150cm，容量1L到5L。</li>
-    <li>小型：<br>長度/寬度/高度小於30cm，容量小於1L。</li>
-  </ol>
-  <p style="font-size: 1.4rem;color: rgb(36,182,133);">新舊程度</p>
-  <ol style="font-size: 1.2rem; color: #4f4f4f;">
-    <li>全新：完全未使用，包裝完好。</li>
-    <li>幾乎全新：使用過一次或兩次，狀況極佳，幾乎沒有磨損。</li>
-    <li>半新：使用過，狀況良好，可能有輕微磨損。</li>
-    <li>適中：明顯使用過，狀況普通，可能有明顯的使用痕跡，但仍可正常使用。</li>
-    <li>稍舊：使用時間較長，狀況一般，有顯著的磨損或損壞，但仍可使用。</li>
-    <li>全舊：使用過度，可能有重大缺陷或損壞，建議僅用於某些用途或需要修理。</li>
-  </ol>
+    <div class="otherInfo">
+      <h2 style="margin-bottom: 20px;">其他資訊</h2>
+      <p style="font-size: 1.8rem;color: rgb(36,182,133);">商品尺寸</p>
+      <ol style="font-size: 1.6rem;color: #4f4f4f; margin-bottom: 30px;">
+        <li>大型：<br>長度/寬度/高度大於150cm，容量大於5L。</li>
+        <li>中型：<br>長度/寬度/高度30cm到150cm，容量1L到5L。</li>
+        <li>小型：<br>長度/寬度/高度小於30cm，容量小於1L。</li>
+      </ol>
+      <p style="font-size: 1.8rem;color: rgb(36,182,133);">新舊程度</p>
+      <ol style="font-size: 1.6rem; color: #4f4f4f;">
+        <li>全新：完全未使用，包裝完好。</li>
+        <li>幾乎全新：使用過一次或兩次，狀況極佳，幾乎沒有磨損。</li>
+        <li>半新：使用過，狀況良好，可能有輕微磨損。</li>
+        <li>適中：明顯使用過，狀況普通，可能有明顯的使用痕跡，但仍可正常使用。</li>
+        <li>稍舊：使用時間較長，狀況一般，有顯著的磨損或損壞，但仍可使用。</li>
+        <li>全舊：使用過度，可能有重大缺陷或損壞，建議僅用於某些用途或需要修理。</li>
+      </ol>
     </div>
-    </div>
-  </div>
   <div class="phonebuy d-flex d-sm-none fixed-bottom">
     <button class="buy">直接下單</button>
     <button class="shopcart" onclick="playUfoAnimation(this)">加入購物車</button>
-</div>
+  </div>
   </div>
         <!-- script部分-->
-        <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="product.js"></script>
-        <script src="demo.js"></script>
+        <script src="../demo.js"></script>
+        <script src="../BackendService.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

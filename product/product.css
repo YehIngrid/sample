@@ -172,15 +172,8 @@
     }    
 }
 @media (min-width:700px) {
-    .sellerinfo{
-        display: flex;
-    }
-    .lgsellerinfo{
-        padding-right: 30px;
-    }
-    .userinfo{
-        font-size: 1.5rem !important;
-        padding-top: 10px;
+    #sellerInfo{
+        display: block;
     }
 }
   .mix img{
@@ -188,23 +181,18 @@
     padding: 5px;
     margin: 0 auto;
   }
-  .sellerinfo h2{
+  #sellerInfo h2{
     font-size: 2rem;
     margin-top: 0px;
     margin-bottom: 0px;
   }
-  .sellerinfo h4{
-    font-size: 1.5rem;
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
-  .sellerinfo p{
+  #sellerInfo p{
     font-size: 1.3rem;
     margin-top: 0px;
     margin-bottom: 0px;
   }
   
-  .sellerinfo{
+  #sellerInfo{
     /* margin-left: 15px; */
     border-radius: 20px;
     box-shadow: #616161 0px 0px 1px;
@@ -214,18 +202,18 @@
     min-width: 200px;
     max-width: 500px;
   }
-  .sellerinfo img{
+  #sellerInfo img{
     width: 160px; /* 或任何你想要的尺寸 */
   height: 160px;
   object-fit: cover; /* 保持比例裁切 */
   border-radius: 50%; /* 圓形 */
   border: 4px solid #2c5ca2; /* 可選邊框 */
   }
-  .sellerinfo h3{
+  #sellerInfo h3{
     padding-top: 10px;
     padding-bottom: 1px;
   }
-  .sellerinfo h6{
+  #sellerInfo h6{
     padding-bottom: 10px;
   }
 .sellertopic{
@@ -490,21 +478,11 @@
     cursor: pointer;
   }
 }
-.sellername{
-    font-size: 1.5rem !important;
-    text-align: center;
-    margin-top: 10px !important;
-    margin-bottom: 0px;
-}
-.icon-button {
-  width: 130px; /* 根據你 SVG 的大小調整 */
-  height: 40px;
-  background-image: url('../svg/backbtn.svg');
-  background-size: cover;
-  transition: background-image 0.3s ease;
- /* TODO:未解決padding問題因為他是svg，可能需要直接去改figma */
-}
-
-.icon-button:hover, .icon-button:focus {
-  background-image: url('../svg/backbtn_hover.svg');
+.otherInfo {
+  width: 80vw;
+  margin: 0 auto;
+  border: #d9d9d9 1px solid;
+  padding: 36px;
+  border-radius: 20px;
+  margin-bottom: 100px;
 }

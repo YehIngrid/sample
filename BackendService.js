@@ -147,6 +147,16 @@ class BackendService {
             fnError("發生錯誤");
         })
     }
+    GetItemsInfo(id, fnSuccess, fnError) {
+        return axios.get(`${this.baseUrl}/api/commodity/item/${id}`)
+        .then(function(response) {
+            fnSuccess(response.data);
+        })
+        .catch(function(error) {
+            console.error(error);
+            fnError("讀取商品資訊失敗");
+        }) 
+    }
     // logout(userData, fnSuccess, fnError) {
     //     return axios
     // }
