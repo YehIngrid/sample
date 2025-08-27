@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
         5 : '稍舊', 
         6 : '全舊', 
       };
-      let new_or_old = newOrOldMap[product.new_or_old];
+      let newOrOld = newOrOldMap[product.new_or_old];
       
       card.innerHTML = `
         <button class="favorite-btn" type="button" aria-label="加入收藏">
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="card-body d-flex flex-column">
           <h5 class="card-title mb-1">${product.name ?? ''}</h5>
-          <p class="card-text text-muted mb-2"># ${category} # ${new_or_old}</p>
+          <p class="card-text text-muted mb-2"># ${category} # ${newOrOld}</p>
           <p class="card-text flex-grow-1">${product.description ?? ''}</p>
           <div class="mt-auto">
             <div class="d-flex justify-content-between align-items-center">
