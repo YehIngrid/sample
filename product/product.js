@@ -150,6 +150,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const newOrOld = newOrOldMap?.[product.newOrOld] ?? product.newOrOld ?? '未標示';
     const category = categoryMap?.[product.category] ?? product.category ?? '未分類';
+    let updateAt = product.updataAt;
+    const taiwanUpdateTime = new Date(updateAt);
+    // 格式化（只保留時:分）
+    const updateTime = taiwanUpdateTime.toLocaleString("zh-TW", { 
+      timeZone: "Asia/Taipei",
+      hour12: false,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+    let createdAt = product.createdAt;
+    const taiwanCreatedTime = new Date(createdAt);
+    const createdTime = taiwanCreatedTime.toLocaleString("zh-TW", {
+      timeZone: "Asia/Taipei",
+      hour12: false,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
 
     const categoryList = document.getElementById('product-category');
     if (categoryList) {
@@ -158,8 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <li>商品狀態：${newOrOld}</li>
         <li>物品年齡：${String(product.age) === '-1' || product.age == null ? '未知' : product.age + '年'}</li>
         <li>庫存：${product.stock ?? '無資料'}</li>
-        <li>商品上架時間: 無資料</li>
-        <li>賣家更新時間: 無資料</li>
+        <li>商品上架時間: ${createdTime}</li>
+        <li>賣家更新時間: ${updateTime}</li>
       `;
     }
 
