@@ -2,7 +2,7 @@ axios.defaults.withCredentials = true;
 
 class BackendService {
     constructor() {
-        this.baseUrl = 'https://23.146.248.58';
+        this.baseUrl = 'https://thpr.hlc23.dev';
     }
     test() {
         console.log('OK');
