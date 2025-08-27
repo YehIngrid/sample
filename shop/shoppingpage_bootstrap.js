@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
         5 : '稍舊', 
         6 : '全舊', 
       };
-      let newOrOld = newOrOldMap[product.new_or_old];
+      let newOrOld = newOrOldMap[product.newOrOld];
       
       card.innerHTML = `
         <button class="favorite-btn" type="button" aria-label="加入收藏">
