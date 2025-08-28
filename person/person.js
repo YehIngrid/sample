@@ -111,38 +111,39 @@ document.getElementById('update-profile').addEventListener('click', async () => 
     }
   });
   
-const mcollapsebtn = document.getElementById('mcollapsebtn');
-mcollapsebtn.addEventListener('click', function () {
-    const mainContentArea = document.getElementById('mainContentArea');
-    mainContentArea.classList.toggle('d-none'); // 切換主內容的顯示狀態
-    const target = document.getElementById('collapseContent');
-    target.classList.toggle('show'); // 切換折疊內容的顯示狀態
-    const backbtn7 = document.getElementById('back-btn7');
-    if (target.classList.contains('show')) {
-      backbtn7.style.display = 'block'; // 顯示返回按鈕
-    } else {
-      backbtn7.style.display = 'none'; // 隱藏返回按鈕
-    }
-  }
-);
+// const mcollapsebtn = document.getElementById('mcollapsebtn');
+// const collapseContent = document.getElementById('collapseContent');
+// mcollapsebtn.addEventListener('click', function () {
+//     const mainContentArea = document.getElementById('mainContentArea');
+//     mainContentArea.classList.toggle('d-none'); // 切換主內容的顯示狀態
+    
+//     collapseContent.classList.toggle('show'); // 切換折疊內容的顯示狀態
+//     const backbtn7 = document.getElementById('back-btn7');
+//     if (collapseContent.classList.contains('show')) {
+//       backbtn7.style.display = 'block'; // 顯示返回按鈕
+//     } else {
+//       backbtn7.style.display = 'none'; // 隱藏返回按鈕
+//     }
+//   }
+// );
 
-  document.getElementById('collapsebtn').addEventListener('click', function () {
-    const mainContentArea = document.getElementById('mainContentArea');
-    mainContentArea.classList.toggle('d-none'); // 切換主內容的顯示狀態
-    const target = document.getElementById('collapseContent');
-    target.classList.toggle('show'); // 切換折疊內容的顯示狀態
-    const backbtn7 = document.getElementById('back-btn7');
-    if (target.classList.contains('show')) {
-      backbtn7.style.display = 'block'; // 顯示返回按鈕
-    } else {
-      backbtn7.style.display = 'none'; // 隱藏返回按鈕
-    }
-  });
+//   document.getElementById('collapsebtn').addEventListener('click', function () {
+//     const mainContentArea = document.getElementById('account');
+//     mainContentArea.classList.toggle('d-none'); // 切換主內容的顯示狀態
+//     const collapseContent = document.getElementById('collapseContent');
+//     collapseContent.classList.toggle('show'); // 切換折疊內容的顯示狀態
+//     const backbtn7 = document.getElementById('back-btn7');
+//     if (collapseContent.classList.contains('show')) {
+//       backbtn7.style.display = 'block'; // 顯示返回按鈕
+//     } else {
+//       backbtn7.style.display = 'none'; // 隱藏返回按鈕
+//     }
+//   });
   document.getElementById('back-btn7').addEventListener('click', function () {
-    const mainContentArea = document.getElementById('mainContentArea');
+    const mainContentArea = document.getElementById('account');
     mainContentArea.classList.remove('d-none'); // 顯示主內容
-    const target = document.getElementById('collapseContent');
-    target.classList.remove('show'); // 隱藏折疊內容
+    const collapseContent = document.getElementById('collapseContent');
+    collapseContent.classList.remove('show'); // 隱藏折疊內容
     this.style.display = 'none'; // 隱藏返回按鈕
   });
 const logoutButton = document.getElementById('logout');
@@ -169,3 +170,20 @@ logoutButton.addEventListener('click', function() {
     }
   });
 });
+ // 左側選單切換右側 section
+  document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
+    item.addEventListener('click', function (e) {
+      e.preventDefault();
+      // 隱藏全部
+      document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
+      // 顯示目標
+      const target = this.getAttribute('data-target');
+      const pane = document.getElementById(target);
+      if (pane) pane.classList.remove('d-none');
+
+      // 更新 active 樣式
+      document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+

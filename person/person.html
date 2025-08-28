@@ -109,7 +109,7 @@
               <div style="margin-top: 20px; margin-bottom: 20px; font-weight: 600;" class="name h2 mb-0" id="profileName"></div>
               <div class="h4" id="profileInfo" style="margin: 10px 30px; text-align: start;"></div>
               <div class="d-grid gap-2 mt-3">
-                <a id="collapsebtn" class="btn editbtn">編輯個人資料</a>
+                <a data-target="profile-edit" class="btn editbtn">編輯個人資料</a>
               </div>
             </div>
           </div>
@@ -117,19 +117,105 @@
           <!-- Account Menu -->
           <div class="card shadow-sm menu">
             <div class="list-group list-group-flush">
-              <a class="list-group-item list-group-item-action active" href="#">帳戶管理中心</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../svg/sellicon.svg" alt="我的商品icon"> 我的商品</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
+              <a class="list-group-item list-group-item-action active" href="#" data-target ="account">帳戶管理中心</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="products"><img src="../svg/sellicon.svg" alt="我的商品icon"> 我的商品</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="favorites"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
               <a class="list-group-item list-group-item-action asideicon" id="logout" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
             </div>
           </div>
         </div>
       </aside>
+      <!-- ?section productEdit沒有解決顯示不了的問題 -->
+      <!-- TODO section productEdit -->
+      <section id="profile-edit" class="col-lg-9 d-none content-section">
+        <button id="back-btn7" style="margin-bottom: 30px; cursor: pointer; border: none; background-color: #004b9743; color: #383838; font-size: 1.6rem; padding: 5px 10px; border-radius: 20px;" type="button">Back</button>
+        <p style="font-size: 1.8rem;">個人資料更改區</p>
 
+        <div style="margin-top: 30px; margin-bottom: 30px;">
+          <div class="d-flex align-items-end" style="margin-bottom: 10px;">
+            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
+            <input type="file" id="photo" accept="image/png, image/jpeg" style="border:none; margin-top: 3px;font-size: 13px;">
+          </div>
+
+          <div class="d-flex  justify-content-between align-items-center" style="margin-bottom: 10px;">
+            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">暱稱</p>
+            <input type="text" style="width: 90%; padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
+          </div>
+          
+          <div class="d-flex  justify-content-between align-items-end" style="margin-bottom: 10px;">
+            <p style=" margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">個人簡介</p>
+            <textarea id="bio" placeholder="簡單介紹一下自己吧！(至多100字)" style="width: 90%; display: block;padding: 5px;font-size: 1.4rem;"></textarea>
+          </div>
+          <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
+          <span class="loader" id="loader1" style="display: none;"></span>
+        </div>
+      </section>
+      <!-- section products -->
+      <section class="col-lg-9 d-none content-section" id="products" >
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h4 class="card-title">我的商品</h4>
+              <div class="table-responsive">
+                <table class="table align-middle">
+                  <thead>
+                    <tr>
+                      <th>商品</th><th>狀態</th><th>價格</th><th>最後更新</th><th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>教科書 A</td><td><span class="badge text-bg-success">上架中</span></td><td>$300</td><td>2025/08/15</td>
+                      <td class="text-end"><button class="btn btn-sm btn-outline-primary">編輯</button></td>
+                    </tr>
+                    <tr>
+                      <td>二手筆電</td><td><span class="badge text-bg-secondary">已售出</span></td><td>$12,000</td><td>2025/08/14</td>
+                      <td class="text-end"><button class="btn btn-sm btn-outline-primary">查看</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- section messages -->
+      <section class="col-lg-9 d-none content-section" id="messages">聊天室</section>
+      <!-- section favorites -->
+      <section class="col-lg-9 d-none content-section" id="favorites">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h4 class="card-title">我的商品</h4>
+              <div class="table-responsive">
+                <table class="table align-middle">
+                  <thead>
+                    <tr>
+                      <th>商品</th><th>狀態</th><th>價格</th><th>最後更新</th><th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>教科書 A</td><td><span class="badge text-bg-success">上架中</span></td><td>$300</td><td>2025/08/15</td>
+                      <td class="text-end"><button class="btn btn-sm btn-outline-primary">編輯</button></td>
+                    </tr>
+                    <tr>
+                      <td>二手筆電</td><td><span class="badge text-bg-secondary">已售出</span></td><td>$12,000</td><td>2025/08/14</td>
+                      <td class="text-end"><button class="btn btn-sm btn-outline-primary">查看</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- section settings -->
+      <section class="col-lg-9 d-none content-section" id="settings">設定</section>
       <!-- Main Content -->
-      <main class="col-lg-9" id="mainContentArea">
+      <main class="col-lg-9 content-section" id="account">
         <div class="row g-3">
           <div class="col-12">
             <div class="alert alert-primary" role="alert" style="background: rgba(77,129,183,.1); border-color: rgba(77,129,183,.2); color:#18456f;">
@@ -206,32 +292,8 @@
         </div>
       </main>
       <!-- 主內容：右（你給的 main 放這裡） -->
-    <main class="col-12 col-lg-9" id="mainContentProfile">
       <!-- 編輯區（預設隱藏，顯示時一樣會在右邊） -->
-      <section id="collapseContent" class="collapse">
-        <button id="back-btn7" style="margin-bottom: 30px; cursor: pointer; border: none; background-color: #004b9743; color: #383838; font-size: 1.6rem; padding: 5px 10px; border-radius: 20px;" type="button">Back</button>
-        <p style="font-size: 1.8rem;">個人資料更改區</p>
-
-        <div style="margin-top: 30px; margin-bottom: 30px;">
-          <div class="d-flex align-items-end" style="margin-bottom: 10px;">
-            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
-            <input type="file" id="photo" accept="image/png, image/jpeg" style="border:none; margin-top: 3px;font-size: 13px;">
-          </div>
-
-          <div class="d-flex  justify-content-between align-items-center" style="margin-bottom: 10px;">
-            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">暱稱</p>
-            <input type="text" style="width: 90%; padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
-          </div>
-          
-          <div class="d-flex  justify-content-between align-items-end" style="margin-bottom: 10px;">
-            <p style=" margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">個人簡介</p>
-            <textarea id="bio" placeholder="簡單介紹一下自己吧！(至多100字)" style="width: 90%; display: block;padding: 5px;font-size: 1.4rem;"></textarea>
-          </div>
-          <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
-          <span class="loader" id="loader1" style="display: none;"></span>
-        </div>
-      </section>
-    </main>
+      
     </div>
   </div>
 
@@ -249,7 +311,7 @@
           <div class="small text-muted" id="mProfileInfo" style="font-size: 1.2rem;">使用者自介</div>
         </div>
       </div>
-        <a id="mcollapsebtn" class="btn editbtn">編輯個人資料</a>
+        <a data-target="profile-edit" class="btn editbtn">編輯個人資料</a>
       <hr>
       <div class="list-group">
         <a class="list-group-item list-group-item-action active standardfontsize" href="#">帳戶管理中心</a>
