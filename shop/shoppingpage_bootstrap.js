@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 Swal.fire({
   title: "確定要販賣此商品?",
-  text: "請確認好所有商品資訊，若後續需要更改或移除資料，請至個人檔案內查看。",
+  text: "請確認好所有商品資訊以及照片是否違反規定，若後續需要更改或移除資料，請至個人檔案內查看。",
   icon: "warning",
   showCancelButton: true,
   confirmButtonColor: "#3085d6",
