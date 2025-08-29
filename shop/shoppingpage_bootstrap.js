@@ -156,7 +156,7 @@ function renderItems(items){
         <img src="${item.mainImage}" alt="${item.name}">
         <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
       `;
-    listEl.appendChild(card);
+    listEl.appendChild(div);
   });
 }
 function renderDots(totalPages, current){
