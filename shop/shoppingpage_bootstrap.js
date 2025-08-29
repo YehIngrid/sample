@@ -74,44 +74,33 @@ document.addEventListener('DOMContentLoaded', function() {
   loginService = new LoginService(backendService);
   let page = 1;
   let limit = 6;
-  let pagingInfo = {page: page, limit: limit};
-
-  backendService.getHotItems(pagingInfo, (response) => {
-    console.log("gethotitems:", response.data.commodities);
-    const hotItems = response.data.commodities;
-    const container = document.getElementById("hotItems");
-
-    hotItems.forEach(item => {
-      const div = document.createElement("div");
-      div.className = "hot-item";
-      div.innerHTML = `
-        <img src="${item.mainImage}" alt="${item.name}">
-        <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
-      `;
-      container.appendChild(div);
-      // const pid = item.dataset.id;
-      // if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
-    });
-  }, (errorMessage) => {
-    console.error("gethotitems:", errorMessage);
-  })
+  const listEl = document.getElementById('hotItems');
+  const dotsEl = document.getElementById('hotDots');
+  fetchPage(page);
+  // let pagingInfo = {page: page, limit: limit};
+  // console.log("gethotitems:", response.data.commodities);
   
-  for (let i = 0; i < totalPages; i++) {
-    const dot = document.createElement('button');
-    if (i === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => {
-      index = i;
-      updateCarousel();
-    });
-    dotsContainer.appendChild(dot);
-  }
+  // backendService.getHotItems(pagingInfo, (response) => {
+    
+  //   // const hotItems = response.data.commodities;
+  //   // const container = document.getElementById("hotItems");
+  //   // if(response.data.pagination.hasNextPage) {
 
-  function updateCarousel() {
-    list.style.transform = `translateX(-${index * 100}%)`;
-    document.querySelectorAll('.dots button').forEach((dot, i) => {
-      dot.classList.toggle('active', i === index);
-    });
-  }
+  //   // }
+  //   // hotItems.forEach(item => {
+  //   //   const div = document.createElement("div");
+  //   //   div.className = "hot-item";
+  //   //   div.innerHTML = `
+  //   //     <img src="${item.mainImage}" alt="${item.name}">
+  //   //     <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
+  //   //   `;
+  //   //   container.appendChild(div);
+  //   //   // const pid = item.dataset.id;
+  //   //   // if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
+  //   // });
+  // }, (errorMessage) => {
+  //   console.error("gethotitems:", errorMessage);
+  // })
 
   if (loginService.isLogin()) {
     Swal.fire({
@@ -147,7 +136,40 @@ document.addEventListener('DOMContentLoaded', function() {
       window.location.href = "../account/account.html"; // 導向登入頁面
     });
   }
+function fetchPage(p){
+  const pagingInfo = { page: p, limit: limit };
+  backendService.getHotItems(pagingInfo, (response) => {
+    const items = response?.data?.commodities ?? [];
+    const pg = response?.data?.pagination ?? {};
+    page = pg.currentPage ?? p;
 
+    renderItems(items);
+    renderDots(pg.totalPages, page);  // 直接用 totalPages 畫點
+  });
+}
+function renderItems(items){
+  listEl.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement("div");
+      div.className = "hot-item";
+      div.innerHTML = `
+        <img src="${item.mainImage}" alt="${item.name}">
+        <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
+      `;
+    listEl.appendChild(card);
+  });
+}
+function renderDots(totalPages, current){
+  dotsEl.innerHTML = '';
+  for(let i=1; i<=totalPages; i++){
+    const btn = document.createElement('button');
+    if(i === current) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+      if (i !== page) fetchPage(i);
+    });
+    dotsEl.appendChild(btn);
+  }
+}
   // 確保所有 DOM 元素都已經載入
   const form = document.getElementById('createCommodityForm');
   const openModalBtn = document.getElementById('openModal');
