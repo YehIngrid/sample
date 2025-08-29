@@ -75,7 +75,10 @@ document.addEventListener('DOMContentLoaded', function() {
   let page = 1;
   let limit = 6;
   const listEl = document.getElementById('hotItems');
-  const dotsEl = document.getElementById('hotDots');
+  const prevHotBtn = document.getElementById("prevHotBtn");
+  const nextHotBtn = document.getElementById("nextHotBtn");
+  const pageInfo = document.getElementById("pageInfo");
+
   fetchPage(page);
   // let pagingInfo = {page: page, limit: limit};
   // console.log("gethotitems:", response.data.commodities);
@@ -144,7 +147,7 @@ function fetchPage(p){
     page = pg.currentPage ?? p;
 
     renderItems(items);
-    renderDots(pg.totalPages, page);  // 直接用 totalPages 畫點
+    updatePager(pg);
   });
 }
 function renderItems(items){
@@ -159,17 +162,18 @@ function renderItems(items){
     listEl.appendChild(div);
   });
 }
-function renderDots(totalPages, current){
-  dotsEl.innerHTML = '';
-  for(let i=1; i<=totalPages; i++){
-    const btn = document.createElement('button');
-    if(i === current) btn.classList.add('active');
-    btn.addEventListener('click', () => {
-      if (i !== page) fetchPage(i);
-    });
-    dotsEl.appendChild(btn);
-  }
+function updatePager(pg){
+  prevHotBtn.disabled = !pg.hasPrevPage;
+  nextHotBtn.disabled = !pg.hasNextPage;
+  pageInfo.textContent = `第 ${pg.currentPage} / ${pg.totalPages} 頁`;
 }
+
+prevHotBtn.addEventListener("click", () => {
+  if (page > 1) fetchPage(page - 1);
+});
+nextHotBtn.addEventListener("click", () => {
+  fetchPage(page + 1);
+});
   // 確保所有 DOM 元素都已經載入
   const form = document.getElementById('createCommodityForm');
   const openModalBtn = document.getElementById('openModal');
