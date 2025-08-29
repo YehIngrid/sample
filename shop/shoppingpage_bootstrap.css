@@ -1557,13 +1557,23 @@ button {
     border-radius: 5px;
     border: 4px solid #b1d8ff;
 }
-.scroll-btn {
-  background: white;
-  border: 1px solid #ddd;
+/* 點點 */
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.dots button {
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  border: none;
+  background: #ccc;
   cursor: pointer;
+}
+.dots button.active {
+  background: #333;
 }
 .hotItemPrice {
   position: relative;
@@ -1585,6 +1595,8 @@ button {
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     overflow: visible;        /* 方格不需要橫向卷軸 */
+    padding-left: 4px;
+    padding-right: 4px;
   }
   .hot-item{ 
     flex: none; 
