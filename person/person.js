@@ -243,7 +243,7 @@ function renderProducts(list = []) {
   if (!tbody) return;
 
   if (!Array.isArray(list) || list.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5">目前沒有商品</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-5">目前沒有商品</td></tr>`;
     return;
   }
 
@@ -265,6 +265,7 @@ function renderProducts(list = []) {
         <td>${updated}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-primary btn-row-action">${st.action}</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action">下架刪除商品</button>
         </td>
       </tr>
     `;
