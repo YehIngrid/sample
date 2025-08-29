@@ -72,10 +72,24 @@ window.addEventListener('click', (event) => {
 document.addEventListener('DOMContentLoaded', function() {
   backendService = new BackendService();
   loginService = new LoginService(backendService);
+  let page = 1;
+  let limit = 6;
+  let pagingInfo = {page: page, limit: limit};
 
-
-  backendService.GetHotItems((response) => {
+  backendService.getHotItems(pagingInfo, (response) => {
     console.log("gethotitems:", response.data.commodities);
+    const hotItems = response.data.commodities;
+    const container = document.getElementById("hotItems");
+
+    hotItems.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "hot-item";
+      div.innerHTML = `
+        <img src="${item.imageUrl}" alt="${item.name}">
+        <p>${item.price}NT$</p>
+      `;
+      container.appendChild(div);
+    });
   }, (errorMessage) => {
     console.error("gethotitems:",errorMessage);
   })
@@ -482,9 +496,12 @@ backbtn2.addEventListener('click', function(e){
 //   });
 // });
 
-
+//?, orders: [{prop:'price',asc: false}, {prop:'id', asc:true}]
 document.addEventListener('DOMContentLoaded', () => {
-  backendService.GetNewItems((response) => {
+  let page = 1;
+  let limit = 12;
+  let pagingInfo = {page: page, limit: limit};
+  backendService.getNewItems(pagingInfo, (response) => {
     const productList = response?.data?.commodities ?? [];
     console.table(productList.map(p => ({ id: p.id, name: p.name, price: p.price })));
 
@@ -662,236 +679,13 @@ favBtn.addEventListener('click', async (e) => {
 });
 
 // TODO 學力銀行
-// backendService.GetHotItems((response) => {
-//     console.log("gethotitems:", response.data.commodities);
-//     const productList = response.data.commodities;
-//     const container = document.querySelector('.container-card');
-//     console.log('productlist:', productList);
-//     productList.forEach(product => {
-//       const card = document.createElement('div');
-//       card.className = 'card product-card';
-//       card.dataset.id = product.id; // 用 ID 填入 data-id
-//       card.style.width = '17rem';
-//     // 檢查螢幕寬度是否為手機（小於 768px）
-//     if (window.innerWidth < 768) {
-//       document.querySelectorAll('.product-card').forEach(card => {
-//         card.style.width = '16rem';
-//         card.style.margin = '10px';
-//       });
-//     }
 
-//       const imgUrl = product.mainImage?.startsWith('http');
-
-//       card.innerHTML = `
-//         <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
-//         <div class="card-body">
-//           <h5 class="card-title">${product.name || '未命名商品'}</h5>
-//           <p class="card-text">＃${product.category || '未分類'}</p>
-//           <p class="price">${product.price || 0}<span>NT$</span></p>
-//           <a href="#" class="card-detail-btn">加入購物車</a>
-//         </div>
-//       `;
-//       container.appendChild(card);
-//     });
-//     // 綁定點擊卡片的「詳細資訊」按鈕事件
-//     document.querySelectorAll('.card').forEach(btn => {
-//       btn.addEventListener('click', function (e) {
-//         e.preventDefault();
-//         //const id = this.closest('.product-card').dataset.id;
-//         const id = e.target.closest('.product-card').dataset.id;
-//         console.log('id', id);
-//         if (id) {
-//           window.location.href = `product.html?id=${id}`;
-//         }
-//       });
-//     });
-//   }, (errorMessage) => {
-//     console.error("getnewitems:",errorMessage);
-//   })
-// ⏬ 載入全部商品並顯示在首頁卡片區
-// fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
-//   .then(res => res.json())
-//   .then(result => {
-//     const productList = result.data;
-//     const container = document.querySelector('.container-card');
-// console.log('productlist:',productList);
-//     productList.forEach(product => {
-//       const card = document.createElement('div');
-//       card.className = 'card product-card';
-//       card.dataset.id = product.id; // 用 ID 填入 data-id
-//       card.style.width = '17rem';
-//     // 檢查螢幕寬度是否為手機（小於 768px）
-//     if (window.innerWidth < 768) {
-//       document.querySelectorAll('.product-card').forEach(card => {
-//         card.style.width = '16rem';
-//         card.style.margin = '10px';
-//       });
-//     }
-
-//       const imgUrl = product.mainImage?.startsWith('http') ? product.mainImage : `https://store-backend-iota.vercel.app${product.mainImage}`;
-
-//       card.innerHTML = `
-//         <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
-//         <div class="card-body">
-//           <h5 class="card-title">${product.name || '未命名商品'}</h5>
-//           <p class="card-text">＃${product.category || '未分類'}</p>
-//           <p class="price">${product.price || 0}<span>NT$</span></p>
-//           <a href="#" class="card-detail-btn">加入購物車</a>
-//         </div>
-//       `;
-//       container.appendChild(card);
-//     });
-//     // 綁定點擊卡片的「詳細資訊」按鈕事件
-//     document.querySelectorAll('.card').forEach(btn => {
-//       btn.addEventListener('click', function (e) {
-//         e.preventDefault();
-//         //const id = this.closest('.product-card').dataset.id;
-//         const id = e.target.closest('.product-card').dataset.id;
-//         console.log('id', id);
-//         if (id) {
-//           window.location.href = `product.html?id=${id}`;
-//         }
-//       });
-//     });
-//   })
-//   .catch(err => console.error('載入商品失敗：', err));
-
-// const grid = document.getElementById('product-grid');
-// const pagination = document.getElementById('pagination');
-
-// let currentPage = 1;
-// const itemsPerPage = 12;
-// let allProducts = [];
-
-// fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
-//   .then(res => res.json())
-//   .then(result => {
-//     allProducts = result.data;
-//     renderPage(currentPage);
-//     renderPagination();
-//     document.body.classList.add('grid-ready');
-//   });
-
-// function renderPage(page) {
-//   grid.innerHTML = '';
-//   const start = (page - 1) * itemsPerPage;
-//   const end = start + itemsPerPage;
-//   const pageItems = allProducts.slice(start, end);
-
-//   pageItems.forEach(product => {
-//     const card = document.createElement('div');
-//     card.className = 'grid-item';
-//     card.dataset.id = product.id;
-
-//     const imgUrl = product.mainImage?.startsWith('http')
-//       ? product.mainImage
-//       : `https://store-backend-iota.vercel.app${product.mainImage}`;
-
-//     card.innerHTML = `
-//       <img src="${imgUrl}" alt="${product.name}">
-//       <div class="card-body">
-//         <h5>${product.name || '未命名商品'}</h5>
-//         <p>＃${product.category || '未分類'}</p>
-//         <p class="price">${product.price || 0}<span> NT$</span></p>
-//         <p class="extra-info">1.1K 件</p>
-//         <p class="tag">คูปอง ส่วนลด 6%</p>
-//       </div>
-//     `;
-
-//     grid.appendChild(card);
-//   });
-// }
-
-// function renderPagination() {
-//   pagination.innerHTML = '';
-//   const totalPages = Math.ceil(allProducts.length / itemsPerPage);
-
-//   for (let i = 1; i <= totalPages; i++) {
-//     const btn = document.createElement('button');
-//     btn.innerText = i;
-//     btn.style.margin = '0 4px';
-//     btn.style.padding = '6px 12px';
-//     btn.style.borderRadius = '6px';
-//     btn.style.border = 'none';
-//     btn.style.backgroundColor = i === currentPage ? '#004b97' : '#ccc';
-//     btn.style.color = i === currentPage ? '#fff' : '#000';
-
-//     btn.addEventListener('click', () => {
-//       currentPage = i;
-//       renderPage(currentPage);
-//       renderPagination(); // 更新按鈕樣式
-//       window.scrollTo({
-//         top: document.getElementById('product-grid').offsetTop,
-//         behavior: 'smooth'
-//       });
-//     });
-
-//     pagination.appendChild(btn);
-//   }
-// }
 const grid = document.getElementById('product-grid');
 const pagination = document.getElementById('pagination');
 let allProducts = [];
 let currentPage = 1;
 const itemsPerPage = 12;
 
-// fetch('https://store-backend-iota.vercel.app/api/commodity/list/all')
-//   .then(res => res.json())
-//   .then(result => {
-//     allProducts = result.data;
-//     renderPage(currentPage);
-//     renderPagination();
-//     document.body.classList.add('grid-ready');
-//   });
-
-// function renderPage(page) {
-//   grid.innerHTML = '';
-//   const start = (page - 1) * itemsPerPage;
-//   const end = start + itemsPerPage;
-//   const pageItems = allProducts.slice(start, end);
-
-//   pageItems.forEach(product => {
-//     const card = document.createElement('div');
-//     card.className = 'grid-item';
-//     card.dataset.id = product.id;
-
-//     const imgUrl = product.mainImage?.startsWith('http')
-//       ? product.mainImage
-//       : `https://store-backend-iota.vercel.app${product.mainImage}`;
-//     //TODO:商品分類
-//     const categoryMap = {
-//       book: '書籍與學籍用品',
-//       life: '宿舍與生活用品',
-//       student: '學生專用器材',
-//       other: '其他',
-//       recyle: '環保生活用品',
-//       clean: '儲物與收納用品',
-//       // ...等等
-//     };
-//     const neworoldMap = {
-//       '-1': '全新',
-//       '2': '二手',
-//       used: '使用過',
-//     };
-//     let neworold = neworoldMap[product.neworold] || product.neworold;
-//     let category = categoryMap[product.category] || product.category;
-//     card.innerHTML = `
-//       <img src="${imgUrl}" alt="${product.name}">
-//       <div class="card-body">
-//         <h5>${product.name || '未命名商品'}</h5>
-//         <p>＃${category || '未分類'} ＃${neworold}</p>
-//         <p class="price">${product.price || 0}<span> NT$</span></p>
-//         <p class="tag">คูปอง ส่วนลด 6%</p>
-//       </div>
-//     `;
-
-//     card.addEventListener('click', () => {
-//       window.location.href = `product.html?id=${product.id}`;
-//     });
-
-//     grid.appendChild(card);
-//   });
-// }
 
 function renderPagination() {
   pagination.innerHTML = '';
@@ -920,28 +714,5 @@ function renderPagination() {
     pagination.appendChild(btn);
   }
 }
-
-// //TODO:商品店家標籤 
-//   let badgeHtml = '';
-
-//   if (product.isFirstProduct) {
-//     badgeHtml += `<div class="card-badge badge-first">首次上架</div>`;
-//   }
-  
-//   if (product.sellerReputation === 5) {
-//     badgeHtml += `<div class="card-badge badge-trusted">優良賣家</div>`;
-//   }
-  
-//   const cardHtml = `
-//     <div class="card product-card">
-//       ${badgeHtml}
-//       <img src="${imgUrl}" class="card-img-top" alt="${product.name}">
-//       <div class="card-body">
-//         <h5 class="card-title">${product.name || '未命名商品'}</h5>
-//         <p class="card-text">＃${product.category || '未分類'}</p>
-//         <p class="price">${product.price || 0}<span>NT$</span></p>
-//       </div>
-//     </div>
-//   `;
 
 

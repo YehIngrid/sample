@@ -1537,3 +1537,33 @@ button {
 .goldborder {
   border: 3px solid gold !important;
 }
+.hot-items-wrapper {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+.hot-items-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+.hot-item {
+  flex: 0 0 auto;
+  width: 120px;
+  margin: 0 5px;
+  text-align: center;
+}
+.hot-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.scroll-btn {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}

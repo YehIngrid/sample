@@ -47,6 +47,9 @@ class BackendService {
                 fnError("登入失敗");
             });
     }
+    getUserItems(fnSuccess, fnError) {
+        return axios.get()
+    }
     getUserData(fnSuccess, fnError) {
         // 從 localStorage 取出
         const savedUid = localStorage.getItem('uid');
@@ -127,8 +130,13 @@ class BackendService {
             fnError("上架商品失敗");
         })
     }
-    GetHotItems(fnSuccess, fnError) {
-        return axios.get(`${this.baseUrl}/api/commodity/list/hot`)
+    getHotItems(pagingInfo, fnSuccess, fnError) {
+        return axios.get(`${this.baseUrl}/api/commodity/list/hot`, {
+            params: {
+                page: pagingInfo.page,
+                limit: pagingInfo.limit
+            }
+        })
         .then(function(response) {
             fnSuccess(response.data);
         })
@@ -137,8 +145,13 @@ class BackendService {
             fnError("發生錯誤");
         })
     }
-    GetNewItems(fnSuccess, fnError) {
-        return axios.get(`${this.baseUrl}/api/commodity/list/new`)
+    getNewItems(pagingInfo, fnSuccess, fnError) {
+        return axios.get(`${this.baseUrl}/api/commodity/list/new`, {
+            params: {
+                page: pagingInfo.page, 
+                limit: pagingInfo.limit
+            }
+        })
         .then(function(response) {
             fnSuccess(response.data);
         })
@@ -147,7 +160,7 @@ class BackendService {
             fnError("發生錯誤");
         })
     }
-    GetItemsInfo(id, fnSuccess, fnError) {
+    getItemsInfo(id, fnSuccess, fnError) {
         return axios.get(`${this.baseUrl}/api/commodity/item/${id}`)
         .then(function(response) {
             fnSuccess(response.data);

@@ -187,3 +187,82 @@ logoutButton.addEventListener('click', function() {
     });
   });
 
+// ?====== 工具函式 ======
+const STATUS_MAP = {
+  listed:   { text: '上架中',  badge: 'text-bg-success', action: '編輯' },
+  sold:     { text: '已售出',  badge: 'text-bg-secondary', action: '查看' },
+  reserved: { text: '保留中',  badge: 'text-bg-warning', action: '查看' },
+  draft:    { text: '草稿',    badge: 'text-bg-light', action: '編輯' }
+};
+
+const nt = new Intl.NumberFormat('zh-TW', {
+  style: 'currency', currency: 'TWD', maximumFractionDigits: 0
+});
+
+function fmtPrice(v) {
+  if (v == null || isNaN(Number(v))) return '-';
+  return nt.format(Number(v));
+}
+
+function fmtDate(v) {
+  if (!v) return '-';
+  const d = new Date(v); // 支援 ISO 或毫秒
+  if (isNaN(d)) return '-';
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}/${m}/${day}`;
+}
+
+function esc(str) {
+  return String(str ?? '').replace(/[&<>"']/g, s =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
+  );
+}
+
+// ?====== 渲染表格 ======
+function renderProducts(list = []) {
+  const tbody = document.querySelector('#products tbody');
+  if (!tbody) return;
+
+  if (!Array.isArray(list) || list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5">目前沒有商品</td></tr>`;
+    return;
+  }
+
+  const rows = list.map(item => {
+    const id       = item.id ?? item._id ?? item.commodity_id ?? '';
+    const name     = esc(item.name ?? item.title ?? '未命名商品');
+    const price    = fmtPrice(item.price);
+    const updated  = fmtDate(item.updatedAt ?? item.updated_at ?? item.last_update ?? item.createdAt);
+    const key      = (item.status ?? 'listed').toLowerCase();
+    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
+
+    return `
+      <tr data-id="${esc(id)}">
+        <td>${name}</td>
+        <td><span class="badge ${st.badge}">${st.text}</span></td>
+        <td>${price}</td>
+        <td>${updated}</td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-outline-primary btn-row-action">${st.action}</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  tbody.innerHTML = rows;
+}
+
+// ====== 列表內按鈕事件（可選） ======
+document.querySelector('#products tbody')?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-row-action');
+  if (!btn) return;
+  const tr = btn.closest('tr');
+  const id = tr?.dataset.id;
+  if (!id) return;
+
+  // 你可以改成跳轉或打開編輯器：
+  // location.href = `product.html?id=${encodeURIComponent(id)}`;
+  console.log('點到商品：', id);
+});
