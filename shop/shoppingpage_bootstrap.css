@@ -609,13 +609,11 @@ ul{
   color: #05121f;
   
 }
-.newsell h3{
-  font-weight: 700;
-  font-size: 1.3rem;
-  padding: 5px;
-  border-radius: 5px;
-  color: #383838;
-  background: linear-gradient(to right, #fcaabd, #ffecad);
+.top {
+  padding-bottom: 20px;
+}
+.topnext {
+  padding-top: 20px;
 }
 .card {
   position: relative;
@@ -1546,6 +1544,7 @@ button {
   display: flex;
   overflow-x: auto;
   scroll-behavior: smooth;
+  overflow-y: hidden;
 }
 .hot-item {
   flex: 0 0 auto;
@@ -1579,5 +1578,6 @@ button {
   border-top-left-radius: 50px;
   display: inline-block;
   font-size: 1.8rem;
+  padding: 12px 6px;
   font-weight: 600;
 }
