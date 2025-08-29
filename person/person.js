@@ -1,6 +1,4 @@
-// 這行要放在最上面，且在 person.js 使用到 backendService 之前
-window.backendService = new BackendService();
-
+let backendService;
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
@@ -191,7 +189,7 @@ logoutButton.addEventListener('click', function() {
 
 document.addEventListener('DOMContentLoaded', () => {
   // 呼叫 API 取商品
-
+  backendService = new BackendService();
   backendService.getMyItems(
     (response) => {
       // 假設後端回傳 { commodities: [...] }
