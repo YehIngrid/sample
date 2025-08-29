@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
       div.className = "hot-item";
       div.innerHTML = `
         <img src="${item.mainImage}" alt="${item.name}">
-        <p class="hotItemPrice">${item.price}NT$</p>
+        <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
       `;
       container.appendChild(div);
       // const pid = item.dataset.id;
@@ -568,7 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="card-text flex-grow-1">${product.description ?? ''}</p>
           <div class="mt-auto">
             <div class="d-flex justify-content-between align-items-center">
-              <span class="fw-bold">NT$ ${product.price ?? ''}</span>
+              <span class="fw-bold price">NT$ ${product.price ?? ''}</span>
               <small class="text-muted">庫存 ${product.stock ?? 0}</small>
             </div>
           </div>

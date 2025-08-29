@@ -459,6 +459,9 @@ ul{
   margin-bottom: 0;
   font-size: 1.2rem;
 }
+.price {
+  font-size: 1.4rem;
+}
 /* .price span{
   font-size: 1.2rem;
   font-weight: 500;
