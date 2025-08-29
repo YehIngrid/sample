@@ -578,17 +578,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 主要流程
   function fetchPage(p){
-    togglePager(true); // loading 中先 disable
+    togglePager(true); // ← 打 API 前先讓按鈕都停用 + 顯示載入中
+
     const pagingInfo = { page: p, limit };
     backendService.getNewItems(pagingInfo, (response) => {
       const productList = response?.data?.commodities ?? [];
       const pg = response?.data?.pagination ?? { currentPage: p, totalPages: 1, hasPrevPage: p>1, hasNextPage: false };
 
-      console.table(productList.map(pr => ({ id: pr.id, name: pr.name, price: pr.price })));
-
       renderItems(productList);
-      updatePager(pg);
-      togglePager(false);
+      updatePager(pg); // ← API 回來後才決定按鈕狀態（enabled/disabled）
     });
   }
 
@@ -688,10 +686,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function togglePager(loading){
+  if (loading) {
     prevBtn.disabled = true;
     nextBtn.disabled = true;
-    if (loading) pageInfo.textContent = '載入中…';
+    pageInfo.textContent = '載入中…';
   }
+  // ❌ 不要在這裡加 else 去改按鈕，否則會覆蓋 updatePager 的判斷
+}
+
 });
 
 
