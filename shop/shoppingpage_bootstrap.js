@@ -627,7 +627,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <img src="${imgUrl}" alt="${product.name ?? ''}" loading="lazy">
         </div>
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title mb-1 ellipsis-text">${product.name ?? ''}</h5>
+          <h5 class="card-title ellipsis-text">${product.name ?? ''}</h5>
           <p class="card-text text-muted mb-2 ellipsis-text"># ${category} ${newOrOld ? `# ${newOrOld}` : ''}</p>
           <div class="mt-auto">
             <div class="d-flex justify-content-between align-items-center">
