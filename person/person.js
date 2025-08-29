@@ -195,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // 假設後端回傳 { commodities: [...] }
       const list = response.data.commodities ?? data; 
       renderProducts(list);
+      console.log(list);
     },
     (errorMessage) => {
       console.error(errorMessage);
