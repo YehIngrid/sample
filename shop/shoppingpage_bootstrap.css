@@ -1560,7 +1560,6 @@ button {
     object-fit: cover;
     object-position: center;
     display: block;
-    position: absolute;
 }
 .scroll-btn {
   background: white;
@@ -1572,7 +1571,7 @@ button {
 }
 .hotItemPrice {
   position: relative;
-  bottom: 10px;
+  bottom: 30px;
   background-color: #004b97;
   color: white;
   border-bottom-left-radius: 50px;
