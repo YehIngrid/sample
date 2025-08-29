@@ -265,7 +265,8 @@ function renderProducts(list = []) {
         <td>${updated}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">下架刪除商品</button>
+          <button class="btn btn-sm btn-outline-warning btn-row-action" data-action="stop">暫停上架商品</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
         </td>
       </tr>
     `;
@@ -285,6 +286,10 @@ function renderProducts(list = []) {
   if (action === 'edit') {
     console.log('編輯商品：', id);
     // location.href = `product.html?id=${encodeURIComponent(id)}`;
+  } else if (action === 'stop') {
+    if(confirm('確定要暫停上架商品嗎?')) {
+      
+    }
   } else if (action === 'delete') {
     console.log('刪除商品：', id);
     if (confirm('確定要下架並刪除此商品嗎？')) {
