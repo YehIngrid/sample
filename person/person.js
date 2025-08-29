@@ -252,7 +252,7 @@ function renderProducts(list = []) {
     const name     = esc(item.name);
     const price    = fmtPrice(item.price);
     const updated  = fmtDate(item.updatedAt);
-    const created  = fmtData(item.createdAt);
+    const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
 
