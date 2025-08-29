@@ -248,9 +248,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 呼叫 API（新版帶 id；若舊簽名不帶 id 則 fallback）
   try {
-    backendService.GetItemsInfo(id, onSuccess, onError);
+    backendService.getItemsInfo(id, onSuccess, onError);
   } catch (e) {
     console.warn('GetItemsInfo(id, ...) 呼叫失敗，嘗試舊簽名：', e);
-    backendService.GetItemsInfo(onSuccess);
+    backendService.getItemsInfo(onSuccess);
   }
 });

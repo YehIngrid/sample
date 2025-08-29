@@ -85,10 +85,12 @@ document.addEventListener('DOMContentLoaded', function() {
       const div = document.createElement("div");
       div.className = "hot-item";
       div.innerHTML = `
-        <img src="${item.imageUrl}" alt="${item.name}">
+        <img src="${item.mainImage}" alt="${item.name}">
         <p>${item.price}NT$</p>
       `;
       container.appendChild(div);
+      const pid = item.dataset.id;
+      if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
     });
   }, (errorMessage) => {
     console.error("gethotitems:",errorMessage);
