@@ -196,8 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const list = response.data.data.commodities ?? data; 
       renderProducts(list);
     },
-    (errMsg) => {
-      console.warn(errMsg);
+    (errorMessage) => {
+      console.error(errorMessage);
       renderProducts([]); // 出錯時顯示「目前沒有商品」
     }
   );
