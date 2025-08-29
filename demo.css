@@ -505,3 +505,10 @@ ul{
      transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
   }
 }
+.ellipsis-text {
+  white-space: nowrap;        /* 不換行 */
+  overflow: hidden;           /* 超出範圍隱藏 */
+  text-overflow: ellipsis;    /* 用 "..." 取代 */
+  display: block;             /* 確保有效果 (或 inline-block) */
+  max-width: 200px;           /* 設定寬度才看得到效果 */
+}

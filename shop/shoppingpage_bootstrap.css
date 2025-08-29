@@ -461,6 +461,7 @@ ul{
 }
 .price {
   font-size: 1.4rem;
+  padding-top: 10px;
 }
 /* .price span{
   font-size: 1.2rem;
@@ -604,11 +605,12 @@ ul{
   
 }
 .top {
-  margin-top: 30px;
+  margin-top: 20px;
   padding-bottom: 20px;
 }
 .topnext {
   padding-top: 20px;
+  margin-bottom: 30px;
 }
 .card {
   position: relative;
