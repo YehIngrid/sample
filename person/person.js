@@ -187,6 +187,21 @@ logoutButton.addEventListener('click', function() {
     });
   });
 
+document.addEventListener('DOMContentLoaded', () => {
+  // 呼叫 API 取商品
+  backendService.getMyItems(
+    (response) => {
+      // 假設後端回傳 { commodities: [...] }
+      const list = response.data.commodities ?? data; 
+      renderProducts(list);
+    },
+    (errMsg) => {
+      console.warn(errMsg);
+      renderProducts([]); // 出錯時顯示「目前沒有商品」
+    }
+  );
+});
+
 // ?====== 工具函式 ======
 const STATUS_MAP = {
   listed:   { text: '上架中',  badge: 'text-bg-success', action: '編輯' },
