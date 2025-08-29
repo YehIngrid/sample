@@ -89,8 +89,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <p>${item.price}NT$</p>
       `;
       container.appendChild(div);
-      const pid = item.dataset.id;
-      if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
+      // const pid = item.dataset.id;
+      // if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
     });
   }, (errorMessage) => {
     console.error("gethotitems:",errorMessage);
