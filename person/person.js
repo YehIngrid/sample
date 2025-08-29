@@ -248,10 +248,11 @@ function renderProducts(list = []) {
   }
 
   const rows = list.map(item => {
-    const id       = item.id ?? item._id ?? item.commodity_id ?? '';
-    const name     = esc(item.name ?? item.title ?? '未命名商品');
+    const id       = item.id;
+    const name     = esc(item.name);
     const price    = fmtPrice(item.price);
-    const updated  = fmtDate(item.updatedAt ?? item.updated_at ?? item.last_update ?? item.createdAt);
+    const updated  = fmtDate(item.updatedAt);
+    const created  = fmtData(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
 
@@ -260,6 +261,7 @@ function renderProducts(list = []) {
         <td>${name}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${price}</td>
+        <td>${created}</td>
         <td>${updated}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-primary btn-row-action">${st.action}</button>
