@@ -264,8 +264,8 @@ function renderProducts(list = []) {
         <td>${created}</td>
         <td>${updated}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-primary btn-row-action">${st.action}</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action">下架刪除商品</button>
+          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">下架刪除商品</button>
         </td>
       </tr>
     `;
@@ -285,4 +285,31 @@ document.querySelector('#products tbody')?.addEventListener('click', (e) => {
   // 你可以改成跳轉或打開編輯器：
   // location.href = `product.html?id=${encodeURIComponent(id)}`;
   console.log('點到商品：', id);
+});
+tbody.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-row-action');
+  if (!btn) return;
+
+  const tr = btn.closest('tr');
+  const id = tr?.dataset.id;
+  const action = btn.dataset.action; // edit 或 delete
+
+  if (!id) return;
+
+  if (action === 'edit') {
+    console.log('編輯商品：', id);
+    // location.href = `product.html?id=${encodeURIComponent(id)}`;
+  } else if (action === 'delete') {
+    console.log('刪除商品：', id);
+    if (confirm('確定要下架並刪除此商品嗎？')) {
+    backendService.deleteItem(id,
+      () => {
+        alert('刪除成功');
+        tr.remove(); // 從畫面移除
+      },
+      (err) => alert('刪除失敗：' + err)
+    );
+  }
+    // TODO: 呼叫後端 API -> backendService.deleteItem(id)
+  }
 });

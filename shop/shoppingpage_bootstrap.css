@@ -716,10 +716,10 @@ ul{
     transform: rotate(360deg);
   }
 }
-
-.d-none {
+/* ?先註解掉，因為會影響到person排版 */
+/* .d-none {
   display: none !important;
-}
+} */
 
 /* ✅ 1. 讓所有卡片不會錯位，並修正 initial load 閃動問題
 #product-grid {
