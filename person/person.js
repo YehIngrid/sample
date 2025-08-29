@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
   backendService.getMyItems(
     (response) => {
       // 假設後端回傳 { commodities: [...] }
-      const list = response.data.data.commodities ?? data; 
+      const list = response.data.commodities ?? data; 
       renderProducts(list);
     },
     (errorMessage) => {
