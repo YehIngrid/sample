@@ -86,14 +86,14 @@ document.addEventListener('DOMContentLoaded', function() {
       div.className = "hot-item";
       div.innerHTML = `
         <img src="${item.mainImage}" alt="${item.name}">
-        <p>${item.price}NT$</p>
+        <p class="hotItemPrice">${item.price}NT$</p>
       `;
       container.appendChild(div);
       // const pid = item.dataset.id;
       // if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
     });
   }, (errorMessage) => {
-    console.error("gethotitems:",errorMessage);
+    console.error("gethotitems:", errorMessage);
   })
   
   if (loginService.isLogin()) {

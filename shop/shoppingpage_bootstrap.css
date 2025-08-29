@@ -604,7 +604,6 @@ ul{
   justify-content: center;
   font-weight: 700;
   padding-top: 10px;
-  margin-top: 5vh !important;
   margin: 0 auto;
   overflow-x: hidden;
   color: #05121f;
@@ -1569,4 +1568,13 @@ button {
   width: 30px;
   height: 30px;
   cursor: pointer;
+}
+.hotItemPrice {
+  position: relative;
+  top: 10px;
+  background-color: #004b97;
+  color: white;
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+  font-size: 2rem;
 }
