@@ -610,6 +610,7 @@ ul{
   
 }
 .top {
+  margin-top: 30px;
   padding-bottom: 20px;
 }
 .topnext {
@@ -1550,7 +1551,7 @@ button {
   flex: 0 0 auto;
   width: 120px;
   height: 120px;
-  margin: 0 5px;
+  margin: 0 10px;
   text-align: end;
 }
 .hot-item img {
@@ -1560,6 +1561,7 @@ button {
     object-position: center;
     display: block;
     border-radius: 5px;
+    border: 5px solid #004b97;
 }
 .scroll-btn {
   background: white;
@@ -1572,7 +1574,7 @@ button {
 .hotItemPrice {
   position: relative;
   bottom: 40px;
-  background-color: #0080ff;
+  background-color: #389afc;
   color: white;
   border-bottom-left-radius: 50px;
   border-top-left-radius: 50px;
