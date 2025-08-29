@@ -1595,8 +1595,8 @@ button {
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     overflow: visible;        /* 方格不需要橫向卷軸 */
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .hot-item{ 
     flex: none; 

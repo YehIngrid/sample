@@ -96,6 +96,23 @@ document.addEventListener('DOMContentLoaded', function() {
     console.error("gethotitems:", errorMessage);
   })
   
+  for (let i = 0; i < totalPages; i++) {
+    const dot = document.createElement('button');
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => {
+      index = i;
+      updateCarousel();
+    });
+    dotsContainer.appendChild(dot);
+  }
+
+  function updateCarousel() {
+    list.style.transform = `translateX(-${index * 100}%)`;
+    document.querySelectorAll('.dots button').forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+  }
+
   if (loginService.isLogin()) {
     Swal.fire({
       title: "歡迎回來！",
