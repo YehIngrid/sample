@@ -80,6 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const pageInfo = document.getElementById("pageInfo");
 
   fetchPage(page);
+
+
   // let pagingInfo = {page: page, limit: limit};
   // console.log("gethotitems:", response.data.commodities);
   
@@ -155,11 +157,16 @@ function renderItems(items){
   items.forEach(item => {
     const div = document.createElement("div");
       div.className = "hot-item";
+      div.dataset.id = item.id;
       div.innerHTML = `
         <img src="${item.mainImage}" alt="${item.name}">
         <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
       `;
     listEl.appendChild(div);
+    div.addEventListener('click', function() {
+      const pid = this.dataset.id;
+      if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
+    })
   });
 }
 function updatePager(pg){
