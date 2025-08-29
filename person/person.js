@@ -272,21 +272,7 @@ function renderProducts(list = []) {
   }).join('');
 
   tbody.innerHTML = rows;
-}
-
-// ====== 列表內按鈕事件（可選） ======
-document.querySelector('#products tbody')?.addEventListener('click', (e) => {
-  const btn = e.target.closest('.btn-row-action');
-  if (!btn) return;
-  const tr = btn.closest('tr');
-  const id = tr?.dataset.id;
-  if (!id) return;
-
-  // 你可以改成跳轉或打開編輯器：
-  // location.href = `product.html?id=${encodeURIComponent(id)}`;
-  console.log('點到商品：', id);
-});
-tbody.addEventListener('click', (e) => {
+  tbody.addEventListener('click', (e) => {
   const btn = e.target.closest('.btn-row-action');
   if (!btn) return;
 
@@ -313,3 +299,18 @@ tbody.addEventListener('click', (e) => {
     // TODO: 呼叫後端 API -> backendService.deleteItem(id)
   }
 });
+}
+
+// ====== 列表內按鈕事件（可選） ======
+document.querySelector('#products tbody')?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn-row-action');
+  if (!btn) return;
+  const tr = btn.closest('tr');
+  const id = tr?.dataset.id;
+  if (!id) return;
+
+  // 你可以改成跳轉或打開編輯器：
+  // location.href = `product.html?id=${encodeURIComponent(id)}`;
+  console.log('點到商品：', id);
+});
+
