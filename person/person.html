@@ -159,21 +159,18 @@
             <div class="card-body">
               <h4 class="card-title">我的商品</h4>
               <div class="table-responsive">
-                <table class="table align-middle">
+                <table class="table align-middle" id="products">
                   <thead>
                     <tr>
-                      <th>商品</th><th>狀態</th><th>價格</th><th>最後更新</th><th></th>
+                      <th>商品</th>
+                      <th>狀態</th>
+                      <th>價格</th>
+                      <th>最後更新</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>教科書 A</td><td><span class="badge text-bg-success">上架中</span></td><td>$300</td><td>2025/08/15</td>
-                      <td class="text-end"><button class="btn btn-sm btn-outline-primary">編輯</button></td>
-                    </tr>
-                    <tr>
-                      <td>二手筆電</td><td><span class="badge text-bg-secondary">已售出</span></td><td>$12,000</td><td>2025/08/14</td>
-                      <td class="text-end"><button class="btn btn-sm btn-outline-primary">查看</button></td>
-                    </tr>
+                    <!-- renderProducts 會動態插入 <tr> -->
                   </tbody>
                 </table>
               </div>
