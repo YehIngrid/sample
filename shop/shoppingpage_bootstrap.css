@@ -1585,7 +1585,7 @@ button {
 }
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
 @media (max-width: 576px){
-  .hot-list{
+  .hot-items-container{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
