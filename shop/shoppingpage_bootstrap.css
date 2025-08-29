@@ -1549,8 +1549,8 @@ button {
 }
 .hot-item {
   flex: 0 0 auto;
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   margin: 0 10px;
   text-align: end;
 }
@@ -1591,7 +1591,13 @@ button {
     gap: 12px;
     overflow: visible;        /* 方格不需要橫向卷軸 */
   }
-  .hot-item{ flex: none; width: 100%; }
+  .hot-item{ 
+    flex: none; 
+    width: 90px;
+    height: 90px;
+    margin: 0 5px;
+    text-align: end;
+  }
   .scroll-btn{ display: none; } /* 手機藏左右箭頭 */
   /* 若只想在手機只顯示前 6 張，可加： */
   /* .hot-item:nth-child(n+7){ display:none; } */
