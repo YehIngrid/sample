@@ -1561,7 +1561,7 @@ button {
     object-position: center;
     display: block;
     border-radius: 5px;
-    border: 5px solid #004b97;
+    border: 4px solid #b1d8ff;
 }
 .scroll-btn {
   background: white;
@@ -1582,4 +1582,17 @@ button {
   font-size: 1.8rem;
   padding: 4px 10px;
   font-weight: 600;
+}
+/* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
+@media (max-width: 576px){
+  .hot-list{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    overflow: visible;        /* 方格不需要橫向卷軸 */
+  }
+  .hot-item{ flex: none; width: 100%; }
+  .scroll-btn{ display: none; } /* 手機藏左右箭頭 */
+  /* 若只想在手機只顯示前 6 張，可加： */
+  /* .hot-item:nth-child(n+7){ display:none; } */
 }
