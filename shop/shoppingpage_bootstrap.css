@@ -1563,10 +1563,27 @@ button {
   align-items: center;
   margin-top: 12px;
   gap: 10px;
+  color: #004b97;
 }
 .pager button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+#prevHotBtn, #nextHotBtn {
+  border: #004b97 1px solid;
+  background-color: #fff;
+  border-radius: 50px;
+  color: #004b97;
+  padding: 3px 6px;
+  font-size: 1.2rem;
+}
+#prevHotBtn:hover, :focus {
+  background-color: #004b97;
+  color: #fff;
+}
+#nextHotBtn:hover, :focus {
+  background-color: #004b97;
+  color: #fff;
 }
 .hotItemPrice {
   position: relative;
