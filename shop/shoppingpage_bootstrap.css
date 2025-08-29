@@ -1569,7 +1569,7 @@ button {
   opacity: 0.5;
   cursor: not-allowed;
 }
-#prevHotBtn, #nextHotBtn {
+#prevHotBtn, #nextHotBtn, #newNext, #newPrev {
   border: #004b97 1px solid;
   background-color: #fff;
   border-radius: 50px;
@@ -1577,11 +1577,7 @@ button {
   padding: 3px 6px;
   font-size: 1.2rem;
 }
-#prevHotBtn:hover, :focus {
-  background-color: #004b97;
-  color: #fff;
-}
-#nextHotBtn:hover, :focus {
+#prevHotBtn, #nextHotBtn, #newNext, #newPrev:hover, :focus {
   background-color: #004b97;
   color: #fff;
 }

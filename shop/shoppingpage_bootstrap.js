@@ -551,40 +551,61 @@ backbtn2.addEventListener('click', function(e){
 //?, orders: [{prop:'price',asc: false}, {prop:'id', asc:true}]
 document.addEventListener('DOMContentLoaded', () => {
   let page = 1;
-  let limit = 12;
-  let pagingInfo = {page: page, limit: limit};
-  backendService.getNewItems(pagingInfo, (response) => {
-    const productList = response?.data?.commodities ?? [];
-    console.table(productList.map(p => ({ id: p.id, name: p.name, price: p.price })));
+  const limit = 12;
 
-    const container = document.getElementById('product-grid');
-    if (!container) {
-      console.warn('#product-grid 容器不存在');
-      return;
-    }
+  const container = document.getElementById('product-grid');
+  const prevBtn   = document.getElementById('newPrev');
+  const nextBtn   = document.getElementById('newNext');
+  const pageInfo  = document.getElementById('newInfo');
 
-    // 先把舊的 row-cols-* 清掉，避免與新設定衝突
-    [...container.classList].forEach(cls => {
-      if (cls.startsWith('row-cols-')) container.classList.remove(cls);
+  if (!container) {
+    console.warn('#product-grid 容器不存在');
+    return;
+  }
+
+  // 初始化排版（只做一次）
+  [...container.classList].forEach(cls => {
+    if (cls.startsWith('row-cols-')) container.classList.remove(cls);
+  });
+  container.classList.add('row', 'row-cols-2', 'row-cols-md-3', 'row-cols-lg-6', 'g-3', 'mt-4', 'container-card');
+
+  // 進入點
+  fetchPage(page);
+
+  // 事件
+  prevBtn.addEventListener('click', () => { if (!prevBtn.disabled) fetchPage(page - 1); });
+  nextBtn.addEventListener('click', () => { if (!nextBtn.disabled) fetchPage(page + 1); });
+
+  // 主要流程
+  function fetchPage(p){
+    togglePager(true); // loading 中先 disable
+    const pagingInfo = { page: p, limit };
+    backendService.getNewItems(pagingInfo, (response) => {
+      const productList = response?.data?.commodities ?? [];
+      const pg = response?.data?.pagination ?? { currentPage: p, totalPages: 1, hasPrevPage: p>1, hasNextPage: false };
+
+      console.table(productList.map(pr => ({ id: pr.id, name: pr.name, price: pr.price })));
+
+      renderItems(productList);
+      updatePager(pg);
+      togglePager(false);
     });
-    // 套用：手機2、平板3、桌機6（也保留間距與外觀）
-    container.classList.add('row', 'row-cols-2', 'row-cols-md-3', 'row-cols-lg-6', 'g-3', 'mt-4', 'container-card');
+  }
 
-    // 清空舊內容避免重複
+  function renderItems(productList){
     container.innerHTML = '';
 
     productList.forEach((product) => {
-      // Bootstrap column 外層
+      // col
       const col = document.createElement('div');
       col.className = 'col';
 
-      // 卡片
+      // card
       const card = document.createElement('div');
       card.className = 'card product-card position-relative h-100';
-      card.dataset.id = product.id;         // 保留你的 data-id
-      card.style.width = '100%';            // 交給格線排版
+      card.dataset.id = product.id;
+      card.style.width = '100%';
 
-      // 圖片 URL（直接用你回傳的 mainImage）
       const imgUrl = product.mainImage || '/img/placeholder.png';
       const categoryMap = {
         book: '書籍與學籍用品',
@@ -594,17 +615,12 @@ document.addEventListener('DOMContentLoaded', () => {
         recycle: '環保生活用品',
         clean: '儲物與收納用品',
       };
-      let category = categoryMap[product.category];
       const newOrOldMap = {
-        1 : '全新', 
-        2 : '幾乎全新', 
-        3 : '半新',
-        4 : '適中', 
-        5 : '稍舊', 
-        6 : '全舊', 
+        1:'全新',2:'幾乎全新',3:'半新',4:'適中',5:'稍舊',6:'全舊',
       };
-      let newOrOld = newOrOldMap[product.newOrOld];
-      
+      const category = categoryMap[product.category] ?? '其他';
+      const newOrOld = newOrOldMap[product.newOrOld] ?? '';
+
       card.innerHTML = `
         <button class="favorite-btn" type="button" aria-label="加入收藏">
           <i class="fa-regular fa-star"></i>
@@ -614,7 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="card-body d-flex flex-column">
           <h5 class="card-title mb-1">${product.name ?? ''}</h5>
-          <p class="card-text text-muted mb-2"># ${category} # ${newOrOld}</p>
+          <p class="card-text text-muted mb-2"># ${category} ${newOrOld ? `# ${newOrOld}` : ''}</p>
           <p class="card-text flex-grow-1">${product.description ?? ''}</p>
           <div class="mt-auto">
             <div class="d-flex justify-content-between align-items-center">
@@ -624,61 +640,60 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
       `;
-// 取得子元素參考
-  const favBtn = card.querySelector('.favorite-btn');
-  const favIcon = favBtn.querySelector('i');
 
-  // 1) 收藏按鈕：只負責切換 + 阻止冒泡與預設
-  favBtn.addEventListener('click', (e) => {
-    const isNowFav = !favIcon.classList.contains('fa-solid'); 
-  // ⬆️ 判斷目前是不是「空心」圖示，如果是，就要加入收藏；如果已經實心，就要取消收藏
-if (isNowFav) {
-      // await backend.addFavorite(pid);   // 呼叫新增 API
-      favIcon.classList.add('fa-solid');
-      favIcon.classList.remove('fa-regular');
-      Swal.fire({
-        title: '已加入收藏！',
-        text: '這個商品已經加到你的收藏清單',
-        iconHtml: '<i class="fa-solid fa-star" style="color:gold;font-size:3.2rem"></i>',
-        customClass: { icon: 'goldborder' }
+      // 收藏按鈕（保留你的互動）
+      const favBtn  = card.querySelector('.favorite-btn');
+      const favIcon = favBtn.querySelector('i');
+      favBtn.addEventListener('click', (e) => {
+        const isNowFav = !favIcon.classList.contains('fa-solid');
+        if (isNowFav) {
+          favIcon.classList.add('fa-solid');
+          favIcon.classList.remove('fa-regular');
+          Swal.fire({
+            title: '已加入收藏！',
+            text: '這個商品已經加到你的收藏清單',
+            iconHtml: '<i class="fa-solid fa-star" style="color:gold;font-size:3.2rem"></i>',
+            customClass: { icon: 'goldborder' }
+          });
+        } else {
+          favIcon.classList.add('fa-regular');
+          favIcon.classList.remove('fa-solid');
+          Swal.fire({
+            title: '已取消收藏',
+            iconHtml: '<i class="fa-regular fa-star" style="color:#999;font-size:3.2rem"></i>',
+            customClass: { icon: 'no-border' }
+          });
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        // TODO: 呼叫收藏/取消收藏 API，使用 card.dataset.id
       });
-    } else {
-      favIcon.classList.add('fa-regular');
-      favIcon.classList.remove('fa-solid');
-      // await backend.removeFavorite(pid); // 呼叫刪除 API
-      Swal.fire({
-        title: '已取消收藏',
-        iconHtml: '<i class="fa-regular fa-star" style="color:#999;font-size:3.2rem"></i>',
-        customClass: { icon: 'no-border' }
+
+      // 卡片導頁
+      card.addEventListener('click', () => {
+        const pid = card.dataset.id;
+        if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
       });
-    }
-    e.preventDefault();
-    e.stopPropagation(); // ⛔ 不讓事件跑到 card 造成導頁
-    // favIcon.classList.toggle('fa-regular');
-    // favIcon.classList.toggle('fa-solid');
-    // Swal.fire({
-    //   title: '已加入收藏！',
-    //   text: '這個商品已經加到你的收藏清單',
-    //   iconHtml: '<i class="fa-solid fa-star" style="color: gold; font-size: 3.2rem;"></i>',
-    //   customClass: {
-    //     icon: 'goldborder' // 移除內建背景
-    //   }
-    // });
 
-    // TODO: 在這裡呼叫收藏/取消收藏 API（可用 card.dataset.id）
-  });
+      col.appendChild(card);
+      container.appendChild(col);
+    });
+  }
 
-  // 2) 卡片本身：其他區域才導頁（不需要 closest）
-  card.addEventListener('click', () => {
-    const pid = card.dataset.id;
-    if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
-  });
+  function updatePager(pg){
+    page = pg.currentPage;
+    pageInfo.textContent = `第 ${pg.currentPage} / ${pg.totalPages} 頁`;
+    prevBtn.disabled = !pg.hasPrevPage;
+    nextBtn.disabled = !pg.hasNextPage;
+  }
 
-  col.appendChild(card);
-  container.appendChild(col);
+  function togglePager(loading){
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    if (loading) pageInfo.textContent = '載入中…';
+  }
 });
-  });
-});
+
 
 // 切換 icon 工具
 function toggleIcon(iconEl, toFav) {
