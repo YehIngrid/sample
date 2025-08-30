@@ -209,7 +209,8 @@ const STATUS_MAP = {
   listed:   { text: '上架中',  badge: 'text-bg-success', action: '編輯' },
   sold:     { text: '已售出',  badge: 'text-bg-secondary', action: '查看' },
   reserved: { text: '保留中',  badge: 'text-bg-warning', action: '查看' },
-  draft:    { text: '草稿',    badge: 'text-bg-light', action: '編輯' }
+  draft:    { text: '草稿',    badge: 'text-bg-light', action: '編輯' }, 
+  delete:   { text: '已下架',  badge: 'text-bg-danger', action: '查看'}
 };
 
 const nt = new Intl.NumberFormat('zh-TW', {
@@ -265,7 +266,7 @@ function renderProducts(list = []) {
         <td>${updated}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
-          <button class="btn btn-sm btn-outline-info btn-row-action" data-action="stop">暫停上架商品</button>
+          <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
         </td>
       </tr>
@@ -292,19 +293,28 @@ function renderProducts(list = []) {
     }
   } else if (action === 'delete') {
     console.log('刪除商品：', id);
-    if (confirm('確定要下架並刪除此商品嗎？')) {
-    backendService.deleteMyItems(id,
-      (response) => {
-        Swal.fire({
-          icon: "success",
-          title: "商品下架成功",
-          text: response
-        })
-        tr.remove(); // 從畫面移除
-      },
-      (err) => alert('刪除失敗：' + err)
-    );
-  }
+    Swal.fire({
+      title: "確定要下架並刪除此商品嗎？",
+      text: "無法再查看商品詳細資訊",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "是，我要下架"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        backendService.deleteMyItems(id,
+          () => {
+            Swal.fire({
+              icon: "success",
+              title: "商品下架成功",
+            })
+            st = STATUS_MAP.delete;
+          },
+          (err) => alert('刪除失敗：' + err)
+        );
+      }
+    });
     // TODO: 呼叫後端 API -> backendService.deleteItem(id)
   }
 });
