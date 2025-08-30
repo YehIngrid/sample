@@ -58,49 +58,55 @@ document.getElementById('update-profile').addEventListener('click', async () => 
     if (displayName) formData.append('name', displayName);
     if (bio) formData.append('introduction', bio);
     if (photoInput.files.length > 0) formData.append('photo', photoInput.files[0]);
+    
     try {
-      // ✅ 顯示 loader
-      loader1.style.display = 'block';
-      backendService = new BackendService();
-      const response = await backendService.updateProfile(formData, (data) => {
-        console.log("更新成功：", data);
-        console.log(data.data.introduction);
-      // 更新顯示的介紹
       Swal.fire({
-        icon: "success",
-        title: "更新成功",
-        text: "個人資料已更新"
-      }).then(() => {
-        window.location.reload(); // 重新載入頁面以顯示最新資料
-      });
-      }, (errorMessage) => {
-        console.error("更新失敗：", errorMessage);
-        Swal.fire({
-          icon: "error",
-          title: "更新失敗",
-          text: errorMessage
-        });
-      });
-      loader1.style.display = 'none';
-      console.log("更新回傳資料：", response);
-      // 更新成功後，重新載入頁面以顯示最新資料
-      mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"; // 替換為實際使用者名稱
-      mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
-      if (localStorage.getItem('avatar')) {
-        mProfileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
-      }
-      else { 
-        mProfileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
-      }
-      
-      if (localStorage.getItem('avatar')) {
-        profileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
-      } else {
-        profileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
-      }
-      profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
-      profileName.textContent = localStorage.getItem("username") ||"使用者名稱"; // 替換為實際使用者名稱
+        title: "確定要進行更新嗎?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "是，我要更新",
+        cancelButtonText: "取消"
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            // ✅ 顯示 loader
+            loader1.style.display = 'block';
 
+            backendService = new BackendService();
+            const response = await backendService.updateProfile(formData);
+
+            console.log("更新成功：", response);
+            console.log(response.data.introduction);
+
+            await Swal.fire({
+              icon: "success",
+              title: "更新成功",
+              text: "個人資料已更新"
+            });
+
+            // 更新 DOM
+            mProfileName.textContent = localStorage.getItem("username") || "使用者名稱";
+            mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹";
+            mProfileAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.png';
+            profileName.textContent = localStorage.getItem("username") || "使用者名稱";
+            profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹";
+            profileAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.png';
+
+            window.location.reload(); // 重新載入頁面以顯示最新資料
+          } catch (errorMessage) {
+            console.error("更新失敗：", errorMessage);
+            Swal.fire({
+              icon: "error",
+              title: "更新失敗",
+              text: errorMessage
+            });
+          } finally {
+            loader1.style.display = 'none';
+          }
+        }
+      });
     } catch (error) {
       console.error("更新失敗：", error);
       Swal.fire({
@@ -361,7 +367,7 @@ document.querySelector('#products tbody')?.addEventListener('click', (e) => {
   console.log('點到商品：', id);
 });
 // TODO 更改大頭照預覽
-document.getElementById('myAvatar').addEventListener('change', function (e) {
+document.getElementById('photo').addEventListener('change', function (e) {
   const preview = document.getElementById('myAvatarPreview');
   preview.innerHTML = ''; // 清除舊圖
 
