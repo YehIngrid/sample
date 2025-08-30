@@ -88,6 +88,7 @@ class BackendService {
             .then(async function(response) {
                 // 更新成功後，儲存新的使用者資料到 localStorage
                 await _this.getUserData();
+                return Promise.resolve(response);
             })
             .catch(function(error) {
                 console.error("更新錯誤：", error);
