@@ -80,25 +80,24 @@ class BackendService {
                 throw error;
             });
     }
-    updateProfile(userData) {
+    async updateProfile(userData) {
         let _this = this;
-        return axios.patch(`${this.baseUrl}/api/account/update`, userData, {
-                withCredentials: true
-            })
-            .then(async function(response) {
-                // 更新成功後，儲存新的使用者資料到 localStorage
-                await _this.getUserData();
-                return Promise.resolve(response);
-            })
-            .catch(function(error) {
-                console.error("更新錯誤：", error);
-                if (error.response?.data?.message == "User not found") {
-                    console.error("使用者不存在", error);
-                } else {
-                    console.error("更新失敗，請稍後再試", error);
-                }
-                throw error;
-            });
+        try {
+            await axios.patch(`${this.baseUrl}/api/account/update`, userData, {
+                    withCredentials: true
+                });
+        } catch (error) {
+            console.error("更新錯誤：", error);
+            if (error.response?.data?.message == "User not found") {
+                console.error("使用者不存在", error);
+            } else {
+                console.error("更新失敗，請稍後再試", error);
+            }
+            return Promise.reject(error);
+        }
+        // 更新成功後，儲存新的使用者資料到 localStorage
+        await _this.getUserData();
+        return response;
     }
     whoami(fnSuccess, fnError) {
         return axios.get(`${this.baseUrl}/api/whoami`, {
