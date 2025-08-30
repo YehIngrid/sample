@@ -289,7 +289,7 @@ function renderProducts(list = []) {
     console.log('編輯商品：', id);
     // 
   } else if (action === 'check') {
-    location.href = `product.html?id=${encodeURIComponent(id)}`;
+    location.href = `../product/product.html?id=${encodeURIComponent(id)}`;
   } else if (action === 'stop') {
     if(confirm('確定要暫停上架商品嗎?')) {
 
