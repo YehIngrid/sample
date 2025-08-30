@@ -139,13 +139,13 @@ document.getElementById('update-profile').addEventListener('click', async () => 
 //       backbtn7.style.display = 'none'; // 隱藏返回按鈕
 //     }
 //   });
-  document.getElementById('back-btn7').addEventListener('click', function () {
-    const mainContentArea = document.getElementById('account');
-    mainContentArea.classList.remove('d-none'); // 顯示主內容
-    const collapseContent = document.getElementById('collapseContent');
-    collapseContent.classList.remove('show'); // 隱藏折疊內容
-    this.style.display = 'none'; // 隱藏返回按鈕
-  });
+  // document.getElementById('back-btn7').addEventListener('click', function () {
+  //   const mainContentArea = document.getElementById('account');
+  //   mainContentArea.classList.remove('d-none'); // 顯示主內容
+  //   const collapseContent = document.getElementById('collapseContent');
+  //   collapseContent.classList.remove('show'); // 隱藏折疊內容
+  //   this.style.display = 'none'; // 隱藏返回按鈕
+  // });
 const logoutButton = document.getElementById('logout');
 logoutButton.addEventListener('click', function() {
   Swal.fire({
