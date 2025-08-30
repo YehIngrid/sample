@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   if (loginService.isLogin()) {
     document.getElementById('loginornot').textContent = '登出';
+    document.getElementById('username').textContent = localStorage.getItem('username') || "username";
   } else {
     Swal.fire({
       title: "請登入",
