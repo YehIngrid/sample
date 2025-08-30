@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
  // 註冊函式：取得註冊表單欄位並呼叫後端 API
- function callSignUp(){
+async function callSignUp(){
   const emailInput = document.getElementById('email');
   const passwordInput1 = document.getElementById('password1');
   const passwordInput2 = document.getElementById('password2');
@@ -90,21 +90,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let backendService = new BackendService();
   backendService.test(); // 測試後端服務是否正常
-  backendService.signup(obj, 
-    (response) => {
-      document.getElementById('loader-wrapper').style.display = 'none';
-      console.log("回傳資料：", response.data);
-      Swal.fire({
-        icon: "success",
-        title: "帳號註冊成功",
-        showConfirmButton: false,
-        footer: "即將返回登入頁面",
-        timer: 1800
-      });
-      setTimeout(() => {
-        window.location.href = "account.html";
-      }, 2000);
-  }, (errorMessage) => {
+  let signupError = null;
+  try {
+    await backendService.signup(obj);
+  } catch (error) {
+    signupError = error;
+  }
+  if (signupError == null) {
+    document.getElementById('loader-wrapper').style.display = 'none';
+        console.log("回傳資料：", response.data);
+        Swal.fire({
+          icon: "success",
+          title: "帳號註冊成功",
+          showConfirmButton: false,
+          footer: "即將返回登入頁面",
+          timer: 1800
+        });
+        setTimeout(() => {
+          window.location.href = "account.html";
+        }, 2000);
+  } else {
+    let errorMessage = signupError.message;
     document.getElementById('loader-wrapper').style.display = 'none';
     console.log("回傳資料：", errorMessage);
     Swal.fire({
@@ -112,7 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
       title: "Oops...",
       text: errorMessage
     });
-  });
+  }
+  
   
   // axios.post('https://store-backend-iota.vercel.app/api/account/signup', obj)
   //   .then(function (response) {
@@ -177,15 +184,12 @@ function callLogin() {
         title: "登入成功",
         text: `歡迎回來！`,//!越改越錯....破防
         showConfirmButton: false,
-        timer: 1800
+        timer: 2100
       })
-      .then(() => {
+      .then(async () => {
+        await backendService.getUserData();
         window.location.href = "../shop/shoppingpage_bootstrap.html"; // 登入成功後跳轉到首頁
-        backendService.getUserData(
-          (response) => {
-          console.log("使用者資料：", response);
-          
-        });
+        
       });
       // TODO: something after login if needed
     },

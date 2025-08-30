@@ -108,28 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // })
 
   if (loginService.isLogin()) {
-    Swal.fire({
-      title: "歡迎回來！",
-      text: `你好! ${localStorage.getItem('uid')}`,
-      icon: "success",
-      confirmButtonText: "繼續" 
-    }).then(() => {
-      // 這裡可以添加用戶登入後的操作，例如載入用戶資料等
-      // window.location.href = "shoppingpage_bootstrap.html"; // 導向購物頁面
-      backendService.getUserData(
-        (response) => {
-          console.log("使用者資料哈哈：", response);
-          document.getElementById('username').textContent = response.data.name || '使用者';
-          console.log("使用者名稱：", response.data.name);
-          console.log("使用者介紹：", response.data.introduction);
-          console.log("使用者頭像：", response.data.avatar);
-          console.log("使用者ID：", response.data.uid);
-        }, 
-        (errorMessage) => {
-          console.error("無法取得使用者資料：", errorMessage);
-        }
-      );
-    });
     document.getElementById('loginornot').textContent = '登出';
   } else {
     Swal.fire({

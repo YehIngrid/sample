@@ -47,10 +47,8 @@ class BackendService {
                 fnError("登入失敗");
             });
     }
-    getUserItems(fnSuccess, fnError) {
-        return axios.get()
-    }
-    getUserData(fnSuccess, fnError) {
+
+    getUserData() {
         // 從 localStorage 取出
         const savedUid = localStorage.getItem('uid');
         const savedUsername = localStorage.getItem('username');
@@ -76,29 +74,29 @@ class BackendService {
                 localStorage.setItem('username', response.data.data.name); 
                 localStorage.setItem('intro', response.data.data.introduction);
                 localStorage.setItem('avatar', response.data.data.photoURL);
-                fnSuccess(response.data);
             })
             .catch(function(error) {
-                fnError("無法取得使用者資料");
+                console.error("無法取得使用者資料", error);
+                throw error;
             });
     }
-    updateProfile(userData, fnSuccess, fnError) {
+    updateProfile(userData) {
         let _this = this;
         return axios.patch(`${this.baseUrl}/api/account/update`, userData, {
                 withCredentials: true
             })
-            .then(function(response) {
-                fnSuccess(response);
+            .then(async function(response) {
                 // 更新成功後，儲存新的使用者資料到 localStorage
-                _this.getUserData(fnSuccess, fnError);
+                await _this.getUserData();
             })
             .catch(function(error) {
                 console.error("更新錯誤：", error);
                 if (error.response?.data?.message == "User not found") {
-                    fnError("使用者不存在");
+                    console.error("使用者不存在", error);
                 } else {
-                    fnError("更新失敗，請稍後再試");
+                    console.error("更新失敗，請稍後再試", error);
                 }
+                throw error;
             });
     }
     whoami(fnSuccess, fnError) {
