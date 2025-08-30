@@ -189,23 +189,27 @@
         <p style="font-size: 1.8rem;">個人資料更改區</p>
 
         <div style="margin-top: 30px; margin-bottom: 30px;">
-          <div class="d-flex align-items-end" style="margin-bottom: 10px;">
-            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
+          <div class="d-block" style="margin-bottom: 10px;">
+            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;" id="myAvatar">大頭照</p>
             <input type="file" id="photo" accept="image/png, image/jpeg" style="border:none; margin-top: 3px;font-size: 13px;">
+            <div id="myAvatarPreview"></div>
           </div>
 
-          <div class="d-flex  justify-content-between align-items-center" style="margin-bottom: 10px;">
+          <div class="d-block" style="margin-bottom: 10px;">
             <p style="margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">暱稱</p>
             <input type="text" style="width: 90%; padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
           </div>
           
-          <div class="d-flex  justify-content-between align-items-end" style="margin-bottom: 10px;">
+          <div class="d-block" style="margin-bottom: 10px;">
             <p style=" margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">個人簡介</p>
             <textarea id="bio" placeholder="簡單介紹一下自己吧！(至多100字)" style="width: 90%; display: block;padding: 5px;font-size: 1.4rem;"></textarea>
           </div>
           <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
           <span class="loader" id="loader1" style="display: none;"></span>
         </div>
+
+        <p>其他資料</p>
+        
       </section>
       <!-- Main Content -->
       <main class="col-lg-9 content-section" id="account">
@@ -283,7 +287,7 @@
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="favorites"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" id="logout"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" id="logoutMobile"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
       </div>
       <div class="remind">
         <p class="text-start" style="font-size: 1.4rem; color: #383838; margin-top: 10px; margin-left: 20px; margin-right: 20px;">小提醒: <br>點擊按鈕後，須將此側邊欄關閉才可見畫面</p>

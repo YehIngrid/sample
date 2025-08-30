@@ -170,6 +170,30 @@ logoutButton.addEventListener('click', function() {
     }
   });
 });
+const logoutMobileButton = document.getElementById('logoutMobile');
+logoutMobileButton.addEventListener('click', function() {
+  Swal.fire({
+    title: '確定要登出嗎？',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '登出',
+    cancelButtonText: '取消'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      localStorage.removeItem('uid');
+      localStorage.removeItem('username');
+      localStorage.removeItem('intro');
+      localStorage.removeItem('avatar');
+      Swal.fire({
+        icon: 'success',
+        title: '登出成功',
+        text: '您已成功登出'
+      }).then(() => {
+        window.location.href = '../account/account.html'; // 登出後跳轉到首頁
+      });
+    }
+  });
+});
  // 左側選單切換右側 section
   document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
     item.addEventListener('click', function (e) {
@@ -336,4 +360,23 @@ document.querySelector('#products tbody')?.addEventListener('click', (e) => {
   // location.href = `product.html?id=${encodeURIComponent(id)}`;
   console.log('點到商品：', id);
 });
+// TODO 更改大頭照預覽
+document.getElementById('myAvatar').addEventListener('change', function (e) {
+  const preview = document.getElementById('myAvatarPreview');
+  preview.innerHTML = ''; // 清除舊圖
 
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    const img = document.createElement('img');
+    img.src = event.target.result;
+    img.style.width = '150px';
+    img.style.borderRadius = '50px';
+    img.style.border = '1px solid #ccc';
+    img.style.boxShadow = '0 0 6px rgba(0,0,0,0.1)';
+    preview.appendChild(img);
+  };
+  reader.readAsDataURL(file);
+});
