@@ -180,6 +180,16 @@ class BackendService {
             fnError("讀取商品資訊失敗");
         }) 
     }
+    deleteMyItems(id, fnSuccess, fnError) {
+        return axios.delete(`${this.baseUrl}/api/commodity/delete/${id}`)
+        .then(function(response) {
+            fnSuccess(response.data);
+        })
+        .catch(function(error) {
+            console.error(error);
+            fnError("無法刪除商品");
+        })
+    }
     // logout(userData, fnSuccess, fnError) {
     //     return axios
     // }

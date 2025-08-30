@@ -163,3 +163,6 @@
     margin-left: 0;
   }
 }
+.btn-sm {
+  --bs-btn-font-size: 1.2rem !important;
+}
