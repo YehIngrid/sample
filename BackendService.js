@@ -82,8 +82,9 @@ class BackendService {
     }
     async updateProfile(userData) {
         let _this = this;
+        let response;
         try {
-            await axios.patch(`${this.baseUrl}/api/account/update`, userData, {
+            response = await axios.patch(`${this.baseUrl}/api/account/update`, userData, {
                     withCredentials: true
                 });
         } catch (error) {
