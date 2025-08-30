@@ -235,7 +235,6 @@
                 <h4 class="card-title">快速動作</h4>
                 <div class="d-flex flex-wrap gap-3 mt-3">
                   <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/addmerchandiseicon.svg" style="margin-right: 5px;" alt="新增商品button">新增商品</button>
-                  <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/newarticle.svg" style="margin-right: 5px;" alt="新增好文button">撰寫好文</button>
                   <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/mycoupon.svg" style="margin-right: 5px;" alt="我的優惠券button">優惠券</button>
                 </div>
               </div>
@@ -276,16 +275,15 @@
           <div class="small text-muted" id="mProfileInfo" style="font-size: 1.2rem;">使用者自介</div>
         </div>
       </div>
-        <a data-target="profile-edit" class="btn editbtn">編輯個人資料</a>
       <hr>
       <div class="list-group">
-        <a class="list-group-item list-group-item-action active standardfontsize" href="#">帳戶管理中心</a>
+        <a class="list-group-item list-group-item-action active standardfontsize" href="#" data-target="account">帳戶管理中心</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="../shoppingcart/shoppingcart.html"><img src="../webP/shoppingcart.webp" alt="購物車icon"> 我的購物車</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../svg/sellicon.svg" alt="我的商品icon"> 我的商品</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="products"><img src="../svg/sellicon.svg" alt="我的商品icon"> 我的商品</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="favorites"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
+        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" id="logout"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
       </div>
       <div class="remind">
         <p class="text-start" style="font-size: 1.4rem; color: #383838; margin-top: 10px; margin-left: 20px; margin-right: 20px;">小提醒: <br>點擊按鈕後，須將此側邊欄關閉才可見畫面</p>
