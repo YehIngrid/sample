@@ -107,10 +107,10 @@
             <div class="card-body text-center">
               <img src="../image/default-avatar.png" alt="頭像" class="avatar mb-2" id="profileAvatar">
               <div style="margin-top: 20px; margin-bottom: 20px; font-weight: 600;" class="name h2 mb-0" id="profileName"></div>
-              <div class="h4" id="profileInfo" style="margin: 10px 30px; text-align: start;"></div>
-              <div class="d-grid gap-2 mt-3">
+              <div class="h4" id="profileInfo" style="margin: 10px 30px; text-align: center;"></div>
+              <!-- <div class="d-grid gap-2 mt-3">
                 <a data-target="profile-edit" class="btn editbtn">編輯個人資料</a>
-              </div>
+              </div> -->
             </div>
           </div>
 
@@ -129,29 +129,10 @@
       </aside>
       <!-- ?section productEdit沒有解決顯示不了的問題 -->
       <!-- TODO section productEdit -->
-      <section id="profile-edit" class="col-lg-9 d-none content-section">
+      <!-- <section id="profile-edit" class="col-lg-9 d-none content-section">
         <button id="back-btn7" style="margin-bottom: 30px; cursor: pointer; border: none; background-color: #004b9743; color: #383838; font-size: 1.6rem; padding: 5px 10px; border-radius: 20px;" type="button">Back</button>
-        <p style="font-size: 1.8rem;">個人資料更改區</p>
-
-        <div style="margin-top: 30px; margin-bottom: 30px;">
-          <div class="d-flex align-items-end" style="margin-bottom: 10px;">
-            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
-            <input type="file" id="photo" accept="image/png, image/jpeg" style="border:none; margin-top: 3px;font-size: 13px;">
-          </div>
-
-          <div class="d-flex  justify-content-between align-items-center" style="margin-bottom: 10px;">
-            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">暱稱</p>
-            <input type="text" style="width: 90%; padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
-          </div>
-          
-          <div class="d-flex  justify-content-between align-items-end" style="margin-bottom: 10px;">
-            <p style=" margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">個人簡介</p>
-            <textarea id="bio" placeholder="簡單介紹一下自己吧！(至多100字)" style="width: 90%; display: block;padding: 5px;font-size: 1.4rem;"></textarea>
-          </div>
-          <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
-          <span class="loader" id="loader1" style="display: none;"></span>
-        </div>
-      </section>
+        
+      </section> -->
       <!-- section products -->
       <section class="col-lg-9 d-none content-section"  id="products">
         <div class="col-12">
@@ -204,7 +185,28 @@
         </div>
       </section>
       <!-- section settings -->
-      <section class="col-lg-9 d-none content-section" id="settings">設定</section>
+      <section class="col-lg-9 d-none content-section" id="settings">
+        <p style="font-size: 1.8rem;">個人資料更改區</p>
+
+        <div style="margin-top: 30px; margin-bottom: 30px;">
+          <div class="d-flex align-items-end" style="margin-bottom: 10px;">
+            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
+            <input type="file" id="photo" accept="image/png, image/jpeg" style="border:none; margin-top: 3px;font-size: 13px;">
+          </div>
+
+          <div class="d-flex  justify-content-between align-items-center" style="margin-bottom: 10px;">
+            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">暱稱</p>
+            <input type="text" style="width: 90%; padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
+          </div>
+          
+          <div class="d-flex  justify-content-between align-items-end" style="margin-bottom: 10px;">
+            <p style=" margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">個人簡介</p>
+            <textarea id="bio" placeholder="簡單介紹一下自己吧！(至多100字)" style="width: 90%; display: block;padding: 5px;font-size: 1.4rem;"></textarea>
+          </div>
+          <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
+          <span class="loader" id="loader1" style="display: none;"></span>
+        </div>
+      </section>
       <!-- Main Content -->
       <main class="col-lg-9 content-section" id="account">
         <div class="row g-3">

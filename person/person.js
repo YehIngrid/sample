@@ -265,6 +265,7 @@ function renderProducts(list = []) {
         <td>${created}</td>
         <td>${updated}</td>
         <td class="text-end">
+          <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
           <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
@@ -286,7 +287,9 @@ function renderProducts(list = []) {
 
   if (action === 'edit') {
     console.log('編輯商品：', id);
-    // location.href = `product.html?id=${encodeURIComponent(id)}`;
+    // 
+  } else if (action === 'check') {
+    location.href = `product.html?id=${encodeURIComponent(id)}`;
   } else if (action === 'stop') {
     if(confirm('確定要暫停上架商品嗎?')) {
 
@@ -300,7 +303,8 @@ function renderProducts(list = []) {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "是，我要下架"
+      confirmButtonText: "是，我要下架",
+      cancelButtonText: "取消"
     }).then((result) => {
       if (result.isConfirmed) {
         backendService.deleteMyItems(id,
@@ -309,7 +313,7 @@ function renderProducts(list = []) {
               icon: "success",
               title: "商品下架成功",
             })
-            st = STATUS_MAP.delete;
+            tr.remove;
           },
           (err) => alert('刪除失敗：' + err)
         );
