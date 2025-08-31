@@ -485,7 +485,7 @@ function renderCards(list = []) {
     return `
       <div class="col" data-id="${esc(id)}">
         <div class="card h-100 shadow-sm">
-          <div class="ratio ratio-2x1 bg-light">
+          <div class="bg-light">
             <img src="${img}" alt="${name}" class="object-cover">
           </div>
           <div class="card-body d-flex flex-column">
