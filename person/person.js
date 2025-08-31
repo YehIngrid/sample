@@ -25,6 +25,8 @@ else {
 }
 // 桌機版
 const userRate = document.getElementById('rate');
+const identify = document.getElementById('identify');
+const memberShip = document.getElementById('membership');
 const profileName = document.getElementById('profileName');
 const profileInfo = document.getElementById('profileInfo');
 const profileAvatar = document.getElementById('profileAvatar');
@@ -35,6 +37,8 @@ if (localStorage.getItem('avatar')) {
 } else {
   profileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
 }
+memberShip.textContent = "無";
+identify.textContent = "已驗證";
 userRate.textContent = localStorage.getItem("rate") || "無法顯示";
 profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
 profileName.textContent = localStorage.getItem("username") ||"使用者名稱"; // 替換為實際使用者名稱
@@ -182,154 +186,7 @@ logoutMobileButton.addEventListener('click', function() {
     });
   });
 
-// document.addEventListener('DOMContentLoaded', () => {
-//   // 呼叫 API 取商品
-//   backendService = new BackendService();
-//   backendService.getMyItems(
-//     (response) => {
-//       // 假設後端回傳 { commodities: [...] }
-//       const list = response.data.commodities ?? data; 
-//       renderProducts(list);
-//       console.log(list);
-//     },
-//     (errorMessage) => {
-//       console.error(errorMessage);
-//       renderProducts([]); // 出錯時顯示「目前沒有商品」
-//     }
-//   );
-// });
 
-// // ?====== 工具函式 ======
-// const STATUS_MAP = {
-//   listed:   { text: '上架中',  badge: 'text-bg-success', action: '編輯' },
-//   sold:     { text: '已售出',  badge: 'text-bg-secondary', action: '查看' },
-//   reserved: { text: '保留中',  badge: 'text-bg-warning', action: '查看' },
-//   draft:    { text: '草稿',    badge: 'text-bg-light', action: '編輯' }, 
-//   delete:   { text: '已下架',  badge: 'text-bg-danger', action: '查看'}
-// };
-
-// const nt = new Intl.NumberFormat('zh-TW', {
-//   style: 'currency', currency: 'TWD', maximumFractionDigits: 0
-// });
-
-// function fmtPrice(v) {
-//   if (v == null || isNaN(Number(v))) return '-';
-//   return nt.format(Number(v));
-// }
-
-// function fmtDate(v) {
-//   if (!v) return '-';
-//   const d = new Date(v); // 支援 ISO 或毫秒
-//   if (isNaN(d)) return '-';
-//   const y = d.getFullYear();
-//   const m = String(d.getMonth()+1).padStart(2,'0');
-//   const day = String(d.getDate()).padStart(2,'0');
-//   return `${y}/${m}/${day}`;
-// }
-
-// function esc(str) {
-//   return String(str ?? '').replace(/[&<>"']/g, s =>
-//     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
-//   );
-// }
-
-// // ?====== 渲染表格 ======
-// function renderProducts(list = []) {
-//   const tbody = document.querySelector('#products tbody');
-//   if (!tbody) return;
-
-//   if (!Array.isArray(list) || list.length === 0) {
-//     tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5">目前沒有商品</td></tr>`;
-//     return;
-//   }
-
-//   const rows = list.map(item => {
-//     const id       = item.id;
-//     const name     = esc(item.name);
-//     const price    = fmtPrice(item.price);
-//     const updated  = fmtDate(item.updatedAt);
-//     const created  = fmtDate(item.createdAt);
-//     const key      = (item.status ?? 'listed').toLowerCase();
-//     const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
-
-//     return `
-//       <tr data-id="${esc(id)}">
-//         <td>${name}</td>
-//         <td><span class="badge ${st.badge}">${st.text}</span></td>
-//         <td>${price}</td>
-//         <td>${created}</td>
-//         <td>${updated}</td>
-//         <td class="text-end">
-//           <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
-//           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
-//           <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
-//           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
-//         </td>
-//       </tr>
-//     `;
-//   }).join('');
-
-//   tbody.innerHTML = rows;
-//   tbody.addEventListener('click', (e) => {
-//   const btn = e.target.closest('.btn-row-action');
-//   if (!btn) return;
-
-//   const tr = btn.closest('tr');
-//   const id = tr?.dataset.id;
-//   const action = btn.dataset.action; // edit 或 delete
-
-//   if (!id) return;
-
-//   if (action === 'edit') {
-//     console.log('編輯商品：', id);
-//     // 
-//   } else if (action === 'check') {
-//     location.href = `../product/product.html?id=${encodeURIComponent(id)}`;
-//   } else if (action === 'stop') {
-//     if(confirm('確定要暫停上架商品嗎?')) {
-
-//     }
-//   } else if (action === 'delete') {
-//     console.log('刪除商品：', id);
-//     Swal.fire({
-//       title: "確定要下架並刪除此商品嗎？",
-//       text: "無法再查看商品詳細資訊",
-//       icon: "warning",
-//       showCancelButton: true,
-//       confirmButtonColor: "#3085d6",
-//       cancelButtonColor: "#d33",
-//       confirmButtonText: "是，我要下架",
-//       cancelButtonText: "取消"
-//     }).then((result) => {
-//       if (result.isConfirmed) {
-//         backendService.deleteMyItems(id,
-//           () => {
-//             Swal.fire({
-//               icon: "success",
-//               title: "商品下架成功",
-//             })
-//             tr.remove;
-//           },
-//           (err) => alert('刪除失敗：' + err)
-//         );
-//       }
-//     });
-//   }
-// });
-// }
-
-// // ====== 列表內按鈕事件（可選） ======
-// document.querySelector('#products tbody')?.addEventListener('click', (e) => {
-//   const btn = e.target.closest('.btn-row-action');
-//   if (!btn) return;
-//   const tr = btn.closest('tr');
-//   const id = tr?.dataset.id;
-//   if (!id) return;
-
-//   // 你可以改成跳轉或打開編輯器：
-//   // location.href = `product.html?id=${encodeURIComponent(id)}`;
-//   console.log('點到商品：', id);
-// });
 // TODO 更改大頭照預覽
 document.getElementById('photo').addEventListener('change', function (e) {
   const preview = document.getElementById('myAvatarPreview');

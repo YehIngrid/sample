@@ -245,7 +245,7 @@
                 <h4 class="card-title">快速動作</h4>
                 <div class="d-flex flex-wrap gap-3 mt-3">
                   <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/addmerchandiseicon.svg" style="margin-right: 5px;" alt="新增商品button">新增商品</button>
-                  <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/mycoupon.svg" style="margin-right: 5px;" alt="我的優惠券button">優惠券</button>
+                  <!-- <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/mycoupon.svg" style="margin-right: 5px;" alt="我的優惠券button">優惠券</button> -->
                 </div>
               </div>
             </div>
@@ -256,21 +256,53 @@
               <div class="card-body">
                 <div class="d-flex flex-wrap gap-2">
                   <div style="text-align: center;">
-                    <h3>信譽積分</h3>
-                    <h2 id="rate"></h2>
+                    <h3 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">信譽積分</h3>
+                    <h3 id="rate"></h3>
                   </div>
-                  <div>
-                    <h3>會員資格</h3>
-                    <h2 id="membership"></h2>
+                  <div style="text-align: center;">
+                    <h3 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">會員資格</h3>
+                    <h3 id="membership"></h3>
                   </div>
-                  <div>
-                    <h3>學生身分認證</h3>
-                    <h2 id="identity"></h2>
+                  <div style="text-align: center;">
+                    <h3 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px;">學生身分認證</h3>
+                    <h3 id="identify"></h3>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h4 class="card-title">我的商品 >> 相關操作說明</h4>
+                <div class="d-flex flex-column flex-wrap gap-3 mt-3">
+                  <div>
+                      <button class="btn btn-outline-success" style="font-size: 1.6rem;">查看商品</button>
+                      <h3 style="margin-left: 5px; margin-top: 10px;">點擊按鈕後，將會跳轉至商品頁面。</h3>
+                  </div>
+                  <div>
+                      <button class="btn btn-outline-primary" style="font-size: 1.6rem;">編輯</button>
+                      <h3 style="margin-left: 5px; margin-top: 10px;">
+                          點擊此按鈕後，下方將會出現該商品的所有資訊，即可進行修改 (可以只更新部分欄位)，最後點擊更新按鈕進行商品編輯。<br>
+                          若更改商品中的「多張照片」區域，將會<strong>一次替換之前的所有照片</strong>。<br>
+                          若商品無法更新，出現錯誤，請先檢查商品資訊是否符合本商城之規定。</h3>
+                  </div>
+                  <div>
+                      <button class="btn btn-outline-secondary" style="font-size: 1.6rem;">暫停上架商品</button>
+                      <h3 style="margin-left: 5px; margin-top: 10px;">待討論</h3>
+                  </div>
+                  <div>
+                      <button class="btn btn-outline-danger" style="font-size: 1.6rem;">永久下架商品</button>
+                      <h3 style="margin-left: 5px; margin-top: 10px;">
+                        點擊此按鈕後，將會刪除指定的商品，並且<strong>永久不會</strong>出現在「我的商品」清單中與架上。<br>
+                        只有在沒有相關的進行中訂單時才能刪除商品。</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </main>
       <!-- 主內容：右（你給的 main 放這裡） -->
