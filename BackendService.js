@@ -74,7 +74,7 @@ class BackendService {
                 localStorage.setItem('username', response.data.data.name); 
                 localStorage.setItem('intro', response.data.data.introduction);
                 localStorage.setItem('avatar', response.data.data.photoURL);
-                localStorage.setItem('rate', response.data.data.rate);
+                localStorage.setItem('rate', response.data.data.owner.rate);
             })
             .catch(function(error) {
                 console.error("無法取得使用者資料", error);

@@ -480,7 +480,7 @@ function renderCards(list = []) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
-    const img      = esc(item.coverUrl || item.imageUrl || '../webP/placeholder.webp');
+    const img      = esc(item.mainImage || item.imageUrl || '../webP/placeholder.webp');
 
     return `
       <div class="col" data-id="${esc(id)}">
