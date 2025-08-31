@@ -56,6 +56,8 @@ class BackendService {
         const savedRate = localStorage.getItem('rate');
         if(savedRate) {
             console.log('以儲存信譽積分', savedRate);
+        } else {
+            console.log('找不到信譽積分!');
         }
         if (savedUsername) {
             console.log('已儲存的使用者名稱:', savedUsername);
