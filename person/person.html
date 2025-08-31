@@ -140,7 +140,7 @@
             <div class="card-body">
               <h4 class="card-title">我的商品</h4>
               <div class="table-responsive">
-                <table class="table align-middle">
+                <table class="table align-middle d-none d-lg-table">
                   <thead>
                     <tr>
                       <th>商品</th><th>狀態</th><th>價格</th><th>建立時間</th><th>最後更新</th><th>相關操作</th>
@@ -148,6 +148,9 @@
                   </thead>
                   <tbody></tbody>
                 </table>
+                <!-- 手機版卡片：小於 lg 才顯示 -->
+                <div id="product-cards" class="row row-cols-2 g-3 d-block d-lg-none"></div>
+                
               </div>
             </div>
           </div>
@@ -189,9 +192,11 @@
         <p style="font-size: 1.8rem;">個人資料更改區</p>
 
         <div style="margin-top: 30px; margin-bottom: 30px;">
-          <div class="d-block" style="margin-bottom: 10px;">
-            <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
-            <input type="file" id="photo" accept="image/png, image/jpeg, image/webp" style="border:none; margin-top: 3px;font-size: 13px;">
+          <div class="d-lg-flex align-items-end d-block" style="margin-bottom: 10px;">
+            <div>
+              <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
+              <input type="file" id="photo" accept="image/png, image/jpeg, image/webp" style="border:none; margin-top: 3px;font-size: 13px;">
+            </div>
             <div id="myAvatarPreview"></div>
           </div>
 
@@ -249,10 +254,18 @@
             <div class="card shadow-sm">
               <div class="card-body">
                 <div class="d-flex flex-wrap gap-2">
-                  <div>信譽積分</div>
-                  <div>儲值幣金額</div>
-                  <div>會員資格</div>
-                  <div>真實身分認證</div>
+                  <div style="text-align: center;">
+                    <h3>信譽積分</h3>
+                    <h2 id="rate"></h2>
+                  </div>
+                  <div>
+                    <h3>會員資格</h3>
+                    <h2 id="membership"></h2>
+                  </div>
+                  <div>
+                    <h3>學生身分認證</h3>
+                    <h2 id="identity"></h2>
+                  </div>
                 </div>
               </div>
             </div>
@@ -273,7 +286,7 @@
     </div>
     <div class="offcanvas-body d-flex flex-column gap-3">
       <div class="d-flex align-items-center gap-3">
-        <img src="../image/default-avatar.png" alt="頭像" class="avatar" style="width:64px;height:64px;border-radius:50%;border:2px solid var(--brand);" id="mProfileAvatar">
+        <img src="../image/default-avatar.png" alt="頭像" class="avatar" style="width:64px;height:64px;object-fit: cover; border-radius:50%;border:2px solid var(--brand);" id="mProfileAvatar">
         <div>
           <div class="fw-bold" id="mProfileName" style="font-size: 1.6rem; font-weight: 600;">使用者名稱</div>
           <div class="small text-muted" id="mProfileInfo" style="font-size: 1.2rem;">使用者自介</div>

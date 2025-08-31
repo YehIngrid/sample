@@ -166,3 +166,7 @@
 .btn-sm {
   --bs-btn-font-size: 1.4rem !important;
 }
+.sidebar {
+  margin-right: 30px;
+}
+.object-cover { width: 100%; height: 100%; object-fit: cover; object-position: center; }
