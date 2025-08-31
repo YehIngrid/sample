@@ -169,4 +169,4 @@
 .sidebar {
   margin-right: 30px;
 }
-.object-cover { width: 100%; height: 50%; object-fit: cover; object-position: center; }
+.object-cover { width: 100%; height: 100%; object-fit: cover; object-position: center; }
