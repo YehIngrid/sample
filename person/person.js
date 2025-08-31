@@ -28,6 +28,9 @@ const userRate = document.getElementById('rate');
 const userRate1 = document.getElementById('rate1');
 const identify = document.getElementById('identify');
 const memberShip = document.getElementById('membership');
+const showName = document.getElementById('showName');
+const showIntro = document.getElementById('showIntro');
+const showTime = document.getElementById('showTime');
 const profileName = document.getElementById('profileName');
 const profileInfo = document.getElementById('profileInfo');
 const profileAvatar = document.getElementById('profileAvatar');
@@ -38,13 +41,17 @@ if (localStorage.getItem('avatar')) {
 } else {
   profileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
 }
-memberShip.textContent = "無";
+memberShip.textContent = "尚未開放";
 identify.textContent = "已驗證";
 userRate1.textContent = localStorage.getItem("rate") || "無法顯示";
 userRate.textContent = localStorage.getItem("rate") || "無法顯示";
-profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
-profileName.textContent = localStorage.getItem("username") ||"使用者名稱"; // 替換為實際使用者名稱
-
+const localIntro = localStorage.getItem("intro") || "使用者介紹";
+profileInfo.textContent = localIntro; // 替換為實際使用者介紹
+showIntro.textContent = localIntro;
+const localName = localStorage.getItem("username") ||"使用者名稱"; 
+profileName.textContent = localName;// 替換為實際使用者名稱
+showName.textContent = localName;
+// TODO 使用者加入時間
 //更新資料動作
 document.getElementById('update-profile').addEventListener('click', async () => {
     const displayName = document.getElementById('display-name').value.trim();

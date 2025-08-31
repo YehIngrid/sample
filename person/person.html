@@ -189,6 +189,60 @@
       </section>
       <!-- section settings -->
       <section class="col-lg-9 d-none content-section" id="settings">
+        <div class="card col-12">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <h4 class="showStyle" style="margin-right: 10px;">用戶名</h4>
+              <h4 id="showName"></h4>
+            </div>
+            <div class="d-flex align-items-center">
+              <h4 class="showStyle" style="margin-right: 10px;">關於我</h4>
+              <h4 id="showIntro"></h4>
+            </div>
+            <div class="d-flex align-items-center">
+              <h4 class="showStyle" style="margin-right: 10px;">加入日期</h4>
+              <h4 id="showTime"></h4>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-danger" style="font-size: 1.6rem;" id="deleteAccount">註銷此帳號</button>
+            </div>
+          </div>
+        </div>
+        <div class="d-lg-flex g-3">
+          <div class="card col-lg-4 col-12">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-4">
+                <h3 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">信譽積分</h3>
+                <h3 id="rate1"></h3>
+              </div>
+              <p style="padding: 0px 10px;">每個用戶基本分為60分，若被其他用戶檢舉一次扣5分，扣到0分為止。</p>
+              <p style="padding: 0px 10px;">每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分1~5分，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。</p>
+              <button class="btn btn-light" style="font-size: 1.4rem;">查看別人對我的評價</button>
+            </div>
+          </div>
+          <div class="card col-lg-4 col-12">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-4">
+                <h3 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">會員資格</h3>
+                <h3 id="membership1">尚未開放此功能，敬請期待</h3>
+              </div>
+              <p style="padding: 0px 10px;">如果尚未加入會員要顯示: </p>
+              <button class="btn btn-light" style="font-size: 1.4rem;">立即加入會員</button>
+            </div>
+          </div>
+          <div class="card col-lg-4 col-12">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-4">
+                <h3 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 10px;">學生身分認證</h3>
+                <h3 id="identify1">先預設已驗證</h3>
+              </div>
+              <p style="padding: 0px 10px;">未驗證要顯示: 您尚未進行學生身分驗證，驗證完可開啟1.販賣功能 2.購買功能</p>
+              <p style="padding: 0px 10px;">已驗證要顯示: 申請帳號，恭喜您完成學生驗證，可以開始販售商品以及購買商品!</p>
+              <button class="btn btn-light" style="font-size: 1.4rem;">立即進行身分驗證</button>
+            </div>
+          </div>
+        </div>
+        <hr>
         <div class="card" style="border-radius: 20px !important;">
           <div class="card-body" style="padding:20px 20px !important;">
             <p style="font-size: 1.8rem; font-weight: 600;">個人資料更改區</p>
@@ -214,40 +268,7 @@
             </div>
           </div>
         </div>
-        <hr>
-        <p>其他資料</p>
-        <div class="d-lg-flex g-3">
-          <div class="card col-lg-4 col-12">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-4">
-                <h3 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">信譽積分</h3>
-                <h3 id="rate1"></h3>
-              </div>
-              <p style="padding: 0px 10px;">每個用戶基本分為60分，若被其他用戶檢舉一次扣5分，若低於40分則不得進行商品買賣。當月低於40分，待至下月起可獲得5分機會分數。</p>
-              <p style="padding: 0px 10px;">每次消費或者販賣一件商品結束後會詢問對方體驗分，評分1~5分，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。</p>
-            </div>
-          </div>
-          <div class="card col-lg-4 col-12">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-4">
-                <h3 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">會員資格</h3>
-                <h3 id="membership1">先預設沒有</h3>
-              </div>
-              <p style="padding: 0px 10px;">如果尚未加入會員要顯示: </p>
-              <p style="padding: 0px 10px;">若已加入會員要顯示: </p>
-            </div>
-          </div>
-          <div class="card col-lg-4 col-12">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-4">
-                <h3 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 10px;">學生身分認證</h3>
-                <h3 id="identify1">先預設已驗證</h3>
-              </div>
-            </div>
-            <p style="padding: 0px 10px;">未驗證要顯示: </p>
-            <p style="padding: 0px 10px;">已驗證要顯示: </p>
-          </div>
-        </div>
+        
       </section>
       <!-- Main Content -->
       <main class="col-lg-9 content-section" id="account">
@@ -263,9 +284,9 @@
               <div class="card-body">
                 <h4 class="card-title">近期通知</h4>
                 <ul class="list-unstyled mb-0">
-                  <li class="mb-2">• 你的商品 <strong>#A1234</strong> 已被加入收藏。</li>
-                  <li class="mb-2">• 有人對你的商品發出訊息。</li>
-                  <li class="mb-2">• 系統維護公告：8/20 01:00–03:00。</li>
+                  <li class="mb-2"> • 你的商品 <strong>#A1234</strong> 已被加入收藏。</li>
+                  <li class="mb-2"> • 有人對你的商品發出訊息。</li>
+                  <li class="mb-2"> • 系統維護公告：8/20 01:00–03:00。</li>
                 </ul>
               </div>
             </div>
