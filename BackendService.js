@@ -53,6 +53,10 @@ class BackendService {
         const savedUid = localStorage.getItem('uid');
         const savedUsername = localStorage.getItem('username');
         const savedIntro = localStorage.getItem('intro');
+        const savedRate = localStorage.getItem('rate');
+        if(savedRate) {
+            console.log('以儲存信譽積分', savedRate);
+        }
         if (savedUsername) {
             console.log('已儲存的使用者名稱:', savedUsername);
         }
