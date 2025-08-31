@@ -22,87 +22,13 @@
         <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     </head>
-    <style>
- #loader {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px;
-    background-color: #fff;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-  }
-  #whatcontent {
-    display: none; /* 初始隱藏內容 */
-  }
-  /* 載入畫面 */
-.spinner {
-  width: 36.4px;
-  height: 36.4px;
-  animation: spinner-y0fdc1 2.4s infinite ease;
-  transform-style: preserve-3d;
-}
 
-.spinner > div {
-  background: linear-gradient(to bottom, #004b9743, #24b6856f);
-  height: 100%;
-  position: absolute;
-  width: 100%;
-  border: 1.5px solid #fff
-  ;
-}
-    
-    .spinner div:nth-of-type(1) {
-      transform: translateZ(-18.2px) rotateY(-360deg);
-    }
-    
-    .spinner div:nth-of-type(2) {
-      transform: rotateY(-270deg) translateX(50%);
-      transform-origin: top right;
-    }
-    
-    .spinner div:nth-of-type(3) {
-      transform: rotateY(270deg) translateX(-50%);
-      transform-origin: center left;
-    }
-    
-    .spinner div:nth-of-type(4) {
-      transform: rotateX(90deg) translateY(-50%);
-      transform-origin: top center;
-    }
-    
-    .spinner div:nth-of-type(5) {
-      transform: rotateX(-90deg) translateY(50%);
-      transform-origin: bottom center;
-    }
-    
-    .spinner div:nth-of-type(6) {
-      transform: translateZ(18.2px);
-    }
-    
-    @keyframes spinner-y0fdc1 {
-      0% {
-         transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
-      }
-    
-      50% {
-         transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
-      }
-    
-      100% {
-         transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
-      }
-    }
-    
-    </style>
     <body>
       <div class="bubble bubble1 parallax"></div>
-<div class="bubble bubble2 parallax"></div>
-<div class="bubble bubble3 parallax"></div>
-<div class="bubble bubble4 parallax"></div>
-<div class="bubble bubble5 parallax"></div>
+      <div class="bubble bubble2 parallax"></div>
+      <div class="bubble bubble3 parallax"></div>
+      <div class="bubble bubble4 parallax"></div>
+      <div class="bubble bubble5 parallax"></div>
 
       <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
         <div class="spinner">
@@ -115,31 +41,97 @@
         </div>
         <div><p style="color: #383838; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;"><br><br>拾貨寶庫加載中... </p></div>
       </div>
+
       <div id="whatcontent" class="d-none">
-        <!-- TODO header -->
+  <!-- Header -->
+  <div class="header">
+    <!-- 響應式選單 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
+      <div class="container-fluid d-flex align-items-center">
+
+        <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
+        <button class="navbar-toggler d-lg-none me-2 order-0"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- (ALL) Logo -->
+        <a class="navbar-brand picture order-1 me-4"
+           href="../newhome.html">
+          <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫登入頁面"
+               style="width: 100px; margin-right: 10px; border-radius: 0%;">
+        </a>
+
+        <!-- (DESKTOP) 導覽選單：桌機顯示 -->
+        <div class="d-none d-lg-flex order-2">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome.html">首頁</a></li>
+            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
+            <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
+          </ul>
+        </div>
+
+        <!-- (RIGHT) 右側：登入 + 購物車（所有尺寸都有；用 ms-auto 推到最右） -->
+        <div class="d-flex align-items-center ms-auto order-3">
+          <div class="login me-2">
+            <a id="username" class="username" href="../person/person.html"></a>
+            <a class="navbar-brand" href="account.html" id="loginornot">登入</a>
+          </div>
+          <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
+            <img src="../webP/shoppingcart.webp" alt="我的購物車">
+          </a>
+        </div>
+      </div>
+
+      <!-- (MOBILE) 手機版導覽選單展開內容：手機顯示，放在同一個 nav 內 -->
+      <div class="collapse mt-2 d-lg-none" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
+          <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
+          <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+          <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
+          <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
+          <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+
+
+      <!-- <div id="whatcontent" class="d-none">
+        <!-- TODO header 
         <div class="header ">
-            <!--TODO 響應式選單-->
+            <!--TODO 響應式選單
             <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
               <div class="container-fluid d-flex align-items-center sticky-top">
             
-                <!-- (A) LOGO 放在最左邊 -->
+                <!-- (A) LOGO 放在最左邊 
                 <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
                   <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫登入頁面" style="width: 100px; margin-right: 10px; border-radius: 0%;">
                 </a>
             
-                <!-- (B) 桌機版導覽選單 -->
+                <!-- (B) 桌機版導覽選單 
                 <div class="d-none d-lg-flex">
                   <ul class="navbar-nav" >
-                    <li class="nav-item"><a class="nav-link"style="color: #383838;" href="../newhome.html">首頁</a></li>
-                    <li class="nav-item"><a class="nav-link" style="color: #383838;"href="../news/news.html">最新資訊</a></li>
-                    <li class="nav-item"><a class="nav-link"style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
-                    <li class="nav-item"><a class="nav-link" style="color: #383838;"href="../questions/questions.html">常見問題</a></li>
-                    <li class="nav-item"><a class="nav-link"style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
-                    <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;"href="../communication/communication.html">客服諮詢</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome.html">首頁</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
+                    <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
                   </ul>
                 </div>
             
-                <!-- (C) 右側：登入 + 購物車 -->
+                <!-- (C) 右側：登入 + 購物車 
                 <div class="d-flex align-items-center ms-auto">
                   <div class="login">
                     <a id="username" class="username" href="../person/person.html"></a>
@@ -154,7 +146,7 @@
             
             
             
-              <!-- 手機版導覽選單展開內容 -->
+              <!-- 手機版導覽選單展開內容 
               <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
                 <ul class="navbar-nav">
                   <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
@@ -167,7 +159,7 @@
               </div>
             </div>
         </div>
-      </div>
+      </div> -->
         <!-- TODO content -->
         <div class="form-signin">
           <div class="content">
@@ -177,13 +169,12 @@
                   <h1 class="h1">登入<br><br></h1>
                   <div class="form-floating">
                     <input type="email" class="form-control form-control-lg" id="floatingInput" placeholder="s4113001001@mail.nchu.edu.tw">
-                    <label for="floatingInput">請輸入中興大學提供的電子信箱</label>
+                    <label for="floatingInput">請輸入學校提供的電子信箱</label>
                   </div>
                   <br>
                   <div class="form-floating">
                     <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password">
                     <label for="floatingPassword">請輸入密碼</label>
-                    <i id="checkEye" class="fas fa-eye"></i>
                   </div>
                   <button type="submit" id="send">登入</button>
                   <br>
@@ -207,19 +198,17 @@
                   <div class="form-floating form-signpass">
                   <input class="form-control" type="password" id="password1" placeholder="請輸入至少6位以上">
                   <label for="floatingPassword" class="p">設定您的密碼，至少6位英數字混合</label>
-                  <i id="checkEye1" class="fas fa-eye"></i>
                   </div>
                   <div class="form-floating form-signpass">
                   <input class="form-control" type="password" id="password2" placeholder="請再次輸入密碼">
                   <label for="floatingPassword" class="p">請再次輸入密碼</label>
-                  <i id="checkEye2" class="fas fa-eye"></i>
                   </div>
                   <div class="form-floating form-signnick">
                   <input class="form-control" type="text" id="name" placeholder="請輸入暱稱">
                   <label for="floatingInput" >請輸入您的暱稱</label>
                   </div>
                   <button type="submit" id="sign" class="signbtn">註冊</button>
-                  <p class="policy">註冊即表示您同意<a>服務條款</a>與<a>隱私權政策</a></p>
+                  <p class="policy">註冊即表示您同意<a>服務條款</a>與<a href="../policy/policy.html">隱私權政策</a></p>
                 </form>
               </div>
             </div>
