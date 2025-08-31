@@ -25,6 +25,7 @@ else {
 }
 // 桌機版
 const userRate = document.getElementById('rate');
+const userRate1 = document.getElementById('rate1');
 const identify = document.getElementById('identify');
 const memberShip = document.getElementById('membership');
 const profileName = document.getElementById('profileName');
@@ -39,6 +40,7 @@ if (localStorage.getItem('avatar')) {
 }
 memberShip.textContent = "無";
 identify.textContent = "已驗證";
+userRate1.textContent = localStorage.getItem("rate") || "無法顯示";
 userRate.textContent = localStorage.getItem("rate") || "無法顯示";
 profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
 profileName.textContent = localStorage.getItem("username") ||"使用者名稱"; // 替換為實際使用者名稱

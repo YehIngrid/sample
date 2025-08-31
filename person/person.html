@@ -163,7 +163,7 @@
         <div class="col-12">
           <div class="card shadow-sm">
             <div class="card-body">
-              <h4 class="card-title">我的商品</h4>
+              <h4 class="card-title">我的收藏</h4>
               <div class="table-responsive">
                 <table class="table align-middle">
                   <thead>
@@ -189,33 +189,65 @@
       </section>
       <!-- section settings -->
       <section class="col-lg-9 d-none content-section" id="settings">
-        <p style="font-size: 1.8rem;">個人資料更改區</p>
-
-        <div style="margin-top: 30px; margin-bottom: 30px;">
-          <div class="d-lg-flex align-items-end d-block" style="margin-bottom: 10px;">
-            <div>
-              <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
-              <input type="file" id="photo" accept="image/png, image/jpeg, image/webp" style="border:none; margin-top: 3px;font-size: 13px;">
+        <div class="card" style="border-radius: 20px !important;">
+          <div class="card-body" style="padding:20px 20px !important;">
+            <p style="font-size: 1.8rem; font-weight: 600;">個人資料更改區</p>
+            <div style="margin-top: 30px; margin-bottom: 30px;">
+              <div class="d-lg-flex align-items-end d-block" style="margin-bottom: 10px;">
+                <div>
+                  <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.6rem; margin-right: 20px;">大頭照</p>
+                  <input type="file" id="photo" accept="image/png, image/jpeg, image/webp" style="border:none; margin-top: 3px;font-size: 13px;">
+                </div>
+                <div id="myAvatarPreview"></div>
+              </div>
+              <div class="d-block" style="margin-bottom: 10px;">
+                <p style="margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">暱稱</p>
+                <input type="text" style="width: 90%; padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
+              </div>
+              
+              <div class="d-block" style="margin-bottom: 10px;">
+                <p style=" margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">個人簡介</p>
+                <textarea id="bio" placeholder="簡單介紹一下自己吧！(至多100字)" style="width: 90%; display: block;padding: 5px;font-size: 1.4rem;"></textarea>
+              </div>
+              <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
+              <span class="loader" id="loader1" style="display: none;"></span>
             </div>
-            <div id="myAvatarPreview"></div>
           </div>
-
-          <div class="d-block" style="margin-bottom: 10px;">
-            <p style="margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">暱稱</p>
-            <input type="text" style="width: 90%; padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
-          </div>
-          
-          <div class="d-block" style="margin-bottom: 10px;">
-            <p style=" margin-bottom: 2px;margin-top: 15px;font-size: 1.6rem;">個人簡介</p>
-            <textarea id="bio" placeholder="簡單介紹一下自己吧！(至多100字)" style="width: 90%; display: block;padding: 5px;font-size: 1.4rem;"></textarea>
-          </div>
-          <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
-          <span class="loader" id="loader1" style="display: none;"></span>
         </div>
-
+        <hr>
         <p>其他資料</p>
-        <p>信譽積分: </p>
-
+        <div class="d-lg-flex g-3">
+          <div class="card col-lg-4 col-12">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-4">
+                <h3 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">信譽積分</h3>
+                <h3 id="rate1"></h3>
+              </div>
+              <p style="padding: 0px 10px;">每個用戶基本分為60分，若被其他用戶檢舉一次扣5分，若低於40分則不得進行商品買賣。當月低於40分，待至下月起可獲得5分機會分數。</p>
+              <p style="padding: 0px 10px;">每次消費或者販賣一件商品結束後會詢問對方體驗分，評分1~5分，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。</p>
+            </div>
+          </div>
+          <div class="card col-lg-4 col-12">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-4">
+                <h3 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">會員資格</h3>
+                <h3 id="membership1">先預設沒有</h3>
+              </div>
+              <p style="padding: 0px 10px;">如果尚未加入會員要顯示: </p>
+              <p style="padding: 0px 10px;">若已加入會員要顯示: </p>
+            </div>
+          </div>
+          <div class="card col-lg-4 col-12">
+            <div class="card-body">
+              <div class="d-flex align-items-center mb-4">
+                <h3 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 10px;">學生身分認證</h3>
+                <h3 id="identify1">先預設已驗證</h3>
+              </div>
+            </div>
+            <p style="padding: 0px 10px;">未驗證要顯示: </p>
+            <p style="padding: 0px 10px;">已驗證要顯示: </p>
+          </div>
+        </div>
       </section>
       <!-- Main Content -->
       <main class="col-lg-9 content-section" id="account">
@@ -256,11 +288,11 @@
               <div class="card-body">
                 <div class="d-flex flex-wrap gap-2">
                   <div style="text-align: center;">
-                    <h3 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">信譽積分</h3>
+                    <h3 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">信譽積分</h3>
                     <h3 id="rate"></h3>
                   </div>
                   <div style="text-align: center;">
-                    <h3 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">會員資格</h3>
+                    <h3 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">會員資格</h3>
                     <h3 id="membership"></h3>
                   </div>
                   <div style="text-align: center;">
@@ -284,8 +316,8 @@
                   <div>
                       <button class="btn btn-outline-primary" style="font-size: 1.6rem;">編輯</button>
                       <h3 style="margin-left: 5px; margin-top: 10px;">
-                          點擊此按鈕後，下方將會出現該商品的所有資訊，即可進行修改 (可以只更新部分欄位)，最後點擊更新按鈕進行商品編輯。<br>
-                          若更改商品中的「多張照片」區域，將會<strong>一次替換之前的所有照片</strong>。<br>
+                          點擊此按鈕後，下方將會出現該商品的所有資訊，即可進行修改 (可以只更新部分欄位)，最後點擊更新按鈕進行商品編輯。<br><br>
+                          若更改商品中的「多張照片」區域，將會<strong>一次替換之前的所有照片</strong>。<br><br>
                           若商品無法更新，出現錯誤，請先檢查商品資訊是否符合本商城之規定。</h3>
                   </div>
                   <div>
@@ -295,7 +327,7 @@
                   <div>
                       <button class="btn btn-outline-danger" style="font-size: 1.6rem;">永久下架商品</button>
                       <h3 style="margin-left: 5px; margin-top: 10px;">
-                        點擊此按鈕後，將會刪除指定的商品，並且<strong>永久不會</strong>出現在「我的商品」清單中與架上。<br>
+                        點擊此按鈕後，將會刪除指定的商品，並且<strong>永久不會</strong>出現在「我的商品」清單中與架上。<br><br>
                         只有在沒有相關的進行中訂單時才能刪除商品。</h3>
                   </div>
                 </div>
