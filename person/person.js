@@ -445,11 +445,23 @@ function handleAction(action, id, rowOrCardEl) {
   // person.js
 
 }
+
 (() => {
   'use strict';
 
   let currentEditId = null;
-  let previewObjectUrl = null;
+
+  // 主圖預覽的 ObjectURL
+  let mainPreviewObjectUrl = null;
+
+  // 次要圖：既有 URL 與「這次新選」的檔案
+  let existingSecondaryUrls = [];     // 從後端帶入（如果有）
+  let selectedSecondaryFiles = [];    // 使用者新選的檔案（有則覆蓋全部）
+  let secondaryObjectUrls = [];       // 只為預覽用，render 後要記得 revoke
+
+  const LIMIT_COUNT = 5;
+  const LIMIT_MB = 5;
+
   let el = null;
 
   document.addEventListener('DOMContentLoaded', init);
@@ -457,18 +469,41 @@ function handleAction(action, id, rowOrCardEl) {
   function init() {
     el = getEls();
     if (!el.drawer || !el.form) {
-      console.error('[person.js] 缺少 Drawer 必要節點 (#editDrawer / #editItemForm)');
+      console.error('[edit-drawer] 缺少 Drawer 必要節點 (#editDrawer / #editItemForm)');
       return;
     }
 
-    // 圖片預覽
+    // 主圖預覽
     el.image?.addEventListener('change', (e) => {
       const file = e.target.files?.[0];
-      if (!file) { hidePreview(); return; }
-      if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
-      previewObjectUrl = URL.createObjectURL(file);
-      el.imagePreview.src = previewObjectUrl;
+      if (!file) { hideMainPreview(); return; }
+      if (mainPreviewObjectUrl) URL.revokeObjectURL(mainPreviewObjectUrl);
+      mainPreviewObjectUrl = URL.createObjectURL(file);
+      el.imagePreview.src = mainPreviewObjectUrl;
       el.imagePreview.classList.remove('d-none');
+    });
+
+    // 次要圖選擇（多檔）
+    el.imagesInput?.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files || []);
+      const okFiles = [];
+
+      for (const f of files) {
+        const sizeMB = f.size / (1024 * 1024);
+        if (sizeMB > LIMIT_MB) {
+          Swal.fire({ icon: 'warning', title: '檔案過大', text: `${f.name} 超過 ${LIMIT_MB}MB` });
+          continue;
+        }
+        okFiles.push(f);
+      }
+
+      // 最多 5 張
+      selectedSecondaryFiles = okFiles.slice(0, LIMIT_COUNT);
+
+      // 只要有新檔就視為覆蓋 → 不顯示既有，改顯示新檔預覽
+      renderSecondaryPreview();
+      syncFileInputFromSelected();
+      updateSecondaryHint();
     });
 
     // 取消/關閉/ESC
@@ -480,7 +515,7 @@ function handleAction(action, id, rowOrCardEl) {
     });
 
     // 送出儲存
-    el.form.addEventListener('submit', (e) => {
+    el.form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentEditId) return;
 
@@ -490,31 +525,42 @@ function handleAction(action, id, rowOrCardEl) {
       formData.append('category', el.category.value);
       formData.append('description', el.description.value);
 
-      const statusValue = el.status.listed.checked ? 'listed'
-                        : el.status.reserved.checked ? 'reserved'
-                        : 'sold';
-      formData.append('status', statusValue);
+      // 主圖（可選）
+      const mainFile = el.image?.files?.[0];
+      if (mainFile) formData.append('image', mainFile);
 
-      const file = el.image?.files?.[0];
-      if (file) formData.append('image', file);
+      // 次要圖（若有新選就覆蓋全部）
+      if (selectedSecondaryFiles.length > 0) {
+        selectedSecondaryFiles.forEach(file => formData.append('otherImages[]', file));
+        // 若後端要旗標可打開：
+        // formData.append('replaceAllOtherImages', 'true');
+      } else {
+        // 沒有新選 → 保留現有，不需傳 anything（依後端規則）
+        // 如果後端要你帶既有 URL 以保留可這樣做：
+        // existingSecondaryUrls.forEach(u => formData.append('existingOtherImages[]', u));
+      }
 
-      // 依你的 backendService 介面
-      backendService.updateMyItems(currentEditId, formData)
-        .then(() => {
-          Swal.fire({ icon: 'success', title: '已更新' });
-          if (typeof window.tryUpdateListDom === 'function') {
-            window.tryUpdateListDom(currentEditId, {
-              name: el.name.value.trim(),
-              price: el.price.value,
-              status: statusValue
-            });
-          }
-          closeEditDrawer();
-        })
-        .catch(err => {
-          console.error(err);
-          Swal.fire({ icon: 'error', title: '更新失敗', text: String(err || '請稍後再試') });
-        });
+      try {
+        const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+        await backendService.updateMyItems(currentEditId, formData, config);
+
+        await Swal.fire({ icon: 'success', title: '已更新' });
+
+        // 若你有前端即時更新列表可在這裡補：
+        if (typeof window.tryUpdateListDom === 'function') {
+          window.tryUpdateListDom(currentEditId, {
+            name: el.name.value.trim(),
+            price: el.price.value
+          });
+        }
+
+        closeEditDrawer();
+        // 你之前提出「更新完要重新載入」
+        location.reload();
+      } catch (err) {
+        console.error(err);
+        Swal.fire({ icon: 'error', title: '更新失敗', text: String(err || '請稍後再試') });
+      }
     });
 
     // 將開關方法掛到全域
@@ -536,11 +582,9 @@ function handleAction(action, id, rowOrCardEl) {
       description: document.getElementById('edit-description'),
       image: document.getElementById('edit-image'),
       imagePreview: document.getElementById('edit-image-preview'),
-      status: {
-        listed: document.getElementById('status-listed'),
-        reserved: document.getElementById('status-reserved'),
-        sold: document.getElementById('status-sold'),
-      }
+      imagesInput: document.getElementById('edit-images'),
+      imagesPreview: document.getElementById('edit-images-preview'),
+      imagesHint: document.getElementById('edit-images-hint'),
     };
   }
 
@@ -550,11 +594,13 @@ function handleAction(action, id, rowOrCardEl) {
 
     // 重置表單 + 清預覽
     el.form.reset();
-    hidePreview();
+    hideMainPreview();
+    resetSecondary();
 
-    // 讀單筆資料（有就帶，沒有就跳過）
-    if (typeof backendService?.getMyItem === 'function') {
-      try {
+    // （可選）載入單筆資料填入表單
+    // 若你有 backendService.getMyItem(id, ok, err) 可打開這段
+    try {
+      if (backendService?.getMyItem) {
         await new Promise((resolve, reject) => {
           backendService.getMyItem(id, (res) => {
             const item = res?.data ?? {};
@@ -562,9 +608,9 @@ function handleAction(action, id, rowOrCardEl) {
             resolve();
           }, (err) => reject(err));
         });
-      } catch (e) {
-        console.error('讀取商品失敗', e);
       }
+    } catch (e) {
+      console.warn('讀取商品失敗，將以空白表單開啟', e);
     }
 
     // 顯示 Drawer
@@ -585,7 +631,8 @@ function handleAction(action, id, rowOrCardEl) {
     setTimeout(() => {
       el.drawer.hidden = true;
       el.backdrop.hidden = true;
-      hidePreview();
+      hideMainPreview();
+      resetSecondary();
     }, 200);
   }
 
@@ -594,26 +641,121 @@ function handleAction(action, id, rowOrCardEl) {
     el.price.value = item.price ?? '';
     el.category.value = item.category ?? '';
     el.description.value = item.description ?? '';
-    const s = (item.status ?? 'listed');
-    (el.status[s] || el.status.listed).checked = true;
 
+    // 主圖
     if (item.imageUrl) {
       el.imagePreview.src = item.imageUrl;
       el.imagePreview.classList.remove('d-none');
     } else {
-      hidePreview();
+      hideMainPreview();
+    }
+
+    // 次要圖（既有 URL）
+    existingSecondaryUrls = Array.isArray(item.otherImageUrls)
+      ? item.otherImageUrls
+      : (Array.isArray(item.images) ? item.images.slice(1) : []); // 若後端把 images[0] 當主圖
+    selectedSecondaryFiles = [];
+    renderSecondaryPreview();
+    updateSecondaryHint();
+  }
+
+  /* ---------- 主圖工具 ---------- */
+  function hideMainPreview() {
+    el.imagePreview.classList.add('d-none');
+    el.imagePreview.removeAttribute('src');
+    if (mainPreviewObjectUrl) {
+      URL.revokeObjectURL(mainPreviewObjectUrl);
+      mainPreviewObjectUrl = null;
     }
   }
 
-  function hidePreview() {
-    el.imagePreview.classList.add('d-none');
-    el.imagePreview.removeAttribute('src');
-    if (previewObjectUrl) {
-      URL.revokeObjectURL(previewObjectUrl);
-      previewObjectUrl = null;
+  /* ---------- 次要圖工具 ---------- */
+  function resetSecondary() {
+    // 釋放上次預覽用的 object URL
+    secondaryObjectUrls.forEach(url => URL.revokeObjectURL(url));
+    secondaryObjectUrls = [];
+
+    existingSecondaryUrls = [];
+    selectedSecondaryFiles = [];
+    if (el.imagesInput) el.imagesInput.value = '';
+    if (el.imagesPreview) el.imagesPreview.innerHTML = '';
+    updateSecondaryHint();
+  }
+
+  function renderSecondaryPreview() {
+    if (!el.imagesPreview) return;
+
+    // 釋放前次建立的 object URLs
+    secondaryObjectUrls.forEach(url => URL.revokeObjectURL(url));
+    secondaryObjectUrls = [];
+
+    el.imagesPreview.innerHTML = '';
+    const usingNew = selectedSecondaryFiles.length > 0;
+
+    if (usingNew) {
+      selectedSecondaryFiles.forEach((file, idx) => {
+        const url = URL.createObjectURL(file);
+        secondaryObjectUrls.push(url);
+
+        const col = document.createElement('div');
+        col.className = 'col-4';
+        col.innerHTML = `
+          <div class="thumb-card1">
+            <span class="badge rounded-pill text-bg-primary thumb-badge">新</span>
+            <button type="button" class="btn btn-sm btn-outline-danger thumb-remove" data-index="${idx}">&times;</button>
+            <img src="${url}" alt="${file.name}">
+          </div>
+        `;
+        el.imagesPreview.appendChild(col);
+      });
+
+      // 綁刪除（只對新檔）
+      el.imagesPreview.querySelectorAll('.thumb-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.getAttribute('data-index'));
+          if (!Number.isNaN(idx)) {
+            selectedSecondaryFiles.splice(idx, 1);
+            renderSecondaryPreview();
+            syncFileInputFromSelected();
+            updateSecondaryHint();
+          }
+        });
+      });
+    } else {
+      // 顯示既有 URL（純預覽，不給個別刪除；若要改規則可再調）
+      existingSecondaryUrls.forEach((href) => {
+        const col = document.createElement('div');
+        col.className = 'col-4';
+        col.innerHTML = `
+          <div class="thumb-card1">
+            <span class="badge rounded-pill text-bg-secondary thumb-badge">既有</span>
+            <img src="${href}" alt="existing">
+          </div>
+        `;
+        el.imagesPreview.appendChild(col);
+      });
     }
   }
+
+  function updateSecondaryHint() {
+    if (!el.imagesHint) return;
+    const count = (selectedSecondaryFiles.length > 0)
+      ? Math.min(selectedSecondaryFiles.length, LIMIT_COUNT)
+      : existingSecondaryUrls.length;
+    el.imagesHint.textContent = `已選 ${count} / ${LIMIT_COUNT}`;
+  }
+
+  // FileList 不可直接改，使用 DataTransfer 重建 input.files
+  function syncFileInputFromSelected() {
+    if (!el.imagesInput) return;
+    const dt = new DataTransfer();
+    selectedSecondaryFiles.slice(0, LIMIT_COUNT).forEach(f => dt.items.add(f));
+    el.imagesInput.files = dt.files;
+  }
+
 })();
+
+
 
 
 function removeItemDom(id) {

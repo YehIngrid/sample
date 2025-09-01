@@ -452,12 +452,12 @@
 
     <div class="mb-3">
       <label for="edit-name" class="form-label">商品名稱</label>
-      <input type="text" class="form-control" id="edit-name" name="name" required>
+      <input type="text" class="form-control" id="edit-name" name="name">
     </div>
 
     <div class="mb-3">
       <label for="edit-price" class="form-label">價格 (NT$)</label>
-      <input type="number" class="form-control" id="edit-price" name="price" min="0" step="1" required>
+      <input type="number" class="form-control" id="edit-price" name="price" min="0" step="1">
     </div>
 
     <div class="mb-3">
@@ -473,36 +473,34 @@
       </select>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">狀態</label>
-      <div class="d-flex gap-3">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="status" id="status-listed" value="listed" checked>
-          <label class="form-check-label" for="status-listed">上架中</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="status" id="status-reserved" value="reserved">
-          <label class="form-check-label" for="status-reserved">保留</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="status" id="status-sold" value="sold">
-          <label class="form-check-label" for="status-sold">已售出</label>
-        </div>
-      </div>
-    </div>
+    
 
     <div class="mb-3">
-      <label for="edit-description" class="form-label">詳細描述</label>
+      <label for="edit-description" class="form-label">商品描述</label>
       <textarea class="form-control" id="edit-description" name="description" rows="4"></textarea>
     </div>
 
     <div class="mb-4">
-      <label for="edit-image" class="form-label">商品圖片</label>
+      <label for="edit-image" class="form-label">商品主要圖片</label>
       <input class="form-control" type="file" id="edit-image" name="image" accept="image/*">
       <div class="mt-2">
         <img id="edit-image-preview" alt="預覽" class="img-fluid rounded d-none" style="max-height: 180px;object-fit: cover;">
       </div>
     </div>
+
+    <!-- 次要圖片（最多 5 張） -->
+    <div class="mb-4">
+      <label for="edit-images" class="form-label">
+        商品其他圖片
+        <br><small class="text-muted">(最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB)</small>
+      </label>
+      <input class="form-control" type="file" id="edit-images" name="otherImages" accept="image/*" multiple>
+      <div class="form-text" id="edit-images-hint">已選 0 / 5</div>
+
+      <!-- 縮圖預覽區 -->
+      <div id="edit-images-preview" class="row g-2 mt-2"></div>
+    </div>
+
 
     <div class="drawer-footer border-top">
       <button type="button" class="btn btn-outline-secondary" id="editDrawerCancelBtn">取消</button>
