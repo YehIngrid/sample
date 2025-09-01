@@ -81,6 +81,7 @@ class BackendService {
                 localStorage.setItem('intro', response.data.data.introduction);
                 localStorage.setItem('avatar', response.data.data.photoURL);
                 localStorage.setItem('rate', response.data.data.rate);
+                localStorage.setItem('userCreatedAt', response.data.data.createdAt);
             })
             .catch(function(error) {
                 console.error("無法取得使用者資料", error);
@@ -195,6 +196,31 @@ class BackendService {
             console.error(error);
             fnError("無法刪除商品");
         })
+    }
+    async updateMyItems(id, data) {
+        try {
+            const token = this.getCookie('idtoken'); // 直接拿 cookie
+            const headers = { idtoken: token };
+
+            // 如果傳的是 JSON，就自己加 Content-Type
+            if (!(data instanceof FormData)) {
+                headers['Content-Type'] = 'application/json';
+            }
+
+            const res = await axios.put(
+                `${this.baseUrl}/api/commodity/update/${id}`,
+                data,
+                { headers }
+            );
+
+            // 如果你希望更新完馬上刷新列表
+            await this.getMyItems();
+
+            return res;
+        } catch (error) {
+            console.error("更新錯誤：", error);
+            return Promise.reject(error);
+        }
     }
     // logout(userData, fnSuccess, fnError) {
     //     return axios
