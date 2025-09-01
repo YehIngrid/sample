@@ -3,105 +3,7 @@ const backbtn = document.querySelector('#back-btn');
 backbtn.addEventListener('click', function(e){
     window.history.back();
 })
-// document.addEventListener('DOMContentLoaded', function () {
-//     backendService = new BackendService();
-//     const params = new URLSearchParams(window.location.search);
-//     const id = params.get('id'); // ✅ 必須先宣告，才能使用！
-//     console.log("id", id);
-//     if (id) {
-//       backendService.GetItemsInfo((response) => {
-//         const product = response.data;
-//   console.log('product:', product);
-//           document.getElementById('product-name').textContent = product.name || '未命名';
-//           document.getElementById('product-price').innerHTML = `${product.price || 0}<span>NT$</span>`;
-//   //TODO:商品分類
-//   const categoryMap = {
-//     book: '書籍與學籍用品',
-//     life: '宿舍與生活用品',
-//     student: '學生專用器材',
-//     other: '其他',
-//     recycle: '環保生活用品',
-//     clean: '儲物與收納用品',
-//     // ...等等
-//   };
-//   const newOrOldMap = {
-//     '-1': '全新',
-//     '2': '二手',
-//     used: '使用過',
-//   };
-//   let newOrOld = newOrOldMap[product.newOrOld] || product.newOrOld;
-//   let category = categoryMap[product.category] || product.category;
-//           const categoryList = document.getElementById('product-category');
-//           categoryList.innerHTML = `
-//             <li>分類：${category || '未分類'}</li>
-//             <li>新舊：${neworold}</li>
-//             <li>物品年齡：${product.age === '-1' ? '未知':product.age+'年'}</li>
-//             <li>庫存：${product.stock || '無資料'}</li>
-//           `;
-  
-//           document.getElementById('product-description').textContent = product.description || '無描述';
-  
-//           const mainImg = document.querySelector('.tryimg');
-// const thumbList = document.querySelector('.thumbnail-list');
-// let imageList = product.imageURL || [];
 
-
-// if (product.mainImage) {
-//   const mainImgFullPath = product.mainImage.startsWith('http') || product.mainImage;
-
-//   // 如果 imageList 中尚未包含主圖才加入
-//   if (!imageList.includes(product.mainImage)) {
-//     imageList.unshift(product.mainImage); // 把主圖加到第一個
-//   }
-// }
-
-// // 顯示主圖
-// if (mainImg && imageList.length > 0) {
-//   const mainSrc = imageList[0].startsWith('http') || imageList[0] ;
-//   mainImg.src = mainSrc;
-// }
-
-// // 產生縮圖（包含主圖）
-// thumbList.innerHTML = '';
-// imageList.forEach((imgUrl, index) => {
-//   const src = imgUrl.startsWith('http') || imgUrl;
-//   const imgEl = document.createElement('img');
-//   imgEl.src = src;
-//   imgEl.classList.add('thumb-img');
-//   if (index === 0) imgEl.classList.add('active');
-
-//   imgEl.addEventListener('click', () => {
-//     mainImg.src = src;
-//     document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
-//     imgEl.classList.add('active');
-//   });
-
-//   thumbList.appendChild(imgEl);
-// });
-
-
-  
-//           console.log('owner:', product.owner);
-          
-//     // 加入賣家資訊到畫面上（範例）
-//     document.getElementById('usernameinfo').innerHTML = `
-//       <img src="${data.data.photoURL || '../image/default-avatar.png'}" alt="賣家頭像" class="sellerphoto">
-//       <p class="sellername">${sellerName}</p>
-      
-//     `;
-// //<p>信譽分數：${reputation}</p>
-//     // ✅ 額外：你可以加標籤
-//     // if (reputation >= 100) {
-//     //   document.getElementById('userinfo').innerHTML += `
-//     //     <div class="card-badge badge-trusted">優良賣家</div>
-//     //   `;
-//     // }
-//   })
-//   .catch(error => {
-//     console.error("無法取得賣家資訊", error);
-//   });
-// })
-    
 document.addEventListener('DOMContentLoaded', () => {
   const backendService = new BackendService();
 
@@ -221,26 +123,91 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // === 賣家資訊（保留；若有 API 就渲染） ===
-    if (product.owner) {
+    if (product?.owner) {
         const u = product.owner;
-        const photo = u.photoURL || '../image/default-avatar.png';
-        const sellerName = u.name || '賣家名稱';
-        const sellerIntroduction = u.introduction || '賣家簡介';
-        const sellerRate = u.rate || '信譽積分:';
-        const box = document.getElementById('sellerInfo');
-        if (box) {
-          box.innerHTML = `
-            <img src="${photo}" alt="賣家頭像" class="sellerphoto">
-            <h2>${sellerName}</h2>
-            <h6>信譽積分: ${sellerRate}</h6>
-            <button>與賣家聊聊</button>
-            <button>查看賣家資訊</button>
-          `;
-        }
+
+        // 先取出你原本的欄位（給預設值）
+        const photo               = u.photoURL || '../image/default-avatar.png';
+        const sellerName          = u.name || '賣家名稱';
+        const sellerIntroduction  = u.introduction || '賣家簡介';
+        // 這裡確保是數字；u.rate 可能是字串
+        const sellerRate          = Number.isFinite(+u.rate) ? +u.rate : 0;
+        const sellerId            = u.id ?? u.uid ?? u._id ?? '';
+
+        // 組成 renderSellerInfo 需要的結構
+        const data = {
+          id: sellerId,
+          name: sellerName,
+          intro: sellerIntroduction,
+          score: sellerRate,   // 注意：數字
+          photoUrl: photo
+        };
+
+        renderSellerInfo(data);
     } else {
+      // 沒有 owner：可隱藏整張卡
+      document.getElementById('sellerInfo')?.classList.add('d-none');
       console.log('略過賣家資訊渲染');
     }
   };
+
+// === 把資料渲染到 #sellerInfo ===
+function renderSellerInfo(data) {
+  const root = document.getElementById('sellerInfo');
+  if (!root) return;
+
+  const img       = document.getElementById('sellerPhoto');
+  const nameEl    = document.getElementById('sellerName');
+  const introEl   = document.getElementById('sellerIntro');
+  const scoreEl   = document.getElementById('sellerRate');
+  const chatBtn   = document.getElementById('sellerChat'); // 與賣家聊聊
+  const rateBtn   = root.querySelector('#sellerRatebtn');               // 查看賣家評價
+  const reportBtn = root.querySelector('sellerBad');            // 檢舉賣家
+
+  // 灌資料（含預設值）
+  if (img) {
+    img.src = data.photoUrl || '../webP/default-avatar.webp';  // 和你的專案一致
+    img.alt = data.name ? `${data.name} 的頭像` : '賣家頭像';
+  }
+  if (nameEl)  nameEl.textContent  = data.name  ?? '用戶名';
+  if (introEl) introEl.textContent = data.intro ?? '這裡是我的自我介紹';
+  if (scoreEl) scoreEl.textContent = Number.isFinite(+data.score) ? +data.score : 0;
+
+  // 綁事件（依你的路由調整）
+  if (chatBtn)   chatBtn.onclick   = () => openChatWithSeller(data.id);
+  if (rateBtn)   rateBtn.onclick   = () => openSellerReviews(data.id);
+  if (reportBtn) reportBtn.onclick = () => reportSeller(data.id);
+}
+
+// === 事件處理：依你的實作調整 ===
+function openChatWithSeller(sellerId) {
+  if (!sellerId) return;
+  location.href = `../chat/?to=${encodeURIComponent(sellerId)}`;
+}
+function openSellerReviews(sellerId) {
+  if (!sellerId) return;
+  location.href = `../seller/reviews.html?seller=${encodeURIComponent(sellerId)}`;
+}
+function reportSeller(sellerId) {
+  if (!sellerId) return;
+  Swal.fire({
+    title: '檢舉賣家',
+    input: 'textarea',
+    inputPlaceholder: '請描述檢舉事由（必要）',
+    inputValidator: v => !v?.trim() ? '請填寫檢舉事由' : undefined,
+    showCancelButton: true,
+    confirmButtonText: '送出'
+  }).then((res) => {
+    if (!res.isConfirmed) return;
+    backendService?.reportSeller?.(
+      sellerId,
+      { reason: res.value },
+      () => Swal.fire({ icon: 'success', title: '已送出' }),
+      (err) => Swal.fire({ icon: 'error', title: '送出失敗', text: String(err || '請稍後再試') })
+    );
+  });
+}
+
 //?<p class="userinfo">${sellerIntroduction}</p>
   const onError = (err) => {
     console.error('GetItemsInfo 失敗：', err);

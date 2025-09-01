@@ -191,37 +191,79 @@
     </div>
     <hr style="width: 86vw;  margin: 0 auto;margin-bottom: 5vh;">
     <div class="mix">
-      <div class="describe">
+      <div class="describe typeofcommodity">
           <h2>商品描述</h2>
-          <p id="product-description" class="description-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas nemo perspiciatis fugiat consectetur, nobis consequuntur placeat veritatis tenetur obcaecati explicabo ad id tempore! Vel consequuntur, cumque iure repellendus odit consectetur inventore sint? Alias cupiditate accusantium cum numquam nam sunt magnam aspernatur, incidunt doloribus quidem fugiat, nisi adipisci odio porro consectetur nulla id obcaecati ab expedita neque earum? Eaque, officiis. Earum, sequi consequuntur ex eveniet molestias suscipit maxime aperiam! Quasi suscipit ea alias. Necessitatibus, laboriosam! Officia modi dolore aperiam blanditiis, similique nostrum ex temporibus et quia laborum non saepe perspiciatis, doloremque dolorem doloribus consequuntur ab quo accusamus repellat, eaque hic porro?</p>
+          <p id="product-description" class="description-text"></p>
       </div>
       
-      <div>
+      <div class="typeofcommodity">
         <h2 class="sellertopic">賣家資訊</h2>
-        <div id="sellerInfo"></div>
+        <div id="sellerInfo" class="card col-12">
+          <div class="card-body">
+              <div class="d-lg-flex d-block">
+                <div class="photo col-lg-2 text-center d-flex align-items-center">
+                  <img src="../webP/default-avatar.webp" alt="賣家頭像" class="sellerphoto" id="sellerPhoto">
+                </div>
+                <div class="info col-lg-7 d-flex flex-column justify-content-around">
+                  <div class="centerseller">
+                      <h3 id="sellerName"></h3>
+                      <p class="col-10" id="sellerIntro"></p>
+                  </div>
+                  <div class="d-flex checkbtn justify-content-start gap-4">
+                      <button class="col-5" id="sellerChat">與賣家聊聊</button>
+                      <button id="sellerRatebtn" class="col-5">查看賣家評價</button>
+                  </div>
+                </div>
+                <div class="rate col-lg-3 text-center">
+                  <div class="score-box d-flex align-items-center justify-content-center">
+                    <span class="display-4 fw-bold" id="sellerRate"></span>
+                  </div>
+                  <h5>信譽積分</h5>
+                  <button class="btn btn-danger" id="sellerBad">檢舉賣家</button>
+                </div>
+              </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="otherInfo">
-      <h2 style="margin-bottom: 20px;">其他資訊</h2>
-      <p style="font-size: 1.8rem;color: rgb(36,182,133);">商品尺寸</p>
-      <ol style="font-size: 1.6rem;color: #4f4f4f; margin-bottom: 30px;">
-        <li>大型：<br>長度/寬度/高度大於150cm，容量大於5L。</li>
-        <li>中型：<br>長度/寬度/高度30cm到150cm，容量1L到5L。</li>
-        <li>小型：<br>長度/寬度/高度小於30cm，容量小於1L。</li>
-      </ol>
-      <p style="font-size: 1.8rem;color: rgb(36,182,133);">新舊程度</p>
-      <ol style="font-size: 1.6rem; color: #4f4f4f;">
-        <li>全新：完全未使用，包裝完好。</li>
-        <li>幾乎全新：使用過一次或兩次，狀況極佳，幾乎沒有磨損。</li>
-        <li>半新：使用過，狀況良好，可能有輕微磨損。</li>
-        <li>適中：明顯使用過，狀況普通，可能有明顯的使用痕跡，但仍可正常使用。</li>
-        <li>稍舊：使用時間較長，狀況一般，有顯著的磨損或損壞，但仍可使用。</li>
-        <li>全舊：使用過度，可能有重大缺陷或損壞，建議僅用於某些用途或需要修理。</li>
-      </ol>
+    
+      <div class="typeofcommodity">
+        <h2 style="margin-bottom: 20px;">其他注意事項</h2>
+        <div class="d-flex flex-wrap gap-4">
+            <div class="card col-lg-3 col-12">
+              <div class="card-body">
+                  <p style="font-size: 1.8rem;color: rgb(255, 0, 157);">取貨方式 - <strong>面交付款</strong></p>
+                  <p style="font-size: 1.7rem; color: #383838;">平台以<strong>面交</strong>為主要交易方式，買賣雙方也可自行協調其他取貨方式。建議於面交時立即<strong>確認商品是否符合需求，再進行付款</strong>；若後續出現問題，請由買賣雙方自行協商處理。</p>
+              </div>
+            </div>
+            <div class="card col-lg-3 col-12">
+              <div class="card-body">
+                  <p style="font-size: 1.8rem;color: rgb(36,182,133);">商品尺寸</p>
+                  <ol style="font-size: 1.6rem;color: #4f4f4f;">
+                    <li>大型：<br>長度/寬度/高度大於150cm，容量大於5L。</li>
+                    <li>中型：<br>長度/寬度/高度30cm到150cm，容量1L到5L。</li>
+                    <li>小型：<br>長度/寬度/高度小於30cm，容量小於1L。</li>
+                  </ol>
+              </div>
+            </div>
+            <div class="card col-lg-5 col-12">
+              <div class="card-body">
+                  <p style="font-size: 1.8rem;color: rgb(36,182,133);">新舊程度</p>
+                  <ol style="font-size: 1.6rem; color: #4f4f4f;">
+                    <li>全新：完全未使用，包裝完好。</li>
+                    <li>幾乎全新：使用過一次或兩次，狀況極佳，幾乎沒有磨損。</li>
+                    <li>半新：使用過，狀況良好，可能有輕微磨損。</li>
+                    <li>適中：明顯使用過，狀況普通，可能有明顯的使用痕跡，但仍可正常使用。</li>
+                    <li>稍舊：使用時間較長，狀況一般，有顯著的磨損或損壞，但仍可使用。</li>
+                    <li>全舊：使用過度，可能有重大缺陷或損壞，建議僅用於某些用途或需要修理。</li>
+                  </ol>
+              </div>
+            </div>
+        </div>
+      </div>
     </div>
   <div class="phonebuy d-flex d-sm-none fixed-bottom">
     <button class="buy">直接下單</button>
-    <button class="shopcart" onclick="playUfoAnimation(this)">加入購物車</button>
+    <button class="shopcart" onclick="">加入購物車</button>
   </div>
   </div>
         <!-- script部分-->
