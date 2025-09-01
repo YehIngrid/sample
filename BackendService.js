@@ -212,10 +212,6 @@ class BackendService {
                 data,
                 { headers }
             );
-
-            // 如果你希望更新完馬上刷新列表
-            await this.getMyItems();
-
             return res;
         } catch (error) {
             console.error("更新錯誤：", error);
