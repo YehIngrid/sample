@@ -9,11 +9,11 @@ class BackendService {
             res => res,
             err => {
                 if (err?.response?.status === 413) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '檔案太大',
-                        text: '單張或總上傳大小超過限制，請壓縮或減少張數再試。'
-                    });
+                Swal.fire({
+                    icon: 'warning',
+                    title: '檔案太大',
+                    text: '單張或總上傳大小超過限制，請壓縮或減少張數再試。'
+                });
                 }
                 return Promise.reject(err);
             }
@@ -31,7 +31,9 @@ class BackendService {
 
     //在localstorage記住目前是否登入帳號後端，用localstorage記住帳號資訊等
     signup(userData, fnSuccess, fnError) {
-        return axios.http.post(`/api/account/signup`, userData)
+        return axios.post(`${this.baseUrl}/api/account/signup`, userData, {
+                withCredentials: true
+            })
             .then(function(response) {
                 fnSuccess(response);
             })
@@ -46,7 +48,9 @@ class BackendService {
     }
     login(userData, fnSuccess, fnError) {
         let _this = this;
-        return axios.http.post(`/api/account/login`, userData)
+        return axios.post(`${this.baseUrl}/api/account/login`, userData, {
+                withCredentials: true
+            })
             .then(function(response) {
                 let uid = response.data.data.uid;
                 localStorage.setItem('uid', uid); // 儲存使用者ID
@@ -84,7 +88,9 @@ class BackendService {
         } else {
         console.log('尚未儲存 UID');
         }
-        return axios.http.get(`/api/account/${savedUid}`)
+        return axios.get(`${this.baseUrl}/api/account/${savedUid}`, {
+                withCredentials: true
+            })
             .then(function(response) {
                 localStorage.setItem('username', response.data.data.name); 
                 localStorage.setItem('intro', response.data.data.introduction);
@@ -101,7 +107,9 @@ class BackendService {
         let _this = this;
         let response;
         try {
-            response = await axios.http.patch(`/api/account/update`, userData);
+            response = await axios.patch(`${this.baseUrl}/api/account/update`, userData, {
+                    withCredentials: true
+                });
         } catch (error) {
             console.error("更新錯誤：", error);
             if (error.response?.data?.message == "User not found") {
@@ -116,7 +124,7 @@ class BackendService {
         return response;
     }
     whoami(fnSuccess, fnError) {
-        return axios.http.get(`/api/whoami`, {
+        return axios.get(`${this.baseUrl}/api/whoami`, {
                 withCredentials: true
             })
             .then(function(response) {
@@ -129,7 +137,9 @@ class BackendService {
     }
     create(sellData, fnSuccess, fnError) {
         const token = this.getCookie('idtoken');
-        return axios.http.post(`/api/commodity/create`, sellData, {
+        return axios.post(`${this.baseUrl}/api/commodity/create`, sellData, {
+            withCredentials: true
+        }, {
             headers: {
                 'idtoken': token
             }})
@@ -143,7 +153,7 @@ class BackendService {
         })
     }
     getHotItems(pagingInfo, fnSuccess, fnError) {
-        return axios.http.get(`/api/commodity/list/hot`, {
+        return axios.get(`${this.baseUrl}/api/commodity/list/hot`, {
             params: {
                 page: pagingInfo.page,
                 limit: pagingInfo.limit
@@ -158,7 +168,7 @@ class BackendService {
         })
     }
     getNewItems(pagingInfo, fnSuccess, fnError) {
-        return axios.http.get(`/api/commodity/list/new`, {
+        return axios.get(`${this.baseUrl}/api/commodity/list/new`, {
             params: {
                 page: pagingInfo.page, 
                 limit: pagingInfo.limit
@@ -173,7 +183,7 @@ class BackendService {
         })
     }
     getItemsInfo(id, fnSuccess, fnError) {
-        return axios.http.get(`/api/commodity/item/${id}`)
+        return axios.get(`${this.baseUrl}/api/commodity/item/${id}`)
         .then(function(response) {
             fnSuccess(response.data);
         })
@@ -183,7 +193,7 @@ class BackendService {
         }) 
     }
     getMyItems(fnSuccess, fnError) {
-        return axios.http.get(`/api/commodity/my`)
+        return axios.get(`${this.baseUrl}/api/commodity/my`)
         .then(function(response) {
             fnSuccess(response.data);
         })
@@ -193,7 +203,7 @@ class BackendService {
         }) 
     }
     deleteMyItems(id, fnSuccess, fnError) {
-        return axios.http.delete(`/api/commodity/delete/${id}`)
+        return axios.delete(`${this.baseUrl}/api/commodity/delete/${id}`)
         .then(function(response) {
             fnSuccess(response.data);
         })
@@ -211,7 +221,12 @@ class BackendService {
             if (!(data instanceof FormData)) {
                 headers['Content-Type'] = 'application/json';
             }
-            const res = await axios.http.put(`/api/commodity/update/${id}`,data, { headers });
+
+            const res = await axios.put(
+                `${this.baseUrl}/api/commodity/update/${id}`,
+                data,
+                { headers }
+            );
             return res;
         } catch (error) {
             console.error("更新錯誤：", error);
