@@ -507,3 +507,11 @@
     margin-bottom: 20px;
   }
 }
+.sellerphoto {
+  width: 200px;              /* 想要的大小 */
+  aspect-ratio: 1 / 1;       /* 固定成正方形 */
+  border-radius: 50%;        /* 變圓 */
+  object-fit: cover;         /* 填滿並裁切，不變形 */
+  object-position: center;   /* 以中心裁切 */
+  display: block;
+}
