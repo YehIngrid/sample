@@ -30,7 +30,6 @@ const identify = document.getElementById('identify');
 const memberShip = document.getElementById('membership');
 const showName = document.getElementById('showName');
 const showIntro = document.getElementById('showIntro');
-const showTime = document.getElementById('showTime');
 const profileName = document.getElementById('profileName');
 const profileInfo = document.getElementById('profileInfo');
 const profileAvatar = document.getElementById('profileAvatar');
@@ -43,18 +42,24 @@ if (localStorage.getItem('avatar')) {
 }
 memberShip.textContent = "尚未開放";
 identify.textContent = "已驗證";
-showTime = new Date(showTime);
-// 格式化（只保留時:分）
-    ShowTime = showTime.toLocaleString("zh-TW", { 
-        timeZone: "Asia/Taipei",
-        hour12: false,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit"
-    });
-ShowTime.textContent = localStorage.getItem("userCreatedAt") || "無法顯示";
+const el = document.getElementById('showTime');
+const iso = localStorage.getItem('userCreatedAt'); // 例如 "2025-08-28T11:23:45.000Z"
+
+if (!iso) {
+  el.textContent = '無法顯示';
+} else {
+  const dt = new Date(iso); // 解析 UTC ISO
+  if (isNaN(dt.getTime())) {
+    el.textContent = '無法顯示';
+  } else {
+    el.textContent = dt.toLocaleDateString('zh-TW', {
+      timeZone: 'Asia/Taipei',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }); // 例：2025/08/28
+  }
+}
 userRate1.textContent = localStorage.getItem("rate") || "無法顯示";
 userRate.textContent = localStorage.getItem("rate") || "無法顯示";
 const localIntro = localStorage.getItem("intro") || "使用者介紹";
