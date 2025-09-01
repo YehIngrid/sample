@@ -443,6 +443,8 @@ function handleAction(action, id, rowOrCardEl) {
     });
   }
   // person.js
+
+}
 (() => {
   'use strict';
 
@@ -612,8 +614,6 @@ function handleAction(action, id, rowOrCardEl) {
     }
   }
 })();
-
-}
 
 
 function removeItemDom(id) {
