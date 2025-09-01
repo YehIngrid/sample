@@ -43,7 +43,18 @@ if (localStorage.getItem('avatar')) {
 }
 memberShip.textContent = "尚未開放";
 identify.textContent = "已驗證";
-showTime.textContent = localStorage.getItem("userCreatedAt") || "無法顯示";
+showTime = new Date(showTime);
+// 格式化（只保留時:分）
+    ShowTime = showTime.toLocaleString("zh-TW", { 
+        timeZone: "Asia/Taipei",
+        hour12: false,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+ShowTime.textContent = localStorage.getItem("userCreatedAt") || "無法顯示";
 userRate1.textContent = localStorage.getItem("rate") || "無法顯示";
 userRate.textContent = localStorage.getItem("rate") || "無法顯示";
 const localIntro = localStorage.getItem("intro") || "使用者介紹";
@@ -426,64 +437,151 @@ function handleAction(action, id, rowOrCardEl) {
       }
     });
   }
-  (() => {
+}
+
+// person.js
+(() => {
+  'use strict';
+
   let currentEditId = null;
   let previewObjectUrl = null;
+  let el = null;
 
-  const el = {
-    drawer: document.getElementById('editDrawer'),
-    backdrop: document.getElementById('editDrawerBackdrop'),
-    closeBtn: document.getElementById('editDrawerCloseBtn'),
-    cancelBtn: document.getElementById('editDrawerCancelBtn'),
-    form: document.getElementById('editItemForm'),
-    id: document.getElementById('edit-id'),
-    name: document.getElementById('edit-name'),
-    price: document.getElementById('edit-price'),
-    category: document.getElementById('edit-category'),
-    description: document.getElementById('edit-description'),
-    image: document.getElementById('edit-image'),
-    imagePreview: document.getElementById('edit-image-preview'),
-    status: {
-      listed: document.getElementById('status-listed'),
-      reserved: document.getElementById('status-reserved'),
-      sold: document.getElementById('status-sold'),
+  document.addEventListener('DOMContentLoaded', init);
+
+  function init() {
+    el = getEls();
+    if (!el.drawer || !el.form) {
+      console.error('[person.js] 缺少 Drawer 必要節點 (#editDrawer / #editItemForm)');
+      return;
     }
-  };
 
-  // 開啟 Drawer
+    // 圖片預覽
+    el.image?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) { hidePreview(); return; }
+      if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+      previewObjectUrl = URL.createObjectURL(file);
+      el.imagePreview.src = previewObjectUrl;
+      el.imagePreview.classList.remove('d-none');
+    });
+
+    // 取消/關閉/ESC
+    el.cancelBtn?.addEventListener('click', closeEditDrawer);
+    el.closeBtn?.addEventListener('click', closeEditDrawer);
+    el.backdrop?.addEventListener('click', closeEditDrawer);
+    window.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape' && !el.drawer.hidden) closeEditDrawer();
+    });
+
+    // 送出儲存
+    el.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!currentEditId) return;
+
+      const formData = new FormData();
+      formData.append('name', el.name.value.trim());
+      formData.append('price', el.price.value);
+      formData.append('category', el.category.value);
+      formData.append('description', el.description.value);
+
+      const statusValue = el.status.listed.checked ? 'listed'
+                        : el.status.reserved.checked ? 'reserved'
+                        : 'sold';
+      formData.append('status', statusValue);
+
+      const file = el.image?.files?.[0];
+      if (file) formData.append('image', file);
+
+      // 依你的 backendService 介面
+      backendService.updateMyItems(currentEditId, formData)
+        .then(() => {
+          Swal.fire({ icon: 'success', title: '已更新' });
+          if (typeof window.tryUpdateListDom === 'function') {
+            window.tryUpdateListDom(currentEditId, {
+              name: el.name.value.trim(),
+              price: el.price.value,
+              status: statusValue
+            });
+          }
+          closeEditDrawer();
+        })
+        .catch(err => {
+          console.error(err);
+          Swal.fire({ icon: 'error', title: '更新失敗', text: String(err || '請稍後再試') });
+        });
+    });
+
+    // 將開關方法掛到全域
+    window.openEditDrawer = openEditDrawer;
+    window.closeEditDrawer = closeEditDrawer;
+  }
+
+  function getEls() {
+    return {
+      drawer: document.getElementById('editDrawer'),
+      backdrop: document.getElementById('editDrawerBackdrop'),
+      closeBtn: document.getElementById('editDrawerCloseBtn'),
+      cancelBtn: document.getElementById('editDrawerCancelBtn'),
+      form: document.getElementById('editItemForm'),
+      id: document.getElementById('edit-id'),
+      name: document.getElementById('edit-name'),
+      price: document.getElementById('edit-price'),
+      category: document.getElementById('edit-category'),
+      description: document.getElementById('edit-description'),
+      image: document.getElementById('edit-image'),
+      imagePreview: document.getElementById('edit-image-preview'),
+      status: {
+        listed: document.getElementById('status-listed'),
+        reserved: document.getElementById('status-reserved'),
+        sold: document.getElementById('status-sold'),
+      }
+    };
+  }
+
   async function openEditDrawer(id, rowOrCardEl = null) {
     currentEditId = id;
     el.id.value = id;
 
-    // 1) 先清空表單
+    // 重置表單 + 清預覽
     el.form.reset();
     hidePreview();
 
-    // 2) 讀取商品資料（用你的 backendService 取單筆）
-    //   你如果手邊已有列表資料，也可直接把 item 傳進來填。
-    try {
-      // 假設有這個 API：backendService.getMyItem(id, success, error)
-      await new Promise((resolve, reject) => {
-        backendService.getMyItem(id, (res) => {
-          const item = res?.data ?? {};
-          fillForm(item);
-          resolve();
-        }, (err) => reject(err));
-      });
-    } catch (e) {
-      console.error('讀取商品失敗', e);
-      // 退而求其次，不擋流程，也可以先打開給用戶改
+    // 讀單筆資料（有就帶，沒有就跳過）
+    if (typeof backendService?.getMyItem === 'function') {
+      try {
+        await new Promise((resolve, reject) => {
+          backendService.getMyItem(id, (res) => {
+            const item = res?.data ?? {};
+            fillForm(item);
+            resolve();
+          }, (err) => reject(err));
+        });
+      } catch (e) {
+        console.error('讀取商品失敗', e);
+      }
     }
 
-    // 3) 顯示 Drawer + 背景
+    // 顯示 Drawer
     el.drawer.hidden = false;
     el.backdrop.hidden = false;
     requestAnimationFrame(() => {
       el.drawer.classList.add('show');
       el.backdrop.classList.add('show');
       document.body.classList.add('overflow-hidden');
-      el.name.focus();
+      el.name?.focus();
     });
+  }
+
+  function closeEditDrawer() {
+    el.drawer.classList.remove('show');
+    el.backdrop.classList.remove('show');
+    document.body.classList.remove('overflow-hidden');
+    setTimeout(() => {
+      el.drawer.hidden = true;
+      el.backdrop.hidden = true;
+      hidePreview();
+    }, 200);
   }
 
   function fillForm(item) {
@@ -491,7 +589,6 @@ function handleAction(action, id, rowOrCardEl) {
     el.price.value = item.price ?? '';
     el.category.value = item.category ?? '';
     el.description.value = item.description ?? '';
-
     const s = (item.status ?? 'listed');
     (el.status[s] || el.status.listed).checked = true;
 
@@ -511,76 +608,7 @@ function handleAction(action, id, rowOrCardEl) {
       previewObjectUrl = null;
     }
   }
-
-  // 關閉 Drawer
-  function closeEditDrawer() {
-    el.drawer.classList.remove('show');
-    el.backdrop.classList.remove('show');
-    document.body.classList.remove('overflow-hidden');
-    // 等動畫結束再隱藏（避免抖動）
-    setTimeout(() => {
-      el.drawer.hidden = true;
-      el.backdrop.hidden = true;
-      hidePreview();
-    }, 200);
-  }
-
-  // 圖片預覽
-  el.image.addEventListener('change', (e) => {
-    const file = e.target.files?.[0];
-    if (!file) { hidePreview(); return; }
-    if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
-    previewObjectUrl = URL.createObjectURL(file);
-    el.imagePreview.src = previewObjectUrl;
-    el.imagePreview.classList.remove('d-none');
-  });
-
-  // 取消/關閉/ESC
-  el.cancelBtn.addEventListener('click', closeEditDrawer);
-  el.closeBtn.addEventListener('click', closeEditDrawer);
-  el.backdrop.addEventListener('click', closeEditDrawer);
-  window.addEventListener('keydown', (ev) => {
-    if (ev.key === 'Escape' && !el.drawer.hidden) closeEditDrawer();
-  });
-
-  // 送出儲存
-// ✅ 改成這個
-el.form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  if (!currentEditId) return;
-
-  const formData = new FormData();
-  formData.append('name', el.name.value.trim());
-  formData.append('price', el.price.value);
-  formData.append('category', el.category.value);
-  formData.append('description', el.description.value);
-
-  const statusValue = el.status.listed.checked ? 'listed'
-                    : el.status.reserved.checked ? 'reserved'
-                    : 'sold';
-  formData.append('status', statusValue);
-
-  const file = el.image.files?.[0];
-  if (file) formData.append('image', file);
-
-  backendService.updateMyItems(currentEditId, formData)
-    .then(() => {
-      Swal.fire({ icon: 'success', title: '已更新' });
-      tryUpdateListDom(currentEditId, {
-        name: el.name.value.trim(),
-        price: el.price.value,
-        status: statusValue
-      });
-      closeEditDrawer();
-    })
-    .catch(err => {
-      console.error(err);
-      Swal.fire({ icon: 'error', title: '更新失敗', text: String(err || '請稍後再試') });
-    });
-});
-  });
-}
-
+})();
 
 function removeItemDom(id) {
   // 表格
