@@ -437,9 +437,7 @@ function handleAction(action, id, rowOrCardEl) {
       }
     });
   }
-}
-
-// person.js
+  // person.js
 (() => {
   'use strict';
 
@@ -609,6 +607,9 @@ function handleAction(action, id, rowOrCardEl) {
     }
   }
 })();
+
+}
+
 
 function removeItemDom(id) {
   // 表格
