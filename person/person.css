@@ -200,7 +200,7 @@
   z-index: 1050;
   display: flex; flex-direction: column;
   border-top-left-radius: 16px; border-bottom-left-radius: 16px;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
 }
 .drawer.show { transform: translateX(0); }
 

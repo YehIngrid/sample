@@ -462,8 +462,8 @@
 
     <div class="mb-3">
       <label for="edit-category" class="form-label">分類</label>
-      <select class="form-select" id="edit-category" name="category" required>
-        <option value="">請選擇</option>
+      <select class="form-select" id="edit-category" name="category">
+        <option value="">請選擇商品類型</option>
         <option value="book">書籍與學習用品</option>
         <option value="life">宿舍與生活用品</option>
         <option value="student">學生專用器材</option>
@@ -477,11 +477,13 @@
 
     <div class="mb-3">
       <label for="edit-description" class="form-label">商品描述</label>
-      <textarea class="form-control" id="edit-description" name="description" rows="4"></textarea>
+      <textarea class="form-control" id="edit-description" name="description" rows="5"></textarea>
     </div>
 
     <div class="mb-4">
-      <label for="edit-image" class="form-label">商品主要圖片</label>
+      <label for="edit-image" class="form-label">商品主要圖片
+        <br><small class="text-muted">(照片大小需 ≤ 5MB)</small>
+      </label>
       <input class="form-control" type="file" id="edit-image" name="image" accept="image/*">
       <div class="mt-2">
         <img id="edit-image-preview" alt="預覽" class="img-fluid rounded d-none" style="max-height: 180px;object-fit: cover;">
