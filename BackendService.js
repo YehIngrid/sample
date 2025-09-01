@@ -233,6 +233,42 @@ class BackendService {
             return Promise.reject(error);
         }
     }
+    async addItemsToCart(commodityId) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/cart/add/${commodityId}`);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async getMyCart() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/cart/`);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async removeItemsFromCart(commodityId) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/cart/remove/${commodityId}`);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async clearMyCart() {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/cart/clear`);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
     // logout(userData, fnSuccess, fnError) {
     //     return axios
     // }
