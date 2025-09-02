@@ -334,6 +334,10 @@
   .info-column, .image-column {
     flex: 1 1 100%;
   }
+  .mobilesetting {
+    width: 91vw !important;
+    margin: 0 auto;
+  }
 }
 .product-container {
   display: flex;
