@@ -209,6 +209,13 @@ function reportSeller(sellerId) {
 }
 });
 
+try {
+  backendService.getItemsInfo(id, onSuccess, onError);
+} catch (e) {
+    console.warn('GetItemsInfo(id, ...) 呼叫失敗，嘗試舊簽名：', e);
+    backendService.getItemsInfo(onSuccess);
+}
+
 //TODO add to shopping cart:
 
   // 4) 綁定加入購物車（電腦 + 手機多顆按鈕都可）
