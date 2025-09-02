@@ -239,10 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
     console.error('GetItemsInfo 失敗：', err);
   };
 
-  // 3) 呼叫 API（兼容兩種命名/簽名）
+  backendService = new BackendService();
+  loadItem();
+
+function loadItem() {
   try {
     if (typeof backendService.getItemsInfo === 'function') {
-      // 可能是 (id, success, error) 或 (success, error)
       if (urlId) backendService.getItemsInfo(urlId, onSuccess, onError);
       else       backendService.getItemsInfo(onSuccess, onError);
     } else if (typeof backendService.GetItemsInfo === 'function') {
@@ -254,6 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
   } catch (e) {
     console.error('呼叫商品詳情 API 時發生例外：', e);
   }
+}
+
 
   // 4) 綁定加入購物車（電腦 + 手機多顆按鈕都可）
   document.querySelectorAll('.shopcart').forEach(btn => {
