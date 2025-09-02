@@ -592,6 +592,7 @@
               <input type="text" id="name" name="name" placeholder="建議使用正式名稱" /><br />
       
               <label for="description">商品狀態描述</label><br>
+              <small class="text-muted" style="font-size: 1.4rem;">可以詳細列出: 商品規格、注意事項、BSMI、ISBN等</small>
               <textarea placeholder="可以說明販售原因、商品瑕疵部位等，建議30字以上" id="description" name="description" rows="10" cols="30"></textarea>
               <br/>
       
@@ -606,7 +607,8 @@
                 <option value="recycle">環保生活用品</option>
                 <option value="clean">儲物與收納用品</option>
                 <option value="other">其他</option>
-              </select><br />
+              </select>
+              <small class="text-muted" style="font-size: 1.4rem;">若不清楚請點擊左上角詳細資訊</small><br />
               <label for="stock">庫存</label>
               <input type="number" id="stock" name="stock" placeholder="可販賣數量"/><br />
           </div>
@@ -617,7 +619,8 @@
               <input type="radio" id="size_medium" name="size" value="medium"/><label for="size_medium" class="formpricespan">中</label>
               <input type="radio" id="size_small" name="size" value="small"/><label for="size_small" class="formpricespan">小</label>
               <br />
-              <label for="neworold">新舊程度</label><br>
+              <label for="neworold">新舊程度</label>
+              <small class="text-muted" style="font-size: 1.4rem;">商品外觀狀態;若不清楚請點擊左上角詳細資訊</small><br>
               <input type="radio" id="neworold_1" name="new_or_old" value="1"><label for="neworold_1" class="formpricespan">全新</label>
               <input type="radio" id="neworold_2" name="new_or_old" value="2"><label for="neworold_2" class="formpricespan">幾乎全新</label>
               <input type="radio" id="neworold_3" name="new_or_old" value="3"><label for="neworold_3" class="formpricespan">半新</label><br>
@@ -627,6 +630,7 @@
               <label for="age">物品年齡</label>
               <input type="number" id="age" name="age" placeholder="未知請填-1"/><span class="formpricespan">年</span><br />
               <label for="mainImage">主要照片</label>
+              <small class="text-muted" style="font-size: 1.4rem;">(照片需 ≤ 5MB)</small>
               <input
                   type="file"
                   id="mainImage"
@@ -635,7 +639,7 @@
                   /><br/>
                   <div id="mainImagePreview" style="margin-top: 10px;"></div>
               <label for="images">其他照片</label>
-              
+              <small class="text-muted" style="font-size: 1.4rem;">(最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB)</small>
               <input
                   type="file"
                   id="image"

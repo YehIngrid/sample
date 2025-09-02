@@ -413,7 +413,8 @@ function handleAction(action, id, rowOrCardEl) {
     openEditDrawer(id, rowOrCardEl);
     // TODO: 打開編輯頁 / Modal
   } else if (action === 'check') {
-    location.href = `../product/product.html?id=${encodeURIComponent(id)}`;
+    const url = `../product/product.html?id=${encodeURIComponent(id)}`;
+    window.open(url, '_blank');
   } else if (action === 'stop') {
     if (confirm('確定要暫停上架商品嗎?')) {
       // TODO: 呼叫暫停 API
