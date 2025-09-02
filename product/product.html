@@ -126,69 +126,37 @@
 <div class="icon-button" id="back-btn">
   <img src="../svg/page.svg" alt="返回上一頁" style="cursor: pointer; margin-top: 10px; margin-left: 20px;">
 </div>
-<!-- <div class="haha d-flex">
-    <!-- 商品主圖 + 縮圖 
-<div class="product-preview">
-  <div class="main-preview">
-    <img src="" alt="主要圖片" class="tryimg">
-  </div>
-  <div class="thumbnail-list"></div> <!-- JS 會填入圖片 
-  <div class="product-container">
-    <!-- 主圖與縮圖 
-    <div class="image-column">
-      <img src="" alt="主要圖片" class="tryimg">
-      <div class="thumbnail-list"></div>
-    </div>
-  
-    <!-- 商品資訊與按鈕 
-    <div class="info-column">
-      <div class="product-info">
-        <h1 id="product-name">商品名稱</h1>
-        <ul id="product-category" class="product-category">
-          <li>分類：</li>
-          <li>新舊：</li>
-          <li>物品年齡：</li>
-          <li>庫存：</li>
-        </ul>
-        <p id="product-price">0<span style="font-size: 1.2rem;">NT$</span></p>
+
+     <div class="product-container row g-4">
+  <!-- 左側：主圖 + 縮圖列（手機先顯示） -->
+  <div class="image-column col-lg-6 order-1">
+    <div class="left-pane d-flex flex-column flex-md-row align-items-start gap-3">
+      <!-- 主圖容器：固定比例、不失真 -->
+      <div class="flex-grow-1 d-flex justify-content-center">
+        <div class="main-preview">
+          <img src="" alt="主要圖片" class="tryimg">
+        </div>
       </div>
-      <div class="buybtn d-none d-sm-flex">
-        <button class="buy">直接下單</button>
-        <button class="shopcart">加入購物車</button>
-      </div>
+      <!-- 縮圖列：桌機直排、手機橫排 -->
+      <div class="thumbnail-list thumbs-rail horizontal-thumbnails" aria-label="商品縮圖列表"></div>
     </div>
   </div>
-  
-</div>
-</div>
-     -->
-     <div class="product-container">
-      
-    
-      <!-- 中間：主圖 -->
-      <div class="image-column">
-        <div class="main-thumbnail-wrapper">
-          <div class="main-preview">
-            <img src="" alt="主要圖片" class="tryimg">
-          </div>
-          <div class="thumbnail-list horizontal-thumbnails"></div>
-        </div>
-      </div>
-      
-      <!-- 右側：資訊與按鈕 -->
-      <div class="info-column">
-        <div class="product-info">
-          <h1 id="product-name">商品名稱</h1>
-          <ul style="font-size: 1.6rem; " id="product-category" class="product-category">
-          </ul>
-          <p id="product-price">0<span style="font-size: 1.2rem;">NT$</span></p>
-        </div>
-        <div class="buybtn d-sm-flex d-none">
-          <button class="buy">直接下單</button>
-          <button class="shopcart" onclick="">加入購物車</button>
-        </div>
-      </div>
+
+  <!-- 右側：資訊與按鈕（手機最後顯示） -->
+  <div class="info-column col-lg-6 order-2">
+    <div class="product-info">
+      <h1 id="product-name" class="product-title h2 mb-2">商品名稱</h1>
+      <ul id="product-category" class="product-category list-unstyled small mb-3"></ul>
+      <p id="product-price" class="mb-0"><span class="price">0</span><span class="ms-2">NT$</span></p>
     </div>
+
+    <div class="buybtn d-sm-flex gap-3 mt-4">
+      <button class="buy btn btn-success flex-fill">直接下單</button>
+      <button class="shopcart btn btn-primary flex-fill">加入購物車</button>
+    </div>
+  </div>
+</div>
+
     <hr style="width: 86vw;  margin: 0 auto;margin-bottom: 5vh;">
     <div class="mix">
       <div class="describe typeofcommodity">

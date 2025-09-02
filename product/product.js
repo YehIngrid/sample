@@ -27,8 +27,9 @@ document.querySelectorAll('.shopcart').forEach(btn => {
         Swal.fire({
           title: '已加入購物車！',
           text: `商品編號 ${id} 已加入購物車`,
-          icon: 'success',
-          confirmButtonText: '好的'
+          iconHtml: '<i class="fa-solid fa-cart-plus" style="color: #a5dc86 font-size: 3.6rem"></i>',
+          customClass: { icon: 'successgreen' },
+          timer: 1500
         });
       } catch (err) {
         Swal.fire({
@@ -105,52 +106,82 @@ document.querySelectorAll('.shopcart').forEach(btn => {
       minute: "2-digit"
     });
 
-    const categoryList = document.getElementById('product-category');
-    if (categoryList) {
-      categoryList.innerHTML = `
-        <li>分類：${category}</li>
-        <li>商品狀態：${newOrOld}</li>
-        <li>物品年齡：${String(product.age) === '-1' || product.age == null ? '未知' : product.age + '年'}</li>
-        <li>庫存：${product.stock ?? '無資料'}</li>
-        <li>商品上架時間: ${createdTime}</li>
-        <li>賣家更新時間: ${updatedTime}</li>
-      `;
-    }
+    // ==== 若專案還沒有工具函式，這裡給最小可用版 ====
+const toArray = (v) => Array.isArray(v) ? v : (v ? String(v).split(',').map(s => s.trim()).filter(Boolean) : []);
+const toFullURL = (u) => {
+  if (!u) return '';
+  try {
+    // 已是絕對網址
+    new URL(u);
+    return u;
+  } catch {
+    // 不是絕對網址就當作相對路徑（依你專案調整 base）
+    return u.startsWith('/') ? u : `/` + u;
+  }
+};
 
-    // === 圖片（主圖 + 縮圖；維持比例） ===
-    const mainImg = document.querySelector('.tryimg');            // 請在 HTML 主圖 <img> 使用 class="tryimg"
-    const thumbList = document.querySelector('.thumbnail-list');  // 縮圖容器 <div class="thumbnail-list"></div>
+// ==== 渲染分類/屬性 ====
+(function renderMeta() {
+  const categoryList = document.getElementById('product-category');
+  if (!categoryList) return;
 
-    let imageList = toArray(product.imageUrl);
-    if (product.mainImage) {
-      const main = toFullURL(product.mainImage);
-      if (!imageList.some(u => toFullURL(u) === main)) imageList.unshift(product.mainImage);
-    }
-    imageList = imageList.map(toFullURL).filter(Boolean);
+  const ageText =
+    String(product?.age) === '-1' || product?.age == null ? '未知' : product.age + '年';
 
-    if (mainImg && imageList.length) {
-      mainImg.src = imageList[0];
-      mainImg.alt = product.name ?? '';
-      mainImg.loading = 'lazy';
-    }
+  categoryList.innerHTML = `
+    <li>分類：${category ?? '未分類'}</li>
+    <li>商品狀態：${newOrOld ?? '未知'}</li>
+    <li>物品年齡：${ageText}</li>
+    <li>庫存：${product?.stock ?? '無資料'}</li>
+    <li>商品上架時間：${createdTime ?? '-'}</li>
+    <li>賣家更新時間：${updatedTime ?? '-'}</li>
+  `;
+})();
 
-    if (thumbList) {
-      thumbList.innerHTML = '';
-      imageList.forEach((src, idx) => {
-        const imgEl = document.createElement('img');
-        imgEl.src = src;
-        imgEl.alt = `縮圖 ${idx + 1}`;
-        imgEl.loading = 'lazy';
-        imgEl.className = 'thumb-img' + (idx === 0 ? ' active' : '');
-        imgEl.addEventListener('click', () => {
-          if (mainImg) mainImg.src = src;
-          thumbList.querySelectorAll('.thumb-img').forEach(i => i.classList.remove('active'));
-          imgEl.classList.add('active');
-        });
-        thumbList.appendChild(imgEl);
+// ==== 圖片（主圖 + 縮圖；維持比例） ====
+(function renderImages() {
+  const mainImg   = document.querySelector('.tryimg');            // 主圖 <img>
+  const thumbList = document.querySelector('.thumbnail-list');    // 縮圖容器
+
+  // 蒐集：主圖優先，其次其它圖片
+  let imageList = toArray(product?.imageUrl);
+  if (product?.mainImage) {
+    const main = toFullURL(product.mainImage);
+    // 若 main 不在 imageList，插到最前
+    if (!imageList.some(u => toFullURL(u) === main)) imageList.unshift(product.mainImage);
+  }
+  imageList = imageList.map(toFullURL).filter(Boolean);
+
+  // 沒圖就用一張 placeholder（可換成你站內圖片路徑）
+  if (!imageList.length) imageList = ['https://picsum.photos/900/900?grayscale'];
+
+  // 主圖
+  if (mainImg) {
+    mainImg.src = imageList[0];
+    mainImg.alt = product?.name ?? '';
+    mainImg.loading = 'lazy';
+  }
+
+  // 縮圖
+  if (thumbList) {
+    thumbList.innerHTML = '';
+    imageList.forEach((src, idx) => {
+      const imgEl = document.createElement('img');
+      imgEl.src = src;
+      imgEl.alt = `縮圖 ${idx + 1}`;
+      imgEl.loading = 'lazy';
+      imgEl.className = 'thumb-img' + (idx === 0 ? ' active' : '');
+      imgEl.addEventListener('click', () => {
+        if (mainImg) mainImg.src = src;
+        thumbList.querySelectorAll('.thumb-img').forEach(i => i.classList.remove('active'));
+        imgEl.classList.add('active');
       });
-    }
+      thumbList.appendChild(imgEl);
+    });
+  }
+})();
 
+  
     // === 賣家資訊（保留；若有 API 就渲染） ===
     if (product?.owner) {
         const u = product.owner;

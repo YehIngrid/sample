@@ -515,3 +515,55 @@
   object-position: center;   /* 以中心裁切 */
   display: block;
 }
+.successgreen {
+  border: 3px solid #a5dc86 !important;
+}
+/* 主圖容器：固定比例、不失真 */
+.main-preview {
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 1 / 1;        /* 想改長方形就調整這裡，如 4/3 */
+  border: 1px solid #e5e7eb;
+  border-radius: .5rem;
+  overflow: hidden;
+  background: #fafafa;
+}
+.main-preview .tryimg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;         /* 不裁切不變形 */
+}
+
+/* 縮圖列：桌機直排、手機橫排 */
+.thumbs-rail {
+  max-height: 520px;
+  overflow: auto;
+}
+.thumbnail-list img.thumb-img {
+  width: 72px;
+  height: 72px;
+  border: 1px solid #e5e7eb;
+  border-radius: .5rem;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  display: block;
+}
+.thumbnail-list img.thumb-img:hover { transform: translateY(-2px); }
+.thumbnail-list img.thumb-img.active {
+  box-shadow: 0 0 0 3px rgba(25,135,84,.35);
+  border-color: rgba(25,135,84,.6);
+}
+
+/* RWD 排列 */
+@media (min-width: 768px) {
+  .left-pane { gap: 1rem; }
+  .thumbnail-list { display: flex; flex-direction: column; gap: .5rem; }
+}
+@media (max-width: 767.98px) {
+  .thumbnail-list { display: flex; gap: .5rem; }
+}
+
+/* 標題與價格視覺權重 */
+.product-title { font-weight: 800; letter-spacing: .02em; }
+.price { font-size: clamp(28px, 5vw, 48px); font-weight: 800; }
