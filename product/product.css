@@ -335,8 +335,8 @@
     flex: 1 1 100%;
   }
   .mobilesetting {
-    width: 91vw !important;
-    margin: 0 auto;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 }
 .product-container {
