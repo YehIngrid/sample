@@ -82,6 +82,7 @@ document.querySelectorAll('.shopcart').forEach(btn => {
     };
     const newOrOld = newOrOldMap?.[product.newOrOld] ?? product.newOrOld ?? '未標示';
     const category = categoryMap?.[product.category] ?? product.category ?? '未分類';
+    const size = product.size;
     let updatedAt = product.updatedAt;
     const taiwanUpdateTime = new Date(updatedAt);
     // 格式化（只保留時:分）
@@ -120,65 +121,120 @@ const toFullURL = (u) => {
   }
 };
 
-// ==== 渲染分類/屬性 ====
+/* ---------- 工具：安全轉數字 + 金額格式 ---------- */
+const num = (v, d = 0) => Number.isFinite(+v) ? +v : d;
+const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
+
+/* ---------- 1) 標題／價格／庫存／數量加減 ---------- */
+(function renderBasics(){
+  // 名稱
+  const nameEl = document.getElementById('product-name');
+  if (nameEl) nameEl.textContent = product?.name ?? '';
+
+  // 價格（只放數字；右邊的 NT$ 已在 HTML）
+  const priceEl = document.getElementById('price');
+  if (priceEl) priceEl.textContent = fmt(product?.price);
+
+  // 庫存
+  const stockEl = document.getElementById('stock');
+  const stock = num(product?.stock, 0);
+  if (stockEl) stockEl.textContent = stock;
+
+  // 數量加減（1 ~ 庫存（若庫存<=0 則固定為 0/不可購買，可依需求擋按鈕））
+  const qtyInput = document.getElementById('qty');
+  const plusBtn  = document.getElementById('plus');
+  const minusBtn = document.getElementById('minus');
+
+  function clampQty(v){
+    v = Number(String(v).replace(/[^\d]/g,'')) || 1;
+    if (stock > 0){
+      if (v < 1) v = 1;
+      if (v > stock) v = stock;
+    }else{
+      v = 0;
+    }
+    return v;
+  }
+  if (qtyInput){
+    qtyInput.value = clampQty(qtyInput.value);
+    qtyInput.addEventListener('input', () => qtyInput.value = clampQty(qtyInput.value));
+  }
+  plusBtn?.addEventListener('click', () => { qtyInput.value = clampQty(num(qtyInput.value) + 1); });
+  minusBtn?.addEventListener('click', () => { qtyInput.value = clampQty(num(qtyInput.value) - 1); });
+})();
+
+/* ---------- 2) 規格／屬性（使用 <dl>） ---------- */
 (function renderMeta() {
   const categoryList = document.getElementById('product-category');
   if (!categoryList) return;
 
-  const ageText =
-    String(product?.age) === '-1' || product?.age == null ? '未知' : product.age + '年';
+  const ageText = (String(product?.age) === '-1' || product?.age == null)
+    ? '未知' : `${product.age}年`;
 
   categoryList.innerHTML = `
-    <li>分類：${category ?? '未分類'}</li>
-    <li>商品狀態：${newOrOld ?? '未知'}</li>
-    <li>物品年齡：${ageText}</li>
-    <li>庫存：${product?.stock ?? '無資料'}</li>
-    <li>商品上架時間：${createdTime ?? '-'}</li>
-    <li>賣家更新時間：${updatedTime ?? '-'}</li>
+    <dt class="col-sm-4 col-md-3">商品大小</dt><dd class="col-sm-8 col-md-9">${size ?? '-'}</dd>
+    <dt class="col-sm-4 col-md-3">商品年齡</dt><dd class="col-sm-8 col-md-9">${ageText}</dd>
+    <dt class="col-sm-4 col-md-3">新舊程度</dt><dd class="col-sm-8 col-md-9">${newOrOld ?? '未知'}</dd>
+    <dt class="col-sm-4 col-md-3">分類</dt><dd class="col-sm-8 col-md-9">${category ?? '未分類'}</dd>
+    <dt class="col-sm-4 col-md-3">上架時間</dt><dd class="col-sm-8 col-md-9">${createdTime ?? '-'}</dd>
+    <dt class="col-sm-4 col-md-3">更新時間</dt><dd class="col-sm-8 col-md-9">${updatedTime ?? '-'}</dd>
   `;
 })();
 
-// ==== 圖片（主圖 + 縮圖；維持比例） ====
+/* ---------- 3) 圖片（主圖＋縮圖，含錯誤 fallback） ---------- */
 (function renderImages() {
-  const mainImg   = document.querySelector('.tryimg');            // 主圖 <img>
-  const thumbList = document.querySelector('.thumbnail-list');    // 縮圖容器
+  const mainImg   = document.querySelector('.tryimg');         // 主圖 <img>
+  const thumbList = document.querySelector('.thumbnail-list'); // 縮圖容器
 
-  // 蒐集：主圖優先，其次其它圖片
-  let imageList = toArray(product?.imageUrl);
-  if (product?.mainImage) {
+  // 3.1 建立清單：先 mainImage，再 imageUrl；排除空值
+  const looksLikeUrl = (u) => !!u && (/^https?:\/\//i.test(u) || u.startsWith('/'));
+  let list = toArray(product?.imageUrl).map(toFullURL).filter(Boolean);
+
+  if (product?.mainImage && looksLikeUrl(product.mainImage)) {
     const main = toFullURL(product.mainImage);
-    // 若 main 不在 imageList，插到最前
-    if (!imageList.some(u => toFullURL(u) === main)) imageList.unshift(product.mainImage);
+    if (main && !list.some(u => toFullURL(u) === main)) list.unshift(main);
   }
-  imageList = imageList.map(toFullURL).filter(Boolean);
+  if (!list.length) list = ['https://picsum.photos/900/900?grayscale'];
 
-  // 沒圖就用一張 placeholder（可換成你站內圖片路徑）
-  if (!imageList.length) imageList = ['https://picsum.photos/900/900?grayscale'];
-
-  // 主圖
-  if (mainImg) {
-    mainImg.src = imageList[0];
+  // 3.2 主圖切換 + 錯誤 fallback
+  let currentIdx = 0;
+  function setMainByIndex(idx){
+    if (!mainImg) return;
+    currentIdx = idx;
+    mainImg.src = list[idx];
     mainImg.alt = product?.name ?? '';
     mainImg.loading = 'lazy';
+
+    // active 標示
+    thumbList?.querySelectorAll('.thumb-img').forEach((el, i) => {
+      el.classList.toggle('active', i === idx);
+    });
   }
 
-  // 縮圖
-  if (thumbList) {
+  if (mainImg){
+    mainImg.onerror = () => {
+      // 換下一張，直到可用或全部嘗試完
+      const next = currentIdx + 1;
+      if (next < list.length) setMainByIndex(next);
+    };
+  }
+
+  // 3.3 產生縮圖
+  if (thumbList){
     thumbList.innerHTML = '';
-    imageList.forEach((src, idx) => {
+    list.forEach((src, idx) => {
       const imgEl = document.createElement('img');
       imgEl.src = src;
       imgEl.alt = `縮圖 ${idx + 1}`;
       imgEl.loading = 'lazy';
       imgEl.className = 'thumb-img' + (idx === 0 ? ' active' : '');
-      imgEl.addEventListener('click', () => {
-        if (mainImg) mainImg.src = src;
-        thumbList.querySelectorAll('.thumb-img').forEach(i => i.classList.remove('active'));
-        imgEl.classList.add('active');
-      });
+      imgEl.addEventListener('click', () => setMainByIndex(idx));
       thumbList.appendChild(imgEl);
     });
   }
+
+  // 初始化主圖
+  setMainByIndex(0);
 })();
 
   

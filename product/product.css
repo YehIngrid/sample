@@ -518,52 +518,73 @@
 .successgreen {
   border: 3px solid #a5dc86 !important;
 }
-/* 主圖容器：固定比例、不失真 */
-.main-preview {
-  width: 100%;
-  max-width: 520px;
-  aspect-ratio: 1 / 1;        /* 想改長方形就調整這裡，如 4/3 */
-  border: 1px solid #e5e7eb;
-  border-radius: .5rem;
-  overflow: hidden;
-  background: #fafafa;
-}
-.main-preview .tryimg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;         /* 不裁切不變形 */
-}
+/* 主圖容器：固定比例＋不失真 */
+    .main-preview {
+      width: 100%;
+      max-width: 520px;          /* 你可以依需求調整 */
+      aspect-ratio: 1 / 1;       /* 固定為正方形容器 */
+      border: 1px solid #e5e7eb;
+      border-radius: .5rem;
+      overflow: hidden;
+      background: #fafafa;
+    }
+    .main-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;       /* 不裁切、不變形地塞進容器 */
+    }
 
-/* 縮圖列：桌機直排、手機橫排 */
-.thumbs-rail {
-  max-height: 520px;
-  overflow: auto;
-}
-.thumbnail-list img.thumb-img {
-  width: 72px;
-  height: 72px;
-  border: 1px solid #e5e7eb;
-  border-radius: .5rem;
-  object-fit: cover;
-  cursor: pointer;
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-  display: block;
-}
-.thumbnail-list img.thumb-img:hover { transform: translateY(-2px); }
-.thumbnail-list img.thumb-img.active {
-  box-shadow: 0 0 0 3px rgba(25,135,84,.35);
-  border-color: rgba(25,135,84,.6);
-}
+    /* 縮圖樣式 */
+    .thumbnail-list {
+      max-height: 520px;
+      overflow: auto;
+    }
+    .thumb {
+      width: 72px;
+      height: 72px;
+      border: 1px solid #e5e7eb;
+      border-radius: .5rem;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .thumb:hover { transform: translateY(-2px); }
+    .thumb.active {
+      box-shadow: 0 0 0 3px rgba(25,135,84,.35);
+      border-color: rgba(25,135,84,.6);
+    }
 
-/* RWD 排列 */
-@media (min-width: 768px) {
-  .left-pane { gap: 1rem; }
-  .thumbnail-list { display: flex; flex-direction: column; gap: .5rem; }
-}
-@media (max-width: 767.98px) {
-  .thumbnail-list { display: flex; gap: .5rem; }
-}
+    /* 讓左側圖片區在 md 以上並排；在手機維持上下排列 */
+    .left-pane {
+      gap: 1rem;
+    }
+    @media (min-width: 768px) {
+      .left-pane {
+        display: flex;
+        flex-direction: row;     /* md+：主圖在左、縮圖直排在右 */
+        align-items: flex-start;
+      }
+      .thumbnail-list {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+      }
+    }
+    @media (max-width: 767.98px) {
+      .thumbnail-list {
+        display: flex;           /* 手機：縮圖改成橫向一排 */
+        gap: .5rem;
+      }
+    }
 
-/* 標題與價格視覺權重 */
-.product-title { font-weight: 800; letter-spacing: .02em; }
-.price { font-size: clamp(28px, 5vw, 48px); font-weight: 800; }
+    /* 大標與價格權重 */
+    .product-title { font-weight: 800; letter-spacing: .02em; }
+    .price { font-size: clamp(28px, 5vw, 48px); font-weight: 800; }
+
+    /* 兩顆主要按鈕做滿版並列 */
+    .cta-wrap > .btn { min-height: 48px; }
+
+    /* 讓資訊列更清楚 */
+    .meta dl { row-gap: .25rem; }
+    .meta dt { width: 7.5em; color: #6b7280; }
+    .meta dd { margin-left: 0; }

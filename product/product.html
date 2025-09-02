@@ -127,36 +127,56 @@
   <img src="../svg/page.svg" alt="返回上一頁" style="cursor: pointer; margin-top: 10px; margin-left: 20px;">
 </div>
 
-     <div class="product-container row g-4">
-  <!-- 左側：主圖 + 縮圖列（手機先顯示） -->
-  <div class="image-column col-lg-6 order-1">
-    <div class="left-pane d-flex flex-column flex-md-row align-items-start gap-3">
-      <!-- 主圖容器：固定比例、不失真 -->
-      <div class="flex-grow-1 d-flex justify-content-center">
-        <div class="main-preview">
-          <img src="" alt="主要圖片" class="tryimg">
+<div class="container my-5">
+  <div class="row g-4">
+    <!-- 左側：主圖＋縮圖 -->
+    <div class="col-lg-6 order-1">
+      <div class="left-pane">
+        <!-- 主圖 -->
+        <div class="flex-grow-1 d-flex justify-content-center">
+          <div class="main-preview">
+            <img class="tryimg" src="" alt="商品主要圖片">
+          </div>
         </div>
+        <!-- 縮圖容器：交給 JS 產生 -->
+        <div class="thumbs-rail mt-3 mt-md-0 thumbnail-list" aria-label="商品縮圖列表"></div>
       </div>
-      <!-- 縮圖列：桌機直排、手機橫排 -->
-      <div class="thumbnail-list thumbs-rail horizontal-thumbnails" aria-label="商品縮圖列表"></div>
-    </div>
-  </div>
-
-  <!-- 右側：資訊與按鈕（手機最後顯示） -->
-  <div class="info-column col-lg-6 order-2">
-    <div class="product-info">
-      <h1 id="product-name" class="product-title h2 mb-2">商品名稱</h1>
-      <ul id="product-category" class="product-category list-unstyled small mb-3"></ul>
-      <p id="product-price" class="mb-0"><span class="price">0</span><span class="ms-2">NT$</span></p>
     </div>
 
-    <div class="buybtn d-sm-flex gap-3 mt-4">
-      <button class="buy btn btn-success flex-fill">直接下單</button>
-      <button class="shopcart btn btn-primary flex-fill">加入購物車</button>
+    <!-- 右側：資訊 -->
+    <div class="col-lg-6 order-2">
+      <h1 id="product-name" class="product-title h2 mb-2"></h1>
+
+      <div class="d-flex align-items-baseline gap-2 mb-3">
+        <div id="price" class="price"></div>
+        <div class="fs-6 fw-semibold">NT$</div>
+      </div>
+
+      <hr class="mb-4">
+
+      <div class="meta">
+        <dl class="row" id="product-category"></dl>
+      </div>
+
+      <div class="mt-3 mb-2 text-muted">庫存：<span id="stock"></span> 件</div>
+
+      <!-- 數量調整器 -->
+      <div class="d-flex align-items-center gap-2 my-3" style="max-width:260px;">
+        <button id="minus" class="btn btn-outline-secondary" type="button" aria-label="減少">−</button>
+        <input id="qty" class="form-control text-center" type="text" value="1" inputmode="numeric" style="max-width:90px;">
+        <button id="plus" class="btn btn-outline-secondary" type="button" aria-label="增加">＋</button>
+      </div>
+
+      <div class="cta-wrap d-flex gap-3 mt-4">
+        <button class="btn btn-success flex-fill" type="button">馬上下單</button>
+        <button class="btn btn-primary flex-fill" type="button">加入購物車</button>
+      </div>
     </div>
   </div>
 </div>
 
+
+  
     <hr style="width: 86vw;  margin: 0 auto;margin-bottom: 5vh;">
     <div class="mix">
       <div class="describe typeofcommodity">
