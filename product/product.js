@@ -165,21 +165,29 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
 
 /* ---------- 2) 規格／屬性（使用 <dl>） ---------- */
 (function renderMeta() {
-  const categoryList = document.getElementById('product-category');
-  if (!categoryList) return;
+  const wrap = document.getElementById('product-category');
+  if (!wrap) return;
 
-  const ageText = (String(product?.age) === '-1' || product?.age == null)
-    ? '未知' : `${product.age}年`;
+  const ageText =
+    String(product?.age) === '-1' || product?.age == null ? '未知' : `${product.age}年`;
 
-  categoryList.innerHTML = `
-    <dt class="col-sm-4 col-md-3">商品大小</dt><dd class="col-sm-8 col-md-9">${size ?? '-'}</dd>
-    <dt class="col-sm-4 col-md-3">商品年齡</dt><dd class="col-sm-8 col-md-9">${ageText}</dd>
-    <dt class="col-sm-4 col-md-3">新舊程度</dt><dd class="col-sm-8 col-md-9">${newOrOld ?? '未知'}</dd>
-    <dt class="col-sm-4 col-md-3">分類</dt><dd class="col-sm-8 col-md-9">${category ?? '未分類'}</dd>
-    <dt class="col-sm-4 col-md-3">上架時間</dt><dd class="col-sm-8 col-md-9">${createdTime ?? '-'}</dd>
-    <dt class="col-sm-4 col-md-3">更新時間</dt><dd class="col-sm-8 col-md-9">${updatedTime ?? '-'}</dd>
-  `;
+  const fields = [
+    ['商品大小',  size ?? '-'],
+    ['商品年齡',  ageText],
+    ['新舊程度',  newOrOld ?? '未知'],
+    ['分類',      category ?? '未分類'],
+    ['上架時間',  createdTime ?? '-'],
+    ['更新時間',  updatedTime ?? '-'],
+  ];
+
+  wrap.innerHTML = fields.map(([k, v]) => `
+    <div class="row g-2 align-items-center mb-1 meta-row">
+      <div class="col-4 col-md-3 text-muted">${k}</div>
+      <div class="col-8 col-md-9">${v}</div>
+    </div>
+  `).join('');
 })();
+
 
 /* ---------- 3) 圖片（主圖＋縮圖，含錯誤 fallback） ---------- */
 (function renderImages() {

@@ -583,8 +583,5 @@
 
     /* 兩顆主要按鈕做滿版並列 */
     .cta-wrap > .btn { min-height: 48px; }
-
-    /* 讓資訊列更清楚 */
-    .meta dl { row-gap: .25rem; }
-    .meta dt { width: 7.5em; color: #6b7280; }
-    .meta dd { margin-left: 0; }
+.meta-row { line-height: 1.6; }
+.meta-row .text-muted { color: #6b7280 !important; }
