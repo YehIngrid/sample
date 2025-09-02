@@ -100,10 +100,7 @@
     }
     
   }
-  .buybtn{
-    width: 100%;
-    padding-top: 15vh;
-  }
+
   .buy{
     border: none;
     width: 50%;
@@ -336,9 +333,6 @@
   }
   .info-column, .image-column {
     flex: 1 1 100%;
-  }
-  .buybtn {
-    margin-top: 1rem;
   }
 }
 .product-container {
