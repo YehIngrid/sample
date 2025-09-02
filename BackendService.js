@@ -137,7 +137,7 @@ class BackendService {
     }
     create(sellData, fnSuccess, fnError) {
         const token = this.getCookie('idtoken');
-        return axios.post(`${this.baseUrl}/api/commodity/create`, sellData, {
+        return this.http.post(`/api/commodity/create`, sellData, {
             withCredentials: true
         }, {
             headers: {
