@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 2) 成功與失敗 callback
   const onSuccess = (response) => {
-    const product = response?.data;
+    const product = response?.data.data;
     if (!product) {
       console.warn('GetItemsInfo 回傳為空');
       return;
