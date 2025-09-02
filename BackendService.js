@@ -193,7 +193,7 @@ class BackendService {
         }) 
     }
     getMyItems(fnSuccess, fnError) {
-        return axios.get(`${this.baseUrl}/api/commodity/my`)
+        return axios.get(`${this.baseUrl}/api/commodity/my`, { headers: { "Cache-Control": "no-cache" } })
         .then(function(response) {
             fnSuccess(response.data);
         })

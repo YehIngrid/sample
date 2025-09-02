@@ -313,6 +313,7 @@ document.getElementById('mainImage').addEventListener('change', function (e) {
 
   const file = e.target.files[0];
   if (!file) return;
+  //?為什麼這邊無法偵測照片大小?
   if (file.size > 500000) {
     Swal.fire({
       icon: 'warning',
@@ -352,6 +353,13 @@ document.getElementById('image').addEventListener('change', function (e) {
       img.style.borderRadius = '8px';
       preview.appendChild(img);
     };
+    if (file.size > 500000) {
+      Swal.fire({
+        icon: 'warning',
+        title: '照片太大',
+        text: '單張照片不能超過 500KB，請壓縮後再上傳。'
+      });
+    }
     reader.readAsDataURL(file);
   });
 });
