@@ -211,54 +211,6 @@ function reportSeller(sellerId) {
 
 //TODO add to shopping cart:
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1) 取得 URL 的商品 id（若有）
-  const params = new URLSearchParams(location.search);
-  const urlId = params.get('id');
-
-  // 2) 成功與失敗 callback
-  const onSuccess = (response) => {
-    const product = response?.data.data;
-    if (!product) {
-      console.warn('GetItemsInfo 回傳為空');
-      return;
-    }
-    const pid = product.id ?? product._id ?? product.uid;
-    if (!pid) {
-      console.warn('找不到商品 id 欄位');
-      return;
-    }
-
-    // 把商品 id 寫進所有購物車按鈕的 data-id
-    document.querySelectorAll('.shopcart').forEach(btn => {
-      btn.dataset.id = String(pid);
-    });
-  };
-
-  const onError = (err) => {
-    console.error('GetItemsInfo 失敗：', err);
-  };
-
-  backendService = new BackendService();
-  loadItem();
-
-function loadItem() {
-  try {
-    if (typeof backendService.getItemsInfo === 'function') {
-      if (urlId) backendService.getItemsInfo(urlId, onSuccess, onError);
-      else       backendService.getItemsInfo(onSuccess, onError);
-    } else if (typeof backendService.GetItemsInfo === 'function') {
-      if (urlId) backendService.GetItemsInfo(urlId, onSuccess, onError);
-      else       backendService.GetItemsInfo(onSuccess, onError);
-    } else {
-      console.error('找不到 getItemsInfo / GetItemsInfo 方法');
-    }
-  } catch (e) {
-    console.error('呼叫商品詳情 API 時發生例外：', e);
-  }
-}
-
-
   // 4) 綁定加入購物車（電腦 + 手機多顆按鈕都可）
   document.querySelectorAll('.shopcart').forEach(btn => {
     btn.addEventListener('click', async () => {
@@ -284,4 +236,4 @@ function loadItem() {
       }
     });
   });
-});
+
