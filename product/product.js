@@ -207,40 +207,18 @@ function reportSeller(sellerId) {
     );
   });
 }
-});
 
-try {
-  backendService.getItemsInfo(id, onSuccess, onError);
-} catch (e) {
+//?<p class="userinfo">${sellerIntroduction}</p>
+  const onError = (err) => {
+    console.error('GetItemsInfo 失敗：', err);
+  };
+
+  // 呼叫 API（新版帶 id；若舊簽名不帶 id 則 fallback）
+  try {
+    backendService.getItemsInfo(id, onSuccess, onError);
+  } catch (e) {
     console.warn('GetItemsInfo(id, ...) 呼叫失敗，嘗試舊簽名：', e);
     backendService.getItemsInfo(onSuccess);
-}
-
+  }
+});
 //TODO add to shopping cart:
-
-  // 4) 綁定加入購物車（電腦 + 手機多顆按鈕都可）
-  document.querySelectorAll('.shopcart').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const id = btn.dataset.id;
-      if (!id) {
-        console.warn('尚未寫入 data-id（可能商品還沒載完）');
-        return;
-      }
-      try {
-        await backendService.addItemsToCart(id);
-        Swal.fire({
-          title: '已加入購物車！',
-          text: `商品編號 ${id} 已加入購物車`,
-          icon: 'success',
-        });
-      } catch (err) {
-        Swal.fire({
-          title: '加入失敗',
-          text: err?.message || '請稍後再試',
-          icon: 'error',
-          confirmButtonText: '知道了'
-        });
-      }
-    });
-  });
-
