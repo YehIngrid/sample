@@ -221,4 +221,3 @@ function reportSeller(sellerId) {
     backendService.getItemsInfo(onSuccess);
   }
 });
-//TODO add to shopping cart:
