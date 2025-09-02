@@ -12,91 +12,18 @@
     <!-- link部分 -->
     <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB_circular_icon.ico">
-    <link rel="stylesheet" href="demo.css">
+    <link rel="stylesheet" href="../demo.css">
     <link rel="stylesheet" href="shoppingcart.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="bubble.css">
+    <link rel="stylesheet" href="../bubble.css">
     <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 </head>
-<style>
-  #loader {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 16px;
-    background-color: #fff;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-  }
-  #whatcontent {
-    display: none; /* 初始隱藏內容 */
-  }
-  /* 載入畫面 */
-.spinner {
-  width: 36.4px;
-  height: 36.4px;
-  animation: spinner-y0fdc1 2.4s infinite ease;
-  transform-style: preserve-3d;
-}
 
-.spinner > div {
-  background: linear-gradient(to bottom, #004b9743, #24b6856f);
-  height: 100%;
-  position: absolute;
-  width: 100%;
-  border: 1.5px solid #fff
-  ;
-}
 
-.spinner div:nth-of-type(1) {
-  transform: translateZ(-18.2px) rotateY(-360deg);
-}
-
-.spinner div:nth-of-type(2) {
-  transform: rotateY(-270deg) translateX(50%);
-  transform-origin: top right;
-}
-
-.spinner div:nth-of-type(3) {
-  transform: rotateY(270deg) translateX(-50%);
-  transform-origin: center left;
-}
-
-.spinner div:nth-of-type(4) {
-  transform: rotateX(90deg) translateY(-50%);
-  transform-origin: top center;
-}
-
-.spinner div:nth-of-type(5) {
-  transform: rotateX(-90deg) translateY(50%);
-  transform-origin: bottom center;
-}
-
-.spinner div:nth-of-type(6) {
-  transform: translateZ(18.2px);
-}
-
-@keyframes spinner-y0fdc1 {
-  0% {
-     transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
-  }
-
-  50% {
-     transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
-  }
-
-  100% {
-     transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
-  }
-}
-
-</style>
 <body>
   <div class="bubble bubble1 parallax"></div>
 <div class="bubble bubble2 parallax"></div>
@@ -123,64 +50,29 @@
         
             <!-- (A) LOGO 放在最左邊 -->
             <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
-              <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50">
-                <defs>
-                  <linearGradient id="chineseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#004b97" />
-                    <stop offset="100%" stop-color="rgb(36,182,133)" />
-                  </linearGradient>
-                  <linearGradient id="englishGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="rgb(36,182,133)" />
-                    <stop offset="100%" stop-color="#004b97" />
-                  </linearGradient>
-                </defs>
-                <rect x="630" y="250" fill="none" />
-                <text x="50" y="20" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="25" fill="url(#chineseGradient)" font-weight="bold">拾貨寶庫</text>
-                <text x="50" y="37" text-anchor="middle" dominant-baseline="middle" font-family="TimeMachine" font-size="12" fill="url(#englishGradient)" font-weight="bold">TREASURE HUB</text>
-              </svg>
+              <img src="../svg/TREASUREHUBCHEN.svg"  alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
             </a>
         
             <!-- (B) 桌機版導覽選單 -->
             <div class="d-none d-lg-flex">
               <ul class="navbar-nav" >
-                <li class="nav-item"><a class="nav-link"style="color: #383838;" href="home.html">首頁</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;"href="news.html">最新資訊</a></li>
-                <li class="nav-item"><a class="nav-link"style="color: #383838;" href="shoppingpage_bootstrap.html">商品分類</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;"href="questions.html">常見問題</a></li>
-                <li class="nav-item"><a class="nav-link"style="color: #383838;" href="introduce.html">團隊介紹</a></li>
-                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;"href="communication.html">客服諮詢</a></li>
+                <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
+                <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+                <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
+                <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
               </ul>
             </div>
         
             <!-- (C) 右側：登入 + 購物車 -->
             <div class="d-flex align-items-center ms-auto">
               <div class="login">
-                <a id="username" class="username" href="person.html"></a>
-                <a class="navbar-brand" href="account.html" id="loginornot">登入</a>
+                <a id="username" class="username" href="../person/person.html"></a>
+                <a class="navbar-brand" href="../account/account.html" id="loginornot">登入</a>
               </div>
               <a class="nav-link specialpadding ms-2" href="shoppingcart.html">
-                <svg width="42" height="30" viewBox="0 0 42 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <ellipse cx="14.2979" cy="27.3529" rx="2.68085" ry="2.64706" fill="#0D779D"/>
-                  <ellipse cx="25.0213" cy="27.3529" rx="2.68085" ry="2.64706" fill="url(#paint0_linear_8_75)" fill-opacity="0.8"/>
-                  <rect width="28.0279" height="11.9012" transform="matrix(0.999999 -0.00105411 0.00107235 0.999999 7.89775 6.60024)" fill="url(#paint1_linear_8_75)" fill-opacity="0.8"/>
-                  <rect x="8.93617" y="21.1765" width="26.8085" height="2.64706" rx="1" fill="#0D779D"/>
-                  <rect width="2.63091" height="23.3531" rx="1" transform="matrix(0.989465 -0.144771 0.146762 0.989172 5.54836 0.460345)" fill="#0D779D"/>
-                  <rect x="0.893616" width="6.25532" height="2.64706" rx="1" fill="#0D779D"/>
-                  <rect width="7.05514" height="20.4683" transform="matrix(0.976289 0.216471 -0.220037 0.975492 33.9931 4.11319)" fill="white"/>
-                  <path d="M9.82979 12.7941H32.617" stroke="white"/>
-                  <line x1="16.5851" y1="5.29412" x2="16.5851" y2="20.2941" stroke="white"/>
-                  <rect width="0.893617" height="15" transform="translate(23.234 5.29412)" fill="white"/>
-                  <defs>
-                  <linearGradient id="paint0_linear_8_75" x1="27.2553" y1="29.5588" x2="23.285" y2="25.5379" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#004B97"/>
-                  <stop offset="1" stop-color="#24B685" stop-opacity="0.8"/>
-                  </linearGradient>
-                  <linearGradient id="paint1_linear_8_75" x1="28.0279" y1="5.95059" x2="2.03464e-09" y2="5.95059" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#004B97" stop-opacity="0.8"/>
-                  <stop offset="1" stop-color="#24B685" stop-opacity="0.6"/>
-                  </linearGradient>
-                  </defs>
-                  </svg>
+                <img src="../svg/shoppingcart.svg" alt="">
               </a>
             </div>
           </div>
@@ -225,151 +117,133 @@
           <!-- 手機版導覽選單展開內容 -->
           <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item"><a class="nav-link" href="home.html">首頁</a></li>
-              <li class="nav-item"><a class="nav-link" href="news.html">最新資訊</a></li>
-              <li class="nav-item"><a class="nav-link" href="shoppingpage_bootstrap.html">商品分類</a></li>
-              <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
-              <li class="nav-item"><a class="nav-link" href="introduce.html">團隊介紹</a></li>
-              <li class="nav-item specialpadding"><a class="nav-link" href="communication.html">客服諮詢</a></li>
+              <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
+              <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
+              <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+              <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
+              <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
+              <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
           </div>
         </div>
-        
-
-      <a href="#" class="talk">
-        <svg width="64" height="59" viewBox="0 0 64 59" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="64" height="59" fill="#FBFBFB"/>
-          <path d="M58 29.5C58 39.165 46.8071 47 33 47C19.1929 47 8 39.165 8 29.5C8 19.835 19.1929 12 33 12C46.8071 12 58 19.835 58 29.5Z" fill="url(#paint0_linear_10_49)" fill-opacity="0.8"/>
-          <ellipse cx="18.3448" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
-          <ellipse cx="45.931" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
-          <ellipse cx="32.1379" cy="29.5" rx="3.44828" ry="3.18182" fill="white"/>
-          <path d="M12 39C10.9427 41.5701 8.99999 44.5 8.49999 45C7.99999 45.5 12 43.5 12 43.5M12 39C12 39 12 42.6429 12 43.5M12 39L15 41.5714M12 43.5C12 43.5 14 42.4286 15.5 42C17 41.5714 15 41.5714 15 41.5714M15 41.5714L11 43" stroke="#6195BD" stroke-width="2" stroke-linejoin="round"/>
-          <defs>
-          <linearGradient id="paint0_linear_10_49" x1="33" y1="12" x2="33" y2="47" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#24B685" stop-opacity="0.6"/>
-          <stop offset="0.368901" stop-color="#127F8E" stop-opacity="0.702167"/>
-          <stop offset="1" stop-color="#004B97" stop-opacity="0.8"/>
-          </linearGradient>
-          </defs>
-          </svg>
-          
-        </a>
     </div>
-     
-  
-          </div>
-<div class="containerhello">
-    <!-- 側邊欄 -->
- <!-- 手機版開關按鈕 -->
-<button id="sidebar-toggle" class="d-md-none sidebar-toggle-btn"><i class="fa-solid fa-circle-info"></i></button>
+</div>
 
-<!-- 側邊欄與遮罩容器 -->
-<div id="sidebar-overlay" class="sidebar-overlay"></div>
-<aside class="sidebar" id="mobile-sidebar">
-  <div class="profile-info">
-    <div class="avatar-wrapper" style="margin-top: 20px;">
-      <img src="../image/default-avatar.png" alt="Profile" id="avatar-img">
-      <input type="file" id="avatar-input" accept="image/jpeg, image/png" hidden>
+<main style="font-size: 1.6rem;">
+  <div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="mb-0">購物車</h3>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="checkAll">
+      <label class="form-check-label" for="checkAll">全選顯示到結算表</label>
     </div>
-    <p class="profile-name" style="margin-top: 10px;" id="username"></p>
-    <p>信譽積分：100</p>
-    <p><br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus libero a cupiditate nostrum voluptatem id ratione, consequatur necessitatibus enim saepe.<br><br></p>
   </div>
-  <nav class="nav-menu">
-    <ul>
-      <li class="active" data-tab="cart">購物車</li>
-      <li data-tab="my-store">我的賣場</li>
-      <li data-tab="transactions">交易支付與退款查詢</li>
-    </ul>
-  </nav>
-</aside>
 
-    <!-- 主內容區 -->
-    <main class="content">
+  <div class="row g-4">
+    <!-- 商品清單 -->
+    <div class="col-lg-8">
+      <div id="cart-items" class="list-group"></div>
+      <div class="d-flex justify-content-between mt-2">
+        <button id="clear-checked" class="btn btn-outline-secondary btn-sm">移除已勾選</button>
+        <button id="clear-all" class="btn btn-outline-danger btn-sm">清空購物車</button>
+      </div>
+    </div>
 
-      <!-- (2) 購物車區塊 -->
-      <section id="cart" class="tab-content active">
-        <h2>購物車</h2>
-        <!-- 購物車內的子標籤切換按鈕 -->
-        <div class="cart-tabs">
-          <button class="cart-tab-button active" data-cart-tab="all">全部</button>
-          <button class="cart-tab-button" data-cart-tab="pending-payment">待付款</button>
-          <button class="cart-tab-button" data-cart-tab="to-be-shipped">待出貨</button>
-          <button class="cart-tab-button" data-cart-tab="completed">已完成</button>
-          <button class="cart-tab-button" data-cart-tab="canceled">取消</button>
-          <button class="cart-tab-button" data-cart-tab="refund">退貨/退款</button>
-        </div>
+    <!-- 結帳摘要 -->
+    <div class="col-lg-4">
+      <div class="card summary-card">
+        <div class="card-body">
+          <h5 class="card-title">訂單摘要</h5>
 
-        <!-- 對應的內容區塊 -->
-        <div class="cart-tab-content active" id="all">
-          <div class="card w-100">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <a href="#" class="btn btn-primary">一鍵下訂單</a>
+          <!-- 訂單狀態 -->
+          <div class="mb-3">
+            <label class="form-label">訂單狀態</label>
+            <select id="order-status" class="form-select">
+              <option value="processing">處理中</option>
+              <option value="paid">已付款（面交時）</option>
+              <option value="shipped" disabled>已出貨（停用）</option>
+              <option value="completed">已完成</option>
+              <option value="cancelled">已取消</option>
+            </select>
+            <div class="form-text">運送方式固定為面交付款，本欄為整筆訂單狀態。</div>
+          </div>
+
+          <!-- 運送方式（固定） -->
+          <div class="mb-3">
+            <label class="form-label">運送方式</label>
+            <div class="form-control d-flex align-items-center gap-2">
+              <span class="badge text-bg-primary">面交</span>
+              <span>面交取貨付款（COD）</span>
             </div>
+            <div class="form-text">僅支援面對面交付與當面付款。</div>
           </div>
-        </div>
-        <div class="cart-tab-content" id="pending-payment">
-          <p>這裡顯示待付款訂單</p>
-        </div>
-        <div class="cart-tab-content" id="to-be-shipped">
-          <p>這裡顯示待出貨訂單</p>
-        </div>
-        <div class="cart-tab-content" id="completed">
-          <p>這裡顯示已完成訂單</p>
-        </div>
-        <div class="cart-tab-content" id="canceled">
-          <p>這裡顯示已取消訂單</p>
-        </div>
-        <div class="cart-tab-content" id="refund">
-          <p>這裡顯示退貨/退款訂單</p>
-        </div>
-      </section>
 
-      <!-- (3) 我的賣場區塊 -->
-      <section id="my-store" class="tab-content">
-        <h2 style="margin-bottom: 30px;">我的賣場</h2>
-        <div class="card w-100">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">編輯商品</a>
+          <!-- 面交資訊 -->
+          <div class="mb-3">
+            <label class="form-label">聯絡人</label>
+            <input id="pickup-name" type="text" class="form-control" placeholder="姓名（必填）" required>
           </div>
+          <div class="mb-3">
+            <label class="form-label">聯絡電話</label>
+            <input id="pickup-phone" type="tel" class="form-control" placeholder="09xx-xxx-xxx（必填）" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">面交地點</label>
+            <input id="pickup-place" type="text" class="form-control" placeholder="例：中興大學 正門/圖書館門口（必填）" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">面交時間</label>
+            <input id="pickup-datetime" type="datetime-local" class="form-control" required>
+            <div class="form-text">以賣家確認為準，可在備註補充彈性時段。</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">備註</label>
+            <textarea id="pickup-note" rows="2" class="form-control" placeholder="例如：可接受 18:00-19:00、下雨改隔日等"></textarea>
+          </div>
+
+          <!-- 小表格 -->
+          <table class="table table-sm align-middle" id="checkout-table">
+            <thead>
+              <tr>
+                <th>商品</th>
+                <th class="text-center">數量</th>
+                <th class="text-end">金額</th>
+              </tr>
+            </thead>
+            <tbody><!-- 動態插入 --></tbody>
+          </table>
+
+          <hr>
+          <div class="d-flex justify-content-between">
+            <span class="muted-sm">小計</span>
+            <span id="subtotal" class="price">NT$ 0</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="muted-sm">運費（面交）</span>
+            <span id="shipping-fee" class="price">NT$ 0</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="muted-sm">折扣</span>
+            <span id="discount" class="price">- NT$ 0</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span class="fw-bold">總計</span>
+            <span id="grand-total" class="fw-bold text-danger price">NT$ 0</span>
+          </div>
+
+          <button id="checkout-btn" class="btn btn-primary w-100 mt-3">送出訂單（面交付款）</button>
+          <div class="form-text mt-2">只有被勾選的商品會計入本次訂單。</div>
         </div>
-        <!-- 例如列出賣家商品卡片、販賣狀態等 -->
-      </section>
-
-      <!-- (4) 交易支付與退款查詢 -->
-      <section id="transactions" class="tab-content">
-        <h2>交易支付與退款查詢</h2>
-        <p>這裡顯示交易紀錄、支付狀態以及退款查詢</p>
-      </section>
-    </main>
-  </div>
-  
-  </div>
-  <div class="footerunder">
-    Copyright©2025拾貨寶庫｜All Rights Reserved
-</div> 
-
-  <section class="footer">
-    <div class="footer-row d-flex justify-content-center">
-          <li><a href="introduce.html">關於我們｜</a></li>
-          <li><a href="questions.html">常見問題｜</a></li>
-          <li><a href="communication.html">客服諮詢｜</a></li>
-          <li><a href="policy.html">隱私政策｜</a></li>
-          <li><a href="#">使用條款｜</a></li>
-          <li><a href="#">退換貨政策</a></li>
+      </div>
     </div>
-  </section>
   </div>
-    <!-- script部分-->
-        <script src="bootstrap_jQuery-demo/js/jquery-3.7.1.min.js"></script>
+</div>
+
+</main>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="shoppingcart.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../BackendService.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -8,289 +8,317 @@ window.onload = function() {
     content.style.setProperty('display', 'block', 'important');
     }
 };
-document.addEventListener('DOMContentLoaded', function() {
-const mobileSearchIcon = document.getElementById('mobileSearchIcon');
-const searchForm = document.getElementById('searchForm');
+// ============ 0)（可選）JWT Header 設定 ============
+/*
+axios.defaults.headers.common.idtoken = getIdTokenSomehow();
+*/
 
-//TODO 手機版：點擊黑色搜尋圖示時，隱藏該圖示並顯示搜尋表單（新行出現）
-mobileSearchIcon.addEventListener('click', function() {
-    mobileSearchIcon.style.display = 'none';
-    searchForm.style.display = 'flex';
-    
-    // 自動將游標焦點移至搜尋輸入框
-    const input = searchForm.querySelector('input');
-    if (input) {
-    input.focus();
+// ============ 1) 建立 service ============ 
+let backendService;
+document.addEventListener('DOMContentLoaded', () => {
+  backendService = new BackendService();
+  initCartFromAPI(); // 頁面載入就打 API
+});
+
+// ============ 2) 共用狀態 / 工具 ============
+const LS_KEY = 'cart_state_v1';
+const LS_STATUS_KEY = 'order_status_v1';
+const LS_PICKUP_KEY = 'pickup_info_v1';
+
+function loadState() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || null; } catch { return null; } }
+function saveState(items) { localStorage.setItem(LS_KEY, JSON.stringify(items)); }
+function loadStatus() { return localStorage.getItem(LS_STATUS_KEY) || 'processing'; }
+function saveStatus(v) { localStorage.setItem(LS_STATUS_KEY, v); }
+function loadPickup() { try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; } }
+function savePickup(info) { localStorage.setItem(LS_PICKUP_KEY, JSON.stringify(info)); }
+
+let cartItems = [];                  // 由 API 載入
+let orderStatus = loadStatus();
+
+// 你的既有節點
+const cartList        = document.getElementById('cart-items');
+const statusSelect    = document.getElementById('order-status');
+const pickupName      = document.getElementById('pickup-name');
+const pickupPhone     = document.getElementById('pickup-phone');
+const pickupPlace     = document.getElementById('pickup-place');
+const pickupDatetime  = document.getElementById('pickup-datetime');
+const pickupNote      = document.getElementById('pickup-note');
+
+// ============ 3) 後端回傳 -> 前端統一格式 ============
+function normalizeCartResponse(payload) {
+  const candidates = [
+    payload?.data?.commodities,
+    payload?.data?.cart?.items,
+    payload?.data?.items,
+    payload?.cartItems,
+    payload?.items,
+    payload?.data,
+    payload
+  ];
+  const rawList = candidates.find(arr => Array.isArray(arr)) || [];
+  return rawList.map(row => {
+    const id    = String(row.id ?? row._id ?? row.commodityId ?? row.productId ?? '');
+    const name  = row.name ?? row.title ?? '未命名商品';
+    const price = Number(row.price ?? row.unitPrice ?? row.amount ?? 0);
+    const img   = row.imageUrl ?? row.img ?? (Array.isArray(row.images) ? row.images[0] : undefined) ?? 'https://via.placeholder.com/120x120?text=No+Image';
+    const qty   = Number(row.qty ?? row.quantity ?? row.count ?? 1) || 1;
+    return { id, name, price, img, qty, checked: false };
+  });
+}
+
+// ============ 4) 初次載入 API ============
+async function initCartFromAPI() {
+  try {
+    const res  = await backendService.getMyCart();
+    const list = normalizeCartResponse(res);
+    cartItems  = Array.isArray(list) ? list : [];
+    saveState(cartItems);
+
+    // 狀態 UI
+    if (statusSelect) {
+      statusSelect.value = orderStatus;
     }
-});
-});
-// Firebase 設定
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCtC488RFTmMSoe7lPj6c-rOVVuKOseTAk",
-//   authDomain: "store-backend-75fea.firebaseapp.com",
-//   projectId: "store-backend-75fea",
-//   storageBucket: "store-backend-75fea.firebasestorage.app",
-//   messagingSenderId: "585571611965",
-//   appId: "1:585571611965:web:65b013617b7877e2904154"
-// };
 
-// Initialize Firebase
-// firebase.initializeApp(firebaseConfig);
-// const auth = firebase.auth();
+    // 還原面交資料
+    (function restorePickup() {
+      const info = loadPickup();
+      if (pickupName && info.name)     pickupName.value     = info.name;
+      if (pickupPhone && info.phone)   pickupPhone.value    = info.phone;
+      if (pickupPlace && info.place)   pickupPlace.value    = info.place;
+      if (pickupDatetime && info.datetime) pickupDatetime.value = info.datetime;
+      if (pickupNote && info.note)     pickupNote.value     = info.note;
+    })();
 
-// // 可設定持久性，確保 Firebase 在刷新時保留登入狀態
-// auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
-// 頁面載入時，先根據 localStorage 設定按鈕初始狀態
-$(document).ready(function(){
-  console.log("文件已加載完成！");
-  const send = document.getElementById('send');
-  const loginornot = document.getElementById('loginornot');
-  const storedStatus = localStorage.getItem("isLoggedIn");
-  if (storedStatus === "true") {
-    loginornot.textContent = "登出";
-    loginornot.onclick = function(e) {
-      e.preventDefault();
-      callLogout();
-    };
-  } else {
-    loginornot.textContent = "登入";
-    loginornot.onclick = function(e) {
-      $(location).attr('href', 'https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/account.html');
-    };
+    renderCart();
+    updateSummary();
+  } catch (err) {
+    console.error('getMyCart 失敗：', err);
+    const fallback = loadState();
+    cartItems = Array.isArray(fallback) ? fallback : [];
+    renderCart();
+    updateSummary();
   }
-  
-  // 綁定 #send 按鈕提交事件，觸發登入
-  $('#send').on('click', function(e){
-    e.preventDefault(); // 攔截表單預設提交
-    console.log("表單已提交！");
-    callLogIn();
-  });
-  
-  // 綁定 #logoutButton 按鈕提交事件，觸發登出
-  $('#logoutButton').on('click', function(e){
-    e.preventDefault();
-    callLogout();
-  });
-});
+}
 
-// auth.onAuthStateChanged(function(user) {
-//   const loginForm = document.getElementById('loginForm');
-//   const logoutButton = document.getElementById('logoutButton');
-//   const authButton = document.getElementById('authButton');
-//   const username = document.getElementById('username');
-//   const avatarImg = document.getElementById('avatar-img');
-
-
-//   if (user) {
-//     console.log("使用者已登入：", user);
-//     console.log("username: ", user.displayName);
-//     localStorage.setItem("isLoggedIn", "true");
-//     if (loginForm) loginForm.style.display = "none";
-//     if (logoutButton) logoutButton.style.display = "block";
-//     if (username) {
-//       username.textContent = `${user.displayName}`;
-//       // username.style.display = "block";
-//     }
-//     if(avatarImg) {
-//       avatarImg.src = user.photoURL || 'https://github.com/YehIngrid/sample/blob/main/image/default-avatar.png?raw=true'; // 預設頭像
-//       avatarImg.style.display = "block";
-//     }
-//     if (authButton) {
-//       authButton.textContent = "登出";
-//       authButton.onclick = function(e) {
-//         e.preventDefault();
-//         Swal.fire({
-//           title: "確定登出？",
-//           text: "登出後無法購物與上架商品",
-//           icon: "warning",
-//           showCancelButton: true,
-//           confirmButtonColor: "#3085d6",
-//           cancelButtonColor: "#d33",
-//           confirmButtonText: "我要登出"
-//         }).then((result) => {
-//           if (result.isConfirmed) {
-//             callLogout();
-//           }
-//       })};
-//     }
-//   } else {
-//     console.log("目前無使用者登入");
-//     localStorage.removeItem("isLoggedIn");
-//     if (loginForm) loginForm.style.display = "block";
-//     if (logoutButton) logoutButton.style.display = "none";
-//     if (authButton) {
-//       authButton.textContent = "登入";
-//     }
-//     send.onclick = function(e) {
-//       e.preventDefault();
-//       callLogIn();
-//     };
-//   }
-// });
-
-// 登入函式：取得表單欄位並呼叫 Firebase 登入 API
-function callLogIn(){
-  const floatingInput = document.getElementById('floatingInput');
-  const floatingPassword = document.getElementById('floatingPassword');
-
-  if (!floatingInput || !floatingPassword) {
-    console.error("無法取得登入欄位，請確認元素 id 是否正確");
+// ============ 5) 渲染商品清單 ============
+function renderCart() {
+  cartList.innerHTML = '';
+  if (cartItems.length === 0) {
+    cartList.innerHTML = `<div class="alert alert-light text-center">目前沒有商品</div>`;
+    const all = document.getElementById('checkAll');
+    if (all) all.checked = false;
+    updateSummary();
     return;
   }
-  
-  if (!floatingInput.value || !floatingPassword.value) {
-    Swal.fire({
-      title: "請填寫所有必填資訊",
-      icon: "warning"
+
+  const allChecked = cartItems.every(i => i.checked);
+  const all = document.getElementById('checkAll');
+  if (all) all.checked = allChecked;
+
+  cartItems.forEach(item => {
+    const li = document.createElement('div');
+    li.className = 'list-group-item';
+    li.dataset.id = item.id;
+    li.innerHTML = `
+      <div class="d-flex align-items-center">
+        <input class="form-check-input me-3 cart-check" type="checkbox" ${item.checked ? 'checked':''}>
+        <img src="${item.img}" alt="${item.name}" class="item-thumb me-3">
+        <div class="flex-grow-1">
+          <div class="d-flex justify-content-between align-items-start">
+            <h6 class="mb-1">${item.name}</h6>
+            <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
+          </div>
+          <div class="d-flex align-items-center gap-2 mt-2">
+            <label class="muted-sm">數量</label>
+            <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input">
+            <button class="btn btn-outline-danger btn-sm ms-auto btn-remove">刪除</button>
+          </div>
+        </div>
+      </div>
+    `;
+    cartList.appendChild(li);
+  });
+}
+
+// ============ 6) 更新右側結帳表 & 總額 ============
+function updateSummary() {
+  const tbody = document.querySelector('#checkout-table tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  let subtotal = 0;
+
+  cartItems.filter(i => i.checked).forEach(i => {
+    const sub = i.price * i.qty;
+    subtotal += sub;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i.name}</td>
+      <td class="text-center">${i.qty}</td>
+      <td class="text-end">NT$ ${sub.toLocaleString()}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const shipping = 0; // 面交固定 0
+  const discount = 0;
+
+  const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+  set('subtotal',     'NT$ ' + subtotal.toLocaleString());
+  set('shipping-fee', 'NT$ ' + shipping.toLocaleString());
+  set('discount',     '- NT$ ' + discount.toLocaleString());
+  set('grand-total',  'NT$ ' + (subtotal + shipping - discount).toLocaleString());
+}
+
+// ============ 7) 事件：勾選 / 數量 / 刪除 ============
+cartList.addEventListener('change', (e) => {
+  const row = e.target.closest('.list-group-item');
+  if (!row) return;
+  const id  = row.dataset.id;
+  const idx = cartItems.findIndex(i => i.id === id);
+  if (idx < 0) return;
+
+  if (e.target.classList.contains('cart-check')) {
+    cartItems[idx].checked = e.target.checked;
+  }
+  if (e.target.classList.contains('qty-input')) {
+    const v = Math.max(1, parseInt(e.target.value || '1', 10));
+    cartItems[idx].qty = v;
+    e.target.value = v;
+  }
+
+  saveState(cartItems);
+  renderCart();    // 讓「全選」勾勾同步
+  updateSummary();
+});
+
+cartList.addEventListener('click', async (e) => {
+  if (!e.target.classList.contains('btn-remove')) return;
+  const row = e.target.closest('.list-group-item');
+  const id  = row?.dataset?.id;
+  if (!id) return;
+
+  try {
+    await backendService.removeItemsFromCart(id); // 後端刪除
+    cartItems = cartItems.filter(i => i.id !== id);
+    saveState(cartItems);
+    renderCart();
+    updateSummary();
+  } catch (err) {
+    console.error('removeItemsFromCart 失敗：', err);
+    alert('刪除失敗，請稍後再試');
+  }
+});
+
+// ============ 8) 全選 / 批次刪除 / 清空 ============
+const checkAllEl = document.getElementById('checkAll');
+if (checkAllEl) {
+  checkAllEl.addEventListener('change', (e) => {
+    const checked = e.target.checked;
+    cartItems = cartItems.map(i => ({ ...i, checked }));
+    saveState(cartItems);
+    renderCart();
+    updateSummary();
+  });
+}
+
+const clearCheckedBtn = document.getElementById('clear-checked');
+if (clearCheckedBtn) {
+  clearCheckedBtn.addEventListener('click', async () => {
+    const selected = cartItems.filter(i => i.checked);
+    if (selected.length === 0) {
+      alert('目前沒有勾選的商品');
+      return;
+    }
+    try {
+      for (const it of selected) {
+        await backendService.removeItemsFromCart(it.id);
+      }
+      cartItems = cartItems.filter(i => !i.checked);
+      saveState(cartItems);
+      renderCart();
+      updateSummary();
+    } catch (err) {
+      console.error('批次移除失敗：', err);
+      alert('移除已勾選失敗，請稍後再試');
+    }
+  });
+}
+
+const clearAllBtn = document.getElementById('clear-all');
+if (clearAllBtn) {
+  clearAllBtn.addEventListener('click', async () => {
+    if (!confirm('確定要清空購物車嗎？')) return;
+    try {
+      await backendService.clearMyCart();
+      cartItems = [];
+      saveState(cartItems);
+      renderCart();
+      updateSummary();
+    } catch (err) {
+      console.error('clearMyCart 失敗：', err);
+      alert('清空失敗，請稍後再試');
+    }
+  });
+}
+
+// ============ 9) 訂單狀態 ============
+if (statusSelect) {
+  statusSelect.value = orderStatus;
+  statusSelect.addEventListener('change', () => {
+    orderStatus = statusSelect.value;
+    saveStatus(orderStatus);
+  });
+}
+
+// ============ 10) 面交資訊（儲存/還原 & 驗證） ============
+[pickupName, pickupPhone, pickupPlace, pickupDatetime, pickupNote].forEach(el => {
+  if (!el) return;
+  el.addEventListener('input', () => {
+    savePickup({
+      name:     pickupName?.value?.trim() ?? '',
+      phone:    pickupPhone?.value?.trim() ?? '',
+      place:    pickupPlace?.value?.trim() ?? '',
+      datetime: pickupDatetime?.value ?? '',
+      note:     pickupNote?.value?.trim() ?? '',
     });
-    return;
-  }
-  
-  let obj = {
-    email: floatingInput.value,
-    password: floatingPassword.value
-  };
-  console.log("登入資訊：", obj);
-  
-  // auth.signInWithEmailAndPassword(obj.email, obj.password)
-  //   .then((userCredential) => {
-  //     var user = userCredential.user;
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: "登入成功",
-  //       text: "歡迎回來！",
-  //       showConfirmButton: false,
-  //       footer: "即將跳轉購物頁面",
-  //       timer: 1500
-  //     });
-  //     return user.getIdToken();
-  //   })
-  //   .then((token) => {
-  //     console.log("使用者 Token：", token);
-  //     setTimeout(() => {
-  //       window.location.href = "shoppingpage_bootstrap.html";
-  //     }, 2000);
-  //   })
-  //   .catch(function (error) {
-  //     console.error("登入錯誤：", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "登入失敗",
-  //       text: "請確認帳號密碼是否正確，或註冊新帳號"
-  //     });
-  //   });
-}
-
-// 登出函式：使用 Firebase 的 signOut 方法
-function callLogout() {
-  // auth.signOut()
-  //   .then(() => {
-  //     Swal.fire({
-  //       icon: "success",
-  //       title: "登出成功",
-  //       text: "歡迎再度光臨",
-  //       showConfirmButton: false,
-  //       footer: "即將返回登入頁面",
-  //       timer: 1800
-  //     });
-  //     // 登出後從 localStorage 移除登入狀態
-  //     localStorage.removeItem("isLoggedIn");
-  //     setTimeout(() => {
-  //       window.location.href = "account.html";
-  //     }, 2000);
-  //   })
-  //   .catch(function(error) {
-  //     console.error("登出錯誤：", error);
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...登出失敗",
-  //       text: "系統暫時發生錯誤，請稍後再試"
-  //     });
-  //   });
-}
-
-// 註冊函式：取得註冊表單欄位並呼叫後端 API
-function callSignUp(){
-  const emailInput = document.getElementById('email');
-  const passwordInput1 = document.getElementById('password1');
-  const passwordInput2 = document.getElementById('password2');
-  const nameInput = document.getElementById('name');
-  
-  if (!emailInput.value || !passwordInput1.value || !passwordInput2.value || !nameInput.value) {
-    alert("請填寫所有必填資訊");
-    return;
-  }
-  if (passwordInput1.value !== passwordInput2.value) {
-    alert("密碼輸入不一致");
-    return;
-  }
-  
-}
-// 切換密碼顯示/隱藏（點擊眼睛圖示）
-$("#checkEye").click(function () {
-  if($(this).hasClass('fa-eye')){
-     $("#floatingPassword").attr('type', 'text');
-  } else {
-     $("#floatingPassword").attr('type', 'password');
-  }
-  $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
+  });
 });
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. 左側側邊欄選單切換
-    const navItems = document.querySelectorAll('.nav-menu li');
-    const tabContents = document.querySelectorAll('.tab-content');
-  
-    navItems.forEach(item => {
-      item.addEventListener('click', () => {
-        // 移除其他項目的 active
-        navItems.forEach(i => i.classList.remove('active'));
-        // 給自己加上 active
-        item.classList.add('active');
-  
-        // 隱藏所有 tab-content
-        tabContents.forEach(tab => {
-          tab.classList.remove('active');
-        });
-  
-        // 顯示對應的 tab-content
-        const tabId = item.getAttribute('data-tab'); // 讀取 data-tab 屬性
-        const targetTab = document.getElementById(tabId);
-        if (targetTab) {
-          targetTab.classList.add('active');
+
+function validPhone(tel) {
+  return /^09\d{8}$/.test(String(tel || '').replace(/[-\s]/g,''));
+}
+
+const checkoutBtn = document.getElementById('checkout-btn');
+if (checkoutBtn) {
+  checkoutBtn.addEventListener('click', () => {
+    const selected = cartItems.filter(i => i.checked);
+    if (selected.length === 0) return alert('請先勾選要結帳的商品');
+
+    if (!pickupName?.value?.trim() || !pickupPhone?.value?.trim() || !pickupPlace?.value?.trim() || !pickupDatetime?.value) {
+      return alert('請完整填寫面交資訊：姓名、電話、地點與時間。');
+    }
+    if (!validPhone(pickupPhone.value)) {
+      return alert('電話格式不正確，請填寫 09xxxxxxxx。');
+    }
+
+    const payload = {
+      status: orderStatus,
+      shipping: {
+        method: 'face_to_face_cod',
+        fee: 0,
+        pickup: {
+          name: pickupName.value.trim(),
+          phone: pickupPhone.value.trim(),
+          place: pickupPlace.value.trim(),
+          datetime: pickupDatetime.value,
+          note: pickupNote?.value?.trim() ?? '',
         }
-      });
-    });
-  
-    // 2. 購物車內的子標籤切換
-    const cartTabButtons = document.querySelectorAll('.cart-tab-button');
-    const cartTabContents = document.querySelectorAll('.cart-tab-content');
-  
-    cartTabButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // 移除其他按鈕的 active
-        cartTabButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-  
-        // 隱藏所有 cart-tab-content
-        cartTabContents.forEach(ctc => ctc.classList.remove('active'));
-  
-        // 顯示對應的 cart-tab-content
-        const cartTabId = btn.getAttribute('data-cart-tab');
-        const targetContent = document.getElementById(cartTabId);
-        if (targetContent) {
-          targetContent.classList.add('active');
-        }
-      });
-    });
-  });
-  
-  document.getElementById('sidebar-toggle').addEventListener('click', function () {
-    document.getElementById('mobile-sidebar').classList.toggle('active');
-    document.getElementById('sidebar-overlay').classList.toggle('active');
-  });
+      },
+      items: selected.map(i => ({ id: i.id, qty: i.qty })),
+    };
 
-  document.getElementById('sidebar-overlay').addEventListener('click', function () {
-    document.getElementById('mobile-sidebar').classList.remove('active');
-    this.classList.remove('active');
+    // TODO: 串接你的下單 API（這裡先示範）
+    console.log('模擬送出訂單（面交）：', payload);
+    alert('已建立訂單（面交付款，模擬）。請查看 console。');
   });
+}

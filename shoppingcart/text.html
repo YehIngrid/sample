@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>購物車（面交取貨付款）</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background:#f6f7fb; }
+    .item-thumb{ width:80px; height:80px; object-fit:cover; border-radius:.5rem; }
+    .list-group-item{ border:0; border-radius:1rem; box-shadow:0 4px 14px rgba(0,0,0,.05); margin-bottom:12px; }
+    .summary-card{ border:0; border-radius:1rem; box-shadow:0 6px 18px rgba(0,0,0,.08); position:sticky; top:24px; }
+    .price{ white-space:nowrap; }
+    .qty-input{ max-width:88px; }
+    .muted-sm{ font-size:.9rem; color:#6c757d; }
+  </style>
+</head>
+<body>
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="mb-0">購物車</h3>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="checkAll">
+      <label class="form-check-label" for="checkAll">全選顯示到結算表</label>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- 商品清單 -->
+    <div class="col-lg-8">
+      <div id="cart-items" class="list-group"></div>
+      <div class="d-flex justify-content-between mt-2">
+        <button id="clear-checked" class="btn btn-outline-secondary btn-sm">移除已勾選</button>
+        <button id="clear-all" class="btn btn-outline-danger btn-sm">清空購物車</button>
+      </div>
+    </div>
+
+    <!-- 結帳摘要 -->
+    <div class="col-lg-4">
+      <div class="card summary-card">
+        <div class="card-body">
+          <h5 class="card-title">訂單摘要</h5>
+
+          <!-- 訂單狀態 -->
+          <div class="mb-3">
+            <label class="form-label">訂單狀態</label>
+            <select id="order-status" class="form-select">
+              <option value="processing">處理中</option>
+              <option value="paid">已付款（面交時）</option>
+              <option value="shipped" disabled>已出貨（停用）</option>
+              <option value="completed">已完成</option>
+              <option value="cancelled">已取消</option>
+            </select>
+            <div class="form-text">運送方式固定為面交付款，本欄為整筆訂單狀態。</div>
+          </div>
+
+          <!-- 運送方式（固定） -->
+          <div class="mb-3">
+            <label class="form-label">運送方式</label>
+            <div class="form-control d-flex align-items-center gap-2">
+              <span class="badge text-bg-primary">面交</span>
+              <span>面交取貨付款（COD）</span>
+            </div>
+            <div class="form-text">僅支援面對面交付與當面付款。</div>
+          </div>
+
+          <!-- 面交資訊 -->
+          <div class="mb-3">
+            <label class="form-label">聯絡人</label>
+            <input id="pickup-name" type="text" class="form-control" placeholder="姓名（必填）" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">聯絡電話</label>
+            <input id="pickup-phone" type="tel" class="form-control" placeholder="09xx-xxx-xxx（必填）" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">面交地點</label>
+            <input id="pickup-place" type="text" class="form-control" placeholder="例：中興大學 正門/圖書館門口（必填）" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">面交時間</label>
+            <input id="pickup-datetime" type="datetime-local" class="form-control" required>
+            <div class="form-text">以賣家確認為準，可在備註補充彈性時段。</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">備註</label>
+            <textarea id="pickup-note" rows="2" class="form-control" placeholder="例如：可接受 18:00-19:00、下雨改隔日等"></textarea>
+          </div>
+
+          <!-- 小表格 -->
+          <table class="table table-sm align-middle" id="checkout-table">
+            <thead>
+              <tr>
+                <th>商品</th>
+                <th class="text-center">數量</th>
+                <th class="text-end">金額</th>
+              </tr>
+            </thead>
+            <tbody><!-- 動態插入 --></tbody>
+          </table>
+
+          <hr>
+          <div class="d-flex justify-content-between">
+            <span class="muted-sm">小計</span>
+            <span id="subtotal" class="price">NT$ 0</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="muted-sm">運費（面交）</span>
+            <span id="shipping-fee" class="price">NT$ 0</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="muted-sm">折扣</span>
+            <span id="discount" class="price">- NT$ 0</span>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <span class="fw-bold">總計</span>
+            <span id="grand-total" class="fw-bold text-danger price">NT$ 0</span>
+          </div>
+
+          <button id="checkout-btn" class="btn btn-primary w-100 mt-3">送出訂單（面交付款）</button>
+          <div class="form-text mt-2">只有被勾選的商品會計入本次訂單。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====== 假資料（之後換成後端回傳即可）======
+const MOCK = [
+  { id:'p1', name:'教科書 A', price:300,  img:'https://picsum.photos/seed/book/120/120', qty:1, checked:false },
+  { id:'p2', name:'二手筆電', price:12000, img:'https://picsum.photos/seed/laptop/120/120', qty:1, checked:false },
+  { id:'p3', name:'宿舍檯燈', price:450,  img:'https://picsum.photos/seed/lamp/120/120', qty:2, checked:true  },
+  { id:'p4', name:'計算機',   price:650,  img:'https://picsum.photos/seed/calc/120/120',  qty:1, checked:false },
+];
+
+// ====== 簡易儲存層（LocalStorage）======
+const LS_KEY = 'cart_state_v1';
+const LS_STATUS_KEY = 'order_status_v1';
+const LS_PICKUP_KEY = 'pickup_info_v1';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || null; } catch { return null; }
+}
+function saveState(items) {
+  localStorage.setItem(LS_KEY, JSON.stringify(items));
+}
+function loadStatus() {
+  return localStorage.getItem(LS_STATUS_KEY) || 'processing';
+}
+function saveStatus(v) {
+  localStorage.setItem(LS_STATUS_KEY, v);
+}
+function loadPickup() {
+  try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; }
+}
+function savePickup(info) {
+  localStorage.setItem(LS_PICKUP_KEY, JSON.stringify(info));
+}
+
+// ====== 狀態 ======
+let cartItems = Array.isArray(loadState()) ? loadState() : MOCK;
+let orderStatus = loadStatus();
+
+// ====== 渲染商品清單 ======
+const cartList = document.getElementById('cart-items');
+function renderCart() {
+  cartList.innerHTML = '';
+  if (cartItems.length === 0) {
+    cartList.innerHTML = `<div class="alert alert-light text-center">目前沒有商品</div>`;
+    document.getElementById('checkAll').checked = false;
+    updateSummary();
+    return;
+  }
+
+  const allChecked = cartItems.every(i => i.checked);
+  document.getElementById('checkAll').checked = allChecked;
+
+  cartItems.forEach(item => {
+    const li = document.createElement('div');
+    li.className = 'list-group-item';
+    li.dataset.id = item.id;
+    li.innerHTML = `
+      <div class="d-flex align-items-center">
+        <input class="form-check-input me-3 cart-check" type="checkbox" ${item.checked ? 'checked':''}>
+        <img src="${item.img}" alt="${item.name}" class="item-thumb me-3">
+        <div class="flex-grow-1">
+          <div class="d-flex justify-content-between align-items-start">
+            <h6 class="mb-1">${item.name}</h6>
+            <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
+          </div>
+          <div class="d-flex align-items-center gap-2 mt-2">
+            <label class="muted-sm">數量</label>
+            <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input">
+            <button class="btn btn-outline-danger btn-sm ms-auto btn-remove">刪除</button>
+          </div>
+        </div>
+      </div>
+    `;
+    cartList.appendChild(li);
+  });
+
+  updateSummary();
+}
+
+// ====== 更新右側結帳表 & 總額 ======
+function updateSummary() {
+  const tbody = document.querySelector('#checkout-table tbody');
+  tbody.innerHTML = '';
+  let subtotal = 0;
+
+  cartItems.filter(i => i.checked).forEach(i => {
+    const sub = i.price * i.qty;
+    subtotal += sub;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i.name}</td>
+      <td class="text-center">${i.qty}</td>
+      <td class="text-end">NT$ ${sub.toLocaleString()}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const shipping = 0; // 面交固定 0
+  const discount = 0;
+
+  document.getElementById('subtotal').textContent = 'NT$ ' + subtotal.toLocaleString();
+  document.getElementById('shipping-fee').textContent = 'NT$ ' + shipping.toLocaleString();
+  document.getElementById('discount').textContent = '- NT$ ' + discount.toLocaleString();
+  document.getElementById('grand-total').textContent = 'NT$ ' + (subtotal + shipping - discount).toLocaleString();
+}
+
+// ====== 事件委派：勾選 / 數量 / 刪除 ======
+cartList.addEventListener('change', (e) => {
+  const row = e.target.closest('.list-group-item');
+  if (!row) return;
+  const id = row.dataset.id;
+  const idx = cartItems.findIndex(i => i.id === id);
+  if (idx < 0) return;
+
+  if (e.target.classList.contains('cart-check')) {
+    cartItems[idx].checked = e.target.checked;
+    saveState(cartItems);
+    renderCart();
+  }
+
+  if (e.target.classList.contains('qty-input')) {
+    const v = Math.max(1, parseInt(e.target.value || '1', 10));
+    cartItems[idx].qty = v;
+    e.target.value = v;
+    saveState(cartItems);
+    updateSummary();
+  }
+});
+
+cartList.addEventListener('click', (e) => {
+  if (e.target.classList.contains('btn-remove')) {
+    const row = e.target.closest('.list-group-item');
+    const id = row?.dataset.id;
+    if (!id) return;
+    cartItems = cartItems.filter(i => i.id !== id);
+    saveState(cartItems);
+    renderCart();
+  }
+});
+
+// ====== 全選切換 ======
+document.getElementById('checkAll').addEventListener('change', (e) => {
+  const checked = e.target.checked;
+  cartItems = cartItems.map(i => ({ ...i, checked }));
+  saveState(cartItems);
+  renderCart();
+});
+
+// ====== 批次刪除、清空 ======
+document.getElementById('clear-checked').addEventListener('click', () => {
+  cartItems = cartItems.filter(i => !i.checked);
+  saveState(cartItems);
+  renderCart();
+});
+document.getElementById('clear-all').addEventListener('click', () => {
+  cartItems = [];
+  saveState(cartItems);
+  renderCart();
+});
+
+// ====== 訂單狀態 ======
+const statusSelect = document.getElementById('order-status');
+statusSelect.value = orderStatus;
+statusSelect.addEventListener('change', () => {
+  orderStatus = statusSelect.value;
+  saveStatus(orderStatus);
+});
+
+// ====== 還原/儲存 面交資訊 ======
+const pickupName     = document.getElementById('pickup-name');
+const pickupPhone    = document.getElementById('pickup-phone');
+const pickupPlace    = document.getElementById('pickup-place');
+const pickupDatetime = document.getElementById('pickup-datetime');
+const pickupNote     = document.getElementById('pickup-note');
+
+(function restorePickup() {
+  const info = loadPickup();
+  if (info.name)     pickupName.value     = info.name;
+  if (info.phone)    pickupPhone.value    = info.phone;
+  if (info.place)    pickupPlace.value    = info.place;
+  if (info.datetime) pickupDatetime.value = info.datetime;
+  if (info.note)     pickupNote.value     = info.note;
+})();
+[pickupName, pickupPhone, pickupPlace, pickupDatetime, pickupNote].forEach(el => {
+  el.addEventListener('input', () => {
+    savePickup({
+      name: pickupName.value.trim(),
+      phone: pickupPhone.value.trim(),
+      place: pickupPlace.value.trim(),
+      datetime: pickupDatetime.value,
+      note: pickupNote.value.trim(),
+    });
+  });
+});
+
+// ====== 基本驗證（電話 09xxxxxxxx 形式）======
+function validPhone(tel) {
+  return /^09\d{8}$/.test(tel.replace(/[-\s]/g,''));
+}
+
+// ====== 結帳（串後端時帶面交資訊）======
+document.getElementById('checkout-btn').addEventListener('click', () => {
+  const selected = cartItems.filter(i => i.checked);
+  if (selected.length === 0) {
+    alert('請先勾選要結帳的商品');
+    return;
+  }
+  if (!pickupName.value.trim() || !pickupPhone.value.trim() || !pickupPlace.value.trim() || !pickupDatetime.value) {
+    alert('請完整填寫面交資訊：姓名、電話、地點與時間。');
+    return;
+  }
+  if (!validPhone(pickupPhone.value)) {
+    alert('電話格式不正確，請填寫 09xxxxxxxx。');
+    return;
+  }
+
+  const payload = {
+    status: orderStatus,                     // ex: 'processing'
+    shipping: {
+      method: 'face_to_face_cod',           // 固定：面交取貨付款
+      fee: 0,
+      pickup: {
+        name: pickupName.value.trim(),
+        phone: pickupPhone.value.trim(),
+        place: pickupPlace.value.trim(),
+        datetime: pickupDatetime.value,     // ISO 字串（local）
+        note: pickupNote.value.trim(),
+      }
+    },
+    items: selected.map(i => ({ id:i.id, qty:i.qty })),
+    // amount 小計可讓後端再重算驗證
+  };
+
+  // TODO: 串接你的後端
+  // axios.post('/api/orders/checkout', payload, { headers: { idtoken: '...' }})
+  console.log('模擬送出訂單（面交）：', payload);
+  alert('已建立訂單（面交付款，模擬）。請查看 console。');
+});
+
+// 初始渲染
+renderCart();
+</script>
+</body>
+</html>
