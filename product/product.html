@@ -155,21 +155,21 @@
       <hr class="mb-4">
 
       <div class="meta">
-        <dl class="row" id="product-category"></dl>
+        <dl class="row" id="product-category" style="font-size: 1.4rem;"></dl>
       </div>
 
       <div class="mt-3 mb-2 text-muted">庫存：<span id="stock"></span> 件</div>
 
       <!-- 數量調整器 -->
-      <div class="d-flex align-items-center gap-2 my-3" style="max-width:260px;">
+      <div class="d-flex align-items-center gap-2 my-3" style="max-width:260px; font-size: 1.6rem;">
         <button id="minus" class="btn btn-outline-secondary" type="button" aria-label="減少">−</button>
         <input id="qty" class="form-control text-center" type="text" value="1" inputmode="numeric" style="max-width:90px;">
         <button id="plus" class="btn btn-outline-secondary" type="button" aria-label="增加">＋</button>
       </div>
 
-      <div class="cta-wrap d-flex gap-3 mt-4">
-        <button class="btn btn-success flex-fill" type="button">馬上下單</button>
-        <button class="btn btn-primary flex-fill" type="button">加入購物車</button>
+      <div class="cta-wrap d-sm-flex gap-3 mt-4 d-none">
+        <button class="btn flex-fill buybtn" type="button" style="width: 50%; font-size: 1.4rem; color: rgb(36,182,133); background-color: rgb(199, 244, 229);">馬上下單</button>
+        <button class="btn flex-fill shopcart" type="button" style="width: 50%; font-size: 1.4rem; background-color: #cadff5; color: #004b97;" >加入購物車</button>
       </div>
     </div>
   </div>
