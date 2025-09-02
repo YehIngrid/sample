@@ -1,16 +1,6 @@
 let backendService;
 let loginService;
 
-// //當整個頁面載入完成後，隱藏 loader 並顯示主要內容
-// window.onload = function() {
-//   // 當頁面載入完畢後隱藏載入動畫，顯示內容
-//   var loader = document.getElementById('loader');
-//   var content = document.getElementById('whatcontent');
-// if (loader && content) {
-//   loader.style.setProperty('display', 'none', 'important');
-//   content.style.setProperty('display', 'block', 'important');
-// }
-// };
 const midcontent = document.getElementById('midcontent');
 //JavaScript: 控制左右按鈕捲動
 
@@ -82,30 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
   fetchPage(page);
 
 
-  // let pagingInfo = {page: page, limit: limit};
-  // console.log("gethotitems:", response.data.commodities);
-  
-  // backendService.getHotItems(pagingInfo, (response) => {
-    
-  //   // const hotItems = response.data.commodities;
-  //   // const container = document.getElementById("hotItems");
-  //   // if(response.data.pagination.hasNextPage) {
-
-  //   // }
-  //   // hotItems.forEach(item => {
-  //   //   const div = document.createElement("div");
-  //   //   div.className = "hot-item";
-  //   //   div.innerHTML = `
-  //   //     <img src="${item.mainImage}" alt="${item.name}">
-  //   //     <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
-  //   //   `;
-  //   //   container.appendChild(div);
-  //   //   // const pid = item.dataset.id;
-  //   //   // if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
-  //   // });
-  // }, (errorMessage) => {
-  //   console.error("gethotitems:", errorMessage);
-  // })
 
   if (loginService.isLogin()) {
     document.getElementById('loginornot').textContent = '登出';
@@ -347,7 +313,13 @@ document.getElementById('mainImage').addEventListener('change', function (e) {
 
   const file = e.target.files[0];
   if (!file) return;
-
+  if (file.size > 500000) {
+    Swal.fire({
+      icon: 'warning',
+      title: '照片太大',
+      text: '單張照片不能超過 500KB，請壓縮後再上傳。'
+    });
+  }
   const reader = new FileReader();
   reader.onload = function (event) {
     const img = document.createElement('img');
@@ -473,59 +445,7 @@ backbtn2.addEventListener('click', function(e){
 // });
 
 // TODO 陳列商品
-// document.addEventListener('DOMContentLoaded', () => {
-//   backendService.GetNewItems((response) => {
-//     const productList = response?.data?.commodities ?? [];
-//     console.table(productList.map(p => ({ id: p.id, name: p.name, price: p.price })));
 
-//     const container = document.getElementById('product-grid');
-//     if (!container) {
-//       console.warn('#product-grid 容器不存在');
-//       return;
-//     }
-
-//     // 清空舊內容避免重複
-//     container.innerHTML = '';
-
-//     productList.forEach((product) => {
-//       // Bootstrap column 外層
-//       const col = document.createElement('div');
-//       col.className = 'col';
-
-//       // 卡片
-//       const card = document.createElement('div');
-//       card.className = 'card product-card h-100';
-//       card.dataset.id = product.id;         // 保留你的 data-id
-//       card.style.width = '100%';            // 交給格線排版
-
-//       // 圖片 URL（直接用你回傳的 mainImage）
-//       const imgUrl = product.mainImage || '/img/placeholder.png';
-
-//       card.innerHTML = `
-//         <img class="card-img-top" src="${imgUrl}" alt="${product.name ?? ''}" loading="lazy">
-//         <div class="card-body d-flex flex-column">
-//           <h5 class="card-title mb-1">${product.name ?? ''}</h5>
-//           <p class="card-text text-muted mb-2">ID: ${product.id}</p>
-//           <p class="card-text flex-grow-1">${product.description ?? ''}</p>
-//           <div class="mt-auto">
-//             <div class="d-flex justify-content-between align-items-center">
-//               <span class="fw-bold">NT$ ${product.price ?? ''}</span>
-//               <small class="text-muted">庫存 ${product.stock ?? 0}</small>
-//             </div>
-//           </div>
-//         </div>
-//       `;
-
-//       // 點卡片導到詳情頁（可保留）
-//       card.addEventListener('click', () => {
-//         location.href = `../product/product.html?id=${encodeURIComponent(product.id)}`;
-//       });
-
-//       col.appendChild(card);
-//       container.appendChild(col);
-//     });
-//   });
-// });
 
 //?, orders: [{prop:'price',asc: false}, {prop:'id', asc:true}]
 document.addEventListener('DOMContentLoaded', () => {
