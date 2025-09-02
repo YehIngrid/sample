@@ -15,6 +15,35 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+//???
+document.querySelectorAll('.shopcart').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!id) {
+        console.warn('尚未寫入 data-id（可能商品還沒載完）');
+        return;
+      }
+      try {
+        await backendService.addItemsToCart(id);
+        Swal.fire({
+          title: '已加入購物車！',
+          text: `商品編號 ${id} 已加入購物車`,
+          icon: 'success',
+          confirmButtonText: '好的'
+        });
+      } catch (err) {
+        Swal.fire({
+          title: '加入失敗',
+          text: err?.message || '請稍後再試',
+          icon: 'error',
+          confirmButtonText: '知道了'
+        });
+      }
+    })
+  })
+
+//??
+
+
   const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span>NT$</span>`;
   const toArray = (v) => Array.isArray(v) ? v : (v ? [v] : []);
   const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u)); // 如需前綴可在此加
