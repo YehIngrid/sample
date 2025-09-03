@@ -1,6 +1,4 @@
-html {
-    font-size: 62.5%;
-}
+
 * {
     margin: 0;
     padding: 0;
@@ -30,17 +28,7 @@ html {
 .searchpic:hover {
     color: white !important;
 }
-/* TODO line官方logo */
-.line {
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    padding-top: 2px;
-}
-.line i{
-    color: #86D97B;
-    font-size: 28px;
-}
+
 .header {
     display: block;
     background-color: rgba(255, 255, 255);
@@ -98,10 +86,10 @@ ul{
     padding: 2rem;
     margin-top: 20vh;
     padding-bottom: 10px;
-    font-size:1.6rem;
+    font-size:1.2rem;
 }
 .footer h3 {
-    font-size: 2rem;
+    font-size: 1.6rem;
     margin-bottom: 1.2rem;
     color: #f0f6fd;
 }
@@ -121,7 +109,7 @@ ul{
 .footer-row li a {
     color: white;
     text-decoration: none;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 
 /* 使用 flex-wrap 讓 navbar 內容可換行 */

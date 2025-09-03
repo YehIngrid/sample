@@ -45,139 +45,90 @@
       <div id="whatcontent" class="d-none">
   <!-- Header -->
   <div class="header">
+    
     <!-- 響應式選單 -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
-      <div class="container-fluid d-flex align-items-center">
+        <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
+          <div class="container-fluid d-flex align-items-center">
 
-        <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
-        <button class="navbar-toggler d-lg-none me-2 order-0"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarNav"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+            <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
+            <button class="navbar-toggler d-lg-none me-2 order-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"   
+                    aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <!-- (ALL) Logo -->
-        <a class="navbar-brand picture order-1 me-4"
-           href="../newhome.html">
-          <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫登入頁面"
-               style="width: 100px; margin-right: 10px; border-radius: 0%;">
-        </a>
+            <!-- (ALL) Logo -->
+            <a class="navbar-brand picture order-1 me-4"
+              href="../newhome.html">
+              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫登入頁面"
+                  style="width: 100px; margin-right: 10px; border-radius: 0%;">
+            </a>
 
-        <!-- (DESKTOP) 導覽選單：桌機顯示 -->
-        <div class="d-none d-lg-flex order-2">
-          <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome.html">首頁</a></li>
-            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
-            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
-            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
-            <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
-            <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
-          </ul>
-        </div>
+            <!-- (DESKTOP) 導覽選單：桌機顯示 -->
+            <div class="d-none d-lg-flex order-2">
+              <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
+                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
+              </ul>
+            </div>
 
-        <!-- (RIGHT) 右側：登入 + 購物車（所有尺寸都有；用 ms-auto 推到最右） -->
-        <div class="d-flex align-items-center ms-auto order-3">
-          <div class="login me-2">
-            <a id="username" class="username" href="../person/person.html"></a>
-            <a class="navbar-brand" href="account.html" id="loginornot">登入</a>
+            <!-- (RIGHT) 右側：登入 + 購物車（所有尺寸都有；用 ms-auto 推到最右） -->
+            <div class="d-flex align-items-center ms-auto order-3">
+              <div class="login me-2">
+                <a id="username" class="username" href="../person/person.html"></a>
+                <a class="navbar-brand" href="account.html" id="loginornot">登入</a>
+              </div>
+              <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
+                <img src="../webP/shoppingcart.webp" alt="我的購物車">
+              </a>
+            </div>
           </div>
-          <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
-            <img src="../webP/shoppingcart.webp" alt="我的購物車">
-          </a>
-        </div>
-      </div>
 
-      <!-- (MOBILE) 手機版導覽選單展開內容：手機顯示，放在同一個 nav 內 -->
-      <div class="collapse mt-2 d-lg-none" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
-          <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
-          <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
-          <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
-          <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
-          <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
-        </ul>
-      </div>
-    </nav>
+          <!-- (MOBILE) 手機版導覽選單展開內容 -->
+          <div class="collapse mt-2 d-lg-none" id="navbarNav"> <!-- ✅ 沒有 show -->
+            <ul class="navbar-nav">
+              <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
+              <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
+              <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+              <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
+              <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
+              <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
+            </ul>
+          </div>
+        </nav>
+
   </div>
 </div>
-
-
-      <!-- <div id="whatcontent" class="d-none">
-        <!-- TODO header 
-        <div class="header ">
-            <!--TODO 響應式選單
-            <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
-              <div class="container-fluid d-flex align-items-center sticky-top">
-            
-                <!-- (A) LOGO 放在最左邊 
-                <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
-                  <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫登入頁面" style="width: 100px; margin-right: 10px; border-radius: 0%;">
-                </a>
-            
-                <!-- (B) 桌機版導覽選單 
-                <div class="d-none d-lg-flex">
-                  <ul class="navbar-nav" >
-                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome.html">首頁</a></li>
-                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
-                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
-                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
-                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
-                    <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
-                  </ul>
-                </div>
-            
-                <!-- (C) 右側：登入 + 購物車 
-                <div class="d-flex align-items-center ms-auto">
-                  <div class="login">
-                    <a id="username" class="username" href="../person/person.html"></a>
-                    <a class="navbar-brand" href="account.html" id="loginornot">登入</a>
-                  </div>
-                  <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
-                    <img src="../webP/shoppingcart.webp" alt="我的購物車">
-                  </a>
-                </div>
-              </div>
-            </nav>
-            
-            
-            
-              <!-- 手機版導覽選單展開內容 
-              <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
-                <ul class="navbar-nav">
-                  <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
-                  <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
-                  <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
-                  <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
-                  <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
-                  <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
-                </ul>
-              </div>
-            </div>
-        </div>
-      </div> -->
         <!-- TODO content -->
         <div class="form-signin">
           <div class="content">
             <div id="loginModal" class="contentoflogin">
               <div class="modalwhat glass-card">
                 <form id="loginForm">
-                  <h1 class="h1">登入<br><br></h1>
+                  <h2>登入<br><br></h2>
                   <div class="form-floating">
                     <input type="email" class="form-control form-control-lg" id="floatingInput" placeholder="s4113001001@mail.nchu.edu.tw">
-                    <label for="floatingInput">請輸入學校提供的電子信箱</label>
+                    <label for="floatingInput">請輸入您的電子信箱</label>
                   </div>
                   <br>
                   <div class="form-floating">
                     <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password">
                     <label for="floatingPassword">請輸入密碼</label>
                   </div>
-                  <button type="submit" id="send">登入</button>
+                  <div class="d-flex align-items-center mt-3 mb-2">
+                    <input type="checkbox" id="rememberMe" style="margin-left: 10px;"><span style=" margin-left: 10px;">記住我</span> 
+                  </div>
+                  <button type="submit" id="send" class="css-button-gradient--4">登入</button>
                   <br>
+                  
                   <a href="#" class="p">忘記密碼？</a>
                   
                 </form>
@@ -190,7 +141,7 @@
               <div id="signupModal" class="modalwhat glass-card" >
                 <form id="signupForm">
                   <a class="backlogin" id="backlogin">返回登入頁</a>
-                  <h1 class="h1">註冊<br><br></h1>
+                  <h2>註冊<br><br></h2>
                   <div class="form-floating form-signemail">
                   <input class="form-control" type="email" id="email" placeholder="請使用學校的電子郵件註冊">
                   <label for="floatingInput">請使用學校的電子郵件註冊</label>
@@ -207,7 +158,7 @@
                   <input class="form-control" type="text" id="name" placeholder="請輸入暱稱">
                   <label for="floatingInput" >請輸入您的暱稱</label>
                   </div>
-                  <button type="submit" id="sign" class="signbtn">註冊</button>
+                  <button type="submit" id="sign" class="signbtn css-button-gradient--4">註冊</button>
                   <p class="policy">註冊即表示您同意<a>服務條款</a>與<a href="../policy/policy.html">隱私權政策</a></p>
                 </form>
               </div>

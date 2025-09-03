@@ -7,7 +7,7 @@
     justify-content: center;
     max-width: 900px;
     padding: 30px;
-    background-color: white;
+    background: linear-gradient(to right, #d4fcff, #c5dcff);
   }
   @media (max-width: 380px) {
     .form-container {
@@ -16,7 +16,7 @@
       margin: 40px auto;
     }
     .form-container h2 {
-      font-size: 1.8rem;
+      font-size: 1.4rem;
       margin-bottom: 0;
       text-align: center;
     }
@@ -24,7 +24,7 @@
   /* 標題樣式 */
   .form-container h2 {
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.6rem;
     margin-bottom: 18px;
     line-height: 1.6;
     color:#383838
@@ -43,7 +43,7 @@
     min-width: 300px;
     height: 324px;
     padding: 15px;
-    font-size: 1.3rem !important;
+    font-size: 1.2rem !important;
     border: 1px solid #ccc;
     border-radius: 8px;
     resize: none;
@@ -60,16 +60,16 @@
   
   /* 標籤樣式 */
   .input-group label {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: bold;
-    color:rgb(95, 95, 95);
+    color:#6d6d6d;
   }
   
   /* 輸入框樣式 */
   .input-group input {
     width: 100%;
     padding: 10px;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     border: 1px solid #ccc;
     border-radius: 6px;
     box-sizing: border-box;
@@ -82,12 +82,12 @@
     margin-left: 70%;
     /* width: 30%; */
     padding: 10px;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: white;
     background: #004b97;
     border: none;
-    border-radius: 6px !important;
+    border-radius: 50px !important;
     cursor: pointer;
     transition: background 0.3s ease;
   }
@@ -98,14 +98,13 @@
     color:rgb(255, 255, 255);
   }
 
-.content{
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.contentofcommunication {
+  margin-top: 10vh;
+  margin-bottom: 10vh;
 }
-@media (max-width: 689px) {
-  .content{
-      margin-top: 10vh;
+@media (max-width: 768px) {
+  .contentofcommunication {
+    margin-top: 0vh;
+    margin-bottom: 5vh;
   }
 }

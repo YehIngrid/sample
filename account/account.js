@@ -8,24 +8,6 @@ window.onload = function() {
   }
 };
 
-// DOMContentLoaded 事件：設定手機版搜尋功能
-document.addEventListener('DOMContentLoaded', function() {
-  const mobileSearchIcon = document.getElementById('mobileSearchIcon');
-  const searchForm = document.getElementById('searchForm');
-  
-  if (mobileSearchIcon && searchForm) {
-    mobileSearchIcon.addEventListener('click', function() {
-      mobileSearchIcon.style.display = 'none';
-      searchForm.style.display = 'flex';
-      
-      // 將游標自動移至搜尋輸入框
-      const input = searchForm.querySelector('input');
-      if (input) {
-        input.focus();
-      }
-    });
-  }
-});
  // 註冊函式：取得註冊表單欄位並呼叫後端 API
 async function callSignUp(){
   const emailInput = document.getElementById('email');
@@ -33,13 +15,6 @@ async function callSignUp(){
   const passwordInput2 = document.getElementById('password2');
   const nameInput = document.getElementById('name');
   
-  if (!emailInput.value || !passwordInput1.value || !passwordInput2.value || !nameInput.value) {
-    Swal.fire({
-      title: "請填寫所有必填資訊",
-      icon: "warning"
-    });
-    return;
-  }
   //TODO:email's limit
   // if(!emailInput.value.endsWith('@mail.nchu.edu.tw')){
   //   Swal.fire({
@@ -61,14 +36,6 @@ async function callSignUp(){
     return;
   }
 
-  // if(passwordInput1.value.length < 6 || /[a-zA-Z]/.test(passwordInput1.value)|| /[0-9]/.test(passwordInput1.value)){
-  //   Swal.fire({
-  //     title: "密碼不符合最低要求",
-  //     icon: "warning",
-  //     text: "請重新設定一組新密碼"
-  //   });
-  //   return;
-  // }
   if (passwordInput1.value !== passwordInput2.value) {
     Swal.fire({
       title: "密碼輸入不一致",
@@ -113,58 +80,26 @@ async function callSignUp(){
     let errorMessage = signupError.message;
     document.getElementById('loader-wrapper').style.display = 'none';
     console.log("回傳資料：", errorMessage);
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: errorMessage
-    });
+    if(error.response?.data?.message === "Email already exists"){
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "此帳號已被註冊"
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text:"系統發生錯誤，請稍後再試"
+        });
+      }
   }
-  
-  
-  // axios.post('https://store-backend-iota.vercel.app/api/account/signup', obj)
-  //   .then(function (response) {
-  //     // 隱藏 loader
-  //     document.getElementById('loader-wrapper').style.display = 'none';
-
-  //     console.log("回傳資料：", response.data);
-  //     if(response.data.message == "User created successfully"){
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "帳號註冊成功",
-  //         showConfirmButton: false,
-  //         footer: "即將返回登入頁面",
-  //         timer: 1800
-  //       });
-  //       setTimeout(() => {
-  //         window.location.href = "account.html";
-  //       }, 2000);
-  //     } 
-  //   })
-  //   .catch(function (error) {
-  //     // 隱藏 loader
-  //     document.getElementById('loader-wrapper').style.display = 'none';
-
-  //     console.error("註冊錯誤：", error);
-  //     if(error.response?.data?.message === "Email already exists"){
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Oops...",
-  //         text: "此帳號已被註冊"
-  //       });
-  //     } else {
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Oops...",
-  //         text:"系統發生錯誤，請稍後再試"
-  //       });
-  //     }
-  //   });
 }
 
 function callLogin() {
   const email = document.getElementById('floatingInput');
   const password = document.getElementById('floatingPassword');
-
+  const rememberMe = document.getElementById('rememberMe').checked;
 
   // TODO:  Input check 
 
@@ -182,12 +117,18 @@ function callLogin() {
       Swal.fire({
         icon: "success",
         title: "登入成功",
-        text: `歡迎回來！`,//!越改越錯....破防
+        text: `歡迎回來！`,
         showConfirmButton: false,
         timer: 2100
       })
       .then(async () => {
         await backendService.getUserData();
+        // if (rememberMe) {
+        //   localStorage.setItem('email', email.value);
+        // } else {
+        //   sessionStorage.setItem('password', email.value);
+        // }
+
         window.location.href = "../shop/shoppingpage_bootstrap.html"; // 登入成功後跳轉到首頁
         
       });
@@ -207,12 +148,25 @@ function callLogin() {
 const signbtn = document.getElementById('sign');
 signbtn.addEventListener('click', function(e){
     e.preventDefault();
-    console.log("hi");
+    if(!document.getElementById('email').value || !document.getElementById('password1').value || !document.getElementById('password2').value || !document.getElementById('name').value){
+      Swal.fire({
+        title: "請填寫所有必填資訊",
+        icon: "warning"
+      });
+      return;
+    }
     callSignUp();
   })
 const loginbtn = document.getElementById('send');
 loginbtn.addEventListener('click', function(e){
     e.preventDefault();
+    if(!document.getElementById('floatingInput').value || !document.getElementById('floatingPassword').value){
+      Swal.fire({
+        title: "請填寫所有必填資訊",
+        icon: "warning"
+      });
+      return;
+    }
     callLogin();
 });
 
@@ -234,55 +188,6 @@ loginbtn.addEventListener('click', function(e){
       loginpage.style.setProperty('display', 'block', 'important');
     }
   })
-// const signbtn = document.getElementById('sign');
-// signbtn.addEventListener('click', function(e){
-//   e.preventDefault();
-//   console.log("hi");
-//   callSignUp();
-// })
-// const signup = document.getElementById('signupLink');
-// const backlogin = document.getElementById('backlogin');
-// const signuppage = document.getElementById('signuppage');
-// const loginpage = document.getElementById('loginModal');
-// signup.addEventListener('click', function(e){
-
-//   if (signuppage && loginpage) {
-//     signuppage.style.setProperty('display', 'block', 'important');
-//     loginpage.style.setProperty('display', 'none', 'important');
-//   }
-// })
-// backlogin.addEventListener('click', function(e){
-//   if (signuppage && loginpage) {
-//     signuppage.style.setProperty('display', 'none', 'important');
-//     loginpage.style.setProperty('display', 'block', 'important');
-//   }
-// })
-
-// 切換密碼顯示/隱藏（點擊眼睛圖示）
-$("#checkEye").click(function () {
-  if($(this).hasClass('fa-eye')){
-     $("#floatingPassword").attr('type', 'text');
-  } else {
-     $("#floatingPassword").attr('type', 'password');
-  }
-  $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
-});
-$("#checkEye1").click(function () {
-  if($(this).hasClass('fa-eye')){
-     $("#password1").attr('type', 'text');
-  } else {
-     $("#password1").attr('type', 'password');
-  }
-  $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
-});
-$("#checkEye2").click(function () {
-  if($(this).hasClass('fa-eye')){
-     $("#password2").attr('type', 'text');
-  } else {
-     $("#password2").attr('type', 'password');
-  }
-  $(this).toggleClass('fa-eye').toggleClass('fa-eye-slash');
-});
 
   function handleScroll() {
     const scrollY = window.scrollY;
@@ -291,4 +196,3 @@ $("#checkEye2").click(function () {
     });
   }
   window.addEventListener('scroll', handleScroll);
-

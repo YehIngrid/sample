@@ -44,17 +44,31 @@
         <!-- TODO header -->
         <div class="header">
             <!--TODO 響應式選單-->
-        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
-          <div class="container-fluid d-flex align-items-center sticky-top">
-        
-            <!-- (A) LOGO 放在最左邊 -->
-            <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
-              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫常見問題" style="width: 100px; border-radius: 0%;">
+        <!-- 響應式選單 -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
+          <div class="container-fluid d-flex align-items-center">
+
+            <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
+            <button class="navbar-toggler d-lg-none me-2 order-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"   
+                    aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- (ALL) Logo -->
+            <a class="navbar-brand picture order-1 me-4"
+              href="../newhome.html">
+              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫登入頁面"
+                  style="width: 100px; margin-right: 10px; border-radius: 0%;">
             </a>
-        
-            <!-- (B) 桌機版導覽選單 -->
-            <div class="d-none d-lg-flex">
-              <ul class="navbar-nav" >
+
+            <!-- (DESKTOP) 導覽選單：桌機顯示 -->
+            <div class="d-none d-lg-flex order-2">
+              <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome.html">首頁</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
@@ -63,23 +77,21 @@
                 <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
               </ul>
             </div>
-        
-            <!-- (C) 右側：登入 ＋ 購物車 -->
-            <div class="d-flex align-items-center ms-auto">
-              <div class="login">
+
+            <!-- (RIGHT) 右側：登入 + 購物車（所有尺寸都有；用 ms-auto 推到最右） -->
+            <div class="d-flex align-items-center ms-auto order-3">
+              <div class="login me-2">
                 <a id="username" class="username" href="../person/person.html"></a>
-                <a class="navbar-brand" href="../account/account.html" id="loginornot">登入</a>
+                <a class="navbar-brand" href="account.html" id="loginornot">登入</a>
               </div>
               <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
-                <img src="../svg/shoppingcart.svg" alt="我的購物車">
+                <img src="../webP/shoppingcart.webp" alt="我的購物車">
               </a>
             </div>
           </div>
-        </nav>
-        
-        
-          <!-- 手機版導覽選單展開內容 -->
-          <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
+
+          <!-- (MOBILE) 手機版導覽選單展開內容 -->
+          <div class="collapse mt-2 d-lg-none" id="navbarNav"> <!-- ✅ 沒有 show -->
             <ul class="navbar-nav">
               <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
               <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
@@ -89,30 +101,26 @@
               <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
           </div>
-        </div>
-        
+        </nav>
     </div>
-     
-  
-          </div>
+</div>
         <div class="all">
         <!-- TODO content -->
         <div class="content">
          <!-- 側邊欄：每個連結的 href 指向對應內容區的 id -->
-  <nav class="sortofqs">
-    <ul>
-      <li><a href="#賣家">賣家</a></li>
-      <li><a href="#買家">買家</a></li>
-      <li><a href="#會員專區">會員專區</a></li>
-      <li><a href="#校園攻略站-創作者">校園攻略站-創作者</a></li>
-      <li><a href="#校園攻略站-讀者">校園攻略站-讀者</a></li>
-    </ul>
-  </nav>
+            <nav class="sortofqs">
+              <ul>
+                <li><a href="#賣家">賣家</a></li>
+                <li><a href="#買家">買家</a></li>
+                <li><a href="#會員專區">會員專區</a></li>
+                <li><a href="#校園攻略站-創作者">校園攻略站-創作者</a></li>
+                <li><a href="#校園攻略站-讀者">校園攻略站-讀者</a></li>
+              </ul>
+            </nav>
 
   <!-- 主內容區：包含多個有唯一 id 的區塊 -->
   <main>
     <h1 data-shadow='FAQ'>FAQ</h1>
-    <!-- <img src="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/qanda.webp" alt="q and a picture"> -->
     <section id="賣家">
       <h2>賣家</h2>
       <ul class="faq-list">
@@ -454,21 +462,6 @@
               <p class="d-flex">
                   <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 3rem; padding-right: 18px;"></i></a><br>
                   <a href="#" target="_blank"><i class="fa-brands fa-line" style="font-size: 3rem;"></i></a>
-              </p>
-          </div>
-          <div class="col-md-4 d-lg-none d-block" style="padding-left: 30px;"> 
-              <h3>常用連結</h3>
-              <p class="d-flex">
-                  <a href="../shop/shoppingpage_bootstrap.html" style="margin-right: 5px;">購物首頁</a>
-                  <a href="../school/school.html" style="margin-right: 5px;">校園攻略站</a>
-                  <a href="../introduce/introduce.html" style="margin-right: 5px;">關於我們</a>
-                  <a href="../questions/questions.html">常見問題</a>
-              </p>
-              <p class="d-flex">
-                <a href="../communication/communication.html" style="margin-right: 5px;">客服諮詢</a>
-                <a href="../policy/policy.html" style="margin-right: 5px;">隱私政策</a>
-                <a href="#" style="margin-right: 5px;">使用條款</a>
-                <a href="#">退換貨政策</a>
               </p>
           </div>
       </div>

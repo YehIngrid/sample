@@ -27,31 +27,4 @@ window.onload = function() {
     }
   });
 
-  // TODO 登入函式
-  function callLogIn() {
-    const floatingInput = document.getElementById('floatingInput');
-    const floatingPassword = document.getElementById('floatingPassword');
-    const loader = document.getElementById('loader-wrapper1');
   
-    if (!floatingInput || !floatingPassword) {
-      console.error("無法取得登入欄位，請確認元素 id 是否正確");
-      return;
-    }
-  
-    if (!floatingInput.value || !floatingPassword.value) {
-      Swal.fire({
-        title: "請填寫所有必填資訊",
-        icon: "warning"
-      });
-      return;
-    }
-  
-    // ✅ 顯示 loading
-    loader.style.display = 'flex';
-  
-    let obj = {
-      email: floatingInput.value,
-      password: floatingPassword.value
-    };
-  
-}

@@ -10,7 +10,7 @@ thead th{
     background-color:#004b97aa;
     color: #fff;
     font-weight: 500;
-    font-size:1.6rem;
+    font-size:1.2rem;
     font-family: 'TimeMachine';
     padding-top: 10px;
     padding-bottom: 10px;
@@ -20,17 +20,7 @@ thead th{
     padding-right: 15vw;
     padding-top: 50px;
 }
-/* tbody a{
-    display: block;
-    padding-left: 30px;
-    padding-right: 30px;
-    text-decoration: none;
-    font-size: 18px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    text-align: left;
-    color: black;
-} */
+
 tbody td{
     border-bottom: solid 1px #004b97aa;
     font-size: 14px;
@@ -42,7 +32,7 @@ tbody td{
 }
 .time{
     color:#004b97aa;
-    font-size:1.3rem;
+    font-size:1rem;
 }
 thead {
   display: table-header-group; /* 確保 <th> 保持在表格上方 */
@@ -54,9 +44,9 @@ tbody {
   color: #004b97aa !important;
   border: none !important;
   margin-bottom: 0px !important;
-  font-size: large !important;
+  font-size: 1.3rem !important;
   font-family: 'TimeMachine' !important;
-  font-weight: 800 !important;
+  font-weight: 600 !important;
 }
 .content .nav-link.active{
     background-color: #004b97aa !important;
@@ -69,7 +59,7 @@ tbody {
   color: rgb(74, 75, 80) !important;
 }
 .name{
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #004b97;
   text-decoration: none;
@@ -84,7 +74,7 @@ tbody {
   
 }
 .name:hover{
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   color: #004b97aa;
 }
 .pagechange{
@@ -95,7 +85,7 @@ tbody {
 }
 .pagechange a{
   color: #004b97;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-weight: 700;
   /* padding-left: 10px; */
   /* padding-right: 10px; */
@@ -106,20 +96,19 @@ tbody {
 }
 .pagechange .active{
   color: #dc0000aa;
-  font-size: 1.6rem;
-  font-weight: 800;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 .pagechange button{
   background-color: #004b97aa;
   color: white;
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 600;
   border: none;
   padding-left: 10px;
   padding-right: 10px;
   margin-left: 1vw;
   margin-right: 1vw;
-  font-family: 'TimeMachine';
   border-radius: 3px;
 }
 @media (max-width: 908px) {
@@ -128,7 +117,7 @@ tbody {
     padding-right: 5vw;
   }
   .pagechange button{
-    font-size: 1.4rem;
+    font-size: 1.1rem;
   }
   
 }
@@ -138,7 +127,7 @@ tbody {
     padding-right: 2vw;
   }
   .pagechange button{
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 }
 /* 小螢幕時，改成「卡片」樣式 */
@@ -178,8 +167,8 @@ tbody {
   }
   /* 6. 中間標題留出空間，避免和上方/下方重疊 */
   .news td.name {
-    margin-top: 1.5rem;  /* 留空給 announce */
-    margin-bottom: 1.5rem; /* 留空給 time */
+    margin-top: 1.2rem;  /* 留空給 announce */
+    margin-bottom: 1.2rem; /* 留空給 time */
   }
 }
 .newsimg{
@@ -206,7 +195,7 @@ tbody {
   
 }
 .detail-title {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   font-weight: bold;
   padding-bottom: 1%;
 }
@@ -218,23 +207,21 @@ tbody {
   padding-top: 40px;
   line-height: 1.8;
   border-top: #666 1px solid;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 }
 .backbtn{
   color: #004b97aa;
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 600;
   text-decoration: none;
   border: none;
-  font-family: 'TimeMachine' !important;
   background-color: white;
   margin-bottom: 3%;
 }
 .btnchi{
   color: #004b97aa;
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 600;
   text-decoration: none;
-  font-family: 'TimeMachine' !important;
   background-color: white;
 }

@@ -581,19 +581,78 @@
       <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         <div class="form-store">
           <h1 class="infortitle">商品資料填寫</h1>
-          <button id="openModal" class="animated-button">請點擊我看詳細資訊！</button>
+          <!-- 按鈕 -->
+          <button id="openModal" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#myModal">
+            請點擊我看詳細資訊！
+          </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                  
+                  <!-- 標題列 -->
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">商品分類與規格說明</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+                  </div>
+
+                  <!-- 內容 -->
+                  <div class="modal-body">
+                    <p><strong>所屬分類</strong></p>
+                    <ol>
+                      <li>書籍與學習用品：<br>教科書、參考書、文具用品（如計算機、繪圖工具、筆記本）、學習卡片、筆記/習題集等。</li>
+                      <li>宿舍與生活用品：<br>床墊、衣架、燈具等宿舍用品、小型廚房用品（如電鍋、餐具）、風扇、暖風機等生活設備。</li>
+                      <li>學生專用器材：<br>實驗器材（護目鏡、手套等）、測量工具（如尺規、測量儀）等。</li>
+                      <li>環保生活用品：<br>環保餐具（如可重複使用的餐具組、餐盒、水瓶）、購物袋、手提袋等。</li>
+                      <li>儲物與收納用品：<br>收納盒、文件夾、掛鉤、收納架等。</li>
+                      <li>其他：<br>若不知道自己販賣的商品類別為何，請選擇其他。</li>
+                    </ol>
+
+                    <p><strong>商品尺寸</strong></p>
+                    <ol>
+                      <li>大型：<br>長度/寬度/高度大於150cm，容量大於5L。</li>
+                      <li>中型：<br>長度/寬度/高度30cm到150cm，容量1L到5L。</li>
+                      <li>小型：<br>長度/寬度/高度小於30cm，容量小於1L。</li>
+                    </ol>
+
+                    <p><strong>新舊程度</strong></p>
+                    <ol>
+                      <li>全新：完全未使用，包裝完好。</li>
+                      <li>幾乎全新：使用過一次或兩次，狀況極佳，幾乎沒有磨損。</li>
+                      <li>半新：使用過，狀況良好，可能有輕微磨損。</li>
+                      <li>適中：明顯使用過，狀況普通，可能有明顯的使用痕跡，但仍可正常使用。</li>
+                      <li>稍舊：使用時間較長，狀況一般，有顯著的磨損或損壞，但仍可使用。</li>
+                      <li>全舊：使用過度，可能有重大缺陷或損壞，建議僅用於某些用途或需要修理。</li>
+                    </ol>
+
+                    <p><strong>主要照片：</strong>一張，且為封面照</p>
+                    <p><strong>其他照片：</strong>可傳多張（最多5張），會放在商品的詳細資訊內</p>
+                  </div>
+
+                  <!-- 底部 -->
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
           <form
               id="createCommodityForm"
               enctype="multipart/form-data" 
           >
           <div class="df">
           <div class="left_form">
-            <label for="name">商品名稱</label>
+              <label for="name">商品名稱</label>
               <input type="text" id="name" name="name" placeholder="建議使用正式名稱" /><br />
-      
-              <label for="description">商品狀態描述</label><br>
-              <small class="text-muted" style="font-size: 1.4rem;">可以詳細列出: 商品規格、注意事項、BSMI、ISBN等</small>
-              <textarea placeholder="可以說明販售原因、商品瑕疵部位等，建議30字以上" id="description" name="description" rows="10" cols="30"></textarea>
+              <div class="d-flex flex-column">
+                  <label for="description">商品狀態描述</label>
+                  <small class="text-muted" style="font-size: 1.4rem; color: #004b97 !important;">可以詳細列出: 商品規格、注意事項、BSMI、ISBN等</small>
+                  <textarea class="text-start" placeholder="可以說明販售原因、商品瑕疵部位等，建議30字以上" id="description" name="description" rows="10" cols="30"></textarea>
+              </div>
+              
               <br/>
       
               <label for="price">售價</label>
@@ -608,7 +667,7 @@
                 <option value="clean">儲物與收納用品</option>
                 <option value="other">其他</option>
               </select>
-              <small class="text-muted" style="font-size: 1.4rem;">若不清楚請點擊左上角詳細資訊</small><br />
+              <br />
               <label for="stock">庫存</label>
               <input type="number" id="stock" name="stock" placeholder="可販賣數量"/><br />
           </div>
@@ -620,7 +679,8 @@
               <input type="radio" id="size_small" name="size" value="0"/><label for="size_small" class="formpricespan">小</label>
               <br />
               <label for="neworold">新舊程度</label>
-              <small class="text-muted" style="font-size: 1.4rem;">商品外觀狀態;若不清楚請點擊左上角詳細資訊</small><br>
+              <br>
+              <small class="text-muted" style="font-size: 1.4rem; color: #004b97 !important;">商品外觀狀態 ; 若不清楚請點擊此表單左上角詳細資訊</small><br>
               <input type="radio" id="neworold_1" name="new_or_old" value="1"><label for="neworold_1" class="formpricespan">全新</label>
               <input type="radio" id="neworold_2" name="new_or_old" value="2"><label for="neworold_2" class="formpricespan">幾乎全新</label>
               <input type="radio" id="neworold_3" name="new_or_old" value="3"><label for="neworold_3" class="formpricespan">半新</label><br>
@@ -630,26 +690,35 @@
               <label for="age">物品年齡</label>
               <input type="number" id="age" name="age" placeholder="未知請填-1"/><span class="formpricespan">年</span><br />
               <label for="mainImage">主要照片</label>
-              <small class="text-muted" style="font-size: 1.4rem;">(照片需 ≤ 5MB)</small>
-              <input
-                  type="file"
-                  id="mainImage"
-                  name="mainImage"
-                  accept="image/jpeg,image/png,image/gif,image/webp"
-                  /><br/>
-                  <div id="mainImagePreview" style="margin-top: 10px;"></div>
+              <br>
+              <small class="text-muted" style="font-size: 1.4rem; color: #004b97 !important;">(照片需 ≤ 5MB，必須為實體照，格式僅支援JPEG, PNG, JPG, WebP)</small>
+              <div class="col-6" style="margin-top: 10px;">
+                  <input
+                      type="file"
+                      id="mainImage"
+                      name="mainImage"
+                      class="form-control"
+                      accept="image/jpeg,image/png,image/gif,image/webp"
+                  />
+              </div>
+              <br/>
+                <div id="mainImagePreview"></div>
               <label for="images">其他照片</label>
-              <small class="text-muted" style="font-size: 1.4rem;">(最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB)</small>
-              <input
-                  type="file"
-                  id="image"
-                  name="images"
-                  accept="image/jpeg,image/png,image/gif,image/webp"
-                  multiple
-                  
-              /><br />
+              <br>
+              <small class="text-muted" style="font-size: 1.4rem; color: #004b97 !important;">(最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB)</small>
+              <div class="col-6" style="margin-top: 10px;">
+                  <input
+                      type="file"
+                      id="image"
+                      name="images"
+                      accept="image/jpeg,image/png,image/gif,image/webp"
+                      multiple
+                      class="form-control"
+                  />
+              </div>
+              <br />
               <div id="previewArea" class="d-flex flex-wrap"></div>
-    <br>
+                <br>
               <button id="create" type="submit" class="submitbtn">一鍵販賣</button>
           </div>
         </div>
@@ -673,40 +742,7 @@
     </div>
       
   </section>
-  
 
-  <!-- 模態視窗 -->
-  <div id="myModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <p>所屬分類</p>
-      <ol>
-        <li>書籍與學習用品：<br>教科書、參考書、文具用品（如計算機、繪圖工具、筆記本）、學習卡片、筆記/習題集等。</li>
-        <li>宿舍與生活用品：<br>床墊、衣架、燈具等宿舍用品、小型廚房用品（如電鍋、餐具）、風扇、暖風機等生活設備。</li>
-        <li>學生專用器材：<br>實驗器材（護目鏡、手套等）、測量工具（如尺規、測量儀）等。</li>
-        <li>環保生活用品：<br>環保餐具（如可重複使用的餐具組、餐盒、水瓶）、購物袋、手提袋等。</li>
-        <li>儲物與收納用品：<br>收納盒、文件夾、掛鉤、收納架等。</li>
-        <li>其他：<br>若不知道自己販賣的商品類別為何，請選擇其他。</li>
-      </ol>
-      <p>商品尺寸</p>
-      <ol>
-        <li>大型：<br>長度/寬度/高度大於150cm，容量大於5L。</li>
-        <li>中型：<br>長度/寬度/高度30cm到150cm，容量1L到5L。</li>
-        <li>小型：<br>長度/寬度/高度小於30cm，容量小於1L。</li>
-      </ol>
-      <p>新舊程度</p>
-      <ol>
-        <li>全新：完全未使用，包裝完好。</li>
-        <li>幾乎全新：使用過一次或兩次，狀況極佳，幾乎沒有磨損。</li>
-        <li>半新：使用過，狀況良好，可能有輕微磨損。</li>
-        <li>適中：明顯使用過，狀況普通，可能有明顯的使用痕跡，但仍可正常使用。</li>
-        <li>稍舊：使用時間較長，狀況一般，有顯著的磨損或損壞，但仍可使用。</li>
-        <li>全舊：使用過度，可能有重大缺陷或損壞，建議僅用於某些用途或需要修理。</li>
-      </ol>
-      <p>主要照片：一張，且為封面照</p>
-      <p>其他照片：可傳多張（最多5張），會放在商品的詳細資訊內</p>
-    </div>
-  </div>
   
 <!-- TODO:許願池 -->
 <section class="wishpool" id="wishpool" style="display: none;">

@@ -42,7 +42,7 @@
 .product-category{
     padding: 10px;
     margin-left: 1vw;
-    font-size: 1.3rem;
+    font-size: 1rem;
 }
   .product-info {
     flex: 1;
@@ -56,7 +56,7 @@
   
   #product-price {
     color: #383838;
-    font-size: 4rem;
+    font-size: 3rem;
     margin-top: 10px;
     font-weight: 600;
     text-align: right;
@@ -67,7 +67,7 @@
       text-align: center;
       margin-right: 0px;
       padding-right: 20px;
-      font-size: 3rem;
+      font-size: 2rem;
     }
     
   }
@@ -107,7 +107,6 @@
     padding-top: 1vh;
     padding-bottom: 1vh;
     background-color: rgb(199, 244, 229);
-    font-size: 1.5rem;
     color: rgb(36,182,133);
   }
   .buy:hover{
@@ -119,7 +118,6 @@
     padding-top: 2vh;
     padding-bottom: 2vh;
     background-color: #cadff5;
-    font-size: 1.5rem;
     color: #004b97;
   }
   .shopcart:hover{
@@ -131,7 +129,7 @@
     
   }
   .describe p{
-    font-size: 1.8rem !important;
+    font-size: 1.1rem !important;
     /* max-width: 70vw;
     margin-left: 2vw;
     margin-top: 2vh; */
@@ -452,25 +450,26 @@
   padding: 5px 10px;
   border-radius: 3px;
   margin-top: 20px;
+  font-size: 1.4rem;
 }
 .rate {
   background-color: #cadff5;
   padding: 10px;
 }
 .rate h3 {
-  font-size: 5rem;
+  font-size: 4rem;
 }
 .rate h5 {
   margin-bottom: 10px;
 }
 .rate button {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
 }
 .checkbtn button{
   background: transparent;
   color: #004e9cc4;
   border: #004e9cc4 1px solid;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   border-radius: 7px;
   padding-bottom: 3px;
   padding-top: 3px;
@@ -480,11 +479,11 @@
   background-color: #004e9cc4;
 }
 .centerseller h3 {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
   margin-bottom: 15px;
 }
 .centerseller p {
-  font-size: 1.4rem;
+  font-size: 1rem;
 }
 .score-box{
   margin-top: 10px;

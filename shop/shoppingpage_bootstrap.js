@@ -279,7 +279,7 @@ Swal.fire({
     backendService.create(sellData, (
     response) => {
       Swal.fire({
-                  title: response,
+                  title: "商品上架成功!",
                   text: "請確認首頁商品欄有無您上架的商品",
                   icon: "success"
                 })

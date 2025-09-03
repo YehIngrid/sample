@@ -331,7 +331,6 @@ ul{
   }
   .form-store{
     background-color: #fbfbfb;
-    margin: 0rem;
     border-radius: 5px;
     padding: 4rem;
     padding-bottom: 7rem;
@@ -394,17 +393,6 @@ ul{
   cursor: pointer;
 }
 
-/* 設定按鈕的基本樣式以及綁定動畫 */
-.animated-button {
-  padding: 10px 20px;
-  font-size: 14px;
-  border: none;
-  color: #383838;
-  cursor: pointer;
-  border-radius: 5px;
-  background: linear-gradient(to right, #adf5d8, #b4d9fd);
-  margin-bottom: 1rem;
-}
 
 /* 滑鼠移到按鈕上時可以加個小效果 */
 .animated-button:hover {

@@ -1,183 +1,23 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>商品詳情頁範例</title>
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    /* 主圖容器：固定比例＋不失真 */
-    .main-img-box {
-      width: 100%;
-      max-width: 520px;          /* 你可以依需求調整 */
-      aspect-ratio: 1 / 1;       /* 固定為正方形容器 */
-      border: 1px solid #e5e7eb;
-      border-radius: .5rem;
-      overflow: hidden;
-      background: #fafafa;
-    }
-    .main-img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;       /* 不裁切、不變形地塞進容器 */
-    }
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <!-- Logo，order-2 表示在大螢幕排第二 -->
+    <a class="navbar-brand order-2 ms-lg-3" href="../newhome.html">Logo</a>
 
-    /* 縮圖樣式 */
-    .thumbs-rail {
-      max-height: 520px;
-      overflow: auto;
-    }
-    .thumb {
-      width: 72px;
-      height: 72px;
-      border: 1px solid #e5e7eb;
-      border-radius: .5rem;
-      object-fit: cover;
-      cursor: pointer;
-      transition: transform .12s ease, box-shadow .12s ease;
-    }
-    .thumb:hover { transform: translateY(-2px); }
-    .thumb.active {
-      box-shadow: 0 0 0 3px rgba(25,135,84,.35);
-      border-color: rgba(25,135,84,.6);
-    }
+    <!-- 漢堡按鈕 -->
+    <button class="navbar-toggler order-1" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    /* 讓左側圖片區在 md 以上並排；在手機維持上下排列 */
-    .left-pane {
-      gap: 1rem;
-    }
-    @media (min-width: 768px) {
-      .left-pane {
-        display: flex;
-        flex-direction: row;     /* md+：主圖在左、縮圖直排在右 */
-        align-items: flex-start;
-      }
-      .thumbs-rail {
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-      }
-    }
-    @media (max-width: 767.98px) {
-      .thumbs-rail {
-        display: flex;           /* 手機：縮圖改成橫向一排 */
-        gap: .5rem;
-      }
-    }
-
-    /* 大標與價格權重 */
-    .product-title { font-weight: 800; letter-spacing: .02em; }
-    .price { font-size: clamp(28px, 5vw, 48px); font-weight: 800; }
-
-    /* 兩顆主要按鈕做滿版並列 */
-    .cta-wrap > .btn { min-height: 48px; }
-
-    /* 讓資訊列更清楚 */
-    .meta dl { row-gap: .25rem; }
-    .meta dt { width: 7.5em; color: #6b7280; }
-    .meta dd { margin-left: 0; }
-  </style>
-</head>
-<body>
-  <div class="container my-5">
-    <div class="row g-4">
-      <!-- 左側：主圖＋縮圖列（手機會先顯示這整塊） -->
-      <div class="col-lg-6 order-1">
-        <div class="left-pane">
-          <!-- 主圖 -->
-          <div class="flex-grow-1 d-flex justify-content-center">
-            <div class="main-img-box">
-              <img id="mainImg" src="https://picsum.photos/id/1025/900/900" alt="商品主要圖片">
-            </div>
-          </div>
-          <!-- 縮圖列：桌機直排；手機排在主圖下方 -->
-          <div class="thumbs-rail mt-3 mt-md-0" aria-label="商品縮圖列表">
-            <img class="thumb active" src="https://picsum.photos/id/1025/300/300" data-full="https://picsum.photos/id/1025/900/900" alt="縮圖 1">
-            <img class="thumb" src="https://picsum.photos/id/237/300/300" data-full="https://picsum.photos/id/237/900/900" alt="縮圖 2">
-            <img class="thumb" src="https://picsum.photos/id/1069/300/300" data-full="https://picsum.photos/id/1069/900/900" alt="縮圖 3">
-            <img class="thumb" src="https://picsum.photos/id/1084/300/300" data-full="https://picsum.photos/id/1084/900/900" alt="縮圖 4">
-            <img class="thumb" src="https://picsum.photos/id/1074/300/300" data-full="https://picsum.photos/id/1074/900/900" alt="縮圖 5">
-          </div>
-        </div>
-      </div>
-
-      <!-- 右側：商品資訊（手機放在最下） -->
-      <div class="col-lg-6 order-2">
-        <h1 class="product-title h2 mb-2">商品名稱</h1>
-        <div class="d-flex align-items-baseline gap-2 mb-3">
-          <div class="price">999</div>
-          <div class="fs-6 fw-semibold">NT$</div>
-        </div>
-
-        <hr class="mb-4">
-
-        <div class="meta">
-          <dl class="row">
-            <dt class="col-sm-4 col-md-3">商品大小</dt><dd class="col-sm-8 col-md-9">大</dd>
-            <dt class="col-sm-4 col-md-3">商品年齡</dt><dd class="col-sm-8 col-md-9">4 年</dd>
-            <dt class="col-sm-4 col-md-3">新舊程度</dt><dd class="col-sm-8 col-md-9">全新</dd>
-            <dt class="col-sm-4 col-md-3">分類</dt><dd class="col-sm-8 col-md-9">其他</dd>
-            <dt class="col-sm-4 col-md-3">上架時間</dt><dd class="col-sm-8 col-md-9">2025/02/25 23:23</dd>
-            <dt class="col-sm-4 col-md-3">更新時間</dt><dd class="col-sm-8 col-md-9">2025/02/26 23:23</dd>
-          </dl>
-        </div>
-
-        <div class="mt-3 mb-2 text-muted">庫存：<span id="stock">5</span> 件</div>
-
-        <!-- 數量調整器 -->
-        <div class="d-flex align-items-center gap-2 my-3" style="max-width: 260px;">
-          <button id="minus" class="btn btn-outline-secondary" type="button" aria-label="減少">−</button>
-          <input id="qty" class="form-control text-center" type="text" value="1" inputmode="numeric" style="max-width: 90px;">
-          <button id="plus" class="btn btn-outline-secondary" type="button" aria-label="增加">＋</button>
-        </div>
-
-        <!-- 主要行動按鈕 -->
-        <div class="cta-wrap d-flex gap-3 mt-4">
-          <button class="btn btn-success flex-fill" type="button">馬上下單</button>
-          <button class="btn btn-primary flex-fill" type="button">加入購物車</button>
-        </div>
-      </div>
+    <!-- 導覽清單，order-0 表示在大螢幕最左邊 -->
+    <div class="collapse navbar-collapse order-0" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
+        <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
+        <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+        <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
+      </ul>
     </div>
   </div>
-
-  <script>
-    // === 縮圖點擊：切換主圖 ===
-    const mainImg = document.getElementById('mainImg');
-    const thumbs = document.querySelectorAll('.thumb');
-    thumbs.forEach(t => {
-      t.addEventListener('click', () => {
-        // 換主圖
-        const full = t.getAttribute('data-full') || t.src;
-        mainImg.src = full;
-        // 標記 active
-        thumbs.forEach(sib => sib.classList.remove('active'));
-        t.classList.add('active');
-      });
-    });
-
-    // === 數量加減（含上限＝庫存，下限＝1） ===
-    const stock = Number(document.getElementById('stock').textContent) || 1;
-    const qtyInput = document.getElementById('qty');
-    const plusBtn = document.getElementById('plus');
-    const minusBtn = document.getElementById('minus');
-
-    function clampQty(v) {
-      v = Number(String(v).replace(/[^\d]/g, '')) || 1;
-      if (v < 1) v = 1;
-      if (v > stock) v = stock;
-      return v;
-    }
-    plusBtn.addEventListener('click', () => {
-      qtyInput.value = clampQty(Number(qtyInput.value) + 1);
-    });
-    minusBtn.addEventListener('click', () => {
-      qtyInput.value = clampQty(Number(qtyInput.value) - 1);
-    });
-    qtyInput.addEventListener('input', () => {
-      qtyInput.value = clampQty(qtyInput.value);
-    });
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</nav>
