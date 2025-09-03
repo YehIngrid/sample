@@ -313,7 +313,6 @@ document.getElementById('mainImage').addEventListener('change', function (e) {
 
   const file = e.target.files[0];
   if (!file) return;
-  //?為什麼這邊無法偵測照片大小?
   if (file.size > 500000) {
     Swal.fire({
       icon: 'warning',

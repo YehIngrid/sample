@@ -82,7 +82,12 @@ document.querySelectorAll('.shopcart').forEach(btn => {
     };
     const newOrOld = newOrOldMap?.[product.newOrOld] ?? product.newOrOld ?? '未標示';
     const category = categoryMap?.[product.category] ?? product.category ?? '未分類';
-    const size = product.size;
+    const sizeMap = {
+      0: '小',
+      1: '中',
+      2: '大'
+    };
+    const size = sizeMap?.[product.size] ?? product.size ?? '未標示';
     let updatedAt = product.updatedAt;
     const taiwanUpdateTime = new Date(updatedAt);
     // 格式化（只保留時:分）
