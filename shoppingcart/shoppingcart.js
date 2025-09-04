@@ -47,15 +47,10 @@ const pickupNote      = document.getElementById('pickup-note');
 // ============ 3) 後端回傳 -> 前端統一格式 ============
 // 直接覆蓋原本的 normalizeCartResponse
 function normalizeCartResponse(payload) {
-  // 把 data.cartItems 納入候選，避免吃空
+  // 你的實際回傳位置：data.cartItems
   const candidates = [
-    payload?.data?.data?.cartItems,        // ✅ 你的實際回傳位置
-    payload?.data?.commodities,
-    payload?.data?.cart?.items,
-    payload?.data?.items,
-    payload?.cartItems,
-    payload?.items,
-    payload?.data,
+    payload?.data?.cartItems,      // ✅ 依你提供的規格
+    payload?.data,                 // 兜底
     Array.isArray(payload) ? payload : null,
     payload
   ].filter(Boolean);
@@ -63,42 +58,41 @@ function normalizeCartResponse(payload) {
   const rawList = candidates.find(arr => Array.isArray(arr)) || [];
 
   return rawList.map(row => {
-    // 後端會給：id(購物車項目id)、itemId(商品id)、quantity(數量)、price(...)
+    // 後端欄位對齊
     const cartItemId = row.id ?? row._id ?? '';
     const productId  = row.itemId ?? row.commodityId ?? row.productId ?? '';
 
-    // 名稱/圖片：若後端包在 product 物件，優先取用；否則給預設
-    const product = row.product || {};
+    // 若後端有內嵌 item，就優先使用
+    const embedded = row.item || {};
+
     const name = row.name
-      ?? product.name
-      ?? product.title
+      ?? embedded.name
       ?? '未命名商品';
 
     const price = Number(
       row.price
-      ?? product.price
-      ?? row.unitPrice
+      ?? embedded.price
       ?? 0
     ) || 0;
 
     const img =
       row.imageUrl
-      ?? product.imageUrl
-      ?? product.cover
-      ?? product.thumbnail
-      ?? (Array.isArray(product.images) ? product.images[0] : undefined)
+      ?? embedded.mainImage
+      ?? embedded.imageUrl
+      ?? (Array.isArray(embedded.images) ? embedded.images[0] : undefined)
       ?? 'https://via.placeholder.com/120x120?text=No+Image';
 
     const qty = Number(row.quantity ?? row.qty ?? row.count ?? 1) || 1;
 
     return {
-      id: String(cartItemId),    // 用購物車項目 id；刪除時 removeItemsFromCart(id) 就能對到
-      productId: String(productId || ''), // 如需帶商品 id 給後端可用
+      id: String(cartItemId),        // ✅ 購物車項目 id（刪除時用）
+      productId: String(productId),  // ✅ 商品 id（補打詳情用）
       name,
       price,
       img,
       qty,
-      checked: false
+      checked: false,
+      _needEnrich: !row.item // 沒有內嵌商品資訊 → 等一下補打詳情
     };
   });
 }
@@ -137,40 +131,15 @@ function normalizeCartResponse(payload) {
 //     updateSummary();
 //   }
 // }
-// ============ 4) 初次載入 API ============
-// 原本的函式上方或下方都可，直接覆蓋原本的 initCartFromAPI
 async function initCartFromAPI() {
   try {
     const res  = await backendService.getMyCart();
-
-    // 🔎 把最完整的回傳印出來，方便你比對 keys
-    console.log('[getMyCart 原始回傳]', JSON.parse(JSON.stringify(res)));
-
-    // 🧠 放寬解析：若第一輪抓不到陣列，再嘗試幾種常見路徑
-    let list = normalizeCartResponse(res);
-    if (!Array.isArray(list) || list.length === 0) {
-      const maybe =
-        res?.data?.cart?.items ||
-        res?.data?.cartItems ||
-        res?.data?.items ||
-        res?.cart?.items ||
-        res?.items ||
-        res?.data?.commodities ||
-        [];
-      if (Array.isArray(maybe)) list = normalizeCartResponse(maybe);
-    }
-
+    const list = normalizeCartResponse(res);
     cartItems  = Array.isArray(list) ? list : [];
-    console.table(cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })));
-
     saveState(cartItems);
 
-    // 狀態 UI
-    if (statusSelect) {
-      statusSelect.value = orderStatus;
-    }
+    if (statusSelect) statusSelect.value = orderStatus;
 
-    // 還原面交資料
     (function restorePickup() {
       const info = loadPickup();
       if (pickupName && info.name)         pickupName.value     = info.name;
@@ -180,14 +149,10 @@ async function initCartFromAPI() {
       if (pickupNote && info.note)         pickupNote.value     = info.note;
     })();
 
-    // ⚠️ 節點保險：萬一被改 id，早點報錯
-    if (!cartList) {
-      console.error('找不到 #cart-items 容器，請確認 HTML 是否仍有 <div id="cart-items">');
-      return;
-    }
-
+    // 🔽 先渲染一版（若 item 已內嵌就會完整），再補齊缺的
     renderCart();
     updateSummary();
+    await enrichMissingProductFields(cartItems);
   } catch (err) {
     console.error('getMyCart 失敗：', err);
     const fallback = loadState();
@@ -196,6 +161,47 @@ async function initCartFromAPI() {
     updateSummary();
   }
 }
+
+
+// 放在 initCartFromAPI 定義的下一段即可
+async function enrichMissingProductFields(items) {
+  const need = items
+    .map((it, idx) => ({ ...it, _idx: idx }))
+    .filter(it => it._needEnrich && it.productId);
+
+  if (need.length === 0) return;
+
+  try {
+    const jobs = need.map(async (it) => {
+      // 假設：backendService.getItemsInfo(productId) 回傳 { data: { name, price, mainImage ... } }
+      const res = await backendService.getItemsInfo(it.productId);
+      const p   = res?.data || {};
+      const name = p.name ?? p.title ?? '未命名商品';
+      const price = Number(p.price ?? 0) || 0;
+      const img = p.mainImage
+        ?? p.imageUrl
+        ?? (Array.isArray(p.images) ? p.images[0] : undefined)
+        ?? 'https://via.placeholder.com/120x120?text=No+Image';
+
+      // 回填
+      items[it._idx] = {
+        ...items[it._idx],
+        name: items[it._idx].name || name,
+        price: items[it._idx].price || price,
+        img: items[it._idx].img || img,
+        _needEnrich: false
+      };
+    });
+
+    await Promise.all(jobs);
+    saveState(items);
+    renderCart();
+    updateSummary();
+  } catch (e) {
+    console.warn('補齊商品詳情失敗，先顯示基本資料即可：', e);
+  }
+}
+
 
 // ============ 5) 渲染商品清單 ============
 function renderCart() {
