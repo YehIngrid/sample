@@ -132,7 +132,7 @@ nextHotBtn.addEventListener("click", () => {
   console.log('openModal 按鈕:', openModalBtn);
   
   // 將 submit 事件綁定到 form 上
-  form.addEventListener('submit', function(e) {
+  openModalBtn.addEventListener('submit', function(e) {
     e.preventDefault(); // 防止表單預設送出
     createCommodity();
   });
