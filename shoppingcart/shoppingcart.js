@@ -210,7 +210,7 @@ function renderCart() {
               <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
             </div>
             <div class="muted-sm d-flex">
-              <img src="../image/default-avatar.png" alt="../image/default-avatar.png" class="owner-avatar me-1">
+              <img src="${item.owner.imageUrl}" alt="../image/default-avatar.png" class="owner-avatar me-1">
               <p>${item.owner}</p>
             </div>
             <p class="mb-2">${item.description || ''}</p>
