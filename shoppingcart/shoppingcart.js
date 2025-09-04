@@ -210,7 +210,7 @@ function renderCart() {
               <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
             </div>
             <div class="muted-sm d-flex">
-              <img src="${item.owner.imageUrl}" alt="../image/default-avatar.png" class="owner-avatar me-1">
+              <img src="${item.owner.photoURL}" alt="../image/default-avatar.png" class="owner-avatar me-1">
               <p>${item.owner}</p>
             </div>
             <p class="mb-2">${item.description || ''}</p>
@@ -229,7 +229,7 @@ function renderCart() {
       lookInfo.style.cursor = 'pointer';
       lookInfo.addEventListener('click', () => {
         if (item.productId) {
-          window.location.href = `../shop/item.html?id=${item.productId}`;
+          window.location.href = `../product/product.html?id=${item.productId}`;
         } else {
           alert('此商品無法連結到詳情頁');
         }
