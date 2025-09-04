@@ -284,7 +284,7 @@ class BackendService {
 
     async getMyCart() {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/cart/`);
+            const response = await axios.get(`${this.baseUrl}/api/cart`);
             return response;
         } catch (error) {
             console.error("發生錯誤", error);

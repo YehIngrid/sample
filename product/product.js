@@ -358,11 +358,17 @@ async function onAddToCart(e) {
   try {
     await backendService.addItemsToCart(id, quantity);
     await Swal.fire({
-      icon: 'success',
       title: '已加入購物車！',
-      text: `商品 ${id} × ${quantity} 已加入購物車`,
+      // 用自訂圖示（購物車）
+      iconHtml: '<i class="fa-solid fa-cart-shopping"></i>',
+      // 不要同時放 icon: 'success'，避免預設圖示覆蓋
       showConfirmButton: false,
-      timer: 1500
+      timer: 1600,
+      customClass: {
+        icon: 'swal2-cart-icon',
+        popup: 'swal2-cart-popup',
+        title: 'swal2-cart-title'
+      }
     });
   } catch (err) {
     const msg = err?.response?.data?.message || err?.message || '請稍後再試';
