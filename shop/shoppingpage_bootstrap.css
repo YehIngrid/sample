@@ -103,7 +103,7 @@ ul{
 .seriesofbutton li{
     display: flex;
     flex-direction: column !important;
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -117,7 +117,7 @@ ul{
     .seriesofbutton li{
         margin-left: 2%;
         margin-right: 2%;
-        font-size: 1.4rem;
+        font-size: 1rem;
     }
 }
 #mainImagePreview img {
@@ -145,7 +145,7 @@ ul{
 .form-control{
     border: 1px solid #004b9739 !important;
     border-radius: 5px !important;
-    font-size: 1.3rem !important;
+    font-size: 1.1rem !important;
 }
 .form-control:focus{
     border: 1px solid rgb(36,182,133) !important;
@@ -296,24 +296,24 @@ ul{
   padding-bottom: 7rem;
 }
 .form-store label{
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   margin-top: 1rem;
 }
 .form-store input{
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   border: none;
   margin-left: 1rem;
   padding: 1%;
 }
 .form-store textarea{
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   border: none;
   margin-top: 0.5rem;
   margin-bottom: 1rem;
   padding: 2%;
 }
 .form-store select{
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   margin-left: 10px;
 }
 .df{
@@ -341,12 +341,11 @@ ul{
 }
 .formpricespan{
   margin-left: 10px;
-  font-size: 1.3rem;
+  font-size: 1.0rem;
 }
 .submitbtn{
   border: none;
-  font-size: 1.8rem;
-  font-family: 'TimeMachine';
+  font-size: 1.3rem;
   padding: 2%;
   margin-top: 1rem;
   color: #fff;
@@ -378,7 +377,7 @@ ul{
   width: 100%;
   max-width: 600px;
   border-radius: 5px;
-  font-size: 1.4rem;
+  font-size: 1rem;
 }
 .modal-content p{
   color: #004b97;
@@ -426,7 +425,7 @@ ul{
   background-color: rgb(36,182,133);
   color: #fff;
   text-decoration: none;
-  font-size:1.3rem;
+  font-size:1rem;
   text-align: center;
   padding-top: 1vh;
   padding-bottom: 1vh;
@@ -436,7 +435,7 @@ ul{
   transform: translateY(0);
 }
 .card-title{
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   padding-left: 6px;
   padding-right: 6px;
   padding-top: 10px;
@@ -445,44 +444,12 @@ ul{
   color: #383838;
   padding-left: 2px;
   margin-bottom: 0;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 .price {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   padding-top: 10px;
 }
-/* .price span{
-  font-size: 1.2rem;
-  font-weight: 500;
-  padding-left: 3px;
-}  */
-/* .product-card {
-  position: relative;
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-} */
-
-/* .product-card:hover {
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
-} */
-/* 
-.card-detail-btn {
-  position: absolute;
-  left: 0;
-  bottom: -50px; 
-  width: 100%;
-  background-color: rgb(36,182,133);
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-  font-weight: bold;
-  text-decoration: none;
-  transition: bottom 0.3s ease;
-} */
-
-/* .product-card:hover .card-detail-btn {
-  bottom: 0; 
-} */
 .login{
   box-shadow: 0 ;
   text-align: right;
@@ -522,25 +489,25 @@ ul{
 }
 .wishad h1{
   color:#803c00;
-  font-size: 4rem;
+  font-size: 2.7rem;
   font-weight: 700;
   padding-top: 10px;
 }
 .wishad h3{
   padding-top: 2rem;
   color: #803c00;
-  font-size: 2rem;
+  font-size: 1.6rem;
 }
 .wishad p{
   color: #803c00;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
 }
 .contentwish{
   margin: 0 auto;
   width: 80vw;
 }
 .contentwish p{
-  font-size: 1.6rem;
+  font-size: 1.2rem;
 }
 /* .card.product-card {
   margin: 1rem;
@@ -704,135 +671,7 @@ ul{
     transform: rotate(360deg);
   }
 }
-/* ?先註解掉，因為會影響到person排版 */
-/* .d-none {
-  display: none !important;
-} */
 
-/* ✅ 1. 讓所有卡片不會錯位，並修正 initial load 閃動問題
-#product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-  max-width: 1280px;
-  margin: 0 auto;
-  visibility: hidden; 預設先隱藏
-}
-#product-grid .card-body{
-  background: linear-gradient(to bottom, rgba(36,182,133,0.25), #004b972d);
-}
-
-body.grid-ready #product-grid {
-  visibility: visible;
-}
-
-✅ 2. 卡片樣式統一設計
-.grid-item {
-  background-color: #fff;
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s ease;
-  cursor: pointer;
-  color: #383838;
-}
-
-.grid-item:hover {
-  transform: translateY(-2px);
-}
-
-.grid-item img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-}
-
-✅ 3. 內部內容間距與格式
-.grid-item .card-body {
-  padding: 0.75rem;
-}
-
-.card-body h5,
-.card-body p {
-  margin: 0.5rem 0;
-}
-.container{
-  --bs-gutter-x: 0rem !important;
-}
-.card-body h5 {
-  font-size: 1.5rem;
-  font-weight: 500;
-  color: #383838;
-}
-.price {
-  font-weight: bold;
-  color: #004b97;
-  text-align: right;
-  font-size: 1.4rem;
-}
-
-.tag {
-  font-size: 12px;
-  color: rgb(36,182,133);
-  display: none;
-  margin-top: 0.25rem;
-}
-
-✅ 4. 手機版也維持兩欄，卡片自動縮小（不要讓 spacing 擴大）
-@media (max-width: 767px) {
-  #product-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    padding: 0.75rem;
-  }
-
-  .grid-item {
-    font-size: 12px;
-  }
-}
-
-✅ 5. 平板 768 以上 3 欄，桌面 1024 以上 4 欄，1280px 以上 6 欄
-@media (min-width: 768px) {
-  #product-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  #product-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (min-width: 1280px) {
-  #product-grid {
-    grid-template-columns: repeat(6, 1fr);
-  }
-}
-#page-controls .page-btn {
-  margin: 0 4px;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 50px;
-  background-color: #eee;
-  cursor: pointer;
-}
-
-#page-controls .page-btn.active {
-  background-color: #004b97;
-  color: white;
-} */
-/* .blinking-warning {
-  animation: jumpBlink 1s step-start infinite;
-  font-weight: bold;
-}
-
-@keyframes jumpBlink {
-  0%, 100% { color: #004b97; }
-  50% { color: rgb(36,182,133); } 
-} */
 .marquee-container {
   width: 100%;
   overflow: hidden;
@@ -848,14 +687,14 @@ body.grid-ready #product-grid {
   animation: scroll-left 20s linear infinite;
   font-weight: bold;
   color: #373737;
-  font-size: 1.2rem;
+  font-size: 1rem;
   top: 1px;
 }
 table {
   border-collapse: collapse;
   border: 2px solid rgb(140,140,140);
   font-family: sans-serif;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   letter-spacing: 1px;
 }
 
@@ -919,14 +758,7 @@ tbody > tr:nth-of-type(even) {
     left: -100%;
   }
 }
-/* .icon-button {
-  background-image: url('../svg/page.svg');
-  background-size: cover;
-  transition: background-image 0.3s ease;
-  margin-right: 16px;
-  cursor: pointer !important;
-  TODO:未解決padding問題因為他是svg，可能需要直接去改figma 
-} */
+
 .icon-button {
   background: rgba(255, 255, 255, 0.01);
   backdrop-filter: blur(10px);
@@ -934,7 +766,7 @@ tbody > tr:nth-of-type(even) {
   border: 2px solid rgba(56, 140, 236, 0.4);
   border-radius: 50px;
   cursor: pointer !important;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   position: fixed;
   font-weight: 700;
   bottom: 40px;
@@ -992,21 +824,21 @@ button {
 }
 .listep {
   list-style: none;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   color: #004b97;
   padding-bottom: 24px;
 
 }
 .step {
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #004b97a3;
   margin-right: 10px;
 }
 .ulmsy {
   margin-left: 40px;
   margin-right: 40px;
-  font-size: 1.4rem;
+  font-size: 1rem;
   list-style: outside;
   padding-bottom: 10px;
 }
@@ -1015,10 +847,10 @@ button {
 }
 .membercontent li {
   margin-left: 40px;
-  font-size: 1.4rem;
+  font-size: 1rem;
 }
 .membercontent h3 {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   color: #004b97;
   margin-top: 20px;
   margin-bottom: 10px;
@@ -1051,7 +883,7 @@ button {
 .contentSeller nav ul li a {
   color: #000;
   text-decoration: none;
-  font-size: 1.4rem;
+  font-size: 1rem;
 }
 /* 當側邊欄 li 處於 active 狀態時放大並顯示小點 */
 .contentSeller nav ul li.active {
@@ -1081,29 +913,27 @@ button {
 .contentSeller section h2 {
   background-color: #7abafa;
   color: #fff;
-  font-size: 2.4rem;
+  font-size: 1.8rem;
   display: inline-block;
   padding: 2px 4px;
   border-radius: 3px;
   margin-bottom: 3vw;
   font-weight: lighter;
-  font-family: 'TimeMachine';
   
 }
 .contentSeller section ul{
   list-style: none;
 }
 .contentSeller section li{
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   padding: 10px;
 }
 .contentSeller h1{
-  font-size: 4rem;
+  font-size: 2.7rem;
   padding-left: 50px;
   padding-top: 30px;
   padding-bottom: 20px;
   font-weight: bold;
-  font-family: 'TimeMachine';
   color: transparent; /* 文字顏色設定透明 */
   background-image: linear-gradient(to right, #7abafa, #6bf5b7); /* 設定漸層角度及顏色 */
   -webkit-background-clip: text; /* 背景裁剪成文字的前景色 */
@@ -1120,7 +950,7 @@ button {
     font-size: 1.2rem;
   }
   .contentSeller h1{
-    font-size: 5rem;
+    font-size: 3rem;
     padding-left: 30px;
     color: transparent; /* 文字顏色設定透明 */
     background-image: linear-gradient(to right, #7abafa, #6bf5b7); /* 設定漸層角度及顏色 */
@@ -1158,23 +988,7 @@ button {
     margin-left: 1vw;
   }
 }
-/* 按鈕樣式 */
-.collapsible {
-  background-color: transparent;
-  border: none;
-  font-size: 1.8rem;
-  cursor: pointer;
-  outline: none;
-  transition: transform 0.3s;
-  
-  /* border-bottom: 1px solid #383838; */
-  /* padding: 3px 10px; */
-  /* border-radius: 6px; */
-}
-/* 當按鈕處於展開狀態時，旋轉倒三角形 180 度 */
-.collapsible.active {
-  transform: rotate(180deg);
-}
+
 /* 內容區塊預設隱藏 */
 .content-news {
 
@@ -1186,10 +1000,10 @@ button {
 }
 .content-news p {
   margin: 10px 0;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
 }
 .contentSeller section p {
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   color: #383838;
   margin-bottom: 20px;
   line-height: 1.5;
@@ -1199,7 +1013,7 @@ button {
   background-color: #004b97; 
   border: 3px solid #7abafa;
   padding: 2px 8px;
-  font-size: 3rem;
+  font-size: 1.8rem;
   margin-right: 10px;
   color: #fff;
 }
@@ -1207,14 +1021,14 @@ button {
   background-color: #004b97;
   padding: 3px;
   color: #fff;
-  font-size: 2rem;
+  font-size: 1.4rem;
   border-radius: 5px;
   margin-right: 30px;
   border: #7abafa 2px solid;
 }
 #seller .nav-link {
   color: #000 !important;
-  font-size: 1.6rem !important;
+  font-size: 1.2rem !important;
   font-weight: 500;
 }
 #seller .nav-tabs .nav-link.active {
@@ -1310,7 +1124,7 @@ button {
   text-decoration: none;
   color: #004b97;
   font-weight: bold;
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 /* ==== 手機版：橫向滑動卡片 ==== */
 .mobile-news-slider {
@@ -1336,7 +1150,7 @@ button {
   padding: 12px 18px;
   background: #fff;
   border-radius: 24px;
-  font-size: 1.4rem;
+  font-size: 1rem;
   white-space: nowrap;
   color: #004b97;
   font-weight: 700;
@@ -1579,7 +1393,7 @@ button {
   border-bottom-left-radius: 50px;
   border-top-left-radius: 50px;
   display: inline-block;
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   padding: 4px 10px;
   padding-right: 2px;
   font-weight: 600;

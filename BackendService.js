@@ -233,15 +233,27 @@ class BackendService {
             return Promise.reject(error);
         }
     }
-    async addItemsToCart(commodityId) {
+    async addItemsToCart(commodityId, quantity = 1) {
+        if (!commodityId) {
+            return Promise.reject(new Error("Commodity ID is required"));
+        }
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            return Promise.reject(new Error("Quantity 必須是正整數"));
+        }
+
         try {
-            const response = await axios.post(`${this.baseUrl}/api/cart/add/${commodityId}`);
+            const response = await axios.post(
+                `${this.baseUrl}/api/cart/add/${commodityId}`,
+                { quantity }, // <-- 必填 body
+                { headers: { "Content-Type": "application/json" }, withCredentials: true }
+            );
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
     }
+
     async getMyCart() {
         try {
             const response = await axios.get(`${this.baseUrl}/api/cart/`);

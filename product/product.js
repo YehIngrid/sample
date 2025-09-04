@@ -22,6 +22,15 @@ document.querySelectorAll('.shopcart').forEach(btn => {
         console.warn('尚未寫入 data-id（可能商品還沒載完）');
         return;
       }
+      if(sellerId === currentUserId){
+        Swal.fire({
+          title: '無法加入購物車',
+          text: '無法將自己的商品加入購物車',
+          icon: 'warning',
+          confirmButtonText: '知道了'
+        });
+        return;
+      }
       try {
         await backendService.addItemsToCart(id);
         Swal.fire({
