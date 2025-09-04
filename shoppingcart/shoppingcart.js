@@ -14,7 +14,7 @@ axios.defaults.headers.common.idtoken = getIdTokenSomehow();
 */
 
 // ============ 1) 建立 service ============ 
-let backendService;
+let backendService = null;
 document.addEventListener('DOMContentLoaded', () => {
   backendService = new BackendService();
   initCartFromAPI(); // 頁面載入就打 API
