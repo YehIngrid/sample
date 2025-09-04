@@ -81,7 +81,6 @@ function normalizeCartResponse(payload) {
 
     const qty = Number(row.quantity) || 1;
     const description = embedded.description || '';
-    const ownerId = embedded.ownerId || '';
     return {
       id: String(cartItemId),        // ✅ 購物車項目 id（刪除時用）
       productId: String(productId),  // ✅ 商品 id（補打詳情用）
@@ -89,12 +88,7 @@ function normalizeCartResponse(payload) {
       price,
       img,
       qty,
-      // 🔽 先留欄位，之後補齊
-      category: '',
-      newOrOld: '',
-      age: '',
       description,
-      ownerId,
       owner: '',
       checked: false,
       _needEnrich: !row.item // 沒有內嵌詳情 → 需要補打 getItemsInfo
@@ -154,22 +148,14 @@ async function enrichMissingProductFields(items) {
         ?? (Array.isArray(p.images) ? p.images[0] : undefined)
         ?? 'https://via.placeholder.com/120x120?text=No+Image';
 
-      // 🔽 這四個欄位的常見對應（可依你後端實際命名調整）
-      const category    = p.category ?? p.categoryName ?? p.type ?? '';
-      const newOrOld    = p.new_or_old ?? p.condition ?? p.state ?? '';
-      const age         = p.age ?? p.usageAge ?? p.usedFor ?? '';
-      const description = p.description ?? p.desc ?? '';
-      const owner       = p.owner ?? p.seller ?? '未知賣家';
+      
+      const owner       = p.owner.name ?? '未知賣家';
 
       items[it._idx] = {
         ...items[it._idx],
         name:        items[it._idx].name || name,
         price:       items[it._idx].price || price,
         img:         items[it._idx].img || img,
-        category:    category,
-        newOrOld:    newOrOld,
-        age:         age,
-        description: description,
         owner:       owner,
         _needEnrich: false
       };
@@ -210,12 +196,14 @@ function renderCart() {
         <img src="${item.img}" alt="${item.name}" class="item-thumb me-3">
         <div class="flex-grow-1">
           <div class="d-flex flex-column">
-            <p>${item.owner}</p>
             <div class="d-flex justify-content-between align-items-start">
               <h6 class="mb-1">${item.name}</h6>
               <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
             </div>
-            <div class="muted-sm"># ${item.category || ''} # ${item.newOrOld || ''} # ${item.age || ''}</div>
+            <div class="muted-sm d-flex">
+              <img src="${owner.img}" alt="../image/default-avatar.png" class="owner-avatar me-1">
+              <p>${item.owner}</p>
+            </div>
             <p class="mb-2">${item.description || ''}</p>
           </div>
 
