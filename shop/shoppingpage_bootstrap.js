@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   if (backendService.isLoggedIn()) {
+    colnsole.log('使用者已登入');
     document.getElementById('loginornot').textContent = '登出';
     document.getElementById('username').textContent = localStorage.getItem('username') || "username";
   } else {
@@ -127,12 +128,11 @@ nextHotBtn.addEventListener("click", () => {
   fetchPage(page + 1);
 });
   // 確保所有 DOM 元素都已經載入
-  const form = document.getElementById('createCommodityForm');
   const openModalBtn = document.getElementById('create');
   console.log('openModal 按鈕:', openModalBtn);
   
   // 將 submit 事件綁定到 form 上
-  openModalBtn.addEventListener('submit', function(e) {
+  openModalBtn.addEventListener('click', function(e) {
     e.preventDefault(); // 防止表單預設送出
     createCommodity();
   });
