@@ -218,7 +218,7 @@ nextHotBtn.addEventListener("click", () => {
   if (!confirmRes.isConfirmed) return;
 
   const loaderOverlay = document.getElementById('loadingOverlay');
-  loaderOverlay?.classList.remove('d-none');
+  loaderOverlay.style.display = 'flex';
 
   const formEl = document.getElementById('createCommodityForm');
   const sellData = new FormData(formEl);
@@ -245,7 +245,7 @@ nextHotBtn.addEventListener("click", () => {
       icon: "error"
     });
   } finally {
-    loaderOverlay?.classList.add('d-none');
+    loaderOverlay.style.display = 'none';
   }
 }
 })
