@@ -1,4 +1,5 @@
-let backendService;
+// 全域變數（不要再用 const/let 重新宣告它）
+let backendService = null;
 const backbtn = document.querySelector('#back-btn');
 backbtn.addEventListener('click', function(e){
     window.history.back();
@@ -320,40 +321,53 @@ function reportSeller(sellerId) {
     backendService.getItemsInfo(onSuccess);
   }
 });
-//???
-document.querySelectorAll('.shopcart').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if (!id) {
-        console.warn('尚未寫入 data-id（可能商品還沒載完）');
-        return;
-      }
-      if(sellerId === currentUserId){
-        Swal.fire({
-          title: '無法加入購物車',
-          text: '無法將自己的商品加入購物車',
-          icon: 'warning',
-          confirmButtonText: '知道了'
-        });
-        return;
-      }
-      try {
-        await backendService.addItemsToCart(id);
-        Swal.fire({
-          title: '已加入購物車！',
-          text: `商品編號 ${id} 已加入購物車`,
-          iconHtml: '<i class="fa-solid fa-cart-plus" style="color: #a5dc86 font-size: 3.6rem"></i>',
-          customClass: { icon: 'successgreen' },
-          timer: 1500
-        });
-      } catch (err) {
-        Swal.fire({
-          title: '加入失敗',
-          text: err?.message || '請稍後再試',
-          icon: 'error',
-          confirmButtonText: '知道了'
-        });
-      }
-    })
-  })
 
-//??
+
+document.addEventListener('DOMContentLoaded', () => {
+  // 建立 service（注意：這裡不要再寫 const/let）
+  backendService = new BackendService();
+
+  // 綁定加入購物車按鈕
+  document.querySelectorAll('.shopcart').forEach(btn => {
+    btn.addEventListener('click', onAddToCart);
+  });
+});
+
+async function onAddToCart(e) {
+  const btn = e.currentTarget;
+
+  // 防呆：service 是否就緒 & 方法存在
+  if (!backendService || typeof backendService.addItemsToCart !== 'function') {
+    console.error('backendService 尚未就緒或不存在 addItemsToCart：', backendService);
+    Swal.fire({ icon: 'error', title: '系統尚未就緒', text: '請重新整理後再試' });
+    return;
+  }
+
+  // 取商品 id（優先 data-id，退而求其次用 URL ?id）
+  const id = btn.dataset.id || new URLSearchParams(location.search).get('id');
+  if (!id) {
+    Swal.fire({ icon: 'warning', title: '找不到商品編號' });
+    return;
+  }
+
+  // 取數量：找同區塊的 .qty-input，找不到就用 1
+  const qtyEl = btn.closest('.card, .product, body').querySelector?.('.qty-input');
+  const quantity = Number(qtyEl ? qtyEl.value : 1) || 1;
+
+  btn.disabled = true;
+  try {
+    await backendService.addItemsToCart(id, quantity);
+    await Swal.fire({
+      icon: 'success',
+      title: '已加入購物車！',
+      text: `商品 ${id} × ${quantity} 已加入購物車`,
+      showConfirmButton: false,
+      timer: 1500
+    });
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || '請稍後再試';
+    Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
+  } finally {
+    btn.disabled = false;
+  }
+}
