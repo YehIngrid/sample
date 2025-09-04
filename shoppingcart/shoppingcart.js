@@ -44,13 +44,10 @@ const pickupPlace     = document.getElementById('pickup-place');
 const pickupDatetime  = document.getElementById('pickup-datetime');
 const pickupNote      = document.getElementById('pickup-note');
 
-// ============ 3) 後端回傳 -> 前端統一格式 ============
-// 直接覆蓋原本的 normalizeCartResponse
 function normalizeCartResponse(payload) {
-  // 你的實際回傳位置：data.cartItems
   const candidates = [
-    payload?.data?.data?.cartItems,      // ✅ 依你提供的規格
-    payload?.data?.cartItems,                 // 兜底
+    payload?.data?.data?.cartItems,
+    payload?.data?.cartItems,
     Array.isArray(payload) ? payload : null,
     payload
   ].filter(Boolean);
@@ -58,43 +55,48 @@ function normalizeCartResponse(payload) {
   const rawList = candidates.find(arr => Array.isArray(arr)) || [];
 
   return rawList.map(row => {
-    // 後端欄位對齊
-    const cartItemId = row.id ;
+    const cartItemId = row.id;
     const productId  = row.itemId ?? '';
+    const embedded   = row.item || {};
 
-    // 若後端有內嵌 item，就優先使用
-    const embedded = row.item || {};
+    const name  = row.name ?? embedded.name ?? '未命名商品';
+    const price = Number(row.price ?? embedded.price ?? 0) || 0;
+    const img   =
+      embedded.mainImage ??
+      embedded.imageUrl ??
+      (Array.isArray(embedded.images) ? embedded.images[0] : undefined) ??
+      'https://via.placeholder.com/120x120?text=No+Image';
 
-    const name = row.name
-      ?? embedded.name
-      ?? '未命名商品';
+    const qty  = Number(row.quantity) || 1;
+    const desc = embedded.description || '';
 
-    const price = Number(
-      row.price
-      ?? embedded.price
-      ?? 0
-    ) || 0;
+    // 只要有任一我們關心的欄位缺少，就標記需要補打詳情
+    const needEnrich =
+      !productId ||
+      !embedded ||
+      !embedded.mainImage ||              // 沒主圖
+      typeof embedded.description === 'undefined' || // 沒描述
+      !embedded.owner;                    // 沒 owner（你 render 需要）
 
-    const img = embedded.mainImage
-      ?? (Array.isArray(embedded.images) ? embedded.images[0] : undefined)
-      ?? 'https://via.placeholder.com/120x120?text=No+Image';
-
-    const qty = Number(row.quantity) || 1;
-    const description = embedded.description || '';
     return {
-      id: String(cartItemId),        // ✅ 購物車項目 id（刪除時用）
-      productId: String(productId),  // ✅ 商品 id（補打詳情用）
+      id: String(cartItemId),
+      productId: String(productId),
       name,
       price,
       img,
       qty,
-      description,
+      description: desc,
       owner: '',
+      // 之後要加的四個欄位先留空位
+      category: '',
+      newOrOld: '',
+      age: '',
       checked: false,
-      _needEnrich: !row.item // 沒有內嵌詳情 → 需要補打 getItemsInfo
+      _needEnrich: needEnrich
     };
   });
 }
+
 
 async function initCartFromAPI() {
   try {
@@ -128,36 +130,60 @@ async function initCartFromAPI() {
 }
 
 
-// 放在 initCartFromAPI 定義的下一段即可
+// 安全包裝：同時支援 getItemsInfo / GetItemsInfo，並統一回傳資料殼
+async function fetchItemInfo(productId) {
+  if (!productId) throw new Error('productId is empty');
+  let res;
+  if (typeof backendService?.getItemsInfo === 'function') {
+    res = await backendService.getItemsInfo(productId);
+  } else if (typeof backendService?.GetItemsInfo === 'function') {
+    res = await backendService.GetItemsInfo(productId);
+  } else {
+    throw new Error('BackendService 沒有 getItemsInfo / GetItemsInfo 方法');
+  }
+  return res?.data?.data || res?.data || res || {};
+}
+
 async function enrichMissingProductFields(items) {
   const need = items
     .map((it, idx) => ({ ...it, _idx: idx }))
     .filter(it => it._needEnrich && it.productId);
 
+  // 🔎 這行一定會印；若 0 表示前面判斷條件沒讓它進來
+  console.log('[enrich] 待補筆數 =', need.length, 'IDs =', need.map(n => n.productId));
+
   if (need.length === 0) return;
 
   try {
     const jobs = need.map(async (it) => {
-      // 假設：backendService.getItemsInfo(productId) 回傳 { data: { name, price, mainImage ... } }
-      const res = await backendService.getItemsInfo(it.productId);
-      const p   = res?.data.data || {};
-      console.log('補齊商品詳情：', it.productId, p);
-      const name = p.name ?? p.title ?? '未命名商品';
-      const price = Number(p.price ?? 0) || 0;
-      const img = p.mainImage
-        ?? p.imageUrl
-        ?? (Array.isArray(p.images) ? p.images[0] : undefined)
-        ?? 'https://via.placeholder.com/120x120?text=No+Image';
+      const p = await fetchItemInfo(it.productId);
+      console.log('[enrich] 詳情', it.productId, p);
 
-      
-      const owner       = p.owner.name ?? '未知賣家';
+      const name  = p.name ?? p.title ?? '未命名商品';
+      const price = Number(p.price ?? 0) || 0;
+      const img   =
+        p.mainImage ??
+        p.imageUrl ??
+        (Array.isArray(p.images) ? p.images[0] : undefined) ??
+        'https://via.placeholder.com/120x120?text=No+Image';
+
+      // 你想新增的四個欄位
+      const category    = p.category ?? p.categoryName ?? '';
+      const newOrOld    = p.new_or_old ?? p.condition ?? '';
+      const age         = p.age ?? p.usageAge ?? '';
+      const description = typeof p.description === 'string' ? p.description : (items[it._idx].description || '');
+      const owner       = p.owner?.name ?? '未知賣家';
 
       items[it._idx] = {
         ...items[it._idx],
         name:        items[it._idx].name || name,
         price:       items[it._idx].price || price,
         img:         items[it._idx].img || img,
-        owner:       owner,
+        category,
+        newOrOld,
+        age,
+        description,
+        owner,
         _needEnrich: false
       };
     });
@@ -167,10 +193,9 @@ async function enrichMissingProductFields(items) {
     renderCart();
     updateSummary();
   } catch (e) {
-    console.warn('補齊商品詳情失敗，先顯示基本資料即可：', e);
+    console.warn('補齊商品詳情失敗：', e);
   }
 }
-
 
 // ============ 5) 渲染商品清單 ============
 function renderCart() {
@@ -208,7 +233,7 @@ function renderCart() {
             <p class="mb-2">${item.description || ''}</p>
           </div>
 
-          <div class="d-flex align-items-center gap-2 mt-2">
+          <div class="d-flex align-items-center gap-2 mt-2" style="font-size: 0.9rem;">
             <label class="muted-sm">數量</label>
             <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input">
             <button class="btn btn-outline-danger btn-sm ms-auto btn-remove">刪除</button>
