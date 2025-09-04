@@ -141,6 +141,7 @@ async function enrichMissingProductFields(items) {
       // 假設：backendService.getItemsInfo(productId) 回傳 { data: { name, price, mainImage ... } }
       const res = await backendService.getItemsInfo(it.productId);
       const p   = res?.data.data || {};
+      console.log('補齊商品詳情：', it.productId, p);
       const name = p.name ?? p.title ?? '未命名商品';
       const price = Number(p.price ?? 0) || 0;
       const img = p.mainImage
