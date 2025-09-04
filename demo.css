@@ -60,16 +60,16 @@ ul{
 
 .swal2-title {
   color: #383838;
-  font-size: 1.8rem;
+  font-size: 1.4rem;
 }
 
 .swal2-confirm {
   background: linear-gradient(to left bottom, #c8f5e6, #c4def7);
   color: #383838;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 .swal2-html-container {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
 }
 .swal2-cancel {
   background-color: #bbb;
@@ -193,18 +193,6 @@ ul{
   background-color: transparent !important;
 }
 
-/* .icon-button {
-  width: 45px; /* 根據你 SVG 的大小調整 
-  height: 45px;
-  background-image: url('../svg/page.svg');
-  background-size: cover;
-  transition: background-image 0.3s ease;
-  TODO:未解決padding問題因為他是svg，可能需要直接去改figma 
-} */
-
-/* .icon-button:hover, .icon-button:focus {
-  background-image: url('../svg/page_focus.svg');
-} */
 .chathome {
   position: fixed;
   bottom: 8px;
