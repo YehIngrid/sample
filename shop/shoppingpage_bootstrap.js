@@ -39,16 +39,11 @@ backbtn.addEventListener('click', function(e){
 // 取得元素
 const modal = document.getElementById('myModal');
 const openBtn = document.getElementById('openModal');
-const closeBtn = document.getElementById('closeModal');
+
 
 // 點擊按鈕時打開模態視窗
 openBtn.addEventListener('click', () => {
   modal.style.display = 'block';
-});
-
-// 點擊關閉按鈕時關閉模態視窗
-closeBtn.addEventListener('click', () => {
-  modal.style.display = 'none';
 });
 
 // 當點擊模態背景也關閉模態視窗
