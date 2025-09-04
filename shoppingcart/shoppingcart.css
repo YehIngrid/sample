@@ -200,9 +200,3 @@
     .qty-input{ max-width:88px; }
     .muted-sm{ font-size:1.2rem; color:#6c757d; }
 
-.owner-avatar{
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  object-fit: cover;
-}
