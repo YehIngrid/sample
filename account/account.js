@@ -48,7 +48,7 @@ async function callSignUp() {
       title: "帳號註冊成功",
       showConfirmButton: false,
       footer: "即將返回登入頁面",
-      timer: 1800
+      timer: 2100
     });
 
     // 導回登入頁
@@ -90,7 +90,9 @@ async function callLogin() {
   }
 
   const backendService = new BackendService();
-
+  // 顯示 loader
+  const loaderLogin = document.getElementById('loaderLogin');
+  loaderLogin.style.display = 'flex';
   try {
     const resp = await backendService.login({ email, password });
     console.log('回傳資料：', resp.data);
@@ -119,6 +121,9 @@ async function callLogin() {
       title: 'Oops...',
       text: e?.message || '登入失敗，請稍後再試'
     });
+  } finally {
+    // 無論成功失敗都關掉 loader
+    loaderLogin.style.display = 'none';
   }
 }
 

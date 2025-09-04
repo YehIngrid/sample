@@ -158,23 +158,28 @@ class BackendService {
                 fnError("無法取得使用者資訊");
             });
     }
-    create(sellData, fnSuccess, fnError) {
+    create(sellData) {
         const token = this.getCookie('idtoken');
-        return this.http.post(`/api/commodity/create`, sellData, {
-            withCredentials: true
-        }, {
+        return this.http.post(
+            '/api/commodity/create',
+            sellData,
+            {
+            withCredentials: true,
             headers: {
-                'idtoken': token
-            }})
-
-        .then(function(response) {
-            fnSuccess(response.data);
-        })
-        .catch(function(error) {
-            console.error(error);
-            fnError("上架商品失敗");
-        })
+                idtoken: token
+                // 不要手動設 'Content-Type'，讓 axios 依 FormData 自動帶 boundary
+            }
+            }
+        )
+        .then((res) => res.data)
+        .catch((err) => {
+            console.error(err);
+            // 從後端取更精確的錯誤訊息
+            const msg = err?.response?.data?.message || '上架商品失敗';
+            throw new Error(msg);
+        });
     }
+
     getHotItems(pagingInfo, fnSuccess, fnError) {
         return axios.get(`${this.baseUrl}/api/commodity/list/hot`, {
             params: {

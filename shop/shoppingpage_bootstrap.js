@@ -137,176 +137,123 @@ nextHotBtn.addEventListener("click", () => {
     createCommodity();
   });
 
-  // 將 createCommodity 定義在全域或 DOMContentLoaded 區塊中皆可，
-  // 但注意：如果 HTML 中使用了 inline onsubmit，就必須確保這個函式能在全域中存取
-  function createCommodity() {
-    // 1. 商品名稱檢查（注意：要檢查 value）
-    const productName = document.getElementById('name');
-    if (!productName.value.trim()) {
-      Swal.fire({
-        title: "請輸入商品名稱",
-        icon: "warning"
-      });
-      return;
-    }
-
-    // 2. 商品描述檢查（不得為空，且至少20字以上）
-    const productDesc = document.getElementById('description').value.trim();
-    if (!productDesc) {
-      Swal.fire({
-        title: "請輸入商品描述",
-        icon: "warning"
-      });
-      return;
-    } else if (productDesc.length < 10) {
-      Swal.fire({
-        title: "字數太少",
-        text:"商品狀態描述至少需要 10 字以上，請再補充內容。",
-        icon: "warning"
-      });
-      return;
-    }
-
-    // 3. 售價檢查（不得為空且必須大於等於 0）
-    const price = document.getElementById('price').value.trim();
-    if (!price || price < 0) {
-      Swal.fire({
-        title: "請輸入商品售價",
-        text: "請檢查是否填入商品售價或者確認金額為正數",
-        icon: "warning"
-      });
-      return;
-    }
-
-    // 4. 商品尺寸檢查（至少要選一個）
-    const sizeOptions = document.getElementsByName('size');
-    let sizeSelected = false;
-    for (let i = 0; i < sizeOptions.length; i++) {
-      if (sizeOptions[i].checked) {
-        sizeSelected = true;
-        break;
-      }
-    }
-    if (!sizeSelected) {
-      Swal.fire({
-        title: "請選擇商品尺寸",
-        icon: "warning"
-      });
-      return;
-    }
-
-    // 5. 新舊程度檢查（至少要選一個）
-    const conditionOptions = document.getElementsByName('new_or_old');
-    let conditionSelected = false;
-    for (let i = 0; i < conditionOptions.length; i++) {
-      if (conditionOptions[i].checked) {
-        conditionSelected = true;
-        break;
-      }
-    }
-    if (!conditionSelected) {
-      Swal.fire({
-        title: "請選擇商品的新舊程度",
-        icon: "warning"
-      });
-      return;
-    }
-
-    // 6. 商品分類檢查（不可為預設值）
-    const category = document.getElementById('category').value;
-    if (!category || category === "notselyet") {
-      Swal.fire({
-        title: "請選擇商品分類",
-        icon: "warning"
-      });
-      return;
-    }
-
-    // 7. 主要照片檢查（至少選一張）
-    const mainPhoto = document.getElementById('mainImage').files;
-    if (mainPhoto.length === 0) {
-      Swal.fire({
-        title: "請上傳主要照片",
-        icon: "warning"
-      });
-      return;
-    }
-    // 8. 其他照片檢查（至少選一張）
-    const otherPhoto = document.getElementById('image').files;
-    if(otherPhoto.length === 0){
-      Swal.fire({
-        title: "請至少上傳一張其他照片",
-        icon: "warning"
-      });
-      return;
-    }
-    // 9.庫存
-    const stock = document.getElementById('stock').value.trim();
-    if(!stock || stock < 0){
-      Swal.fire({
-        title:"請填入庫存數量", 
-        icon:"warning"
-      });
-      return;
-    }
-    //10.物品年齡
-    const age = document.getElementById('age').value.trim();
-    if(!age || age < -1){
-      Swal.fire({
-        title:"請選擇商品年齡",
-        icon:"warning"
-      });
-      return;
-    }
-    const loaderOverlay = document.getElementById('loadingOverlay');
-
-Swal.fire({
-  title: "確定要販賣此商品?",
-  text: "請確認好所有商品資訊以及照片是否違反規定，若後續需要更改或移除資料，請至個人檔案內查看。",
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "#3085d6",
-  cancelButtonColor: "#d33",
-  confirmButtonText: "是，我就要賣！"
-}).then((result) => {
-  if (result.isConfirmed) {
-    const sellData = new FormData(form);
-    // ✅ 顯示 loading 遮罩
-    loaderOverlay.classList.remove('d-none');
-    for (let [key, value] of sellData.entries()) {
-      console.log(key, value);
-    }
-    backendService.create(sellData, (
-    response) => {
-      Swal.fire({
-                  title: "商品上架成功!",
-                  text: "請確認首頁商品欄有無您上架的商品",
-                  icon: "success"
-                })
-    .then((result) => {
-        if (result.isConfirmed) {
-          // ✅ 使用者按下 OK 後跳轉
-          window.location.href = "shoppingpage_bootstrap.html";
-        }
-      });
-    form.reset();
-    }, (errorMessage) => {
-      Swal.fire({
-              title: "Oops...發生錯誤，請稍後再試",
-              text: errorMessage || 'Failed to create commodity.',
-              icon: "error",
-            })
-    } )
-      .finally(() => {
-        // ✅ 隱藏 loading
-        loaderOverlay.classList.add('d-none');
-      });
+ 
+  async function createCommodity() {
+  // 1. 商品名稱
+  const nameEl = document.getElementById('name');
+  if (!nameEl.value.trim()) {
+    Swal.fire({ title: "請輸入商品名稱", icon: "warning" });
+    return;
   }
-});
 
-    
+  // 2. 商品描述
+  const desc = document.getElementById('description').value.trim();
+  if (!desc) {
+    Swal.fire({ title: "請輸入商品描述", icon: "warning" });
+    return;
+  } else if (desc.length < 10) {
+    Swal.fire({ title: "字數太少", text: "商品狀態描述至少需要 10 字以上，請再補充內容。", icon: "warning" });
+    return;
   }
-});
+
+  // 3. 售價（數字檢查）
+  const priceStr = document.getElementById('price').value.trim();
+  const price = Number(priceStr);
+  if (priceStr === '' || Number.isNaN(price) || price < 0) {
+    Swal.fire({ title: "請輸入商品售價", text: "請確認金額為非負數", icon: "warning" });
+    return;
+  }
+
+  // 4. 尺寸
+  if (![...document.getElementsByName('size')].some(x => x.checked)) {
+    Swal.fire({ title: "請選擇商品尺寸", icon: "warning" });
+    return;
+  }
+
+  // 5. 新舊程度
+  if (![...document.getElementsByName('new_or_old')].some(x => x.checked)) {
+    Swal.fire({ title: "請選擇商品的新舊程度", icon: "warning" });
+    return;
+  }
+
+  // 6. 分類
+  const category = document.getElementById('category').value;
+  if (!category || category === 'notselyet') {
+    Swal.fire({ title: "請選擇商品分類", icon: "warning" });
+    return;
+  }
+
+  // 7. 主要照片
+  if (document.getElementById('mainImage').files.length === 0) {
+    Swal.fire({ title: "請上傳主要照片", icon: "warning" });
+    return;
+  }
+  // 8. 其他照片
+  if (document.getElementById('image').files.length === 0) {
+    Swal.fire({ title: "請至少上傳一張其他照片", icon: "warning" });
+    return;
+  }
+
+  // 9. 庫存（數字檢查）
+  const stockStr = document.getElementById('stock').value.trim();
+  const stock = Number(stockStr);
+  if (stockStr === '' || Number.isNaN(stock) || stock < 0) {
+    Swal.fire({ title: "請填入庫存數量", icon: "warning" });
+    return;
+  }
+
+  // 10. 年齡（允許 -1 表示不詳）
+  const ageStr = document.getElementById('age').value.trim();
+  const age = Number(ageStr);
+  if (ageStr === '' || Number.isNaN(age) || age < -1) {
+    Swal.fire({ title: "請選擇商品年齡", icon: "warning" });
+    return;
+  }
+
+  // 二次確認
+  const confirmRes = await Swal.fire({
+    title: "確定要販賣此商品?",
+    text: "請確認所有商品資訊與照片皆符合規定。",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "是，我就要賣！"
+  });
+  if (!confirmRes.isConfirmed) return;
+
+  const loaderOverlay = document.getElementById('loadingOverlay');
+  loaderOverlay?.classList.remove('d-none');
+
+  const formEl = document.getElementById('createCommodityForm');
+  const sellData = new FormData(formEl);
+  // 保險起見，把數字欄位用 set 覆蓋成數字字串
+  sellData.set('price', String(price));
+  sellData.set('stock', String(stock));
+  sellData.set('age', String(age));
+
+  const backendService = new BackendService();
+
+  try {
+    await backendService.create(sellData);
+    await Swal.fire({
+      title: "商品上架成功!",
+      text: "請至首頁確認是否顯示您的商品",
+      icon: "success"
+    });
+    formEl.reset();
+    window.location.href = "shoppingpage_bootstrap.html";
+  } catch (e) {
+    Swal.fire({
+      title: "Oops...發生錯誤，請稍後再試",
+      text: e?.message || 'Failed to create commodity.',
+      icon: "error"
+    });
+  } finally {
+    loaderOverlay?.classList.add('d-none');
+  }
+}
+})
 document.getElementById('mainImage').addEventListener('change', function (e) {
   const preview = document.getElementById('mainImagePreview');
   preview.innerHTML = ''; // 清除舊圖
