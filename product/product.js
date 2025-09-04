@@ -15,45 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-//???
-document.querySelectorAll('.shopcart').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if (!id) {
-        console.warn('尚未寫入 data-id（可能商品還沒載完）');
-        return;
-      }
-      if(sellerId === currentUserId){
-        Swal.fire({
-          title: '無法加入購物車',
-          text: '無法將自己的商品加入購物車',
-          icon: 'warning',
-          confirmButtonText: '知道了'
-        });
-        return;
-      }
-      try {
-        await backendService.addItemsToCart(id);
-        Swal.fire({
-          title: '已加入購物車！',
-          text: `商品編號 ${id} 已加入購物車`,
-          iconHtml: '<i class="fa-solid fa-cart-plus" style="color: #a5dc86 font-size: 3.6rem"></i>',
-          customClass: { icon: 'successgreen' },
-          timer: 1500
-        });
-      } catch (err) {
-        Swal.fire({
-          title: '加入失敗',
-          text: err?.message || '請稍後再試',
-          icon: 'error',
-          confirmButtonText: '知道了'
-        });
-      }
-    })
-  })
-
-//??
-
-
   const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span>NT$</span>`;
   const toArray = (v) => Array.isArray(v) ? v : (v ? [v] : []);
   const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u)); // 如需前綴可在此加
@@ -359,3 +320,40 @@ function reportSeller(sellerId) {
     backendService.getItemsInfo(onSuccess);
   }
 });
+//???
+document.querySelectorAll('.shopcart').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!id) {
+        console.warn('尚未寫入 data-id（可能商品還沒載完）');
+        return;
+      }
+      if(sellerId === currentUserId){
+        Swal.fire({
+          title: '無法加入購物車',
+          text: '無法將自己的商品加入購物車',
+          icon: 'warning',
+          confirmButtonText: '知道了'
+        });
+        return;
+      }
+      try {
+        await backendService.addItemsToCart(id);
+        Swal.fire({
+          title: '已加入購物車！',
+          text: `商品編號 ${id} 已加入購物車`,
+          iconHtml: '<i class="fa-solid fa-cart-plus" style="color: #a5dc86 font-size: 3.6rem"></i>',
+          customClass: { icon: 'successgreen' },
+          timer: 1500
+        });
+      } catch (err) {
+        Swal.fire({
+          title: '加入失敗',
+          text: err?.message || '請稍後再試',
+          icon: 'error',
+          confirmButtonText: '知道了'
+        });
+      }
+    })
+  })
+
+//??
