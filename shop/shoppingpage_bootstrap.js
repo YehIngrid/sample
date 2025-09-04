@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-  if (backendService.whoami()) {
+  if (backendService.isLoggedIn()) {
     document.getElementById('loginornot').textContent = '登出';
     document.getElementById('username').textContent = localStorage.getItem('username') || "username";
   } else {
