@@ -50,7 +50,7 @@ function normalizeCartResponse(payload) {
   // 你的實際回傳位置：data.cartItems
   const candidates = [
     payload?.data?.data?.cartItems,      // ✅ 依你提供的規格
-    payload?.data,                 // 兜底
+    payload?.data?.cartItems,                 // 兜底
     Array.isArray(payload) ? payload : null,
     payload
   ].filter(Boolean);
@@ -59,8 +59,8 @@ function normalizeCartResponse(payload) {
 
   return rawList.map(row => {
     // 後端欄位對齊
-    const cartItemId = row.id ?? row._id ?? '';
-    const productId  = row.itemId ?? row.commodityId ?? row.productId ?? '';
+    const cartItemId = row.id ;
+    const productId  = row.itemId ?? '';
 
     // 若後端有內嵌 item，就優先使用
     const embedded = row.item || {};
@@ -75,14 +75,11 @@ function normalizeCartResponse(payload) {
       ?? 0
     ) || 0;
 
-    const img =
-      row.imageUrl
-      ?? embedded.mainImage
-      ?? embedded.imageUrl
+    const img = embedded.mainImage
       ?? (Array.isArray(embedded.images) ? embedded.images[0] : undefined)
       ?? 'https://via.placeholder.com/120x120?text=No+Image';
 
-    const qty = Number(row.quantity ?? row.qty ?? row.count ?? 1) || 1;
+    const qty = Number(row.quantity) || 1;
 
     return {
       id: String(cartItemId),        // ✅ 購物車項目 id（刪除時用）
@@ -175,7 +172,7 @@ async function enrichMissingProductFields(items) {
     const jobs = need.map(async (it) => {
       // 假設：backendService.getItemsInfo(productId) 回傳 { data: { name, price, mainImage ... } }
       const res = await backendService.getItemsInfo(it.productId);
-      const p   = res?.data || {};
+      const p   = res?.data.data || {};
       const name = p.name ?? p.title ?? '未命名商品';
       const price = Number(p.price ?? 0) || 0;
       const img = p.mainImage
