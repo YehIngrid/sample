@@ -130,72 +130,55 @@ async function initCartFromAPI() {
 }
 
 
-// 安全包裝：同時支援 getItemsInfo / GetItemsInfo，並統一回傳資料殼
-async function fetchItemInfo(productId) {
-  if (!productId) throw new Error('productId is empty');
-  let res;
-  if (typeof backendService?.getItemsInfo === 'function') {
-    res = await backendService.getItemsInfo(productId);
-  } else if (typeof backendService?.GetItemsInfo === 'function') {
-    res = await backendService.GetItemsInfo(productId);
-  } else {
-    throw new Error('BackendService 沒有 getItemsInfo / GetItemsInfo 方法');
-  }
-  return res?.data?.data || res?.data || res || {};
+
+function getItemInfoAsync(id) {
+  return new Promise((resolve, reject) => {
+    backendService.getItemsInfo(
+      id,
+      (json) => resolve(json?.data || {}), // fnSuccess 會拿到 axios.response.data → 取 json.data
+      (err)  => reject(err)
+    );
+  });
 }
 
 async function enrichMissingProductFields(items) {
-  const need = items
-    .map((it, idx) => ({ ...it, _idx: idx }))
-    .filter(it => it._needEnrich && it.productId);
+  const need = items.map((it, idx) => ({ ...it, _idx: idx }))
+                    .filter(it => it._needEnrich && it.productId);
 
-  // 🔎 這行一定會印；若 0 表示前面判斷條件沒讓它進來
-  console.log('[enrich] 待補筆數 =', need.length, 'IDs =', need.map(n => n.productId));
-
+  console.log('[enrich] 待補筆數 =', need.length, need.map(n => n.productId));
   if (need.length === 0) return;
 
-  try {
-    const jobs = need.map(async (it) => {
-      const p = await fetchItemInfo(it.productId);
-      console.log('[enrich] 詳情', it.productId, p);
+  const jobs = need.map(async (it) => {
+    const p = await getItemInfoAsync(it.productId);  // ← 這裡直接拿到商品物件（json.data）
+    console.log('[enrich] 詳情', it.productId, p);
 
-      const name  = p.name ?? p.title ?? '未命名商品';
-      const price = Number(p.price ?? 0) || 0;
-      const img   =
-        p.mainImage ??
-        p.imageUrl ??
-        (Array.isArray(p.images) ? p.images[0] : undefined) ??
-        'https://via.placeholder.com/120x120?text=No+Image';
+    const name  = p.name ?? '未命名商品';
+    const price = Number(p.price ?? 0) || 0;
+    const img   = p.mainImage ?? p.imageUrl ??
+                  (Array.isArray(p.imageUrl) ? p.imageUrl[0] : undefined) ??
+                  'https://via.placeholder.com/120x120?text=No+Image';
+    const owner = p.owner?.name ?? '未知賣家';
 
-      // 你想新增的四個欄位
-      const category    = p.category ?? p.categoryName ?? '';
-      const newOrOld    = p.new_or_old ?? p.condition ?? '';
-      const age         = p.age ?? p.usageAge ?? '';
-      const description = typeof p.description === 'string' ? p.description : (items[it._idx].description || '');
-      const owner       = p.owner?.name ?? '未知賣家';
+    items[it._idx] = {
+      ...items[it._idx],
+      name:        items[it._idx].name || name,
+      price:       items[it._idx].price || price,
+      img:         items[it._idx].img || img,
+      owner,
+      category:    p.category ?? '',
+      newOrOld:    p.newOrOld ?? p.new_or_old ?? '',
+      age:         p.age ?? '',
+      description: typeof p.description === 'string' ? p.description : (items[it._idx].description || ''),
+      _needEnrich: false
+    };
+  });
 
-      items[it._idx] = {
-        ...items[it._idx],
-        name:        items[it._idx].name || name,
-        price:       items[it._idx].price || price,
-        img:         items[it._idx].img || img,
-        category,
-        newOrOld,
-        age,
-        description,
-        owner,
-        _needEnrich: false
-      };
-    });
-
-    await Promise.all(jobs);
-    saveState(items);
-    renderCart();
-    updateSummary();
-  } catch (e) {
-    console.warn('補齊商品詳情失敗：', e);
-  }
+  await Promise.all(jobs);
+  saveState(items);
+  renderCart();
+  updateSummary();
 }
+
 
 // ============ 5) 渲染商品清單 ============
 function renderCart() {
@@ -227,7 +210,7 @@ function renderCart() {
               <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
             </div>
             <div class="muted-sm d-flex">
-              <img src="../svg/Group.svg" alt="賣家名稱" class="me-1">
+              <img src="../image/default-avatar.png" alt="../image/default-avatar.png" class="owner-avatar me-1">
               <p>${item.owner}</p>
             </div>
             <p class="mb-2">${item.description || ''}</p>
