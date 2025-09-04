@@ -96,7 +96,7 @@ async function callSignUp(){
   }
 }
 
-function callLogin() {
+async function callLogin() {
   const email = document.getElementById('floatingInput');
   const password = document.getElementById('floatingPassword');
   const rememberMe = document.getElementById('rememberMe').checked;
@@ -104,7 +104,7 @@ function callLogin() {
   // TODO:  Input check 
 
   const backendService = new BackendService();
-  backendService.login(
+  await backendService.login(
     {
       email: email.value,
       password: password.value

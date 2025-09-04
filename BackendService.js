@@ -30,37 +30,41 @@ class BackendService {
     }
 
     //在localstorage記住目前是否登入帳號後端，用localstorage記住帳號資訊等
-    signup(userData, fnSuccess, fnError) {
-        return axios.post(`${this.baseUrl}/api/account/signup`, userData, {
-                withCredentials: true
-            })
-            .then(function(response) {
-                fnSuccess(response);
-            })
-            .catch(function(error) {
-                console.error("註冊錯誤：", error);
-                if (error.response?.data?.message == "Email already exists") {
-                    fnError("此帳號已被註冊");
-                } else {
-                    fnError("系統發生錯誤，請稍後再試");
-                }
-            });
+    async signup(userData) {
+        let response;
+        try {
+            response = await axios.post(`${this.baseUrl}/api/account/signup`, userData);
+            return response;
+        } catch (error) {
+            console.error("註冊錯誤：", error);
+            if (error.response?.data?.message == "Email already exists") {
+                throw new Error("此帳號已被註冊");
+            } else {
+                throw new Error("系統發生錯誤，請稍後再試");
+            }
+        }
     }
-    login(userData, fnSuccess, fnError) {
+    async login(userData) {
         let _this = this;
-        return axios.post(`${this.baseUrl}/api/account/login`, userData, {
-                withCredentials: true
-            })
-            .then(function(response) {
-                let uid = response.data.data.uid;
-                localStorage.setItem('uid', uid); // 儲存使用者ID
-                fnSuccess(response.data);
-                _this.whoami(fnSuccess, fnError);
-            })
-            .catch(function(error) {
-                console.error(error);
-                fnError("登入失敗");
-            });
+        let response;
+        try {
+            response = await axios.post(`${this.baseUrl}/api/account/login`, userData);
+        } catch (error) {
+            console.error("登入錯誤：", error);
+            throw new Error("登入失敗，請稍後再試");
+        }
+        let uid = response.data.data.uid;
+        localStorage.setItem('uid', uid); // 儲存使用者ID
+        await _this.whoami(
+            function(data) {
+                console.log("使用者資訊：", data);
+            },
+            function(error) {
+                console.error("無法取得使用者資訊", error);
+            }
+        );
+        await _this.getUserData();
+        return response;
     }
 
     getUserData() {
