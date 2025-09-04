@@ -45,12 +45,11 @@ const pickupDatetime  = document.getElementById('pickup-datetime');
 const pickupNote      = document.getElementById('pickup-note');
 
 // ============ 3) 後端回傳 -> 前端統一格式 ============
-// ============ 3) 後端回傳 -> 前端統一格式 ============
 // 直接覆蓋原本的 normalizeCartResponse
 function normalizeCartResponse(payload) {
   // 把 data.cartItems 納入候選，避免吃空
   const candidates = [
-    payload?.data?.cartItems,        // ✅ 你的實際回傳位置
+    payload?.data?.data?.cartItems,        // ✅ 你的實際回傳位置
     payload?.data?.commodities,
     payload?.data?.cart?.items,
     payload?.data?.items,
