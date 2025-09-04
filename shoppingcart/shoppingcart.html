@@ -45,77 +45,54 @@
     <!-- TODO header -->
     <div class="header ">
         <!--TODO 響應式選單-->
-        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
-          <div class="container-fluid d-flex align-items-center sticky-top">
-        
-            <!-- (A) LOGO 放在最左邊 -->
-            <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
-              <img src="../svg/TREASUREHUBCHEN.svg"  alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
+        <!-- 響應式選單 -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
+          <div class="container-fluid d-flex align-items-center">
+
+            <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
+            <button class="navbar-toggler d-lg-none me-2 order-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"   
+                    aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- (ALL) Logo -->
+            <a class="navbar-brand picture order-1 me-4"
+              href="../newhome.html">
+              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫登入頁面"
+                  style="width: 100px; margin-right: 10px; border-radius: 0%;">
             </a>
-        
-            <!-- (B) 桌機版導覽選單 -->
-            <div class="d-none d-lg-flex">
-              <ul class="navbar-nav" >
-                <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
-                <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
-                <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
-                <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
-                <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
-                <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
+
+            <!-- (DESKTOP) 導覽選單：桌機顯示 -->
+            <div class="d-none d-lg-flex order-2">
+              <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
+                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
               </ul>
             </div>
-        
-            <!-- (C) 右側：登入 + 購物車 -->
-            <div class="d-flex align-items-center ms-auto">
-              <div class="login">
+
+            <!-- (RIGHT) 右側：登入 + 購物車（所有尺寸都有；用 ms-auto 推到最右） -->
+            <div class="d-flex align-items-center ms-auto order-3">
+              <div class="login me-2">
                 <a id="username" class="username" href="../person/person.html"></a>
-                <a class="navbar-brand" href="../account/account.html" id="loginornot">登入</a>
+                <a class="navbar-brand" href="account.html" id="loginornot">登入</a>
               </div>
-              <a class="nav-link specialpadding ms-2" href="shoppingcart.html">
-                <img src="../svg/shoppingcart.svg" alt="">
+              <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
+                <img src="../webP/shoppingcart.webp" alt="我的購物車">
               </a>
             </div>
           </div>
-        </nav>
-        
-        <!-- 桌機版也顯示的搜尋欄 -->
-        <div class="container-fluid1">
-          <div class="d-flex align-items-center">
-            <!-- 手機版：漢堡選單按鈕放最左邊 -->
-            <button class="navbar-toggler me-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon">
-                <svg style="padding-right: 7px;" width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2 2H22" stroke="#9CBED2" stroke-width="3" stroke-linecap="round"/>
-                  <path d="M2 8H22" stroke="#83ADC5" stroke-width="3" stroke-linecap="round"/>
-                  <path d="M2 14H22" stroke="#689EBE" stroke-width="3" stroke-linecap="round"/>
-                </svg>
-                  
-              </span>
-            </button>
-            <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
-              <input class="form-control me-2" style="max-width: 730px !important; " type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
-              <button class="btn" type="submit">
-                <svg width="28" height="21" viewBox="0 0 28 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10Z" fill="white"/>
-                  <path d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10Z" stroke="url(#paint0_linear_83_152)" stroke-opacity="0.8" stroke-width="3"/>
-                  <path d="M25.1252 20.5166C25.8409 20.9339 26.7593 20.6919 27.1765 19.9762C27.5937 19.2605 27.3518 18.3421 26.6361 17.9249L25.1252 20.5166ZM18.3639 16.5751L25.1252 20.5166L26.6361 17.9249L19.8748 13.9834L18.3639 16.5751Z" fill="url(#paint1_linear_83_152)" fill-opacity="0.6"/>
-                  <defs>
-                  <linearGradient id="paint0_linear_83_152" x1="3" y1="44" x2="3" y2="64" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#24B685" stop-opacity="0.6"/>
-                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
-                  </linearGradient>
-                  <linearGradient id="paint1_linear_83_152" x1="22.6763" y1="14.5057" x2="22.4519" y2="17.9985" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#24B685"/>
-                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
-                  </linearGradient>
-                  </defs>
-                  </svg>
-              </button>
-            </form>
-          </div>
-        
-          <!-- 手機版導覽選單展開內容 -->
-          <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
+
+          <!-- (MOBILE) 手機版導覽選單展開內容 -->
+          <div class="collapse mt-2 d-lg-none" id="navbarNav"> <!-- ✅ 沒有 show -->
             <ul class="navbar-nav">
               <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
               <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
@@ -125,14 +102,14 @@
               <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
           </div>
-        </div>
-    </div>
+        </nav>
+
 </div>
 
-<main style="font-size: 1.6rem;">
-  <div class="container py-4">
+<main style="font-size: 1.2rem;">
+  <div class="container py-3">
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <h3 class="mb-0">購物車</h3>
+    <h4 class="mb-0">購物車</h4>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="checkAll">
       <label class="form-check-label" for="checkAll">全選顯示到結算表</label>
@@ -238,7 +215,44 @@
     </div>
   </div>
 </div>
-
+<div class="footer">
+            <div class="container" >
+                <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
+                    <div class="col-md-4" style="padding-left: 30px;">
+                        <h3>聯絡我們</h3>
+                        <p>電子郵件：
+                            <a href="mailto:treasurehub@gmail.com">
+                                treasurehub@gmail.com
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-4" style="padding-left: 30px;">
+                        <h3>關於我們</h3>
+                        <p>一個專為大學生打造的二手商場、校園商機、資訊交易整合平台</p>
+                    </div>
+                    <div class="col-md-4" style="padding-left: 30px;"> 
+                        <h3>社交媒體</h3>
+                        <p class="d-flex">
+                            <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 3rem; padding-right: 18px;"></i></a><br>
+                            <a href="#" target="_blank"><i class="fa-brands fa-line" style="font-size: 3rem;"></i></a>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <p>Copyright&copy; 2025拾貨寶庫｜All Rights Reserved.</p>
+                        <div class="footer-row d-md-flex justify-content-center d-none">
+                            <li><a href="../introduce/introduce.html">關於我們</a></li>
+                            <li><a href="../questions/questions.html">常見問題</a></li>
+                            <li><a href="../communication/communication.html">客服諮詢</a></li>
+                            <li><a href="../policy/policy.html">隱私政策</a></li>
+                            <li><a href="#">使用條款</a></li>
+                            <li><a href="#">退換貨政策</a></li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 </main>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

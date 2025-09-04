@@ -88,46 +88,17 @@ function normalizeCartResponse(payload) {
       price,
       img,
       qty,
+      // 🔽 先留欄位，之後補齊
+      category: '',
+      newOrOld: '',
+      age: '',
+      description: '',
       checked: false,
-      _needEnrich: !row.item // 沒有內嵌商品資訊 → 等一下補打詳情
+      _needEnrich: !row.item // 沒有內嵌詳情 → 需要補打 getItemsInfo
     };
   });
 }
 
-
-// // ============ 4) 初次載入 API ============
-// async function initCartFromAPI() {
-//   try {
-//     const res  = await backendService.getMyCart();
-//     const list = normalizeCartResponse(res);
-//     cartItems  = Array.isArray(list) ? list : [];
-//     saveState(cartItems);
-
-//     // 狀態 UI
-//     if (statusSelect) {
-//       statusSelect.value = orderStatus;
-//     }
-
-//     // 還原面交資料
-//     (function restorePickup() {
-//       const info = loadPickup();
-//       if (pickupName && info.name)     pickupName.value     = info.name;
-//       if (pickupPhone && info.phone)   pickupPhone.value    = info.phone;
-//       if (pickupPlace && info.place)   pickupPlace.value    = info.place;
-//       if (pickupDatetime && info.datetime) pickupDatetime.value = info.datetime;
-//       if (pickupNote && info.note)     pickupNote.value     = info.note;
-//     })();
-
-//     renderCart();
-//     updateSummary();
-//   } catch (err) {
-//     console.error('getMyCart 失敗：', err);
-//     const fallback = loadState();
-//     cartItems = Array.isArray(fallback) ? fallback : [];
-//     renderCart();
-//     updateSummary();
-//   }
-// }
 async function initCartFromAPI() {
   try {
     const res  = await backendService.getMyCart();
@@ -180,12 +151,21 @@ async function enrichMissingProductFields(items) {
         ?? (Array.isArray(p.images) ? p.images[0] : undefined)
         ?? 'https://via.placeholder.com/120x120?text=No+Image';
 
-      // 回填
+      // 🔽 這四個欄位的常見對應（可依你後端實際命名調整）
+      const category    = p.category ?? p.categoryName ?? p.type ?? '';
+      const newOrOld    = p.new_or_old ?? p.condition ?? p.state ?? '';
+      const age         = p.age ?? p.usageAge ?? p.usedFor ?? '';
+      const description = p.description ?? p.desc ?? '';
+
       items[it._idx] = {
         ...items[it._idx],
-        name: items[it._idx].name || name,
-        price: items[it._idx].price || price,
-        img: items[it._idx].img || img,
+        name:        items[it._idx].name || name,
+        price:       items[it._idx].price || price,
+        img:         items[it._idx].img || img,
+        category:    category,
+        newOrOld:    newOrOld,
+        age:         age,
+        description: description,
         _needEnrich: false
       };
     });
@@ -220,14 +200,21 @@ function renderCart() {
     li.className = 'list-group-item';
     li.dataset.id = item.id;
     li.innerHTML = `
-      <div class="d-flex align-items-center">
-        <input class="form-check-input me-3 cart-check" type="checkbox" ${item.checked ? 'checked':''}>
+      <div class="d-flex align-items-start">
+        <input class="form-check-input me-3 cart-check mt-1" type="checkbox" ${item.checked ? 'checked':''}>
         <img src="${item.img}" alt="${item.name}" class="item-thumb me-3">
         <div class="flex-grow-1">
           <div class="d-flex justify-content-between align-items-start">
             <h6 class="mb-1">${item.name}</h6>
             <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
           </div>
+
+          <div class="d-flex flex-column">
+            <h6 class="mb-1">${item.name}</h6>
+            <div class="muted-sm"># ${item.category || ''} # ${item.newOrOld || ''} # ${item.age || ''}</div>
+            <p class="mb-2">${item.description || ''}</p>
+          </div>
+
           <div class="d-flex align-items-center gap-2 mt-2">
             <label class="muted-sm">數量</label>
             <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input">
