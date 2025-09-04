@@ -45,27 +45,42 @@ class BackendService {
         }
     }
     async login(userData) {
-        let _this = this;
-        let response;
         try {
-            response = await axios.post(`${this.baseUrl}/api/account/login`, userData);
-        } catch (error) {
-            console.error("登入錯誤：", error);
-            throw new Error("登入失敗，請稍後再試");
-        }
-        let uid = response.data.data.uid;
-        localStorage.setItem('uid', uid); // 儲存使用者ID
-        await _this.whoami(
-            function(data) {
-                console.log("使用者資訊：", data);
-            },
-            function(error) {
-                console.error("無法取得使用者資訊", error);
+            const response = await axios.post(
+            `${this.baseUrl}/api/account/login`,
+            userData,
+            { withCredentials: true, headers: { 'Content-Type': 'application/json' } }
+            );
+
+            const uid = response?.data?.data?.uid;
+            if (uid) localStorage.setItem('uid', uid);
+
+            // 若 whoami / getUserData 是 Promise 版
+            if (typeof this.whoami === 'function') {
+            try { await this.whoami(); } catch (_) {}
             }
-        );
-        await _this.getUserData();
-        return response;
-    }
+            if (typeof this.getUserData === 'function') {
+            try { await this.getUserData(); } catch (_) {}
+            }
+
+            return response;
+        } catch (error) {
+            console.error('登入錯誤：', error);
+
+            // 友善化錯誤訊息
+            const status = error?.response?.status;
+            const msg    = error?.response?.data?.message;
+
+            if (status === 401 || /invalid/i.test(msg)) {
+            throw new Error('帳號或密碼錯誤');
+            }
+            if (status === 429) {
+            throw new Error('嘗試次數過多，請稍後再試');
+            }
+            throw new Error('登入失敗，請稍後再試');
+        }
+        }
+
 
     getUserData() {
         // 從 localStorage 取出
