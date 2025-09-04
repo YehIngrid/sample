@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
   if (backendService.isLoggedIn()) {
-    colnsole.log('使用者已登入');
+    console.log('使用者已登入');
     document.getElementById('loginornot').textContent = '登出';
     document.getElementById('username').textContent = localStorage.getItem('username') || "username";
   } else {
