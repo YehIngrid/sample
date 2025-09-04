@@ -80,7 +80,8 @@ function normalizeCartResponse(payload) {
       ?? 'https://via.placeholder.com/120x120?text=No+Image';
 
     const qty = Number(row.quantity) || 1;
-
+    const description = embedded.description || '';
+    const ownerId = embedded.ownerId || '';
     return {
       id: String(cartItemId),        // ✅ 購物車項目 id（刪除時用）
       productId: String(productId),  // ✅ 商品 id（補打詳情用）
@@ -92,7 +93,8 @@ function normalizeCartResponse(payload) {
       category: '',
       newOrOld: '',
       age: '',
-      description: '',
+      description,
+      ownerId,
       owner: '',
       checked: false,
       _needEnrich: !row.item // 沒有內嵌詳情 → 需要補打 getItemsInfo
