@@ -60,16 +60,13 @@ ul{
 
 .swal2-title {
   color: #383838;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 
 .swal2-confirm {
   background: linear-gradient(to left bottom, #c8f5e6, #c4def7);
   color: #383838;
-  font-size: 1.2rem;
-}
-.swal2-html-container {
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 .swal2-cancel {
   background-color: #bbb;

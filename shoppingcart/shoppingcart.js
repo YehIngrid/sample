@@ -66,12 +66,65 @@ function normalizeCartResponse(payload) {
   });
 }
 
+// // ============ 4) 初次載入 API ============
+// async function initCartFromAPI() {
+//   try {
+//     const res  = await backendService.getMyCart();
+//     const list = normalizeCartResponse(res);
+//     cartItems  = Array.isArray(list) ? list : [];
+//     saveState(cartItems);
+
+//     // 狀態 UI
+//     if (statusSelect) {
+//       statusSelect.value = orderStatus;
+//     }
+
+//     // 還原面交資料
+//     (function restorePickup() {
+//       const info = loadPickup();
+//       if (pickupName && info.name)     pickupName.value     = info.name;
+//       if (pickupPhone && info.phone)   pickupPhone.value    = info.phone;
+//       if (pickupPlace && info.place)   pickupPlace.value    = info.place;
+//       if (pickupDatetime && info.datetime) pickupDatetime.value = info.datetime;
+//       if (pickupNote && info.note)     pickupNote.value     = info.note;
+//     })();
+
+//     renderCart();
+//     updateSummary();
+//   } catch (err) {
+//     console.error('getMyCart 失敗：', err);
+//     const fallback = loadState();
+//     cartItems = Array.isArray(fallback) ? fallback : [];
+//     renderCart();
+//     updateSummary();
+//   }
+// }
 // ============ 4) 初次載入 API ============
+// 原本的函式上方或下方都可，直接覆蓋原本的 initCartFromAPI
 async function initCartFromAPI() {
   try {
     const res  = await backendService.getMyCart();
-    const list = normalizeCartResponse(res);
+
+    // 🔎 把最完整的回傳印出來，方便你比對 keys
+    console.log('[getMyCart 原始回傳]', JSON.parse(JSON.stringify(res)));
+
+    // 🧠 放寬解析：若第一輪抓不到陣列，再嘗試幾種常見路徑
+    let list = normalizeCartResponse(res);
+    if (!Array.isArray(list) || list.length === 0) {
+      const maybe =
+        res?.data?.cart?.items ||
+        res?.data?.cartItems ||
+        res?.data?.items ||
+        res?.cart?.items ||
+        res?.items ||
+        res?.data?.commodities ||
+        [];
+      if (Array.isArray(maybe)) list = normalizeCartResponse(maybe);
+    }
+
     cartItems  = Array.isArray(list) ? list : [];
+    console.table(cartItems.map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty })));
+
     saveState(cartItems);
 
     // 狀態 UI
@@ -82,12 +135,18 @@ async function initCartFromAPI() {
     // 還原面交資料
     (function restorePickup() {
       const info = loadPickup();
-      if (pickupName && info.name)     pickupName.value     = info.name;
-      if (pickupPhone && info.phone)   pickupPhone.value    = info.phone;
-      if (pickupPlace && info.place)   pickupPlace.value    = info.place;
+      if (pickupName && info.name)         pickupName.value     = info.name;
+      if (pickupPhone && info.phone)       pickupPhone.value    = info.phone;
+      if (pickupPlace && info.place)       pickupPlace.value    = info.place;
       if (pickupDatetime && info.datetime) pickupDatetime.value = info.datetime;
-      if (pickupNote && info.note)     pickupNote.value     = info.note;
+      if (pickupNote && info.note)         pickupNote.value     = info.note;
     })();
+
+    // ⚠️ 節點保險：萬一被改 id，早點報錯
+    if (!cartList) {
+      console.error('找不到 #cart-items 容器，請確認 HTML 是否仍有 <div id="cart-items">');
+      return;
+    }
 
     renderCart();
     updateSummary();
