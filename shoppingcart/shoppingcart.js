@@ -93,6 +93,7 @@ function normalizeCartResponse(payload) {
       newOrOld: '',
       age: '',
       description: '',
+      owner: '',
       checked: false,
       _needEnrich: !row.item // 沒有內嵌詳情 → 需要補打 getItemsInfo
     };
@@ -156,6 +157,7 @@ async function enrichMissingProductFields(items) {
       const newOrOld    = p.new_or_old ?? p.condition ?? p.state ?? '';
       const age         = p.age ?? p.usageAge ?? p.usedFor ?? '';
       const description = p.description ?? p.desc ?? '';
+      const owner       = p.owner ?? p.seller ?? '未知賣家';
 
       items[it._idx] = {
         ...items[it._idx],
@@ -166,6 +168,7 @@ async function enrichMissingProductFields(items) {
         newOrOld:    newOrOld,
         age:         age,
         description: description,
+        owner:       owner,
         _needEnrich: false
       };
     });
@@ -204,13 +207,12 @@ function renderCart() {
         <input class="form-check-input me-3 cart-check mt-1" type="checkbox" ${item.checked ? 'checked':''}>
         <img src="${item.img}" alt="${item.name}" class="item-thumb me-3">
         <div class="flex-grow-1">
-          <div class="d-flex justify-content-between align-items-start">
-            <h6 class="mb-1">${item.name}</h6>
-            <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
-          </div>
-
           <div class="d-flex flex-column">
-            <h6 class="mb-1">${item.name}</h6>
+            <p>${item.owner}</p>
+            <div class="d-flex justify-content-between align-items-start">
+              <h6 class="mb-1">${item.name}</h6>
+              <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
+            </div>
             <div class="muted-sm"># ${item.category || ''} # ${item.newOrOld || ''} # ${item.age || ''}</div>
             <p class="mb-2">${item.description || ''}</p>
           </div>
