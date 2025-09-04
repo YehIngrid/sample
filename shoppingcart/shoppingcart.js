@@ -45,26 +45,65 @@ const pickupDatetime  = document.getElementById('pickup-datetime');
 const pickupNote      = document.getElementById('pickup-note');
 
 // ============ 3) 後端回傳 -> 前端統一格式 ============
+// ============ 3) 後端回傳 -> 前端統一格式 ============
+// 直接覆蓋原本的 normalizeCartResponse
 function normalizeCartResponse(payload) {
+  // 把 data.cartItems 納入候選，避免吃空
   const candidates = [
+    payload?.data?.cartItems,        // ✅ 你的實際回傳位置
     payload?.data?.commodities,
     payload?.data?.cart?.items,
     payload?.data?.items,
     payload?.cartItems,
     payload?.items,
     payload?.data,
+    Array.isArray(payload) ? payload : null,
     payload
-  ];
+  ].filter(Boolean);
+
   const rawList = candidates.find(arr => Array.isArray(arr)) || [];
+
   return rawList.map(row => {
-    const id    = String(row.id ?? row._id ?? row.commodityId ?? row.productId ?? '');
-    const name  = row.name ?? row.title ?? '未命名商品';
-    const price = Number(row.price ?? row.unitPrice ?? row.amount ?? 0);
-    const img   = row.imageUrl ?? row.img ?? (Array.isArray(row.images) ? row.images[0] : undefined) ?? 'https://via.placeholder.com/120x120?text=No+Image';
-    const qty   = Number(row.qty ?? row.quantity ?? row.count ?? 1) || 1;
-    return { id, name, price, img, qty, checked: false };
+    // 後端會給：id(購物車項目id)、itemId(商品id)、quantity(數量)、price(...)
+    const cartItemId = row.id ?? row._id ?? '';
+    const productId  = row.itemId ?? row.commodityId ?? row.productId ?? '';
+
+    // 名稱/圖片：若後端包在 product 物件，優先取用；否則給預設
+    const product = row.product || {};
+    const name = row.name
+      ?? product.name
+      ?? product.title
+      ?? '未命名商品';
+
+    const price = Number(
+      row.price
+      ?? product.price
+      ?? row.unitPrice
+      ?? 0
+    ) || 0;
+
+    const img =
+      row.imageUrl
+      ?? product.imageUrl
+      ?? product.cover
+      ?? product.thumbnail
+      ?? (Array.isArray(product.images) ? product.images[0] : undefined)
+      ?? 'https://via.placeholder.com/120x120?text=No+Image';
+
+    const qty = Number(row.quantity ?? row.qty ?? row.count ?? 1) || 1;
+
+    return {
+      id: String(cartItemId),    // 用購物車項目 id；刪除時 removeItemsFromCart(id) 就能對到
+      productId: String(productId || ''), // 如需帶商品 id 給後端可用
+      name,
+      price,
+      img,
+      qty,
+      checked: false
+    };
   });
 }
+
 
 // // ============ 4) 初次載入 API ============
 // async function initCartFromAPI() {
