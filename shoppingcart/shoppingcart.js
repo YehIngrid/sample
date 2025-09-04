@@ -200,7 +200,7 @@ function renderCart() {
     li.className = 'list-group-item';
     li.dataset.id = item.id;
     li.innerHTML = `
-      <div class="d-flex align-items-start">
+      <div class="d-flex align-items-start" id="lookInfo">
         <input class="form-check-input me-3 cart-check mt-1" type="checkbox" ${item.checked ? 'checked':''}>
         <img src="${item.img}" alt="${item.name}" class="item-thumb me-3">
         <div class="flex-grow-1">
@@ -224,6 +224,17 @@ function renderCart() {
         </div>
       </div>
     `;
+    const lookInfo = li.querySelector('#lookInfo');
+    if (lookInfo) {
+      lookInfo.style.cursor = 'pointer';
+      lookInfo.addEventListener('click', () => {
+        if (item.productId) {
+          window.location.href = `../shop/item.html?id=${item.productId}`;
+        } else {
+          alert('此商品無法連結到詳情頁');
+        }
+      });
+    }
     cartList.appendChild(li);
   });
 }
