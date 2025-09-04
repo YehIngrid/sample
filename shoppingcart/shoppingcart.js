@@ -49,7 +49,7 @@ const pickupNote      = document.getElementById('pickup-note');
 function normalizeCartResponse(payload) {
   // 你的實際回傳位置：data.cartItems
   const candidates = [
-    payload?.data?.cartItems,      // ✅ 依你提供的規格
+    payload?.data?.data?.cartItems,      // ✅ 依你提供的規格
     payload?.data,                 // 兜底
     Array.isArray(payload) ? payload : null,
     payload
