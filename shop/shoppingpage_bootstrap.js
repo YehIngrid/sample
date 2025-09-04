@@ -128,7 +128,7 @@ nextHotBtn.addEventListener("click", () => {
 });
   // 確保所有 DOM 元素都已經載入
   const form = document.getElementById('createCommodityForm');
-  const openModalBtn = document.getElementById('openModal');
+  const openModalBtn = document.getElementById('create');
   console.log('openModal 按鈕:', openModalBtn);
   
   // 將 submit 事件綁定到 form 上
