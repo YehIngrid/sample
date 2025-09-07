@@ -377,3 +377,72 @@ async function onAddToCart(e) {
     btn.disabled = false;
   }
 }
+// Promise 版
+async function showSellerCommodities(id) {
+  const sellerCommodities = document.querySelector('#sellerCommodities');
+  if (!sellerCommodities) return;
+
+  const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span>NT$</span>`;
+  const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u));
+
+  try {
+    const response = await backendService.getUserCommodities(id); // ← 這裡假設回傳 Promise
+    const products = response?.data?.data ?? [];
+
+    if (!Array.isArray(products) || products.length === 0) {
+      sellerCommodities.style.display = 'none';
+      return;
+    }
+
+    sellerCommodities.style.display = ''; // 確保顯示
+    sellerCommodities.innerHTML = '';
+
+    const frag = document.createDocumentFragment();
+
+    products.forEach((product) => {
+      const col = document.createElement('div');
+      col.className = 'col-6 col-md-4 col-lg-3 mb-3';
+
+      const card = document.createElement('div');
+      card.className = 'card h-100';
+
+      const img = document.createElement('img');
+      img.src = toFullURL(product.mainImage) || 'https://picsum.photos/300/300?grayscale';
+      img.className = 'card-img-top';
+      img.alt = product.name || '商品圖片';
+      img.loading = 'lazy';
+      img.referrerPolicy = 'no-referrer';
+      img.onerror = () => { img.src = 'https://picsum.photos/300/300?grayscale'; };
+
+      const cardBody = document.createElement('div');
+      cardBody.className = 'card-body d-flex flex-column';
+
+      const title = document.createElement('h5');
+      title.className = 'card-title';
+      title.textContent = product.name || '未命名';
+
+      const price = document.createElement('p');
+      price.className = 'card-text mt-auto mb-2';
+      price.innerHTML = formatPrice(product.price);
+
+      const link = document.createElement('a');
+      const pid = product.id ?? product._id ?? product.commodityId ?? '';
+      link.href = `./product.html?id=${encodeURIComponent(pid)}`;
+      link.className = 'btn btn-primary w-100 mt-auto';
+      link.textContent = '查看商品';
+
+      cardBody.appendChild(title);
+      cardBody.appendChild(price);
+      cardBody.appendChild(link);
+      card.appendChild(img);
+      card.appendChild(cardBody);
+      col.appendChild(card);
+      frag.appendChild(col);
+    });
+
+    sellerCommodities.appendChild(frag);
+  } catch (err) {
+    console.error('取得賣家商品失敗：', err);
+    sellerCommodities.style.display = 'none';
+  }
+}

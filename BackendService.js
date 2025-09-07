@@ -310,6 +310,15 @@ class BackendService {
             return Promise.reject(error);
         }
     }
+    async getUserCommodities(uid) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/user/${uid}`);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
     // logout(userData, fnSuccess, fnError) {
     //     return axios
     // }

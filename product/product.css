@@ -582,3 +582,9 @@
     .cta-wrap > .btn { min-height: 48px; }
 .meta-row { line-height: 1.6; }
 .meta-row .text-muted { color: #6b7280 !important; }
+.sellertopic {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  margin-top: 30px;
+}
