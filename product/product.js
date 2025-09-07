@@ -232,7 +232,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         const sellerIntroduction  = u.introduction || '賣家簡介';
         // 這裡確保是數字；u.rate 可能是字串
         const sellerRate          = Number.isFinite(+u.rate) ? +u.rate : 0;
-        const sellerId            = u.id ?? u.uid ?? u._id ?? '';
+        const sellerId            = u.accountId;
 
         // 組成 renderSellerInfo 需要的結構
         const data = {
@@ -244,7 +244,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         };
 
         renderSellerInfo(data);
-        showSellerCommodities(data.id); // 顯示賣家其他商品
+        showSellerCommodities(sellerId); // 顯示賣家其他商品
     } else {
       // 沒有 owner：可隱藏整張卡
       document.getElementById('sellerInfo')?.classList.add('d-none');
