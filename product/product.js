@@ -380,7 +380,7 @@ async function onAddToCart(e) {
 }
 // Promise 版
 async function showSellerCommodities(id) {
-  const sellerCommodities = document.querySelector('#sellerCommodities');
+  const sellerCommodities = document.querySelector('sellerCommodities');
   console.log('sellerCommodities:', sellerCommodities);
   if (!sellerCommodities) return;
 
