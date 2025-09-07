@@ -244,7 +244,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         };
 
         renderSellerInfo(data);
-        showSellerCommodities(sellerId); // 顯示賣家其他商品
+        showSellerCommodities(data.id); // 顯示賣家其他商品
     } else {
       // 沒有 owner：可隱藏整張卡
       document.getElementById('sellerInfo')?.classList.add('d-none');
@@ -389,7 +389,7 @@ async function showSellerCommodities(id) {
 
   try {
     const response = await backendService.getUserCommodities(id); // ← 這裡假設回傳 Promise
-    const products = response?.data?.commodities ?? [];
+    const products = response?.data?.data.commodities ?? [];
     console.log('賣家商品：', products);
     if (!Array.isArray(products) || products.length === 0) {
       sellerCommodities.style.display = 'none';
