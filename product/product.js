@@ -244,6 +244,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         };
 
         renderSellerInfo(data);
+        showSellerCommodities(sellerId); // 顯示賣家其他商品
     } else {
       // 沒有 owner：可隱藏整張卡
       document.getElementById('sellerInfo')?.classList.add('d-none');
