@@ -380,6 +380,7 @@ async function onAddToCart(e) {
 // Promise 版
 async function showSellerCommodities(id) {
   const sellerCommodities = document.querySelector('#sellerCommodities');
+  console.log('sellerCommodities:', sellerCommodities);
   if (!sellerCommodities) return;
 
   const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span>NT$</span>`;
@@ -388,7 +389,7 @@ async function showSellerCommodities(id) {
   try {
     const response = await backendService.getUserCommodities(id); // ← 這裡假設回傳 Promise
     const products = response?.data?.data ?? [];
-
+    console.log('賣家商品：', products);
     if (!Array.isArray(products) || products.length === 0) {
       sellerCommodities.style.display = 'none';
       return;
