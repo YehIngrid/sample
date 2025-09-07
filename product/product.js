@@ -389,7 +389,7 @@ async function showSellerCommodities(id) {
 
   try {
     const response = await backendService.getUserCommodities(id); // ← 這裡假設回傳 Promise
-    const products = response?.data?.data?.commodities ?? [];
+    const products = response?.data?.commodities ?? [];
     console.log('賣家商品：', products);
     if (!Array.isArray(products) || products.length === 0) {
       sellerCommodities.style.display = 'none';
