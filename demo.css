@@ -45,6 +45,7 @@ ul{
 .container-fluid{
     width: 91vw !important;
     margin: 0 auto !important;
+    flex-wrap: nowrap;
 }
 .container-fluid1{
     background-color: #fbfbfb;
@@ -110,10 +111,6 @@ ul{
     font-size: 1rem;
 }
 
-/* 使用 flex-wrap 讓 navbar 內容可換行 */
-.container-fluid.flex-wrap {
-    flex-wrap: wrap;
-  }
   #loginornot {
     font-size: 1.2rem;
   }
