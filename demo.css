@@ -15,12 +15,9 @@
     align-items: end;
 }
 .nav-link{
-    font-size: 14px !important;
+    padding-left: 30px !important;
 }
 @media (max-width: 1200px) {
-    .nav-link{
-        font-size: 12px !important;
-    }
     .form-search{
         width: 25% !important;
     }
@@ -83,10 +80,10 @@ ul{
     padding: 2rem;
     margin-top: 20vh;
     padding-bottom: 10px;
-    font-size:1.2rem;
+    font-size:1rem;
 }
 .footer h3 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 1.2rem;
     color: #f0f6fd;
 }
@@ -106,14 +103,16 @@ ul{
 .footer-row li a {
     color: white;
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 /* 使用 flex-wrap 讓 navbar 內容可換行 */
 .container-fluid.flex-wrap {
     flex-wrap: wrap;
   }
-  
+  #loginornot {
+    font-size: 1.2rem;
+  }
   /* 手機版 (max-width: 991px)：
      - 搜尋表單預設隱藏，且在換行後佔滿整行 */
   @media (max-width: 991px) {

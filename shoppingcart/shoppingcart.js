@@ -221,8 +221,10 @@ function renderCart() {
           <div class="d-flex align-items-center gap-2 mt-2" style="font-size: 0.9rem;">
             <label class="muted-sm">數量</label>
             <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input" style="width:100px">
-            <button class="badge text-bg-dark btn-look" type="button">查看</button>
-            <button class="btn btn-light btn-sm ms-auto btn-remove" type="button">刪除</button>
+            <div>
+              <button class="badge text-bg-dark btn-look" type="button">查看</button>
+              <button class="btn btn-light btn-sm ms-auto btn-remove" type="button">刪除</button>
+            </div>
           </div>
         </div>
       </div>

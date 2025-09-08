@@ -88,11 +88,11 @@ async function callLogin() {
     Swal.fire({ icon: 'warning', title: '請輸入帳號與密碼' });
     return;
   }
-
-  const backendService = new BackendService();
-  // 顯示 loader
   const loaderLogin = document.getElementById('loaderLogin');
   loaderLogin.style.display = 'flex';
+  const backendService = new BackendService();
+  // 顯示 loader
+  
   try {
     const resp = await backendService.login({ email, password });
     console.log('回傳資料：', resp.data);
