@@ -14,13 +14,14 @@ axios.defaults.headers.common.idtoken = getIdTokenSomehow();
 */
 
 // ============ 1) 建立 service ============ 
+// ============ 0) 初始化 ============
 let backendService = null;
 document.addEventListener('DOMContentLoaded', () => {
   backendService = new BackendService();
   initCartFromAPI(); // 頁面載入就打 API
 });
 
-// ============ 2) 共用狀態 / 工具 ============
+// ============ 1) 共用狀態 / 工具 ============
 const LS_KEY = 'cart_state_v1';
 const LS_STATUS_KEY = 'order_status_v1';
 const LS_PICKUP_KEY = 'pickup_info_v1';
@@ -31,6 +32,11 @@ function loadStatus() { return localStorage.getItem(LS_STATUS_KEY) || 'processin
 function saveStatus(v) { localStorage.setItem(LS_STATUS_KEY, v); }
 function loadPickup() { try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; } }
 function savePickup(info) { localStorage.setItem(LS_PICKUP_KEY, JSON.stringify(info)); }
+
+// 若外部沒提供 updateSummary，避免报错
+if (typeof window.updateSummary !== 'function') {
+  window.updateSummary = function noop() {};
+}
 
 let cartItems = [];                  // 由 API 載入
 let orderStatus = loadStatus();
@@ -44,6 +50,7 @@ const pickupPlace     = document.getElementById('pickup-place');
 const pickupDatetime  = document.getElementById('pickup-datetime');
 const pickupNote      = document.getElementById('pickup-note');
 
+// ============ 2) 資料正規化 ============
 function normalizeCartResponse(payload) {
   const candidates = [
     payload?.data?.data?.cartItems,
@@ -58,7 +65,7 @@ function normalizeCartResponse(payload) {
     const cartItemId = row.id;
     const productId  = row.itemId ?? '';
     const embedded   = row.item || {};
-    const owner = row.owner;
+    const ownerObj   = row.owner || {};
 
     const name  = row.name ?? embedded.name ?? '未命名商品';
     const price = Number(row.price ?? embedded.price ?? 0) || 0;
@@ -68,6 +75,7 @@ function normalizeCartResponse(payload) {
       (Array.isArray(embedded.images) ? embedded.images[0] : undefined) ??
       'https://via.placeholder.com/120x120?text=No+Image';
 
+    // API 已保證有 quantity，但保守起見仍做數字化
     const qty  = Number(row.quantity) || 1;
     const desc = embedded.description || '';
 
@@ -86,15 +94,15 @@ function normalizeCartResponse(payload) {
       img,
       qty,
       description: desc,
-      owner_name: owner.name || '未知賣家',
-      owner_photo: owner.photoURL || '../image/default-avatar.png',
+      owner_name: ownerObj.name || '未知賣家',
+      owner_photo: ownerObj.photoURL || '../image/default-avatar.png',
       checked: false,
       _needEnrich: needEnrich
     };
   });
 }
 
-
+// ============ 3) 取購物車 ============
 async function initCartFromAPI() {
   try {
     const res  = await backendService.getMyCart();
@@ -113,7 +121,7 @@ async function initCartFromAPI() {
       if (pickupNote && info.note)         pickupNote.value     = info.note;
     })();
 
-    // 🔽 先渲染一版（若 item 已內嵌就會完整），再補齊缺的
+    // 先渲染，再補齊商品資訊
     renderCart();
     updateSummary();
     await enrichMissingProductFields(cartItems);
@@ -126,8 +134,7 @@ async function initCartFromAPI() {
   }
 }
 
-
-
+// ============ 4) 取商品詳情補齊 ============
 function getItemInfoAsync(id) {
   return new Promise((resolve, reject) => {
     backendService.getItemsInfo(
@@ -146,7 +153,7 @@ async function enrichMissingProductFields(items) {
   if (need.length === 0) return;
 
   const jobs = need.map(async (it) => {
-    const p = await getItemInfoAsync(it.productId);  // ← 這裡直接拿到商品物件（json.data）
+    const p = await getItemInfoAsync(it.productId);  // ← 直接拿到商品物件（json.data）
     console.log('[enrich] 詳情', it.productId, p);
 
     const name  = p.name ?? '未命名商品';
@@ -160,7 +167,8 @@ async function enrichMissingProductFields(items) {
       name:        items[it._idx].name || name,
       price:       items[it._idx].price || price,
       img:         items[it._idx].img || img,
-      owner,
+      owner_name:  p.owner?.name || items[it._idx].owner_name,
+      owner_photo: p.owner?.photoURL || items[it._idx].owner_photo,
       description: typeof p.description === 'string' ? p.description : (items[it._idx].description || ''),
       _needEnrich: false
     };
@@ -172,11 +180,12 @@ async function enrichMissingProductFields(items) {
   updateSummary();
 }
 
-
 // ============ 5) 渲染商品清單 ============
 function renderCart() {
+  if (!cartList) return;
+
   cartList.innerHTML = '';
-  if (cartItems.length === 0) {
+  if (!Array.isArray(cartItems) || cartItems.length === 0) {
     cartList.innerHTML = `<div class="alert alert-light text-center">目前沒有商品</div>`;
     const all = document.getElementById('checkAll');
     if (all) all.checked = false;
@@ -200,35 +209,73 @@ function renderCart() {
           <div class="d-flex flex-column">
             <div class="d-flex justify-content-between align-items-start">
               <h6 class="mb-1">${item.name}</h6>
-              <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
+              <div class="price text-primary">NT$ ${Number(item.price || 0).toLocaleString('zh-TW')}</div>
             </div>
-            <div class="muted-sm d-flex">
-              <img src="${owner.photoURL}" alt="../image/default-avatar.png" class="owner-avatar me-1">
-              <p>${owner.name}</p>
+            <div class="muted-sm d-flex align-items-center">
+              <img src="${item.owner_photo}" alt="${item.owner_name}" class="owner-avatar me-2">
+              <p class="mb-0">${item.owner_name}</p>
             </div>
             <p class="mb-2">${item.description || ''}</p>
           </div>
 
           <div class="d-flex align-items-center gap-2 mt-2" style="font-size: 0.9rem;">
             <label class="muted-sm">數量</label>
-            <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input">
-            <button class="badge text-bg-dark" id="lookInfo">查看</button>
-            <button class="btn btn-light btn-sm ms-auto btn-remove">刪除</button>
+            <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input" style="width:100px">
+            <button class="badge text-bg-dark btn-look" type="button">查看</button>
+            <button class="btn btn-light btn-sm ms-auto btn-remove" type="button">刪除</button>
           </div>
         </div>
       </div>
     `;
-    const lookInfo = li.querySelector('#lookInfo');
-    if (lookInfo) {
-      lookInfo.style.cursor = 'pointer';
-      lookInfo.addEventListener('click', () => {
+
+    // 綁事件：查看
+    const lookBtn = li.querySelector('.btn-look');
+    if (lookBtn) {
+      lookBtn.style.cursor = 'pointer';
+      lookBtn.addEventListener('click', () => {
         if (item.productId) {
-          window.location.href = `../product/product.html?id=${item.productId}`;
+          window.location.href = `../product/product.html?id=${encodeURIComponent(item.productId)}`;
         } else {
           alert('此商品無法連結到詳情頁');
         }
       });
     }
+
+    // 綁事件：勾選
+    const check = li.querySelector('.cart-check');
+    if (check) {
+      check.addEventListener('change', (e) => {
+        item.checked = !!e.target.checked;
+        const all = document.getElementById('checkAll');
+        if (all) all.checked = cartItems.every(x => x.checked);
+        saveState(cartItems);
+        updateSummary();
+      });
+    }
+
+    // 綁事件：數量
+    const qtyInput = li.querySelector('.qty-input');
+    if (qtyInput) {
+      qtyInput.addEventListener('input', (e) => {
+        const v = Math.max(1, Number(e.target.value) || 1);
+        e.target.value = v;
+        item.qty = v;
+        saveState(cartItems);
+        updateSummary();
+      });
+    }
+
+    // 綁事件：刪除
+    const removeBtn = li.querySelector('.btn-remove');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        cartItems = cartItems.filter(x => x.id !== item.id);
+        saveState(cartItems);
+        renderCart();
+        updateSummary();
+      });
+    }
+
     cartList.appendChild(li);
   });
 }
