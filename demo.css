@@ -44,6 +44,7 @@ ul{
 }
 .container-fluid{
     width: 91vw !important;
+    margin: 0 auto !important;
 }
 .container-fluid1{
     background-color: #fbfbfb;
