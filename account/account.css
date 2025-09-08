@@ -99,7 +99,7 @@ input::placeholder {
 }
 
 
-#loader-wrapper, #loader-wrapper1 {
+#loader-wrapper, #loaderLogin {
   position: fixed;
   top: 0;
   left: 0;
