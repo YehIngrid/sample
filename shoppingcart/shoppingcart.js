@@ -58,6 +58,7 @@ function normalizeCartResponse(payload) {
     const cartItemId = row.id;
     const productId  = row.itemId ?? '';
     const embedded   = row.item || {};
+    const owner = row.owner;
 
     const name  = row.name ?? embedded.name ?? '未命名商品';
     const price = Number(row.price ?? embedded.price ?? 0) || 0;
@@ -75,8 +76,7 @@ function normalizeCartResponse(payload) {
       !productId ||
       !embedded ||
       !embedded.mainImage ||              // 沒主圖
-      typeof embedded.description === 'undefined' || // 沒描述
-      !embedded.owner;                    // 沒 owner（你 render 需要）
+      typeof embedded.description === 'undefined';
 
     return {
       id: String(cartItemId),
@@ -86,11 +86,8 @@ function normalizeCartResponse(payload) {
       img,
       qty,
       description: desc,
-      owner: '',
-      // 之後要加的四個欄位先留空位
-      category: '',
-      newOrOld: '',
-      age: '',
+      owner_name: owner.name || '未知賣家',
+      owner_photo: owner.photoURL || '../image/default-avatar.png',
       checked: false,
       _needEnrich: needEnrich
     };
@@ -157,7 +154,6 @@ async function enrichMissingProductFields(items) {
     const img   = p.mainImage ?? p.imageUrl ??
                   (Array.isArray(p.imageUrl) ? p.imageUrl[0] : undefined) ??
                   'https://via.placeholder.com/120x120?text=No+Image';
-    const owner = p.owner?.name ?? '未知賣家';
 
     items[it._idx] = {
       ...items[it._idx],
@@ -165,9 +161,6 @@ async function enrichMissingProductFields(items) {
       price:       items[it._idx].price || price,
       img:         items[it._idx].img || img,
       owner,
-      category:    p.category ?? '',
-      newOrOld:    p.newOrOld ?? p.new_or_old ?? '',
-      age:         p.age ?? '',
       description: typeof p.description === 'string' ? p.description : (items[it._idx].description || ''),
       _needEnrich: false
     };
@@ -200,7 +193,7 @@ function renderCart() {
     li.className = 'list-group-item';
     li.dataset.id = item.id;
     li.innerHTML = `
-      <div class="d-flex align-items-start" id="lookInfo">
+      <div class="d-flex align-items-start">
         <input class="form-check-input me-3 cart-check mt-1" type="checkbox" ${item.checked ? 'checked':''}>
         <img src="${item.img}" alt="${item.name}" class="item-thumb me-3">
         <div class="flex-grow-1">
@@ -210,8 +203,8 @@ function renderCart() {
               <div class="price text-primary">NT$ ${item.price.toLocaleString()}</div>
             </div>
             <div class="muted-sm d-flex">
-              <img src="${item.owner.photoURL}" alt="../image/default-avatar.png" class="owner-avatar me-1">
-              <p>${item.owner}</p>
+              <img src="${owner.photoURL}" alt="../image/default-avatar.png" class="owner-avatar me-1">
+              <p>${owner.name}</p>
             </div>
             <p class="mb-2">${item.description || ''}</p>
           </div>
@@ -219,7 +212,8 @@ function renderCart() {
           <div class="d-flex align-items-center gap-2 mt-2" style="font-size: 0.9rem;">
             <label class="muted-sm">數量</label>
             <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input">
-            <button class="btn btn-outline-danger btn-sm ms-auto btn-remove">刪除</button>
+            <button class="badge text-bg-dark" id="lookInfo">查看</button>
+            <button class="btn btn-light btn-sm ms-auto btn-remove">刪除</button>
           </div>
         </div>
       </div>

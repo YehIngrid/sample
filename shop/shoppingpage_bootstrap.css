@@ -436,9 +436,8 @@ ul{
 }
 .card-title{
   font-size: 1.3rem;
-  padding-left: 6px;
-  padding-right: 6px;
-  padding-top: 10px;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 .card-text{
   color: #383838;
@@ -448,7 +447,6 @@ ul{
 }
 .price {
   font-size: 1rem;
-  padding-top: 10px;
 }
 .login{
   box-shadow: 0 ;
@@ -1387,16 +1385,16 @@ button {
 }
 .hotItemPrice {
   position: relative;
-  bottom: 40px;
+  bottom: 50px;
   background-color: #389afc;
   color: white;
   border-bottom-left-radius: 50px;
   border-top-left-radius: 50px;
   display: inline-block;
   font-size: 1.4rem;
-  padding: 4px 10px;
+  padding: 3px 10px;
   padding-right: 2px;
-  font-weight: 600;
+  font-weight: 500;
 }
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
 @media (max-width: 576px){
