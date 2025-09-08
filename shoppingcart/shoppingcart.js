@@ -65,8 +65,8 @@ function normalizeCartResponse(payload) {
     const cartItemId = row.id;
     const productId  = row.itemId ?? '';
     const embedded   = row.item || {};
-    const ownerObj   = row.owner || {};
-
+    const ownerObj   = embedded.owner || {};
+    console.log('商家名稱', ownerObj.name, ownerObj);
     const name  = row.name ?? embedded.name ?? '未命名商品';
     const price = Number(row.price ?? embedded.price ?? 0) || 0;
     const img   =
