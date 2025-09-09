@@ -261,7 +261,7 @@ class BackendService {
             return Promise.reject(error);
         }
     }
-    async addItemsToCart(commodityId, quantity = 1) {
+    async addItemsToCart(commodityId, quantity) {
         if (!commodityId) {
             return Promise.reject(new Error("Commodity ID is required"));
         }
@@ -275,6 +275,7 @@ class BackendService {
                 { quantity }, // <-- 必填 body
                 { headers: { "Content-Type": "application/json" }, withCredentials: true }
             );
+            console.log('quantity:', quantity);
             return response;
         } catch (error) {
             console.error("發生錯誤", error);

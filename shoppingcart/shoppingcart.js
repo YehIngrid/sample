@@ -222,7 +222,7 @@ function renderCart() {
             <label class="muted-sm">數量</label>
             <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input" style="width:100px">
             <div>
-              <button class="badge text-bg-dark btn-look" type="button">查看</button>
+              <button class="btn btn-dark btn-look" type="button">查看</button>
               <button class="btn btn-light btn-sm ms-auto btn-remove" type="button">刪除</button>
             </div>
           </div>
