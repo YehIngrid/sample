@@ -304,7 +304,7 @@ class BackendService {
     }
     async clearMyCart() {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/cart/clear`);
+            const response = await axios.delete(`${this.baseUrl}/api/cart/clear`);
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
