@@ -458,7 +458,7 @@
 
 <!-- TODO 商品資訊表單 -->
   <section class="formsection" id="seller">
-    <div class="icon-button" id="back-btn" style="margin-top: 10px; margin-bottom: 10px;">back</div>
+    <div class="icon-button" id="back-btn" style="margin-top: 10px; margin-bottom: 10px;"><i class="fa-solid fa-circle-arrow-left" style="margin-right: 5px;"></i>Back</div>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
@@ -474,109 +474,119 @@
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <img src="../webP/adseller.webp" alt="" class="adseller">
         <hr>
-        <div class="contentSeller">
-          <!-- TODO導覽頁 -->
-          <nav class="sortSeller">
-            <ul>
-              <li><a href="#所屬分類">所屬分類</a></li>
-              <li><a href="#商品尺寸">商品尺寸</a></li>
-              <li><a href="#新舊程度">新舊程度</a></li>
-              <li><a href="#照片">照片</a></li>
-              <li><a href="#常見錯誤示範">常見錯誤示範</a></li>
-            </ul>
-          </nav>
-          <!-- TODO 內容 -->
-          <main>
-            <h1>拾貨寶庫商品分類方法</h1>
-            <section id="所屬分類">
-              <h2>所屬分類</h2>
-              <ul>
-                <li style="font-weight: 600;">書籍與學籍用品</li>
-                <li>教科書、參考書、文具用品（如計算機、繪圖工具、筆記本）、學習卡片、筆記/習題集等。</li>
-                <li style="font-weight: 600;">宿舍與生活用品</li>
-                <li>床墊、衣架、燈具等宿舍用品、小型廚房用品（如電鍋、餐具）、風扇、暖風機等生活設備。</li>
-                <li style="font-weight: 600;">學生專用器材</li>
-                <li>實驗器材（護目鏡、手套等）、測量工具（如尺規、測量儀）等。</li>
-                <li style="font-weight: 600;">環保生活用品</li>
-                <li>環保餐具（如可重複使用的餐具組、餐盒、水瓶）、購物袋、手提袋等。</li>
-                <li style="font-weight: 600;">儲物與收納用品</li>
-                <li>收納盒、文件夾、掛鉤、收納架等。</li>
-                <li style="font-weight: 600;">其他</li>
-                <li>若不知道自己販賣的商品類別為何，請選擇其他。</li>
-              </ul>
-            </section>
-            <section id="商品尺寸">
-              <h2>商品尺寸</h2>
-              <p>商品尺寸分為大、中、小三種，請根據商品實際大小選擇。</p>
-              <ul>
-                <li><strong><span class="fontspecial">大</span></strong>如大型家具、電器等。</li>
-                <li><strong><span class="fontspecial">中</span></strong>如書籍、文具用品等。</li>
-                <li><strong><span class="fontspecial">小</span></strong>如小型電子產品、配件等。</li>
-              </ul>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">大型</th>
-                    <th scope="col">中型</th>
-                    <th scope="col">小型</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">長度/寬度/高度</th>
-                    <td>大於150cm</td>
-                    <td>30cm到150cm</td>
-                    <td>小於30cm</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">容量</th>
-                    <td>大於5L</td>
-                    <td>1L到5L</td>
-                    <td>小於1L</td>
-                  </tr>
-                </tbody>
-              </table>
-            </section>
-            <section id="新舊程度">
-              <h2>新舊程度</h2>
-              <p>商品的新舊程度分為六個等級，請根據商品實際狀況選擇：</p>
-              <ul>
-                <li><strong><span class="specialsort">全新</span></strong>未使用過的商品。</li>
-                <li><strong><span class="specialsort">幾乎全新</span></strong>使用次數極少，狀態良好。</li>
-                <li><strong><span class="specialsort">半新</span></strong>使用過，但狀態良好。</li>
-                <li><strong><span class="specialsort">適中</span></strong>有明顯使用痕跡，但仍可正常使用。</li>
-                <li><strong><span class="specialsort">稍舊</span></strong>有較多使用痕跡，可能有輕微損壞。</li>
-                <li><strong><span class="specialsort">全舊</span></strong>明顯使用痕跡，可能有較大損壞或缺陷。</li>
-              </ul>
-            </section>
-            <section id="照片">
-              <h2>主要照片</h2>
-              <p>商品的主要照片，建議使用清晰、明亮的圖片，能夠清楚展示商品的外觀和細節。</p>
-              <p>e.g</p>
-              <img style="margin-bottom: 50px; width: 200px;" src="../image/mainex.jpg" alt="範例主要圖片"><br>
-              <h2>次要照片</h2>
-              <p><strong>最多上傳5張</strong>，次要照片可以展示商品的其他角度、細節或使用情境，幫助買家更好地了解商品。</p>
-              <p>e.g</p>
-              <div class="d-lg-flex d-block">
-                <img src="../image/ex1.jpg" alt="範例次要圖片1" style="margin-bottom: 10px; width: 150px; margin-right: 10px;">
-                <img src="../image/ex2.jpg" alt="範例次要圖片2" style="margin-bottom: 10px; width: 150px; margin-right: 10px;">
-                <img src="../image/ex3.jpg" alt="範例次要圖片3" style="margin-bottom: 10px; width: 150px; margin-right: 10px;">
-                <img src="../image/ex4.jpg" alt="範例次要圖片4" style="margin-bottom: 10px; width: 150px; margin-right: 10px;">
-                <img src="../image/ex5.jpg" alt="範例次要圖片5" style="margin-bottom: 10px; width: 150px; ">
-              </div>
-            </section>
-            <!-- TODO: 常見錯誤示範 -->
-            <section id="常見錯誤示範">
-              <div class="d-block">
-                <h2>常見錯誤示範</h2>
-                <br>
-                <img src="../image/wrongphoto.png" alt="" class="d-lg-block d-none">
-                <img src="../image/mwrongphoto.png" alt="" class="d-lg-none d-block">
-              </div>
-            </section>
-          </main>
-        </div>
+        <!-- ========== 新版：左側目錄 + 右側內容（含 Back） ========== -->
+<div class="wrap-seller">
+  <!-- 左側目錄 -->
+  <nav class="toc-seller" id="tocSeller">
+    <h4>分類索引</h4>
+    <a href="#所屬分類">所屬分類</a>
+    <a href="#商品尺寸">商品尺寸</a>
+    <a href="#新舊程度">新舊程度</a>
+    <a href="#照片">照片</a>
+    <a href="#常見錯誤示範">常見錯誤示範</a>
+  </nav>
+
+  <!-- 右側內容 -->
+  <main class="content-seller">
+    <header class="page-title">
+      <h1>拾貨寶庫商品分類方法</h1>
+    </header>
+
+    <section id="所屬分類" class="sec">
+      <h2 style="margin-bottom: 20px;">所屬分類 <span class="badge-seller">必填</span></h2>
+      <ul class="bullet">
+        <li><strong>書籍與學籍用品</strong></li>
+        <li>教科書、參考書、文具用品（如計算機、繪圖工具、筆記本）、學習卡片、筆記/習題集等。</li>
+        <li><strong>宿舍與生活用品</strong></li>
+        <li>床墊、衣架、燈具等宿舍用品、小型廚房用品（如電鍋、餐具）、風扇、暖風機等生活設備。</li>
+        <li><strong>學生專用器材</strong></li>
+        <li>實驗器材（護目鏡、手套等）、測量工具（如尺規、測量儀）等。</li>
+        <li><strong>環保生活用品</strong></li>
+        <li>環保餐具（如可重複使用的餐具組、餐盒、水瓶）、購物袋、手提袋等。</li>
+        <li><strong>儲物與收納用品</strong></li>
+        <li>收納盒、文件夾、掛鉤、收納架等。</li>
+        <li><strong>其他</strong></li>
+        <li>若不知道自己販賣的商品類別為何，請選擇其他。</li>
+      </ul>
+    </section>
+
+    <section id="商品尺寸" class="sec">
+      <h2>商品尺寸 <span class="badge-seller">必填</span></h2>
+      <p>商品尺寸分為大、中、小三種，請根據商品實際大小選擇。</p>
+      <ul class="bullet">
+        <li><strong class="fontspecial">大</strong>：如大型家具、電器等。</li>
+        <li><strong class="fontspecial">中</strong>：如書籍、文具用品等。</li>
+        <li><strong class="fontspecial">小</strong>：如小型電子產品、配件等。</li>
+      </ul>
+
+      <div class="table-wrap">
+        <table class="table table-bordered table-sm">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">大型</th>
+              <th scope="col">中型</th>
+              <th scope="col">小型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">長度/寬度/高度</th>
+              <td>大於 150cm</td>
+              <td>30cm 到 150cm</td>
+              <td>小於 30cm</td>
+            </tr>
+            <tr>
+              <th scope="row">容量</th>
+              <td>大於 5L</td>
+              <td>1L 到 5L</td>
+              <td>小於 1L</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="新舊程度" class="sec">
+      <h2>新舊程度 <span class="badge-seller">必填</span></h2>
+      <p>商品的新舊程度分為六個等級，請根據商品實際狀況選擇：</p>
+      <ul class="bullet">
+        <li><strong class="specialsort">全新</strong>：未使用過的商品。</li>
+        <li><strong class="specialsort" style="margin-right: 15px !important;">幾乎全新</strong>：使用次數極少，狀態良好。</li>
+        <li><strong class="specialsort">半新</strong>：使用過，但狀態良好。</li>
+        <li><strong class="specialsort">適中</strong>：有明顯使用痕跡，但仍可正常使用。</li>
+        <li><strong class="specialsort">稍舊</strong>：有較多使用痕跡，可能有輕微損壞。</li>
+        <li><strong class="specialsort">全舊</strong>：明顯使用痕跡，可能有較大損壞或缺陷。</li>
+      </ul>
+    </section>
+
+    <section id="照片" class="sec">
+      <h2>主要照片 <span class="badge-seller">必填</span></h2>
+      <p>商品的主要照片，建議使用清晰、明亮的圖片，能夠清楚展示商品的外觀和細節。</p>
+      <p>e.g</p>
+      <img style="margin-bottom: 24px; width: 200px;" src="../image/mainex.jpg" alt="範例主要圖片"><br>
+
+      <h2>次要照片 <span class="badge-seller">必填</span></h2>
+      <p><strong>最多上傳 5 張</strong>，次要照片可以展示商品的其他角度、細節或使用情境，幫助買家更好地了解商品。</p>
+      <p>e.g</p>
+      <div class="d-lg-flex d-block">
+        <img src="../image/ex1.jpg" alt="範例次要圖片1" style="margin-bottom:10px;width:150px;margin-right:10px;">
+        <img src="../image/ex2.jpg" alt="範例次要圖片2" style="margin-bottom:10px;width:150px;margin-right:10px;">
+        <img src="../image/ex3.jpg" alt="範例次要圖片3" style="margin-bottom:10px;width:150px;margin-right:10px;">
+        <img src="../image/ex4.jpg" alt="範例次要圖片4" style="margin-bottom:10px;width:150px;margin-right:10px;">
+        <img src="../image/ex5.jpg" alt="範例次要圖片5" style="margin-bottom:10px;width:150px;">
+      </div>
+    </section>
+
+    <section id="常見錯誤示範" class="sec">
+      <h2>常見錯誤示範</h2>
+      <div class="d-block">
+        <img src="../image/wrongphoto.png" alt="常見錯誤示範（桌機）" class="d-lg-block d-none">
+        <img src="../image/mwrongphoto.png" alt="常見錯誤示範（手機）" class="d-lg-none d-block">
+      </div>
+    </section>
+  </main>
+</div>
       </div>
       <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         <div class="form-store">
@@ -692,7 +702,7 @@
               <label for="mainImage">主要照片</label>
               <br>
               <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">(照片需 ≤ 5MB，必須為實體照，格式僅支援JPEG, PNG, JPG, WebP)</small>
-              <div class="col-6" style="margin-top: 10px;">
+              <div class="col-lg-6 col-12" style="margin-top: 10px;">
                   <input
                       type="file"
                       id="mainImage"
@@ -706,7 +716,7 @@
               <label for="images">其他照片</label>
               <br>
               <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">(最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB)</small>
-              <div class="col-6" style="margin-top: 10px;">
+              <div class="col-lg-6 col-12" style="margin-top: 10px;">
                   <input
                       type="file"
                       id="image"
@@ -744,35 +754,174 @@
   </section>
 
   
-<!-- TODO:許願池 -->
+<!-- ====== 原始許願池區塊 ====== -->
 <section class="wishpool" id="wishpool" style="display: none;">
-  <div style=" margin: 0 auto;">
+  <div class="icon-button" id="back-btn1" style="margin-top: 20px; margin-left: 4vw;"><i class="fa-solid fa-circle-arrow-left" style="margin-right: 5px;"></i>Back</div>
+  <div style="display: flex;">
     <img src="../webP/adwishpool.webp" alt="" class="adwishpool_">
     <hr>
   </div>
-    <div class="icon-button" id="back-btn1">Back</div>
-  <div class="campuscontent">
-    <div class="thoughts">
-      <h3 style="background-color: #1a5fa3c2; color: #fff; padding: 10px 20px;">概念說明</h3>
-      <p style="padding: 10px 20px;">許願池是一種由買家主動提出需求、賣家主動回應的「反向媒合機制」。它改變傳統 C2C 平台以賣家為主導的模式，讓「需求端」成為流通的起點。
-      </p>
+
+  
+
+  <div class="accordion middlemargin" id="accordionPanelsStayOpenExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          概念說明
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse">
+        <div class="accordion-body">
+          許願池是一種由買家主動提出需求、賣家主動回應的「反向媒合機制」。它改變傳統 C2C 平台以賣家為主導的模式，讓「需求端」成為流通的起點。
+        </div>
+      </div>
     </div>
-    <div class="thoughts">
-      <h3 style="background-color: #004b97; color: #fff; padding: 10px 20px;">操作流程</h3>
-      <ul class="ulstep">
-        <li class="listep"><span class="step">STEP 1<br></span>買家填寫許願單（品項、預算、偏好狀況等）</li>
-        <li class="listep"><span class="step">STEP 2<br></span>系統將願望集中展示在許願池區域</li>
-        <li class="listep"><span class="step">STEP 3<br></span>賣家可依照願望內容選擇上架商品並標註「回應許願」</li>
-        <li class="listep"><span class="step">STEP 4<br></span>平台會主動通知買家，完成配對並引導交易</li>
-      </ul>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          操作流程
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse show">
+        <div class="accordion-body">
+          <ul class="ulstep">
+            <li class="listep"><span class="step">STEP 1</span> 買家填寫許願單</li>
+            <li class="listep"><span class="step">STEP 2</span> 系統將願望集中展示在許願池區域</li>
+            <li class="listep"><span class="step">STEP 3</span> 賣家可依照願望內容選擇上架商品並標註「回應許願」</li>
+            <li class="listep"><span class="step">STEP 4</span> 平台會通知買家，完成配對並引導交易</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
-  <form action="submit">
-    <label for="subject">我想要許願：</label>
-    <input type="text">
-    <button>送出許願</button>
-  </form>
+
+  <div class="d-flex justify-content-end" style="width: 80vw; margin: 0 auto;">
+    <!-- 按鈕觸發表單浮出 -->
+    <button class="button-87" id="startWish" role="button">開始許願</button>
+  </div>
 </section>
+
+<!-- ====== 遮罩 ====== -->
+<div id="wishOverlay"></div>
+
+<!-- ====== 許願表單浮層 ====== -->
+<section id="wishform">
+  <header class="view-form__header">
+    <button id="closeWishForm">← 返回</button>
+    <h3 style="margin-left: 20px; margin-bottom: 0px !important;">許願表單</h3>
+  </header>
+
+  <form id="wishForm" class="p-3">
+    <div class="mb-3">
+      <div class="img-preview" id="imgPreview">
+        <span class="placeholder">點選或拖曳圖片到此</span>
+        <img id="imgPreviewImg" alt="">
+      </div>
+      <label for="wishPhoto" class="form-label">商品照片</label>
+      <input class="form-control" type="file" id="wish-image" name="image" accept="image/*">
+      <div class="invalid-feedback"></div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+  
+    <div class="mb-3">
+      <label for="wishName" class="form-label">商品名稱</label>
+      <input type="text" id="wishName" class="form-control" placeholder="例：iPad 10 代 64GB（粉）">
+      <div class="invalid-feedback">請輸入商品名稱</div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+  
+    <div class="mb-3">
+      <label for="wishCategory" class="form-label">類別</label>
+      <select id="wishCategory" class="form-select">
+        <option value="notselyet" selected disabled>請選擇商品分類</option>
+        <option value="book">書籍與學籍用品</option>
+        <option value="life">宿舍與生活用品</option>
+        <option value="student">學生專用器材</option>
+        <option value="recycle">環保生活用品</option>
+        <option value="clean">儲物與收納用品</option>
+        <option value="other">其他</option>
+      </select>
+      <div class="invalid-feedback">請選擇類別</div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+  
+    <div class="row mb-3">
+      <div class="col">
+        <label for="budgetMin" class="form-label">預算最低</label>
+        <input type="number" id="budgetMin" class="form-control" placeholder="0">
+        <div class="invalid-feedback"></div>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+      <div class="col">
+        <label for="budgetMax" class="form-label">預算最高</label>
+        <input type="number" id="budgetMax" class="form-control" placeholder="5000">
+        <div class="invalid-feedback"></div>
+        <div class="valid-feedback">Looks good!</div>
+      </div>
+    </div>
+  
+    <div class="mb-3">
+      <label for="wishDesc" class="form-label">內容說明</label>
+      <textarea id="wishDesc" rows="3" class="form-control" placeholder="成色、顏色、尺寸、是否可自取等"></textarea>
+      <div class="invalid-feedback">請至少輸入 10 字以上的說明</div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+  
+    <div class="mb-3">
+      <label for="urgency" class="form-label">急迫度</label>
+      <select id="urgency" class="form-select">
+        <option value="" selected disabled>請選擇急迫度</option>
+        <option value="normal">一般</option>
+        <option value="high">急需</option>
+        <option value="low">不急</option>
+      </select>
+      <div class="invalid-feedback"></div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+  
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="agree">
+      <label class="form-check-label" for="agree">
+        我同意將許願內容用於匿名配對與推薦，並且收到相符商品之賣家訊息通知。
+      </label>
+      <div class="invalid-feedback">必須勾選才能送出</div>
+      <div class="valid-feedback">Looks good!</div>
+    </div>
+  
+    <div class="form-actions d-flex justify-content-start align-items-start">
+      <button type="reset" class="btn btn-ghost" style="font-size: 0.9rem;">清除</button>
+      <div class="buttons" type="submit">
+        <button class="blob-btn">
+          送出許願
+          <span class="blob-btn__inner">
+            <span class="blob-btn__blobs">
+              <span class="blob-btn__blob"></span>
+              <span class="blob-btn__blob"></span>
+              <span class="blob-btn__blob"></span>
+              <span class="blob-btn__blob"></span>
+            </span>
+          </span>
+        </button>
+        <br/>
+      
+      <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+        <defs>
+          <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+            <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+  </form>
+  
+</section>
+
 <!-- TODO member -->
 <section class="member" id="member" style="display: none;">
   <img src="../webP/admember.webp" class="admember_" alt="" style="margin: 0 auto; margin-top: 20px;">
