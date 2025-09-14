@@ -51,22 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   fetchPage(page);
 
-
-
-  if (backendService.isLoggedIn()) {
-    console.log('使用者已登入');
-    document.getElementById('loginornot').textContent = '登出';
-    document.getElementById('username').textContent = localStorage.getItem('username') || "username";
-  } else {
-    Swal.fire({
-      title: "請登入",
-      text: "你尚未登入，請先登入以繼續。",
-      icon: "warning",
-      confirmButtonText: "去登入"
-    }).then(() => {
-      // window.location.href = "../account/account.html"; // 導向登入頁面
-    });
-  }
 function fetchPage(p){
   const pagingInfo = { page: p, limit: limit };
   backendService.getHotItems(pagingInfo, (response) => {

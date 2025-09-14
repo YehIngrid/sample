@@ -23,10 +23,6 @@ class BackendService {
         console.log('OK');
         // ? 是不是該做連線測試?
     }
-    isLoggedIn() {
-        const uid = localStorage.getItem('uid');
-        return !!uid;
-    }
     getCookie(name) {
         const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
         if (match) return match[2];
@@ -146,18 +142,26 @@ class BackendService {
         await _this.getUserData();
         return response;
     }
-    whoami(fnSuccess, fnError) {
-        return axios.get(`${this.baseUrl}/api/whoami`, {
-                withCredentials: true
-            })
-            .then(function(response) {
-                fnSuccess(response.data);
-            })
-            .catch(function(error) {
-                console.error(error);
-                fnError("無法取得使用者資訊");
-            });
+    async whoami() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/whoami`);
+            return response.data;   // 通常直接回傳 data
+        } catch (error) {
+            console.error("無法取得使用者資訊", error);
+            const status = error?.response?.status;
+            const msg    = error?.response?.data?.message;
+            
+            if (status === 401 || /invalid/i.test(msg)) {
+                if (localStorage.getItem('uid') != null) {
+                    throw new Error('伺服器連線逾時，系統將自動幫您登出');
+                }
+                throw new Error('您尚未登入，無法進行買賣相關操作');
+            }
+            // 其他錯誤才走這裡
+            throw new Error(msg || '伺服器發生錯誤，請稍後再試');
+        }
     }
+
     create(sellData) {
         const token = this.getCookie('idtoken');
         return this.http.post(

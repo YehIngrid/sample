@@ -26,5 +26,59 @@ window.onload = function() {
       });
     }
   });
+async function renderAuthUI() {
+  try {
+    const user = await backendService.whoami(); // 成功代表已登入
+    const usernameEl = document.getElementById('username');
+    usernameEl.textContent = user?.name || user?.username || '用戶';
+    usernameEl.style.display = '';
 
-  
+    const loginOrNot = document.getElementById('loginornot');
+    loginOrNot.textContent = '登出';
+    loginOrNot.href = '#';
+    loginOrNot.onclick = (e) => {
+      e.preventDefault();
+      doLogout();
+    };
+  } catch (err) {
+    const usernameEl = document.getElementById('username');
+    usernameEl.textContent = '';
+    usernameEl.style.display = 'none';
+
+    const loginOrNot = document.getElementById('loginornot');
+    loginOrNot.textContent = '登入';
+    loginOrNot.href = 'account.html';
+    loginOrNot.onclick = null;
+  }
+}
+
+function doLogout() {
+  // 清除登入資訊
+  localStorage.removeItem('uid');
+  localStorage.removeItem('username');
+  localStorage.removeItem('intro');
+  localStorage.removeItem('avatar');
+
+  // 自動登出提示
+  let timerInterval;
+  Swal.fire({
+    title: "登出成功",
+    html: "將在 <b></b> 秒後回到登入頁",
+    timer: 3000, // 2 秒後自動跳轉
+    timerProgressBar: true,
+    didOpen: () => {
+      Swal.showLoading();
+      const timer = Swal.getPopup().querySelector("b");
+      timerInterval = setInterval(() => {
+        timer.textContent = Math.ceil(Swal.getTimerLeft() / 1000);
+      }, 100);
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    }
+  }).then(() => {
+    location.href = '/account/account.html';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', renderAuthUI);
