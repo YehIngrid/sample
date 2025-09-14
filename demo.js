@@ -1,3 +1,4 @@
+let backendService;
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
@@ -28,6 +29,7 @@ window.onload = function() {
   });
 async function renderAuthUI() {
   try {
+    backendService = new BackendService();
     const user = await backendService.whoami(); // 成功代表已登入
     const usernameEl = document.getElementById('username');
     usernameEl.textContent = user?.name || user?.username || '用戶';
