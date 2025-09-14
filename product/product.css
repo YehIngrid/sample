@@ -444,14 +444,6 @@
   border-radius: 20px;
   margin-bottom: 100px;
 }
-.typeofcommodity h2 {
-  background-color: #004b97;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 3px;
-  margin-top: 20px;
-  font-size: 1.4rem;
-}
 .rate {
   background-color: #cadff5;
   padding: 10px;
@@ -582,3 +574,9 @@
     .cta-wrap > .btn { min-height: 48px; }
 .meta-row { line-height: 1.6; }
 .meta-row .text-muted { color: #6b7280 !important; }
+.sellertopic {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  margin-top: 30px;
+}

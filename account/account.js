@@ -79,7 +79,7 @@ async function callSignUp() {
 async function callLogin() {
   const emailEl = document.getElementById('floatingInput');
   const pwdEl   = document.getElementById('floatingPassword');
-  const rememberMe = document.getElementById('rememberMe').checked;
+  // const rememberMe = document.getElementById('rememberMe').checked;
 
   // 簡單輸入檢查
   const email = emailEl.value.trim();
@@ -88,18 +88,18 @@ async function callLogin() {
     Swal.fire({ icon: 'warning', title: '請輸入帳號與密碼' });
     return;
   }
-
-  const backendService = new BackendService();
-  // 顯示 loader
   const loaderLogin = document.getElementById('loaderLogin');
   loaderLogin.style.display = 'flex';
+  const backendService = new BackendService();
+  // 顯示 loader
+  
   try {
     const resp = await backendService.login({ email, password });
     console.log('回傳資料：', resp.data);
 
-    // 記住 email（選擇性）
-    if (rememberMe) localStorage.setItem('rememberEmail', email);
-    else localStorage.removeItem('rememberEmail');
+    // // 記住 email（選擇性）
+    // if (rememberMe) localStorage.setItem('rememberEmail', email);
+    // else localStorage.removeItem('rememberEmail');
 
     await Swal.fire({
       icon: 'success',

@@ -50,7 +50,7 @@
             <!-- (B) 桌機版導覽選單 -->
             <div class="d-none d-lg-flex">
               <ul class="navbar-nav" >
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
@@ -62,7 +62,7 @@
             <!-- (C) 右側：登入 + 購物車 -->
             <div class="d-flex align-items-center ms-auto">
               <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
-                <img src="../webP/shoppingcart.webp" class="d-none d-lg-block" alt="購物車">
+                <img src="../svg/shoppingcart.svg" class="d-none d-lg-block" alt="購物車">
               </a>
             </div>
           </div>
@@ -73,7 +73,7 @@
           <!-- 手機版導覽選單展開內容 -->
           <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item"><a class="nav-link" href="../newhome.html">首頁</a></li>
+              <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
               <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
               <li class="nav-item"><a class="nav-link" href="../shop/shoppingpage_bootstrap.html">商品分類</a></li>
               <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
@@ -192,16 +192,16 @@
         <div class="card col-12">
           <div class="card-body">
             <div class="d-flex align-items-center">
-              <h5 class="showStyle" style="margin-right: 10px;">用戶名</h5>
-              <h5 id="showName"></h5>
+              <h6 class="showStyle" style="margin-right: 10px;">用戶名</h6>
+              <h6 id="showName"></h6>
             </div>
             <div class="d-flex align-items-center">
-              <h5 class="showStyle" style="margin-right: 10px;">關於我</h5>
+              <h6 class="showStyle" style="margin-right: 10px;">關於我</h6>
               <h5 id="showIntro"></h5>
             </div>
             <div class="d-flex align-items-center">
-              <h5 class="showStyle" style="margin-right: 10px;">加入日期</h5>
-              <h5 id="showTime"></h5>
+              <h6 class="showStyle" style="margin-right: 10px;">加入日期</h6>
+              <h6 id="showTime"></h6>
             </div>
             <div class="text-end">
               <button class="btn btn-danger" style="font-size: 1.2rem;" id="deleteAccount">註銷此帳號</button>
@@ -212,8 +212,8 @@
           <div class="card col-lg-4 col-12">
             <div class="card-body">
               <div class="d-flex align-items-center mb-4">
-                <h5 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">信譽積分</h5>
-                <h5 id="rate1"></h5>
+                <h6 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">信譽積分</h6>
+                <h6 id="rate1"></h6>
               </div>
               <p style="padding: 0px 10px;">每個用戶基本分為60分，若被其他用戶檢舉一次扣5分，扣到0分為止。</p>
               <p style="padding: 0px 10px;">每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分1~5分，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。</p>
@@ -223,8 +223,8 @@
           <div class="card col-lg-4 col-12">
             <div class="card-body">
               <div class="d-flex align-items-center mb-4">
-                <h5 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">會員資格</h5>
-                <h5 id="membership1">尚未開放此功能，敬請期待</h5>
+                <h6 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">會員資格</h6>
+                <h6 id="membership1">尚未開放此功能，敬請期待</h6>
               </div>
               <p style="padding: 0px 10px;">如果尚未加入會員要顯示: </p>
               <button class="btn btn-light" style="font-size: 1rem;">立即加入會員</button>
@@ -233,8 +233,8 @@
           <div class="card col-lg-4 col-12">
             <div class="card-body">
               <div class="d-flex align-items-center mb-4">
-                <h5 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 10px;">學生身分認證</h5>
-                <h5 id="identify1">先預設已驗證</h5>
+                <h6 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 10px;">學生身分認證</h6>
+                <h6 id="identify1">先預設已驗證</h6>
               </div>
               <p style="padding: 0px 10px;">未驗證要顯示: 您尚未進行學生身分驗證，驗證完可開啟1.販賣功能 2.購買功能</p>
               <p style="padding: 0px 10px;">已驗證要顯示: 申請帳號，恭喜您完成學生驗證，可以開始販售商品以及購買商品!</p>
@@ -249,19 +249,28 @@
             <div style="margin-top: 30px; margin-bottom: 30px;">
               <div class="d-lg-flex align-items-end d-block" style="margin-bottom: 10px;">
                 <div>
-                  <p style="margin-bottom: 2px; margin-top: 15px;font-size: 1.2rem; margin-right: 20px;">大頭照</p>
-                  <input type="file" id="photo" accept="image/png, image/jpeg, image/webp" style="border:none; margin-top: 3px;font-size: 13px;">
+                  <label for="edit-image" class="form-label">大頭照
+                    <br><small class="text-muted">(照片大小需 ≤ 5MB，上傳格式限 png, jpg, jpeg, webp)</small>
+                  </label>
+                  <input class="form-control" type="file" id="photo" name="image" accept="image/png, image/jpg, image/jpeg, image/webp">
                 </div>
                 <div id="myAvatarPreview"></div>
               </div>
-              <div class="d-block" style="margin-bottom: 10px;">
-                <p style="margin-bottom: 2px;margin-top: 15px;font-size: 1.2rem;">暱稱</p>
-                <input type="text" style="width: 90%; padding:3px ;font-size: 13px;" id="display-name" placeholder="輸入顯示名稱">
+              <div class="col-md-4 mb-3">
+                <label for="validationTooltipUsername">暱稱</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="validationTooltipUsernamePrepend">@</span>
+                  </div>
+                  <input type="text" class="form-control" id="display-name" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend">
+                  <div class="invalid-tooltip">
+                    Please choose a unique and valid username.
+                  </div>
+                </div>
               </div>
-              
-              <div class="d-block" style="margin-bottom: 10px;">
-                <p style=" margin-bottom: 2px;margin-top: 15px;font-size: 1.2rem;">個人簡介</p>
-                <textarea id="bio" placeholder="簡單介紹一下自己吧！(至多100字)" style="width: 90%; display: block;padding: 5px;font-size: 1rem;"></textarea>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">個人簡介</label>
+                <textarea class="form-control" id="bio" rows="3"></textarea>
               </div>
               <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
               <span class="loader" id="loader1" style="display: none;"></span>
@@ -309,16 +318,16 @@
               <div class="card-body">
                 <div class="d-flex flex-wrap gap-2">
                   <div style="text-align: center;">
-                    <h5 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">信譽積分</h5>
-                    <h5 id="rate"></h5>
+                    <h6 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">信譽積分</h6>
+                    <h6 id="rate"></h6>
                   </div>
                   <div style="text-align: center;">
-                    <h5 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">會員資格</h5>
-                    <h5 id="membership"></h5>
+                    <h6 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">會員資格</h6>
+                    <h6 id="membership"></h6>
                   </div>
                   <div style="text-align: center;">
-                    <h5 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px;">學生身分認證</h5>
-                    <h5 id="identify"></h5>
+                    <h6 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px;">學生身分認證</h6>
+                    <h6 id="identify"></h6>
                   </div>
                 </div>
               </div>
@@ -328,28 +337,28 @@
           <div class="col-12">
             <div class="card shadow-sm">
               <div class="card-body">
-                <h5 class="card-title">我的商品 >> 相關操作說明</h5>
+                <h5 class="card-title">我的商品 / 相關操作說明</h5>
                 <div class="d-flex flex-column flex-wrap gap-3 mt-3">
                   <div>
-                      <button class="btn btn-outline-success" style="font-size: 1.2rem;">查看商品</button>
-                      <h5 style="margin-left: 5px; margin-top: 10px;">點擊按鈕後，將會跳轉至商品頁面。</h5>
+                      <button class="btn btn-outline-success">查看商品</button>
+                      <h6 style="margin-left: 5px; margin-top: 10px;">點擊按鈕後，將會跳轉至商品頁面。</h6>
                   </div>
                   <div>
-                      <button class="btn btn-outline-primary" style="font-size: 1.2rem;">編輯</button>
-                      <h5 style="margin-left: 5px; margin-top: 10px;">
+                      <button class="btn btn-outline-primary">編輯</button>
+                      <h6 style="margin-left: 5px; margin-top: 10px;">
                           點擊此按鈕後，下方將會出現該商品的所有資訊，即可進行修改 (可以只更新部分欄位)，最後點擊更新按鈕進行商品編輯。<br><br>
                           若更改商品中的「多張照片」區域，將會<strong>一次替換之前的所有照片</strong>。<br><br>
-                          若商品無法更新，出現錯誤，請先檢查商品資訊是否符合本商城之規定。</h5>
+                          若商品無法更新，出現錯誤，請先檢查商品資訊是否符合本商城之規定。</h6>
                   </div>
                   <div>
-                      <button class="btn btn-outline-secondary" style="font-size: 1.2rem;">暫停上架商品</button>
-                      <h5 style="margin-left: 5px; margin-top: 10px;">待討論</h5>
+                      <button class="btn btn-outline-secondary">暫停上架商品</button>
+                      <h6 style="margin-left: 5px; margin-top: 10px;">待討論</h6>
                   </div>
                   <div>
-                      <button class="btn btn-outline-danger" style="font-size: 1.2rem;">永久下架商品</button>
-                      <h5 style="margin-left: 5px; margin-top: 10px;">
+                      <button class="btn btn-outline-danger">永久下架商品</button>
+                      <h6 style="margin-left: 5px; margin-top: 10px;">
                         點擊此按鈕後，將會刪除指定的商品，並且<strong>永久不會</strong>出現在「我的商品」清單中與架上。<br><br>
-                        只有在沒有相關的進行中訂單時才能刪除商品。</h5>
+                        只有在沒有相關的進行中訂單時才能刪除商品。</h6>
                   </div>
                 </div>
               </div>
@@ -381,7 +390,6 @@
       <hr>
       <div class="list-group">
         <a class="list-group-item list-group-item-action active standardfontsize" href="#" data-target="account">帳戶管理中心</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="../shoppingcart/shoppingcart.html"><img src="../webP/shoppingcart.webp" alt="購物車icon"> 我的購物車</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="products"><img src="../svg/sellicon.svg" alt="我的商品icon"> 我的商品</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="favorites"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
@@ -390,6 +398,18 @@
       </div>
       <div class="remind">
         <p class="text-start" style="font-size: 1rem; color: #383838; margin-top: 10px; margin-left: 20px; margin-right: 20px;">小提醒: <br>點擊按鈕後，須將此側邊欄關閉才可見畫面</p>
+      </div>
+      <div class="link">
+        <h6>常用連結</h6>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><img src="../svg/shoppingcart.svg" alt="購物車icon"> 我的購物車</li>
+          <li class="list-group-item">首頁</li>
+          <li class="list-group-item">最新消息</li>
+          <li class="list-group-item">商品分類</li>
+          <li class="list-group-item">常見問題</li>
+          <li class="list-group-item">團隊介紹</li>
+          <li class="list-group-item">客服諮詢</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -472,9 +492,34 @@
         <option value="other">其他</option>
       </select>
     </div>
-
-    
-
+    <!-- TODO 加入其他沒有寫的屬性，尚未測試排版與功能（還沒寫） -->
+    <div class="form-group mb-3">
+      <label for="edit-category">庫存數量</label>
+      <select class="form-control" id="edit-category" name="stock">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label d-block">商品大小</label>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
+        <label class="form-check-label" for="inlineRadio1">小</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
+        <label class="form-check-label" for="inlineRadio2">中</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3">
+        <label class="form-check-label" for="inlineRadio3">大</label>
+      </div>
+    </div>
+    <!-- TODO size部分尚未完成，還有新舊程度跟年齡 -->
+    <!--? stop here -->
     <div class="mb-3">
       <label for="edit-description" class="form-label">商品描述</label>
       <textarea class="form-control" id="edit-description" name="description" rows="5"></textarea>

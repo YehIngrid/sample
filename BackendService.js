@@ -261,7 +261,7 @@ class BackendService {
             return Promise.reject(error);
         }
     }
-    async addItemsToCart(commodityId, quantity = 1) {
+    async addItemsToCart(commodityId, quantity) {
         if (!commodityId) {
             return Promise.reject(new Error("Commodity ID is required"));
         }
@@ -275,6 +275,7 @@ class BackendService {
                 { quantity }, // <-- 必填 body
                 { headers: { "Content-Type": "application/json" }, withCredentials: true }
             );
+            console.log('quantity:', quantity);
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
@@ -303,7 +304,61 @@ class BackendService {
     }
     async clearMyCart() {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/cart/clear`);
+            const response = await axios.delete(`${this.baseUrl}/api/cart/clear`);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async getUserCommodities(uid) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/user/${uid}`);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async createOrder(orderData) {
+        try {
+            const response = await axios.post(
+                `${this.baseUrl}/api/order/create`,
+                orderData,
+                { headers: { "Content-Type": "application/json" }, withCredentials: true }
+            );
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    //? 這裡的id指的是什麼
+    async getMyOrders(id) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/order/${id}`, { headers: { "Cache-Control": "no-cache" } });
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async updateMyOrders(id, orderData) {
+        try {
+            const response = await axios.put(
+                `${this.baseUrl}/api/order/update/${id}`,
+                orderData,
+                { headers: { "Content-Type": "application/json" } }
+            );
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async cancelMyOrder(id) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/order/cancel/${id}`);
             return response;
         } catch (error) {
             console.error("發生錯誤", error);

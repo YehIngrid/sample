@@ -232,7 +232,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         const sellerIntroduction  = u.introduction || '賣家簡介';
         // 這裡確保是數字；u.rate 可能是字串
         const sellerRate          = Number.isFinite(+u.rate) ? +u.rate : 0;
-        const sellerId            = u.id ?? u.uid ?? u._id ?? '';
+        const sellerId            = u.accountId;
 
         // 組成 renderSellerInfo 需要的結構
         const data = {
@@ -244,6 +244,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         };
 
         renderSellerInfo(data);
+        showSellerCommodities(sellerId); // 顯示賣家其他商品
     } else {
       // 沒有 owner：可隱藏整張卡
       document.getElementById('sellerInfo')?.classList.add('d-none');
@@ -359,21 +360,84 @@ async function onAddToCart(e) {
     await backendService.addItemsToCart(id, quantity);
     await Swal.fire({
       title: '已加入購物車！',
-      // 用自訂圖示（購物車）
-      iconHtml: '<i class="fa-solid fa-cart-shopping"></i>',
-      // 不要同時放 icon: 'success'，避免預設圖示覆蓋
+      icon: 'success', 
       showConfirmButton: false,
       timer: 1600,
-      customClass: {
-        icon: 'swal2-cart-icon',
-        popup: 'swal2-cart-popup',
-        title: 'swal2-cart-title'
-      }
     });
   } catch (err) {
     const msg = err?.response?.data?.message || err?.message || '請稍後再試';
     Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
   } finally {
     btn.disabled = false;
+  }
+}
+// Promise 版
+async function showSellerCommodities(id) {
+  const sellerCommodities = document.querySelector('#otherProducts');
+  console.log('sellerCommodities:', sellerCommodities);
+  if (!sellerCommodities) return;
+
+  const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span>NT$</span>`;
+  const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u));
+
+  try {
+    const response = await backendService.getUserCommodities(id); // ← 這裡假設回傳 Promise
+    const products = response?.data?.data.commodities ?? [];
+    console.log('賣家商品：', products);
+    if (!Array.isArray(products) || products.length === 0) {
+      sellerCommodities.style.display = 'none';
+      return;
+    }
+
+    sellerCommodities.style.display = ''; // 確保顯示
+    sellerCommodities.innerHTML = '';
+
+    const frag = document.createDocumentFragment();
+
+    products.forEach((product) => {
+      const col = document.createElement('div');
+      col.className = 'col-6 col-md-4 col-lg-3 mb-3';
+
+      const card = document.createElement('div');
+      card.className = 'card h-100';
+
+      const img = document.createElement('img');
+      img.src = toFullURL(product.mainImage) || 'https://picsum.photos/300/300?grayscale';
+      img.className = 'card-img-top';
+      img.alt = product.name || '商品圖片';
+      img.loading = 'lazy';
+      img.referrerPolicy = 'no-referrer';
+      img.onerror = () => { img.src = 'https://picsum.photos/300/300?grayscale'; };
+
+      const cardBody = document.createElement('div');
+      cardBody.className = 'card-body d-flex flex-column';
+
+      const title = document.createElement('h5');
+      title.className = 'card-title';
+      title.textContent = product.name || '未命名';
+
+      const price = document.createElement('p');
+      price.className = 'card-text mt-auto mb-2';
+      price.innerHTML = formatPrice(product.price);
+
+      const link = document.createElement('a');
+      const pid = product.id ?? product._id ?? product.commodityId ?? '';
+      link.href = `./product.html?id=${encodeURIComponent(pid)}`;
+      link.className = 'btn btn-primary w-100 mt-auto';
+      link.textContent = '查看商品';
+
+      cardBody.appendChild(title);
+      cardBody.appendChild(price);
+      cardBody.appendChild(link);
+      card.appendChild(img);
+      card.appendChild(cardBody);
+      col.appendChild(card);
+      frag.appendChild(col);
+    });
+
+    sellerCommodities.appendChild(frag);
+  } catch (err) {
+    console.error('取得賣家商品失敗：', err);
+    sellerCommodities.style.display = 'none';
   }
 }

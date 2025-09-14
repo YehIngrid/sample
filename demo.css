@@ -14,13 +14,20 @@
     background-color: rgb(255, 255, 255); /* 半透明背景 */
     align-items: end;
 }
-.nav-link{
-    font-size: 14px !important;
+.container-fluid{
+  width: 91vw !important;
+  margin: 0 auto !important;
 }
+@media screen and (max-width: 700px) {
+  .nav-link{
+    padding-left: 30px !important;
+  }
+  .container-fluid {
+    width: 100vw !important;
+  }
+}
+
 @media (max-width: 1200px) {
-    .nav-link{
-        font-size: 12px !important;
-    }
     .form-search{
         width: 25% !important;
     }
@@ -42,9 +49,7 @@ ul{
     margin-top: 15px !important;
     margin-bottom: 0px !important;
 }
-.container-fluid{
-    width: 86vw !important;
-}
+
 .container-fluid1{
     background-color: #fbfbfb;
     margin: 0 auto !important;
@@ -83,10 +88,10 @@ ul{
     padding: 2rem;
     margin-top: 20vh;
     padding-bottom: 10px;
-    font-size:1.2rem;
+    font-size:1rem;
 }
 .footer h3 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 1.2rem;
     color: #f0f6fd;
 }
@@ -106,14 +111,12 @@ ul{
 .footer-row li a {
     color: white;
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
-/* 使用 flex-wrap 讓 navbar 內容可換行 */
-.container-fluid.flex-wrap {
-    flex-wrap: wrap;
+  #loginornot {
+    font-size: 1.2rem;
   }
-  
   /* 手機版 (max-width: 991px)：
      - 搜尋表單預設隱藏，且在換行後佔滿整行 */
   @media (max-width: 991px) {

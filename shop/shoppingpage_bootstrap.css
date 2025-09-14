@@ -1,10 +1,9 @@
 /* TODO advertisement */
 /* 輪播容器：桌面版寬 1200px；手機版 (max-width: 800px) 寬 100% */
-.carousel {
+/* .carousel {
     position: relative;
-    width: 85vw;
-    margin: 10% auto ;
-    /* margin: 10% auto; */
+    width: 60vw;
+
     margin-top: 0% ;
     margin-bottom: 1% ;
     overflow: hidden;
@@ -14,15 +13,13 @@
       width: 100%;
     }
   }
-  /* 軌道與幻燈片 */
   .carousel-track {
     display: flex;
 
     transition: transform 0.5s ease;
   }
-  /* 桌面版每個幻燈片固定 600px 寬；手機版則全寬 */
   .slide {
-    width: 600px;
+    width: 800px;
     flex-shrink: 0;
     position: relative;
   }
@@ -41,12 +38,10 @@
     padding-right: 5px;
 
   }
-  /* 箭頭控制 */
-/* 假設你的輪播外層容器為 .carousel */
 .carousel {
-    position: relative; /* 讓 .carousel 作為定位參考容器 */
-    overflow: hidden;   /* 可視需求，通常輪播會隱藏超出範圍的內容 */
-  }
+    position: relative; 
+    overflow: hidden;   
+  } */
   
   /* 基本按鈕樣式（可依需求自行調整） */
   .arrow {
@@ -154,9 +149,6 @@ ul{
 .container h4{
     margin-top: 15px !important;
     margin-bottom: 0px !important;
-}
-.container-fluid{
-    width: 86vw !important;
 }
 .specialpadding{
     padding-right: 30px;
@@ -289,7 +281,7 @@ ul{
 }
 .form-store{
   background-color: #fbfbfb;
-  margin: 4rem;
+  margin: 1.2rem;
   box-shadow: 0 0 6px rgba(0,0,0,0.2);
   border-radius: 10px;
   padding: 3.6rem;
@@ -436,9 +428,8 @@ ul{
 }
 .card-title{
   font-size: 1.3rem;
-  padding-left: 6px;
-  padding-right: 6px;
-  padding-top: 10px;
+  padding-left: 3px;
+  padding-right: 3px;
 }
 .card-text{
   color: #383838;
@@ -448,7 +439,6 @@ ul{
 }
 .price {
   font-size: 1rem;
-  padding-top: 10px;
 }
 .login{
   box-shadow: 0 ;
@@ -551,7 +541,7 @@ ul{
   text-align: center;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   font-weight: 700;
   padding-top: 10px;
   margin: 0 auto;
@@ -722,9 +712,10 @@ tbody > tr:nth-of-type(even) {
   background-color: #94c7fbaa;
 }
 .adwishpool_ , .admystery_{
-  width: 100vw; 
+  width: 91vw; 
   height: auto; 
   margin: 0 auto; 
+  justify-content: center;
   animation: fade 2s linear 0s;
 }
 .admember_ {
@@ -760,23 +751,22 @@ tbody > tr:nth-of-type(even) {
 }
 
 .icon-button {
-  background: rgba(255, 255, 255, 0.01);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 2px solid rgba(56, 140, 236, 0.4);
+  background-color: #4D81B7;
+  color: #fff;
   border-radius: 50px;
   cursor: pointer !important;
   font-size: 1.2rem;
-  position: fixed;
+  display: inline-block;
   font-weight: 700;
-  bottom: 40px;
-  right: 40px;
   padding: 10px 20px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* .icon-button:hover, .icon-button:focus {
-  background-image: url('../svg/page_focus.svg');
-} */
+.icon-button:hover, .icon-button:focus {
+  background-color: #004b9769;
+  color: #fff;
+  text-decoration: none;
+}
 .wishadd{
   background-image: url('../svg/wishadd.svg');
   width: 346px;
@@ -1012,7 +1002,7 @@ button {
   border-radius: 50%;
   background-color: #004b97; 
   border: 3px solid #7abafa;
-  padding: 2px 8px;
+  padding: 2px 6px;
   font-size: 1.8rem;
   margin-right: 10px;
   color: #fff;
@@ -1387,16 +1377,16 @@ button {
 }
 .hotItemPrice {
   position: relative;
-  bottom: 40px;
+  bottom: 50px;
   background-color: #389afc;
   color: white;
   border-bottom-left-radius: 50px;
   border-top-left-radius: 50px;
   display: inline-block;
   font-size: 1.4rem;
-  padding: 4px 10px;
+  padding: 3px 10px;
   padding-right: 2px;
-  font-weight: 600;
+  font-weight: 500;
 }
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
 @media (max-width: 576px){
@@ -1421,4 +1411,328 @@ button {
 }
 .hot-item:hover img {
   transform: scale(1.05);
+}
+.button-87 {
+  margin: 10px;
+  padding: 10px 15px 10px 30px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: #272727;
+  border-radius: 50px;
+  display: block;
+  border: 0px;
+  font-weight: 700;
+  letter-spacing: 15px;
+  box-shadow: 0px 0px 14px -7px #74a2ff;
+  background-image: linear-gradient(45deg, #c2cffb 0%, #cbb5ff  51%, #c68cd1  100%);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-87:hover {
+  background-position: right center;
+  /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.button-87:active {
+  transform: scale(0.95);
+}
+.middlemargin {
+  width: 80vw;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+/* 遮罩 */
+#wishOverlay {
+  position: fixed;
+  inset: 0;                 /* top/left/right/bottom: 0 */
+  background: rgba(0,0,0,0.4);
+  z-index: 10000;           /* 拉很高避免被其他 fixed 蓋住 */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+#wishOverlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 表單浮層（右側抽屜/全螢幕都可用） */
+#wishform {
+  position: fixed;
+  top: 0; right: 0;
+  width: 100%;
+  max-width: 700px;         /* 想全螢幕就註解掉這行 */
+  height: 100%;
+  background: #fff;
+  z-index: 10001;           /* 比 overlay 高 */
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  overflow-y: auto;
+}
+#wishform.active {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* 標題列（可換成你的樣式） */
+.view-form__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #c68cd1 0%, #c2cffb 100%);
+  color: #fff;
+}
+.view-form__header button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* 可選：開啟浮層時鎖住背景滾動 */
+.body-lock {
+  overflow: hidden;
+}
+/* 抽屜內文預設字色，避免被全域樣式吃掉 */
+#wishform { color:#383838; }
+/* 標題列本來就是白字＋藍底，保留即可 */
+.view-form__header h2 { margin:0; font-weight:600; }
+.buttons {
+  border-radius: 30px;
+}
+
+.blob-btn {
+  z-index: 1;
+  position: relative;
+  padding: 10px 30px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #c68cd1;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  transition: color 0.5s;
+  cursor: pointer;
+  border-radius: 30px;
+}
+
+.blob-btn:before {
+  content: "";
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #c2cffb; /* $borderW + $cyan */
+  border-radius: 30px;
+}
+
+.blob-btn:after {
+  content: "";
+  z-index: -2;
+  position: absolute;
+  left: 3px; /* $borderW*1.5 = 3px */
+  top: 3px;
+  width: 100%;
+  height: 100%;
+  transition: all 0.3s 0.2s;
+  border-radius: 30px;
+}
+
+.blob-btn:hover {
+  color: #FFFFFF; /* $dark */
+  border-radius: 30px;
+}
+
+.blob-btn:hover:after {
+  transition: all 0.3s;
+  left: 0;
+  top: 0;
+  border-radius: 30px;
+}
+
+.blob-btn__inner {
+  z-index: -1;
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  background: #ffffff;
+}
+
+.blob-btn__blobs {
+  position: relative;
+  display: block;
+  height: 100%;
+  filter: url('#goo');
+}
+
+.blob-btn__blob {
+  position: absolute;
+  top: 2px; /* $borderW */
+  width: 25%; /* 100% / 4 */
+  height: 100%;
+  background: linear-gradient(0deg,#c68cd1 0%, #c2cffb 100%);
+  border-radius: 100%;
+  transform: translate3d(0,150%,0) scale(1.7);
+  transition: transform 0.45s;
+}
+
+@supports (filter: url('#goo')) {
+  .blob-btn__blob {
+    transform: translate3d(0,150%,0) scale(1.4);
+  }
+}
+
+/* nth-child 展開 ($numOfBlobs = 4) */
+.blob-btn__blob:nth-child(1) {
+  left: 0%;
+  transition-delay: 0s;
+}
+
+.blob-btn__blob:nth-child(2) {
+  left: 30%;
+  transition-delay: 0.08s;
+}
+
+.blob-btn__blob:nth-child(3) {
+  left: 60%;
+  transition-delay: 0.16s;
+}
+
+.blob-btn__blob:nth-child(4) {
+  left: 90%;
+  transition-delay: 0.24s;
+}
+
+.blob-btn:hover .blob-btn__blob {
+  transform: translateZ(0) scale(1.7);
+}
+
+@supports (filter: url('#goo')) {
+  .blob-btn:hover .blob-btn__blob {
+    transform: translateZ(0) scale(1.4);
+  }
+}
+.img-preview {
+  width: 240px;                 /* 你也可以改成 100% 做自適應 */
+  aspect-ratio: 1 / 1;          /* 正方形重點 */
+  border: 2px dashed #c68cd1;   /* 沒圖時的邊框 */
+  border-radius: 16px;
+  background: #faf4ff;
+  color: #dfe7ff;
+  display: grid;
+  place-items: center;          /* 置中 placeholder */
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
+  margin-bottom: 20px;
+}
+
+.img-preview:hover {
+  border-color: #c2cffb;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+
+.img-preview .placeholder {
+  font-size: 14px;
+  pointer-events: none;         /* 讓文字不擋到點擊 */
+  color: #c68cd1;
+  background-color: transparent !important;
+}
+
+.img-preview img {
+  position: absolute;
+  inset: 0;                     /* top/right/bottom/left: 0 */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;            /* 等比裁切填滿 */
+  display: none;                /* 預設不顯示，等有圖再顯示 */
+}
+
+/* 有圖片時的狀態 */
+.img-preview.has-image .placeholder { display: none; }
+.img-preview.has-image img { display: block; }
+
+/* 可選：拖曳進來時的狀態（若加上 JS 監聽 drop/dragover） */
+.img-preview.dragover {
+  border-color: #4D81B7;
+  box-shadow: 0 0 0 4px rgba(77,129,183,.12);
+}
+:root{
+  --brand:#4D81B7;
+  --border:#e6e6e6;
+  --muted:#6b7280;
+  --side-w:240px;
+  --radius:14px;
+  --container-max:1100px;
+}
+html{ scroll-behavior:smooth; }
+.wrap-seller{
+  max-width:var(--container-max);
+  margin:32px auto;
+  padding:0 16px;
+  display:grid;
+  grid-template-columns:var(--side-w) 1fr;
+  gap:24px;
+}
+/* 左欄目錄 */
+.toc-seller{
+  position:sticky; top:24px; align-self:start;
+  border:1px solid var(--border); border-radius:var(--radius);
+  background:#fff; padding:12px;
+}
+.toc-seller h4{ margin:6px 8px 8px; font-size:14px; color:var(--muted); }
+.toc-seller a{
+  display:block; padding:10px 12px; border-radius:10px;
+  text-decoration:none; color:#111827; font-weight:600;
+}
+.toc-seller a:hover{ background:#f5f7fb; }
+.toc-seller a.active{ background:#edf3fb; color:var(--brand); outline:2px solid #e3eefc; }
+.back-btn{
+  width:100%; margin-bottom:8px; padding:8px 10px; border-radius:10px;
+  border:1px solid var(--border); background:#fff; cursor:pointer; font-weight:600;
+}
+.back-btn:hover{ background:#f7faff; color:var(--brand); }
+
+/* 右側內容 */
+.content-seller{ display:flex; flex-direction:column; gap:24px; }
+.page-title h1{ margin:0 0 4px; font-size:28px; }
+.sec{
+  padding:20px 30px; border:1px solid var(--border); border-radius:var(--radius);
+  scroll-margin-top:80px; /* 若有固定navbar可調整 */
+}
+.sec h2{ margin:0 0 8px; font-size:22px; }
+.sec li{ margin-bottom:6px; line-height:1.6; list-style: none;}
+.bullet{ padding-left:18px; }
+.badge-seller{
+  display:inline-block; margin-left:8px; padding:2px 10px; border-radius:999px;
+  background:#eef4fb; color:var(--brand); font-weight:700; font-size:12px;
+}
+.table-wrap{ overflow:auto; }
+/* RWD：手機把左欄改為頂部水平目錄 */
+@media (max-width: 992px){
+  .wrap-seller{ grid-template-columns:1fr; }
+  .toc-seller{
+    position:static; display:grid; grid-auto-flow:column; gap:8px;
+    overflow-x:auto; scrollbar-width:thin; align-items:center;
+  }
+  .toc-seller h4{ display:none; }
+  .toc-seller a{ white-space:nowrap; border:1px solid var(--border); }
 }
