@@ -81,4 +81,4 @@ function doLogout() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', renderAuthUI);
+document.addEventListener('DOMContentLoaded', renderAuthUI());
