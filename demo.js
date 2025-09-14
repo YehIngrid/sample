@@ -77,7 +77,7 @@ function doLogout() {
       clearInterval(timerInterval);
     }
   }).then(() => {
-    location.href = '/account/account.html';
+    location.href = '../account/account.html';
   });
 }
 
