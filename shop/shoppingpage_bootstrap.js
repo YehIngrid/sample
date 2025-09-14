@@ -8,21 +8,6 @@ const midcontent = document.getElementById('midcontent');
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
 
-  // 點擊「←」按鈕，向左捲動
-  prevBtn.addEventListener('click', () => {
-    scrollContainer.scrollBy({
-      left: -200,       // 向左捲動 200px
-      behavior: 'smooth'
-    });
-  });
-
-  // 點擊「→」按鈕，向右捲動
-  nextBtn.addEventListener('click', () => {
-    scrollContainer.scrollBy({
-      left: 200,        // 向右捲動 200px
-      behavior: 'smooth'
-    });
-  });
 // TODO seller
 const seller = document.getElementById('seller');
 const sellerbtn = document.getElementById('sellerbtn');

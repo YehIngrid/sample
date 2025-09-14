@@ -1,0 +1,10 @@
+{
+    "liveServer.settings.https": {
+      "enable": true,
+      "cert": "/Users/ingridyeh/localhost.pem",
+      "key": "/Users/ingridyeh/localhost-key.pem",
+      "passphrase": ""   // 如果有設定密碼要填
+    },
+    "liveServer.settings.port": 5501
+  }
+  
