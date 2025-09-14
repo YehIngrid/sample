@@ -47,7 +47,7 @@ async function renderAuthUI() {
 
     const loginOrNot = document.getElementById('loginornot');
     loginOrNot.textContent = '登入';
-    loginOrNot.href = 'account.html';
+    loginOrNot.href = '../account/account.html';
     loginOrNot.onclick = null;
   }
 }
