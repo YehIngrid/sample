@@ -198,6 +198,7 @@ function renderCart() {
   cartItems.forEach(item => {
     const li = document.createElement('div');
     li.className = 'list-group-item';
+    item.owner.photoURL = item.owner.photoURL || '../image/default-avatar.png';
     li.dataset.id = item.id;
     li.innerHTML = `
       <div class="d-flex align-items-start" id="lookInfo">
@@ -297,14 +298,38 @@ cartList.addEventListener('click', async (e) => {
   if (!id) return;
 
   try {
-    await backendService.removeItemsFromCart(id); // 後端刪除
-    cartItems = cartItems.filter(i => i.id !== id);
+    // 1) 先打後端
+    const res = await backendService.removeItemsFromCart(id);
+
+    // 2) 兼容 axios response / JSON body 兩種殼
+    const httpStatus = (typeof res?.status === 'number' ? res.status : undefined);
+    const bodyStatus = (typeof res?.data?.status === 'number' ? res.data.status :
+                       typeof res?.status === 'number' ? res.status : // res 是 body 且有 status
+                       undefined);
+
+    const ok = (typeof httpStatus === 'number' && httpStatus >= 200 && httpStatus < 300)
+            || (typeof bodyStatus === 'number' && bodyStatus >= 200 && bodyStatus < 300);
+
+    if (!ok) throw new Error(`Unexpected status: http=${httpStatus ?? '-'} body=${bodyStatus ?? '-'}`);
+    // 3) 本地狀態更新（記得把 id 轉字串以防型別不一致）
+    const targetId = String(id);
+    cartItems = cartItems.filter(i => String(i.id) !== targetId);
     saveState(cartItems);
     renderCart();
     updateSummary();
+    Swal.fire({
+      icon: 'success',
+      title: '商品已從購物車移除',
+      showConfirmButton: false,
+      timer: 1500
+    });
   } catch (err) {
     console.error('removeItemsFromCart 失敗：', err);
-    alert('刪除失敗，請稍後再試');
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: '刪除失敗，請稍後再試'
+    });
   }
 });
 
@@ -325,7 +350,10 @@ if (clearCheckedBtn) {
   clearCheckedBtn.addEventListener('click', async () => {
     const selected = cartItems.filter(i => i.checked);
     if (selected.length === 0) {
-      alert('目前沒有勾選的商品');
+      Swal.fire({
+        icon: 'warning',
+        title: '請先勾選要移除的商品'
+      });
       return;
     }
     try {
@@ -338,7 +366,11 @@ if (clearCheckedBtn) {
       updateSummary();
     } catch (err) {
       console.error('批次移除失敗：', err);
-      alert('移除已勾選失敗，請稍後再試');
+      Swal.fire({
+        icon: 'error', 
+        title: 'Oops...',
+        text: '移除已勾選失敗，請稍後再試'
+      });
     }
   });
 }
@@ -346,16 +378,36 @@ if (clearCheckedBtn) {
 const clearAllBtn = document.getElementById('clear-all');
 if (clearAllBtn) {
   clearAllBtn.addEventListener('click', async () => {
-    if (!confirm('確定要清空購物車嗎？')) return;
+    if (!Swal.fire) return;
     try {
-      await backendService.clearMyCart();
+      const res = await backendService.clearMyCart();
+        // 2) 兼容 axios response / JSON body 兩種殼
+      const httpStatus = (typeof res?.status === 'number' ? res.status : undefined);
+      const bodyStatus = (typeof res?.data?.status === 'number' ? res.data.status :
+                        typeof res?.status === 'number' ? res.status : // res 是 body 且有 status
+                        undefined);
+
+      const ok = (typeof httpStatus === 'number' && httpStatus >= 200 && httpStatus < 300)
+              || (typeof bodyStatus === 'number' && bodyStatus >= 200 && bodyStatus < 300);
+
+      if (!ok) throw new Error(`Unexpected status: http=${httpStatus ?? '-'} body=${bodyStatus ?? '-'}`);
       cartItems = [];
       saveState(cartItems);
       renderCart();
       updateSummary();
+      Swal.fire({
+        icon: 'success',
+        title: '購物車已清空',
+        showConfirmButton: false,
+        timer: 1500
+      });
     } catch (err) {
       console.error('clearMyCart 失敗：', err);
-      alert('清空失敗，請稍後再試');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: '清空失敗，請稍後再試'
+      });
     }
   });
 }
