@@ -232,12 +232,110 @@
     <div class="news-card">📢 最新公告：#明天放假</div>
   </div>
 </div>  
-    
+<div class="d-flex">
+  <div class="col-lg-4">
+    <li class="d-flex">
+      <img src="../svg/book.svg" alt="">書籍與學籍用品
+    </li>
+    <li class="d-flex">
+      <img src="../svg/life.svg" alt="">宿舍與生活用品
+    </li>
+    <li class="d-flex">
+      <img src="../svg/ruler.svg" alt="">學生專用器材
+    </li>
+    <li class="d-flex">
+      <img src="../svg/bag.svg" alt="">環保生活用品
+    </li>
+    <li class="d-flex">
+      <img src="../svg/save.svg" alt="">儲物與收納用品
+    </li>
+    <li class="d-flex"><img src="../svg/Other.svg" alt="">其他</li>
+  </div>
+  <div class="col-lg-8">
 
+
+    <div id="" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="../webP/articlead.webp" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="../webP/ad.webp" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="../webP/cheat.webp" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="../webP/earth.webp" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="../webP/coupon.webp" class="d-block w-100" alt="...">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    
+    
+       <!-- TODO (更新版)功能清單:賣家專區，許願池等等 -->
+       <div class="seriesofbutton">
+        <ul>
+            <li>
+              <button id="sellerbtn">
+                <img src="../svg/seller.svg" alt="賣家專區">
+              </button>賣家專區
+            </li>
+            <li>
+              <button id="wishpoolbtn">
+                <img src="../svg/wish.svg" alt="許願池專區">
+              </button>許願池
+            </li>
+            <li>
+              <button id="memberbtn">
+                <img src="../webP/Diamond.webp" alt="加入會員">
+              </button>加入會員
+            </li>
+            <!-- <li>
+              <button id="mysterybtn">
+                <img src="../webP/mystery.webp" alt="神秘箱">
+              </button>神秘箱
+            </li> -->
+            <!-- <li>
+              <button id="everydaybtn">
+                <img src="../webP/everyday.webp" alt="每日登入">
+              </button>每日登入
+            </li> -->
+            <!-- <li>
+              <button id="donatebtn">
+                <img src="../webP/donate.webp" alt="我要捐款">
+              </button>我要捐款
+            </li> -->
+            <li>
+              <button id="campusbtn" onclick="window.open('../school/school.html', '_blank')">
+                <img src="../webP/article.webp" alt="校園攻略站">
+              </button>校園攻略站
+            </li>
+            <!-- <li>
+              <button>
+                <img src="../webP/cooperate.webp" alt="學力銀行">
+              </button>學力銀行
+            </li> -->
+        </ul>
+    </div>
+    </div>
+  </div>
+</div>
 
 <!-- TODO: 熱賣區-->
+
 <div class="top">
-  <img src="../svg/toptop.svg" alt="熱賣專區">
+  <img src="../svg/hot.svg" alt="熱賣專區">
 </div>
 <div class="hot-items-wrapper d-flex justify-content-center align-items-center">
   <div class="hot-items-container" id="hotItems"></div>
@@ -246,9 +344,6 @@
   <button id="prevHotBtn">上一頁</button>
   <span id="pageInfo"></span>
   <button id="nextHotBtn">下一頁</button>
-</div>
-<div class="topnext">
-  <img src="../svg/topunder.svg" alt="分隔線">
 </div>
 <div class="newsell">
   <img src="../svg/new.svg" alt="最新上架">
@@ -263,199 +358,7 @@
   <button id="newNext">下一頁</button>
 </div>
 
-  <!--TODO 分類項目區塊 -->
-  <div class="sort mx-auto" style="max-width:1200px;">
-    <div class="container my-2">
-      <!-- 單列水平捲動區 -->
-      <div class="d-flex align-items-center justify-content-center my-4">
-        <!-- 左箭頭按鈕 -->
-        <button class="btn me-2" id="prevBtn">
-          <img src="../webP/LEFT.webp" alt="左箭頭" style="width: 24px;">
-        </button>
-        <!-- 可水平捲動的容器 -->
-        <div class="scroll-container flex-nowrap" id="scrollContainer">
-          <!-- 以下是每個分類項目（可複製重複） -->
-          <div class="sort-item text-center">
-            <a href="#" class="d-block text-decoration-none">
-              <div class="card border-0">
-                <img src="../webP/bike.webp" alt="腳踏車" class="card-img-top">
-                <div class="card-body p-2">
-                  <p class="card-text mb-0">腳踏車</p>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="sort-item text-center">
-            <a href="#" class="d-block text-decoration-none">
-              <div class="card border-0">
-                <img src="../webP/book.webp" alt="原文書籍" class="card-img-top">
-                <div class="card-body p-2">
-                  <p class="card-text mb-0">原文書籍</p>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="sort-item text-center">
-            <a href="#" class="d-block text-decoration-none">
-              <div class="card border-0">
-                <img src="../webP/mobile.webp" alt="3C產品" class="card-img-top">
-                <div class="card-body p-2">
-                  <p class="card-text mb-0">3C產品</p>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="sort-item text-center">
-            <a href="#" class="d-block text-decoration-none">
-              <div class="card border-0">
-                <img src="../webP/sports.webp" alt="運動用品" class="card-img-top">
-                <div class="card-body p-2">
-                  <p class="card-text mb-0">運動用品</p>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="sort-item text-center">
-            <a href="#" class="d-block text-decoration-none">
-              <div class="card border-0">
-                <img src="../webP/clothes.webp" alt="衣物" class="card-img-top">
-                <div class="card-body p-2">
-                  <p class="card-text mb-0">衣物</p>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="sort-item text-center">
-            <a href="#" class="d-block text-decoration-none">
-              <div class="card border-0">
-                <img src="../webP/bag.webp" alt="包包/帆布袋" class="card-img-top">
-                <div class="card-body p-2">
-                  <p class="card-text mb-0">包包/帆布袋</p>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="sort-item text-center">
-            <a href="#" class="d-block text-decoration-none">
-              <div class="card border-0">
-                <img src="../webP/life.webp" alt="宿舍用品" class="card-img-top">
-                <div class="card-body p-2">
-                  <p class="card-text mb-0">宿舍用品</p>
-                </div>
-              </div>
-            </a>
-          </div>
-          <!-- <div class="sort-item text-center">
-            <a href="#" class="d-block text-decoration-none">
-              <div class="card border-0">
-                <img src="../webP/food.webp" alt="零食/食物" class="card-img-top">
-                <div class="card-body p-2">
-                  <p class="card-text mb-0">零食/食物</p>
-                </div>
-              </div>
-            </a>
-          </div> -->
-          <!-- 依需求繼續複製更多分類項目 ... -->
-        </div>
-        <!-- 右箭頭按鈕 -->
-        <button class="btn ms-2" id="nextBtn">
-          <img src="../webP/RIGHT.webp" alt="右箭頭" style="width: 24px;">
-        </button>
-      </div>
-    </div>
-  </div>
 
-<div class="carousel">
-  <div class="carousel-track">
-    <!-- 第一個元素：複製的最後一張 -->
-    <div class="slide">
-      <img src="../webP/articlead.webp" alt="廣告 5">
-    </div>
-    <!-- 原始幻燈片順序 -->
-    <div class="slide">
-      <img src="../webP/ad.webp" alt="廣告 1">
-    </div>
-    <div class="slide">
-      <img src="../webP/cheat.webp" alt="廣告 2">
-    </div>
-    <div class="slide">
-      <img src="../webP/earth.webp" alt="廣告 3">
-    </div>
-    <div class="slide">
-      <img src="../webP/廣告設計頁正式版.webp" alt="廣告 5">
-    </div>
-    <div class="slide">
-      <img src="../webP/coupon.webp" alt="廣告 4">
-    </div>
-    <div class="slide">
-      <img src="../webP/articlead.webp" alt="廣告 5">
-    </div>
-    <!-- 最後一個元素：複製的第一張 -->
-    <div class="slide">
-      <img src="../webP/ad.webp" alt="廣告 1">
-    </div>
-  </div>
-  <!-- 左右箭頭 -->
-  <!-- HTML -->
-   <!-- ?這裡是廣告業左右的箭頭不是自己畫的 -->
-    <button class="arrow arrow-left">
-      <svg width="24" height="24" viewBox="0 0 24 24">
-        <path d="M15 18l-6-6 6-6" fill="none" stroke="#333" stroke-width="2"/>
-      </svg>
-    </button>
-    <button class="arrow arrow-right">
-      <svg width="24" height="24" viewBox="0 0 24 24">
-        <path d="M9 18l6-6-6-6" fill="none" stroke="#333" stroke-width="2"/>
-      </svg>
-    </button>
-</div>   
-
-   <!-- TODO (更新版)功能清單:賣家專區，許願池等等 -->
-   <div class="seriesofbutton">
-    <ul>
-        <li>
-          <button id="sellerbtn">
-            <img src="../svg/seller.svg" alt="賣家專區">
-          </button>賣家專區
-        </li>
-        <li>
-          <button id="wishpoolbtn">
-            <img src="../svg/wish.svg" alt="許願池專區">
-          </button>許願池
-        </li>
-        <li>
-          <button id="memberbtn">
-            <img src="../webP/Diamond.webp" alt="加入會員">
-          </button>加入會員
-        </li>
-        <!-- <li>
-          <button id="mysterybtn">
-            <img src="../webP/mystery.webp" alt="神秘箱">
-          </button>神秘箱
-        </li> -->
-        <!-- <li>
-          <button id="everydaybtn">
-            <img src="../webP/everyday.webp" alt="每日登入">
-          </button>每日登入
-        </li> -->
-        <!-- <li>
-          <button id="donatebtn">
-            <img src="../webP/donate.webp" alt="我要捐款">
-          </button>我要捐款
-        </li> -->
-        <li>
-          <button id="campusbtn" onclick="window.open('../school/school.html', '_blank')">
-            <img src="../webP/article.webp" alt="校園攻略站">
-          </button>校園攻略站
-        </li>
-        <!-- <li>
-          <button>
-            <img src="../webP/cooperate.webp" alt="學力銀行">
-          </button>學力銀行
-        </li> -->
-    </ul>
-</div>
-</div>
 
 </main>
 

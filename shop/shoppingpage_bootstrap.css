@@ -1,10 +1,9 @@
 /* TODO advertisement */
 /* 輪播容器：桌面版寬 1200px；手機版 (max-width: 800px) 寬 100% */
-.carousel {
+/* .carousel {
     position: relative;
-    width: 85vw;
-    margin: 10% auto ;
-    /* margin: 10% auto; */
+    width: 60vw;
+
     margin-top: 0% ;
     margin-bottom: 1% ;
     overflow: hidden;
@@ -14,15 +13,13 @@
       width: 100%;
     }
   }
-  /* 軌道與幻燈片 */
   .carousel-track {
     display: flex;
 
     transition: transform 0.5s ease;
   }
-  /* 桌面版每個幻燈片固定 600px 寬；手機版則全寬 */
   .slide {
-    width: 600px;
+    width: 800px;
     flex-shrink: 0;
     position: relative;
   }
@@ -41,12 +38,10 @@
     padding-right: 5px;
 
   }
-  /* 箭頭控制 */
-/* 假設你的輪播外層容器為 .carousel */
 .carousel {
-    position: relative; /* 讓 .carousel 作為定位參考容器 */
-    overflow: hidden;   /* 可視需求，通常輪播會隱藏超出範圍的內容 */
-  }
+    position: relative; 
+    overflow: hidden;   
+  } */
   
   /* 基本按鈕樣式（可依需求自行調整） */
   .arrow {
@@ -546,7 +541,7 @@ ul{
   text-align: center;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   font-weight: 700;
   padding-top: 10px;
   margin: 0 auto;
