@@ -100,7 +100,7 @@ async function callLogin() {
     // // 記住 email（選擇性）
     // if (rememberMe) localStorage.setItem('rememberEmail', email);
     // else localStorage.removeItem('rememberEmail');
-
+    loaderLogin.style.display = 'none';
     await Swal.fire({
       icon: 'success',
       title: '登入成功',
