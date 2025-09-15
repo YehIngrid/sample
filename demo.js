@@ -31,7 +31,7 @@ async function renderAuthUI() {
     backendService = new BackendService();
     const user = await backendService.whoami(); // 成功代表已登入
     const usernameEl = document.getElementById('username');
-    usernameEl.textContent = user?.name || user?.username || '用戶';
+    usernameEl.textContent = user?.data.name;
     usernameEl.style.display = '';
 
     const loginOrNot = document.getElementById('loginornot');
