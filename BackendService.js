@@ -369,7 +369,20 @@ class BackendService {
             return Promise.reject(error);
         }
     }
-    // logout(userData, fnSuccess, fnError) {
-    //     return axios
-    // }
+    async logout() {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/account/logout`);
+            // 清除 localStorage
+            localStorage.removeItem('uid');
+            localStorage.removeItem('username');
+            localStorage.removeItem('intro');
+            localStorage.removeItem('avatar');
+            localStorage.removeItem('rate');
+            localStorage.removeItem('userCreatedAt');
+            return response;
+        } catch (error) {
+            console.error("登出錯誤：", error);
+            throw new Error("系統發生錯誤，請稍後再試");
+        }
+    }
 }

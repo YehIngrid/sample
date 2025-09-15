@@ -55,12 +55,8 @@ async function renderAuthUI() {
 }
 
 function doLogout() {
-  // 清除登入資訊
-  localStorage.removeItem('uid');
-  localStorage.removeItem('username');
-  localStorage.removeItem('intro');
-  localStorage.removeItem('avatar');
-
+  let res = backendService.logout(); // 清除 token
+  console.log("登出結果", res);
   // 自動登出提示
   let timerInterval;
   Swal.fire({
