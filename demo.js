@@ -32,7 +32,7 @@ async function renderAuthUI() {
     const user = await backendService.whoami(); // 成功代表已登入
     console.log("目前使用", user);
     const usernameEl = document.getElementById('username');
-    usernameEl.textContent = localStorage.getItem("name") || '使用者' ;
+    usernameEl.textContent = localStorage.getItem("username") || '使用者' ;
     usernameEl.style.display = '';
 
     const loginOrNot = document.getElementById('loginornot');
