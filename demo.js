@@ -30,8 +30,9 @@ async function renderAuthUI() {
   try {
     backendService = new BackendService();
     const user = await backendService.whoami(); // 成功代表已登入
+    console.log("目前使用", user);
     const usernameEl = document.getElementById('username');
-    usernameEl.textContent = user?.data.name;
+    usernameEl.textContent = localStorage.getItem("name") || '使用者' ;
     usernameEl.style.display = '';
 
     const loginOrNot = document.getElementById('loginornot');
@@ -82,4 +83,4 @@ function doLogout() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', renderAuthUI());
+document.addEventListener('DOMContentLoaded', renderAuthUI);
