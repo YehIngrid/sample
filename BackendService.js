@@ -187,6 +187,7 @@ class BackendService {
     async getAllCategories() {
         try {
             const response = await axios.get(`${this.baseUrl}/api/commodity/list/all?page=1&limit=20`);
+            console.log("分類資料：", response.data);
             return response.data;
         } catch (error) {
             console.error("無法取得分類資料", error);
