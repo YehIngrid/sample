@@ -109,13 +109,15 @@
             </div>
         </div>
         <div class="contentOfCommodity d-flex">
-            <div class="deepCategorySort">
-                <!-- TODO 深度分類: 依照不同大分類顯示不同的小分類選項 -->
-                <div class="footer">
-                    <p>© 2025 TREASUREHUB. All rights reserved.</p>
+                <div id="deepCategorySort" class="deepCategorySort d-none">
+                    <h6>品項分類</h6>
+                    <ul id="deepCategoryList"></ul>
+                    <button id="clearSubBtn" class="btn btn-sm btn-outline-secondary mt-2">清除子分類</button>
                 </div>
-            </div>
+
+
             <div class="sortAndProduct">
+                
                 <div class="d-flex justify-content-center align-items-center" style="width: 70vw; margin: 0 auto; padding: 10px 0;">
                     <div class="me-3">排序方式
                         <select id="sortSelect" class="form-select">
@@ -131,15 +133,54 @@
                     <div class="me-3">最高預算
                         <input type="number" id="maxPriceInput" class="form-control" placeholder="不限" style="width: 100px;">
                     </div>
+                    <div class="me-3">商品大小
+                        <select name="" id="" class="form-select">
+                            <option value="default">預設不排大小</option>
+                            <option value="0">小型</option>
+                            <option value="1">中型</option>
+                            <option value="2">大型</option>
+                        </select>
+                    </div>
+                    <div class="me-3">商品年齡
+                        <select name="" id="" class="form-select">
+                            <option value="default">預設不排年齡</option>
+                            <option value="0">全新</option>
+                            <option value="1">1年內</option>
+                            <option value="2">1-3年</option>
+                            <option value="3">3年以上</option>
+                        </select>
+                    </div>
+                    <div class="me-3">商品狀態
+                        <select name="" id="" class="form-select">
+                            <option value="default">預設不排狀態</option>
+                            <option value="0">全新</option>
+                            <option value="1">稍新</option>
+                            <option value="2">半新</option>
+                            <option value="3">稍舊</option>
+                            <option value="4">半舊</option>
+                            <option value="5">全舊</option>
+                        </select>
+                    </div>
                     <div class="me-3">
                         <button id="filterButton" class="btn btn-primary">篩選</button>
                     </div>
                 </div>
-                <div class="grid d-flex justify-content-center" id="productGrid" style="width: 70vw; margin: 0 auto;">
-                    <!-- 商品卡片將由 JavaScript 動態生成並插入到這裡 -->
+
+                <!-- 主要區塊：用 bootstrap row/col 來排版 -->
+                <main class="flex-grow-1">
+                <!-- 這裡放置一個 row，商品會以 col 包裝 (col-6 col-md-4 col-lg-3 等) -->
+                <div id="productRow" class="row g-3">
+                    <!-- JS 會把 <div class="col..."> 插入到這裡 -->
                 </div>
+
+
+                <!-- IntersectionObserver 觸發點（不可見） -->
+                <div id="loadMoreTrigger" style="height:1px;"></div>
+                </main>
+
             </div>
         </div>
+
     </div>
     <!-- script部分-->
     <script src="../demo.js"></script>

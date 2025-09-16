@@ -21,6 +21,70 @@
 .sort_list a:hover {
     color: #c8f5e6;
 }
-.sort_list a:active {
+.sort_list .active {
     color: #c4def7;
+}
+/* 側邊欄基礎 */
+.deepCategorySort {
+  width: 240px;
+  background: #fff;
+  border-radius: 6px;
+  margin-right: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  flex-shrink: 0;
+  padding: 20px 20px;
+}
+.deepCategorySort h6 {
+  font-weight: 600;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+.deepCategorySort ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-top: 5px;
+  padding-bottom: 20px;
+}
+.deepCategorySort li {
+  margin-bottom: 6px;
+}
+.deepCategorySort li a {
+  color: #555;
+  text-decoration: none;
+  display: block;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+.deepCategorySort li a:hover,
+.deepCategorySort li a.active {
+    background: #f0f8ff;
+    color: #000;
+    text-decoration: none;
+}
+/* 隱藏類別 */
+.hidden { display: none !important; }
+
+/* 商品卡的簡單樣式（可以改成 bootstrap 卡片或你用的樣式） */
+.product-card {
+  width: 180px;
+  height: 240px;
+  background: #fff;
+  border-radius: 6px;
+  margin: 8px;
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+/* 側欄基礎樣式 */
+/* .deepCategorySort { border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.06); } */
+/* 若想使用 d-none (Bootstrap) 也可以，不需這個 hidden */
+.product-card-img { width:100%; height:150px; object-fit:cover; border-radius:4px; background:#f8f9fa; }
+.contentOfCommodity {
+    margin: 20px 180px;
+    display: flex;
+    align-items: flex-start;
 }

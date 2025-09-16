@@ -184,6 +184,16 @@ class BackendService {
         });
     }
 
+    async getAllCategories() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/list/all?page=1&limit=20`);
+            return response.data;
+        } catch (error) {
+            console.error("無法取得分類資料", error);
+            throw error;
+        }
+    }
+
     getHotItems(pagingInfo, fnSuccess, fnError) {
         return axios.get(`${this.baseUrl}/api/commodity/list/hot`, {
             params: {
