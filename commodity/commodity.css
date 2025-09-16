@@ -1,0 +1,26 @@
+.header_secondary {
+    padding-left: 200px;
+    padding-right: 200px;
+    background-color: #f3f3f3;
+}
+.header_secondary a {
+    color: #383838 !important;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding-left: 20px;
+}
+.sort_list {
+    list-style: none;
+    padding: 0;
+    background-color: #004b97;
+}
+.sort_list a {
+    color: white;
+    text-decoration: none;
+}
+.sort_list a:hover {
+    color: #c8f5e6;
+}
+.sort_list a:active {
+    color: #c4def7;
+}
