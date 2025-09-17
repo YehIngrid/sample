@@ -39,6 +39,9 @@
     background-color: #004b97 !important;
     color: white !important;
 }
+.list-group-item {
+    padding: 12px 20px;
+}
   .profile-name {
     font-size: 1.1rem;
     font-weight: bold;
@@ -207,4 +210,8 @@
   position: absolute;
   right: .25rem;
   top: .25rem;
+}
+.link a{
+  text-decoration: none;
+  color: #383838;
 }

@@ -184,10 +184,14 @@ class BackendService {
         });
     }
 
-    async getAllCategories() {
+    async getAllCategories(pagingInfo) {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/commodity/list/all?page=1&limit=20`);
-            console.log("分類資料：", response.data);
+            const response = await axios.get(`${this.baseUrl}/api/commodity/list/all`, {
+                params: {
+                    page: pagingInfo.page,
+                    limit: pagingInfo.limit
+                }
+            });
             return response.data;
         } catch (error) {
             console.error("無法取得分類資料", error);

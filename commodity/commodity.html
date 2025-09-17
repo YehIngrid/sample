@@ -88,16 +88,15 @@
                     <div class="me-3">
                         <!-- TODO 點擊頭像顯示下拉選單: 個人資訊、登出 -->
                         <div class="dropdown">
-                            <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <div class="d-flex">
+                            <button class="btn btn-link dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="d-flex justify-content-center align-items-center">
                                     <img src="../image/default-avatar.png" alt="" style="width: 30px;">
                                     <span id="username" class="username"></span>
                                 </div>
-                                
                             </button>
                             <ul class="dropdown-menu">
-                                <li><button class="dropdown-item" type="button" id="loginornot"></button></li>
-                                <li><button class="dropdown-item" type="button"><a href="../person/person.html">個人資訊</a></button></li>
+                                <li><button class="dropdown-item" type="button"><a href="../account/account.html" id="loginornot" style="text-decoration: none; color: #383838;"></a></button></li>
+                                <li><button class="dropdown-item" type="button"><a href="../person/person.html" style="text-decoration: none; color: #383838;">個人資訊</a></button></li>
                             </ul>
                         </div>
                     </div>
