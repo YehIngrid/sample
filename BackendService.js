@@ -80,7 +80,22 @@ class BackendService {
             throw new Error('登入失敗，請稍後再試');
         }
         }
-
+        async logout() {
+            try {
+                const response = await axios.post(`${this.baseUrl}/api/account/logout`);
+                // 清除 localStorage
+                localStorage.removeItem('uid');
+                localStorage.removeItem('username');
+                localStorage.removeItem('intro');
+                localStorage.removeItem('avatar');
+                localStorage.removeItem('rate');
+                localStorage.removeItem('userCreatedAt');
+                return response;
+            } catch (error) {
+                console.error("登出錯誤：", error);
+                throw new Error("系統發生錯誤，請稍後再試");
+            }
+        }
 
     getUserData() {
         // 從 localStorage 取出
@@ -339,12 +354,12 @@ class BackendService {
             return Promise.reject(error);
         }
     }
-    async createOrder(orderData) {
+    async createOrder(cartItemsId) {
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/order/create`,
-                orderData,
-                { headers: { "Content-Type": "application/json" }, withCredentials: true }
+                { headers: { "Content-Type": "application/json" }, withCredentials: true }, 
+                { body : cartItemsId } // 確保 body 是字串
             );
             return response;
         } catch (error) {
@@ -352,23 +367,57 @@ class BackendService {
             return Promise.reject(error);
         }
     }
-    //? 這裡的id指的是什麼
-    async getMyOrders(id) {
+    async getBuyerOrders() {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/order/${id}`, { headers: { "Cache-Control": "no-cache" } });
+            const response = await axios.get(`${this.baseUrl}/api/order/buyer`, { headers: { "Cache-Control": "no-cache" } });
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
     }
-    async updateMyOrders(id, orderData) {
+    async getSellerOrders() {
         try {
-            const response = await axios.put(
-                `${this.baseUrl}/api/order/update/${id}`,
-                orderData,
+            const response = await axios.get(`${this.baseUrl}/api/order/seller`, { headers: { "Cache-Control": "no-cache" } });
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async getOrderDetails(id) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/order/${id}`);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async sellerAcceptOrders(id) {
+        try {
+            const response = await axios.post(
+                `${this.baseUrl}/api/order/${id}/accept`,
                 { headers: { "Content-Type": "application/json" } }
             );
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async sellerDeliveredOrders(id) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/order/${id}/delivered`);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async buyerCompletedOrders(id) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/order/${id}/completed`);
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
@@ -384,20 +433,5 @@ class BackendService {
             return Promise.reject(error);
         }
     }
-    async logout() {
-        try {
-            const response = await axios.post(`${this.baseUrl}/api/account/logout`);
-            // 清除 localStorage
-            localStorage.removeItem('uid');
-            localStorage.removeItem('username');
-            localStorage.removeItem('intro');
-            localStorage.removeItem('avatar');
-            localStorage.removeItem('rate');
-            localStorage.removeItem('userCreatedAt');
-            return response;
-        } catch (error) {
-            console.error("登出錯誤：", error);
-            throw new Error("系統發生錯誤，請稍後再試");
-        }
-    }
+    
 }
