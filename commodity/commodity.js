@@ -144,8 +144,6 @@ function renderProductsBootstrap(items) {
   const frag = document.createDocumentFragment();
   const noProducts = document.getElementById('no-products');
 
-    // 先清空舊商品
-    container.innerHTML = '';
 
     if (!items || items.length === 0) {
         // 沒商品 → 顯示提示
