@@ -120,11 +120,11 @@ function renderProductsBootstrap(items) {
     col.className = 'col-6 col-md-4 col-lg-3';
     col.innerHTML = `
       <div class="card h-100">
-        ${p.img ? `<img src="${escapeHtml(p.mainImage)}" class="card-img-top product-card-img" alt="${escapeHtml(p.name)}">` :
+        ${p.mainImage ? `<img src="${escapeHtml(p.mainImage)}" class="card-img-top product-card-img" alt="${escapeHtml(p.name)}">` :
         `<div class="product-card-img d-flex align-items-center justify-content-center text-secondary">${escapeHtml(p.name.slice(0,6))}</div>`}
         <div class="card-body d-flex flex-column">
           <h6 class="card-title" style="font-size:14px;">${escapeHtml(p.name)}</h6>
-          <p class="mb-2 text-muted" style="font-size:13px;">類別：${escapeHtml(p.category)}</p>
+          <p class="mb-2 text-muted" style="font-size:13px;"># ${escapeHtml(p.newOrOld)}</p>
           <div class="mt-auto d-flex justify-content-between align-items-center">
             <div class="fw-bold text-danger">NT$${escapeHtml(p.price)}</div>
             <button class="btn btn-sm btn-outline-primary add-cart" data-id="${p.id}">加入購物車</button>
