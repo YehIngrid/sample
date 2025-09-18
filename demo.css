@@ -164,11 +164,11 @@ ul{
   text-decoration: none;
 } */
 .username{
-  text-decoration: none;
+  text-decoration: none !important;
   color: #004b97;
-  font-weight: 500;
+  font-weight: 600;
   padding-right: 5px;
-
+  padding-left: 5px;
 }
 
 .login{
