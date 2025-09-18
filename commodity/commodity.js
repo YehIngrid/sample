@@ -139,6 +139,52 @@ async function loadProducts() {
     isLoading = false;
   }
 }
+// 使用 bootstrap row / col 來 render 商品
+function renderProductsBootstrap(items) {
+  const frag = document.createDocumentFragment();
+  items.forEach(p => {
+    const col = document.createElement('div');
+    col.className = 'col-6 col-md-4 col-lg-3';
+    const categoryMap = {
+        book: '書籍與學籍用品',
+        life: '宿舍與生活用品',
+        student: '學生專用器材',
+        other: '其他',
+        recycle: '環保生活用品',
+        clean: '儲物與收納用品',
+    };
+    const newOrOldMap = {
+      1:'全新',2:'幾乎全新',3:'半新',4:'適中',5:'稍舊',6:'全舊',
+    };
+    const category = categoryMap[p.category] ?? '其他';
+    const newOrOld = newOrOldMap[p.newOrOld] ?? '';
+    col.innerHTML = `
+      <div class="card h-100">
+        ${p.mainImage ? `<img src="${escapeHtml(p.mainImage)}" class="card-img-top product-card-img" alt="${escapeHtml(p.name)}">` :
+        `<div class="product-card-img d-flex align-items-center justify-content-center text-secondary">${escapeHtml(p.name.slice(0,6))}</div>`}
+        <div class="card-body d-flex flex-column">
+          <h6 class="card-title" style="font-size:14px;">${escapeHtml(p.name)}</h6>
+          <p class="mb-2 text-muted" style="font-size:13px;"># ${escapeHtml(newOrOld)}</p>
+          <div class="mt-auto d-flex justify-content-between align-items-center">
+            <div class="fw-bold text-danger">NT$${escapeHtml(p.price)}</div>
+            <button class="btn btn-sm btn-outline-primary add-cart" data-id="${p.id}">加入購物車</button>
+          </div>
+        </div>
+      </div>
+    `;
+    frag.appendChild(col);
+  });
+  productRow.appendChild(frag);
+
+  // 加購物車事件
+  productRow.querySelectorAll('.add-cart').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const id = btn.dataset.id;
+      alert('加入購物車：ID ' + id);
+    });
+  });
+}
+
 
 // escape HTML
 function escapeHtml(str) {
