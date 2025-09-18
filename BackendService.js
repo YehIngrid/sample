@@ -354,6 +354,15 @@ class BackendService {
             return Promise.reject(error);
         }
     }
+    async getOrderStatus() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/order`, { headers: { "Cache-Control": "no-cache" } });
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
     async createOrder(cartItemsId) {
         try {
             const response = await axios.post(
