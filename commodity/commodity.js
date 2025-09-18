@@ -82,7 +82,7 @@ function toggleAside(category) {
   }
 }
 
-// 載入商品（分頁）
+// 載入商品（分頁，含前端篩選與 totalCount 更新）
 async function loadProducts() {
   if (isLoading) return;
   isLoading = true;
@@ -90,17 +90,45 @@ async function loadProducts() {
 
   try {
     let items = [];
-    let limit = PAGE_SIZE;
     const backendService = new BackendService();
-    const pagingInfo = { page: pageIndex + 1, limit: limit};
+    const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
     const response = await backendService.getAllCategories(pagingInfo);
 
+    // API 回傳的商品
     items = response.data?.commodities || [];
-    const pg = response.data?.pagination || {};
-    const totalCount = pg.total || items.length;
 
+    // === 前端分類篩選 ===
+    const categoryMap = {
+      book: '書籍與學籍用品',
+      life: '宿舍與生活用品',
+      student: '學生專用器材',
+      recycle: '環保生活用品',
+      clean: '儲物與收納用品',
+      other: '其他',
+    };
+
+    let filteredItems = items;
+
+    // 篩選大分類
+    if (currentCategory !== 'all') {
+      filteredItems = filteredItems.filter(p => categoryMap[p.category] === currentCategory);
+    }
+
+    // 篩選子分類（假設商品物件有 subCategory 欄位）
+    if (currentSub) {
+      filteredItems = filteredItems.filter(p => p.subCategory === currentSub);
+    }
+
+    // 重新計算分頁數量
+    const totalCount = filteredItems.length;
+
+    // 依 pageIndex 切出這一頁要顯示的商品
+    const start = pageIndex * PAGE_SIZE;
+    const pagedItems = filteredItems.slice(start, start + PAGE_SIZE);
+
+    // 清空後重新 render
     productRow.innerHTML = '';
-    renderProductsBootstrap(items);
+    renderProductsBootstrap(pagedItems);
     renderPagination(totalCount);
 
     loaderEl.textContent = '';
@@ -110,38 +138,6 @@ async function loadProducts() {
   } finally {
     isLoading = false;
   }
-}
-
-// 使用 bootstrap row / col 來 render 商品
-function renderProductsBootstrap(items) {
-  const frag = document.createDocumentFragment();
-  items.forEach(p => {
-    const col = document.createElement('div');
-    col.className = 'col-6 col-md-4 col-lg-3';
-    col.innerHTML = `
-      <div class="card h-100">
-        ${p.mainImage ? `<img src="${escapeHtml(p.mainImage)}" class="card-img-top product-card-img" alt="${escapeHtml(p.name)}">` :
-        `<div class="product-card-img d-flex align-items-center justify-content-center text-secondary">${escapeHtml(p.name.slice(0,6))}</div>`}
-        <div class="card-body d-flex flex-column">
-          <h6 class="card-title" style="font-size:14px;">${escapeHtml(p.name)}</h6>
-          <p class="mb-2 text-muted" style="font-size:13px;"># ${escapeHtml(p.newOrOld)}</p>
-          <div class="mt-auto d-flex justify-content-between align-items-center">
-            <div class="fw-bold text-danger">NT$${escapeHtml(p.price)}</div>
-            <button class="btn btn-sm btn-outline-primary add-cart" data-id="${p.id}">加入購物車</button>
-          </div>
-        </div>
-      </div>
-    `;
-    frag.appendChild(col);
-  });
-  productRow.appendChild(frag);
-
-  productRow.querySelectorAll('.add-cart').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const id = btn.dataset.id;
-      alert('加入購物車：ID ' + id);
-    });
-  });
 }
 
 // escape HTML
