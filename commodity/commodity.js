@@ -142,9 +142,23 @@ async function loadProducts() {
 // 使用 bootstrap row / col 來 render 商品
 function renderProductsBootstrap(items) {
   const frag = document.createDocumentFragment();
+  const noProducts = document.getElementById('no-products');
+
+    // 先清空舊商品
+    container.innerHTML = '';
+
+    if (!items || items.length === 0) {
+        // 沒商品 → 顯示提示
+        noProducts.style.display = 'block';
+        return;
+    }
+
+    // 有商品 → 隱藏無商品提示
+    noProducts.style.display = 'none';
+
   items.forEach(p => {
     const col = document.createElement('div');
-    col.className = 'col-6 col-md-4 col-lg-3';
+    col.className = 'col-6 col-md-4 col-lg-2';
     const categoryMap = {
         book: '書籍與學籍用品',
         life: '宿舍與生活用品',
@@ -184,7 +198,6 @@ function renderProductsBootstrap(items) {
     });
   });
 }
-
 
 // escape HTML
 function escapeHtml(str) {
