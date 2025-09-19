@@ -177,6 +177,25 @@ ul{
   font-size: 14px;
   box-shadow:0px !important;
 }
+ * {
+    scrollbar-width: auto;
+    scrollbar-color: #d6e8ff #ffffff;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 13px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #d6e8ff;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+  }
 .footer-row li a{
   color: #fff;
   text-decoration: none;
