@@ -494,21 +494,6 @@ if (checkoutBtn) {
       return alert('電話格式不正確，請填寫 09xxxxxxxx。');
     }
 
-    const payload = {
-      status: orderStatus,
-      shipping: {
-        method: 'face_to_face_cod',
-        fee: 0,
-        pickup: {
-          name: pickupName.value.trim(),
-          phone: pickupPhone.value.trim(),
-          place: pickupPlace.value.trim(),
-          datetime: pickupDatetime.value,
-          note: pickupNote?.value?.trim() ?? '',
-        }
-      },
-      items: selected.map(i => ({ id: i.id, qty: i.qty })),
-    };
 
     // TODO: 串接你的下單 API（這裡先示範）
     const i = { id: selected.map(i => i.id) }; // 模擬 API 需要的參數格式
