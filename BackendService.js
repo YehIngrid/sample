@@ -367,7 +367,8 @@ class BackendService {
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/order/create`,
-                { cartItemsId }
+                // 將參數名稱從 { cartItemsId } 改為 { "cartItem_ids": cartItemsId }
+                { "cartItem_ids": cartItemsId } 
             );
             return response;
         } catch (error) {
