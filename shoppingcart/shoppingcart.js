@@ -494,10 +494,10 @@ if (checkoutBtn) {
       return alert('電話格式不正確，請填寫 09xxxxxxxx。');
     }
 
+    // 只取 cart item 的 id
+    const cartItemsId = selected.map(i => i.id);
 
-    // TODO: 串接你的下單 API（這裡先示範）
-    const i = { id: selected.map(i => i.id) }; // 模擬 API 需要的參數格式
-    cartItemsId = i.id; // 全域變數，給 handleCreateOrder 用
+    // 呼叫建立訂單
     handleCreateOrder(cartItemsId);
   });
 }
