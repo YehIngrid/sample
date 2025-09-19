@@ -72,7 +72,7 @@
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../commodity/commodity.html">購物商場</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">購物首頁</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
                 <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
               </ul>
@@ -80,13 +80,6 @@
         
             <!-- (C) 右側：登入 + 購物車 -->
             <div class="d-flex align-items-center ms-auto">
-              <div class="news-ticker">
-                <div class="news-wrapper">
-                  <ul class="news-list">
-                    <li><a href="#">民主潮聲：#大罷免</a></li>
-                  </ul>
-                </div>
-              </div>
               
               <div class="login">
                 <a id="username" class="username" href="../person/person.html"></a>
@@ -123,7 +116,7 @@
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../commodity/commodity.html">購物商場</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">購物首頁</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
                 <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
@@ -223,51 +216,43 @@
           </div>
   <main id="midcontent">
   <div class="my-section">  
-    <!-- ✅ 手機版：可滑動卡片 -->
-<div class="mobile-news-slider">
-  <div class="news-slider">
-    <div class="news-card">📢 民主潮聲：#大罷免</div>
-    <div class="news-card">📢 立院衝突：#青島東路</div>
-    <div class="news-card">📢 熱搜話題：#言論自由</div>
-    <div class="news-card">📢 最新公告：#明天放假</div>
-  </div>
-</div>  
+
 <div class="d-lg-flex d-block justify-content-center" style="width: 70vw; margin: 0 auto;">
-  <div class="col-lg-2 d-flex flex-column categorylist">
-    <h4 style="text-align: center; margin-bottom: 10px;">商品分類</h4>
+  <div class="col-lg-2 d-flex flex-column categorylist my-lg-cat">
+    <h6>商品分類</h6>
     <a href="../commodity/commodity.html?category=書籍與學籍用品">
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
             <img src="../svg/book.svg" style="width: 30px;" alt="">
             <div>書籍與學籍用品</div>
         </div>
     </a>
     <a href="../commodity/commodity.html?category=宿舍與生活用品">
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
             <img src="../svg/life.svg" style="width: 30px;" alt="">
             <div>宿舍與生活用品</div>
         </div>
     </a>
     <a href="../commodity/commodity.html?category=學生專用器材">
-        <div class="d-flex">
-            <img src="../svg/ruler.svg" style="width: 30px;" alt="">
+        <div class="d-flex align-items-center">
+            <img src="../svg/ruler.svg" style="width: 20px; margin-right: 10px;" alt="">
             <div>學生專用器材</div>
         </div>
     </a>
     <a href="../commodity/commodity.html?category=環保生活用品">
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
             <img src="../svg/bag.svg" style="width: 30px;" alt="">
             <div>環保生活用品</div>
         </div>
     </a>
     <a href="../commodity/commodity.html?category=儲物與收納用品">
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
             <img src="../svg/save.svg" style="width: 30px;" alt="">
             <div>儲物與收納用品</div>
         </div>
     </a>
     <a href="../commodity/commodity.html?category=其他">
-        <div class="d-flex">
-            <img src="../svg/Other.svg" style="width: 30px;" alt="">
+        <div class="d-flex align-items-center">
+            <img src="../svg/Other.svg" style="width: 50px;" alt="">
             <div>其他</div>
         </div>
     </a>
@@ -314,13 +299,18 @@
             <li>
               <button id="wishpoolbtn">
                 <img src="../svg/wish.svg" alt="許願池專區">
-              </button>許願池
+              </button>許願專區
             </li>
             <li>
+              <button onclick="window.open('../questions/questions.html', '_blank')">
+                <img src="../svg/fandq.svg" alt="常見問題">
+              </button>常見問題
+            </li>
+            <!-- <li>
               <button id="memberbtn">
                 <img src="../webP/Diamond.webp" alt="加入會員">
               </button>加入會員
-            </li>
+            </li> -->
             <!-- <li>
               <button id="mysterybtn">
                 <img src="../webP/mystery.webp" alt="神秘箱">
@@ -336,11 +326,11 @@
                 <img src="../webP/donate.webp" alt="我要捐款">
               </button>我要捐款
             </li> -->
-            <li>
+            <!-- <li>
               <button id="campusbtn" onclick="window.open('../school/school.html', '_blank')">
                 <img src="../webP/article.webp" alt="校園攻略站">
               </button>校園攻略站
-            </li>
+            </li> -->
             <!-- <li>
               <button>
                 <img src="../webP/cooperate.webp" alt="學力銀行">
@@ -352,20 +342,34 @@
     
   </div>
 </div>
-<hr style="width: 70vw; margin: 0px auto;">
+<hr style="width: 70vw; margin: 0px auto; margin-bottom: 20px;">
+<div style="width: 71vw; margin: 0px auto;">
+  <img src="../image/noratead.png" alt="" style="width: 71vw; margin: 0px auto;">
+</div>
 <!-- TODO: 熱賣區-->
+<div class="firstlinesell d-flex justify-content-center" style="width: 69vw; margin: 20px auto 0 auto;">
+  <div class="top d-flex flex-column col-lg-6 col-12">
+    <div class="topicoftop d-flex align-items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fire" viewBox="0 0 16 16">
+        <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15"/>
+      </svg>
+      <h4 style="margin: 0; padding-left: 4px; font-weight: 600; letter-spacing: 4px; color: #fff9f1;">熱賣專區</h4>
+    </div>
+    
+    <div class="hot-items-wrapper d-grid grid-cols-3 gap-3">
+      <div class="hot-items-container d-grid grid-cols-3 gap-3" id="hotItems"></div>
+    </div>
+    <div class="pager">
+      <button id="prevHotBtn">上一頁</button>
+      <span id="pageInfo"></span>
+      <button id="nextHotBtn">下一頁</button>
+    </div>
+  </div>
+  <div class="wishpoollook col-lg-6 col-12 mx-4">
+    <h4 style="margin: 0; padding-left: 4px; font-weight: 600; letter-spacing: 4px;">許願池</h4>
+  </div>
+</div>
 
-<div class="top">
-  <img src="../svg/hot.svg" alt="熱賣專區">
-</div>
-<div class="hot-items-wrapper d-flex justify-content-center align-items-center">
-  <div class="hot-items-container" id="hotItems"></div>
-</div>
-<div class="pager">
-  <button id="prevHotBtn">上一頁</button>
-  <span id="pageInfo"></span>
-  <button id="nextHotBtn">下一頁</button>
-</div>
 <div class="newsell">
   <img src="../svg/new.svg" alt="最新上架">
 </div>
