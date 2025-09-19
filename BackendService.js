@@ -199,7 +199,7 @@ class BackendService {
         });
     }
 
-    async getAllCategories(pagingInfo) {
+    async getAllCommodities(pagingInfo) {
         try {
             const response = await axios.get(`${this.baseUrl}/api/commodity/list/all`, {
                 params: {
