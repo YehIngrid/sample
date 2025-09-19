@@ -508,7 +508,8 @@ async function handleCreateOrder(cartItemsId) {
         Swal.fire({
             icon: 'success',
             title: '訂單建立成功！',
-            showConfirmButton: false,
+            text: '感謝您的購買，請等待賣家聯絡您進行面交，在個人頁面 > 我的購買清單查看。',
+            showConfirmButton: true,
             timer: 2000
         });
         console.log("訂單建立成功:", response.data);

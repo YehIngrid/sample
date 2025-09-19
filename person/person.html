@@ -119,8 +119,8 @@
             <div class="list-group list-group-flush">
               <a class="list-group-item list-group-item-action active" href="#" data-target ="account">帳戶管理中心</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="products"><img src="../svg/sellicon.svg" alt="我的商品icon"> 我的商品</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="products"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="products"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="favorites"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
@@ -153,6 +153,50 @@
                 <!-- 手機版卡片：小於 lg 才顯示 -->
                 <div id="product-cards" class="row g-3 d-block d-lg-none"></div>
 
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- section sellProducts -->
+      <section class="col-lg-9 d-none content-section" id="sellProducts">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">我的銷售訂單</h5>
+              <div class="table-responsive" style="overflow-x: hidden;">
+                <table class="table align-middle d-none d-lg-table">
+                  <thead>
+                    <tr>
+                      <th>商品</th><th>狀態</th><th>買家下單時間</th><th>詳細面交資訊</th><th>相關操作</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+                <!-- 手機版卡片：小於 lg 才顯示 -->
+                <div id="sell-product" class="row g-3 d-block d-lg-none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- section buyProducts -->
+      <section class="col-lg-9 d-none content-section" id="buyProducts">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">我的購買訂單</h5>
+              <div class="table-responsive" style="overflow-x: hidden;">
+                <table class="table align-middle d-none d-lg-table">
+                  <thead>
+                    <tr>
+                      <th>商品</th><th>狀態</th><th>下單時間</th><th>詳細面交資訊</th><th>相關操作</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+                <!-- 手機版卡片：小於 lg 才顯示 -->
+                <div id="buy-product" class="row g-3 d-block d-lg-none"></div>
               </div>
             </div>
           </div>
@@ -393,8 +437,8 @@
       <div class="list-group">
         <a class="list-group-item list-group-item-action active standardfontsize" href="#" data-target="account">帳戶管理中心</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="products"><img src="../svg/sellicon.svg" alt="我的商品icon"> 我的商品</a>
-        <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="products" style="font-size: 1.2rem;"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
-        <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="products" style="font-size: 1.2rem;"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
+        <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts" style="font-size: 1.2rem;"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
+        <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="buyProducts" style="font-size: 1.2rem;"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="favorites"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>

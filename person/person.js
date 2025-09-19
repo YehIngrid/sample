@@ -252,20 +252,33 @@ document.addEventListener('DOMContentLoaded', () => {
       renderCards([]);
     }
   );
+  // const res = await backendService.getSellerOrders();
 
   // 事件委派（表格）
   document.querySelector('#products tbody')?.addEventListener('click', onRowAction);
   // 事件委派（卡片）
   document.querySelector('#product-cards')?.addEventListener('click', onCardAction);
+  
+  document.querySelector('#buyProducts tbody')?.addEventListener('click', onRowAction);
+  document.querySelector('#buy-product')?.addEventListener('click', onCardAction);
+  // 讀取賣家訂單
+});
+document.addEventListener('DOMContentLoaded', async () => {
+  backendService = new BackendService();
+  try {
+    const response = await backendService.getSellerOrders();
+  } catch (error) {
+
+  }
+  document.querySelector('#sellProducts tbody')?.addEventListener('click', onRowAction);
+  document.querySelector('#sell-product')?.addEventListener('click', onCardAction);
 });
 
 // ===== 工具 =====
 const STATUS_MAP = {
   listed:   { text: '上架中',  badge: 'text-bg-success',  action: '編輯' },
   sold:     { text: '已售出',  badge: 'text-bg-secondary',action: '查看' },
-  reserved: { text: '保留中',  badge: 'text-bg-warning',  action: '查看' },
-  draft:    { text: '草稿',    badge: 'text-bg-light',    action: '編輯' },
-  delete:   { text: '已下架',  badge: 'text-bg-danger',   action: '查看' }
+  reserved: { text: '訂單處理中',  badge: 'text-bg-warning',  action: '查看' },
 };
 
 const nt = new Intl.NumberFormat('zh-TW', {
@@ -291,6 +304,41 @@ function esc(str) {
   return String(str ?? '').replace(/[&<>"']/g, s =>
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
   );
+}
+function renderSellerOrders(list = []) {
+  const tbody = document.querySelector('#sellProducts tbody');
+  if (!tbody) return;
+  if (!Array.isArray(list) || list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
+    return;
+  }
+  const rows = list.map(item => {
+    const id       = item.id;
+    const name     = esc(item.name);
+    const price    = fmtPrice(item.price);
+    const updated  = fmtDate(item.updatedAt);
+    const created  = fmtDate(item.createdAt);
+    const key      = (item.status ?? 'listed').toLowerCase();
+    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
+    const meetingInfo = esc(item.meetingInfo || '無詳細資訊');
+    return `
+      <tr data-id="${esc(id)}">
+        <td>${name}</td>
+        <td><span class="badge ${st
+.badge}">${st.text}</span></td>
+        <td>${created}</td>
+        <td>${meetingInfo}</td>
+        <td class="text-end">
+          <button class="btn btn-sm
+  btn-outline-success btn-row-action" data-action="check">查看商品</button>
+          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
+          <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+  tbody.innerHTML = rows;
 }
 
 // ===== 渲染：桌機表格 =====
