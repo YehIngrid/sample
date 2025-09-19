@@ -181,7 +181,7 @@ function renderProductsBootstrap(items) {
     const category = categoryMap[p.category] ?? '其他';
     const newOrOld = newOrOldMap[p.newOrOld] ?? '';
     col.innerHTML = `
-      <div class="card h-100">
+      <div class="card h-100" style="cursor:pointer;" onclick="window.location.href='../product/product.html?id=${escapeHtml(p.id)}'">
         ${p.mainImage ? `<img src="${escapeHtml(p.mainImage)}" class="card-img-top product-card-img" alt="${escapeHtml(p.name)}">` :
         `<div class="product-card-img d-flex align-items-center justify-content-center text-secondary">${escapeHtml(p.name.slice(0,6))}</div>`}
         <div class="card-body d-flex flex-column">
@@ -200,11 +200,24 @@ function renderProductsBootstrap(items) {
 
   // 加購物車事件
   productRow.querySelectorAll('.add-cart').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const id = btn.dataset.id;
-      alert('加入購物車：ID ' + id);
-    });
-  });
+    btn.addEventListener('click', async() => {
+    const id = btn.dataset.id;
+        try {
+            await backendService.addItemsToCart(id, 1);
+            Swal.fire({
+            title: '已加入購物車！',
+            icon: 'success', 
+            showConfirmButton: false,
+            timer: 1600,
+            });
+        } catch (err) {
+            const msg = err?.response?.data?.message || err?.message || '請稍後再試';
+            Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
+        } finally {
+            btn.disabled = false;
+        }
+            });
+        });
 }
 
 // escape HTML
