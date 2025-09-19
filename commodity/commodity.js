@@ -59,7 +59,7 @@ function changeCategory(category) {
 
 // 控制側欄顯示/填入子分類
 function toggleAside(category) {
-  if (category === 'all' || category === 'hot' || category === 'new') {
+  if (category === 'all' || category == 'hot' || category == 'new') {
     asideEl.classList.add('d-none');
   } else {
     asideEl.classList.remove('d-none');
@@ -94,10 +94,10 @@ async function loadProducts() {
     const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
     if (currentCategory === 'hot') {
         const response = await backendService.getHotItems(pagingInfo);
-        items = response.data?.commodities || [];
+        items = response.data?.data.commodities || [];
     } else if (currentCategory === 'new') {
         const response = await backendService.getNewItems(pagingInfo);
-        items = response.data?.commodities || [];
+        items = response.data?.data.commodities || [];
     } else {
         // 其他分類都撈全部，然後前端再篩選
         const response = await backendService.getAllCommodities(pagingInfo);
@@ -223,7 +223,7 @@ function renderPagination(totalCount) {
 
   // 上一頁
   const prevBtn = document.createElement('button');
-  prevBtn.textContent = '«';
+  prevBtn.textContent = '<';
   prevBtn.className = 'btn btn-sm mx-1 ' + (pageIndex === 0 ? 'btn-secondary disabled' : 'btn-outline-primary');
   prevBtn.addEventListener('click', () => {
     if (pageIndex > 0) {
@@ -249,7 +249,7 @@ function renderPagination(totalCount) {
 
   // 下一頁
   const nextBtn = document.createElement('button');
-  nextBtn.textContent = '»';
+  nextBtn.textContent = '>';
   nextBtn.className = 'btn btn-sm mx-1 ' + (pageIndex === totalPages - 1 ? 'btn-secondary disabled' : 'btn-outline-primary');
   nextBtn.addEventListener('click', () => {
     if (pageIndex < totalPages - 1) {
