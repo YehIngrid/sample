@@ -496,7 +496,7 @@ if (checkoutBtn) {
 
     // 只取 cart item 的 id
     const cartItemsId = selected.map(i => i.id);
-
+    alert('模擬送出訂單，包含的 cart item id 有：' + cartItemsId.join(', '));
     // 呼叫建立訂單
     handleCreateOrder(cartItemsId);
   });
