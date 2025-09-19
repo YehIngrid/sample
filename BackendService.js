@@ -367,8 +367,11 @@ class BackendService {
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/order/create`,
-                { headers: { "Content-Type": "application/json" }, withCredentials: true }, 
-                { body : cartItemsId } // 確保 body 是字串
+                { cartItemsId }, // 這裡是 body，要送到後端的資料
+                {
+                    headers: { "Content-Type": "application/json" },
+                    withCredentials: true
+                }
             );
             return response;
         } catch (error) {

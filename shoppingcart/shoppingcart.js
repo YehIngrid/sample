@@ -23,13 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ============ 1) 共用狀態 / 工具 ============
 const LS_KEY = 'cart_state_v1';
-const LS_STATUS_KEY = 'order_status_v1';
 const LS_PICKUP_KEY = 'pickup_info_v1';
 
 function loadState() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || null; } catch { return null; } }
 function saveState(items) { localStorage.setItem(LS_KEY, JSON.stringify(items)); }
-function loadStatus() { return localStorage.getItem(LS_STATUS_KEY) || 'processing'; }
-function saveStatus(v) { localStorage.setItem(LS_STATUS_KEY, v); }
 function loadPickup() { try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; } }
 function savePickup(info) { localStorage.setItem(LS_PICKUP_KEY, JSON.stringify(info)); }
 
@@ -39,11 +36,9 @@ if (typeof window.updateSummary !== 'function') {
 }
 
 let cartItems = [];                  // 由 API 載入
-let orderStatus = loadStatus();
 
 // 你的既有節點
 const cartList        = document.getElementById('cart-items');
-const statusSelect    = document.getElementById('order-status');
 const pickupName      = document.getElementById('pickup-name');
 const pickupPhone     = document.getElementById('pickup-phone');
 const pickupPlace     = document.getElementById('pickup-place');
@@ -110,7 +105,6 @@ async function initCartFromAPI() {
     cartItems  = Array.isArray(list) ? list : [];
     saveState(cartItems);
 
-    if (statusSelect) statusSelect.value = orderStatus;
 
     (function restorePickup() {
       const info = loadPickup();
@@ -200,7 +194,7 @@ function renderCart() {
   cartItems.forEach(item => {
     const li = document.createElement('div');
     li.className = 'list-group-item';
-    item.owner.photoURL = item.owner.photoURL || '../image/default-avatar.png';
+    // item.owner.photoURL = item.owner.photoURL || '../image/default-avatar.png';
     li.dataset.id = item.id;
     li.innerHTML = `
       <div class="d-flex align-items-start">
@@ -225,6 +219,7 @@ function renderCart() {
             <div>
               <button class="btn btn-dark btn-look" type="button">查看</button>
               <button class="btn btn-light btn-sm ms-auto btn-remove" type="button">刪除</button>
+              <button class="btn btn-primary btn-talk" type="button">與賣家聯絡</button>
             </div>
           </div>
         </div>
@@ -279,6 +274,18 @@ function renderCart() {
       });
     }
 
+    //TODO 綁事件：聯絡賣家
+    const talkBtn = li.querySelector('.btn-talk');
+    if (talkBtn) {
+      talkBtn.style.cursor = 'pointer';
+      talkBtn.addEventListener('click', () => {
+        if (item.owner_name) {
+          alert(`模擬與 ${item.owner_name} 聯絡（此功能尚未實作）`);
+        } else {
+          alert('無法取得賣家資訊');
+        }
+      });
+    }
     cartList.appendChild(li);
   });
 }
@@ -455,14 +462,6 @@ if (clearAllBtn) {
   });
 }
 
-// ============ 9) 訂單狀態 ============
-if (statusSelect) {
-  statusSelect.value = orderStatus;
-  statusSelect.addEventListener('change', () => {
-    orderStatus = statusSelect.value;
-    saveStatus(orderStatus);
-  });
-}
 
 // ============ 10) 面交資訊（儲存/還原 & 驗證） ============
 [pickupName, pickupPhone, pickupPlace, pickupDatetime, pickupNote].forEach(el => {
@@ -512,7 +511,28 @@ if (checkoutBtn) {
     };
 
     // TODO: 串接你的下單 API（這裡先示範）
-    console.log('模擬送出訂單（面交）：', payload);
-    alert('已建立訂單（面交付款，模擬）。請查看 console。');
+    const i = { id: selected.map(i => i.id) }; // 模擬 API 需要的參數格式
+    cartItemsId = i.id; // 全域變數，給 handleCreateOrder 用
+    handleCreateOrder(cartItemsId);
   });
+}
+
+async function handleCreateOrder(cartItemsId) {
+    try {
+        const response = await backendService.createOrder(cartItemsId);
+        Swal.fire({
+            icon: 'success',
+            title: '訂單建立成功！',
+            showConfirmButton: false,
+            timer: 2000
+        });
+        console.log("訂單建立成功:", response.data);
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: '訂單建立失敗',
+            text: '請稍後再試或聯絡客服',
+        });
+        console.error("建立訂單失敗:", error);
+    }
 }
