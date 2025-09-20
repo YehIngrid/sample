@@ -332,7 +332,7 @@ function renderSellerOrders(list = []) {
     const type = item.type || '未知交易方式';
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
+    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
     const meetingInfo = esc(item.meetingInfo || '無詳細資訊');
     return `
       <tr data-id="${esc(id)}">
@@ -369,7 +369,7 @@ function renderTable(list = []) {
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
+    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
 
     return `
       <tr data-id="${esc(id)}">
