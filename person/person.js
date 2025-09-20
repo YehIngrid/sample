@@ -267,8 +267,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   backendService = new BackendService();
   try {
     const response = await backendService.getSellerOrders();
+    const res = response.data?.data.commodities;
+    renderSellerOrders(res);
   } catch (error) {
-
+    Swal.fire({
+      title:"錯誤", 
+      text: error, 
+      icon: 'error'
+    })
   }
   document.querySelector('#sellProducts tbody')?.addEventListener('click', onRowAction);
   document.querySelector('#sell-product')?.addEventListener('click', onCardAction);
