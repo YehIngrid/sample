@@ -497,8 +497,7 @@ function renderCards(list = []) {
             <div class="fw-bold mb-2">${price}</div>
             <div class="mt-auto d-grid gap-2">
               <button class="btn btn-outline-success btn-sm btn-card-action" data-action="check">查看商品</button>
-              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="edit">${st.action}</button>
-              <button class="btn btn-outline-secondary btn-sm btn-card-action" data-action="stop">暫停上架商品</button>
+              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
               <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
             </div>
           </div>
@@ -558,8 +557,9 @@ async function handleAction(action, id, rowOrCardEl) {
       Swal.fire({
         title: '請在約定的時間與地點與買家進行交易', 
         icon: 'success',
+      }).then(() => {
+        window.location.reload();
       })
-      window.location.reload();
     } catch (error) {
       Swal.fire({
         title: '系統登記出貨失敗，請稍後再試', 
@@ -571,10 +571,12 @@ async function handleAction(action, id, rowOrCardEl) {
     try {
       await backendService.buyerCompletedOrders(id);
       Swal.fire({
-        title: '感謝您使用拾貨寶庫進行交易! 已通知賣家您已確認商品正確無誤', 
-        icon: 'success',
-      })
-      window.location.reload();
+        title: "感謝您使用拾貨寶庫進行交易! 已通知賣家您已確認商品正確無誤",
+        text: "可以對賣家進行此次的交易評分",
+        icon: "success",
+      }).then(() => {
+        window.location.reload();
+      });
     } catch (error) {
       Swal.fire({
         title: '系統登記取貨失敗，請稍後再試', 
