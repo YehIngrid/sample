@@ -353,7 +353,7 @@ function renderBuyerOrders(list) {
     const id       = item.id;
     const name     = esc(item.name);
     const price    = fmtPrice(item.totalAmount);
-    const buyer = item.buyerUser.name;
+    const seller = item.sellerUser.name;
     const type = item.type || '未知交易方式';
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
@@ -365,9 +365,9 @@ function renderBuyerOrders(list) {
         <td>${id}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
-        <td>價格: ${price} 交易方式: ${type} 買家暱稱: ${buyer}</td>
+        <td>價格: ${price} 交易方式: ${type} 賣家名稱: ${seller}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
+          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
         </td>
       </tr>
@@ -399,7 +399,7 @@ function renderSellerOrders(list) {
         <td>${id}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
-        <td>價格: ${price} 交易方式: ${type} 買家暱稱: ${buyer}</td>
+        <td>價格: ${price} 交易方式: ${type} 買家名稱: ${buyer}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
