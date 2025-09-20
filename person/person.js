@@ -401,7 +401,7 @@ function renderSellerOrders(list) {
         <td>${created}</td>
         <td>價格: ${price} 交易方式: ${type} 買家暱稱: ${buyer}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
+          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
         </td>
       </tr>
@@ -438,7 +438,7 @@ function renderTable(list = []) {
         <td>${updated}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
-          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
+          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
           <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
         </td>
@@ -524,7 +524,7 @@ function onCardAction(e) {
 }
 
 // ===== 共用：按鈕動作（表格/卡片都走這裡） =====
-function handleAction(action, id, rowOrCardEl) {
+async function handleAction(action, id, rowOrCardEl) {
   if (action === 'edit') {
     console.log('編輯商品：', id);
     openEditDrawer(id, rowOrCardEl);
@@ -536,6 +536,20 @@ function handleAction(action, id, rowOrCardEl) {
     if (confirm('確定要暫停上架商品嗎?')) {
       // TODO: 呼叫暫停 API
       console.log('暫停上架：', id);
+    }
+  } else if (action === '接受訂單') {
+    try {
+      await backendService.sellerAcceptOrders(id);
+      Swal.fire({
+        title: '已同意訂單，系統將自動通知買家', 
+        icon: 'success',
+      })
+    } catch (error) {
+      Swal.fire({
+        title: '訂單同意失敗，請稍後再試', 
+        icon: 'error',
+        text: error
+      })
     }
   } else if (action === 'delete') {
     Swal.fire({
