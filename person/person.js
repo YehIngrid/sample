@@ -179,12 +179,10 @@ logoutMobileButton.addEventListener('click', function() {
     showCancelButton: true,
     confirmButtonText: '登出',
     cancelButtonText: '取消'
-  }).then((result) => {
+  }).then(async(result) => {
     if (result.isConfirmed) {
-      localStorage.removeItem('uid');
-      localStorage.removeItem('username');
-      localStorage.removeItem('intro');
-      localStorage.removeItem('avatar');
+    try {
+      await backendService.logout();
       Swal.fire({
         icon: 'success',
         title: '登出成功',
@@ -192,6 +190,12 @@ logoutMobileButton.addEventListener('click', function() {
       }).then(() => {
         window.location.href = '../account/account.html'; // 登出後跳轉到首頁
       });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error', 
+        title: '登出失敗請稍後重試'
+      })
+    }
     }
   });
 });
