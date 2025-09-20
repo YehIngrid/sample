@@ -138,14 +138,9 @@ ul{
     margin: 13px;
     
 }
-.form-control{
-    border: 1px solid #004b9739 !important;
-    border-radius: 5px !important;
-    font-size: 1.1rem !important;
-}
+
 .form-control:focus{
-    border: 1px solid rgb(36,182,133) !important;
-    box-shadow: 0 0 2px #004b972d!important;
+    border: 1px solid #004b972d !important;
 }
 .container h4{
     margin-top: 15px !important;
@@ -322,26 +317,20 @@ ul{
   padding: 3.6rem;
   padding-bottom: 7rem;
 }
+@media (max-width: 400px) {
+  .form-store {
+    margin: 1rem;
+    padding: 1rem;
+  }
+}
 .form-store label{
   font-size: 1.2rem;
   margin-top: 1rem;
 }
-.form-store input{
-  font-size: 1.1rem;
-  border: none;
-  margin-left: 1rem;
-  padding: 1%;
-}
+
 .form-store textarea{
-  font-size: 1.1rem;
-  border: none;
   margin-top: 0.5rem;
   margin-bottom: 1rem;
-  padding: 2%;
-}
-.form-store select{
-  font-size: 1.1rem;
-  margin-left: 10px;
 }
 .df{
   display: flex;
@@ -359,16 +348,15 @@ ul{
   .form-store{
     background-color: #fbfbfb;
     border-radius: 5px;
-    padding: 4rem;
+    padding: 1.5rem;
     padding-bottom: 7rem;
   }
 }
-.formprice{
-  width: 8rem;
-}
+
 .formpricespan{
-  margin-left: 10px;
-  font-size: 1.0rem;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 0.8rem;
 }
 .submitbtn{
   border: none;

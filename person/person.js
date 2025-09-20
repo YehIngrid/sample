@@ -259,8 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 事件委派（卡片）
   document.querySelector('#product-cards')?.addEventListener('click', onCardAction);
   
-  document.querySelector('#buyProducts tbody')?.addEventListener('click', onRowAction);
-  document.querySelector('#buy-product')?.addEventListener('click', onCardAction);
+  
   // 讀取賣家訂單
 });
 document.addEventListener('DOMContentLoaded', async () => {
@@ -278,6 +277,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   document.querySelector('#sellProducts tbody')?.addEventListener('click', onRowAction);
   document.querySelector('#sell-product')?.addEventListener('click', onCardAction);
+
+  try {
+    const response = await backendService.getBuyerOrders();
+    const list = response?.data?.data ?? [];
+    renderBuyerOrders(list);
+  } catch (error) {
+    Swal.fire({
+      title:"錯誤", 
+      text: error, 
+      icon: 'error'
+    })
+  }
+  document.querySelector('#buyProducts tbody')?.addEventListener('click', onRowAction);
+  document.querySelector('#buy-product')?.addEventListener('click', onCardAction);
 });
 
 // ===== 工具 =====
@@ -288,12 +301,18 @@ const STATUS_MAP = {
 };
 const order_STATUS_MAP = {
   pending: { text: '等待賣家接受訂單', badge: 'text-bg-warning', action: '接受訂單'}, 
-  preparing: { text: '正在準備訂單', badge: 'text-bg-info', action: '即將出貨'}, 
+  preparing: { text: '準備訂單', badge: 'text-bg-info', action: '即將出貨'}, 
   delivered: { text: '已出貨', badge: 'text-bg-primary', action: '確認出貨'}, 
   completed: { text: '買家成功取貨', badge: 'text-bg-success', action: '給對方評價'}, 
   canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '查看'}
 }
-
+const buyer_STATUS_MAP = {
+  pending: { text: '等待賣家接受訂單', badge: 'text-bg-warning', action: '聯絡賣家'}, 
+  preparing: { text: '賣家正在準備訂單', badge: 'text-bg-info', action: '聯絡賣家'}, 
+  delivered: { text: '已出貨', badge: 'text-bg-primary', action: '成功取貨'}, 
+  completed: { text: '已取貨', badge: 'text-bg-success', action: '給對方評價'}, 
+  canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '查看'}
+}
 const nt = new Intl.NumberFormat('zh-TW', {
   style: 'currency', currency: 'TWD', maximumFractionDigits: 0
 });
@@ -318,6 +337,41 @@ function esc(str) {
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
   );
 }
+function renderBuyerOrders(list) {
+  const tbody = document.querySelector('#buyProducts tbody');
+  if (!tbody) return;
+  console.log('BuyerList:', list);
+  if (!Array.isArray(list) || list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
+    return;
+  }
+  const rows = list.map(item => {
+    const id       = item.id;
+    const name     = esc(item.name);
+    const price    = fmtPrice(item.totalAmount);
+    const buyer = item.buyerUser.name;
+    const type = item.type || '未知交易方式';
+    const created  = fmtDate(item.createdAt);
+    const key      = (item.status ?? 'listed').toLowerCase();
+    const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.listed;
+    const meetingInfo = esc(item.meetingInfo || '無詳細資訊');
+  
+  return `
+      <tr data-id="${esc(id)}">
+        <td>${id}</td>
+        <td><span class="badge ${st.badge}">${st.text}</span></td>
+        <td>${created}</td>
+        <td>價格: ${price} 交易方式: ${type} 買家暱稱: ${buyer}</td>
+        <td class="text-end">
+          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+  tbody.innerHTML = rows;
+}
+
 function renderSellerOrders(list) {
   const tbody = document.querySelector('#sellProducts tbody');
   if (!tbody) return;
@@ -329,7 +383,8 @@ function renderSellerOrders(list) {
   const rows = list.map(item => {
     const id       = item.id;
     const name     = esc(item.name);
-    const price    = fmtPrice(item.price);
+    const price    = fmtPrice(item.totalAmount);
+    const buyer = item.buyerUser.name;
     const type = item.type || '未知交易方式';
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
@@ -340,7 +395,7 @@ function renderSellerOrders(list) {
         <td>${id}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
-        <td>價格: ${price} 交易方式: ${type}</td>
+        <td>價格: ${price} 交易方式: ${type} 買家暱稱: ${buyer}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
