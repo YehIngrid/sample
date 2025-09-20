@@ -1251,46 +1251,6 @@ const timer = setInterval(() => {
   </div>
   
 </div>
-<script>
-  const newsItems = [
-    "民主潮聲：#大罷免",
-    "立院衝突：#青島東路",
-    "熱搜話題：#言論自由",
-    "最新公告：#明天放假"
-  ];
-
-  const ul = document.querySelector(".news-list");
-  let currentIndex = 0;
-
-  function showNews() {
-    // 清空現有內容
-    ul.innerHTML = "";
-
-    const li = document.createElement("li");
-    const a = document.createElement("a");
-    a.href = "#";
-    a.textContent = newsItems[currentIndex];
-    li.appendChild(a);
-
-    li.classList.add("active");
-    ul.appendChild(li);
-
-    currentIndex = (currentIndex + 1) % newsItems.length;
-  }
-
-  showNews();
-  setInterval(() => {
-    const li = ul.querySelector("li");
-    if (li) {
-      li.classList.remove("active");
-      li.style.opacity = "0";
-      li.style.transform = "translateY(-100%)";
-    }
-
-    setTimeout(showNews, 500); // 等動畫跑完後再切換
-  }, 3000);
- 
-</script>
 
     <!-- script部分-->
     <script src="../demo.js"></script>
