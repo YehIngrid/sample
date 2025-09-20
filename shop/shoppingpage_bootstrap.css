@@ -1291,13 +1291,9 @@ button {
 .hot-items-wrapper {
   display: flex;
   align-items: center;
-  overflow: hidden;
   position: relative;
-  background-color: #fff;
-}
-.hot-items-container {
-  scroll-behavior: smooth;
-  overflow-y: hidden;
+  background-color: #fff9f1;
+  border-radius: 20px;
 }
 .hot-item {
   flex: 0 0 auto;
@@ -1366,7 +1362,7 @@ button {
   font-weight: 500;
 }
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
-@media (max-width: 576px){
+
   .hot-items-container{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1382,7 +1378,7 @@ button {
     margin: 0 0px;
     text-align: end;
   }
-}
+
 .hot-item img {
   transition: transform 0.3s ease;
 }
