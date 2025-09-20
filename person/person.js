@@ -267,8 +267,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   backendService = new BackendService();
   try {
     const response = await backendService.getSellerOrders();
-    const res = response.data?.data.commodities;
-    renderSellerOrders(res);
+    const list = response?.data?.data ?? [];
+    renderSellerOrders(list);
   } catch (error) {
     Swal.fire({
       title:"錯誤", 
@@ -286,6 +286,13 @@ const STATUS_MAP = {
   sold:     { text: '已售出',  badge: 'text-bg-secondary',action: '查看' },
   reserved: { text: '訂單處理中',  badge: 'text-bg-warning',  action: '查看' },
 };
+const order_STATUS_MAP = {
+  pending: { text: '等待賣家接受訂單', badge: 'text-bg-warning', action: '接受訂單'}, 
+  preparing: { text: '正在準備訂單', badge: 'text-bg-info', action: '即將出貨'}, 
+  delivered: { text: '已出貨', badge: 'text-bg-primary', action: '確認出貨'}, 
+  completed: { text: '買家成功取貨', badge: 'text-bg-success', action: '給對方評價'}, 
+  canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '查看'}
+}
 
 const nt = new Intl.NumberFormat('zh-TW', {
   style: 'currency', currency: 'TWD', maximumFractionDigits: 0
@@ -322,21 +329,19 @@ function renderSellerOrders(list = []) {
     const id       = item.id;
     const name     = esc(item.name);
     const price    = fmtPrice(item.price);
-    const updated  = fmtDate(item.updatedAt);
+    const type = item.type || '未知交易方式';
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
     const meetingInfo = esc(item.meetingInfo || '無詳細資訊');
     return `
       <tr data-id="${esc(id)}">
-        <td>${name}</td>
-        <td><span class="badge ${st
-.badge}">${st.text}</span></td>
+        <td>${id}</td>
+        <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
-        <td>${meetingInfo}</td>
+        <td>價格: ${price} 交易方式: ${type}</td>
         <td class="text-end">
-          <button class="btn btn-sm
-  btn-outline-success btn-row-action" data-action="check">查看商品</button>
+          <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
           <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
@@ -364,7 +369,7 @@ function renderTable(list = []) {
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
+    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
 
     return `
       <tr data-id="${esc(id)}">
@@ -374,10 +379,8 @@ function renderTable(list = []) {
         <td>${created}</td>
         <td>${updated}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
-          <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
         </td>
       </tr>
     `;
