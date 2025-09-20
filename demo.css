@@ -19,9 +19,9 @@
   margin: 0 auto !important;
 }
 @media screen and (max-width: 700px) {
-  .nav-link{
+  /* .nav-link{
     padding-left: 30px !important;
-  }
+  } */
   .container-fluid {
     width: 100vw !important;
   }

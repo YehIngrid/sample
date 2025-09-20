@@ -558,16 +558,13 @@ ul{
   gap: 1rem;
   max-width: 1200px; 
 } */
-.newsell{
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  font-weight: 700;
-  padding-top: 10px;
+.newsell {
+  background: linear-gradient( to right, #24b68569, #004b972d);
+  border-radius: 20px;
+  width: 70vw;
   margin: 0 auto;
-  overflow-x: hidden;
-  color: #05121f;
+  margin-top: 20px;
+  padding: 20px;
 }
 .top {
   background-color: #fabebe;

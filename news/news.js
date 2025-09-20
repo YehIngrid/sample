@@ -2,94 +2,9 @@
   let data = [
     {
         from:"店鋪公告",
-        n_name:"最新消息每一則新聞都可以點擊歐，裡面有詳細資訊",
-        time:"2025-02-08",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"系統公告",
-        n_name:"網站登入頁面更新啦",
-        time:"2025-02-07",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"系統公告",
-        n_name:"網站最新消息頁面更新啦",
-        time:"2025-02-06",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"店鋪公告",
-        n_name:"許願池功能開啟啦，趕快去看看吧！",
-        time:"2025-02-05",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"店鋪公告",
-        n_name:"最新消息每一則新聞都可以點擊歐，裡面有詳細資訊",
-        time:"2025-02-04",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"系統公告",
-        n_name:"網站登入頁面更新啦",
-        time:"2025-02-03",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"系統公告",
-        n_name:"網站最新消息頁面更新啦",
-        time:"2025-02-02",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"店鋪公告",
-        n_name:"許願池功能開啟啦，趕快去看看吧！",
-        time:"2025-02-01",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"店鋪公告",
-        n_name:"最新消息每一則新聞都可以點擊歐，裡面有詳細資訊",
-        time:"2025-01-31",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"系統公告",
-        n_name:"網站登入頁面更新啦",
-        time:"2025-01-30",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"系統公告",
-        n_name:"網站最新消息頁面更新啦",
-        time:"2025-01-29",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"店鋪公告",
-        n_name:"許願池功能開啟啦，趕快去看看吧！",
-        time:"2025-01-28",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"系統公告",
-        n_name:"網站以後會固定在星期三晚上7:00-9:00進行更新",
-        time:"2025-01-27",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"系統公告",
-        n_name:"網站會在2025-01-26進行更新",
-        time:"2025-01-25",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
-    {
-        from:"店鋪公告",
-        n_name:"店鋪即將開張！趕快來看看新上架的商品吧！",
-        time:"2025-01-24",
-        detail:"Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore ab cumque minima voluptas excepturi delectus vitae ipsam repudiandae, saepe ad totam quos? Error dolorem consectetur harum cum modi esse iure at nemo, accusamus ad! Omnis veniam odio quasi commodi, ipsa vitae, dolorem culpa voluptatibus dolore obcaecati impedit expedita delectus quae ut. Mollitia, consequatur molestias cum laudantium libero, quos voluptatum at ipsa, saepe omnis deserunt. Illum corrupti eum, magnam porro repellat sequi repellendus aperiam cupiditate rem ullam quibusdam iste. Veritatis animi, consequatur est aut ratione minima! Odio magni ipsam dicta ullam enim, eum facere dignissimos non, accusantium sunt, laborum eveniet. Porro."
-    },
+        n_name:"拾貨寶庫買賣流程公告",
+        time:"2026-09-20",
+        detail:"<p>為了讓大家能安心在<strong>拾貨寶庫</strong>交易，我們將訂單狀態分為五個階段，並且從<strong>買家</strong>與<strong>賣家</strong>的角度說明各自的操作與注意事項：<br><br>🔹 1. Pending（待確認）<br><strong>買家</strong>：您已經送出訂單，系統會先幫您暫存，等待賣家確認是否能出貨。<br><strong>賣家</strong>：您會收到新訂單通知，請盡快檢查庫存與商品狀況，並回覆是否能接單。<br><br>🔹 2. Preparing（準備中）<br><strong>買家</strong>：代表賣家已接受訂單，正在整理商品。此時您可耐心等候，不需額外操作。<br><strong>賣家</strong>：請開始準備商品，並在約定前確認商品完整、乾淨，符合買家需求。<br></br>🔹 3. 現實面交<br><strong>買家</strong>：和賣家約定的面交時間、地點已經確認，請準時到達並攜帶現金或雙方約定的付款方式。<br><strong>賣家</strong>：請準時到達面交地點，並準備好商品，確保交付順利完成。<br></br>🔹 4. Delivered（已交付）<br><strong>買家</strong>：您已經收到商品，請再次檢查商品是否與描述相符。<br><strong>賣家</strong>：商品已經交付給買家，可以在系統中更新狀態。<br></br>🔹 5. Completed（完成）<br><strong>買家</strong>：訂單正式結束，感謝您的支持！別忘了可以給賣家一個評價，幫助更多人安心交易。<br><strong>賣家</strong>：訂單已完成，您可放心結算此次交易。也歡迎您繼續在拾貨寶庫分享更多好物。<br></br>💡 <strong>提醒</strong>：整個過程中，若有任何問題或無法面交，請務必提前與對方溝通，避免誤會與爭議。拾貨寶庫致力於打造透明、安全又溫暖的交易環境，感謝每一位用心參與的買家與賣家！</p>"},
 ];
 let filteredData = data;  // 預設為全部資料
     let itemsPerPage = 7;
@@ -180,7 +95,7 @@ let filteredData = data;  // 預設為全部資料
       document.getElementById("detailTitle").textContent = item.n_name;
       document.getElementById("detailFrom").textContent = item.from;
       document.getElementById("detailTime").textContent = item.time;
-      document.getElementById("detailContent").textContent = item.detail;
+      document.getElementById("detailContent").innerHTML = item.detail;
 
       // 3. 顯示 detail 區塊，隱藏列表
       document.getElementById("newsListPage").style.display = "none";

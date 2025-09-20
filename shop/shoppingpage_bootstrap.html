@@ -346,45 +346,47 @@
 <div style="width: 71vw; margin: 0px auto;">
   <img src="../image/noratead.png" alt="" style="width: 71vw; margin: 0px auto;">
 </div>
-<!-- TODO: 熱賣區-->
-<div class="firstlinesell d-flex justify-content-center" style="width: 69vw; margin: 20px auto 0 auto;">
-  <div class="top d-flex flex-column col-lg-6 col-12">
-    <div class="topicoftop d-flex align-items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fire" viewBox="0 0 16 16">
-        <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15"/>
-      </svg>
-      <h4 style="margin: 0; padding-left: 4px; font-weight: 600; letter-spacing: 4px; color: #fff9f1;">熱賣專區</h4>
+  <!-- TODO: 熱賣區-->
+  <div class="firstlinesell d-lg-flex d-block justify-content-center" style="width: 70vw; margin: 20px auto 0 auto;">
+    <div class="top d-flex flex-column col-lg-6 col-12">
+      <div class="topicoftop d-flex align-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fire" viewBox="0 0 16 16">
+          <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15"/>
+        </svg>
+        <h4 style="margin: 0; padding-left: 4px; font-weight: 600; letter-spacing: 4px; color: #fff9f1;">熱賣專區</h4>
+      </div>
+      
+      <div class="hot-items-wrapper">
+        <div class="hot-items-container" id="hotItems"></div>
+      </div>
+      <div class="pager">
+        <button id="prevHotBtn">上一頁</button>
+        <span id="pageInfo"></span>
+        <button id="nextHotBtn">下一頁</button>
+      </div>
     </div>
-    
-    <div class="hot-items-wrapper">
-      <div class="hot-items-container" id="hotItems"></div>
+    <div class="wishpoollook col-lg-6 col-12">
+      <h4 style="margin: 0; padding-left: 4px; font-weight: 600; letter-spacing: 4px;">許願池</h4>
+    </div>
+  </div>
+
+  <div class="newsell">
+    <!-- TODO 商品卡片 -->
+    <div class="topicoftop d-flex align-items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stars" viewBox="0 0 16 16">
+          <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.73 1.73 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.73 1.73 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.73 1.73 0 0 0 3.407 2.31zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+        </svg>
+        <h4 style="margin: 0; padding-left: 4px; font-weight: 600; letter-spacing: 4px; color: #383838;">最新上架</h4>
+    </div>
+    <div class="mgMobile">
+      <div id="product-grid" class="container-card row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-4"></div>
     </div>
     <div class="pager">
-      <button id="prevHotBtn">上一頁</button>
-      <span id="pageInfo"></span>
-      <button id="nextHotBtn">下一頁</button>
+      <button id="newPrev">上一頁</button>
+      <span id="newInfo"></span>
+      <button id="newNext">下一頁</button>
     </div>
   </div>
-  <div class="wishpoollook col-lg-6 col-12 mx-4">
-    <h4 style="margin: 0; padding-left: 4px; font-weight: 600; letter-spacing: 4px;">許願池</h4>
-  </div>
-</div>
-
-<div class="newsell">
-  <img src="../svg/new.svg" alt="最新上架">
-</div>
-<!-- TODO 商品卡片 -->
-<div class="mgMobile">
-  <div id="product-grid" class="container-card row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-4"></div>
-</div>
-<div class="pager">
-  <button id="newPrev">上一頁</button>
-  <span id="newInfo"></span>
-  <button id="newNext">下一頁</button>
-</div>
-
-
-
 </main>
 
 

@@ -43,9 +43,6 @@ tbody {
 .content .nav-link{
   color: #004b97aa !important;
   border: none !important;
-  margin-bottom: 0px !important;
-  font-size: 1.3rem !important;
-  font-family: 'TimeMachine' !important;
   font-weight: 600 !important;
 }
 .content .nav-link.active{
