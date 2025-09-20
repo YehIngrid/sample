@@ -318,9 +318,10 @@ function esc(str) {
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
   );
 }
-function renderSellerOrders(list = []) {
+function renderSellerOrders(list) {
   const tbody = document.querySelector('#sellProducts tbody');
   if (!tbody) return;
+  console.log('List:' , list);
   if (!Array.isArray(list) || list.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
     return;
@@ -341,10 +342,8 @@ function renderSellerOrders(list = []) {
         <td>${created}</td>
         <td>價格: ${price} 交易方式: ${type}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
-          <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
         </td>
       </tr>
     `;
@@ -379,8 +378,10 @@ function renderTable(list = []) {
         <td>${created}</td>
         <td>${updated}</td>
         <td class="text-end">
+          <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="edit">${st.action}</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
+          <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
         </td>
       </tr>
     `;
