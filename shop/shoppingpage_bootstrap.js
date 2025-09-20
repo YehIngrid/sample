@@ -518,19 +518,19 @@ backbtn1.addEventListener('click', function(e){
   talkInterface.style.display = 'block';
 })
 // TODO member
-const member = document.getElementById('member');
-const memberbtn = document.getElementById('memberbtn');
-const backbtn2 = document.getElementById('back-btn2');
-memberbtn.addEventListener('click', function(e){
-  member.style.display = 'block';
-  midcontent.style.display = 'none';
-  talkInterface.style.display = 'none';
-})
-backbtn2.addEventListener('click', function(e){
-  member.style.display = 'none';
-  talkInterface.style.display = 'block';
-  midcontent.style.display = 'block';
-})
+// const member = document.getElementById('member');
+// const memberbtn = document.getElementById('memberbtn');
+// const backbtn2 = document.getElementById('back-btn2');
+// memberbtn.addEventListener('click', function(e){
+//   member.style.display = 'block';
+//   midcontent.style.display = 'none';
+//   talkInterface.style.display = 'none';
+// })
+// backbtn2.addEventListener('click', function(e){
+//   member.style.display = 'none';
+//   talkInterface.style.display = 'block';
+//   midcontent.style.display = 'block';
+// })
 // TODO mystery
 // const mystery = document.getElementById('mystery');
 // const mysterybtn = document.getElementById('mysterybtn');
