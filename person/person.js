@@ -544,9 +544,40 @@ async function handleAction(action, id, rowOrCardEl) {
         title: '已同意訂單，系統將自動通知買家', 
         icon: 'success',
       })
+      window.location.reload();
     } catch (error) {
       Swal.fire({
         title: '訂單同意失敗，請稍後再試', 
+        icon: 'error',
+        text: error
+      })
+    }
+  } else if (action === '即將出貨') {
+    try {
+      await backendService.sellerDeliveredOrders(id);
+      Swal.fire({
+        title: '請在約定的時間與地點與買家進行交易', 
+        icon: 'success',
+      })
+      window.location.reload();
+    } catch (error) {
+      Swal.fire({
+        title: '系統登記出貨失敗，請稍後再試', 
+        icon: 'error',
+        text: error
+      })
+    }
+  } else if (action === '成功取貨') {
+    try {
+      await backendService.buyerCompletedOrders(id);
+      Swal.fire({
+        title: '感謝您使用拾貨寶庫進行交易! 已通知賣家您已確認商品正確無誤', 
+        icon: 'success',
+      })
+      window.location.reload();
+    } catch (error) {
+      Swal.fire({
+        title: '系統登記取貨失敗，請稍後再試', 
         icon: 'error',
         text: error
       })
