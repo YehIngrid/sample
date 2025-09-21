@@ -415,8 +415,7 @@ ul{
 
 /* TODO:container-card */
 .container-card{
-  margin-top: 3vh;
-  margin-bottom: 5vh;
+  margin-bottom: 3vh;
 }
 .card{
   margin-left: 1px;
@@ -448,15 +447,16 @@ ul{
   transform: translateY(0);
 }
 .card-title{
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   padding-left: 3px;
   padding-right: 3px;
+  line-height: 1.5rem !important;
 }
 .card-text{
   color: #383838;
   padding-left: 2px;
   margin-bottom: 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 .price {
   font-size: 1rem;
@@ -1363,6 +1363,17 @@ button {
   }
   .newsell {
     width: 91vw;
+    padding: 2px
+  }
+  .top {
+    padding: 12px;
+  }
+  .topicoftop {
+    padding: 12px;
+    padding-bottom: 0px;
+  }
+  .pager {
+    padding-bottom: 12px;
   }
 }
 .mobilesort {

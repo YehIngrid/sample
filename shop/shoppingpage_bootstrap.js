@@ -71,6 +71,7 @@ function renderItems(items){
       div.innerHTML = `
         <img src="${item.mainImage}" alt="${item.name}">
         <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
+        <h5>${item.name}</h5>
       `;
     listEl.appendChild(div);
     div.addEventListener('click', function() {
