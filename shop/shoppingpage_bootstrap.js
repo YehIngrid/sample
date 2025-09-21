@@ -72,9 +72,9 @@ function renderItems(items){
         <div class="card">
           <div class="img-box">
             <img src="${item.mainImage}" alt="${item.name}">
-            <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
           </div>
           <div class="hotItemName">${item.name}</div>
+          <p class="hotItemPrice">${item.price}<span>NT$</span></p>
         </div>
       `;
     listEl.appendChild(div);
