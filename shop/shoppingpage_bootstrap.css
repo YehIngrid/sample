@@ -1331,19 +1331,13 @@ button {
   color: #fff;
 }
 .hotItemPrice {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: rgba(0,123,255,0.85);
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
   font-weight: bold;
+  color: #007bff;
+  margin-bottom: 8px;
 }
 .hotItemName {
-  padding: 10px;
+  padding: 12px;
   font-size: 14px;
-  text-align: center;
 }
 .firstlinesell {
   width: 69vw;
@@ -1399,28 +1393,30 @@ button {
 
 .hot-items-container{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 自動依容器調整 */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 16px;
     padding: 16px;
 }
 .hot-items-container .card {
-    display: flex;
-    flex-direction: column;
     background: #fff;
     border-radius: 12px;
-    overflow: hidden;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    text-align: center;
 }
 .hot-items-container .img-box {
-  position: relative;
-  aspect-ratio: 3/4; /* 固定比例，避免圖片變形 */
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;          /* 置中 */
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .img-box img {
-  width: 100%;
+   width: 100%;
   height: 100%;
-  object-fit: cover; /* 保持比例，填滿容器 */
-  display: block;
+  object-fit: cover;  
 }
   /* .hot-item{ 
     flex: none; 
