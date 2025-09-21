@@ -1343,8 +1343,14 @@ button {
   padding-right: 2px;
   font-weight: 500;
 }
+.hotItemName {
+  position: relative;
+  bottom: 40px;
+  color: #004b97;
+  font-size: 1rem;
+}
 .firstlinesell {
-  width: 70vw;
+  width: 69vw;
   margin: 20px auto 0px auto;
 }
 .smallmysection {

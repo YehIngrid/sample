@@ -69,9 +69,11 @@ function renderItems(items){
       div.className = "hot-item";
       div.dataset.id = item.id;
       div.innerHTML = `
-        <img src="${item.mainImage}" alt="${item.name}">
-        <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
-        <h5>${item.name}</h5>
+        <div class="d-flex flex-column">
+          <img src="${item.mainImage}" alt="${item.name}">
+          <p class="hotItemPrice">${item.price}<span style="font-size: 1.4rem;">NT$</span></p>
+          <h5 class="hotItemName">${item.name}</h5>
+        </div>
       `;
     listEl.appendChild(div);
     div.addEventListener('click', function() {
