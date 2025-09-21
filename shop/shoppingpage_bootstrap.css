@@ -1274,9 +1274,6 @@ button {
   border: 3px solid gold !important;
 }
 .hot-items-wrapper {
-  display: flex;
-  align-items: center;
-  position: relative;
   background-color: #fff9f1;
   border-radius: 20px;
 }
@@ -1345,6 +1342,45 @@ button {
   padding: 3px 10px;
   padding-right: 2px;
   font-weight: 500;
+}
+.firstlinesell {
+  width: 70vw;
+  margin: 20px auto 0px auto;
+}
+.smallmysection {
+  width: 70vw; 
+  margin: 0 auto;
+}
+@media (max-width: 500px) {
+  .smallmysection {
+    width: 100vw;
+  }
+  .my-section {
+    padding-top: 0px;
+  }
+  .firstlinesell {
+    width: 91vw;
+  }
+  .newsell {
+    width: 91vw;
+  }
+}
+.mobilesort {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 12px;
+}
+.mobilesort a{
+  text-decoration: none;
+  color: #383838;
+  font-size: 0.9rem;
+}
+.mobilesort img {
+  width: 90px;
+  height: 90px;
 }
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
 
