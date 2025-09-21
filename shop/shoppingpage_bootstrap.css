@@ -1331,23 +1331,19 @@ button {
   color: #fff;
 }
 .hotItemPrice {
-  position: relative;
-  bottom: 50px;
-  background-color: #389afc;
-  color: white;
-  border-bottom-left-radius: 50px;
-  border-top-left-radius: 50px;
-  display: inline-block;
-  font-size: 1.4rem;
-  padding: 3px 10px;
-  padding-right: 2px;
-  font-weight: 500;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0,123,255,0.85);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: bold;
 }
 .hotItemName {
-  position: relative;
-  bottom: 40px;
-  color: #004b97;
-  font-size: 1rem;
+  padding: 10px;
+  font-size: 14px;
+  text-align: center;
 }
 .firstlinesell {
   width: 69vw;
@@ -1401,15 +1397,32 @@ button {
 }
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
 
-  .hot-items-container{
+.hot-items-container{
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    overflow: visible;        /* 方格不需要橫向卷軸 */
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-  .hot-item{ 
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 自動依容器調整 */
+    gap: 16px;
+    padding: 16px;
+}
+.hot-items-container .card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.hot-items-container .img-box {
+  position: relative;
+  aspect-ratio: 3/4; /* 固定比例，避免圖片變形 */
+  overflow: hidden;
+}
+.img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 保持比例，填滿容器 */
+  display: block;
+}
+  /* .hot-item{ 
     flex: none; 
     width: 100px;
     height: 100px;
@@ -1422,7 +1435,7 @@ button {
 }
 .hot-item:hover img {
   transform: scale(1.05);
-}
+} */
 .button-87 {
   margin: 10px;
   padding: 10px 15px 10px 30px;
