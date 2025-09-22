@@ -1387,9 +1387,9 @@ button {
 
 .hot-items-container{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 16px;
-    padding: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 12px;
 }
 .hot-items-container .card {
     background: #fff;
@@ -1399,8 +1399,8 @@ button {
     text-align: center;
 }
 .hot-items-container .img-box {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   margin: 0 auto;          /* 置中 */
   overflow: hidden;
   display: flex;

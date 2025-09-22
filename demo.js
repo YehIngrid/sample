@@ -28,30 +28,37 @@ window.onload = function() {
   });
 async function renderAuthUI() {
   try {
-    backendService = new BackendService();
-    const user = await backendService.whoami(); // 成功代表已登入
-    console.log("目前使用", user);
-    const usernameEl = document.getElementById('username');
-    usernameEl.textContent = localStorage.getItem("username") || '使用者' ;
-    usernameEl.style.display = '';
+  backendService = new BackendService();
+  const user = await backendService.whoami(); // 成功代表已登入
+  console.log("目前使用", user);
 
-    const loginOrNot = document.getElementById('loginornot');
-    loginOrNot.textContent = '登出';
-    loginOrNot.href = '#';
-    loginOrNot.onclick = (e) => {
+  document.querySelectorAll('.username').forEach((el) => {
+    el.textContent = localStorage.getItem("username") || '使用者';
+    el.style.display = '';
+  });
+
+  document.querySelectorAll('.loginornot').forEach((el) => {
+    el.textContent = '登出';
+    el.href = '#';
+    el.onclick = (e) => {
       e.preventDefault();
       doLogout();
     };
-  } catch (err) {
-    const usernameEl = document.getElementById('username');
-    usernameEl.textContent = '';
-    usernameEl.style.display = 'none';
+  });
 
-    const loginOrNot = document.getElementById('loginornot');
-    loginOrNot.textContent = '登入';
-    loginOrNot.href = '../account/account.html';
-    loginOrNot.onclick = null;
-  }
+} catch (err) {
+  document.querySelectorAll('.username').forEach((el) => {
+    el.textContent = '';
+    el.style.display = 'none';
+  });
+
+  document.querySelectorAll('.loginornot').forEach((el) => {
+    el.textContent = '登入';
+    el.href = '../account/account.html';
+    el.onclick = null;
+  });
+}
+
 }
 
 function doLogout() {
