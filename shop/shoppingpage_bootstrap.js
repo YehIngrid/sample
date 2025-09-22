@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
   backendService = new BackendService();
   loginService = new LoginService(backendService);
   let page = 1;
-  let limit = 6;
+  let limit = 8;
   const listEl = document.getElementById('hotItems');
   const prevHotBtn = document.getElementById("prevHotBtn");
   const nextHotBtn = document.getElementById("nextHotBtn");
