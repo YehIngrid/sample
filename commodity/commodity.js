@@ -129,7 +129,7 @@ async function loadProducts() {
     let filteredItems = items;
 
     // 篩選大分類
-    if (currentCategory !== 'all') {
+    if (currentCategory !== ('all' || 'hot' || 'new')) {
       filteredItems = filteredItems.filter(p => categoryMap[p.category] === currentCategory);
     }
 
