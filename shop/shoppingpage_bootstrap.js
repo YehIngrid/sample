@@ -616,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
   [...container.classList].forEach(cls => {
     if (cls.startsWith('row-cols-')) container.classList.remove(cls);
   });
-  container.classList.add('row', 'row-cols-2', 'row-cols-md-3', 'row-cols-lg-6', 'g-3', 'mt-4', 'container-card');
+  container.classList.add('row', 'row-cols-2', 'row-cols-md-3', 'row-cols-lg-6', 'g-3', 'container-card');
 
   // 進入點
   fetchPage(page);
