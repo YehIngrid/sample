@@ -97,6 +97,7 @@ async function loadProducts() {
         backendService.getHotItems(pagingInfo, (response => {
             console.log("call getHotItems()", response.data);
             items = response?.data?.commodities || [];
+            finishRender(items);
         }), (errorMessage => {
           console.log(errorMessage);
         }))
@@ -104,6 +105,7 @@ async function loadProducts() {
         backendService.getNewItems(pagingInfo, (response => {
             console.log("call getHotItems()", response.data);
             items = response?.data?.commodities || [];
+            finishRender(items);
         }), (errorMessage => {
           console.log(errorMessage);
         }))
@@ -158,6 +160,20 @@ async function loadProducts() {
     isLoading = false;
   }
 }
+function finishRender(items) {
+    // 篩選、分頁
+    const totalCount = items.length;
+    const start = pageIndex * PAGE_SIZE;
+    const pagedItems = items.slice(start, start + PAGE_SIZE);
+
+    productRow.innerHTML = '';
+    renderProductsBootstrap(pagedItems);
+    renderPagination(totalCount);
+
+    loaderEl.textContent = '';
+    isLoading = false;
+}
+
 // 使用 bootstrap row / col 來 render 商品
 function renderProductsBootstrap(items) {
   const frag = document.createDocumentFragment();
