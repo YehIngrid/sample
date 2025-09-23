@@ -96,14 +96,14 @@ async function loadProducts() {
     if (currentCategory === 'hot') {
         backendService.getHotItems(pagingInfo, (response => {
             console.log("call getHotItems()", response.data);
-            items = response.data?.data.commodities || [];
+            items = response?.data?.commodities || [];
         }), (errorMessage => {
           console.log(errorMessage);
         }))
     } else if (currentCategory === 'new') {
         backendService.getNewItems(pagingInfo, (response => {
             console.log("call getHotItems()", response.data);
-            items = response.data?.data.commodities || [];
+            items = response?.data?.commodities || [];
         }), (errorMessage => {
           console.log(errorMessage);
         }))
