@@ -61,6 +61,7 @@ function changeCategory(category) {
 function toggleAside(category) {
   if (category === 'all' || category == 'hot' || category == 'new') {
     asideEl.classList.add('d-none');
+    loadProducts();
   } else {
     asideEl.classList.remove('d-none');
     const items = subcategories[category] || [];
