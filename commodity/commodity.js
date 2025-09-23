@@ -94,13 +94,19 @@ async function loadProducts() {
     const backendService = new BackendService();
     const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
     if (currentCategory === 'hot') {
-        const response = await backendService.getHotItems(pagingInfo);
-        console.log("call getHotItems()", response.data);
-        items = response.data?.data.commodities || [];
+        backendService.getHotItems(pagingInfo, (response => {
+            console.log("call getHotItems()", response.data);
+            items = response.data?.data.commodities || [];
+        }), (errorMessage => {
+          console.log(errorMessage);
+        }))
     } else if (currentCategory === 'new') {
-        const response = await backendService.getNewItems(pagingInfo);
-        console.log("call getNewItems()", response.data);
-        items = response.data?.data.commodities || [];
+        backendService.getNewItems(pagingInfo, (response => {
+            console.log("call getHotItems()", response.data);
+            items = response.data?.data.commodities || [];
+        }), (errorMessage => {
+          console.log(errorMessage);
+        }))
     } else {
         // 其他分類都撈全部，然後前端再篩選
         const response = await backendService.getAllCommodities(pagingInfo);
