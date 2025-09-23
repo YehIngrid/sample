@@ -74,7 +74,7 @@ function renderItems(items){
             <img src="${item.mainImage}" alt="${item.name}">
           </div>
           <div class="hotItemName">${item.name}</div>
-          <p class="hotItemPrice">${item.price}<span>NT$</span></p>
+          <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${item.price}</p>
         </div>
       `;
     listEl.appendChild(div);
