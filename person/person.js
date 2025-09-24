@@ -681,7 +681,7 @@ async function handleAction(action, id, rowOrCardEl) {
     }
   } else if (action === 'checkInfo') {
     try {
-      let res = await getOrderDetails(id);
+      let res = await backendService.getOrderDetails(id);
         const detailCard = document.getElementById('sellOrderDetail');
         const infoBox = document.getElementById('sellOrderInfo');
         item = res.data?.data;
