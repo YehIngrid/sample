@@ -545,7 +545,7 @@ function renderSellerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="check">查看商品</button>
+              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看商品</button>
               <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
               <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
             </div>
@@ -592,7 +592,7 @@ function renderBuyerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="check">查看商品</button>
+              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看商品</button>
               <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
               <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
             </div>
@@ -680,28 +680,37 @@ async function handleAction(action, id, rowOrCardEl) {
       })
     }
   } else if (action === 'checkInfo') {
-  const detailCard = document.getElementById('sellOrderDetail');
-  const infoBox = document.getElementById('sellOrderInfo');
+    try {
+      let res = await getOrderDetails(id);
+        const detailCard = document.getElementById('sellOrderDetail');
+        const infoBox = document.getElementById('sellOrderInfo');
+        item = res.data?.data;
+        // 假設這裡有一筆訂單資料 item（要從後端 API 抓）
+        const orderStatus = item.status; // TODO: 改成 item.status
+        const meetingTime = '先這樣'; // TODO: item.meetingInfo.time
+        const meetingPlace = "中興大學圖書館前廣場"; // TODO: item.meetingInfo.place
 
-  // 假設這裡有一筆訂單資料 item（要從後端 API 抓）
-  const orderStatus = item.status; // TODO: 改成 item.status
-  const meetingTime = '先這樣'; // TODO: item.meetingInfo.time
-  const meetingPlace = "中興大學圖書館前廣場"; // TODO: item.meetingInfo.place
+        // 填入資訊
+        infoBox.innerHTML = `
+          <p><strong>訂單編號：</strong> ${id}</p>
+          <p><strong>狀態：</strong> ${orderStatus}</p>
+          <p><strong>面交時間：</strong> ${meetingTime}</p>
+          <p><strong>面交地點：</strong> ${meetingPlace}</p>
+        `;
 
-  // 填入資訊
-  infoBox.innerHTML = `
-    <p><strong>訂單編號：</strong> ${id}</p>
-    <p><strong>狀態：</strong> ${orderStatus}</p>
-    <p><strong>面交時間：</strong> ${meetingTime}</p>
-    <p><strong>面交地點：</strong> ${meetingPlace}</p>
-  `;
+        // 更新流程圖
+        updateOrderFlowImg(orderStatus);
 
-  // 更新流程圖
-  updateOrderFlowImg(orderStatus);
-
-  // 顯示卡片
-  detailCard.classList.remove('d-none');
-  detailCard.scrollIntoView({ behavior: 'smooth' });
+        // 顯示卡片
+        detailCard.classList.remove('d-none');
+        detailCard.scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+      Swal.fire({
+        title: 'Oops', 
+        icon: 'error', 
+        text: error
+      })
+    }
 } else if (action === 'delete') {
     Swal.fire({
       title: "確定要下架並刪除此商品嗎？",
