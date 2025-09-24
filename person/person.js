@@ -272,7 +272,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const response = await backendService.getSellerOrders();
     const list = response?.data?.data ?? [];
     renderSellerOrders(list);
+    renderSellerCards(list);
   } catch (error) {
+    renderSellerOrders([]);
+    renderSellerCards([]);
     Swal.fire({
       title:"錯誤", 
       text: error, 
@@ -286,7 +289,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const response = await backendService.getBuyerOrders();
     const list = response?.data?.data ?? [];
     renderBuyerOrders(list);
+    renderBuyerCards(list);
   } catch (error) {
+    renderBuyerOrders([]);
+    renderBuyerCards([]);
     Swal.fire({
       title:"錯誤", 
       text: error, 
