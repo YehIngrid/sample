@@ -510,7 +510,100 @@ function renderCards(list = []) {
 
   wrap.innerHTML = html;
 }
+function renderSellerCards(list = []) {
+  const wrap = document.getElementById('sell-product');
+  if (!wrap) return;
 
+  if (!Array.isArray(list) || list.length === 0) {
+    wrap.innerHTML = `<div class="col-12 text-center text-muted py-5">目前沒有商品</div>`;
+    return;
+  }
+
+  const html = list.map(item => {
+    const id       = item.id;
+    const name     = esc(item.name);
+    const price    = fmtPrice(item.price);
+    const updated  = fmtDate(item.updatedAt);
+    const created  = fmtDate(item.createdAt);
+    const key      = (item.status ?? 'listed').toLowerCase();
+    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
+    const img      = esc(item.mainImage || item.imageUrl || '../webP/placeholder.webp');
+
+    return `
+      <div class="col" data-id="${esc(id)}">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex flex-row">
+              <div class="bg-light">
+                <img src="${img}" alt="${name}" class="object-cover">
+              </div>
+              <div>
+                <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
+                <span class="badge ${st.badge}">${st.text}</span>
+                <div class="small text-muted mb-2">建立：${created}<br>更新：${updated}</div>
+                <div class="fw-bold mb-2">${price}</div>
+              </div>
+            </div>
+            <div class="mt-auto d-flex gap-2">
+              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="check">查看商品</button>
+              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
+              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  wrap.innerHTML = html;
+}
+function renderBuyerCards(list = []) {
+  const wrap = document.getElementById('buy-product');
+  if (!wrap) return;
+
+  if (!Array.isArray(list) || list.length === 0) {
+    wrap.innerHTML = `<div class="col-12 text-center text-muted py-5">目前沒有商品</div>`;
+    return;
+  }
+
+  const html = list.map(item => {
+    const id       = item.id;
+    const name     = esc(item.name);
+    const price    = fmtPrice(item.price);
+    const updated  = fmtDate(item.updatedAt);
+    const created  = fmtDate(item.createdAt);
+    const key      = (item.status ?? 'listed').toLowerCase();
+    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
+    const img      = esc(item.mainImage || item.imageUrl || '../webP/placeholder.webp');
+
+    return `
+      <div class="col" data-id="${esc(id)}">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex flex-row">
+              <div class="bg-light">
+                <img src="${img}" alt="${name}" class="object-cover">
+              </div>
+              <div>
+                <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
+                <span class="badge ${st.badge}">${st.text}</span>
+                <div class="small text-muted mb-2">建立：${created}<br>更新：${updated}</div>
+                <div class="fw-bold mb-2">${price}</div>
+              </div>
+            </div>
+            <div class="mt-auto d-flex gap-2">
+              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="check">查看商品</button>
+              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
+              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  wrap.innerHTML = html;
+}
 // 卡片事件處理
 function onCardAction(e) {
   const btn = e.target.closest('.btn-card-action');
@@ -586,7 +679,30 @@ async function handleAction(action, id, rowOrCardEl) {
         text: error
       })
     }
-  } else if (action === 'delete') {
+  } else if (action === 'checkInfo') {
+  const detailCard = document.getElementById('sellOrderDetail');
+  const infoBox = document.getElementById('sellOrderInfo');
+
+  // 假設這裡有一筆訂單資料 item（要從後端 API 抓）
+  const orderStatus = item.status; // TODO: 改成 item.status
+  const meetingTime = '先這樣'; // TODO: item.meetingInfo.time
+  const meetingPlace = "中興大學圖書館前廣場"; // TODO: item.meetingInfo.place
+
+  // 填入資訊
+  infoBox.innerHTML = `
+    <p><strong>訂單編號：</strong> ${id}</p>
+    <p><strong>狀態：</strong> ${orderStatus}</p>
+    <p><strong>面交時間：</strong> ${meetingTime}</p>
+    <p><strong>面交地點：</strong> ${meetingPlace}</p>
+  `;
+
+  // 更新流程圖
+  updateOrderFlowImg(orderStatus);
+
+  // 顯示卡片
+  detailCard.classList.remove('d-none');
+  detailCard.scrollIntoView({ behavior: 'smooth' });
+} else if (action === 'delete') {
     Swal.fire({
       title: "確定要下架並刪除此商品嗎？",
       text: "無法再查看商品詳細資訊",
@@ -611,6 +727,21 @@ async function handleAction(action, id, rowOrCardEl) {
   }
   // person.js
 
+}
+document.getElementById('closeSellOrderDetail').addEventListener('click', () => {
+  document.getElementById('sellOrderDetail').classList.add('d-none');
+});
+
+function updateOrderFlowImg(status) {
+  const steps = ["pending", "preparing", "delivered", "completed"];
+  steps.forEach(s => document.getElementById("step-" + s).classList.add("d-none"));
+
+  const idx = steps.indexOf(status);
+  if (idx >= 0) {
+    for (let i = 0; i <= idx; i++) {
+      document.getElementById("step-" + steps[i]).classList.remove("d-none");
+    }
+  }
 }
 
 (() => {
