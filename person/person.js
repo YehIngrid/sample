@@ -486,7 +486,7 @@ function renderCards(list = []) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
-    const img      = esc(item.mainImage || item.imageUrl || '../webP/placeholder.webp');
+    const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
 
     return `
       <div class="col" data-id="${esc(id)}">
@@ -533,7 +533,7 @@ function renderSellerCards(list = []) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
-    const img      = esc(item.mainImage || item.imageUrl || '../webP/placeholder.webp');
+    const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
 
     return `
       <div class="col" data-id="${esc(id)}">
@@ -551,9 +551,9 @@ function renderSellerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看商品</button>
+              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看訂單詳情</button>
               <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
-              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
+              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">取消訂單</button>
             </div>
           </div>
         </div>
@@ -580,7 +580,7 @@ function renderBuyerCards(list = []) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
-    const img      = esc(item.mainImage || item.imageUrl || '../webP/placeholder.webp');
+    const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
 
     return `
       <div class="col" data-id="${esc(id)}">
@@ -598,9 +598,9 @@ function renderBuyerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看商品</button>
+              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看訂單詳情</button>
               <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
-              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
+              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">取消訂單</button>
             </div>
           </div>
         </div>
