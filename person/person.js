@@ -365,10 +365,11 @@ function renderBuyerOrders(list) {
         <td>${id}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
-        <td>價格: ${price} 交易方式: ${type} 賣家名稱: ${seller}</td>
+        <td>${price} 元</td>
         <td class="text-end">
+          <button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>
         </td>
       </tr>
     `;
@@ -381,7 +382,7 @@ function renderSellerOrders(list) {
   if (!tbody) return;
   console.log('List:' , list);
   if (!Array.isArray(list) || list.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
     return;
   }
   const rows = list.map(item => {
@@ -399,10 +400,10 @@ function renderSellerOrders(list) {
         <td>${id}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
-        <td>價格: ${price} 交易方式: ${type} 買家名稱: ${buyer}</td>
         <td class="text-end">
+          <button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">取消訂單</button>
+          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>
         </td>
       </tr>
     `;
@@ -439,7 +440,6 @@ function renderTable(list = []) {
         <td class="text-end">
           <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
-          <button class="btn btn-sm btn-outline-secondary btn-row-action" data-action="stop">暫停上架商品</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
         </td>
       </tr>
@@ -485,17 +485,19 @@ function renderCards(list = []) {
     return `
       <div class="col" data-id="${esc(id)}">
         <div class="card h-100 shadow-sm">
-          <div class="bg-light">
-            <img src="${img}" alt="${name}" class="object-cover">
-          </div>
           <div class="card-body d-flex flex-column">
-            <div class="d-flex align-items-center justify-content-between mb-1">
-              <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
-              <span class="badge ${st.badge}">${st.text}</span>
+            <div class="bg-light">
+              <img src="${img}" alt="${name}" class="object-cover">
             </div>
-            <div class="small text-muted mb-2">建立：${created} · 更新：${updated}</div>
-            <div class="fw-bold mb-2">${price}</div>
-            <div class="mt-auto d-grid gap-2">
+            <div>
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
+                <span class="badge ${st.badge}">${st.text}</span>
+              </div>
+              <div class="small text-muted mb-2">建立：${created} · 更新：${updated}</div>
+              <div class="fw-bold mb-2">${price}</div>
+            </div>
+            <div class="mt-auto d-flex gap-2">
               <button class="btn btn-outline-success btn-sm btn-card-action" data-action="check">查看商品</button>
               <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
               <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
