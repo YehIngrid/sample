@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ===== 工具 =====
 const STATUS_MAP = {
-  listed:   { text: '上架中',  badge: 'text-bg-success',  action: '編輯' },
+  listed:   { text: '上架中',  badge: 'text-bg-success',  action: '編輯商品' },
   sold:     { text: '已售出',  badge: 'text-bg-secondary',action: '查看' },
   reserved: { text: '訂單處理中',  badge: 'text-bg-warning',  action: '查看' },
 };
@@ -486,16 +486,18 @@ function renderCards(list = []) {
       <div class="col" data-id="${esc(id)}">
         <div class="card h-100 shadow-sm">
           <div class="card-body d-flex flex-column">
-            <div class="bg-light">
-              <img src="${img}" alt="${name}" class="object-cover">
-            </div>
-            <div>
-              <div class="d-flex align-items-center justify-content-between mb-1">
-                <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
-                <span class="badge ${st.badge}">${st.text}</span>
+            <div class="d-flex flex-row">
+              <div class="bg-light">
+                <img src="${img}" alt="${name}" class="object-cover">
               </div>
-              <div class="small text-muted mb-2">建立：${created} · 更新：${updated}</div>
-              <div class="fw-bold mb-2">${price}</div>
+              <div>
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                  <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
+                  <span class="badge ${st.badge}">${st.text}</span>
+                </div>
+                <div class="small text-muted mb-2">建立：${created}<br>更新：${updated}</div>
+                <div class="fw-bold mb-2">${price}</div>
+              </div>
             </div>
             <div class="mt-auto d-flex gap-2">
               <button class="btn btn-outline-success btn-sm btn-card-action" data-action="check">查看商品</button>
