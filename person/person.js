@@ -358,7 +358,7 @@ function renderBuyerOrders(list) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.listed;
-    const meetingInfo = esc(item.meetingInfo || '無詳細資訊');
+    const log = esc(item.log || '無詳細資訊');
   
   return `
       <tr data-id="${esc(id)}">
@@ -491,10 +491,8 @@ function renderCards(list = []) {
                 <img src="${img}" alt="${name}" class="object-cover">
               </div>
               <div>
-                <div class="d-flex align-items-center justify-content-between mb-1">
-                  <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
-                  <span class="badge ${st.badge}">${st.text}</span>
-                </div>
+                <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
+                <span class="badge ${st.badge}">${st.text}</span>
                 <div class="small text-muted mb-2">建立：${created}<br>更新：${updated}</div>
                 <div class="fw-bold mb-2">${price}</div>
               </div>
