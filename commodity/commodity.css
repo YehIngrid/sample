@@ -133,7 +133,7 @@
 
 .mobile-subcategories img.active {
   border-color: #007bff;
-  transform: scale(1.05);
+  transform: scale(1.01);
 }
 @media (max-width: 768px) {
   .deepCategorySort {
@@ -143,8 +143,14 @@
     margin: 10px 10px;
     display: block;
   }
+  .mobile-subcategories {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
   .sortAndProductdiv {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    padding-left: 3px;
+    padding-right: 3px;
   }
 }
