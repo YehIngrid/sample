@@ -136,6 +136,9 @@
   border-color: #007bff;
   transform: scale(1.01);
 }
+#filterButton {
+  margin-top: 12px;
+}
 @media (max-width: 768px) {
   .deepCategorySort {
     display: none;
@@ -149,7 +152,7 @@
     padding: 0 !important;
   }
   .sortAndProductdiv {
-    width: 100vw;
+    width: 90vw;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     padding-left: 3px;
