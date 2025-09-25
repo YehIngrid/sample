@@ -24,6 +24,11 @@
 .sort_list .active {
     color: #c4def7;
 }
+.sortAndProductdiv {
+  width: 70vw; 
+  margin: 0 auto; 
+  padding: 10px 0;
+}
 /* 側邊欄基礎 */
 .deepCategorySort {
   width: 240px;
@@ -91,7 +96,7 @@
 } */
 .product-card-img {
   width: 130px;
-  height: 150px;
+  height: 160px;
   object-fit: cover;       /* 填滿容器、維持比例，必要時裁切 */
   object-position: center; /* 需要改裁切錨點就改這裡：center top 等 */
   display: block;
@@ -137,5 +142,9 @@
   .contentOfCommodity {
     margin: 10px 10px;
     display: block;
+  }
+  .sortAndProductdiv {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
