@@ -110,6 +110,10 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
+#mobileSubCategoryIcons {
+    overflow: scroll;
+    padding-bottom: 10px;
+}
 .mobile-subcategories img {
   width: 100px;
   height: 100px;
@@ -120,7 +124,6 @@
   background: #fff;
   cursor: pointer;
   transition: transform 0.2s, border-color 0.2s;
-  overflow-x: scroll;
 }
 
 .mobile-subcategories img.active {
