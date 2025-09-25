@@ -67,6 +67,9 @@
   .deepCategorySort {
     display: none;
   }
+  .contentOfCommodity {
+    margin: 0;
+  }
 }
 /* 隱藏類別 */
 .hidden { display: none !important; }
