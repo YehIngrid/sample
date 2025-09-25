@@ -293,9 +293,10 @@ function renderProductsBootstrap(items) {
 
   // 加購物車事件
   productRow.querySelectorAll('.add-cart').forEach(btn => {
-    btn.addEventListener('click', async() => {
+    btn.addEventListener('click', async(e) => {
     const id = btn.dataset.id;
         try {
+            e.preventDefault();
             await backendService.addItemsToCart(id, 1);
             Swal.fire({
             title: '已加入購物車！',
