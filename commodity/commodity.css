@@ -120,6 +120,7 @@
   background: #fff;
   cursor: pointer;
   transition: transform 0.2s, border-color 0.2s;
+  overflow-x: scroll;
 }
 
 .mobile-subcategories img.active {
@@ -132,5 +133,6 @@
   }
   .contentOfCommodity {
     margin: 10px 10px;
+    display: block;
   }
 }
