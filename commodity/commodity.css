@@ -63,14 +63,7 @@
     color: #000;
     text-decoration: none;
 }
-@media (max-width: 768px) {
-  .deepCategorySort {
-    display: none;
-  }
-  .contentOfCommodity {
-    margin: 10px 10px;
-  }
-}
+
 /* 隱藏類別 */
 .hidden { display: none !important; }
 
@@ -98,7 +91,7 @@
 } */
 .product-card-img {
   width: 130px;
-  height: 130px;
+  height: 150px;
   object-fit: cover;       /* 填滿容器、維持比例，必要時裁切 */
   object-position: center; /* 需要改裁切錨點就改這裡：center top 等 */
   display: block;
@@ -132,4 +125,12 @@
 .mobile-subcategories img.active {
   border-color: #007bff;
   transform: scale(1.05);
+}
+@media (max-width: 768px) {
+  .deepCategorySort {
+    display: none;
+  }
+  .contentOfCommodity {
+    margin: 10px 10px;
+  }
 }
