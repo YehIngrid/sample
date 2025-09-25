@@ -282,7 +282,6 @@ function renderProductsBootstrap(items) {
           <p class="mb-2 text-muted" style="font-size:13px;"># ${escapeHtml(newOrOld)}</p>
           <div class="mt-auto d-flex justify-content-between align-items-center">
             <div class="fw-bold text-danger">NT$${escapeHtml(p.price)}</div>
-            <button class="btn btn-sm btn-outline-primary add-cart" data-id="${p.id}">加入購物車</button>
           </div>
         </div>
       </div>
@@ -292,26 +291,25 @@ function renderProductsBootstrap(items) {
   productRow.appendChild(frag);
 
   // 加購物車事件
-  productRow.querySelectorAll('.add-cart').forEach(btn => {
-    btn.addEventListener('click', async(e) => {
-    const id = btn.dataset.id;
-        try {
-            e.preventDefault();
-            await backendService.addItemsToCart(id, 1);
-            Swal.fire({
-            title: '已加入購物車！',
-            icon: 'success', 
-            showConfirmButton: false,
-            timer: 1600,
-            });
-        } catch (err) {
-            const msg = err?.response?.data?.message || err?.message || '請稍後再試';
-            Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
-        } finally {
-            btn.disabled = false;
-        }
-            });
-        });
+  // productRow.querySelectorAll('.add-cart').forEach(btn => {
+  //   btn.addEventListener('click', async(e) => {
+  //   const id = btn.dataset.id;
+  //       try {
+  //           await backendService.addItemsToCart(id, 1);
+  //           Swal.fire({
+  //           title: '已加入購物車！',
+  //           icon: 'success', 
+  //           showConfirmButton: false,
+  //           timer: 1600,
+  //           });
+  //       } catch (err) {
+  //           const msg = err?.response?.data?.message || err?.message || '請稍後再試';
+  //           Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
+  //       } finally {
+  //           btn.disabled = false;
+  //       }
+  //           });
+  //       });
 }
 
 // escape HTML
