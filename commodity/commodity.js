@@ -21,7 +21,49 @@ const subcategories = {
   '學生專用器材': ['實驗器材','測量工具', '其他'],
   '環保生活用品': ['環保餐具','購物袋/手提袋', '其他'],
   '儲物與收納用品': ['收納箱','置物架', '其他'],
-  '其他': ['周邊','腳踏車','其他']
+  '其他': ['周邊','腳踏車','衣服', '運動用品', '其他']
+};
+const subcategoryIcons = {
+  '書籍與學籍用品': {
+    '學校專業用書': '../svg/studybook.svg',
+    '通識課本/語言學習書': '../svg/languagebook.svg',
+    '非學校用書': '../svg/noschoolbook.svg',
+    '文具用品': '../svg/pencil.svg',
+    '筆記/習題集': '../svg/note.svg',
+    '其他': '../svg/mother.svg'
+  },
+  '宿舍與生活用品': {
+    '廚房用具': '../svg/kitchen.svg',
+    '寢具': '../svg/bed.svg',
+    '電器用品': '../svg/mlife.svg',
+    '清潔用品': '../svg/tshclean.svg',
+    '個人保養': '../svg/makeup.svg',
+    '其他': '../svg/mother.svg'
+  },
+  '學生專用器材': {
+    '實驗器材': '../svg/experiment.svg',
+    '測量工具': '../svg/mruler.svg', 
+    '其他':'../svg/mother.svg'
+  }, 
+  '環保生活用品': {
+    '環保餐具': '../svg/spoon.svg',
+    '購物袋/手提袋': '../svg/mnewbag.svg',
+    '其他': '../svg/mother.svg'
+  }, 
+  '儲物與收納用品': {
+    '收納箱': '../svg/box.svg',
+    '置物架': '../svg/store.svg',
+    '其他': '../svg/mother.svg'
+  }, 
+  '其他': {
+    '周邊': '../svg/idol.svg',
+    '腳踏車': '../svg/bike.svg',
+    '衣服': '../svg/clothes.svg',
+    '運動用品': '../svg/sports.svg', 
+    '其他': '../svg/mother.svg'
+  }
+
+  // … 其他分類照這樣寫
 };
 
 // ====== 初始化分類按鈕事件 ======
@@ -61,24 +103,50 @@ function changeCategory(category) {
 function toggleAside(category) {
   if (category === 'all' || category == 'hot' || category == 'new') {
     asideEl.classList.add('d-none');
-    // loadProducts();
+    document.getElementById('mobileSubCategoryIcons').innerHTML = '';
   } else {
     asideEl.classList.remove('d-none');
     const items = subcategories[category] || [];
-    deepListEl.innerHTML = items.map(s => `<li><a href="#" class="deep-sub" data-sub="${s}">${s}</a></li>`).join('');
-    // 綁事件
-    document.querySelectorAll('.deep-sub').forEach(a => {
-        a.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.querySelectorAll('.deep-sub').forEach(x => x.classList.remove('active'));
-            a.classList.add('active');
 
-            const sub = a.dataset.sub;
-            currentSub = sub;
-            pageIndex = 0;
-            productRow.innerHTML = '';
-            loadProducts();
-        });
+    // 桌機版子分類清單
+    deepListEl.innerHTML = items.map(s => `<li><a href="#" class="deep-sub" data-sub="${s}">${s}</a></li>`).join('');
+
+    // 手機版子分類 (圓形圖片)
+    const mobileIcons = document.getElementById('mobileSubCategoryIcons');
+    const iconMap = subcategoryIcons[category] || {};
+    mobileIcons.innerHTML = items.map(s => `
+      <div>
+        <img src="${iconMap[s] || 'icons/default.png'}" 
+             alt="${s}" 
+             class="mobile-sub" 
+             data-sub="${s}">
+        <div class="text-center" style="font-size:12px;">${s}</div>
+      </div>
+    `).join('');
+
+    // 綁定事件（桌機）
+    document.querySelectorAll('.deep-sub').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.deep-sub, .mobile-sub').forEach(x => x.classList.remove('active'));
+        a.classList.add('active');
+        currentSub = a.dataset.sub;
+        pageIndex = 0;
+        productRow.innerHTML = '';
+        loadProducts();
+      });
+    });
+
+    // 綁定事件（手機）
+    document.querySelectorAll('.mobile-sub').forEach(img => {
+      img.addEventListener('click', () => {
+        document.querySelectorAll('.deep-sub, .mobile-sub').forEach(x => x.classList.remove('active'));
+        img.classList.add('active');
+        currentSub = img.dataset.sub;
+        pageIndex = 0;
+        productRow.innerHTML = '';
+        loadProducts();
+      });
     });
   }
 }
