@@ -82,18 +82,19 @@
 /* 側欄基礎樣式 */
 /* .deepCategorySort { border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,0.06); } */
 /* 若想使用 d-none (Bootstrap) 也可以，不需這個 hidden */
-.product-card-img {
+/* .product-card-img {
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: #f8f9fa; /* 沒圖時的底色 */
-}
-.product-card-img img {
+  background: #f8f9fa; /* 沒圖時的底色 
+} */
+.product-card-img {
   width: 100%;
   height: 100%;
   object-fit: cover;       /* 填滿容器、維持比例，必要時裁切 */
   object-position: center; /* 需要改裁切錨點就改這裡：center top 等 */
   display: block;
+  background-color: #f8f9fa;
 }
 .contentOfCommodity {
     margin: 20px 180px;
