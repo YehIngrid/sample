@@ -750,14 +750,14 @@ document.getElementById('closeSellOrderDetail').addEventListener('click', () => 
 function updateOrderFlowImg(status) {
   const img = document.getElementById("flowImage");
   const map = {
-    pending:   "./svg/allstate_pending.svg",
-    preparing: "./svg/allstate_preparing.svg",
-    c2c:       "./svg/allstate_ctoc.svg",
-    delivered: "./svg/allstate_deliver.svg",
-    completed: "./svg/allstate_finish.svg"
+    pending:   "../svg/allstate_pending.svg",
+    preparing: "../svg/allstate_preparing.svg",
+    c2c:       "../svg/allstate_ctoc.svg",
+    delivered: "../svg/allstate_deliver.svg",
+    completed: "../svg/allstate_finish.svg"
   };
 
-  img.src = map[status] || "./svg/allstate.svg";  // 預設灰色
+  img.src = map[status] || "../svg/allstate.svg";  // 預設灰色
 }
 
 (() => {
