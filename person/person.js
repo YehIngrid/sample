@@ -748,15 +748,16 @@ document.getElementById('closeSellOrderDetail').addEventListener('click', () => 
 });
 
 function updateOrderFlowImg(status) {
-  const steps = ["pending", "preparing", "delivered", "completed"];
-  steps.forEach(s => document.getElementById("step-" + s).classList.add("d-none"));
+  const img = document.getElementById("flowImage");
+  const map = {
+    pending:   "./svg/allstate_pending.svg",
+    preparing: "./svg/allstate_preparing.svg",
+    c2c:       "./svg/allstate_ctoc.svg",
+    delivered: "./svg/allstate_deliver.svg",
+    completed: "./svg/allstate_finish.svg"
+  };
 
-  const idx = steps.indexOf(status);
-  if (idx >= 0) {
-    for (let i = 0; i <= idx; i++) {
-      document.getElementById("step-" + steps[i]).classList.remove("d-none");
-    }
-  }
+  img.src = map[status] || "./svg/allstate.svg";  // 預設灰色
 }
 
 (() => {
