@@ -690,12 +690,19 @@ async function handleAction(action, id, rowOrCardEl) {
       let res = await backendService.getOrderDetails(id);
         const detailCard = document.getElementById('sellOrderDetail');
         const infoBox = document.getElementById('sellOrderInfo');
+        const detailBuyer = document.getElementById('buyerOrderDetail');
+        const buyerInfoBox = document.getElementById('buyerOrderInfo');
         item = res.data?.data;
         // 假設這裡有一筆訂單資料 item（要從後端 API 抓）
         const orderStatus = item.status; // TODO: 改成 item.status
         const meetingTime = '先這樣'; // TODO: item.meetingInfo.time
         const meetingPlace = "中興大學圖書館前廣場"; // TODO: item.meetingInfo.place
-
+        buyerInfoBox.innerHTML = `
+          <p><strong>訂單編號：</strong> ${id}</p>
+          <p><strong>狀態：</strong> ${orderStatus}</p>
+          <p><strong>面交時間：</strong> ${meetingTime}</p>
+          <p><strong>面交地點：</strong> ${meetingPlace}</p>
+        `;
         // 填入資訊
         infoBox.innerHTML = `
           <p><strong>訂單編號：</strong> ${id}</p>
@@ -710,6 +717,8 @@ async function handleAction(action, id, rowOrCardEl) {
         // 顯示卡片
         detailCard.classList.remove('d-none');
         detailCard.scrollIntoView({ behavior: 'smooth' });
+        detailBuyer.classList.remove('d-none');
+        detailBuyer.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
       Swal.fire({
         title: 'Oops', 
@@ -749,6 +758,7 @@ document.getElementById('closeSellOrderDetail').addEventListener('click', () => 
 
 function updateOrderFlowImg(status) {
   const img = document.getElementById("flowImage");
+  const imgbuyer = document.getElementById("flowImagebuyer");
   const map = {
     pending:   "../svg/allstate_pending.svg",
     preparing: "../svg/allstate_preparing.svg",
@@ -758,6 +768,7 @@ function updateOrderFlowImg(status) {
   };
 
   img.src = map[status] || "../svg/allstate.svg";  // 預設灰色
+  imgbuyer.src = map[status] || "../svg/allstate.svg";
 }
 
 (() => {

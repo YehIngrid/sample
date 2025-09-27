@@ -221,6 +221,30 @@
                   </thead>
                   <tbody></tbody>
                 </table>
+                <div id="buyerOrderDetail" class="card shadow-sm mt-3 d-none">
+                  <div class="card-body">
+                    <h5 class="card-title">訂單詳細資訊</h5>
+                    
+                    <!-- 基本資訊 -->
+                    <div id="buyerOrderInfo" class="mb-3">
+                      <p><strong>訂單編號：</strong> -</p>
+                      <p><strong>狀態：</strong> -</p>
+                      <p><strong>面交時間：</strong> -</p>
+                      <p><strong>面交地點：</strong> -</p>
+                    </div>
+
+                    <!-- 流程圖 -->
+                <div id="orderFlowImgbuyer" class="text-center my-3">
+                  <img id="flowImagebuyer" src="../svg/allstate.svg" class="img-fluid" style="max-width: 800px;">
+                </div>
+
+
+                    <!-- 關閉按鈕 -->
+                    <div class="text-end mt-3">
+                      <button class="btn btn-secondary" id="closeSellOrderDetail">關閉</button>
+                    </div>
+                  </div>
+                </div>
                 <!-- 手機版卡片：小於 lg 才顯示 -->
                 <div id="buy-product" class="row g-3 d-block d-lg-none"></div>
               </div>
