@@ -532,7 +532,7 @@ function renderSellerCards(list = []) {
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
+    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
     const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
 
     return `
@@ -579,7 +579,7 @@ function renderBuyerCards(list = []) {
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
+    const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.listed;
     const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
 
     return `
