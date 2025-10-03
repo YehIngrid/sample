@@ -150,7 +150,7 @@ border: 1.5px solid #fff
     margin-bottom: 2rem;
     font-family: 'TimeMachine';
 }
-.titlecenter h2 {
+.titlecenter h4 {
     font-size: 1.5rem;
     color: #fff;
     margin-bottom: 1rem;
@@ -411,8 +411,8 @@ right: 0;
     .titlecenter h1 {
         font-size: 2.1rem;
     }
-    .titlecenter h2 {
-        font-size: 1.6rem;
+    .titlecenter h4 {
+        font-size: 1rem;
         margin-left: 20px;
         margin-right: 20px;
     }
