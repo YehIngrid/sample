@@ -155,79 +155,76 @@ function toggleAside(category) {
 async function loadProducts() {
   if (isLoading) return;
   isLoading = true;
-  loaderEl.textContent = '載入中...';
+
+  // 顯示 skeleton（避免整頁 spinner）
+  showSkeletons(12);
 
   try {
     let items = [];
     const backendService = new BackendService();
     const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
+
     if (currentCategory === 'hot') {
-        backendService.getHotItems(pagingInfo, (response => {
-            console.log("call getHotItems()", response.data);
-            items = response?.data?.commodities || [];
-            finishRender(items);
-        }), (errorMessage => {
-          console.log(errorMessage);
-        }))
+      backendService.getHotItems(pagingInfo, (response => {
+        console.log("call getHotItems()", response.data);
+        items = response?.data?.commodities || [];
+        finishRender(items);  // 會自動清掉 skeleton，顯示商品
+      }), (errorMessage => {
+        console.log(errorMessage);
+        productRow.innerHTML = `<div class="text-center text-muted">載入失敗</div>`;
+      }))
     } else if (currentCategory === 'new') {
-        backendService.getNewItems(pagingInfo, (response => {
-            console.log("call getHotItems()", response.data);
-            items = response?.data?.commodities || [];
-            finishRender(items);
-        }), (errorMessage => {
-          console.log(errorMessage);
-        }))
+      backendService.getNewItems(pagingInfo, (response => {
+        console.log("call getNewItems()", response.data);
+        items = response?.data?.commodities || [];
+        finishRender(items);
+      }), (errorMessage => {
+        console.log(errorMessage);
+        productRow.innerHTML = `<div class="text-center text-muted">載入失敗</div>`;
+      }))
     } else {
-        // 其他分類都撈全部，然後前端再篩選
-        const response = await backendService.getAllCommodities(pagingInfo);
-        // API 回傳的商品
-        items = response.data?.commodities || [];
+      // 其他分類都撈全部，然後前端再篩選
+      const response = await backendService.getAllCommodities(pagingInfo);
+      items = response.data?.commodities || [];
+
+      // === 前端分類篩選 ===
+      const categoryMap = {
+        book: '書籍與學籍用品',
+        life: '宿舍與生活用品',
+        student: '學生專用器材',
+        recycle: '環保生活用品',
+        clean: '儲物與收納用品',
+        other: '其他',
+      };
+
+      let filteredItems = items;
+
+      if (currentCategory !== ('all' || 'hot' || 'new')) {
+        filteredItems = filteredItems.filter(p => categoryMap[p.category] === currentCategory);
+      }
+
+      if (currentSub) {
+        filteredItems = filteredItems.filter(p => p.subCategory === currentSub);
+      }
+
+      const totalCount = filteredItems.length;
+      const start = pageIndex * PAGE_SIZE;
+      const pagedItems = filteredItems.slice(start, start + PAGE_SIZE);
+
+      // render → 自動覆蓋掉 skeleton
+      productRow.innerHTML = '';
+      renderProductsBootstrap(pagedItems);
+      renderPagination(totalCount);
     }
-    
-    
 
-    // === 前端分類篩選 ===
-    const categoryMap = {
-      book: '書籍與學籍用品',
-      life: '宿舍與生活用品',
-      student: '學生專用器材',
-      recycle: '環保生活用品',
-      clean: '儲物與收納用品',
-      other: '其他',
-    };
-
-    let filteredItems = items;
-
-    // 篩選大分類
-    if (currentCategory !== ('all' || 'hot' || 'new')) {
-      filteredItems = filteredItems.filter(p => categoryMap[p.category] === currentCategory);
-    }
-
-    // 篩選子分類（假設商品物件有 subCategory 欄位）
-    if (currentSub) {
-      filteredItems = filteredItems.filter(p => p.subCategory === currentSub);
-    }
-
-    // 重新計算分頁數量
-    const totalCount = filteredItems.length;
-
-    // 依 pageIndex 切出這一頁要顯示的商品
-    const start = pageIndex * PAGE_SIZE;
-    const pagedItems = filteredItems.slice(start, start + PAGE_SIZE);
-
-    // 清空後重新 render
-    productRow.innerHTML = '';
-    renderProductsBootstrap(pagedItems);
-    renderPagination(totalCount);
-
-    loaderEl.textContent = '';
   } catch (err) {
     console.error('API 載入失敗', err);
-    loaderEl.textContent = '載入失敗，請稍後重試';
+    productRow.innerHTML = `<div class="text-center text-muted">載入失敗，請稍後重試</div>`;
   } finally {
     isLoading = false;
   }
 }
+
 function finishRender(items) {
     // 篩選、分頁
     const totalCount = items.length;
@@ -390,3 +387,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // 使用初始分類來載入商品
   changeCategory(initialCategory);
 });
+function showSkeletons(count = 12) {
+  productRow.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < count; i++) {
+    const col = document.createElement('div');
+    col.className = 'col-6 col-md-4 col-lg-2';
+    col.innerHTML = `
+      <div class="card skeleton-card">
+        <div class="skeleton skeleton-img"></div>
+        <div class="skeleton skeleton-text" style="width: 80%;"></div>
+        <div class="skeleton skeleton-text" style="width: 60%;"></div>
+      </div>
+    `;
+    frag.appendChild(col);
+  }
+  productRow.appendChild(frag);
+}
