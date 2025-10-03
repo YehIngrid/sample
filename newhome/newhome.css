@@ -287,7 +287,6 @@ border: 1.5px solid #fff
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 2px solid rgba(54, 137, 247, 0.2);
 }
 .service h3 {
     font-size: 1.4rem;

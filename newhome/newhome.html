@@ -59,7 +59,10 @@
                             <a class="nav-link active" aria-current="page" href="newhome.html">首頁</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../shop/shoppingpage_bootstrap.html">購物商場</a>
+                            <a class="nav-link" href="../shop/shoppingpage_bootstrap.html">購物首頁</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../commodity/commodity.html" class="nav-link">購物商場</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="../news/news.html">最新資訊</a>
@@ -73,9 +76,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="../communication/communication.html">客服諮詢</a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a class="nav-link" href="../school/school.html">校園攻略站</a>
-                        </li>
+                        </li> -->
                     </div>
                 </div>
             </nav>
@@ -83,8 +86,8 @@
                 <h1>拾貨寶庫</h1>
                 <h2>一個專為學生設計的校園共享經濟平台</h2>
                 <div class="buttontwo d-flex">
-                    <button class="hvr-sweep-to-right shopbtn">立即開始購物</button>
-                    <button class="hvr-sweep-to-right lookbtn">逛逛其他分頁</button>
+                    <button class="hvr-sweep-to-right shopbtn" onclick="window.location.href='../commodity/commodity.html'">立即開始購物</button>
+                    <button class="hvr-sweep-to-right lookbtn" onclick="window.location.href='../shop/shoppingpage_bootstrap.html'">逛逛其他分頁</button>
                 </div>
                 <!-- <img src="webP/people.webp" alt="人裝飾圖片"> -->
                 <div class="scroll-down" onclick="scrollToNext()">
@@ -438,7 +441,7 @@
                 </div>
             </div>
         </div>
-    <script src="bootstrap_jQuery-demo/js/bootstrap.min.js"></script>
+    <script src="../bootstrap_jQuery-demo/js/bootstrap.min.js"></script>
     <!-- 放在 body 結尾或 head 中 -->
     <script src="../finisher-header.es5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
