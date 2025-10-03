@@ -447,3 +447,21 @@ async function showSellerCommodities(id) {
     sellerCommodities.style.display = 'none';
   }
 }
+async function orderNow(productId) {
+  try {
+    const response = await backendService.addItemsToCart({
+      productId: productId,
+      quantity: 1
+    });
+
+    if (response.status === 200) {
+      // 加入購物車成功，跳轉到購物車頁
+      window.location.href = "../shoppingcart/shoppingcart.html";
+    } else {
+      alert("訂單頁面跳轉失敗，請稍後再試");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("發生錯誤，請稍後再試");
+  }
+}
