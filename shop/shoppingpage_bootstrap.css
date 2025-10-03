@@ -232,13 +232,13 @@ ul{
   font-weight: 600;
 }
 .my-lg-cat a {
-  height: 50px;
+  height: 42px;
   background-color: #fbfbfb;
   text-decoration: none;
   padding-top: 6px;
   padding-bottom: 4px;
   transition: background 0.3s, color 0.3s;
-  padding-left: 20px;
+  padding-left: 18px;
   padding-right: 10px;
   color: #383838;
 }
@@ -258,7 +258,7 @@ ul{
     overflow-x: auto;         /* 開啟水平捲動 */
     overflow-y: hidden;
     scroll-behavior: smooth;  /* 捲動平滑 */
-    min-width: 70vw;          /* 容器寬度，可改成固定 px，例如 1000px */
+    min-width: 80vw;          /* 容器寬度，可改成固定 px，例如 1000px */
     border: 1px solid #ccc;   /* 選擇性：讓容器有邊框 */
     padding: 10px;
     margin: 0 auto;           /* 水平置中 */
@@ -561,7 +561,7 @@ ul{
 .newsell {
   background: linear-gradient( to right, #24b68569, #004b972d);
   border-radius: 20px;
-  width: 70vw;
+  width: 80vw;
   margin: 0 auto;
   margin-top: 20px;
   padding: 20px;
@@ -1334,11 +1334,11 @@ button {
   font-size: 14px;
 }
 .firstlinesell {
-  width: 69vw;
+  width: 79vw;
   margin: 20px auto 0px auto;
 }
 .smallmysection {
-  width: 70vw; 
+  width: 80vw; 
   margin: 0 auto;
 }
 @media (max-width: 500px) {
