@@ -366,7 +366,13 @@ async function onAddToCart(e) {
     });
   } catch (err) {
     const msg = err?.response?.data?.message || err?.message || '請稍後再試';
-    Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
+    if (String(msg).toLowerCase().includes('stock')) {
+      Swal.fire({ icon: 'warning', title: '庫存不足', text: msg });
+    } else if (String(msg).toLowerCase().includes('No JWT token provided')) {
+      Swal.fire({ icon: 'warning', title: '請先登入才可將商品加入購物車', text: msg });
+    } else {
+      Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
+    }
   } finally {
     btn.disabled = false;
   }
