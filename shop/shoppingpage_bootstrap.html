@@ -124,43 +124,6 @@
         </div>
         
 
-       <!-- 聊天室開啟按鈕 -->
-<a href="#" class="talk" data-bs-toggle="offcanvas" data-bs-target="#chatOffcanvas">
-  <img src="../svg/newtalk.svg" alt="聊天室">
-</a>
-
-<!-- Bootstrap Offcanvas 聊天室 -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="chatOffcanvas" aria-labelledby="chatOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="chatOffcanvasLabel">聊天室</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="關閉"></button>
-  </div>
-
-  <div class="offcanvas-body">
-
-    <!-- ✅ 聊天清單 (chatHome) -->
-    <div id="chatHome">
-      <input type="text" id="chatSearch" placeholder="搜尋聊天對象..." class="form-control mb-3">
-
-      <div class="chat-list">
-        <div class="person d-flex align-items-center" data-uid="service001" data-name="拾貨寶庫客服">
-          <img src="../image/default-avatar.png" alt="頭像" class="avatar">
-          <div class="text-info">
-            <h3>拾貨寶庫客服</h3>
-            <p>最後一則聊天記錄</p>
-          </div>
-          <div class="lasttimestamp">2025/06/18 19:22</div>
-        </div>
-        <div class="person d-flex align-items-center" data-uid="service002" data-name="葉傑宜">
-          <img src="../image/default-avatar.png" alt="頭像" class="avatar">
-          <div class="text-info">
-            <h3>葉傑宜</h3>
-            <p>最後一則聊天記錄</p>
-          </div>
-          <div class="lasttimestamp">2025/06/18 19:22</div>
-        </div>
-      </div>
-    </div>
 
 
 
@@ -1205,6 +1168,7 @@ const timer = setInterval(() => {
     </div>
   </div>
 </section> -->
+
 <div class="footer">
             <div class="container" >
                 <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
@@ -1244,6 +1208,73 @@ const timer = setInterval(() => {
             </div>
         </div>
   </div>
+<!-- 聊天室開啟按鈕 -->
+<a href="#" class="talk" data-bs-toggle="offcanvas" data-bs-target="#chatOffcanvas">
+  <img src="../svg/newtalk.svg" alt="聊天室">
+</a>
+
+<!-- Offcanvas 容器 -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="chatOffcanvas" aria-labelledby="chatOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="chatOffcanvasLabel">聊天</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="關閉"></button>
+  </div>
+
+  <div class="offcanvas-body">
+
+    <!-- ✅ 聊天清單 -->
+    <div id="chatList">
+      <input type="text" id="chatSearch" placeholder="搜尋聊天對象..." class="form-control mb-3">
+
+      <div class="chat-list">
+        <div class="person d-flex align-items-center chat-person" data-name="拾貨寶庫客服">
+          <img src="../image/default-avatar.png" alt="頭像" class="avatar">
+          <div class="text-info">
+            <h3>拾貨寶庫客服</h3>
+            <p>最後一則聊天記錄</p>
+          </div>
+          <div class="lasttimestamp">2025/06/18 19:22</div>
+        </div>
+        <div class="person d-flex align-items-center chat-person" data-name="葉傑宜">
+          <img src="../image/default-avatar.png" alt="頭像" class="avatar">
+          <div class="text-info">
+            <h3>葉傑宜</h3>
+            <p>最後一則聊天記錄</p>
+          </div>
+          <div class="lasttimestamp">2025/06/18 19:22</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ 單一聊天視窗 -->
+    <div id="chatConversation" class="d-none">
+      <div class="chatHeader d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <button class="btn btn-link p-0 me-2" id="backToList">← 返回</button>
+          <span class="name" id="chatTargetName">選擇對象</span>
+        </div>
+        <div class="set">
+          <img src="../webP/else.webp" alt="其他">
+        </div>
+      </div>
+
+      <div class="chatting border rounded p-2 my-2" id="chatBox" style="height: 250px; overflow-y: auto;">
+        <!-- 範例訊息 -->
+        <div class="message receiver">你好～想問一下有貨嗎？</div>
+        <div class="timestamp">2025/06/18 19:21</div>
+        <div class="message sender">有的唷！你要哪個顏色？</div>
+        <div class="timestamp">2025/06/18 19:22</div>
+      </div>
+
+      <div class="inputArea d-flex mt-2">
+        <input type="text" placeholder="輸入訊息..." class="form-control me-2" id="messageInput">
+        <button class="btn btn-primary" id="sendBtn">送出</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
   <!-- Loading 遮罩 -->
 <div id="loadingOverlay" class="loading-overlay d-none">
   <div class="d-flex flex-column justify-content-center align-items-center">
@@ -1251,7 +1282,6 @@ const timer = setInterval(() => {
     <span style="font-size: 1.3rem; padding-top: 5px;">上傳商品中...</span>
     <span style="font-size: 1.3rem;">請勿跳出視窗或做任何操作</span>
   </div>
-  
 </div>
 
     <!-- script部分-->

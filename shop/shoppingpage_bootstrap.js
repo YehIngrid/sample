@@ -845,34 +845,37 @@ function renderPagination() {
   sections.forEach(sec => sec && observer.observe(sec));
 })();
 document.addEventListener("DOMContentLoaded", function () {
-  const chatHome = document.getElementById("chatHome");
-  const chatWindow = document.getElementById("chatWindow");
+  const chatList = document.getElementById("chatList");
+  const chatConversation = document.getElementById("chatConversation");
   const chatTargetName = document.getElementById("chatTargetName");
-  const backToHome = document.getElementById("backToHome");
-  const sendBtn = document.getElementById("sendbtn");
+  const backToList = document.getElementById("backToList");
+  const sendBtn = document.getElementById("sendBtn");
   const messageInput = document.getElementById("messageInput");
-  const chatBox = document.getElementById("chat");
-  const chatOffcanvas = document.getElementById("chatOffcanvas");
+  const chatBox = document.getElementById("chatBox");
 
-  // ✅ 在 Offcanvas 開啟後再綁定聊天清單
-  chatOffcanvas.addEventListener("shown.bs.offcanvas", () => {
-    document.querySelectorAll(".chat-list .person").forEach(person => {
-      person.addEventListener("click", () => {
-        const name = person.dataset.name || "未命名";
-        chatTargetName.textContent = name;
-        chatHome.classList.add("d-none");
-        chatWindow.classList.remove("d-none");
-      });
+  // 點擊聊天清單 → 進入對話
+  document.querySelectorAll(".chat-person").forEach(person => {
+    person.addEventListener("click", () => {
+      const name = person.dataset.name || "未命名";
+      chatTargetName.textContent = name;
+      chatList.classList.add("d-none");
+      chatConversation.classList.remove("d-none");
+
+      // 預設假訊息
+      chatBox.innerHTML = `
+        <div class="message receiver">嗨！我是 ${name}</div>
+        <div class="timestamp">${new Date().toLocaleString()}</div>
+      `;
     });
   });
 
-  // 返回聊天清單
-  backToHome.addEventListener("click", () => {
-    chatWindow.classList.add("d-none");
-    chatHome.classList.remove("d-none");
+  // 返回清單
+  backToList.addEventListener("click", () => {
+    chatConversation.classList.add("d-none");
+    chatList.classList.remove("d-none");
   });
 
-  // 發送訊息
+  // 送出訊息
   sendBtn.addEventListener("click", () => {
     const msg = messageInput.value.trim();
     if (!msg) return;
@@ -883,12 +886,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const timeDiv = document.createElement("div");
     timeDiv.classList.add("timestamp");
-    timeDiv.textContent = new Date().toLocaleString();
+    timeDiv.textContent = new Date().toLocaleTimeString();
 
     chatBox.appendChild(msgDiv);
     chatBox.appendChild(timeDiv);
 
     messageInput.value = "";
-    chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.scrollTop = chatBox.scrollHeight; // 自動捲到底
   });
 });
