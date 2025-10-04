@@ -1,5 +1,7 @@
 
-  
+.centerseller {
+  margin-left: 20px;
+}
   .product-container {
     max-width: 80vw;
     margin: auto;
@@ -558,14 +560,15 @@
         flex-direction: column;
         gap: .5rem;
       }
-      .rate {
-        margin-top: 20px;
-      }
+      
     }
     @media (max-width: 767.98px) {
       .thumbnail-list {
         display: flex;           /* 手機：縮圖改成橫向一排 */
         gap: .5rem;
+      }
+      .rate {
+        margin-top: 20px;
       }
     }
 

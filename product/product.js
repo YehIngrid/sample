@@ -425,7 +425,7 @@ async function showSellerCommodities(id) {
     
       // 右邊文字區塊
       const bodyCol = document.createElement('div');
-      bodyCol.className = 'col-7 d-flex flex-column'; // 右側資訊區
+      bodyCol.className = 'col-8 d-flex flex-column'; // 右側資訊區
     
       const cardBody = document.createElement('div');
       cardBody.className = 'card-body d-flex flex-column';
