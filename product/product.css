@@ -169,7 +169,6 @@
     
 }
   .mix img{
-    max-width: 220px;
     padding: 5px;
     margin: 0 auto;
   }
@@ -494,6 +493,9 @@
   .checkbtn button{
     margin: 0 auto;
     margin-bottom: 20px;
+  }
+  .rate {
+    margin-top: 20px;
   }
 }
 .sellerphoto {
