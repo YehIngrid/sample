@@ -431,7 +431,7 @@ async function showSellerCommodities(id) {
       cardBody.className = 'card-body d-flex flex-column';
     
       const title = document.createElement('h5');
-      title.className = 'card-title';
+      title.className = 'card-title ellipsis-text';
       title.textContent = product.name || '未命名';
     
       const price = document.createElement('p');

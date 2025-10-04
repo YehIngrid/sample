@@ -282,12 +282,12 @@ document.getElementById('image').addEventListener('change', function (e) {
 const wishpool = document.getElementById('wishpool');
 const backbtn1 = document.getElementById('back-btn1');
 const wishpoolbtn = document.getElementById('wishpoolbtn');
-// const talkInterface = document.getElementById('talkInterface');
+const talkInterface = document.getElementById('talkInterface');
 wishpoolbtn.addEventListener('click', function(e){
   wishpool.style.display = 'block';
   console.log('hello');
   midcontent.style.display = 'none';
-  talkInterface.style.display = 'none';
+  // talkInterface.style.display = 'none';
 
   const startBtn   = document.getElementById('startWish');
   const backBtn    = document.getElementById('closeWishForm');
@@ -516,11 +516,11 @@ urgency.addEventListener('change', validateUrgency);
   });
   
 })
-backbtn1.addEventListener('click', function(e){
+backbtn1.addEventListener('click', function(){
   wishpool.style.display = 'none';
   console.log('hiii');
   midcontent.style.display = 'block';
-  talkInterface.style.display = 'block';
+  //talkInterface.style.display = 'block';
 })
 // TODO member
 // const member = document.getElementById('member');
@@ -844,3 +844,51 @@ function renderPagination() {
   }, { rootMargin:'0px 0px -60% 0px', threshold:0.2 });
   sections.forEach(sec => sec && observer.observe(sec));
 })();
+document.addEventListener("DOMContentLoaded", function () {
+  const chatHome = document.getElementById("chatHome");
+  const chatWindow = document.getElementById("chatWindow");
+  const chatTargetName = document.getElementById("chatTargetName");
+  const backToHome = document.getElementById("backToHome");
+  const sendBtn = document.getElementById("sendbtn");
+  const messageInput = document.getElementById("messageInput");
+  const chatBox = document.getElementById("chat");
+  const chatOffcanvas = document.getElementById("chatOffcanvas");
+
+  // ✅ 在 Offcanvas 開啟後再綁定聊天清單
+  chatOffcanvas.addEventListener("shown.bs.offcanvas", () => {
+    document.querySelectorAll(".chat-list .person").forEach(person => {
+      person.addEventListener("click", () => {
+        const name = person.dataset.name || "未命名";
+        chatTargetName.textContent = name;
+        chatHome.classList.add("d-none");
+        chatWindow.classList.remove("d-none");
+      });
+    });
+  });
+
+  // 返回聊天清單
+  backToHome.addEventListener("click", () => {
+    chatWindow.classList.add("d-none");
+    chatHome.classList.remove("d-none");
+  });
+
+  // 發送訊息
+  sendBtn.addEventListener("click", () => {
+    const msg = messageInput.value.trim();
+    if (!msg) return;
+
+    const msgDiv = document.createElement("div");
+    msgDiv.classList.add("message", "sender");
+    msgDiv.textContent = msg;
+
+    const timeDiv = document.createElement("div");
+    timeDiv.classList.add("timestamp");
+    timeDiv.textContent = new Date().toLocaleString();
+
+    chatBox.appendChild(msgDiv);
+    chatBox.appendChild(timeDiv);
+
+    messageInput.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+});

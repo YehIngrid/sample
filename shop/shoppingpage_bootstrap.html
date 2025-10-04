@@ -124,96 +124,51 @@
         </div>
         
 
-      <a href="#" class="talk" id="talkInterface">
-        <!-- <img src="../webP/talk.webp" alt="聊天室"> -->
-      </a>
-<!-- TODO:聊天室 -->
-        <div class="chathome" id="chatHome">
-          <div class="d-flex justify-content-between">
-            <h2>聊天</h2>
-            <div class="closecross">
-              <img src="../image/closecross.png" alt="close" id="closebtn">
-            </div>
-          </div>
-          <input type="text" id="chatSearch" placeholder="搜尋聊天對象..." class="form-control mb-3" style="padding: 5px;">
+       <!-- 聊天室開啟按鈕 -->
+<a href="#" class="talk" data-bs-toggle="offcanvas" data-bs-target="#chatOffcanvas">
+  <img src="../svg/newtalk.svg" alt="聊天室">
+</a>
 
-          <hr>
-          <div class="chat-list">
-            <!-- 多個聊天對象 -->
-            <div class="person d-flex align-items-center" data-uid="service001">
-              <img src="../image/default-avatar.png" alt="頭像" class="avatar">
-              <div class="text-info">
-                <h3>拾貨寶庫客服</h3>
-                <p>最後一則聊天記錄</p>
-              </div>
-              <div class="lasttimestamp">2025/06/18 19:22</div>
-            </div>
-            <!-- ... 更多 person ... -->
-            <div class="person d-flex align-items-center" data-uid="service001">
-              <img src="../image/default-avatar.png" alt="頭像" class="avatar">
-              <div class="text-info">
-                <h3>葉傑宜</h3>
-                <p>最後一則聊天記錄</p>
-              </div>
-              <div class="lasttimestamp">2025/06/18 19:22</div>
-            </div>
-            <div class="person d-flex align-items-center" data-uid="service001">
-              <img src="../image/default-avatar.png" alt="頭像" class="avatar">
-              <div class="text-info">
-                <h3>葉忠祥</h3>
-                <p>最後一則聊天記錄</p>
-              </div>
-              <div class="lasttimestamp">2025/06/18 19:22</div>
-            </div>
+<!-- Bootstrap Offcanvas 聊天室 -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="chatOffcanvas" aria-labelledby="chatOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="chatOffcanvasLabel">聊天室</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="關閉"></button>
+  </div>
+
+  <div class="offcanvas-body">
+
+    <!-- ✅ 聊天清單 (chatHome) -->
+    <div id="chatHome">
+      <input type="text" id="chatSearch" placeholder="搜尋聊天對象..." class="form-control mb-3">
+
+      <div class="chat-list">
+        <div class="person d-flex align-items-center" data-uid="service001" data-name="拾貨寶庫客服">
+          <img src="../image/default-avatar.png" alt="頭像" class="avatar">
+          <div class="text-info">
+            <h3>拾貨寶庫客服</h3>
+            <p>最後一則聊天記錄</p>
           </div>
-          <div class="person d-flex align-items-center" data-uid="service001">
-            <img src="../image/default-avatar.png" alt="頭像" class="avatar">
-            <div class="text-info">
-              <h3>Ingrid Yeh</h3>
-              <p>最後一則聊天記錄</p>
-            </div>
-            <div class="lasttimestamp">2025/06/18 19:22</div>
-          </div>
+          <div class="lasttimestamp">2025/06/18 19:22</div>
         </div>
+        <div class="person d-flex align-items-center" data-uid="service002" data-name="葉傑宜">
+          <img src="../image/default-avatar.png" alt="頭像" class="avatar">
+          <div class="text-info">
+            <h3>葉傑宜</h3>
+            <p>最後一則聊天記錄</p>
+          </div>
+          <div class="lasttimestamp">2025/06/18 19:22</div>
         </div>
-        <div class="chatWindow" id="chatWindow">
-          <div class="chatHeader d-flex">
-            <div class="d-flex">
-              <div class="backtalk" style="margin-right: 10px;" id="backToHome">
-                <img src="../webP/backtalk.webp" alt="返回">
-              </div>
-              <!-- 姓名 -->
-              <div class="sellerName">
-                <span class="name" id="chatTargetName"></span>
-              </div>
-            </div>
-            <div class="d-flex">
-              <div class="set" style="margin-right: 7px;">
-                <img src="../webP/else.webp" alt="其他">
-              </div>
-            </div>
-          </div>
-        
-          <div class="chatting" id="chat">
-            <div class="message receiver">你好～想問一下有貨嗎？</div>
-            <div class="timestamp">2025/06/18 19:21</div>
-            <div class="message sender">有的唷！你要哪個顏色？</div>
-            <div class="timestamp">2025/06/18 19:22</div>
-          </div>
-          <div class="inputArea">
-            <button class="sendother">
-              <img src="../webP/sendother.webp" alt="傳送圖片等">
-            </button>
-            <input type="text" placeholder="輸入訊息..." class="inputMessage" id="messageInput">
-            <button class="sendButton" id="sendbtn">
-              <img src="../webP/sendM.webp" alt="傳送">
-            </button>
-          </div>
-        </div>
+      </div>
     </div>
-     
-  
-          </div>
+
+
+
+</div>
+
+        </div>
+      
+
   <main id="midcontent">
   <div class="my-section">  
 
