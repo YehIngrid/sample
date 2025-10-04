@@ -402,46 +402,63 @@ async function showSellerCommodities(id) {
 
     products.forEach((product) => {
       const col = document.createElement('div');
-      col.className = 'col-6 col-md-4 col-lg-3 mb-3';
-
+      col.className = 'col-12 col-md-6 col-lg-3 mb-3'; // 手機1排、平板2排、電腦4排
+    
       const card = document.createElement('div');
       card.className = 'card h-100';
-
+    
+      const row = document.createElement('div');
+      row.className = 'row g-0'; // 去掉間距，讓圖片與內容貼齊
+    
+      // 左邊圖片
+      const imgCol = document.createElement('div');
+      imgCol.className = 'col-4'; // 圖片占左側寬度
+    
       const img = document.createElement('img');
       img.src = toFullURL(product.mainImage) || 'https://picsum.photos/300/300?grayscale';
-      img.className = 'card-img-top';
+      img.className = 'img-fluid rounded-start h-100 object-fit-cover'; // 確保圖片不變形
       img.alt = product.name || '商品圖片';
       img.loading = 'lazy';
       img.referrerPolicy = 'no-referrer';
       img.onerror = () => { img.src = 'https://picsum.photos/300/300?grayscale'; };
-
+      imgCol.appendChild(img);
+    
+      // 右邊文字區塊
+      const bodyCol = document.createElement('div');
+      bodyCol.className = 'col-8 d-flex flex-column'; // 右側資訊區
+    
       const cardBody = document.createElement('div');
       cardBody.className = 'card-body d-flex flex-column';
-
+    
       const title = document.createElement('h5');
       title.className = 'card-title';
       title.textContent = product.name || '未命名';
-
+    
       const price = document.createElement('p');
       price.className = 'card-text mt-auto mb-2';
       price.innerHTML = formatPrice(product.price);
-
+    
       const link = document.createElement('a');
       const pid = product.id ?? product._id ?? product.commodityId ?? '';
       link.href = `./product.html?id=${encodeURIComponent(pid)}`;
       link.className = 'btn btn-primary w-100 mt-auto';
       link.textContent = '查看商品';
-
+    
       cardBody.appendChild(title);
       cardBody.appendChild(price);
       cardBody.appendChild(link);
-      card.appendChild(img);
-      card.appendChild(cardBody);
+      bodyCol.appendChild(cardBody);
+    
+      // 組合結構
+      row.appendChild(imgCol);
+      row.appendChild(bodyCol);
+      card.appendChild(row);
       col.appendChild(card);
       frag.appendChild(col);
     });
-
+    
     sellerCommodities.appendChild(frag);
+    
   } catch (err) {
     console.error('取得賣家商品失敗：', err);
     sellerCommodities.style.display = 'none';
