@@ -416,7 +416,7 @@ async function showSellerCommodities(id) {
     
       const img = document.createElement('img');
       img.src = toFullURL(product.mainImage) || 'https://picsum.photos/300/300?grayscale';
-      img.className = 'img-fluid rounded-start h-100 object-fit-cover'; // 確保圖片不變形
+      img.className = 'img-fluid rounded-start otherimg object-fit-cover'; // 確保圖片不變形
       img.alt = product.name || '商品圖片';
       img.loading = 'lazy';
       img.referrerPolicy = 'no-referrer';
