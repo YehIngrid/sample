@@ -494,9 +494,7 @@
     margin: 0 auto;
     margin-bottom: 20px;
   }
-  .rate {
-    margin-top: 20px;
-  }
+  
 }
 .sellerphoto {
   width: 180px;              /* 想要的大小 */
@@ -559,6 +557,9 @@
         display: flex;
         flex-direction: column;
         gap: .5rem;
+      }
+      .rate {
+        margin-top: 20px;
       }
     }
     @media (max-width: 767.98px) {

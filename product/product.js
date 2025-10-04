@@ -408,7 +408,7 @@ async function showSellerCommodities(id) {
       card.className = 'card h-100';
     
       const row = document.createElement('div');
-      row.className = 'row g-0'; // 去掉間距，讓圖片與內容貼齊
+      row.className = 'row g-5'; // 去掉間距，讓圖片與內容貼齊
     
       // 左邊圖片
       const imgCol = document.createElement('div');
@@ -425,7 +425,7 @@ async function showSellerCommodities(id) {
     
       // 右邊文字區塊
       const bodyCol = document.createElement('div');
-      bodyCol.className = 'col-8 d-flex flex-column'; // 右側資訊區
+      bodyCol.className = 'col-7 d-flex flex-column'; // 右側資訊區
     
       const cardBody = document.createElement('div');
       cardBody.className = 'card-body d-flex flex-column';
