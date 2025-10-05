@@ -756,43 +756,43 @@ function toggleIcon(iconEl, toFav) {
 }
 
 // 建立收藏按鈕事件
-favBtn.addEventListener('click', async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+// favBtn.addEventListener('click', async (e) => {
+//   e.preventDefault();
+//   e.stopPropagation();
 
-  const pid = card.dataset.id;   // 商品 id
-  const isNowFav = !favIcon.classList.contains('fa-solid'); 
-  // ⬆️ 判斷目前是不是「空心」圖示，如果是，就要加入收藏；如果已經實心，就要取消收藏
+//   const pid = card.dataset.id;   // 商品 id
+//   const isNowFav = !favIcon.classList.contains('fa-solid'); 
+//   // ⬆️ 判斷目前是不是「空心」圖示，如果是，就要加入收藏；如果已經實心，就要取消收藏
 
-  // 樂觀更新：先切 icon
-  toggleIcon(favIcon, isNowFav);
+//   // 樂觀更新：先切 icon
+//   toggleIcon(favIcon, isNowFav);
 
-  try {
-    if (isNowFav) {
-      await backend.addFavorite(pid);   // 呼叫新增 API
-      Swal.fire({
-        title: '已加入收藏！',
-        iconHtml: '<i class="fa-solid fa-star" style="color:gold;font-size:2.5rem"></i>',
-        customClass: { icon: 'no-border' }
-      });
-    } else {
-      await backend.removeFavorite(pid); // 呼叫刪除 API
-      Swal.fire({
-        title: '已取消收藏',
-        iconHtml: '<i class="fa-regular fa-star" style="color:#999;font-size:2.5rem"></i>',
-        customClass: { icon: 'no-border' }
-      });
-    }
-  } catch (err) {
-    // API 失敗 → 還原 icon
-    toggleIcon(favIcon, !isNowFav);
-    Swal.fire({
-      title: '操作失敗',
-      text: '請稍後再試',
-      icon: 'error'
-    });
-  }
-});
+//   try {
+//     if (isNowFav) {
+//       await backend.addFavorite(pid);   // 呼叫新增 API
+//       Swal.fire({
+//         title: '已加入收藏！',
+//         iconHtml: '<i class="fa-solid fa-star" style="color:gold;font-size:2.5rem"></i>',
+//         customClass: { icon: 'no-border' }
+//       });
+//     } else {
+//       await backend.removeFavorite(pid); // 呼叫刪除 API
+//       Swal.fire({
+//         title: '已取消收藏',
+//         iconHtml: '<i class="fa-regular fa-star" style="color:#999;font-size:2.5rem"></i>',
+//         customClass: { icon: 'no-border' }
+//       });
+//     }
+//   } catch (err) {
+//     // API 失敗 → 還原 icon
+//     toggleIcon(favIcon, !isNowFav);
+//     Swal.fire({
+//       title: '操作失敗',
+//       text: '請稍後再試',
+//       icon: 'error'
+//     });
+//   }
+// });
 
 // TODO 學力銀行
 
