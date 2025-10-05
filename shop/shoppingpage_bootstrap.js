@@ -282,7 +282,6 @@ document.getElementById('image').addEventListener('change', function (e) {
 const wishpool = document.getElementById('wishpool');
 const backbtn1 = document.getElementById('back-btn1');
 const wishpoolbtn = document.getElementById('wishpoolbtn');
-const talkInterface = document.getElementById('talkInterface');
 wishpoolbtn.addEventListener('click', function(e){
   wishpool.style.display = 'block';
   console.log('hello');
@@ -844,6 +843,7 @@ function renderPagination() {
   }, { rootMargin:'0px 0px -60% 0px', threshold:0.2 });
   sections.forEach(sec => sec && observer.observe(sec));
 })();
+
 document.addEventListener("DOMContentLoaded", function () {
   const chatList = document.getElementById("chatList");
   const chatConversation = document.getElementById("chatConversation");
@@ -852,15 +852,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const sendBtn = document.getElementById("sendBtn");
   const messageInput = document.getElementById("messageInput");
   const chatBox = document.getElementById("chatBox");
-
+ if (!chatList || !chatConversation || !chatTargetName || !backToList || !sendBtn || !messageInput || !chatBox) {
+    console.warn("缺少必要的聊天介面元素");
+    return;
+  } else {
+    console.log("聊天介面元素載入完成");
+  }
   // 點擊聊天清單 → 進入對話
-  document.querySelectorAll(".chat-person").forEach(person => {
+  document.querySelectorAll(".person").forEach(person => {
     person.addEventListener("click", () => {
       const name = person.dataset.name || "未命名";
       chatTargetName.textContent = name;
       chatList.classList.add("d-none");
       chatConversation.classList.remove("d-none");
-
+      console.log(`開始與 ${name} 聊天`);
       // 預設假訊息
       chatBox.innerHTML = `
         <div class="message receiver">嗨！我是 ${name}</div>
