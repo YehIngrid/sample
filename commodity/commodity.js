@@ -390,3 +390,74 @@ document.addEventListener('DOMContentLoaded', () => {
   // 使用初始分類來載入商品
   changeCategory(initialCategory);
 });
+// 1. 獲取所有相關的 HTML 元素
+    const sortSelect = document.getElementById('sortSelect');
+    const minPriceInput = document.getElementById('minPriceInput');
+    const maxPriceInput = document.getElementById('maxPriceInput');
+    const filterButton = document.getElementById('filterButton');
+
+    // 獲取其他 select 元素（如果 HTML 中沒有指定 ID，這裡用 class 或其他方式獲取）
+    // 假設它們是按照順序排列的，我們可以通過其父 div 結構來獲取
+    const sortAndProductDiv = document.querySelector('.sortAndProductdiv');
+    const selectElements = sortAndProductDiv ? sortAndProductDiv.querySelectorAll('select') : [];
+
+    // 由於 HTML 中除了 sortSelect 外，其他 select 沒有 ID，我們需要依賴順序或更精確的選擇器
+    // 這裡使用陣列索引來獲取 '商品大小', '商品年齡', '商品狀態' 的 select
+    // sortSelect 是第一個
+    const sizeSelect = selectElements.length >= 2 ? selectElements[1] : null; // 第二個 select
+    const ageSelect = selectElements.length >= 3 ? selectElements[2] : null;  // 第三個 select
+    const conditionSelect = selectElements.length >= 4 ? selectElements[3] : null; // 第四個 select
+
+    // 2. 定義篩選函式
+    function applyFilters() {
+        // 獲取排序方式
+        const sortBy = sortSelect ? sortSelect.value : 'default';
+
+        // 獲取價格範圍
+        const minPrice = minPriceInput ? parseFloat(minPriceInput.value) || 0 : 0;
+        const maxPrice = maxPriceInput ? parseFloat(maxPriceInput.value) : Infinity; // 如果沒有輸入，則設為無限大
+
+        // 獲取商品大小
+        const size = sizeSelect ? sizeSelect.value : 'default';
+
+        // 獲取商品年齡
+        const age = ageSelect ? ageSelect.value : 'default';
+
+        // 獲取商品狀態
+        const condition = conditionSelect ? conditionSelect.value : 'default';
+
+        // --- 輸出所有篩選值 (用於測試) ---
+        console.log('--- 篩選參數 ---');
+        console.log('排序方式 (sortBy):', sortBy);
+        console.log('最低預算 (minPrice):', minPrice);
+        console.log('最高預算 (maxPrice):', maxPrice === Infinity ? '不限' : maxPrice);
+        console.log('商品大小 (size):', size);
+        console.log('商品年齡 (age):', age);
+        console.log('商品狀態 (condition):', condition);
+        console.log('------------------');
+
+        // --- 您可以在這裡加入真正的篩選和排序邏輯 ---
+        // 1. 檢查價格邏輯 (例如：最低預算不能大於最高預算)
+        if (minPrice > maxPrice) {
+            alert('最低預算不能高於最高預算！請重新輸入。');
+            return;
+        }
+
+        // 2. 呼叫後端 API 或執行前端資料篩選
+        // 例如: filterAndSortProducts(sortBy, minPrice, maxPrice, size, age, condition);
+
+        // 3. 更新 UI
+        // 例如: displayFilteredProducts(filteredProducts);
+    }
+
+    // 3. 綁定事件監聽
+    if (filterButton) {
+        filterButton.addEventListener('click', applyFilters);
+    } else {
+        console.error('找不到篩選按鈕 (filterButton)。請檢查 HTML ID。');
+    }
+
+    // 提示: 如果想在 select 或 input 變動時也觸發，可以這樣綁定：
+    // if (sortSelect) {
+    //     sortSelect.addEventListener('change', applyFilters);
+    // }
