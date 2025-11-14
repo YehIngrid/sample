@@ -409,14 +409,15 @@ function applyFilters(items) {
 
   // 新舊程度篩選（假設 p.newOrOld 是 1~6 的數字）
   if (newOrOld !== null) {
-    result = result.filter(p => p.newOrOld === newOrOld);
+    result = result.filter(p => p.newOrOld <= newOrOld);
   }
   if (sortselected === 'priceAsc') {
     result.sort((a, b) => a.price - b.price);
   } else if (sortselected === 'priceDesc') {
     result.sort((a, b) => b.price - a.price);
   }
-  console.log('篩選後的商品數量:', result.length);
+  const filterResultCountEl = document.getElementById('filterResultCount');
+  filterResultCountEl.textContent = `共找到 ${result.length} 件商品`;
   console.log('篩選後的商品:', result);
   return result;
 }
@@ -434,7 +435,7 @@ filterBtn.addEventListener('click', (e) => {
     const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
     const newOrOld = newOrOldInput.value !== 'default' ? newOrOldInput.value : null;
     let newOrOldMap = {
-      0:'全新',1:'稍新',2:'半新',3:'適中',4:'稍舊',5:'全舊',
+      1:'全新',2:'稍新',3:'半新',4:'適中',5:'稍舊',6:'全舊',
     };
     console.log('篩選條件:', { minPrice, maxPrice, newOrOld: newOrOld ? newOrOldMap[newOrOld] : null });
     // 在這裡可以根據篩選條件進行商品篩選
@@ -451,11 +452,11 @@ filterBtn.addEventListener('click', (e) => {
     else if (minPrice !== null) filterText += `最低接受價格: ${minPrice} 元`
     else if (maxPrice !== null) filterText += `最高接受價格: ${maxPrice} 元`
     else filterText += `未設定價格區間`; 
-    if (newOrOld !== null) filterText += `商品狀態: ${newOrOldMap[newOrOld]} `
+    if (newOrOld !== null) filterText += `最低可接受之商品狀態: ${newOrOldMap[newOrOld]} `
     else filterText += `未設定商品狀態`;
     filterAllEl.textContent = filterText;
 
-    const filterResultCountEl = document.getElementById('filterResultCount');
+    
     // 假設這裡有一個函式可以根據篩選條件取得符合的商品數量
     // 這裡暫時用一個假設的數字來示範
 
@@ -463,5 +464,4 @@ filterBtn.addEventListener('click', (e) => {
     pageIndex = 0;
     productRow.innerHTML = '';
     loadProducts();
-        // filterResultCountEl.textContent = `共找到 ${result.length} 件商品`;
 });
