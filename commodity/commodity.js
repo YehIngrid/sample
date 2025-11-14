@@ -406,6 +406,8 @@ const filterBtn = document.getElementById('filterBtn');
 filterBtn.addEventListener('click', (e) => {
     e.preventDefault();
     console.log('點擊篩選按鈕');
+    const sortselected = sortSelect.value;
+    console.log('選擇的分類:', sortselected);
     const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
     const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
     const size = sizeInput.value !== 'default' ? sizeInput.value : null;
