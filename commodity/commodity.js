@@ -406,18 +406,18 @@ const sortItems = document.querySelectorAll('.sort_item');
 const clearSubBtn = document.getElementById('clearSubBtn');
 const paginationEl = document.getElementById('pagination');
 
-// 新增：篩選器 DOM 元素
+// 篩選器 DOM 元素
 const sortSelect = document.getElementById('sortSelect');
 const minPriceInput = document.getElementById('minPriceInput');
 const maxPriceInput = document.getElementById('maxPriceInput');
 const filterButton = document.getElementById('filterButton');
-// 由於 HTML 中除了 sortSelect 外，其他 select 沒有 ID，我們需要依賴順序或更精確的選擇器
-// 最佳實踐是為所有您需要操作的元素都設定一個唯一的 ID
+
+// 由於 HTML 中除了 sortSelect 外，其他 select 沒有 ID，這裡依照順序獲取
 const sortAndProductDiv = document.querySelector('.sortAndProductdiv');
 const selectElements = sortAndProductDiv ? sortAndProductDiv.querySelectorAll('select') : [];
-const sizeSelect = selectElements.length >= 2 ? selectElements[1] : null; // 第二個 select (商品大小)
-const ageSelect = selectElements.length >= 3 ? selectElements[2] : null;  // 第三個 select (商品年齡)
-const conditionSelect = selectElements.length >= 4 ? selectElements[3] : null; // 第四個 select (商品狀態)
+const sizeSelect = selectElements.length >= 2 ? selectElements[1] : null;       // 第二個 select (商品大小)
+const ageSelect = selectElements.length >= 3 ? selectElements[2] : null;        // 第三個 select (商品年齡)
+const conditionSelect = selectElements.length >= 4 ? selectElements[3] : null;  // 第四個 select (商品狀態)
 
 // 範例：每個大分類對應的小分類
 const subcategories = {
@@ -467,48 +467,50 @@ const subcategoryIcons = {
         '運動用品': '../svg/sports.svg', 
         '其他': '../svg/mother.svg'
     }
-    // ... 其他分類照這樣寫
 };
 
-// ====== 篩選參數獲取函式 (新增) ======
+// ====== 篩選參數獲取函式 ======
 function getFilterParams() {
     // 獲取排序方式
     const sortBy = sortSelect ? sortSelect.value : 'default';
 
     // 獲取價格範圍
     const minPrice = minPriceInput ? parseFloat(minPriceInput.value) || 0 : 0;
-    const maxPrice = maxPriceInput ? parseFloat(maxPriceInput.value) : Infinity; // 如果沒有輸入，則設為無限大
+    const maxPrice = maxPriceInput ? parseFloat(maxPriceInput.value) : Infinity;
 
     // 獲取商品大小 (0:小型, 1:中型, 2:大型)
-    // 這裡我們需要將 value 轉為數字，'default' 為 null
     const sizeValue = sizeSelect ? sizeSelect.value : 'default';
-    const size = sizeValue !== 'default' ? parseInt(sizeValue) : null;
+    // 假設 size 欄位在商品物件上是數字 0/1/2
+    const size = sizeValue !== 'default' ? parseInt(sizeValue) : null; 
 
     // 獲取商品年齡 (0:全新, 1:1年內, 2:1-3年, 3:3年以上)
     const ageValue = ageSelect ? ageSelect.value : 'default';
+    // 假設 age 欄位在商品物件上是數字 0/1/2/3
     const age = ageValue !== 'default' ? parseInt(ageValue) : null;
 
-    // 獲取商品狀態 (0-5)
-    // 您的 HTML 標籤值是 0, 1, 2, 3, 4, 5，這裡假設商品物件上的 newOrOld 欄位也是這個範圍
+    // 獲取商品狀態 (前端 0-5 => API 1-6)
     const conditionValue = conditionSelect ? conditionSelect.value : 'default';
-    const condition = conditionValue !== 'default' ? parseInt(conditionValue) : null;
+    let condition = null;
+    if (conditionValue !== 'default') {
+        const value = parseInt(conditionValue);
+        // *** 修正：將前端 0-5 範圍轉換為 API 的 1-6 範圍 ***
+        condition = value + 1; 
+    }
     
     // 檢查價格邏輯
     if (minPrice > maxPrice) {
         alert('最低預算不能高於最高預算！請重新輸入。');
-        // 返回一個標記，表示參數無效，阻止後續篩選
         return { isValid: false };
     }
-
 
     return {
         isValid: true,
         sortBy,
         minPrice,
-        maxPrice: maxPrice === Infinity ? null : maxPrice, // 將 Infinity 轉為 null 方便後續處理或傳給 API
-        size, // null 或 0/1/2
-        age, // null 或 0/1/2/3
-        condition, // null 或 0/1/2/3/4/5
+        maxPrice: maxPrice === Infinity ? null : maxPrice,
+        size,       // null 或 0/1/2
+        age,        // null 或 0/1/2/3
+        condition,  // null 或 1-6
     };
 }
 
@@ -524,7 +526,7 @@ sortItems.forEach(el => {
     });
 });
 
-// 新增：篩選按鈕事件
+// 篩選按鈕事件
 if (filterButton) {
     filterButton.addEventListener('click', (e) => {
         e.preventDefault();
@@ -557,9 +559,8 @@ function changeCategory(category) {
     loadProducts();
 }
 
-// 控制側欄顯示/填入子分類 (此函式保持不變)
+// 控制側欄顯示/填入子分類
 function toggleAside(category) {
-    // ... (內容不變)
     if (category === 'all' || category == 'hot' || category == 'new') {
         asideEl.classList.add('d-none');
         document.getElementById('mobileSubCategoryIcons').innerHTML = '';
@@ -627,40 +628,36 @@ async function loadProducts() {
     // 輸出篩選參數（用於除錯）
     console.log('當前篩選參數:', filters);
     
-    // 由於您的後端 API (getHotItems, getNewItems, getAllCommodities) 似乎不支持直接傳入篩選條件，
-    // 因此我們仍然假設所有商品 (除 hot/new) 是由前端進行篩選和排序。
-
     try {
         let items = [];
-        const backendService = new BackendService();
+        // 假設 BackendService 類別在全域可用
+        const backendService = new BackendService(); 
         const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
 
-        // 處理熱門和最新商品
+        // 處理熱門和最新商品 (API 直接回傳)
         if (currentCategory === 'hot') {
             backendService.getHotItems(pagingInfo, (response => {
                 items = response?.data?.commodities || [];
-                // 這裡將篩選和渲染邏輯統一到 finishRender 內，讓 hot/new 也能套用篩選
                 finishRender(items, filters); 
             }), (errorMessage => {
-                console.log(errorMessage);
+                console.error("getHotItems 失敗:", errorMessage);
                 loaderEl.textContent = '載入失敗，請稍後重試';
                 isLoading = false;
             }))
-            return; // 結束 async 函式，等待 callback
+            return; 
         } else if (currentCategory === 'new') {
             backendService.getNewItems(pagingInfo, (response => {
                 items = response?.data?.commodities || [];
                 finishRender(items, filters);
             }), (errorMessage => {
-                console.log(errorMessage);
+                console.error("getNewItems 失敗:", errorMessage);
                 loaderEl.textContent = '載入失敗，請稍後重試';
                 isLoading = false;
             }))
-            return; // 結束 async 函式，等待 callback
+            return; 
         }
         
-        // 處理其他所有分類 (非 hot/new)
-        // 假設這個 API 獲取了 *所有* 商品，後續在前端篩選。
+        // 處理其他所有分類 (呼叫 getAllCommodities 後在前端篩選)
         const response = await backendService.getAllCommodities(pagingInfo);
         items = response.data?.commodities || [];
         finishRender(items, filters);
@@ -669,13 +666,14 @@ async function loadProducts() {
     } catch (err) {
         console.error('API 載入失敗', err);
         loaderEl.textContent = '載入失敗，請稍後重試';
-        isLoading = false;
+    } finally {
+        // 在 finishRender 內部會將 isLoading 設為 false，此處不需要
     }
 }
 
-
+// 整合篩選、排序、分頁和渲染
 function finishRender(items, filters) {
-    // 這裡我們將大/子分類的篩選也納入，確保無論從哪裡呼叫 finishRender 都能正確篩選
+    
     const categoryMap = {
         book: '書籍與學籍用品',
         life: '宿舍與生活用品',
@@ -689,19 +687,21 @@ function finishRender(items, filters) {
 
     // 1. 篩選大分類
     if (currentCategory !== 'all' && currentCategory !== 'hot' && currentCategory !== 'new') {
+        // 假設商品物件有 p.category 欄位（如 'book', 'life'）
         filteredItems = filteredItems.filter(p => categoryMap[p.category] === currentCategory);
     }
 
-    // 2. 篩選子分類（假設商品物件有 subCategory 欄位）
+    // 2. 篩選子分類
     if (currentSub) {
+        // 假設商品物件有 p.subCategory 欄位
         filteredItems = filteredItems.filter(p => p.subCategory === currentSub);
     }
     
-    // ====== 3. 篩選額外條件 (新增的核心邏輯) ======
+    // ====== 3. 篩選額外條件 (價格、大小、年齡、狀態) ======
 
     // 篩選價格
     filteredItems = filteredItems.filter(p => {
-        // 確保 p.price 是數字
+        // 確保 p.price 是數字型態
         const price = parseFloat(p.price); 
         const minOk = price >= filters.minPrice;
         const maxOk = filters.maxPrice === null || price <= filters.maxPrice;
@@ -710,23 +710,29 @@ function finishRender(items, filters) {
 
     // 篩選商品大小 (假設商品物件有 size 欄位，值為 0/1/2)
     if (filters.size !== null) {
-        filteredItems = filteredItems.filter(p => p.size === filters.size);
-    }
-
-    // 篩選商品年齡 (假設商品物件有 ageCategory 欄位，值為 0/1/2/3)
-    if (filters.age !== null) {
         filteredItems = filteredItems.filter(p => {
-            // 注意：這裡假設您的商品資料有一個 ageCategory 欄位來對應年齡選項 (0:全新, 1:1年內, 2:1-3年, 3:3年以上)
-            return p.ageCategory === filters.age; 
+            // p.size 欄位應是 0/1/2
+            return parseInt(p.size) === filters.size; 
         });
     }
 
-    // 篩選商品狀態 (假設商品物件有 newOrOld 欄位，值為 0-5)
-    if (filters.condition !== null) {
-        filteredItems = filteredItems.filter(p => p.newOrOld === filters.condition);
+    // 篩選商品年齡 (假設商品物件有 age 欄位，值為 0/1/2/3)
+    if (filters.age !== null) {
+        filteredItems = filteredItems.filter(p => {
+            // p.age 欄位應是 0/1/2/3
+            return parseInt(p.age) === filters.age; 
+        });
     }
 
-    // ====== 4. 執行排序 (新增的核心邏輯) ======
+    // 篩選商品狀態 (p.newOrOld 欄位，值為 API 範圍 1-6)
+    if (filters.condition !== null) {
+        filteredItems = filteredItems.filter(p => {
+            // filters.condition 已轉換為 1-6，與 p.newOrOld (1-6) 進行比較
+            return p.newOrOld === filters.condition;
+        });
+    }
+
+    // ====== 4. 執行排序 ======
 
     if (filters.sortBy !== 'default') {
         filteredItems.sort((a, b) => {
@@ -739,8 +745,7 @@ function finishRender(items, filters) {
                 case 'priceDesc':
                     return priceB - priceA;
                 case 'newest':
-                    // 假設商品物件有 createdAt/uploadTime 欄位可供排序
-                    // 這裡用一個假設的 'createdAt' 欄位，越新的時間值越大
+                    // 假設商品物件有 createdAt 欄位，用於最新排序
                     const dateA = new Date(a.createdAt || 0).getTime();
                     const dateB = new Date(b.createdAt || 0).getTime();
                     return dateB - dateA; // 降冪 (最新的在前面)
@@ -752,14 +757,10 @@ function finishRender(items, filters) {
     
     // ====== 5. 渲染分頁 ======
 
-    // 重新計算分頁數量
     const totalCount = filteredItems.length;
-
-    // 依 pageIndex 切出這一頁要顯示的商品
     const start = pageIndex * PAGE_SIZE;
     const pagedItems = filteredItems.slice(start, start + PAGE_SIZE);
 
-    // 清空後重新 render
     productRow.innerHTML = '';
     renderProductsBootstrap(pagedItems);
     renderPagination(totalCount);
@@ -768,18 +769,16 @@ function finishRender(items, filters) {
     isLoading = false;
 }
 
-// 使用 bootstrap row / col 來 render 商品 (此函式保持不變)
+// 使用 bootstrap row / col 來 render 商品
 function renderProductsBootstrap(items) {
     const frag = document.createDocumentFragment();
     const noProducts = document.getElementById('no-products');
 
     if (!items || items.length === 0) {
-        // 沒商品 → 顯示提示
         noProducts.style.display = 'block';
         return;
     }
 
-    // 有商品 → 隱藏無商品提示
     noProducts.style.display = 'none';
 
     items.forEach(p => {
@@ -793,11 +792,12 @@ function renderProductsBootstrap(items) {
             recycle: '環保生活用品',
             clean: '儲物與收納用品',
         };
+        // *** 修正：商品狀態映射為 API 回傳的 1-6 數值 ***
         const newOrOldMap = {
-            0:'全新',1:'稍新',2:'半新',3:'稍舊',4:'半舊',5:'全舊', // 這裡根據您的篩選 HTML option value 修正
+            1:'全新', 2:'稍新', 3:'半新', 4:'稍舊', 5:'半舊', 6:'全舊',
         };
         const category = categoryMap[p.category] ?? '其他';
-        const newOrOld = newOrOldMap[p.newOrOld] ?? '';
+        const newOrOld = newOrOldMap[p.newOrOld] ?? ''; // p.newOrOld 應該是 1-6
         col.innerHTML = `
             <div class="card h-100" style="cursor:pointer;" onclick="window.location.href='../product/product.html?id=${escapeHtml(p.id)}'">
                 ${p.mainImage ? `<img src="${escapeHtml(p.mainImage)}" class="card-img-top product-card-img" alt="${escapeHtml(p.name)}">` :
@@ -815,10 +815,10 @@ function renderProductsBootstrap(items) {
     });
     productRow.appendChild(frag);
 
-    // ... (購物車事件註釋保持不變)
+    // ... (加購物車事件註釋保持不變)
 }
 
-// escape HTML (此函式保持不變)
+// escape HTML
 function escapeHtml(str) {
     return String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -827,7 +827,7 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;');
 }
 
-// 分頁按鈕 (此函式保持不變)
+// 分頁按鈕
 function renderPagination(totalCount) {
     const totalPages = Math.ceil(totalCount / PAGE_SIZE);
     paginationEl.innerHTML = '';
@@ -871,7 +871,7 @@ function renderPagination(totalCount) {
     paginationEl.appendChild(nextBtn);
 }
 
-// 初始載入（此函式保持不變）
+// 初始載入
 document.addEventListener('DOMContentLoaded', () => {
     // 取得 URL 參數
     const urlParams = new URLSearchParams(window.location.search);
