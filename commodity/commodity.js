@@ -395,24 +395,18 @@ document.addEventListener('DOMContentLoaded', () => {
 function resetFilterInputs() {
     document.getElementById('minPriceInput').value = '';
     document.getElementById('maxPriceInput').value = '';
-    document.getElementById('sizeInput').value = 'default';
-    document.getElementById('ageInput').value = 'default';
     document.getElementById('new_or_oldInput').value = 'default';
 }
 function getFilterValues() {
     const sortselected = sortSelect.value;
     const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
     const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
-    const size = sizeInput.value !== 'default' ? sizeInput.value : null;
-    const age = ageInput.value !== 'default' ? ageInput.value : null;
     const newOrOld = newOrOldInput.value !== 'default' ? newOrOldInput.value : null;
-    return { sortselected, minPrice, maxPrice, size, age, newOrOld };
+    return { sortselected, minPrice, maxPrice, newOrOld };
 }
 function applyFilters(items) {
   const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
   const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
-  const size = sizeInput.value !== 'default' ? sizeInput.value : null;
-  const age = ageInput.value !== 'default' ? ageInput.value : null;
   const newOrOld = newOrOldInput.value !== 'default' ? parseInt(newOrOldInput.value) : null;
   const sortselected = sortSelect.value;
   let result = items;
@@ -425,16 +419,6 @@ function applyFilters(items) {
     result = result.filter(p => p.price <= maxPrice);
   }
 
-  // 商品大小篩選（假設 p.size 是字串）
-  if (size !== null) {
-    result = result.filter(p => p.size === size);
-  }
-
-  // 商品年齡篩選（假設 p.age 是字串）
-  if (age !== null) {
-    result = result.filter(p => p.age === age);
-  }
-
   // 新舊程度篩選（假設 p.newOrOld 是 1~6 的數字）
   if (newOrOld !== null) {
     result = result.filter(p => p.newOrOld === newOrOld);
@@ -444,14 +428,15 @@ function applyFilters(items) {
   } else if (sortselected === 'priceDesc') {
     result.sort((a, b) => b.price - a.price);
   }
+  console.log('篩選後的商品數量:', result.length);
+  console.log('篩選後的商品:', result);
   return result;
 }
 
 const sortSelect = document.getElementById('sortSelect');
 const minPriceInput = document.getElementById('minPriceInput');
 const maxPriceInput = document.getElementById('maxPriceInput');
-const sizeInput = document.getElementById('sizeInput');
-const ageInput = document.getElementById('ageInput');
+
 const newOrOldInput = document.getElementById('new_or_oldInput');
 const filterBtn = document.getElementById('filterBtn');
 filterBtn.addEventListener('click', (e) => {
@@ -459,26 +444,22 @@ filterBtn.addEventListener('click', (e) => {
     console.log('點擊篩選按鈕');
     const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
     const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
-    const size = sizeInput.value !== 'default' ? sizeInput.value : null;
-    const age = ageInput.value !== 'default' ? ageInput.value : null;
     const newOrOld = newOrOldInput.value !== 'default' ? newOrOldInput.value : null;
-    console.log('篩選條件:', { minPrice, maxPrice, size, age, newOrOld });
+    console.log('篩選條件:', { minPrice, maxPrice, newOrOld });
     // 在這裡可以根據篩選條件進行商品篩選
     const filterAllEl = document.getElementById('filterAll');
     let filterText = '';
     if (minPrice !== null && maxPrice !== null) filterText += `價格區間: ${minPrice} ~ ${maxPrice} 元`; 
-    if (size !== null) filterText += `商品大小: ${size} `;
-    if (age !== null) filterText += `商品年齡: ${age} `;
     if (newOrOld !== null) filterText += `商品狀態: ${newOrOld} `;
     filterAllEl.textContent = filterText || '無篩選條件';
 
     const filterResultCountEl = document.getElementById('filterResultCount');
     // 假設這裡有一個函式可以根據篩選條件取得符合的商品數量
     // 這裡暫時用一個假設的數字來示範
-    const filteredCount = Math.floor(Math.random() * 100); // 假設的商品數量
-    filterResultCountEl.textContent = `共找到 ${filteredCount} 件商品`;
+
     // 例如，重新載入商品並應用篩選條件
     pageIndex = 0;
     productRow.innerHTML = '';
     loadProducts();
+        // filterResultCountEl.textContent = `共找到 ${result.length} 件商品`;
 });
