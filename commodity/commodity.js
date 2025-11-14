@@ -391,19 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 使用初始分類來載入商品
   changeCategory(initialCategory);
 });
-// ====== 篩選功能 ======
-function resetFilterInputs() {
-    document.getElementById('minPriceInput').value = '';
-    document.getElementById('maxPriceInput').value = '';
-    document.getElementById('new_or_oldInput').value = 'default';
-}
-function getFilterValues() {
-    const sortselected = sortSelect.value;
-    const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
-    const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
-    const newOrOld = newOrOldInput.value !== 'default' ? newOrOldInput.value : null;
-    return { sortselected, minPrice, maxPrice, newOrOld };
-}
+
 function applyFilters(items) {
   const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
   const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
@@ -445,13 +433,27 @@ filterBtn.addEventListener('click', (e) => {
     const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
     const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
     const newOrOld = newOrOldInput.value !== 'default' ? newOrOldInput.value : null;
-    console.log('篩選條件:', { minPrice, maxPrice, newOrOld });
+    let newOrOldMap = {
+      0:'全新',1:'稍新',2:'半新',3:'適中',4:'稍舊',5:'全舊',
+    };
+    console.log('篩選條件:', { minPrice, maxPrice, newOrOld: newOrOld ? newOrOldMap[newOrOld] : null });
     // 在這裡可以根據篩選條件進行商品篩選
     const filterAllEl = document.getElementById('filterAll');
     let filterText = '';
-    if (minPrice !== null && maxPrice !== null) filterText += `價格區間: ${minPrice} ~ ${maxPrice} 元`; 
-    if (newOrOld !== null) filterText += `商品狀態: ${newOrOld} `;
-    filterAllEl.textContent = filterText || '無篩選條件';
+    if (sortSelect.value == 'priceDesc') {
+        filterText +=  `價格由高到低排序`;
+    } else if (sortSelect.value == 'priceAsc') {
+        filterText +=  `價格由低到高排序`;
+    } else {
+        filterText +=  `未設定商品排序`;
+    }
+    if (minPrice !== null && maxPrice !== null) filterText += `價格區間: ${minPrice} ~ ${maxPrice} 元`
+    else if (minPrice !== null) filterText += `最低接受價格: ${minPrice} 元`
+    else if (maxPrice !== null) filterText += `最高接受價格: ${maxPrice} 元`
+    else filterText += `未設定價格區間`; 
+    if (newOrOld !== null) filterText += `商品狀態: ${newOrOldMap[newOrOld]} `
+    else filterText += `未設定商品狀態`;
+    filterAllEl.textContent = filterText;
 
     const filterResultCountEl = document.getElementById('filterResultCount');
     // 假設這裡有一個函式可以根據篩選條件取得符合的商品數量
