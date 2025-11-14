@@ -168,7 +168,7 @@
       </div>
 
       <div class="cta-wrap d-sm-flex gap-3 mt-5 d-none">
-        <button class="btn flex-fill buybtn" type="button" style="width: 50%; margin-top: 10px; font-size: 1.2rem; color: rgb(36,182,133); background-color: rgb(199, 244, 229);">馬上下單</button>
+        <button class="btn flex-fill buybtn" type="button" onclick="orderNow(商品ID)" style="width: 50%; margin-top: 10px; font-size: 1.2rem; color: rgb(36,182,133); background-color: rgb(199, 244, 229);">馬上下單</button>
         <button class="btn flex-fill shopcart" type="button" style="width: 50%; margin-top: 10px; font-size: 1.2rem; background-color: #cadff5; color: #004b97;" >加入購物車</button>
       </div>
     </div>
@@ -266,13 +266,13 @@
 <!-- TODO sellerCommodities -->
 <div class="sellerCommodities">
   <h5 class="sellertopic">賣家其他商品</h5>
-  <div id="otherProducts" class="d-flex flex-wrap gap-4 justify-content-center">
+  <div id="otherProducts" class="d-flex flex-wrap gap-3">
     <!-- 其他商品卡片會由 JS 動態生成 -->
   </div>
 </div>
     </div>
   <div class="phonebuy d-flex d-sm-none fixed-bottom">
-    <button class="buy">直接下單</button>
+    <button class="buy" onclick="orderNow(商品ID)">直接下單</button>
     <button class="shopcart" onclick="">加入購物車</button>
   </div>
   </div>

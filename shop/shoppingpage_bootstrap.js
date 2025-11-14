@@ -282,12 +282,11 @@ document.getElementById('image').addEventListener('change', function (e) {
 const wishpool = document.getElementById('wishpool');
 const backbtn1 = document.getElementById('back-btn1');
 const wishpoolbtn = document.getElementById('wishpoolbtn');
-// const talkInterface = document.getElementById('talkInterface');
 wishpoolbtn.addEventListener('click', function(e){
   wishpool.style.display = 'block';
   console.log('hello');
   midcontent.style.display = 'none';
-  talkInterface.style.display = 'none';
+  // talkInterface.style.display = 'none';
 
   const startBtn   = document.getElementById('startWish');
   const backBtn    = document.getElementById('closeWishForm');
@@ -516,11 +515,11 @@ urgency.addEventListener('change', validateUrgency);
   });
   
 })
-backbtn1.addEventListener('click', function(e){
+backbtn1.addEventListener('click', function(){
   wishpool.style.display = 'none';
   console.log('hiii');
   midcontent.style.display = 'block';
-  talkInterface.style.display = 'block';
+  //talkInterface.style.display = 'block';
 })
 // TODO member
 // const member = document.getElementById('member');
@@ -757,43 +756,43 @@ function toggleIcon(iconEl, toFav) {
 }
 
 // 建立收藏按鈕事件
-favBtn.addEventListener('click', async (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+// favBtn.addEventListener('click', async (e) => {
+//   e.preventDefault();
+//   e.stopPropagation();
 
-  const pid = card.dataset.id;   // 商品 id
-  const isNowFav = !favIcon.classList.contains('fa-solid'); 
-  // ⬆️ 判斷目前是不是「空心」圖示，如果是，就要加入收藏；如果已經實心，就要取消收藏
+//   const pid = card.dataset.id;   // 商品 id
+//   const isNowFav = !favIcon.classList.contains('fa-solid'); 
+//   // ⬆️ 判斷目前是不是「空心」圖示，如果是，就要加入收藏；如果已經實心，就要取消收藏
 
-  // 樂觀更新：先切 icon
-  toggleIcon(favIcon, isNowFav);
+//   // 樂觀更新：先切 icon
+//   toggleIcon(favIcon, isNowFav);
 
-  try {
-    if (isNowFav) {
-      await backend.addFavorite(pid);   // 呼叫新增 API
-      Swal.fire({
-        title: '已加入收藏！',
-        iconHtml: '<i class="fa-solid fa-star" style="color:gold;font-size:2.5rem"></i>',
-        customClass: { icon: 'no-border' }
-      });
-    } else {
-      await backend.removeFavorite(pid); // 呼叫刪除 API
-      Swal.fire({
-        title: '已取消收藏',
-        iconHtml: '<i class="fa-regular fa-star" style="color:#999;font-size:2.5rem"></i>',
-        customClass: { icon: 'no-border' }
-      });
-    }
-  } catch (err) {
-    // API 失敗 → 還原 icon
-    toggleIcon(favIcon, !isNowFav);
-    Swal.fire({
-      title: '操作失敗',
-      text: '請稍後再試',
-      icon: 'error'
-    });
-  }
-});
+//   try {
+//     if (isNowFav) {
+//       await backend.addFavorite(pid);   // 呼叫新增 API
+//       Swal.fire({
+//         title: '已加入收藏！',
+//         iconHtml: '<i class="fa-solid fa-star" style="color:gold;font-size:2.5rem"></i>',
+//         customClass: { icon: 'no-border' }
+//       });
+//     } else {
+//       await backend.removeFavorite(pid); // 呼叫刪除 API
+//       Swal.fire({
+//         title: '已取消收藏',
+//         iconHtml: '<i class="fa-regular fa-star" style="color:#999;font-size:2.5rem"></i>',
+//         customClass: { icon: 'no-border' }
+//       });
+//     }
+//   } catch (err) {
+//     // API 失敗 → 還原 icon
+//     toggleIcon(favIcon, !isNowFav);
+//     Swal.fire({
+//       title: '操作失敗',
+//       text: '請稍後再試',
+//       icon: 'error'
+//     });
+//   }
+// });
 
 // TODO 學力銀行
 
@@ -844,3 +843,60 @@ function renderPagination() {
   }, { rootMargin:'0px 0px -60% 0px', threshold:0.2 });
   sections.forEach(sec => sec && observer.observe(sec));
 })();
+
+document.addEventListener("DOMContentLoaded", function () {
+  const chatList = document.getElementById("chatList");
+  const chatConversation = document.getElementById("chatConversation");
+  const chatTargetName = document.getElementById("chatTargetName");
+  const backToList = document.getElementById("backToList");
+  const sendBtn = document.getElementById("sendBtn");
+  const messageInput = document.getElementById("messageInput");
+  const chatBox = document.getElementById("chatBox");
+ if (!chatList || !chatConversation || !chatTargetName || !backToList || !sendBtn || !messageInput || !chatBox) {
+    console.warn("缺少必要的聊天介面元素");
+    return;
+  } else {
+    console.log("聊天介面元素載入完成");
+  }
+  // 點擊聊天清單 → 進入對話
+  document.querySelectorAll(".person").forEach(person => {
+    person.addEventListener("click", () => {
+      const name = person.dataset.name || "未命名";
+      chatTargetName.textContent = name;
+      chatList.classList.add("d-none");
+      chatConversation.classList.remove("d-none");
+      console.log(`開始與 ${name} 聊天`);
+      // 預設假訊息
+      chatBox.innerHTML = `
+        <div class="message receiver">嗨！我是 ${name}</div>
+        <div class="timestamp">${new Date().toLocaleString()}</div>
+      `;
+    });
+  });
+
+  // 返回清單
+  backToList.addEventListener("click", () => {
+    chatConversation.classList.add("d-none");
+    chatList.classList.remove("d-none");
+  });
+
+  // 送出訊息
+  sendBtn.addEventListener("click", () => {
+    const msg = messageInput.value.trim();
+    if (!msg) return;
+
+    const msgDiv = document.createElement("div");
+    msgDiv.classList.add("message", "sender");
+    msgDiv.textContent = msg;
+
+    const timeDiv = document.createElement("div");
+    timeDiv.classList.add("timestamp");
+    timeDiv.textContent = new Date().toLocaleTimeString();
+
+    chatBox.appendChild(msgDiv);
+    chatBox.appendChild(timeDiv);
+
+    messageInput.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight; // 自動捲到底
+  });
+});

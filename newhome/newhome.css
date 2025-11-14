@@ -150,7 +150,7 @@ border: 1.5px solid #fff
     margin-bottom: 2rem;
     font-family: 'TimeMachine';
 }
-.titlecenter h2 {
+.titlecenter h4 {
     font-size: 1.5rem;
     color: #fff;
     margin-bottom: 1rem;
@@ -287,7 +287,6 @@ border: 1.5px solid #fff
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 2px solid rgba(54, 137, 247, 0.2);
 }
 .service h3 {
     font-size: 1.4rem;
@@ -412,8 +411,8 @@ right: 0;
     .titlecenter h1 {
         font-size: 2.1rem;
     }
-    .titlecenter h2 {
-        font-size: 1.6rem;
+    .titlecenter h4 {
+        font-size: 1rem;
         margin-left: 20px;
         margin-right: 20px;
     }

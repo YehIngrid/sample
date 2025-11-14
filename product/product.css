@@ -1,5 +1,7 @@
 
-  
+.centerseller {
+  margin-left: 20px;
+}
   .product-container {
     max-width: 80vw;
     margin: auto;
@@ -169,7 +171,6 @@
     
 }
   .mix img{
-    max-width: 220px;
     padding: 5px;
     margin: 0 auto;
   }
@@ -495,6 +496,7 @@
     margin: 0 auto;
     margin-bottom: 20px;
   }
+  
 }
 .sellerphoto {
   width: 180px;              /* 想要的大小 */
@@ -558,11 +560,15 @@
         flex-direction: column;
         gap: .5rem;
       }
+      
     }
     @media (max-width: 767.98px) {
       .thumbnail-list {
         display: flex;           /* 手機：縮圖改成橫向一排 */
         gap: .5rem;
+      }
+      .rate {
+        margin-top: 20px;
       }
     }
 
@@ -579,4 +585,8 @@
   font-weight: 600;
   margin-bottom: 15px;
   margin-top: 30px;
+}
+.otherimg {
+  width: 120px;
+  height: 120px;
 }
