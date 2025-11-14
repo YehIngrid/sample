@@ -421,7 +421,22 @@ function applyFilters(items) {
   console.log('篩選後的商品:', result);
   return result;
 }
-
+function clearFilters() {
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    newOrOldInput.value = 'default';
+    sortSelect.value = 'default';
+    pageIndex = 0;
+    productRow.innerHTML = '';
+    document.getElementById('filterAll').textContent = '';
+    loadProducts();
+}
+const cleanFilterBtn = document.getElementById('cleanFilter');
+cleanFilterBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    console.log('點擊清除篩選按鈕');
+    clearFilters();
+});
 const sortSelect = document.getElementById('sortSelect');
 const minPriceInput = document.getElementById('minPriceInput');
 const maxPriceInput = document.getElementById('maxPriceInput');
