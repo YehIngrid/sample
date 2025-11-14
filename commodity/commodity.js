@@ -390,3 +390,30 @@ document.addEventListener('DOMContentLoaded', () => {
   // 使用初始分類來載入商品
   changeCategory(initialCategory);
 });
+const sortSelect = document.getElementById('sortSelect');
+// if (sortSelect) {
+//   sortSelect.addEventListener('change', (e) => {
+//     const selectedCategory = e.target.value;
+//     changeCategory(selectedCategory);
+//   });
+// }
+const minPriceInput = document.getElementById('minPriceInput');
+const maxPriceInput = document.getElementById('maxPriceInput');
+const sizeInput = document.getElementById('sizeInput');
+const ageInput = document.getElementById('ageInput');
+const newOrOldInput = document.getElementById('new_or_oldInput');
+const filterBtn = document.getElementById('filterBtn');
+filterBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
+    const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
+    const size = sizeInput.value !== 'default' ? sizeInput.value : null;
+    const age = ageInput.value !== 'default' ? ageInput.value : null;
+    const newOrOld = newOrOldInput.value !== 'default' ? newOrOldInput.value : null;
+    console.log('篩選條件:', { minPrice, maxPrice, size, age, newOrOld });
+    // 在這裡可以根據篩選條件進行商品篩選
+    // 例如，重新載入商品並應用篩選條件
+    pageIndex = 0;
+    productRow.innerHTML = '';
+    loadProducts();
+});
