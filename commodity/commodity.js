@@ -417,7 +417,7 @@ function applyFilters(items) {
     result.sort((a, b) => b.price - a.price);
   }
   const filterResultCountEl = document.getElementById('filterResultCount');
-  filterResultCountEl.textContent = `共找到 ${result.length} 件商品`;
+  filterResultCountEl.textContent = `共 ${result.length} 件商品`;
   console.log('篩選後的商品:', result);
   return result;
 }
