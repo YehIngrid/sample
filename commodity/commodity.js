@@ -405,6 +405,7 @@ const newOrOldInput = document.getElementById('new_or_oldInput');
 const filterBtn = document.getElementById('filterBtn');
 filterBtn.addEventListener('click', (e) => {
     e.preventDefault();
+    console.log('點擊篩選按鈕');
     const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
     const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
     const size = sizeInput.value !== 'default' ? sizeInput.value : null;
