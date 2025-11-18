@@ -74,6 +74,18 @@ input::placeholder {
   margin-bottom: -3px;
   border-radius: 0 !important;
 }
+.form-resettpass input[type="password"] {
+  margin-bottom: -1px;
+  border-top-left-radius: 5px !important;
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+.form-resetbpass input[type="password"] {
+  margin-bottom: -3px;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
 .form-signpass input[type="text"] {
   margin-bottom: -3px;
   border-radius: 0 !important;
@@ -83,8 +95,17 @@ input::placeholder {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
+.form-forgetemail input[type="email"]{
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  margin-bottom: 10px;
+}
 .signbtn{
   margin-top: 6vh !important;
+  margin-bottom: 2vh !important;
+}
+.forgetbtn{
+  margin-top: 1vh !important;
   margin-bottom: 2vh !important;
 }
 .remind {
@@ -92,6 +113,13 @@ input::placeholder {
   text-align: left;
   margin-left: 8px;
   margin-right: 8px;
+}
+.remindForget {
+  color: #004b97;
+  text-align: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 18px;
 }
 .checkalert {
   font-size: 20px;

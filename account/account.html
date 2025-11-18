@@ -125,15 +125,58 @@
                   </div>
                   <button type="submit" id="send" class="css-button-gradient--4">登入</button>
                   <br>
-                  
-                  <a href="#" class="p">忘記密碼？</a>
-                  
+                  <a href="#" class="p" id="forgetPasswordbtn">忘記密碼？</a>
                 </form>
                 <p class="p"><br>
                   還沒有加入拾貨寶庫的會員嗎？<a id="signupLink" href="#">快速註冊</a>
                 </p>
               </div>
             </div>
+            <!-- TODO forgetpwdpage1 -->
+            <div id="forgetpwdpage" class="signuppage d-none">
+              <div id="forgetpwdModal" class="modalwhat glass-card" >
+                <form id="forgetpwdForm">
+                  <a class="backlogin" id="forgetBacklogin">返回登入頁</a>
+                  <h2 style="margin-bottom: 18px;">重設密碼<br></h2>
+                  <div class="form-floating form-forgetemail">
+                  <input class="form-control" type="email" id="forgetemail" placeholder="請輸入您的帳號電子郵件">
+                  <label for="floatingInput">請輸入您的帳號電子郵件</label>
+                  </div>
+                  <p class="remindForget">請輸入您的 Email，我們會寄送重設密碼的連結，如果該 Email 已註冊，我們會寄送信件。</p>
+                  <button type="submit" id="forgetSendbtn" class="forgetbtn css-button-gradient--4">送出</button>
+                </form>
+              </div>
+            </div>
+            <!-- TODO get the 驗證碼 page2 -->
+            <!-- TODO reset password page3 -->
+            <div id="resetpwdpage" class="signuppage d-none">
+              <div id="resetpwdModal" class="modalwhat glass-card" >
+                <form id="resetpwdForm">
+                  <h2>設定您的新密碼<br><br></h2>
+                  <div class="form-floating form-resettpass">
+                  <input class="form-control" type="password" id="password1" placeholder="請輸入至少8位英數字混合密碼">
+                  <label for="floatingPassword" class="p">設定您的密碼，至少 8 位英數字混合</label>
+                  </div>
+                  <div class="form-floating form-resetbpass">
+                  <input class="form-control" type="password" id="password2" placeholder="請再次輸入密碼">
+                  <label for="floatingPassword" class="p">請再次輸入密碼</label>
+                  </div>
+                  <button type="submit" id="resetbtn" class="signbtn css-button-gradient--4">重設新密碼</button>
+                </form>
+              </div>
+            </div>
+            <!-- TODO reset success page4 -->
+            <div id="resetsuccesspage" class="signuppage d-none">
+              <div id="resetsuccessModal" class="modalwhat glass-card" >
+                <form id="resetsuccessForm">
+                  <h2>密碼重設成功！<br></h2>
+                  <i class="fa-regular fa-circle-check" style="color: #28a745; font-size: 4rem; margin-top: 10px;margin-bottom: 15px;"></i>
+                  <p class="resetSuccessRemind">您的密碼已成功重設，請使用新密碼登入。</p>
+                  <button type="submit" id="resetSuccessBackLogin" class="checkBackbtn css-button-gradient--4">返回登入頁</button>
+                </form>
+              </div>
+            </div>
+            <!-- TODO signup page -->
             <div id="signuppage" class="signuppage d-none">
               <div id="signupModal" class="modalwhat glass-card" >
                 <form id="signupForm">
