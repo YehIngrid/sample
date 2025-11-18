@@ -84,9 +84,29 @@ input::placeholder {
   border-top-left-radius: 0;
 }
 .signbtn{
-  margin-top: 8vh !important;
-  margin-bottom: 4vh !important;
-
+  margin-top: 6vh !important;
+  margin-bottom: 2vh !important;
+}
+.remind {
+  color: #004b97;
+  text-align: left;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.checkalert {
+  font-size: 20px;
+  color: orangered;
+  text-align: center;
+}
+.checkRemind {
+  color: black;
+  text-align: left;
+  margin-left: 16px;
+  margin-right: 13px;
+}
+.checkBackbtn {
+  margin-top: 1vh !important;
+  margin-bottom: 2vh !important;
 }
 .policy{
   color: #b1b1b1;

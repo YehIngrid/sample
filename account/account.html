@@ -124,7 +124,7 @@
                     <label for="floatingPassword">請輸入密碼</label>
                   </div>
                   <div class="d-flex align-items-center mt-3 mb-2">
-                    <input type="checkbox" id="rememberMe" style="margin-left: 10px;"><span style=" margin-left: 10px;">記住我</span> 
+                    <input type="checkbox" id="rememberMe" style="margin-left: 10px;"><span style=" margin-left: 10px;">記住我的帳號</span> 
                   </div>
                   <button type="submit" id="send" class="css-button-gradient--4">登入</button>
                   <br>
@@ -148,7 +148,7 @@
                   </div>
                   <div class="form-floating form-signpass">
                   <input class="form-control" type="password" id="password1" placeholder="請輸入至少6位以上">
-                  <label for="floatingPassword" class="p">設定您的密碼，至少6位英數字混合</label>
+                  <label for="floatingPassword" class="p">設定您的密碼，至少 8 位英數字混合</label>
                   </div>
                   <div class="form-floating form-signpass">
                   <input class="form-control" type="password" id="password2" placeholder="請再次輸入密碼">
@@ -159,7 +159,18 @@
                   <label for="floatingInput" >請輸入您的暱稱</label>
                   </div>
                   <button type="submit" id="sign" class="signbtn css-button-gradient--4">註冊</button>
+                  <p class="remind">註冊帳號後系統將會傳送認證連結至註冊帳號，請點擊郵件連結即可成功開通帳號，開通帳號後即可登入。</p>
                   <p class="policy">註冊即表示您同意<a>服務條款</a>與<a href="../policy/policy.html">隱私權政策</a></p>
+                </form>
+              </div>
+            </div>
+            <div id="checkEmailPage" class="signuppage d-none">
+              <div id="checkModal" class="modalwhat glass-card" >
+                <form id="checkForm">
+                  <h2>請確認信箱有無認證信<br></h2>
+                  <p class="checkalert">請在一天內點擊認證連結</p>
+                  <p class="checkRemind">註冊帳號後系統將會傳送認證連結至註冊帳號，請點擊郵件連結即可成功開通帳號，開通帳號後即可登入。</p>
+                  <button type="submit" id="checkBackLogin" class="checkBackbtn css-button-gradient--4">我瞭解了，返回登入頁</button>
                 </form>
               </div>
             </div>

@@ -12,12 +12,14 @@ async function callSignUp() {
   const passwordInput1 = document.getElementById('password1');
   const passwordInput2 = document.getElementById('password2');
   const nameInput = document.getElementById('name');
+  const checkBackLogin = document.getElementById('checkBackLogin');
+  const checkEmailPage = document.getElementById('checkEmailPage');
 
-  // 密碼格式：至少 6 碼，含英數
+  // 密碼格式：至少 8 碼，含英數
   const pwd = passwordInput1.value.trim();
-  const isValid = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/.test(pwd);
+  const isValid = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(pwd);
   if (!isValid) {
-    Swal.fire({ title: "密碼不符合最低要求", icon: "warning", text: "密碼需至少6位，且同時包含英文字母與數字" });
+    Swal.fire({ title: "密碼不符合最低要求", icon: "warning", text: "密碼需至少8位，且同時包含英文字母與數字" });
     return;
   }
 
@@ -43,16 +45,14 @@ async function callSignUp() {
     const resp = await backendService.signup(payload); // <— 用 resp
     console.log("回傳資料：", resp.data);
 
-    await Swal.fire({
-      icon: "success",
-      title: "帳號註冊成功",
-      showConfirmButton: false,
-      footer: "即將返回登入頁面",
-      timer: 2100
+    checkEmailPage.classList.remove('d-none');
+    checkBackLogin.addEventListener('click', function(e){
+      e.preventDefault();
+      window.location.href = "account.html";
     });
 
-    // 導回登入頁
-    window.location.href = "account.html";
+    // // 導回登入頁
+    // window.location.href = "account.html";
   } catch (e) {
     // 這裡的 e 會是 BackendService.signup() 丟出的 Error("此帳號已被註冊") 等
     console.log("回傳錯誤：", e.message);
