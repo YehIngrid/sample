@@ -7,6 +7,7 @@ window.onload = function() {
     content.style.setProperty('display', 'block', 'important');
   }
 };
+const signuppage = document.getElementById('signuppage');
 async function callSignUp() {
   const emailInput = document.getElementById('email');
   const passwordInput1 = document.getElementById('password1');
@@ -46,6 +47,7 @@ async function callSignUp() {
     console.log("回傳資料：", resp.data);
 
     checkEmailPage.classList.remove('d-none');
+    signuppage.classList.add('d-none');
     checkBackLogin.addEventListener('click', function(e){
       e.preventDefault();
       window.location.href = "account.html";
@@ -156,7 +158,7 @@ loginbtn.addEventListener('click', function(e){
   //TODO : 切換登入與註冊頁面
   const signup = document.getElementById('signupLink');
   const backlogin = document.getElementById('backlogin');
-  const signuppage = document.getElementById('signuppage');
+  
   const loginpage = document.getElementById('loginModal');
   signup.addEventListener('click', function(e){
   
