@@ -286,8 +286,8 @@ forgetSendBtn.addEventListener("click", function(e) {
 
 
 const resetpwdpage = document.getElementById("resetpwdpage");
-const checkBackLogin = document.getElementById("checkBackLogin");
-checkBackLogin.addEventListener("click", function (e) {
+const checkBackLogin1 = document.getElementById("checkBackLogin1");
+checkBackLogin1.addEventListener("click", function (e) {
   e.preventDefault();
   // 隱藏 getLinkPage、顯示 resetpwdpage
   document.getElementById("getLinkPage").classList.add("d-none");
@@ -327,3 +327,63 @@ document.querySelectorAll(".pwd").forEach((pwd) => {
     }, 300);
   });
 });
+// // TODO 檢查重設密碼電子郵件寄信 + function
+// const forgetemailInput = document.getElementById("forgetemail");
+// const backendService = new BackendService();
+// async function sendResetEmail() {
+//   const email = forgetemailInput.value.trim();
+//   if (!email) {
+//     Swal.fire({ title: "請輸入電子郵件地址", icon: "warning" });
+//     return;
+//   }
+//   try {
+//     const resp = await backendService.sendResetPasswordEmail({ email });
+//     console.log("回傳資料：", resp.data);
+//   } catch (e) {
+//     console.log("回傳錯誤：", e.message);
+//     Swal.fire({
+//       icon: "error",
+//       title: "Oops...",
+//       text: e.message || "系統發生錯誤，請稍後再試"
+//     });
+//   }
+// }
+// // TODO 重設密碼功能 + function
+// const newPassword1Input = document.getElementById("newPassword1");
+// const newPassword2Input = document.getElementById("newPassword2");
+// async function resetPassword() {
+//   const newPassword1 = newPassword1Input.value;
+//   const newPassword2 = newPassword2Input.value;
+//   // 密碼格式：至少 8 碼，含英數
+//   const isValid = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(newPassword1);
+//   if (!isValid) {
+//     Swal.fire({ title: "密碼不符合最低要求", icon: "warning", text: "密碼需至少8位，且同時包含英文字母與數字" });
+//     return;
+//   }
+//   if (newPassword1 !== newPassword2) {
+//     Swal.fire({ title: "密碼輸入不一致", icon: "warning" });
+//     return;
+//   }
+//   try {
+//     const resp = await backendService.resetPassword({ newPassword: newPassword1 });
+//     console.log("回傳資料：", resp.data);
+//   } catch (e) {
+//     console.log("回傳錯誤：", e.message);
+//     Swal.fire({
+//       icon: "error",
+//       title: "Oops...",
+//       text: e.message || "系統發生錯誤，請稍後再試"
+//     });
+//   }
+// }
+// const resetpwdForm = document.getElementById("resetpwdForm");
+// resetpwdForm.addEventListener("submit", function (e) {
+//   e.preventDefault();
+//   resetPassword();
+// });
+// // TODO 發送重設密碼郵件功能按鈕
+// const forgetSendbtn = document.getElementById("forgetSendbtn");
+// forgetSendbtn.addEventListener("click", function (e) {
+//   e.preventDefault();
+//   sendResetEmail();
+// });
