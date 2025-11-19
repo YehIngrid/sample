@@ -181,3 +181,149 @@ loginbtn.addEventListener('click', function(e){
     });
   }
   window.addEventListener('scroll', handleScroll);
+const forgetPasswordbtn = document.getElementById("forgetPasswordbtn");
+forgetPasswordbtn.addEventListener("click", function (e) {
+  e.preventDefault();
+  // 隱藏 loginpage、顯示 forgetpwdpage
+  document.getElementById("loginModal").classList.add("d-none");
+  document.getElementById("forgetpwdpage").classList.remove("d-none");
+});
+const forgetBacklogin = document.getElementById("forgetBacklogin");
+forgetBacklogin.addEventListener("click", function (e) {
+  e.preventDefault();
+  // 隱藏 forgetpwdpage、顯示 loginpage
+  document.getElementById("forgetpwdpage").classList.add("d-none");
+  document.getElementById("loginModal").classList.remove("d-none");
+});
+// TODO timer 5 minute
+let countdownTimer = null;
+let endTime = null;
+let counting = false;   // 是否正在計時
+let finished = false;   // 是否已經結束（避免 alert 無限跳）
+
+function startCountdown() {
+  counting = true;
+  finished = false;
+
+  // 5 分鐘後的時間
+  endTime = Date.now() + 300000;
+
+  updateCountdown();
+
+  countdownTimer = setInterval(updateCountdown, 200);
+}
+
+function updateCountdown() {
+  // 如果不在計時狀態，直接停止
+  if (!counting) return;
+
+  const timerEl = document.getElementById("timer");
+  if (!timerEl) return; // 該區塊不在畫面上 → 自動停止
+
+  const diff = endTime - Date.now();
+
+  // 計時到了
+  if (diff <= 0) {
+    finishCountdown();
+    return;
+  }
+
+  // 顯示剩餘時間
+  const sec = Math.floor(diff / 1000);
+  const min = String(Math.floor(sec / 60)).padStart(2, '0');
+  const s = String(sec % 60).padStart(2, '0');
+  timerEl.textContent = `${min}:${s}`;
+}
+
+function finishCountdown() {
+  if (finished) return; // 已經 alert 過了 → 不要再跳
+
+  finished = true;
+  counting = false;
+
+  clearInterval(countdownTimer);
+  countdownTimer = null;
+
+  // 顯示 00:00
+  const timerEl = document.getElementById("timer");
+  if (timerEl) timerEl.textContent = "00:00";
+
+    Swal.fire({
+    title: "Oops...",
+    text: "驗證連結已過期，請重新申請。",
+    icon: "warning",
+  }).then (() => {
+    // 倒數結束後，返回登入頁
+    document.getElementById("getLinkPage").classList.add("d-none");
+    document.getElementById("loginModal").classList.remove("d-none");
+  });
+}
+
+// 🔥 監聽頁面區塊是否被隱藏
+const observer = new MutationObserver(() => {
+  const page = document.getElementById("getLinkPage");
+  if (!page || page.classList.contains("d-none")) {
+    // 被隱藏 → 停止倒數
+    counting = false;
+    clearInterval(countdownTimer);
+    countdownTimer = null;
+  }
+});
+
+// 偵測 getLinkPage 的 d-none
+observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+const forgetSendBtn = document.getElementById("forgetSendbtn");
+forgetSendBtn.addEventListener("click", function(e) {
+  e.preventDefault();
+
+  // 切換畫面
+  document.getElementById("forgetpwdpage").classList.add("d-none");
+  document.getElementById("getLinkPage").classList.remove("d-none");
+
+  // 開始倒數
+  startCountdown();
+});
+
+
+const resetpwdpage = document.getElementById("resetpwdpage");
+const checkBackLogin = document.getElementById("checkBackLogin");
+checkBackLogin.addEventListener("click", function (e) {
+  e.preventDefault();
+  // 隱藏 getLinkPage、顯示 resetpwdpage
+  document.getElementById("getLinkPage").classList.add("d-none");
+  document.getElementById("resetpwdpage").classList.remove("d-none");
+  // 停止倒數
+  clearInterval(countdown);
+});
+const resetsuccesspage = document.getElementById("resetsuccesspage");
+const resetpwdbtn = document.getElementById("resetbtn");
+resetpwdbtn.addEventListener("click", function (e) {
+  e.preventDefault();
+  // 隱藏 resetpwdpage、顯示 resetsuccesspage
+  document.getElementById("resetpwdpage").classList.add("d-none");
+  document.getElementById("resetsuccesspage").classList.remove("d-none");
+});
+const resetsuccessBackLogin = document.getElementById("resetSuccessBackLogin");
+resetsuccessBackLogin.addEventListener("click", function (e) {
+  e.preventDefault();
+  // 隱藏 resetsuccesspage、顯示 loginpage
+  document.getElementById("resetsuccesspage").classList.add("d-none");
+  document.getElementById("loginModal").classList.remove("d-none");
+});
+// TODO 密碼顯示1秒後隱藏功能
+let timer;
+
+document.querySelectorAll(".pwd").forEach((pwd) => {
+  pwd.addEventListener("input", function () {
+    // 顯示明碼
+    pwd.type = "text";
+
+    // 清掉前一個計時器
+    clearTimeout(timer);
+
+    // 1 秒後恢復 password
+    timer = setTimeout(() => {
+      pwd.type = "password";
+    }, 300);
+  });
+});

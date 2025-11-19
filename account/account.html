@@ -6,8 +6,8 @@
         <!-- meta部分 -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
-        <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
+        <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集 | 帳戶登入"/>
+        <meta name="keywords" content="拾獲寶庫、拾貨寶庫、拾貨寶庫登入、中興二手"/>
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
         <!-- link部分 -->
         <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
@@ -118,7 +118,7 @@
                   </div>
                   <br>
                   <div class="form-floating">
-                    <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password">
+                    <input type="password" class="pwd form-control form-control-lg" id="floatingPassword" placeholder="Password">
                     <label for="floatingPassword">請輸入密碼</label>
                   </div>
                   <button type="submit" id="send" class="css-button-gradient--4">登入</button>
@@ -141,22 +141,33 @@
                   <label for="floatingInput">請輸入您的帳號電子郵件</label>
                   </div>
                   <p class="remindForget">請輸入您的 Email，我們會寄送重設密碼的連結，如果該 Email 已註冊，我們會寄送信件。</p>
-                  <button type="submit" id="forgetSendbtn" class="forgetbtn css-button-gradient--4">送出</button>
+                  <button type="submit" onclick="startCountdown()" id="forgetSendbtn" class="forgetbtn css-button-gradient--4">送出</button>
                 </form>
               </div>
             </div>
             <!-- TODO get the 驗證碼 page2 -->
+            <div id="getLinkPage" class="signuppage d-none">
+              <div id="getLinkModal" class="modalwhat glass-card" >
+                <form id="getLinkForm">
+                  <h3>請點擊信箱重設密碼連結<br></h3>
+                  <h2 id="timer" class="display-4 fw-bold">05:00</h2>
+                  <p class="linkalert">請在 5 分鐘內點擊重設密碼連結</p>
+                  <p class="checkRemind">點擊連結後才可進到下一步驟，重設密碼。</p>
+                  <button type="submit" id="checkBackLogin" class="checkBackbtn css-button-gradient--4">我已點擊郵件連結，下一步</button>
+                </form>
+              </div>
+            </div>
             <!-- TODO reset password page3 -->
             <div id="resetpwdpage" class="signuppage d-none">
               <div id="resetpwdModal" class="modalwhat glass-card" >
                 <form id="resetpwdForm">
                   <h2>設定您的新密碼<br><br></h2>
                   <div class="form-floating form-resettpass">
-                  <input class="form-control" type="password" id="password1" placeholder="請輸入至少8位英數字混合密碼">
+                  <input class="pwd form-control" type="password" id="newPwd1" placeholder="請輸入至少8位英數字混合密碼">
                   <label for="floatingPassword" class="p">設定您的密碼，至少 8 位英數字混合</label>
                   </div>
                   <div class="form-floating form-resetbpass">
-                  <input class="form-control" type="password" id="password2" placeholder="請再次輸入密碼">
+                  <input class="form-control pwd" type="password" id="newPwd2" placeholder="請再次輸入密碼">
                   <label for="floatingPassword" class="p">請再次輸入密碼</label>
                   </div>
                   <button type="submit" id="resetbtn" class="signbtn css-button-gradient--4">重設新密碼</button>
@@ -185,11 +196,11 @@
                   <label for="floatingInput">請使用學校的電子郵件註冊</label>
                   </div>
                   <div class="form-floating form-signpass">
-                  <input class="form-control" type="password" id="password1" placeholder="請輸入至少6位以上">
+                  <input class="form-control pwd" type="password" id="password1" placeholder="請輸入至少6位以上">
                   <label for="floatingPassword" class="p">設定您的密碼，至少 8 位英數字混合</label>
                   </div>
                   <div class="form-floating form-signpass">
-                  <input class="form-control" type="password" id="password2" placeholder="請再次輸入密碼">
+                  <input class="form-control pwd" type="password" id="password2" placeholder="請再次輸入密碼">
                   <label for="floatingPassword" class="p">請再次輸入密碼</label>
                   </div>
                   <div class="form-floating form-signnick">
@@ -206,7 +217,7 @@
               <div id="checkModal" class="modalwhat glass-card" >
                 <form id="checkForm">
                   <h2>請確認信箱有無認證信<br></h2>
-                  <p class="checkalert">請在一天內點擊認證連結</p>
+                  <p class="checkalert">請在 1 天內點擊認證連結</p>
                   <p class="checkRemind">註冊帳號後系統將會傳送認證連結至註冊帳號，請點擊郵件連結即可成功開通帳號，開通帳號後即可登入。</p>
                   <button type="submit" id="checkBackLogin" class="checkBackbtn css-button-gradient--4">我瞭解了，返回登入頁</button>
                 </form>
