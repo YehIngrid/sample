@@ -900,3 +900,46 @@ document.addEventListener("DOMContentLoaded", function () {
     chatBox.scrollTop = chatBox.scrollHeight; // 自動捲到底
   });
 });
+// 你要顯示的願望資料
+// type = orange / yellow / blue
+const wishes = [
+    { text:"許願 FUNDAMENTALS OF DATA STRUCTURES IN C"},
+    { text:"許願國文課本"},
+    { text:"希望有人能捐贈二手的計算機"},
+    //往後如果要新增願望直接 push
+];
+
+// 頁面控制
+let currentPageofWishPool = 0;
+const perPage = 10;
+
+function renderWPPage() {
+    const start = currentPage * perPage;
+    const pageData = wishes.slice(start, start + perPage);
+
+    const container = document.getElementById("wishArea");
+    container.innerHTML = "";
+
+    pageData.forEach((item, i) => {
+        const div = document.createElement("div");
+        div.className = "wish";
+        div.style.animationDelay = `${i * 0.15}s`; //一個個延後彈出
+        div.innerText = item.text;
+        container.appendChild(div);
+    });
+}
+
+// 分頁按鈕
+document.getElementById("prevWPBtn").onclick = ()=> {
+    if(currentPage > 0) currentPage--;
+    renderWPPage();
+};
+
+document.getElementById("nextWPBtn").onclick = ()=> {
+    if((currentPage + 1) * perPage < wishes.length)
+        currentPage++;
+    renderWPPage();
+};
+
+//初次載入
+renderWPPage();
