@@ -1206,12 +1206,16 @@ const timer = setInterval(() => {
             </div>
         </div>
   </div>
-<!-- 聊天室開啟按鈕 -->
+  <button class="chaticon" id="chaticon">
+    <img src="../svg/chaticon.svg" alt="">
+  </button>
+  <embed src="../chatroom.html" type="text/html" width="400" height="750" style="display: none;" id="talkInterface">
+<!-- 聊天室開啟按鈕
 <a href="#" class="talk" data-bs-toggle="offcanvas" data-bs-target="#chatOffcanvas">
   <img src="../svg/newtalk.svg" alt="聊天室">
 </a>
 
-<!-- Offcanvas 容器 -->
+<!-- Offcanvas 容器 --
 <div class="offcanvas offcanvas-end" tabindex="-1" id="chatOffcanvas" aria-labelledby="chatOffcanvasLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="chatOffcanvasLabel">聊天</h5>
@@ -1220,7 +1224,7 @@ const timer = setInterval(() => {
 
   <div class="offcanvas-body">
 
-    <!-- ✅ 聊天清單 -->
+    <!-- ✅ 聊天清單 --
     <div id="chatList">
       <input type="text" id="chatSearch" placeholder="搜尋聊天對象..." class="form-control mb-3">
 
@@ -1244,7 +1248,7 @@ const timer = setInterval(() => {
       </div>
     </div>
 
-    <!-- ✅ 單一聊天視窗 -->
+    <!-- ✅ 單一聊天視窗 
     <div id="chatConversation" class="d-none">
       <div class="chatHeader d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
@@ -1257,7 +1261,7 @@ const timer = setInterval(() => {
       </div>
 
       <div class="chatting border rounded p-2 my-2" id="chatBox" style="height: 250px; overflow-y: auto;">
-        <!-- 範例訊息 -->
+        <!-- 範例訊息 
         <div class="message receiver">你好～想問一下有貨嗎？</div>
         <div class="timestamp">2025/06/18 19:21</div>
         <div class="message sender">有的唷！你要哪個顏色？</div>
@@ -1271,7 +1275,7 @@ const timer = setInterval(() => {
     </div>
 
   </div>
-</div>
+</div> -->
 
   <!-- Loading 遮罩 -->
 <div id="loadingOverlay" class="loading-overlay d-none">

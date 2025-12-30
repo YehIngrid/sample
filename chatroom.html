@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE 聊天室</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="chatroom.css">
+</head>
+<body>
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <!-- 左側聊天選單 -->
+            <div class="col-md-3 col-lg-2 sidebar p-0">
+                <div class="sidebar-header p-3">
+                    <h5 class="mb-0"><i class="bi bi-chat-dots"></i> 聊天室</h5>
+                </div>
+                
+                <!-- 搜尋框 -->
+                <div class="p-3">
+                    <input type="text" class="form-control" id="searchChat" placeholder="搜尋聊天室...">
+                </div>
+
+                <!-- 聊天室列表 -->
+                <div class="chat-list" id="chatList">
+                    <div class="chat-item active" data-room="general">
+                        <div class="d-flex align-items-center">
+                            <div class="chat-avatar">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-0">一般討論</h6>
+                                    <small class="text-muted">10:30</small>
+                                </div>
+                                <small class="text-muted">最新訊息預覽...</small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">3</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-item" data-room="tech">
+                        <div class="d-flex align-items-center">
+                            <div class="chat-avatar">
+                                <i class="bi bi-code-slash"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-0">技術討論</h6>
+                                    <small class="text-muted">昨天</small>
+                                </div>
+                                <small class="text-muted">有人在嗎?</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-item" data-room="random">
+                        <div class="d-flex align-items-center">
+                            <div class="chat-avatar">
+                                <i class="bi bi-emoji-smile"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-0">閒聊區</h6>
+                                    <small class="text-muted">上週</small>
+                                </div>
+                                <small class="text-muted">哈哈哈</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 在線用戶 -->
+                <div class="online-users p-3 border-top">
+                    <h6 class="mb-2">在線用戶 (5)</h6>
+                    <div id="onlineUsersList">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="online-dot"></span>
+                            <small>用戶1</small>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="online-dot"></span>
+                            <small>用戶2</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側主聊天區域 -->
+            <div class="col-md-9 col-lg-10 chat-main p-0">
+                <!-- 聊天室標題 -->
+                <div class="chat-header p-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0">一般討論</h5>
+                            <small class="text-muted">5 位成員在線</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-2" id="connectionStatus">
+                                <i class="bi bi-circle-fill text-success"></i> 已連接
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 訊息顯示區 -->
+                <div class="messages-container" id="messagesContainer">
+                    <!-- 歡迎訊息 -->
+                    <div class="text-center my-4">
+                        <small class="text-muted">歡迎來到聊天室!</small>
+                    </div>
+
+                    <!-- 範例訊息 -->
+                    <div class="message message-other">
+                        <div class="message-avatar">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <strong>小明</strong>
+                                <small class="text-muted ms-2">10:25</small>
+                            </div>
+                            <div class="message-text">
+                                大家好!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="message message-self">
+                        <div class="message-content">
+                            <div class="message-header text-end">
+                                <small class="text-muted me-2">10:26</small>
+                                <strong>我</strong>
+                            </div>
+                            <div class="message-text">
+                                嗨! 很高興見到大家
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 輸入區域 -->
+                <div class="message-input-container p-3 border-top">
+                    <form id="messageForm" class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <i class="bi bi-paperclip"></i>
+                        </button>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="messageInput" 
+                            placeholder="輸入訊息..."
+                            autocomplete="off"
+                        >
+                        <button type="button" class="btn btn-outline-secondary">
+                            <i class="bi bi-emoji-smile"></i>
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send"></i> 發送
+                        </button>
+                    </form>
+                    <div id="typingIndicator" class="typing-indicator mt-2" style="display: none;">
+                        <small class="text-muted">
+                            <i class="bi bi-three-dots"></i> 有人正在輸入...
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="chatroom.js"></script>
+</body>
+</html>

@@ -943,3 +943,24 @@ document.getElementById("nextWPBtn").onclick = ()=> {
 
 //初次載入
 renderWPPage();
+
+
+const chatopen = document.getElementById('chaticon');
+const chatclose = document.getElementById('closechat');
+const talkInterface = document.getElementById('talkInterface');
+chatopen.addEventListener('click', function(e){
+  if(!backendService.whoami()){
+    Swal.fire({
+      title: '請先登入會員',
+      icon: 'warning',
+      confirmButtonText: '確定'
+    });
+    return;
+  }
+  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+    talkInterface.style.display = 'block'; // 顯示
+  } else {
+    talkInterface.style.display = 'none'; // 隱藏
+  }
+  console.log('chat open');
+})
