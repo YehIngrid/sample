@@ -1,19 +1,84 @@
 class ChatRoom {
     constructor() {
-        this.currentRoom = 'general';
-        this.eventSource = null;
-        this.username = 'User_' + Math.floor(Math.random() * 1000);
-        this.isConnected = false;
-        
+        this.currentRoom = 'general';        
+        this.currentRoomName = '一般討論';        
+        this.eventSource = null;        
+        this.username = 'User_' + Math.floor(Math.random() * 1000);        
+        this.isConnected = false;        
+        this.isMobile = window.innerWidth < 768;                
         this.init();
     }
 
     init() {
-        this.setupEventListeners();
-        this.connectSSE();
-        this.scrollToBottom();
+        this.setupEventListeners();        
+        this.setupMobileView();        
+        this.connectSSE();        
+        this.scrollToBottom();                
+        // 監聽視窗大小變化        
+        window.addEventListener('resize', () => {            
+            this.handleResize();        
+        });
     }
-
+    // 設置手機視圖    
+    setupMobileView() {        
+        this.isMobile = window.innerWidth < 768; 
+        if (this.isMobile) {            // 手機版：預設顯示側邊欄，隱藏聊天主區域         
+            this.showSidebar();            
+            this.hideChatMain();        
+        } else {            // 桌面版：兩者都顯示  
+            this.showSidebar();            
+            this.showChatMain();        
+        }    
+    }    
+    // 處理視窗大小變化    
+    handleResize() {        
+        const wasMobile = this.isMobile;        
+        this.isMobile = window.innerWidth < 768;                
+        // 如果從手機切換到桌面        
+        if (wasMobile && !this.isMobile) {            
+            this.showSidebar();            
+            this.showChatMain();        
+        }        
+        // 如果從桌面切換到手機        
+        else if (!wasMobile && this.isMobile) {            
+            this.showSidebar();            
+            this.hideChatMain();        
+        }    
+    }    
+    // 顯示側邊欄    
+    showSidebar() {        
+        const sidebar = document.getElementById('sidebar');        
+        sidebar.classList.remove('mobile-hidden');    
+    }    
+    // 隱藏側邊欄    
+    hideSidebar() {        
+        const sidebar = document.getElementById('sidebar');        
+        sidebar.classList.add('mobile-hidden');    
+    }    
+    // 顯示聊天主區域    
+    showChatMain() {        
+        const chatMain = document.getElementById('chatMain');        
+        chatMain.classList.remove('mobile-hidden');    
+    }    
+    // 隱藏聊天主區域    
+    hideChatMain() {        
+        const chatMain = document.getElementById('chatMain');        
+        chatMain.classList.add('mobile-hidden');    
+    }    
+    // 手機版：切換到聊天室視圖    
+    switchToChat() {        
+        if (this.isMobile) {            
+            this.hideSidebar();            
+            this.showChatMain();        
+        }    
+    }    
+    // 手機版：返回到側邊欄視圖    
+    backToSidebar() {        
+        if (this.isMobile) {            
+            this.showSidebar();            
+            this.hideChatMain();        
+        }    
+    }
     // SSE 連接
     connectSSE() {
         const sseUrl = '/sse/chat'; // 請替換為您的 SSE 端點
@@ -88,6 +153,10 @@ class ChatRoom {
 
     // 設置事件監聽器
     setupEventListeners() {
+        const backButton = document.getElementById('backButton');        
+        backButton.addEventListener('click', () => {            
+            this.backToSidebar();        
+        });
         // 發送訊息
         const form = document.getElementById('messageForm');
         form.addEventListener('submit', (e) => {
@@ -119,6 +188,7 @@ class ChatRoom {
         document.querySelectorAll('.chat-item').forEach(item => {
             item.addEventListener('click', () => {
                 this.switchRoom(item.dataset.room);
+                this.switchToChat();
             });
         });
 

@@ -212,3 +212,9 @@
   text-decoration: none;
   color: #383838;
 }
+.embedchat {
+  width: 100%;
+  height: 80vh;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+}
