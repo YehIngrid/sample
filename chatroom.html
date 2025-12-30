@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SSE 聊天室</title>
+    <title>聊天室</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="chatroom.css">
@@ -92,16 +92,16 @@
                 <!-- 聊天室標題 -->
                 <div class="chat-header p-3 border-bottom">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div>
+                        <div class="col-6">
                             <h5 class="mb-0">一般討論</h5>
                             <small class="text-muted">5 位成員在線</small>
                         </div>
                         <div>
-                            <button class="btn btn-sm btn-outline-secondary me-2" id="connectionStatus">
+                            <button class=" col-8 btn btn-sm btn-outline-secondary" id="connectionStatus">
                                 <i class="bi bi-circle-fill text-success"></i> 已連接
                             </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-three-dots-vertical"></i>
+                            <button class="col-3 btn btn-sm">
+                                <img src="webP/else.webp" alt="" style="width: 100%;">
                             </button>
                         </div>
                     </div>
@@ -146,8 +146,9 @@
                 <!-- 輸入區域 -->
                 <div class="message-input-container p-3 border-top">
                     <form id="messageForm" class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-secondary">
-                            <i class="bi bi-paperclip"></i>
+                        <input type="file" id="image-input" accept="image/*" hidden>
+                        <button type="button" class="sendothericon" id="send-image-btn">
+                            <img src="webP/sendother.webp" alt="" style="width: 80%;">
                         </button>
                         <input 
                             type="text" 
@@ -156,11 +157,8 @@
                             placeholder="輸入訊息..."
                             autocomplete="off"
                         >
-                        <button type="button" class="btn btn-outline-secondary">
-                            <i class="bi bi-emoji-smile"></i>
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-send"></i> 發送
+                        <button type="submit" class="sendicon">
+                            <img src="svg/newsend.svg" alt="" style="width: 100%;">
                         </button>
                     </form>
                     <div id="typingIndicator" class="typing-indicator mt-2" style="display: none;">
