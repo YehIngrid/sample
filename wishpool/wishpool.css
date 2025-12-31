@@ -20,6 +20,10 @@ nav {
     nav {
         padding-left: 20px !important;
     }
+    .nav-item a {
+        font-size: 12px;
+    }
+    
 }
 nav a {
     color: var(--light-text-color);
@@ -235,7 +239,38 @@ nav a {
 .page.active {
     display: block;
 }
-
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  
+  .tag {
+    padding: 4px 8px;
+    border: 1px solid var(--secondary-color);
+    background: var(--light-text-color);
+    border-radius: 50px;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 12px;
+  }
+  
+  .tag:hover {
+    border-color: var(--text-color);
+    color: #555;
+  }
+  
+  .tag.active {
+    background: var(--third-color);
+    color: #fff;
+    border-color: var(--special-color);
+  }
+  
+  .item {
+    margin-top: 20px;
+  }
+  
 /* *footer */
 .footer , .footer a{
     background-color: var(--primary-color);

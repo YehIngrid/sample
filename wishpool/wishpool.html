@@ -72,7 +72,7 @@
             <a class="nav-link" href="#about" data-spa>創立理念</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="wishpool.html">許願池</a>
+            <a class="nav-link active" aria-current="page" href="#wishpool" data-spa>許願池</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#makewish" data-spa>我要許願</a>
@@ -94,7 +94,47 @@
         <p>在這裡，你可以了解許願者的基本資訊，讓你更了解他們的需求和背景。這些資訊將有助於你更好地理解許願者的願望，並提供更有針對性的幫助。</p>
         <p>許願池是一種由買家主動提出需求、賣家主動回應的「反向媒合機制」。它改變傳統 C2C 平台以賣家為主導的模式，讓「需求端」成為流通的起點。</p>
       </section>
-      <section id="wishpool" class="page">這是許願池</section>
+      <section id="wishpool" class="page" style="margin: 5vh 5vw;">
+        <div class="leftsort col-lg-3 col-12">
+          <h6 style="margin-bottom: 10px;">篩選條件</h6>
+          <div class="tag-list">
+            <button class="tag" data-tag="student">學生專用器材</button>
+            <button class="tag" data-tag="hundred">0~100 元收購</button>
+            <button class="tag" data-tag="necessary">急迫度高</button>
+            <button class="tag" data-tag="fiveh">100~500 元收購</button>
+            <button class="tag" data-tag="normal">一般急迫度</button>
+            <button class="tag" data-tag="book">書籍與學籍用品</button>
+            <button class="tag" data-tag="nonecessary">急迫度低</button>
+            <button class="tag" data-tag="tothous">500~1000 元收購</button>
+            <button class="tag" data-tag="life">宿舍與生活用品</button>
+            <button class="tag" data-tag="thousand">1000 元以上收購</button>
+            <button class="tag" data-tag="recycle">環保生活用品</button>
+            <button class="tag" data-tag="clean">儲物與收納用品</button>
+            <button class="tag" data-tag="trithou">3000 元以上收購</button>
+            <button class="tag" data-tag="other">其他</button>
+          </div>
+        </div>
+        <div class="wishpoolcontainer">
+          <div class="wishgrid" id="wishGrid">
+            <!-- 許願卡片會在這裡動態生成 -->
+            
+            <div class="item-list">
+              <div class="card text-dark bg-light mb-3 item" data-tags="necessary" style="max-width: 24rem;">
+                <div class="card-body">
+                  <h5 class="card-title">許願標題緊急</h5>
+                  <p class="card-text">許願內容</p>
+                </div>
+              </div>
+              <div class="card text-dark bg-light mb-3 item" data-tags="book necessary" style="max-width: 24rem;">
+                <div class="card-body">
+                  <h5 class="card-title">許願標題書緊急</h5>
+                  <p class="card-text">許願內容</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section id="makewish" class="page" style="margin: 5vh 5vw;">
         <h3>許願步驟</h3>
         <p>在這裡，你可以輕鬆地提交你的願望，讓更多人知道你想要什麼。只需填寫簡單的表格，描述你心中的商品和預算範圍，我們將幫助你將願望傳達給潛在的賣家。</p>
