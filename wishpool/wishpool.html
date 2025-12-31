@@ -17,7 +17,6 @@
     <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/YehIngrid/sample/refs/heads/main/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB_circular_icon.ico">
     <link rel="stylesheet" href="wishpool.css">
-    <link rel="stylesheet" href="../demo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -48,25 +47,14 @@
     <!-- TODO header -->
     <div class="header ">
         <!--TODO 響應式選單-->
-        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
-          <div class="container-fluid d-flex align-items-center sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
+          <div class="container-fluid d-flex align-items-end justify-content-center ">
         
             <!-- (A) LOGO 放在最左邊 -->
-            <a class="navbar-brand picture me-4" href="../newhome/newhome.html">
-              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" style="width: 150px; font-size: 3rem; border-radius: 0;">
+            <a class="me-4" href="wishpool.html">
+              <img src="../svg/treasurehub_wishpoolLogo.svg" alt="拾貨寶庫 Logo" style="width: 150px;">
             </a>
         
-            <!-- (B) 桌機版導覽選單 -->
-            <div class="d-none d-lg-flex">
-              <ul class="navbar-nav" >
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../commodity/commodity.html">購物商場</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">購物首頁</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
-                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
-              </ul>
-            </div>
         
             <!-- (C) 右側：登入 + 購物車 -->
             <div class="d-flex align-items-center ms-auto">
@@ -74,52 +62,165 @@
               <div class="login">
                 <a class="username" href="../person/person.html"></a>
                 <!-- TODO 登入登出id -->
-                <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
+                <a class="loginornot" href="../account/account.html">登入</a>
               </div>
-              <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
-                <img src="../svg/shoppingcart.svg" alt="購物車">
-              </a>
             </div>
           </div>
         </nav>
-        
-        <!-- 桌機版也顯示的搜尋欄 -->
-        <div class="container-fluid1">
-          <div class="d-flex align-items-center">
-            <!-- 手機版：漢堡選單按鈕放最左邊 -->
-            <button class="navbar-toggler me-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon">
-                <img src="../webP/navbar.webp" alt="手機版選單" style="width: 20px;">
-              </span>
-            </button>
-            <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
-              <input class="form-control me-2" style="max-width: 730px;" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
-              <button class="btn" type="submit">
-                <img src="../webP/searchicon.webp" alt="點擊搜尋">
-              </button>
-            </form>
-          </div>
-        
-          <!-- 手機版導覽選單展開內容 -->
-          <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../commodity/commodity.html">購物商場</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shoppingpage_bootstrap.html">購物首頁</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../introduce/introduce.html">團隊介紹</a></li>
-                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
-            </ul>
-          </div>
-        </div>
+        <ul class="nav justify-content-center">
+          <li class="nav-item">
+            <a class="nav-link" href="#about" data-spa>創立理念</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="wishpool.html">許願池</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#makewish" data-spa>我要許願</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../shop/shoppingpage_bootstrap.html">返回購物首頁</a>
+          </li>
+        </ul>
+    
       </div>
     </div>
 
     <!-- TODO 主要內容 -->
-    <div class="wishcontainer">
+    <main class="container">
+      <section id="about" class="page" style="margin: 5vh 5vw; padding-bottom: 30vh;">
+        <h3 style="margin-bottom: 20px;">創立理念</h3>
+        <p>歡迎來到許願池！在這裡，你可以分享你心中渴望擁有的商品，無論是學習用品、生活必需品，還是夢寐以求的珍藏品。我們鼓勵大家勇敢許下願望，讓我們一起努力實現它們！</p>
+        <!-- <img src="../webP/adwishpool.webp" alt="" class="adwishpool_" style="width: 100%;"> -->
+        <p>在這裡，你可以了解許願者的基本資訊，讓你更了解他們的需求和背景。這些資訊將有助於你更好地理解許願者的願望，並提供更有針對性的幫助。</p>
+        <p>許願池是一種由買家主動提出需求、賣家主動回應的「反向媒合機制」。它改變傳統 C2C 平台以賣家為主導的模式，讓「需求端」成為流通的起點。</p>
+      </section>
+      <section id="wishpool" class="page">這是許願池</section>
+      <section id="makewish" class="page" style="margin: 5vh 5vw;">
+        <h3>許願步驟</h3>
+        <p>在這裡，你可以輕鬆地提交你的願望，讓更多人知道你想要什麼。只需填寫簡單的表格，描述你心中的商品和預算範圍，我們將幫助你將願望傳達給潛在的賣家。</p>
+        <div class="ulstepdiv">
+          <ul class="ulstep">
+            <li class="listep"><span class="step">STEP 1</span> 買家填寫許願單</li>
+            <li class="listep"><span class="step">STEP 2</span> 系統將願望集中展示在許願池區域</li>
+            <li class="listep"><span class="step">STEP 3</span> 賣家可依照願望內容選擇上架商品並標註「回應許願」</li>
+            <li class="listep"><span class="step">STEP 4</span> 平台會通知買家，完成配對並引導交易</li>
+          </ul>
+        </div>
+        <p>當你提交願望後，我們會將其展示在許願池中，讓其他用戶可以看到並回應你的需求。你也可以隨時查看你的願望狀態，了解是否有賣家對你的願望感興趣。</p>
+        <p>我們鼓勵大家積極參與許願池，不僅是許下願望，也可以幫助他人實現他們的夢想。讓我們一起創造一個充滿愛心和支持的社群，讓每個人的願望都能成真！</p>
+        <h3 style="margin-top: 20px;">許願表單</h3>
+        <div class="formwish">
+          <form id="wishForm" class="p-3">
+            <div class="mb-3">
+              <div class="img-preview" id="imgPreview">
+                <span class="placeholder">點選或拖曳圖片到此</span>
+                <img id="imgPreviewImg" alt="">
+              </div>
+              <label for="wishPhoto" class="form-label">商品照片</label>
+              <input class="form-control" type="file" id="wish-image" name="image" accept="image/*">
+              <div class="invalid-feedback"></div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+          
+            <div class="mb-3">
+              <label for="wishName" class="form-label">商品名稱</label>
+              <input type="text" id="wishName" class="form-control" placeholder="例：iPad 10 代 64GB（粉）">
+              <div class="invalid-feedback">請輸入商品名稱</div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+          
+            <div class="mb-3">
+              <label for="wishCategory" class="form-label">類別</label>
+              <select id="wishCategory" class="form-select">
+                <option value="notselyet" selected disabled>請選擇商品分類</option>
+                <option value="book">書籍與學籍用品</option>
+                <option value="life">宿舍與生活用品</option>
+                <option value="student">學生專用器材</option>
+                <option value="recycle">環保生活用品</option>
+                <option value="clean">儲物與收納用品</option>
+                <option value="other">其他</option>
+              </select>
+              <div class="invalid-feedback">請選擇類別</div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+          
+            <div class="row mb-3">
+              <div class="col">
+                <label for="budgetMin" class="form-label">預算最低</label>
+                <input type="number" id="budgetMin" class="form-control" placeholder="0">
+                <div class="invalid-feedback"></div>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+              <div class="col">
+                <label for="budgetMax" class="form-label">預算最高</label>
+                <input type="number" id="budgetMax" class="form-control" placeholder="5000">
+                <div class="invalid-feedback"></div>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+            </div>
+          
+            <div class="mb-3">
+              <label for="wishDesc" class="form-label">內容說明</label>
+              <textarea id="wishDesc" rows="3" class="form-control" placeholder="成色、顏色、尺寸、是否可自取等"></textarea>
+              <div class="invalid-feedback">請至少輸入 10 字以上的說明</div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+          
+            <div class="mb-3">
+              <label for="urgency" class="form-label">急迫度</label>
+              <select id="urgency" class="form-select">
+                <option value="" selected disabled>請選擇急迫度</option>
+                <option value="normal">一般</option>
+                <option value="high">急需</option>
+                <option value="low">不急</option>
+              </select>
+              <div class="invalid-feedback"></div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+          
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="agree">
+              <label class="form-check-label" for="agree">
+                我同意將許願內容用於匿名配對與推薦，並且收到相符商品之賣家訊息通知。
+              </label>
+              <div class="invalid-feedback">必須勾選才能送出</div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+          
+            <div class="form-actions d-flex justify-content-start align-items-start">
+              <button type="reset" class="btn btn-ghost" style="font-size: 0.9rem;">清除</button>
+              <div class="buttons" type="submit">
+                <button class="blob-btn">
+                  送出許願
+                  <span class="blob-btn__inner">
+                    <span class="blob-btn__blobs">
+                      <span class="blob-btn__blob"></span>
+                      <span class="blob-btn__blob"></span>
+                      <span class="blob-btn__blob"></span>
+                      <span class="blob-btn__blob"></span>
+                    </span>
+                  </span>
+                </button>
+                <br/>
+              
+              <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <defs>
+                  <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                  </filter>
+                </defs>
+              </svg>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+    <!-- <div class="wishcontainer">
         <div class="wishlist">
             <h2>許願池</h2>
-            <p>歡迎來到許願池！在這裡，你可以分享你心中渴望擁有的商品，無論是學習用品、生活必需品，還是夢寐以求的珍藏品。我們鼓勵大家勇敢許下願望，讓我們一起努力實現它們！</p>
+            
             <div class="wishpicture">
                 <img src="" alt="許願池圖示" style="width: 120px; height: auto;">
             </div>
@@ -132,7 +233,7 @@
         </div>
         <div class="wishperson">
             <h2>許願者資訊</h2>
-            <p>在這裡，你可以了解許願者的基本資訊，讓你更了解他們的需求和背景。這些資訊將有助於你更好地理解許願者的願望，並提供更有針對性的幫助。</p>
+            
             <div class="personpicture">
                 <img src="" alt="許願者頭像" style="width: 120px; height: auto; border-radius: 50%;">
             </div>
@@ -141,12 +242,13 @@
             <button class="personcontact">聯絡許願者</button>
         </div>
         <div class="otherwish">其他願望</div>
-    </div>
+    </div> -->
+    <!-- TODO footer -->
 <div class="footer">
-            <div class="container" >
+            <div class="container">
                 <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
                     <div class="col-md-4" style="padding-left: 30px;">
-                        <h3>聯絡我們</h3>
+                        <h4>聯絡我們</h4>
                         <p>電子郵件：
                             <a href="mailto:treasurehub@gmail.com">
                                 treasurehub@gmail.com
@@ -154,11 +256,11 @@
                         </p>
                     </div>
                     <div class="col-md-4" style="padding-left: 30px;">
-                        <h3>關於我們</h3>
+                        <h4>關於我們</h4>
                         <p>一個專為大學生打造的二手商場、校園商機、資訊交易整合平台</p>
                     </div>
                     <div class="col-md-4" style="padding-left: 30px;"> 
-                        <h3>社交媒體</h3>
+                        <h4>社交媒體</h4>
                         <p class="d-flex">
                             <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 3rem; padding-right: 18px;"></i></a><br>
                             <a href="#" target="_blank"><i class="fa-brands fa-line" style="font-size: 3rem;"></i></a>
@@ -180,7 +282,7 @@
                 </div>
             </div>
         </div>
- <script src="../demo.js"></script>
+    <script src="../demo.js"></script>
     <script src="wishpool.js"></script>
     <script src="../questions/questions.js"></script>
     <script src="../BackendService.js"></script>
