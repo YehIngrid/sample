@@ -206,6 +206,7 @@ nextHotBtn.addEventListener("click", () => {
 
   try {
     await backendService.create(sellData);
+    loaderOverlay.style.display = 'none';
     await Swal.fire({
       title: "商品上架成功!",
       text: "請至首頁確認是否顯示您的商品",
