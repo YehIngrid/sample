@@ -26,8 +26,7 @@ else {
 // 桌機版
 const userRate = document.getElementById('rate');
 const userRate1 = document.getElementById('rate1');
-const identify = document.getElementById('identify');
-const memberShip = document.getElementById('membership');
+// const memberShip = document.getElementById('membership');
 const showName = document.getElementById('showName');
 const showIntro = document.getElementById('showIntro');
 const profileName = document.getElementById('profileName');
@@ -40,8 +39,6 @@ if (localStorage.getItem('avatar')) {
 } else {
   profileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
 }
-memberShip.textContent = "尚未開放";
-identify.textContent = "已驗證";
 const el = document.getElementById('showTime');
 const iso = localStorage.getItem('userCreatedAt'); // 例如 "2025-08-28T11:23:45.000Z"
 
