@@ -113,6 +113,14 @@ html, body {
     margin-bottom: 16px;
     animation: fadeIn 0.3s ease-in;
 }
+.imgmessage {
+    max-width: 200px;
+    margin-top: 5px;
+    animation: fadeIn 0.3s ease-in;
+}
+.imgmessage img {
+    margin-left: 10px;
+}
 
 @keyframes fadeIn {
     from {
@@ -146,7 +154,9 @@ html, body {
 .message-self .message-content {
     text-align: right;
 }
-
+.imgmessage .message-self .message-content {
+    text-align: right;
+}
 .message-header {
     margin-bottom: 4px;
 }
