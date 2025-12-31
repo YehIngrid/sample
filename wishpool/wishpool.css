@@ -16,6 +16,11 @@ nav {
     padding-left: 100px !important;
     padding-right: 12px !important;
 }
+@media screen and (max-width: 768px) {
+    nav {
+        padding-left: 20px !important;
+    }
+}
 nav a {
     color: var(--light-text-color);
 }
