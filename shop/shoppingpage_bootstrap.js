@@ -192,6 +192,7 @@ nextHotBtn.addEventListener("click", () => {
   if (!confirmRes.isConfirmed) return;
 
   const loaderOverlay = document.getElementById('loadingOverlay');
+  loaderOverlay.classList.remove('d-none');
   loaderOverlay.style.display = 'flex';
 
   const formEl = document.getElementById('createCommodityForm');
