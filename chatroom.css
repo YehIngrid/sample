@@ -114,7 +114,7 @@ html, body {
     animation: fadeIn 0.3s ease-in;
 }
 .imgmessage {
-    max-width: 200px;
+    display: flex;
     margin-top: 5px;
     animation: fadeIn 0.3s ease-in;
 }
