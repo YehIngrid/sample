@@ -193,7 +193,7 @@ nextHotBtn.addEventListener("click", () => {
 
   const loaderOverlay = document.getElementById('loadingOverlay');
   loaderOverlay.classList.remove('d-none');
-  loaderOverlay.style.display = 'flex';
+  loaderOverlay.classList.add('d-flex');
 
   const formEl = document.getElementById('createCommodityForm');
   const sellData = new FormData(formEl);
@@ -206,7 +206,8 @@ nextHotBtn.addEventListener("click", () => {
 
   try {
     await backendService.create(sellData);
-    loaderOverlay.style.display = 'none';
+    loaderOverlay.classList.remove('d-flex');
+    loaderOverlay.classList.add('d-none');
     await Swal.fire({
       title: "商品上架成功!",
       text: "請至首頁確認是否顯示您的商品",
@@ -221,7 +222,8 @@ nextHotBtn.addEventListener("click", () => {
       icon: "error"
     });
   } finally {
-    loaderOverlay.style.display = 'none';
+    loaderOverlay.classList.add('d-none');
+    loaderOverlay.classList.remove('d-flex');
   }
 }
 })
