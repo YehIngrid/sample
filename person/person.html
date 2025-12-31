@@ -295,7 +295,7 @@
             </div>
             <div class="d-flex align-items-center">
               <h6 class="showStyle" style="margin-right: 10px;">關於我</h6>
-              <h5 id="showIntro"></h5>
+              <h6 id="showIntro"></h6>
             </div>
             <div class="d-flex align-items-center">
               <h6 class="showStyle" style="margin-right: 10px;">加入日期</h6>
@@ -306,19 +306,19 @@
             </div>
           </div>
         </div>
-        <div class="d-lg-flex g-3">
-          <div class="card col-lg-4 col-12">
+        <div class="d-lg-flex py-3">
+          <div class="card col-lg-8 col-12">
             <div class="card-body">
               <div class="d-flex align-items-center mb-4">
-                <h6 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">信譽積分</h6>
+                <h6 style=" background-color: #24B363; color: white; padding: 5px 7px; border-radius: 50px; margin-right: 5px;">信譽積分</h6>
                 <h6 id="rate1"></h6>
               </div>
-              <p style="padding: 0px 10px;">每個用戶基本分為60分，若被其他用戶檢舉一次扣5分，扣到0分為止。</p>
-              <p style="padding: 0px 10px;">每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分1~5分，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。</p>
+              <p style="padding: 0px 7px; font-size: 14px;">每個用戶基本分為 60 分，若被其他用戶檢舉一次扣 5 分，扣到 0 分為止。</p>
+              <p style="padding: 0px 10px; font-size: 14px;">每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分 1~5 分，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。</p>
               <button class="btn btn-light" style="font-size: 1rem;">查看別人對我的評價</button>
             </div>
           </div>
-          <div class="card col-lg-4 col-12">
+          <!-- <div class="card col-lg-4 col-12">
             <div class="card-body">
               <div class="d-flex align-items-center mb-4">
                 <h6 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">會員資格</h6>
@@ -327,18 +327,7 @@
               <p style="padding: 0px 10px;">如果尚未加入會員要顯示: </p>
               <button class="btn btn-light" style="font-size: 1rem;">立即加入會員</button>
             </div>
-          </div>
-          <div class="card col-lg-4 col-12">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-4">
-                <h6 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 10px;">學生身分認證</h6>
-                <h6 id="identify1">先預設已驗證</h6>
-              </div>
-              <p style="padding: 0px 10px;">未驗證要顯示: 您尚未進行學生身分驗證，驗證完可開啟1.販賣功能 2.購買功能</p>
-              <p style="padding: 0px 10px;">已驗證要顯示: 申請帳號，恭喜您完成學生驗證，可以開始販售商品以及購買商品!</p>
-              <button class="btn btn-light" style="font-size: 1.4rem;">立即進行身分驗證</button>
-            </div>
-          </div>
+          </div> -->
         </div>
         <hr>
         <div class="card" style="border-radius: 20px !important;">
@@ -384,7 +373,7 @@
             <div class="card shadow-sm">
               <div class="card-body">
                 <h5 class="card-title">近期通知</h5>
-                <ul class="list-unstyled mb-0">
+                <ul class="list-unstyled mb-0" style="font-size: 14px;">
                   <li class="mb-2"> • 你的商品 <strong>#A1234</strong> 已被加入收藏。</li>
                   <li class="mb-2"> • 有人對你的商品發出訊息。</li>
                   <li class="mb-2"> • 系統維護公告：8/20 01:00–03:00。</li>
@@ -392,14 +381,14 @@
               </div>
             </div>
           </div>
-
+        
           <div class="col-md-6">
             <div class="card shadow-sm">
               <div class="card-body">
                 <h5 class="card-title">快速動作</h5>
-                <div class="d-flex flex-wrap gap-3 mt-3">
-                  <button class="btn btn-outline-secondary" style="font-size: 1.2rem;"><img src="../svg/addmerchandiseicon.svg" style="margin-right: 5px;" alt="新增商品button">新增商品</button>
-                  <!-- <button class="btn btn-outline-secondary" style="font-size: 1.6rem;"><img src="../svg/mycoupon.svg" style="margin-right: 5px;" alt="我的優惠券button">優惠券</button> -->
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                  <button class="btn btn-outline-secondary" style="font-size: 14px;"><img src="../svg/addmerchandiseicon.svg" style="margin-right: 5px;" alt="新增商品button">新增商品</button>
+                  <button class="btn btn-outline-secondary" style="font-size: 14px;">修改個人資料</button>
                 </div>
               </div>
             </div>
@@ -411,16 +400,12 @@
                 <div class="d-flex flex-wrap gap-2">
                   <div style="text-align: center;">
                     <h6 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">信譽積分</h6>
-                    <h6 id="rate"></h6>
+                    <h6 id="rate">無法顯示</h6>
                   </div>
-                  <div style="text-align: center;">
+                  <!-- <div style="text-align: center;">
                     <h6 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">會員資格</h6>
                     <h6 id="membership"></h6>
-                  </div>
-                  <div style="text-align: center;">
-                    <h6 style=" background-color: #8a6aff; color: white; padding: 5px 10px; border-radius: 50px;">學生身分認證</h6>
-                    <h6 id="identify"></h6>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
