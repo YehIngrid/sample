@@ -94,41 +94,62 @@
         <p>在這裡，你可以了解許願者的基本資訊，讓你更了解他們的需求和背景。這些資訊將有助於你更好地理解許願者的願望，並提供更有針對性的幫助。</p>
         <p>許願池是一種由買家主動提出需求、賣家主動回應的「反向媒合機制」。它改變傳統 C2C 平台以賣家為主導的模式，讓「需求端」成為流通的起點。</p>
       </section>
-      <section id="wishpool" class="page" style="margin: 5vh 5vw;">
-        <div class="leftsort col-lg-3 col-12">
-          <h6 style="margin-bottom: 10px;">篩選條件</h6>
-          <div class="tag-list">
-            <button class="tag" data-tag="student">學生專用器材</button>
-            <button class="tag" data-tag="hundred">0~100 元收購</button>
-            <button class="tag" data-tag="necessary">急迫度高</button>
-            <button class="tag" data-tag="fiveh">100~500 元收購</button>
-            <button class="tag" data-tag="normal">一般急迫度</button>
-            <button class="tag" data-tag="book">書籍與學籍用品</button>
-            <button class="tag" data-tag="nonecessary">急迫度低</button>
-            <button class="tag" data-tag="tothous">500~1000 元收購</button>
-            <button class="tag" data-tag="life">宿舍與生活用品</button>
-            <button class="tag" data-tag="thousand">1000 元以上收購</button>
-            <button class="tag" data-tag="recycle">環保生活用品</button>
-            <button class="tag" data-tag="clean">儲物與收納用品</button>
-            <button class="tag" data-tag="trithou">3000 元以上收購</button>
-            <button class="tag" data-tag="other">其他</button>
+      <section id="wishpool" class="page" style="margin: 5vh 3vw;">
+        <div class="wpcontainer d-lg-flex d-block">
+          <div class="leftsort col-lg-3 col-12">
+            <h6 style="margin-bottom: 10px;">篩選條件</h6>
+            <div class="tag-list">
+              <button class="tag" data-tag="student">學生專用器材</button>
+              <button class="tag" data-tag="hundred">0~100 元收購</button>
+              <button class="tag" data-tag="necessary">急迫度高</button>
+              <button class="tag" data-tag="fiveh">100~500 元收購</button>
+              <button class="tag" data-tag="normal">一般急迫度</button>
+              <button class="tag" data-tag="book">書籍與學籍用品</button>
+              <button class="tag" data-tag="nonecessary">急迫度低</button>
+              <button class="tag" data-tag="tothous">500~1000 元收購</button>
+              <button class="tag" data-tag="life">宿舍與生活用品</button>
+              <button class="tag" data-tag="thousand">1000 元以上收購</button>
+              <button class="tag" data-tag="recycle">環保生活用品</button>
+              <button class="tag" data-tag="clean">儲物與收納用品</button>
+              <button class="tag" data-tag="trithou">3000 元以上收購</button>
+              <button class="tag" data-tag="other">其他</button>
+              <button class="tag" data-tag="expired">已過期</button>
+            </div>
           </div>
-        </div>
-        <div class="wishpoolcontainer">
-          <div class="wishgrid" id="wishGrid">
-            <!-- 許願卡片會在這裡動態生成 -->
-            
-            <div class="item-list">
-              <div class="card text-dark bg-light mb-3 item" data-tags="necessary" style="max-width: 24rem;">
-                <div class="card-body">
-                  <h5 class="card-title">許願標題緊急</h5>
-                  <p class="card-text">許願內容</p>
+          <div class="wishpoolcontainer col-lg-9 col-12">
+            <div class="wishgrid" id="wishGrid">
+              <!-- 許願卡片會在這裡動態生成 -->
+              
+              <div class="item-list">
+                <div class="card text-dark bg-light item" data-tags="book necessary">
+                  <div class="card-header">2026/08/23 截止</div>
+                  <div class="card-body d-flex align-items-center">
+                    <div class="left">
+                      <img src="../image/placeholder.png" alt="" style="width: 100px;">
+                    </div>
+                    <div class="right" style="margin-left: 15px;">
+                      <h5 class="card-title">許願標題書緊急</h5>
+                      <p class="card-text ellipsis-text-wp">許願內容 Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit possimus, facere sit nisi, deserunt similique fuga doloremque provident temporibus, mollitia neque porro molestias aliquam illo saepe voluptatum quia dolores voluptate dicta aspernatur quibusdam hic. Assumenda voluptas ratione voluptatibus alias consectetur perspiciatis molestias atque. Reiciendis facere libero error? Nulla, tempore ipsum?</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="card text-dark bg-light mb-3 item" data-tags="book necessary" style="max-width: 24rem;">
-                <div class="card-body">
-                  <h5 class="card-title">許願標題書緊急</h5>
-                  <p class="card-text">許願內容</p>
+                <div class="card text-dark bg-light item" data-tags="necessary">
+                  <div class="card-body">
+                    <h5 class="card-title">許願標題緊急</h5>
+                    <p class="card-text">許願內容</p>
+                  </div>
+                </div>
+                <div class="card text-dark bg-light item" data-tags="book necessary">
+                  <div class="card-header">2026/08/23 截止</div>
+                  <div class="card-body d-flex align-items-center">
+                    <div class="left">
+                      <img src="../image/placeholder.png" alt="" style="width: 100px;">
+                    </div>
+                    <div class="right" style="margin-left: 15px;">
+                      <h5 class="card-title">許願標題書緊急</h5>
+                      <p class="card-text ellipsis-text-wp">許願內容 Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit possimus, facere sit nisi, deserunt similique fuga doloremque provident temporibus, mollitia neque porro molestias aliquam illo saepe voluptatum quia dolores voluptate dicta aspernatur quibusdam hic. Assumenda voluptas ratione voluptatibus alias consectetur perspiciatis molestias atque. Reiciendis facere libero error? Nulla, tempore ipsum?</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -186,14 +207,14 @@
           
             <div class="row mb-3">
               <div class="col">
-                <label for="budgetMin" class="form-label">預算最低</label>
-                <input type="number" id="budgetMin" class="form-control" placeholder="0">
+                <label for="budgetMax" class="form-label">預算最高<br>(單位: 元)</label>
+                <input type="number" id="budgetMax" class="form-control" placeholder="0">
                 <div class="invalid-feedback"></div>
                 <div class="valid-feedback">Looks good!</div>
               </div>
               <div class="col">
-                <label for="budgetMax" class="form-label">預算最高</label>
-                <input type="number" id="budgetMax" class="form-control" placeholder="5000">
+                <label for="expireDate" class="form-label">願望過期日<br>(過期後3天後刪除)</label>
+                <input type="date" id="expireDate" class="form-control" placeholder="0">
                 <div class="invalid-feedback"></div>
                 <div class="valid-feedback">Looks good!</div>
               </div>
@@ -201,7 +222,7 @@
           
             <div class="mb-3">
               <label for="wishDesc" class="form-label">內容說明</label>
-              <textarea id="wishDesc" rows="3" class="form-control" placeholder="成色、顏色、尺寸、是否可自取等"></textarea>
+              <textarea id="wishDesc" rows="3" class="form-control" placeholder="型號、顏色、尺寸、方便聯絡時間等"></textarea>
               <div class="invalid-feedback">請至少輸入 10 字以上的說明</div>
               <div class="valid-feedback">Looks good!</div>
             </div>
@@ -210,27 +231,18 @@
               <label for="urgency" class="form-label">急迫度</label>
               <select id="urgency" class="form-select">
                 <option value="" selected disabled>請選擇急迫度</option>
-                <option value="normal">一般</option>
                 <option value="high">急需</option>
+                <option value="normal">一般</option>
                 <option value="low">不急</option>
               </select>
               <div class="invalid-feedback"></div>
               <div class="valid-feedback">Looks good!</div>
             </div>
           
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="agree">
-              <label class="form-check-label" for="agree">
-                我同意將許願內容用於匿名配對與推薦，並且收到相符商品之賣家訊息通知。
-              </label>
-              <div class="invalid-feedback">必須勾選才能送出</div>
-              <div class="valid-feedback">Looks good!</div>
-            </div>
-          
             <div class="form-actions d-flex justify-content-start align-items-start">
               <button type="reset" class="btn btn-ghost" style="font-size: 0.9rem;">清除</button>
-              <div class="buttons" type="submit">
-                <button class="blob-btn">
+              <div class="buttons">
+                <button class="blob-btn" type="submit" id="wishFormbtn">
                   送出許願
                   <span class="blob-btn__inner">
                     <span class="blob-btn__blobs">
@@ -257,32 +269,6 @@
         </div>
       </section>
     </main>
-    <!-- <div class="wishcontainer">
-        <div class="wishlist">
-            <h2>許願池</h2>
-            
-            <div class="wishpicture">
-                <img src="" alt="許願池圖示" style="width: 120px; height: auto;">
-            </div>
-            <div class="necessary">急迫度</div>
-            <div class="wishtitle">許願商品名</div>
-            <div class="wishsort">商品分類</div>
-            <div class="wishdescription">許願商品描述</div>
-            <div class="highest">最高預算</div>
-            <div class="lowest">最低預算</div>
-        </div>
-        <div class="wishperson">
-            <h2>許願者資訊</h2>
-            
-            <div class="personpicture">
-                <img src="" alt="許願者頭像" style="width: 120px; height: auto; border-radius: 50%;">
-            </div>
-            <div class="personname">許願者姓名</div>
-            <div class="personother">其他資訊</div>
-            <button class="personcontact">聯絡許願者</button>
-        </div>
-        <div class="otherwish">其他願望</div>
-    </div> -->
     <!-- TODO footer -->
 <div class="footer">
             <div class="container">

@@ -6,6 +6,7 @@
     --background-color: #c9fbfc;
     --text-color: #333333;
     --light-text-color: rgb(255, 249, 211);
+    --brand-color: #004b97;
 }
 body {
     background-color: var(--background-color) !important;
@@ -266,11 +267,7 @@ nav a {
     color: #fff;
     border-color: var(--special-color);
   }
-  
-  .item {
-    margin-top: 20px;
-  }
-  
+
 /* *footer */
 .footer , .footer a{
     background-color: var(--primary-color);
@@ -304,4 +301,45 @@ nav a {
         padding: 10px;
         padding-top: 20px;
     }
+}
+.ellipsis-text-wp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4; /* 顯示的行數 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #333333;
+}
+.wishgrid {
+  display: grid;
+  gap: 20px;
+  padding: 15px;
+}
+.item-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+.card {
+  max-width: 30rem !important;
+  border: 1px solid var(--secondary-color) !important;
+  cursor: pointer;
+}
+.card-header {
+  background-color: var(--light-text-color) !important;
+  color: var(--secondary-color);
+}
+@media screen and (max-width: 768px) {
+  .wishgrid {
+    display: block;
+  }
+  .item-list {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .card {
+    margin-bottom: 10px !important;
+  }
 }
