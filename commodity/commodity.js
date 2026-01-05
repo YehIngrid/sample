@@ -488,14 +488,15 @@ function applyFilters(items) {
     result.sort((a, b) => b.price - a.price);
   }
   const filterResultCountEl = document.getElementById('filterResultCount');
-  if(!result || result.length === 0){
-    result.length = 0;
+  resultlength = result.length;
+  if(!resultlength || resultlength === 0){
+    resultlength = 0;
     productRow.innerHTML = '';
     const noProducts = document.getElementById('no-products');
     noProducts.style.display = 'block';
     return result;
   }
-  filterResultCountEl.textContent = `${result.length || 0} 件商品`;
+  filterResultCountEl.textContent = `${resultlength}`;
   console.log('篩選後的商品:', result);
   return result;
 }
