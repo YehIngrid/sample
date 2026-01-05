@@ -366,26 +366,6 @@ function renderProductsBootstrap(items) {
   });
   productRow.appendChild(frag);
 
-  // 加購物車事件
-  // productRow.querySelectorAll('.add-cart').forEach(btn => {
-  //   btn.addEventListener('click', async(e) => {
-  //   const id = btn.dataset.id;
-  //       try {
-  //           await backendService.addItemsToCart(id, 1);
-  //           Swal.fire({
-  //           title: '已加入購物車！',
-  //           icon: 'success', 
-  //           showConfirmButton: false,
-  //           timer: 1600,
-  //           });
-  //       } catch (err) {
-  //           const msg = err?.response?.data?.message || err?.message || '請稍後再試';
-  //           Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
-  //       } finally {
-  //           btn.disabled = false;
-  //       }
-  //           });
-  //       });
 }
 
 // escape HTML
@@ -494,9 +474,8 @@ function applyFilters(items) {
     productRow.innerHTML = '';
     const noProducts = document.getElementById('no-products');
     noProducts.style.display = 'block';
-    return result;
   }
-  filterResultCountEl.textContent = `${resultlength}`;
+  filterResultCountEl.textContent = `${resultlength === 0 ? 0 : resultlength}`;
   console.log('篩選後的商品:', result);
   return result;
 }
