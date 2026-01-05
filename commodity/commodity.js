@@ -495,7 +495,7 @@ function applyFilters(items) {
     noProducts.style.display = 'block';
     return result;
   }
-  filterResultCountEl.textContent = `${result.length}`;
+  filterResultCountEl.textContent = `${result.length || 0} 件商品`;
   console.log('篩選後的商品:', result);
   return result;
 }
