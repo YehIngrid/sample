@@ -152,41 +152,112 @@ function toggleAside(category) {
 }
 
 //TODO 載入商品（分頁，含前端篩選與 totalCount 更新）
+// async function loadProducts() {
+//   if (isLoading) return;
+//   isLoading = true;
+//   loaderEl.textContent = '載入中...';
+
+//   try {
+//     let items = [];
+//     const backendService = new BackendService();
+//     const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
+//     if (currentCategory === 'hot') {
+//         backendService.getHotItems(pagingInfo, (response => {
+//             console.log("call getHotItems()", response.data);
+//             items = response?.data?.commodities || [];
+//             finishRender(items);
+//         }), (errorMessage => {
+//           console.log(errorMessage);
+//         }))
+//     } else if (currentCategory === 'new') {
+//         backendService.getNewItems(pagingInfo, (response => {
+//             console.log("call getHotItems()", response.data);
+//             items = response?.data?.commodities || [];
+//             finishRender(items);
+//         }), (errorMessage => {
+//           console.log(errorMessage);
+//         }))
+//     } else {
+//         // 其他分類都撈全部，然後前端再篩選
+//         const response = await backendService.getAllCommodities(pagingInfo);
+//         // API 回傳的商品
+//         items = response.data?.commodities || [];
+//     }
+    
+    
+
+//     // === 前端分類篩選 ===
+//     const categoryMap = {
+//       book: '書籍與學籍用品',
+//       life: '宿舍與生活用品',
+//       student: '學生專用器材',
+//       recycle: '環保生活用品',
+//       clean: '儲物與收納用品',
+//       other: '其他',
+//     };
+
+//     let filteredItems = items;
+
+//     // 篩選大分類
+//     if (currentCategory !== ('all' || 'hot' || 'new')) {
+//       filteredItems = filteredItems.filter(p => categoryMap[p.category] === currentCategory);
+//     }
+
+//     // 篩選子分類（假設商品物件有 subCategory 欄位）
+//     if (currentSub) {
+//       filteredItems = filteredItems.filter(p => p.subCategory === currentSub);
+//     }
+
+//     filteredItems = applyFilters(filteredItems);
+//     // 重新計算分頁數量
+//     const totalCount = filteredItems.length;
+
+//     // 依 pageIndex 切出這一頁要顯示的商品
+//     const start = pageIndex * PAGE_SIZE;
+//     const pagedItems = filteredItems.slice(start, start + PAGE_SIZE);
+
+//     // 清空後重新 render
+//     productRow.innerHTML = '';
+//     renderProductsBootstrap(pagedItems);
+//     renderPagination(totalCount);
+
+//     loaderEl.textContent = '';
+//   } catch (err) {
+//     console.error('API 載入失敗', err);
+//     loaderEl.textContent = '載入失敗，請稍後重試';
+//   } finally {
+//     isLoading = false;
+//   }
+// }
 async function loadProducts() {
   if (isLoading) return;
   isLoading = true;
   loaderEl.textContent = '載入中...';
+  let currentSource = 'all';     // all | hot | new（資料來源）
+let currentCategory = 'all';   // 書籍 / 生活用品…
+let currentSub = null;         // 子分類
 
   try {
     let items = [];
     const backendService = new BackendService();
     const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
-    if (currentCategory === 'hot') {
-        backendService.getHotItems(pagingInfo, (response => {
-            console.log("call getHotItems()", response.data);
-            items = response?.data?.commodities || [];
-            finishRender(items);
-        }), (errorMessage => {
-          console.log(errorMessage);
-        }))
-    } else if (currentCategory === 'new') {
-        backendService.getNewItems(pagingInfo, (response => {
-            console.log("call getHotItems()", response.data);
-            items = response?.data?.commodities || [];
-            finishRender(items);
-        }), (errorMessage => {
-          console.log(errorMessage);
-        }))
-    } else {
-        // 其他分類都撈全部，然後前端再篩選
-        const response = await backendService.getAllCommodities(pagingInfo);
-        // API 回傳的商品
-        items = response.data?.commodities || [];
-    }
-    
-    
 
-    // === 前端分類篩選 ===
+    // === 1️⃣ 依「來源」決定要撈哪支 API ===
+    if (currentSource === 'hot') {
+      const response = await backendService.getHotItems(pagingInfo);
+      items = response?.data?.commodities || [];
+
+    } else if (currentSource === 'new') {
+      const response = await backendService.getNewItems(pagingInfo);
+      items = response?.data?.commodities || [];
+
+    } else {
+      // all
+      const response = await backendService.getAllCommodities(pagingInfo);
+      items = response?.data?.commodities || [];
+    }
+
+    // === 2️⃣ 前端分類 / 篩選 ===
     const categoryMap = {
       book: '書籍與學籍用品',
       life: '宿舍與生活用品',
@@ -198,25 +269,28 @@ async function loadProducts() {
 
     let filteredItems = items;
 
-    // 篩選大分類
-    if (currentCategory !== ('all' || 'hot' || 'new')) {
-      filteredItems = filteredItems.filter(p => categoryMap[p.category] === currentCategory);
+    // 👉 大分類（不是 all 才篩）
+    if (currentCategory && currentCategory !== 'all') {
+      filteredItems = filteredItems.filter(
+        p => categoryMap[p.category] === currentCategory
+      );
     }
 
-    // 篩選子分類（假設商品物件有 subCategory 欄位）
+    // 👉 子分類
     if (currentSub) {
-      filteredItems = filteredItems.filter(p => p.subCategory === currentSub);
+      filteredItems = filteredItems.filter(
+        p => p.subCategory === currentSub
+      );
     }
 
+    // 👉 其他條件（價格、關鍵字…）
     filteredItems = applyFilters(filteredItems);
-    // 重新計算分頁數量
-    const totalCount = filteredItems.length;
 
-    // 依 pageIndex 切出這一頁要顯示的商品
+    // === 3️⃣ 分頁 ===
+    const totalCount = filteredItems.length;
     const start = pageIndex * PAGE_SIZE;
     const pagedItems = filteredItems.slice(start, start + PAGE_SIZE);
 
-    // 清空後重新 render
     productRow.innerHTML = '';
     renderProductsBootstrap(pagedItems);
     renderPagination(totalCount);
@@ -229,6 +303,7 @@ async function loadProducts() {
     isLoading = false;
   }
 }
+
 function finishRender(items) {
     // 篩選、分頁
     const totalCount = items.length;
@@ -393,16 +468,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function applyFilters(items) {
-  const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
   const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
   const newOrOld = newOrOldInput.value !== 'default' ? parseInt(newOrOldInput.value) : null;
   const sortselected = sortSelect.value;
   let result = items;
 
-  // 價格篩選
-  if (minPrice !== null) {
-    result = result.filter(p => p.price >= minPrice);
-  }
+
   if (maxPrice !== null) {
     result = result.filter(p => p.price <= maxPrice);
   }
@@ -417,12 +488,18 @@ function applyFilters(items) {
     result.sort((a, b) => b.price - a.price);
   }
   const filterResultCountEl = document.getElementById('filterResultCount');
-  filterResultCountEl.textContent = `共 ${result.length} 件商品`;
+  if(!result || result.length === 0){
+    result.length = 0;
+    productRow.innerHTML = '';
+    const noProducts = document.getElementById('no-products');
+    noProducts.style.display = 'block';
+    return result;
+  }
+  filterResultCountEl.textContent = `${result.length}`;
   console.log('篩選後的商品:', result);
   return result;
 }
 function clearFilters() {
-    minPriceInput.value = '';
     maxPriceInput.value = '';
     newOrOldInput.value = 'default';
     sortSelect.value = 'default';
@@ -438,7 +515,6 @@ cleanFilterBtn.addEventListener('click', (e) => {
     clearFilters();
 });
 const sortSelect = document.getElementById('sortSelect');
-const minPriceInput = document.getElementById('minPriceInput');
 const maxPriceInput = document.getElementById('maxPriceInput');
 
 const newOrOldInput = document.getElementById('new_or_oldInput');
@@ -446,29 +522,34 @@ const filterBtn = document.getElementById('filterBtn');
 filterBtn.addEventListener('click', (e) => {
     e.preventDefault();
     console.log('點擊篩選按鈕');
-    const minPrice = minPriceInput.value ? parseInt(minPriceInput.value) : null;
     const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
     const newOrOld = newOrOldInput.value !== 'default' ? newOrOldInput.value : null;
     let newOrOldMap = {
-      1:'全新',2:'稍新',3:'半新',4:'適中',5:'稍舊',6:'全舊',
+      1:'僅限全新',2:'稍新以上',3:'半新以上',4:'適中以上',5:'稍舊以上',6:'全舊以上',
     };
-    console.log('篩選條件:', { minPrice, maxPrice, newOrOld: newOrOld ? newOrOldMap[newOrOld] : null });
+    console.log('篩選條件:', { maxPrice, newOrOld: newOrOld ? newOrOldMap[newOrOld] : null });
     // 在這裡可以根據篩選條件進行商品篩選
     const filterAllEl = document.getElementById('filterAll');
     let filterText = '';
     if (sortSelect.value == 'priceDesc') {
         filterText +=  `價格由高到低排序`;
+        filterText +=  `\n`;
     } else if (sortSelect.value == 'priceAsc') {
         filterText +=  `價格由低到高排序`;
+        filterText +=  `\n`;
     } else {
-        filterText +=  `未設定商品排序`;
+        filterText +=  ``;
     }
-    if (minPrice !== null && maxPrice !== null) filterText += `價格區間: ${minPrice} ~ ${maxPrice} 元`
-    else if (minPrice !== null) filterText += `最低接受價格: ${minPrice} 元`
-    else if (maxPrice !== null) filterText += `最高接受價格: ${maxPrice} 元`
-    else filterText += `未設定價格區間`; 
-    if (newOrOld !== null) filterText += `最低可接受之商品狀態: ${newOrOldMap[newOrOld]} `
-    else filterText += `未設定商品狀態`;
+    if (maxPrice !== null){
+      filterText += `最高接受價格: ${maxPrice} 元`;
+      filterText +=  `\n`;
+    } else filterText += ``; 
+    if (newOrOld !== null) {
+      filterText += `最低可接受之商品狀態: ${newOrOldMap[newOrOld]}`;
+      filterText +=  `\n`;
+    }
+    else filterText += ``;
+    if(filterText === '') filterText = '無篩選條件\n';
     filterAllEl.textContent = filterText;
 
     

@@ -166,7 +166,7 @@
                 </div>
             </div>
         </div>
-        <div class="contentOfCommodity d-lg-flex">
+        <div class="contentOfCommodity d-lg-flex justify-content-around">
                 <div id="deepCategorySort" class="deepCategorySort d-none">
                     <h6>品項分類</h6>
                     <ul id="deepCategoryList"></ul>
@@ -189,32 +189,29 @@
                             <option value="priceDesc">價格由高到低</option>
                         </select>
                     </div>
-                    <div class="me-3">最低預算
-                        <input type="number" id="minPriceInput" class="form-control" placeholder="0元起" style="width: 100px;">
-                    </div>
-                    <div class="me-3">最高預算
-                        <input type="number" id="maxPriceInput" class="form-control" placeholder="不限" style="width: 100px;">
-                    </div>
-                    <div class="me-3">最低可接受之商品狀態
+                    <div class="me-3">商品狀態
                         <select name="" id="new_or_oldInput" class="form-select">
                             <option value="default">預設不排狀態</option>
-                            <option value="1">全新</option>
-                            <option value="2">稍新</option>
-                            <option value="3">半新</option>
-                            <option value="4">稍舊</option>
-                            <option value="5">半舊</option>
-                            <option value="6">全舊</option>
+                            <option value="1">僅限全新</option>
+                            <option value="2">稍新以上</option>
+                            <option value="3">半新以上</option>
+                            <option value="4">稍舊以上</option>
+                            <option value="5">半舊以上</option>
+                            <option value="6">全舊以上</option>
                         </select>
                     </div>
+                    <div class="me-3">最高預算
+                        <input type="number" id="maxPriceInput" class="form-control" placeholder="不限">
+                    </div>
                     <div class="me-3">
-                        <button id="filterBtn" class="btn btn-primary">篩選</button>
+                        <button id="filterBtn" class="btn">篩選</button>
                     </div>
                 </div>
                 <div class="filterResult">
-                    <p>您的篩選條件: </p>
-                    <button id="cleanFilter" class="btn btn-secondary">清除篩選</button>
+                    <h6>您的篩選條件: </h6>
                     <p id="filterAll"></p>
-                    <span id="filterResultCount">共找到 0 件商品</span>
+                    <span>共 <span id="filterResultCount"></span> 件商品</span>
+                    <button id="cleanFilter" class="btn">清除</button>
                 </div>
                 <!-- 主要區塊：用 bootstrap row/col 來排版 -->
                 <main class="flex-grow-1">

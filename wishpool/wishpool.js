@@ -231,4 +231,7 @@ urgency.addEventListener('change', validateUrgency);
         wishFormbig.submit();
       }
   });
-
+// card.addEventListener('click', () => {
+//   const pid = card.dataset.id;
+//   if (pid) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(pid)}`;
+// });

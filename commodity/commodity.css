@@ -1,13 +1,21 @@
+:root {
+  --brand-color: #004b97;
+  --second-brand-color: #BEE4DA;
+}
 .header_secondary {
     padding-left: 200px;
     padding-right: 200px;
-    background-color: #f3f3f3;
+    background-color: var(--second-brand-color);
 }
 .header_secondary a {
-    color: #383838 !important;
+    color: black !important;
     text-decoration: none;
-    font-size: 1.1rem;
     padding-left: 20px;
+}
+.header_secondary a:hover {
+    color: var(--brand-color) !important;
+    transition: color 0.3s ease;
+    text-decoration: none;
 }
 .sort_list {
     list-style: none;
@@ -34,10 +42,10 @@
   width: 240px;
   background: #fff;
   border-radius: 6px;
-  margin-right: 24px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   flex-shrink: 0;
   padding: 20px 20px;
+  /* padding-right: 48px; */
 }
 .deepCategorySort h6 {
   font-weight: 600;
@@ -105,7 +113,6 @@
 .contentOfCommodity {
     margin: 2vw 4vw;
     /* TODO 會去要看一下桌機排版 */
-    display: flex;
     align-items: flex-start;
 }
 #no-products i {
@@ -140,7 +147,7 @@
 #filterButton {
   margin-top: 12px;
 }
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   .deepCategorySort {
     display: none;
   }
@@ -155,9 +162,7 @@
   .sortAndProductdiv {
     width: 90vw;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    padding-left: 3px;
-    padding-right: 3px;
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 .skeleton {
@@ -192,4 +197,28 @@
 }
 #productRow .row {
   margin-top: 1.5rem;
+}
+#filterBtn {
+  background-color: var(--brand-color) !important;
+  color: white !important;
+}
+#cleanFilter {
+  background-color: var(--second-brand-color) !important;
+  color: black !important;
+  display: inline-block;
+  margin-left: 30px;
+}
+#filterAll {
+  white-space: pre-line;
+}
+.filterResult {
+  margin-left: 10px;
+  max-width: 300px;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: var(--second-brand-color) 2px 4px 6px -1px, var(--brand-color) 2px 2px 4px -1px;
+}
+#filterResultCount {
+  color: var(--brand-color);
+  font-weight: bold;
 }
