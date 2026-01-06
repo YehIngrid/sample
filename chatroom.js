@@ -807,7 +807,9 @@ class ChatRoom {
     ====================== */
 
     bindEvents() {
-        document.getElementById('messageForm').addEventListener('submit', e => {
+        const messageForm = document.getElementById('messageForm');
+        if(!messageForm) return;
+        messageForm.addEventListener('submit', e => {
             e.preventDefault();
             this.sendMessage();
         });
