@@ -422,7 +422,7 @@ async function showSellerCommodities(id) {
 
     products.forEach((product) => {
       const col = document.createElement('div');
-      col.className = 'col-12 col-md-6 col-lg-3 mb-3'; // 手機1排、平板2排、電腦4排
+      col.className = 'col-12 col-md-6 col-lg-4 mb-3'; // 手機1排、平板2排、電腦4排
     
       const card = document.createElement('div');
       card.className = 'card h-100';
