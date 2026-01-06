@@ -287,6 +287,7 @@ function openChatWithSeller(itemId) {
     Swal.fire({ icon: 'warning', title: '無法與賣家聊天', text: '缺少商品編號' });
     return;
   } else {
+    openCloseChatInterface();
     chatService = new ChatBackendService();
     chatService.createRoom(itemId)
       .then((data) => {
