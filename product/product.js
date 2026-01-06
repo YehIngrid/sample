@@ -2,6 +2,7 @@
 let backendService = null;
 let chatService = null;
 let chatRoom = null;
+let sellerId = null;
 const backbtn = document.querySelector('#back-btn');
 backbtn.addEventListener('click', function(e){
     window.history.back();
@@ -233,7 +234,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         const sellerIntroduction  = u.introduction || '賣家簡介';
         // 這裡確保是數字；u.rate 可能是字串
         const sellerRate          = Number.isFinite(+u.rate) ? +u.rate : 0;
-        const sellerId            = u.accountId;
+        sellerId            = u.accountId;
 
         // 組成 renderSellerInfo 需要的結構
         const data = {
@@ -522,8 +523,7 @@ function openCloseChatInterface(){
     talkInterface.style.display = 'block'; // 顯示
     chatService = new ChatBackendService();
     const itemName = document.getElementById('product-name').textContent || '商品';
-    const userId = backendService.whoami().id || backendService.whoami().accountId;
-    const sellerId = null;
+    const userId = backendService.whoami().data.uid || backendService.whoami().uid;
     chatService.createRoom(itemName, userId, sellerId)
       .then((data) => {
         const roomId = data?.roomId;
