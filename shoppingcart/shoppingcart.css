@@ -206,3 +206,11 @@
   border-radius: 50%;
   object-fit: cover;
 }
+#checkout-btn {
+  background-color: #004b97 !important;
+  color: white !important;
+}
+#checkout-btn:hover {
+  background-color: #0058af !important;
+  color: white !important;
+}

@@ -26,7 +26,7 @@ const LS_KEY = 'cart_state_v1';
 const LS_PICKUP_KEY = 'pickup_info_v1';
 
 function loadState() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || null; } catch { return null; } }
-function saveState(items) { localStorage.setItem(LS_KEY, JSON.stringify(items)); }
+function saveState(items) { onAddToCart(items.id, items.qty); localStorage.setItem(LS_KEY, JSON.stringify(items)); }
 function loadPickup() { try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; } }
 function savePickup(info) { localStorage.setItem(LS_PICKUP_KEY, JSON.stringify(info)); }
 
@@ -39,8 +39,6 @@ let cartItems = [];                  // 由 API 載入
 
 // 你的既有節點
 const cartList        = document.getElementById('cart-items');
-const pickupName      = document.getElementById('pickup-name');
-const pickupPhone     = document.getElementById('pickup-phone');
 const pickupPlace     = document.getElementById('pickup-place');
 const pickupDatetime  = document.getElementById('pickup-datetime');
 const pickupNote      = document.getElementById('pickup-note');
@@ -97,6 +95,26 @@ function normalizeCartResponse(payload) {
   });
 }
 
+async function onAddToCart(itemId, quantity) {
+  try {
+    const res = await backendService.addItemsToCart(itemId, quantity);
+    console.log('加入購物車成功：', res);
+    await initCartFromAPI(); // 重新載入購物車
+    Swal.fire({
+      icon: 'success',
+      title: '成功更新商品數量',
+      showConfirmButton: false,
+      timer: 1500
+    });
+  } catch (err) {
+    console.error('加入購物車失敗：', err);
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: '更新商品數量失敗，請稍後再試'
+    });
+  }
+}
 // ============ 3) 取購物車 ============
 async function initCartFromAPI() {
   try {
@@ -108,8 +126,6 @@ async function initCartFromAPI() {
 
     (function restorePickup() {
       const info = loadPickup();
-      if (pickupName && info.name)         pickupName.value     = info.name;
-      if (pickupPhone && info.phone)       pickupPhone.value    = info.phone;
       if (pickupPlace && info.place)       pickupPlace.value    = info.place;
       if (pickupDatetime && info.datetime) pickupDatetime.value = info.datetime;
       if (pickupNote && info.note)         pickupNote.value     = info.note;
@@ -464,12 +480,10 @@ if (clearAllBtn) {
 
 
 // ============ 10) 面交資訊（儲存/還原 & 驗證） ============
-[pickupName, pickupPhone, pickupPlace, pickupDatetime, pickupNote].forEach(el => {
+[pickupPlace, pickupDatetime, pickupNote].forEach(el => {
   if (!el) return;
   el.addEventListener('input', () => {
     savePickup({
-      name:     pickupName?.value?.trim() ?? '',
-      phone:    pickupPhone?.value?.trim() ?? '',
       place:    pickupPlace?.value?.trim() ?? '',
       datetime: pickupDatetime?.value ?? '',
       note:     pickupNote?.value?.trim() ?? '',
@@ -477,9 +491,7 @@ if (clearAllBtn) {
   });
 });
 
-function validPhone(tel) {
-  return /^09\d{8}$/.test(String(tel || '').replace(/[-\s]/g,''));
-}
+
 
 const checkoutBtn = document.getElementById('checkout-btn');
 if (checkoutBtn) {
@@ -487,17 +499,13 @@ if (checkoutBtn) {
     const selected = cartItems.filter(i => i.checked);
     if (selected.length === 0) return alert('請先勾選要結帳的商品');
 
-    if (!pickupName?.value?.trim() || !pickupPhone?.value?.trim() || !pickupPlace?.value?.trim() || !pickupDatetime?.value) {
-      return alert('請完整填寫面交資訊：姓名、電話、地點與時間。');
-    }
-    if (!validPhone(pickupPhone.value)) {
-      return alert('電話格式不正確，請填寫 09xxxxxxxx。');
+    if (!pickupPlace?.value?.trim() || !pickupDatetime?.value) {
+      return alert('請完整填寫面交資訊：地點與時間。');
     }
 
     // 只取 cart item 的 id
     const cartItemsId = selected.map(i => i.id);
-    alert('模擬送出訂單，包含的 cart item id 有：' + cartItemsId.join(', '));
-    // 呼叫建立訂單
+
     handleCreateOrder(cartItemsId);
   });
 }

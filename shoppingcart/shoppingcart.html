@@ -131,7 +131,7 @@
     <div class="col-lg-4">
       <div class="card summary-card">
         <div class="card-body">
-          <h5 class="card-title">訂單摘要</h5>
+          <h5 class="card-title">訂單資訊</h5>
 
           <!-- 訂單狀態 -->
           <div class="mb-3">
@@ -145,18 +145,10 @@
               <span class="badge text-bg-primary">面交</span>
               <span>面交取貨付款（COD）</span>
             </div>
-            <div class="form-text">僅支援面對面交付與當面付款。</div>
+            <div class="form-text">目前僅支援面對面交付與當面付款。</div>
           </div>
 
           <!-- 面交資訊 -->
-          <div class="mb-3">
-            <label class="form-label">聯絡人</label>
-            <input id="pickup-name" type="text" class="form-control" placeholder="姓名（必填）" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">聯絡電話</label>
-            <input id="pickup-phone" type="tel" class="form-control" placeholder="09xx-xxx-xxx（必填）" required>
-          </div>
           <div class="mb-3">
             <label class="form-label">面交地點</label>
             <input id="pickup-place" type="text" class="form-control" placeholder="例：中興大學 正門/圖書館門口（必填）" required>
@@ -183,7 +175,7 @@
             <tbody><!-- 動態插入 --></tbody>
           </table>
 
-          <hr>
+
           <div class="d-flex justify-content-between">
             <span class="muted-sm">小計</span>
             <span id="subtotal" class="price">NT$ 0</span>
@@ -201,51 +193,13 @@
             <span id="grand-total" class="fw-bold text-danger price">NT$ 0</span>
           </div>
 
-          <button id="checkout-btn" class="btn btn-primary w-100 mt-3">送出訂單（面交付款）</button>
+          <button id="checkout-btn" class="btn w-100 mt-3">送出訂單（面交付款）</button>
           <div class="form-text mt-2">只有被勾選的商品會計入本次訂單。</div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div class="footer">
-            <div class="container" >
-                <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
-                    <div class="col-md-4" style="padding-left: 30px;">
-                        <h3>聯絡我們</h3>
-                        <p>電子郵件：
-                            <a href="mailto:treasurehub@gmail.com">
-                                treasurehub@gmail.com
-                            </a>
-                        </p>
-                    </div>
-                    <div class="col-md-4" style="padding-left: 30px;">
-                        <h3>關於我們</h3>
-                        <p>一個專為大學生打造的二手商場、校園商機、資訊交易整合平台</p>
-                    </div>
-                    <div class="col-md-4" style="padding-left: 30px;"> 
-                        <h3>社交媒體</h3>
-                        <p class="d-flex">
-                            <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 3rem; padding-right: 18px;"></i></a><br>
-                            <a href="#" target="_blank"><i class="fa-brands fa-line" style="font-size: 3rem;"></i></a>
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <p>Copyright&copy; 2025拾貨寶庫｜All Rights Reserved.</p>
-                        <div class="footer-row d-md-flex justify-content-center d-none">
-                            <li><a href="../introduce/introduce.html">關於我們</a></li>
-                            <li><a href="../questions/questions.html">常見問題</a></li>
-                            <li><a href="../communication/communication.html">客服諮詢</a></li>
-                            <li><a href="../policy/policy.html">隱私政策</a></li>
-                            <li><a href="#">使用條款</a></li>
-                            <li><a href="#">退換貨政策</a></li>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 </main>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

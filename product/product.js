@@ -1,17 +1,18 @@
 // 全域變數（不要再用 const/let 重新宣告它）
 let backendService = null;
+let chatService = null;
+let chatRoom = null;
 const backbtn = document.querySelector('#back-btn');
 backbtn.addEventListener('click', function(e){
     window.history.back();
 })
-
+let itemId = new URLSearchParams(location.search).get('id');
 document.addEventListener('DOMContentLoaded', () => {
   const backendService = new BackendService();
 
   // 取得 URL ?id=xxx
-  const id = new URLSearchParams(location.search).get('id');
-  console.log('id:', id);
-  if (!id) {
+  console.log('id:', itemId);
+  if (!itemId) {
     console.warn('缺少商品 id');
     return;
   }
@@ -275,15 +276,33 @@ function renderSellerInfo(data) {
   if (scoreEl) scoreEl.textContent = Number.isFinite(+data.score) ? +data.score : 0;
 
   // 綁事件（依你的路由調整）
-  if (chatBtn)   chatBtn.onclick   = () => openChatWithSeller(data.id);
+  if (chatBtn)   chatBtn.onclick   = () => openChatWithSeller(itemId);
   if (rateBtn)   rateBtn.onclick   = () => openSellerReviews(data.id);
   if (reportBtn) reportBtn.onclick = () => reportSeller(data.id);
 }
 
 // === 事件處理：依你的實作調整 ===
-function openChatWithSeller(sellerId) {
-  if (!sellerId) return;
-  location.href = `../chat/?to=${encodeURIComponent(sellerId)}`;
+function openChatWithSeller(itemId) {
+  if (!itemId) {
+    Swal.fire({ icon: 'warning', title: '無法與賣家聊天', text: '缺少商品編號' });
+    return;
+  } else {
+    chatService = new ChatBackendService();
+    chatService.createRoom(itemId)
+      .then((data) => {
+        const roomId = data?.roomId;
+        if (roomId) {
+          // TODO: 顯示聊天室介面（依你的路由調整）
+          openCloseChatInterface();
+        } else {
+          Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+        }
+      })
+      .catch((err) => {
+        console.error('建立聊天室失敗：', err);
+        Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+      });
+  }
 }
 function openSellerReviews(sellerId) {
   if (!sellerId) return;
@@ -481,4 +500,45 @@ async function orderNow(productId) {
     console.error(err);
     alert("發生錯誤，請稍後再試");
   }
+}
+// 聊天室介面顯示與隱藏
+const chatopen = document.getElementById('chaticon');
+const chatclose = document.getElementById('closechat');
+const talkInterface = document.getElementById('talkInterface');
+chatopen.addEventListener('click', function(e){
+    openCloseChatInterface();
+})
+function openCloseChatInterface(){
+  if(!backendService.whoami()){
+    Swal.fire({
+      title: '請先登入會員',
+      icon: 'warning',
+      confirmButtonText: '確定'
+    });
+    return;
+  }
+  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+    talkInterface.style.display = 'block'; // 顯示
+    chatService = new ChatBackendService();
+    const itemName = document.getElementById('product-name').textContent || '商品';
+    const userId = backendService.whoami().id || backendService.whoami().accountId;
+    const sellerId = null;
+    chatService.createRoom(itemName, String(userId), String(sellerId))
+      .then((data) => {
+        const roomId = data?.roomId;
+        if (roomId) {
+          chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+          chatRoom.init();
+        } else {
+          Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+        }
+      })
+      .catch((err) => {
+        console.error('建立聊天室失敗：', err);
+        Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+      });
+  } else {
+    talkInterface.style.display = 'none'; // 隱藏
+  }
+  console.log('chat open');
 }

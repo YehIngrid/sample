@@ -335,7 +335,7 @@ function renderProductsBootstrap(items) {
 
   items.forEach(p => {
     const col = document.createElement('div');
-    col.className = 'col-5 col-md-4 col-lg-2';
+    col.className = 'col-6 col-md-4 col-lg-2';
     const categoryMap = {
         book: '書籍與學籍用品',
         life: '宿舍與生活用品',
