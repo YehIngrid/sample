@@ -664,7 +664,7 @@ class ChatRoom {
         try {
             const rooms = await this.backend.listRooms();
 
-            rooms.forEach(room => {
+            rooms.data.forEach(room => {
                 const item = document.createElement('div');
                 item.className = 'chat-item';
                 item.dataset.roomId = room.id;
