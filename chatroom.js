@@ -665,8 +665,11 @@ class ChatRoom {
         try {
             const rooms = await this.backend.listRooms();  
             console.log(rooms);
-
-            rooms.data.roomId.forEach(room => {
+            if (!rooms.data || rooms.data.length === 0) {
+                chatList.innerHTML = '<p class="text-center text-muted mt-3">無可用聊天室</p>';
+                return;
+            }
+            rooms.data.forEach(room => {
                 const item = document.createElement('div');
                 item.className = 'chat-item';
                 item.dataset.roomId = room.id;

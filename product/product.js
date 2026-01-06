@@ -524,7 +524,7 @@ function openCloseChatInterface(){
     const itemName = document.getElementById('product-name').textContent || '商品';
     const userId = backendService.whoami().id || backendService.whoami().accountId;
     const sellerId = null;
-    chatService.createRoom(itemName, String(userId), String(sellerId))
+    chatService.createRoom(itemName, userId, sellerId)
       .then((data) => {
         const roomId = data?.roomId;
         if (roomId) {
