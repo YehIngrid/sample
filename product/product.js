@@ -335,7 +335,7 @@ function reportSeller(sellerId) {
 
   // 呼叫 API（新版帶 id；若舊簽名不帶 id 則 fallback）
   try {
-    backendService.getItemsInfo(id, onSuccess, onError);
+    backendService.getItemsInfo(itemId, onSuccess, onError);
   } catch (e) {
     console.warn('GetItemsInfo(id, ...) 呼叫失敗，嘗試舊簽名：', e);
     backendService.getItemsInfo(onSuccess);
