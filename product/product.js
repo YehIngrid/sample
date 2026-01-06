@@ -511,6 +511,7 @@ chatopen.addEventListener('click', function(e){
     openCloseChatInterface();
 })
 function openCloseChatInterface(){
+  backendService = new BackendService();
   if(!backendService.whoami()){
     Swal.fire({
       title: '請先登入會員',
