@@ -662,7 +662,8 @@ class ChatRoom {
         chatList.innerHTML = '';
 
         try {
-            const rooms = await this.backend.listRooms();
+            const rooms = await this.backend.listRooms();  
+            console.log(rooms);
 
             rooms.data.roomId.forEach(room => {
                 const item = document.createElement('div');
