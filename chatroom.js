@@ -659,8 +659,9 @@ class ChatRoom {
 
     async loadRooms() {
         const chatList = document.getElementById('chatList');
+        if (!chatList) return;
         chatList.innerHTML = '';
-
+        
         try {
             const rooms = await this.backend.listRooms();  
             console.log(rooms);
