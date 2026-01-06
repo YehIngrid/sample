@@ -523,7 +523,8 @@ function openCloseChatInterface(){
     talkInterface.style.display = 'block'; // 顯示
     chatService = new ChatBackendService();
     const itemName = document.getElementById('product-name').textContent || '商品';
-    const userId = backendService.whoami().data.uid || backendService.whoami().uid;
+    const result = backendService.whoami();
+    const userId = result.data.uid || result.uid || result.data;
     chatService.createRoom(itemName, userId, sellerId)
       .then((data) => {
         const roomId = data?.roomId;
