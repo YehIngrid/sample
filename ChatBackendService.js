@@ -44,7 +44,7 @@ class ChatBackendService {
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/create-room`,
-                { participants: [String(userId), String(sellerId)], roomName: [String(itemName)] }
+                { participants: [userId, sellerId], roomName: itemName }
             );
             return response.data;
         } catch (error) {
