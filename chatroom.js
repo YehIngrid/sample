@@ -717,7 +717,10 @@ class ChatRoom {
         container.innerHTML = '';
 
         // 載入歷史訊息
-        const history = await this.backend.getHistory(roomId);
+        const before = new Date().toISOString();
+        if(!before) return;
+        console.log('載入歷史訊息', roomId, before);
+        const history = await this.backend.getHistory(roomId, limit=50, before);
         history.forEach(msg => this.renderMessage(msg));
 
         // SSE
