@@ -31,7 +31,7 @@ class ChatBackendService {
     async getHistory(roomId) {
         try {
             const response = await axios.get(
-                `${this.baseUrl}/api/chat/history`, {params: { roomId: roomId }}
+                `${this.baseUrl}/api/chat/history`, {params: { roomId: String(roomId) }}
             );
             return response.data;
         } catch (error) {
