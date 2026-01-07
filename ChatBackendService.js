@@ -28,10 +28,10 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    async getHistory(roomId) {
+    async getHistory(roomId, limit = 50, before = pickupDatetime) {
         try {
             const response = await axios.get(
-                `${this.baseUrl}/api/chat/history`, {params: { roomId: String(roomId) }}
+                `${this.baseUrl}/api/chat/history`, {params: { roomId: String(roomId), limit, before: before }}
             );
             return response.data;
         } catch (error) {
