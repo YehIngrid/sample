@@ -64,7 +64,7 @@ class ChatBackendService {
         }
     }
     async openSse(roomId) {
-        const eventSource = new EventSource(`/api/chat/stream?room=${roomId}`, {
+        const eventSource = new EventSource(`${this.baseUrl}/api/chat/stream?room=${roomId}`, {
             withCredentials: true
         }, {params: { room: String(roomId) }});
 
