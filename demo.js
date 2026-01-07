@@ -31,6 +31,7 @@ async function renderAuthUI() {
   backendService = new BackendService();
   const user = await backendService.whoami(); // 成功代表已登入
   console.log("目前使用", user);
+  console.log("test userid", user.data.uid);
 
   document.querySelectorAll('.username').forEach((el) => {
     el.textContent = localStorage.getItem("username") || '使用者';
