@@ -524,9 +524,9 @@ async function openCloseChatInterface(){
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
     talkInterface.style.display = 'block'; // 顯示
     chatService = new ChatBackendService();
-    const itemName = document.getElementById('product-name').textContent || '商品';
+    // const itemName = document.getElementById('product-name').textContent || '商品';
     const userId = res.data.uid;
-    chatService.createRoom(itemName, userId, sellerId)
+    chatService.createRoom(itemId, userId, sellerId)
       .then((data) => {
         const roomId = data?.roomId;
         if (roomId) {

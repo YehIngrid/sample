@@ -40,11 +40,11 @@ class ChatBackendService {
         }
     }
     // TODO : createRoom 需要 itemName, userId, sellerId 參數，記得要傳字串不是id
-    async createRoom(itemName, userId, sellerId) {
+    async createRoom(itemId, userId, sellerId) {
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/create-room`,
-                { participants: [userId, sellerId], roomName: itemName }
+                { participants: [userId, sellerId], roomName: itemId }
             );
             return response.data;
         } catch (error) {
