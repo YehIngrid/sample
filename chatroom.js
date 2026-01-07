@@ -633,6 +633,8 @@ class ChatRoom {
         this.currentRoomId = null;
         this.currentRoomName = '';
         this.eventSource = null;
+        this.auth = new BackendService();
+        this.myId = this.auth.whoami()?.uid || null;
         this.username = '我'; // 可之後改成登入使用者
         this.isMobile = window.innerWidth < 768;
         this.lightbox = null; // PhotoSwipe instance
@@ -731,9 +733,9 @@ class ChatRoom {
         let typingTimer;
         input.addEventListener('input', () => {
             clearTimeout(typingTimer);
-            this.sendTypingStatus(true);
+            this.showTyping(true);
             typingTimer = setTimeout(() => {
-                this.sendTypingStatus(false);
+                this.showTyping(false);
             }, 1000);
         });
     }
@@ -764,8 +766,8 @@ class ChatRoom {
                             <i class="bi bi-chat-dots-fill"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0">${room.roomId}房間</h6>
-                            <small class="text-muted">${room.lastMessage || '無描述'}</small>
+                            <h6 class="mb-0">${room.id}房間</h6>
+                            <small class="text-muted">${room.lastMessageId || '無描述'}</small>
                         </div>
                     </div>
                 `;
@@ -868,7 +870,7 @@ class ChatRoom {
 
     renderMessage(data) {
         const container = document.getElementById('messagesContainer');
-        const isSelf = data.senderName === this.username;
+        const isSelf = data.ownerId === this.myId;
 
         const time = new Date(data.createdAt).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
@@ -887,7 +889,7 @@ class ChatRoom {
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf
                         ? `<small class="text-muted me-2">${time}</small><strong>我</strong>`
-                        : `<strong>${data.senderName}</strong><small class="text-muted ms-2">${time}</small>`
+                        : `<strong>${data.ownerId}</strong><small class="text-muted ms-2">${time}</small>`
                     }
                 </div>
                 <div class="message-text">
