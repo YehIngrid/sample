@@ -526,6 +526,8 @@ async function openCloseChatInterface(){
     chatService = new ChatBackendService();
     // const itemName = document.getElementById('product-name').textContent || '商品';
     const userId = res.data.uid;
+    console.log("userId:", userId);
+    console.log("sellerId:", sellerId);
     chatService.createRoom(itemId, userId, sellerId)
       .then((data) => {
         const roomId = data?.roomId;
