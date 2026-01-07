@@ -66,7 +66,7 @@ class ChatBackendService {
     async openSse(roomId) {
         const eventSource = new EventSource(`/api/chat/stream?roomId=${roomId}`, {
             withCredentials: true
-        }, {params: { roomId: roomId }});
+        }, {params: { roomId: String(roomId) }});
 
         eventSource.addEventListener('message', (event) => {
         const data = JSON.parse(event.data);
