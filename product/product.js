@@ -510,9 +510,10 @@ const talkInterface = document.getElementById('talkInterface');
 chatopen.addEventListener('click', function(e){
     openCloseChatInterface();
 })
-function openCloseChatInterface(){
+async function openCloseChatInterface(){
   backendService = new BackendService();
-  if(!backendService.whoami()){
+  const res = await backendService.whoami();
+  if(!res){
     Swal.fire({
       title: '請先登入會員',
       icon: 'warning',
@@ -524,8 +525,7 @@ function openCloseChatInterface(){
     talkInterface.style.display = 'block'; // 顯示
     chatService = new ChatBackendService();
     const itemName = document.getElementById('product-name').textContent || '商品';
-    const result = backendService.whoami();
-    const userId = result.data.uid || result.uid || result.data;
+    const userId = res.data.uid;
     chatService.createRoom(itemName, userId, sellerId)
       .then((data) => {
         const roomId = data?.roomId;
