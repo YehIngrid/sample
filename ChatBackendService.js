@@ -20,7 +20,7 @@ class ChatBackendService {
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/typing`,
-                { roomId: roomId, isTyping: true }
+                { room: String(roomId), isTyping: true }
             );
             return response.data;
         } catch (error) {
