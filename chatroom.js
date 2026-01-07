@@ -1,13 +1,3 @@
-
-
-// // function openCloseChatInterface() {
-// //     const chatInterface = document.getElementById('talkInterface');
-// //     if (chatInterface.style.display === 'none' || chatInterface.style.display === '') {
-// //         chatInterface.style.display = 'block';
-// //     } else {
-// //         chatInterface.style.display = 'none';
-// //     }
-// // }
 // class ChatRoom {
 //     constructor() {
 //         this.currentRoom = 'general';        
@@ -644,6 +634,8 @@ class ChatRoom {
         this.currentRoomName = '';
         this.eventSource = null;
         this.username = '我'; // 可之後改成登入使用者
+        this.isMobile = window.innerWidth < 768;
+        this.lightbox = null; // PhotoSwipe instance
 
         this.init();
     }
@@ -651,8 +643,101 @@ class ChatRoom {
     async init() {
         this.bindEvents();
         await this.loadRooms();
+        this.setupMobileView();
+        this.initPhotoSwipe();
+        window.addEventListener('resize', () => {
+            this.handleResize();
+        });
     }
 
+    initPhotoSwipe() {
+        // 動態載入 PhotoSwipe CSS 和 JS
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css';
+        document.head.appendChild(cssLink);
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe-lightbox.esm.min.js';
+        script.type = 'module';
+        script.onload = () => {
+            console.log('PhotoSwipe 已載入');
+        };
+        document.head.appendChild(script);
+    }
+
+    setupMobileView() {
+        this.isMobile = window.innerWidth < 768;
+        if (this.isMobile) {
+            this.showSidebar();
+            this.hideChatMain();
+        } else {
+            this.showSidebar();
+            this.showChatMain();
+        }
+    }
+
+    handleResize() {
+        const wasMobile = this.isMobile;
+        this.isMobile = window.innerWidth < 768;
+        if (wasMobile && !this.isMobile) {
+            this.showSidebar();
+            this.showChatMain();
+        } else if (!wasMobile && this.isMobile) {
+            this.showSidebar();
+            this.hideChatMain();
+        }  
+    }
+
+    showSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.remove('mobile-hidden');
+    }
+    hideSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.add('mobile-hidden');
+    }
+    showChatMain() {
+        const chatMain = document.getElementById('chatMain');
+        chatMain.classList.remove('mobile-hidden');
+    }
+    hideChatMain() {
+        const chatMain = document.getElementById('chatMain');
+        chatMain.classList.add('mobile-hidden');
+    }
+    switchToChat() {
+        if (this.isMobile) {
+            this.hideSidebar();
+            this.showChatMain();
+        }
+    }
+    backToSidebar() {
+        if (this.isMobile) {
+            this.showSidebar();
+            this.hideChatMain();
+        }
+    }
+
+    bindEvents() {
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', () => {
+            this.backToSidebar();
+        });
+        const form = document.getElementById('messageForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.sendMessage();
+        });
+        const input = document.getElementById('messageInput');
+        let typingTimer;
+        input.addEventListener('input', () => {
+            clearTimeout(typingTimer);
+            this.sendTypingStatus(true);
+            typingTimer = setTimeout(() => {
+                this.sendTypingStatus(false);
+            }, 1000);
+        });
+    }
+    
     /* ======================
        聊天室列表
     ====================== */
@@ -673,27 +758,27 @@ class ChatRoom {
                 const item = document.createElement('div');
                 item.className = 'chat-item';
                 item.dataset.roomId = room.id;
-
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
                             <i class="bi bi-chat-dots-fill"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0">${room.roomName}</h6>
+                            <h6 class="mb-0">${room.roomId}房間</h6>
+                            <small class="text-muted">${room.lastMessage || '無描述'}</small>
                         </div>
                     </div>
                 `;
 
                 item.addEventListener('click', () => {
-                    this.switchRoom(room.id, room.roomName);
+                    this.switchRoom(room.id);
                 });
 
                 chatList.appendChild(item);
             });
 
             if (rooms.length > 0) {
-                this.switchRoom(rooms[0].id, rooms[0].roomName);
+                this.switchRoom(rooms[0].id);
             }
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
@@ -704,14 +789,14 @@ class ChatRoom {
        切換聊天室
     ====================== */
 
-    async switchRoom(roomId, roomName) {
+    async switchRoom(roomId) {
         this.currentRoomId = roomId;
-        this.currentRoomName = roomName;
+        //this.currentRoomName = roomName;
 
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
 
-        document.querySelector('.chat-header h5').textContent = roomName;
+        document.querySelector('.chat-header h5').textContent = roomId + '房間';
 
         const container = document.getElementById('messagesContainer');
         container.innerHTML = '';
@@ -748,7 +833,8 @@ class ChatRoom {
 
         this.eventSource.addEventListener('typing', (event) => {
             const data = JSON.parse(event.data);
-            this.showTyping(data.username);
+            console.log('有人正在輸入...', data);
+            this.showTyping();
         });
 
         this.eventSource.addEventListener('status', (event) => {
@@ -771,7 +857,8 @@ class ChatRoom {
         const text = input.value.trim();
         if (!text || !this.currentRoomId) return;
 
-        await this.backend.sendMessage(this.currentRoomId, text);
+        const data =await this.backend.sendMessage(this.currentRoomId, text);
+        this.renderMessage(data);
         input.value = '';
     }
 
@@ -813,10 +900,10 @@ class ChatRoom {
         container.scrollTop = container.scrollHeight;
     }
 
-    showTyping(username) {
+    showTyping() {
         const indicator = document.getElementById('typingIndicator');
         indicator.style.display = 'block';
-        indicator.innerHTML = `<small>${username} 正在輸入...</small>`;
+        indicator.innerHTML = `<small>有人正在輸入...</small>`;
         clearTimeout(this.typingTimer);
         this.typingTimer = setTimeout(() => {
             indicator.style.display = 'none';
@@ -827,23 +914,23 @@ class ChatRoom {
        綁定事件
     ====================== */
 
-    bindEvents() {
-        const messageForm = document.getElementById('messageForm');
-        if(!messageForm) return;
-        messageForm.addEventListener('submit', e => {
-            e.preventDefault();
-            this.sendMessage();
-        });
+    // bindEvents() {
+    //     const messageForm = document.getElementById('messageForm');
+    //     if(!messageForm) return;
+    //     messageForm.addEventListener('submit', e => {
+    //         e.preventDefault();
+    //         this.sendMessage();
+    //     });
 
-        document.getElementById('messageInput').addEventListener('input', () => {
-            this.backend.typing(this.currentRoomId);
-        });
+    //     document.getElementById('messageInput').addEventListener('input', () => {
+    //         this.backend.typing(this.currentRoomId);
+    //     });
 
-        document.getElementById('backButton')?.addEventListener('click', () => {
-            document.getElementById('sidebar').classList.remove('mobile-hidden');
-            document.getElementById('chatMain').classList.add('mobile-hidden');
-        });
-    }
+    //     document.getElementById('backButton')?.addEventListener('click', () => {
+    //         document.getElementById('sidebar').classList.remove('mobile-hidden');
+    //         document.getElementById('chatMain').classList.add('mobile-hidden');
+    //     });
+    // }
 
     escapeHtml(text) {
         const div = document.createElement('div');
