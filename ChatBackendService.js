@@ -8,7 +8,7 @@ class ChatBackendService {
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/send-message`,
-                { roomId: roomId, message: message }
+                { room: String(roomId), message: message }
             );
             return response.data;
         } catch (error) {
