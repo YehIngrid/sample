@@ -720,7 +720,8 @@ class ChatRoom {
         const before = new Date().toISOString();
         if(!before) return;
         console.log('載入歷史訊息', roomId, before);
-        const history = await this.backend.getHistory(roomId, limit=50, before);
+        const limit = 50;
+        const history = await this.backend.getHistory(roomId, limit, before);
         history.forEach(msg => this.renderMessage(msg));
 
         // SSE

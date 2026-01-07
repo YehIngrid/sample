@@ -28,7 +28,7 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    async getHistory(roomId, limit = 50, before) {
+    async getHistory(roomId, limit, before) {
         try {
             const response = await axios.get(
                 `${this.baseUrl}/api/chat/history`, {params: { roomId: String(roomId), limit, before: before }}
