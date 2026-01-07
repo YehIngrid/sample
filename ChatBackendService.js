@@ -77,6 +77,10 @@ class ChatBackendService {
         console.log('使用者正在輸入:', event.data);
         });
 
+        eventSource.addEventListener('status', (event) => {
+        console.log('狀態更新:', event.data);
+        });
+
         eventSource.onerror = (error) => {
         console.error('連接錯誤:', error);
         eventSource.close();

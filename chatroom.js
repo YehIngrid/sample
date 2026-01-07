@@ -748,6 +748,16 @@ class ChatRoom {
             const data = JSON.parse(event.data);
             this.showTyping(data.username);
         });
+
+        this.eventSource.addEventListener('status', (event) => {
+            const data = JSON.parse(event.data);
+            console.log('連線狀態:', data);
+        });
+
+        this.eventSource.onerror = (error) => {
+            console.error('SSE 連接錯誤:', error);
+            this.eventSource.close();
+        };
     }
 
     /* ======================
