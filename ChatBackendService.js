@@ -39,12 +39,11 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    // TODO : createRoom 需要 itemName, userId, sellerId 參數，記得要傳字串不是id
     async createRoom(itemId, userId, sellerId) {
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/create-room`,
-                { participants: [userId, sellerId], roomName: itemId }
+                { participants: [userId, sellerId], roomName: "商品討論", itemId: itemId }
             );
             return response.data;
         } catch (error) {
