@@ -722,7 +722,7 @@ class ChatRoom {
         console.log('載入歷史訊息', roomId, before);
         const limit = 50;
         const history = await this.backend.getHistory(roomId, limit, before);
-        history.data.message.forEach(msg => this.renderMessage(msg));
+        history.data.forEach(msg => this.renderMessage(msg));
 
         // SSE
         this.connectSSE(roomId);
