@@ -912,7 +912,7 @@ class ChatRoom {
         clearTimeout(this.typingTimer);
         this.typingTimer = setTimeout(() => {
             indicator.style.display = 'none';
-        }, 2000);
+        }, 1000);
     }
 
     /* ======================
