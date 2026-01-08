@@ -113,12 +113,12 @@ html, body {
 .message {
     display: flex;
     margin-bottom: 16px;
-    animation: fadeIn 0.3s ease-in;
+    animation: fadeIn 0.1s ease-in;
 }
 .imgmessage {
     display: flex;
     margin-top: 5px;
-    animation: fadeIn 0.3s ease-in;
+    animation: fadeIn 0.1s ease-in;
 }
 .imgmessage img {
     margin-left: 10px;
@@ -127,7 +127,7 @@ html, body {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(7px);
     }
     to {
         opacity: 1;
