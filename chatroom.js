@@ -633,6 +633,7 @@ class ChatRoom {
         this.currentRoomId = null;
         this.currentRoomName = '';
         this.eventSource = null;
+        this.username = '';
         this.auth = new BackendService();
         this.myId = this.auth.whoami()?.uid || null;
         this.username = '我'; // 可之後改成登入使用者
@@ -870,13 +871,13 @@ class ChatRoom {
 
     renderMessage(data) {
         const container = document.getElementById('messagesContainer');
-        const isSelf = data.ownerId === this.myId;
+        const isSelf = data.data?.username === this.username || data.data?.userId === this.myId;
 
-        const time = new Date(data.createdAt).toLocaleTimeString('zh-TW', {
+        const timestamp = new Date(data.data?.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
             minute: '2-digit'
         });
-
+        this.username = localStorage.getItem('username') || '我';
         const div = document.createElement('div');
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
 
@@ -888,12 +889,12 @@ class ChatRoom {
             <div class="message-content">
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf
-                        ? `<small class="text-muted me-2">${time}</small><strong>我</strong>`
-                        : `<strong>${data.ownerId}</strong><small class="text-muted ms-2">${time}</small>`
+                        ? `<small class="text-muted me-2">${timestamp}</small><strong>我</strong>`
+                        : `<strong>${data.data?.username}</strong><small class="text-muted ms-2">${timestamp}</small>`
                     }
                 </div>
                 <div class="message-text">
-                    ${this.escapeHtml(data.message)}
+                    ${this.escapeHtml(data.data?.message)}
                 </div>
             </div>
         `;
