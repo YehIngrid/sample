@@ -872,14 +872,14 @@ class ChatRoom {
     renderMessage(data) {
         const container = document.getElementById('messagesContainer');
         console.log('data', data);
-        const isSelf = data.data?.userId === this.myId;
+        this.username = localStorage.getItem('username');
+        const isSelf = this.username === data.data.username;
 
         const timestamp = new Date(data.data?.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
             minute: '2-digit'
         });
-        this.username = localStorage.getItem('username') || '我';
-        console.log('username:', this.username, localStorage.getItem('username'));
+        
         const div = document.createElement('div');
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
 
@@ -892,7 +892,7 @@ class ChatRoom {
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf
                         ? `<small class="text-muted me-2">${timestamp}</small><strong>${this.username}</strong>`
-                        : `<strong>${data.data?.username}</strong><small class="text-muted ms-2">${timestamp}</small>`
+                        : `<strong>老闆</strong><small class="text-muted ms-2">${timestamp}</small>`
                     }
                 </div>
                 <div class="message-text">
