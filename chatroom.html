@@ -142,6 +142,11 @@
 
                 <!-- 輸入區域 -->
                 <div class="message-input-container p-3 border-top">
+                    <div id="typingIndicator" class="typing-indicator mt-2" style="display: none;">
+                        <small class="text-muted">
+                            <i class="bi bi-three-dots"></i> 有人正在輸入...
+                        </small>
+                    </div>
                     <form id="messageForm" class="d-flex gap-2">
                         <input type="file" id="image-upload" accept="image/*" hidden>
                         <button type="button" class="sendothericon" id="send-image-btn">
@@ -158,11 +163,6 @@
                             <img src="svg/newsend.svg" alt="" style="width: 100%;">
                         </button>
                     </form>
-                    <div id="typingIndicator" class="typing-indicator mt-2" style="display: none;">
-                        <small class="text-muted">
-                            <i class="bi bi-three-dots"></i> 有人正在輸入...
-                        </small>
-                    </div>
                 </div>
             </div>
         </div>
