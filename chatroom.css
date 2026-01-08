@@ -191,6 +191,7 @@ html, body {
 
 .typing-indicator {
     animation: pulse 1.5s infinite;
+    padding: 10px 30px;
 }
 
 @keyframes pulse {
