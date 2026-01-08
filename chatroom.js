@@ -871,7 +871,7 @@ class ChatRoom {
 
     renderMessage(data) {
         const container = document.getElementById('messagesContainer');
-        console.log('data.data.userId:', data.data.userId, 'data.userId:', data.userId);
+        console.log('data', data);
         const isSelf = data.data?.userId === this.myId;
 
         const timestamp = new Date(data.data?.timestamp).toLocaleTimeString('zh-TW', {
