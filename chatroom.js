@@ -871,13 +871,15 @@ class ChatRoom {
 
     renderMessage(data) {
         const container = document.getElementById('messagesContainer');
-        const isSelf = data.data?.username === this.username || data.data?.userId === this.myId;
+        console.log('data.data.userId:', data.data.userId, 'data.userId:', data.userId);
+        const isSelf = data.data?.userId === this.myId;
 
         const timestamp = new Date(data.data?.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
             minute: '2-digit'
         });
         this.username = localStorage.getItem('username') || '我';
+        console.log('username:', this.username, localStorage.getItem('username'));
         const div = document.createElement('div');
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
 
@@ -889,7 +891,7 @@ class ChatRoom {
             <div class="message-content">
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf
-                        ? `<small class="text-muted me-2">${timestamp}</small><strong>我</strong>`
+                        ? `<small class="text-muted me-2">${timestamp}</small><strong>${this.username}</strong>`
                         : `<strong>${data.data?.username}</strong><small class="text-muted ms-2">${timestamp}</small>`
                     }
                 </div>
@@ -910,7 +912,7 @@ class ChatRoom {
         clearTimeout(this.typingTimer);
         this.typingTimer = setTimeout(() => {
             indicator.style.display = 'none';
-        }, 3000);
+        }, 2000);
     }
 
     /* ======================
