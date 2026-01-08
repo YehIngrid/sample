@@ -861,7 +861,7 @@ class ChatRoom {
         if (!text || !this.currentRoomId) return;
 
         const data =await this.backend.sendMessage(this.currentRoomId, text);
-        this.renderMessage(data);
+        this.renderMessage(data.data);
         input.value = '';
     }
 
