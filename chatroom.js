@@ -811,7 +811,7 @@ class ChatRoom {
         const limit = 50;
         const history = await this.backend.getHistory(roomId, limit, before);
         history.data.forEach(msg => this.renderMessage(msg));
-
+        console.log('歷史訊息載入完成:', history);
         // SSE
         this.connectSSE(roomId);
     }
@@ -879,7 +879,7 @@ class ChatRoom {
             hour: '2-digit',
             minute: '2-digit'
         });
-        
+
         const div = document.createElement('div');
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
 
