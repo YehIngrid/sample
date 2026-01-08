@@ -861,7 +861,7 @@ class ChatRoom {
         if (!text || !this.currentRoomId) return;
 
         const data =await this.backend.sendMessage(this.currentRoomId, text);
-        this.renderMessage(data.data);
+        this.renderMessage(data);
         input.value = '';
     }
 
@@ -899,7 +899,7 @@ class ChatRoom {
                     }
                 </div>
                 <div class="message-text">
-                    ${this.escapeHtml(data.message)}
+                    ${isSelf ? this.escapeHtml(data.data.message) : this.escapeHtml(data.message)}
                 </div>
             </div>
         `;
