@@ -737,7 +737,7 @@ class ChatRoom {
             this.showTyping(true);
             typingTimer = setTimeout(() => {
                 this.showTyping(false);
-            }, 1000);
+            }, 100);
         });
     }
     
@@ -873,9 +873,9 @@ class ChatRoom {
         const container = document.getElementById('messagesContainer');
         console.log('data', data);
         this.username = localStorage.getItem('username');
-        const isSelf = this.myId === data.data?.userId;
+        const isSelf = this.myId === data.userId;
 
-        const timestamp = new Date(data.data?.timestamp).toLocaleTimeString('zh-TW', {
+        const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
             minute: '2-digit'
         });
