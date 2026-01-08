@@ -873,7 +873,7 @@ class ChatRoom {
         const container = document.getElementById('messagesContainer');
         console.log('data', data);
         this.username = localStorage.getItem('username');
-        const isSelf = this.myId === data.userId;
+        const isSelf = this.myId === data.data?.userId;
 
         const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
