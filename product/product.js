@@ -283,27 +283,27 @@ function renderSellerInfo(data) {
 }
 
 // === 事件處理：依你的實作調整 ===
-function openChatWithSeller(itemId) {
+async function openChatWithSeller(itemId) {
   if (!itemId) {
     Swal.fire({ icon: 'warning', title: '無法與賣家聊天', text: '缺少商品編號' });
     return;
   } else {
     openCloseChatInterface();
     chatService = new ChatBackendService();
-    chatService.createRoom(itemId)
-      .then((data) => {
-        const roomId = data?.room.id;
-        if (roomId) {
-          // TODO: 顯示聊天室介面（依你的路由調整）
-          openCloseChatInterface();
-        } else {
-          Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-        }
-      })
-      .catch((err) => {
-        console.error('建立聊天室失敗：', err);
+    const res = await chatService.createRoom(itemId)
+    res.then((data) => {
+      const roomId = data?.roomId;
+      if (roomId) {
+        chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+        chatRoom.init();
+      } else {
         Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-      });
+      }
+    })
+    .catch((err) => {
+      console.error('建立聊天室失敗：', err);
+      Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+    });
   }
 }
 function openSellerReviews(sellerId) {
