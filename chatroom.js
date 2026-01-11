@@ -835,7 +835,7 @@ class ChatRoom {
 
         this.eventSource = new EventSource(`${this.backend.baseUrl}/api/chat/stream?room=${roomId}`, {
             withCredentials: true
-        });
+        }, {params: {room: String(roomId)}});
 
         this.eventSource.addEventListener('newMessage', (event) => {
             const data = JSON.parse(event.data);

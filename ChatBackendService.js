@@ -69,21 +69,21 @@ class ChatBackendService {
             withCredentials: true
         }, {params: { room: String(roomId) }});
 
-        eventSource.addEventListener('message', (event) => {
+        eventSource.addEventListener('newMessage', (event) => {
         const data = JSON.parse(event.data);
-        console.log('新訊息:', data);
+            console.log('新訊息:', data);
         });
 
         eventSource.addEventListener('typing', (event) => {
-        console.log('使用者正在輸入:', event.data);
+            console.log('使用者正在輸入:', event.data);
         });
 
-        eventSource.addEventListener('status', (event) => {
-        console.log('狀態更新:', event.data);
+        eventSource.addEventListener('ready', (event) => {
+            console.log('狀態更新:', event.data);
         });
 
         eventSource.onerror = (error) => {
-        console.error('連接錯誤:', error);
+            console.error('連接錯誤:', error);
         eventSource.close();
         };
 
