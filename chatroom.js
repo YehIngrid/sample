@@ -777,7 +777,7 @@ class ChatRoom {
                             <h6 class="mb-0">商品${data.id}聊天室</h6>
                             <small class="text-muted">${data.lastMessageId || '無訊息'}</small>
                         </div>
-                        <span class="badge bg-primary rounded-pill ${data.lastMessageId == data.lastReadMessageId ? 'd-none' : ''}"></span> 
+                        <span class="badge bg-primary rounded-pill ${data.lastMessageId == data.lastReadMessageId ? 'd-none' : ''}">new</span> 
                     </div>
                 `;
                 // 未讀訊息徽章(上面的badge)
