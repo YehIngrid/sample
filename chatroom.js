@@ -695,19 +695,19 @@ class ChatRoom {
     showSidebar() {
         const sidebar = document.getElementById('sidebar');
         console.log('顯示側邊欄', sidebar);
-        sidebar.classList.remove('mobile-hidden');
+        sidebar.classList.add('mobile-hidden');
     }
     hideSidebar() {
         const sidebar = document.getElementById('sidebar');
-        sidebar.classList.add('mobile-hidden');
+        sidebar.classList.remove('mobile-hidden');
     }
     showChatMain() {
         const chatMain = document.getElementById('chatMain');
-        chatMain.classList.remove('mobile-hidden');
+        chatMain.classList.add('mobile-hidden');
     }
     hideChatMain() {
         const chatMain = document.getElementById('chatMain');
-        chatMain.classList.add('mobile-hidden');
+        chatMain.classList.remove('mobile-hidden');
     }
     switchToChat() {
         if (this.isMobile) {
