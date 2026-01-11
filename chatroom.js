@@ -814,7 +814,7 @@ class ChatRoom {
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
         // 聊天室內名字
-        document.querySelector('.chat-header h5').textContent = '商品' + roomId + '聊天室';
+        document.querySelector('.chat-header h6').textContent = '商品' + roomId + '聊天室';
 
         const container = document.getElementById('messagesContainer');
         container.innerHTML = '';
