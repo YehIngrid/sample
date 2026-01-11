@@ -735,14 +735,14 @@ class ChatRoom {
             this.sendMessage();
         });
         const input = document.getElementById('messageInput');
-        let typingTimer;
-        input.addEventListener('input', () => {
-            clearTimeout(typingTimer);
-            this.showTyping(true);
-            typingTimer = setTimeout(() => {
-                this.showTyping(false);
-            }, 100);
-        });
+        // let typingTimer;
+        // input.addEventListener('input', () => {
+        //     clearTimeout(typingTimer);
+        //     this.showTyping(true);
+        //     typingTimer = setTimeout(() => {
+        //         this.showTyping(false);
+        //     }, 100);
+        // });
     }
     
     /* ======================
