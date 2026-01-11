@@ -837,7 +837,7 @@ class ChatRoom {
             withCredentials: true
         });
 
-        this.eventSource.addEventListener('message', (event) => {
+        this.eventSource.addEventListener('newMessage', (event) => {
             const data = JSON.parse(event.data);
             this.renderMessage(data);
         });
@@ -848,7 +848,7 @@ class ChatRoom {
             this.showTyping();
         });
 
-        this.eventSource.addEventListener('status', (event) => {
+        this.eventSource.addEventListener('ready', (event) => {
             const data = JSON.parse(event.data);
             console.log('連線狀態:', data);
         });
