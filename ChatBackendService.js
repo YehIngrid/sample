@@ -63,6 +63,7 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
+    // in chatroom.js
     async openSse(roomId) {
         const eventSource = new EventSource(`${this.baseUrl}/api/chat/stream?room=${roomId}`, {
             withCredentials: true

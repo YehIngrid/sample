@@ -636,17 +636,16 @@ class ChatRoom {
         this.username = '';
         this.auth = new BackendService();
         this.myId = this.auth.whoami()?.uid || null;
-        this.username = '我'; // 可之後改成登入使用者
+        this.username = ''; // 可之後改成登入使用者
         this.isMobile = window.innerWidth < 768;
         this.lightbox = null; // PhotoSwipe instance
-
         this.init();
     }
 
     async init() {
-        this.bindEvents();
         await this.loadRooms();
         this.setupMobileView();
+        this.bindEvents();
         this.initPhotoSwipe();
         window.addEventListener('resize', () => {
             this.handleResize();
@@ -670,6 +669,7 @@ class ChatRoom {
 
     setupMobileView() {
         this.isMobile = window.innerWidth < 768;
+        console.log('初始視窗大小, 是否為手機版:', this.isMobile);
         if (this.isMobile) {
             this.showSidebar();
             this.hideChatMain();
@@ -681,6 +681,7 @@ class ChatRoom {
 
     handleResize() {
         const wasMobile = this.isMobile;
+        console.log('視窗大小改變, 是否為手機版:', wasMobile, '->', window.innerWidth < 768);
         this.isMobile = window.innerWidth < 768;
         if (wasMobile && !this.isMobile) {
             this.showSidebar();
@@ -693,6 +694,7 @@ class ChatRoom {
 
     showSidebar() {
         const sidebar = document.getElementById('sidebar');
+        console.log('顯示側邊欄', sidebar);
         sidebar.classList.remove('mobile-hidden');
     }
     hideSidebar() {
@@ -722,7 +724,9 @@ class ChatRoom {
 
     bindEvents() {
         const backButton = document.getElementById('backButton');
+        console.log('是否收到backButton: ', backButton);
         backButton.addEventListener('click', () => {
+            console.log('返回側邊欄');
             this.backToSidebar();
         });
         const form = document.getElementById('messageForm');
@@ -747,7 +751,10 @@ class ChatRoom {
 
     async loadRooms() {
         const chatList = document.getElementById('chatList');
-        if (!chatList) return;
+        if (!chatList) {
+            console.error('找不到聊天室列表容器');
+            return;
+        }
         chatList.innerHTML = '';
         
         try {
@@ -757,24 +764,25 @@ class ChatRoom {
                 chatList.innerHTML = '<p class="text-center text-muted mt-3">無可用聊天室</p>';
                 return;
             }
-            rooms.data.forEach(room => {
+            rooms.data.forEach(data => {
                 const item = document.createElement('div');
                 item.className = 'chat-item';
-                item.dataset.roomId = room.id;
+                item.dataset.roomId = data.id;
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
                             <i class="bi bi-chat-dots-fill"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0">${room.id}房間</h6>
-                            <small class="text-muted">${room.lastMessageId || '無描述'}</small>
+                            <h6 class="mb-0">商品${data.id}聊天室</h6>
+                            <small class="text-muted">${data.lastMessageId || '無訊息'}</small>
                         </div>
+                        <span class="badge bg-primary rounded-pill ${data.lastMessageId == data.lastReadMessageId ? 'd-none' : ''}"> </span> 
                     </div>
                 `;
-
+                // 未讀訊息徽章(上面的badge)
                 item.addEventListener('click', () => {
-                    this.switchRoom(room.id);
+                    this.switchRoom(data.id);
                 });
 
                 chatList.appendChild(item);
@@ -798,8 +806,8 @@ class ChatRoom {
 
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
-
-        document.querySelector('.chat-header h5').textContent = roomId + '房間';
+        // 聊天室內名字
+        document.querySelector('.chat-header h5').textContent = '商品' + roomId + '聊天室';
 
         const container = document.getElementById('messagesContainer');
         container.innerHTML = '';
@@ -813,14 +821,14 @@ class ChatRoom {
         history.data.forEach(msg => this.renderMessage(msg));
         console.log('歷史訊息載入完成:', history);
         // SSE
-        this.connectSSE(roomId);
+        await this.connectSSE(roomId);
     }
 
     /* ======================
        SSE 即時訊息
     ====================== */
 
-    connectSSE(roomId) {
+    async connectSSE(roomId) {
         if (this.eventSource) {
             this.eventSource.close();
         }
@@ -860,8 +868,8 @@ class ChatRoom {
         const text = input.value.trim();
         if (!text || !this.currentRoomId) return;
 
-        const data =await this.backend.sendMessage(this.currentRoomId, text);
-        this.renderMessage(data);
+        const mes = await this.backend.sendMessage(this.currentRoomId, text).data;
+        this.renderMessage(mes);
         input.value = '';
     }
 
@@ -873,8 +881,8 @@ class ChatRoom {
         const container = document.getElementById('messagesContainer');
         console.log('data', data);
         this.username = localStorage.getItem('username');
-        const isSelf = this.myId === data.data?.userId;
-
+        const isSelf = this.myId == data.userId;
+        console.log('isSelf', isSelf);
         const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
             minute: '2-digit'
@@ -895,11 +903,11 @@ class ChatRoom {
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf
                         ? `<small class="text-muted me-2">${now}</small><strong>${this.username}</strong>`
-                        : `<strong>老闆</strong><small class="text-muted ms-2">${timestamp}</small>`
+                        : `<strong>對方</strong><small class="text-muted ms-2">${timestamp}</small>`
                     }
                 </div>
                 <div class="message-text">
-                    ${isSelf ? this.escapeHtml(data.data.message) : this.escapeHtml(data.message)}
+                    ${this.escapeHtml(data.message)}
                 </div>
             </div>
         `;
