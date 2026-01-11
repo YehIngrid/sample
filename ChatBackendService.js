@@ -63,7 +63,18 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    // in chatroom.js
+    async sendAttach(roomId, image) {
+        try {
+            const response = await axios.post(
+                `${this.baseUrl}/api/chat/send-attach`,
+                { room: String(roomId), image: image }
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error sending attachment:', error);
+            return Promise.reject(error);
+        }
+    }
     async openSse(roomId) {
         const eventSource = new EventSource(`${this.baseUrl}/api/chat/stream?room=${roomId}`, {
             withCredentials: true

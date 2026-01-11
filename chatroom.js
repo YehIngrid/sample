@@ -753,11 +753,11 @@ class ChatRoom {
 
     async loadRooms() {
         const chatList = document.getElementById('chatList');
-        if (chatList) {
+        if (!chatList) {
             console.error('找不到聊天室列表容器');
             return;
         }
-        // chatList.innerHTML = '';
+        chatList.innerHTML = '';
         
         try {
             const rooms = await this.backend.listRooms();  
