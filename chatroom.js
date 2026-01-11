@@ -869,7 +869,7 @@ class ChatRoom {
         if (!text || !this.currentRoomId) return;
 
         const mes = await this.backend.sendMessage(this.currentRoomId, text);
-        this.renderMessage(mes);
+        this.renderMessage(mes.data);
         input.value = '';
     }
 
