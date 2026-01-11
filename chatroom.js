@@ -695,19 +695,19 @@ class ChatRoom {
     showSidebar() {
         const sidebar = document.getElementById('sidebar');
         console.log('顯示側邊欄', sidebar);
-        sidebar.classList.add('mobile-hidden');
+        sidebar.classList.remove('mobile-hidden');
     }
     hideSidebar() {
         const sidebar = document.getElementById('sidebar');
-        sidebar.classList.remove('mobile-hidden');
+        sidebar.classList.add('mobile-hidden');
     }
     showChatMain() {
         const chatMain = document.getElementById('chatMain');
-        chatMain.classList.add('mobile-hidden');
+        chatMain.classList.remove('mobile-hidden');
     }
     hideChatMain() {
         const chatMain = document.getElementById('chatMain');
-        chatMain.classList.remove('mobile-hidden');
+        chatMain.classList.add('mobile-hidden');
     }
     switchToChat() {
         if (this.isMobile) {
@@ -803,6 +803,11 @@ class ChatRoom {
     ====================== */
 
     async switchRoom(roomId) {
+        if(this.isMobile) {
+            this.hideSidebar();
+            this.showChatMain();
+        }
+        console.log('切換聊天室', roomId);
         this.currentRoomId = roomId;
         //this.currentRoomName = roomName;
 
@@ -921,11 +926,11 @@ class ChatRoom {
     showTyping() {
         const indicator = document.getElementById('typingIndicator');
         indicator.style.display = 'block';
-        indicator.innerHTML = `<small>有人正在輸入...</small>`;
+        indicator.innerHTML = `<small>對方正在輸入...</small>`;
         clearTimeout(this.typingTimer);
         this.typingTimer = setTimeout(() => {
             indicator.style.display = 'none';
-        }, 1000);
+        }, 100);
     }
 
     /* ======================
