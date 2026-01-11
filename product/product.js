@@ -292,7 +292,7 @@ function openChatWithSeller(itemId) {
     chatService = new ChatBackendService();
     chatService.createRoom(itemId)
       .then((data) => {
-        const roomId = data?.roomId;
+        const roomId = data?.room.id;
         if (roomId) {
           // TODO: 顯示聊天室介面（依你的路由調整）
           openCloseChatInterface();
