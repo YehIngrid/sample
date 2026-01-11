@@ -777,7 +777,7 @@ class ChatRoom {
                             <h6 class="mb-0">商品${data.id}聊天室</h6>
                             <small class="text-muted">${data.lastMessageId || '無訊息'}</small>
                         </div>
-                        <span class="badge bg-primary rounded-pill ${data.lastMessageId == data.lastReadMessageId ? 'd-none' : ''}"> </span> 
+                        <span class="badge bg-primary rounded-pill ${data.lastMessageId == data.lastReadMessageId ? 'd-none' : ''}"></span> 
                     </div>
                 `;
                 // 未讀訊息徽章(上面的badge)
@@ -868,7 +868,7 @@ class ChatRoom {
         const text = input.value.trim();
         if (!text || !this.currentRoomId) return;
 
-        const mes = await this.backend.sendMessage(this.currentRoomId, text).data;
+        const mes = await this.backend.sendMessage(this.currentRoomId, text);
         this.renderMessage(mes);
         input.value = '';
     }
@@ -881,7 +881,7 @@ class ChatRoom {
         const container = document.getElementById('messagesContainer');
         console.log('data', data);
         this.username = localStorage.getItem('username');
-        const isSelf = this.myId == data.userId;
+        const isSelf = this.username == data.username;
         console.log('isSelf', isSelf);
         const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
