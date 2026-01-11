@@ -734,7 +734,9 @@ class ChatRoom {
             e.preventDefault();
             this.sendMessage();
         });
-        const input = document.getElementById('messageInput');
+        document.getElementById('messageInput').addEventListener('input', () => {
+            this.backend.typing(this.currentRoomId);
+        });
         // let typingTimer;
         // input.addEventListener('input', () => {
         //     clearTimeout(typingTimer);
@@ -774,7 +776,7 @@ class ChatRoom {
                             <i class="bi bi-chat-dots-fill"></i>
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0">商品${data.id}聊天室</h6>
+                            <h6 class="mb-0 roomName">商品${data.id}聊天室</h6>
                             <small class="text-muted">${data.lastMessageId || '無訊息'}</small>
                         </div>
                         <span class="badge bg-primary rounded-pill ${data.lastMessageId == data.lastReadMessageId ? 'd-none' : ''}">new</span> 
