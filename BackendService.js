@@ -159,7 +159,7 @@ class BackendService {
     }
     async whoami() {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/whoami`);
+            const response = await axios.get(`${this.baseUrl}/api/whoami`, {withCredentials: true });
             return response.data;   // 通常直接回傳 data
         } catch (error) {
             console.error("無法取得使用者資訊", error);
