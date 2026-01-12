@@ -408,7 +408,7 @@ class ChatRoom {
         this.eventSource.addEventListener('newMessage', (event) => {
             const data = JSON.parse(event.data);
             this.renderMessage(data);
-            playNotificationSound();
+            this.playNotificationSound();
         });
 
         this.eventSource.addEventListener('typing', (event) => {
@@ -453,9 +453,9 @@ class ChatRoom {
     ====================== */
 
     renderMessage(data) {
-        if (data.attachment) {
+        if (data.attachments) {
             this.appendImageMessage({
-                attachment: data.attachment,
+                attachment: data.attachments,
                 username: data.username,
                 timestamp: data.timestamp
             });
