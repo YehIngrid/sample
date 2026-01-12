@@ -299,11 +299,11 @@ class ChatRoom {
         // });
     }
     // 播放通知音
-//     playNotificationSound() {
-//         // 可以添加音效檔案
-//         // const audio = new Audio('/sounds/notification.mp3');
-//         // audio.play().catch(e => console.log('無法播放音效'));
-//     }
+    playNotificationSound() {
+        // 可以添加音效檔案
+        const audio = new Audio('sound/mes.mp3');
+        audio.play().catch(e => console.log('無法播放音效'));
+    }
     /* ======================
        聊天室列表
     ====================== */
@@ -408,6 +408,7 @@ class ChatRoom {
         this.eventSource.addEventListener('newMessage', (event) => {
             const data = JSON.parse(event.data);
             this.renderMessage(data);
+            playNotificationSound();
         });
 
         this.eventSource.addEventListener('typing', (event) => {
