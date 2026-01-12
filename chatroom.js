@@ -6,7 +6,6 @@ class ChatRoom {
         this.eventSource = null;
         this.username = '';
         this.auth = new BackendService();
-        this.myId = this.auth.whoami()?.uid || null;
         this.username = ''; // 可之後改成登入使用者
         this.isMobile = window.innerWidth < 768;
         this.lightbox = null; // PhotoSwipe instance
