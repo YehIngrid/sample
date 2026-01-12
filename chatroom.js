@@ -11,7 +11,6 @@ class ChatRoom {
         this.isMobile = window.innerWidth < 768;
         this.lightbox = null; // PhotoSwipe instance
         this.pendingImage = null;
-        this.putImage();
         this.init();
     }
 
@@ -125,7 +124,12 @@ class ChatRoom {
         };
         reader.readAsDataURL(file);
     }
-
+    closePreview() {
+        document.getElementByClassName('btn-close').addEventListener('click', () => {
+            this.pendingImage = null;
+            document.querySelector('.preview').remove();
+        });
+    }
     sendImage(file) {
         const reader = new FileReader();
         reader.onload = async () => {
