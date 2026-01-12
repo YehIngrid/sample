@@ -538,7 +538,9 @@ class ChatRoom {
 /* ======================
    初始化
 ====================== */
-
+let chatRoom = null;
+let backendService = null;
+let chatBackendService = null;
 document.addEventListener('DOMContentLoaded', () => {
     window.chatRoom = new ChatRoom();
 });
