@@ -336,6 +336,27 @@ class BackendService {
             return Promise.reject(error);
         }
     }
+    async updateCartItemQuantity(commodityId, quantity) {
+        if (!commodityId) {
+            return Promise.reject(new Error("Commodity ID is required"));
+        }
+        if (!Number.isInteger(quantity) || quantity < 1) {
+            return Promise.reject(new Error("Quantity 必須是正整數"));
+        }
+
+        try {
+            const response = await axios.patch(
+                `${this.baseUrl}/api/cart/update/${commodityId}`,
+                { quantity }, // <-- 必填 body
+                { headers: { "Content-Type": "application/json" }, withCredentials: true }
+            );
+            console.log('Updated quantity to:', quantity);
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
     async clearMyCart() {
         try {
             const response = await axios.delete(`${this.baseUrl}/api/cart/clear`);

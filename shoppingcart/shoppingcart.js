@@ -16,8 +16,10 @@ axios.defaults.headers.common.idtoken = getIdTokenSomehow();
 // ============ 1) 建立 service ============ 
 // ============ 0) 初始化 ============
 let backendService = null;
+let chatService    = new ChatBackendService();
 document.addEventListener('DOMContentLoaded', () => {
   backendService = new BackendService();
+  chatService = new ChatBackendService();
   initCartFromAPI(); // 頁面載入就打 API
 });
 
@@ -97,7 +99,7 @@ function normalizeCartResponse(payload) {
 
 async function onAddToCart(itemId, quantity) {
   try {
-    const res = await backendService.addItemsToCart(itemId, quantity);
+    const res = await backendService.updateCartItemQuantity(itemId, quantity);
     console.log('加入購物車成功：', res);
     await initCartFromAPI(); // 重新載入購物車
     Swal.fire({
@@ -296,9 +298,13 @@ function renderCart() {
       talkBtn.style.cursor = 'pointer';
       talkBtn.addEventListener('click', () => {
         if (item.owner_name) {
-          alert(`模擬與 ${item.owner_name} 聯絡（此功能尚未實作）`);
+          openChatWithSeller(item.productId);
         } else {
-          alert('無法取得賣家資訊');
+          Swal.fire({
+            icon: 'error',
+            title: '無法聯絡賣家',
+            text: '此商品無法取得賣家資訊',
+          });
         }
       });
     }
@@ -306,6 +312,29 @@ function renderCart() {
   });
 }
 
+async function openChatWithSeller(itemId) {
+  if (!itemId) {
+    Swal.fire({ icon: 'warning', title: '無法與賣家聊天', text: '缺少商品編號' });
+    return;
+  } else {
+    openCloseChatInterface();
+    chatService = new ChatBackendService();
+    const res = await chatService.createRoom(itemId)
+    res.then((data) => {
+      const roomId = data?.roomId;
+      if (roomId) {
+        chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+        chatRoom.init();
+      } else {
+        Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+      }
+    })
+    .catch((err) => {
+      console.error('建立聊天室失敗：', err);
+      Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+    });
+  }
+}
 // ============ 6) 更新右側結帳表 & 總額 ============
 function updateSummary() {
   const tbody = document.querySelector('#checkout-table tbody');
