@@ -162,12 +162,6 @@ class ChatRoom {
 
         // 提取圖片 URL
         let imageUrl = data.attachments;
-        if (data.message.includes('<img')) {
-            const match = data.message.match(/src="([^"]+)"/);
-            if (match) {
-                imageUrl = match[1];
-            }
-        }
 
         // 創建一個臨時圖片來獲取真實尺寸
         const tempImg = new Image();
