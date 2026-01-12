@@ -1,20 +1,3 @@
-//TODO 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
-window.onload = function() {
-    // 當頁面載入完畢後隱藏載入動畫，顯示內容
-    var loader = document.getElementById('loader');
-    var content = document.getElementById('whatcontent');
-    if (loader && content) {
-    loader.style.setProperty('display', 'none', 'important');
-    content.style.setProperty('display', 'block', 'important');
-    }
-};
-// ============ 0)（可選）JWT Header 設定 ============
-/*
-axios.defaults.headers.common.idtoken = getIdTokenSomehow();
-*/
-
-// ============ 1) 建立 service ============ 
-// ============ 0) 初始化 ============
 let backendService = null;
 let chatService    = null;
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,7 +15,6 @@ function saveState(items) { onAddToCart(items.id, items.qty); localStorage.setIt
 function loadPickup() { try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; } }
 function savePickup(info) { localStorage.setItem(LS_PICKUP_KEY, JSON.stringify(info)); }
 
-// 若外部沒提供 updateSummary，避免报错
 if (typeof window.updateSummary !== 'function') {
   window.updateSummary = function noop() {};
 }
@@ -41,9 +23,6 @@ let cartItems = [];                  // 由 API 載入
 
 // 你的既有節點
 const cartList        = document.getElementById('cart-items');
-const pickupPlace     = document.getElementById('pickup-place');
-const pickupDatetime  = document.getElementById('pickup-datetime');
-const pickupNote      = document.getElementById('pickup-note');
 
 // ============ 2) 資料正規化 ============
 function normalizeCartResponse(payload) {
@@ -124,14 +103,6 @@ async function initCartFromAPI() {
     const list = normalizeCartResponse(res);
     cartItems  = Array.isArray(list) ? list : [];
     saveState(cartItems);
-
-
-    (function restorePickup() {
-      const info = loadPickup();
-      if (pickupPlace && info.place)       pickupPlace.value    = info.place;
-      if (pickupDatetime && info.datetime) pickupDatetime.value = info.datetime;
-      if (pickupNote && info.note)         pickupNote.value     = info.note;
-    })();
 
     // 先渲染，再補齊商品資訊
     renderCart();
@@ -508,33 +479,22 @@ if (clearAllBtn) {
 }
 
 
-// ============ 10) 面交資訊（儲存/還原 & 驗證） ============
-[pickupPlace, pickupDatetime, pickupNote].forEach(el => {
-  if (!el) return;
-  el.addEventListener('input', () => {
-    savePickup({
-      place:    pickupPlace?.value?.trim() ?? '',
-      datetime: pickupDatetime?.value ?? '',
-      note:     pickupNote?.value?.trim() ?? '',
-    });
-  });
-});
-
-
-
 const checkoutBtn = document.getElementById('checkout-btn');
 if (checkoutBtn) {
   checkoutBtn.addEventListener('click', () => {
     const selected = cartItems.filter(i => i.checked);
     if (selected.length === 0) return alert('請先勾選要結帳的商品');
-
-    if (!pickupPlace?.value?.trim() || !pickupDatetime?.value) {
-      return alert('請完整填寫面交資訊：地點與時間。');
-    }
-
     // 只取 cart item 的 id
     const cartItemsId = selected.map(i => i.id);
-
+    const checkOrderRules = document.getElementById('checkOrderRules');
+  if(checkOrderRules && !checkOrderRules.checked){
+    Swal.fire({
+      icon: 'warning',
+      title: '請同意訂購規則後再結帳',
+      showConfirmButton: true,
+    });
+    return;
+  }
     handleCreateOrder(cartItemsId);
   });
 }
@@ -558,4 +518,41 @@ async function handleCreateOrder(cartItemsId) {
         });
         console.error("建立訂單失敗:", error);
     }
+}
+async function openCloseChatInterface(){
+  backendService = new BackendService();
+  const res = await backendService.whoami();
+  if(!res){
+    Swal.fire({
+      title: '請先登入會員',
+      icon: 'warning',
+      confirmButtonText: '確定'
+    });
+    return;
+  }
+  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+    talkInterface.style.display = 'block'; // 顯示
+    chatService = new ChatBackendService();
+    // const itemName = document.getElementById('product-name').textContent || '商品';
+    const userId = res.data.uid;
+    console.log("userId:", userId);
+    console.log("sellerId:", sellerId);
+    chatService.createRoom(itemId)
+      .then((data) => {
+        const roomId = data?.roomId;
+        if (roomId) {
+          chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+          chatRoom.init();
+        } else {
+          Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+        }
+      })
+      .catch((err) => {
+        console.error('建立聊天室失敗：', err);
+        Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+      });
+  } else {
+    talkInterface.style.display = 'none'; // 隱藏
+  }
+  console.log('chat open');
 }

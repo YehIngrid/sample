@@ -147,50 +147,44 @@
             </div>
             <div class="form-text">目前僅支援面對面交付與當面付款。</div>
           </div>
-
-          <!-- 面交資訊 -->
-          <div class="mb-3">
-            <label class="form-label">面交地點</label>
-            <input id="pickup-place" type="text" class="form-control" placeholder="例：中興大學 正門/圖書館門口（必填）" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">面交時間</label>
-            <input id="pickup-datetime" type="datetime-local" class="form-control" required>
-            <div class="form-text">以賣家確認為準，可在備註補充彈性時段。</div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">備註</label>
-            <textarea id="pickup-note" rows="2" class="form-control" placeholder="例如：可接受 18:00-19:00、下雨改隔日等"></textarea>
-          </div>
-
+          
           <!-- 小表格 -->
           <table class="table table-sm align-middle" id="checkout-table">
             <thead>
               <tr>
-                <th>商品</th>
-                <th class="text-center">數量</th>
-                <th class="text-end">金額</th>
+                <th style="font-size: 12px;">商品</th>
+                <th class="text-center" style="font-size: 12px;">數量</th>
+                <th class="text-end" style="font-size: 12px;">金額</th>
               </tr>
             </thead>
-            <tbody><!-- 動態插入 --></tbody>
+            <tbody style="font-size: 12px;"><!-- 動態插入 --></tbody>
           </table>
 
 
           <div class="d-flex justify-content-between">
-            <span class="muted-sm">小計</span>
-            <span id="subtotal" class="price">NT$ 0</span>
+            <span class="muted-sm" style="font-size: 12px;">小計</span>
+            <span id="subtotal" class="price" style="font-size: 12px;">NT$ 0</span>
           </div>
           <div class="d-flex justify-content-between">
-            <span class="muted-sm">運費（面交）</span>
-            <span id="shipping-fee" class="price">NT$ 0</span>
+            <span class="muted-sm" style="font-size: 12px;">運費（面交）</span>
+            <span id="shipping-fee" class="price" style="font-size: 12px;">NT$ 0</span>
           </div>
           <div class="d-flex justify-content-between">
-            <span class="muted-sm">折扣</span>
-            <span id="discount" class="price">- NT$ 0</span>
+            <span class="muted-sm" style="font-size: 12px;">折扣</span>
+            <span id="discount" class="price" style="font-size: 12px;">- NT$ 0</span>
           </div>
           <div class="d-flex justify-content-between mt-2">
             <span class="fw-bold">總計</span>
             <span id="grand-total" class="fw-bold text-danger price">NT$ 0</span>
+          </div>
+          <!-- 面交確認 -->
+          <div class="mb-3">
+            <div class="form-check" style="padding-top: 20px;">
+              <input class="form-check-input" type="checkbox" value="" id="CheckOrderRules">
+              <label class="form-check-label" for="flexCheckDefault" style="font-size: 14px; font-weight: bold; ">
+                我已經與賣家溝通好面交時間與地點，並且同意面交付款方式。
+              </label>
+            </div>
           </div>
 
           <button id="checkout-btn" class="btn w-100 mt-3">送出訂單（面交付款）</button>
