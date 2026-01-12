@@ -448,7 +448,7 @@ class ChatRoom {
     ====================== */
 
     renderMessage(data) {
-        if (data.attachments) {
+        if (data.attachments.length > 0) {
             this.appendImageMessage({
                 attachment: data.attachments,
                 username: data.username,
