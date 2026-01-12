@@ -16,7 +16,7 @@ axios.defaults.headers.common.idtoken = getIdTokenSomehow();
 // ============ 1) 建立 service ============ 
 // ============ 0) 初始化 ============
 let backendService = null;
-let chatService    = new ChatBackendService();
+let chatService    = null;
 document.addEventListener('DOMContentLoaded', () => {
   backendService = new BackendService();
   chatService = new ChatBackendService();
