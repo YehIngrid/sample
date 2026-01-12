@@ -14,10 +14,10 @@ class ChatRoom {
     }
 
     async init() {
-        await this.loadRooms();
         this.setupMobileView();
+        await this.loadRooms();
         this.bindEvents();
-        this.initPhotoSwipe();
+        // this.initPhotoSwipe();
         window.addEventListener('resize', () => {
             this.handleResize();
         });
@@ -304,6 +304,7 @@ class ChatRoom {
     ====================== */
 
     async loadRooms() {
+        openCloseChatInterface(true);
         const chatList = document.getElementById('chatList');
         if (!chatList) {
             console.error('找不到聊天室列表容器');
