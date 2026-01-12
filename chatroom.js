@@ -122,7 +122,6 @@ class ChatRoom {
             `;
 
             container.appendChild(preview);
-            this.scrollToBottom();
         };
         reader.readAsDataURL(file);
     }
@@ -162,7 +161,7 @@ class ChatRoom {
         });
 
         // 提取圖片 URL
-        let imageUrl = data.attachment;
+        let imageUrl = data.attachments;
         if (data.message.includes('<img')) {
             const match = data.message.match(/src="([^"]+)"/);
             if (match) {
