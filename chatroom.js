@@ -210,8 +210,6 @@ class ChatRoom {
 
         container.appendChild(imgWrapper);
         
-        // 自動滾動到底部
-        this.scrollToBottom();
     }
     setupMobileView() {
         this.isMobile = window.innerWidth < 768;
