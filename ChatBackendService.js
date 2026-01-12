@@ -66,7 +66,7 @@ class ChatBackendService {
     async sendAttach(roomId, image) {
         try {
             const response = await axios.post(
-                `${this.baseUrl}/api/chat/send-attach`,
+                `${this.baseUrl}/api/chat/attachment`,
                 { room: String(roomId), image: image }
             );
             return response.data;

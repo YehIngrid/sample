@@ -185,10 +185,6 @@ html, body {
 }
 
 /* 輸入區域 */
-.message-input-container {
-    background-color: white;
-    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
-}
 
 #messageInput {
     flex: 1;
@@ -322,4 +318,26 @@ html, body {
     .else {
         width: 100%;
     }
+}
+.preview {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.preview img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 10px;
+}
+.btn-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    line-height: 18px;
+    text-align: center;
+    cursor: pointer;
 }
