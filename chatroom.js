@@ -304,7 +304,6 @@ class ChatRoom {
     ====================== */
 
     async loadRooms() {
-        this.openCloseChatInterface(); // 開啟聊天介面
         const chatList = document.getElementById('chatList');
         if (!chatList) {
             console.error('找不到聊天室列表容器');
