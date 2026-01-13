@@ -296,19 +296,18 @@ async function openChatWithSeller(itemId) {
     openCloseChatInterface();
     chatService = new ChatBackendService();
     const res = await chatService.createRoom(itemId)
-    res.then((data) => {
-      const roomId = data?.roomId;
+    try{
+      const roomId = res.data?.roomId;
       if (roomId) {
         chatRoom = new ChatRoom(chatService, roomId, talkInterface);
         chatRoom.init();
       } else {
         Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
       }
-    })
-    .catch((err) => {
+    } catch(err){ 
       console.error('建立聊天室失敗：', err);
       Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-    });
+    }
   }
 }
 // ============ 6) 更新右側結帳表 & 總額 ============
