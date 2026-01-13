@@ -97,6 +97,7 @@ class ChatRoom {
     }
     putImage() {
         this.sendImagebtn.addEventListener('click', () => {
+            console.log('點擊上傳圖片按鈕');
             this.previewArea.click();
         });
 
