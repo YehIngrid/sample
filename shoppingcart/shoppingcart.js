@@ -192,32 +192,32 @@ function renderCart() {
     // item.owner.photoURL = item.owner.photoURL || '../image/default-avatar.png';
     li.dataset.id = item.id;
     li.innerHTML = `
-      <div class="d-flex align-items-start">
-        <input class="form-check-input me-3 cart-check mt-1" type="checkbox" ${item.checked ? 'checked':''}>
-        <img src="${item.img}" alt="${item.name}" class="item-thumb me-3">
-        <div class="flex-grow-1">
-          <div class="d-flex flex-column">
-            <div class="d-flex justify-content-between align-items-start">
-              <h6 class="mb-1">${item.name}</h6>
-              <div class="price text-primary">NT$ ${Number(item.price || 0).toLocaleString('zh-TW')}</div>
-            </div>
+    <tr>
+      <thead>
+        <tr>
+          <th scope="col">
             <div class="muted-sm d-flex align-items-center">
               <img src="${item.owner_photo}" alt="${item.owner_name}" class="owner-avatar me-2">
               <p class="mb-0">${item.owner_name}</p>
             </div>
-            <p class="mb-2">${item.description || ''}</p>
-          </div>
-
-          <div class="d-flex align-items-center gap-2 mt-2" style="font-size: 0.9rem;">
-            <label class="muted-sm">數量</label>
-            <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input" style="width:100px">
-            <div>
-              <button class="btn btn-dark btn-look" type="button">查看</button>
-              <button class="btn btn-primary btn-talk" type="button">與賣家聯絡</button>
-            </div>
-          </div>
-        </div>
-      </div>
+          </th>
+        <tr>
+      </thead>
+      <tbody>
+          <th scope="row"><input class="form-check-input me-3 cart-check mt-1" type="checkbox" ${item.checked ? 'checked':''}></th>
+          <td><img src="${item.img}" alt="${item.name}" class="item-thumb me-3"></td>
+          <td><h6 class="mb-1">${item.name}</h6></td>
+          <td><p class="mb-2">${item.description || ''}</p></td>
+          <td><div class="price text-primary">NT$ ${Number(item.price || 0).toLocaleString('zh-TW')}</div></td>
+          <td><input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input" style="width:100px"></td>
+          <td>
+              <div>
+                <button class="btn btn-dark btn-look" type="button">查看</button>
+                <button class="btn btn-primary btn-talk" type="button">與賣家聯絡</button>
+              </div>
+          </td>
+      </tbody>
+    </tr>
     `;
 
     // 綁事件：查看
