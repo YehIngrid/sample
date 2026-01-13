@@ -192,7 +192,7 @@ class ChatRoom {
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf ? `
                         <small class="text-muted me-2">${time}</small>
-                        <strong>我</strong>
+                        <strong>${this.username}</strong>
                     ` : `
                         <strong>${data.username}</strong>
                         <small class="text-muted ms-2">${time}</small>
@@ -284,6 +284,7 @@ class ChatRoom {
             this.sendMessage();
         });
         document.getElementById('messageInput').addEventListener('input', () => {
+            if(this.isSelf) return;
             this.backend.typing(this.currentRoomId);
         });
         // let typingTimer;

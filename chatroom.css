@@ -121,6 +121,7 @@ html, body {
 }
 .imgmessage img {
     margin-left: 10px;
+    margin-bottom: 15px;
 }
 
 @keyframes fadeIn {
