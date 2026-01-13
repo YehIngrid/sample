@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============ 1) 共用狀態 / 工具 ============
 const LS_KEY = 'cart_state_v1';
 const LS_PICKUP_KEY = 'pickup_info_v1';
-const sellerId = null;
-const quantity = 1;
-const productId = null;
+let sellerId = null;
+let quantity = 1;
+let productId = null;
 function loadState() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || null; } catch { return null; } }
 function saveState(items) { onAddToCart(items.id, items.qty); localStorage.setItem(LS_KEY, JSON.stringify(items)); }
 function loadPickup() { try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; } }
