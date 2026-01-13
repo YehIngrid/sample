@@ -541,7 +541,7 @@ async function openCloseChatInterface(){
     const userId = res.data.uid;
     console.log("userId:", userId);
     console.log("sellerId:", sellerId);
-    chatService.createRoom(itemId)
+    chatService.createRoom(productId)
       .then((data) => {
         const roomId = data?.roomId;
         if (roomId) {
