@@ -12,6 +12,7 @@ class ChatRoom {
         this.pendingImage = null;
         this.sendImagebtn = document.getElementById('send-image-btn');
         this.previewArea = document.getElementById('image-upload');
+        this.input = document.getElementById('messageInput');
         this.init();
     }
 
@@ -283,8 +284,8 @@ class ChatRoom {
             e.preventDefault();
             this.sendMessage();
         });
-        document.getElementById('messageInput').addEventListener('input', () => {
-            if(this.isSelf) return;
+        this.input.addEventListener('input', () => {
+            if(isSelf) return;
             this.backend.typing(this.currentRoomId);
         });
         // let typingTimer;
