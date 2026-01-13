@@ -336,7 +336,7 @@ class BackendService {
             return Promise.reject(error);
         }
     }
-    async updateCartItemQuantity(commodityId, quantity) {
+    async updateCartItemQuantity(cartItemId, quantity) {
         if (!commodityId) {
             return Promise.reject(new Error("Commodity ID is required"));
         }
@@ -346,9 +346,8 @@ class BackendService {
 
         try {
             const response = await axios.patch(
-                `${this.baseUrl}/api/cart/update`,
+                `${this.baseUrl}/api/cart/update/${cartItemId}`,
                 { quantity },
-                {params: {cartItemId: commodityId} },
                 { headers: { "Content-Type": "application/json" }, withCredentials: true }
             );
             console.log('Updated quantity to:', quantity);

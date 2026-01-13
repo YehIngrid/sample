@@ -12,6 +12,7 @@ const LS_PICKUP_KEY = 'pickup_info_v1';
 let sellerId = null;
 let quantity = 1;
 let productId = null;
+let cartItemId = null;
 function loadState() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || null; } catch { return null; } }
 function saveState(items) { onAddToCart(items.id, items.qty); localStorage.setItem(LS_KEY, JSON.stringify(items)); }
 function loadPickup() { try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; } }
@@ -38,7 +39,7 @@ function normalizeCartResponse(payload) {
   const rawList = candidates.find(arr => Array.isArray(arr)) || [];
 
   return rawList.map(row => {
-    const cartItemId = row.id;
+    cartItemId = row.id;
     productId  = row.itemId ?? '';
     const embedded   = row.item || {};
     const ownerObj   = embedded.owner || {};
@@ -80,10 +81,10 @@ function normalizeCartResponse(payload) {
   });
 }
 
-async function onAddToCart(productId, quantity) {
-  console.log('加入購物車：', productId, quantity);
+async function onAddToCart(cartItemId, quantity) {
+  console.log('加入購物車：', cartItemId, quantity);
   try {
-    const res = await backendService.updateCartItemQuantity(productId, quantity);
+    const res = await backendService.updateCartItemQuantity(cartItemId, quantity);
     console.log('加入購物車成功：', res);
     await initCartFromAPI(); // 重新載入購物車
     Swal.fire({
