@@ -9,7 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============ 1) 共用狀態 / 工具 ============
 const LS_KEY = 'cart_state_v1';
 const LS_PICKUP_KEY = 'pickup_info_v1';
-
+const sellerId = null;
+const quantity = 1;
+const productId = null;
 function loadState() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || null; } catch { return null; } }
 function saveState(items) { onAddToCart(items.id, items.qty); localStorage.setItem(LS_KEY, JSON.stringify(items)); }
 function loadPickup() { try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; } }
@@ -37,10 +39,12 @@ function normalizeCartResponse(payload) {
 
   return rawList.map(row => {
     const cartItemId = row.id;
-    const productId  = row.itemId ?? '';
+    productId  = row.itemId ?? '';
     const embedded   = row.item || {};
     const ownerObj   = embedded.owner || {};
     console.log('商家名稱', ownerObj.name, ownerObj);
+    sellerId = embedded.ownerId || null;
+    quantity = Number(row.quantity) || 1;
     const name  = row.name ?? embedded.name ?? '未命名商品';
     const price = Number(row.price ?? embedded.price ?? 0) || 0;
     const img   =
@@ -208,7 +212,6 @@ function renderCart() {
             <input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input" style="width:100px">
             <div>
               <button class="btn btn-dark btn-look" type="button">查看</button>
-              <button class="btn btn-light btn-sm ms-auto btn-remove" type="button">刪除</button>
               <button class="btn btn-primary btn-talk" type="button">與賣家聯絡</button>
             </div>
           </div>
@@ -253,16 +256,16 @@ function renderCart() {
       });
     }
 
-    // 綁事件：刪除
-    const removeBtn = li.querySelector('.btn-remove');
-    if (removeBtn) {
-      removeBtn.addEventListener('click', () => {
-        cartItems = cartItems.filter(x => x.id !== item.id);
-        saveState(cartItems);
-        renderCart();
-        updateSummary();
-      });
-    }
+    // // 綁事件：刪除
+    // const removeBtn = li.querySelector('.btn-remove');
+    // if (removeBtn) {
+    //   removeBtn.addEventListener('click', () => {
+    //     cartItems = cartItems.filter(x => x.id !== item.id);
+    //     saveState(cartItems);
+    //     renderCart();
+    //     updateSummary();
+    //   });
+    // }
 
     //TODO 綁事件：聯絡賣家
     const talkBtn = li.querySelector('.btn-talk');
