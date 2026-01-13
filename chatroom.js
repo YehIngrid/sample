@@ -13,6 +13,7 @@ class ChatRoom {
         this.sendImagebtn = document.getElementById('send-image-btn');
         this.previewArea = document.getElementById('image-upload');
         this.input = document.getElementById('messageInput');
+        this.closepreview = document.getElementByClassName('btn-close');
         this.init();
     }
 
@@ -102,7 +103,10 @@ class ChatRoom {
         this.previewArea.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
+            if(file.size > 5 * 1024 * 1024) {
+                alert('圖片大小超過 5MB 限制');
+                return;
+            }
             this.pendingImage = file;
             this.previewImage(file);
         });
@@ -127,7 +131,7 @@ class ChatRoom {
         reader.readAsDataURL(file);
     }
     closePreview() {
-        document.getElementByClassName('btn-close').addEventListener('click', () => {
+        this.closepreview.addEventListener('click', () => {
             this.pendingImage = null;
             document.querySelector('.preview').remove();
         });
@@ -143,10 +147,10 @@ class ChatRoom {
             } catch (error) {
                 console.error('發送圖片錯誤:', error);
                 // 即使沒有伺服器,也在本地顯示圖片訊息(用於測試)
-                this.appendImageMessage({
-                    ...messageData,
-                    isSelf: true
-                });
+                // this.appendImageMessage({
+                //     ...messageData,
+                //     isSelf: true
+                // });
             }
         };
         reader.readAsDataURL(file);
