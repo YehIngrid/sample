@@ -346,8 +346,9 @@ class BackendService {
 
         try {
             const response = await axios.patch(
-                `${this.baseUrl}/api/cart/update/${commodityId}`,
-                { quantity }, // <-- 必填 body
+                `${this.baseUrl}/api/cart/update`,
+                { quantity },
+                {params: {cartItemId: commodityId} },
                 { headers: { "Content-Type": "application/json" }, withCredentials: true }
             );
             console.log('Updated quantity to:', quantity);
