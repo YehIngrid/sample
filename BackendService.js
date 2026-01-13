@@ -319,7 +319,7 @@ class BackendService {
 
     async getMyCart() {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/cart/`);
+            const response = await axios.get(`${this.baseUrl}/api/cart`, { withCredentials: true });
             console.log("購物車內容：", response.data);
             return response;
         } catch (error) {
