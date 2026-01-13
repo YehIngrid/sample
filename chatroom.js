@@ -13,7 +13,7 @@ class ChatRoom {
         this.sendImagebtn = document.getElementById('send-image-btn');
         this.previewArea = document.getElementById('image-upload');
         this.input = document.getElementById('messageInput');
-        this.closepreview = document.getElementByClassName('btn-close');
+        this.closepreview = document.querySelector('.btn-close');
         this.init();
     }
 
