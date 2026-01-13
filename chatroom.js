@@ -164,7 +164,7 @@ class ChatRoom {
         });
 
         // 提取圖片 URL
-        let imageUrl = data.attachments[0]?.url || '';
+        let imageUrl = data.attachments || '';
 
         // 創建一個臨時圖片來獲取真實尺寸
         const tempImg = new Image();
