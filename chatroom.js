@@ -21,6 +21,7 @@ class ChatRoom {
         window.addEventListener('resize', () => {
             this.handleResize();
         });
+        this.putImage();
     }
 
     initPhotoSwipe() {
@@ -212,7 +213,7 @@ class ChatRoom {
         `;
 
         container.appendChild(imgWrapper);
-        
+        container.scrollTop = container.scrollHeight;
     }
     setupMobileView() {
         this.isMobile = window.innerWidth < 768;
