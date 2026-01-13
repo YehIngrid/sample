@@ -10,6 +10,8 @@ class ChatRoom {
         this.isMobile = window.innerWidth < 768;
         this.lightbox = null; // PhotoSwipe instance
         this.pendingImage = null;
+        this.sendImagebtn = document.getElementById('send-image-btn');
+        this.previewArea = document.getElementById('image-upload');
         this.init();
     }
 
@@ -21,7 +23,6 @@ class ChatRoom {
         window.addEventListener('resize', () => {
             this.handleResize();
         });
-        this.putImage();
     }
 
     initPhotoSwipe() {
@@ -93,11 +94,11 @@ class ChatRoom {
             });
     }
     putImage() {
-        document.getElementById('send-image-btn').addEventListener('click', () => {
-            document.getElementById('image-upload').click();
+        this.sendImagebtn.addEventListener('click', () => {
+            this.previewArea.click();
         });
 
-        document.getElementById('image-upload').addEventListener('change', (e) => {
+        this.previewArea.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
