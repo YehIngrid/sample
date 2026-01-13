@@ -213,7 +213,7 @@ class ChatRoom {
             </div>
         `;
 
-        container.appendChild(imgWrapper);
+        container.appendChild(div);
         container.scrollTop = container.scrollHeight;
     }
     setupMobileView() {
