@@ -76,9 +76,10 @@ function normalizeCartResponse(payload) {
   });
 }
 
-async function onAddToCart(itemId, quantity) {
+async function onAddToCart(productId, quantity) {
+  console.log('加入購物車：', productId, quantity);
   try {
-    const res = await backendService.updateCartItemQuantity(itemId, quantity);
+    const res = await backendService.updateCartItemQuantity(productId, quantity);
     console.log('加入購物車成功：', res);
     await initCartFromAPI(); // 重新載入購物車
     Swal.fire({
