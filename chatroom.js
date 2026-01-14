@@ -117,7 +117,9 @@ class ChatRoom {
         document.addEventListener('click', (e) => {
             const closeBtn = e.target.closest('.btn-close');
             if (!closeBtn) return;
-    
+            else {
+                console.log('關閉圖片預覽');
+            }
             this.pendingImage = null;
             document.querySelector('.preview')?.remove();
         });
