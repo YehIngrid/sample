@@ -13,7 +13,6 @@ class ChatRoom {
         this.sendImagebtn = document.getElementById('send-image-btn');
         this.previewArea = document.getElementById('image-upload');
         this.input = document.getElementById('messageInput');
-        this.closepreview = document.querySelector('.btn-close');
         this.init();
     }
 
@@ -22,6 +21,8 @@ class ChatRoom {
         await this.loadRooms();
         this.bindEvents();
         // this.initPhotoSwipe();
+        this.putImage();
+        this.closePreview();
         window.addEventListener('resize', () => {
             this.handleResize();
         });
@@ -112,6 +113,15 @@ class ChatRoom {
             this.previewImage(file);
         });
     }
+    closePreview() {
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-close')) {
+                this.pendingImage = null;
+                document.querySelector('.preview')?.remove();
+            }
+        });
+    }
+    
     previewImage(file) {
         const reader = new FileReader();
         reader.onload = () => {
