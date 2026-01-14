@@ -115,10 +115,11 @@ class ChatRoom {
     }
     closePreview() {
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('btn-close')) {
-                this.pendingImage = null;
-                document.querySelector('.preview')?.remove();
-            }
+            const closeBtn = e.target.closest('.btn-close');
+            if (!closeBtn) return;
+    
+            this.pendingImage = null;
+            document.querySelector('.preview')?.remove();
         });
     }
     
