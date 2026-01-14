@@ -589,6 +589,16 @@ const saveState = () => {
 // ================== API → Cart ==================
 async function initCart() {
   try {
+    await backendService.whoami();
+  } catch {
+    Swal.fire ({
+      icon: 'warning',
+      title: '請先登入會員',
+      showConfirmButton: true,
+    });
+    return;
+  }
+  try {
     const res = await backendService.getMyCart();
     cartItems = normalizeCart(res);
     saveState();
