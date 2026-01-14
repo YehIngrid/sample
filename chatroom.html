@@ -17,8 +17,15 @@
                 <div class="sidebar-header p-3">
                     <h5 class="mb-0">聊天室</h5>
                 </div>
-
-                <!-- 聊天室列表 -->
+                <div id="chatListWrapper" class="position-relative">
+                    <div id="chatListLoader" class="chat-loader d-none">
+                        <div class="spinner-border text-primary"></div>
+                    </div>
+                
+                    <div id="chatList" class="chat-list"></div>
+                </div>
+                
+                <!-- 聊天室列表
                 <div class="chat-list" id="chatList">
                     <div class="chat-item" data-room="general">
                         <div class="d-flex align-items-center">
@@ -34,7 +41,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <!-- 右側主聊天區域 -->
@@ -67,9 +74,16 @@
                         </div>
                     </div>
                 </div>
-
+                <div id="chatMainWrapper" class="position-relative">
+                    <div id="chatMainLoader" class="chat-loader d-none">
+                        <div class="spinner-border text-primary"></div>
+                    </div>
+                
+                    <div id="messagesContainer" class="messages-container"></div>
+                </div>
+                
                 <!-- 訊息顯示區 -->
-                <div class="messages-container" id="messagesContainer">
+                <!-- <div class="messages-container" id="messagesContainer"> -->
                     <!-- 歡迎訊息 -->
                     <!-- <div class="text-center my-4">
                         <small class="text-muted">歡迎來到聊天室!</small>

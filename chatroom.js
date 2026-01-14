@@ -17,17 +17,37 @@ class ChatRoom {
     }
 
     async init() {
+        this.cacheDOM();
         this.setupMobileView();
+
+        this.showLoaders();
         await this.loadRooms();
+        this.hideLoaders();
+
         this.bindEvents();
-        // this.initPhotoSwipe();
         this.putImage();
         this.closePreview();
         window.addEventListener('resize', () => {
             this.handleResize();
         });
     }
-
+    cacheDOM() {
+        this.chatList = document.getElementById('chatList');
+        this.chatListLoader = document.getElementById('chatListLoader');
+    
+        this.chatMainLoader = document.getElementById('chatMainLoader');
+        this.messagesContainer = document.getElementById('messagesContainer');
+    }
+    showLoaders() {
+        this.chatListLoader?.classList.remove('d-none');
+        this.chatMainLoader?.classList.remove('d-none');
+    }
+    
+    hideLoaders() {
+        this.chatListLoader?.classList.add('d-none');
+        this.chatMainLoader?.classList.add('d-none');
+    }
+    
     initPhotoSwipe() {
         // 動態載入 PhotoSwipe CSS 和 JS
         const cssLink = document.createElement('link');
@@ -333,7 +353,7 @@ class ChatRoom {
             return;
         }
         chatList.innerHTML = '';
-        
+        this.showLoaders();
         try {
             const rooms = await this.backend.listRooms();  
             console.log(rooms);
@@ -370,6 +390,8 @@ class ChatRoom {
             }
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
+        } finally {
+            this.hideLoaders();
         }
     }
 
@@ -378,6 +400,7 @@ class ChatRoom {
     ====================== */
 
     async switchRoom(roomId) {
+        this.chatMainLoader.classList.remove('d-none');
         if(this.isMobile) {
             this.hideSidebar();
             this.showChatMain();
@@ -402,6 +425,7 @@ class ChatRoom {
         const history = await this.backend.getHistory(roomId, limit, before);
         history.data.forEach(msg => this.renderMessage(msg));
         console.log('歷史訊息載入完成:', history);
+        this.chatMainLoader.classList.add('d-none');
         // SSE
         
         //await this.backend.markAsRead(roomId);
