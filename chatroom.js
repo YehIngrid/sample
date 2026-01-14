@@ -290,9 +290,10 @@ class ChatRoom {
             this.sendMessage();
         });
         this.input.addEventListener('input', () => {
-            if(isSelf) return;
+            if (!this.currentRoomId) return;
             this.backend.typing(this.currentRoomId);
         });
+        
         // let typingTimer;
         // input.addEventListener('input', () => {
         //     clearTimeout(typingTimer);
@@ -414,12 +415,18 @@ class ChatRoom {
             this.renderMessage(data);
             this.playNotificationSound();
         });
-
         this.eventSource.addEventListener('typing', (event) => {
             const data = JSON.parse(event.data);
-            console.log('有人正在輸入...', data);
+        
+            // 確保有自己的 username
+            this.username = localStorage.getItem('username');
+        
+            // 如果是自己送的 typing，忽略
+            if (data.username === this.username) return;
+        
             this.showTyping();
         });
+        
 
         this.eventSource.addEventListener('ready', (event) => {
             const data = JSON.parse(event.data);
