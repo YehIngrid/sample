@@ -58,7 +58,7 @@ async function listAll() {
     wpbackendService = new wpBackendService();
     try {
       const res = await wpbackendService.listWishes(1);
-      getInfo(res);
+      getInfo(res.data);
     } catch (error) {
       console.error('Error loading wishpool data:', error);
     }
