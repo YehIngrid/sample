@@ -8,6 +8,9 @@
     --light-text-color: rgb(255, 249, 211);
     --brand-color: #004b97;
 }
+html {
+  overflow-x: hidden;
+}
 body {
     background-color: var(--background-color) !important;
     color: #042f37 !important;
