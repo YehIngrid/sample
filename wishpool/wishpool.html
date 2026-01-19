@@ -69,6 +69,9 @@
         </nav>
         <ul class="nav justify-content-center">
           <li class="nav-item">
+            <a class="nav-link" href="../shop/shoppingpage_bootstrap.html">返回購物</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#about" data-spa>創立理念</a>
           </li>
           <li class="nav-item">
@@ -78,15 +81,22 @@
             <a class="nav-link" href="#makewish" data-spa>我要許願</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../shop/shoppingpage_bootstrap.html">返回購物首頁</a>
+            <a class="nav-link" href="#mywishes" data-spa>我的願望</a>
           </li>
         </ul>
-    
       </div>
     </div>
 
     <!-- TODO 主要內容 -->
     <main class="container">
+      <section id="mywishes" class="page" style="margin: 5vh 3vw;">
+        <h3>我的願望</h3>
+        <div class="wishpoolcontainer col-12">
+          <div class="wishgrid" id="myWishGrid">
+            <!-- 我的許願卡片會在這裡動態生成 -->
+          </div>
+        </div>
+      </section>
       <section id="about" class="page" style="margin: 5vh 5vw; padding-bottom: 30vh;">
         <h3 style="margin-bottom: 20px;">創立理念</h3>
         <p>歡迎來到許願池！在這裡，你可以分享你心中渴望擁有的商品，無論是學習用品、生活必需品，還是夢寐以求的珍藏品。我們鼓勵大家勇敢許下願望，讓我們一起努力實現它們！</p>
@@ -99,46 +109,20 @@
           <div class="leftsort col-lg-3 col-12">
             <h6 style="margin-bottom: 10px;">篩選條件</h6>
             <div class="tag-list">
-              <button class="tag" data-tag="student">學生專用器材</button>
               <button class="tag" data-tag="hundred">0~100 元收購</button>
               <button class="tag" data-tag="necessary">急迫度高</button>
               <button class="tag" data-tag="fiveh">100~500 元收購</button>
               <button class="tag" data-tag="normal">一般急迫度</button>
-              <button class="tag" data-tag="book">書籍與學籍用品</button>
               <button class="tag" data-tag="nonecessary">急迫度低</button>
               <button class="tag" data-tag="tothous">500~1000 元收購</button>
-              <button class="tag" data-tag="life">宿舍與生活用品</button>
               <button class="tag" data-tag="thousand">1000 元以上收購</button>
-              <button class="tag" data-tag="recycle">環保生活用品</button>
-              <button class="tag" data-tag="clean">儲物與收納用品</button>
               <button class="tag" data-tag="trithou">3000 元以上收購</button>
-              <button class="tag" data-tag="other">其他</button>
-              <button class="tag" data-tag="expired">已過期</button>
             </div>
           </div>
           <div class="wishpoolcontainer col-lg-9 col-12">
-            <div class="wishgrid" id="wishGrid">
-              <!-- 許願卡片會在這裡動態生成 -->
-              
-              <div class="item-list">
-                <div class="card text-dark bg-light item" data-tags="book necessary">
-                  <div class="card-header">2026/08/23 截止</div>
-                  <div class="card-body d-flex align-items-center">
-                    <div class="left">
-                      <img src="../image/placeholder.png" alt="" style="width: 100px;">
-                    </div>
-                    <div class="right" style="margin-left: 15px;">
-                      <h5 class="card-title">許願標題書緊急</h5>
-                      <p class="card-text ellipsis-text-wp">許願內容 Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit possimus, facere sit nisi, deserunt similique fuga doloremque provident temporibus, mollitia neque porro molestias aliquam illo saepe voluptatum quia dolores voluptate dicta aspernatur quibusdam hic. Assumenda voluptas ratione voluptatibus alias consectetur perspiciatis molestias atque. Reiciendis facere libero error? Nulla, tempore ipsum?</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="card text-dark bg-light item" data-tags="necessary">
-                  <div class="card-body">
-                    <h5 class="card-title">許願標題緊急</h5>
-                    <p class="card-text">許願內容</p>
-                  </div>
-                </div>
+            <div class="wishgrid">
+              <div class="item-list" id="wishGrid">
+                <!-- 許願卡片會在這裡動態生成 -->
                 <div class="card text-dark bg-light item" data-tags="book necessary">
                   <div class="card-header">2026/08/23 截止</div>
                   <div class="card-body d-flex align-items-center">
@@ -309,9 +293,10 @@
             </div>
         </div>
     <script src="../demo.js"></script>
-    <script src="wishpool.js"></script>
     <script src="../questions/questions.js"></script>
     <script src="../BackendService.js"></script>
     <script src="../LoginService.js"></script>
+    <script src="../wpBackendService.js"></script>
+    <script src="wishpool.js"></script>
 </body>
 </html>

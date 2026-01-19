@@ -2,14 +2,14 @@ axios.defaults.withCredentials = true;
 
 class wpBackendService {
     constructor() {
-        this.baseUrl = 'https://thpr.hlc23.dev';
+        this.baseUrl = 'https://thpr.hlc23.dev/api/wishpool';
         this.http = axios.create({ baseURL: this.baseUrl });
     }
-    async postwish(wishId) {
+    async createWish(itemName, description, priority, maxPrice, photo) {
         try {
             const response = await axios.post(
-                `${this.baseUrl}/api/wish/post-wish`,
-                { wishId: wishId }
+                `${this.baseUrl}/create`,
+                { itemName, description, priority, maxPrice, photo }
             );
             return response.data;
         } catch (error) {
@@ -17,10 +17,12 @@ class wpBackendService {
             return Promise.reject(error);
         }
     }
-    async listwishes() {
+    // List wishes with pagination and priority filter
+    async listWishes(page) {
         try {
             const response = await axios.get(
-                `${this.baseUrl}/api/wish/list-wishes`
+                `${this.baseUrl}`, 
+                {params: {page: page, limit: 12, priority: null}}
             );
             return response.data;
         } catch (error) {
@@ -28,14 +30,49 @@ class wpBackendService {
             return Promise.reject(error);
         }
     }
-    async getwish(wishId) {
+    // Get wish details by ID
+    async getWishInfo(id) {
         try {
             const response = await axios.get(
-                `${this.baseUrl}/api/wish/get-wish`, {params: { wishId: wishId }}
+                `${this.baseUrl}/${id}`
             );
             return response.data;
         } catch (error) {
             console.error('Error fetching wish:', error);
+            return Promise.reject(error);
+        }
+    }
+    async deleteWish(id) {
+        try {
+            const response = await axios.delete(
+                `${this.baseUrl}/${id}`
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error deleting wish:', error);
+            return Promise.reject(error);
+        }
+    }
+    async myWishes(page, status) {
+        try {
+            const response = await axios.get(
+                `${this.baseUrl}/my`,
+                {params: {page: page, limit: 12, status: status}}
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching my wishes:', error);
+            return Promise.reject(error);
+        }
+    }
+    async contactWisher(id) {
+        try {
+            const response = await axios.post(
+                `${this.baseUrl}/${id}/contact`
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error contacting wisher:', error);
             return Promise.reject(error);
         }
     }

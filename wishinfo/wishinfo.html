@@ -79,7 +79,7 @@
             
     <div class="gallery-container">
         <div class="image-grid" id="gallery">
-            <div class="image-item">
+            <div class="image-item" id="wish-photo">
                 <img src="https://picsum.photos/1200/800?random=1" alt="示例圖片 1">
             </div>
         </div>
@@ -98,14 +98,11 @@
 
     <!-- 右側：資訊 -->
     <div class="col-lg-5 order-2">
-        
-                <dl class="fs-6" id="product-category">商品類型: 書籍與學籍用品</dl>
-      <h1 id="product-name" class="product-title h2 mb-2">許願商品名稱</h1>
-<hr class="mb-4" style="margin: 0 auto;">
+      <h1 id="product-name" class="product-title h2 mb-2" id="product-title">許願商品名稱</h1>
+      <hr class="mb-4" style="margin: 0 auto;">
       <div class="align-items-baseline mb-3">
-        <div class="fs-6 fw-semibold" style="color: red;">急迫度: 緊急</div>
-        <div class="fs-6 fw-semibold price">最高收購價 NT$ 2000</div>
-
+        <div class="fs-6 fw-semibold" style="color: red;">急迫度: <span id="wish-priority">未設定</span></div>
+        <div class="fs-6 fw-semibold price">最高收購價 NT$ <span id="wish-price">0</span></div>
       </div>
 <div class="meta mobilesetting">
         
@@ -121,7 +118,7 @@
       
 
       <div class="cta-wrap d-sm-flex gap-3 mt-5 d-none">
-        <button class="contactbtn flex-fill">聯絡許願者</button>
+        <button class="contactbtn flex-fill" id="contact-wisher">聯絡許願者</button>
     </div>
   </div>
 </div>
