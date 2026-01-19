@@ -22,7 +22,7 @@ class wpBackendService {
         try {
             const response = await axios.get(
                 `${this.baseUrl}`, 
-                {params: {page: page, limit: 12, priority: null}}
+                {params: {page: page, limit: 12}}
             );
             return response.data;
         } catch (error) {
