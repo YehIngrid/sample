@@ -349,16 +349,6 @@ wishFormbig.addEventListener("submit", async function (e) {
     wishName.classList.add("is-valid");
   }
 
-  // 商品分類
-  const wishCategory = document.getElementById("wishCategory");
-  if (wishCategory.value === "notselyet" || !wishCategory.value) {
-    wishCategory.classList.add("is-invalid");
-    wishCategory.classList.remove("is-valid");
-    isValid = false;
-  } else {
-    wishCategory.classList.remove("is-invalid");
-    wishCategory.classList.add("is-valid");
-  }
 
   // 內容說明
   const wishDesc = document.getElementById("wishDesc");
