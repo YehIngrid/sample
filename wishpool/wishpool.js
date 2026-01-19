@@ -68,7 +68,7 @@ async function listMyWishes() {
     wpbackendService = new wpBackendService();
     try {
       const res = await wpbackendService.myWishes(1, null);
-      getMyInfo(res);
+      getMyInfo(res.data);
     } catch (error) {
       console.error('Error loading my wishes data:', error);
     }
