@@ -6,6 +6,7 @@ class wpBackendService {
         this.http = axios.create({ baseURL: this.baseUrl });
     }
     async createWish(itemName, description, priority, maxPrice, photo) {
+        console.log('建立願望：', itemName, description, priority, maxPrice, photo);
         try {
             const response = await axios.post(
                 `${this.baseUrl}/create`,

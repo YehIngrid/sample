@@ -325,7 +325,7 @@ if (!wishFormbig) {
   console.error("[wish] 缺少必要元素：", wishFormbig);
 }
 // 綁定送出事件
-wishFormbig.addEventListener("click", async function (e) {
+wishFormbig.addEventListener("click", function (e) {
   console.log("送出表單，進行最終驗證");
   e.preventDefault(); // 一律阻止原生送出
 
@@ -364,7 +364,7 @@ wishFormbig.addEventListener("click", async function (e) {
   // ✅ 全部通過才真的送出
   if (!isValid) return;
 
-  await submit(); // 你自己的 async function
+  submit(); // 你自己的 async function
 });
 
 async function submit() {
