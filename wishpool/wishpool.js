@@ -33,10 +33,9 @@ document.querySelectorAll('a[data-spa]').forEach(link => {
       //   }
       // }
     }
-  
-    // 第一次載入
-    showPage(location.hash || '#wishpool');
   });
+  // 第一次載入
+  //showPage(location.hash || '#wishpool');
  // 點擊切換
  window.addEventListener('hashchange', () => {
   showPage(location.hash);
