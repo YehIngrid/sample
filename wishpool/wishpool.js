@@ -254,6 +254,7 @@ function validexpireDate() {
     setErr(expireDate, '過期日不可早於今天');
     return false;
   }
+  return true;
 }
 function validateBudgetMax() {
   clearErr(budgetMax);
