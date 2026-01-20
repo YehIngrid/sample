@@ -139,7 +139,7 @@ function showMyInfo(data) {
     card.setAttribute('data-tags', tagsString);
     card.dataset.id = wish.id;
     const showDeleteBtn = wish.status === 1;
-    const deleteButtonHTML = showDeleteBtn ? `<button class="btn btn-danger" onclick="deleteWish(${card.dataset.id})">刪除願望</button>`: '';
+    const deleteButtonHTML = showDeleteBtn ? `<button class="btn btn-danger" onclick="deleteWish(${card.dataset.id}); return false;">刪除願望</button>`: '';
 
     const statusMap = {
       1: '上架中',
