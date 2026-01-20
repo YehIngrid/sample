@@ -1,9 +1,14 @@
 let backendService;
 let wpbackendService;
 // 先抓一次就好（全域共用）
+let wishPoolCache = null;
+let myWishesCache = null;
+
+
 const pages = document.querySelectorAll('.page');
 const links = document.querySelectorAll('.nav-link');
 
+// SPA 顯示邏輯
 // SPA 顯示邏輯
 async function showPage(hash) {
   pages.forEach(p => p.classList.remove('active'));
@@ -15,11 +20,16 @@ async function showPage(hash) {
   if (target) target.classList.add('active');
   if (activeLink) activeLink.classList.add('active');
 
+  // ===== 公開願望池 =====
   if (hash === '#wishpool') {
-    await listAll();
+    if (!wishPoolCache) {
+      wishPoolCache = await listAll();     // 只打一次 API
+    }
+    getInfo(wishPoolCache);
+    return;
   }
 
-  // 登入檢查（之後再開）
+  // ===== 我的願望 =====
   if (hash === '#mywishes') {
     const isLoggedIn = await checkLogin();
     if (!isLoggedIn) {
@@ -29,10 +39,17 @@ async function showPage(hash) {
         text: '需登入會員才可查看我的願望'
       });
       location.hash = '#wishpool';
+      return; // ⛔ 很重要
     }
-    await listMyWishes();
+
+    if (!myWishesCache) {
+      myWishesCache = await listMyWishes();
+    }
+    getInfo(myWishesCache);
+    return;
   }
 }
+
 
 // 只負責「點擊 → 改 hash」
 document.querySelectorAll('a[data-spa]').forEach(link => {
@@ -41,10 +58,8 @@ document.querySelectorAll('a[data-spa]').forEach(link => {
     location.hash = link.getAttribute('href');
   });
 });
-
-// 第一次載入
+// first time
 showPage(location.hash || '#wishpool');
-
 // hash 改變時切換頁面
 window.addEventListener('hashchange', () => {
   showPage(location.hash);
@@ -66,6 +81,7 @@ async function listAll() {
     try {
       const res = await wpbackendService.listWishes(1);
       getInfo(res.data);
+      return res.data;
     } catch (error) {
       console.error('Error loading wishpool data:', error);
     }
@@ -76,12 +92,17 @@ async function listMyWishes() {
     try {
       const res = await wpbackendService.myWishes(1, null);
       getMyInfo(res.data);
+      return res.data;
     } catch (error) {
       console.error('Error loading my wishes data:', error);
     }
 }
 
 function getInfo(data) {
+  if (!data || data.length === 0) {
+    container.innerHTML = '<p class="empty">你目前還沒有願望 🌱</p>';
+    return;
+  }
   data.wishes.forEach(wish => {
     const container = document.getElementById('wishGrid');
     const card = document.createElement('div');
@@ -372,8 +393,19 @@ wishFormbig.addEventListener("click", function (e) {
 
   // ✅ 全部通過才真的送出
   if (!isValid) return;
-
-  submit(); // 你自己的 async function
+  Swal.fire({
+    icon: 'warning',
+    title: '確定送出？請詳閱下方規則',
+    text: '願望送出後，7天後過期刪除，並且7天後才能許下一個願望。',
+    showCancelButton: true,
+    confirmButtonText: '確定送出',
+    cancelButtonText: '再想想'
+  }).then(result => {
+    if (result.isConfirmed) {
+      submit(); // 你的 async function
+    }
+  });
+  
 });
 
 async function submit() {
