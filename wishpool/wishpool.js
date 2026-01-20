@@ -158,7 +158,7 @@ function showMyInfo(data) {
     `;
     const showDeleteBtn = wish.status === 1;
     const deleteButton = showDeleteBtn ? document.createElement('button'): null;
-    if(!deleteButton) {
+    if(deleteButton) {
       deleteButton.classList.add('btn', 'btn-danger');
       deleteButton.innerHTML = '刪除願望';
       card.appendChild(deleteButton);
