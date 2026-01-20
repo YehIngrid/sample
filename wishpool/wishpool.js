@@ -1,45 +1,54 @@
 let backendService;
 let wpbackendService;
+// 先抓一次就好（全域共用）
+const pages = document.querySelectorAll('.page');
+const links = document.querySelectorAll('.nav-link');
+
+// SPA 顯示邏輯
+async function showPage(hash) {
+  pages.forEach(p => p.classList.remove('active'));
+  links.forEach(l => l.classList.remove('active'));
+
+  const target = document.querySelector(hash);
+  const activeLink = document.querySelector(`a[href="${hash}"]`);
+
+  if (target) target.classList.add('active');
+  if (activeLink) activeLink.classList.add('active');
+
+  if (hash === '#wishpool') {
+    await listAll();
+  }
+
+  // 登入檢查（之後再開）
+  // if (hash === '#mywishes') {
+  //   const isLoggedIn = await checkLogin();
+  //   if (!isLoggedIn) {
+  //     Swal.fire({
+  //       icon: 'warning',
+  //       title: '請先登入會員',
+  //       text: '需登入會員才可查看我的願望'
+  //     });
+  //     location.hash = '#wishpool';
+  //   }
+  // }
+}
+
+// 只負責「點擊 → 改 hash」
 document.querySelectorAll('a[data-spa]').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault(); // 阻止跳頁
-      location.hash = link.getAttribute('href');
-    });
-    const pages = document.querySelectorAll('.page');
-    const links = document.querySelectorAll('.nav-link');
-  
-    async function showPage(hash) {
-      pages.forEach(p => p.classList.remove('active'));
-      links.forEach(l => l.classList.remove('active'));
-  
-      const target = document.querySelector(hash);
-      const link = document.querySelector(`a[href="${hash}"]`);
-  
-      if (target) target.classList.add('active');
-      if (link) link.classList.add('active');
-      if(hash === '#wishpool'){
-        await listAll();
-      }
-      // ?登入檢查，先註解起來
-      // if (hash === '#mywishes') {
-      //   const isLoggedIn = await checkLogin();
-      //   if (!isLoggedIn) {
-      //     Swal.fire({
-      //       icon: 'warning',
-      //       title: '請先登入會員',
-      //       text: '需登入會員才可查看我的願望'
-      //     });
-      //     location.hash = '#wishpool';
-      //   }
-      // }
-    }
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    location.hash = link.getAttribute('href');
   });
-  // 第一次載入
-  showPage(location.hash || '#wishpool');
- // 點擊切換
- window.addEventListener('hashchange', () => {
+});
+
+// 第一次載入
+showPage(location.hash || '#wishpool');
+
+// hash 改變時切換頁面
+window.addEventListener('hashchange', () => {
   showPage(location.hash);
 });
+
 async function checkLogin() {
   backendService = new BackendService();
   try {
