@@ -17,7 +17,7 @@ async function renderWishInfo(id) {
         wpbackendService = new wpBackendService();
         const res = await wpbackendService.getWishInfo(id);
         console.log('wish info:', res);
-        const titleEl = document.getElementById('product-title');
+        const titleEl = document.getElementById('product-name');
         const descEl = document.getElementById('product-description');
         const priceEl = document.getElementById('wish-price');
         const priorityEl = document.getElementById('wish-priority');
@@ -27,11 +27,11 @@ async function renderWishInfo(id) {
             2: '一般',
             3: '緊急'
         };
-        imagesContainer.innerHTML = `<img src="${res.photoURL}" alt="願望圖片" />`;
-        priorityEl.innerText = priorityMap[res.priority] || '未設定';
-        titleEl.innerText = res.itemName || '無標題';
-        descEl.innerText = res.description || '無描述';
-        priceEl.innerText = res.maxPrice || '無價格上限';
+        imagesContainer.innerHTML = `<img src="${res.data.photoURL}" alt="願望圖片" />`;
+        priorityEl.innerText = priorityMap[res.data.priority] || '未設定';
+        titleEl.innerText = res.data.itemName || '無標題';
+        descEl.innerText = res.data.description || '無描述';
+        priceEl.innerText = res.data.maxPrice || '無價格上限';
         // TODO: 表單必填資訊尚未處理
 
     } catch (error) {
