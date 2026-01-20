@@ -20,17 +20,18 @@ async function showPage(hash) {
   }
 
   // 登入檢查（之後再開）
-  // if (hash === '#mywishes') {
-  //   const isLoggedIn = await checkLogin();
-  //   if (!isLoggedIn) {
-  //     Swal.fire({
-  //       icon: 'warning',
-  //       title: '請先登入會員',
-  //       text: '需登入會員才可查看我的願望'
-  //     });
-  //     location.hash = '#wishpool';
-  //   }
-  // }
+  if (hash === '#mywishes') {
+    const isLoggedIn = await checkLogin();
+    if (!isLoggedIn) {
+      Swal.fire({
+        icon: 'warning',
+        title: '請先登入會員',
+        text: '需登入會員才可查看我的願望'
+      });
+      location.hash = '#wishpool';
+    }
+    await listMyWishes();
+  }
 }
 
 // 只負責「點擊 → 改 hash」
