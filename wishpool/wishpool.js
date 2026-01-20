@@ -1,8 +1,6 @@
 let backendService;
 let wpbackendService;
-// 先抓一次就好（全域共用）
-let wishPoolCache = null;
-let myWishesCache = null;
+
 
 // document.addEventListener("DOMContentLoaded", (e) => {
 
@@ -141,7 +139,7 @@ function showMyInfo(data) {
     card.setAttribute('data-tags', tagsString);
     card.dataset.id = wish.id;
     const showDeleteBtn = wish.status === 1;
-    const deleteButtonHTML = showDeleteBtn ? `<button class="btn btn-danger">刪除願望</button>`: '';
+    const deleteButtonHTML = showDeleteBtn ? `<button class="btn btn-danger" onclick="deleteWish(${card.dataset.id})">刪除願望</button>`: '';
 
     const statusMap = {
       1: '上架中',
@@ -168,7 +166,35 @@ function showMyInfo(data) {
     container.appendChild(card);
   });
 }
-
+async function deleteWish() {
+  wpbackendService = new wpBackendService;
+  Swal.fire({
+    icon: 'warning',
+    title: '確定刪除？',
+    text: '願望刪除後僅能在「我的願望」裡查看。',
+    showCancelButton: true,
+    confirmButtonText: '確定刪除',
+    cancelButtonText: '取消'
+  }).then(async result => {
+    if (result.isConfirmed) {
+      try {
+        const res = await wpbackendService.deleteWish(id);
+        Swal.fire({
+          icon: 'success', 
+          title: '刪除成功'
+        })
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...刪除失敗',
+          text: error.message
+        })
+      }
+    }
+  });
+  
+  
+}
 
 function generateTags(data) {
   const tags = [];
@@ -207,7 +233,7 @@ function generateTags(data) {
       filterItems();
     });
   });
-  
+
   function filterItems() {
     const items = document.querySelectorAll('.item');
     // 目前被選取的 tags
