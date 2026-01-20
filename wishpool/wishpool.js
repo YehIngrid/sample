@@ -87,9 +87,10 @@ function getInfo(data) {
     card.classList.add('card', 'item','text-dark', 'bg-light');
     const tagsString = generateTags(wish);
     card.setAttribute('data-tags', tagsString);
+    const expiresAt = new Date(wish.expiresAt);
     card.dataset.id = wish.id;
     card.innerHTML = `
-        <div class="card-header">${wish.expiresAt} 截止</div>
+        <div class="card-header">${expiresAt.toLocaleDateString()} 截止</div>
         <div class="card-body d-flex align-items-center">
           <div class="left">
             <img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px;">
@@ -170,7 +171,7 @@ function generateTags(data) {
   } else {
     tags.push('trithou');
   }
-
+  console.log('tags:', tags);
   return tags.join(' ');
 }
 
