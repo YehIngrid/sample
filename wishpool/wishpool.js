@@ -4,11 +4,12 @@ let wpbackendService;
 let wishPoolCache = null;
 let myWishesCache = null;
 
+// document.addEventListener("DOMContentLoaded", (e) => {
 
+// })
 const pages = document.querySelectorAll('.page');
 const links = document.querySelectorAll('.nav-link');
 
-// SPA 顯示邏輯
 // SPA 顯示邏輯
 async function showPage(hash) {
   pages.forEach(p => p.classList.remove('active'));
@@ -58,8 +59,7 @@ document.querySelectorAll('a[data-spa]').forEach(link => {
     location.hash = link.getAttribute('href');
   });
 });
-// first time
-showPage(location.hash || '#wishpool');
+
 // hash 改變時切換頁面
 window.addEventListener('hashchange', () => {
   showPage(location.hash);
