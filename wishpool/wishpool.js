@@ -175,7 +175,7 @@ function showMyInfo(data) {
   });
   
 }
-async function deleteWish() {
+async function deleteWish(id) {
   wpbackendService = new wpBackendService;
   Swal.fire({
     icon: 'warning',
