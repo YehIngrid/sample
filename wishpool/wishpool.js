@@ -200,9 +200,16 @@ function generateTags(data) {
 
 
   const tags = document.querySelectorAll('.tag');
-  const items = document.querySelectorAll('.item');
+  
+  tags.forEach(tag => {
+    tag.addEventListener('click', () => {
+      tag.classList.toggle('active'); // 重點！
+      filterItems();
+    });
+  });
   
   function filterItems() {
+    const items = document.querySelectorAll('.item');
     // 目前被選取的 tags
     const activeTags = Array.from(tags)
       .filter(tag => tag.classList.contains('active'))
@@ -217,7 +224,6 @@ function generateTags(data) {
         return;
       }
   
-      // 只要符合「任一個」被選 tag 就顯示（OR）
       const match = activeTags.every(tag =>
         itemTags.includes(tag)
       );
@@ -226,12 +232,7 @@ function generateTags(data) {
     });
   }
   
-  tags.forEach(tag => {
-    tag.addEventListener('click', () => {
-      tag.classList.toggle('active'); // 重點！
-      filterItems();
-    });
-  });
+
 // TODO wishpool 還沒改成適合wishpool.js的格式
 
 const wishForm   = document.getElementById('wishForm');
