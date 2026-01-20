@@ -96,20 +96,23 @@ function showInfo(data) {
     container.innerHTML = '<p class="empty">你目前還沒有願望 🌱</p>';
     return;
   }
+  const container = document.getElementById('wishGrid');
+  container.innerHTML = ''; //清除資料
   data.wishes.forEach(wish => {
-    const container = document.getElementById('wishGrid');
-    container.innerHTML = ''; //清除資料
     const card = document.createElement('div');
     card.classList.add('card', 'item','text-dark', 'bg-light');
     const tagsString = generateTags(wish);
     card.setAttribute('data-tags', tagsString);
     const expiresAt = new Date(wish.expiresAt);
     card.dataset.id = wish.id;
+    const showImage = wish.photoURL != null;
+    const image = showImage ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px;">`: `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
+" alt="No Image" style="width: 100px;">`;
     card.innerHTML = `
         <div class="card-header">${expiresAt.toLocaleDateString()} 截止</div>
         <div class="card-body d-flex align-items-center">
           <div class="left">
-            <img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px;">
+            ${image}
           </div>
           <div class="right" style="margin-left: 15px;">
             <h5 class="card-title">${wish.itemName}</h5>
@@ -126,12 +129,15 @@ function showInfo(data) {
 }
 
 function showMyInfo(data) {
+  const container = document.getElementById('myWishGrid');
+  container.innerHTML = '';
   data.wishes.forEach(wish => {
-    const container = document.getElementById('myWishGrid');
-    container.innerHTML = '';
     const card = document.createElement('div');
     card.classList.add('card', 'item','text-dark', 'bg-light');
     const tagsString = generateTags(wish);
+    const showImage = wish.photoURL != null;
+    const image = showImage ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px;">`: `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
+" alt="No Image" style="width: 100px;">`;
     card.setAttribute('data-tags', tagsString);
     card.dataset.id = wish.id;
     const showDeleteBtn = wish.status === 1;
@@ -146,7 +152,7 @@ function showMyInfo(data) {
         <div class="card-header">願望狀態：${statusMap[wish.status]}</div>
         <div class="card-body d-flex align-items-center">
           <div class="left">
-            <img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px;">
+            ${image}
           </div>
           <div class="right" style="margin-left: 15px;">
             <h5 class="card-title">${wish.itemName}</h5>
