@@ -8,9 +8,15 @@ class wpBackendService {
     async createWish(itemName, description, priority, maxPrice, photo) {
         console.log('建立願望：', itemName, description, priority, maxPrice, photo);
         try {
+            const formData = new FormData();
+            formData.append('itemName', itemName);
+            formData.append('description', description);
+            formData.append('priority', priority);
+            formData.append('maxPrice', maxPrice);
+            formData.append('photo', photo);
             const response = await axios.post(
                 `${this.baseUrl}/create`,
-                { itemName, description, priority, maxPrice, photo }
+                formData
             );
             return response.data;
         } catch (error) {
