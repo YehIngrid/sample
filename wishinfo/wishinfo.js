@@ -27,7 +27,7 @@ async function renderWishInfo(id) {
             2: '一般',
             3: '緊急'
         };
-        imagesContainer.innerHTML = `<img src="${res.data.photoURL}" alt="願望圖片" />`;
+        imagesContainer.innerHTML = `<img src="${res.data.photoURL || '無照片'}" alt="願望圖片" />`;
         priorityEl.innerText = priorityMap[res.data.priority] || '未設定';
         titleEl.innerText = res.data.itemName || '無標題';
         descEl.innerText = res.data.description || '無描述';
