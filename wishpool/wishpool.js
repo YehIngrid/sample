@@ -165,7 +165,7 @@ function showMyInfo(data) {
       deleteButton.addEventListener('click', (e) => {
         e.stopPropagation();
         deleteWish(card.dataset.id);
-      })
+      });
     }
     card.addEventListener('click', () => {
       const pid = card.dataset.id;
