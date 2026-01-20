@@ -138,9 +138,7 @@ function showMyInfo(data) {
 " alt="No Image" style="width: 100px;">`;
     card.setAttribute('data-tags', tagsString);
     card.dataset.id = wish.id;
-    const showDeleteBtn = wish.status === 1;
-    const deleteButtonHTML = showDeleteBtn ? `<button class="btn btn-danger" onclick="deleteWish(${card.dataset.id}); return false;">刪除願望</button>`: '';
-
+    
     const statusMap = {
       1: '上架中',
       2: '已過期',
@@ -157,14 +155,25 @@ function showMyInfo(data) {
             <p class="card-text ellipsis-text-wp">${wish.description}</p>
           </div>
         </div>
-        ${deleteButtonHTML}
     `;
+    const showDeleteBtn = wish.status === 1;
+    const deleteButton = showDeleteBtn ? document.createElement('button'): null;
+    if(!deleteButton) {
+      deleteButton.classList.add('btn', 'btn-danger');
+      deleteButton.innerHTML = '刪除願望';
+      card.appendChild(deleteButton);
+      deleteButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteWish(card.dataset.id);
+      })
+    }
     card.addEventListener('click', () => {
       const pid = card.dataset.id;
       if (pid) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(pid)}`;
     });
     container.appendChild(card);
   });
+  
 }
 async function deleteWish() {
   wpbackendService = new wpBackendService;
