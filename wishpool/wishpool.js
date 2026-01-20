@@ -224,7 +224,7 @@ const fileInput = document.getElementById('wish-image');
 const preview   = document.getElementById('imgPreview');
 const imgEl     = document.getElementById('imgPreviewImg');
 const budgetMax = document.getElementById('budgetMax');
-const expireDate = document.getElementById('expireDate');
+// const expireDate = document.getElementById('expireDate');
 const urgency   = document.getElementById('urgency');
 
 // --- 小工具：設/清錯 ---
@@ -250,19 +250,19 @@ function validatePhoto() {
 // --- 驗證：最低/最高預算 + 關係 ---
 const toNum = v => (v === '' ? NaN : Number(v));
 
-function validexpireDate() {
-  clearErr(expireDate);
-  const v = expireDate.value;
-  if (!v) { setErr(expireDate, '請選擇願望過期日'); return false; }
-  const selectedDate = new Date(v);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  if (selectedDate < today) {
-    setErr(expireDate, '過期日不可早於今天');
-    return false;
-  }
-  return true;
-}
+// function validexpireDate() {
+//   clearErr(expireDate);
+//   const v = expireDate.value;
+//   if (!v) { setErr(expireDate, '請選擇願望過期日'); return false; }
+//   const selectedDate = new Date(v);
+//   const today = new Date();
+//   today.setHours(0, 0, 0, 0);
+//   if (selectedDate < today) {
+//     setErr(expireDate, '過期日不可早於今天');
+//     return false;
+//   }
+//   return true;
+// }
 function validateBudgetMax() {
   clearErr(budgetMax);
   const v = toNum(budgetMax.value);
@@ -281,7 +281,7 @@ function validateUrgency() {
 
 // --- 即時驗證（使用者輸入就檢查） ---
 fileInput.addEventListener('change', validatePhoto);
-expireDate.addEventListener('input', () => { validexpireDate();});
+// expireDate.addEventListener('input', () => { validexpireDate();});
 budgetMax.addEventListener('input', () => { validateBudgetMax(); });
 urgency.addEventListener('change', validateUrgency);
 
@@ -340,11 +340,11 @@ wishFormbig.addEventListener("click", function (e) {
   let isValid = true;
 
   const okPhoto = validatePhoto();
-  const okDate  = validexpireDate();
+  // const okDate  = validexpireDate();
   const okMax   = validateBudgetMax();
   const okUrg   = validateUrgency();
 
-  isValid = isValid && okPhoto && okDate && okMax && okUrg;
+  isValid = isValid && okPhoto && okMax && okUrg;
 
   // 商品名稱
   const wishName = document.getElementById("wishName");
