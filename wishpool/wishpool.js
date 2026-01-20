@@ -23,11 +23,7 @@ async function showPage(hash) {
 
   // ===== 公開願望池 =====
   if (hash === '#wishpool') {
-    if (!wishPoolCache) {
-      wishPoolCache = await listAll();     // 只打一次 API
-    }
-    getInfo(wishPoolCache);
-    return;
+    await listAll();
   }
 
   // ===== 我的願望 =====
@@ -41,13 +37,9 @@ async function showPage(hash) {
       });
       location.hash = '#wishpool';
       return; // ⛔ 很重要
+    } else {
+      await listMyWishes();
     }
-
-    if (!myWishesCache) {
-      myWishesCache = await listMyWishes();
-    }
-    getInfo(myWishesCache);
-    return;
   }
 }
 
@@ -60,6 +52,7 @@ document.querySelectorAll('a[data-spa]').forEach(link => {
   });
 });
 
+showPage(location.hash || '#wishpool');
 // hash 改變時切換頁面
 window.addEventListener('hashchange', () => {
   showPage(location.hash);
@@ -80,7 +73,7 @@ async function listAll() {
     wpbackendService = new wpBackendService();
     try {
       const res = await wpbackendService.listWishes(1);
-      getInfo(res.data);
+      showInfo(res.data);
       return res.data;
     } catch (error) {
       console.error('Error loading wishpool data:', error);
@@ -91,20 +84,21 @@ async function listMyWishes() {
     wpbackendService = new wpBackendService();
     try {
       const res = await wpbackendService.myWishes(1, null);
-      getMyInfo(res.data);
+      showMyInfo(res.data);
       return res.data;
     } catch (error) {
       console.error('Error loading my wishes data:', error);
     }
 }
 
-function getInfo(data) {
+function showInfo(data) {
   if (!data || data.length === 0) {
     container.innerHTML = '<p class="empty">你目前還沒有願望 🌱</p>';
     return;
   }
   data.wishes.forEach(wish => {
     const container = document.getElementById('wishGrid');
+    container.innerHTML = ''; //清除資料
     const card = document.createElement('div');
     card.classList.add('card', 'item','text-dark', 'bg-light');
     const tagsString = generateTags(wish);
@@ -131,9 +125,10 @@ function getInfo(data) {
   });
 }
 
-function getMyInfo(data) {
+function showMyInfo(data) {
   data.wishes.forEach(wish => {
     const container = document.getElementById('myWishGrid');
+    container.innerHTML = '';
     const card = document.createElement('div');
     card.classList.add('card', 'item','text-dark', 'bg-light');
     const tagsString = generateTags(wish);
