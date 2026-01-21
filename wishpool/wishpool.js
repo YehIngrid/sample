@@ -1,6 +1,6 @@
 let backendService;
 let wpbackendService;
-
+let isLoggedIn;
 
 // document.addEventListener("DOMContentLoaded", (e) => {
 
@@ -26,7 +26,7 @@ async function showPage(hash) {
 
   // ===== 我的願望 =====
   if (hash === '#mywishes') {
-    const isLoggedIn = await checkLogin();
+    isLoggedIn = await checkLogin();
     if (!isLoggedIn) {
       Swal.fire({
         icon: 'warning',
@@ -38,6 +38,11 @@ async function showPage(hash) {
     } else {
       await listMyWishes();
     }
+  }
+  if(hash === '#makewish') {
+    Swal.fire({
+      text: "歡迎許願！記得要先登入會員歐～"
+    });
   }
 }
 
@@ -307,13 +312,31 @@ function clearErr(el) {
   if (fb && fb.classList.contains('invalid-feedback')) fb.textContent = '';
 }
 
-// --- 驗證：照片必上傳 ---
+// --- 驗證：照片上傳 < 5MB ---
 function validatePhoto() {
   clearErr(fileInput);
-  const f = fileInput.files && fileInput.files[0];
-  if (!f) { setErr(fileInput, '請上傳商品照片'); return false; }
+
+  const f = fileInput.files?.[0];
+  const MAX_SIZE = 5 * 1024 * 1024;
+
+  // 沒選照片 → 合法
+  if (!f) return true;
+
+  // 有選但超過 5MB
+  if (f.size > MAX_SIZE) {
+    setErr(fileInput, '照片大小不能超過 5MB');
+
+    // 🔴 關鍵：清空檔案 & 預覽
+    fileInput.value = '';
+    preview.classList.remove('has-image');
+    imgEl.removeAttribute('src');
+
+    return false;
+  }
+
   return true;
 }
+
 
 // --- 驗證：最低/最高預算 + 關係 ---
 const toNum = v => (v === '' ? NaN : Number(v));
@@ -348,24 +371,35 @@ function validateUrgency() {
 }
 
 // --- 即時驗證（使用者輸入就檢查） ---
-fileInput.addEventListener('change', validatePhoto);
+fileInput.addEventListener('change', validatePhoto());
 // expireDate.addEventListener('input', () => { validexpireDate();});
 budgetMax.addEventListener('input', () => { validateBudgetMax(); });
-urgency.addEventListener('change', validateUrgency);
+urgency.addEventListener('change', validateUrgency());
 
 
 fileInput.addEventListener('change', (e) => {
-  const file = e.target.files && e.target.files[0];
+  const file = e.target.files?.[0];
   if (!file) {
     preview.classList.remove('has-image');
     imgEl.removeAttribute('src');
     return;
   }
+
+  const MAX_SIZE = 5 * 1024 * 1024;
+  if (file.size > MAX_SIZE) {
+    setErr(fileInput, '照片大小不能超過 5MB');
+    fileInput.value = '';
+    preview.classList.remove('has-image');
+    imgEl.removeAttribute('src');
+    return;
+  }
+
   const url = URL.createObjectURL(file);
-  imgEl.onload = () => URL.revokeObjectURL(url); // 釋放暫存
+  imgEl.onload = () => URL.revokeObjectURL(url);
   imgEl.src = url;
   preview.classList.add('has-image');
 });
+
 
   //（可選）支援拖曳上傳
   ['dragenter','dragover'].forEach(evt =>
@@ -424,7 +458,16 @@ wishFormbig.addEventListener("click", function (e) {
     wishName.classList.remove("is-invalid");
     wishName.classList.add("is-valid");
   }
-
+  //預算最高
+  const budgetMax = document.getElementById("budgetMax");
+  if (!budgetMax.value.trim() || budgetMax.value <= 0) {
+    budgetMax.classList.add("is-invalid");
+    budgetMax.classList.remove("is-valid");
+    isValid = false;
+  } else {
+    budgetMax.classList.remove("is-invalid");
+    budgetMax.classList.add("is-valid");
+  }
 
   // 內容說明
   const wishDesc = document.getElementById("wishDesc");
@@ -439,6 +482,14 @@ wishFormbig.addEventListener("click", function (e) {
 
   // ✅ 全部通過才真的送出
   if (!isValid) return;
+  if (!isLoggedIn){
+    Swal.fire({
+      icon: 'warning',
+      title: '請先登入會員',
+      text: '需登入會員才可查看我的願望'
+    });
+    return;
+  }
   Swal.fire({
     icon: 'warning',
     title: '確定送出？請詳閱下方規則',
@@ -456,14 +507,14 @@ wishFormbig.addEventListener("click", function (e) {
 
 async function submit() {
   wpbackendService = new wpBackendService();
-  
+  const photo = fileInput.files?.[0] || null;
   try {
     const result = await wpbackendService.createWish(
       wishName.value,
       wishDesc.value,
       urgency.value,
       budgetMax.value,
-      fileInput.files[0]
+      photo
     );
     console.log('願望建立成功：', result);
     Swal.fire({
