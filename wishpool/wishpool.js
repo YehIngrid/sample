@@ -371,10 +371,10 @@ function validateUrgency() {
 }
 
 // --- 即時驗證（使用者輸入就檢查） ---
-fileInput.addEventListener('change', validatePhoto());
+fileInput.addEventListener('change', validatePhoto);
 // expireDate.addEventListener('input', () => { validexpireDate();});
 budgetMax.addEventListener('input', () => { validateBudgetMax(); });
-urgency.addEventListener('change', validateUrgency());
+urgency.addEventListener('change', validateUrgency);
 
 
 fileInput.addEventListener('change', (e) => {
