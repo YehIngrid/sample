@@ -90,7 +90,7 @@
 
     <!-- TODO 主要內容 -->
     <main class="container">
-      <section id="mywishes" class="page" style="margin: 5vh 3vw;">
+      <section id="mywishes" class="page" style="margin-bottom: 36vh; margin-top: 5vh;">
         <h3>我的願望</h3>
         <div class="wishpoolcontainer col-12">
           <div class="wishgrid" id="myWishGrid">
@@ -98,14 +98,14 @@
           </div>
         </div>
       </section>
-      <section id="about" class="page" style="margin: 5vh 5vw; padding-bottom: 30vh;">
+      <section id="about" class="page" style="padding-bottom: 30vh; margin-top: 5vh;">
         <h3 style="margin-bottom: 20px;">創立理念</h3>
         <p>歡迎來到許願池！在這裡，你可以分享你心中渴望擁有的商品，無論是學習用品、生活必需品，還是夢寐以求的珍藏品。我們鼓勵大家勇敢許下願望，讓我們一起努力實現它們！</p>
         <!-- <img src="../webP/adwishpool.webp" alt="" class="adwishpool_" style="width: 100%;"> -->
         <p>在這裡，你可以了解許願者的基本資訊，讓你更了解他們的需求和背景。這些資訊將有助於你更好地理解許願者的願望，並提供更有針對性的幫助。</p>
         <p>許願池是一種由買家主動提出需求、賣家主動回應的「反向媒合機制」。它改變傳統 C2C 平台以賣家為主導的模式，讓「需求端」成為流通的起點。</p>
       </section>
-      <section id="wishpool" class="page" style="margin: 5vh 3vw;">
+      <section id="wishpool" class="page" style="margin-top: 5vh;">
         <div class="wpcontainer d-lg-flex d-block">
           <div class="leftsort col-lg-3 col-12">
             <h6 style="margin-bottom: 10px;">篩選條件</h6>
@@ -120,11 +120,11 @@
               <button class="tag" data-tag="trithou">3000 元以上收購</button>
             </div>
           </div>
-          <div class="wishpoolcontainer col-lg-9 col-12">
+          <div class="wishpoolcontainer col-lg-9 col-12" style="margin-bottom: 36vh;">
             <div class="wishgrid">
               <div class="item-list" id="wishGrid">
                 <!-- 許願卡片會在這裡動態生成 -->
-                <div class="card text-dark bg-light item" data-tags="book necessary">
+                <!-- <div class="card text-dark bg-light item" data-tags="book necessary">
                   <div class="card-header">2026/08/23 截止</div>
                   <div class="card-body d-flex align-items-center">
                     <div class="left">
@@ -136,13 +136,16 @@
                       <p class="card-text ellipsis-text-wp">許願內容 Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit possimus, facere sit nisi, deserunt similique fuga doloremque provident temporibus, mollitia neque porro molestias aliquam illo saepe voluptatum quia dolores voluptate dicta aspernatur quibusdam hic. Assumenda voluptas ratione voluptatibus alias consectetur perspiciatis molestias atque. Reiciendis facere libero error? Nulla, tempore ipsum?</p>
                     </div>
                   </div>
+                </div> -->
+                <div class="nowish text-center" style="color: var(--secondary-color);">
+                  <p>～目前沒有願望～</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <section id="makewish" class="page" style="margin: 5vh 5vw;">
+      <section id="makewish" class="page" style="margin-top: 5vh;">
         <h3>許願步驟</h3>
         <p>在這裡，你可以輕鬆地提交你的願望，讓更多人知道你想要什麼。只需填寫簡單的表格，描述你心中的商品和預算範圍，我們將幫助你將願望傳達給潛在的賣家。</p>
         <div class="ulstepdiv">
@@ -167,7 +170,7 @@
               </div>
               <label for="wishPhoto" class="form-label">商品照片</label>
               <small class="small"> < 5 MB (jpg/jpeg/png/webp)</small>
-              <input class="form-control" type="file" id="wish-image" name="image" accept="image/*">
+              <input class="form-control" type="file" id="wish-image" name="image" accept="image/jpeg, image/jpg, image/png, image/webp">
               <div class="invalid-feedback"></div>
               <div class="valid-feedback">Looks good!</div>
             </div>

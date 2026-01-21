@@ -9,7 +9,7 @@
     --brand-color: #004b97;
 }
 html {
-  overflow-x: hidden;
+  overflow-x: hidden !important;
 }
 body {
     background-color: var(--background-color) !important;
@@ -24,10 +24,27 @@ nav {
     nav {
         padding-left: 20px !important;
     }
+    .nav {
+      --bs-nav-link-padding-y: 0.25rem !important;
+    }
     .nav-item a {
         font-size: 12px;
     }
-    
+    .card-title {
+      font-size: 14px;
+    }
+    .card-header {
+      font-size: 12px;
+    }
+    .ulstep {
+      padding-left: 10px;
+    }
+    .step {
+      padding-right: 15px;
+    }
+    .formwish {
+      padding: 10px;
+    }
 }
 nav a {
     color: var(--light-text-color);
