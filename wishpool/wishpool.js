@@ -40,9 +40,13 @@ async function showPage(hash) {
     }
   }
   if(hash === '#makewish') {
-    Swal.fire({
-      text: "歡迎許願！記得要先登入會員歐～"
-    });
+    isLoggedIn = await checkLogin();
+    if (!isLoggedIn) {
+      Swal.fire({
+        title: '請先登入會員',
+        text: '需登入會員才可送出許願清單歐！'
+      });
+    }
   }
 }
 
