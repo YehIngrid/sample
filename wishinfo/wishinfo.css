@@ -13,6 +13,11 @@ nav {
   box-shadow: 0 12px 0 rgba(127,222,223,0.45);
   color:#0f5f63;
 }
+.swal2-confirm {
+  background-color: var(--secondary-color);
+  color: #fff;
+  font-size: 1rem;
+}
 section{
   min-height:100vh;
   display:flex;

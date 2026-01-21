@@ -11,6 +11,11 @@
 html {
   overflow-x: hidden !important;
 }
+.swal2-confirm {
+  background-color: var(--secondary-color);
+  color: #fff;
+  font-size: 1rem;
+}
 body {
     background-color: var(--background-color) !important;
     color: #042f37 !important;
