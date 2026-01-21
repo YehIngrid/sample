@@ -147,7 +147,7 @@
         <p>在這裡，你可以輕鬆地提交你的願望，讓更多人知道你想要什麼。只需填寫簡單的表格，描述你心中的商品和預算範圍，我們將幫助你將願望傳達給潛在的賣家。</p>
         <div class="ulstepdiv">
           <ul class="ulstep">
-            <li class="listep"><span class="step">STEP 1</span> 買家填寫許願單</li>
+            <li class="listep"><span class="step">STEP 1</span> 買家填寫許願單 (需登入會員）</li>
             <li class="listep"><span class="step">STEP 2</span> 系統將願望集中展示在許願池區域</li>
             <li class="listep"><span class="step">STEP 3</span> 賣家可依照願望內容選擇上架商品並標註「回應許願」</li>
             <li class="listep"><span class="step">STEP 4</span> 平台會通知買家，完成配對並引導交易</li>
@@ -155,7 +155,8 @@
         </div>
         <p>當你提交願望後，我們會將其展示在許願池中，讓其他用戶可以看到並回應你的需求。你也可以隨時查看你的願望狀態，了解是否有賣家對你的願望感興趣。<br>
         我們鼓勵大家積極參與許願池，不僅是許下願望，也可以幫助他人實現他們的夢想。讓我們一起創造一個充滿愛心和支持的社群，讓每個人的願望都能成真！</p>
-        <p style="padding: 3px 8px; background-color: var(--secondary-color); color: white; font-weight: 600; font-size: large;">注意事項：每位用戶 7 天內只可以許 1 個願望！！並且上傳後 7 天，願望將會自動過期消失，僅可以在「我的願望」裡檢視。</p>
+        <p class="warning">注意事項：每位用戶 7 天內只可以許 1 個願望！！並且上傳後 7 天，願望將會自動過期消失，僅可以在「我的願望」裡檢視。</p>
+        <p>請先<span class="loginfirst">登入會員</span>才可提交許願表單！</p>
         <h3 style="margin-top: 20px;">許願表單</h3>
         <div class="formwish">
           <form id="wishForm" class="p-3">
@@ -165,6 +166,7 @@
                 <img id="imgPreviewImg" alt="">
               </div>
               <label for="wishPhoto" class="form-label">商品照片</label>
+              <small class="small"> < 5 MB (jpg/jpeg/png/webp)</small>
               <input class="form-control" type="file" id="wish-image" name="image" accept="image/*">
               <div class="invalid-feedback"></div>
               <div class="valid-feedback">Looks good!</div>
@@ -172,6 +174,7 @@
           
             <div class="mb-3">
               <label for="wishName" class="form-label">商品名稱</label>
+              <small class="small">*必填</small>
               <input type="text" id="wishName" class="form-control" placeholder="例：iPad 10 代 64GB（粉）">
               <div class="invalid-feedback">請輸入商品名稱</div>
               <div class="valid-feedback">Looks good!</div>
@@ -179,7 +182,8 @@
           
             <div class="row mb-3">
               <div class="col">
-                <label for="budgetMax" class="form-label">預算最高<br>(單位: 元)</label>
+                <label for="budgetMax" class="form-label">預算最高</label>
+                <small class="small">*必填（單位: 元）</small>
                 <input type="number" id="budgetMax" class="form-control" placeholder="0">
                 <div class="invalid-feedback"></div>
                 <div class="valid-feedback">Looks good!</div>
@@ -194,6 +198,7 @@
           
             <div class="mb-3">
               <label for="wishDesc" class="form-label">內容說明</label>
+              <small class="small">*必填</small>
               <textarea id="wishDesc" rows="3" class="form-control" placeholder="型號、顏色、尺寸、方便聯絡時間等"></textarea>
               <div class="invalid-feedback">請至少輸入 10 字以上的說明</div>
               <div class="valid-feedback">Looks good!</div>
@@ -201,6 +206,7 @@
           
             <div class="mb-3">
               <label for="urgency" class="form-label">急迫度</label>
+              <small class="small">*必填</small>
               <select id="urgency" class="form-select">
                 <option value="" selected disabled>請選擇急迫度</option>
                 <option value="3">急需</option>

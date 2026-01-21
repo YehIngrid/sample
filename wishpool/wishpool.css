@@ -346,3 +346,23 @@ nav a {
     margin-bottom: 10px !important;
   }
 }
+.warning {
+  padding: 3px 8px;
+  background-color: var(--secondary-color);
+  color: white;
+  font-weight: 600;
+  font-size: large;
+}
+.loginfirst {
+  color: var(--secondary-color);
+  font-size: large;
+  font-weight: 600;
+  background-color: #fff;
+  padding: 3px 8px;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+.small {
+  color: #cb6898;
+  margin-left: 3px;
+}
