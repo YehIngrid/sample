@@ -109,7 +109,7 @@ function showInfo(data) {
     const expiresAt = new Date(wish.expiresAt);
     card.dataset.id = wish.id;
     const showImage = wish.photoURL != null;
-    const image = showImage ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px;">`: `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
+    const image = showImage ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px; max-height: 100px; object-fit: cover; object-position: center;">`: `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
 " alt="No Image" style="width: 100px;">`;
     card.innerHTML = `
         <div class="card-header">${expiresAt.toLocaleDateString()} 截止</div>
@@ -139,7 +139,7 @@ function showMyInfo(data) {
     card.classList.add('card', 'item','text-dark', 'bg-light');
     const tagsString = generateTags(wish);
     const showImage = wish.photoURL != null;
-    const image = showImage ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px;">`: `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
+    const image = showImage ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px; max-height: 100px; object-fit: cover; object-position: center;">`: `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
 " alt="No Image" style="width: 100px;">`;
     card.setAttribute('data-tags', tagsString);
     card.dataset.id = wish.id;
