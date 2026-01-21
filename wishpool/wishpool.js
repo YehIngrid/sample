@@ -187,17 +187,26 @@ async function deleteWish(id) {
   }).then(async result => {
     if (result.isConfirmed) {
       try {
-        const res = await wpbackendService.deleteWish(id);
+        await wpbackendService.deleteWish(id);
         Swal.fire({
           icon: 'success', 
-          title: '刪除成功'
-        })
+          title: '刪除成功',
+          confirmButtonText: 'ok',
+        }).then (async result => {
+          if(result.isConfirmed) {
+            try {
+              await wpbackendService.listMyWishes();
+            } catch(error) {
+              console.log('error: ',error);
+            }
+          }
+        }); //TODO 加入重新載入
       } catch (error) {
         Swal.fire({
           icon: 'error',
           title: 'Oops...刪除失敗',
           text: error.message
-        })
+        });
       }
     }
   });
