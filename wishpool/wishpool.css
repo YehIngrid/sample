@@ -8,6 +8,9 @@
     --light-text-color: rgb(255, 249, 211);
     --brand-color: #004b97;
 }
+* {
+  box-sizing: border-box;
+}
 html {
   overflow-x: hidden !important;
 }
@@ -19,6 +22,7 @@ html {
 body {
     background-color: var(--background-color) !important;
     color: #042f37 !important;
+    overflow-x: hidden;
 }
 nav {
     background-color: var(--primary-color);
@@ -30,6 +34,9 @@ nav {
         padding-left: 20px !important;
     }
     .nav {
+      --bs-nav-link-padding-y: 0.25rem !important;
+    }
+    .nav-link {
       --bs-nav-link-padding-y: 0.25rem !important;
     }
     .nav-item a {
