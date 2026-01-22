@@ -41,7 +41,22 @@ async function renderWishInfo(id) {
     }
 }
 const contactbtn = document.getElementById('contact-wisher');
+const mbcontactbtn = document.getElementById('contact-wisher-mobile');
 contactbtn.addEventListener('click', async () => {
+    try {
+        if (!wishId) {
+            console.warn('缺少願望 id');
+            return;
+        }
+        // TODO 聯絡許願者
+        const res = await wpbackendService.contactWisher(wishId);
+        alert('已聯絡許願者，請等待回覆！');
+    } catch (error) {
+        console.error('Error contacting wisher:', error);
+        alert('聯絡許願者失敗，請稍後再試。');
+    }
+});
+mbcontactbtn.addEventListener('click', async () => {
     try {
         if (!wishId) {
             console.warn('缺少願望 id');
