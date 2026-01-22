@@ -20,6 +20,7 @@ async function renderWishInfo(id) {
         const titleEl = document.getElementById('product-name');
         const descEl = document.getElementById('product-description');
         const priceEl = document.getElementById('wish-price');
+        const wisher = document.getElementById('wisher');
         const priorityEl = document.getElementById('wish-priority');
         const imagesContainer = document.getElementById('wish-photo');
         priorityMap = {
@@ -27,13 +28,13 @@ async function renderWishInfo(id) {
             2: '一般',
             3: '緊急'
         };
-        imagesContainer.innerHTML = `<img src="${res.data.photoURL || '無照片'}" alt="願望圖片" />`;
+        imagesContainer.innerHTML = `<img src="${res.data.photoURL || 
+            "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>"}' alt="願望圖片" />`;
         priorityEl.innerText = priorityMap[res.data.priority] || '未設定';
         titleEl.innerText = res.data.itemName || '無標題';
         descEl.innerText = res.data.description || '無描述';
         priceEl.innerText = res.data.maxPrice || '無價格上限';
-        // TODO: 表單必填資訊尚未處理
-
+        wisher.innerText = res.data.owner.name || '未知';
     } catch (error) {
         console.error('Error fetching wish info:', error);
         return;
@@ -46,6 +47,7 @@ contactbtn.addEventListener('click', async () => {
             console.warn('缺少願望 id');
             return;
         }
+        // TODO 聯絡許願者
         const res = await wpbackendService.contactWisher(wishId);
         alert('已聯絡許願者，請等待回覆！');
     } catch (error) {
@@ -79,3 +81,4 @@ document.addEventListener('keydown', (e) => {
 document.getElementById('lightbox').addEventListener('click', (e) => {
     if (e.target.id === 'lightbox') closeLightbox();
 });
+// TODO 願望聊天室相關操作

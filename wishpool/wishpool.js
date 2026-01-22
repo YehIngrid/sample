@@ -537,8 +537,4 @@ async function submit() {
     });
   }
 }
-// card.addEventListener('click', () => {
-//   const pid = card.dataset.id;
-//   if (pid) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(pid)}`;
-// });
-// TODO create wish
+// TODO 願望聊天室相關操作

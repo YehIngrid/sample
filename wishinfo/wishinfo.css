@@ -101,7 +101,7 @@ h2{margin-top:0}
     font-size: 15px;
 }
 .price {
-    color: var(--brand-color);
+    color: var(--secondary-color);
 }
 @media screen and (max-width: 576px) {
     .container {
