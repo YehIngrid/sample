@@ -164,12 +164,7 @@ class ChatRoom {
         };
         reader.readAsDataURL(file);
     }
-    closePreview() {
-        this.closepreview.addEventListener('click', () => {
-            this.pendingImage = null;
-            document.querySelector('.preview').remove();
-        });
-    }
+
     sendImage(file) {
         const reader = new FileReader();
         reader.onload = async () => {
