@@ -348,7 +348,7 @@ class ChatRoom {
             return;
         }
         chatList.innerHTML = '';
-        this.showLoaders();
+        // this.showLoaders();
         try {
             const rooms = await this.backend.listRooms();  
             console.log(rooms);
