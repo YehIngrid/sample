@@ -385,9 +385,10 @@ class ChatRoom {
             }
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
-        } finally {
-            this.hideLoaders();
         }
+        // } finally {
+        //     this.hideLoaders();
+        // }
     }
 
     /* ======================
