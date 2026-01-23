@@ -97,6 +97,11 @@
           <div class="wishgrid" id="myWishGrid">
             <!-- 我的許願卡片會在這裡動態生成 -->
           </div>
+          <div class="pagination-controls text-center my-3">
+            <button id="myprevPage" class="wishpage">上一頁</button>
+            <span id="mypageInfo" class="mx-2" style="color: var(--secondary-color);"></span>
+            <button id="mynextPage" class="wishpage">下一頁</button>
+          </div>
         </div>
       </section>
       <section id="about" class="page" style="padding-bottom: 30vh; margin-top: 5vh;">
@@ -138,11 +143,17 @@
                     </div>
                   </div>
                 </div> -->
-                <div class="nowish text-center" style="color: var(--secondary-color);">
+                <!-- <div class="nowish text-center" style="color: var(--secondary-color);">
                   <p>～目前沒有願望～</p>
-                </div>
+                </div> -->
               </div>
             </div>
+            <div class="pagination-controls text-center my-3">
+              <button id="prevPage" class="wishpage">上一頁</button>
+              <span id="pageInfo" class="mx-2" style="color: var(--secondary-color);"></span>
+              <button id="nextPage" class="wishpage">下一頁</button>
+            </div>
+            
           </div>
         </div>
       </section>

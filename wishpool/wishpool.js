@@ -1,10 +1,36 @@
 let backendService;
 let wpbackendService;
 let isLoggedIn;
+let currentPage = 1;
+let totalPages = 1; // 如果後端有回 totalPages
+let mycurrentPage = 1;
+let mytotalPages = 1;
 
-// document.addEventListener("DOMContentLoaded", (e) => {
-
-// })
+document.addEventListener("DOMContentLoaded", (e) => {
+  document.getElementById('prevPage')?.addEventListener('click', () => {
+    if (currentPage > 1) {
+      listAll(currentPage - 1);
+    }
+  });
+  
+  document.getElementById('nextPage')?.addEventListener('click', () => {
+    if (currentPage < totalPages) {
+      listAll(currentPage + 1);
+    }
+  });
+  
+  document.getElementById('myprevPage')?.addEventListener('click', () => {
+    if (mycurrentPage > 1) {
+      listMyWishes(mycurrentPage - 1);
+    }
+  });
+  
+  document.getElementById('mynextPage')?.addEventListener('click', () => {
+    if (mycurrentPage < mytotalPages) {
+      listMyWishes(mycurrentPage + 1);
+    }
+  });
+})
 const pages = document.querySelectorAll('.page');
 const links = document.querySelectorAll('.nav-link');
 
@@ -21,7 +47,8 @@ async function showPage(hash) {
 
   // ===== 公開願望池 =====
   if (hash === '#wishpool') {
-    await listAll();
+    currentPage = 1;
+    await listAll(1);
   }
 
   // ===== 我的願望 =====
@@ -76,26 +103,46 @@ async function checkLogin() {
   }
 }
 
-async function listAll() {
+async function listAll(page = 1) {
     wpbackendService = new wpBackendService();
     try {
-      const res = await wpbackendService.listWishes(1);
+      const res = await wpbackendService.listWishes(page);
+      currentPage = page;
       showInfo(res.data);
-      return res.data;
+      if (res.data.pagination.totalPages) {
+        totalPages = res.data.pagination.totalPages;
+      }
+      updatePaginationUI();
     } catch (error) {
       console.error('Error loading wishpool data:', error);
     }
 }
 // TODO nextpage previous page 還沒做
-async function listMyWishes() {
+async function listMyWishes(mypage) {
     wpbackendService = new wpBackendService();
     try {
-      const res = await wpbackendService.myWishes(1, null);
+      const res = await wpbackendService.myWishes(mypage, null);
+      mycurrentPage = mypage;
       showMyInfo(res.data);
-      return res.data;
+      if(res.data.pagination.totalPages) {
+        mytotalPages = res.data.pagination.totalPages;
+      }
+      updatePaginationUI();
     } catch (error) {
       console.error('Error loading my wishes data:', error);
     }
+}
+function updatePaginationUI() {
+  const prevBtn = document.getElementById('prevPage');
+  const nextBtn = document.getElementById('nextPage');
+  const pageInfo = document.getElementById('pageInfo');
+
+  if (!prevBtn || !nextBtn || !pageInfo) return;
+
+  pageInfo.textContent = `第 ${currentPage} 頁`;
+
+  prevBtn.disabled = currentPage <= 1;
+  nextBtn.disabled = currentPage >= totalPages;
 }
 
 function showInfo(data) {
@@ -537,4 +584,5 @@ async function submit() {
     });
   }
 }
+
 // TODO 願望聊天室相關操作
