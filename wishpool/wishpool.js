@@ -584,6 +584,7 @@ wishFormbig.addEventListener("click", function (e) {
 });
 
 async function submit() {
+  showLoading();
   wpbackendService = new wpBackendService();
   const photo = fileInput.files?.[0] || null;
   try {
@@ -609,7 +610,22 @@ async function submit() {
       title: '願望送出失敗',
       text: '請稍後再試，或聯絡客服人員。',
     });
+  } finally {
+    hideLoading();
   }
+}
+function showLoading() {
+  const el = document.getElementById('globalLoading');
+  if (!el) return;
+
+  el.classList.remove('d-none');
+}
+
+function hideLoading() {
+  const el = document.getElementById('globalLoading');
+  if (!el) return;
+
+  el.classList.add('d-none');
 }
 
 // TODO 願望聊天室相關操作

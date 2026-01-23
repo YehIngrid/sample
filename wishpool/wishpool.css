@@ -452,3 +452,13 @@ nav a {
   background-color: var(--secondary-color);
   color: var(--primary-color);
 }
+.loading-overlay {
+  position: fixed;
+  inset: 0; /* top/right/bottom/left = 0 */
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

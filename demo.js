@@ -7,7 +7,7 @@ window.onload = function() {
     loader.style.setProperty('display', 'none', 'important');
     content.style.setProperty('display', 'block', 'important');
   }
-  };
+};
 
   document.addEventListener('DOMContentLoaded', function() {
     const mobileSearchIcon = document.getElementById('mobileSearchIcon');
