@@ -161,7 +161,7 @@ function myupdatePaginationUI() {
 
 function showInfo(data) {
   const container = document.getElementById('wishGrid');
-  if (!data.wishes || data.wishes.length === 0) {
+  if (!data.wishes || data.total === 0) {
     container.innerHTML = '<p class="empty">目前還沒有願望 🌱</p>';
     return;
   }
@@ -198,7 +198,7 @@ function showInfo(data) {
 
 function showMyInfo(data) {
   const container = document.getElementById('myWishGrid');
-  if (!data.wishes || data.wishes.length === 0) {
+  if (!data.wishes || data.total === 0) {
     container.innerHTML = '<p class="empty">你目前還沒有願望 🌱</p>';
     return;
   }
