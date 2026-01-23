@@ -110,8 +110,8 @@ async function listAll(page = 1) {
       const res = await wpbackendService.listWishes(page);
       currentPage = page;
       showInfo(res.data);
-      if (res.data.data.totalPages) {
-        totalPages = res.data.data.totalPages;
+      if (res.data.totalPages) {
+        totalPages = res.data.totalPages;
       }
       updatePaginationUI();
     } catch (error) {
@@ -125,8 +125,8 @@ async function listMyWishes(mypage) {
       const res = await wpbackendService.myWishes(mypage, null);
       mycurrentPage = mypage;
       showMyInfo(res.data);
-      if(res.data.data.totalPages) {
-        mytotalPages = res.data.data.totalPages;
+      if(res.data.totalPages) {
+        mytotalPages = res.data.totalPages;
       }
       myupdatePaginationUI();
     } catch (error) {
