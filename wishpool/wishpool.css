@@ -58,7 +58,12 @@ nav {
       padding: 10px;
     }
     .leftsort {
-      margin-left: 20px;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+    .contactbtn {
+      padding: 8px 8px;
+      border-radius: 0px;
     }
 }
 nav a {
