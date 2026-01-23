@@ -105,6 +105,7 @@ async function checkLogin() {
 }
 
 async function listAll(page = 1) {
+  const total = document.getElementById('total');
     wpbackendService = new wpBackendService();
     try {
       const res = await wpbackendService.listWishes(page);
@@ -113,6 +114,9 @@ async function listAll(page = 1) {
       if (res.data.totalPages) {
         totalPages = res.data.totalPages;
       }
+      if(res.data.total) {
+        total.innerText = res.data.total;
+      }
       updatePaginationUI();
     } catch (error) {
       console.error('Error loading wishpool data:', error);
@@ -120,6 +124,7 @@ async function listAll(page = 1) {
 }
 // TODO nextpage previous page 還沒做
 async function listMyWishes(mypage) {
+  const mytotal = document.getElementById('my-total');
     wpbackendService = new wpBackendService();
     try {
       const res = await wpbackendService.myWishes(mypage, null);
@@ -127,6 +132,9 @@ async function listMyWishes(mypage) {
       showMyInfo(res.data);
       if(res.data.totalPages) {
         mytotalPages = res.data.totalPages;
+      }
+      if(res.data.total) {
+        mytotal.innerText = res.data.total;
       }
       myupdatePaginationUI();
     } catch (error) {
@@ -162,7 +170,7 @@ function myupdatePaginationUI() {
 function showInfo(data) {
   const container = document.getElementById('wishGrid');
   if (!data.wishes || data.total === 0) {
-    container.innerHTML = '<p class="empty">目前還沒有願望 🌱</p>';
+    container.innerHTML = '<p class="empty">目前還沒有願望</p>';
     return;
   }
   container.innerHTML = ''; //清除資料
@@ -200,7 +208,7 @@ function showMyInfo(data) {
   const container = document.getElementById('myWishGrid');
   const emptycontainer = document.getElementById('empty');
   if (!data.wishes || data.total === 0) {
-    emptycontainer.innerHTML = '<p class="empty">你目前還沒有願望 🌱</p>';
+    emptycontainer.innerHTML = '<p class="empty">你目前還沒有願望</p>';
     return;
   }
   container.innerHTML = '';
