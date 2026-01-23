@@ -146,11 +146,11 @@ function updatePaginationUI() {
 }
 
 function showInfo(data) {
+  const container = document.getElementById('wishGrid');
   if (!data || data.length === 0) {
-    container.innerHTML = '<p class="empty">你目前還沒有願望 🌱</p>';
+    container.innerHTML = '<p class="empty">目前還沒有願望 🌱</p>';
     return;
   }
-  const container = document.getElementById('wishGrid');
   container.innerHTML = ''; //清除資料
   data.wishes.forEach(wish => {
     const card = document.createElement('div');
@@ -184,6 +184,10 @@ function showInfo(data) {
 
 function showMyInfo(data) {
   const container = document.getElementById('myWishGrid');
+  if (!data || data.length === 0) {
+    container.innerHTML = '<p class="empty">你目前還沒有願望 🌱</p>';
+    return;
+  }
   container.innerHTML = '';
   data.wishes.forEach(wish => {
     const card = document.createElement('div');
