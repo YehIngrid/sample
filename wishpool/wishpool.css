@@ -57,9 +57,14 @@ nav {
     .formwish {
       padding: 10px;
     }
-    .left {
-      margin: 0 auto;
+    .leftsort {
+      margin-left: 20px;
     }
+}
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 750px !important;
+  }
 }
 nav a {
     color: var(--light-text-color);
@@ -356,6 +361,11 @@ nav a {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
+}
+.my-item-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 .card {
   max-width: 30rem !important;
