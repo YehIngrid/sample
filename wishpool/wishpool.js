@@ -109,8 +109,8 @@ async function listAll(page = 1) {
       const res = await wpbackendService.listWishes(page);
       currentPage = page;
       showInfo(res.data);
-      if (res.data.pagination.totalPages) {
-        totalPages = res.data.pagination.totalPages;
+      if (res.data.data.pagination.totalPages) {
+        totalPages = res.data.data.pagination.totalPages;
       }
       updatePaginationUI();
     } catch (error) {
