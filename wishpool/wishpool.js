@@ -198,8 +198,9 @@ function showInfo(data) {
 
 function showMyInfo(data) {
   const container = document.getElementById('myWishGrid');
+  const emptycontainer = document.getElementById('empty');
   if (!data.wishes || data.total === 0) {
-    container.innerHTML = '<p class="empty">你目前還沒有願望 🌱</p>';
+    emptycontainer.innerHTML = '<p class="empty">你目前還沒有願望 🌱</p>';
     return;
   }
   container.innerHTML = '';
