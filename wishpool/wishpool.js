@@ -63,7 +63,8 @@ async function showPage(hash) {
       location.hash = '#wishpool';
       return; // ⛔ 很重要
     } else {
-      await listMyWishes();
+      mycurrentPage = 1;
+      await listMyWishes(1);
     }
   }
   if(hash === '#makewish') {
@@ -124,10 +125,10 @@ async function listMyWishes(mypage) {
       const res = await wpbackendService.myWishes(mypage, null);
       mycurrentPage = mypage;
       showMyInfo(res.data);
-      if(res.data.pagination.totalPages) {
-        mytotalPages = res.data.pagination.totalPages;
+      if(res.data.data.totalPages) {
+        mytotalPages = res.data.data.totalPages;
       }
-      updatePaginationUI();
+      myupdatePaginationUI();
     } catch (error) {
       console.error('Error loading my wishes data:', error);
     }
@@ -144,6 +145,19 @@ function updatePaginationUI() {
   prevBtn.disabled = currentPage <= 1;
   nextBtn.disabled = currentPage >= totalPages;
 }
+function myupdatePaginationUI() {
+  const myprevBtn = document.getElementById('myprevPage');
+  const mynextBtn = document.getElementById('mynextPage');
+  const mypageInfo = document.getElementById('mypageInfo');
+
+  if (!myprevBtn || !mynextBtn || !mypageInfo) return;
+
+  mypageInfo.textContent = `第 ${mycurrentPage} 頁`;
+
+  myprevBtn.disabled = mycurrentPage <= 1;
+  mynextBtn.disabled = mycurrentPage >= mytotalPages;
+}
+
 
 function showInfo(data) {
   const container = document.getElementById('wishGrid');
