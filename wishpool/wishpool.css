@@ -57,6 +57,9 @@ nav {
     .formwish {
       padding: 10px;
     }
+    .leftsort {
+      margin: 0 auto;
+    }
 }
 nav a {
     color: var(--light-text-color);
