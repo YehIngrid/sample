@@ -363,10 +363,10 @@ class ChatRoom {
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
-                            <i class="bi bi-chat-dots-fill"></i>
+                            <img src="${data.item.mainImage}" alt="${data.item.name}的照片">
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0 roomName">商品${data.id}聊天室</h6>
+                            <h6 class="mb-0 roomName">商品${data.item.name}聊天室</h6>
                             <small class="text-muted">${data.lastMessageId || '無訊息'}</small>
                         </div>
                         <span class="badge bg-primary rounded-pill ${data.lastMessageId == data.lastReadMessageId ? 'd-none' : ''}">new</span> 
