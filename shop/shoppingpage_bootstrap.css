@@ -1669,3 +1669,6 @@ html{ scroll-behavior:smooth; }
 .wisher {
   margin-right: 10px;
 }
+.container-fluid1 {
+  background-color: #004b97 !important;
+}
