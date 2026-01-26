@@ -1347,7 +1347,7 @@ button {
 }
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
 
-.hot-items-container {
+.hot-items-wrapper {
   display: flex;
   gap: 12px;
   padding: 12px;
@@ -1363,7 +1363,7 @@ button {
     overflow: hidden;
     text-align: center;
 }
-.hot-item-container .card {
+.hot-item-container{
   flex: 1 0 calc((100% - 5 * 12px) / 6);
   min-width: 130px;
 }
