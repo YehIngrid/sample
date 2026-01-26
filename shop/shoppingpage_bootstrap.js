@@ -683,6 +683,7 @@ function showWishes(data) {
   data.wishes.forEach((wish, i) => {
     const card = document.createElement("div");
     card.classList.add('wish', 'd-flex');
+    card.dataset.id = wish.id;
     const defaultphoto = "../webP/default-avatar.webp"
     const ownerphoto = wish.owner.photoURL || defaultphoto;
     const cardtitle = wish.itemName;
@@ -695,6 +696,10 @@ function showWishes(data) {
             <p>${cardtitle}</p>
           </div>
       `
+      card.addEventListener('click', () => {
+        const pid = card.dataset.id;
+        if (pid) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(pid)}`;
+      });
       container.appendChild(card);
   })
 }
