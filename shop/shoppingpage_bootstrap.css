@@ -1347,14 +1347,15 @@ button {
 }
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
 
-.hot-items-wrapper {
+.hot-items-container {
   display: flex;
   gap: 12px;
-  padding: 12px;
-
+  padding: 32px 12px; /* 上面留空間給放大 */
   overflow-x: auto;
-  flex-wrap: nowrap;
+
+  scroll-snap-type: x mandatory;
 }
+
 
 .hot-items-container .card {
     background: #fff;
@@ -1363,9 +1364,31 @@ button {
     overflow: hidden;
     text-align: center;
 }
-.hot-item-container{
+.hot-item-container .card {
   flex: 1 0 calc((100% - 5 * 12px) / 6);
   min-width: 130px;
+
+  scroll-snap-align: center;
+
+  transition: 
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+}
+.hot-items-container:has(.hot-item-container .card:target),
+.hot-items-container:has(.hot-item-container .card:focus-visible),
+.hot-items-container:has(.hot-item-container .card:hover) {
+  .hot-item-container .card {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+
+  .hot-item-card:hover,
+  .hot-item-card:focus-visible {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.08);
+    z-index: 2;
+  }
 }
 
 .hot-items-container .img-box {
