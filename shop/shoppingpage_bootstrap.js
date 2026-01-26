@@ -682,22 +682,21 @@ function showWishes(data) {
   container.innerHTML = '';
   data.wishes.forEach((wish, i) => {
     const card = document.createElement("div");
+    card.classList.add('wish', 'd-flex');
     const defaultphoto = "../webP/default-avatar.webp"
     const ownerphoto = wish.owner.photoURL || defaultphoto;
     const cardtitle = wish.itemName;
     card.style.animationDelay = `${i * 0.15}s`;
     card.innerHTML = `
-      <div class="wish d-flex">
           <div class="wisher">
             <img src="${ownerphoto}" alt="許願者頭像">
           </div>
           <div class="wishtitle">
             <p>${cardtitle}</p>
           </div>
-      </div>
       `
+      container.appendChild(card);
   })
-  container.appendChild(card);
 }
 
 // chat 部分
