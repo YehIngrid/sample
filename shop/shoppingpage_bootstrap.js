@@ -695,8 +695,9 @@ function showWishes(data) {
             <p>${cardtitle}</p>
           </div>
       </div>
-    `
+      `
   })
+  container.appendChild(card);
 }
 
 // chat 部分
