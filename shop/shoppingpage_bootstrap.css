@@ -1235,10 +1235,10 @@ button {
 .goldborder {
   border: 3px solid gold !important;
 }
-/* .hot-items-wrapper {
-  background-color: #fff9f1;
-  border-radius: 20px;
-} */
+.hot-items-wrapper {
+  background-color: #fff;
+  border-radius: 10px;
+}
 
 .hot-item img {
     width: 100%;
@@ -1351,6 +1351,7 @@ button {
   gap: 16px;
   overflow-x: auto;
   padding: 20px 12px;
+  padding-top: 0px;
   scrollbar-width: none;
   }
   
