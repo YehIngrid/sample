@@ -363,7 +363,7 @@ class ChatRoom {
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
-                            <img src="${data.item.mainImage}" alt="${data.item.name}的照片">
+                            <img src="${data.item.mainImage}" alt="${data.item.name}的照片" style="width: 20px; height: 20px; border-radius: 50px;">
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">商品${data.item.name}聊天室</h6>
