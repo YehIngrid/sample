@@ -694,7 +694,7 @@ function showWishes(data) {
             <img src="${ownerphoto}" alt="許願者頭像">
           </div>
           <div class="wishtitle">
-            <p>${cardtitle}</p>
+            <p style="margin-bottom: 0px;">${cardtitle}</p>
           </div>
       </div>
       `
