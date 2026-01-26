@@ -1347,59 +1347,76 @@ button {
 
 .hot-items-container {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   overflow-x: auto;
-  padding: 24px 12px;
-
+  padding: 32px 12px 40px;
   scrollbar-width: none;
-}
-
-.hot-items-container::-webkit-scrollbar {
+  }
+  
+  
+  .hot-items-container::-webkit-scrollbar {
   display: none;
-}
-.fake-scrollbar {
+  }
+  
+  
+  .hot-item-card {
+  min-width: 160px;
+  height: 120px;
+  border-radius: 18px;
+  background: linear-gradient(160deg, #2b2f55, #14162b);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  }
+  
+  
+  .hot-item-card:hover {
+  transform: translateY(-6px) scale(1.05);
+  }
+  
+  
+  /* fake scrollbar */
+  .fake-scrollbar {
   position: relative;
   height: 6px;
-  margin: 12px 24px;
+  margin: 0 24px;
   border-radius: 999px;
   background: rgba(255,255,255,0.08);
   overflow: hidden;
-}
-
-.fake-thumb {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  
+  
+  .fake-scrollbar.show {
+  opacity: 1;
+  transform: translateY(0);
+  }
+  
+  
+  .fake-thumb {
   position: absolute;
   height: 100%;
-  width: 40%;
   left: 0;
   top: 0;
-
   border-radius: 999px;
-
   background: linear-gradient(
-    90deg,
-    rgba(180,160,255,0.4),
-    rgba(120,200,255,0.9),
-    rgba(180,160,255,0.4)
+  90deg,
+  rgba(180,160,255,0.35),
+  rgba(120,200,255,0.95),
+  rgba(180,160,255,0.35)
   );
-
   box-shadow:
-    0 0 10px rgba(120,200,255,0.8),
-    0 0 20px rgba(120,200,255,0.4);
-
+  0 0 10px rgba(120,200,255,0.9),
+  0 0 20px rgba(120,200,255,0.4);
   animation: breathe 2.8s ease-in-out infinite;
   transition: transform 0.1s linear;
-}
-@keyframes breathe {
-  0%, 100% {
-    opacity: 0.5;
-    filter: blur(0.5px);
   }
-  50% {
-    opacity: 1;
-    filter: blur(0);
-  }
-}
-
 .hot-item-container .card {
   background: #fff;
   border-radius: 12px;

@@ -92,29 +92,52 @@ function updatePager(pg){
 }
 const container = document.getElementById('hotItems');
 const thumb = document.querySelector('.fake-thumb');
+const fakeBar = document.querySelector('.fake-scrollbar');
+
 
 function updateFakeScrollbar() {
-  const visibleRatio =
-    container.clientWidth / container.scrollWidth;
+const maxScroll = container.scrollWidth - container.clientWidth;
+const visibleRatio = container.clientWidth / container.scrollWidth;
 
-  const thumbWidth =
-    visibleRatio * container.clientWidth;
 
-  const scrollRatio =
-    container.scrollLeft /
-    (container.scrollWidth - container.clientWidth);
+const rawThumbWidth = visibleRatio * container.clientWidth;
+const thumbWidth = Math.min(120, Math.max(24, rawThumbWidth));
 
-  thumb.style.width = `${thumbWidth}px`;
-  thumb.style.transform = `translateX(${scrollRatio * (container.clientWidth - thumbWidth)}px)`;
+
+const scrollRatio = maxScroll > 0
+? container.scrollLeft / maxScroll
+: 0;
+
+
+thumb.style.width = `${thumbWidth}px`;
+thumb.style.transform = `translateX(${scrollRatio * (container.clientWidth - thumbWidth)}px)`;
 }
 
+
+function updateScrollbarVisibility() {
+const canScrollRight =
+container.scrollLeft + container.clientWidth < container.scrollWidth - 1;
+fakeBar.classList.toggle('show', canScrollRight);
+}
+
+
 container.addEventListener('scroll', () => {
-  requestAnimationFrame(updateFakeScrollbar);
+requestAnimationFrame(() => {
+updateFakeScrollbar();
+updateScrollbarVisibility();
+});
 });
 
-window.addEventListener('resize', updateFakeScrollbar);
 
+window.addEventListener('resize', () => {
 updateFakeScrollbar();
+updateScrollbarVisibility();
+});
+
+
+// 初始化
+updateFakeScrollbar();
+updateScrollbarVisibility();
 
 prevHotBtn.addEventListener("click", () => {
   if (page > 1) fetchPage(page - 1);
