@@ -1288,15 +1288,15 @@ button {
 .hotItemPrice {
   font-weight: bold;
   color: #007bff;
-  margin-bottom: 8px;
+  margin-bottom: 0px;
   font-size: 1.4rem;
 }
 .hotItemName {
-  padding: 12px;
-  font-size: 14px;
+  padding: 8px;
+  font-size: 12px;
 }
 .firstlinesell {
-  width: 79vw;
+  width: 80vw;
   margin: 20px auto 0px auto;
 }
 .smallmysection {

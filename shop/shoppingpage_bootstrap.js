@@ -67,7 +67,7 @@ function renderItems(items){
   listEl.innerHTML = '';
   items.forEach(item => {
     const div = document.createElement("div");
-      div.className = "hot-item";
+      div.className = "hot-item ellipsis-text";
       div.dataset.id = item.id;
       div.innerHTML = `
         <div class="card">
