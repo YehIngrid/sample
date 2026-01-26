@@ -1,5 +1,6 @@
 let backendService;
 let loginService;
+let wpbackendService;
 
 const midcontent = document.getElementById('midcontent');
 //JavaScript: 控制左右按鈕捲動
@@ -48,8 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const prevHotBtn = document.getElementById("prevHotBtn");
   const nextHotBtn = document.getElementById("nextHotBtn");
   const pageInfo = document.getElementById("pageInfo");
-
   fetchPage(page);
+  callWish();
 
 function fetchPage(p){
   const pagingInfo = { page: p, limit: limit };
@@ -662,51 +663,43 @@ document.addEventListener("DOMContentLoaded", function () {
     chatBox.scrollTop = chatBox.scrollHeight; // 自動捲到底
   });
 });
-// 你要顯示的願望資料
-// type = orange / yellow / blue
-const wishes = [
-    { text:"許願 FUNDAMENTALS OF DATA STRUCTURES IN C"},
-    { text:"許願國文課本"},
-    { text:"希望有人能捐贈二手的計算機"},
-    //往後如果要新增願望直接 push
-];
-
-// 頁面控制
-let currentPageofWishPool = 0;
-const perPage = 10;
-
-function renderWPPage() {
-    const start = currentPage * perPage;
-    const pageData = wishes.slice(start, start + perPage);
-
-    const container = document.getElementById("wishArea");
-    container.innerHTML = "";
-
-    pageData.forEach((item, i) => {
-        const div = document.createElement("div");
-        div.className = "wish";
-        div.style.animationDelay = `${i * 0.15}s`; //一個個延後彈出
-        div.innerText = item.text;
-        container.appendChild(div);
-    });
+// TODO 呼叫 wishpool.js, wpBackendService.js 來展示願望
+async function callWish() {
+  wpbackendService = new wpBackendService();
+  try {
+    const res = await wpbackendService.listWishes(1);
+    showWishes(res.data);
+  } catch {
+    console.error('showWishes error: ', error);
+  }
+}
+function showWishes(data) {
+  const container = document.getElementById("wishArea");
+  if(!data.wishes || data.total === 0) {
+    container.innerHTML = '<p class="empty">目前還沒有願望</p>';
+    return;
+  }
+  container.innerHTML = '';
+  data.wishes.forEach((wish, i) => {
+    const card = document.createElement("div");
+    const defaultphoto = "../webP/default-avatar.webp"
+    const ownerphoto = wish.owner.photoURL || defaultphoto;
+    const cardtitle = wish.itemName;
+    card.style.animationDelay = `${i * 0.15}s`;
+    card.innerHTML = `
+      <div class="wish d-flex">
+          <div class="wisher">
+            <img src="${ownerphoto}" alt="許願者頭像">
+          </div>
+          <div class="wishtitle">
+            <p>${cardtitle}</p>
+          </div>
+      </div>
+    `
+  })
 }
 
-// 分頁按鈕
-document.getElementById("prevWPBtn").onclick = ()=> {
-    if(currentPage > 0) currentPage--;
-    renderWPPage();
-};
-
-document.getElementById("nextWPBtn").onclick = ()=> {
-    if((currentPage + 1) * perPage < wishes.length)
-        currentPage++;
-    renderWPPage();
-};
-
-//初次載入
-renderWPPage();
-
-
+// chat 部分
 const chatopen = document.getElementById('chaticon');
 const chatclose = document.getElementById('closechat');
 const talkInterface = document.getElementById('talkInterface');

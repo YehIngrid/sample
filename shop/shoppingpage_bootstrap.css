@@ -1659,3 +1659,13 @@ html{ scroll-behavior:smooth; }
     overflow:hidden;
     z-index:10000;
 }
+.wisher img {
+  width: 25px;
+  height: 25px;
+  border-radius: 50px;
+  object-fit: cover;
+  object-position: center;
+}
+.wisher {
+  margin-right: 10px;
+}
