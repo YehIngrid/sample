@@ -682,19 +682,21 @@ function showWishes(data) {
   container.innerHTML = '';
   data.wishes.forEach((wish, i) => {
     const card = document.createElement("div");
-    card.classList.add('wish', 'd-flex');
+    card.classList.add('wish');
     card.dataset.id = wish.id;
     const defaultphoto = "../webP/default-avatar.webp"
     const ownerphoto = wish.owner.photoURL || defaultphoto;
     const cardtitle = wish.itemName;
     card.style.animationDelay = `${i * 0.15}s`;
     card.innerHTML = `
+      <div class="d-flex">
           <div class="wisher">
             <img src="${ownerphoto}" alt="許願者頭像">
           </div>
           <div class="wishtitle">
             <p>${cardtitle}</p>
           </div>
+      </div>
       `
       card.addEventListener('click', () => {
         const pid = card.dataset.id;
