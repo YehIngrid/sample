@@ -1348,11 +1348,58 @@ button {
 .hot-items-container {
   display: flex;
   gap: 12px;
-  padding: 32px 12px; /* 上面留空間給放大 */
   overflow-x: auto;
+  padding: 24px 12px;
 
-  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
 }
+
+.hot-items-container::-webkit-scrollbar {
+  display: none;
+}
+.fake-scrollbar {
+  position: relative;
+  height: 6px;
+  margin: 12px 24px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.fake-thumb {
+  position: absolute;
+  height: 100%;
+  width: 40%;
+  left: 0;
+  top: 0;
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(180,160,255,0.4),
+    rgba(120,200,255,0.9),
+    rgba(180,160,255,0.4)
+  );
+
+  box-shadow:
+    0 0 10px rgba(120,200,255,0.8),
+    0 0 20px rgba(120,200,255,0.4);
+
+  animation: breathe 2.8s ease-in-out infinite;
+  transition: transform 0.1s linear;
+}
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.5;
+    filter: blur(0.5px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
 .hot-item-container .card {
   background: #fff;
   border-radius: 12px;

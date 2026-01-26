@@ -90,6 +90,31 @@ function updatePager(pg){
   nextHotBtn.disabled = !pg.hasNextPage;
   pageInfo.textContent = `第 ${pg.currentPage} / ${pg.totalPages} 頁`;
 }
+const container = document.getElementById('hotItems');
+const thumb = document.querySelector('.fake-thumb');
+
+function updateFakeScrollbar() {
+  const visibleRatio =
+    container.clientWidth / container.scrollWidth;
+
+  const thumbWidth =
+    visibleRatio * container.clientWidth;
+
+  const scrollRatio =
+    container.scrollLeft /
+    (container.scrollWidth - container.clientWidth);
+
+  thumb.style.width = `${thumbWidth}px`;
+  thumb.style.transform = `translateX(${scrollRatio * (container.clientWidth - thumbWidth)}px)`;
+}
+
+container.addEventListener('scroll', () => {
+  requestAnimationFrame(updateFakeScrollbar);
+});
+
+window.addEventListener('resize', updateFakeScrollbar);
+
+updateFakeScrollbar();
 
 prevHotBtn.addEventListener("click", () => {
   if (page > 1) fetchPage(page - 1);
