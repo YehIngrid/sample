@@ -443,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="mt-auto">
             <div class="d-flex justify-content-between align-items-center">
               <span class="fw-bold price">NT$ ${product.price ?? ''}</span>
-              <small class="text-muted">庫存 ${product.stock ?? 0}</small>
+              <small class="text-muted" style="font-size: 9px;">庫存 ${product.stock ?? 0}</small>
             </div>
           </div>
         </div>

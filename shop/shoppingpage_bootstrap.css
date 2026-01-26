@@ -418,7 +418,7 @@ ul{
   color: #383838;
   padding-left: 2px;
   margin-bottom: 0;
-  font-size: 0.9rem;
+  font-size: 10px;
 }
 .price {
   font-size: 1rem;
@@ -525,7 +525,7 @@ ul{
   border-radius: 20px;
   width: 80vw;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 20px;
 }
 .top {
@@ -1347,12 +1347,15 @@ button {
 }
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
 
-.hot-items-container{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
-    padding: 12px;
+.hot-items-container {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+
+  overflow-x: auto;
+  flex-wrap: nowrap;
 }
+
 .hot-items-container .card {
     background: #fff;
     border-radius: 12px;
@@ -1360,6 +1363,11 @@ button {
     overflow: hidden;
     text-align: center;
 }
+.hot-item-container .card {
+  flex: 1 0 calc((100% - 5 * 12px) / 6);
+  min-width: 130px;
+}
+
 .hot-items-container .img-box {
   width: 140px;
   height: 140px;
