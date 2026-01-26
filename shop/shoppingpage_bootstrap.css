@@ -528,7 +528,8 @@ ul{
   padding: 20px;
 }
 .top {
-  background-color: #fabebe;
+  /* background: linear-gradient(to right, #ffafb6, var(--brand)); */
+  background-color: var(--brand);
   color: white;
   border-radius: 20px;
   padding: 20px;
@@ -1234,10 +1235,10 @@ button {
 .goldborder {
   border: 3px solid gold !important;
 }
-.hot-items-wrapper {
+/* .hot-items-wrapper {
   background-color: #fff9f1;
   border-radius: 20px;
-}
+} */
 
 .hot-item img {
     width: 100%;
@@ -1267,9 +1268,9 @@ button {
   font-size: 1rem;
 }
 #prevHotBtn, #nextHotBtn:hover {
-  border: #97002d 1px solid;
-  background-color: #97002d;
-  color: #fff9f1;
+  border: #fff 1px solid;
+  background-color: #fff;
+  color: var(--brand);
 }
 #newNext, #newPrev {
   border: #004b97 1px solid;
@@ -1349,7 +1350,7 @@ button {
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  padding: 32px 12px 40px;
+  padding: 20px 12px;
   scrollbar-width: none;
   }
   
