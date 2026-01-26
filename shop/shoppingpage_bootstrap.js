@@ -669,7 +669,7 @@ async function callWish() {
   try {
     const res = await wpbackendService.listWishes(1);
     showWishes(res.data);
-  } catch {
+  } catch (error) {
     console.error('showWishes error: ', error);
   }
 }
