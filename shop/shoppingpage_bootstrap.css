@@ -1,4 +1,14 @@
-    /* 基本按鈕樣式（可依需求自行調整） */
+:root {
+  --primary-color: #cffafe;
+  --secondary-color: #0891b2;
+  --third-color: #F4A5AE;
+  --special-color: #A8577E;
+  --background-color: #c9fbfc;
+  --text-color: #333333;
+  --light-text-color: rgb(255, 249, 211);
+  --brand-color: #004b97;
+}
+  /* 基本按鈕樣式（可依需求自行調整） */
   .arrow {
     position: absolute;        /* 絕對定位 */
     top: 50%;                  /* 垂直置中 */
@@ -1194,13 +1204,13 @@ button {
   z-index: 2; /* 確保在圖片上面 */
 }
 .wishpoollook {
-  background-color: #fff9f1;
+  background-color: var(--secondary-color);
   padding: 10px;
   border-radius: 20px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   text-align: center;
   font-weight: 700;
-  color: #ff5269;
+  color: var(--primary-color);
 }
 .favorite-btn:hover {
   transform: scale(1.1);
@@ -1668,7 +1678,4 @@ html{ scroll-behavior:smooth; }
 }
 .wisher {
   margin-right: 10px;
-}
-.container-fluid1 {
-  background-color: #004b97 !important;
 }

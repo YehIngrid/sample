@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
   backendService = new BackendService();
   loginService = new LoginService(backendService);
   let page = 1;
-  let limit = 8;
+  let limit = 6;
   const listEl = document.getElementById('hotItems');
   const prevHotBtn = document.getElementById("prevHotBtn");
   const nextHotBtn = document.getElementById("nextHotBtn");
@@ -689,7 +689,7 @@ function showWishes(data) {
     const cardtitle = wish.itemName;
     card.style.animationDelay = `${i * 0.15}s`;
     card.innerHTML = `
-      <div class="d-flex">
+      <div class="d-flex align-items-center">
           <div class="wisher">
             <img src="${ownerphoto}" alt="許願者頭像">
           </div>
