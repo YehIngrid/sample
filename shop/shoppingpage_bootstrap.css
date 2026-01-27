@@ -503,9 +503,7 @@ ul{
 }
 
 .card-body {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+  padding: 10px !important;
   justify-content: space-between;
 }
 
@@ -1286,9 +1284,11 @@ button {
 }
 .hotItemPrice {
   font-weight: bold;
-  color: #007bff;
+  color: var(--brand);
   margin-bottom: 0px;
   font-size: 1.4rem;
+  text-align: end;
+  padding-right: 3px;
 }
 .hotItemName {
   padding: 8px;
@@ -1351,7 +1351,7 @@ button {
   gap: 16px;
   overflow-x: auto;
   padding: 20px 12px;
-  padding-top: 0px;
+  padding-bottom: 15px;
   scrollbar-width: none;
   }
   
@@ -1680,7 +1680,7 @@ html{ scroll-behavior:smooth; }
     cursor: pointer;
     animation: pop 0.6s forwards ease-out;
     background-color: #fff;
-    max-width: 200px;
+    max-width: 120px;
     white-space: nowrap;      /* 不換行 */
     overflow: hidden;         /* 超出隱藏 */
     text-overflow: ellipsis; 
