@@ -1206,7 +1206,6 @@ button {
   padding: 10px;
   border-radius: 20px;
   box-shadow: 0 2px 5px rgba(3, 1, 1, 0.1);
-  text-align: center;
   font-weight: 700;
   color: var(--secondary-color);
 }
