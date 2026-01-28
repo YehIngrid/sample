@@ -743,7 +743,7 @@ async function handleAction(action, id, rowOrCardEl) {
         <span class="orderstyle">訂購商品</span>
         <table class="table align-middle">
           <thead>
-            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計(元)</th></tr>
+            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>單價(元)</th></tr>
           </thead>
           <tbody class="itemlist"></tbody>
         </table>
@@ -761,7 +761,7 @@ async function handleAction(action, id, rowOrCardEl) {
         <span class="orderstyle" style="margin-bottom: 10px;">訂購商品</span>
         <table class="table align-middle">
           <thead>
-            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計(元)</th></tr>
+            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>單價(元)</th></tr>
           </thead>
           <tbody class="itemlist"></tbody>
         </table>
