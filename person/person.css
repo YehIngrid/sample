@@ -244,3 +244,52 @@ small {
   background-color: white;
   margin-bottom: 10px;
 }
+.stateContainer {
+  width: 50vw;
+  margin: 0 auto;
+}
+.stateContainer img {
+  box-shadow: 1px 2px 1px 2px rgba(32, 32, 32, 0.114);
+  border-radius: 50px;
+}
+.stateText {
+  margin-top: 10px;
+  font-size: 10px;
+}
+@media screen and (max-width: 1100px) {
+  .stateContainer {
+    width: 65vw;
+  }
+}
+@media screen and (max-width: 900px) {
+  .stateContainer {
+    width: 70vw;
+  }
+  .stateContainer img {
+    width: 80%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .stateContainer {
+    width: 85vw;
+  }
+  .stateContainer img {
+    width: 80%;
+  }
+}
+@media screen and (max-width: 543px) {
+  .stateContainer {
+    width: 95vw;
+  }
+  .stateContainer img {
+    width: 60%;
+    box-shadow: 0px 1px 0px 1px rgba(32, 32, 32, 0.114);
+  }
+  .stateText {
+    margin-top: 8px;
+    font-size: 8px;
+  }
+  .timestamp {
+    font-size: 7px !important;
+  }
+}

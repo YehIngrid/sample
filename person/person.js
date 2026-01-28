@@ -725,7 +725,7 @@ async function handleAction(action, id, rowOrCardEl) {
       orderTypeMap = {
         'c2c': "面交取貨"
       }
-      const orderStatus = item.status;
+      const orderStatus = res.data.data;
       const type = res.data.data.type;
       const builtOrderTime = new Date(res.data.data.createdAt).toLocaleDateString();
       const buyerName = res.data.data.buyerUser.name; 
@@ -783,7 +783,7 @@ async function handleAction(action, id, rowOrCardEl) {
           itemlist.innerHTML = itemContent;
         });
 
-      updateOrderFlowImg(orderStatus);
+      updateStatusUI(orderStatus);
 
       // 🔥 關鍵：切換畫面
       if (!sellSection.classList.contains('d-none')) {
@@ -845,6 +845,52 @@ function updateOrderFlowImg(status) {
   img.src = map[status] || "../svg/allstate.svg";  // 預設灰色
   imgbuyer.src = map[status] || "../svg/allstate.svg";
 }
+
+const updateStatusUI = (data) => {
+  const logs = data.logs; // 假設格式：[{status: "created", timestamp: "2026/01/28..."}, ...]
+  const statusItems = document.querySelectorAll('.status-item');
+  
+  // 1. 檢查是否含有取消狀態
+  const cancelLog = logs.find(log => log.status === 'canceled');
+
+  statusItems.forEach((item, index) => {
+    const statusName = item.getAttribute('data-status');
+    const logEntry = logs.find(log => log.status === statusName);
+    const img = item.querySelector('img');
+    const timeBox = item.querySelector('.timestamp');
+
+    if (cancelLog) {
+      // 找到取消發生的時間點索引
+      const cancelIndex = logs.findIndex(log => log.status === 'canceled');
+      
+      if (statusName === 'canceled') {
+          // 如果目前的 div 就是取消節點（如果你有預留的話）
+          img.src = '../svg/cancel.svg';
+      } else if (logEntry) {
+          // 取消前已完成的步驟：維持彩色
+          img.src = img.src.replace('yet.svg', '.svg');
+          timeBox.innerText = logEntry.timestamp;
+      } else {
+          // 取消後尚未發生的步驟：直接隱藏或替換為取消 Icon
+          // 這裡建議將「下一個未完成」的節點換成 cancel.svg，其餘隱藏
+          item.style.opacity = '0.5'; 
+          img.src = '../svg/cancel.svg';
+          item.querySelector('.stateText').innerText = '訂單已取消';
+      }
+      return;
+    }
+
+    // 2. 正常流程處理
+    if (logEntry) {
+      // 換成彩色圖 (去掉 yet)
+      img.src = img.src.replace('yet.svg', '.svg');
+      // 填入時間
+      timeBox.innerText = logEntry.timestamp;
+      // 增加 active class (可選)
+      item.classList.add('active');
+    }
+  });
+};
 
 (() => {
   'use strict';

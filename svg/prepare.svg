@@ -1,26 +1,14 @@
-<svg width="108" height="108" viewBox="0 0 108 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_d_552_854)">
-<rect x="4" width="100" height="100" rx="50" fill="white"/>
-</g>
-<path d="M17 48.9381L25.367 35.3299L57.4404 19L88.1193 35.3299V64.5876L57.4404 85L25.367 67.9897V53.0206L17 48.9381Z" fill="url(#paint0_linear_552_854)"/>
-<path d="M25.367 35.3299L17 48.9381L25.367 53.0206M25.367 35.3299L57.4404 52.3402M25.367 35.3299L57.4404 19L88.1193 35.3299M57.4404 52.3402L49.0734 65.9485L25.367 53.0206M57.4404 52.3402L88.1193 35.3299M57.4404 52.3402V85M88.1193 35.3299V64.5876L57.4404 85M88.1193 35.3299L93 44.8557M57.4404 85L25.367 67.9897V53.0206" stroke="url(#paint1_linear_552_854)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M57.5 42L65 46L57.5 50L49.5 46L57.5 42Z" fill="#FBFBFB"/>
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="100" height="100" rx="50" fill="white"/>
+<path d="M13 48.9381L21.367 35.3299L53.4404 19L84.1193 35.3299V64.5876L53.4404 85L21.367 67.9897V53.0206L13 48.9381Z" fill="url(#paint0_linear_572_1081)"/>
+<path d="M21.367 35.3299L13 48.9381L21.367 53.0206M21.367 35.3299L53.4404 52.3402M21.367 35.3299L53.4404 19L84.1193 35.3299M53.4404 52.3402L45.0734 65.9485L21.367 53.0206M53.4404 52.3402L84.1193 35.3299M53.4404 52.3402V85M84.1193 35.3299V64.5876L53.4404 85M84.1193 35.3299L89 44.8557M53.4404 85L21.367 67.9897V53.0206" stroke="url(#paint1_linear_572_1081)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M53.5 42L61 46L53.5 50L45.5 46L53.5 42Z" fill="#FBFBFB"/>
 <defs>
-<filter id="filter0_d_552_854" x="0" y="0" width="108" height="108" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_552_854"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_552_854" result="shape"/>
-</filter>
-<linearGradient id="paint0_linear_552_854" x1="55" y1="19" x2="55" y2="85" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint0_linear_572_1081" x1="51" y1="19" x2="51" y2="85" gradientUnits="userSpaceOnUse">
 <stop stop-color="#7CD6FF" stop-opacity="0.74"/>
 <stop offset="1" stop-color="#DCADDB"/>
 </linearGradient>
-<linearGradient id="paint1_linear_552_854" x1="55" y1="19" x2="55" y2="85" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint1_linear_572_1081" x1="51" y1="19" x2="51" y2="85" gradientUnits="userSpaceOnUse">
 <stop stop-color="#EDF8FF"/>
 <stop offset="1" stop-color="#EFE5FF"/>
 </linearGradient>

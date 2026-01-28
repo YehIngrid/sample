@@ -183,9 +183,35 @@
   <div class="">
     <h5 class="">訂單詳細資訊</h5>
         <!-- 流程圖 -->
-<div id="orderFlowImg" class="text-center my-3">
-  <img id="flowImage" src="../svg/allstate.svg" class="img-fluid" style="max-width: 800px;">
-</div>
+        <div class="stateContainer">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="pending">
+              <img src="../svg/askreplyyet.svg" alt="">
+              <div class="stateText text-center">訂單已建立<br>等待賣家接受</div>
+              <div class="timestamp"></div>
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="preparing">
+              <img src="../svg/prepareyet.svg" alt="">
+              <div class="stateText text-center">賣家已接受訂單<br>正在準備商品</div>
+              <div class="timestamp"></div>
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="delivered">
+              <img src="../svg/ctocyet.svg" alt="">
+              <div class="stateText text-center">賣家已出貨<br>等待買家確認收貨</div>
+              <div class="timestamp"></div>
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="completed">
+              <img src="../svg/deliveryet.svg" alt="">
+              <div class="stateText text-center">買家已確認收貨<br>訂單完成</div>
+              <div class="timestamp"></div>
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="scored">
+              <img src="../svg/finishyet.svg" alt="">
+              <div class="stateText text-center">雙方皆已<br>評分完成</div>
+              <div class="timestamp"></div>
+            </div>
+          </div>
+        </div>
 
     <!-- 基本資訊 -->
     <div id="sellOrderInfo" class="mb-3">
@@ -224,9 +250,35 @@
                     </div>
                     <h5 class="">訂單詳細資訊</h5>
                         <!-- 流程圖 -->
-                <div id="orderFlowImgbuyer" class="text-center my-3">
-                  <img id="flowImagebuyer" src="../svg/allstate.svg" class="img-fluid" style="max-width: 800px;">
-                </div>
+                        <div class="stateContainer">
+                          <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="pending">
+                              <img src="../svg/askreplyyet.svg" alt="">
+                              <div class="stateText text-center">訂單已建立<br>等待賣家接受</div>
+                              <div class="timestamp"></div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="preparing">
+                              <img src="../svg/prepareyet.svg" alt="">
+                              <div class="stateText text-center">賣家已接受訂單<br>正在準備商品</div>
+                              <div class="timestamp"></div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="delivered">
+                              <img src="../svg/ctocyet.svg" alt="">
+                              <div class="stateText text-center">賣家已出貨<br>等待買家確認收貨</div>
+                              <div class="timestamp"></div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="completed">
+                              <img src="../svg/deliveryet.svg" alt="">
+                              <div class="stateText text-center">買家已確認收貨<br>訂單完成</div>
+                              <div class="timestamp"></div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="scored">
+                              <img src="../svg/finishyet.svg" alt="">
+                              <div class="stateText text-center">雙方皆已<br>評分完成</div>
+                              <div class="timestamp"></div>
+                            </div>
+                          </div>
+                        </div>
                     <!-- 基本資訊 -->
                     <div id="buyerOrderInfo" class="mb-3">
                     </div>
