@@ -684,33 +684,41 @@ async function handleAction(action, id, rowOrCardEl) {
   } else if (action === 'checkInfo') {
     try {
       let res = await backendService.getOrderDetails(id);
-        const buyProducts = document.getElementById('buyProducts');
-        buyProducts.style.display = 'none';
-        const detailCard = document.getElementById('sellOrderDetail');
-        const infoBox = document.getElementById('sellOrderInfo');
-        const detailBuyer = document.getElementById('buyerOrderDetail');
-        const buyerInfoBox = document.getElementById('buyerOrderInfo');
-        item = res.data?.data;
-        // 假設這裡有一筆訂單資料 item（要從後端 API 抓）
-        const orderStatus = item.status; // TODO: 改成 item.status
-        buyerInfoBox.innerHTML = `
-          <p><strong>訂單編號：</strong> ${id}</p>
-          <p><strong>狀態：</strong> ${orderStatus}</p>
-        `;
-        // 填入資訊
-        infoBox.innerHTML = `
-          <p><strong>訂單編號：</strong> ${id}</p>
-          <p><strong>狀態：</strong> ${orderStatus}</p>
-        `;
 
-        // 更新流程圖
-        updateOrderFlowImg(orderStatus);
+      const sellSection = document.getElementById('sellProducts');
+      const buySection = document.getElementById('buyProducts');
 
-        // 顯示卡片
-        detailCard.classList.remove('d-none');
-        detailCard.scrollIntoView({ behavior: 'smooth' });
-        detailBuyer.classList.remove('d-none');
-        detailBuyer.scrollIntoView({ behavior: 'smooth' });
+      const sellTable = sellSection.querySelector('table');
+      const buyTable = buySection.querySelector('table');
+
+      const sellDetail = document.getElementById('sellOrderDetail');
+      const buyDetail = document.getElementById('buyerOrderDetail');
+
+      const item = res.data?.data;
+      const orderStatus = item.status;
+
+      // 填入資訊（你原本的）
+      document.getElementById('sellOrderInfo').innerHTML = `
+        <p><strong>訂單編號：</strong> ${id}</p>
+        <p><strong>狀態：</strong> ${orderStatus}</p>
+      `;
+      document.getElementById('buyerOrderInfo').innerHTML = `
+        <p><strong>訂單編號：</strong> ${id}</p>
+        <p><strong>狀態：</strong> ${orderStatus}</p>
+      `;
+
+      updateOrderFlowImg(orderStatus);
+
+      // 🔥 關鍵：切換畫面
+      if (!sellSection.classList.contains('d-none')) {
+        sellTable.style.display = 'none';
+        sellDetail.classList.remove('d-none');
+      }
+
+      if (!buySection.classList.contains('d-none')) {
+        buyTable.style.display = 'none';
+        buyDetail.classList.remove('d-none');
+      }
     } catch (error) {
       Swal.fire({
         title: 'Oops', 
