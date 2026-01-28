@@ -327,11 +327,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ===== 工具 =====
-const STATUS_MAP = {
-  listed:   { text: '上架中',  badge: 'text-bg-success',  action: '編輯商品' },
-  sold:     { text: '已售出',  badge: 'text-bg-secondary',action: '查看' },
-  reserved: { text: '訂單處理中',  badge: 'text-bg-warning',  action: '查看' },
-};
 const order_STATUS_MAP = {
   pending: { text: '等待賣家接受訂單', badge: 'text-bg-warning', action: '接受訂單'}, 
   preparing: { text: '準備訂單', badge: 'text-bg-info', action: '即將出貨'}, 
@@ -455,13 +450,12 @@ function renderTable(list = []) {
     const price    = fmtPrice(item.price);
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
-    const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
+    const quantity = item.quantity;
 
     return `
       <tr data-id="${esc(id)}">
         <td>${name}</td>
-        <td><span class="badge ${st.badge}">${st.text}</span></td>
+        <td>${quantity}</td>
         <td>${price}</td>
         <td>${created}</td>
         <td>${updated}</td>
@@ -752,7 +746,7 @@ async function handleAction(action, id, rowOrCardEl) {
         <span class="orderstyle">訂購商品</span>
         <table class="table align-middle">
           <thead>
-            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
+            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計(元)</th></tr>
           </thead>
           <tbody class="itemlist"></tbody>
         </table>
@@ -767,10 +761,10 @@ async function handleAction(action, id, rowOrCardEl) {
             <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
         </ul>
         <hr>
-        <span class="orderstyle">訂購商品</span>
+        <span class="orderstyle" style="margin-bottom: 10px;">訂購商品</span>
         <table class="table align-middle">
           <thead>
-            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
+            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計(元)</th></tr>
           </thead>
           <tbody class="itemlist"></tbody>
         </table>
