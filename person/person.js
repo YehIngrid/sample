@@ -1081,6 +1081,19 @@ function updateOrderFlowImg(status) {
 })();
 
 
+// 賣家返回列表
+document.getElementById('backToSellTable')?.addEventListener('click', () => {
+  const section = document.getElementById('sellProducts');
+  section.querySelector('table').style.display = '';
+  document.getElementById('sellOrderDetail').classList.add('d-none');
+});
+
+// 買家返回列表
+document.getElementById('backToBuyTable')?.addEventListener('click', () => {
+  const section = document.getElementById('buyProducts');
+  section.querySelector('table').style.display = '';
+  document.getElementById('buyerOrderDetail').classList.add('d-none');
+});
 
 
 function removeItemDom(id) {
