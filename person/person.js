@@ -751,7 +751,7 @@ async function handleAction(action, id, rowOrCardEl) {
         <hr>
         <table class="table align-middle">
           <thead>
-            <tr><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
+            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
           </thead>
           <tbody class="itemlist"></tbody>
         </table>
@@ -768,7 +768,7 @@ async function handleAction(action, id, rowOrCardEl) {
         <hr>
         <table class="table align-middle">
           <thead>
-            <tr><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
+            <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
           </thead>
           <tbody class="itemlist"></tbody>
         </table>
@@ -776,7 +776,8 @@ async function handleAction(action, id, rowOrCardEl) {
       const itemlists = document.querySelectorAll('.itemlist');
       const itemContent = res.data.data.orderItems.map(item => `
         <tr>
-          <td><img src="${item?.mainImage || '../image/placeholder.png'}" alt=""></td>
+          <td>${item?.itemId || 'unknown'}</td>
+          <td><img src="${item?.mainImage || '../image/placeholder.png'}" alt="商品照片" style="width: 100px;"></td>
           <td>${htmlEncode(item?.name) || 'unknown'}</td>
           <td>${item?.quantity || 'unknown'}</td>
           <td>${item?.price || 'unknown'}</td>
