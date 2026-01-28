@@ -227,11 +227,13 @@ small {
 }
 #sellOrderDetail li {
   list-style: none;
+  line-height: 40px;
 }
 .orderstyle {
   margin-right: 10px;
   background-color: var(--brand-color);
   color: white;
-  padding: 5px 7px;
+  padding: 5px 8px;
   border-radius: 5px;
+  font-size: 12px;
 }

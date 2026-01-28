@@ -741,6 +741,7 @@ async function handleAction(action, id, rowOrCardEl) {
             <li><span class="orderstyle">買家姓名</span>${buyerName}</li>
             <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
         </ul>
+        <hr>
       `;
       document.getElementById('buyerOrderInfo').innerHTML = `
         <ul>
@@ -751,6 +752,7 @@ async function handleAction(action, id, rowOrCardEl) {
             <li><span class="orderstyle">賣家姓名</span>${sellerName}</li>
             <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
         </ul>
+        <hr>
       `;
 
       updateOrderFlowImg(orderStatus);
