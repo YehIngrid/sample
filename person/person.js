@@ -712,7 +712,6 @@ async function handleAction(action, id, rowOrCardEl) {
       const sellDetail = document.getElementById('sellOrderDetail');
       const buyDetail = document.getElementById('buyerOrderDetail');
 
-      const item = res.data?.data;
       orderStatusMap = {
         'pending': "訂單已建立，等待賣家接受",
         'preparing' : "賣家已接受訂單，正在準備商品",
@@ -723,7 +722,7 @@ async function handleAction(action, id, rowOrCardEl) {
       orderTypeMap = {
         'c2c': "面交取貨"
       }
-      const orderStatus = res.data.data;
+      const orderStatus = res.data.data.status;
       const type = res.data.data.type;
       const builtOrderTime = new Date(res.data.data.createdAt).toLocaleDateString();
       const buyerName = res.data.data.buyerUser.name; 
