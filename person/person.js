@@ -715,15 +715,28 @@ async function handleAction(action, id, rowOrCardEl) {
 
       const item = res.data?.data;
       const orderStatus = item.status;
-
+      const type = res.data.data.type;
+      const builtOrderTime = new Date(res.data.data.createAt).toLocaleDateString();
+      const buyerName = res.data.data.buyerUser.name; 
+      const sellerName = res.data.data.sellerUser.name;
+      const totalAmount = res.data.data.totalAmount;
+      console.log('res: ', res);
       // 填入資訊（你原本的）
       document.getElementById('sellOrderInfo').innerHTML = `
-        <p><strong>訂單編號：</strong> ${id}</p>
-        <p><strong>狀態：</strong> ${orderStatus}</p>
+        <p>訂單編號： ${id}</p>
+        <p>狀態： ${orderStatus}</p>
+        <p>交貨方式： ${type}</p>
+        <p>建立日期： ${builtOrderTime}</p>
+        <p>買家姓名：${buyerName}</p>
+        <p>總計： ${totalAmount}</p>
       `;
       document.getElementById('buyerOrderInfo').innerHTML = `
-        <p><strong>訂單編號：</strong> ${id}</p>
-        <p><strong>狀態：</strong> ${orderStatus}</p>
+        <p>訂單編號： ${id}</p>
+        <p>狀態： ${orderStatus}</p>
+        <p>交貨方式： ${type}</p>
+        <p>建立日期： ${builtOrderTime}</p>
+        <p>賣家姓名：${sellerName}</p>
+        <p>總計： ${totalAmount}</p>
       `;
 
       updateOrderFlowImg(orderStatus);

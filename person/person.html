@@ -174,31 +174,31 @@
                 </table>
                 <!-- 銷售訂單詳情卡片（預設隱藏） -->
 <div id="sellOrderDetail" class="card shadow-sm mt-3 d-none">
-  <div class="card-body">
-    <h5 class="card-title">訂單詳細資訊</h5>
-    
+  <!-- back 按鈕 -->
+  <div class="text-start mt-3">
+    <button class="btn btn-outline-secondary" id="backToSellTable">
+      ← 返回訂單列表
+    </button>
+  </div>
+  <div class="">
+    <h5 class="">訂單詳細資訊</h5>
+        <!-- 流程圖 -->
+<div id="orderFlowImg" class="text-center my-3">
+  <img id="flowImage" src="../svg/allstate.svg" class="img-fluid" style="max-width: 800px;">
+</div>
+
     <!-- 基本資訊 -->
     <div id="sellOrderInfo" class="mb-3">
       <p>訂單編號： -</p>
       <p>狀態： -</p>
     </div>
 
-    <!-- 流程圖 -->
-<div id="orderFlowImg" class="text-center my-3">
-  <img id="flowImage" src="../svg/allstate.svg" class="img-fluid" style="max-width: 800px;">
-</div>
 
 
-    <!-- 關閉按鈕 -->
-    <div class="text-end mt-3">
-      <button class="btn btn-outline-secondary" id="backToSellTable">
-        ← 返回訂單列表
-      </button>
-    </div>
+    
     
   </div>
 </div>
-
                 <!-- 手機版卡片：小於 lg 才顯示 -->
                 <div id="sell-product" class="row g-3 d-block d-lg-none"></div>
               </div>
@@ -210,8 +210,8 @@
       <section class="col-lg-9 d-none content-section" id="buyProducts">
         <div class="col-12">
           <div>
-            <div class="card-body">
-              <h5 class="card-title">我的購買訂單</h5>
+            <div class="">
+              <h5 class="">我的購買訂單</h5>
               <div class="table-responsive" style="overflow-x: hidden;">
                 <table class="table align-middle d-none d-lg-table">
                   <thead>
@@ -223,27 +223,22 @@
                 </table>
                 <div id="buyerOrderDetail" class="shadow-sm mt-3">
                   <div class="">
+                    <!-- back 按鈕 -->
+                    <div class="text-start mt-3">
+                      <button class="btn btn-outline-secondary" id="backToBuyTable">
+                        ← 返回訂單列表
+                      </button>
+                    </div>
                     <h5 class="">訂單詳細資訊</h5>
-                    
+                        <!-- 流程圖 -->
+                <div id="orderFlowImgbuyer" class="text-center my-3">
+                  <img id="flowImagebuyer" src="../svg/allstate.svg" class="img-fluid" style="max-width: 800px;">
+                </div>
                     <!-- 基本資訊 -->
                     <div id="buyerOrderInfo" class="mb-3">
                       <p>訂單編號： -</p>
                       <p>狀態： -</p>
                     </div>
-
-                    <!-- 流程圖 -->
-                <div id="orderFlowImgbuyer" class="text-center my-3">
-                  <img id="flowImagebuyer" src="../svg/allstate.svg" class="img-fluid" style="max-width: 800px;">
-                </div>
-
-
-                    <!-- 關閉按鈕 -->
-                    <div class="text-end mt-3">
-                      <button class="btn btn-outline-secondary" id="backToBuyTable">
-                        ← 返回訂單列表
-                      </button>
-                    </div>
-                    
                   </div>
                 </div>
                 <!-- 手機版卡片：小於 lg 才顯示 -->
