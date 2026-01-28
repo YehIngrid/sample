@@ -749,6 +749,7 @@ async function handleAction(action, id, rowOrCardEl) {
             <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
         </ul>
         <hr>
+        <span class="orderstyle">訂購商品</span>
         <table class="table align-middle">
           <thead>
             <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
@@ -766,6 +767,7 @@ async function handleAction(action, id, rowOrCardEl) {
             <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
         </ul>
         <hr>
+        <span class="orderstyle">訂購商品</span>
         <table class="table align-middle">
           <thead>
             <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
