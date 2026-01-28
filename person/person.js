@@ -10,6 +10,7 @@ window.onload = function() {
   }
 }
 function htmlEncode(str) {
+  if(str == null) return '';
   return str.replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
