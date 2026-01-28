@@ -237,3 +237,8 @@ small {
   border-radius: 5px;
   font-size: 12px;
 }
+.back {
+  border: none;
+  background-color: white;
+  margin-bottom: 10px;
+}
