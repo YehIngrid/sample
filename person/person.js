@@ -200,19 +200,38 @@ logoutMobileButton.addEventListener('click', function() {
   document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
     item.addEventListener('click', function (e) {
       e.preventDefault();
+      resetOrderView();
       // 隱藏全部
       document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
       // 顯示目標
       const target = this.getAttribute('data-target');
       const pane = document.getElementById(target);
       if (pane) pane.classList.remove('d-none');
-
       // 更新 active 樣式
       document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
       this.classList.add('active');
     });
   });
 
+function resetOrderView() {
+  // 賣家
+  const sellSection = document.getElementById('sellProducts');
+  if (sellSection) {
+    const table = sellSection.querySelector('table');
+    const detail = document.getElementById('sellOrderDetail');
+    if (table) table.style.display = '';
+    if (detail) detail.classList.add('d-none');
+  }
+
+  // 買家
+  const buySection = document.getElementById('buyProducts');
+  if (buySection) {
+    const table = buySection.querySelector('table');
+    const detail = document.getElementById('buyerOrderDetail');
+    if (table) table.style.display = '';
+    if (detail) detail.classList.add('d-none');
+  }
+}
 
 // TODO 更改大頭照預覽
 document.getElementById('photo').addEventListener('change', function (e) {
