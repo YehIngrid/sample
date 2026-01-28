@@ -219,5 +219,9 @@
   border-radius: 8px;
 }
 .edit-text {
-  font-size: 12px;
+  font-size: 14px;
+}
+small {
+  font-size: 10px;
+  color: var(--brand-color);
 }
