@@ -622,7 +622,7 @@ function onCardAction(e) {
 
 // ===== 共用：按鈕動作（表格/卡片都走這裡） =====
 async function handleAction(action, id, rowOrCardEl) {
-  if (action === 'edit') {
+  if (action === '編輯商品') {
     console.log('編輯商品：', id);
     openEditDrawer(id, rowOrCardEl);
     // TODO: 打開編輯頁 / Modal
