@@ -759,11 +759,13 @@ async function handleAction(action, id, rowOrCardEl) {
 
       // 🔥 關鍵：切換畫面
       if (!sellSection.classList.contains('d-none')) {
+        const sellTable = document.getElementById('sellTable');
         sellTable.style.display = 'none';
         sellDetail.classList.remove('d-none');
       }
 
       if (!buySection.classList.contains('d-none')) {
+        const buyTable = document.getElementById('buyTable');
         buyTable.style.display = 'none';
         buyDetail.classList.remove('d-none');
       }
