@@ -9,7 +9,13 @@ window.onload = function() {
     content.style.setProperty('display', 'block', 'important');
   }
 }
-
+function htmlEncode(str) {
+  return str.replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+}
 // 判斷是否有 uid，顯示使用者資料
 // 手機版
 const mProfileName = document.getElementById('mProfileName');
@@ -742,6 +748,12 @@ async function handleAction(action, id, rowOrCardEl) {
             <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
         </ul>
         <hr>
+        <table class="table align-middle">
+          <thead>
+            <tr><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
+          </thead>
+          <tbody class="itemlist"></tbody>
+        </table>
       `;
       document.getElementById('buyerOrderInfo').innerHTML = `
         <ul>
@@ -753,7 +765,25 @@ async function handleAction(action, id, rowOrCardEl) {
             <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
         </ul>
         <hr>
+        <table class="table align-middle">
+          <thead>
+            <tr><th>商品照片</th><th>名稱</th><th>購買數量</th><th>小計</th></tr>
+          </thead>
+          <tbody class="itemlist"></tbody>
+        </table>
       `;
+      const itemlists = document.querySelectorAll('.itemlist');
+      const itemContent = res.data.data.orderItems.map(item => `
+        <tr>
+          <td><img src="${item?.mainImage || '../image/placeholder.png'}" alt=""></td>
+          <td>${htmlEncode(item?.name) || 'unknown'}</td>
+          <td>${item?.quantity || 'unknown'}</td>
+          <td>${item?.price || 'unknown'}</td>
+        </tr>
+        `).join('');
+        itemlists.forEach(itemlist => {
+          itemlist.innerHTML = itemContent;
+        });
 
       updateOrderFlowImg(orderStatus);
 
