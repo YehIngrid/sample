@@ -714,6 +714,16 @@ async function handleAction(action, id, rowOrCardEl) {
       const buyDetail = document.getElementById('buyerOrderDetail');
 
       const item = res.data?.data;
+      orderStatusMap = {
+        'pending': "訂單已建立，等待賣家接受",
+        'preparing' : "賣家已接受訂單，正在準備商品",
+        'delivered' : "賣家已出貨，等待買家確認收貨",
+        'completed': "買家已確認收貨，訂單完成",
+        'canceled': "訂單已取消"
+      }
+      orderTypeMap = {
+        'c2c': "面交取貨"
+      }
       const orderStatus = item.status;
       const type = res.data.data.type;
       const builtOrderTime = new Date(res.data.data.createdAt).toLocaleDateString();
@@ -724,16 +734,16 @@ async function handleAction(action, id, rowOrCardEl) {
       // 填入資訊（你原本的）
       document.getElementById('sellOrderInfo').innerHTML = `
         <p>訂單編號： ${id}</p>
-        <p>狀態： ${orderStatus}</p>
-        <p>交貨方式： ${type}</p>
+        <p>狀態： ${orderStatusMap[orderStatus]}</p>
+        <p>交貨方式： ${orderTypeMap[type]}</p>
         <p>建立日期： ${builtOrderTime}</p>
         <p>買家姓名：${buyerName}</p>
         <p style="text-align: end;">總計： <span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</p>
       `;
       document.getElementById('buyerOrderInfo').innerHTML = `
         <p>訂單編號： ${id}</p>
-        <p>狀態： ${orderStatus}</p>
-        <p>交貨方式： ${type}</p>
+        <p>狀態： ${orderStatusMap[orderStatus]}</p>
+        <p>交貨方式： ${orderTypeMap[type]}}</p>
         <p>建立日期： ${builtOrderTime}</p>
         <p>賣家姓名：${sellerName}</p>
         <p style="text-align: end;">總計： <span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</p>
