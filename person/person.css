@@ -225,3 +225,6 @@ small {
   font-size: 10px;
   color: var(--brand-color);
 }
+#sellOrderDetail p {
+  margin-bottom: 0px;
+}

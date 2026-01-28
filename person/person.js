@@ -716,7 +716,7 @@ async function handleAction(action, id, rowOrCardEl) {
       const item = res.data?.data;
       const orderStatus = item.status;
       const type = res.data.data.type;
-      const builtOrderTime = new Date(res.data.data.createAt).toLocaleDateString();
+      const builtOrderTime = new Date(res.data.data.createdAt).toLocaleDateString();
       const buyerName = res.data.data.buyerUser.name; 
       const sellerName = res.data.data.sellerUser.name;
       const totalAmount = res.data.data.totalAmount;
@@ -728,7 +728,7 @@ async function handleAction(action, id, rowOrCardEl) {
         <p>交貨方式： ${type}</p>
         <p>建立日期： ${builtOrderTime}</p>
         <p>買家姓名：${buyerName}</p>
-        <p>總計： ${totalAmount}</p>
+        <p style="text-align: end;">總計： <span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</p>
       `;
       document.getElementById('buyerOrderInfo').innerHTML = `
         <p>訂單編號： ${id}</p>
@@ -736,7 +736,7 @@ async function handleAction(action, id, rowOrCardEl) {
         <p>交貨方式： ${type}</p>
         <p>建立日期： ${builtOrderTime}</p>
         <p>賣家姓名：${sellerName}</p>
-        <p>總計： ${totalAmount}</p>
+        <p style="text-align: end;">總計： <span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</p>
       `;
 
       updateOrderFlowImg(orderStatus);
