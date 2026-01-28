@@ -461,7 +461,7 @@ function renderTable(list = []) {
         <td>${updated}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
-          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
+          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="編輯商品">編輯商品</button>
           <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
         </td>
       </tr>
