@@ -512,7 +512,6 @@ function renderCards(list = []) {
               </div>
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
-                <span class="badge ${st.badge}">${st.text}</span>
                 <div class="small text-muted mb-2">建立：${created}<br>更新：${updated}</div>
                 <div class="fw-bold mb-2">${price}</div>
               </div>
