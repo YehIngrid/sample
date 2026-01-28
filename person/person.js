@@ -500,8 +500,6 @@ function renderCards(list = []) {
     const price    = fmtPrice(item.price);
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
-    const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = STATUS_MAP[key] ?? STATUS_MAP.listed;
     const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
 
     return `
@@ -521,7 +519,7 @@ function renderCards(list = []) {
             </div>
             <div class="mt-auto d-flex gap-2">
               <button class="btn btn-outline-success btn-sm btn-card-action" data-action="check">查看商品</button>
-              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
+              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="編輯商品">編輯商品</button>
               <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
             </div>
           </div>
