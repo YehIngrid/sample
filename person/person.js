@@ -752,9 +752,6 @@ async function handleAction(action, id, rowOrCardEl) {
   // person.js
 
 }
-document.getElementById('closeSellOrderDetail').addEventListener('click', () => {
-  document.getElementById('sellOrderDetail').classList.add('d-none');
-});
 
 function updateOrderFlowImg(status) {
   const img = document.getElementById("flowImage");
