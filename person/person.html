@@ -536,26 +536,29 @@
 
 <!-- 右側滑出編輯面板 -->
 <aside class="drawer" id="editDrawer" role="dialog" aria-modal="true" aria-labelledby="editDrawerTitle" hidden>
-  <header class="drawer-header border-bottom">
-    <h5 id="editDrawerTitle" class="mb-0">編輯商品</h5>
+  <header class="drawer-header border-bottom d-flex">
     <button type="button" class="btn-close" aria-label="Close" id="editDrawerCloseBtn"></button>
+    <h6 id="editDrawerTitle" class="mb-0">編輯商品</h6>
   </header>
 
   <form id="editItemForm" class="drawer-body">
     <input type="hidden" id="edit-id" name="id">
 
     <div class="mb-3">
-      <label for="edit-name" class="form-label">商品名稱</label>
+      <label for="edit-name" class="form-label edit-text">商品名稱</label>
+      <small>* 必填</small>
       <input type="text" class="form-control" id="edit-name" name="name">
     </div>
 
     <div class="mb-3">
       <label for="edit-price" class="form-label">價格 (NT$)</label>
+      <small>* 必填</small>
       <input type="number" class="form-control" id="edit-price" name="price" min="0" step="1">
     </div>
 
     <div class="mb-3">
       <label for="edit-category" class="form-label">分類</label>
+      <small>* 必填</small>
       <select class="form-select" id="edit-category" name="category">
         <option value="">請選擇商品類型</option>
         <option value="book">書籍與學習用品</option>
@@ -569,6 +572,7 @@
     <!-- TODO 加入其他沒有寫的屬性，尚未測試排版與功能（還沒寫） -->
     <div class="form-group mb-3">
       <label for="edit-category">庫存數量</label>
+      <small>* 必填</small>
       <select class="form-control" id="edit-category" name="stock">
         <option>1</option>
         <option>2</option>
@@ -579,6 +583,7 @@
     </div>
     <div class="mb-3">
       <label class="form-label d-block">商品大小</label>
+      <small>* 必填</small>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
         <label class="form-check-label" for="inlineRadio1">小</label>
@@ -596,11 +601,13 @@
     <!--? stop here -->
     <div class="mb-3">
       <label for="edit-description" class="form-label">商品描述</label>
+      <small>* 必填</small>
       <textarea class="form-control" id="edit-description" name="description" rows="5"></textarea>
     </div>
 
     <div class="mb-4">
       <label for="edit-image" class="form-label">商品主要圖片
+        <small>* 必填</small>
         <br><small class="text-muted">(照片大小需 ≤ 5MB)</small>
       </label>
       <input class="form-control" type="file" id="edit-image" name="image" accept="image/*">
@@ -613,7 +620,7 @@
     <div class="mb-4">
       <label for="edit-images" class="form-label">
         商品其他圖片
-        <br><small class="text-muted">(最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB)</small>
+        <br><small class="text-muted">* 必填(最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB)</small>
       </label>
       <input class="form-control" type="file" id="edit-images" name="otherImages" accept="image/*" multiple>
       <div class="form-text" id="edit-images-hint">已選 0 / 5</div>
