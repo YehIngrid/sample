@@ -733,20 +733,24 @@ async function handleAction(action, id, rowOrCardEl) {
       console.log('res: ', res);
       // 填入資訊（你原本的）
       document.getElementById('sellOrderInfo').innerHTML = `
-        <p>訂單編號： ${id}</p>
-        <p>狀態： ${orderStatusMap[orderStatus]}</p>
-        <p>交貨方式： ${orderTypeMap[type]}</p>
-        <p>建立日期： ${builtOrderTime}</p>
-        <p>買家姓名：${buyerName}</p>
-        <p style="text-align: end;">總計： <span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</p>
+        <ul>
+            <li><span class="orderstyle">訂單編號</span>${id}</li>
+            <li><span class="orderstyle">建立日期</span>${builtOrderTime}</li>
+            <li><span class="orderstyle">商品狀態</span>${orderStatusMap[orderStatus]}</li>
+            <li><span class="orderstyle">交貨方式</span>${orderTypeMap[type]}</li>
+            <li><span class="orderstyle">買家姓名</span>${buyerName}</li>
+            <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
+        </ul>
       `;
       document.getElementById('buyerOrderInfo').innerHTML = `
-        <p>訂單編號： ${id}</p>
-        <p>狀態： ${orderStatusMap[orderStatus]}</p>
-        <p>交貨方式： ${orderTypeMap[type]}}</p>
-        <p>建立日期： ${builtOrderTime}</p>
-        <p>賣家姓名：${sellerName}</p>
-        <p style="text-align: end;">總計： <span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</p>
+        <ul>
+            <li><span class="orderstyle">訂單編號</span>${id}</li>
+            <li><span class="orderstyle">建立日期</span>${builtOrderTime}</li>
+            <li><span class="orderstyle">商品狀態</span>${orderStatusMap[orderStatus]}</li>
+            <li><span class="orderstyle">交貨方式</span>${orderTypeMap[type]}</li>
+            <li><span class="orderstyle">賣家姓名</span>${sellerName}</li>
+            <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
+        </ul>
       `;
 
       updateOrderFlowImg(orderStatus);

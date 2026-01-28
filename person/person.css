@@ -225,6 +225,13 @@ small {
   font-size: 10px;
   color: var(--brand-color);
 }
-#sellOrderDetail p {
-  margin-bottom: 0px;
+#sellOrderDetail li {
+  list-style: none;
+}
+.orderstyle {
+  margin-right: 10px;
+  background-color: var(--brand-color);
+  color: white;
+  padding: 5px 7px;
+  border-radius: 5px;
 }
