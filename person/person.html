@@ -559,7 +559,7 @@
     </div>
     <!-- TODO 加入其他沒有寫的屬性，尚未測試排版與功能（還沒寫） -->
     <div class="form-group mb-3">
-      <label for="edit-category edit-text">庫存數量</label>
+      <label for="edit-category" class="edit-text">庫存數量</label>
       <small>* 必填</small>
       <select class="form-control" id="edit-category" name="stock">
         <option>1</option>
@@ -611,7 +611,7 @@
         <br><small class="text-muted">* 必填(最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB)</small>
       </label>
       <input class="form-control" type="file" id="edit-images" name="otherImages" accept="image/*" multiple>
-      <div class="form-text" id="edit-images-hint">已選 0 / 5</div>
+      <div class="form-text edit-text" id="edit-images-hint">已選 0 / 5</div>
 
       <!-- 縮圖預覽區 -->
       <div id="edit-images-preview" class="row g-2 mt-2"></div>
