@@ -845,7 +845,13 @@ function updateOrderFlowImg(status) {
   img.src = map[status] || "../svg/allstate.svg";  // 預設灰色
   imgbuyer.src = map[status] || "../svg/allstate.svg";
 }
+// 時間處理
+const formatter = new Intl.DateTimeFormat('zh-TW', {
+  year: 'numeric', month: '2-digit', day: '2-digit',
+  hour: '2-digit', minute: '2-digit', hour12: false
+});
 
+// 輸出類似：2025/09/20 12:33
 const updateStatusUI = (data) => {
   const logs = data.logs; // 假設格式：[{status: "created", timestamp: "2026/01/28..."}, ...]
   const statusItems = document.querySelectorAll('.status-item');
@@ -869,7 +875,7 @@ const updateStatusUI = (data) => {
       } else if (logEntry) {
           // 取消前已完成的步驟：維持彩色
           img.src = img.src.replace('yet.svg', '.svg');
-          timeBox.innerText = logEntry.timestamp;
+          timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
       } else {
           // 取消後尚未發生的步驟：直接隱藏或替換為取消 Icon
           // 這裡建議將「下一個未完成」的節點換成 cancel.svg，其餘隱藏
@@ -885,7 +891,7 @@ const updateStatusUI = (data) => {
       // 換成彩色圖 (去掉 yet)
       img.src = img.src.replace('yet.svg', '.svg');
       // 填入時間
-      timeBox.innerText = logEntry.timestamp;
+      timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
       // 增加 active class (可選)
       item.classList.add('active');
     }
