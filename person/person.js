@@ -397,7 +397,6 @@ function renderSellerOrders(list) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
-    const meetingInfo = esc(item.meetingInfo || '無詳細資訊');
     return `
       <tr data-id="${esc(id)}">
         <td>${id}</td>
@@ -700,8 +699,6 @@ async function handleAction(action, id, rowOrCardEl) {
         infoBox.innerHTML = `
           <p><strong>訂單編號：</strong> ${id}</p>
           <p><strong>狀態：</strong> ${orderStatus}</p>
-          <p><strong>面交時間：</strong> ${meetingTime}</p>
-          <p><strong>面交地點：</strong> ${meetingPlace}</p>
         `;
 
         // 更新流程圖
