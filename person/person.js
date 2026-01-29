@@ -565,7 +565,7 @@ function renderSellerCards(list = []) {
             <div class="mt-auto d-flex gap-2">
               <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看訂單詳情</button>
               <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
-              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">取消訂單</button>
+              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="cancel">取消訂單</button>
             </div>
           </div>
         </div>
@@ -607,7 +607,7 @@ function renderBuyerCards(list = []) {
             <div class="mt-auto d-flex gap-2">
               <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看訂單詳情</button>
               <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
-              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">取消訂單</button>
+              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="cancel">取消訂單</button>
             </div>
           </div>
         </div>
@@ -639,10 +639,23 @@ async function handleAction(action, id, rowOrCardEl) {
   } else if (action === 'check') {
     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
     window.open(url, '_blank');
-  } else if (action === 'stop') {
-    if (confirm('確定要暫停上架商品嗎?')) {
-      // TODO: 呼叫暫停 API
-      console.log('暫停上架：', id);
+  } else if (action === 'cancel') {
+    if (confirm('確定要取消訂單嗎?')) {
+      try {
+        await backendService.cancelMyOrder(id);
+        Swal.fire({
+          title: '已取消訂單，系統將自動通知買家', 
+          icon: 'success',
+        });
+        window.location.reload();
+      } catch (error) {
+        Swal.fire({
+          title: '訂單取消失敗，請稍後再試', 
+          icon: 'error',
+          text: error
+        });
+        return;
+      } 
     }
   } else if (action === '接受訂單') {
     try {

@@ -453,7 +453,7 @@ class BackendService {
     }
     async cancelMyOrder(id) {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/order/cancel/${id}`);
+            const response = await axios.post(`${this.baseUrl}/api/order/${id}/cancel`);
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
