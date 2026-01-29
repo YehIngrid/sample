@@ -548,16 +548,13 @@ function renderSellerCards(list = []) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
-    const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
+
 
     return `
       <div class="col" data-id="${esc(id)}">
         <div class="card h-100 shadow-sm">
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row">
-              <div class="bg-light">
-                <img src="${img}" alt="${name}" class="object-cover">
-              </div>
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">訂單編號： ${id}</h6>
                 <span class="badge ${st.badge}">${st.text}</span>
@@ -594,16 +591,12 @@ function renderBuyerCards(list = []) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.listed;
-    const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
 
     return `
       <div class="col" data-id="${esc(id)}">
         <div class="card h-100 shadow-sm">
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row">
-              <div class="bg-light">
-                <img src="${img}" alt="${name}" class="object-cover">
-              </div>
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">訂單編號 ${id}</h6>
                 <span class="badge ${st.badge}">${st.text}</span>
