@@ -899,59 +899,55 @@ const updateStatusUI = (data) => {
   const logs = data.logs || [];
   const statusItems = document.querySelectorAll('.status-item');
   
-  // 1. 取得取消紀錄（如果有）
+  // 1. 取得取消紀錄
   const cancelLog = logs.find(log => log.status === 'canceled');
 
-  // 2. 第一步：徹底重置所有節點到「初始灰色 (yet)」狀態
+  // 2. 第一步：重置所有節點（還原灰色圖與不透明度）
   statusItems.forEach(item => {
     const img = item.querySelector('img');
     const timeBox = item.querySelector('.timestamp');
-    const text = item.querySelector('.stateText');
+    const statusName = item.getAttribute('data-status');
 
-    // 還原圖片：將 .svg 或 cancel.svg 換回 yet.svg
-    // 假設你的原始圖名格式是 statusnameyet.svg
+    // 恢復為 yet.svg 路徑
     let currentSrc = img.src;
-    if (currentSrc.includes('cancel.svg')) {
-      // 如果原本變成了 cancel.svg，要根據 data-status 換回原本的 yet 圖
-      const statusName = item.getAttribute('data-status');
-      img.src = `../svg/${statusName}yet.svg`; 
-    } else if (!currentSrc.includes('yet.svg')) {
-      img.src = currentSrc.replace('.svg', 'yet.svg');
+    if (currentSrc.includes('cancel.svg') || !currentSrc.includes('yet.svg')) {
+      img.src = `../svg/${statusName}yet.svg`;
     }
     
     timeBox.innerText = '';
     item.style.opacity = '1'; 
     item.classList.remove('active');
-    
-    // 如果你有手動改過 stateText，也要記得在這裡還原（例如：從「訂單已取消」改回原本文字）
-    // text.innerText = ... (視你的 HTML 結構而定)
   });
 
-  // 3. 第二步：根據 logs 填入正確狀態
+  // 3. 第二步：根據取消狀態動態渲染
+  let cancelHasRendered = false;
+
   statusItems.forEach((item) => {
     const statusName = item.getAttribute('data-status');
     const logEntry = logs.find(log => log.status === statusName);
     const img = item.querySelector('img');
     const timeBox = item.querySelector('.timestamp');
 
-    // 情況 A：這是一個已取消的訂單
     if (cancelLog) {
-      if (logEntry) {
-        // 取消前已完成的步驟：顯示彩色
-        img.src = img.src.replace('yet.svg', '.svg');
+      if (logEntry && statusName !== 'canceled') {
+        // A. 取消前已完成的正常步驟：顯示彩色
+        img.src = `../svg/${statusName}.svg`;
         timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
-      } else if (statusName === 'canceled') {
-        // 取消節點本身
+      } 
+      else if (statusName === 'canceled') {
+        // B. 取消節點本身：顯示 cancel.svg
         img.src = '../svg/cancel.svg';
         timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
-      } else {
-        // 取消後未發生的步驟：變淡
+        cancelHasRendered = true;
+      } 
+      else if (cancelHasRendered || !logEntry) {
+        // C. 在取消動作之後的步驟：透明度設為 0.3
         item.style.opacity = '0.3';
       }
     } 
-    // 情況 B：正常流程
     else if (logEntry) {
-      img.src = img.src.replace('yet.svg', '.svg');
+      // 正常流程：顯示彩色
+      img.src = `../svg/${statusName}.svg`;
       timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
       item.classList.add('active');
     }
