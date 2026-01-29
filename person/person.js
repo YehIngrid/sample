@@ -383,7 +383,6 @@ function renderBuyerOrders(list) {
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.listed;
     const log = esc(item.log || '無詳細資訊');
-  
   return `
       <tr data-id="${esc(id)}">
         <td>${id}</td>
@@ -391,9 +390,12 @@ function renderBuyerOrders(list) {
         <td>${created}</td>
         <td>${price} 元</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>
+          ${item.status !== 'canceled' 
+            ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
+            : ''
+          }
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>
+          ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
         </td>
       </tr>
     `;
@@ -424,9 +426,12 @@ function renderSellerOrders(list) {
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>
+          ${item.status !== 'canceled' 
+            ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
+            : ''
+          }
           <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>
+          ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
         </td>
       </tr>
     `;
@@ -563,9 +568,12 @@ function renderSellerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看訂單詳情</button>
+              ${item.status !== 'canceled' 
+                ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
+                : ''
+              }
               <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
-              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="cancel">取消訂單</button>
+              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
             </div>
           </div>
         </div>
@@ -605,9 +613,12 @@ function renderBuyerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="checkInfo">查看訂單詳情</button>
+              ${item.status !== 'canceled' 
+                ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
+                : ''
+              }
               <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
-              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="cancel">取消訂單</button>
+              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
             </div>
           </div>
         </div>
@@ -646,8 +657,12 @@ async function handleAction(action, id, rowOrCardEl) {
         Swal.fire({
           title: '已取消訂單，系統將自動通知買家', 
           icon: 'success',
-        });
-        window.location.reload();
+          confirmButtonText: "ok",
+        }).then(async ()=>{
+          const res = await backendService.getBuyerOrders();
+          renderBuyerCards(res?.data?.data);
+          renderBuyerOrders(res?.data?.data);
+        })
       } catch (error) {
         Swal.fire({
           title: '訂單取消失敗，請稍後再試', 
@@ -762,9 +777,6 @@ async function getDetail(id) {
 
     const sellSection = document.getElementById('sellProducts');
     const buySection = document.getElementById('buyProducts');
-
-    const sellTable = sellSection.querySelector('table');
-    const buyTable = buySection.querySelector('table');
 
     const sellDetail = document.getElementById('sellOrderDetail');
     const buyDetail = document.getElementById('buyerOrderDetail');
