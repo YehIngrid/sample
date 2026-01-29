@@ -894,62 +894,63 @@ const formatter = new Intl.DateTimeFormat('zh-TW', {
 
 // 輸出類似：2025/09/20 12:33
 const updateStatusUI = (data) => {
-  const logs = data.logs; // 假設格式：[{status: "created", timestamp: "2026/01/28..."}, ...]
+  const logs = data.logs || [];
   const statusItems = document.querySelectorAll('.status-item');
   
+  // 1. 取得取消紀錄（如果有）
+  const cancelLog = logs.find(log => log.status === 'canceled');
 
+  // 2. 第一步：徹底重置所有節點到「初始灰色 (yet)」狀態
   statusItems.forEach(item => {
     const img = item.querySelector('img');
     const timeBox = item.querySelector('.timestamp');
     const text = item.querySelector('.stateText');
 
-    // 1. 強制還原成 "yet" 圖片（如果原本已經去掉了，就加回來）
-    if (!img.src.includes('yet.svg')) {
-      img.src = img.src.replace('.svg', 'yet.svg');
+    // 還原圖片：將 .svg 或 cancel.svg 換回 yet.svg
+    // 假設你的原始圖名格式是 statusnameyet.svg
+    let currentSrc = img.src;
+    if (currentSrc.includes('cancel.svg')) {
+      // 如果原本變成了 cancel.svg，要根據 data-status 換回原本的 yet 圖
+      const statusName = item.getAttribute('data-status');
+      img.src = `../svg/${statusName}yet.svg`; 
+    } else if (!currentSrc.includes('yet.svg')) {
+      img.src = currentSrc.replace('.svg', 'yet.svg');
     }
     
-    // 2. 清空時間與還原樣式
     timeBox.innerText = '';
     item.style.opacity = '1'; 
-    item.style.display = 'flex'; // 確保之前被隱藏的重新顯示
+    item.classList.remove('active');
+    
+    // 如果你有手動改過 stateText，也要記得在這裡還原（例如：從「訂單已取消」改回原本文字）
+    // text.innerText = ... (視你的 HTML 結構而定)
   });
-  // 1. 檢查是否含有取消狀態
-  const cancelLog = logs.find(log => log.status === 'canceled');
 
-  statusItems.forEach((item, index) => {
+  // 3. 第二步：根據 logs 填入正確狀態
+  statusItems.forEach((item) => {
     const statusName = item.getAttribute('data-status');
     const logEntry = logs.find(log => log.status === statusName);
     const img = item.querySelector('img');
     const timeBox = item.querySelector('.timestamp');
 
+    // 情況 A：這是一個已取消的訂單
     if (cancelLog) {
-      // 找到取消發生的時間點索引
-      const cancelIndex = logs.findIndex(log => log.status === 'canceled');
-      
-      if (statusName === 'canceled') {
-          // 如果目前的 div 就是取消節點（如果你有預留的話）
-          img.src = '../svg/cancel.svg';
-      } else if (logEntry) {
-          // 取消前已完成的步驟：維持彩色
-          img.src = img.src.replace('yet.svg', '.svg');
-          timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
+      if (logEntry) {
+        // 取消前已完成的步驟：顯示彩色
+        img.src = img.src.replace('yet.svg', '.svg');
+        timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
+      } else if (statusName === 'canceled') {
+        // 取消節點本身
+        img.src = '../svg/cancel.svg';
+        timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
       } else {
-          // 取消後尚未發生的步驟：直接隱藏或替換為取消 Icon
-          // 這裡建議將「下一個未完成」的節點換成 cancel.svg，其餘隱藏
-          item.style.opacity = '0.5'; 
-          img.src = '../svg/cancel.svg';
-          item.querySelector('.stateText').innerText = '訂單已取消';
+        // 取消後未發生的步驟：變淡
+        item.style.opacity = '0.3';
       }
-      return;
-    }
-
-    // 2. 正常流程處理
-    if (logEntry) {
-      // 換成彩色圖 (去掉 yet)
+    } 
+    // 情況 B：正常流程
+    else if (logEntry) {
       img.src = img.src.replace('yet.svg', '.svg');
-      // 填入時間
       timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
-      // 增加 active class (可選)
       item.classList.add('active');
     }
   });
