@@ -1,4 +1,6 @@
-
+.asideicon {
+  font-size: 14px;
+}
 .asideicon img {
   width: 24px;
   height: 24px;
@@ -41,7 +43,7 @@
     padding: 12px 20px;
 }
   .profile-name {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: bold;
   }
 .personcontent{
