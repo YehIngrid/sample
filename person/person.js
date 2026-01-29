@@ -513,9 +513,9 @@ function renderCards(list = []) {
               </div>
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
-                <div class="small text-muted mb-2">建立：${created}<br>更新：${updated}</div>
-                <div>庫存：${quantity}</div>
-                <div class="fw-bold mb-2">${price}</div>
+                <div class="small text-muted mb-2" style="font-size: 14px;">建立：${created}<br>更新：${updated}</div>
+                <div style="font-size: 12px;">庫存：${quantity}</div>
+                <div class="fw-bold mb-2 text-end">${price}</div>
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
