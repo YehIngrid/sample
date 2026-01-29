@@ -899,72 +899,61 @@ const updateStatusUI = (data) => {
   const logs = data.logs || [];
   const statusItems = document.querySelectorAll('.status-item');
   
-  // 1. 取得取消紀錄
+  // 1. 取得取消紀錄（如果有）
   const cancelLog = logs.find(log => log.status === 'canceled');
-
-  // 2. 徹底重置：先全部恢復為 yet (灰色)
+  
+  // 2. 第一步：徹底重置所有節點到「初始灰色 (yet)」狀態
   statusItems.forEach(item => {
-    const statusName = item.getAttribute('data-status');
     const img = item.querySelector('img');
     const timeBox = item.querySelector('.timestamp');
+    const text = item.querySelector('.stateText');
+
+    // 還原圖片：將 .svg 或 cancel.svg 換回 yet.svg
+    // 假設你的原始圖名格式是 statusnameyet.svg
+    let currentSrc = img.src;
+    if (currentSrc.includes('cancel.svg')) {
+      // 如果原本變成了 cancel.svg，要根據 data-status 換回原本的 yet 圖
+      const statusName = item.getAttribute('data-status');
+      img.src = `../svg/${statusName}yet.svg`; 
+    } else if (!currentSrc.includes('yet.svg')) {
+      img.src = currentSrc.replace('.svg', 'yet.svg');
+    }
     
-    img.src = `../svg/${statusName}yet.svg`;
     timeBox.innerText = '';
-    item.style.opacity = '1';
+    item.style.opacity = '1'; 
     item.classList.remove('active');
+    
+    // 如果你有手動改過 stateText，也要記得在這裡還原（例如：從「訂單已取消」改回原本文字）
+    // text.innerText = ... (視你的 HTML 結構而定)
   });
 
-  if (cancelLog) {
-    // 【取消邏輯】
-    let lastFinishedIndex = -1;
+  // 3. 第二步：根據 logs 填入正確狀態
+  statusItems.forEach((item) => {
+    const statusName = item.getAttribute('data-status');
+    const logEntry = logs.find(log => log.status === statusName);
+    const img = item.querySelector('img');
+    const timeBox = item.querySelector('.timestamp');
 
-    // 先找出最後一個完成的正常步驟索引
-    statusItems.forEach((item, index) => {
-      const statusName = item.getAttribute('data-status');
-      if (logs.find(log => log.status === statusName)) {
-        lastFinishedIndex = index;
-      }
-    });
-
-    statusItems.forEach((item, index) => {
-      const statusName = item.getAttribute('data-status');
-      const img = item.querySelector('img');
-      const timeBox = item.querySelector('.timestamp');
-      const logEntry = logs.find(log => log.status === statusName);
-
-      if (index <= lastFinishedIndex) {
-        // 這些是取消前就完成的：顯示彩色
-        img.src = `../svg/${statusName}.svg`;
+    // 情況 A：這是一個已取消的訂單
+    if (cancelLog) {
+      if (logEntry) {
+        // 取消前已完成的步驟：顯示彩色
+        img.src = img.src.replace('yet.svg', '.svg');
         timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
-      } 
-      else if (index === lastFinishedIndex + 1) {
-        // 這是「原本彩色的後面那個狀態」：把它變成 cancel.svg
+      } else {
         img.src = '../svg/cancel.svg';
         timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
-        // 你可以順便改掉文字，例如：
-        const text = item.querySelector('.stateText');
-        if(text) text.innerText = '訂單已取消';
-      } 
-      else {
-        // 剩下的全部變淡
-        item.style.opacity = '0.3';
       }
-    });
-  } else {
-    // 【正常流程邏輯】
-    statusItems.forEach((item) => {
-      const statusName = item.getAttribute('data-status');
-      const logEntry = logs.find(log => log.status === statusName);
-      if (logEntry) {
-        const img = item.querySelector('img');
-        const timeBox = item.querySelector('.timestamp');
-        img.src = `../svg/${statusName}.svg`;
-        timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
-        item.classList.add('active');
-      }
-    });
-  }
+    } 
+    // 情況 B：正常流程
+    else if (logEntry) {
+      img.src = img.src.replace('yet.svg', '.svg');
+      timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
+      item.classList.add('active');
+    }
+  });
 };
+
 (() => {
   'use strict';
 
