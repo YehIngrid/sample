@@ -693,23 +693,20 @@ async function handleAction(action, id, rowOrCardEl) {
       })
     }
   } else if (action === 'checkInfo') {
-    // 判斷是賣家還是買家訂單 (依據元素所在的 section)
     const isSeller = !!el.closest('#sellProducts');
     
     if (isSeller) {
-      // 隱藏賣家表格與手機卡片
-      document.querySelector('#sellTable').style.display = 'none';
-      document.getElementById('sell-product').classList.add('d-none'); // 隱藏手機版卡片
-      // 顯示詳情
-      document.getElementById('sellOrderDetail').classList.remove('d-none');
-      // 執行載入詳情的內容...
-      // loadSellerOrderDetail(id); 
+        // 隱藏賣家原有的內容 (表格 + 手機卡片容器)
+        document.getElementById('sellTable').classList.add('d-none');
+        document.getElementById('sell-product').classList.add('d-none');
+        // 顯示詳情
+        document.getElementById('sellOrderDetail').classList.remove('d-none');
     } else {
-      // 隱藏買家表格與手機卡片
-      document.querySelector('#buyTable').style.display = 'none';
-      document.getElementById('buy-product').classList.add('d-none'); // 隱藏手機版卡片
-      // 顯示詳情
-      document.getElementById('buyerOrderDetail').classList.remove('d-none');
+        // 隱藏買家原有的內容
+        document.getElementById('buyTable').classList.add('d-none');
+        document.getElementById('buy-product').classList.add('d-none');
+        // 顯示詳情
+        document.getElementById('buyerOrderDetail').classList.remove('d-none');
     }
     try {
       let res = await backendService.getOrderDetails(id);
@@ -1233,28 +1230,19 @@ const updateStatusUI = (data) => {
 })();
 
 
-// 賣家返回列表
+// 賣家返回
 document.getElementById('backToSellTable')?.addEventListener('click', () => {
-  const section = document.getElementById('sellProducts');
-  // 恢復表格顯示
-  section.querySelector('#sellTable').style.display = '';
-  // 恢復手機版卡片顯示
+  document.getElementById('sellTable').classList.remove('d-none');
   document.getElementById('sell-product').classList.remove('d-none');
-  // 隱藏詳情頁
   document.getElementById('sellOrderDetail').classList.add('d-none');
 });
 
-// 買家返回列表
+// 買家返回
 document.getElementById('backToBuyTable')?.addEventListener('click', () => {
-  const section = document.getElementById('buyProducts');
-  // 恢復表格顯示
-  section.querySelector('#buyTable').style.display = '';
-  // 恢復手機版卡片顯示
+  document.getElementById('buyTable').classList.remove('d-none');
   document.getElementById('buy-product').classList.remove('d-none');
-  // 隱藏詳情頁
   document.getElementById('buyerOrderDetail').classList.add('d-none');
 });
-
 function removeItemDom(id) {
   // 表格
   document.querySelector(`#products tbody tr[data-id="${CSS?.escape ? CSS.escape(id) : id}"]`)?.remove();
