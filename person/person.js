@@ -558,8 +558,8 @@ function renderSellerCards(list = []) {
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">訂單編號： ${id}</h6>
                 <span class="badge ${st.badge}">${st.text}</span>
-                <div class="small text-muted mb-2">訂單建立時間：${created}</div>
-                <div class="fw-bold mb-2">${price}</div>
+                <div class="small text-muted mb-2" style="font-size: 14px;">訂單建立時間：${created}</div>
+                <div class="fw-bold mb-2 text-end">${price}</div>
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
@@ -600,8 +600,8 @@ function renderBuyerCards(list = []) {
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">訂單編號 ${id}</h6>
                 <span class="badge ${st.badge}">${st.text}</span>
-                <div class="small text-muted mb-2">訂單建立時間：${created}</div>
-                <div class="fw-bold mb-2">${price}</div>
+                <div class="small text-muted mb-2" style="font-size: 14px;">訂單建立時間：${created}</div>
+                <div class="fw-bold mb-2 text-end">${price}</div>
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
