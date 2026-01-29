@@ -735,7 +735,7 @@ async function handleAction(action, id, rowOrCardEl) {
         </ul>
         <hr>
         <span class="orderstyle">訂購商品</span>
-        <table class="table align-middle" style="margin-top: 15px;">
+        <table class="table align-middle responsive-table" style="margin-top: 15px;">
           <thead>
             <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>單價(元)</th></tr>
           </thead>
@@ -753,7 +753,7 @@ async function handleAction(action, id, rowOrCardEl) {
         </ul>
         <hr>
         <span class="orderstyle" style="margin-bottom: 10px;">訂購商品</span>
-        <table class="table align-middle" style="margin-top: 15px;">
+        <table class="table align-middle responsive-table" style="margin-top: 15px;">
           <thead>
             <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>單價(元)</th></tr>
           </thead>
@@ -763,11 +763,11 @@ async function handleAction(action, id, rowOrCardEl) {
       const itemlists = document.querySelectorAll('.itemlist');
       const itemContent = res.data.data.orderItems.map(item => `
         <tr>
-          <td>${item?.itemId || 'unknown'}</td>
-          <td><img src="${item?.mainImage || '../image/placeholder.png'}" alt="商品照片" style="width: 80px; height: 80px; object-fit: cover; object-position: center;"></td>
-          <td>${htmlEncode(item?.name) || 'unknown'}</td>
-          <td>${item?.quantity || 'unknown'}</td>
-          <td>${item?.price || 'unknown'}</td>
+          <td data-label="商品編號">${item?.itemId || 'unknown'}</td>
+          <td data-label="商品照片"><img src="${item?.mainImage || '../image/placeholder.png'}" alt="商品照片" style="width: 80px; height: 80px; object-fit: cover; object-position: center;"></td>
+          <td data-label="名稱">${htmlEncode(item?.name) || 'unknown'}</td>
+          <td data-label="購買數量">${item?.quantity || 'unknown'}</td>
+          <td data-label="單價(元)">${item?.price || 'unknown'}</td>
         </tr>
         `).join('');
         itemlists.forEach(itemlist => {

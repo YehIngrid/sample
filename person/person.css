@@ -278,7 +278,7 @@ small {
 }
 @media screen and (max-width: 543px) {
   .stateContainer {
-    width: 96vw;
+    width: 90vw;
   }
   .stateContainer img {
     width: 50%;
@@ -290,5 +290,55 @@ small {
   }
   .timestamp {
     font-size: 6px !important;
+  }
+}
+@media screen and (max-width: 768px) {
+  /* 隱藏原本的表頭 */
+  .responsive-table thead {
+    display: none;
+  }
+
+  .responsive-table, 
+  .responsive-table tbody, 
+  .responsive-table tr, 
+  .responsive-table td {
+    display: block;
+    width: 100%;
+  }
+
+  /* 每一列轉化為一個卡片 */
+  .responsive-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  /* 讓儲存格像卡片內的行一樣排列 */
+  .responsive-table td {
+    text-align: right;
+    padding: 8px 10px;
+    position: relative;
+    border: none;
+    border-bottom: 1px dashed #f0f0f0;
+  }
+
+  .responsive-table td:last-child {
+    border-bottom: none;
+  }
+
+  /* 使用偽元素製作左側標籤 */
+  .responsive-table td::before {
+    content: attr(data-label); /* 從 HTML 的 data-label 抓取文字 */
+    position: absolute;
+    left: 10px;
+    font-weight: bold;
+    color: #666;
+  }
+  
+  /* 針對圖片的特殊調整 (讓它置中或靠右) */
+  .responsive-table td[data-label="商品照片"] img {
+    max-width: 80px;
   }
 }
