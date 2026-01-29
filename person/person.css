@@ -314,7 +314,9 @@ small {
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   }
-
+  .table {
+    border: none !important;
+  }
   /* 讓儲存格像卡片內的行一樣排列 */
   .responsive-table td {
     text-align: right;
