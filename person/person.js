@@ -450,7 +450,7 @@ function renderTable(list = []) {
     const price    = fmtPrice(item.price);
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
-    const quantity = item.quantity;
+    const quantity = item.totalAmount;
 
     return `
       <tr data-id="${esc(id)}">
@@ -501,6 +501,7 @@ function renderCards(list = []) {
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
     const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
+    const quantity = item.totalAmount;
 
     return `
       <div class="col" data-id="${esc(id)}">
@@ -513,6 +514,7 @@ function renderCards(list = []) {
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
                 <div class="small text-muted mb-2">建立：${created}<br>更新：${updated}</div>
+                <div>庫存：${quantity}</div>
                 <div class="fw-bold mb-2">${price}</div>
               </div>
             </div>
@@ -722,6 +724,7 @@ async function handleAction(action, id, rowOrCardEl) {
         'c2c': "面交取貨"
       }
       const orderStatus = res.data.data.status;
+      const logs = res.data.data;
       const type = res.data.data.type;
       const builtOrderTime = new Date(res.data.data.createdAt).toLocaleDateString();
       const buyerName = res.data.data.buyerUser.name; 
@@ -779,7 +782,7 @@ async function handleAction(action, id, rowOrCardEl) {
           itemlist.innerHTML = itemContent;
         });
 
-      updateStatusUI(orderStatus);
+      updateStatusUI(logs);
 
       // 🔥 關鍵：切換畫面
       if (!sellSection.classList.contains('d-none')) {
