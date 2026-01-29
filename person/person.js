@@ -383,6 +383,7 @@ function renderBuyerOrders(list) {
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.listed;
     const log = esc(item.log || '無詳細資訊');
+    
   return `
       <tr data-id="${esc(id)}">
         <td>${id}</td>
@@ -420,6 +421,7 @@ function renderSellerOrders(list) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
+    const isDisabled = (st.action === '確認出貨') ? 'disabled' : '';
     return `
       <tr data-id="${esc(id)}">
         <td>${id}</td>
@@ -430,7 +432,7 @@ function renderSellerOrders(list) {
             ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
             : ''
           }
-          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
+          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}" ${isDisabled}>${st.action}</button>
           ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
         </td>
       </tr>
@@ -553,7 +555,7 @@ function renderSellerCards(list = []) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
-
+    const isDisabled = (st.action === '確認出貨') ? 'disabled' : '';
 
     return `
       <div class="col" data-id="${esc(id)}">
@@ -572,7 +574,7 @@ function renderSellerCards(list = []) {
                 ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
                 : ''
               }
-              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
+              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}" ${isDisabled}>${st.action}</button>
               ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
             </div>
           </div>
