@@ -720,7 +720,7 @@ async function handleAction(action, id, rowOrCardEl) {
         text: error
       })
     }
-  } else if (action === 'checkInfo') {
+  } else if (action === 'checkInfo' || action === '查看') {
     const isSeller = !!el.closest('#sellProducts');
     
     if (isSeller) {
