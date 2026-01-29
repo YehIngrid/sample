@@ -543,7 +543,7 @@ function renderSellerCards(list = []) {
   const html = list.map(item => {
     const id       = item.id;
     const name     = esc(item.name);
-    const price    = fmtPrice(item.price);
+    const price    = fmtPrice(item.totalAmount);
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
@@ -559,9 +559,9 @@ function renderSellerCards(list = []) {
                 <img src="${img}" alt="${name}" class="object-cover">
               </div>
               <div>
-                <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
+                <h6 class="mb-0 text-truncate" title="${name}">訂單編號： ${id}</h6>
                 <span class="badge ${st.badge}">${st.text}</span>
-                <div class="small text-muted mb-2">建立：${created}<br>更新：${updated}</div>
+                <div class="small text-muted mb-2">訂單建立時間：${created}</div>
                 <div class="fw-bold mb-2">${price}</div>
               </div>
             </div>
@@ -590,8 +590,7 @@ function renderBuyerCards(list = []) {
   const html = list.map(item => {
     const id       = item.id;
     const name     = esc(item.name);
-    const price    = fmtPrice(item.price);
-    const updated  = fmtDate(item.updatedAt);
+    const price    = fmtPrice(item.totalAmount);
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.listed;
@@ -606,9 +605,9 @@ function renderBuyerCards(list = []) {
                 <img src="${img}" alt="${name}" class="object-cover">
               </div>
               <div>
-                <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
+                <h6 class="mb-0 text-truncate" title="${name}">訂單編號 ${id}</h6>
                 <span class="badge ${st.badge}">${st.text}</span>
-                <div class="small text-muted mb-2">建立：${created}<br>更新：${updated}</div>
+                <div class="small text-muted mb-2">訂單建立時間：${created}</div>
                 <div class="fw-bold mb-2">${price}</div>
               </div>
             </div>
