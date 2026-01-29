@@ -855,6 +855,22 @@ const updateStatusUI = (data) => {
   const logs = data.logs; // 假設格式：[{status: "created", timestamp: "2026/01/28..."}, ...]
   const statusItems = document.querySelectorAll('.status-item');
   
+
+  statusItems.forEach(item => {
+    const img = item.querySelector('img');
+    const timeBox = item.querySelector('.timestamp');
+    const text = item.querySelector('.stateText');
+
+    // 1. 強制還原成 "yet" 圖片（如果原本已經去掉了，就加回來）
+    if (!img.src.includes('yet.svg')) {
+      img.src = img.src.replace('.svg', 'yet.svg');
+    }
+    
+    // 2. 清空時間與還原樣式
+    timeBox.innerText = '';
+    item.style.opacity = '1'; 
+    item.style.display = 'flex'; // 確保之前被隱藏的重新顯示
+  });
   // 1. 檢查是否含有取消狀態
   const cancelLog = logs.find(log => log.status === 'canceled');
 
