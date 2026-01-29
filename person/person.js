@@ -902,58 +902,69 @@ const updateStatusUI = (data) => {
   // 1. 取得取消紀錄
   const cancelLog = logs.find(log => log.status === 'canceled');
 
-  // 2. 第一步：重置所有節點（還原灰色圖與不透明度）
+  // 2. 徹底重置：先全部恢復為 yet (灰色)
   statusItems.forEach(item => {
+    const statusName = item.getAttribute('data-status');
     const img = item.querySelector('img');
     const timeBox = item.querySelector('.timestamp');
-    const statusName = item.getAttribute('data-status');
-
-    // 恢復為 yet.svg 路徑
-    let currentSrc = img.src;
-    if (currentSrc.includes('cancel.svg') || !currentSrc.includes('yet.svg')) {
-      img.src = `../svg/${statusName}yet.svg`;
-    }
     
+    img.src = `../svg/${statusName}yet.svg`;
     timeBox.innerText = '';
-    item.style.opacity = '1'; 
+    item.style.opacity = '1';
     item.classList.remove('active');
   });
 
-  // 3. 第二步：根據取消狀態動態渲染
-  let cancelHasRendered = false;
+  if (cancelLog) {
+    // 【取消邏輯】
+    let lastFinishedIndex = -1;
 
-  statusItems.forEach((item) => {
-    const statusName = item.getAttribute('data-status');
-    const logEntry = logs.find(log => log.status === statusName);
-    const img = item.querySelector('img');
-    const timeBox = item.querySelector('.timestamp');
+    // 先找出最後一個完成的正常步驟索引
+    statusItems.forEach((item, index) => {
+      const statusName = item.getAttribute('data-status');
+      if (logs.find(log => log.status === statusName)) {
+        lastFinishedIndex = index;
+      }
+    });
 
-    if (cancelLog) {
-      if (logEntry && statusName !== 'canceled') {
-        // A. 取消前已完成的正常步驟：顯示彩色
+    statusItems.forEach((item, index) => {
+      const statusName = item.getAttribute('data-status');
+      const img = item.querySelector('img');
+      const timeBox = item.querySelector('.timestamp');
+      const logEntry = logs.find(log => log.status === statusName);
+
+      if (index <= lastFinishedIndex) {
+        // 這些是取消前就完成的：顯示彩色
         img.src = `../svg/${statusName}.svg`;
         timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
       } 
-      else if (statusName === 'canceled') {
-        // B. 取消節點本身：顯示 cancel.svg
+      else if (index === lastFinishedIndex + 1) {
+        // 這是「原本彩色的後面那個狀態」：把它變成 cancel.svg
         img.src = '../svg/cancel.svg';
         timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
-        cancelHasRendered = true;
+        // 你可以順便改掉文字，例如：
+        const text = item.querySelector('.stateText');
+        if(text) text.innerText = '訂單已取消';
       } 
-      else if (cancelHasRendered || !logEntry) {
-        // C. 在取消動作之後的步驟：透明度設為 0.3
+      else {
+        // 剩下的全部變淡
         item.style.opacity = '0.3';
       }
-    } 
-    else if (logEntry) {
-      // 正常流程：顯示彩色
-      img.src = `../svg/${statusName}.svg`;
-      timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
-      item.classList.add('active');
-    }
-  });
+    });
+  } else {
+    // 【正常流程邏輯】
+    statusItems.forEach((item) => {
+      const statusName = item.getAttribute('data-status');
+      const logEntry = logs.find(log => log.status === statusName);
+      if (logEntry) {
+        const img = item.querySelector('img');
+        const timeBox = item.querySelector('.timestamp');
+        img.src = `../svg/${statusName}.svg`;
+        timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
+        item.classList.add('active');
+      }
+    });
+  }
 };
-
 (() => {
   'use strict';
 
