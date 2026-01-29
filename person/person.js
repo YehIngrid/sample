@@ -450,7 +450,7 @@ function renderTable(list = []) {
     const price    = fmtPrice(item.price);
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
-    const quantity = item.totalAmount;
+    const quantity = item.stock;
 
     return `
       <tr data-id="${esc(id)}">
@@ -501,7 +501,7 @@ function renderCards(list = []) {
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
     const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
-    const quantity = item.totalAmount;
+    const quantity = item.stock;
 
     return `
       <div class="col" data-id="${esc(id)}">
