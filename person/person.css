@@ -324,6 +324,7 @@ small {
     position: relative;
     border: none;
     border-bottom: 1px dashed #f0f0f0;
+    font-size: 12px;
   }
 
   .responsive-table td:last-child {
@@ -343,4 +344,13 @@ small {
   .responsive-table td[data-label="商品照片"] img {
     max-width: 80px;
   }
+}
+#products tbody {
+  font-size: 13px;
+}
+#sellProducts tbody {
+  font-size: 13px;
+}
+#buyProducts tbody {
+  font-size: 13px;
 }
