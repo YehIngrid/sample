@@ -365,6 +365,7 @@ function esc(str) {
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
   );
 }
+//TODO 剛剛調整按鈕樣式
 function renderBuyerOrders(list) {
   const tbody = document.querySelector('#buyProducts tbody');
   if (!tbody) return;
@@ -392,11 +393,11 @@ function renderBuyerOrders(list) {
         <td>${price} 元</td>
         <td class="text-end">
           ${item.status !== 'canceled' 
-            ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
+            ? `<button class="btn btn-outline-dark btn-row-action" data-action="checkInfo" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">查看訂單詳情</button>` 
             : ''
           }
-          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}">${st.action}</button>
-          ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
+          <button class="btn btn-outline-primary btn-row-action" data-action="${st.action}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">${st.action}</button>
+          ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-outline-danger btn-row-action" data-action="cancel" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">取消訂單</button>` : ''}
         </td>
       </tr>
     `;
