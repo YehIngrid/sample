@@ -1757,3 +1757,6 @@ html{ scroll-behavior:smooth; }
 .wisher {
   margin-right: 10px;
 }
+.empty {
+  text-align: center;
+}
