@@ -429,8 +429,13 @@ class ChatRoom {
         console.log('載入歷史訊息', roomId, before);
         const limit = 50;
         const history = await this.backend.getHistory(roomId, limit, before);
-        history.data.forEach(msg => this.renderMessage(msg));
-        console.log('歷史訊息載入完成:', history);
+        if(history.data && history.data.length > 0) {
+            history.data.forEach(msg => this.renderMessage(msg));
+            console.log('歷史訊息載入完成:', history);
+        } else {
+            console.log('沒有歷史訊息');
+            document.getElementById('messagesContainer').innerHTML = '<p class="text-center text-muted mt-3">沒有歷史訊息</p>';
+        }
         // this.chatMainLoader.classList.add('d-none');
         // SSE
         
@@ -599,6 +604,14 @@ class ChatRoom {
                 // 新的高度 - 舊的高度 = 剛才載入的內容高度
                 // 讓捲軸維持在原本看的那一則訊息上
                 container.scrollTop = container.scrollHeight - oldScrollHeight;
+            } else {
+                console.log('沒有更多歷史訊息');
+                // 可以選擇顯示一個提示，告訴使用者已經沒有更多訊息了
+                // 例如在頂端顯示一個小訊息「沒有更多歷史訊息了」
+                const noMoreMsg = document.createElement('div');
+                noMoreMsg.className = 'text-center text-muted my-2';
+                noMoreMsg.textContent = '沒有更多歷史訊息了';
+                container.prepend(noMoreMsg);
             }
         } catch (err) {
             console.error('載入更多訊息失敗', err);
