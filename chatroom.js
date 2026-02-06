@@ -186,14 +186,14 @@ class ChatRoom {
     }
 
     // 修正後的圖片訊息添加函數
-    appendImageMessage(data) {
+    appendImageMessage(data, prepend = false) {
         const container = document.getElementById('messagesContainer');
         const imgWrapper = document.createElement('div');
         
         // 修正：正確判斷是否為自己的訊息
         const isSelf = data.isSelf === true || data.username === this.username;
         imgWrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
-
+        imgWrapper.dataset.timestamp = data.timestamp; // 用於載入更多訊息時的時間戳記
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
             minute: '2-digit'
@@ -247,8 +247,12 @@ class ChatRoom {
             </div>
         `;
 
-        container.appendChild(imgWrapper);
-        container.scrollTop = container.scrollHeight;
+        if (prepend) {
+            container.prepend(imgWrapper);
+        } else {
+            container.appendChild(imgWrapper);
+            container.scrollTop = container.scrollHeight;
+        }
     }
     setupMobileView() {
         this.isMobile = window.innerWidth < 768;
@@ -508,7 +512,7 @@ class ChatRoom {
                 attachments: data.attachments,
                 username: data.username,
                 timestamp: data.timestamp
-            });
+            }, prepend);
             return;
         }
 
