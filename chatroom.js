@@ -609,7 +609,7 @@ class ChatRoom {
                 // 可以選擇顯示一個提示，告訴使用者已經沒有更多訊息了
                 // 例如在頂端顯示一個小訊息「沒有更多歷史訊息了」
                 const noMoreMsg = document.createElement('div');
-                noMoreMsg.className = 'text-center text-muted my-2';
+                noMoreMsg.className = 'text-center text-muted nohistory';
                 noMoreMsg.textContent = '沒有更多歷史訊息了';
                 container.prepend(noMoreMsg);
             }

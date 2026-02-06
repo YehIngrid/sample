@@ -343,3 +343,7 @@ html, body {
     text-align: center;
     cursor: pointer;
 }
+.nohistory {
+    padding-bottom: 10px;
+    font-size: 11px;
+}
