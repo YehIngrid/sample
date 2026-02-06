@@ -321,7 +321,13 @@ class ChatRoom {
             if (!this.currentRoomId) return;
             this.backend.typing(this.currentRoomId);
         });
-        
+        const container = document.getElementById('messagesContainer');
+        container.addEventListener('scroll', () => {
+            // 當捲軸拉到最頂端 (scrollTop === 0) 時觸發
+            if (container.scrollTop === 0) {
+                this.loadMoreMessages();
+            }
+        });
         // let typingTimer;
         // input.addEventListener('input', () => {
         //     clearTimeout(typingTimer);
@@ -496,7 +502,7 @@ class ChatRoom {
        UI 渲染
     ====================== */
 
-    renderMessage(data) {
+    renderMessage(data, prepend = false) {
         if (data.attachments.length > 0) {
             this.appendImageMessage({
                 attachments: data.attachments,
@@ -521,7 +527,7 @@ class ChatRoom {
         });
         const div = document.createElement('div');
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
-
+        div.dataset.timestamp = data.timestamp; // 用於載入更多訊息時的時間戳記
         div.innerHTML = `
             ${!isSelf ? `
                 <div class="message-avatar">
@@ -540,8 +546,14 @@ class ChatRoom {
             </div>
         `;
 
-        container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
+        if (prepend) {
+            container.prepend(div); // 插入到最前面
+        } else {
+            container.appendChild(div); // 插入到最後面
+            container.scrollTop = container.scrollHeight; // 只有新訊息才自動滾到底部
+        }
+        
+        return div;
     }
 
     showTyping() {
@@ -553,7 +565,39 @@ class ChatRoom {
             indicator.style.display = 'none';
         }, 1000);
     }
+    // TODO 總訊息量超過五十則
+    async loadMoreMessages() {
+        const container = document.getElementById('messagesContainer');
+        
+        // 1. 取得目前最頂端訊息的時間戳
+        const firstMsgElement = container.querySelector('.message, .imgmessage');
+        if (!firstMsgElement) return;
+        const before = firstMsgElement.dataset.timestamp;
 
+        // 2. 紀錄增加資料前的 總高度 與 捲軸位置
+        const oldScrollHeight = container.scrollHeight;
+
+        try {
+            const limit = 50;
+            const history = await this.backend.getHistory(this.currentRoomId, limit, before);
+            
+            // 3. 歷史訊息通常是時間由新到舊，我們要「反向」插入回頂端
+            // 假設後端回傳 [49, 48, 47...0]，我們要確保順序正確
+            if (history.data && history.data.length > 0) {
+                // 注意：這裡直接 loop 並使用 prepend
+                history.data.forEach(msg => {
+                    this.renderMessage(msg, true); // 使用剛剛修改的 prepend 模式
+                });
+
+                // 4. 最關鍵：修正捲軸位置
+                // 新的高度 - 舊的高度 = 剛才載入的內容高度
+                // 讓捲軸維持在原本看的那一則訊息上
+                container.scrollTop = container.scrollHeight - oldScrollHeight;
+            }
+        } catch (err) {
+            console.error('載入更多訊息失敗', err);
+        }
+    }
     /* ======================
        綁定事件
     ====================== */
