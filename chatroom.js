@@ -584,7 +584,8 @@ class ChatRoom {
         try {
             const limit = 50;
             const history = await this.backend.getHistory(this.currentRoomId, limit, before);
-            
+            console.log('載入更多歷史訊息:', history);
+            console.log('timestamp:', before);
             // 3. 歷史訊息通常是時間由新到舊，我們要「反向」插入回頂端
             // 假設後端回傳 [49, 48, 47...0]，我們要確保順序正確
             if (history.data && history.data.length > 0) {
