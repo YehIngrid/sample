@@ -590,9 +590,10 @@ class ChatRoom {
             // 假設後端回傳 [49, 48, 47...0]，我們要確保順序正確
             if (history.data && history.data.length > 0) {
                 // 注意：這裡直接 loop 並使用 prepend
-                history.data.forEach(msg => {
-                    this.renderMessage(msg, true); // 使用剛剛修改的 prepend 模式
-                });
+                const data = history.data;
+                for (let i = data.length - 1; i >= 0; i--) {
+                    this.renderMessage(data[i], true); 
+                }
 
                 // 4. 最關鍵：修正捲軸位置
                 // 新的高度 - 舊的高度 = 剛才載入的內容高度
