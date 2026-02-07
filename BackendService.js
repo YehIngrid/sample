@@ -385,7 +385,7 @@ class BackendService {
         try {
             const payload = {
             cart_item_ids: cartItems.map(item => ({
-                cart_item_id: Number(item.id),
+                cart_item_id: item.id,
                 quantity: Number(item.qty)
             }))
             };
