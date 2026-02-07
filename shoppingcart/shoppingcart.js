@@ -1,617 +1,55 @@
-// let backendService = null;
-// let chatService    = null;
-// document.addEventListener('DOMContentLoaded', () => {
-//   backendService = new BackendService();
-//   chatService = new ChatBackendService();
-//   initCartFromAPI(); // 頁面載入就打 API
-// });
+// ================== Service ==================
+let backendService = null;
+let chatService = null;
+let chatRoom = null;
+let isCheckingOut = false;
 
-// // ============ 1) 共用狀態 / 工具 ============
-// const LS_KEY = 'cart_state_v1';
-// const LS_PICKUP_KEY = 'pickup_info_v1';
-// let sellerId = null;
-// let quantity = 1;
-// let productId = null;
-// let cartItemId = null;
-// function loadState() { try { return JSON.parse(localStorage.getItem(LS_KEY)) || null; } catch { return null; } }
-// function saveState(items) { onAddToCart(items.id, items.qty); localStorage.setItem(LS_KEY, JSON.stringify(items)); }
-// function loadPickup() { try { return JSON.parse(localStorage.getItem(LS_PICKUP_KEY)) || {}; } catch { return {}; } }
-// function savePickup(info) { localStorage.setItem(LS_PICKUP_KEY, JSON.stringify(info)); }
-
-// if (typeof window.updateSummary !== 'function') {
-//   window.updateSummary = function noop() {};
-// }
-
-// let cartItems = [];                  // 由 API 載入
-
-// // 你的既有節點
-// const cartList        = document.getElementById('cart-items');
-
-// // ============ 2) 資料正規化 ============
-// function normalizeCartResponse(payload) {
-//   const candidates = [
-//     payload?.data?.data?.cartItems,
-//     payload?.data?.cartItems,
-//     Array.isArray(payload) ? payload : null,
-//     payload
-//   ].filter(Boolean);
-
-//   const rawList = candidates.find(arr => Array.isArray(arr)) || [];
-
-//   return rawList.map(row => {
-//     cartItemId = row.id;
-//     productId  = row.itemId ?? '';
-//     const embedded   = row.item || {};
-//     const ownerObj   = embedded.owner || {};
-//     console.log('商家名稱', ownerObj.name, ownerObj);
-//     sellerId = embedded.ownerId || null;
-//     quantity = Number(row.quantity) || 1;
-//     const name  = row.name ?? embedded.name ?? '未命名商品';
-//     const price = Number(row.price ?? embedded.price ?? 0) || 0;
-//     const img   =
-//       embedded.mainImage ??
-//       embedded.imageUrl ??
-//       (Array.isArray(embedded.images) ? embedded.images[0] : undefined) ??
-//       'https://via.placeholder.com/120x120?text=No+Image';
-
-//     // API 已保證有 quantity，但保守起見仍做數字化
-//     const qty  = Number(row.quantity) || 1;
-//     const desc = embedded.description || '';
-
-//     // 只要有任一我們關心的欄位缺少，就標記需要補打詳情
-//     const needEnrich =
-//       !productId ||
-//       !embedded ||
-//       !embedded.mainImage ||              // 沒主圖
-//       typeof embedded.description === 'undefined';
-
-//     return {
-//       id: String(cartItemId),
-//       productId: String(productId),
-//       name,
-//       price,
-//       img,
-//       qty,
-//       description: desc,
-//       owner_name: ownerObj.name || '未知賣家',
-//       owner_photo: ownerObj.photoURL || '../image/default-avatar.png',
-//       checked: false,
-//       _needEnrich: needEnrich
-//     };
-//   });
-// }
-
-// async function onAddToCart(cartItemId, quantity) {
-//   console.log('加入購物車：', cartItemId, quantity);
-//   try {
-//     const res = await backendService.updateCartItemQuantity(cartItemId, quantity);
-//     console.log('加入購物車成功：', res);
-//     await initCartFromAPI(); // 重新載入購物車
-//     Swal.fire({
-//       icon: 'success',
-//       title: '成功更新商品數量',
-//       showConfirmButton: false,
-//       timer: 1500
-//     });
-//   } catch (err) {
-//     console.error('加入購物車失敗：', err);
-//     Swal.fire({
-//       icon: 'error',
-//       title: 'Oops...',
-//       text: '更新商品數量失敗，請稍後再試'
-//     });
-//   }
-// }
-// // ============ 3) 取購物車 ============
-// async function initCartFromAPI() {
-//   try {
-//     const res  = await backendService.getMyCart();
-//     const list = normalizeCartResponse(res);
-//     cartItems  = Array.isArray(list) ? list : [];
-//     saveState(cartItems);
-
-//     // 先渲染，再補齊商品資訊
-//     renderCart();
-//     updateSummary();
-//     await enrichMissingProductFields(cartItems);
-//   } catch (err) {
-//     console.error('getMyCart 失敗：', err);
-//     const fallback = loadState();
-//     cartItems = Array.isArray(fallback) ? fallback : [];
-//     renderCart();
-//     updateSummary();
-//   }
-// }
-
-// // ============ 4) 取商品詳情補齊 ============
-// function getItemInfoAsync(id) {
-//   return new Promise((resolve, reject) => {
-//     backendService.getItemsInfo(
-//       id,
-//       (json) => resolve(json?.data || {}), // fnSuccess 會拿到 axios.response.data → 取 json.data
-//       (err)  => reject(err)
-//     );
-//   });
-// }
-
-// async function enrichMissingProductFields(items) {
-//   const need = items.map((it, idx) => ({ ...it, _idx: idx }))
-//                     .filter(it => it._needEnrich && it.productId);
-
-//   console.log('[enrich] 待補筆數 =', need.length, need.map(n => n.productId));
-//   if (need.length === 0) return;
-
-//   const jobs = need.map(async (it) => {
-//     const p = await getItemInfoAsync(it.productId);  // ← 直接拿到商品物件（json.data）
-//     console.log('[enrich] 詳情', it.productId, p);
-
-//     const name  = p.name ?? '未命名商品';
-//     const price = Number(p.price ?? 0) || 0;
-//     const img   = p.mainImage ?? p.imageUrl ??
-//                   (Array.isArray(p.imageUrl) ? p.imageUrl[0] : undefined) ??
-//                   'https://via.placeholder.com/120x120?text=No+Image';
-
-//     items[it._idx] = {
-//       ...items[it._idx],
-//       name:        items[it._idx].name || name,
-//       price:       items[it._idx].price || price,
-//       img:         items[it._idx].img || img,
-//       owner_name:  p.owner?.name || items[it._idx].owner_name,
-//       owner_photo: p.owner?.photoURL || items[it._idx].owner_photo,
-//       description: typeof p.description === 'string' ? p.description : (items[it._idx].description || ''),
-//       _needEnrich: false
-//     };
-//   });
-
-//   await Promise.all(jobs);
-//   saveState(items);
-//   renderCart();
-//   updateSummary();
-// }
-
-// // ============ 5) 渲染商品清單 ============
-// function renderCart() {
-//   if (!cartList) return;
-
-//   cartList.innerHTML = '';
-//   if (!Array.isArray(cartItems) || cartItems.length === 0) {
-//     cartList.innerHTML = `<div class="alert alert-light text-center">目前沒有商品</div>`;
-//     const all = document.getElementById('checkAll');
-//     if (all) all.checked = false;
-//     updateSummary();
-//     return;
-//   }
-
-//   const allChecked = cartItems.every(i => i.checked);
-//   const all = document.getElementById('checkAll');
-//   if (all) all.checked = allChecked;
-
-//   cartItems.forEach(item => {
-//     const li = document.createElement('div');
-//     li.className = 'list-group-item';
-//     // item.owner.photoURL = item.owner.photoURL || '../image/default-avatar.png';
-//     li.dataset.id = item.id;
-//     li.innerHTML = `
-//     <tr>
-//       <thead>
-//         <tr>
-//           <th scope="col">
-//             <div class="muted-sm d-flex align-items-center">
-//               <img src="${item.owner_photo}" alt="${item.owner_name}" class="owner-avatar me-2">
-//               <p class="mb-0">${item.owner_name}</p>
-//             </div>
-//           </th>
-//         <tr>
-//       </thead>
-//       <tbody>
-//           <th scope="row"><input class="form-check-input me-3 cart-check mt-1" type="checkbox" ${item.checked ? 'checked':''}></th>
-//           <td><img src="${item.img}" alt="${item.name}" class="item-thumb me-3"></td>
-//           <td><h6 class="mb-1">${item.name}</h6></td>
-//           <td><p class="mb-2">${item.description || ''}</p></td>
-//           <td><div class="price text-primary">NT$ ${Number(item.price || 0).toLocaleString('zh-TW')}</div></td>
-//           <td><input type="number" min="1" value="${item.qty}" class="form-control form-control-sm qty-input" style="width:100px"></td>
-//           <td>
-//               <div>
-//                 <button class="btn btn-dark btn-look" type="button">查看</button>
-//                 <button class="btn btn-primary btn-talk" type="button">與賣家聯絡</button>
-//               </div>
-//           </td>
-//       </tbody>
-//     </tr>
-//     `;
-
-//     // 綁事件：查看
-//     const lookBtn = li.querySelector('.btn-look');
-//     if (lookBtn) {
-//       lookBtn.style.cursor = 'pointer';
-//       lookBtn.addEventListener('click', () => {
-//         if (item.productId) {
-//           window.location.href = `../product/product.html?id=${encodeURIComponent(item.productId)}`;
-//         } else {
-//           alert('此商品無法連結到詳情頁');
-//         }
-//       });
-//     }
-
-//     // 綁事件：勾選
-//     const check = li.querySelector('.cart-check');
-//     if (check) {
-//       check.addEventListener('change', (e) => {
-//         item.checked = !!e.target.checked;
-//         const all = document.getElementById('checkAll');
-//         if (all) all.checked = cartItems.every(x => x.checked);
-//         saveState(cartItems);
-//         updateSummary();
-//       });
-//     }
-
-//     // 綁事件：數量
-//     const qtyInput = li.querySelector('.qty-input');
-//     if (qtyInput) {
-//       qtyInput.addEventListener('input', (e) => {
-//         const v = Math.max(1, Number(e.target.value) || 1);
-//         e.target.value = v;
-//         item.qty = v;
-//         saveState(cartItems);
-//         updateSummary();
-//       });
-//     }
-
-//     // // 綁事件：刪除
-//     // const removeBtn = li.querySelector('.btn-remove');
-//     // if (removeBtn) {
-//     //   removeBtn.addEventListener('click', () => {
-//     //     cartItems = cartItems.filter(x => x.id !== item.id);
-//     //     saveState(cartItems);
-//     //     renderCart();
-//     //     updateSummary();
-//     //   });
-//     // }
-
-//     //TODO 綁事件：聯絡賣家
-//     const talkBtn = li.querySelector('.btn-talk');
-//     if (talkBtn) {
-//       talkBtn.style.cursor = 'pointer';
-//       talkBtn.addEventListener('click', () => {
-//         if (item.owner_name) {
-//           openChatWithSeller(item.productId);
-//         } else {
-//           Swal.fire({
-//             icon: 'error',
-//             title: '無法聯絡賣家',
-//             text: '此商品無法取得賣家資訊',
-//           });
-//         }
-//       });
-//     }
-//     cartList.appendChild(li);
-//   });
-// }
-
-// async function openChatWithSeller(itemId) {
-//   if (!itemId) {
-//     Swal.fire({ icon: 'warning', title: '無法與賣家聊天', text: '缺少商品編號' });
-//     return;
-//   } else {
-//     openCloseChatInterface();
-//     chatService = new ChatBackendService();
-//     const res = await chatService.createRoom(itemId)
-//     try{
-//       const roomId = res.data?.roomId;
-//       if (roomId) {
-//         chatRoom = new ChatRoom(chatService, roomId, talkInterface);
-//         chatRoom.init();
-//       } else {
-//         Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-//       }
-//     } catch(err){ 
-//       console.error('建立聊天室失敗：', err);
-//       Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-//     }
-//   }
-// }
-// // ============ 6) 更新右側結帳表 & 總額 ============
-// function updateSummary() {
-//   const tbody = document.querySelector('#checkout-table tbody');
-//   if (!tbody) return;
-//   tbody.innerHTML = '';
-//   let subtotal = 0;
-
-//   cartItems.filter(i => i.checked).forEach(i => {
-//     const sub = i.price * i.qty;
-//     subtotal += sub;
-//     const tr = document.createElement('tr');
-//     tr.innerHTML = `
-//       <td>${i.name}</td>
-//       <td class="text-center">${i.qty}</td>
-//       <td class="text-end">NT$ ${sub.toLocaleString()}</td>
-//     `;
-//     tbody.appendChild(tr);
-//   });
-
-//   const shipping = 0; // 面交固定 0
-//   const discount = 0;
-
-//   const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
-//   set('subtotal',     'NT$ ' + subtotal.toLocaleString());
-//   set('shipping-fee', 'NT$ ' + shipping.toLocaleString());
-//   set('discount',     '- NT$ ' + discount.toLocaleString());
-//   set('grand-total',  'NT$ ' + (subtotal + shipping - discount).toLocaleString());
-// }
-
-// // ============ 7) 事件：勾選 / 數量 / 刪除 ============
-// cartList.addEventListener('change', (e) => {
-//   const row = e.target.closest('.list-group-item');
-//   if (!row) return;
-//   const id  = row.dataset.id;
-//   const idx = cartItems.findIndex(i => i.id === id);
-//   if (idx < 0) return;
-
-//   if (e.target.classList.contains('cart-check')) {
-//     cartItems[idx].checked = e.target.checked;
-//   }
-//   if (e.target.classList.contains('qty-input')) {
-//     const v = Math.max(1, parseInt(e.target.value || '1', 10));
-//     cartItems[idx].qty = v;
-//     e.target.value = v;
-//   }
-
-//   saveState(cartItems);
-//   renderCart();    // 讓「全選」勾勾同步
-//   updateSummary();
-// });
-
-// cartList.addEventListener('click', async (e) => {
-//   if (!e.target.classList.contains('btn-remove')) return;
-//   const row = e.target.closest('.list-group-item');
-//   const id  = row?.dataset?.id;
-//   if (!id) return;
-
-//   try {
-//     // 1) 先打後端
-//     const res = await backendService.removeItemsFromCart(id);
-
-//     // 2) 兼容 axios response / JSON body 兩種殼
-//     const httpStatus = (typeof res?.status === 'number' ? res.status : undefined);
-//     const bodyStatus = (typeof res?.data?.status === 'number' ? res.data.status :
-//                        typeof res?.status === 'number' ? res.status : // res 是 body 且有 status
-//                        undefined);
-
-//     const ok = (typeof httpStatus === 'number' && httpStatus >= 200 && httpStatus < 300)
-//             || (typeof bodyStatus === 'number' && bodyStatus >= 200 && bodyStatus < 300);
-
-//     if (!ok) throw new Error(`Unexpected status: http=${httpStatus ?? '-'} body=${bodyStatus ?? '-'}`);
-//     // 3) 本地狀態更新（記得把 id 轉字串以防型別不一致）
-//     const targetId = String(id);
-//     cartItems = cartItems.filter(i => String(i.id) !== targetId);
-//     saveState(cartItems);
-//     renderCart();
-//     updateSummary();
-//     Swal.fire({
-//       icon: 'success',
-//       title: '商品已從購物車移除',
-//       showConfirmButton: false,
-//       timer: 1500
-//     });
-//   } catch (err) {
-//     console.error('removeItemsFromCart 失敗：', err);
-//     Swal.fire({
-//       icon: 'error',
-//       title: 'Oops...',
-//       text: '刪除失敗，請稍後再試'
-//     });
-//   }
-// });
-
-// // ============ 8) 全選 / 批次刪除 / 清空 ============
-// const checkAllEl = document.getElementById('checkAll');
-// if (checkAllEl) {
-//   checkAllEl.addEventListener('change', (e) => {
-//     const checked = e.target.checked;
-//     cartItems = cartItems.map(i => ({ ...i, checked }));
-//     saveState(cartItems);
-//     renderCart();
-//     updateSummary();
-//   });
-// }
-
-// const clearCheckedBtn = document.getElementById('clear-checked');
-// if (clearCheckedBtn) {
-//   clearCheckedBtn.addEventListener('click', async () => {
-//     const selected = cartItems.filter(i => i.checked);
-//     if (selected.length === 0) {
-//       Swal.fire({
-//         icon: 'warning',
-//         title: '請先勾選要移除的商品'
-//       });
-//       return;
-//     }
-//     try {
-//       for (const it of selected) {
-//         await backendService.removeItemsFromCart(it.id);
-//       }
-//       cartItems = cartItems.filter(i => !i.checked);
-//       saveState(cartItems);
-//       renderCart();
-//       updateSummary();
-//     } catch (err) {
-//       console.error('批次移除失敗：', err);
-//       Swal.fire({
-//         icon: 'error', 
-//         title: 'Oops...',
-//         text: '移除已勾選失敗，請稍後再試'
-//       });
-//     }
-//   });
-// }
-
-// const clearAllBtn = document.getElementById('clear-all');
-// if (clearAllBtn) {
-//   clearAllBtn.addEventListener('click', async () => {
-//     if (!Swal.fire) return;
-//     try {
-//       const res = await backendService.clearMyCart();
-//         // 2) 兼容 axios response / JSON body 兩種殼
-//       const httpStatus = (typeof res?.status === 'number' ? res.status : undefined);
-//       const bodyStatus = (typeof res?.data?.status === 'number' ? res.data.status :
-//                         typeof res?.status === 'number' ? res.status : // res 是 body 且有 status
-//                         undefined);
-
-//       const ok = (typeof httpStatus === 'number' && httpStatus >= 200 && httpStatus < 300)
-//               || (typeof bodyStatus === 'number' && bodyStatus >= 200 && bodyStatus < 300);
-
-//       if (!ok) throw new Error(`Unexpected status: http=${httpStatus ?? '-'} body=${bodyStatus ?? '-'}`);
-//       cartItems = [];
-//       saveState(cartItems);
-//       renderCart();
-//       updateSummary();
-//       Swal.fire({
-//         icon: 'success',
-//         title: '購物車已清空',
-//         showConfirmButton: false,
-//         timer: 1500
-//       });
-//     } catch (err) {
-//       console.error('clearMyCart 失敗：', err);
-//       Swal.fire({
-//         icon: 'error',
-//         title: 'Oops...',
-//         text: '清空失敗，請稍後再試'
-//       });
-//     }
-//   });
-// }
-
-
-// const checkoutBtn = document.getElementById('checkout-btn');
-// if (checkoutBtn) {
-//   checkoutBtn.addEventListener('click', () => {
-//     const selected = cartItems.filter(i => i.checked);
-//     if (selected.length === 0) return alert('請先勾選要結帳的商品');
-//     // 只取 cart item 的 id
-//     const cartItemsId = selected.map(i => i.id);
-//     const checkOrderRules = document.getElementById('checkOrderRules');
-//   if(checkOrderRules && !checkOrderRules.checked){
-//     Swal.fire({
-//       icon: 'warning',
-//       title: '請同意訂購規則後再結帳',
-//       showConfirmButton: true,
-//     });
-//     return;
-//   }
-//     handleCreateOrder(cartItemsId);
-//   });
-// }
-
-// async function handleCreateOrder(cartItemsId) {
-//     try {
-//         const response = await backendService.createOrder(cartItemsId);
-//         Swal.fire({
-//             icon: 'success',
-//             title: '訂單建立成功！',
-//             text: '感謝您的購買，請等待賣家聯絡您進行面交，在個人頁面 > 我的購買清單查看。',
-//             showConfirmButton: true,
-//             timer: 2000
-//         });
-//         console.log("訂單建立成功:", response.data);
-//     } catch (error) {
-//         Swal.fire({
-//             icon: 'error',
-//             title: '訂單建立失敗',
-//             text: '請稍後再試或聯絡客服',
-//         });
-//         console.error("建立訂單失敗:", error);
-//     }
-// }
-// async function openCloseChatInterface(){
-//   backendService = new BackendService();
-//   const res = await backendService.whoami();
-//   if(!res){
-//     Swal.fire({
-//       title: '請先登入會員',
-//       icon: 'warning',
-//       confirmButtonText: '確定'
-//     });
-//     return;
-//   }
-//   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-//     talkInterface.style.display = 'block'; // 顯示
-//     chatService = new ChatBackendService();
-//     // const itemName = document.getElementById('product-name').textContent || '商品';
-//     const userId = res.data.uid;
-//     console.log("userId:", userId);
-//     console.log("sellerId:", sellerId);
-//     chatService.createRoom(productId)
-//       .then((data) => {
-//         const roomId = data?.roomId;
-//         if (roomId) {
-//           chatRoom = new ChatRoom(chatService, roomId, talkInterface);
-//           chatRoom.init();
-//         } else {
-//           Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-//         }
-//       })
-//       .catch((err) => {
-//         console.error('建立聊天室失敗：', err);
-//         Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-//       });
-//   } else {
-//     talkInterface.style.display = 'none'; // 隱藏
-//   }
-//   console.log('chat open');
-// }
-
-// ================== 基本初始化 ==================
-let backendService;
-let chatService;
-
-document.addEventListener('DOMContentLoaded', () => {
-  backendService = new BackendService();
-  chatService = new ChatBackendService();
-  initCart();
-});
-
-const LS_KEY = 'cart_state_v2';
+// ================== State ==================
+const LS_KEY = 'cart_state_v1';
 let cartItems = [];
 
+// ================== DOM ==================
 const cartList = document.getElementById('cart-items');
 
-// ================== State 工具 ==================
-const loadState = () => {
-  try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; }
-  catch { return []; }
-};
-
-const saveState = () => {
-  localStorage.setItem(LS_KEY, JSON.stringify(cartItems));
-};
-
-// ================== API → Cart ==================
-async function initCart() {
+// ================== Utils ==================
+function loadState() {
   try {
-    await backendService.whoami();
+    return JSON.parse(localStorage.getItem(LS_KEY)) || [];
   } catch {
-    Swal.fire ({
-      icon: 'warning',
-      title: '請先登入會員',
-      showConfirmButton: true,
-    });
-    return;
+    return [];
   }
-  try {
-    const res = await backendService.getMyCart();
-    cartItems = normalizeCart(res);
-    saveState();
-  } catch (err) {
-    console.warn('使用 localStorage cart');
-    cartItems = loadState();
-  }
-  renderCart();
-  updateSummary();
 }
 
-// ================== 資料正規化 ==================
-function normalizeCart(res) {
+function saveState() {
+  localStorage.setItem(LS_KEY, JSON.stringify(cartItems));
+}
+
+// ================== Init ==================
+document.addEventListener('DOMContentLoaded', async () => {
+  backendService = new BackendService();
+  chatService = new ChatBackendService();
+  await initCartFromAPI();
+});
+
+// ================== API Init ==================
+async function initCartFromAPI() {
+  try {
+    const res = await backendService.getMyCart();
+    cartItems = normalizeCartResponse(res);
+    saveState();
+    renderCart();
+    updateSummary();
+    await enrichMissingProductFields(cartItems);
+  } catch (err) {
+    console.error('載入購物車失敗，改用 localStorage', err);
+    cartItems = loadState();
+    renderCart();
+    updateSummary();
+  }
+}
+
+// ================== Normalize ==================
+function normalizeCartResponse(res) {
   const list =
     res?.data?.data?.cartItems ??
     res?.data?.cartItems ??
@@ -623,28 +61,69 @@ function normalizeCart(res) {
 
     return {
       id: String(row.id),
-      productId: String(row.itemId),
+      productId: String(row.itemId || ''),
       name: item.name || row.name || '未命名商品',
       price: Number(item.price || row.price || 0),
       qty: Number(row.quantity || 1),
       img: item.mainImage || item.imageUrl || 'https://via.placeholder.com/120',
       description: item.description || '',
-      seller: {
-        name: owner.name || '未知賣家',
-        photo: owner.photoURL || '../image/default-avatar.png'
-      },
-      checked: false
+      owner_name: owner.name || '未知賣家',
+      owner_photo: owner.photoURL || '../image/default-avatar.png',
+      checked: false,
+      _needEnrich: !item.description || !item.mainImage
     };
   });
 }
 
+// ================== Enrich ==================
+function getItemInfoAsync(id) {
+  return new Promise((resolve, reject) => {
+    backendService.getItemsInfo(
+      id,
+      json => resolve(json?.data || {}),
+      err => reject(err)
+    );
+  });
+}
+
+async function enrichMissingProductFields(items) {
+  const targets = items
+    .map((it, idx) => ({ ...it, _idx: idx }))
+    .filter(it => it._needEnrich && it.productId);
+
+  if (targets.length === 0) return;
+
+  await Promise.all(targets.map(async it => {
+    const p = await getItemInfoAsync(it.productId);
+    items[it._idx] = {
+      ...items[it._idx],
+      description: p.description || items[it._idx].description,
+      img: p.mainImage || items[it._idx].img,
+      owner_name: p.owner?.name || items[it._idx].owner_name,
+      owner_photo: p.owner?.photoURL || items[it._idx].owner_photo,
+      _needEnrich: false
+    };
+  }));
+
+  saveState();
+  renderCart();
+  updateSummary();
+}
+
 // ================== Render ==================
 function renderCart() {
+  if (!cartList) return;
+
   cartList.innerHTML = '';
 
   if (cartItems.length === 0) {
     cartList.innerHTML = `<div class="alert alert-light text-center">目前沒有商品</div>`;
     return;
+  }
+
+  const checkAll = document.getElementById('checkAll');
+  if (checkAll) {
+    checkAll.checked = cartItems.every(i => i.checked);
   }
 
   cartItems.forEach(item => {
@@ -653,27 +132,27 @@ function renderCart() {
     el.dataset.id = item.id;
 
     el.innerHTML = `
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <div class="d-flex align-items-center">
-          <img src="${item.seller.photo}" class="owner-avatar me-2">
-          <strong>${item.seller.name}</strong>
-        </div>
-        <input type="checkbox" class="cart-check" ${item.checked ? 'checked' : ''}>
-      </div>
-
-      <div class="d-flex">
+      <div class="d-flex align-items-start">
+        <input type="checkbox" class="form-check-input me-3 cart-check" ${item.checked ? 'checked' : ''}>
         <img src="${item.img}" class="item-thumb me-3">
         <div class="flex-grow-1">
           <h6>${item.name}</h6>
+          <div class="d-flex align-items-center mb-1">
+            <img src="${item.owner_photo}" class="owner-avatar me-2">
+            <small>${item.owner_name}</small>
+          </div>
           <p class="text-muted">${item.description}</p>
-          <div class="text-primary">NT$ ${item.price.toLocaleString()}</div>
-        </div>
 
-        <div class="text-end">
-          <input type="number" class="qty-input form-control mb-2"
-            min="1" value="${item.qty}" style="width:90px">
-          <button class="btn btn-sm btn-dark btn-look">查看</button>
-          <button class="btn btn-sm btn-primary btn-talk mt-1">聯絡賣家</button>
+          <div class="d-flex align-items-center gap-2">
+            <input type="number" class="form-control form-control-sm qty-input"
+              min="1" value="${item.qty}" style="width:100px">
+            <button class="btn btn-dark btn-look">查看</button>
+            <button class="btn btn-light btn-remove">刪除</button>
+            <button class="btn btn-primary btn-talk">聯絡賣家</button>
+          </div>
+        </div>
+        <div class="text-primary ms-3">
+          NT$ ${item.price.toLocaleString()}
         </div>
       </div>
     `;
@@ -681,8 +160,8 @@ function renderCart() {
   });
 }
 
-// ================== 事件委派 ==================
-cartList.addEventListener('change', e => {
+// ================== Events ==================
+cartList.addEventListener('change', async e => {
   const row = e.target.closest('.list-group-item');
   if (!row) return;
 
@@ -694,15 +173,22 @@ cartList.addEventListener('change', e => {
   }
 
   if (e.target.classList.contains('qty-input')) {
-    item.qty = Math.max(1, Number(e.target.value));
-    backendService.updateCartItemQuantity(item.id, item.qty);
+    const v = Math.max(1, Number(e.target.value));
+    e.target.value = v;
+    item.qty = v;
+    try {
+      await backendService.updateCartItemQuantity(item.id, v);
+    } catch {
+      Swal.fire('數量更新失敗');
+    }
   }
 
   saveState();
+  renderCart();
   updateSummary();
 });
 
-cartList.addEventListener('click', e => {
+cartList.addEventListener('click', async e => {
   const row = e.target.closest('.list-group-item');
   if (!row) return;
 
@@ -713,24 +199,32 @@ cartList.addEventListener('click', e => {
     location.href = `../product/product.html?id=${item.productId}`;
   }
 
+  if (e.target.classList.contains('btn-remove')) {
+    try {
+      await backendService.removeItemsFromCart(item.id);
+      cartItems = cartItems.filter(i => i.id !== item.id);
+      saveState();
+      renderCart();
+      updateSummary();
+    } catch {
+      Swal.fire('刪除失敗');
+    }
+  }
+
   if (e.target.classList.contains('btn-talk')) {
-    openChat(item);
+    openChat(item.productId);
   }
 });
 
-// ================== 聊天室 ==================
-async function openChat(item) {
-  try {
-    const res = await chatService.createRoom(item.productId);
-    const roomId = res?.data?.roomId;
-    if (!roomId) throw new Error();
-
-    openCloseChatInterface();
-    const chatRoom = new ChatRoom(chatService, roomId, talkInterface);
-    chatRoom.init();
-  } catch {
-    Swal.fire({ icon: 'error', title: '無法建立聊天室' });
-  }
+// ================== Check All ==================
+const checkAllEl = document.getElementById('checkAll');
+if (checkAllEl) {
+  checkAllEl.addEventListener('change', e => {
+    cartItems = cartItems.map(i => ({ ...i, checked: e.target.checked }));
+    saveState();
+    renderCart();
+    updateSummary();
+  });
 }
 
 // ================== Summary ==================
@@ -744,7 +238,6 @@ function updateSummary() {
   cartItems.filter(i => i.checked).forEach(i => {
     const sum = i.price * i.qty;
     total += sum;
-
     tbody.innerHTML += `
       <tr>
         <td>${i.name}</td>
@@ -754,6 +247,91 @@ function updateSummary() {
     `;
   });
 
-  document.getElementById('grand-total').textContent =
-    `NT$ ${total.toLocaleString()}`;
+  const totalEl = document.getElementById('grand-total');
+  if (totalEl) totalEl.textContent = `NT$ ${total.toLocaleString()}`;
+}
+function showCheckoutLoading() {
+  Swal.fire({
+    title: '訂單處理中',
+    text: '請稍候，請勿重新整理或重複點擊',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+}
+
+function closeCheckoutLoading() {
+  Swal.close();
+}
+
+// ================== Chat ==================
+async function openChat(productId) {
+  try {
+    const res = await chatService.createRoom(productId);
+    const roomId = res?.data?.roomId;
+    if (!roomId) throw new Error();
+    openCloseChatInterface();
+    chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+    chatRoom.init();
+  } catch {
+    Swal.fire({ icon: 'error', title: '無法建立聊天室' });
+  }
+}
+const checkoutBtn = document.getElementById('checkout-btn');
+if (checkoutBtn) {
+  checkoutBtn.addEventListener('click', async () => {
+
+    // ===== 防重複送單 =====
+    if (isCheckingOut) return;
+
+    const selected = cartItems.filter(i => i.checked);
+    if (selected.length === 0) {
+      Swal.fire('請先勾選要結帳的商品');
+      return;
+    }
+
+    const checkOrderRules = document.getElementById('checkOrderRules');
+    if (checkOrderRules && !checkOrderRules.checked) {
+      Swal.fire({
+        icon: 'warning',
+        title: '請同意訂購規則後再結帳'
+      });
+      return;
+    }
+
+    try {
+      isCheckingOut = true;
+      checkoutBtn.disabled = true;
+      showCheckoutLoading();
+
+      const cartItemIds = selected.map(i => i.id);
+
+      await backendService.createOrder(cartItemIds);
+
+      closeCheckoutLoading();
+      Swal.fire({
+        icon: 'success',
+        title: '訂單建立成功！',
+        text: '請至「我的購買清單」查看訂單',
+        confirmButtonText: '確定'
+      });
+
+      // 可選：成功後刷新購物車
+      await initCartFromAPI();
+
+    } catch (err) {
+      console.error('建立訂單失敗', err);
+      closeCheckoutLoading();
+      Swal.fire({
+        icon: 'error',
+        title: '訂單建立失敗',
+        text: '請稍後再試'
+      });
+    } finally {
+      isCheckingOut = false;
+      checkoutBtn.disabled = false;
+    }
+  });
 }
