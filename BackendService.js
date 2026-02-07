@@ -381,19 +381,27 @@ class BackendService {
             return Promise.reject(error);
         }
     }
-    async createOrder(cartItemsId) {
+    async createOrder(cartItems) {
         try {
+            const payload = {
+            cart_item_ids: cartItems.map(item => ({
+                cart_item_id: Number(item.id),
+                quantity: Number(item.qty)
+            }))
+            };
+
             const response = await axios.post(
-                `${this.baseUrl}/api/order/create`,
-                // 將參數名稱從 { cartItemsId } 改為 { "cartItem_ids": cartItemsId }
-                { "cartItem_ids": cartItemsId } 
+            `${this.baseUrl}/api/order/create`,
+            payload
             );
+
             return response;
         } catch (error) {
-            console.error("發生錯誤", error);
+            console.error('建立訂單失敗', error);
             return Promise.reject(error);
         }
     }
+
     async getBuyerOrders() {
         try {
             const response = await axios.get(`${this.baseUrl}/api/order/buyer`, { headers: { "Cache-Control": "no-cache" } });

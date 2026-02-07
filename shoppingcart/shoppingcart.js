@@ -306,9 +306,12 @@ if (checkoutBtn) {
       checkoutBtn.disabled = true;
       showCheckoutLoading();
 
-      const cartItemIds = selected.map(i => i.id);
-
-      await backendService.createOrder(cartItemIds);
+      await backendService.createOrder(
+        selected.map(i => ({
+          id: i.id,
+          qty: i.qty
+        }))
+      );
 
       closeCheckoutLoading();
       Swal.fire({
