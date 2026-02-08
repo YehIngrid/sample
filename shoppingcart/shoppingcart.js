@@ -146,8 +146,8 @@ function renderCart() {
           <p class="text-muted multiline-ellipsis" style="font-size: 12px;">${item.description}</p>
         </div>
         <div class="text-end">
-          <div class="fw-bold">
-            NT$ ${item.price.toLocaleString()}
+          <div>
+            <p class="fw-bold">NT$ ${item.price.toLocaleString()}</p>
           </div>
           <input type="number" class="form-control form-control-sm qty-input"
                 min="1" value="${item.qty}">
