@@ -139,7 +139,7 @@ function renderCart() {
           </div>
           <input type="checkbox" class="form-check-input me-3 cart-check" ${item.checked ? 'checked' : ''}>
       </div>
-      <div class="d-flex align-items-start">
+      <div class="d-flex align-items-start" style="margin-right: 2px;">
         <img src="${item.img}" class="item-thumb me-2">
         <div class="flex-grow-1">
           <h6>${item.name}</h6>
@@ -147,19 +147,24 @@ function renderCart() {
         </div>
         <div class="text-end">
           <div>
-            <p class="fw-bold">NT$ ${item.price.toLocaleString()}</p>
+            NT$ ${item.price.toLocaleString()}
           </div>
           <input type="number" class="form-control form-control-sm qty-input"
                 min="1" value="${item.qty}">
         </div>
       </div>
-      <div class="d-flex justify-content-end gap-2">
+      <div class="mt-1 d-flex justify-content-end gap-2">
         <button class="btn btn-sm btn-primary btn-look">查看商品</button>
         <button class="btn btn-sm btn-warning btn-talk">聯絡賣家</button>
         <button class="btn btn-sm btn-light btn-remove">移除</button>
       </div>
     `;
     cartList.appendChild(el);
+    document.querySelectorAll('.cart-check').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        onItemCheckChange(Number(cb.dataset.id), cb.checked);
+      });
+    });
   });
 }
 
@@ -396,4 +401,17 @@ if (clearAllBtn) {
       Swal.fire('清空失敗');
     }
   });
+}
+function onItemCheckChange(itemId, checked) {
+  const item = cartItems.find(i => i.id === itemId);
+  item.checked = checked;
+
+  if (checked) {
+    const sellerId = item.sellerId;
+    cartItems.forEach(i => {
+      if (i.sellerId !== sellerId) i.checked = false;
+    });
+  }
+
+  renderCart();
 }
