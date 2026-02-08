@@ -141,12 +141,12 @@ function renderCart() {
       </div>
       <div class="d-flex align-items-start" style="margin-right: 2px;">
         <img src="${item.img}" class="item-thumb me-2">
-        <div class="flex-grow-1">
+        <div class="flex-grow-1" style="min-width: 90px;">
           <h6>${item.name}</h6>
           <p class="text-muted ellipsis" style="font-size: 12px;">${item.description}</p>
         </div>
         <div class="text-end">
-          <div>
+          <div style="font-size: 14px; font-weight: bold;">
             NT$ ${item.price.toLocaleString()}
           </div>
           <input type="number" class="form-control form-control-sm qty-input"

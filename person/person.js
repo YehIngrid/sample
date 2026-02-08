@@ -203,23 +203,81 @@ logoutMobileButton.addEventListener('click', function() {
     }
   });
 });
- // 左側選單切換右側 section
-  document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
-    item.addEventListener('click', function (e) {
-      e.preventDefault();
-      resetOrderView();
-      // 隱藏全部
-      document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
-      // 顯示目標
-      const target = this.getAttribute('data-target');
-      const pane = document.getElementById(target);
-      if (pane) pane.classList.remove('d-none');
-      // 更新 active 樣式
-      document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
-      this.classList.add('active');
-    });
+// 修改原本的 list-group-item 監聽器
+document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
+  item.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = this.getAttribute('data-target');
+    
+    // 1. 更新 URL 參數，但不重新整理頁面
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?page=' + target;
+    window.history.pushState({ path: newUrl }, '', newUrl);
+    
+    // 2. 呼叫統一的路由處理函式
+    handleRouting();
   });
+});
+async function handleRouting() {
+  const params = new URLSearchParams(window.location.search);
+  const page = params.get('page') || 'account'; // 預設顯示帳戶中心
 
+  // 1. 切換 UI 顯示狀態
+  resetOrderView(); // 呼叫您原本定義的重置函式，確保詳情頁會被收起
+  
+  // 隱藏所有區塊並移除選單 active 狀態
+  document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
+  document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
+
+  // 顯示目標區塊
+  const targetPane = document.getElementById(page);
+  if (targetPane) {
+    targetPane.classList.remove('d-none');
+  }
+
+  // 找到對應的選單項目並加上 active
+  const activeLink = document.querySelector(`.list-group-item[data-target="${page}"]`);
+  if (activeLink) {
+    activeLink.classList.add('active');
+  }
+
+  // 2. 根據不同頁面發送 API 請求
+  if (!backendService) backendService = new BackendService();
+
+  try {
+    switch (page) {
+      case 'products': // 我的商品
+        backendService.getMyItems(
+          (response) => {
+            const list = response?.data?.commodities ?? [];
+            renderTable(list);
+            renderCards(list);
+          },
+          (err) => console.error('讀取商品失敗:', err)
+        );
+        break;
+
+      case 'sellProducts': // 我賣出的商品 (賣家訂單)
+        const sellRes = await backendService.getSellerOrders();
+        const sellList = sellRes?.data?.data ?? [];
+        renderSellerOrders(sellList);
+        renderSellerCards(sellList);
+        break;
+
+      case 'buyProducts': // 我買到的商品 (買家訂單)
+        const buyRes = await backendService.getBuyerOrders();
+        const buyList = buyRes?.data?.data ?? [];
+        renderBuyerOrders(buyList);
+        renderBuyerCards(buyList);
+        break;
+
+      case 'account':
+        // 帳戶中心通常顯示 localStorage 資料，已在全域邏輯處理完成
+        break;
+    }
+  } catch (error) {
+    console.error(`路由 [${page}] 載入資料失敗:`, error);
+  }
+}
 function resetOrderView() {
   // 賣家
   const sellSection = document.getElementById('sellProducts');
@@ -263,68 +321,80 @@ document.getElementById('photo').addEventListener('change', function (e) {
   };
   reader.readAsDataURL(file);
 });
+// 在 DOMContentLoaded 裡面加入
 document.addEventListener('DOMContentLoaded', () => {
   backendService = new BackendService();
+  
+  // 初始化：根據當前 URL 決定顯示哪個頁面
+  handleRouting();
 
-  backendService.getMyItems(
-    (response) => {
-      const list = response?.data?.commodities ?? [];
-      renderTable(list);
-      renderCards(list);     // 手機用的卡片
-      console.log(list);
-    },
-    (errorMessage) => {
-      console.error(errorMessage);
-      renderTable([]);
-      renderCards([]);
-    }
-  );
-  // const res = await backendService.getSellerOrders();
+  // 監聽瀏覽器上一頁/下一頁
+  window.onpopstate = function() {
+    handleRouting();
+  };
+});
+// document.addEventListener('DOMContentLoaded', () => {
+//   backendService = new BackendService();
 
-  // 事件委派（表格）
-  document.querySelector('#products tbody')?.addEventListener('click', onRowAction);
-  // 事件委派（卡片）
-  document.querySelector('#product-cards')?.addEventListener('click', onCardAction);
+//   backendService.getMyItems(
+//     (response) => {
+//       const list = response?.data?.commodities ?? [];
+//       renderTable(list);
+//       renderCards(list);     // 手機用的卡片
+//       console.log(list);
+//     },
+//     (errorMessage) => {
+//       console.error(errorMessage);
+//       renderTable([]);
+//       renderCards([]);
+//     }
+//   );
+//   // const res = await backendService.getSellerOrders();
+
+//   // 事件委派（表格）
+//   document.querySelector('#products tbody')?.addEventListener('click', onRowAction);
+//   // 事件委派（卡片）
+//   document.querySelector('#product-cards')?.addEventListener('click', onCardAction);
   
   
-  // 讀取賣家訂單
-});
-document.addEventListener('DOMContentLoaded', async () => {
-  backendService = new BackendService();
-  try {
-    const response = await backendService.getSellerOrders();
-    const list = response?.data?.data ?? [];
-    renderSellerOrders(list);
-    renderSellerCards(list);
-  } catch (error) {
-    renderSellerOrders([]);
-    renderSellerCards([]);
-    Swal.fire({
-      title:"錯誤", 
-      text: error, 
-      icon: 'error'
-    })
-  }
-  document.querySelector('#sellProducts tbody')?.addEventListener('click', onRowAction);
-  document.querySelector('#sell-product')?.addEventListener('click', onCardAction);
+//   // 讀取賣家訂單
+// });
+// document.addEventListener('DOMContentLoaded', async () => {
+//   backendService = new BackendService();
+//   try {
+//     const response = await backendService.getSellerOrders();
+//     const list = response?.data?.data ?? [];
+//     renderSellerOrders(list);
+//     renderSellerCards(list);
+//   } catch (error) {
+//     renderSellerOrders([]);
+//     renderSellerCards([]);
+//     Swal.fire({
+//       title:"錯誤", 
+//       text: error, 
+//       icon: 'error'
+//     })
+//   }
+//   document.querySelector('#sellProducts tbody')?.addEventListener('click', onRowAction);
+//   document.querySelector('#sell-product')?.addEventListener('click', onCardAction);
 
-  try {
-    const response = await backendService.getBuyerOrders();
-    const list = response?.data?.data ?? [];
-    renderBuyerOrders(list);
-    renderBuyerCards(list);
-  } catch (error) {
-    renderBuyerOrders([]);
-    renderBuyerCards([]);
-    Swal.fire({
-      title:"錯誤", 
-      text: error, 
-      icon: 'error'
-    })
-  }
-  document.querySelector('#buyProducts tbody')?.addEventListener('click', onRowAction);
-  document.querySelector('#buy-product')?.addEventListener('click', onCardAction);
-});
+//   try {
+//     const response = await backendService.getBuyerOrders();
+//     const list = response?.data?.data ?? [];
+//     renderBuyerOrders(list);
+//     renderBuyerCards(list);
+//   } catch (error) {
+//     renderBuyerOrders([]);
+//     renderBuyerCards([]);
+//     Swal.fire({
+//       title:"錯誤", 
+//       text: error, 
+//       icon: 'error'
+//     })
+//   }
+//   document.querySelector('#buyProducts tbody')?.addEventListener('click', onRowAction);
+//   document.querySelector('#buy-product')?.addEventListener('click', onCardAction);
+// });
 
 // ===== 工具 =====
 const order_STATUS_MAP = {
