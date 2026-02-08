@@ -172,8 +172,8 @@ cartList.addEventListener('change', async e => {
   if (!item) return;
 
   // 處理勾選框
-  if (target.classList.contains('cart-check')) {
-    onItemCheckChange(itemId, target.checked);
+  if (e.target.classList.contains('cart-check')) {
+    onItemCheckChange(e.target.dataset.id, e.target.checked);
     return; // 已經在 onItemCheckChange 裡 render 了，直接返回
   }
   
