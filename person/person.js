@@ -223,46 +223,56 @@ document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
 
 // 2. 統一的 handleAction (放在全域)
 async function handleAction(action, id, rowOrCardEl) {
+  // 1. 編輯商品
   if (action === '編輯商品') {
-    openEditDrawer(id, rowOrCardEl);
-  } else if (action === 'check') {
-    window.open(`../product/product.html?id=${encodeURIComponent(id)}`, '_blank');
-  } else if (action === 'checkInfo' || action === '查看') {
-    // 判斷是賣家還是買家
-    const isSeller = !!rowOrCardEl.closest('#sellProducts');
-    const targetPage = isSeller ? 'sellOrderDetail' : 'buyerOrderDetail';
+    if (typeof openEditDrawer === 'function') openEditDrawer(id, rowOrCardEl);
+    return;
+  }
 
-    // 更新網址並觸發路由
+  // 2. 查看商品詳情 (公開頁面)
+  if (action === 'check') {
+    window.open(`../product/product.html?id=${encodeURIComponent(id)}`, '_blank');
+    return;
+  }
+
+  // 3. 查看訂單資訊 (進入詳情頁面)
+  if (action === 'checkInfo' || action === '查看') {
+    // 這裡改用 ID 判斷最準確，不依賴 DOM 層級
+    const isSellerSide = !!document.getElementById('sellProducts').contains(rowOrCardEl);
+    const targetPage = isSellerSide ? 'sellOrderDetail' : 'buyerOrderDetail';
+
     const newUrl = new URL(window.location.href);
     newUrl.searchParams.set('page', targetPage);
     newUrl.searchParams.set('orderId', id);
     window.history.pushState({ page: targetPage, orderId: id }, '', newUrl);
 
     handleRouting();
-  } else if (action === 'cancel') {
-    if (confirm('確定要取消訂單嗎?')) {
-      try {
-        await backendService.cancelMyOrder(id);
-        Swal.fire({ title: '已取消訂單', icon: 'success' }).then(() => handleRouting());
-      } catch (err) { Swal.fire({ title: '失敗', icon: 'error', text: err }); }
-    }
-  } else if (action === '接受訂單') {
-    try {
+    return;
+  }
+
+  // 4. API 動作 (取消、接受、出貨、完成)
+  try {
+    let successMsg = "";
+    if (action === 'cancel') {
+      if (!confirm('確定要取消訂單嗎?')) return;
+      await backendService.cancelMyOrder(id);
+      successMsg = "訂單已取消";
+    } else if (action === '接受訂單') {
       await backendService.sellerAcceptOrders(id);
-      Swal.fire({ title: '已同意訂單', icon: 'success' }).then(() => handleRouting());
-    } catch (err) { Swal.fire({ title: '失敗', icon: 'error', text: err }); }
-  } else if (action === '即將出貨') {
-    try {
+      successMsg = "已接受訂單";
+    } else if (action === '即將出貨') {
       await backendService.sellerDeliveredOrders(id);
-      Swal.fire({ title: '已登記出貨', icon: 'success' }).then(() => handleRouting());
-    } catch (err) { Swal.fire({ title: '失敗', icon: 'error', text: err }); }
-  } else if (action === '成功取貨') {
-    try {
+      successMsg = "已更新為出貨狀態";
+    } else if (action === '成功取貨') {
       await backendService.buyerCompletedOrders(id);
-      Swal.fire({ title: "交易完成！", icon: "success" }).then(() => handleRouting());
-    } catch (err) { Swal.fire({ title: '失敗', icon: 'error', text: err }); }
-  } else if (action === 'delete') {
-    // ... 原本的刪除邏輯 ...
+      successMsg = "交易已完成！";
+    }
+
+    if (successMsg) {
+      Swal.fire({ title: successMsg, icon: 'success' }).then(() => handleRouting());
+    }
+  } catch (err) {
+    Swal.fire({ title: '操作失敗', text: err, icon: 'error' });
   }
 }
 
@@ -272,42 +282,43 @@ async function handleRouting() {
   const page = params.get('page') || 'account';
   const orderId = params.get('orderId');
 
-  // A. 重置所有顯示狀態
-  resetOrderView(); 
+  // A. 重置：隱藏所有大區塊，移除所有 active 樣式
   document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
   document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
 
-  // B. 處理詳情頁
+  // B. 處理「詳情頁」 (sellOrderDetail / buyerOrderDetail)
   if (page === 'sellOrderDetail' || page === 'buyerOrderDetail') {
     const isSell = (page === 'sellOrderDetail');
     const parentId = isSell ? 'sellProducts' : 'buyProducts';
-    const tableId = isSell ? 'sellTable' : 'buyTable';
-    const cardId = isSell ? 'sell-product' : 'buy-product';
+    
+    // 顯示父層區塊
+    const parentSection = document.getElementById(parentId);
+    parentSection.classList.remove('d-none');
 
-    document.getElementById(parentId).classList.remove('d-none');
-    document.getElementById(tableId).style.setProperty('display', 'none', 'important');
-    document.getElementById(cardId).style.setProperty('display', 'none', 'important');
+    // 強制隱藏該區塊下的「列表表格」與「手機卡片容器」
+    // 使用隱藏標記來確保不會跟詳情頁衝突
+    parentSection.querySelectorAll('.order-list-container').forEach(el => el.classList.add('d-none'));
+    
+    // 顯示詳情內容
     document.getElementById(page).classList.remove('d-none');
 
     if (orderId) getDetail(orderId);
     return;
   }
 
-  // C. 處理一般頁面
+  // C. 處理「一般分頁」 (products, sellProducts, buyProducts, account)
   const targetPane = document.getElementById(page);
   if (targetPane) {
     targetPane.classList.remove('d-none');
-    // 恢復列表與手機卡片的顯示 (因為可能從詳情頁點返回)
-    const table = targetPane.querySelector('table')?.closest('div');
-    if (table) table.style.display = 'block';
-    const cards = targetPane.querySelector('.row.g-3');
-    if (cards) cards.style.setProperty('display', 'flex', 'important');
+    // 恢復該區塊下的列表容器顯示 (確保表格/手機卡片能出現)
+    targetPane.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
   }
 
+  // 更新左側選單 UI
   const activeLink = document.querySelector(`.list-group-item[data-target="${page}"]`);
   if (activeLink) activeLink.classList.add('active');
 
-  // D. 根據分頁抓取資料
+  // D. 抓取資料
   if (!backendService) backendService = new BackendService();
   try {
     if (page === 'products') {
@@ -776,137 +787,6 @@ function onCardAction(e) {
 
   handleAction(action, id, card);
 }
-
-// ===== 共用：按鈕動作（表格/卡片都走這裡） =====
-// async function handleAction(action, id, rowOrCardEl) {
-//   if (action === '編輯商品') {
-//     console.log('編輯商品：', id);
-//     openEditDrawer(id, rowOrCardEl);
-//     // TODO: 打開編輯頁 / Modal
-//   } else if (action === 'check') {
-//     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
-//     window.open(url);
-//   } else if (action === 'cancel') {
-//     if (confirm('確定要取消訂單嗎?')) {
-//       try {
-//         await backendService.cancelMyOrder(id);
-//         Swal.fire({
-//           title: '已取消訂單，系統將自動通知買家', 
-//           icon: 'success',
-//           confirmButtonText: "ok",
-//         }).then(async ()=>{
-//           const res = await backendService.getBuyerOrders();
-//           renderBuyerCards(res?.data?.data);
-//           renderBuyerOrders(res?.data?.data);
-//         })
-//       } catch (error) {
-//         Swal.fire({
-//           title: '訂單取消失敗，請稍後再試', 
-//           icon: 'error',
-//           text: error
-//         });
-//         return;
-//       } 
-//     }
-//   } else if (action === '接受訂單') {
-//     try {
-//       await backendService.sellerAcceptOrders(id);
-//       Swal.fire({
-//         title: '已同意訂單，系統將自動通知買家', 
-//         icon: 'success',
-//       })
-//       window.location.reload();
-//     } catch (error) {
-//       Swal.fire({
-//         title: '訂單同意失敗，請稍後再試', 
-//         icon: 'error',
-//         text: error
-//       })
-//     }
-//   } else if (action === '即將出貨') {
-//     try {
-//       await backendService.sellerDeliveredOrders(id);
-//       Swal.fire({
-//         title: '請在約定的時間與地點與買家進行交易', 
-//         icon: 'success',
-//       }).then(() => {
-//         window.location.reload();
-//       })
-//     } catch (error) {
-//       Swal.fire({
-//         title: '系統登記出貨失敗，請稍後再試', 
-//         icon: 'error',
-//         text: error
-//       })
-//     }
-//   } else if (action === '成功取貨') {
-//     try {
-//       await backendService.buyerCompletedOrders(id);
-//       Swal.fire({
-//         title: "感謝您使用拾貨寶庫進行交易! 已通知賣家您已確認商品正確無誤",
-//         text: "可以對賣家進行此次的交易評分",
-//         icon: "success",
-//       }).then(() => {
-//         window.location.reload();
-//       });
-//     } catch (error) {
-//       Swal.fire({
-//         title: '系統登記取貨失敗，請稍後再試', 
-//         icon: 'error',
-//         text: error
-//       })
-//     }
-//   } else if (action === 'checkInfo' || action === '查看') {
-//     const isSeller = !!el.closest('#sellProducts');
-    
-//     if (isSeller) {
-//       // 1. 隱藏列表：電腦表格 + 手機卡片容器
-//       document.getElementById('sellTable').classList.add('d-none');
-//       document.getElementById('sell-product').classList.add('d-none');
-      
-//       // 2. 顯示詳情
-//       document.getElementById('sellOrderDetail').classList.remove('d-none');
-      
-//       // 載入資料的邏輯...
-//       // loadSellerOrderDetail(id);
-//       getDetail(id);
-//     } else {
-//       // 1. 隱藏列表
-//       document.getElementById('buyTable').classList.add('d-none');
-//       document.getElementById('buy-product').classList.add('d-none');
-      
-//       // 2. 顯示詳情
-//       document.getElementById('buyerOrderDetail').classList.remove('d-none');
-      
-//       // 載入資料的邏輯...
-//       getDetail(id);
-//     }
-// } else if (action === 'delete') {
-//     Swal.fire({
-//       title: "確定要下架並刪除此商品嗎？",
-//       text: "無法再查看商品詳細資訊",
-//       icon: "warning",
-//       showCancelButton: true,
-//       confirmButtonColor: "#3085d6",
-//       cancelButtonColor: "#d33",
-//       confirmButtonText: "是，我要下架",
-//       cancelButtonText: "取消"
-//     }).then((result) => {
-//       if (result.isConfirmed) {
-//         backendService.deleteMyItems(id,
-//           () => {
-//             Swal.fire({ icon: "success", title: "商品下架成功" });
-//             // 同時移除表格列與卡片
-//             removeItemDom(id);
-//           },
-//           (err) => alert('刪除失敗：' + err)
-//         );
-//       }
-//     });
-//   }
-//   // person.js
-
-// }
 // ===== 共用：按鈕動作（表格/卡片都走這裡） =====
 async function getDetail(id) {
   try {
