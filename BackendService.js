@@ -385,6 +385,7 @@ class BackendService {
         try {
             const payload = {
                 cartItems_ids : cartItems.map(item => {
+                    let obj = {};
                     obj[item.id] = item.qty;
                     return obj;
                 })
