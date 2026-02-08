@@ -259,3 +259,7 @@ text-overflow: ellipsis;
   font-size: 14px;
   color: var(--bs-secondary-color);
 }
+small {
+  font-size: 14px;
+  color: var(--bs-secondary-color);
+}
