@@ -223,23 +223,13 @@ document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
 
 // 2. 統一的 handleAction (放在全域)
 async function handleAction(action, id, rowOrCardEl) {
-  // 1. 編輯商品
-  if (action === '編輯商品') {
-    if (typeof openEditDrawer === 'function') openEditDrawer(id, rowOrCardEl);
-    return;
-  }
+  // 找出這個點擊動作是在哪個大分頁發生的
+  const parentSection = rowOrCardEl.closest('.content-section');
+  const sectionId = parentSection ? parentSection.id : '';
 
-  // 2. 查看商品詳情 (公開頁面)
-  if (action === 'check') {
-    window.open(`../product/product.html?id=${encodeURIComponent(id)}`, '_blank');
-    return;
-  }
-
-  // 3. 查看訂單資訊 (進入詳情頁面)
   if (action === 'checkInfo' || action === '查看') {
-    // 這裡改用 ID 判斷最準確，不依賴 DOM 層級
-    const isSellerSide = !!document.getElementById('sellProducts').contains(rowOrCardEl);
-    const targetPage = isSellerSide ? 'sellOrderDetail' : 'buyerOrderDetail';
+    // 根據所在的 sectionId 決定去哪個詳情頁
+    const targetPage = (sectionId === 'sellProducts') ? 'sellOrderDetail' : 'buyerOrderDetail';
 
     const newUrl = new URL(window.location.href);
     newUrl.searchParams.set('page', targetPage);
@@ -249,76 +239,69 @@ async function handleAction(action, id, rowOrCardEl) {
     handleRouting();
     return;
   }
-
-  // 4. API 動作 (取消、接受、出貨、完成)
+  
+  // 處理 API 動作 (cancel, 接受訂單, 即將出貨, 成功取貨)
   try {
-    let successMsg = "";
     if (action === 'cancel') {
       if (!confirm('確定要取消訂單嗎?')) return;
       await backendService.cancelMyOrder(id);
-      successMsg = "訂單已取消";
     } else if (action === '接受訂單') {
       await backendService.sellerAcceptOrders(id);
-      successMsg = "已接受訂單";
     } else if (action === '即將出貨') {
       await backendService.sellerDeliveredOrders(id);
-      successMsg = "已更新為出貨狀態";
     } else if (action === '成功取貨') {
       await backendService.buyerCompletedOrders(id);
-      successMsg = "交易已完成！";
     }
-
-    if (successMsg) {
-      Swal.fire({ title: successMsg, icon: 'success' }).then(() => handleRouting());
-    }
+    
+    Swal.fire({ title: '操作成功', icon: 'success' }).then(() => handleRouting());
   } catch (err) {
-    Swal.fire({ title: '操作失敗', text: err, icon: 'error' });
+    Swal.fire({ title: '失敗', text: err, icon: 'error' });
   }
 }
-
 // 3. 核心路由處理
+// ==========================================
+// 1. 核心路由處理 (handleRouting)
+// ==========================================
 async function handleRouting() {
   const params = new URLSearchParams(window.location.search);
   const page = params.get('page') || 'account';
   const orderId = params.get('orderId');
 
-  // A. 重置：隱藏所有大區塊，移除所有 active 樣式
+  // 初始化 UI
+  resetOrderView(); 
   document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
   document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
 
-  // B. 處理「詳情頁」 (sellOrderDetail / buyerOrderDetail)
+  // A. 處理詳情頁面 (進入賣家或買家訂單詳情)
   if (page === 'sellOrderDetail' || page === 'buyerOrderDetail') {
-    const isSell = (page === 'sellOrderDetail');
-    const parentId = isSell ? 'sellProducts' : 'buyProducts';
+    const isSellDetail = (page === 'sellOrderDetail');
+    const parentId = isSellDetail ? 'sellProducts' : 'buyProducts';
     
-    // 顯示父層區塊
-    const parentSection = document.getElementById(parentId);
-    parentSection.classList.remove('d-none');
-
-    // 強制隱藏該區塊下的「列表表格」與「手機卡片容器」
-    // 使用隱藏標記來確保不會跟詳情頁衝突
-    parentSection.querySelectorAll('.order-list-container').forEach(el => el.classList.add('d-none'));
-    
-    // 顯示詳情內容
-    document.getElementById(page).classList.remove('d-none');
-
-    if (orderId) getDetail(orderId);
+    const parentSec = document.getElementById(parentId);
+    if (parentSec) {
+      parentSec.classList.remove('d-none');
+      // 隱藏該區塊內的「列表容器」(包含表格與手機卡片)
+      parentSec.querySelectorAll('.order-list-container').forEach(el => el.classList.add('d-none'));
+      // 顯示詳情
+      document.getElementById(page).classList.remove('d-none');
+      if (orderId) getDetail(orderId);
+    }
     return;
   }
 
-  // C. 處理「一般分頁」 (products, sellProducts, buyProducts, account)
+  // B. 處理一般分頁
   const targetPane = document.getElementById(page);
   if (targetPane) {
     targetPane.classList.remove('d-none');
-    // 恢復該區塊下的列表容器顯示 (確保表格/手機卡片能出現)
+    // 恢復該區塊內列表容器的顯示
     targetPane.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
   }
 
-  // 更新左側選單 UI
+  // 更新選單 active 狀態
   const activeLink = document.querySelector(`.list-group-item[data-target="${page}"]`);
   if (activeLink) activeLink.classList.add('active');
 
-  // D. 抓取資料
+  // C. 根據網址載入後端資料
   if (!backendService) backendService = new BackendService();
   try {
     if (page === 'products') {
@@ -335,9 +318,82 @@ async function handleRouting() {
       const list = res?.data?.data ?? [];
       renderBuyerOrders(list); renderBuyerCards(list);
     }
-  } catch (err) { console.error('API Error:', err); }
+  } catch (err) { console.error('API 載入失敗:', err); }
 }
 
+// ==========================================
+// 2. 統一 Action 處理 (handleAction)
+// ==========================================
+async function handleAction(action, id, rowOrCardEl) {
+  // 透過 closest 找尋當前動作所在的 section
+  const sectionId = rowOrCardEl.closest('.content-section')?.id;
+
+  if (action === '編輯商品') {
+    openEditDrawer(id, rowOrCardEl);
+  } else if (action === 'check') {
+    window.open(`../product/product.html?id=${encodeURIComponent(id)}`, '_blank');
+  } else if (action === 'checkInfo' || action === '查看') {
+    // 根據所在區塊決定詳情頁路徑
+    const targetPage = (sectionId === 'sellProducts') ? 'sellOrderDetail' : 'buyerOrderDetail';
+    
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set('page', targetPage);
+    newUrl.searchParams.set('orderId', id);
+    window.history.pushState({ page: targetPage, orderId: id }, '', newUrl);
+    
+    handleRouting();
+  } else {
+    // API 動作類
+    try {
+      if (action === 'cancel') {
+        if (!confirm('確定要取消嗎?')) return;
+        await backendService.cancelMyOrder(id);
+      } else if (action === '接受訂單') {
+        await backendService.sellerAcceptOrders(id);
+      } else if (action === '即將出貨') {
+        await backendService.sellerDeliveredOrders(id);
+      } else if (action === '成功取貨') {
+        await backendService.buyerCompletedOrders(id);
+      }
+      Swal.fire({ title: '操作成功', icon: 'success' }).then(() => handleRouting());
+    } catch (err) {
+      Swal.fire({ title: '失敗', text: err, icon: 'error' });
+    }
+  }
+}
+
+// ==========================================
+// 3. 事件初始化 (在 DOMContentLoaded 內)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // 左側選單點擊
+  document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = this.getAttribute('data-target');
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.set('page', target);
+      newUrl.searchParams.delete('orderId');
+      window.history.pushState({ page: target }, '', newUrl);
+      handleRouting();
+    });
+  });
+
+  // 監聽瀏覽器返回
+  window.onpopstate = () => handleRouting();
+
+  // 執行首次載入
+  handleRouting();
+});
+
+// 賣家/買家 返回列表按鈕改為：
+document.getElementById('backToSellTable')?.addEventListener('click', () => {
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.set('page', 'sellProducts');
+  newUrl.searchParams.delete('orderId');
+  window.history.pushState({}, '', newUrl);
+  handleRouting();
+});
 // 4. 返回按鈕監聽 (改為 URL 控制)
 document.getElementById('backToSellTable')?.addEventListener('click', () => {
   history.back(); // 直接回上一頁，或者用 pushState 回 sellProducts
