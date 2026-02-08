@@ -140,20 +140,20 @@ function renderCart() {
           <input type="checkbox" class="form-check-input me-3 cart-check" ${item.checked ? 'checked' : ''}>
       </div>
       <div class="d-flex align-items-start">
-        <img src="${item.img}" class="item-thumb me-3">
+        <img src="${item.img}" class="item-thumb me-2">
         <div class="flex-grow-1">
           <h6>${item.name}</h6>
           <p class="text-muted multiline-ellipsis" style="font-size: 12px;">${item.description}</p>
         </div>
         <div class="text-end">
-          <div>
+          <div class="fw-bold">
             NT$ ${item.price.toLocaleString()}
           </div>
           <input type="number" class="form-control form-control-sm qty-input"
                 min="1" value="${item.qty}">
         </div>
       </div>
-      <div class="mt-3 d-flex justify-content-end gap-2">
+      <div class="d-flex justify-content-end gap-2">
         <button class="btn btn-sm btn-primary btn-look">查看商品</button>
         <button class="btn btn-sm btn-warning btn-talk">聯絡賣家</button>
         <button class="btn btn-sm btn-light btn-remove">移除</button>
