@@ -256,3 +256,7 @@ main {
   -webkit-line-clamp: 3;
   overflow: hidden;
 }
+.warntext {
+  font-size: 14px;
+  color: var(--bs-secondary-color);
+}
