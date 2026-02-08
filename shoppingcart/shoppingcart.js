@@ -137,7 +137,7 @@ function renderCart() {
             <img src="${item.owner_photo}" class="owner-avatar me-2">
             <small>${item.owner_name}</small>
           </div>
-          <input type="checkbox" class="form-check-input me-3 cart-check" ${item.checked ? 'checked' : ''}>
+          <input type="checkbox" data-id="${item.id}" class="form-check-input me-3 cart-check" ${item.checked ? 'checked' : ''}>
       </div>
       <div class="d-flex align-items-start" style="margin-right: 2px;">
         <img src="${item.img}" class="item-thumb me-2">
@@ -160,11 +160,6 @@ function renderCart() {
       </div>
     `;
     cartList.appendChild(el);
-    document.querySelectorAll('.cart-check').forEach(cb => {
-      cb.addEventListener('change', (e) => {
-        onItemCheckChange(Number(cb.dataset.id), cb.checked);
-      });
-    });
   });
 }
 
@@ -176,10 +171,12 @@ cartList.addEventListener('change', async e => {
   const item = cartItems.find(i => i.id === row.dataset.id);
   if (!item) return;
 
-  if (e.target.classList.contains('cart-check')) {
-    item.checked = e.target.checked;
+  // 處理勾選框
+  if (target.classList.contains('cart-check')) {
+    onItemCheckChange(itemId, target.checked);
+    return; // 已經在 onItemCheckChange 裡 render 了，直接返回
   }
-
+  
   if (e.target.classList.contains('qty-input')) {
     const v = Math.max(1, Number(e.target.value));
     e.target.value = v;
@@ -403,15 +400,22 @@ if (clearAllBtn) {
   });
 }
 function onItemCheckChange(itemId, checked) {
-  const item = cartItems.find(i => i.id === itemId);
+  const item = cartItems.find(i => i.id === String(itemId));
+  if (!item) return;
+
   item.checked = checked;
 
+  // 如果你的需求是「一次只能勾選同一個賣家的商品」
   if (checked) {
-    const sellerId = item.sellerId;
+    const currentOwner = item.owner_name; // 使用現有的欄位
     cartItems.forEach(i => {
-      if (i.sellerId !== sellerId) i.checked = false;
+      if (i.owner_name !== currentOwner) {
+        i.checked = false;
+      }
     });
   }
 
+  saveState();
   renderCart();
+  updateSummary();
 }
