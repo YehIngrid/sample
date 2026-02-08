@@ -143,10 +143,10 @@ function renderCart() {
         <img src="${item.img}" class="item-thumb me-3">
         <div class="flex-grow-1">
           <h6>${item.name}</h6>
-          <p class="text-muted">${item.description}</p>
+          <p class="text-muted multiline-ellipsis" style="font-size: 12px;">${item.description}</p>
         </div>
         <div class="text-end">
-          <div class="ms-3">
+          <div>
             NT$ ${item.price.toLocaleString()}
           </div>
           <input type="number" class="form-control form-control-sm qty-input"
@@ -154,9 +154,9 @@ function renderCart() {
         </div>
       </div>
       <div class="mt-3 d-flex justify-content-end gap-2">
-        <button class="btn btn-sm btn-outline-primary btn-look">查看商品</button>
-        <button class="btn btn-sm btn-outline-secondary btn-talk">聯絡賣家</button>
-        <button class="btn btn-sm btn-outline-danger btn-remove">移除</button>
+        <button class="btn btn-sm btn-primary btn-look">查看商品</button>
+        <button class="btn btn-sm btn-warning btn-talk">聯絡賣家</button>
+        <button class="btn btn-sm btn-light btn-remove">移除</button>
       </div>
     `;
     cartList.appendChild(el);
