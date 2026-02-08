@@ -143,7 +143,7 @@ function renderCart() {
         <img src="${item.img}" class="item-thumb me-2">
         <div class="flex-grow-1">
           <h6>${item.name}</h6>
-          <p class="text-muted multiline-ellipsis" style="font-size: 12px;">${item.description}</p>
+          <p class="text-muted ellipsis" style="font-size: 12px;">${item.description}</p>
         </div>
         <div class="text-end">
           <div>

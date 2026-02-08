@@ -433,8 +433,8 @@ class ChatRoom {
             history.data.forEach(msg => this.renderMessage(msg));
             console.log('歷史訊息載入完成:', history);
         } else {
-            console.log('沒有歷史訊息');
-            document.getElementById('messagesContainer').innerHTML = '<p class="text-center text-muted mt-3">沒有歷史訊息</p>';
+            console.log('沒有訊息');
+            document.getElementById('messagesContainer').innerHTML = '<p class="text-center text-muted mt-3">沒有訊息</p>';
         }
         // this.chatMainLoader.classList.add('d-none');
         // SSE
@@ -605,12 +605,12 @@ class ChatRoom {
                 // 讓捲軸維持在原本看的那一則訊息上
                 container.scrollTop = container.scrollHeight - oldScrollHeight;
             } else {
-                console.log('沒有更多歷史訊息');
+                console.log('沒有更多對話紀錄');
                 // 可以選擇顯示一個提示，告訴使用者已經沒有更多訊息了
                 // 例如在頂端顯示一個小訊息「沒有更多歷史訊息了」
                 const noMoreMsg = document.createElement('div');
                 noMoreMsg.className = 'text-center text-muted nohistory';
-                noMoreMsg.textContent = '沒有更多歷史訊息了';
+                noMoreMsg.textContent = '沒有更多對話紀錄了';
                 container.prepend(noMoreMsg);
             }
         } catch (err) {
