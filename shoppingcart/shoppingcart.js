@@ -280,8 +280,8 @@ async function openChat(productId) {
     openCloseChatInterface();
     chatRoom = new ChatRoom(chatService, roomId, talkInterface);
     chatRoom.init();
-  } catch {
-    Swal.fire({ icon: 'error', title: '無法建立聊天室' });
+  } catch(error) {
+    Swal.fire({ icon: 'error', title: '無法建立聊天室', text: error.message || '請稍後再試' });
   }
 }
 const checkoutBtn = document.getElementById('checkout-btn');
