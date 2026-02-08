@@ -144,12 +144,6 @@ function renderCart() {
         <div class="flex-grow-1">
           <h6>${item.name}</h6>
           <p class="text-muted">${item.description}</p>
-
-          <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-dark btn-look btn-sm">查看</button>
-            <button class="btn btn-light btn-remove btn-sm">刪除</button>
-            <button class="btn btn-primary btn-talk btn-sm">聯絡賣家</button>
-          </div>
         </div>
         <div class="text-end">
           <div class="ms-3" style="color: var(--primary-color); font-weight: bold;">
@@ -158,6 +152,11 @@ function renderCart() {
           <input type="number" class="form-control form-control-sm qty-input"
                 min="1" value="${item.qty}" style="width:80px">
         </div>
+      </div>
+      <div class="mt-3 d-flex justify-content-end gap-2">
+        <button class="btn btn-sm btn-outline-primary btn-look">查看商品</button>
+        <button class="btn btn-sm btn-outline-secondary btn-talk">聯絡賣家</button>
+        <button class="btn btn-sm btn-outline-danger btn-remove">移除</button>
       </div>
     `;
     cartList.appendChild(el);
