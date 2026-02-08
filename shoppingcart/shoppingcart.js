@@ -132,23 +132,25 @@ function renderCart() {
     el.dataset.id = item.id;
 
     el.innerHTML = `
+      <div>
+          <div class="d-flex align-items-center mb-1">
+            <img src="${item.owner_photo}" class="owner-avatar me-2">
+            <small>${item.owner_name}</small>
+          </div>
+      </div>
       <div class="d-flex align-items-start">
         <input type="checkbox" class="form-check-input me-3 cart-check" ${item.checked ? 'checked' : ''}>
         <img src="${item.img}" class="item-thumb me-3">
         <div class="flex-grow-1">
           <h6>${item.name}</h6>
-          <div class="d-flex align-items-center mb-1">
-            <img src="${item.owner_photo}" class="owner-avatar me-2">
-            <small>${item.owner_name}</small>
-          </div>
           <p class="text-muted">${item.description}</p>
 
           <div class="d-flex align-items-center gap-2">
             <input type="number" class="form-control form-control-sm qty-input"
               min="1" value="${item.qty}" style="width:100px">
-            <button class="btn btn-dark btn-look">查看</button>
-            <button class="btn btn-light btn-remove">刪除</button>
-            <button class="btn btn-primary btn-talk">聯絡賣家</button>
+            <button class="btn btn-dark btn-look btn-sm">查看</button>
+            <button class="btn btn-light btn-remove btn-sm">刪除</button>
+            <button class="btn btn-primary btn-talk btn-sm">聯絡賣家</button>
           </div>
         </div>
         <div class="text-primary ms-3">
