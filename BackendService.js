@@ -384,10 +384,10 @@ class BackendService {
     async createOrder(cartItems) {
         try {
             const payload = {
-                cartItems_ids : cartItems.reduce((obj, item) => {
+                cartItems_ids : cartItems.map(item => {
                     obj[item.id] = item.qty;
                     return obj;
-                }, {})
+                })
             };
             const response = await axios.post(
             `${this.baseUrl}/api/order/create`,
