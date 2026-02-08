@@ -146,11 +146,11 @@ function renderCart() {
           <p class="text-muted">${item.description}</p>
         </div>
         <div class="text-end">
-          <div class="ms-3" style="color: var(--primary-color); font-weight: bold;">
+          <div class="ms-3">
             NT$ ${item.price.toLocaleString()}
           </div>
           <input type="number" class="form-control form-control-sm qty-input"
-                min="1" value="${item.qty}" style="width:80px">
+                min="1" value="${item.qty}">
         </div>
       </div>
       <div class="mt-3 d-flex justify-content-end gap-2">
