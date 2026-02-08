@@ -219,63 +219,62 @@ document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
 });
 async function handleRouting() {
   const params = new URLSearchParams(window.location.search);
-  const page = params.get('page') || 'account'; // 預設顯示帳戶中心
+  const page = params.get('page') || 'account';
+  const orderId = params.get('orderId');
 
-  // 1. 切換 UI 顯示狀態
-  resetOrderView(); // 呼叫您原本定義的重置函式，確保詳情頁會被收起
-  
-  // 隱藏所有區塊並移除選單 active 狀態
+  // 1. 初始化：隱藏所有大區塊
   document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
   document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
 
-  // 顯示目標區塊
+  // 2. 進入詳情頁邏輯 (sellOrderDetail 或 buyerOrderDetail)
+  if (page === 'sellOrderDetail' || page === 'buyerOrderDetail') {
+    const isSellDetail = (page === 'sellOrderDetail');
+    const parentSection = isSellDetail ? 'sellProducts' : 'buyProducts';
+    const tableId = isSellDetail ? 'sellTable' : 'buyTable';
+    const cardContainerId = isSellDetail ? 'sell-product' : 'buy-product';
+
+    // 顯示父層，但隱藏列表與手機卡片
+    document.getElementById(parentSection).classList.remove('d-none');
+    document.getElementById(tableId).style.setProperty('display', 'none', 'important');
+    document.getElementById(cardContainerId).style.setProperty('display', 'none', 'important');
+    
+    // 顯示詳情區塊
+    document.getElementById(page).classList.remove('d-none');
+    
+    if (orderId) getDetail(orderId);
+    return;
+  }
+
+  // 3. 進入一般分頁邏輯
   const targetPane = document.getElementById(page);
   if (targetPane) {
     targetPane.classList.remove('d-none');
+    // 如果是進入訂單列表，確保列表跟卡片是顯示的 (萬一剛從詳情頁回來)
+    const table = targetPane.querySelector('table')?.closest('div');
+    if (table) table.style.display = 'block'; 
+    // 也要恢復手機版卡片容器的顯示
+    const mobileCards = targetPane.querySelector('.row.g-3');
+    if (mobileCards) mobileCards.style.display = 'flex';
   }
 
-  // 找到對應的選單項目並加上 active
   const activeLink = document.querySelector(`.list-group-item[data-target="${page}"]`);
-  if (activeLink) {
-    activeLink.classList.add('active');
-  }
+  if (activeLink) activeLink.classList.add('active');
 
-  // 2. 根據不同頁面發送 API 請求
+  // 4. 根據頁面載入資料
   if (!backendService) backendService = new BackendService();
-
-  try {
-    switch (page) {
-      case 'products': // 我的商品
-        backendService.getMyItems(
-          (response) => {
-            const list = response?.data?.commodities ?? [];
-            renderTable(list);
-            renderCards(list);
-          },
-          (err) => console.error('讀取商品失敗:', err)
-        );
-        break;
-
-      case 'sellProducts': // 我賣出的商品 (賣家訂單)
-        const sellRes = await backendService.getSellerOrders();
-        const sellList = sellRes?.data?.data ?? [];
-        renderSellerOrders(sellList);
-        renderSellerCards(sellList);
-        break;
-
-      case 'buyProducts': // 我買到的商品 (買家訂單)
-        const buyRes = await backendService.getBuyerOrders();
-        const buyList = buyRes?.data?.data ?? [];
-        renderBuyerOrders(buyList);
-        renderBuyerCards(buyList);
-        break;
-
-      case 'account':
-        // 帳戶中心通常顯示 localStorage 資料，已在全域邏輯處理完成
-        break;
-    }
-  } catch (error) {
-    console.error(`路由 [${page}] 載入資料失敗:`, error);
+  if (page === 'products') {
+    backendService.getMyItems(res => {
+      const list = res?.data?.commodities ?? [];
+      renderTable(list); renderCards(list);
+    }, err => console.error(err));
+  } else if (page === 'sellProducts') {
+    const res = await backendService.getSellerOrders();
+    const list = res?.data?.data ?? [];
+    renderSellerOrders(list); renderSellerCards(list);
+  } else if (page === 'buyProducts') {
+    const res = await backendService.getBuyerOrders();
+    const list = res?.data?.data ?? [];
+    renderBuyerOrders(list); renderBuyerCards(list);
   }
 }
 function resetOrderView() {
@@ -715,15 +714,146 @@ function onCardAction(e) {
 }
 
 // ===== 共用：按鈕動作（表格/卡片都走這裡） =====
+// async function handleAction(action, id, rowOrCardEl) {
+//   if (action === '編輯商品') {
+//     console.log('編輯商品：', id);
+//     openEditDrawer(id, rowOrCardEl);
+//     // TODO: 打開編輯頁 / Modal
+//   } else if (action === 'check') {
+//     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
+//     window.open(url);
+//   } else if (action === 'cancel') {
+//     if (confirm('確定要取消訂單嗎?')) {
+//       try {
+//         await backendService.cancelMyOrder(id);
+//         Swal.fire({
+//           title: '已取消訂單，系統將自動通知買家', 
+//           icon: 'success',
+//           confirmButtonText: "ok",
+//         }).then(async ()=>{
+//           const res = await backendService.getBuyerOrders();
+//           renderBuyerCards(res?.data?.data);
+//           renderBuyerOrders(res?.data?.data);
+//         })
+//       } catch (error) {
+//         Swal.fire({
+//           title: '訂單取消失敗，請稍後再試', 
+//           icon: 'error',
+//           text: error
+//         });
+//         return;
+//       } 
+//     }
+//   } else if (action === '接受訂單') {
+//     try {
+//       await backendService.sellerAcceptOrders(id);
+//       Swal.fire({
+//         title: '已同意訂單，系統將自動通知買家', 
+//         icon: 'success',
+//       })
+//       window.location.reload();
+//     } catch (error) {
+//       Swal.fire({
+//         title: '訂單同意失敗，請稍後再試', 
+//         icon: 'error',
+//         text: error
+//       })
+//     }
+//   } else if (action === '即將出貨') {
+//     try {
+//       await backendService.sellerDeliveredOrders(id);
+//       Swal.fire({
+//         title: '請在約定的時間與地點與買家進行交易', 
+//         icon: 'success',
+//       }).then(() => {
+//         window.location.reload();
+//       })
+//     } catch (error) {
+//       Swal.fire({
+//         title: '系統登記出貨失敗，請稍後再試', 
+//         icon: 'error',
+//         text: error
+//       })
+//     }
+//   } else if (action === '成功取貨') {
+//     try {
+//       await backendService.buyerCompletedOrders(id);
+//       Swal.fire({
+//         title: "感謝您使用拾貨寶庫進行交易! 已通知賣家您已確認商品正確無誤",
+//         text: "可以對賣家進行此次的交易評分",
+//         icon: "success",
+//       }).then(() => {
+//         window.location.reload();
+//       });
+//     } catch (error) {
+//       Swal.fire({
+//         title: '系統登記取貨失敗，請稍後再試', 
+//         icon: 'error',
+//         text: error
+//       })
+//     }
+//   } else if (action === 'checkInfo' || action === '查看') {
+//     const isSeller = !!el.closest('#sellProducts');
+    
+//     if (isSeller) {
+//       // 1. 隱藏列表：電腦表格 + 手機卡片容器
+//       document.getElementById('sellTable').classList.add('d-none');
+//       document.getElementById('sell-product').classList.add('d-none');
+      
+//       // 2. 顯示詳情
+//       document.getElementById('sellOrderDetail').classList.remove('d-none');
+      
+//       // 載入資料的邏輯...
+//       // loadSellerOrderDetail(id);
+//       getDetail(id);
+//     } else {
+//       // 1. 隱藏列表
+//       document.getElementById('buyTable').classList.add('d-none');
+//       document.getElementById('buy-product').classList.add('d-none');
+      
+//       // 2. 顯示詳情
+//       document.getElementById('buyerOrderDetail').classList.remove('d-none');
+      
+//       // 載入資料的邏輯...
+//       getDetail(id);
+//     }
+// } else if (action === 'delete') {
+//     Swal.fire({
+//       title: "確定要下架並刪除此商品嗎？",
+//       text: "無法再查看商品詳細資訊",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonColor: "#3085d6",
+//       cancelButtonColor: "#d33",
+//       confirmButtonText: "是，我要下架",
+//       cancelButtonText: "取消"
+//     }).then((result) => {
+//       if (result.isConfirmed) {
+//         backendService.deleteMyItems(id,
+//           () => {
+//             Swal.fire({ icon: "success", title: "商品下架成功" });
+//             // 同時移除表格列與卡片
+//             removeItemDom(id);
+//           },
+//           (err) => alert('刪除失敗：' + err)
+//         );
+//       }
+//     });
+//   }
+//   // person.js
+
+// }
+// ===== 共用：按鈕動作（表格/卡片都走這裡） =====
 async function handleAction(action, id, rowOrCardEl) {
   if (action === '編輯商品') {
     console.log('編輯商品：', id);
     openEditDrawer(id, rowOrCardEl);
-    // TODO: 打開編輯頁 / Modal
   } else if (action === 'check') {
+    // 查看商品公開頁面
     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
     window.open(url, '_blank');
   } else if (action === 'cancel') {
+    // 取消訂單邏輯
     if (confirm('確定要取消訂單嗎?')) {
       try {
         await backendService.cancelMyOrder(id);
@@ -731,101 +861,55 @@ async function handleAction(action, id, rowOrCardEl) {
           title: '已取消訂單，系統將自動通知買家', 
           icon: 'success',
           confirmButtonText: "ok",
-        }).then(async ()=>{
-          const res = await backendService.getBuyerOrders();
-          renderBuyerCards(res?.data?.data);
-          renderBuyerOrders(res?.data?.data);
-        })
-      } catch (error) {
-        Swal.fire({
-          title: '訂單取消失敗，請稍後再試', 
-          icon: 'error',
-          text: error
+        }).then(async () => {
+          // 重新載入當前頁面資料
+          handleRouting(); 
         });
-        return;
+      } catch (error) {
+        Swal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
       } 
     }
   } else if (action === '接受訂單') {
     try {
       await backendService.sellerAcceptOrders(id);
-      Swal.fire({
-        title: '已同意訂單，系統將自動通知買家', 
-        icon: 'success',
-      })
-      window.location.reload();
+      Swal.fire({ title: '已同意訂單', icon: 'success' }).then(() => handleRouting());
     } catch (error) {
-      Swal.fire({
-        title: '訂單同意失敗，請稍後再試', 
-        icon: 'error',
-        text: error
-      })
+      Swal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
     }
   } else if (action === '即將出貨') {
     try {
       await backendService.sellerDeliveredOrders(id);
-      Swal.fire({
-        title: '請在約定的時間與地點與買家進行交易', 
-        icon: 'success',
-      }).then(() => {
-        window.location.reload();
-      })
+      Swal.fire({ title: '已登記出貨', icon: 'success' }).then(() => handleRouting());
     } catch (error) {
-      Swal.fire({
-        title: '系統登記出貨失敗，請稍後再試', 
-        icon: 'error',
-        text: error
-      })
+      Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
   } else if (action === '成功取貨') {
     try {
       await backendService.buyerCompletedOrders(id);
-      Swal.fire({
-        title: "感謝您使用拾貨寶庫進行交易! 已通知賣家您已確認商品正確無誤",
-        text: "可以對賣家進行此次的交易評分",
-        icon: "success",
-      }).then(() => {
-        window.location.reload();
-      });
+      Swal.fire({ title: "交易完成！", icon: "success" }).then(() => handleRouting());
     } catch (error) {
-      Swal.fire({
-        title: '系統登記取貨失敗，請稍後再試', 
-        icon: 'error',
-        text: error
-      })
+      Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
     }
   } else if (action === 'checkInfo' || action === '查看') {
-    const isSeller = !!el.closest('#sellProducts');
+    // 🔥 關鍵修正：判斷發起動作的容器是買家還是賣家
+    const isSeller = !!rowOrCardEl.closest('#sellProducts');
+    const targetPage = isSeller ? 'sellOrderDetail' : 'buyerOrderDetail';
+
+    // 1. 更新 URL，讓 handleRouting 能夠解析
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set('page', targetPage);
+    newUrl.searchParams.set('orderId', id);
+    window.history.pushState({ page: targetPage, orderId: id }, '', newUrl);
+
+    // 2. 執行路由跳轉（這會自動呼叫 getDetail(id)）
+    handleRouting();
     
-    if (isSeller) {
-      // 1. 隱藏列表：電腦表格 + 手機卡片容器
-      document.getElementById('sellTable').classList.add('d-none');
-      document.getElementById('sell-product').classList.add('d-none');
-      
-      // 2. 顯示詳情
-      document.getElementById('sellOrderDetail').classList.remove('d-none');
-      
-      // 載入資料的邏輯...
-      // loadSellerOrderDetail(id);
-      getDetail(id);
-    } else {
-      // 1. 隱藏列表
-      document.getElementById('buyTable').classList.add('d-none');
-      document.getElementById('buy-product').classList.add('d-none');
-      
-      // 2. 顯示詳情
-      document.getElementById('buyerOrderDetail').classList.remove('d-none');
-      
-      // 載入資料的邏輯...
-      getDetail(id);
-    }
-} else if (action === 'delete') {
+  } else if (action === 'delete') {
+    // 下架商品
     Swal.fire({
       title: "確定要下架並刪除此商品嗎？",
-      text: "無法再查看商品詳細資訊",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "是，我要下架",
       cancelButtonText: "取消"
     }).then((result) => {
@@ -833,7 +917,6 @@ async function handleAction(action, id, rowOrCardEl) {
         backendService.deleteMyItems(id,
           () => {
             Swal.fire({ icon: "success", title: "商品下架成功" });
-            // 同時移除表格列與卡片
             removeItemDom(id);
           },
           (err) => alert('刪除失敗：' + err)
@@ -841,8 +924,6 @@ async function handleAction(action, id, rowOrCardEl) {
       }
     });
   }
-  // person.js
-
 }
 async function getDetail(id) {
   try {
@@ -1337,26 +1418,18 @@ const updateStatusUI = (data) => {
 
 // 賣家返回列表
 document.getElementById('backToSellTable')?.addEventListener('click', () => {
-  // 恢復表格 (電腦版)
-  document.getElementById('sellTable').classList.remove('d-none');
-  // 恢復手機卡片 (手機版)
-  document.getElementById('sell-product').classList.remove('d-none');
-  // 隱藏詳情
-  document.getElementById('sellOrderDetail').classList.add('d-none');
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.set('page', 'sellProducts');
+  newUrl.searchParams.delete('orderId');
+  window.history.pushState({}, '', newUrl);
+  handleRouting();
 });
 
 // 買家返回列表
 document.getElementById('backToBuyTable')?.addEventListener('click', () => {
-  // 恢復表格
-  document.getElementById('buyTable').classList.remove('d-none');
-  // 恢復手機卡片
-  document.getElementById('buy-product').classList.remove('d-none');
-  // 隱藏詳情
-  document.getElementById('buyerOrderDetail').classList.add('d-none');
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.set('page', 'buyProducts');
+  newUrl.searchParams.delete('orderId');
+  window.history.pushState({}, '', newUrl);
+  handleRouting();
 });
-function removeItemDom(id) {
-  // 表格
-  document.querySelector(`#products tbody tr[data-id="${CSS?.escape ? CSS.escape(id) : id}"]`)?.remove();
-  // 卡片（每張卡外層 .col 有 data-id）
-  document.querySelector(`#product-cards [data-id="${CSS?.escape ? CSS.escape(id) : id}"]`)?.remove();
-}
