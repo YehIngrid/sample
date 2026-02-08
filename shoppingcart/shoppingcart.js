@@ -341,3 +341,59 @@ if (checkoutBtn) {
     }
   });
 }
+const clearCheckedBtn = document.getElementById('clear-checked');
+
+if (clearCheckedBtn) {
+  clearCheckedBtn.addEventListener('click', () => {
+    const checkedItems = cartItems.filter(i => i.checked);
+
+    if (checkedItems.length === 0) {
+      Swal.fire('沒有勾選任何商品');
+      return;
+    }
+
+    // 取消勾選
+    cartItems.forEach(item => {
+      item.checked = false;
+    });
+
+    saveState();
+    renderCart();
+    updateSummary();
+  });
+}
+
+const clearAllBtn = document.getElementById('clear-all');
+if (clearAllBtn) {
+  clearAllBtn.addEventListener('click', async () => {
+    if (cartItems.length === 0) {
+      Swal.fire('購物車已經是空的');
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: '確定清空購物車？',
+      text: '此操作無法復原',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '清空',
+      cancelButtonText: '取消'
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await Promise.all(
+        cartItems.map(i => backendService.removeItemsFromCart(i.id))
+      );
+
+      cartItems = [];
+      saveState();
+      renderCart();
+      updateSummary();
+    } catch (err) {
+      console.error(err);
+      Swal.fire('清空失敗');
+    }
+  });
+}
