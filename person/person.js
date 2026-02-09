@@ -274,7 +274,11 @@ async function handleRouting() {
   const params = new URLSearchParams(window.location.search);
   const page = params.get('page') || 'account'; // 預設頁面
   const orderId = params.get('orderId');
-  console.log('detail dom:', document.getElementById(page));
+  console.log('page =', page);
+  console.log('detail dom =', document.getElementById(page));
+  console.log('detail visible =',
+    !document.getElementById(page)?.classList.contains('d-none')
+  );
 
   // A. 重置 UI 狀態
   resetOrderView(); 
@@ -283,21 +287,25 @@ async function handleRouting() {
 
   // B. 處理「詳情模式」
   if (page === 'sellOrderDetail' || page === 'buyerOrderDetail') {
-    const isSell = (page === 'sellOrderDetail');
+    const isSell = page === 'sellOrderDetail';
     const parentId = isSell ? 'sellProducts' : 'buyProducts';
-    const parentSec = document.getElementById(parentId);
 
-    if (parentSec) {
-      parentSec.classList.remove('d-none');
-      // 隱藏列表包裝層 (包含表格與手機卡片)
-      parentSec.querySelectorAll('.order-list-container').forEach(el => el.classList.add('d-none'));
-      // 顯示詳情區塊
-      document.getElementById(page).classList.remove('d-none');
-      // 向後端要詳情資料
-      if (orderId) getDetail(orderId);
-    }
+    const parentSec = document.getElementById(parentId);
+    const detailSec = document.getElementById(page);
+
+    parentSec?.classList.remove('d-none');
+
+    // 隱藏列表
+    parentSec?.querySelectorAll('.order-list-container')
+      .forEach(el => el.classList.add('d-none'));
+
+    // 👉 顯示 detail（你原本少這行）
+    detailSec?.classList.remove('d-none');
+
+    if (orderId) getDetail(orderId);
     return;
   }
+
 
   // C. 處理「一般列表模式」
   const targetPane = document.getElementById(page);
