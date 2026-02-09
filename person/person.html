@@ -155,144 +155,136 @@
         </div>
       </section>
       <!-- section sellProducts -->
-      <section class="col-lg-9 d-none content-section" id="sellProducts">
-        <div class="order-list-container">
-          <div class="col-12">
-            <div class="">
-              <div class="table-responsive" style="overflow-x: hidden;">
-                <!-- 銷售訂單詳情卡片（預設隱藏） -->
-<div id="sellOrderDetail" class="mt-3 d-none">
-  <!-- back 按鈕 -->
-  <div class="text-start mt-3">
-    <button class="back" id="backToSellTable">
-      <img src="../svg/page.svg" alt="返回訂單列表">
-    </button>
-  </div>
-  <div class="">
-    <h5 class="">訂單詳細資訊</h5>
-        <!-- 流程圖 -->
-        <div class="stateContainer">
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="pending">
-              <img src="../svg/askreplyyet.svg" alt="">
-              <div class="stateText text-center">訂單已建立<br>等待賣家接受</div>
-              <div class="timestamp"></div>
-            </div>
-            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="preparing">
-              <img src="../svg/prepareyet.svg" alt="">
-              <div class="stateText text-center">賣家已接受訂單<br>正在準備商品</div>
-              <div class="timestamp"></div>
-            </div>
-            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="delivered">
-              <img src="../svg/ctocyet.svg" alt="">
-              <div class="stateText text-center">賣家已出貨<br>等待買家確認收貨</div>
-              <div class="timestamp"></div>
-            </div>
-            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="completed">
-              <img src="../svg/deliveryet.svg" alt="">
-              <div class="stateText text-center">買家已確認收貨<br>訂單完成</div>
-              <div class="timestamp"></div>
-            </div>
-            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="scored">
-              <img src="../svg/finishyet.svg" alt="">
-              <div class="stateText text-center">雙方皆已<br>評分完成</div>
-              <div class="timestamp"></div>
-            </div>
-          </div>
+       <section class="col-lg-9 d-none content-section" id="sellProducts">
+
+  <!-- 🔹 訂單詳情（獨立一塊） -->
+  <div id="sellOrderDetail" class="mt-3 d-none">
+    <div class="text-start mt-3">
+      <button class="back" id="backToSellTable">
+        <img src="../svg/page.svg" alt="返回訂單列表">
+      </button>
+    </div>
+
+    <h5>訂單詳細資訊</h5>
+
+    <!-- 流程圖 -->
+    <div class="stateContainer">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="pending">
+          <img src="../svg/askreplyyet.svg" alt="">
+          <div class="stateText text-center">訂單已建立<br>等待賣家接受</div>
+          <div class="timestamp"></div>
         </div>
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="preparing">
+          <img src="../svg/prepareyet.svg" alt="">
+          <div class="stateText text-center">賣家已接受訂單<br>正在準備商品</div>
+          <div class="timestamp"></div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="delivered">
+          <img src="../svg/ctocyet.svg" alt="">
+          <div class="stateText text-center">賣家已出貨<br>等待買家確認收貨</div>
+          <div class="timestamp"></div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="completed">
+          <img src="../svg/deliveryet.svg" alt="">
+          <div class="stateText text-center">買家已確認收貨<br>訂單完成</div>
+          <div class="timestamp"></div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="scored">
+          <img src="../svg/finishyet.svg" alt="">
+          <div class="stateText text-center">雙方皆已<br>評分完成</div>
+          <div class="timestamp"></div>
+        </div>
+      </div>
+    </div>
 
     <!-- 基本資訊 -->
-    <div id="sellOrderInfo" class="mb-3">
-      
+    <div id="sellOrderInfo" class="mb-3"></div>
   </div>
-</div>
-              </div>
-              <h5 class="">我的銷售訂單</h5>
-              <div  id="sellTable">
-                <table class="table align-middle d-none d-lg-table">
-                  <thead>
-                    <tr>
-                      <th>訂單編號</th><th>狀態</th><th>買家下單時間</th><th>相關操作</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
-              <!-- 手機版卡片：小於 lg 才顯示 -->
-              <div id="sell-product" class="row g-3 d-block d-lg-none"></div>
-            </div>
-          </div>
-        </div>
-      </section>
+
+  <!-- 🔹 訂單列表（單獨包） -->
+  <div class="order-list-container">
+    <h5>我的銷售訂單</h5>
+
+    <div id="sellTable">
+      <table class="table align-middle d-none d-lg-table">
+        <thead>
+          <tr>
+            <th>訂單編號</th>
+            <th>狀態</th>
+            <th>買家下單時間</th>
+            <th>相關操作</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="sell-product" class="row g-3 d-block d-lg-none"></div>
+  </div>
+
+</section>
       <!-- section buyProducts -->
-      <section class="col-lg-9 d-none content-section" id="buyProducts">
-        <div class="order-list-container">
-          <div class="col-12">
-            <div class="">
-              <div class="table-responsive" style="overflow-x: hidden;">
-                <div id="buyerOrderDetail" class="mt-3">
-                  <div class="">
-                    <!-- back 按鈕 -->
-                    <div class="text-start mt-3">
-                      <button class="back" id="backToBuyTable">
-                        <img src="../svg/page.svg" alt="返回訂單列表">
-                      </button>
-                    </div>
-                    <h5 class="">訂單詳細資訊</h5>
-                        <!-- 流程圖 -->
-                        <div class="stateContainer">
-                          <div class="d-flex align-items-center justify-content-between">
-                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="pending">
-                              <img src="../svg/askreplyyet.svg" alt="">
-                              <div class="stateText text-center">訂單已建立<br>等待賣家接受</div>
-                              <div class="timestamp"></div>
-                            </div>
-                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="preparing">
-                              <img src="../svg/prepareyet.svg" alt="">
-                              <div class="stateText text-center">賣家已接受訂單<br>正在準備商品</div>
-                              <div class="timestamp"></div>
-                            </div>
-                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="delivered">
-                              <img src="../svg/ctocyet.svg" alt="">
-                              <div class="stateText text-center">賣家已出貨<br>等待買家確認收貨</div>
-                              <div class="timestamp"></div>
-                            </div>
-                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="completed">
-                              <img src="../svg/deliveryet.svg" alt="">
-                              <div class="stateText text-center">買家已確認收貨<br>訂單完成</div>
-                              <div class="timestamp"></div>
-                            </div>
-                            <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="scored">
-                              <img src="../svg/finishyet.svg" alt="">
-                              <div class="stateText text-center">雙方皆已<br>評分完成</div>
-                              <div class="timestamp"></div>
-                            </div>
-                          </div>
-                        </div>
-                    <!-- 基本資訊 -->
-                    <div id="buyerOrderInfo" class="mb-3">
-                    </div>
-                  </div>
-                </div>
-                <h5 class="">我的購買訂單</h5>
-                <div id="buyTable">
-                  <table class="table align-middle d-none d-lg-table">
-                    <thead>
-                      <tr>
-                        <th>商品</th><th>狀態</th><th>下單時間</th><th>總計</th><th>相關操作</th>
-                      </tr>
-                    </thead>
-                    <tbody></tbody>
-                  </table>
-                </div>
-                
-                <!-- 手機版卡片：小於 lg 才顯示 -->
-                <div id="buy-product" class="row g-3 d-block d-lg-none"></div>
-              </div>
-            </div>
-          </div>
+<section class="col-lg-9 d-none content-section" id="buyProducts">
+
+  <!-- 訂單詳情 -->
+  <div id="buyerOrderDetail" class="mt-3 d-none">
+    <div class="text-start mt-3">
+      <button class="back" id="backToBuyTable">
+        <img src="../svg/page.svg" alt="返回訂單列表">
+      </button>
+    </div>
+    <h5 class="">訂單詳細資訊</h5>
+    <!-- 流程圖 -->
+    <div class="stateContainer">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="pending">
+          <img src="../svg/askreplyyet.svg" alt="">
+          <div class="stateText text-center">訂單已建立<br>等待賣家接受</div>
+          <div class="timestamp"></div>
         </div>
-      </section>
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="preparing">
+          <img src="../svg/prepareyet.svg" alt="">
+          <div class="stateText text-center">賣家已接受訂單<br>正在準備商品</div>
+          <div class="timestamp"></div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="delivered">
+          <img src="../svg/ctocyet.svg" alt="">
+          <div class="stateText text-center">賣家已出貨<br>等待買家確認收貨</div>
+          <div class="timestamp"></div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="completed">
+          <img src="../svg/deliveryet.svg" alt="">
+          <div class="stateText text-center">買家已確認收貨<br>訂單完成</div>
+          <div class="timestamp"></div>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center status-item" data-status="scored">
+          <img src="../svg/finishyet.svg" alt="">
+          <div class="stateText text-center">雙方皆已<br>評分完成</div>
+          <div class="timestamp"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 訂單列表 -->
+  <div class="order-list-container">
+    <h5>我的購買訂單</h5>
+    <div id="buyTable">
+      <table class="table align-middle d-none d-lg-table">
+        <thead>
+          <tr>
+            <th>商品</th><th>狀態</th><th>下單時間</th><th>總計</th><th>相關操作</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="buy-product" class="row g-3 d-block d-lg-none"></div>
+  </div>
+
+</section>
+
       <!-- section messages -->
       <section class="col-lg-9 d-none content-section" id="messages">
         <embed src="../chatroom.html" type="text/html" class="embedchat">
