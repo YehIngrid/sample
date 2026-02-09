@@ -274,6 +274,7 @@ async function handleRouting() {
   const params = new URLSearchParams(window.location.search);
   const page = params.get('page') || 'account'; // 預設頁面
   const orderId = params.get('orderId');
+  console.log('detail dom:', document.getElementById(page));
 
   // A. 重置 UI 狀態
   resetOrderView(); 
