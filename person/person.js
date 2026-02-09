@@ -275,6 +275,9 @@ async function handleRouting() {
   const page = params.get('page') || 'account';
   const orderId = params.get('orderId');
 
+  if (orderId) {
+    openOrderDetail(orderId);
+  }
   const isDetailPage =
     page === 'sellOrderDetail' || page === 'buyerOrderDetail';
 
@@ -303,7 +306,7 @@ async function handleRouting() {
     // 👉 顯示 detail（你原本少這行）
     detailSec?.classList.remove('d-none');
 
-    if (orderId) getDetail(orderId);
+    if (orderId) openOrderDetail(orderId);
     return;
   }
 
@@ -906,6 +909,40 @@ async function getDetail(id) {
       icon: 'error',
       text: error.message || error
     });
+  }
+}
+function openOrderDetail(id) {
+  history.pushState(
+    { page: 'detail', orderId: id },
+    '',
+    `?order=${id}`
+  );
+
+  getDetail(id);
+}
+window.addEventListener('popstate', (event) => {
+  if (!event.state || event.state.page !== 'detail') {
+    showOrderList();
+  }
+});
+function showOrderList() {
+  const sellSection = document.getElementById('sellProducts');
+  const buySection  = document.getElementById('buyProducts');
+
+  const sellDetail = document.getElementById('sellOrderDetail');
+  const buyDetail  = document.getElementById('buyerOrderDetail');
+
+  const sellTable = document.getElementById('sellTable');
+  const buyTable  = document.getElementById('buyTable');
+
+  const isSell = !sellSection.classList.contains('d-none');
+
+  if (isSell) {
+    sellDetail.classList.add('d-none');
+    sellTable.classList.remove('d-none');
+  } else {
+    buyDetail.classList.add('d-none');
+    buyTable.classList.remove('d-none');
   }
 }
 
