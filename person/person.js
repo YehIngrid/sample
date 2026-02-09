@@ -267,45 +267,74 @@ async function handleAction(action, id, el) {
 // ==========================================
 // 3. 核心路由處理 (handleRouting)
 // ==========================================
+// 核心路由與資料載入
 async function handleRouting() {
   const params = new URLSearchParams(window.location.search);
-  const page = params.get('page') || 'account';
+  const page = params.get('page') || 'account'; // 預設頁面
   const orderId = params.get('orderId');
 
-  // 隱藏所有，移除 active
-  document.querySelectorAll('.content-section').forEach(s => s.classList.add('d-none'));
-  document.querySelectorAll('.list-group-item').forEach(l => l.classList.remove('active'));
+  // A. 重置 UI 狀態
+  resetOrderView(); 
+  document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
+  document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
 
-  // 處理詳情模式 (重要：同時處理手機版隱藏)
+  // B. 處理「詳情模式」
   if (page === 'sellOrderDetail' || page === 'buyerOrderDetail') {
-    const parentId = (page === 'sellOrderDetail') ? 'sellProducts' : 'buyProducts';
-    const parent = document.getElementById(parentId);
-    if (parent) {
-      parent.classList.remove('d-none');
+    const isSell = (page === 'sellOrderDetail');
+    const parentId = isSell ? 'sellProducts' : 'buyProducts';
+    const parentSec = document.getElementById(parentId);
+
+    if (parentSec) {
+      parentSec.classList.remove('d-none');
       // 隱藏列表包裝層 (包含表格與手機卡片)
-      parent.querySelector('.order-list-container').classList.add('d-none');
-      // 顯示詳情層
+      parentSec.querySelectorAll('.order-list-container').forEach(el => el.classList.add('d-none'));
+      // 顯示詳情區塊
       document.getElementById(page).classList.remove('d-none');
+      // 向後端要詳情資料
       if (orderId) getDetail(orderId);
     }
     return;
   }
 
-  // 處理列表模式
-  const target = document.getElementById(page);
-  if (target) {
-    target.classList.remove('d-none');
-    const listContainer = target.querySelector('.order-list-container');
-    if (listContainer) listContainer.classList.remove('d-none');
-    
-    // 只有在列表模式才需要載入資料
-    loadDataByPage(page); 
+  // C. 處理「一般列表模式」
+  const targetPane = document.getElementById(page);
+  if (targetPane) {
+    targetPane.classList.remove('d-none');
+    // 恢復列表容器顯示
+    targetPane.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
   }
 
   // 選單 Active
-  document.querySelector(`[data-target="${page}"]`)?.classList.add('active');
-}
+  const activeLink = document.querySelector(`.list-group-item[data-target="${page}"]`);
+  if (activeLink) activeLink.classList.add('active');
 
+  // D. 這裡就是您原本要找的「根據頁面載入資料」邏輯
+  if (!backendService) backendService = new BackendService();
+
+  try {
+    if (page === 'products') {
+      backendService.getMyItems(res => {
+        const list = res?.data?.commodities ?? [];
+        renderTable(list); 
+        renderCards(list);
+      }, err => console.error(err));
+    } 
+    else if (page === 'sellProducts') {
+      const res = await backendService.getSellerOrders();
+      const list = res?.data?.data ?? [];
+      renderSellerOrders(list); 
+      renderSellerCards(list);
+    } 
+    else if (page === 'buyProducts') {
+      const res = await backendService.getBuyerOrders();
+      const list = res?.data?.data ?? [];
+      renderBuyerOrders(list); 
+      renderBuyerCards(list);
+    }
+  } catch (err) {
+    console.error('後端資料抓取失敗:', err);
+  }
+}
 // ==========================================
 // 3. 事件初始化 (在 DOMContentLoaded 內)
 // ==========================================
