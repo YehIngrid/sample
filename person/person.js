@@ -186,6 +186,8 @@ logoutMobileButton.addEventListener('click', function() {
   }).then(async(result) => {
     if (result.isConfirmed) {
     try {
+      if (!backendService) backendService = new BackendService();
+
       await backendService.logout();
       Swal.fire({
         icon: 'success',
@@ -338,26 +340,26 @@ async function handleRouting() {
 // ==========================================
 // 3. 事件初始化 (在 DOMContentLoaded 內)
 // ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-  // 左側選單點擊
-  document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
-    item.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = this.getAttribute('data-target');
-      const newUrl = new URL(window.location.href);
-      newUrl.searchParams.set('page', target);
-      newUrl.searchParams.delete('orderId');
-      window.history.pushState({ page: target }, '', newUrl);
-      handleRouting();
-    });
-  });
+// document.addEventListener('DOMContentLoaded', () => {
+//   // 左側選單點擊
+//   document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
+//     item.addEventListener('click', function(e) {
+//       e.preventDefault();
+//       const target = this.getAttribute('data-target');
+//       const newUrl = new URL(window.location.href);
+//       newUrl.searchParams.set('page', target);
+//       newUrl.searchParams.delete('orderId');
+//       window.history.pushState({ page: target }, '', newUrl);
+//       handleRouting();
+//     });
+//   });
 
-  // 監聽瀏覽器返回
-  window.onpopstate = () => handleRouting();
+//   // 監聽瀏覽器返回
+//   window.onpopstate = () => handleRouting();
 
-  // 執行首次載入
-  handleRouting();
-});
+//   // 執行首次載入
+//   handleRouting();
+// });
 
 // 賣家/買家 返回列表按鈕改為：
 document.getElementById('backToSellTable')?.addEventListener('click', () => {
@@ -367,38 +369,16 @@ document.getElementById('backToSellTable')?.addEventListener('click', () => {
   window.history.pushState({}, '', newUrl);
   handleRouting();
 });
-// 4. 返回按鈕監聽 (改為 URL 控制)
-document.getElementById('backToSellTable')?.addEventListener('click', () => {
-  history.back(); // 直接回上一頁，或者用 pushState 回 sellProducts
-});
-document.getElementById('backToBuyTable')?.addEventListener('click', () => {
-  history.back();
-});
 
 // 5. 監聽瀏覽器返回並初始化
-window.onpopstate = () => handleRouting();
+
 // 在 DOMContentLoaded 的最後一行加上 handleRouting();
 
 
 
 function resetOrderView() {
-  // 賣家
-  const sellSection = document.getElementById('sellProducts');
-  if (sellSection) {
-    const table = sellSection.querySelector('table');
-    const detail = document.getElementById('sellOrderDetail');
-    if (table) table.style.display = '';
-    if (detail) detail.classList.add('d-none');
-  }
-
-  // 買家
-  const buySection = document.getElementById('buyProducts');
-  if (buySection) {
-    const table = buySection.querySelector('table');
-    const detail = document.getElementById('buyerOrderDetail');
-    if (table) table.style.display = '';
-    if (detail) detail.classList.add('d-none');
-  }
+  document.getElementById('sellOrderDetail')?.classList.add('d-none');
+  document.getElementById('buyerOrderDetail')?.classList.add('d-none');
 }
 
 // TODO 更改大頭照預覽
