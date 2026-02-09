@@ -680,9 +680,9 @@ function renderCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-outline-success btn-sm btn-card-action" data-action="check">查看商品</button>
-              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="編輯商品">編輯商品</button>
-              <button class="btn btn-outline-danger btn-sm btn-card-action" data-action="delete">永久下架商品</button>
+              <button class="btn btn-outline-success btn-sm action-btn btn-card-action" data-id="${id}" data-action="check">查看商品</button>
+              <button class="btn btn-outline-primary btn-sm action-btn btn-card-action" data-id="${id}" data-action="編輯商品">編輯商品</button>
+              <button class="btn btn-outline-danger btn-sm action-btn btn-card-action" data-id="${id}" data-action="delete">永久下架商品</button>
             </div>
           </div>
         </div>
@@ -725,11 +725,11 @@ function renderSellerCards(list = []) {
             </div>
             <div class="mt-auto d-flex gap-2">
               ${item.status !== 'canceled' 
-                ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
+                ? `<button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>` 
                 : ''
               }
-              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}" ${isDisabled}>${st.action}</button>
-              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
+              <button class="btn btn-outline-primary btn-sm action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>${st.action}</button>
+              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm action-btn btn-outline-danger btn-row-action" data-id="${id}" data-action="cancel">取消訂單</button>` : ''}
             </div>
           </div>
         </div>
@@ -770,11 +770,11 @@ function renderBuyerCards(list = []) {
             </div>
             <div class="mt-auto d-flex gap-2">
               ${item.status !== 'canceled' 
-                ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
+                ? `<button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>` 
                 : ''
               }
-              <button class="btn btn-outline-primary btn-sm btn-card-action" data-action="${st.action}">${st.action}</button>
-              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
+              <button class="btn btn-outline-primary btn-sm action-btn btn-card-action"  data-id="${id}" data-action="${st.action}">${st.action}</button>
+              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm action-btn btn-outline-danger btn-row-action" data-id="${id}" data-action="cancel">取消訂單</button>` : ''}
             </div>
           </div>
         </div>
