@@ -260,6 +260,6 @@ text-overflow: ellipsis;
   color: var(--bs-secondary-color);
 }
 small {
-  font-size: 14px;
-  color: var(--bs-secondary-color);
+  font-size: 12px;
+  color: #004b97;
 }

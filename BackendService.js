@@ -386,7 +386,7 @@ class BackendService {
             const payload = {
                 cartItem_ids : cartItems.map(item => ({
                     id: item.id,
-                    qty: item.quantity
+                    qty: item.qty
                 }))
             };
             const response = await axios.post(
