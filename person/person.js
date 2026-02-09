@@ -809,105 +809,106 @@ function onCardAction(e) {
 // ===== 共用：按鈕動作（表格/卡片都走這裡） =====
 async function getDetail(id) {
   try {
-    let res = await backendService.getOrderDetails(id);
-
     const sellSection = document.getElementById('sellProducts');
-    const buySection = document.getElementById('buyProducts');
+    const buySection  = document.getElementById('buyProducts');
 
     const sellDetail = document.getElementById('sellOrderDetail');
-    const buyDetail = document.getElementById('buyerOrderDetail');
+    const buyDetail  = document.getElementById('buyerOrderDetail');
 
-    orderStatusMap = {
-      'pending': "訂單已建立，等待賣家接受",
-      'preparing' : "賣家已接受訂單，正在準備商品",
-      'delivered' : "賣家已出貨，等待買家確認收貨",
-      'completed': "買家已確認收貨，訂單完成",
-      'canceled': "訂單已取消"
-    }
-    orderTypeMap = {
-      'c2c': "面交取貨"
-    }
-    const orderStatus = res.data.data.status;
-    const logs = res.data.data;
-    const type = res.data.data.type;
-    const builtOrderTime = new Date(res.data.data.createdAt).toLocaleDateString();
-    const buyerName = res.data.data.buyerUser.name; 
-    const sellerName = res.data.data.sellerUser.name;
-    const totalAmount = res.data.data.totalAmount;
-    console.log('res: ', res);
-    // 填入資訊（你原本的）
-    document.getElementById('sellOrderInfo').innerHTML = `
+    const isSell = !sellSection.classList.contains('d-none');
+
+    const res = await backendService.getOrderDetails(id);
+    const data = res.data.data;
+
+    const orderStatusMap = {
+      pending: "訂單已建立，等待賣家接受",
+      preparing: "賣家已接受訂單，正在準備商品",
+      delivered: "賣家已出貨，等待買家確認收貨",
+      completed: "買家已確認收貨，訂單完成",
+      canceled: "訂單已取消"
+    };
+
+    const orderTypeMap = {
+      c2c: "面交取貨"
+    };
+
+    const infoBox = isSell
+      ? document.getElementById('sellOrderInfo')
+      : document.getElementById('buyerOrderInfo');
+
+    infoBox.innerHTML = `
       <ul>
-          <li><span class="orderstyle">訂單編號</span>${id}</li>
-          <li><span class="orderstyle">建立日期</span>${builtOrderTime}</li>
-          <li><span class="orderstyle">商品狀態</span>${orderStatusMap[orderStatus]}</li>
-          <li><span class="orderstyle">交貨方式</span>${orderTypeMap[type]}</li>
-          <li><span class="orderstyle">買家姓名</span>${buyerName}</li>
-          <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
+        <li><span class="orderstyle">訂單編號</span>${id}</li>
+        <li><span class="orderstyle">建立日期</span>${new Date(data.createdAt).toLocaleDateString()}</li>
+        <li><span class="orderstyle">商品狀態</span>${orderStatusMap[data.status]}</li>
+        <li><span class="orderstyle">交貨方式</span>${orderTypeMap[data.type]}</li>
+        <li>
+          <span class="orderstyle">${isSell ? '買家姓名' : '賣家姓名'}</span>
+          ${isSell ? data.buyerUser.name : data.sellerUser.name}
+        </li>
+        <li style="text-align:end;">
+          <span class="orderstyle">總計</span>
+          <span style="font-weight:600;color:var(--brand-color)">
+            ${data.totalAmount}
+          </span> 元
+        </li>
       </ul>
       <hr>
       <span class="orderstyle">訂購商品</span>
-      <table class="table align-middle responsive-table" style="margin-top: 15px;">
+      <table class="table align-middle responsive-table mt-3">
         <thead>
-          <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>單價(元)</th></tr>
+          <tr>
+            <th>商品編號</th>
+            <th>商品照片</th>
+            <th>名稱</th>
+            <th>購買數量</th>
+            <th>單價(元)</th>
+          </tr>
         </thead>
         <tbody class="itemlist"></tbody>
       </table>
     `;
-    document.getElementById('buyerOrderInfo').innerHTML = `
-      <ul>
-          <li><span class="orderstyle">訂單編號</span>${id}</li>
-          <li><span class="orderstyle">建立日期</span>${builtOrderTime}</li>
-          <li><span class="orderstyle">商品狀態</span>${orderStatusMap[orderStatus]}</li>
-          <li><span class="orderstyle">交貨方式</span>${orderTypeMap[type]}</li>
-          <li><span class="orderstyle">賣家姓名</span>${sellerName}</li>
-          <li style="text-align: end;"><span class="orderstyle">總計</span><span style="font-weight: 600; color: var(--brand-color)">${totalAmount}</span> 元</li>
-      </ul>
-      <hr>
-      <span class="orderstyle" style="margin-bottom: 10px;">訂購商品</span>
-      <table class="table align-middle responsive-table" style="margin-top: 15px;">
-        <thead>
-          <tr><th>商品編號</th><th>商品照片</th><th>名稱</th><th>購買數量</th><th>單價(元)</th></tr>
-        </thead>
-        <tbody class="itemlist"></tbody>
-      </table>
-    `;
-    const itemlists = document.querySelectorAll('.itemlist');
-    const itemContent = res.data.data.orderItems.map(item => `
-      <tr>
-        <td data-label="商品編號">${item?.itemId || 'unknown'}</td>
-        <td data-label="商品照片"><img src="${item?.mainImage || '../image/placeholder.png'}" alt="商品照片" style="width: 80px; height: 80px; object-fit: cover; object-position: center;"></td>
-        <td data-label="名稱">${htmlEncode(item?.name) || 'unknown'}</td>
-        <td data-label="購買數量">${item?.quantity || 'unknown'}</td>
-        <td data-label="單價(元)">${item?.price || 'unknown'}</td>
-      </tr>
+
+    const itemlist = infoBox.querySelector('.itemlist');
+    const items = data.orderItems;
+
+    if (!Array.isArray(items) || items.length === 0) {
+      itemlist.innerHTML = '<tr><td colspan="5">沒有商品資料</td></tr>';
+    } else {
+      itemlist.innerHTML = items.map(item => `
+        <tr>
+          <td>${item.itemId}</td>
+          <td>
+            <img src="${item.mainImage || '../image/placeholder.png'}"
+                 style="width:80px;height:80px;object-fit:cover;">
+          </td>
+          <td>${htmlEncode(item.name)}</td>
+          <td>${item.quantity}</td>
+          <td>${item.price}</td>
+        </tr>
       `).join('');
-      itemlists.forEach(itemlist => {
-        itemlist.innerHTML = itemContent;
-      });
-
-    updateStatusUI(logs);
-
-    // 🔥 關鍵：切換畫面
-    if (!sellSection.classList.contains('d-none')) {
-      const sellTable = document.getElementById('sellTable');
-      sellTable.style.display = 'none';
-      sellDetail.classList.remove('d-none');
     }
 
-    if (!buySection.classList.contains('d-none')) {
-      const buyTable = document.getElementById('buyTable');
-      buyTable.style.display = 'none';
+    updateStatusUI(data);
+
+    // 切換畫面
+    if (isSell) {
+      document.getElementById('sellTable').style.display = 'none';
+      sellDetail.classList.remove('d-none');
+    } else {
+      document.getElementById('buyTable').style.display = 'none';
       buyDetail.classList.remove('d-none');
     }
+
   } catch (error) {
     Swal.fire({
-      title: 'Oops', 
-      icon: 'error', 
-      text: error
-    })
+      title: 'Oops',
+      icon: 'error',
+      text: error.message || error
+    });
   }
 }
+
 function updateOrderFlowImg(status) {
   const img = document.getElementById("flowImage");
   const imgbuyer = document.getElementById("flowImagebuyer");
