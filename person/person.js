@@ -272,17 +272,18 @@ async function handleAction(action, id, el) {
 // 核心路由與資料載入
 async function handleRouting() {
   const params = new URLSearchParams(window.location.search);
-  const page = params.get('page') || 'account'; // 預設頁面
+  const page = params.get('page') || 'account';
   const orderId = params.get('orderId');
-  console.log('page =', page);
-  console.log('detail dom =', document.getElementById(page));
-  console.log('detail visible =',
-    !document.getElementById(page)?.classList.contains('d-none')
-  );
 
-  // A. 重置 UI 狀態
-  resetOrderView(); 
-  document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
+  const isDetailPage =
+    page === 'sellOrderDetail' || page === 'buyerOrderDetail';
+
+  if (!isDetailPage) {
+    resetOrderView();
+  }
+
+  document.querySelectorAll('.content-section')
+    .forEach(sec => sec.classList.add('d-none'));
   document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
 
   // B. 處理「詳情模式」
