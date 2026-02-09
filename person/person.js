@@ -882,10 +882,10 @@ async function getDetail(id) {
         <tr>
           <td>${item.itemId}</td>
           <td>
-            <img src="${item.mainImage || '../image/placeholder.png'}"
+            <img src="${item.item.mainImage || '../image/placeholder.png'}"
                  style="width:80px;height:80px;object-fit:cover;">
           </td>
-          <td>${htmlEncode(item.name)}</td>
+          <td>${htmlEncode(item?.item.name)}</td>
           <td>${item.quantity}</td>
           <td>${item.price}</td>
         </tr>
