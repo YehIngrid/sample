@@ -384,7 +384,7 @@ class BackendService {
     async createOrder(cartItems) {
         try {
             const payload = {
-                cartItem_ids : cartItems.map(item => ({
+                cartItems : cartItems.map(item => ({
                     id: item.id,
                     qty: item.qty
                 }))
