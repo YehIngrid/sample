@@ -546,11 +546,11 @@ function renderBuyerOrders(list) {
         <td>${price} 元</td>
         <td class="text-end">
           ${item.status !== 'canceled' 
-            ? `<button class="btn btn-outline-dark btn-row-action" data-action="checkInfo" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">查看訂單詳情</button>` 
+            ? `<button class="btn btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">查看訂單詳情</button>` 
             : ''
           }
-          <button class="btn btn-outline-primary btn-row-action" data-action="${st.action}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">${st.action}</button>
-          ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-outline-danger btn-row-action" data-action="cancel" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">取消訂單</button>` : ''}
+          <button class="btn btn-outline-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">${st.action}</button>
+          ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-outline-danger action-btn btn-row-action" data-action="cancel" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">取消訂單</button>` : ''}
         </td>
       </tr>
     `;
@@ -583,11 +583,11 @@ function renderSellerOrders(list) {
         <td>${created}</td>
         <td class="text-end">
           ${item.status !== 'canceled' 
-            ? `<button class="btn btn-sm btn-outline-dark btn-row-action" data-action="checkInfo">查看訂單詳情</button>` 
+            ? `<button class="btn btn-sm  btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}">查看訂單詳情</button>` 
             : ''
           }
-          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="${st.action}" ${isDisabled}>${st.action}</button>
-          ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger btn-row-action" data-action="cancel">取消訂單</button>` : ''}
+          <button class="btn btn-sm btn-outline-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>${st.action}</button>
+          ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger action-btn btn-row-action" data-action="cancel" data-id="${id}">取消訂單</button>` : ''}
         </td>
       </tr>
     `;
@@ -621,9 +621,9 @@ function renderTable(list = []) {
         <td>${created}</td>
         <td>${updated}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-success btn-row-action" data-action="check">查看商品</button>
-          <button class="btn btn-sm btn-outline-primary btn-row-action" data-action="編輯商品">編輯商品</button>
-          <button class="btn btn-sm btn-outline-danger btn-row-action" data-action="delete">永久下架商品</button>
+          <button class="btn btn-sm  btn-outline-success action-btn btn-row-action" data-action="check" data-id="${id}">查看商品</button>
+          <button class="btn btn-sm btn-outline-primary action-btn btn-row-action" data-action="編輯商品" data-id="${id}">編輯商品</button>
+          <button class="btn btn-sm btn-outline-danger action-btn btn-row-action" data-action="delete" data-id="${id}">永久下架商品</button>
         </td>
       </tr>
     `;
