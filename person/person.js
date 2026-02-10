@@ -331,70 +331,65 @@ async function handleRouting() {
   const page = params.get('page') || 'account';
   const orderId = params.get('orderId');
 
-  // A. 重置所有區塊
+  // 隱藏全部
   document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
-  document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
-  
-  // 確保電腦版表格容器預設是顯示的
+
+  // 預設表格顯示
   const sellTable = document.getElementById('sellTable');
   const buyTable = document.getElementById('buyTable');
-  if (sellTable) sellTable.style.display = 'block'; 
+  if (sellTable) sellTable.style.display = 'block';
   if (buyTable) buyTable.style.display = 'block';
 
-  // B. 找到當前分頁節點
+  // 顯示目標頁
   const targetPane = document.getElementById(page);
-  if (targetPane) {
-    targetPane.classList.remove('d-none');
-    
-    // 如果網址有 orderId，則進入「詳情模式」
-    if (orderId && (page === 'sellProducts' || page === 'buyProducts')) {
-      const isSell = (page === 'sellProducts');
-      const detailSec = document.getElementById(isSell ? 'sellOrderDetail' : 'buyerOrderDetail');
-      const tableEl = isSell ? sellTable : buyTable;
+  if (targetPane) targetPane.classList.remove('d-none');
 
-      // 隱藏列表容器（手機卡片區）與 電腦表格
-      targetPane.querySelectorAll('.order-list-container').forEach(el => el.classList.add('d-none'));
-      if (tableEl) tableEl.style.display = 'none';
-
-      // 顯示詳情區並抓取資料
-      detailSec?.classList.remove('d-none');
-      getDetail(orderId); 
-    } 
-    else {
-      // 「列表模式」：確保列表容器與表格都是顯示的
-      targetPane.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
-      resetOrderView(); // 隱藏所有詳情區塊
-    }
+  // =========================
+  // 詳細頁模式
+  // =========================
+  if (page === 'sellOrderDetail' && orderId) {
+    document.getElementById('sellProducts')?.classList.remove('d-none');
+    document.getElementById('sellOrderDetail')?.classList.remove('d-none');
+    sellTable.style.display = 'none';
+    getDetail(orderId);
+    return;
   }
 
-  // 選單 Active 狀態
-  const activeLink = document.querySelector(`.list-group-item[data-target="${page}"]`);
-  if (activeLink) activeLink.classList.add('active');
+  if (page === 'buyerOrderDetail' && orderId) {
+    document.getElementById('buyProducts')?.classList.remove('d-none');
+    document.getElementById('buyerOrderDetail')?.classList.remove('d-none');
+    buyTable.style.display = 'none';
+    getDetail(orderId);
+    return;
+  }
 
-  // C. 載入分頁原始資料
+  // =========================
+  // 列表模式
+  // =========================
+  resetOrderView();
+
+  // Active menu
+  document.querySelectorAll('.list-group-item[data-target]').forEach(link => {
+    link.classList.toggle('active', link.dataset.target === page);
+  });
+
+  // 載入資料
   if (!backendService) backendService = new BackendService();
   try {
-    if (page === 'products') {
-      backendService.getMyItems(res => {
-        const list = res?.data?.commodities ?? [];
-        renderTable(list); 
-        renderCards(list);
-      }, err => console.error(err));
-    } 
-    else if (page === 'sellProducts') {
+    if (page === 'sellProducts') {
       const res = await backendService.getSellerOrders();
-      renderSellerOrders(res?.data?.data ?? []); 
+      renderSellerOrders(res?.data?.data ?? []);
       renderSellerCards(res?.data?.data ?? []);
-    } 
-    else if (page === 'buyProducts') {
+    } else if (page === 'buyProducts') {
       const res = await backendService.getBuyerOrders();
-      renderBuyerOrders(res?.data?.data ?? []); 
+      renderBuyerOrders(res?.data?.data ?? []);
       renderBuyerCards(res?.data?.data ?? []);
     }
   } catch (err) {
-    console.error('資料載入失敗:', err);
+    console.error(err);
   }
 }
+
 // ==========================================
 // 3. 事件初始化 (在 DOMContentLoaded 內)
 // ==========================================
@@ -421,13 +416,19 @@ async function handleRouting() {
 
 // 賣家/買家 返回列表按鈕改為：
 document.getElementById('backToSellTable')?.addEventListener('click', () => {
-  const newUrl = new URL(window.location.href);
-  newUrl.searchParams.set('page', 'sellProducts');
-  newUrl.searchParams.delete('orderId');
-  window.history.pushState({}, '', newUrl);
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', 'sellProducts');
+  url.searchParams.delete('orderId');
+  history.pushState({}, '', url);
   handleRouting();
 });
-
+document.getElementById('backToBuyTable')?.addEventListener('click', () => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', 'buyProducts');
+  url.searchParams.delete('orderId');
+  history.pushState({}, '', url);
+  handleRouting();
+});
 // 5. 監聽瀏覽器返回並初始化
 
 // 在 DOMContentLoaded 的最後一行加上 handleRouting();
