@@ -313,7 +313,7 @@ async function handleAction(action, id, el) {
         backendService.deleteMyItems(id,
           () => {
             Swal.fire({ icon: "success", title: "商品下架成功" });
-            removeItemDom(id);
+            window.location.reload(); // 刪除後重新載入頁面以更新列表
           },
           (err) => alert('刪除失敗：' + err)
         );
