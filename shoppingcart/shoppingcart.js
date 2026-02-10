@@ -299,7 +299,7 @@ function closeCheckoutLoading() {
 async function openChat(productId) {
   try {
     const res = await chatService.createRoom(productId);
-    const roomId = res?.data?.roomId;
+    const roomId = res?.data?.room?.id;
     if (!roomId) throw new Error();
     openCloseChatInterface();
     chatRoom = new ChatRoom(chatService, roomId, talkInterface);
