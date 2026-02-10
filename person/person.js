@@ -973,11 +973,9 @@ async function getDetail(id) {
   }
 }
 function openOrderDetail(id) {
-  history.pushState(
-    { page: 'detail', orderId: id },
-    '',
-    `?order=${id}`
-  );
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.set('orderId', id); // 統一使用 orderId
+  window.history.pushState({ page: 'detail', orderId: id }, '', newUrl);
 
   getDetail(id);
 }
@@ -996,26 +994,32 @@ function showOrderList() {
   const sellTable = document.getElementById('sellTable');
   const buyTable  = document.getElementById('buyTable');
 
+  // 1. 判斷目前在哪個大分頁
   const isSell = !sellSection.classList.contains('d-none');
 
+  // 2. 隱藏詳情，顯示表格容器
   if (isSell) {
     sellDetail.classList.add('d-none');
     sellTable.classList.remove('d-none');
+    // 確保列表容器也顯示（對應 handleRouting 的結構）
+    sellSection.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
   } else {
     buyDetail.classList.add('d-none');
     buyTable.classList.remove('d-none');
+    buySection.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
   }
 
-   const url = new URL(window.location.href);
-    url.searchParams.delete('order');
+  // 3. 【關鍵修正】更新 URL，移除 orderId (或 order) 並推送到歷史紀錄
+  const url = new URL(window.location.href);
+  url.searchParams.delete('orderId'); // 移除 orderId
+  url.searchParams.delete('order');   // 移除你 openOrderDetail 裡用的 order
 
-    history.replaceState(
-      { page: isSell ? 'sellProducts' : 'buyProducts' },
-      '',
-      url
-    );
+  // 使用 pushState 或 replaceState 更新網址但不重新整理
+  window.history.pushState({ page: isSell ? 'sellProducts' : 'buyProducts' }, '', url);
+  
+  // 4. 重新執行路由檢查，確保狀態同步
+  handleRouting();
 }
-
 function updateOrderFlowImg(status) {
   const img = document.getElementById("flowImage");
   const imgbuyer = document.getElementById("flowImagebuyer");
