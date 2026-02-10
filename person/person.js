@@ -941,14 +941,14 @@ async function getDetail(id) {
     } else {
       itemlist.innerHTML = items.map(item => `
         <tr>
-          <td>${item.itemId}</td>
-          <td>
+          <td data-label="商品編號">${item.itemId}</td>
+          <td data-label="商品照片">
             <img src="${item.item.mainImage || '../image/placeholder.png'}"
                  style="width:80px;height:80px;object-fit:cover;">
           </td>
-          <td>${htmlEncode(item?.item.name)}</td>
-          <td>${item.quantity}</td>
-          <td>${item.price}</td>
+          <td data-label="名稱">${htmlEncode(item?.item.name)}</td>
+          <td data-label="購買數量">${item.quantity}</td>
+          <td data-label="單價(元)">${item.price}</td>
         </tr>
       `).join('');
     }
