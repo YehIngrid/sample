@@ -302,7 +302,7 @@ async function openChat(productId) {
     const roomId = res?.data?.room?.id;
     if (!roomId) throw new Error();
     openCloseChatInterface();
-    chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+    let chatRoom = new ChatRoom(chatService, roomId, talkInterface);
     chatRoom.init();
   } catch(error) {
     Swal.fire({ icon: 'error', title: '無法建立聊天室', text: error.message || '請稍後再試' });
