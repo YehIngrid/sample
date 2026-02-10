@@ -275,12 +275,17 @@ async function handleRouting() {
   const page = params.get('page') || 'account';
   const orderId = params.get('orderId');
 
-  if (orderId) {
-    openOrderDetail(orderId);
-  }
   const isDetailPage =
     page === 'sellOrderDetail' || page === 'buyerOrderDetail';
 
+  if (!isDetailPage && params.has('orderId')) {
+    const cleanUrl = new URL(window.location.href);
+    cleanUrl.searchParams.delete('orderId');
+    window.history.replaceState({}, '', cleanUrl);
+  }
+  if (orderId) {
+    openOrderDetail(orderId);
+  }
   if (!isDetailPage) {
     resetOrderView();
   }
