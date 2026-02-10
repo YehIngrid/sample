@@ -944,6 +944,15 @@ function showOrderList() {
     buyDetail.classList.add('d-none');
     buyTable.classList.remove('d-none');
   }
+
+   const url = new URL(window.location.href);
+    url.searchParams.delete('order');
+
+    history.replaceState(
+      { page: isSell ? 'sellProducts' : 'buyProducts' },
+      '',
+      url
+    );
 }
 
 function updateOrderFlowImg(status) {
