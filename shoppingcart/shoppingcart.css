@@ -259,7 +259,13 @@ text-overflow: ellipsis;
   font-size: 14px;
   color: var(--bs-secondary-color);
 }
-small {
-  font-size: 12px;
-  color: #004b97;
+.warnSameSeller {
+  font-size: 14px;
+  color: black;
+  display: block;
+  padding: 5px 10px;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 4px;
+  margin-left: 5px;
 }

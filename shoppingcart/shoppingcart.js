@@ -121,11 +121,6 @@ function renderCart() {
     return;
   }
 
-  const checkAll = document.getElementById('checkAll');
-  if (checkAll) {
-    checkAll.checked = cartItems.every(i => i.checked);
-  }
-
   cartItems.forEach(item => {
     const el = document.createElement('div');
     el.className = 'list-group-item';
@@ -225,13 +220,42 @@ cartList.addEventListener('click', async e => {
 const checkAllEl = document.getElementById('checkAll');
 if (checkAllEl) {
   checkAllEl.addEventListener('change', e => {
+    // 如果是取消勾選，直接全部取消，不需要判斷賣家
+    if (!e.target.checked) {
+      cartItems.forEach(i => i.checked = false);
+      saveState();
+      renderCart();
+      updateSummary();
+      return;
+    }
+
+    // 如果是點擊「全選」
+    if (cartItems.length > 0) {
+      // 1. 取得第一個商品的賣家名稱作為基準
+      const firstOwner = cartItems[0].owner_name;
+      
+      // 2. 檢查是否所有商品的賣家都跟第一個一樣
+      const isSameOwner = cartItems.every(i => i.owner_name === firstOwner);
+
+      if (!isSameOwner) {
+        // 3. 如果有不同賣家，跳出警告並將勾選框還原成未選取
+        e.target.checked = false; 
+        Swal.fire({
+          icon: 'warning',
+          title: '無法全選',
+          text: '購物車內含不同賣家的商品，請手動挑選同一位賣家的商品進行結帳。'
+        });
+        return;
+      }
+    }
+
+    // 4. 通過檢查，執行全選
     cartItems = cartItems.map(i => ({ ...i, checked: e.target.checked }));
     saveState();
     renderCart();
     updateSummary();
   });
 }
-
 // ================== Summary ==================
 function updateSummary() {
   const tbody = document.querySelector('#checkout-table tbody');
