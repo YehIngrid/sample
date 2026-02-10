@@ -257,7 +257,7 @@ async function handleAction(action, id, el) {
     handleRouting(); // 觸發畫面切換
   } else if (action === '編輯商品') {
     console.log('編輯商品：', id);
-    openEditDrawer(id, rowOrCardEl);
+    openEditDrawer(id, el);
   } else if (action === 'check') {
     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
     window.location.href = url;
