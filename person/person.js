@@ -255,14 +255,70 @@ async function handleAction(action, id, el) {
     window.history.pushState({ page: targetPage, orderId: id }, '', newUrl);
     
     handleRouting(); // 觸發畫面切換
-  } else if (action === '接受訂單' || action === '即將出貨' || action === '成功取貨' || action === 'cancel') {
-    try {
-      // 根據 action 呼叫對應 API (省略具體 switch)
-      // await backendService.xxx(id);
-      Swal.fire('成功', '操作已完成', 'success').then(() => handleRouting());
-    } catch (err) {
-      Swal.fire('錯誤', err.message, 'error');
+  } else if (action === '編輯商品') {
+    console.log('編輯商品：', id);
+    openEditDrawer(id, rowOrCardEl);
+  } else if (action === 'check') {
+    const url = `../product/product.html?id=${encodeURIComponent(id)}`;
+    window.location.href = url;
+  } else if (action === 'cancel') {
+    if (confirm('確定要取消訂單嗎?')) {
+      try {
+        await backendService.cancelMyOrder(id);
+        Swal.fire({
+          title: '已取消訂單，系統將自動通知買家', 
+          icon: 'success',
+          confirmButtonText: "ok",
+        }).then(async () => {
+          // 重新載入當前頁面資料
+          handleRouting(); 
+        });
+      } catch (error) {
+        Swal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
+      } 
     }
+  } else if(action === '接受訂單') {
+    try {
+      await backendService.sellerAcceptOrders(id);
+      Swal.fire({ title: '已同意訂單', icon: 'success' }).then(() => handleRouting());
+    } catch (error) {
+      Swal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
+    }
+  } else if (action === '即將出貨') {
+    try {
+      await backendService.sellerDeliveredOrders(id);
+      Swal.fire({ title: '已登記出貨', icon: 'success' }).then(() => handleRouting());
+    } catch (error) {
+      Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
+    }
+  } else if (action === '成功取貨') {
+    try {
+      await backendService.buyerCompletedOrders(id);
+      Swal.fire({ title: "交易完成！", icon: "success" }).then(() => handleRouting());
+    } catch (error) {
+      Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
+    }
+  } else if (action === '給對方評價') {
+    // 這裡可以打開評價的 modal 或頁面
+    Swal.fire({ title: '評價功能尚未實作', icon: 'info' });
+  } else if (action === 'delete') {
+    Swal.fire({
+      title: "確定要下架並刪除此商品嗎？",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "是，我要下架",
+      cancelButtonText: "取消"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        backendService.deleteMyItems(id,
+          () => {
+            Swal.fire({ icon: "success", title: "商品下架成功" });
+            removeItemDom(id);
+          },
+          (err) => alert('刪除失敗：' + err)
+        );
+      }
+    });
   }
 }
 
