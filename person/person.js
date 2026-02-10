@@ -331,62 +331,48 @@ async function handleRouting() {
   const page = params.get('page') || 'account';
   const orderId = params.get('orderId');
 
-  const isDetailPage =
-    page === 'sellOrderDetail' || page === 'buyerOrderDetail';
-
-  if (!isDetailPage && params.has('orderId')) {
-    const cleanUrl = new URL(window.location.href);
-    cleanUrl.searchParams.delete('orderId');
-    window.history.replaceState({}, '', cleanUrl);
-  }
-  if (orderId) {
-    openOrderDetail(orderId);
-  }
-  if (!isDetailPage) {
-    resetOrderView();
-  }
-
-  document.querySelectorAll('.content-section')
-    .forEach(sec => sec.classList.add('d-none'));
+  // A. 重置所有區塊
+  document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
   document.querySelectorAll('.list-group-item[data-target]').forEach(link => link.classList.remove('active'));
+  
+  // 確保電腦版表格容器預設是顯示的
+  const sellTable = document.getElementById('sellTable');
+  const buyTable = document.getElementById('buyTable');
+  if (sellTable) sellTable.style.display = 'block'; 
+  if (buyTable) buyTable.style.display = 'block';
 
-  // B. 處理「詳情模式」
-  if (page === 'sellOrderDetail' || page === 'buyerOrderDetail') {
-    const isSell = page === 'sellOrderDetail';
-    const parentId = isSell ? 'sellProducts' : 'buyProducts';
-
-    const parentSec = document.getElementById(parentId);
-    const detailSec = document.getElementById(page);
-
-    parentSec?.classList.remove('d-none');
-
-    // 隱藏列表
-    parentSec?.querySelectorAll('.order-list-container')
-      .forEach(el => el.classList.add('d-none'));
-
-    // 👉 顯示 detail（你原本少這行）
-    detailSec?.classList.remove('d-none');
-
-    if (orderId) openOrderDetail(orderId);
-    return;
-  }
-
-
-  // C. 處理「一般列表模式」
+  // B. 找到當前分頁節點
   const targetPane = document.getElementById(page);
   if (targetPane) {
     targetPane.classList.remove('d-none');
-    // 恢復列表容器顯示
-    targetPane.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
+    
+    // 如果網址有 orderId，則進入「詳情模式」
+    if (orderId && (page === 'sellProducts' || page === 'buyProducts')) {
+      const isSell = (page === 'sellProducts');
+      const detailSec = document.getElementById(isSell ? 'sellOrderDetail' : 'buyerOrderDetail');
+      const tableEl = isSell ? sellTable : buyTable;
+
+      // 隱藏列表容器（手機卡片區）與 電腦表格
+      targetPane.querySelectorAll('.order-list-container').forEach(el => el.classList.add('d-none'));
+      if (tableEl) tableEl.style.display = 'none';
+
+      // 顯示詳情區並抓取資料
+      detailSec?.classList.remove('d-none');
+      getDetail(orderId); 
+    } 
+    else {
+      // 「列表模式」：確保列表容器與表格都是顯示的
+      targetPane.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
+      resetOrderView(); // 隱藏所有詳情區塊
+    }
   }
 
-  // 選單 Active
+  // 選單 Active 狀態
   const activeLink = document.querySelector(`.list-group-item[data-target="${page}"]`);
   if (activeLink) activeLink.classList.add('active');
 
-  // D. 這裡就是您原本要找的「根據頁面載入資料」邏輯
+  // C. 載入分頁原始資料
   if (!backendService) backendService = new BackendService();
-
   try {
     if (page === 'products') {
       backendService.getMyItems(res => {
@@ -397,18 +383,16 @@ async function handleRouting() {
     } 
     else if (page === 'sellProducts') {
       const res = await backendService.getSellerOrders();
-      const list = res?.data?.data ?? [];
-      renderSellerOrders(list); 
-      renderSellerCards(list);
+      renderSellerOrders(res?.data?.data ?? []); 
+      renderSellerCards(res?.data?.data ?? []);
     } 
     else if (page === 'buyProducts') {
       const res = await backendService.getBuyerOrders();
-      const list = res?.data?.data ?? [];
-      renderBuyerOrders(list); 
-      renderBuyerCards(list);
+      renderBuyerOrders(res?.data?.data ?? []); 
+      renderBuyerCards(res?.data?.data ?? []);
     }
   } catch (err) {
-    console.error('後端資料抓取失敗:', err);
+    console.error('資料載入失敗:', err);
   }
 }
 // ==========================================
@@ -973,11 +957,12 @@ async function getDetail(id) {
   }
 }
 function openOrderDetail(id) {
-  const newUrl = new URL(window.location.href);
-  newUrl.searchParams.set('orderId', id); // 統一使用 orderId
-  window.history.pushState({ page: 'detail', orderId: id }, '', newUrl);
-
-  getDetail(id);
+  const url = new URL(window.location.href);
+  // 保持目前的 page (sellProducts 或 buyProducts)，只設定 orderId
+  url.searchParams.set('orderId', id);
+  
+  window.history.pushState({ orderId: id }, '', url);
+  handleRouting(); // 觸發切換
 }
 window.addEventListener('popstate', (event) => {
   if (!event.state || event.state.page !== 'detail') {
@@ -985,40 +970,11 @@ window.addEventListener('popstate', (event) => {
   }
 });
 function showOrderList() {
-  const sellSection = document.getElementById('sellProducts');
-  const buySection  = document.getElementById('buyProducts');
-
-  const sellDetail = document.getElementById('sellOrderDetail');
-  const buyDetail  = document.getElementById('buyerOrderDetail');
-
-  const sellTable = document.getElementById('sellTable');
-  const buyTable  = document.getElementById('buyTable');
-
-  // 1. 判斷目前在哪個大分頁
-  const isSell = !sellSection.classList.contains('d-none');
-
-  // 2. 隱藏詳情，顯示表格容器
-  if (isSell) {
-    sellDetail.classList.add('d-none');
-    sellTable.classList.remove('d-none');
-    // 確保列表容器也顯示（對應 handleRouting 的結構）
-    sellSection.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
-  } else {
-    buyDetail.classList.add('d-none');
-    buyTable.classList.remove('d-none');
-    buySection.querySelectorAll('.order-list-container').forEach(el => el.classList.remove('d-none'));
-  }
-
-  // 3. 【關鍵修正】更新 URL，移除 orderId (或 order) 並推送到歷史紀錄
   const url = new URL(window.location.href);
-  url.searchParams.delete('orderId'); // 移除 orderId
-  url.searchParams.delete('order');   // 移除你 openOrderDetail 裡用的 order
+  url.searchParams.delete('orderId'); // 移除 ID
 
-  // 使用 pushState 或 replaceState 更新網址但不重新整理
-  window.history.pushState({ page: isSell ? 'sellProducts' : 'buyProducts' }, '', url);
-  
-  // 4. 重新執行路由檢查，確保狀態同步
-  handleRouting();
+  window.history.pushState({}, '', url);
+  handleRouting(); // 觸發切換，會自動回到列表
 }
 function updateOrderFlowImg(status) {
   const img = document.getElementById("flowImage");
