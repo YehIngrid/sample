@@ -308,6 +308,44 @@ async function openChat(productId) {
     Swal.fire({ icon: 'error', title: '無法建立聊天室', text: error.message || '請稍後再試' });
   }
 }
+async function openCloseChatInterface(){
+  backendService = new BackendService();
+  const res = await backendService.whoami();
+  if(!res){
+    Swal.fire({
+      title: '請先登入會員',
+      icon: 'warning',
+      confirmButtonText: '確定'
+    });
+    return;
+  }
+  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+    talkInterface.style.display = 'block'; // 顯示
+    // chatService = new ChatBackendService();
+    // const itemName = document.getElementById('product-name').textContent || '商品';
+    // const userId = res.data.uid;
+    // console.log("userId:", userId);
+    // console.log("sellerId:", sellerId);
+    // chatService.createRoom(itemId)
+    //   .then((data) => {
+    //     const roomId = data?.roomId;
+    //     if (roomId) {
+    //       chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+    //       chatRoom.init();
+    //     } else {
+    //       Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error('建立聊天室失敗：', err);
+    //     Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
+    //   });
+  } else {
+    talkInterface.style.display = 'none'; // 隱藏
+  }
+  console.log('chat open');
+}
+
 const checkoutBtn = document.getElementById('checkout-btn');
 if (checkoutBtn) {
   checkoutBtn.addEventListener('click', async () => {
