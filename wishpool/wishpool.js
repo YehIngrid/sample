@@ -111,11 +111,11 @@ async function listAll(page = 1) {
       const res = await wpbackendService.listWishes(page);
       currentPage = page;
       showInfo(res.data);
-      if (res.data.totalPages) {
-        totalPages = res.data.totalPages;
+      if (res.data.pagination.totalPages) {
+        totalPages = res.data.pagination.totalPages;
       }
-      if(res.data.total) {
-        total.innerText = res.data.total;
+      if(res.data.pagination.total) {
+        total.innerText = res.data.pagination.total;
       }
       updatePaginationUI();
     } catch (error) {
@@ -130,11 +130,11 @@ async function listMyWishes(mypage) {
       const res = await wpbackendService.myWishes(mypage, null);
       mycurrentPage = mypage;
       showMyInfo(res.data);
-      if(res.data.totalPages) {
-        mytotalPages = res.data.totalPages;
+      if(res.data.pagination.totalPages) {
+        mytotalPages = res.data.pagination.totalPages;
       }
-      if(res.data.total) {
-        mytotal.innerText = res.data.total;
+      if(res.data.pagination.total) {
+        mytotal.innerText = res.data.pagination.total;
       }
       myupdatePaginationUI();
     } catch (error) {
@@ -169,7 +169,7 @@ function myupdatePaginationUI() {
 
 function showInfo(data) {
   const container = document.getElementById('wishGrid');
-  if (!data.wishes || data.total === 0) {
+  if (!data.wishes || data.pagination.total === 0) {
     container.innerHTML = '<p class="empty">目前還沒有願望</p>';
     return;
   }
@@ -207,7 +207,7 @@ function showInfo(data) {
 function showMyInfo(data) {
   const container = document.getElementById('myWishGrid');
   const emptycontainer = document.getElementById('empty');
-  if (!data.wishes || data.total === 0) {
+  if (!data.wishes || data.pagination.total === 0) {
     emptycontainer.innerHTML = '<p class="empty">你目前還沒有願望</p>';
     return;
   }

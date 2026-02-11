@@ -723,7 +723,7 @@ async function callWish() {
 }
 function showWishes(data) {
   const container = document.getElementById("wishArea");
-  if(!data.wishes || data.total === 0) {
+  if(!data.wishes || data.pagination.total === 0) {
     container.innerHTML = '<p class="empty">目前還沒有願望</p>';
     return;
   }
