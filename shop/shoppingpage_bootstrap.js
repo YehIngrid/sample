@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     midcontent.style.display = "block";
   }
 });
-
+const backbtn = document.getElementById('back-btn');
 backbtn.addEventListener('click', () => {
   location.href = "shoppingpage_bootstrap.html";
 });
