@@ -288,6 +288,7 @@ class ChatRoom {
 
     hideSidebar() {
         const sidebar = document.getElementById('sidebar');
+        if (!sidebar) return;
         sidebar.classList.add('mobile-hidden');
     }
     showChatMain() {

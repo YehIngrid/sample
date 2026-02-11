@@ -179,7 +179,7 @@ ul{
     background-position: center;  /* 置中 */
     padding-top: 40px;
 }           /* 上下內距 */
-.my-lg-cat {
+/* .my-lg-cat {
   padding-top: 10px;
   padding-bottom: 10px;
   border-radius: 10px;
@@ -212,6 +212,56 @@ ul{
 .my-lg-cat a div {
     font-size: 1rem;
     padding-left: 5px;
+} */
+/* 修改分類列表容器 */
+.categorylist {
+    padding: 15px;
+    background-color: #ffffff; /* 白色背景讓內容更突顯 */
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* 輕微陰影增加層次感 */
+    margin-right: 15px; /* 加入你要求的右側間距，與右側廣告拉開 */
+    margin-bottom: 15px;
+}
+
+/* 標題樣式 */
+.categorylist h6 {
+    color: var(--brand-color); /* 使用你檔案中的藍色變數 */
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+/* 分類項目連結 */
+.categorylist a {
+    text-decoration: none !important;
+    color: #4a4a4a;
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+/* 懸停效果：背景變淡藍色，文字變深藍 */
+.categorylist a:hover {
+    background-color: #eef6ff; 
+    color: var(--brand-color);
+    transform: translateX(5px); /* 輕微右移動畫 */
+}
+
+/* 核心：統一圖標容器大小 (解決 margin-right 關鍵) */
+.icon-box {
+    width: 28px;         /* 固定寬度確保文字垂直對齊 */
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 12px;  /* 圖標與文字之間的間距 */
+}
+
+.icon-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 /* 可水平捲動的容器設定 */
 .scroll-container {
