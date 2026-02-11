@@ -119,7 +119,6 @@
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="favorites"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
               <a class="list-group-item list-group-item-action asideicon" id="logout" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
             </div>
@@ -204,7 +203,7 @@
 
   <!-- 🔹 訂單列表（單獨包） -->
   <div class="order-list-container">
-    <h5>我的銷售訂單</h5>
+    <h5 id="sellTableTitle">我的銷售訂單</h5>
 
     <div id="sellTable">
       <table class="table align-middle d-none d-lg-table">
@@ -271,7 +270,7 @@
 
   <!-- 訂單列表 -->
   <div class="order-list-container">
-    <h5>我的購買訂單</h5>
+    <h5 id="buyTableTitle">我的購買訂單</h5>
     <div id="buyTable">
       <table class="table align-middle d-none d-lg-table">
         <thead>
@@ -290,35 +289,6 @@
       <!-- section messages -->
       <section class="col-lg-9 d-none content-section" id="messages">
         <embed src="../chatroom.html" type="text/html" class="embedchat">
-      </section>
-      <!-- section favorites -->
-      <section class="col-lg-9 d-none content-section" id="favorites">
-        <div class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title">我的收藏</h5>
-              <div class="table-responsive">
-                <table class="table align-middle">
-                  <thead>
-                    <tr>
-                      <th>商品</th><th>狀態</th><th>價格</th><th>最後更新</th><th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>教科書 A</td><td><span class="badge text-bg-success">上架中</span></td><td>$300</td><td>2025/08/15</td>
-                      <td class="text-end"><button class="btn btn-sm btn-outline-primary">編輯</button></td>
-                    </tr>
-                    <tr>
-                      <td>二手筆電</td><td><span class="badge text-bg-secondary">已售出</span></td><td>$12,000</td><td>2025/08/14</td>
-                      <td class="text-end"><button class="btn btn-sm btn-outline-primary">查看</button></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
       <!-- section settings -->
       <section class="col-lg-9 d-none content-section" id="settings">
@@ -349,8 +319,8 @@
                 <h6 id="rate1"></h6>
               </div>
               <p style="padding: 0px 7px; font-size: 14px;">每個用戶基本分為 60 分，若被其他用戶檢舉一次扣 5 分，扣到 0 分為止。</p>
-              <p style="padding: 0px 10px; font-size: 14px;">每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分 1~5 分，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。</p>
-              <button class="btn btn-light" style="font-size: 1rem;">查看別人對我的評價</button>
+              <p style="padding: 0px 10px; font-size: 14px;">每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分 0~5 或 0~3 分(買家對賣家/賣家對買家)，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。</p>
+              <button class="btn btn-light">查看別人對我的評價</button>
             </div>
           </div>
           <!-- <div class="card col-lg-4 col-12">
@@ -502,7 +472,6 @@
         <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
         <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="favorites"><img src="../svg/saveicon.svg" alt="收藏清單icon"> 收藏清單</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" id="logoutMobile"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
       </div>
