@@ -279,11 +279,13 @@ class ChatRoom {
         }  
     }
 
+
     showSidebar() {
         const sidebar = document.getElementById('sidebar');
-        console.log('顯示側邊欄', sidebar);
+        if (!sidebar) return;
         sidebar.classList.remove('mobile-hidden');
     }
+
     hideSidebar() {
         const sidebar = document.getElementById('sidebar');
         sidebar.classList.add('mobile-hidden');
@@ -650,8 +652,3 @@ class ChatRoom {
    初始化
 ====================== */
 let chatRoom = null;
-let backendService = null;
-let chatBackendService = null;
-document.addEventListener('DOMContentLoaded', () => {
-    window.chatRoom = new ChatRoom();
-});

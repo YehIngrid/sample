@@ -301,11 +301,14 @@ async function openChat(productId) {
     const res = await chatService.createRoom(productId);
     const roomId = res?.data?.room?.id;
     if (!roomId) throw new Error("roomId not found");
-    
-    await openCloseChatInterface();
-    window.chatRoom.switchRoom(roomId);
 
-    chatRoom.init();
+    await openCloseChatInterface();
+
+    if (!window.chatRoom) {
+        window.chatRoom = new ChatRoom();
+    }
+
+    window.chatRoom.switchRoom(roomId);
 
   } catch (error) {
     Swal.fire({
@@ -315,6 +318,7 @@ async function openChat(productId) {
     });
   }
 }
+
 
 async function openCloseChatInterface(){
   const talkInterface = document.getElementById('talkInterface');
