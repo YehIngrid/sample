@@ -1,7 +1,6 @@
 // ================== Service ==================
 let backendService = null;
 let chatService = null;
-let chatRoom = null;
 let isCheckingOut = false;
 
 // ================== State ==================
