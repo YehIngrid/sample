@@ -300,16 +300,24 @@ async function openChat(productId) {
   try {
     const res = await chatService.createRoom(productId);
     const roomId = res?.data?.room?.id;
-    if (!roomId) throw new Error();
-    openCloseChatInterface();
-    let chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+    if (!roomId) throw new Error("roomId not found");
+    const talkInterface = document.getElementById('talkInterface');
+    await openCloseChatInterface();
+
+    // ❗ 不要再加 let
+    chatRoom = new ChatRoom(chatService, roomId, talkInterface);
     chatRoom.init();
-  } catch(error) {
-    Swal.fire({ icon: 'error', title: '無法建立聊天室', text: error.message || '請稍後再試' });
+
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: '無法建立聊天室',
+      text: error.message || '請稍後再試'
+    });
   }
 }
+
 async function openCloseChatInterface(){
-  backendService = new BackendService();
   const res = await backendService.whoami();
   if(!res){
     Swal.fire({
