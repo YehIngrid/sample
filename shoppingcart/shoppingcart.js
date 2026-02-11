@@ -301,11 +301,11 @@ async function openChat(productId) {
     const res = await chatService.createRoom(productId);
     const roomId = res?.data?.room?.id;
     if (!roomId) throw new Error("roomId not found");
-    const talkInterface = document.getElementById('talkInterface');
+    
     await openCloseChatInterface();
 
-    // ❗ 不要再加 let
-    chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+    window.chatRoom.switchRoom(roomId);
+
     chatRoom.init();
 
   } catch (error) {
@@ -318,6 +318,7 @@ async function openChat(productId) {
 }
 
 async function openCloseChatInterface(){
+  const talkInterface = document.getElementById('talkInterface');
   const res = await backendService.whoami();
   if(!res){
     Swal.fire({
