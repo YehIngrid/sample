@@ -487,9 +487,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const newOrOld = newOrOldMap[product.newOrOld] ?? '';
 
       card.innerHTML = `
-        <button class="favorite-btn" type="button" aria-label="加入收藏">
-          <i class="fa-regular fa-star"></i>
-        </button>
         <div class="product-thumb">
           <img src="${imgUrl}" alt="${product.name ?? ''}" loading="lazy">
         </div>
@@ -504,34 +501,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
       `;
-
-      // 收藏按鈕（保留你的互動）
-      const favBtn  = card.querySelector('.favorite-btn');
-      const favIcon = favBtn.querySelector('i');
-      favBtn.addEventListener('click', (e) => {
-        const isNowFav = !favIcon.classList.contains('fa-solid');
-        if (isNowFav) {
-          favIcon.classList.add('fa-solid');
-          favIcon.classList.remove('fa-regular');
-          Swal.fire({
-            title: '已加入收藏！',
-            text: '這個商品已經加到你的收藏清單',
-            iconHtml: '<i class="fa-solid fa-star" style="color:gold;font-size:3.2rem"></i>',
-            customClass: { icon: 'goldborder' }
-          });
-        } else {
-          favIcon.classList.add('fa-regular');
-          favIcon.classList.remove('fa-solid');
-          Swal.fire({
-            title: '已取消收藏',
-            iconHtml: '<i class="fa-regular fa-star" style="color:#999;font-size:3.2rem"></i>',
-            customClass: { icon: 'no-border' }
-          });
-        }
-        e.preventDefault();
-        e.stopPropagation();
-        // TODO: 呼叫收藏/取消收藏 API，使用 card.dataset.id
-      });
 
       // 卡片導頁
       card.addEventListener('click', () => {
@@ -574,44 +543,6 @@ function toggleIcon(iconEl, toFav) {
   }
 }
 
-// 建立收藏按鈕事件
-// favBtn.addEventListener('click', async (e) => {
-//   e.preventDefault();
-//   e.stopPropagation();
-
-//   const pid = card.dataset.id;   // 商品 id
-//   const isNowFav = !favIcon.classList.contains('fa-solid'); 
-//   // ⬆️ 判斷目前是不是「空心」圖示，如果是，就要加入收藏；如果已經實心，就要取消收藏
-
-//   // 樂觀更新：先切 icon
-//   toggleIcon(favIcon, isNowFav);
-
-//   try {
-//     if (isNowFav) {
-//       await backend.addFavorite(pid);   // 呼叫新增 API
-//       Swal.fire({
-//         title: '已加入收藏！',
-//         iconHtml: '<i class="fa-solid fa-star" style="color:gold;font-size:2.5rem"></i>',
-//         customClass: { icon: 'no-border' }
-//       });
-//     } else {
-//       await backend.removeFavorite(pid); // 呼叫刪除 API
-//       Swal.fire({
-//         title: '已取消收藏',
-//         iconHtml: '<i class="fa-regular fa-star" style="color:#999;font-size:2.5rem"></i>',
-//         customClass: { icon: 'no-border' }
-//       });
-//     }
-//   } catch (err) {
-//     // API 失敗 → 還原 icon
-//     toggleIcon(favIcon, !isNowFav);
-//     Swal.fire({
-//       title: '操作失敗',
-//       text: '請稍後再試',
-//       icon: 'error'
-//     });
-//   }
-// });
 
 // TODO 學力銀行
 

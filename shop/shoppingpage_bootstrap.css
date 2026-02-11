@@ -1238,19 +1238,7 @@ button {
     margin: 0 10px auto;
   }
 } 
-.favorite-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  border: none;
-  background: white;
-  border-radius: 50%;
-  padding: 6px;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  transition: transform 0.2s ease;
-  z-index: 2; /* 確保在圖片上面 */
-}
+
 .wishpoollook {
   background-color: var(--primary-color);
   padding: 10px;
@@ -1259,29 +1247,7 @@ button {
   font-weight: 700;
   color: var(--secondary-color);
 }
-.favorite-btn:hover {
-  transform: scale(1.1);
-}
 
-.favorite-btn i {
-  color: #ff4d4d; /* 預設紅色 */
-  font-size: 18px;
-}
-.card { position: relative; }
-.favorite-btn{
-  position: absolute; top: 10px; right: 10px;
-  border: none; background: #fff; border-radius: 50%;
-  padding: 6px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,.2);
-  z-index: 10; pointer-events: auto;
-}
-.favorite-btn i { font-size: 18px; color: #ff5a5a; }
-
-/* 如果卡片裡有 .stretched-link，避免它吃掉點擊 */
-.card .stretched-link::after { pointer-events: none; z-index: 1; }
-/* 移除 SweetAlert 預設的 icon 背景 */
-.goldborder {
-  border: 3px solid gold !important;
-}
 .hot-items-wrapper {
   background-color: #fff;
   border-radius: 10px;
