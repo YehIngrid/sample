@@ -303,7 +303,6 @@ async function openChat(productId) {
     if (!roomId) throw new Error("roomId not found");
     
     await openCloseChatInterface();
-
     window.chatRoom.switchRoom(roomId);
 
     chatRoom.init();
