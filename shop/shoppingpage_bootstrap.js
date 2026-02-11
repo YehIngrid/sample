@@ -10,18 +10,26 @@ const midcontent = document.getElementById('midcontent');
   const nextBtn = document.getElementById('nextBtn');
 
 // TODO seller
-const seller = document.getElementById('seller');
-const sellerbtn = document.getElementById('sellerbtn');
-sellerbtn.addEventListener('click', function(e) {
-  seller.style.display = 'block';
-  midcontent.style.display = 'none';
-})
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const page = params.get("page");
 
-const backbtn = document.querySelector('#back-btn');
-backbtn.addEventListener('click', function(e){
-  midcontent.style.display = 'block';
-  seller.style.display = 'none';
-})
+  const seller = document.getElementById("seller");
+  const midcontent = document.getElementById("midcontent");
+
+  if (page === "seller") {
+    seller.style.display = "block";
+    midcontent.style.display = "none";
+  } else {
+    seller.style.display = "none";
+    midcontent.style.display = "block";
+  }
+});
+
+backbtn.addEventListener('click', () => {
+  location.href = "shoppingpage_bootstrap.html";
+});
+
 // 取得元素
 const modal = document.getElementById('myModal');
 const openBtn = document.getElementById('openModal');

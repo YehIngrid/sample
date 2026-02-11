@@ -1371,3 +1371,12 @@ const updateStatusUI = (data) => {
   }
 
 })();
+function goToPage(pageName) {
+  const url = new URL(window.location.href);
+
+  // 修改或新增 page 參數
+  url.searchParams.set("page", pageName);
+
+  // 導向新網址
+  window.location.href = url.toString();
+}
