@@ -293,6 +293,7 @@ class ChatRoom {
     }
     showChatMain() {
         const chatMain = document.getElementById('chatMain');
+        if (!chatMain) return;
         chatMain.classList.remove('mobile-hidden');
     }
     hideChatMain() {
