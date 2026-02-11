@@ -548,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const order_STATUS_MAP = {
   pending: { text: '等待賣家接受訂單', badge: 'text-bg-warning', action: '接受訂單'}, 
   preparing: { text: '準備訂單', badge: 'text-bg-info', action: '即將出貨'}, 
-  delivered: { text: '已出貨', badge: 'text-bg-primary', action: '確認出貨'}, 
+  delivered: { text: '已出貨', badge: 'text-bg-primary', action: '等待買家確認收貨'}, 
   completed: { text: '買家成功取貨', badge: 'text-bg-success', action: '給對方評價'}, 
   canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '查看'}
 }
@@ -640,7 +640,7 @@ function renderSellerOrders(list) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
-    const isDisabled = (st.action === '確認出貨') ? 'disabled' : '';
+    const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
     return `
       <tr data-id="${esc(id)}">
         <td>${id}</td>
@@ -774,7 +774,7 @@ function renderSellerCards(list = []) {
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
-    const isDisabled = (st.action === '確認出貨') ? 'disabled' : '';
+    const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
 
     return `
       <div class="col" data-id="${esc(id)}">
