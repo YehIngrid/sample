@@ -4,24 +4,6 @@ class BackendService {
     constructor() {
         this.baseUrl = 'https://thpr.hlc23.dev';
         this.http = axios.create({ baseURL: this.baseUrl });
-
-        this.http.interceptors.response.use(
-            res => res,
-            err => {
-                if (err?.response?.status === 413) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: '檔案太大',
-                    text: '單張或總上傳大小超過限制，請壓縮或減少張數再試。'
-                });
-                }
-                return Promise.reject(err);
-            }
-        );
-    }
-    test() {
-        console.log('OK');
-        // ? 是不是該做連線測試?
     }
     getCookie(name) {
         const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -80,22 +62,22 @@ class BackendService {
             throw new Error('登入失敗，請稍後再試');
         }
         }
-        async logout() {
-            try {
-                const response = await axios.post(`${this.baseUrl}/api/account/logout`);
-                // 清除 localStorage
-                localStorage.removeItem('uid');
-                localStorage.removeItem('username');
-                localStorage.removeItem('intro');
-                localStorage.removeItem('avatar');
-                localStorage.removeItem('rate');
-                localStorage.removeItem('userCreatedAt');
-                return response;
-            } catch (error) {
-                console.error("登出錯誤：", error);
-                throw new Error("系統發生錯誤，請稍後再試");
-            }
+    async logout() {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/account/logout`);
+            // 清除 localStorage
+            localStorage.removeItem('uid');
+            localStorage.removeItem('username');
+            localStorage.removeItem('intro');
+            localStorage.removeItem('avatar');
+            localStorage.removeItem('rate');
+            localStorage.removeItem('userCreatedAt');
+            return response;
+        } catch (error) {
+            console.error("登出錯誤：", error);
+            throw new Error("系統發生錯誤，請稍後再試");
         }
+    }
 
     getUserData() {
         // 從 localStorage 取出
@@ -176,7 +158,15 @@ class BackendService {
             throw new Error(msg || '伺服器發生錯誤，請稍後再試');
         }
     }
-
+    async disableAccount() {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/account/disable`);
+            return response;
+        } catch (error) {
+            console.error("停用帳號錯誤：", error);
+            throw new Error("系統發生錯誤，請稍後再試");
+        }
+    }
     create(sellData) {
         const token = this.getCookie('idtoken');
         return this.http.post(

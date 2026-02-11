@@ -1380,3 +1380,35 @@ function goToPage(pageName) {
   // 導向新網址
   window.location.href = url.toString();
 }
+//TODO 停用帳號
+const disableAccountBtn = document.getElementById('disableAccountBtn');
+if (disableAccountBtn) {
+  disableAccountBtn.addEventListener('click', async () => {
+    const result = await Swal.fire({
+      title: '確定要停用帳號嗎？',
+      text: '停用後將無法登入，且資料將被刪除',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '是的，停用帳號',
+      cancelButtonText: '取消'
+    });
+    if (result.isConfirmed) {
+      try {
+        await backendService.disableAccount();
+        Swal.fire({
+          title: '帳號已停用',
+          text: '您的帳號已成功停用，將被登出',
+          icon: 'success'
+        }).then(() => {
+          // 停用後登出並導向首頁
+          backendService.logout().finally(() => {
+            window.location.href = '/';
+          });
+        });
+      } catch (error) {
+        console.error('停用帳號失敗:', error);
+        Swal.fire({ title: '錯誤', text: '停用帳號失敗，請稍後再試', icon: 'error' });
+      }
+    }
+  });
+}
