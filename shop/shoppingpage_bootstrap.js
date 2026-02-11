@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 const backbtn = document.getElementById('back-btn');
 backbtn.addEventListener('click', () => {
-  location.href = "shoppingpage_bootstrap.html";
+  window.history.back();
 });
 
 // 取得元素
