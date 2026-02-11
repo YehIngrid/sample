@@ -384,6 +384,11 @@ async function handleRouting() {
       const res = await backendService.getBuyerOrders();
       renderBuyerOrders(res?.data?.data ?? []);
       renderBuyerCards(res?.data?.data ?? []);
+    } else if (page === 'products') {
+      const res = await backendService.getMyItems();
+      const list = res?.data?.commodities ?? [];
+      renderTable(list);
+      renderCards(list);     // 手機用的卡片
     }
   } catch (err) {
     console.error(err);
