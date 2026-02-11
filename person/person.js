@@ -385,10 +385,11 @@ async function handleRouting() {
       renderBuyerOrders(res?.data?.data ?? []);
       renderBuyerCards(res?.data?.data ?? []);
     } else if (page === 'products') {
-      const res = await backendService.getMyItems();
-      const list = res?.data?.commodities ?? [];
-      renderTable(list);
-      renderCards(list);     // 手機用的卡片
+      backendService.getMyItems(res => {
+        const list = res?.data?.commodities ?? [];
+        renderTable(list); 
+        renderCards(list);
+      }, err => console.error(err));
     }
   } catch (err) {
     console.error(err);
