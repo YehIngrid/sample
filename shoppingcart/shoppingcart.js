@@ -294,6 +294,14 @@ function closeCheckoutLoading() {
 }
 
 // ================== Chat ==================
+// 聊天室介面顯示與隱藏
+const chatopen = document.getElementById('chaticon');
+const chatclose = document.getElementById('closechat');
+const talkInterface = document.getElementById('talkInterface');
+chatopen.addEventListener('click', function(e){
+    openCloseChatInterface();
+})
+
 async function openChat(productId) {
   try {
     const res = await chatService.createRoom(productId);

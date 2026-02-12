@@ -310,6 +310,7 @@ class ChatRoom {
     }
     hideChatMain() {
         const chatMain = document.getElementById('chatMain');
+        if (!chatMain) return;
         chatMain.classList.add('mobile-hidden');
     }
     switchToChat() {
