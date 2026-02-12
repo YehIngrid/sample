@@ -269,8 +269,8 @@ async function openChatWithSeller(itemId) {
   chatService = new ChatBackendService();
 
   try {
-    const data = await chatService.createRoom(itemId);
-    const roomId = data?.room?.id;
+    const res = await chatService.createRoom(itemId);
+    const roomId = res?.data?.room?.id;
 
     if (!roomId) throw new Error('roomId 不存在');
 
