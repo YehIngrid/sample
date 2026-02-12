@@ -308,15 +308,14 @@ async function handleAction(action, id, el) {
       showCancelButton: true,
       confirmButtonText: "是，我要下架",
       cancelButtonText: "取消"
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        backendService.deleteMyItems(id,
-          () => {
+        await backendService.deleteMyItems(id)
+          .then(() => {
             Swal.fire({ icon: "success", title: "商品下架成功" });
             window.location.reload(); // 刪除後重新載入頁面以更新列表
-          },
-          (err) => alert('刪除失敗：' + err)
-        );
+          })
+          .catch(err => alert('刪除失敗：' + err));
       }
     });
   }
@@ -385,11 +384,10 @@ async function handleRouting() {
       renderBuyerOrders(res?.data?.data ?? []);
       renderBuyerCards(res?.data?.data ?? []);
     } else if (page === 'products') {
-      backendService.getMyItems(res => {
-        const list = res?.data?.commodities ?? [];
-        renderTable(list); 
-        renderCards(list);
-      }, err => console.error(err));
+      const res = await backendService.getMyItems();
+      const list = res?.data?.commodities ?? [];
+      renderTable(list); 
+      renderCards(list);
     }
   } catch (err) {
     console.error(err);

@@ -75,14 +75,13 @@ function normalizeCartResponse(res) {
 }
 
 // ================== Enrich ==================
-function getItemInfoAsync(id) {
-  return new Promise((resolve, reject) => {
-    backendService.getItemsInfo(
-      id,
-      json => resolve(json?.data || {}),
-      err => reject(err)
-    );
-  });
+async function getItemInfoAsync(id) {
+  try {
+    const res = await backendService.getItemsInfo(id);
+    return res?.data || {};
+  } catch (err) {
+    throw err;
+  }
 }
 
 async function enrichMissingProductFields(items) {

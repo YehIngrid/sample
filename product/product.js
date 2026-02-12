@@ -8,7 +8,7 @@ backbtn.addEventListener('click', function(e){
     window.history.back();
 })
 let itemId = new URLSearchParams(location.search).get('id');
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const backendService = new BackendService();
 
   // 取得 URL ?id=xxx
@@ -309,17 +309,12 @@ function reportSeller(sellerId) {
   });
 }
 
-//?<p class="userinfo">${sellerIntroduction}</p>
-  const onError = (err) => {
-    console.error('GetItemsInfo 失敗：', err);
-  };
 
   // 呼叫 API（新版帶 id；若舊簽名不帶 id 則 fallback）
   try {
-    backendService.getItemsInfo(itemId, onSuccess, onError);
+    await backendService.getItemsInfo(itemId);
   } catch (e) {
     console.warn('GetItemsInfo(id, ...) 呼叫失敗，嘗試舊簽名：', e);
-    backendService.getItemsInfo(onSuccess);
   }
 });
 

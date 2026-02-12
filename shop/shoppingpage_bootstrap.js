@@ -60,16 +60,15 @@ document.addEventListener('DOMContentLoaded', function() {
   fetchPage(page);
   callWish();
 
-function fetchPage(p){
+  async function fetchPage(p){
   const pagingInfo = { page: p, limit: limit };
-  backendService.getHotItems(pagingInfo, (response) => {
+   const response = await backendService.getHotItems(pagingInfo);
     const items = response?.data?.commodities ?? [];
     const pg = response?.data?.pagination ?? {};
     page = pg.currentPage ?? p;
 
     renderItems(items);
     updatePager(pg);
-  });
 }
 function renderItems(items){
   listEl.innerHTML = '';
@@ -444,17 +443,16 @@ document.addEventListener('DOMContentLoaded', () => {
   nextBtn.addEventListener('click', () => { if (!nextBtn.disabled) fetchPage(page + 1); });
 
   // 主要流程
-  function fetchPage(p){
+   async function fetchPage(p){
     togglePager(true); // ← 打 API 前先讓按鈕都停用 + 顯示載入中
 
     const pagingInfo = { page: p, limit };
-    backendService.getNewItems(pagingInfo, (response) => {
+    const response = await backendService.getNewItems(pagingInfo);
       const productList = response?.data?.commodities ?? [];
       const pg = response?.data?.pagination ?? { currentPage: p, totalPages: 1, hasPrevPage: p>1, hasNextPage: false };
 
       renderItems(productList);
       updatePager(pg); // ← API 回來後才決定按鈕狀態（enabled/disabled）
-    });
   }
 
   function renderItems(productList){

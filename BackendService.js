@@ -79,14 +79,14 @@ class BackendService {
         }
     }
 
-    getUserData() {
+    async getUserData() {
         // 從 localStorage 取出
         const savedUid = localStorage.getItem('uid');
         const savedUsername = localStorage.getItem('username');
         const savedIntro = localStorage.getItem('intro');
         const savedRate = localStorage.getItem('rate');
         if(savedRate) {
-            console.log('以儲存信譽積分', savedRate);
+            console.log('已儲存信譽積分', savedRate);
         } else {
             console.log('找不到信譽積分!');
         }
@@ -99,25 +99,25 @@ class BackendService {
             console.log('尚未設定使用者介紹');
         }
         if (savedUid) {
-        console.log('已儲存的 UID:', savedUid);
+            console.log('已儲存的 UID:', savedUid);
         // 這裡可以用來呼叫 API 或顯示用戶資訊
         } else {
-        console.log('尚未儲存 UID');
+            console.log('尚未儲存 UID');
         }
-        return axios.get(`${this.baseUrl}/api/account/${savedUid}`, {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/account/${savedUid}`, {
                 withCredentials: true
-            })
-            .then(function(response) {
-                localStorage.setItem('username', response.data.data.name); 
-                localStorage.setItem('intro', response.data.data.introduction);
-                localStorage.setItem('avatar', response.data.data.photoURL);
-                localStorage.setItem('rate', response.data.data.rate);
-                localStorage.setItem('userCreatedAt', response.data.data.createdAt);
-            })
-            .catch(function(error) {
-                console.error("無法取得使用者資料", error);
-                throw error;
             });
+            localStorage.setItem('username', response.data.data.name); 
+            localStorage.setItem('intro', response.data.data.introduction);
+            localStorage.setItem('avatar', response.data.data.photoURL);
+            localStorage.setItem('rate', response.data.data.rate);
+            localStorage.setItem('userCreatedAt', response.data.data.createdAt);
+            return response;
+        } catch (error) {
+            console.error("無法取得使用者資料", error);
+            throw new Error("系統發生錯誤，請稍後再試");
+        }
     }
     async updateProfile(userData) {
         let _this = this;
@@ -167,26 +167,27 @@ class BackendService {
             throw new Error("系統發生錯誤，請稍後再試");
         }
     }
-    create(sellData) {
+    async create(sellData) {
         const token = this.getCookie('idtoken');
-        return this.http.post(
-            '/api/commodity/create',
-            sellData,
-            {
-            withCredentials: true,
-            headers: {
-                idtoken: token
-                // 不要手動設 'Content-Type'，讓 axios 依 FormData 自動帶 boundary
-            }
-            }
-        )
-        .then((res) => res.data)
-        .catch((err) => {
+        try {
+            const response = await this.http.post(
+                '/api/commodity/create',
+                sellData,
+                {
+                    withCredentials: true,
+                    headers: {
+                        idtoken: token
+                        // 不要手動設 'Content-Type'，讓 axios 依 FormData 自動帶 boundary
+                    }
+                }
+            );
+            return response.data;
+        } catch (err) {
             console.error(err);
             // 從後端取更精確的錯誤訊息
             const msg = err?.response?.data?.message || '上架商品失敗';
-            throw new Error(msg);
-        });
+            return Promise.reject(new Error(msg));
+        }
     }
 
     async getAllCommodities(pagingInfo) {
@@ -200,69 +201,64 @@ class BackendService {
             return response.data;
         } catch (error) {
             console.error("無法取得分類資料", error);
-            throw error;
+            return Promise.reject(error);
         }
     }
 
-    getHotItems(pagingInfo, fnSuccess, fnError) {
-        return axios.get(`${this.baseUrl}/api/commodity/list/hot`, {
-            params: {
-                page: pagingInfo.page,
-                limit: pagingInfo.limit
-            }
-        })
-        .then(function(response) {
-            fnSuccess(response.data);
-        })
-        .catch(function(error) {
-            console.error(error);
-            fnError("發生錯誤");
-        })
+     async getHotItems(pagingInfo) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/list/hot`, {
+                params: {
+                    page: pagingInfo.page,
+                    limit: pagingInfo.limit
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("無法取得熱門商品資料", error);
+            return Promise.reject(error);
+        }
     }
-    getNewItems(pagingInfo, fnSuccess, fnError) {
-        return axios.get(`${this.baseUrl}/api/commodity/list/new`, {
-            params: {
-                page: pagingInfo.page, 
-                limit: pagingInfo.limit
-            }
-        })
-        .then(function(response) {
-            fnSuccess(response.data);
-        })
-        .catch(function(error) {
-            console.error(error);
-            fnError("發生錯誤");
-        })
+    async getNewItems(pagingInfo) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/list/new`, {
+                params: {
+                    page: pagingInfo.page, 
+                    limit: pagingInfo.limit
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("無法取得最新商品資料", error);
+            return Promise.reject(error);
+        }
     }
-    getItemsInfo(id, fnSuccess, fnError) {
-        return axios.get(`${this.baseUrl}/api/commodity/item/${id}`)
-        .then(function(response) {
-            fnSuccess(response.data);
-        })
-        .catch(function(error) {
-            console.error(error);
-            fnError("讀取商品資訊失敗");
-        }) 
+    async getItemsInfo(id) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/item/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("讀取商品資訊失敗", error);
+            return Promise.reject(error);
+        } 
     }
-    getMyItems(fnSuccess, fnError) {
-        return axios.get(`${this.baseUrl}/api/commodity/my`, { headers: { "Cache-Control": "no-cache" } })
-        .then(function(response) {
-            fnSuccess(response.data);
-        })
-        .catch(function(error) {
+    async getMyItems() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/my`, { headers: { "Cache-Control": "no-cache" } });
+            return response.data;
+        } catch (error) {
             console.error(error);
-            fnError("讀取商品資訊失敗");
-        }) 
+            return Promise.reject(error);
+        }
     }
-    deleteMyItems(id, fnSuccess, fnError) {
-        return axios.delete(`${this.baseUrl}/api/commodity/delete/${id}`)
-        .then(function(response) {
-            fnSuccess(response.data);
-        })
-        .catch(function(error) {
+    async deleteMyItems(id) {
+        try {
+            const response = await axios.delete(`${this.baseUrl}/api/commodity/delete/${id}`);
+            return response.data;
+        } catch (error) {
             console.error(error);
-            fnError("無法刪除商品");
-        })
+            return Promise.reject(new Error("無法刪除商品"));
+        }
     }
     async updateMyItems(id, data) {
         try {
