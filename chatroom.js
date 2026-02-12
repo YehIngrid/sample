@@ -562,7 +562,7 @@ class ChatRoom {
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf
                         ? `<small class="text-muted me-2">${timestamp}</small><strong>${this.username}</strong>`
-                        : `<strong>對方</strong><small class="text-muted ms-2">${timestamp}</small>`
+                        : `<strong>${data.username}</strong><small class="text-muted ms-2">${timestamp}</small>`
                     }
                 </div>
                 <div class="message-text">
@@ -570,7 +570,7 @@ class ChatRoom {
                 </div>
             </div>
         `;
-
+        // TODO data.username 是對方名子?
         if (prepend) {
             container.prepend(div); // 插入到最前面
         } else {
