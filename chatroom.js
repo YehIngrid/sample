@@ -26,7 +26,7 @@ class ChatRoom {
         await this.loadRooms();
         // this.hideLoaders();
         if (this.currentRoomId) {
-            const roomEl = document.querySelector(`[data-roomId="${this.currentRoomId}"]`);
+            const roomEl = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
             if (roomEl) {
                 // 從 HTML 結構中抓取商品名稱，避免傳入 undefined
                 const name = roomEl.querySelector('#product-name')?.textContent || '未知';
