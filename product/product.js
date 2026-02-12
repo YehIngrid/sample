@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       6 : '全舊', 
     };
     const newOrOld = newOrOldMap[product.newOrOld] ?? '未標示';
-    const category = categoryMap?.[product.category] ?? '未分類';
+    const category = categoryMap?.[product.category] ?? '未分類(其他)';
     const sizeMap = {
       0: '小',
       1: '中',
