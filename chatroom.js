@@ -561,7 +561,7 @@ class ChatRoom {
             <div class="message-content">
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf
-                        ? `<small class="text-muted me-2">${now}</small><strong>${this.username}</strong>`
+                        ? `<small class="text-muted me-2">${timestamp}</small><strong>${this.username}</strong>`
                         : `<strong>對方</strong><small class="text-muted ms-2">${timestamp}</small>`
                     }
                 </div>
