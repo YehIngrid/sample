@@ -393,7 +393,7 @@ class ChatRoom {
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">商品<span class="roomNameSpan">${data.item.name}</span>聊天室</h6>
-                            <small class="text-muted">${data.lastMessage || '無訊息'}</small>
+                            <small class="text-muted">${data.lastMessage.message || '無訊息'}</small>
                         </div>
                         <span class="badge bg-primary rounded-pill ${data.isNew == false ? 'd-none' : ''}">new</span> 
                     </div>
