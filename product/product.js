@@ -1,26 +1,38 @@
 // 全域變數（不要再用 const/let 重新宣告它）
 let backendService = null;
 let chatService = null;
-let chatRoom = null;
 let sellerId = null;
+let itemId = null;   // 放最上面
+
+const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span>NT$</span>`;
+const toArray = (v) => Array.isArray(v) ? v : (v ? [v] : []);
+const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u)); // 如需前綴可在此加
+
 const backbtn = document.querySelector('#back-btn');
 backbtn.addEventListener('click', function(e){
     window.history.back();
 })
-let itemId = new URLSearchParams(location.search).get('id');
-document.addEventListener('DOMContentLoaded', async () => {
-  const backendService = new BackendService();
 
-  // 取得 URL ?id=xxx
+document.addEventListener('DOMContentLoaded', async () => {
+  backendService = new BackendService();
+  itemId = new URLSearchParams(location.search).get('id');
   console.log('id:', itemId);
   if (!itemId) {
     console.warn('缺少商品 id');
     return;
   }
+  try {
+    const response = await backendService.getItemsInfo(itemId);
+    onSuccess(response);
+  } catch (e) {
+    console.error('取得商品失敗', e);
+  }
+  document.querySelectorAll('.shopcart').forEach(btn => {
+    btn.addEventListener('click', onAddToCart);
+  });
+});
 
-  const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span>NT$</span>`;
-  const toArray = (v) => Array.isArray(v) ? v : (v ? [v] : []);
-  const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u)); // 如需前綴可在此加
+
 
   const onSuccess = (response) => {
     const product = response?.data ?? {};
@@ -63,20 +75,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const size = sizeMap?.[product.size] ?? '未標示';
     const updatedTime = formatTaipeiTime(product.updatedAt);
     const createdTime = formatTaipeiTime(product.createdAt);
-
-    // ==== 若專案還沒有工具函式，這裡給最小可用版 ====
-const toArray = (v) => Array.isArray(v) ? v : (v ? String(v).split(',').map(s => s.trim()).filter(Boolean) : []);
-const toFullURL = (u) => {
-  if (!u) return '';
-  try {
-    // 已是絕對網址
-    new URL(u);
-    return u;
-  } catch {
-    // 不是絕對網址就當作相對路徑（依你專案調整 base）
-    return u.startsWith('/') ? u : `/` + u;
-  }
-};
 
 /* ---------- 工具：安全轉數字 + 金額格式 ---------- */
 const num = (v, d = 0) => Number.isFinite(+v) ? +v : d;
@@ -244,7 +242,7 @@ function renderSellerInfo(data) {
   const scoreEl   = document.getElementById('sellerRate');
   const chatBtn   = document.getElementById('sellerChat'); // 與賣家聊聊
   const rateBtn   = root.querySelector('#sellerRatebtn');               // 查看賣家評價
-  const reportBtn = root.querySelector('sellerBad');            // 檢舉賣家
+  const reportBtn = root.querySelector('#sellerBad');            // 檢舉賣家
 
   // 灌資料（含預設值）
   if (img) {
@@ -264,70 +262,50 @@ function renderSellerInfo(data) {
 // === 事件處理：依你的實作調整 ===
 async function openChatWithSeller(itemId) {
   if (!itemId) {
-    Swal.fire({ icon: 'warning', title: '無法與賣家聊天', text: '缺少商品編號' });
-    return;
-  } else {
-    openCloseChatInterface();
-    chatService = new ChatBackendService();
-    const res = await chatService.createRoom(itemId)
-    res.then((data) => {
-      const roomId = data?.roomId;
-      if (roomId) {
-        chatRoom = new ChatRoom(chatService, roomId, talkInterface);
-        chatRoom.init();
-      } else {
-        Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-      }
-    })
-    .catch((err) => {
-      console.error('建立聊天室失敗：', err);
-      Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-    });
+    return Swal.fire({ icon: 'warning', title: '缺少商品編號' });
+  }
+
+  openCloseChatInterface();
+  chatService = new ChatBackendService();
+
+  try {
+    const data = await chatService.createRoom(itemId);
+    const roomId = data?.roomId;
+
+    if (!roomId) throw new Error('roomId 不存在');
+
+    chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+    chatRoom.init();
+
+  } catch (err) {
+    console.error(err);
+    Swal.fire({ icon: 'error', title: '無法建立聊天室' });
   }
 }
+
 function openSellerReviews(sellerId) {
   if (!sellerId) return;
   location.href = `../seller/reviews.html?seller=${encodeURIComponent(sellerId)}`;
 }
-function reportSeller(sellerId) {
+async function reportSeller(sellerId) {
   if (!sellerId) return;
-  Swal.fire({
+
+  const res = await Swal.fire({
     title: '檢舉賣家',
     input: 'textarea',
-    inputPlaceholder: '請描述檢舉事由（必要）',
-    inputValidator: v => !v?.trim() ? '請填寫檢舉事由' : undefined,
+    inputPlaceholder: '請描述檢舉原因',
     showCancelButton: true,
-    confirmButtonText: '送出'
-  }).then((res) => {
-    if (!res.isConfirmed) return;
-    backendService?.reportSeller?.(
-      sellerId,
-      { reason: res.value },
-      () => Swal.fire({ icon: 'success', title: '已送出' }),
-      (err) => Swal.fire({ icon: 'error', title: '送出失敗', text: String(err || '請稍後再試') })
-    );
   });
-}
 
+  if (!res.isConfirmed) return;
 
-  // 呼叫 API（新版帶 id；若舊簽名不帶 id 則 fallback）
   try {
-    await backendService.getItemsInfo(itemId);
+    await backendService.reportSeller(sellerId, { reason: res.value });
+    Swal.fire('已送出', '', 'success');
   } catch (e) {
-    console.warn('GetItemsInfo(id, ...) 呼叫失敗，嘗試舊簽名：', e);
+    Swal.fire('送出失敗', '', 'error');
   }
-});
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  // 建立 service（注意：這裡不要再寫 const/let）
-  backendService = new BackendService();
-
-  // 綁定加入購物車按鈕
-  document.querySelectorAll('.shopcart').forEach(btn => {
-    btn.addEventListener('click', onAddToCart);
-  });
-});
+}
 
 async function onAddToCart(e) {
   const btn = e.currentTarget;
@@ -484,7 +462,8 @@ const talkInterface = document.getElementById('talkInterface');
 chatopen.addEventListener('click', function(e){
     openCloseChatInterface();
 })
-async function openCloseChatInterface(){
+
+async function openCloseChatInterface() {
   backendService = new BackendService();
   const res = await backendService.whoami();
   if(!res){
