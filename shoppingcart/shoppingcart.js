@@ -306,6 +306,7 @@ async function openChat(productId) {
   try {
     const res = await chatService.createRoom(productId);
     const roomId = res?.data?.room?.id;
+    const roomName = res?.data?.item?.name;
     if (!roomId) throw new Error("roomId not found");
 
     await openCloseChatInterface();
@@ -314,7 +315,7 @@ async function openChat(productId) {
         window.chatRoom = new ChatRoom();
     }
 
-    window.chatRoom.switchRoom(roomId);
+    window.chatRoom.switchRoom(roomId, roomName);
 
   } catch (error) {
     Swal.fire({
