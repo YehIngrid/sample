@@ -26,11 +26,11 @@ class ChatRoom {
         await this.loadRooms();
         // this.hideLoaders();
         if (this.currentRoomId) {
-            // 從列表中尋找對應的 roomName (或讓後端 API 支援由 ID 取得單一 Room 資訊)
-            const rooms = await this.backend.listRooms();
-            const targetRoom = rooms.data.find(r => r.id === this.currentRoomId);
-            if (targetRoom) {
-                this.switchRoom(targetRoom.id, targetRoom.item.name);
+            const roomEl = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
+            if (roomEl) {
+                // 從 HTML 結構中抓取商品名稱，避免傳入 undefined
+                const name = roomEl.querySelector('#product-name')?.textContent || '未知';
+                await this.switchRoom(this.currentRoomId, name);
             }
         }
         this.bindEvents();
