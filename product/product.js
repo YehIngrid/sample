@@ -270,11 +270,11 @@ async function openChatWithSeller(itemId) {
 
   try {
     const data = await chatService.createRoom(itemId);
-    const roomId = data?.roomId;
+    const roomId = data?.room?.id;
 
     if (!roomId) throw new Error('roomId 不存在');
 
-    chatRoom = new ChatRoom(chatService, roomId, talkInterface);
+    chatRoom = new ChatRoom(roomId);
     chatRoom.init();
 
   } catch (err) {
