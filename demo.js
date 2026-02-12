@@ -88,3 +88,21 @@ function doLogout() {
 }
 
 document.addEventListener('DOMContentLoaded', renderAuthUI);
+const formatTaipeiTime = (dateStr) => {
+  if (!dateStr) return '-'; // 如果沒有資料，直接回傳 '-'
+  
+  const date = new Date(dateStr);
+  
+  // 檢查是否為無效日期 (Invalid Date)
+  if (isNaN(date.getTime())) return '-';
+
+  return date.toLocaleString("zh-TW", {
+    timeZone: "Asia/Taipei",
+    hour12: false,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+};

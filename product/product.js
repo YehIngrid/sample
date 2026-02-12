@@ -53,37 +53,16 @@ document.addEventListener('DOMContentLoaded', () => {
       5 : '稍舊', 
       6 : '全舊', 
     };
-    const newOrOld = newOrOldMap?.[product.newOrOld] ?? product.newOrOld ?? '未標示';
-    const category = categoryMap?.[product.category] ?? product.category ?? '未分類';
+    const newOrOld = newOrOldMap[product.newOrOld] ?? '未標示';
+    const category = categoryMap?.[product.category] ?? '未分類';
     const sizeMap = {
       0: '小',
       1: '中',
       2: '大'
     };
-    const size = sizeMap?.[product.size] ?? product.size ?? '未標示';
-    let updatedAt = product.updatedAt;
-    const taiwanUpdateTime = new Date(updatedAt);
-    // 格式化（只保留時:分）
-    const updatedTime = taiwanUpdateTime.toLocaleString("zh-TW", { 
-      timeZone: "Asia/Taipei",
-      hour12: false,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-    let createdAt = product.createdAt;
-    const taiwanCreatedTime = new Date(createdAt);
-    const createdTime = taiwanCreatedTime.toLocaleString("zh-TW", {
-      timeZone: "Asia/Taipei",
-      hour12: false,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit"
-    });
+    const size = sizeMap?.[product.size] ?? '未標示';
+    const updatedTime = formatTaipeiTime(product.updatedAt);
+    const createdTime = formatTaipeiTime(product.createdAt);
 
     // ==== 若專案還沒有工具函式，這裡給最小可用版 ====
 const toArray = (v) => Array.isArray(v) ? v : (v ? String(v).split(',').map(s => s.trim()).filter(Boolean) : []);
