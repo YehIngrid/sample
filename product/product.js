@@ -30,13 +30,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('.shopcart').forEach(btn => {
     btn.addEventListener('click', onAddToCart);
   });
-  const embed = document.getElementById('talkInterface');
+  const iframe = document.getElementById('talkInterface');
 
-// 必須等待 embed 載入完成
-  embed.addEventListener('load', () => {
+// 必須等待 iframe 載入完成
+  iframe.addEventListener('load', () => {
       try {
-          // 取得 embed 內部的 document
-          const innerDoc = embed.getSVGDocument() || embed.contentDocument;
+          // 取得 iframe 內部的 document
+          const innerDoc = iframe.contentDocument;
           
           // 抓取裡面的元素，例如一個 ID 為 "message-input" 的輸入框
           const element = innerDoc.getElementById('chatList');
