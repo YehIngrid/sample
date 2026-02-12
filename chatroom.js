@@ -1,7 +1,7 @@
 class ChatRoom {
-    constructor() {
+    constructor(initialRoomId = null) {
         this.backend = new ChatBackendService();
-        this.currentRoomId = null;
+        this.currentRoomId = initialRoomId;
         this.currentRoomName = '';
         this.eventSource = null;
         this.username = '';
@@ -25,7 +25,14 @@ class ChatRoom {
         // this.showLoaders();
         await this.loadRooms();
         // this.hideLoaders();
-
+        if (this.currentRoomId) {
+            // 從列表中尋找對應的 roomName (或讓後端 API 支援由 ID 取得單一 Room 資訊)
+            const rooms = await this.backend.listRooms();
+            const targetRoom = rooms.data.find(r => r.id === this.currentRoomId);
+            if (targetRoom) {
+                this.switchRoom(targetRoom.id, targetRoom.item.name);
+            }
+        }
         this.bindEvents();
         this.putImage();
         this.closePreview();

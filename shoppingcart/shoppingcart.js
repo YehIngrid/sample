@@ -306,11 +306,10 @@ async function openChat(productId) {
   try {
     const res = await chatService.createRoom(productId);
     const roomId = res?.data?.room?.id;
-    const roomName = res?.data?.item?.name;
     if (!roomId) throw new Error("roomId not found");
 
     await openCloseChatInterface();
-
+    await loadRoom();
     if (!window.chatRoom) {
         window.chatRoom = new ChatRoom();
     }
