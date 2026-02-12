@@ -483,7 +483,7 @@ async function openCloseChatInterface() {
     console.log("sellerId:", sellerId);
     chatService.createRoom(itemId)
       .then((data) => {
-        const roomId = data?.roomId;
+        const roomId = data?.data?.room?.id;
         if (roomId) {
           chatRoom = new ChatRoom(chatService, roomId, talkInterface);
           chatRoom.init();
