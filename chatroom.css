@@ -175,11 +175,15 @@ html, body {
     word-wrap: break-word;
 }
 .roomName {
+    font-size: 12px;
     max-width: 160px;
     text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.roomNameSpan {
+    color: var(--brand-color);
 }
 .message-self .message-text {
     background: linear-gradient(to right, var(--primary-color), var(--secondary-color));

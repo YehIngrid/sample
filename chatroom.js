@@ -380,22 +380,22 @@ class ChatRoom {
                             <img src="${data.item.mainImage}" alt="${data.item.name}的照片" style="width: 45px; height: 45px; border-radius: 50px;">
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0 roomName">商品${data.item.name}聊天室</h6>
-                            <small class="text-muted">${data.lastMessageId || '無訊息'}</small>
+                            <h6 class="mb-0 roomName">商品<span class="roomNameSpan">${data.item.name}</span>聊天室</h6>
+                            <small class="text-muted">${data.lastMessage || '無訊息'}</small>
                         </div>
-                        <span class="badge bg-primary rounded-pill ${data.lastMessageId == data.lastReadMessageId ? 'd-none' : ''}">new</span> 
+                        <span class="badge bg-primary rounded-pill ${data.isNew == false ? 'd-none' : ''}">new</span> 
                     </div>
                 `;
                 // 未讀訊息徽章(上面的badge)
                 item.addEventListener('click', () => {
-                    this.switchRoom(data.id);
+                    this.switchRoom(data.id, data.item.name);
                 });
 
                 chatList.appendChild(item);
             });
 
             if (rooms.length > 0) {
-                this.switchRoom(rooms[0].id);
+                this.switchRoom(rooms[0].id, rooms[0].item.name);
             }
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
@@ -409,7 +409,7 @@ class ChatRoom {
        切換聊天室
     ====================== */
 
-    async switchRoom(roomId) {
+    async switchRoom(roomId, roomName) {
         // this.chatMainLoader.classList.remove('d-none');
         if(this.isMobile) {
             this.hideSidebar();
@@ -417,12 +417,12 @@ class ChatRoom {
         }
         console.log('切換聊天室', roomId);
         this.currentRoomId = roomId;
-        //this.currentRoomName = roomName;
+        this.currentRoomName = roomName;
 
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
         // 聊天室內名字
-        document.querySelector('.chat-header h6').textContent = '商品' + roomId + '聊天室';
+        document.querySelector('.chat-header h6').textContent = '商品' + roomName + '聊天室';
 
         const container = document.getElementById('messagesContainer');
         container.innerHTML = '';
