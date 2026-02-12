@@ -351,3 +351,7 @@ html, body {
     padding-bottom: 10px;
     font-size: 11px;
 }
+#messagesContainer {
+    scroll-behavior: smooth; /* 讓滾動變得滑順 */
+    overflow-y: auto;
+}

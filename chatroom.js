@@ -10,6 +10,8 @@ class ChatRoom {
         this.isMobile = window.innerWidth < 768;
         this.lightbox = null; // PhotoSwipe instance
         this.pendingImage = null;
+        this.hasMore = true; 
+        this.isLoading = false;
         this.sendImagebtn = document.getElementById('send-image-btn');
         this.previewArea = document.getElementById('image-upload');
         this.input = document.getElementById('messageInput');
@@ -202,20 +204,6 @@ class ChatRoom {
         // 提取圖片 URL
         let imageUrl = data.attachments || '';
 
-        // 創建一個臨時圖片來獲取真實尺寸
-        const tempImg = new Image();
-        tempImg.onload = () => {
-            // 圖片載入完成後，更新 data 屬性
-            const link = imgWrapper.querySelector('.image-link');
-            if (link) {
-                link.setAttribute('data-pswp-width', tempImg.naturalWidth);
-                link.setAttribute('data-pswp-height', tempImg.naturalHeight);
-            }
-            // 重新初始化 PhotoSwipe 以包含新圖片
-            this.initPhotoSwipeGallery();
-        };
-        tempImg.src = imageUrl;
-
         imgWrapper.innerHTML = `
             ${!isSelf ? `
                 <div class="message-avatar">
@@ -239,9 +227,9 @@ class ChatRoom {
                        target="_blank"
                        class="image-link">
                         <img src="${imageUrl}" 
-                             alt="Image" 
-                             style="max-width: 200px; max-height: 200px; border-radius: 8px; cursor: pointer;"
-                             loading="lazy">
+                            alt="Image" 
+                            style="width: 200px; min-height: 150px; background: #f0f0f0; border-radius: 8px; cursor: pointer;"
+                            loading="lazy">
                     </a>
                 </div>
             </div>
@@ -251,8 +239,32 @@ class ChatRoom {
             container.prepend(imgWrapper);
         } else {
             container.appendChild(imgWrapper);
-            container.scrollTop = container.scrollHeight;
+            
+            // --- 修改重點：強制在插入後滾動一次 ---
+            // 使用 requestAnimationFrame 確保瀏覽器已經渲染該 DOM 節點
+            requestAnimationFrame(() => {
+                container.scrollTop = container.scrollHeight;
+            });
         }
+
+        // 圖片載入完成後的處理
+        const tempImg = new Image();
+        tempImg.onload = () => {
+            // ... 原有的 PhotoSwipe 邏輯 ...
+            // 圖片載入完成後，更新 data 屬性
+            const link = imgWrapper.querySelector('.image-link');
+            if (link) {
+                link.setAttribute('data-pswp-width', tempImg.naturalWidth);
+                link.setAttribute('data-pswp-height', tempImg.naturalHeight);
+            }
+            // 重新初始化 PhotoSwipe 以包含新圖片
+            this.initPhotoSwipeGallery();
+            // --- 核心修正：圖片真正加載完成撐開高度後，再滾動一次 ---
+            if (!prepend) {
+                container.scrollTop = container.scrollHeight;
+            }
+        };
+        tempImg.src = imageUrl;
     }
     setupMobileView() {
         this.isMobile = window.innerWidth < 768;
@@ -581,7 +593,7 @@ class ChatRoom {
     // TODO 總訊息量超過五十則
     async loadMoreMessages() {
         const container = document.getElementById('messagesContainer');
-        
+        if (!this.hasMore || this.isLoading) return;
         // 1. 取得目前最頂端訊息的時間戳
         const firstMsgElement = container.querySelector('.message, .imgmessage');
         if (!firstMsgElement) return;
@@ -591,6 +603,7 @@ class ChatRoom {
         const oldScrollHeight = container.scrollHeight;
 
         try {
+            this.isLoading = true;
             const limit = 50;
             const history = await this.backend.getHistory(this.currentRoomId, limit, before);
             console.log('載入更多歷史訊息:', history);
@@ -608,18 +621,28 @@ class ChatRoom {
                 // 新的高度 - 舊的高度 = 剛才載入的內容高度
                 // 讓捲軸維持在原本看的那一則訊息上
                 container.scrollTop = container.scrollHeight - oldScrollHeight;
+                if (data.length < limit) {
+                    this.hasMore = false; 
+                    this.renderNoMoreHint(container);
+                }
             } else {
                 console.log('沒有更多對話紀錄');
                 // 可以選擇顯示一個提示，告訴使用者已經沒有更多訊息了
                 // 例如在頂端顯示一個小訊息「沒有更多歷史訊息了」
-                const noMoreMsg = document.createElement('div');
-                noMoreMsg.className = 'text-center text-muted nohistory';
-                noMoreMsg.textContent = '沒有更多對話紀錄了';
-                container.prepend(noMoreMsg);
+                this.hasMore = false; 
+                this.renderNoMoreHint(container);
             }
         } catch (err) {
             console.error('載入更多訊息失敗', err);
         }
+    }
+    // 提取出來的顯示提示函數
+    renderNoMoreHint(container) {
+        if (container.querySelector('.nohistory')) return; // 避免重複添加
+        const noMoreMsg = document.createElement('div');
+        noMoreMsg.className = 'text-center text-muted nohistory';
+        noMoreMsg.textContent = '沒有更多對話紀錄了';
+        container.prepend(noMoreMsg);
     }
     /* ======================
        綁定事件
