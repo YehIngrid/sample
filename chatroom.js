@@ -29,7 +29,7 @@ class ChatRoom {
             const roomEl = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
             if (roomEl) {
                 // 從 HTML 結構中抓取商品名稱，避免傳入 undefined
-                const name = roomEl.querySelector('#product-name')?.textContent || '未知';
+                const name = roomEl.querySelector('roomNameSpan')?.textContent || '未知';
                 await this.switchRoom(this.currentRoomId, name);
             }
         }
@@ -356,14 +356,6 @@ class ChatRoom {
                 this.loadMoreMessages();
             }
         });
-        // let typingTimer;
-        // input.addEventListener('input', () => {
-        //     clearTimeout(typingTimer);
-        //     this.showTyping(true);
-        //     typingTimer = setTimeout(() => {
-        //         this.showTyping(false);
-        //     }, 100);
-        // });
     }
     // 播放通知音
     playNotificationSound() {

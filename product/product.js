@@ -30,6 +30,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('.shopcart').forEach(btn => {
     btn.addEventListener('click', onAddToCart);
   });
+  const embed = document.getElementById('talkInterface');
+
+// 必須等待 embed 載入完成
+  embed.addEventListener('load', () => {
+      try {
+          // 取得 embed 內部的 document
+          const innerDoc = embed.getSVGDocument() || embed.contentDocument;
+          
+          // 抓取裡面的元素，例如一個 ID 為 "message-input" 的輸入框
+          const element = innerDoc.getElementById('chatList');
+          console.log('抓到的元素：', element);
+          //element.value = "從外部設定的文字";
+      } catch (e) {
+          console.error("無法存取：可能跨網域或尚未完全載入", e);
+      }
+  });
 });
 
 
