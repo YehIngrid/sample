@@ -28,6 +28,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   backendService = new BackendService();
   chatService = new ChatBackendService();
   await initCartFromAPI();
+
+  const iframe = document.getElementById('talkInterface');
+
+// 必須等待 iframe 載入完成
+  iframe.addEventListener('load', () => {
+      try {
+          // 取得 iframe 內部的 document
+          const innerDoc = iframe.contentDocument;
+          
+          // 抓取裡面的元素，例如一個 ID 為 "message-input" 的輸入框
+          const element = innerDoc.getElementById('chatList');
+          console.log('抓到的元素：', element);
+          //element.value = "從外部設定的文字";
+      } catch (e) {
+          console.error("無法存取：可能跨網域或尚未完全載入", e);
+      }
+  });
 });
 
 // ================== API Init ==================

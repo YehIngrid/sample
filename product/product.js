@@ -491,28 +491,28 @@ async function openCloseChatInterface() {
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
     talkInterface.style.display = 'block'; 
     
-    try {
-      // 1. 取得 roomId
-      const response = await chatService.createRoom(itemId);
-      const roomId = response?.data?.room?.id;
+    // try {
+    //   // 1. 取得 roomId
+    //   const response = await chatService.createRoom(itemId);
+    //   const roomId = response?.data?.room?.id;
 
-      if (roomId) {
-        // 2. 實例化 ChatRoom 時傳入 roomId
-        // 注意：不需再傳入 chatService 或 talkInterface，因為 ChatRoom 內部會自行處理
-        chatRoom = new ChatRoom(roomId); 
-        await chatRoom.init(); 
+    //   if (roomId) {
+    //     // 2. 實例化 ChatRoom 時傳入 roomId
+    //     // 注意：不需再傳入 chatService 或 talkInterface，因為 ChatRoom 內部會自行處理
+    //     chatRoom = new ChatRoom(roomId); 
+    //     await chatRoom.init(); 
         
-        // 3. 手機版自動切換視窗
-        if (chatRoom.isMobile) {
-            chatRoom.switchToChat();
-        }
-      } else {
-        throw new Error('無法取得房間 ID');
-      }
-    } catch (err) {
-      console.error('建立聊天室失敗：', err);
-      Swal.fire({ icon: 'error', title: '無法建立聊天室' });
-    }
+    //     // 3. 手機版自動切換視窗
+    //     if (chatRoom.isMobile) {
+    //         chatRoom.switchToChat();
+    //     }
+    //   } else {
+    //     throw new Error('無法取得房間 ID');
+    //   }
+    // } catch (err) {
+    //   console.error('建立聊天室失敗：', err);
+    //   Swal.fire({ icon: 'error', title: '無法建立聊天室' });
+    // }
   } else {
     talkInterface.style.display = 'none'; 
   }
