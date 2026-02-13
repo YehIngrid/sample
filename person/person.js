@@ -352,6 +352,8 @@ async function handleRouting() {
   if (page === 'sellOrderDetail' && orderId) {
     document.getElementById('sellProducts')?.classList.remove('d-none');
     document.getElementById('sellOrderDetail')?.classList.remove('d-none');
+    const sellCards = document.getElementById('sell-product');
+    if (sellCards) sellCards.style.display = 'none';
     sellTable.style.display = 'none';
     sellTableTitle.style.display = 'none';
     getDetail(orderId);
@@ -361,6 +363,8 @@ async function handleRouting() {
   if (page === 'buyerOrderDetail' && orderId) {
     document.getElementById('buyProducts')?.classList.remove('d-none');
     document.getElementById('buyerOrderDetail')?.classList.remove('d-none');
+    const buyCards = document.getElementById('buy-product');
+    if (buyCards) buyCards.style.display = 'none';
     buyTable.style.display = 'none';
     buyTableTitle.style.display = 'none';
     getDetail(orderId);
@@ -617,7 +621,7 @@ function renderBuyerOrders(list) {
             ? `<button class="btn btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">查看訂單詳情</button>` 
             : ''
           }
-          <button class="btn btn-outline-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">${st.action}</button>
+          <button class="btn btn-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">${st.action}</button>
           ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-outline-danger action-btn btn-row-action" data-action="cancel" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">取消訂單</button>` : ''}
         </td>
       </tr>
@@ -654,7 +658,7 @@ function renderSellerOrders(list) {
             ? `<button class="btn btn-sm  btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}">查看訂單詳情</button>` 
             : ''
           }
-          <button class="btn btn-sm btn-outline-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>${st.action}</button>
+          <button class="btn btn-sm btn-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>${st.action}</button>
           ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger action-btn btn-row-action" data-action="cancel" data-id="${id}">取消訂單</button>` : ''}
         </td>
       </tr>
@@ -796,7 +800,7 @@ function renderSellerCards(list = []) {
                 ? `<button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>` 
                 : ''
               }
-              <button class="btn btn-outline-primary btn-sm action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>${st.action}</button>
+              <button class="btn btn-primary btn-sm action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>${st.action}</button>
               ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm action-btn btn-outline-danger btn-row-action" data-id="${id}" data-action="cancel">取消訂單</button>` : ''}
             </div>
           </div>
@@ -841,7 +845,7 @@ function renderBuyerCards(list = []) {
                 ? `<button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>` 
                 : ''
               }
-              <button class="btn btn-outline-primary btn-sm action-btn btn-card-action"  data-id="${id}" data-action="${st.action}">${st.action}</button>
+              <button class="btn btn-primary btn-sm action-btn btn-card-action"  data-id="${id}" data-action="${st.action}">${st.action}</button>
               ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm action-btn btn-outline-danger btn-row-action" data-id="${id}" data-action="cancel">取消訂單</button>` : ''}
             </div>
           </div>
