@@ -24,10 +24,9 @@ const mProfileInfo = document.getElementById('mProfileInfo');
 const mProfileAvatar = document.getElementById('mProfileAvatar');
 mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"; // 替換為實際使用者名稱
 mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
-if (localStorage.getItem('avatar')) {
+if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != '') {
   mProfileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
-}
-else { 
+} else { 
   mProfileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
 }
 // 桌機版
@@ -41,7 +40,7 @@ const profileInfo = document.getElementById('profileInfo');
 const profileAvatar = document.getElementById('profileAvatar');
   console.log("使用者名稱：", localStorage.getItem('username'));
   console.log("使用者介紹：", localStorage.getItem('intro'));
-if (localStorage.getItem('avatar')) {
+if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != '') {
   profileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
 } else {
   profileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
