@@ -334,7 +334,11 @@ async function handleRouting() {
 
   // 預設表格顯示
   const sellTable = document.getElementById('sellTable');
+  const sellTableTitle = document.getElementById('sellTableTitle');
+  const buyTableTitle = document.getElementById('buyTableTitle');
   const buyTable = document.getElementById('buyTable');
+  if (sellTableTitle) sellTableTitle.style.display = 'block';
+  if (buyTableTitle) buyTableTitle.style.display = 'block';
   if (sellTable) sellTable.style.display = 'block';
   if (buyTable) buyTable.style.display = 'block';
 
@@ -349,6 +353,7 @@ async function handleRouting() {
     document.getElementById('sellProducts')?.classList.remove('d-none');
     document.getElementById('sellOrderDetail')?.classList.remove('d-none');
     sellTable.style.display = 'none';
+    sellTableTitle.style.display = 'none';
     getDetail(orderId);
     return;
   }
@@ -357,6 +362,7 @@ async function handleRouting() {
     document.getElementById('buyProducts')?.classList.remove('d-none');
     document.getElementById('buyerOrderDetail')?.classList.remove('d-none');
     buyTable.style.display = 'none';
+    buyTableTitle.style.display = 'none';
     getDetail(orderId);
     return;
   }
