@@ -341,7 +341,8 @@ async function handleRouting() {
   if (buyTableTitle) buyTableTitle.style.display = 'block';
   if (sellTable) sellTable.style.display = 'block';
   if (buyTable) buyTable.style.display = 'block';
-
+  if (document.getElementById('sell-product')) document.getElementById('sell-product').style.display = 'flex';
+  if (document.getElementById('buy-product')) document.getElementById('buy-product').style.display = 'flex';
   // 顯示目標頁
   const targetPane = document.getElementById(page);
   if (targetPane) targetPane.classList.remove('d-none');
