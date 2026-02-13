@@ -354,7 +354,7 @@ async function handleRouting() {
     document.getElementById('sellProducts')?.classList.remove('d-none');
     document.getElementById('sellOrderDetail')?.classList.remove('d-none');
     const sellCards = document.getElementById('sell-product');
-    if (sellCards) sellCards.style.display = 'none';
+    if (sellCards) sellCards.classList.add('d-none');
     sellTable.style.display = 'none';
     sellTableTitle.style.display = 'none';
     getDetail(orderId);
@@ -365,7 +365,7 @@ async function handleRouting() {
     document.getElementById('buyProducts')?.classList.remove('d-none');
     document.getElementById('buyerOrderDetail')?.classList.remove('d-none');
     const buyCards = document.getElementById('buy-product');
-    if (buyCards) buyCards.style.display = 'none';
+    if (buyCards) buyCards.classList.add('d-none');
     buyTable.style.display = 'none';
     buyTableTitle.style.display = 'none';
     getDetail(orderId);
