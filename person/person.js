@@ -500,7 +500,6 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
           // 取得 iframe 內部的 document
           const innerDoc = iframe.contentDocument;
-          
           // 抓取裡面的元素，例如一個 ID 為 "message-input" 的輸入框
           const element = innerDoc.getElementById('chatList');
           console.log('抓到的元素：', element);
