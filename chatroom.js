@@ -391,7 +391,7 @@ class ChatRoom {
         return '無訊息';
     };
     async loadRooms() {
-        const chatList = chatInnerDoc?.querySelector('#chatList') || document.getElementById('chatList');
+        const chatList = window.chatInnerDoc?.querySelector('#chatList') || document.getElementById('chatList');
         if (!chatList) {
             console.error('找不到聊天室列表容器');
             return;
