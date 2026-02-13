@@ -270,7 +270,8 @@ async function handleAction(action, id, el) {
           confirmButtonText: "ok",
         }).then(async () => {
           // 重新載入當前頁面資料
-          handleRouting(); 
+          handleRouting();
+          window.location.reload(); 
         });
       } catch (error) {
         Swal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
@@ -280,6 +281,7 @@ async function handleAction(action, id, el) {
     try {
       await backendService.sellerAcceptOrders(id);
       Swal.fire({ title: '已同意訂單', icon: 'success' }).then(() => handleRouting());
+      window.location.reload();
     } catch (error) {
       Swal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
     }
@@ -287,6 +289,7 @@ async function handleAction(action, id, el) {
     try {
       await backendService.sellerDeliveredOrders(id);
       Swal.fire({ title: '已登記出貨', icon: 'success' }).then(() => handleRouting());
+      window.location.reload();
     } catch (error) {
       Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
@@ -294,6 +297,7 @@ async function handleAction(action, id, el) {
     try {
       await backendService.buyerCompletedOrders(id);
       Swal.fire({ title: "交易完成！", icon: "success" }).then(() => handleRouting());
+      window.location.reload();
     } catch (error) {
       Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
     }
@@ -489,68 +493,6 @@ document.addEventListener('DOMContentLoaded', () => {
     handleRouting();
   };
 });
-// document.addEventListener('DOMContentLoaded', () => {
-//   backendService = new BackendService();
-
-//   backendService.getMyItems(
-//     (response) => {
-//       const list = response?.data?.commodities ?? [];
-//       renderTable(list);
-//       renderCards(list);     // 手機用的卡片
-//       console.log(list);
-//     },
-//     (errorMessage) => {
-//       console.error(errorMessage);
-//       renderTable([]);
-//       renderCards([]);
-//     }
-//   );
-//   // const res = await backendService.getSellerOrders();
-
-//   // 事件委派（表格）
-//   document.querySelector('#products tbody')?.addEventListener('click', onRowAction);
-//   // 事件委派（卡片）
-//   document.querySelector('#product-cards')?.addEventListener('click', onCardAction);
-  
-  
-//   // 讀取賣家訂單
-// });
-// document.addEventListener('DOMContentLoaded', async () => {
-//   backendService = new BackendService();
-//   try {
-//     const response = await backendService.getSellerOrders();
-//     const list = response?.data?.data ?? [];
-//     renderSellerOrders(list);
-//     renderSellerCards(list);
-//   } catch (error) {
-//     renderSellerOrders([]);
-//     renderSellerCards([]);
-//     Swal.fire({
-//       title:"錯誤", 
-//       text: error, 
-//       icon: 'error'
-//     })
-//   }
-//   document.querySelector('#sellProducts tbody')?.addEventListener('click', onRowAction);
-//   document.querySelector('#sell-product')?.addEventListener('click', onCardAction);
-
-//   try {
-//     const response = await backendService.getBuyerOrders();
-//     const list = response?.data?.data ?? [];
-//     renderBuyerOrders(list);
-//     renderBuyerCards(list);
-//   } catch (error) {
-//     renderBuyerOrders([]);
-//     renderBuyerCards([]);
-//     Swal.fire({
-//       title:"錯誤", 
-//       text: error, 
-//       icon: 'error'
-//     })
-//   }
-//   document.querySelector('#buyProducts tbody')?.addEventListener('click', onRowAction);
-//   document.querySelector('#buy-product')?.addEventListener('click', onCardAction);
-// });
 
 // ===== 工具 =====
 const order_STATUS_MAP = {
