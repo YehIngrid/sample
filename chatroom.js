@@ -334,12 +334,19 @@ class ChatRoom {
     }
 
     bindEvents() {
-        const backButton = document.getElementById('backButton');
-        console.log('是否收到backButton: ', backButton);
-        backButton.addEventListener('click', () => {
+        document.addEventListener('click', (e) => {
+            const backBtn = e.target.closest('#backButton');
+            if (!backBtn) return;
+
             console.log('返回側邊欄');
             this.backToSidebar();
         });
+        // const backButton = document.getElementById('backButton');
+        // console.log('是否收到backButton: ', backButton);
+        // backButton.addEventListener('click', () => {
+        //     console.log('返回側邊欄');
+        //     this.backToSidebar();
+        // });
         const form = document.getElementById('messageForm');
         form.addEventListener('submit', (e) => {
             e.preventDefault();
