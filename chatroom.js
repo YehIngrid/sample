@@ -15,7 +15,7 @@ class ChatRoom {
         this.sendImagebtn = document.getElementById('send-image-btn');
         this.previewArea = document.getElementById('image-upload');
         this.input = document.getElementById('messageInput');
-        this.init();
+        document.addEventListener("DOMContentLoaded", () => this.init());
     }
 
     async init() {
