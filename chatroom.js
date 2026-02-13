@@ -33,12 +33,13 @@ class ChatRoom {
                 await this.switchRoom(this.currentRoomId, name);
             }
         }
-        this.bindEvents();
-        this.putImage();
-        this.closePreview();
         window.addEventListener('resize', () => {
             this.handleResize();
         });
+        this.bindEvents();
+        this.putImage();
+        this.closePreview();
+        
     }
     // cacheDOM() {
     //     this.chatList = document.getElementById('chatList');

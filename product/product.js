@@ -287,6 +287,8 @@ async function openChatWithSeller(itemId) {
   try {
     const res = await chatService.createRoom(itemId);
     const roomId = res?.data?.room?.id;
+    console.log('聊天室 ID：', roomId);
+    console.log('聊天室服務回應：', res);
 
     if (!roomId) throw new Error('roomId 不存在');
 
