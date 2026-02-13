@@ -103,6 +103,11 @@
     <script src="ChatBackendService.js"></script>
     <script src="BackendService.js"></script>
     <script src="chatroom.js"></script>
-    <script>chatRoom = new ChatRoom();</script>
+    <script>
+        window.addEventListener("load", () => {
+            window.chatRoom = new ChatRoom();
+            chatRoom.init();
+        });
+    </script>
 </body>
 </html>
