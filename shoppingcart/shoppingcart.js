@@ -2,6 +2,7 @@
 let backendService = null;
 let chatService = null;
 let isCheckingOut = false;
+let chatInnerWin = null;
 
 // ================== State ==================
 const LS_KEY = 'cart_state_v1';
@@ -36,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
           // 取得 iframe 內部的 document
           const innerDoc = iframe.contentDocument;
-          
+          chatInnerWin = iframe.contentWindow;
           // 抓取裡面的元素，例如一個 ID 為 "message-input" 的輸入框
           const element = innerDoc.getElementById('chatList');
           console.log('抓到的元素：', element);
@@ -227,7 +228,7 @@ cartList.addEventListener('click', async e => {
   }
 
   if (e.target.classList.contains('btn-talk')) {
-    openChat(item.productId);
+    openChatWithSeller(item.productId);
   }
 });
 
@@ -312,73 +313,37 @@ function closeCheckoutLoading() {
 
 // ================== Chat ==================
 // 聊天室介面顯示與隱藏
+// 聊天室介面顯示與隱藏
 const chatopen = document.getElementById('chaticon');
 const chatclose = document.getElementById('closechat');
 const talkInterface = document.getElementById('talkInterface');
 chatopen.addEventListener('click', function(e){
-    openCloseChatInterface();
+    toggleChatInterface();
 })
 
-async function openChat(productId) {
-  try {
-    const res = await chatService.createRoom(productId);
-    const roomId = res?.data?.room?.id;
-    if (!roomId) throw new Error("roomId not found");
-
-    await openCloseChatInterface();
-    await loadRoom();
-    if (!window.chatRoom) {
-        window.chatRoom = new ChatRoom();
-    }
-
-    window.chatRoom.switchRoom(roomId, roomName);
-
-  } catch (error) {
-    Swal.fire({
-      icon: 'error',
-      title: '無法建立聊天室',
-      text: error.message || '請稍後再試'
-    });
-  }
-}
-
-
-async function openCloseChatInterface(){
-  const talkInterface = document.getElementById('talkInterface');
+// product.js 修正後的 openCloseChatInterface 函式
+async function openCloseChatInterface() {
+  backendService = new BackendService();
   const res = await backendService.whoami();
   if(!res){
-    Swal.fire({
-      title: '請先登入會員',
-      icon: 'warning',
-      confirmButtonText: '確定'
-    });
+    Swal.fire({ title: '請先登入會員', icon: 'warning' });
     return;
   }
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-    talkInterface.style.display = 'block'; // 顯示
-    // chatService = new ChatBackendService();
-    // const itemName = document.getElementById('product-name').textContent || '商品';
-    // const userId = res.data.uid;
-    // console.log("userId:", userId);
-    // console.log("sellerId:", sellerId);
-    // chatService.createRoom(itemId)
-    //   .then((data) => {
-    //     const roomId = data?.roomId;
-    //     if (roomId) {
-    //       chatRoom = new ChatRoom(chatService, roomId, talkInterface);
-    //       chatRoom.init();
-    //     } else {
-    //       Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.error('建立聊天室失敗：', err);
-    //     Swal.fire({ icon: 'error', title: '無法建立聊天室', text: '請稍後再試' });
-    //   });
-  } else {
-    talkInterface.style.display = 'none'; // 隱藏
+    talkInterface.style.display = 'block'; 
   }
-  console.log('chat open');
+}
+async function toggleChatInterface() {
+  const res = await backendService.whoami();
+  if(!res){
+    Swal.fire({ title: '請先登入會員', icon: 'warning' });
+    return;
+  }
+  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+    talkInterface.style.display = 'block'; 
+  } else {
+    talkInterface.style.display = 'none'; 
+  }
 }
 
 const checkoutBtn = document.getElementById('checkout-btn');
@@ -515,4 +480,19 @@ function onItemCheckChange(itemId, checked) {
   saveState();
   renderCart();
   updateSummary();
+}
+async function openChatWithSeller(itemId) {
+  if (!itemId) {
+    return Swal.fire({ icon: 'warning', title: '缺少商品編號' });
+  }
+
+  openCloseChatInterface();
+  chatService = new ChatBackendService();
+
+  try {
+    chatInnerWin.openChatWithSeller(itemId);
+  } catch (err) {
+    console.error(err);
+    Swal.fire({ icon: 'error', title: '無法建立聊天室' });
+  }
 }
