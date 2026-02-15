@@ -275,7 +275,7 @@ async function handleAction(action, id, el) {
         }).then(async () => {
           // 重新載入當前頁面資料
           handleRouting();
-        });
+        }).then(() => window.location.reload());
       } catch (error) {
         Swal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
       } 
@@ -283,21 +283,21 @@ async function handleAction(action, id, el) {
   } else if(action === '接受訂單') {
     try {
       await backendService.sellerAcceptOrders(id);
-      Swal.fire({ title: '已同意訂單', icon: 'success' }).then(() => handleRouting());
+      Swal.fire({ title: '已同意訂單', icon: 'success' }).then(() => handleRouting()).then(()=> window.location.reload());
     } catch (error) {
       Swal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
     }
   } else if (action === '即將出貨') {
     try {
       await backendService.sellerDeliveredOrders(id);
-      Swal.fire({ title: '已登記出貨', icon: 'success' }).then(() => handleRouting());
+      Swal.fire({ title: '已登記出貨', icon: 'success' }).then(() => handleRouting()).then(()=> window.location.reload());
     } catch (error) {
       Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
   } else if (action === '成功取貨') {
     try {
       await backendService.buyerCompletedOrders(id);
-      Swal.fire({ title: "交易完成！", icon: "success" }).then(() => handleRouting());
+      Swal.fire({ title: "交易完成！", icon: "success" }).then(() => handleRouting()).then(() => window.location.reload());
     } catch (error) {
       Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
     }
@@ -405,8 +405,6 @@ async function handleRouting() {
     }
   } catch (err) {
     console.error(err);
-  } finally {
-    window.location.reload(); // 確保資料更新後重新載入頁面
   }
 }
 
