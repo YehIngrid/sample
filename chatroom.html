@@ -115,7 +115,7 @@
             chatService = new ChatBackendService();
             try {
                 const res =  chatService.createRoom(itemId);
-                const roomId = res?.data?.room?.id;
+                const roomId = res?.room?.id;
                 console.log('聊天室 ID：', roomId);
                 console.log('聊天室服務回應：', res);
                 chatRoom = new ChatRoom(roomId);
