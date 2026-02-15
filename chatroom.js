@@ -698,7 +698,7 @@ class ChatRoom {
 }
 let chatRoom = null;
 window.addEventListener("load", () => {
-    
+    chatRoom = new ChatRoom(null);
 });
 async function openChatWithSeller(itemId) {
     if (!itemId) {
