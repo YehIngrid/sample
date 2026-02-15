@@ -3,7 +3,8 @@ let backendService = null;
 let chatService = null;
 let sellerId = null;
 let itemId = null;   // 放最上面
-let chatInnerDoc = null; // 儲存 iframe 內部 document 的參考
+let chatInnerDoc = null; 
+let chatInnerWin = null; // 儲存 iframe 內部 document 的參考
 
 const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span>NT$</span>`;
 const toArray = (v) => Array.isArray(v) ? v : (v ? [v] : []);
@@ -38,8 +39,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
           // 取得 iframe 內部的 document
           const innerDoc = iframe.contentDocument;
+          const innerWindow = iframe.contentWindow;
           chatInnerDoc = innerDoc; // 儲存內部 document 參考
-          
+          chatInnerWin = innerWindow; // 儲存內部 window 參考
           // 抓取裡面的元素，例如一個 ID 為 "message-input" 的輸入框
           const element = innerDoc.getElementById('chatList');
           console.log('抓到的元素：', element);
@@ -287,7 +289,7 @@ async function openChatWithSeller(itemId) {
   chatService = new ChatBackendService();
 
   try {
-    chatInnerDoc.openChatWithSeller(itemId);
+    chatInnerWin.openChatWithSeller(itemId);
   } catch (err) {
     console.error(err);
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });
