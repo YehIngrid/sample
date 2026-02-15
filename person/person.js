@@ -303,7 +303,7 @@ async function handleAction(action, id, el) {
     }
   } else if (action === '給對方評價') {
     // 這裡可以打開評價的 modal 或頁面
-    Swal.fire({ title: '評價功能尚未實作', icon: 'info' });
+    openReviewModal();
   } else if (action === 'delete') {
     Swal.fire({
       title: "確定要下架並刪除此商品嗎？",
@@ -1440,4 +1440,68 @@ async function openChatWithSeller(itemId) {
     console.error(err);
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });
   }
+}
+// TODO 評價UI
+function openReviewModal() {
+  Swal.fire({
+    title: '請為此次訂單的賣家評分！',
+    html: `
+    <div class="review-container">
+      
+      <!-- 左側評分 -->
+      <div class="review-left">
+        ${createStarRow('商品描述準確度')}
+        ${createStarRow('客服與回應態度')}
+        ${createStarRow('出貨速度')}
+        ${createStarRow('溝通禮貌度')}
+        ${createStarRow('交易可靠度')}
+
+        <textarea id="review-text" placeholder="留下評價..." rows="3"></textarea>
+      </div>
+
+      <!-- 右側賣家資訊 -->
+      <div class="review-right">
+        <div class="seller-avatar"></div>
+        <div class="seller-name">賣家姓名</div>
+        <div class="seller-score">信譽積分：65</div>
+      </div>
+
+    </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: '送出評價',
+    width: 600,
+    didOpen: () => {
+      initStars();
+    }
+  });
+}
+
+// 建立一排星星
+function createStarRow(label) {
+  return `
+  <div class="star-row">
+    <span>${label}</span>
+    <div class="stars" data-score="0">
+      ${[1,2,3,4,5].map(i => `<i class="star" data-value="${i}">★</i>`).join('')}
+    </div>
+  </div>`;
+}
+
+// 星星互動
+function initStars() {
+  document.querySelectorAll('.stars').forEach(starGroup => {
+    const stars = starGroup.querySelectorAll('.star');
+
+    stars.forEach(star => {
+      star.addEventListener('click', () => {
+        const value = star.dataset.value;
+        starGroup.dataset.score = value;
+
+        stars.forEach(s => {
+          s.classList.toggle('active', s.dataset.value <= value);
+        });
+      });
+    });
+  });
 }
