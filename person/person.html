@@ -118,7 +118,6 @@
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="products"><img src="../svg/my.svg" alt="我的商品icon"> 我的商品</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
               <a class="list-group-item list-group-item-action asideicon" id="logout" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
             </div>
@@ -286,10 +285,6 @@
 
 </section>
 
-      <!-- section messages -->
-      <section class="col-lg-9 d-none content-section" id="messages">
-        <iframe src="../chatroom.html" type="text/html" class="embedchat"></iframe>
-      </section>
       <!-- section settings -->
       <section class="col-lg-9 d-none content-section" id="settings">
         <div class="card col-12">
@@ -471,7 +466,6 @@
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="products"><img src="../svg/my.svg" alt="我的商品icon"> 我的商品</a>
         <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
         <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="messages"><img src="../webP/talk.webp" alt="我的訊息icon"> 我的訊息</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
         <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" id="logoutMobile"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
       </div>
@@ -641,7 +635,10 @@
     </div>
   </form>
 </aside>
-
+<button class="chaticon" id="chaticon">
+  <img src="../svg/chaticon.svg" alt="">
+</button>
+<iframe src="../chatroom.html" type="text/html" width="400" height="750" style="display: none;" id="talkInterface"></iframe>
 
     <!-- script部分-->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
