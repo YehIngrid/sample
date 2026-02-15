@@ -696,3 +696,23 @@ class ChatRoom {
         return div.innerHTML;
     }
 }
+let chatRoom = null;
+window.addEventListener("load", () => {
+    
+});
+function openChatWithSeller(itemId) {
+    if (!itemId) {
+        return alert('無法開啟聊天室，缺少商品 ID');
+    }
+    chatService = new ChatBackendService();
+    try {
+        const res =  chatService.createRoom(itemId);
+        const roomId = res?.data?.room?.id;
+        console.log('聊天室 ID：', roomId);
+        console.log('聊天室服務回應：', res);
+        chatRoom = new ChatRoom(roomId);
+        chatRoom.init();
+    } catch (error) {
+        console.error(error);
+    }
+}
