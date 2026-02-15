@@ -1,4 +1,5 @@
 let backendService;
+let chatService;
 let chatInnerWin; // 用於存放 iframe 的 window 物件
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {

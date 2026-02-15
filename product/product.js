@@ -485,7 +485,7 @@ async function openCloseChatInterface() {
     return;
   }
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-    talkInterface.style.display = 'block'; 
+    talkInterface.style.display = 'block';
   }
 }
 async function toggleChatInterface() {
