@@ -287,16 +287,7 @@ async function openChatWithSeller(itemId) {
   chatService = new ChatBackendService();
 
   try {
-    const res = await chatService.createRoom(itemId);
-    const roomId = res?.data?.room?.id;
-    console.log('聊天室 ID：', roomId);
-    console.log('聊天室服務回應：', res);
-
-    if (!roomId) throw new Error('roomId 不存在');
-
-    chatRoom = new ChatRoom(roomId);
-    chatRoom.init();
-
+    chatInnerDoc.openChatWithSeller(itemId);
   } catch (err) {
     console.error(err);
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });
@@ -480,7 +471,7 @@ const chatopen = document.getElementById('chaticon');
 const chatclose = document.getElementById('closechat');
 const talkInterface = document.getElementById('talkInterface');
 chatopen.addEventListener('click', function(e){
-    openCloseChatInterface();
+    toggleChatInterface();
 })
 
 // product.js 修正後的 openCloseChatInterface 函式
@@ -491,32 +482,18 @@ async function openCloseChatInterface() {
     Swal.fire({ title: '請先登入會員', icon: 'warning' });
     return;
   }
-
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
     talkInterface.style.display = 'block'; 
-    
-    // try {
-    //   // 1. 取得 roomId
-    //   const response = await chatService.createRoom(itemId);
-    //   const roomId = response?.data?.room?.id;
-
-    //   if (roomId) {
-    //     // 2. 實例化 ChatRoom 時傳入 roomId
-    //     // 注意：不需再傳入 chatService 或 talkInterface，因為 ChatRoom 內部會自行處理
-    //     chatRoom = new ChatRoom(roomId); 
-    //     await chatRoom.init(); 
-        
-    //     // 3. 手機版自動切換視窗
-    //     if (chatRoom.isMobile) {
-    //         chatRoom.switchToChat();
-    //     }
-    //   } else {
-    //     throw new Error('無法取得房間 ID');
-    //   }
-    // } catch (err) {
-    //   console.error('建立聊天室失敗：', err);
-    //   Swal.fire({ icon: 'error', title: '無法建立聊天室' });
-    // }
+  }
+}
+async function toggleChatInterface() {
+  const res = await backendService.whoami();
+  if(!res){
+    Swal.fire({ title: '請先登入會員', icon: 'warning' });
+    return;
+  }
+  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+    talkInterface.style.display = 'block'; 
   } else {
     talkInterface.style.display = 'none'; 
   }
