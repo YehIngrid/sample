@@ -696,8 +696,3 @@ class ChatRoom {
         return div.innerHTML;
     }
 }
-
-/* ======================
-   初始化
-====================== */
-let chatRoom = null;
