@@ -236,7 +236,7 @@ class ChatRoom {
                        class="image-link">
                         <img src="${imageUrl}" 
                             alt="Image" 
-                            style="width: 200px; min-height: 150px; background: #f0f0f0; border-radius: 8px; cursor: pointer;"
+                            style="width: 200px; background: #f0f0f0; border-radius: 8px; cursor: pointer;"
                             loading="lazy">
                     </a>
                 </div>
@@ -515,6 +515,17 @@ class ChatRoom {
             this.showTyping();
         });
         
+        this.eventSource.addEventListener('read', (event) => {
+            const data = JSON.parse(event.data);
+            console.log('訊息已讀:', data);
+            // 可以在這裡更新 UI，例如移除未讀徽章
+            //this.removeUnreadBadge(data.roomId);
+        });
+
+        this.eventSource.addEventListener('ping', (event) => {
+            const data = JSON.parse(event.data);
+            console.log('ping:', data);
+        });
 
         this.eventSource.addEventListener('ready', (event) => {
             const data = JSON.parse(event.data);
@@ -550,7 +561,6 @@ class ChatRoom {
     /* ======================
        UI 渲染
     ====================== */
-
     renderMessage(data, prepend = false) {
         if (data.attachments.length > 0) {
             this.appendImageMessage({
@@ -614,7 +624,23 @@ class ChatRoom {
             indicator.style.display = 'none';
         }, 1000);
     }
-    // TODO 總訊息量超過五十則
+    detectRead() {
+        // 可以在這裡實作當訊息進入可視區域時，發送已讀通知給後端
+        // 例如使用 IntersectionObserver 來監測訊息元素是否可見
+        const container = document.getElementById('messagesContainer');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const msgId = entry.target.dataset.messageId;
+                    // 發送已讀通知給後端
+                    const readAt = new Date().toISOString();
+                    this.backend.markAsRead(this.currentRoomId, readAt);
+                    // 可以在這裡更新 UI，例如移除未讀徽章
+                    //this.removeUnreadBadge(this.currentRoomId);
+                }
+            });
+        }, { threshold: 0.5 }); // 設定可見比例
+    }    // TODO 總訊息量超過五十則
     async loadMoreMessages() {
         const container = document.getElementById('messagesContainer');
         if (!this.hasMore || this.isLoading) return;

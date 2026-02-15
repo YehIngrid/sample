@@ -275,7 +275,6 @@ async function handleAction(action, id, el) {
         }).then(async () => {
           // 重新載入當前頁面資料
           handleRouting();
-          window.location.reload(); 
         });
       } catch (error) {
         Swal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
@@ -285,7 +284,6 @@ async function handleAction(action, id, el) {
     try {
       await backendService.sellerAcceptOrders(id);
       Swal.fire({ title: '已同意訂單', icon: 'success' }).then(() => handleRouting());
-      window.location.reload();
     } catch (error) {
       Swal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
     }
@@ -293,7 +291,6 @@ async function handleAction(action, id, el) {
     try {
       await backendService.sellerDeliveredOrders(id);
       Swal.fire({ title: '已登記出貨', icon: 'success' }).then(() => handleRouting());
-      window.location.reload();
     } catch (error) {
       Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
@@ -301,7 +298,6 @@ async function handleAction(action, id, el) {
     try {
       await backendService.buyerCompletedOrders(id);
       Swal.fire({ title: "交易完成！", icon: "success" }).then(() => handleRouting());
-      window.location.reload();
     } catch (error) {
       Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
     }
@@ -409,32 +405,10 @@ async function handleRouting() {
     }
   } catch (err) {
     console.error(err);
+  } finally {
+    window.location.reload(); // 確保資料更新後重新載入頁面
   }
 }
-
-// ==========================================
-// 3. 事件初始化 (在 DOMContentLoaded 內)
-// ==========================================
-// document.addEventListener('DOMContentLoaded', () => {
-//   // 左側選單點擊
-//   document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
-//     item.addEventListener('click', function(e) {
-//       e.preventDefault();
-//       const target = this.getAttribute('data-target');
-//       const newUrl = new URL(window.location.href);
-//       newUrl.searchParams.set('page', target);
-//       newUrl.searchParams.delete('orderId');
-//       window.history.pushState({ page: target }, '', newUrl);
-//       handleRouting();
-//     });
-//   });
-
-//   // 監聽瀏覽器返回
-//   window.onpopstate = () => handleRouting();
-
-//   // 執行首次載入
-//   handleRouting();
-// });
 
 // 賣家/買家 返回列表按鈕改為：
 document.getElementById('backToSellTable')?.addEventListener('click', () => {
@@ -521,14 +495,14 @@ const order_STATUS_MAP = {
   preparing: { text: '準備訂單', badge: 'text-bg-info', action: '即將出貨'}, 
   delivered: { text: '已出貨', badge: 'text-bg-primary', action: '等待買家確認收貨'}, 
   completed: { text: '買家成功取貨', badge: 'text-bg-success', action: '給對方評價'}, 
-  canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '查看'}
+  canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '給對方評價'}
 }
 const buyer_STATUS_MAP = {
   pending: { text: '等待賣家接受訂單', badge: 'text-bg-warning', action: '聯絡賣家'}, 
   preparing: { text: '賣家正在準備訂單', badge: 'text-bg-info', action: '聯絡賣家'}, 
   delivered: { text: '已出貨', badge: 'text-bg-primary', action: '成功取貨'}, 
   completed: { text: '已取貨', badge: 'text-bg-success', action: '給對方評價'}, 
-  canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '查看'}
+  canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '給對方評價'}
 }
 const nt = new Intl.NumberFormat('zh-TW', {
   style: 'currency', currency: 'TWD', maximumFractionDigits: 0
@@ -581,10 +555,7 @@ function renderBuyerOrders(list) {
         <td>${created}</td>
         <td>${price} 元</td>
         <td class="text-end">
-          ${item.status !== 'canceled' 
-            ? `<button class="btn btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">查看訂單詳情</button>` 
-            : ''
-          }
+          <button class="btn btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">查看訂單詳情</button>
           <button class="btn btn-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">${st.action}</button>
           ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-outline-danger action-btn btn-row-action" data-action="cancel" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">取消訂單</button>` : ''}
         </td>
@@ -618,10 +589,7 @@ function renderSellerOrders(list) {
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
         <td class="text-end">
-          ${item.status !== 'canceled' 
-            ? `<button class="btn btn-sm  btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}">查看訂單詳情</button>` 
-            : ''
-          }
+          <button class="btn btn-sm  btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}">查看訂單詳情</button>
           <button class="btn btn-sm btn-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>${st.action}</button>
           ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger action-btn btn-row-action" data-action="cancel" data-id="${id}">取消訂單</button>` : ''}
         </td>
@@ -760,10 +728,7 @@ function renderSellerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              ${item.status !== 'canceled' 
-                ? `<button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>` 
-                : ''
-              }
+              <button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>
               <button class="btn btn-primary btn-sm action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>${st.action}</button>
               ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm action-btn btn-outline-danger btn-row-action" data-id="${id}" data-action="cancel">取消訂單</button>` : ''}
             </div>
@@ -805,10 +770,7 @@ function renderBuyerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              ${item.status !== 'canceled' 
-                ? `<button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>` 
-                : ''
-              }
+              <button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>
               <button class="btn btn-primary btn-sm action-btn btn-card-action"  data-id="${id}" data-action="${st.action}">${st.action}</button>
               ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm action-btn btn-outline-danger btn-row-action" data-id="${id}" data-action="cancel">取消訂單</button>` : ''}
             </div>
@@ -954,20 +916,7 @@ function showOrderList() {
   window.history.pushState({}, '', url);
   handleRouting(); // 觸發切換，會自動回到列表
 }
-function updateOrderFlowImg(status) {
-  const img = document.getElementById("flowImage");
-  const imgbuyer = document.getElementById("flowImagebuyer");
-  const map = {
-    pending:   "../svg/allstate_pending.svg",
-    preparing: "../svg/allstate_preparing.svg",
-    c2c:       "../svg/allstate_ctoc.svg",
-    delivered: "../svg/allstate_deliver.svg",
-    completed: "../svg/allstate_finish.svg"
-  };
 
-  img.src = map[status] || "../svg/allstate.svg";  // 預設灰色
-  imgbuyer.src = map[status] || "../svg/allstate.svg";
-}
 // 時間處理
 const formatter = new Intl.DateTimeFormat('zh-TW', {
   year: 'numeric', month: '2-digit', day: '2-digit',
@@ -975,57 +924,124 @@ const formatter = new Intl.DateTimeFormat('zh-TW', {
 });
 
 // 輸出類似：2025/09/20 12:33
+// const updateStatusUI = (data) => {
+//   const logs = data.logs || [];
+//   const statusItems = document.querySelectorAll('.status-item');
+  
+//   // 1. 取得取消紀錄（如果有）
+//   const cancelLog = logs.find(log => log.status === 'canceled');
+  
+//   // 2. 第一步：徹底重置所有節點到「初始灰色 (yet)」狀態
+//   statusItems.forEach(item => {
+//     const img = item.querySelector('img');
+//     const timeBox = item.querySelector('.timestamp');
+//     const text = item.querySelector('.stateText');
+
+//     // 還原圖片：將 .svg 或 cancel.svg 換回 yet.svg
+//     // 假設你的原始圖名格式是 statusnameyet.svg
+//     let currentSrc = img.src;
+//     if (currentSrc.includes('cancel.svg')) {
+//       // 如果原本變成了 cancel.svg，要根據 data-status 換回原本的 yet 圖
+//       const statusName = item.getAttribute('data-status');
+//       img.src = `../svg/${statusName}yet.svg`; 
+//     } else if (!currentSrc.includes('yet.svg')) {
+//       img.src = currentSrc.replace('.svg', 'yet.svg');
+//     }
+    
+//     timeBox.innerText = '';
+//     item.style.opacity = '1'; 
+//     item.classList.remove('active');
+    
+//     // 如果你有手動改過 stateText，也要記得在這裡還原（例如：從「訂單已取消」改回原本文字）
+//     // text.innerText = ... (視你的 HTML 結構而定)
+//   });
+
+//   // 3. 第二步：根據 logs 填入正確狀態
+//   statusItems.forEach((item) => {
+//     const statusName = item.getAttribute('data-status');
+//     const logEntry = logs.find(log => log.status === statusName);
+//     const img = item.querySelector('img');
+//     const timeBox = item.querySelector('.timestamp');
+
+//     // 情況 A：這是一個已取消的訂單
+//     if (cancelLog) {
+//       if (logEntry) {
+//         // 取消前已完成的步驟：顯示彩色
+//         img.src = img.src.replace('yet.svg', '.svg');
+//         timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
+//       } else {
+//         img.src = '../svg/cancel.svg';
+//         timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
+//       }
+//     } 
+//     // 情況 B：正常流程
+//     else if (logEntry) {
+//       img.src = img.src.replace('yet.svg', '.svg');
+//       timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
+//       item.classList.add('active');
+//     }
+//   });
+// };
+
 const updateStatusUI = (data) => {
   const logs = data.logs || [];
   const statusItems = document.querySelectorAll('.status-item');
-  
-  // 1. 取得取消紀錄（如果有）
+
   const cancelLog = logs.find(log => log.status === 'canceled');
-  
-  // 2. 第一步：徹底重置所有節點到「初始灰色 (yet)」狀態
+  const scoreLog = logs.find(log => log.status === 'scored');
+
+  // 1️⃣ reset
   statusItems.forEach(item => {
     const img = item.querySelector('img');
     const timeBox = item.querySelector('.timestamp');
     const text = item.querySelector('.stateText');
+    const statusName = item.dataset.status;
 
-    // 還原圖片：將 .svg 或 cancel.svg 換回 yet.svg
-    // 假設你的原始圖名格式是 statusnameyet.svg
-    let currentSrc = img.src;
-    if (currentSrc.includes('cancel.svg')) {
-      // 如果原本變成了 cancel.svg，要根據 data-status 換回原本的 yet 圖
-      const statusName = item.getAttribute('data-status');
-      img.src = `../svg/${statusName}yet.svg`; 
-    } else if (!currentSrc.includes('yet.svg')) {
-      img.src = currentSrc.replace('.svg', 'yet.svg');
-    }
-    
+    // reset icon
+    img.src = `../svg/${statusName}yet.svg`;
     timeBox.innerText = '';
-    item.style.opacity = '1'; 
     item.classList.remove('active');
-    
-    // 如果你有手動改過 stateText，也要記得在這裡還原（例如：從「訂單已取消」改回原本文字）
-    // text.innerText = ... (視你的 HTML 結構而定)
+
+    // reset text（可依你的原本 HTML 定義）
+    const defaultTextMap = {
+      pending: "訂單已建立<br>等待賣家接受",
+      preparing: "賣家已接受訂單<br>正在準備商品",
+      delivered: "賣家已出貨<br>等待買家確認收貨",
+      completed: "買家已確認收貨<br>訂單完成",
+      scored: "雙方皆已<br>評分完成"
+    };
+    if (text) text.innerHTML = defaultTextMap[statusName];
   });
 
-  // 3. 第二步：根據 logs 填入正確狀態
-  statusItems.forEach((item) => {
-    const statusName = item.getAttribute('data-status');
-    const logEntry = logs.find(log => log.status === statusName);
+  // 2️⃣ fill logs
+  statusItems.forEach(item => {
+    const statusName = item.dataset.status;
+    const logEntry = logs.find(l => l.status === statusName);
     const img = item.querySelector('img');
     const timeBox = item.querySelector('.timestamp');
+    const text = item.querySelector('.stateText');
 
-    // 情況 A：這是一個已取消的訂單
-    if (cancelLog) {
+    // 🔥 有取消紀錄（且尚未評分完成）
+    if (cancelLog && !scoreLog) {
+
       if (logEntry) {
-        // 取消前已完成的步驟：顯示彩色
+        // cancel 前完成的流程 → 彩色
         img.src = img.src.replace('yet.svg', '.svg');
         timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
-      } else {
+        item.classList.add('active');
+      } 
+      else {
+        // cancel 後的步驟 → cancel icon
         img.src = '../svg/cancel.svg';
         timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
+
+        // ⭐ 修改文字
+        if (text) {
+          text.innerHTML = `訂單已取消<br>${formatter.format(new Date(cancelLog.timestamp))}`;
+        }
       }
-    } 
-    // 情況 B：正常流程
+    }
+    // 🟢 正常流程
     else if (logEntry) {
       img.src = img.src.replace('yet.svg', '.svg');
       timeBox.innerText = formatter.format(new Date(logEntry.timestamp));

@@ -75,6 +75,18 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
+    async markAsRead(roomId, readAt) {
+        try {
+            const response = await axios.patch(
+                `${this.baseUrl}/api/chat/rooms/${roomId}/read`,
+                { readAt: readAt }
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error marking messages as read:', error);
+            return Promise.reject(error);
+        }
+    }
     async openSse(roomId) {
         const eventSource = new EventSource(`${this.baseUrl}/api/chat/stream?room=${roomId}`, {
             withCredentials: true
@@ -91,6 +103,14 @@ class ChatBackendService {
 
         eventSource.addEventListener('ready', (event) => {
             console.log('狀態更新:', event.data);
+        });
+
+        eventSource.addEventListener('read', (event) => {
+            console.log('訊息已讀:', event.data);
+        });
+
+        eventSource.addEventListener('ping', (event) => {
+            console.log('ping:', event.data);
         });
 
         eventSource.onerror = (error) => {
