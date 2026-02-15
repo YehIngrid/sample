@@ -698,6 +698,7 @@ class ChatRoom {
 }
 let chatRoom = null;
 window.addEventListener("load", () => {
+    console.log('chatroom Load');
     chatRoom = new ChatRoom(null);
 });
 async function openChatWithSeller(itemId) {
