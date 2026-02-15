@@ -500,3 +500,7 @@ async function toggleChatInterface() {
     talkInterface.style.display = 'none'; 
   }
 }
+// TODO 顯示評價
+function renderStars(score) {
+  return '★'.repeat(score) + '☆'.repeat(5 - score);
+}

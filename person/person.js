@@ -1442,66 +1442,95 @@ async function openChatWithSeller(itemId) {
   }
 }
 // TODO 評價UI
-function openReviewModal() {
+function openReviewModal(orderId, sellerId) {
   Swal.fire({
-    title: '請為此次訂單的賣家評分！',
+    title: '請為此次訂單的賣家評分',
     html: `
-    <div class="review-container">
-      
-      <!-- 左側評分 -->
-      <div class="review-left">
-        ${createStarRow('商品描述準確度')}
-        ${createStarRow('客服與回應態度')}
-        ${createStarRow('出貨速度')}
-        ${createStarRow('溝通禮貌度')}
-        ${createStarRow('交易可靠度')}
+      <div id="review-list">
+        <label class="review-item">
+          <input type="checkbox" class="score-check"> 商品描述準確 (+1)
+        </label><br>
 
-        <textarea id="review-text" placeholder="留下評價..." rows="3"></textarea>
+        <label class="review-item">
+          <input type="checkbox" class="score-check"> 出貨速度快 (+1)
+        </label><br>
+
+        <label class="review-item">
+          <input type="checkbox" class="score-check"> 溝通禮貌 (+1)
+        </label><br>
+
+        <label class="review-item">
+          <input type="checkbox" class="score-check"> 交易可靠 (+1)
+        </label><br>
+
+        <label class="review-item">
+          <input type="checkbox" class="score-check"> 包裝完整 (+1)
+        </label><br>
+
+        <textarea id="review-comment" class="form-control mt-2" rows="3" placeholder="留下評價..."></textarea>
+
+        <div class="mt-2 text-end">
+          評分：<span id="score-preview">0</span> / 5
+        </div>
       </div>
-
-      <!-- 右側賣家資訊 -->
-      <div class="review-right">
-        <div class="seller-avatar"></div>
-        <div class="seller-name">賣家姓名</div>
-        <div class="seller-score">信譽積分：65</div>
-      </div>
-
-    </div>
     `,
     showCancelButton: true,
     confirmButtonText: '送出評價',
     width: 600,
+
     didOpen: () => {
-      initStars();
+      initScoreCheckbox();
+    },
+
+    preConfirm: async () => {
+      const score = calcScore();
+      const comment = document.getElementById('review-comment').value;
+
+      if (score === 0) {
+        Swal.showValidationMessage('至少勾選一項評分');
+        return false;
+      }
+
+      // 傳到後端
+      try {
+        const res = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId,
+            sellerId,
+            score, // 0~5
+            comment
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || '送出失敗');
+
+        return data;
+      } catch (err) {
+        Swal.showValidationMessage(err.message);
+        return false;
+      }
+    }
+  }).then(result => {
+    if (result.isConfirmed) {
+      Swal.fire('成功', '評價已送出', 'success');
     }
   });
 }
-
-// 建立一排星星
-function createStarRow(label) {
-  return `
-  <div class="star-row">
-    <span>${label}</span>
-    <div class="stars" data-score="0">
-      ${[1,2,3,4,5].map(i => `<i class="star" data-value="${i}">★</i>`).join('')}
-    </div>
-  </div>`;
-}
-
-// 星星互動
-function initStars() {
-  document.querySelectorAll('.stars').forEach(starGroup => {
-    const stars = starGroup.querySelectorAll('.star');
-
-    stars.forEach(star => {
-      star.addEventListener('click', () => {
-        const value = star.dataset.value;
-        starGroup.dataset.score = value;
-
-        stars.forEach(s => {
-          s.classList.toggle('active', s.dataset.value <= value);
-        });
-      });
+function initScoreCheckbox() {
+  document.querySelectorAll('.score-check').forEach(cb => {
+    cb.addEventListener('change', () => {
+      document.getElementById('score-preview').innerText = calcScore();
     });
   });
+}
+
+function calcScore() {
+  let score = 0;
+  document.querySelectorAll('.score-check').forEach(cb => {
+    if (cb.checked) score++;
+  });
+  return score; // 0~5
 }
