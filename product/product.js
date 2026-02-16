@@ -156,7 +156,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   ];
 
   wrap.innerHTML = fields.map(([k, v]) => `
-    <div class="row g-2 align-items-center mb-1 meta-row">
+    <div class="row gy-2 align-items-center mb-1 meta-row">
       <div class="col-4 col-md-3 text-muted">${k}</div>
       <div class="col-8 col-md-9">${v}</div>
     </div>
