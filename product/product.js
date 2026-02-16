@@ -298,7 +298,7 @@ async function openChatWithSeller(itemId) {
 
 function openSellerReviews(sellerId) {
   if (!sellerId) return;
-  location.href = `../seller/reviews.html?seller=${encodeURIComponent(sellerId)}`;
+  const reviewContainer = document.getElementById('sellerReviews');
 }
 async function reportSeller(sellerId) {
   if (!sellerId) return;
@@ -504,3 +504,5 @@ async function toggleChatInterface() {
 function renderStars(score) {
   return '★'.repeat(score) + '☆'.repeat(5 - score);
 }
+const scoreStar = document.querySelector('.score');
+scoreStar.textContent = renderStars(Number(scoreStar.textContent));

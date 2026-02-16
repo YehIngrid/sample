@@ -169,19 +169,19 @@
 
       <div class="cta-wrap d-sm-flex gap-3 mt-5 d-none">
         <button class="btn flex-fill buybtn" type="button" onclick="orderNow(商品ID)" style="width: 50%; margin-top: 10px; font-size: 1.2rem; color: rgb(36,182,133); background-color: rgb(199, 244, 229);">馬上下單</button>
-        <button class="btn flex-fill shopcart" type="button" style="width: 50%; margin-top: 10px; font-size: 1.2rem; background-color: #cadff5; color: #004b97;" >加入購物車</button>
+        <button class="btn flex-fill shopcart" type="button" style="width: 50%; margin-top: 10px; font-size: 1.2rem; background-color: #cfe2ff; color: #004b97;" >加入購物車</button>
       </div>
     </div>
   </div>
 </div>
     <div class="mix">
       <div class="describe typeofcommodity">
-          <h4>商品描述</h4>
+          <h5>商品描述</h5>
           <p id="product-description" class="description-text"></p>
       </div>
 
       <div class="typeofcommodity">
-        <h4 style="margin-bottom: 20px;">其他注意事項</h4>
+        <h5 style="margin-bottom: 20px;">其他注意事項</h5>
         <div class="accordion" id="accordionExample">
           <div class="accordion-item">
             <h2 class="accordion-header">
@@ -191,7 +191,7 @@
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <p style="font-size: 1.2rem; color: #383838;">平台以<strong>面交</strong>為主要交易方式，買賣雙方也可自行協調其他取貨方式。建議於面交時立即<strong>確認商品是否符合需求，再進行付款</strong>；若後續出現問題，請由買賣雙方自行協商處理。</p>
+                <p style="color: #383838;">平台以<strong style="color: #004b97;"> 面交 </strong>為主要交易方式，買賣雙方也可自行協調其他取貨方式。建議於面交時立即<strong style="color: #004b97;"> 確認商品是否符合需求，再進行付款 </strong>；若後續出現問題，請由買賣雙方自行協商處理。</p>
               </div>
             </div>
           </div>
@@ -203,7 +203,7 @@
             </h2>
             <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <ol style="font-size: 1.1rem;color: #4f4f4f;">
+                <ol style="color: #4f4f4f;">
                   <li>大型：<br>長度/寬度/高度大於150cm，容量大於5L。</li>
                   <li>中型：<br>長度/寬度/高度30cm到150cm，容量1L到5L。</li>
                   <li>小型：<br>長度/寬度/高度小於30cm，容量小於1L。</li>
@@ -219,7 +219,7 @@
             </h2>
             <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <ol style="font-size: 1.1rem; color: #4f4f4f;">
+                <ol style="color: #4f4f4f;">
                   <li>全新：完全未使用，包裝完好。</li>
                   <li>幾乎全新：使用過一次或兩次，狀況極佳，幾乎沒有磨損。</li>
                   <li>半新：使用過，狀況良好，可能有輕微磨損。</li>
@@ -234,7 +234,7 @@
       </div>
 
       <div class="typeofcommodity">
-        <h4 class="sellertopic">賣家資訊</h4>
+        <h5 class="sellertopic">賣家資訊</h5>
         <div id="sellerInfo" class="card col-12">
           <div class="card-body">
               <div class="d-lg-flex d-block">
@@ -256,7 +256,24 @@
                     <span class="display-4 fw-bold" id="sellerRate"></span>
                   </div>
                   <h5>信譽積分</h5>
-                  <button class="btn btn-danger" id="sellerBad">檢舉賣家</button>
+                  <button class="btn btn-sm btn-danger" id="sellerBad">檢舉賣家</button>
+                </div>
+              </div>
+              <div class="">
+                <hr>
+                <div class="reviewerInfo d-flex justify-content-between" id="reviewerInfo">
+                  <div class="d-flex align-items-center gap-1">
+                    <img src="../image/default-avatar.png" alt="" style="width: 45px; height: 45px;">
+                    <div class="d-block d-lg-flex gap-1 align-items-center">
+                        <span class="reviewerName">評價者姓名</span>
+                        <div class="score">4</div>
+                        <div class="itemNames">｜商品名稱</div>
+                    </div>
+                  </div>
+                  <div class="reviewTime">2026-02-03</div>
+                </div>
+                <div class="reviewText" id="reviewText">
+                  <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia quasi obcaecati sint impedit in repellat placeat magni voluptates deleniti eligendi.</span>
                 </div>
               </div>
           </div>

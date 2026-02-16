@@ -119,7 +119,7 @@
     width: 50%;
     padding-top: 2vh;
     padding-bottom: 2vh;
-    background-color: #cadff5;
+    background-color: #cfe2ff;
     color: #004b97;
   }
   .shopcart:hover{
@@ -136,7 +136,7 @@
     margin-left: 2vw;
     margin-top: 2vh; */
     /* max-width: 70vw; */
-    background-color: #cadff5;;
+    background-color: #cfe2ff;;
     padding: 15px;
     border-radius: 5px;
     margin-top: 16px;
@@ -157,7 +157,7 @@
     margin: 0 auto;
   }
   .mix{
-    max-width: 80vw;
+    max-width: 85vw;
     margin: 0 auto;
     margin-bottom: 10vh;
     /* display: flex; */
@@ -446,7 +446,7 @@
   margin-bottom: 100px;
 }
 .rate {
-  background-color: #cadff5;
+  background-color: #cfe2ff;
   padding: 10px;
 }
 .rate h3 {
@@ -455,21 +455,17 @@
 .rate h5 {
   margin-bottom: 10px;
 }
-.rate button {
-  font-size: 1.2rem;
-}
 .checkbtn button{
-  background: transparent;
-  color: #004e9cc4;
-  border: #004e9cc4 1px solid;
-  font-size: 1.2rem;
-  border-radius: 7px;
+  background-color: #004e9cc4;
+  color: #fff;
+  border-radius: 5px;
   padding-bottom: 3px;
   padding-top: 3px;
+  border: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 .checkbtn button:hover {
-  color: #fff;
-  background-color: #004e9cc4;
+  background-color: #004b97;
 }
 .centerseller h3 {
   font-size: 1.2rem;
@@ -580,12 +576,6 @@
     .cta-wrap > .btn { min-height: 48px; }
 .meta-row { line-height: 1.6; }
 .meta-row .text-muted { color: #6b7280 !important; }
-.sellertopic {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 15px;
-  margin-top: 30px;
-}
 .otherimg {
   width: 120px;
   height: 120px;
@@ -622,4 +612,23 @@
     flex-direction:column;
     overflow:hidden;
     z-index:10000;
+}
+.reviewText {
+  margin: 10px;
+}
+.reviewTime {
+  font-size: 12px;
+}
+.itemNames {
+  color: #4f4f4f; 
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 150px;
+}
+.score {
+  background-image: linear-gradient(90deg, #ff6a00, #ee0979);
+  color: transparent;
+  background-clip: text;
 }
