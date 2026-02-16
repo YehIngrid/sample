@@ -297,14 +297,27 @@ async function openChatWithSeller(itemId) {
 }
 
 function toggleSellerReviews() {
-  //if (!sellerId) return;
   const reviewContainer = document.getElementById('sellerReviews');
+
   if (reviewContainer.classList.contains('d-none')) {
+    // 顯示邏輯
     reviewContainer.classList.remove('d-none');
+    
+    // 強制瀏覽器重繪 (Reflow)，確保動畫能觸發
+    void reviewContainer.offsetWidth; 
+    
+    reviewContainer.classList.add('show');
   } else {
-    reviewContainer.classList.add('d-none');
+    // 隱藏邏輯
+    reviewContainer.classList.remove('show');
+
+    // 等動畫結束 (300ms) 再加上 d-none 節省效能
+    setTimeout(() => {
+      reviewContainer.classList.add('d-none');
+    }, 300);
   }
 }
+
 async function reportSeller(sellerId) {
   if (!sellerId) return;
 

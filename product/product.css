@@ -632,3 +632,15 @@
   color: transparent;
   background-clip: text;
 }
+/* 初始隱藏狀態：透明度 0 且往上偏移 */
+.fade-down {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* 顯示狀態：當 class 包含 .show 時，回到原位 */
+.fade-down.show {
+  opacity: 1;
+  transform: translateY(0);
+}
