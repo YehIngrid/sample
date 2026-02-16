@@ -439,13 +439,13 @@ async function showSellerCommodities(id) {
       title.textContent = product.name || '未命名';
     
       const price = document.createElement('p');
-      price.className = 'card-text mt-auto mb-2';
+      price.className = 'card-text mt-auto mb-2 text-end bold';
       price.innerHTML = formatPrice(product.price);
     
       const link = document.createElement('a');
       const pid = product.id ?? product._id ?? product.commodityId ?? '';
       link.href = `./product.html?id=${encodeURIComponent(pid)}`;
-      link.className = 'btn btn-primary w-100 mt-auto';
+      link.className = 'btn btn-light w-100 mt-auto';
       link.textContent = '查看商品';
     
       cardBody.appendChild(title);
