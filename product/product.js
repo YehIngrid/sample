@@ -144,7 +144,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   if (!wrap) return;
 
   const ageText =
-    String(product?.age) === '-1' || product?.age == null ? '未知' : `${product.age}年`;
+    String(product?.age) === '-1' || product?.age == null ? '未知' : `${product.age} 年`;
 
   const fields = [
     ['商品大小',  size ?? '-'],
