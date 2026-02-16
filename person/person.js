@@ -1471,9 +1471,9 @@ function openReviewModal(orderId, sellerId) {
           </div>
           <div>
             <div>
-              <img src="${sellerUrl}" alt="賣家頭像"/>
-              <span>${sellerName}</span>
-              <span>信譽積分：${score}</span>
+              <img src="../image/default-avatar.png" alt="賣家頭像"/>
+              <span>賣家姓名</span>
+              <span>信譽積分：100</span>
             </div>
           </div>
         </div>
