@@ -1447,7 +1447,7 @@ function openReviewModal(orderId, sellerId) {
     title: '請為此次訂單的賣家評分',
     html: `
       <div id="review-list">
-        <div class="d-flex">
+        <div class="d-flex justify-content-between">
           <div>
             <label class="review-item">
               <input type="checkbox" class="score-check"> 商品描述準確 (+1)
@@ -1470,8 +1470,8 @@ function openReviewModal(orderId, sellerId) {
             </label><br>
           </div>
           <div>
-            <div>
-              <img src="../image/default-avatar.png" alt="賣家頭像"/>
+            <div class="d-flex flex-column justify-content-center">
+              <img src="../image/default-avatar.png" alt="賣家頭像" style="width: 100px; height: 100px;"/>
               <span>賣家姓名</span>
               <span>信譽積分：100</span>
             </div>
