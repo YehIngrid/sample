@@ -1544,3 +1544,8 @@ function calcScore() {
   });
   return score; // 0~5
 }
+function renderStars(score) {
+  return '★'.repeat(score) + '☆'.repeat(5 - score);
+}
+const scoreStar = document.querySelector('.score');
+scoreStar.textContent = renderStars(Number(scoreStar.textContent));

@@ -401,6 +401,7 @@ small {
   position: relative;
   display: inline-block;
   cursor: help;
+  margin-right: 5px;
 }
 
 /* 提示框主體 */
@@ -412,7 +413,7 @@ small {
   transform: translateY(-50%) scale(0.8); /* 初始縮小一點 */
   
   /* 樣式設計 */
-  width: 250px; /* 寬度 */
+  width: 280px; /* 寬度 */
   padding: 10px;
   background-color: #333;
   color: #fff;
@@ -451,4 +452,26 @@ small {
   opacity: 1;
   visibility: visible;
   transform: translateY(-50%) scale(1); /* 回復大小 */
+}
+.reviewerName {
+  font-size: 12px;
+}
+.reviewText {
+  margin: 10px;
+}
+.reviewTime {
+  font-size: 12px;
+}
+.itemNames {
+  color: #4f4f4f; 
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 150px;
+}
+.score {
+  background-image: linear-gradient(90deg, #ff6a00, #ee0979);
+  color: transparent;
+  background-clip: text;
 }
