@@ -489,7 +489,9 @@
     margin: 0 auto;
     margin-bottom: 20px;
   }
-  
+  .topic {
+    font-size: 16px;
+  }
 }
 .sellerphoto {
   width: 150px;              /* 想要的大小 */

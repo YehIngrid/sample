@@ -176,12 +176,12 @@
 </div>
     <div class="mix">
       <div class="describe typeofcommodity">
-          <h5>商品描述</h5>
+          <h5 class="topic">商品描述</h5>
           <p id="product-description" class="description-text"></p>
       </div>
 
       <div class="typeofcommodity">
-        <h5 style="margin-bottom: 20px;">其他注意事項</h5>
+        <h5 style="margin-bottom: 20px;" class="topic">其他注意事項</h5>
         <div class="accordion" id="accordionExample">
           <div class="accordion-item">
             <h2 class="accordion-header">
@@ -234,7 +234,7 @@
       </div>
 
       <div class="typeofcommodity">
-        <h5 class="sellertopic">賣家資訊</h5>
+        <h5 class="sellertopic topic">賣家資訊</h5>
         <div id="sellerInfo" class="card col-12">
           <div class="card-body">
               <div class="d-lg-flex d-block justify-content-between gap-2">
@@ -259,7 +259,7 @@
                   <button class="btn btn-sm btn-danger" id="sellerBad">檢舉賣家</button>
                 </div>
               </div>
-              <div class="d-none" id="sellerReviews fade-down">
+              <div class="d-none fade-down" id="sellerReviews">
                 <hr>
                 <div class="reviewerInfo d-flex justify-content-between" id="reviewerInfo">
                   <div class="d-flex align-items-center gap-1">
@@ -282,7 +282,7 @@
     
 <!-- TODO sellerCommodities -->
 <div class="sellerCommodities">
-  <h5 class="sellertopic">賣家其他商品</h5>
+  <h5 class="sellertopic topic">賣家其他商品</h5>
   <div id="otherProducts" class="d-flex flex-wrap gap-3">
     <!-- 其他商品卡片會由 JS 動態生成 -->
   </div>
