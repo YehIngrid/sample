@@ -275,7 +275,7 @@ function renderSellerInfo(data) {
 
   // 綁事件（依你的路由調整）
   if (chatBtn)   chatBtn.onclick   = () => openChatWithSeller(itemId);
-  if (rateBtn)   rateBtn.onclick   = () => openSellerReviews(data.id);
+  if (rateBtn)   rateBtn.onclick   = () => toggleSellerReviews();
   if (reportBtn) reportBtn.onclick = () => reportSeller(data.id);
 }
 
@@ -296,9 +296,14 @@ async function openChatWithSeller(itemId) {
   }
 }
 
-function openSellerReviews(sellerId) {
-  if (!sellerId) return;
+function toggleSellerReviews() {
+  //if (!sellerId) return;
   const reviewContainer = document.getElementById('sellerReviews');
+  if (reviewContainer.classList.contains('d-none')) {
+    reviewContainer.classList.remove('d-none');
+  } else {
+    reviewContainer.classList.add('d-none');
+  }
 }
 async function reportSeller(sellerId) {
   if (!sellerId) return;
