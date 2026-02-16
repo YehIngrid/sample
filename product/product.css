@@ -505,7 +505,7 @@
 /* 主圖容器：固定比例＋不失真 */
     .main-preview {
       width: 100%;
-      max-width: 520px;          /* 你可以依需求調整 */
+      max-width: 480px;          /* 你可以依需求調整 */
       aspect-ratio: 1 / 1;       /* 固定為正方形容器 */
       border: 1px solid #e5e7eb;
       border-radius: .5rem;
