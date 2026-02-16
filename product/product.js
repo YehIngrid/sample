@@ -387,7 +387,7 @@ async function showSellerCommodities(id) {
   console.log('sellerCommodities:', sellerCommodities);
   if (!sellerCommodities) return;
 
-  const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span>NT$</span>`;
+  const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span> NT$</span>`;
   const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u));
 
   try {
@@ -439,7 +439,7 @@ async function showSellerCommodities(id) {
       title.textContent = product.name || '未命名';
     
       const price = document.createElement('p');
-      price.className = 'card-text mt-auto mb-2 text-end bold';
+      price.className = 'card-text mt-auto mb-2 text-end fw-bold';
       price.innerHTML = formatPrice(product.price);
     
       const link = document.createElement('a');
