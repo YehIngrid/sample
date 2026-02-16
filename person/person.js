@@ -1447,26 +1447,36 @@ function openReviewModal(orderId, sellerId) {
     title: '請為此次訂單的賣家評分',
     html: `
       <div id="review-list">
-        <label class="review-item">
-          <input type="checkbox" class="score-check"> 商品描述準確 (+1)
-        </label><br>
+        <div class="d-flex">
+          <div>
+            <label class="review-item">
+              <input type="checkbox" class="score-check"> 商品描述準確 (+1)
+            </label><br>
 
-        <label class="review-item">
-          <input type="checkbox" class="score-check"> 出貨速度快 (+1)
-        </label><br>
+            <label class="review-item">
+              <input type="checkbox" class="score-check"> 出貨速度快 (+1)
+            </label><br>
 
-        <label class="review-item">
-          <input type="checkbox" class="score-check"> 溝通禮貌 (+1)
-        </label><br>
+            <label class="review-item">
+              <input type="checkbox" class="score-check"> 溝通禮貌 (+1)
+            </label><br>
 
-        <label class="review-item">
-          <input type="checkbox" class="score-check"> 交易可靠 (+1)
-        </label><br>
+            <label class="review-item">
+              <input type="checkbox" class="score-check"> 交易可靠 (+1)
+            </label><br>
 
-        <label class="review-item">
-          <input type="checkbox" class="score-check"> 包裝完整 (+1)
-        </label><br>
-
+            <label class="review-item">
+              <input type="checkbox" class="score-check"> 包裝完整 (+1)
+            </label><br>
+          </div>
+          <div>
+            <div>
+              <img src="${sellerUrl}" alt="賣家頭像"/>
+              <span>${sellerName}</span>
+              <span>信譽積分：${score}</span>
+            </div>
+          </div>
+        </div>
         <textarea id="review-comment" class="form-control mt-2" rows="3" placeholder="留下評價..."></textarea>
 
         <div class="mt-2 text-end">
