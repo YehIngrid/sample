@@ -481,7 +481,7 @@ async function orderNow() {
   try {
     const response = await backendService.addItemsToCart({
       productId: itemId,
-      quantity: 1
+      quantity: Number(document.getElementById('qty')?.value) || 1
     });
 
     if (response.status === 200) {
