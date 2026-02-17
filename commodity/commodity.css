@@ -163,3 +163,10 @@
   color: var(--brand-color);
   font-weight: bold;
 }
+.search {
+  margin-bottom: 7px;
+}
+.search span {
+  color: var(--brand-color);
+  font-weight: bold;
+}
