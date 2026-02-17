@@ -1,5 +1,4 @@
 let backendService;
-let loginService;
 let wpbackendService;
 
 const midcontent = document.getElementById('midcontent');
@@ -50,7 +49,6 @@ window.addEventListener('click', (event) => {
 
 document.addEventListener('DOMContentLoaded', function() {
   backendService = new BackendService();
-  loginService = new LoginService(backendService);
   let page = 1;
   let limit = 6;
   const listEl = document.getElementById('hotItems');
