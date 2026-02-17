@@ -1,70 +1,15 @@
 // ====== 設定 ======
 const PAGE_SIZE = 18;
 let currentCategory = 'all';
-let currentSub = null;
 let pageIndex = 0;
 let isLoading = false;
 
-// DOM
-const asideEl = document.getElementById('deepCategorySort');
-const deepListEl = document.getElementById('deepCategoryList');
+// DOM 元素
 const productRow = document.getElementById('productRow');
 const loaderEl = document.getElementById('loader');
 const sortItems = document.querySelectorAll('.sort_item');
-const clearSubBtn = document.getElementById('clearSubBtn');
 const paginationEl = document.getElementById('pagination');
 
-// 範例：每個大分類對應的小分類
-const subcategories = {
-  '書籍與學籍用品': ['學校專業用書','通識課本/語言學習書','非學校用書', '文具用品','筆記/習題集', '其他'],
-  '宿舍與生活用品': ['廚房用具','寢具','電器用品','清潔用品','個人保養', '其他'],
-  '學生專用器材': ['實驗器材','測量工具', '其他'],
-  '環保生活用品': ['環保餐具','購物袋/手提袋', '其他'],
-  '儲物與收納用品': ['收納箱','置物架', '其他'],
-  '其他': ['周邊','腳踏車','衣服', '運動用品', '其他']
-};
-const subcategoryIcons = {
-  '書籍與學籍用品': {
-    '學校專業用書': '../svg/studybook.svg',
-    '通識課本/語言學習書': '../svg/languagebook.svg',
-    '非學校用書': '../svg/noschoolbook.svg',
-    '文具用品': '../svg/pencil.svg',
-    '筆記/習題集': '../svg/note.svg',
-    '其他': '../svg/mother.svg'
-  },
-  '宿舍與生活用品': {
-    '廚房用具': '../svg/kitchen.svg',
-    '寢具': '../svg/bed.svg',
-    '電器用品': '../svg/mlife.svg',
-    '清潔用品': '../svg/tshclean.svg',
-    '個人保養': '../svg/makeup.svg',
-    '其他': '../svg/mother.svg'
-  },
-  '學生專用器材': {
-    '實驗器材': '../svg/experiment.svg',
-    '測量工具': '../svg/mruler.svg', 
-    '其他':'../svg/mother.svg'
-  }, 
-  '環保生活用品': {
-    '環保餐具': '../svg/spoon.svg',
-    '購物袋/手提袋': '../svg/mnewbag.svg',
-    '其他': '../svg/mother.svg'
-  }, 
-  '儲物與收納用品': {
-    '收納箱': '../svg/box.svg',
-    '置物架': '../svg/store.svg',
-    '其他': '../svg/mother.svg'
-  }, 
-  '其他': {
-    '周邊': '../svg/idol.svg',
-    '腳踏車': '../svg/bike.svg',
-    '衣服': '../svg/clothes.svg',
-    '運動用品': '../svg/sports.svg', 
-    '其他': '../svg/mother.svg'
-  }
-
-  // … 其他分類照這樣寫
-};
 
 // ====== 初始化分類按鈕事件 ======
 sortItems.forEach(el => {
@@ -77,78 +22,13 @@ sortItems.forEach(el => {
   });
 });
 
-// 清除子分類
-if (clearSubBtn) {
-  clearSubBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    currentSub = null;
-    pageIndex = 0;
-    productRow.innerHTML = '';
-    document.querySelectorAll('.deep-sub').forEach(x => x.classList.remove('active'));
-    loadProducts();
-  });
-}
 
 // 切換大分類
 function changeCategory(category) {
   currentCategory = category;
-  currentSub = null;
   pageIndex = 0;
   productRow.innerHTML = '';
-  toggleAside(category);
   loadProducts();
-}
-
-// 控制側欄顯示/填入子分類
-function toggleAside(category) {
-  if (category === 'all' || category == 'hot' || category == 'new') {
-    asideEl.classList.add('d-none');
-    document.getElementById('mobileSubCategoryIcons').innerHTML = '';
-  } else {
-    asideEl.classList.remove('d-none');
-    const items = subcategories[category] || [];
-
-    // 桌機版子分類清單
-    deepListEl.innerHTML = items.map(s => `<li><a href="#" class="deep-sub" data-sub="${s}">${s}</a></li>`).join('');
-
-    // 手機版子分類 (圓形圖片)
-    const mobileIcons = document.getElementById('mobileSubCategoryIcons');
-    const iconMap = subcategoryIcons[category] || {};
-    mobileIcons.innerHTML = items.map(s => `
-      <div>
-        <img src="${iconMap[s] || 'icons/default.png'}" 
-             alt="${s}" 
-             class="mobile-sub" 
-             data-sub="${s}">
-        <div class="text-center" style="font-size:12px;">${s}</div>
-      </div>
-    `).join('');
-
-    // 綁定事件（桌機）
-    document.querySelectorAll('.deep-sub').forEach(a => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelectorAll('.deep-sub, .mobile-sub').forEach(x => x.classList.remove('active'));
-        a.classList.add('active');
-        currentSub = a.dataset.sub;
-        pageIndex = 0;
-        productRow.innerHTML = '';
-        loadProducts();
-      });
-    });
-
-    // 綁定事件（手機）
-    document.querySelectorAll('.mobile-sub').forEach(img => {
-      img.addEventListener('click', () => {
-        document.querySelectorAll('.deep-sub, .mobile-sub').forEach(x => x.classList.remove('active'));
-        img.classList.add('active');
-        currentSub = img.dataset.sub;
-        pageIndex = 0;
-        productRow.innerHTML = '';
-        loadProducts();
-      });
-    });
-  }
 }
 
 //TODO 載入商品（分頁，含前端篩選與 totalCount 更新）
@@ -235,7 +115,6 @@ async function loadProducts() {
   loaderEl.textContent = '載入中...';
   let currentSource = 'all';     // all | hot | new（資料來源）
 let currentCategory = 'all';   // 書籍 / 生活用品…
-let currentSub = null;         // 子分類
 
   try {
     let items = [];
@@ -273,13 +152,6 @@ let currentSub = null;         // 子分類
     if (currentCategory && currentCategory !== 'all') {
       filteredItems = filteredItems.filter(
         p => categoryMap[p.category] === currentCategory
-      );
-    }
-
-    // 👉 子分類
-    if (currentSub) {
-      filteredItems = filteredItems.filter(
-        p => p.subCategory === currentSub
       );
     }
 
