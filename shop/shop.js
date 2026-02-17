@@ -268,7 +268,7 @@ nextHotBtn.addEventListener("click", () => {
       icon: "success"
     });
     formEl.reset();
-    window.location.href = "shoppingpage_bootstrap.html";
+    window.location.href = "shop.html";
   } catch (e) {
     Swal.fire({
       title: "Oops...發生錯誤，請稍後再試",
