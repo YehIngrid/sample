@@ -384,7 +384,7 @@ nav a {
   cursor: pointer;
 }
 .card-header {
-  background-color: var(--light-text-color) !important;
+  background-color: var(--background-color) !important;
   color: var(--background-color);
 }
 @media screen and (max-width: 768px) {
@@ -397,6 +397,9 @@ nav a {
   }
   .card {
     margin-bottom: 10px !important;
+  }
+  .my-item-list {
+    display: block;
   }
 }
 .warning {
