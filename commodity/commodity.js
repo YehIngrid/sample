@@ -219,7 +219,7 @@ function renderProductsBootstrap(items) {
     const newOrOldMap = {
       1:'全新',2:'幾乎全新',3:'半新',4:'適中',5:'稍舊',6:'全舊',
     };
-    const newOrOld =  (p.newOrOld <= 6 && p.newOrOld >= 6) ? newOrOldMap[p.newOrOld] : '無法評估';
+    const newOrOld =  (p.newOrOld <= 6 && p.newOrOld >= 0) ? newOrOldMap[p.newOrOld] : '無法評估';
     col.innerHTML = `
       <div class="card h-100" style="cursor:pointer;" onclick="window.location.href='../product/product.html?id=${escapeHtml(p.id)}'">
         ${p.mainImage ? `<img src="${escapeHtml(p.mainImage)}" class="card-img-top product-card-img" alt="${escapeHtml(p.name)}">` :
