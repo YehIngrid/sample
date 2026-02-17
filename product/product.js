@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('.buybtn').forEach(btn => {
     btn.addEventListener('click', async () => {
       if (!(await requireLogin())) return;
-      orderNow(itemId);
+      orderNow();
     });
   });
   const iframe = document.getElementById('talkInterface');
@@ -477,10 +477,10 @@ async function showSellerCommodities(id) {
     sellerCommodities.style.display = 'none';
   }
 }
-async function orderNow(productId) {
+async function orderNow() {
   try {
     const response = await backendService.addItemsToCart({
-      productId: productId,
+      productId: itemId,
       quantity: 1
     });
 
