@@ -355,6 +355,7 @@ nav a {
     }
 }
 .ellipsis-text-wp {
+  width: 120px;
     text-wrap: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -476,10 +477,4 @@ nav a {
 .pageContainer {
   position: relative;
   min-height: 40vh; /* 確保頁面至少佔滿整個視窗高度 */
-}
-#wishpool .page {
-  margin: 0 !important;
-}
-#mywish .page {
-  margin: 0 !important;
 }
