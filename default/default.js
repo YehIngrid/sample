@@ -117,7 +117,23 @@ async function requireLogin() {
     return true;
   } catch (err) {
     const currentUrl = window.location.pathname + window.location.search;
-    window.location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+
+    const result = await Swal.fire({
+      title: "尚未登入",
+      text: "此功能需要登入，是否前往登入？",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "前往登入",
+      cancelButtonText: "取消"
+    });
+
+    if (result.isConfirmed) {
+      window.location.href =
+        `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+    }
+
     return false;
   }
 }
