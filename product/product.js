@@ -479,10 +479,7 @@ async function showSellerCommodities(id) {
 }
 async function orderNow() {
   try {
-    const response = await backendService.addItemsToCart({
-      productId: itemId,
-      quantity: Number(document.getElementById('qty')?.value) || 1
-    });
+    const response = await backendService.addItemsToCart(itemId, Number(document.getElementById('qty')?.value));
     console.log('qty：', document.getElementById('qty')?.value);
     if (response.status === 200) {
       // 加入購物車成功，跳轉到購物車頁
