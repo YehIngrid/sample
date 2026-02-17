@@ -1,6 +1,7 @@
 let backendService;
 let chatService;
 let chatInnerWin; // 用於存放 iframe 的 window 物件
+let goodsOrder;
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
@@ -237,7 +238,13 @@ document.addEventListener('click', function(e) {
   // 執行原本的 handleAction，並傳入按鈕元素 btn 作為參考
   handleAction(action, id, btn);
 });
-
+function findSellerIdByOrderId(goodsOrders) {
+  goodsOrders.forEach(order => {
+    if (order.id === orderId) {
+      return order.sellerUser.accountId;
+    }
+  });
+}
 // ==========================================
 // 2. 修復後的 handleAction (不需 onclick)
 // ==========================================
@@ -263,7 +270,8 @@ async function handleAction(action, id, el) {
     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
     window.location.href = url;
   } else if (action === '聯絡賣家') {
-    openChatWithSeller(id);
+    const sellerId = findSellerIdByOrderId(goodsOrder);
+    openChatWithSeller(sellerId);
   } else if (action === 'cancel') {
     if (confirm('確定要取消訂單嗎?')) {
       try {
@@ -397,6 +405,7 @@ async function handleRouting() {
       const res = await backendService.getBuyerOrders();
       renderBuyerOrders(res?.data?.data ?? []);
       renderBuyerCards(res?.data?.data ?? []);
+      goodsOrder = res?.data?.data;
     } else if (page === 'products') {
       const res = await backendService.getMyItems();
       const list = res?.data?.commodities ?? [];
@@ -1426,16 +1435,16 @@ async function openCloseChatInterface() {
     talkInterface.style.display = 'block'; 
   }
 }
-async function openChatWithSeller(itemId) {
-  if (!itemId) {
-    return Swal.fire({ icon: 'warning', title: '缺少商品編號' });
+async function openChatWithSeller(targetUserId) {
+  if (!targetUserId) {
+    return Swal.fire({ icon: 'warning', title: '缺少userid' });
   }
 
   openCloseChatInterface();
   chatService = new ChatBackendService();
 
   try {
-    chatInnerWin.openChatWithSeller(itemId);
+    chatInnerWin.openChatWithSeller(targetUserId);
   } catch (err) {
     console.error(err);
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });

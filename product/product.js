@@ -283,22 +283,22 @@ function renderSellerInfo(data) {
   if (scoreEl) scoreEl.textContent = Number.isFinite(+data.score) ? +data.score : 0;
 
   // 綁事件（依你的路由調整）
-  if (chatBtn)   chatBtn.onclick   = () => openChatWithSeller(itemId);
+  if (chatBtn)   chatBtn.onclick   = () => openChatWithSeller(data.accountId);
   if (rateBtn)   rateBtn.onclick   = () => toggleSellerReviews();
   if (reportBtn) reportBtn.onclick = () => reportSeller(data.id);
 }
 
 // === 事件處理：依你的實作調整 ===
-async function openChatWithSeller(itemId) {
-  if (!itemId) {
-    return Swal.fire({ icon: 'warning', title: '缺少商品編號' });
+async function openChatWithSeller(targetSellerId) {
+  if (!targetSellerId) {
+    return Swal.fire({ icon: 'warning', title: '缺少sellerid' });
   }
 
   openCloseChatInterface();
   chatService = new ChatBackendService();
 
   try {
-    chatInnerWin.openChatWithSeller(itemId);
+    chatInnerWin.openChatWithSeller(targetSellerId);
   } catch (err) {
     console.error(err);
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });

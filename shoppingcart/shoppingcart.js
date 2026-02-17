@@ -228,7 +228,7 @@ cartList.addEventListener('click', async e => {
   }
 
   if (e.target.classList.contains('btn-talk')) {
-    openChatWithSeller(item.productId);
+    openChatWithSeller(item.ownerId);
   }
 });
 
@@ -481,16 +481,16 @@ function onItemCheckChange(itemId, checked) {
   renderCart();
   updateSummary();
 }
-async function openChatWithSeller(itemId) {
-  if (!itemId) {
-    return Swal.fire({ icon: 'warning', title: '缺少商品編號' });
+async function openChatWithSeller(targetSellerId) {
+  if (!targetSellerId) {
+    return Swal.fire({ icon: 'warning', title: '缺少sellerId' });
   }
 
   openCloseChatInterface();
   chatService = new ChatBackendService();
 
   try {
-    chatInnerWin.openChatWithSeller(itemId);
+    chatInnerWin.openChatWithSeller(targetSellerId);
   } catch (err) {
     console.error(err);
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });

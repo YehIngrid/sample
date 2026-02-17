@@ -39,12 +39,12 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    async createRoom(itemId) {
-        console.log("發送請求前的最後確認:", { itemId });
+    async createRoom(targetUserId) {
+        console.log("發送請求前的最後確認:", { targetUserId });
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/create-room`,
-                { itemId: itemId }
+                { targetUserId: String(targetUserId) }
             );
             return response.data;
         } catch (error) {
