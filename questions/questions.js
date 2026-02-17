@@ -1,4 +1,3 @@
-
 // 取得所有內容區塊與側邊欄 li 項
 const sections = document.querySelectorAll('main section');
 const navItems = document.querySelectorAll('nav ul li');
