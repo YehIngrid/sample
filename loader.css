@@ -9,9 +9,6 @@
     height: 100%;
     z-index: 9999;
   }
-  #whatcontent {
-    display: none; /* 初始隱藏內容 */
-  }
   /* 載入畫面 */
 .spinner {
   width: 36.4px;
