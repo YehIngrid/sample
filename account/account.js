@@ -115,7 +115,15 @@ async function callLogin() {
     await backendService.getUserData?.();
 
     // 導頁
-    window.location.href = '../shop/shop.html';
+    const params = new URLSearchParams(window.location.search);
+    const redirectUrl = params.get("redirect");
+
+    if (redirectUrl && redirectUrl.startsWith("/")) {
+        window.location.href = redirectUrl;
+    } else {
+        window.location.href = "../shop/shop.html";
+    }
+
   } catch (e) {
     console.error('登入錯誤：', e);
     Swal.fire({

@@ -30,7 +30,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('取得商品失敗', e);
   }
   document.querySelectorAll('.shopcart').forEach(btn => {
-    btn.addEventListener('click', onAddToCart);
+    btn.addEventListener('click', async () => {
+      if (!(await requireLogin())) return;
+      onAddToCart
+    });
+  });
+  document.querySelectorAll('.buybtn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!(await requireLogin())) return;
+      orderNow(itemId);
+    });
   });
   const iframe = document.getElementById('talkInterface');
 

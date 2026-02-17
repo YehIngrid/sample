@@ -31,38 +31,40 @@ window.onload = function() {
   });
 async function renderAuthUI() {
   try {
-  backendService = new BackendService();
-  const user = await backendService.whoami(); // 成功代表已登入
-  console.log("目前使用", user);
-  console.log("test userid", user.data.uid);
+      backendService = new BackendService();
+      const user = await backendService.whoami(); // 成功代表已登入
+      console.log("目前使用", user);
+      console.log("test userid", user.data.uid);
 
-  document.querySelectorAll('.username').forEach((el) => {
-    el.textContent = localStorage.getItem("username") || '使用者';
-    el.style.display = '';
-  });
+      document.querySelectorAll('.username').forEach((el) => {
+        el.textContent = localStorage.getItem("username") || '使用者';
+        el.style.display = '';
+      });
 
-  document.querySelectorAll('.loginornot').forEach((el) => {
-    el.textContent = '登出';
-    el.href = '#';
-    el.onclick = (e) => {
-      e.preventDefault();
-      doLogout();
-    };
-  });
+      document.querySelectorAll('.loginornot').forEach((el) => {
+        el.textContent = '登出';
+        el.href = '#';
+        el.onclick = (e) => {
+          e.preventDefault();
+          doLogout();
+        };
+      });
 
-} catch (err) {
-  document.querySelectorAll('.username').forEach((el) => {
-    el.textContent = '';
-    el.style.display = 'none';
-  });
+    } catch (err) {
+      document.querySelectorAll('.username').forEach((el) => {
+        el.textContent = '';
+        el.style.display = 'none';
+      });
 
-  document.querySelectorAll('.loginornot').forEach((el) => {
-    el.textContent = '登入';
-    el.href = '../account/account.html';
-    el.onclick = null;
-  });
-}
-
+      document.querySelectorAll('.loginornot').forEach((el) => {
+        el.textContent = '登入';
+      
+        const currentUrl = window.location.pathname + window.location.search;
+        el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+      
+        el.onclick = null;
+      });
+    }
 }
 
 function doLogout() {
@@ -109,3 +111,13 @@ const formatTaipeiTime = (dateStr) => {
     minute: "2-digit"
   });
 };
+async function requireLogin() {
+  try {
+    await backendService.whoami();
+    return true;
+  } catch (err) {
+    const currentUrl = window.location.pathname + window.location.search;
+    window.location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+    return false;
+  }
+}
