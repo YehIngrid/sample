@@ -4,8 +4,11 @@ window.onload = function() {
   var loader = document.getElementById('loader');
   var content = document.getElementById('whatcontent');
   if (loader && content) {
-    loader.style.setProperty('display', 'none', 'important');
-    content.style.setProperty('display', 'block', 'important');
+    loader.classList.add('d-none');
+    loader.classList.remove('d-flex');
+    content.classList.remove('d-none');
+    // loader.style.setProperty('display', 'none', 'important');
+    // content.style.setProperty('display', 'block', 'important');
   }
 };
 
