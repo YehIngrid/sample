@@ -496,3 +496,16 @@ async function openChatWithSeller(itemId) {
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });
   }
 }
+const selectedId = localStorage.getItem("selectedCartItem");
+
+if (selectedId) {
+  const checkbox = document.querySelector(
+    `input[type="checkbox"][data-id="${selectedId}"]`
+  );
+  if (checkbox) {
+    checkbox.checked = true;
+  }
+
+  // 用完就刪掉
+  localStorage.removeItem("selectedCartItem");
+}

@@ -483,6 +483,7 @@ async function orderNow() {
     console.log('qty：', document.getElementById('qty')?.value);
     if (response.status === 200) {
       // 加入購物車成功，跳轉到購物車頁
+      localStorage.setItem("selectedCartItem", itemId);
       window.location.href = "../shoppingcart/shoppingcart.html";
     } else {
       alert("訂單頁面跳轉失敗，請稍後再試");
