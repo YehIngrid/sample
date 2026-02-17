@@ -384,8 +384,8 @@ nav a {
   cursor: pointer;
 }
 .card-header {
-  background-color: var(--background-color) !important;
-  color: var(--background-color);
+  background-color: var(--brand-color) !important;
+  color: var(--background-color) !important;
 }
 @media screen and (max-width: 768px) {
   .wishgrid {
