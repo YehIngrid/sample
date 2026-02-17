@@ -69,8 +69,8 @@ section {
   margin-bottom: 100px;
   padding: 20px;
   background-color: transparent;
-  margin-left: 4vw;
-  margin-right: 4vw;
+  padding-left: 4vw;
+  padding-right: 4vw;
 }
 section h2 {
   margin-bottom: 10px;
@@ -90,12 +90,7 @@ section li{
   font-size: 1.3rem;
   font-weight: 500;
 }
-.content img{
-  width: 60vw;
-  height: auto;
-  margin-left: 7vw;
-  margin-bottom: 10vh;
-}
+
 .content h1{
   font-size: 7rem;
   padding-left: 50px;
@@ -124,8 +119,8 @@ section li{
     margin-bottom: 100px;
     padding: 20px;
     background-color: transparent;
-    margin-left: 3vw;
-    margin-right: 3vw;
+    padding-left: 3vw;
+    padding-right: 3vw;
   }
 }
 @media (max-width: 430px){
@@ -142,8 +137,8 @@ section li{
     margin-bottom: 100px;
     padding: 20px;
     background-color: transparent;
-    margin-left: 1vw;
-    margin-right: 1vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
   }
 }
 /* 按鈕樣式 */
@@ -228,3 +223,34 @@ h1 {
   0% {background-position: 0 0}
   0% {background-position: 100% -100%}
   }
+  .stepImg {
+    display: grid;
+    gap: 10px;
+  }
+  
+  /* 電腦版：全部一排 */
+  @media (min-width: 768px) {
+    .stepImg {
+      grid-template-columns: repeat(7, 1fr); 
+    }
+  }
+  
+  /* 手機版：四個一排 */
+  @media (max-width: 767px) {
+    .stepImg {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  .stepImg img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .stepImg img:hover {
+    transform: scale(1.05);
+  }
+  
