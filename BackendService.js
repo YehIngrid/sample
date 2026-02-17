@@ -285,7 +285,7 @@ class BackendService {
         if (!commodityId) {
             return Promise.reject(new Error("Commodity ID is required"));
         }
-        if (!Number.isInteger(quantity) || quantity < 1) {
+        if (!Number.isInteger(quantity) || quantity <= 0) {
             return Promise.reject(new Error("Quantity 必須是正整數"));
         }
 
