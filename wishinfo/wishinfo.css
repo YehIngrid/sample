@@ -3,13 +3,13 @@ nav {
     background-color: var(--background-color) !important;
 }
 /* ④ 可愛商品展示池 */
-.bg-paper{
+/* .bg-paper{
   background: linear-gradient(180deg,#eaffff 0%, #c9fbfc 50%, #9eeff1 100%);
-}
+} */
 .bg-paper .card{
   background:#ffffff;
   border-radius:26px;
-  border:2px solid #7fdedf;
+  border:2px solid var(--brand-color);
   box-shadow: 0 12px 0 rgba(127,222,223,0.45);
   color:#0f5f63;
 }
@@ -45,7 +45,7 @@ section{
 .break{margin:12px 0;font-size:18px}
 h2{margin-top:0}
 .contactbtn {
-    background-color: var(--secondary-color);
+    background-color: var(--brand-color);
     color: white;
     padding: 4px 8px;
     border: none;
@@ -53,8 +53,8 @@ h2{margin-top:0}
     font-size: 15px;
 }
 .contactbtn:hover {
-    background-color: var(--third-color);
-    color: white;
+    background: linear-gradient(to right bottom, var(--focus-color), var(--focus-border-color));
+    color: #383838;
     text-decoration: none;
     transition: background-color 0.3s ease;
 }
@@ -89,24 +89,24 @@ h2{margin-top:0}
   font-size: 14px;
 }
 .container {
-    max-width: 900px;
+    width: 900px !important;
     border-radius: 10px;
-    border:2px solid #7fdedf;
-    box-shadow: 0 12px 0 rgba(127,222,223,0.45);
+    border:2px solid var(--brand-color);
+    box-shadow: 0 12px 0 #004b9733;
     padding: 20px;
     background-color: #fff;
 }
 .infostyle{
-    color: var(--secondary-color);
+    color: var(--brand-color);
     font-size: 15px;
 }
 .price {
-    color: var(--secondary-color);
+    color: var(--brand-color);
 }
 @media screen and (max-width: 576px) {
     .container {
         padding: 10px;
-        max-width: 345px;
+        max-width: 345px !important;
     }
     
 }

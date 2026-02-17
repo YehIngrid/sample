@@ -478,8 +478,8 @@ nav a {
   min-height: 40vh; /* 確保頁面至少佔滿整個視窗高度 */
 }
 #wishpool .page {
-  margin: 0;
+  margin: 0 !important;
 }
 #mywish .page {
-  margin: 0;
+  margin: 0 !important;
 }
