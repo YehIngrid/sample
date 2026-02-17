@@ -355,9 +355,7 @@ nav a {
     }
 }
 .ellipsis-text-wp {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4; /* 顯示的行數 */
+    text-wrap: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 11px;
@@ -478,4 +476,10 @@ nav a {
 .pageContainer {
   position: relative;
   min-height: 40vh; /* 確保頁面至少佔滿整個視窗高度 */
+}
+#wishpool .page {
+  margin: 0;
+}
+#mywish .page {
+  margin: 0;
 }
