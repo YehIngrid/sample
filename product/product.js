@@ -486,11 +486,11 @@ async function orderNow() {
       localStorage.setItem("selectedCartItem", itemId);
       window.location.href = "../shoppingcart/shoppingcart.html";
     } else {
-      alert("訂單頁面跳轉失敗，請稍後再試");
+      Swal.fire({ icon: 'error', title: 'Oops...', text: "訂單頁面跳轉失敗，請稍後再試" });
     }
   } catch (err) {
     console.error(err);
-    alert("發生錯誤，請稍後再試");
+    Swal.fire({ icon: 'error', title: 'Oops...', text: "發生錯誤，請稍後再試" });
   }
 }
 // 聊天室介面顯示與隱藏
