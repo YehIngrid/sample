@@ -119,9 +119,9 @@ async function callLogin() {
     const redirectUrl = params.get("redirect");
 
     if (redirectUrl && redirectUrl.startsWith("/")) {
-        window.location.replace = redirectUrl;
+        window.location.replace(redirectUrl);
     } else {
-        window.location.replace = "../shop/shop.html";
+        window.location.replace("../shop/shop.html");
     }
 
   } catch (e) {
