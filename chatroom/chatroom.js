@@ -4,7 +4,7 @@ class ChatRoom {
         this.currentRoomId = initialRoomId;
         this.currentRoomName = '';
         this.eventSource = null;
-        this.username = '';
+        this.username = localStorage.getItem('username') || ''; // 從 localStorage 取得 username
         this.auth = new BackendService();
         this.username = ''; // 可之後改成登入使用者
         this.isMobile = window.innerWidth < 768;
@@ -408,7 +408,7 @@ class ChatRoom {
             let target = null;
             rooms.data.items.forEach(data => {
                 const item = document.createElement('div');
-                target = data.members.find(m => m.username !== this.username);
+                target = data.members.find(m => m.name !== this.username);
                 const targetUrl = target.photoURL || '../image/default-avatar.png';
                 item.className = 'chat-item';
                 item.dataset.roomId = data.id;
