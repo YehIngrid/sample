@@ -141,6 +141,7 @@ function renderCart() {
     const el = document.createElement('div');
     el.className = 'list-group-item';
     el.dataset.id = item.id;
+    el.dataset.sellerId = item.ownerId;
 
     el.innerHTML = `
       <div class="d-flex justify-content-between align-items-start mb-2">
@@ -228,7 +229,7 @@ cartList.addEventListener('click', async e => {
   }
 
   if (e.target.classList.contains('btn-talk')) {
-    openChatWithSeller(item.ownerId);
+    openChatWithSeller(row.dataset.sellerId);
   }
 });
 

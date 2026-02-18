@@ -283,7 +283,7 @@ function renderSellerInfo(data) {
   if (scoreEl) scoreEl.textContent = Number.isFinite(+data.score) ? +data.score : 0;
 
   // 綁事件（依你的路由調整）
-  if (chatBtn)   chatBtn.onclick   = () => openChatWithSeller(data.accountId);
+  if (chatBtn)   chatBtn.onclick   = () => openChatWithSeller(data.id);
   if (rateBtn)   rateBtn.onclick   = () => toggleSellerReviews();
   if (reportBtn) reportBtn.onclick = () => reportSeller(data.id);
 }
