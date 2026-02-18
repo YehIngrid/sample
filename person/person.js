@@ -238,7 +238,7 @@ document.addEventListener('click', function(e) {
   // 執行原本的 handleAction，並傳入按鈕元素 btn 作為參考
   handleAction(action, id, btn);
 });
-function findSellerIdByOrderId(goodsOrders) {
+function findSellerIdByOrderId(goodsOrders, orderId) {
   goodsOrders.forEach(order => {
     if (order.id === orderId) {
       return order.sellerUser.accountId;
@@ -270,7 +270,7 @@ async function handleAction(action, id, el) {
     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
     window.location.href = url;
   } else if (action === '聯絡賣家') {
-    const sellerId = findSellerIdByOrderId(goodsOrder);
+    const sellerId = findSellerIdByOrderId(goodsOrder, id);
     openChatWithSeller(sellerId);
   } else if (action === 'cancel') {
     if (confirm('確定要取消訂單嗎?')) {
