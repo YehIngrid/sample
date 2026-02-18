@@ -23,6 +23,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.warn('缺少商品 id');
     return;
   }
+  if (itemId) {
+    document.querySelectorAll('.order').forEach(btn => {
+      btn.dataset.id = itemId;
+    });
+  }
   try {
     const response = await backendService.getItemsInfo(itemId);
     onSuccess(response);
@@ -477,8 +482,16 @@ async function showSellerCommodities(id) {
     sellerCommodities.style.display = 'none';
   }
 }
-document.querySelector('.order').addEventListener('click', async (e) => {
+document.addEventListener('click', async (e) => {
+  // 判斷點擊的是否為 .order 按鈕
+  const btn = e.target.closest('.order');
+  if (!btn) return;
+
+  e.preventDefault();
+
   if (!(await requireLogin())) return;
+
+  const itemId = btn.dataset.id; // 取得 data-id
   orderNow(itemId);
 });
 async function orderNow(itemId) { // 建議將 itemId 作為參數傳入
