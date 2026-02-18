@@ -15,7 +15,6 @@ class ChatRoom {
         this.sendImagebtn = document.getElementById('send-image-btn');
         this.previewArea = document.getElementById('image-upload');
         this.input = document.getElementById('messageInput');
-        this.init();
     }
 
     async init() {
@@ -406,9 +405,10 @@ class ChatRoom {
                 chatList.innerHTML = '<p class="text-center text-muted mt-3">無可用聊天室</p>';
                 return;
             }
+            let target = null;
             rooms.data.items.forEach(data => {
                 const item = document.createElement('div');
-                const target = data.members.find(m => m.username !== this.username);
+                target = data.members.find(m => m.username !== this.username);
                 const targetUrl = target.photoURL || '../image/default-avatar.png';
                 item.className = 'chat-item';
                 item.dataset.roomId = data.id;
@@ -432,6 +432,9 @@ class ChatRoom {
                 chatList.appendChild(item);
             });
 
+            if (rooms.length > 0) {
+                this.switchRoom(rooms.data.items[0].id, rooms.data.items[0].target.name);
+            }
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
         }
