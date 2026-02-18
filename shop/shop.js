@@ -689,23 +689,35 @@ function showWishes(data) {
   })
 }
 
-// chat 部分
+// 聊天室介面顯示與隱藏
 const chatopen = document.getElementById('chaticon');
 const chatclose = document.getElementById('closechat');
 const talkInterface = document.getElementById('talkInterface');
 chatopen.addEventListener('click', function(e){
-  if(!backendService.whoami()){
-    Swal.fire({
-      title: '請先登入會員',
-      icon: 'warning',
-      confirmButtonText: '確定'
-    });
+    toggleChatInterface();
+})
+
+// product.js 修正後的 openCloseChatInterface 函式
+async function openCloseChatInterface() {
+  backendService = new BackendService();
+  const res = await backendService.whoami();
+  if(!res){
+    Swal.fire({ title: '請先登入會員', icon: 'warning' });
     return;
   }
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-    talkInterface.style.display = 'block'; // 顯示
-  } else {
-    talkInterface.style.display = 'none'; // 隱藏
+    talkInterface.style.display = 'block';
   }
-  console.log('chat open');
-})
+}
+async function toggleChatInterface() {
+  const res = await backendService.whoami();
+  if(!res){
+    Swal.fire({ title: '請先登入會員', icon: 'warning' });
+    return;
+  }
+  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+    talkInterface.style.display = 'block'; 
+  } else {
+    talkInterface.style.display = 'none'; 
+  }
+}
