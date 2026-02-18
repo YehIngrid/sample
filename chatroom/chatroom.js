@@ -406,6 +406,7 @@ class ChatRoom {
                 return;
             }
             let target = null;
+            let myself = null;
             rooms.data.items.forEach(data => {
                 const item = document.createElement('div');
                 target = data.members.find(m => m.name !== this.username);
