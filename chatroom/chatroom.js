@@ -432,9 +432,6 @@ class ChatRoom {
                 chatList.appendChild(item);
             });
 
-            if (rooms.length > 0) {
-                this.switchRoom(rooms[0].id, rooms[0].name);
-            }
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
         }
