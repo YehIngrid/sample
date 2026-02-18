@@ -333,12 +333,13 @@ class ChatRoom {
     }
 
     bindEvents() {
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', async (e) => {
             const backBtn = e.target.closest('#backButton');
             if (!backBtn) return;
 
             console.log('返回側邊欄');
             this.backToSidebar();
+            await this.loadRooms(); // 返回側邊欄時重新載入聊天室列表，確保最新狀態
         });
         // const backButton = document.getElementById('backButton');
         // console.log('是否收到backButton: ', backButton);
@@ -421,7 +422,7 @@ class ChatRoom {
                             <h6 class="mb-0 roomName">${target.name}</h6>
                             <small class="text-muted lastMessage">${this.getLastMessageText(data.lastMessage)}</small>
                         </div>
-                        <span class="badge bg-primary rounded-pill ${data.lastReadMessageId == data.lastMessageId ? 'd-none' : ''}">new</span> 
+                        <span class="badge bg-primary rounded-pill ${target.lastReadMessageId == data.lastMessageId ? 'd-none' : ''}">新訊息</span> 
                     </div>
                 `;
                 // 未讀訊息徽章(上面的badge)
