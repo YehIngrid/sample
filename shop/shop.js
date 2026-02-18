@@ -1,6 +1,7 @@
 let backendService;
 let wpbackendService;
 let chatInnerWin;
+let chatRoomList;
 
 const midcontent = document.getElementById('midcontent');
 //JavaScript: 控制左右按鈕捲動
@@ -724,7 +725,8 @@ async function toggleChatInterface() {
   }
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
     talkInterface.style.display = 'block';
-    chatInnerWin.openChatWithSeller(null);
+    chatRoomList = new ChatRoom(null);
+    chatRoomList.init();
   } else {
     talkInterface.style.display = 'none'; 
   }
