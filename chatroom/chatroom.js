@@ -409,6 +409,7 @@ class ChatRoom {
             rooms.data.items.forEach(data => {
                 const item = document.createElement('div');
                 target = data.members.find(m => m.name !== this.username);
+                console.log('聊天室目標對象:', target);
                 const targetUrl = target.photoURL || '../image/default-avatar.png';
                 item.className = 'chat-item';
                 item.dataset.roomId = data.id;
