@@ -426,7 +426,7 @@ class ChatRoom {
                 `;
                 // 未讀訊息徽章(上面的badge)
                 item.addEventListener('click', () => {
-                    this.switchRoom(data.id, data.name);
+                    this.switchRoom(data.id, target.name);
                 });
 
                 chatList.appendChild(item);
