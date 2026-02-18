@@ -1,5 +1,6 @@
 let backendService;
 let wpbackendService;
+let chatInnerWin;
 
 const midcontent = document.getElementById('midcontent');
 //JavaScript: 控制左右按鈕捲動
@@ -23,6 +24,24 @@ document.addEventListener("DOMContentLoaded", () => {
     seller.style.display = "none";
     midcontent.style.display = "block";
   }
+  const iframe = document.getElementById('talkInterface');
+  iframe.src = '../chatroom/chatroom.html';
+// 必須等待 iframe 載入完成
+  iframe.addEventListener('load', () => {
+      try {
+          // 取得 iframe 內部的 document
+          const innerDoc = iframe.contentDocument;
+          const innerWindow = iframe.contentWindow;
+          chatInnerDoc = innerDoc; // 儲存內部 document 參考
+          chatInnerWin = innerWindow; // 儲存內部 window 參考
+          // 抓取裡面的元素，例如一個 ID 為 "message-input" 的輸入框
+          const element = innerDoc.getElementById('chatList');
+          console.log('抓到的元素：', element);
+          //element.value = "從外部設定的文字";
+      } catch (e) {
+          console.error("無法存取：可能跨網域或尚未完全載入", e);
+      }
+  });
 });
 const backbtn = document.getElementById('back-btn');
 backbtn.addEventListener('click', () => {
@@ -697,18 +716,6 @@ chatopen.addEventListener('click', function(e){
     toggleChatInterface();
 })
 
-// product.js 修正後的 openCloseChatInterface 函式
-async function openCloseChatInterface() {
-  backendService = new BackendService();
-  const res = await backendService.whoami();
-  if(!res){
-    Swal.fire({ title: '請先登入會員', icon: 'warning' });
-    return;
-  }
-  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-    talkInterface.style.display = 'block';
-  }
-}
 async function toggleChatInterface() {
   const res = await backendService.whoami();
   if(!res){
@@ -716,7 +723,8 @@ async function toggleChatInterface() {
     return;
   }
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-    talkInterface.style.display = 'block'; 
+    talkInterface.style.display = 'block';
+    chatInnerWin.openChatWithSeller(null);
   } else {
     talkInterface.style.display = 'none'; 
   }
