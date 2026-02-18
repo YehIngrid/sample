@@ -412,6 +412,7 @@ class ChatRoom {
                 target = data.members.find(m => m.name !== this.username);
                 myself = data.members.find(m => m.name === this.username);
                 console.log('聊天室目標對象:', target);
+                console.log('聊天室自己:', myself);
                 const targetUrl = target.photoURL || '../image/default-avatar.png';
                 item.className = 'chat-item';
                 item.dataset.roomId = data.id;
@@ -427,6 +428,8 @@ class ChatRoom {
                         <span class="badge bg-primary rounded-pill ${myself.lastReadMessageId == data.lastMessageId ? 'd-none' : ''}">新訊息</span> 
                     </div>
                 `;
+                console.log('myself.lastReadMessageId:', myself.lastReadMessageId);
+                console.log('data.lastMessageId:', data.lastMessageId);
                 // 未讀訊息徽章(上面的badge)
                 item.addEventListener('click', () => {
                     this.switchRoom(data.id, target.name);
