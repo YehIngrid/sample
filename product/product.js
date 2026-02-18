@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('.shopcart').forEach(btn => {
     btn.addEventListener('click', async () => {
       if (!(await requireLogin())) return;
-      onAddToCart
+      onAddToCart();
     });
   });
   document.querySelectorAll('.buybtn').forEach(btn => {
