@@ -409,6 +409,7 @@ class ChatRoom {
             rooms.data.items.forEach(data => {
                 const item = document.createElement('div');
                 target = data.members.find(m => m.name !== this.username);
+                myself = data.members.find(m => m.name === this.username);
                 console.log('聊天室目標對象:', target);
                 const targetUrl = target.photoURL || '../image/default-avatar.png';
                 item.className = 'chat-item';
@@ -422,7 +423,7 @@ class ChatRoom {
                             <h6 class="mb-0 roomName">${target.name}</h6>
                             <small class="text-muted lastMessage">${this.getLastMessageText(data.lastMessage)}</small>
                         </div>
-                        <span class="badge bg-primary rounded-pill ${target.lastReadMessageId == data.lastMessageId ? 'd-none' : ''}">新訊息</span> 
+                        <span class="badge bg-primary rounded-pill ${myself.lastReadMessageId == data.lastMessageId ? 'd-none' : ''}">新訊息</span> 
                     </div>
                 `;
                 // 未讀訊息徽章(上面的badge)
