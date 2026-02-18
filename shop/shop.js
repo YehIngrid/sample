@@ -718,12 +718,12 @@ chatopen.addEventListener('click', function(e){
 })
 
 async function toggleChatInterface() {
-  const res = await backendService.whoami();
-  if(!res){
-    Swal.fire({ title: '請先登入會員', icon: 'warning' });
-    return;
-  }
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+    const res = await backendService.whoami();
+    if(!res){
+      Swal.fire({ title: '請先登入會員', icon: 'warning' });
+      return;
+    }
     talkInterface.style.display = 'block';
   } else {
     talkInterface.style.display = 'none'; 
