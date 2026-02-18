@@ -477,20 +477,41 @@ async function showSellerCommodities(id) {
     sellerCommodities.style.display = 'none';
   }
 }
-async function orderNow() {
+document.querySelector('.order').addEventListener('click', async (e) => {
+  if (!(await requireLogin())) return;
+  orderNow(itemId);
+});
+async function orderNow(itemId) { // 建議將 itemId 作為參數傳入
   try {
-    const response = await backendService.addItemsToCart(itemId, Number(document.getElementById('qty')?.value));
-    console.log('qty：', document.getElementById('qty')?.value);
-    localStorage.setItem("selectedCartItem", itemId);
-    if (response.status === 200) {
-      // 加入購物車成功，跳轉到購物車頁
+    const qtyInput = document.getElementById('qty');
+    const quantity = Number(qtyInput?.value || 1); // 預設值處理
+
+    // 1. 發送請求
+    const response = await backendService.addItemsToCart(itemId, quantity);
+    
+    // 2. 判斷是否成功 (假設 response 是 axios 或是 fetch 的包裝)
+    if (response.status === 200 || response.ok) {
+      
+      // 成功後才執行：存儲狀態並跳轉
+      localStorage.setItem("selectedCartItem", itemId);
       window.location.href = "../shoppingcart/shoppingcart.html";
+      
     } else {
-      Swal.fire({ icon: 'error', title: 'Oops...', text: "訂單頁面跳轉失敗，請稍後再試" });
+      // 伺服器回傳錯誤（如：庫存不足）
+      Swal.fire({ 
+        icon: 'warning', 
+        title: '無法加入購物車', 
+        text: response.data?.message || "訂單處理失敗，請稍後再試" 
+      });
     }
   } catch (err) {
-    console.error(err);
-    Swal.fire({ icon: 'error', title: 'Oops...', text: "發生錯誤，請稍後再試" });
+    // 網路連線錯誤或程式崩潰
+    console.error('Order Error:', err);
+    Swal.fire({ 
+      icon: 'error', 
+      title: '系統錯誤', 
+      text: "連線發生問題，請檢查網路狀態" 
+    });
   }
 }
 // 聊天室介面顯示與隱藏
