@@ -429,7 +429,7 @@ class ChatRoom {
                         </div>
                         <span class="badge bg-primary rounded-pill ${isNewMessage ? '' : 'd-none'}">新訊息</span> 
                     </div>
-                `;"2026-02-18T10:39:00.589Z"
+                `;
                 console.log('myself.lastReadMessageId:', myself.lastReadMessageId);
                 console.log('data.lastMessageId:', data.lastMessageId);
                 // 未讀訊息徽章(上面的badge)
@@ -489,8 +489,9 @@ class ChatRoom {
         // this.chatMainLoader.classList.add('d-none');
         // SSE
         
-        //await this.backend.markAsRead(roomId);
-        //this.clearUnreadBadge(roomId);
+        const readAt = new Date().toISOString();
+        await this.backend.markAsRead(roomId, readAt);
+
 
         await this.connectSSE(roomId);
     }
@@ -512,6 +513,8 @@ class ChatRoom {
             const data = JSON.parse(event.data);
             this.renderMessage(data);
             this.playNotificationSound();
+            const readAt = new Date().toISOString();
+            this.backend.markAsRead(this.currentRoomId, readAt);
         });
         this.eventSource.addEventListener('typing', (event) => {
             const data = JSON.parse(event.data);
@@ -621,7 +624,7 @@ class ChatRoom {
             container.appendChild(div); // 插入到最後面
             container.scrollTop = container.scrollHeight; // 只有新訊息才自動滾到底部
         }
-        
+        this.detectRead(div);
         return div;
     }
 
@@ -634,23 +637,20 @@ class ChatRoom {
             indicator.style.display = 'none';
         }, 1000);
     }
-    detectRead() {
-        // 可以在這裡實作當訊息進入可視區域時，發送已讀通知給後端
-        // 例如使用 IntersectionObserver 來監測訊息元素是否可見
-        const container = document.getElementById('messagesContainer');
+    detectRead(element) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const msgId = entry.target.dataset.messageId;
-                    // 發送已讀通知給後端
                     const readAt = new Date().toISOString();
                     this.backend.markAsRead(this.currentRoomId, readAt);
-                    // 可以在這裡更新 UI，例如移除未讀徽章
-                    //this.removeUnreadBadge(this.currentRoomId);
+                    observer.unobserve(entry.target); // 避免重複觸發
                 }
             });
-        }, { threshold: 0.5 }); // 設定可見比例
-    }    // TODO 總訊息量超過五十則
+        }, { threshold: 0.5 });
+    
+        observer.observe(element);
+    }
+    // TODO 總訊息量超過五十則
     async loadMoreMessages() {
         const container = document.getElementById('messagesContainer');
         if (!this.hasMore || this.isLoading) return;
