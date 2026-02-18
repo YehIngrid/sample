@@ -1,4 +1,4 @@
-class ChatRoom {
+class ChatRoomList {
     constructor(initialRoomId = null) {
         this.backend = new ChatBackendService();
         this.currentRoomId = initialRoomId;
@@ -735,11 +735,11 @@ class ChatRoom {
 let chatRoom = null;
 window.addEventListener("load", () => {
     console.log('chatroom Load');
-    openChatRoom(null);
+    openChatRoomList(null);
 });
-function openChatRoom(roomId) {
-    chatRoom = new ChatRoom(roomId);
-    chatRoom.init();
+function openChatRoomList(roomId) {
+    chatRoomList = new ChatRoomList(roomId);
+    chatRoomList.init();
 }
 async function openChatWithSeller(targetUserId) {
     if (!targetUserId) {
@@ -751,7 +751,7 @@ async function openChatWithSeller(targetUserId) {
         const roomId = res?.data?.room?.id;
         console.log('聊天室 ID：', roomId);
         console.log('聊天室服務回應：', res);
-        openChatRoom(roomId);
+        openChatRoomList(roomId);
     } catch (error) {
         console.error(error);
     }
