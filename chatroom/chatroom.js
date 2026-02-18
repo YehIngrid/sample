@@ -735,8 +735,12 @@ class ChatRoom {
 let chatRoom = null;
 window.addEventListener("load", () => {
     console.log('chatroom Load');
-    chatRoom = new ChatRoom(null);
+    openChatRoom(null);
 });
+function openChatRoom(roomId) {
+    chatRoom = new ChatRoom(roomId);
+    chatRoom.init();
+}
 async function openChatWithSeller(targetUserId) {
     if (!targetUserId) {
         return alert('無法開啟聊天室，缺少 User ID');
@@ -747,8 +751,7 @@ async function openChatWithSeller(targetUserId) {
         const roomId = res?.data?.room?.id;
         console.log('聊天室 ID：', roomId);
         console.log('聊天室服務回應：', res);
-        chatRoom = new ChatRoom(roomId);
-        chatRoom.init();
+        openChatRoom(roomId);
     } catch (error) {
         console.error(error);
     }

@@ -725,8 +725,6 @@ async function toggleChatInterface() {
   }
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
     talkInterface.style.display = 'block';
-    chatRoomList = new ChatRoom(null);
-    chatRoomList.init();
   } else {
     talkInterface.style.display = 'none'; 
   }
