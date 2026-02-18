@@ -239,8 +239,11 @@ document.addEventListener('click', function(e) {
   handleAction(action, id, btn);
 });
 function findSellerIdByOrderId(goodsOrders, orderId) {
+  console.log('正在尋找訂單ID:', orderId);
+  console.log('目前的訂單列表:', goodsOrders);
   goodsOrders.forEach(order => {
     if (order.id === orderId) {
+      console.log('找到訂單，賣家ID:', order.sellerUser.accountId);
       return order.sellerUser.accountId;
     }
   });
