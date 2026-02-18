@@ -411,6 +411,8 @@ class ChatRoom {
                 const item = document.createElement('div');
                 target = data.members.find(m => m.name !== this.username);
                 myself = data.members.find(m => m.name === this.username);
+                const isMyMessage = data.lastMessage.username == myself.name ? true : false;
+                const isNewMessage = !isMyMessage && myself.lastReadMessageId !== data.lastMessageId;
                 console.log('聊天室目標對象:', target);
                 console.log('聊天室自己:', myself);
                 const targetUrl = target.photoURL || '../image/default-avatar.png';
@@ -425,9 +427,9 @@ class ChatRoom {
                             <h6 class="mb-0 roomName">${target.name}</h6>
                             <small class="text-muted lastMessage">${this.getLastMessageText(data.lastMessage)}</small>
                         </div>
-                        <span class="badge bg-primary rounded-pill ${myself.lastReadMessageId == data.lastMessageId ? 'd-none' : ''}">新訊息</span> 
+                        <span class="badge bg-primary rounded-pill ${isNewMessage ? '' : 'd-none'}">新訊息</span> 
                     </div>
-                `;
+                `;"2026-02-18T10:39:00.589Z"
                 console.log('myself.lastReadMessageId:', myself.lastReadMessageId);
                 console.log('data.lastMessageId:', data.lastMessageId);
                 // 未讀訊息徽章(上面的badge)
