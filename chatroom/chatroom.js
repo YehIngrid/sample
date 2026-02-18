@@ -408,15 +408,17 @@ class ChatRoom {
             }
             rooms.data.items.forEach(data => {
                 const item = document.createElement('div');
+                const target = data.members.some(m => m.username != this.username);
+                const targetUrl = target.photoURL || '../image/default-avatar.png';
                 item.className = 'chat-item';
                 item.dataset.roomId = data.id;
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
-                            <img src="${data.item.mainImage}" alt="${data.item.name}的照片" style="width: 45px; height: 45px; border-radius: 50px;">
+                            <img src="${targetUrl}" alt="${target.name}的照片" style="width: 45px; height: 45px; border-radius: 50px;">
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0 roomName">商品<span class="roomNameSpan">${data.item.name}</span>聊天室</h6>
+                            <h6 class="mb-0 roomName">${target.name}</h6>
                             <small class="text-muted lastMessage">${this.getLastMessageText(data.lastMessage)}</small>
                         </div>
                         <span class="badge bg-primary rounded-pill ${data.lastReadMessageId == data.lastMessageId ? 'd-none' : ''}">new</span> 
@@ -424,14 +426,14 @@ class ChatRoom {
                 `;
                 // 未讀訊息徽章(上面的badge)
                 item.addEventListener('click', () => {
-                    this.switchRoom(data.id, data.item.name);
+                    this.switchRoom(data.id, data.name);
                 });
 
                 chatList.appendChild(item);
             });
 
             if (rooms.length > 0) {
-                this.switchRoom(rooms[0].id, rooms[0].item.name);
+                this.switchRoom(rooms[0].id, rooms[0].name);
             }
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
@@ -445,7 +447,7 @@ class ChatRoom {
        切換聊天室
     ====================== */
 
-    async switchRoom(roomId, roomName) {
+    async switchRoom(roomId, targetName) {
         // this.chatMainLoader.classList.remove('d-none');
         if(this.isMobile) {
             this.hideSidebar();
@@ -453,12 +455,12 @@ class ChatRoom {
         }
         console.log('切換聊天室', roomId);
         this.currentRoomId = roomId;
-        this.currentRoomName = roomName;
+        this.currentRoomName = targetName;
 
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
         // 聊天室內名字
-        document.querySelector('.chat-header h6').textContent = '商品' + roomName + '聊天室';
+        document.querySelector('.chat-header h6').textContent = targetName;
 
         const container = document.getElementById('messagesContainer');
         container.innerHTML = '';
