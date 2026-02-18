@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
   const iframe = document.getElementById('talkInterface');
-  iframe.src = './chatroom/chatroom.html';
+  iframe.src = '../chatroom/chatroom.html';
 // 必須等待 iframe 載入完成
   iframe.addEventListener('load', () => {
       try {
