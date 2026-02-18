@@ -408,7 +408,7 @@ class ChatRoom {
             }
             rooms.data.items.forEach(data => {
                 const item = document.createElement('div');
-                const target = data.members.some(m => m.username != this.username);
+                const target = data.members.find(m => m.username !== this.username);
                 const targetUrl = target.photoURL || '../image/default-avatar.png';
                 item.className = 'chat-item';
                 item.dataset.roomId = data.id;
