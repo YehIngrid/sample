@@ -529,6 +529,7 @@ async function orderNow(e) {
       
       // 成功後存儲狀態並跳轉
       localStorage.setItem("selectedCartItem", id);
+      console.log('下單成功，商品 ID 已存儲到 localStorage:', id);
       window.location.href = "../shoppingcart/shoppingcart.html";
       
     } else {
