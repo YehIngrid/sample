@@ -466,7 +466,7 @@ if (clearAllBtn) {
   });
 }
 function onItemCheckChange(itemId, checked) {
-  const item = cartItems.find(i => i.itemId === String(itemId));
+  const item = cartItems.find(i => i.productId === String(itemId));
   if (!item) return;
 
   item.checked = checked;
