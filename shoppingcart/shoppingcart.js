@@ -508,7 +508,7 @@ function applyPreselectedItem() {
     
     // 2. 移除紀錄
     localStorage.removeItem("selectedCartItem");
-    
+    console.log('deleted selectedCartItem from localStorage');
     // 註：因為 onItemCheckChange 裡面已經有 renderCart() 和 updateSummary()，
     // 所以不需要再手動操作 DOM。
   }

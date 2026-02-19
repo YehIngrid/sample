@@ -491,7 +491,6 @@ document.addEventListener('click', async (e) => {
 
   if (!(await requireLogin())) return;
 
-  const itemId = btn.dataset.id; // 取得 data-id
   orderNow(e);
 });
 async function orderNow(e) {
