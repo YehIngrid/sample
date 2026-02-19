@@ -35,15 +35,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('取得商品失敗', e);
   }
   document.querySelectorAll('.shopcart').forEach(btn => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', async (e) => {
       if (!(await requireLogin())) return;
-      onAddToCart();
+      onAddToCart(e);
     });
   });
   document.querySelectorAll('.buybtn').forEach(btn => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', async (e) => {
       if (!(await requireLogin())) return;
-      orderNow();
+      orderNow(e);
     });
   });
   const iframe = document.getElementById('talkInterface');
@@ -494,37 +494,63 @@ document.addEventListener('click', async (e) => {
   const itemId = btn.dataset.id; // 取得 data-id
   orderNow(itemId);
 });
-async function orderNow(itemId) { // 建議將 itemId 作為參數傳入
-  try {
-    const qtyInput = document.getElementById('qty');
-    const quantity = Number(qtyInput?.value || 1); // 預設值處理
+async function orderNow(e) {
+  const btn = e.currentTarget; // 取得被點擊的按鈕
 
-    // 1. 發送請求
-    const response = await backendService.addItemsToCart(itemId, quantity);
+  // 1. 防呆：backendService 是否存在
+  if (!backendService || typeof backendService.addItemsToCart !== 'function') {
+    Swal.fire({ icon: 'error', title: '系統尚未就緒', text: '請重新整理後再試' });
+    return;
+  }
+
+  // 2. 取得商品 ID (優先從 data-id 拿，沒有則從變數 itemId 或 URL 拿)
+  // 註：如果你在 HTML 寫 <button class="order-now" data-id="123"> 這裡就抓得到
+  const id = btn.dataset.id || new URLSearchParams(location.search).get('id');
+  
+  if (!id) {
+    Swal.fire({ icon: 'warning', title: '找不到商品編號' });
+    return;
+  }
+
+  // 3. 取得數量
+  const qtyInput = document.getElementById('qty');
+  const quantity = Math.max(1, Number(qtyInput?.value) || 1);
+
+  // --- 開始執行 ---
+  btn.disabled = true; // 禁用按鈕防止重複送出
+
+  try {
+    // 4. 發送請求
+    const response = await backendService.addItemsToCart(id, quantity);
     
-    // 2. 判斷是否成功 (假設 response 是 axios 或是 fetch 的包裝)
-    if (response.status === 200 || response.ok) {
+    // 5. 判斷是否成功 (相容 Axios 或 Fetch 的回傳結構)
+    // 通常 API 回傳 200 或 201 代表成功
+    if (response.status === 200 || response.status === 201 || response.ok) {
       
-      // 成功後才執行：存儲狀態並跳轉
-      localStorage.setItem("selectedCartItem", itemId);
+      // 成功後存儲狀態並跳轉
+      localStorage.setItem("selectedCartItem", id);
       window.location.href = "../shoppingcart/shoppingcart.html";
       
     } else {
-      // 伺服器回傳錯誤（如：庫存不足）
-      Swal.fire({ 
-        icon: 'warning', 
-        title: '無法加入購物車', 
-        text: response.data?.message || "訂單處理失敗，請稍後再試" 
-      });
+      // 伺服器邏輯錯誤 (例如庫存不足)
+      throw response; // 丟出 response 進入 catch 統一處理
     }
+
   } catch (err) {
-    // 網路連線錯誤或程式崩潰
+    // 6. 統一錯誤處理 (邏輯與 onAddToCart 相同)
     console.error('Order Error:', err);
-    Swal.fire({ 
-      icon: 'error', 
-      title: '系統錯誤', 
-      text: "連線發生問題，請檢查網路狀態" 
-    });
+    const msg = err?.response?.data?.message || err?.data?.message || err?.message || '請稍後再試';
+    
+    if (String(msg).toLowerCase().includes('stock')) {
+      Swal.fire({ icon: 'warning', title: '庫存不足', text: msg });
+    } else if (String(msg).toLowerCase().includes('jwt')) {
+      Swal.fire({ icon: 'warning', title: '請先登入', text: '登入後即可進行購買' });
+    } else {
+      Swal.fire({ icon: 'error', title: '下單失敗', text: msg });
+    }
+  } finally {
+    // 無論成功或失敗，都要把按鈕恢復 (雖然成功會跳頁，但為了保險起見)
+    btn.disabled = false;
   }
 }
 // 聊天室介面顯示與隱藏
