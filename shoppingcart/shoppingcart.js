@@ -57,6 +57,8 @@ async function initCartFromAPI() {
     renderCart();
     updateSummary();
     await enrichMissingProductFields(cartItems);
+
+    applyPreselectedItem();
   } catch (err) {
     console.error('載入購物車失敗，改用 localStorage', err);
     cartItems = loadState();
@@ -497,16 +499,16 @@ async function openChatWithSeller(targetSellerId) {
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });
   }
 }
-const selectedId = localStorage.getItem("selectedCartItem");
-
-if (selectedId) {
-  const checkbox = document.querySelector(
-    `input[type="checkbox"][data-id="${selectedId}"]`
-  );
-  if (checkbox) {
-    checkbox.checked = true;
+function applyPreselectedItem() {
+  const selectedId = localStorage.getItem("selectedCartItem");
+  if (selectedId) {
+    // 1. 更新資料狀態
+    onItemCheckChange(selectedId, true);
+    
+    // 2. 移除紀錄
+    localStorage.removeItem("selectedCartItem");
+    
+    // 註：因為 onItemCheckChange 裡面已經有 renderCart() 和 updateSummary()，
+    // 所以不需要再手動操作 DOM。
   }
-
-  // 用完就刪掉
-  localStorage.removeItem("selectedCartItem");
 }
