@@ -353,7 +353,7 @@ async function reportSeller(sellerId) {
 }
 
 async function onAddToCart(e) {
-  const btn = e.currentTarget;
+  const btn = e.target.closest('.shopcart');
 
   // 防呆：service 是否就緒 & 方法存在
   if (!backendService || typeof backendService.addItemsToCart !== 'function') {
@@ -492,10 +492,10 @@ document.addEventListener('click', async (e) => {
   if (!(await requireLogin())) return;
 
   const itemId = btn.dataset.id; // 取得 data-id
-  orderNow(itemId);
+  orderNow(e);
 });
 async function orderNow(e) {
-  const btn = e.currentTarget; // 取得被點擊的按鈕
+  const btn = e.target.closest('.order');; // 取得被點擊的按鈕
 
   // 1. 防呆：backendService 是否存在
   if (!backendService || typeof backendService.addItemsToCart !== 'function') {
