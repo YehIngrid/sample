@@ -143,6 +143,7 @@ function renderCart() {
     const el = document.createElement('div');
     el.className = 'list-group-item';
     el.dataset.id = item.id;
+    el.dataset.itemId = item.itemId;
     el.dataset.sellerId = item.ownerId;
 
     el.innerHTML = `
@@ -465,7 +466,7 @@ if (clearAllBtn) {
   });
 }
 function onItemCheckChange(itemId, checked) {
-  const item = cartItems.find(i => i.id === String(itemId));
+  const item = cartItems.find(i => i.itemId === String(itemId));
   if (!item) return;
 
   item.checked = checked;
