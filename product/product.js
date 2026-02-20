@@ -385,7 +385,7 @@ async function onAddToCart(e) {
   } catch (err) {
     const msg = err?.response?.data?.message || err?.message || '請稍後再試';
     if (String(msg).toLowerCase().includes('stock')) {
-      Swal.fire({ icon: 'warning', title: '庫存不足', text: msg });
+      Swal.fire({ icon: 'warning', title: '庫存不足，您在購物車已有這個商品', text: msg });
     } else if (String(msg).toLowerCase().includes('No JWT token provided')) {
       Swal.fire({ icon: 'warning', title: '請先登入才可將商品加入購物車', text: msg });
     } else {

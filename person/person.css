@@ -409,7 +409,7 @@ small {
   content: attr(data-text); /* 抓取 HTML 裡的文字 */
   position: absolute;
   left: 125%; /* 放在右側 */
-  top: 50%;
+  top: -30%;
   transform: translateY(-50%) scale(0.8); /* 初始縮小一點 */
   
   /* 樣式設計 */
@@ -421,7 +421,6 @@ small {
   font-size: 14px;
   line-height: 1.5;
   border-radius: 6px;
-  z-index: 9999;
   
   /* 動畫效果：淡入 + 向下掉一點點 */
   opacity: 0;
