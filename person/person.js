@@ -436,10 +436,12 @@ async function handleRouting() {
   if (!backendService) backendService = new BackendService();
   try {
     if (page === 'sellProducts') {
+      window.currentOrder = null;
       const res = await backendService.getSellerOrders();
       renderSellerOrders(res?.data?.data ?? []);
       renderSellerCards(res?.data?.data ?? []);
     } else if (page === 'buyProducts') {
+      window.currentOrder = null;
       const res = await backendService.getBuyerOrders();
       renderBuyerOrders(res?.data?.data ?? []);
       renderBuyerCards(res?.data?.data ?? []);
