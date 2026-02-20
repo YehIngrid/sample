@@ -470,10 +470,15 @@ small {
   width: 150px;
 }
 .score {
-  background-image: linear-gradient(90deg, #ff6a00, #ee0979);
+  background-image: linear-gradient(90deg, #ffd000, #ff6a00);
   color: transparent;
   background-clip: text;
 }
 .contact {
   border: none;
+  padding: 2px 5px;
+  font-size: 14px;
+  background: linear-gradient(to right bottom, #004b97, rgb(36,182,133,0.8));
+  color: white;
+  border-radius: 7px;
 }
