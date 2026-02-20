@@ -3,6 +3,7 @@ let chatService;
 let chatInnerWin; // 用於存放 iframe 的 window 物件
 let goodsOrder;
 const myUid = localStorage.getItem("uid");
+window.currentOrder = null;
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
@@ -284,10 +285,25 @@ async function handleAction(action, id, el) {
     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
     window.location.href = url;
   } else if (action === '聯絡賣家' || action === 'contact') {
-    const targetId = findTargetIdByOrderId(goodsOrder, id);
+    let targetId = null;
+    const myUid = localStorage.getItem("uid");
+
+    // ✅ 1️⃣ 詳細頁優先
+    if (window.currentOrder) {
+      const order = window.currentOrder;
+
+      targetId = order.buyerUser.accountId == myUid
+        ? order.sellerUser.accountId
+        : order.buyerUser.accountId;
+    }
+
+    // ✅ 2️⃣ fallback 列表
+    if (!targetId) {
+      targetId = findTargetIdByOrderId(goodsOrder, id);
+    }
 
     if (!targetId) {
-      console.error("找不到聊天對象");
+      console.error("找不到聊天對象", { id, goodsOrder, currentOrder: window.currentOrder });
       Swal.fire("錯誤", "找不到聊天對象", "error");
       return;
     }
@@ -837,7 +853,7 @@ async function getDetail(id) {
 
     const res = await backendService.getOrderDetails(id);
     const data = res.data.data;
-
+    window.currentOrder = data;
     const orderStatusMap = {
       pending: "訂單已建立，等待賣家接受",
       preparing: "賣家已接受訂單，正在準備商品",

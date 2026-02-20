@@ -478,7 +478,8 @@ small {
   border: none;
   padding: 2px 5px;
   font-size: 14px;
-  background: linear-gradient(to right bottom, #004b97, rgb(36,182,133,0.8));
+  background: #ffd000;
   color: white;
   border-radius: 7px;
+  line-height: 20px;
 }
