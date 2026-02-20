@@ -59,7 +59,13 @@
         
             <!-- (C) 右側：登入 + 購物車 -->
             <div class="d-flex align-items-center ms-auto">
-              
+              <div class="position-relative me-3">
+                <i class="fa-solid fa-bell fs-5" id="notificationBtn" style="cursor:pointer; color: var(--brand-color);"></i>
+                <span id="notificationBadge"
+                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+                      0
+                </span>
+              </div>
               <div class="login">
                 <a class="username" href="../person/person.html"></a>
                 <!-- TODO 登入登出id -->
@@ -133,53 +139,12 @@
             <div class="wishgrid">
               <div class="item-list" id="wishGrid">
                 <!-- 許願卡片會在這裡動態生成 -->
-                <!-- <div class="card text-dark bg-light item" data-tags="book necessary">
-                  <div class="card-header">2026/08/23 截止</div>
-                  <div class="card-body d-flex align-items-center">
-                    <div class="left">
-                      <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
-                      " alt="" style="width: 100px;">
-                    </div>
-                    <div class="right" style="margin-left: 15px;">
-                      <h5 class="card-title">許願標題書緊急</h5>
-                      <p class="card-text ellipsis-text-wp">許願內容 Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit possimus, facere sit nisi, deserunt similique fuga doloremque provident temporibus, mollitia neque porro molestias aliquam illo saepe voluptatum quia dolores voluptate dicta aspernatur quibusdam hic. Assumenda voluptas ratione voluptatibus alias consectetur perspiciatis molestias atque. Reiciendis facere libero error? Nulla, tempore ipsum?</p>
-                    </div>
-                  </div>
-                </div> -->
-                <!-- <div class="nowish text-center" style="color: var(--secondary-color);">
-                  <p>～目前沒有願望～</p>
-                </div> -->
               </div>
             </div>
             <div class="pagination-controls text-center my-3">
               <button id="prevPage" class="wishpage">上一頁</button>
               <span id="pageInfo" class="mx-2" style="color: var(--brand-color);"></span>
               <button id="nextPage" class="wishpage">下一頁</button>
-            </div>
-            <div class="toast-container position-static">
-              <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
-                  <img src="..." class="rounded me-2" alt="...">
-                  <strong class="me-auto">Bootstrap</strong>
-                  <small class="text-body-secondary">just now</small>
-                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                  See? Just like this.
-                </div>
-              </div>
-            
-              <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
-                  <img src="..." class="rounded me-2" alt="...">
-                  <strong class="me-auto">Bootstrap</strong>
-                  <small class="text-body-secondary">2 seconds ago</small>
-                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                  Heads up, toasts will stack automatically
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -334,10 +299,15 @@
           </div>
         </div>
         
+        <div id="notificationPanel"
+            class="position-fixed top-0 end-0 bg-white shadow"
+            style="width: 350px; height: 100vh; display:none; overflow:auto;">
+        </div>
     <script src="../default/default.js"></script>
     <script src="../questions/questions.js"></script>
     <script src="../BackendService.js"></script>
     <script src="../wpBackendService.js"></script>
     <script src="wishpool.js"></script>
+    <script src="wish.js"></script>
 </body>
 </html>
