@@ -474,3 +474,6 @@ small {
   color: transparent;
   background-clip: text;
 }
+.contact {
+  border: none;
+}

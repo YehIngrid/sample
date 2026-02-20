@@ -2,6 +2,7 @@ let backendService;
 let chatService;
 let chatInnerWin; // 用於存放 iframe 的 window 物件
 let goodsOrder;
+const myUid = localStorage.getItem("uid");
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
@@ -238,15 +239,25 @@ document.addEventListener('click', function(e) {
   // 執行原本的 handleAction，並傳入按鈕元素 btn 作為參考
   handleAction(action, id, btn);
 });
-function findSellerIdByOrderId(goodsOrders, orderId) {
-  console.log('正在尋找訂單ID:', orderId);
-  console.log('目前的訂單列表:', goodsOrders);
-  goodsOrders.forEach(order => {
-    if (order.id === orderId) {
-      console.log('找到訂單，賣家ID:', order.sellerUser.accountId);
-      return order.sellerUser.accountId;
-    }
-  });
+function findTargetIdByOrderId(goodsOrders, orderId) {
+  if (!goodsOrders) return null;
+
+  const myUid = localStorage.getItem("uid");
+
+  const order = goodsOrders.find(o => o.id == orderId);
+  if (!order) return null;
+
+  // 如果我是買家 → 對方是賣家
+  if (order.buyerUser.accountId == myUid) {
+    return order.sellerUser.accountId;
+  }
+
+  // 如果我是賣家 → 對方是買家
+  if (order.sellerUser.accountId == myUid) {
+    return order.buyerUser.accountId;
+  }
+
+  return null;
 }
 // ==========================================
 // 2. 修復後的 handleAction (不需 onclick)
@@ -272,9 +283,17 @@ async function handleAction(action, id, el) {
   } else if (action === 'check') {
     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
     window.location.href = url;
-  } else if (action === '聯絡賣家') {
-    const sellerId = findSellerIdByOrderId(goodsOrder, id);
-    openChatWithSeller(sellerId);
+  } else if (action === '聯絡賣家' || action === 'contact') {
+    const targetId = findTargetIdByOrderId(goodsOrder, id);
+
+    if (!targetId) {
+      console.error("找不到聊天對象");
+      Swal.fire("錯誤", "找不到聊天對象", "error");
+      return;
+    }
+
+    console.log("聊天對象 accountId:", targetId);
+    openChatWithTarget(targetId);
   } else if (action === 'cancel') {
     if (confirm('確定要取消訂單嗎?')) {
       try {
@@ -414,6 +433,7 @@ async function handleRouting() {
       const list = res?.data?.commodities ?? [];
       renderTable(list); 
       renderCards(list);
+      goodsOrder = res?.data?.data;
     }
   } catch (err) {
     console.error(err);
@@ -843,6 +863,7 @@ async function getDetail(id) {
         <li>
           <span class="orderstyle">${isSell ? '買家姓名' : '賣家姓名'}</span>
           ${isSell ? data.buyerUser.name : data.sellerUser.name}
+          <button class="contact" data-action="contact">與對方聯絡</button>
         </li>
         <li style="text-align:end;">
           <span class="orderstyle">總計</span>
@@ -1438,7 +1459,7 @@ async function openCloseChatInterface() {
     talkInterface.style.display = 'block'; 
   }
 }
-async function openChatWithSeller(targetUserId) {
+async function openChatWithTarget(targetUserId) {
   if (!targetUserId) {
     return Swal.fire({ icon: 'warning', title: '缺少userid' });
   }
@@ -1447,7 +1468,7 @@ async function openChatWithSeller(targetUserId) {
   chatService = new ChatBackendService();
 
   try {
-    chatInnerWin.openChatWithSeller(targetUserId);
+    chatInnerWin.openChatWithTarget(targetUserId);
   } catch (err) {
     console.error(err);
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });

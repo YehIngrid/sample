@@ -741,7 +741,7 @@ function openChatRoomList(roomId) {
     chatRoomList = new ChatRoomList(roomId);
     chatRoomList.init();
 }
-async function openChatWithSeller(targetUserId) {
+async function openChatWithTarget(targetUserId) {
     if (!targetUserId) {
         return alert('無法開啟聊天室，缺少 User ID');
     }
