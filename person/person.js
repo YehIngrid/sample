@@ -880,7 +880,7 @@ async function getDetail(id) {
           <span class="orderstyle">${isSell ? '買家姓名' : '賣家姓名'}</span>
           ${isSell ? data.buyerUser.name : data.sellerUser.name}
         </li>
-        <li><button class="contact action-btn" data-action="contact" data-id="${id}">與對方聯絡</button></li>
+        <li><button class="contact action-btn" data-action="contact" data-id="${id}">與對方聯絡<img src="../svg/comment.svg" alt="comment icon"/></button></li>
         <li style="text-align:end;">
           <span class="orderstyle">總計</span>
           <span style="font-weight:600;color:var(--brand-color)">
