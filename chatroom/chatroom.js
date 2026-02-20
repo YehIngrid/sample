@@ -14,9 +14,12 @@ class ChatRoomList {
         this.sendImagebtn = document.getElementById('send-image-btn');
         this.previewArea = document.getElementById('image-upload');
         this.input = document.getElementById('messageInput');
+        this.alreadyInit = false;
     }
 
     async init() {
+        if (this.alreadyInit) return;
+        this.alreadyInit = true;
         // this.cacheDOM();
         this.setupMobileView();
 
