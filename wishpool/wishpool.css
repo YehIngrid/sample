@@ -481,3 +481,8 @@ nav a {
   position: relative;
   min-height: 40vh; /* 確保頁面至少佔滿整個視窗高度 */
 }
+.message {
+  border-bottom: #cccccc 1px solid;
+  padding: 10px 12px;
+  overflow-y: scroll;
+}
