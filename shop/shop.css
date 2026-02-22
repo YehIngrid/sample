@@ -1351,13 +1351,19 @@ button {
 
 .hot-items-container {
   display: flex;
+  justify-content: center;
   gap: 16px;
   overflow-x: auto;
   padding: 20px 12px;
   padding-bottom: 15px;
   scrollbar-width: none;
+}
+@media screen and (max-width: 768px) {
+  .hot-items-container {
+    justify-content: flex-start;
   }
   
+}
   
   .hot-items-container::-webkit-scrollbar {
   display: none;
