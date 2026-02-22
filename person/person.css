@@ -138,6 +138,7 @@
 }
 .object-cover { width: 120px; height: 120px; object-fit: cover; object-position: center; padding-right: 10px; padding-bottom: 10px;}
 .showStyle {
+  font-size: 14px;
   display: inline-block;
   color: white;
   background-color: #004b97;
