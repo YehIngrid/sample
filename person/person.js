@@ -1501,7 +1501,7 @@ function openReviewModal(orderId, sellerId) {
         <div class="d-flex justify-content-between">
           <div>
             <div class="d-flex flex-column justify-content-center align-items-center">
-              <img src="../image/default-avatar.png" alt="賣家頭像" style="width: 80px; height: 80px; margin: 0 auto;"/>
+              <img src="../image/default-avatar.png" alt="賣家頭像" style="width: 80px; height: 80px; margin: 0 auto; margin-bottom: 5px;"/>
               <span style="font-size: 14px;">賣家姓名</span>
               <span style="font-size: 14px;">信譽積分：100</span>
             </div>
