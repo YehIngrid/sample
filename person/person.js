@@ -1500,6 +1500,13 @@ function openReviewModal(orderId, sellerId) {
       <div id="review-list">
         <div class="d-flex justify-content-between">
           <div>
+            <div class="d-flex flex-column justify-content-center">
+              <img src="../image/default-avatar.png" alt="賣家頭像" style="width: 80px; height: 80px;"/>
+              <span>賣家姓名</span>
+              <span>信譽積分：100</span>
+            </div>
+          </div>
+          <div class="scoreContent">
             <label class="review-item">
               <input type="checkbox" class="score-check"> 商品描述準確 (+1)
             </label><br>
@@ -1519,13 +1526,6 @@ function openReviewModal(orderId, sellerId) {
             <label class="review-item">
               <input type="checkbox" class="score-check"> 包裝完整 (+1)
             </label><br>
-          </div>
-          <div>
-            <div class="d-flex flex-column justify-content-center">
-              <img src="../image/default-avatar.png" alt="賣家頭像" style="width: 100px; height: 100px;"/>
-              <span>賣家姓名</span>
-              <span>信譽積分：100</span>
-            </div>
           </div>
         </div>
         <textarea id="review-comment" class="form-control mt-2" rows="3" placeholder="留下評價..."></textarea>

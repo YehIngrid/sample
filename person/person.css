@@ -147,10 +147,12 @@
 }
 .settingEmailbtn {
   border: none;
-  background-color: #004b97;
+  background-color: #ffd000;
   color: white;
   padding: 5px 10px;
+  margin-left: 5px;
   border-radius: 4px;
+  font-size: 12px;
 }
 /* 背景遮罩 */
 .drawer-backdrop {
@@ -477,9 +479,7 @@ small {
   width: 150px;
 }
 .score {
-  background-image: #ffd000;
-  color: transparent;
-  background-clip: text;
+  background-color: #ffd000;
 }
 .contact {
   border: none;
@@ -500,4 +500,22 @@ small {
   border-radius: 10px; 
   background: linear-gradient(to right bottom, rgb(186, 223, 206), #004b97);
   color: white;
+}
+.myItem button {
+  margin-bottom: 3px;
+}
+.myItem p {
+  font-size: 14px !important;
+  margin-left: 3px;
+  line-height: 1.5;
+}
+.myItem strong {
+  color: #004b97;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-weight: 700;
+}
+.scoreContent {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
