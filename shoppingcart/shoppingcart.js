@@ -135,7 +135,11 @@ function renderCart() {
   cartList.innerHTML = '';
 
   if (cartItems.length === 0) {
-    cartList.innerHTML = `<div class="alert alert-light text-center">目前沒有商品</div>`;
+    cartList.innerHTML = `
+    <div class="d-flex flex-column align-items-center alert alert-light ">
+      <i class="fas fa-box-open fa-4x text-muted py-1"></i>
+      <div class="text-center">目前沒有商品</div>
+    </div>`;
     return;
   }
 

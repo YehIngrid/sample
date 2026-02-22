@@ -132,7 +132,6 @@ border: 1.5px solid #fff
     text-align: center;
     line-height: 60px;
     letter-spacing: 10px;
-    font-family: 'TimeMachine';
     /* TODO 字距 */
 }
 .titlecenter {
@@ -148,7 +147,6 @@ border: 1.5px solid #fff
     color: #fff;
     font-weight: 700;
     margin-bottom: 2rem;
-    font-family: 'TimeMachine';
 }
 .titlecenter h4 {
     font-size: 1.5rem;
@@ -169,9 +167,8 @@ border: 1.5px solid #fff
     margin-top: 2rem;
 }
 .shopbtn:hover {
-    color: white;
-    background-color: #004b97;
-    border: white 1px solid;
+    color: #383838;
+    background: rgb(186, 223, 206);
 }
 .lookbtn {
     background-color: rgba(255, 255, 255, 0.1) ;

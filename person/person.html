@@ -291,16 +291,21 @@
         <div class="card col-12">
           <div class="card-body">
             <div class="d-flex align-items-center">
-              <h6 class="showStyle" style="margin-right: 10px;">用戶名</h6>
+              <h6 class="showStyle">用戶名</h6>
               <h6 id="showName"></h6>
             </div>
             <div class="d-flex align-items-center">
-              <h6 class="showStyle" style="margin-right: 10px;">關於我</h6>
+              <h6 class="showStyle">關於我</h6>
               <h6 id="showIntro"></h6>
             </div>
             <div class="d-flex align-items-center">
-              <h6 class="showStyle" style="margin-right: 10px;">加入日期</h6>
+              <h6 class="showStyle">加入日期</h6>
               <h6 id="showTime"></h6>
+            </div>
+            <div class="d-flex align-items-center">
+              <h6 class="showStyle">常用帳號</h6>
+              <div id="showEmail">buyer@example.com</div>
+              <button class="settingEmailbtn">設定常用帳號</button>
             </div>
             <div class="text-end">
               <button class="btn btn-danger" id="disableAccountBtn">停用此帳號</button>
@@ -360,7 +365,7 @@
                 <label for="exampleFormControlTextarea1">個人簡介</label>
                 <textarea class="form-control" id="bio" rows="3"></textarea>
               </div>
-              <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
+              <button class="updatebtn" id="update-profile">更新個人資料</button>
               <span class="loader" id="loader1" style="display: none;"></span>
             </div>
           </div>
@@ -377,7 +382,7 @@
               </div>
               <div class="reviewerInfo d-flex justify-content-between" id="reviewerInfo">
                 <div class="d-flex align-items-center gap-1">
-                  <img src="../image/default-avatar.png" alt="" style="width: 45px; height: 45px;">
+                  <img src="../image/default-avatar.png" alt="" style="width: 30px; height: 30px;">
                   <div class="d-block d-lg-flex gap-1 align-items-center">
                       <span class="reviewerName">評價者姓名</span>
                       <div class="score">4</div>

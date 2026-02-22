@@ -484,5 +484,10 @@ nav a {
 .message {
   border-bottom: #cccccc 1px solid;
   padding: 10px 12px;
-  overflow-y: scroll;
+}
+.time {
+  font-size: 10px;
+}
+.receive {
+  font-size: 14px;
 }
