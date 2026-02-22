@@ -370,7 +370,7 @@ class ChatRoomList {
     // 播放通知音
     playNotificationSound() {
         // 可以添加音效檔案
-        const audio = new Audio('sound/mes.mp3');
+        const audio = new Audio('../sound/mes.mp3');
         audio.play().catch(e => console.log('無法播放音效'));
     }
     /* ======================
@@ -735,14 +735,21 @@ class ChatRoomList {
         return div.innerHTML;
     }
 }
-let chatRoom = null;
+let chatRoomList = null;
 window.addEventListener("load", () => {
     console.log('chatroom Load');
     openChatRoomList(null);
 });
+
 function openChatRoomList(roomId) {
-    chatRoomList = new ChatRoomList(roomId);
-    chatRoomList.init();
+    if (!chatRoomList) {
+        chatRoomList = new ChatRoomList(roomId);
+        chatRoomList.init().then(() => {
+            if (roomId) chatRoomList.switchRoom(roomId);
+        });
+    } else if (roomId) {
+        chatRoomList.switchRoom(roomId);
+    }
 }
 async function openChatWithTarget(targetUserId) {
     if (!targetUserId) {

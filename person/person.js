@@ -769,9 +769,9 @@ function renderSellerCards(list = []) {
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row">
               <div>
-                <h6 class="mb-0 text-truncate" title="${name}">訂單編號： ${id}</h6>
-                <span class="badge ${st.badge}">${st.text}</span>
+                <h6 class="mb-0 text-truncate" title="${name}">訂單編號 ${id}</h6>
                 <div class="small text-muted mb-2" style="font-size: 14px;">訂單建立時間：${created}</div>
+                <span class="badge ${st.badge}">${st.text}</span>
                 <div class="fw-bold mb-2 text-end">${price}</div>
               </div>
             </div>
@@ -812,8 +812,8 @@ function renderBuyerCards(list = []) {
             <div class="d-flex flex-row">
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">訂單編號 ${id}</h6>
-                <span class="badge ${st.badge}">${st.text}</span>
                 <div class="small text-muted mb-2" style="font-size: 14px;">訂單建立時間：${created}</div>
+                <span class="badge ${st.badge}">${st.text}</span>
                 <div class="fw-bold mb-2 text-end">${price}</div>
               </div>
             </div>
@@ -1498,7 +1498,7 @@ function openReviewModal(orderId, sellerId) {
     title: '請為此次訂單的賣家評分',
     html: `
       <div id="review-list">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between" style="margin-bottom: 10px;">
           <div>
             <div class="d-flex flex-column justify-content-center align-items-center">
               <img src="../image/default-avatar.png" alt="賣家頭像" style="width: 80px; height: 80px; margin: 0 auto; margin-bottom: 5px;"/>

@@ -479,7 +479,9 @@ small {
   width: 150px;
 }
 .score {
-  background-color: #ffd000;
+  background-image: linear-gradient(to right, #ff6b00, #ff8c00);
+  color: transparent;
+  background-clip: text;
 }
 .contact {
   border: none;
