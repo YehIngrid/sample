@@ -14,7 +14,7 @@ window.addEventListener('click', function(e) {
     // 如果聊天視窗是開著的，且點擊的對象不是按鈕，也不在聊天視窗內
     if (talkInterface.style.display === 'block' && 
         !talkInterface.contains(e.target) && 
-        !chatOpenBtn.contains(e.target) &&
+        !chatopen.contains(e.target) &&
     !document.querySelector('.swal2-container')) {
         
         talkInterface.style.display = 'none';
