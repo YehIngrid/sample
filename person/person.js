@@ -1456,16 +1456,15 @@ chatopen.addEventListener('click', function(e){
 })
 
 async function openCloseChatInterface() {
-  backendService = new BackendService();
-  const res = await backendService.whoami();
-  if(!res){
-    Swal.fire({ title: '請先登入會員', icon: 'warning' });
-    return;
-  }
-  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-    talkInterface.style.display = 'block'; 
+  if(await canEnterChat()) {
+    if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+        talkInterface.style.display = 'block'; 
+    }
+  } else {
+    talkInterface.style.display = 'none';
   }
 }
+
 async function openChatWithTarget(targetUserId) {
   if (!targetUserId) {
     return Swal.fire({ icon: 'warning', title: '缺少userid' });
