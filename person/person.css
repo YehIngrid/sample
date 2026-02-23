@@ -467,6 +467,7 @@ small {
 }
 .reviewText {
   margin: 10px;
+  font-size: 14px;
 }
 .reviewTime {
   font-size: 12px;

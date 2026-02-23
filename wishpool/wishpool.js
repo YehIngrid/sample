@@ -76,6 +76,9 @@ async function showPage(hash) {
       });
     }
   }
+  if(hash === '#about') {
+    animateCountUp("wishNum", 128);
+  }
 }
 
 
@@ -652,5 +655,3 @@ function animateCountUp(id, target, duration = 2000) {
 
   requestAnimationFrame(update);
 }
-
-animateCountUp("wishNum", 128);

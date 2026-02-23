@@ -372,17 +372,17 @@
         </div>
         <div class="review card mt-3">
           <div class="card-body">
-            <h5>別人對我的評價</h5>
+            <h4>我的評價</h4>
             <div id="reviewsContainer" class="d-flex flex-column">
               <hr style="margin-top: 0px;">
               <!-- 評價卡片會動態生成在這裡 -->
               <div class="d-flex align-items-center">
-                <span style="font-size: 16px;">您購買/販賣的商品</span>
+                <span style="font-size: 12px;">您購買/販賣的商品</span>
                 <div class="itemNames">｜商品名稱</div>
               </div>
               <div class="reviewerInfo d-flex justify-content-between align-items-center" id="reviewerInfo">
                 <div class="d-flex align-items-center gap-1">
-                  <img src="../image/default-avatar.png" alt="" style="width: 30px; height: 30px;">
+                  <img src="../image/default-avatar.png" alt="" style="width: 27px; height: 27px;">
                   <div class="d-block d-lg-flex gap-1 align-items-center">
                       <span class="reviewerName">評價者姓名</span>
                       <div class="score">4</div>
@@ -418,8 +418,8 @@
                 <h5 class="card-title">快速動作</h5>
                 <div class="d-flex flex-wrap gap-2 mt-3">
                   <button class="btn btn-outline-secondary" style="font-size: 14px;" onclick="window.location.href='../shop/shop.html?page=seller'"><img src="../svg/addmerchandiseicon.svg" style="margin-right: 5px;" alt="新增商品button">新增商品</button>
-                  <button class="btn btn-outline-secondary" style="font-size: 14px;" onclick="goToPage('settings')">修改個人資料</button>
-                  <button class="btn btn-outline-secondary" style="font-size: 14px;">查看評價</button>
+                  <button class="btn btn-outline-secondary" style="font-size: 14px;" onclick="goToPage('settings')"><i class="bi bi-pencil-square"></i> 修改個人資料</button>
+                  <button class="btn btn-outline-secondary" style="font-size: 14px;" onclick="goToPage('settings')"><i class="bi bi-card-heading"></i> 查看評價</button>
                 </div>
               </div>
             </div>
