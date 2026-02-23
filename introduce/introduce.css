@@ -2,6 +2,7 @@
   font-size: 1.6rem !important;
   margin-left: 10rem ;
 }
+.mobileNav {     background-color: #fbfbfb;     margin: 0 auto !important;     padding: 5px 3vw !important; }
 .listdecnone li{
   list-style-type: none;
   margin-left: -2rem;
