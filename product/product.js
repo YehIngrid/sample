@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-  const onSuccess = (response) => {
+  const onSuccess =  async(response) => {
     const product = response?.data ?? {};
     console.log('product:', product);
 
@@ -258,6 +258,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
 
         renderSellerInfo(data);
         showSellerCommodities(sellerId); // 顯示賣家其他商品
+        await checkIsOwnProduct(sellerId);
     } else {
       // 沒有 owner：可隱藏整張卡
       document.getElementById('sellerInfo')?.classList.add('d-none');
@@ -578,3 +579,53 @@ function renderStars(score) {
 }
 const scoreStar = document.querySelector('.score');
 scoreStar.textContent = renderStars(Number(scoreStar.textContent));
+/**
+ * 檢查登入者是否為賣家本人，若是則禁用相關按鈕
+ */
+async function checkIsOwnProduct(sellerId) {
+    if (!backendService) return;
+
+    try {
+        // 取得當前登入者資訊
+        const userInfo = await backendService.getUserInfo();
+        const currentUserId = userInfo?.data?.accountId;
+
+        // 如果 ID 相同，執行禁用邏輯
+        if (currentUserId && String(currentUserId) === String(sellerId)) {
+            disableActionButtons();
+        }
+    } catch (err) {
+        // 未登入或獲取資訊失敗則不處理 (按鈕維持預設)
+        console.log("User not logged in or info unavailable.");
+    }
+}
+
+/**
+ * 禁用按鈕的具體實作
+ */
+function disableActionButtons() {
+    // 定義所有需要禁用的按鈕選擇器
+    const buttonsToDisable = [
+        '.order',          // 馬上下單 (含手機版)
+        '.shopcart',       // 加入購物車 (含手機版)
+        '#sellerChat',     // 與賣家聊聊
+        '#sellerBad'       // 檢舉賣家
+    ];
+
+    buttonsToDisable.forEach(selector => {
+        document.querySelectorAll(selector).forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+            btn.title = '您不能購買或檢舉自己的商品';
+            
+            // 如果是「與賣家聊聊」按鈕，移除 click 事件或讓它無效
+            if (selector === '#sellerChat') {
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    Swal.fire({ icon: 'info', title: '這是您的商品', text: '您無法與自己發起對話' });
+                };
+            }
+        });
+    });
+}
