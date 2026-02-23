@@ -584,19 +584,9 @@ scoreStar.textContent = renderStars(Number(scoreStar.textContent));
  */
 async function checkIsOwnProduct(sellerId) {
     if (!backendService) return;
-
-    try {
-        // 取得當前登入者資訊
-        const userInfo = await backendService.getUserInfo();
-        const currentUserId = userInfo?.data?.accountId;
-
-        // 如果 ID 相同，執行禁用邏輯
-        if (currentUserId && String(currentUserId) === String(sellerId)) {
-            disableActionButtons();
-        }
-    } catch (err) {
-        // 未登入或獲取資訊失敗則不處理 (按鈕維持預設)
-        console.log("User not logged in or info unavailable.");
+    const currentUserId = localStorage.getItem('uid'); // 從 localStorage 取出登入者 ID
+    if (currentUserId && String(currentUserId) === String(sellerId)) {
+        disableActionButtons();
     }
 }
 
