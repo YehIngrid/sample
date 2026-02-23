@@ -573,18 +573,7 @@ async function openCloseChatInterface() {
     talkInterface.style.display = 'block';
   }
 }
-async function toggleChatInterface() {
-  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-    const res = await backendService.whoami();
-    if(!res){
-      Swal.fire({ title: '請先登入會員', icon: 'warning' });
-      return;
-    }
-    talkInterface.style.display = 'block'; 
-  } else {
-    talkInterface.style.display = 'none'; 
-  }
-}
+
 // TODO 顯示評價
 function renderStars(score) {
   return '★'.repeat(score) + '☆'.repeat(5 - score);

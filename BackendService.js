@@ -145,17 +145,7 @@ class BackendService {
             return response.data;   // 通常直接回傳 data
         } catch (error) {
             console.error("無法取得使用者資訊", error);
-            const status = error?.response?.status;
-            const msg    = error?.response?.data?.message;
-            
-            if (status === 401 || /invalid/i.test(msg)) {
-                if (localStorage.getItem('uid') != null) {
-                    throw new Error('伺服器連線逾時，系統將自動幫您登出');
-                }
-                throw new Error('您尚未登入，無法進行買賣相關操作');
-            }
-            // 其他錯誤才走這裡
-            throw new Error(msg || '伺服器發生錯誤，請稍後再試');
+            return Promise.reject(error);
         }
     }
     async disableAccount() {
