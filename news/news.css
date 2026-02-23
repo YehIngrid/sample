@@ -1,4 +1,8 @@
-
+.mobileNav {
+    background-color: #fbfbfb;
+    margin: 0 auto !important;
+    padding: 5px 3vw !important;
+}
 /* .content{
     height: 100vh;
 } */

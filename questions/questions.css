@@ -58,6 +58,11 @@ html, body {
   color: black;
   margin-right: 8px;
 }
+.mobileNav {
+    background-color: #fbfbfb;
+    margin: 0 auto !important;
+    padding: 5px 3vw !important;
+}
 /* 主內容區 */
 main {
   flex: 1;
