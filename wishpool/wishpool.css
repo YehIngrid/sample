@@ -355,7 +355,7 @@ nav a {
     }
 }
 .ellipsis-text-wp {
-  width: 120px;
+    width: 180px;
     text-wrap: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -484,5 +484,26 @@ nav a {
 .message {
   border-bottom: #cccccc 1px solid;
   padding: 10px 12px;
-  overflow-y: scroll;
+}
+.time {
+  font-size: 10px;
+}
+.receive {
+  font-size: 14px;
+}
+.cometrue {
+  color: var(--brand-color);
+  font-size: 20px;
+  margin-top: 30px;
+}
+.wishNum {
+  background-image: linear-gradient(to left top, var(--brand-color), var(--focus-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 70px;
+    font-weight: 600;
 }

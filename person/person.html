@@ -291,17 +291,22 @@
         <div class="card col-12">
           <div class="card-body">
             <div class="d-flex align-items-center">
-              <h6 class="showStyle" style="margin-right: 10px;">用戶名</h6>
+              <h6 class="showStyle">用戶名</h6>
               <h6 id="showName"></h6>
             </div>
             <div class="d-flex align-items-center">
-              <h6 class="showStyle" style="margin-right: 10px;">關於我</h6>
+              <h6 class="showStyle">關於我</h6>
               <h6 id="showIntro"></h6>
             </div>
             <div class="d-flex align-items-center">
-              <h6 class="showStyle" style="margin-right: 10px;">加入日期</h6>
+              <h6 class="showStyle">加入日期</h6>
               <h6 id="showTime"></h6>
             </div>
+            <div class="d-flex align-items-center">
+              <h6 class="showStyle">常用帳號</h6>
+              <h6 id="showEmail">buyer@example.com</h6>
+            </div>
+            <button class="settingEmailbtn">設定常用帳號</button>
             <div class="text-end">
               <button class="btn btn-danger" id="disableAccountBtn">停用此帳號</button>
             </div>
@@ -360,7 +365,7 @@
                 <label for="exampleFormControlTextarea1">個人簡介</label>
                 <textarea class="form-control" id="bio" rows="3"></textarea>
               </div>
-              <button style="display: flex; justify-content: end; margin-top: 30px;border:none;font-size: 12px; padding:10px 15px;border-radius: 10px; background-color: #004b9743;" id="update-profile">更新個人資料</button>
+              <button class="updatebtn" id="update-profile">更新個人資料</button>
               <span class="loader" id="loader1" style="display: none;"></span>
             </div>
           </div>
@@ -372,12 +377,12 @@
               <hr style="margin-top: 0px;">
               <!-- 評價卡片會動態生成在這裡 -->
               <div class="d-flex align-items-center">
-                <span>您購買/販賣的商品</span>
+                <span style="font-size: 16px;">您購買/販賣的商品</span>
                 <div class="itemNames">｜商品名稱</div>
               </div>
-              <div class="reviewerInfo d-flex justify-content-between" id="reviewerInfo">
+              <div class="reviewerInfo d-flex justify-content-between align-items-center" id="reviewerInfo">
                 <div class="d-flex align-items-center gap-1">
-                  <img src="../image/default-avatar.png" alt="" style="width: 45px; height: 45px;">
+                  <img src="../image/default-avatar.png" alt="" style="width: 30px; height: 30px;">
                   <div class="d-block d-lg-flex gap-1 align-items-center">
                       <span class="reviewerName">評價者姓名</span>
                       <div class="score">4</div>
@@ -414,6 +419,7 @@
                 <div class="d-flex flex-wrap gap-2 mt-3">
                   <button class="btn btn-outline-secondary" style="font-size: 14px;" onclick="window.location.href='../shop/shop.html?page=seller'"><img src="../svg/addmerchandiseicon.svg" style="margin-right: 5px;" alt="新增商品button">新增商品</button>
                   <button class="btn btn-outline-secondary" style="font-size: 14px;" onclick="goToPage('settings')">修改個人資料</button>
+                  <button class="btn btn-outline-secondary" style="font-size: 14px;">查看評價</button>
                 </div>
               </div>
             </div>
@@ -441,22 +447,22 @@
               <div class="card-body">
                 <h5 class="card-title">我的商品 / 相關操作說明</h5>
                 <div class="d-flex flex-column flex-wrap gap-3 mt-3">
-                  <div>
+                  <div class="myItem">
                       <button class="btn btn-sm btn-outline-success">查看商品</button>
-                      <h6 style="margin-left: 5px; margin-top: 10px;">點擊按鈕後，將會跳轉至商品頁面。</h6>
+                      <p>點擊按鈕後，將會跳轉至商品頁面。</p>
                   </div>
-                  <div>
+                  <div class="myItem">
                       <button class="btn btn-sm btn-outline-primary">編輯</button>
-                      <h6 style="margin-left: 5px; margin-top: 10px;">
-                          點擊此按鈕後，下方將會出現該商品的所有資訊，即可進行修改 (可以只更新部分欄位)，最後點擊更新按鈕進行商品編輯。<br><br>
-                          若更改商品中的「多張照片」區域，將會<strong>一次替換之前的所有照片</strong>。<br><br>
-                          若商品無法更新，出現錯誤，請先檢查商品資訊是否符合本商城之規定。</h6>
+                      <p>
+                          點擊此按鈕後，下方將會出現該商品的所有資訊，即可進行修改 (可以只更新部分欄位)，最後點擊更新按鈕進行商品編輯。<br>
+                          若更改商品中的「多張照片」區域，將會<strong>一次替換之前的所有照片</strong>。<br>
+                          若商品無法更新，出現錯誤，請先檢查商品資訊是否符合本商城之規定。</p>
                   </div>
-                  <div>
+                  <div class="myItem">
                       <button class="btn btn-sm btn-outline-danger">永久下架商品</button>
-                      <h6 style="margin-left: 5px; margin-top: 10px;">
-                        點擊此按鈕後，將會刪除指定的商品，並且<strong>永久不會</strong>出現在「我的商品」清單中與架上。<br><br>
-                        只有在沒有相關的進行中訂單時才能刪除商品。</h6>
+                      <p>
+                        點擊此按鈕後，將會刪除指定的商品，並且<strong>永久不會</strong>出現在「我的商品」清單中與架上。<br>
+                        只有在沒有相關的進行中訂單時才能刪除商品。</p>
                   </div>
                 </div>
               </div>

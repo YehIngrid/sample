@@ -628,4 +628,29 @@ function hideLoading() {
   el.classList.add('d-none');
 }
 
-// TODO 願望聊天室相關操作
+function easeOutQuad(t) {
+  return t * (2 - t);
+}
+
+function animateCountUp(id, target, duration = 2000) {
+  const el = document.getElementById(id);
+  const startTime = performance.now();
+
+  function update(currentTime) {
+    let progress = Math.min((currentTime - startTime) / duration, 1);
+    progress = easeOutQuad(progress);
+
+    const value = Math.floor(progress * target);
+    el.textContent = value;
+
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      el.textContent = target;
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+
+animateCountUp("wishNum", 128);

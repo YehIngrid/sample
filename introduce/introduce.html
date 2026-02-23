@@ -2,7 +2,6 @@
     <html lang="zh-TW">
     <head>
         <title>團隊介紹</title>
-            
         <!-- meta部分 -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,9 +20,16 @@
         <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
         <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+        <link rel="stylesheet" href="../bubble.css">
     </head>
     
     <body>
+      <div class="bubble bubble1 parallax"></div>
+      <div class="bubble bubble2 parallax"></div>
+      <div class="bubble bubble3 parallax"></div>
+      <div class="bubble bubble4 parallax"></div>
+      <div class="bubble bubble5 parallax"></div>
+      
       <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
         <div class="spinner">
           <div></div>
@@ -90,7 +96,7 @@
             <ul class="navbar-nav mobileNav">
               <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
               <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
-              <li class="nav-item"><a class="nav-link" href="../shop/shop.html">商品分類</a></li>
+              <li class="nav-item"><a class="nav-link" href="../shop/shop.html">商品首頁</a></li>
               <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
               <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
               <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
@@ -103,7 +109,6 @@
         <div class="content">  
             <div class="infor">
               <h1 class="topic">團隊介紹</h1>
-              <h2 class="undertopic">首頁 > 團隊介紹</h2>
               <div>
                 <h2 class="goal">一手資源，一手經驗，全在拾貨寶庫！</h2>
                 <p>拾貨寶庫是一個專為大學生打造的校園二手與資訊交易平台。</p> 
@@ -114,52 +119,48 @@
               <p style="margin-top: 20px;">我們是一支充滿創新與多元背景的團隊，來自不同領域的年輕創業者，致力於打造可持續發展的二手買賣、資訊交易、校園商機平台 「拾貨寶庫」。</p>
                 <div class="row row-cols-1 row-cols-md-3 g-4" style="width: 86vw; margin: 0 auto;">
                   <div class="col">
-                    <div class="card member">
-                      <!-- <img src="../image/girlphoto4.png" loading="lazy" class="card-img-top" alt="..." style="width:240px; height: 240px; margin: 0 auto; margin-top: 20px;"> -->
+                    <div class="card">
                       <div class="card-body">
-                        <h4 style="text-align: center;margin-top: 10px;font-weight: 500;color: black;margin-bottom: 10px;">企劃策略</h4>
-                        <h5 class="card-title" style="text-align: center;font-size: 1.2rem;color: #004b97;">范琹芷</h5>
-                        <p class="card-text" style="font-size: 1rem !important;">國立中興大學 創新產業經營系</p>
+                        <h4 class="occupation">企劃策略</h4>
+                        <h5 class="card-title name">范琹芷</h5>
+                        <p class="card-text">國立中興大學 創新產業經營系</p>
                       </div>
                     </div>
                   </div>
                   <div class="col">
-                    <div class="card member">
-                      <!-- <img src="../webP/girltext1.webp" loading="lazy" class="card-img-top" alt="..." style="width:240px; height: 240px; margin: 0 auto; margin-top: 20px;"> -->
+                    <div class="card">
                       <div class="card-body">
-                        <h4 style="text-align: center;margin-top: 10px;font-weight: 500;color: black;margin-bottom: 10px;">營運部門</h4>
-                        <h5 class="card-title" style="text-align: center;font-size: 1.2rem;color: #004b97;">張雅茹</h5>
-                        <p class="card-text" style="font-size: 1rem !important;">私立崇仁醫護管理專科學校 護理系</p>
+                        <h4 class="occupation">營運部門</h4>
+                        <h5 class="card-title name">張雅茹</h5>
+                        <p class="card-text">私立崇仁醫護管理專科學校 護理系</p>
                       </div>
                     </div>
                   </div>
                   <div class="col">
-                    <div class="card member">
+                    <div class="card">
                       <!-- <img src="../image/girlsphoto1.png" loading="lazy" class="card-img-top" alt="..." style="width:240px; height: 240px; margin: 0 auto; margin-top: 20px;"> -->
                       <div class="card-body">
-                        <h4 style="text-align: center;margin-top: 10px;font-weight: 500;color: black;margin-bottom: 10px;">行銷企劃</h4>
-                        <h5 class="card-title" style="text-align: center;font-size: 1.2rem;color: #004b97;">李佳萍</h5>
-                        <p class="card-text" style="font-size: 1rem !important;">國立高雄科技大學 運籌管理系</p>
+                        <h4 class="occupation">行銷企劃</h4>
+                        <h5 class="card-title name">李佳萍</h5>
+                        <p class="card-text">國立高雄科技大學 運籌管理系</p>
                       </div>
                     </div>
                   </div>
                   <div class="col">
-                    <div class="card member">
-                      <!-- <img src="../webP/boytext.webp" loading="lazy" class="card-img-top" alt="..." style="width:240px; height: 240px; margin: 0 auto; margin-top: 20px; border-radius: 50%;"> -->
+                    <div class="card">
                       <div class="card-body">
-                        <h4 style="text-align: center;margin-top: 10px;font-weight: 500;color: black;margin-bottom: 10px;">技術部門 後端開發</h4>
-                        <h5 class="card-title" style="text-align: center;font-size: 1.2rem;color: #004b97;">李元亨</h5>
-                        <p class="card-text" style="font-size: 1rem !important;">國立中興大學 資訊工程學系</p>
+                        <h4 class="occupation">技術部門 後端開發</h4>
+                        <h5 class="card-title name">李元亨</h5>
+                        <p class="card-text">國立中興大學 資訊工程學系</p>
                       </div>
                     </div>
                   </div>
                   <div class="col" style="margin-bottom: 20px;">
-                    <div class="card member">
-                      <!-- <img src="../webP/text.webp" loading="lazy" class="card-img-top" alt="..." style="width:240px; height: 240px; margin: 0 auto; margin-top: 20px;"> -->
+                    <div class="card">
                       <div class="card-body">
-                        <h4 style="text-align: center;margin-top: 10px;font-weight: 500;color: black;margin-bottom: 10px;">技術部門 前端設計</h4>
-                        <h5 class="card-title" style="text-align: center;font-size: 1.2rem;color: #004b97;">葉潔頤</h5>
-                        <p class="card-text" style="font-size: 1rem !important;">國立中興大學 資訊工程學系</p>
+                        <h4 class="occupation">技術部門 前端設計</h4>
+                        <h5 class="card-title name">葉潔頤</h5>
+                        <p class="card-text">國立中興大學 資訊工程學系</p>
                       </div>
                     </div>
                   </div>

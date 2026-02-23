@@ -111,12 +111,13 @@
         </div>
       </section>
       <section id="about" class="page">
-        <div class="pageContainer">
+        <div class="pageContainer" style="margin-bottom: 150px;">
           <h3 style="margin-bottom: 20px;">創立理念</h3>
           <p>歡迎來到許願池！在這裡，你可以分享你心中渴望擁有的商品，無論是學習用品、生活必需品，還是夢寐以求的珍藏品。我們鼓勵大家勇敢許下願望，讓我們一起努力實現它們！</p>
           <!-- <img src="../webP/adwishpool.webp" alt="" class="adwishpool_" style="width: 100%;"> -->
           <p>在這裡，你可以了解許願者的基本資訊，讓你更了解他們的需求和背景。這些資訊將有助於你更好地理解許願者的願望，並提供更有針對性的幫助。</p>
           <p>許願池是一種由買家主動提出需求、賣家主動回應的「反向媒合機制」。它改變傳統 C2C 平台以賣家為主導的模式，讓「需求端」成為流通的起點。</p>
+          <div class="cometrue text-center">截至目前，已成功媒合 <span class="wishNum" id="wishNum"></span> 組願望，拾貨寶庫持續為更多心願牽起連結</div>
         </div>
       </section>
       <section id="wishpool" class="page" style="margin: 0 auto; margin-top: 4vh;">
@@ -299,16 +300,16 @@
           </div>
         </div>
         
-        <div id="notificationPanel" class="position-fixed bg-white shadow" style="width: 350px; height: 500px; display:none; overflow:auto; top: 110px; right: 20px; border-radius: 10px;">
+        <div id="notificationPanel" class="position-fixed bg-white shadow" style="width: 350px; height: 500px; display:none; overflow-y: scroll; top: 110px; right: 20px; border-radius: 10px;">
           <div class="message">
             <div class="d-flex justify-content-between">
               <div class="d-flex">
                 <img src="../image/default-avatar.png" class="rounded-circle me-2" width="24" height="24">
-                <div>
+                <div class="receive">
                   <strong>賣家名稱</strong>回應了你的願望
                 </div>
               </div>
-              <div class="text-muted small">2026-02-02 18:18</div>
+              <div class="text-muted time">2026-02-02 18:18</div>
             </div>
             <div class="commodity d-flex justify-content-between align-items-center">
               <div>
