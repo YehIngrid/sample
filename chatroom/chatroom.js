@@ -246,24 +246,27 @@ class ChatRoomList {
             <div class="message-content">
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf ? `
-                        <small class="text-muted me-2" style="font-size: 0.75rem;">${time}</small>
                         <strong>${this.username}</strong>
                     ` : `
                         <strong>${data.username}</strong>
-                        <small class="text-muted ms-2" style="font-size: 0.75rem;">${time}</small>
+                        
                     `}
                 </div>
-                <div class="message-image-wrapper" style="margin-top: 8px;">
-                    <a href="${imageUrl}" 
-                       data-pswp-width="auto" 
-                       data-pswp-height="auto" 
-                       target="_blank"
-                       class="image-link">
-                        <img src="${imageUrl}" 
-                            alt="Image" 
-                            style="width: 200px; background: #f0f0f0; border-radius: 8px; cursor: pointer;"
-                            loading="lazy">
-                    </a>
+                <div class="d-flex align-items-end">
+                    ${isSelf ? `<small class="text-muted me-2" style="font-size: 0.75rem;">${time}</small>` : ``}
+                    <div class="message-image-wrapper" style="margin-top: 8px;">
+                        <a href="${imageUrl}" 
+                        data-pswp-width="auto" 
+                        data-pswp-height="auto" 
+                        target="_blank"
+                        class="image-link">
+                            <img src="${imageUrl}" 
+                                alt="Image" 
+                                style="width: 200px; background: #f0f0f0; border-radius: 8px; cursor: pointer;"
+                                loading="lazy">
+                        </a>
+                    </div>
+                    ${isSelf ? `` : `<small class="text-muted me-2" style="font-size: 0.75rem;">${time}</small>`}
                 </div>
             </div>
         `;
@@ -672,12 +675,16 @@ class ChatRoomList {
             <div class="message-content">
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf
-                        ? `<small class="text-muted me-2">${timestamp}</small><strong>${this.username}</strong>`
-                        : `<strong>${data.username}</strong><small class="text-muted ms-2">${timestamp}</small>`
+                        ? `<strong>${this.username}</strong>`
+                        : `<strong>${data.username}</strong>`
                     }
                 </div>
-                <div class="message-text">
-                    ${this.escapeHtml(data.message)}
+                <div class="d-flex align-items-end">
+                    ${isSelf ? `<small class="text-muted me-2" style="font-size: 0.75rem;">${timestamp}</small>` : ``}
+                    <div class="message-text">
+                        ${this.escapeHtml(data.message)}
+                    </div>
+                    ${isSelf ? `` : `<small class="text-muted ms-2" style="font-size: 0.75rem;">${timestamp}</small>`}
                 </div>
             </div>
         `;
