@@ -871,7 +871,8 @@ class ChatRoomList {
                 });
                 this.readObserver.unobserve(entry.target);
             });
-        }, { threshold: 0.6 });
+        }, { threshold: 0 });
+        this.isInitialLoading = false;
     }
 
     async init() {
@@ -879,6 +880,7 @@ class ChatRoomList {
         this.alreadyInit = true;
         this.setupMobileView();
         await this.loadRooms();
+        this.connectSSE(); // 帳號層級 SSE，開啟一次即可
         if (this.currentRoomId) {
             const roomEl = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
             if (roomEl) {
@@ -1027,7 +1029,9 @@ class ChatRoomList {
             container.prepend(imgWrapper);
         } else {
             container.appendChild(imgWrapper);
-            requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
+            requestAnimationFrame(() => {
+                if (!this.isInitialLoading) container.scrollTop = container.scrollHeight;
+            });
         }
 
         const tempImg = new Image();
@@ -1038,7 +1042,7 @@ class ChatRoomList {
                 link.setAttribute('data-pswp-height', tempImg.naturalHeight);
             }
             this.initPhotoSwipeGallery();
-            if (!prepend) container.scrollTop = container.scrollHeight;
+            if (!prepend && !this.isInitialLoading) container.scrollTop = container.scrollHeight;
         };
         tempImg.src = imageUrl;
 
@@ -1176,8 +1180,6 @@ class ChatRoomList {
     }
 
     async switchRoom(roomId, targetName) {
-        const prevRoomId = this.currentRoomId;
-
         if (this.readObserver) this.readObserver.disconnect();
         if (this.isMobile) { this.hideSidebar(); this.showChatMain(); }
 
@@ -1208,6 +1210,7 @@ class ChatRoomList {
                 ? messages.find(m => m.timestamp > lastReadTimestamp)
                 : null; // 沒有已讀紀錄 → 捲到最底部
 
+            this.isInitialLoading = true;
             messages.forEach(msg => {
                 if (firstUnread && msg.id === firstUnread.id) {
                     const divider = document.createElement('div');
@@ -1219,7 +1222,10 @@ class ChatRoomList {
             });
 
             // 等 DOM 渲染完畢再捲動
-            requestAnimationFrame(() => this.scrollToFirstUnread(firstUnread));
+            requestAnimationFrame(() => {
+                this.scrollToFirstUnread(firstUnread);
+                this.isInitialLoading = false;
+            });
 
             // ✅ 初始載入時套用對方已讀狀態
             const partnerRead = this.partnerReadMap.get(String(roomId));
@@ -1228,7 +1234,7 @@ class ChatRoomList {
             container.innerHTML = '<p class="text-center text-muted mt-3">沒有訊息</p>';
         }
 
-        await this.connectSSE(roomId, prevRoomId);
+        this.connectSSE(); // SSE 已在 init() 開啟，此處為 idempotent 保護
     }
 
     scrollToFirstUnread(firstUnread) {
@@ -1242,28 +1248,34 @@ class ChatRoomList {
         else container.scrollTop = container.scrollHeight;
     }
 
-    // ✅ prevRoomId 用來正確判斷 SSE 是否需要重連
-    async connectSSE(roomId, prevRoomId) {
-        if (this.eventSource && prevRoomId === roomId) return;
-        if (this.eventSource) {
-            this.eventSource.close();
-            this.eventSource = null;
-        }
+    // ✅ 帳號層級 SSE：只連線一次，接收所有聊天室的事件
+    connectSSE() {
+        if (this.eventSource) return; // 已連線，不重複開啟
 
         this.eventSource = new EventSource(
-            `${this.backend.baseUrl}/api/chat/stream?room=${roomId}`,
+            `${this.backend.baseUrl}/api/chat/stream`,
             { withCredentials: true }
         );
 
         this.eventSource.addEventListener('newMessage', (event) => {
             const data = JSON.parse(event.data);
-            this.renderMessage(data);
-            this.playNotificationSound();
-            // ✅ 更新聊天室列表的最後一則訊息文字與未讀紅點
-            const chatItem = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
+            // ✅ 只在目前開啟的聊天室才渲染訊息
+            if (String(data.room) === String(this.currentRoomId)) {
+                this.renderMessage(data);
+                this.playNotificationSound();
+            }
+            // ✅ 更新對應聊天室列表項目的最後一則訊息文字與未讀紅點
+            const chatItem = document.querySelector(`[data-room-id="${data.room}"]`);
             if (chatItem) {
                 const lastMsgEl = chatItem.querySelector('.lastMessage');
-                if (lastMsgEl) lastMsgEl.textContent = this.getLastMessageText(data);
+                if (lastMsgEl) {
+                    const newText = this.getLastMessageText(data);
+                    lastMsgEl.textContent = newText;
+                    // typing 計時器進行中時，同步更新 originalText，避免計時器結束後覆蓋回舊文字
+                    if (lastMsgEl.dataset.originalText !== undefined) {
+                        lastMsgEl.dataset.originalText = newText;
+                    }
+                }
                 if (data.username !== this.username) {
                     chatItem.querySelector('.unread-dot')?.classList.remove('d-none');
                 }
@@ -1279,10 +1291,13 @@ class ChatRoomList {
             const data = JSON.parse(event.data);
             this.username = localStorage.getItem('username');
             if (data.username === this.username) return;
-            this.showTyping();
+            // ✅ 只在目前開啟的聊天室才顯示輸入中提示
+            if (String(data.room) === String(this.currentRoomId)) {
+                this.showTyping();
+            }
 
-            // ✅ 在聊天室列表也顯示「對方正在輸入...」
-            const chatItem = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
+            // ✅ 在對應聊天室列表也顯示「對方正在輸入...」
+            const chatItem = document.querySelector(`[data-room-id="${data.room}"]`);
             if (chatItem) {
                 const lastMsgEl = chatItem.querySelector('.lastMessage');
                 if (lastMsgEl) {
@@ -1309,8 +1324,10 @@ class ChatRoomList {
                     ?.querySelector('.unread-dot')?.classList.add('d-none');
                 window.parent?.dispatchEvent(new CustomEvent('chatRead'));
             } else {
-                // ✅ 對方已讀：更新訊息的「已讀」標記
-                this.updateReadReceipts(data.lastReadMessageId);
+                // ✅ 對方已讀：更新目前聊天室訊息的「已讀」標記
+                if (String(data.room) === String(this.currentRoomId)) {
+                    this.updateReadReceipts(data.lastReadMessageId);
+                }
             }
         });
 
@@ -1321,6 +1338,7 @@ class ChatRoomList {
 
         this.eventSource.onerror = () => {
             this.eventSource?.close();
+            this.eventSource = null;
         };
     }
 
@@ -1382,7 +1400,9 @@ class ChatRoomList {
             container.prepend(div);
         } else {
             container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
+            if (!this.isInitialLoading) {
+                container.scrollTop = container.scrollHeight;
+            }
         }
         this.detectRead(div);
         return div;
@@ -1414,7 +1434,7 @@ class ChatRoomList {
 
     async loadMoreMessages() {
         const container = document.getElementById('messagesContainer');
-        if (!this.hasMore || this.isLoading) return;
+        if (!this.hasMore || this.isLoading || this.isInitialLoading) return;
 
         const firstMsgEl = container.querySelector('.message, .imgmessage');
         if (!firstMsgEl) return;

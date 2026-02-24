@@ -87,8 +87,8 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    openSse(roomId) {
-        const url = `${this.baseUrl}/api/chat/stream?room=${encodeURIComponent(roomId)}`;
+    openSse() {
+        const url = `${this.baseUrl}/api/chat/stream`;
         const eventSource = new EventSource(url, { withCredentials: true });
 
         eventSource.addEventListener('newMessage', (event) => {

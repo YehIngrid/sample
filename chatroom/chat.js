@@ -39,3 +39,22 @@ async function canEnterChat() {
       return false;
   }
 }
+
+// 帳號層級 SSE：頁面載入即建立連線，接收所有聊天室即時通知（顯示 chaticon 紅點）
+window.addEventListener('load', () => {
+    if (typeof ChatBackendService === 'undefined') return; // 未引入 ChatBackendService 則略過
+    const _notifSvc = new ChatBackendService();
+    const _notifSse = new EventSource(
+        `${_notifSvc.baseUrl}/api/chat/stream`,
+        { withCredentials: true }
+    );
+    _notifSse.addEventListener('newMessage', (event) => {
+        const data = JSON.parse(event.data);
+        if (data.username !== localStorage.getItem('username')) {
+            window.dispatchEvent(new CustomEvent('chatUnread'));
+        }
+    });
+    _notifSse.addEventListener('ping', () => {});
+    _notifSse.addEventListener('ready', () => {});
+    _notifSse.onerror = () => { _notifSse.close(); };
+});
