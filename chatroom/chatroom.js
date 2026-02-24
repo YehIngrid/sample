@@ -16,6 +16,19 @@ class ChatRoomList {
         this.input = document.getElementById('messageInput');
         this.alreadyInit = false;
         this.lastReadId = null;
+        this.readObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+
+                const msgId = Number(entry.target.dataset.messageId);
+                if (msgId <= this.lastReadId) return;
+
+                this.lastReadId = msgId;
+                this.backend.markAsRead(this.currentRoomId, msgId);
+
+                this.readObserver.unobserve(entry.target);
+            });
+        }, { threshold: 0.6 });
     }
 
     async init() {
@@ -494,7 +507,7 @@ class ChatRoomList {
 
             const container = document.getElementById("messagesContainer");
 
-            const lastReadId = this.lastReadMessageId;
+            const lastReadId = this.lastReadId || 0; // 如果沒有已讀訊息，預設為 0
             const messages = history.data.sort((a,b)=>a.id-b.id);
             const firstUnread = messages.find(m => m.id > lastReadId);
 
@@ -514,7 +527,7 @@ class ChatRoomList {
         // this.chatMainLoader.classList.add('d-none');
         // SSE
         await this.connectSSE(roomId);
-        this.scrollToFirstUnread(history.data, myself.lastReadMessageId);
+        this.scrollToFirstUnread(history.data, this.lastReadId);
     }
     scrollToFirstUnread(messages, lastReadId) {
         if (!messages || !lastReadId) {
@@ -574,6 +587,8 @@ class ChatRoomList {
             console.log('訊息已讀:', data);
             // 可以在這裡更新 UI，例如移除未讀徽章
             //this.removeUnreadBadge(data.roomId);
+            const item = document.querySelector(`[data-room-id="${data.roomId}"]`);
+            item?.querySelector('.badge')?.classList.add('d-none');
         });
 
         this.eventSource.addEventListener('ping', (event) => {
@@ -662,10 +677,6 @@ class ChatRoomList {
             container.appendChild(div); // 插入到最後面
             container.scrollTop = container.scrollHeight; // 只有新訊息才自動滾到底部
         }
-        if (firstUnread) {
-            const el = document.querySelector(`[data-message-id="${firstUnread.id}"]`);
-            el?.scrollIntoView({ block: "start" });
-        }
         this.detectRead(div);
         return div;
     }
@@ -680,22 +691,7 @@ class ChatRoomList {
         }, 1000);
     }
     detectRead(element) {
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-
-                const msgId = Number(entry.target.dataset.messageId);
-                if (msgId <= this.lastReadId) return; // ✅ 已讀不送
-
-                this.lastReadId = msgId;
-                const readAt = new Date().toISOString();
-                this.backend.markAsRead(this.currentRoomId, readAt);
-
-                observer.unobserve(entry.target);
-            });
-        }, { threshold: 0.6 });
-
-        observer.observe(element);
+        this.readObserver.observe(element);
     }
     // TODO 總訊息量超過五十則
     async loadMoreMessages() {
