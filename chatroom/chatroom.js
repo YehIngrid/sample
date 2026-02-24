@@ -1224,7 +1224,9 @@ class ChatRoomList {
             // 等 DOM 渲染完畢再捲動
             requestAnimationFrame(() => {
                 this.scrollToFirstUnread(firstUnread);
-                this.isInitialLoading = false;
+                // 用 setTimeout 確保 scrollToFirstUnread 觸發的 scroll 事件
+                // 在 isInitialLoading 重置前被攔截，避免誤觸 loadMoreMessages
+                setTimeout(() => { this.isInitialLoading = false; }, 100);
             });
 
             // ✅ 初始載入時套用對方已讀狀態
