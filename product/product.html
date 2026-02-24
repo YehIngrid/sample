@@ -295,9 +295,38 @@
   </div>
   <button class="chaticon" id="chaticon">
     <img src="../svg/chaticon.svg" alt="">
-  </button>
-  <iframe type="text/html" width="400" height="750" style="display: none;" id="talkInterface"></iframe>
-  <!-- script部分-->
+    <!-- 紅點，預設隱藏，fixed 定位對齊 chaticon 右上角 -->
+    <span id="chatUnreadDot" style="
+        display: none;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 12px;
+        height: 12px;
+        background: red;
+        border-radius: 50%;
+        border: 2px solid white;
+        pointer-events: none;
+    "></span>
+</button>
+<iframe type="text/html" width="400" height="750"
+        style="display: none;" id="talkInterface"></iframe>
+
+<script>
+// ② 收到 iframe（chatroom）傳來的事件
+window.addEventListener('chatUnread', () => {
+    document.getElementById('chatUnreadDot').style.display = 'block';
+    document.getElementById('newMessageComing')?.classList.remove('d-none');
+});
+window.addEventListener('chatRead', () => {
+    document.getElementById('chatUnreadDot').style.display = 'none';
+    //document.getElementById('newMessageComing')?.classList.add('d-none');
+});
+// ③ 點擊 chaticon 開啟 iframe 時也清除紅點
+document.getElementById('chaticon').addEventListener('click', () => {
+    //document.getElementById('chatUnreadDot').style.display = 'none';
+});
+</script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="product.js"></script>

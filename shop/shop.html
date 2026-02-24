@@ -1068,14 +1068,15 @@ const timer = setInterval(() => {
 // ② 收到 iframe（chatroom）傳來的事件
 window.addEventListener('chatUnread', () => {
     document.getElementById('chatUnreadDot').style.display = 'block';
+    document.getElementById('newMessageComing')?.classList.remove('d-none');
 });
 window.addEventListener('chatRead', () => {
     document.getElementById('chatUnreadDot').style.display = 'none';
+    //document.getElementById('newMessageComing')?.classList.add('d-none');
 });
-
 // ③ 點擊 chaticon 開啟 iframe 時也清除紅點
 document.getElementById('chaticon').addEventListener('click', () => {
-    document.getElementById('chatUnreadDot').style.display = 'none';
+    //document.getElementById('chatUnreadDot').style.display = 'none';
 });
 </script>
   <!-- Loading 遮罩 -->
