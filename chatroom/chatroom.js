@@ -1254,16 +1254,17 @@ class ChatRoomList {
 
         this.eventSource.addEventListener('read', (event) => {
             const data = JSON.parse(event.data);
+            const isSelf = data.userId === this.username;
 
-            // ✅ 移除聊天室列表的未讀 badge
-            document.querySelector(`[data-room-id="${data.room}"]`)
-                ?.querySelector('.badge')?.classList.add('d-none');
-
-            // ✅ 更新已讀狀態：對方讀到 lastReadMessageId 為止，之前的訊息全部加上「已讀」
-            this.updateReadReceipts(data.lastReadMessageId);
-
-            // ✅ 通知外層頁面的 chaticon 清除紅點
-            window.parent?.dispatchEvent(new CustomEvent('chatRead'));
+            if (isSelf) {
+                // ✅ 自己已讀：移除聊天室列表的未讀 badge，通知外層清除紅點
+                document.querySelector(`[data-room-id="${data.room}"]`)
+                    ?.querySelector('.badge')?.classList.add('d-none');
+                window.parent?.dispatchEvent(new CustomEvent('chatRead'));
+            } else {
+                // ✅ 對方已讀：更新訊息的「已讀」標記
+                this.updateReadReceipts(data.lastReadMessageId);
+            }
         });
 
         this.eventSource.addEventListener('ping', () => {});
