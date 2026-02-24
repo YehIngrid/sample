@@ -138,6 +138,7 @@ html, body {
 
 .message-other {
     flex-direction: row;
+    align-items: end;
 }
 
 .message-self {

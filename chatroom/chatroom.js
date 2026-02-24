@@ -245,12 +245,7 @@ class ChatRoomList {
             ` : ''}
             <div class="message-content">
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
-                    ${isSelf ? `
-                        <strong>${this.username}</strong>
-                    ` : `
-                        <strong>${data.username}</strong>
-                        
-                    `}
+                    ${isSelf ? `` : `<strong>${data.username}</strong>`}
                 </div>
                 <div class="d-flex align-items-end">
                     ${isSelf ? `<small class="text-muted me-2" style="font-size: 0.75rem;">${time}</small>` : ``}
@@ -675,7 +670,7 @@ class ChatRoomList {
             <div class="message-content">
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf
-                        ? `<strong>${this.username}</strong>`
+                        ? ``
                         : `<strong>${data.username}</strong>`
                     }
                 </div>
