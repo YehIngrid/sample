@@ -362,7 +362,7 @@ class ChatRoomList {
             clearTimeout(typingTimer);
             typingTimer = setTimeout(() => {
                 this.backend.typing(this.currentRoomId);
-            }, 300);
+            }, 400);
         });
         const container = document.getElementById('messagesContainer');
         container.addEventListener('scroll', () => {
@@ -441,10 +441,6 @@ class ChatRoomList {
                 console.log('myself.lastReadMessageId:', myself.lastReadMessageId);
                 console.log('data.lastMessageId:', data.lastMessageId);
                 // 未讀訊息徽章(上面的badge)
-                item.addEventListener('click', () => {
-                    this.switchRoom(data.id, target.name);
-                });
-
                 chatList.appendChild(item);
             });
 
@@ -461,7 +457,6 @@ class ChatRoomList {
     ====================== */
 
     async switchRoom(roomId, targetName) {
-        if (this.currentRoomId === roomId) return;
         // this.chatMainLoader.classList.remove('d-none');
         if(this.isMobile) {
             this.hideSidebar();
@@ -516,7 +511,7 @@ class ChatRoomList {
             this.eventSource.close();
             this.eventSource = null;
         }
-
+        this.currentRoomId = roomId;
         this.eventSource = new EventSource(`${this.backend.baseUrl}/api/chat/stream?room=${roomId}`, {
             withCredentials: true
         });
@@ -775,3 +770,10 @@ async function openChatWithTarget(targetUserId) {
         console.error(error);
     }
 }
+document.getElementById("chatList").addEventListener("click", (e) => {
+    const item = e.target.closest(".chat-item");
+    if (!item) return;
+    const roomId = item.dataset.roomId;
+    const name = item.querySelector(".roomName").textContent;
+    this.switchRoom(roomId, name);
+});
