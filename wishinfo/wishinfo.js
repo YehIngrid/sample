@@ -1,10 +1,9 @@
 let wpbackendService;
-const backbtn = document.querySelector('#back-btn');
-backbtn.addEventListener('click', function(e){
-    window.history.back();
-})
+let backendService;
 let wishId = new URLSearchParams(location.search).get('id');
 document.addEventListener('DOMContentLoaded', () => {
+    wpbackendService = new wpBackendService();
+    backendService = new backendService();
     console.log('id:', wishId);
     if (!wishId) {
         console.warn('缺少願望 id');
@@ -12,6 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderWishInfo(wishId);
 });
+const backbtn = document.querySelector('#back-btn');
+backbtn.addEventListener('click', function(e){
+    window.history.back();
+})
 async function renderWishInfo(id) {
     try {
         wpbackendService = new wpBackendService();
@@ -28,9 +31,23 @@ async function renderWishInfo(id) {
             2: '一般',
             3: '緊急'
         };
-        const showImage = res.data.photoURL != null;
-        const image = showImage ? `<img id="lightbox-img" src="${res.data.photoURL}" alt="${res.data.itemName}的照片" object-fit: cover; object-position: center;">`: `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
-" alt="No Image" style="width: 300px;">`;
+        // --- 修改圖片生成邏輯 ---
+        if (res.data.photoURL) {
+            // PhotoSwipe 需要 a 標籤包裹，並註明寬高 (這裡先預設 1200x800)
+            imagesContainer.innerHTML = `
+                <a href="${res.data.photoURL}" 
+                   data-pswp-width="1200" 
+                   data-pswp-height="800" 
+                   target="_blank"
+                   class="image-item">
+                    <img src="${res.data.photoURL}" alt="${res.data.itemName}">
+                </a>`;
+            
+            // 重要：圖片插入 DOM 後，初始化或重啟 PhotoSwipe
+            initPhotoSwipe(); 
+        } else {
+            imagesContainer.innerHTML = `<div class="no-image-placeholder"> (無圖片 SVG 略...) </div>`;
+        }
         imagesContainer.innerHTML = image;
         priorityEl.innerText = priorityMap[res.data.priority] || '未設定';
         titleEl.innerText = res.data.itemName || '無標題';
@@ -67,15 +84,6 @@ async function handleContactWisher() {
   }
 });
 
-// 簡單的 lightbox 功能
-function openLightbox(src) {
-    document.getElementById('lightbox-img').src = src;
-    document.getElementById('lightbox').classList.add('active');
-}
-
-function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('active');
-}
 
 // 綁定點擊事件
 document.querySelectorAll('.image-item img').forEach(img => {
@@ -93,4 +101,3 @@ document.addEventListener('keydown', (e) => {
 document.getElementById('lightbox').addEventListener('click', (e) => {
     if (e.target.id === 'lightbox') closeLightbox();
 });
-// TODO 願望聊天室相關操作

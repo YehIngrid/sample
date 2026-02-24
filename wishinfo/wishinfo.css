@@ -1,11 +1,6 @@
-
 nav {
     background-color: var(--background-color) !important;
 }
-/* ④ 可愛商品展示池 */
-/* .bg-paper{
-  background: linear-gradient(180deg,#eaffff 0%, #c9fbfc 50%, #9eeff1 100%);
-} */
 .bg-paper .card{
   background:#ffffff;
   border-radius:26px;
@@ -110,25 +105,35 @@ h2{margin-top:0}
     }
     
 }
+/* wishinfo.css 或在 HTML style 中加入 */
+#wish-photo a {
+    display: block;
+    cursor: zoom-in;
+}
+#wish-photo img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.gallery-container { max-width: 1200px; margin: 0 auto; }
+.image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); gap: 20px; padding: 20px; }
+.image-item { 
+    width: 275px; height: 275px; background: #fff; border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer;
+    transition: all 0.3s ease; position: relative; justify-self: center;
+}
+.image-item:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+.image-item img { width: 100%; height: 100%; object-fit: contain; object-position: center; }
 
-        .gallery-container { max-width: 1200px; margin: 0 auto; }
-        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); gap: 20px; padding: 20px; }
-        .image-item { 
-            width: 275px; height: 275px; background: #fff; border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; cursor: pointer;
-            transition: all 0.3s ease; position: relative; justify-self: center;
-        }
-        .image-item:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-        .image-item img { width: 100%; height: 100%; object-fit: contain; object-position: center; }
-        
-        /* 簡單的 Lightbox */
-        .lightbox { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center;
-        }
-        .lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; }
-        .lightbox.active { display: flex; }
-        .close-btn { 
-            position: absolute; top: 20px; right: 20px; color: white; 
-            font-size: 30px; cursor: pointer; z-index: 5001;
-        }
+/* 簡單的 Lightbox */
+.lightbox { 
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center;
+}
+.lightbox img { max-width: 90%; max-height: 90%; object-fit: contain; }
+.lightbox.active { display: flex; }
+.close-btn { 
+    position: absolute; top: 20px; right: 20px; color: white; 
+    font-size: 30px; cursor: pointer; z-index: 5001;
+}
