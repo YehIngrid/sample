@@ -1142,16 +1142,24 @@ class ChatRoomList {
                 item.dataset.roomId = data.id;
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
-                        <div class="chat-avatar">
+                        <div class="chat-avatar position-relative">
                             <img src="${target?.photoURL || '../image/default-avatar.png'}"
                                  alt="${target?.name}的照片"
                                  style="width: 45px; height: 45px; border-radius: 50px;">
+                            <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
+                                position: absolute;
+                                top: 0; right: 0;
+                                width: 12px; height: 12px;
+                                background: red;
+                                border-radius: 50%;
+                                border: 2px solid white;
+                                pointer-events: none;
+                            "></span>
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${target?.name ?? '未知'}</h6>
                             <small class="text-muted lastMessage">${this.getLastMessageText(data.lastMessage)}</small>
                         </div>
-                        <span class="badge bg-primary rounded-pill ${isNewMessage ? '' : 'd-none'}">新訊息</span>
                     </div>`;
                 chatList.appendChild(item);
             });
@@ -1273,7 +1281,7 @@ class ChatRoomList {
             if (isSelf) {
                 // ✅ 自己已讀：移除聊天室列表的未讀 badge，通知外層清除紅點
                 document.querySelector(`[data-room-id="${data.room}"]`)
-                    ?.querySelector('.badge')?.classList.add('d-none');
+                    ?.querySelector('.unread-dot')?.classList.add('d-none');
                 window.parent?.dispatchEvent(new CustomEvent('chatRead'));
             } else {
                 // ✅ 對方已讀：更新訊息的「已讀」標記
