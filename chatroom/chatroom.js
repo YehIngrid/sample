@@ -527,8 +527,6 @@ class ChatRoomList {
             const data = JSON.parse(event.data);
             this.renderMessage(data);
             this.playNotificationSound();
-            const readAt = new Date().toISOString();
-            this.backend.markAsRead(this.currentRoomId, readAt);
         });
         this.eventSource.addEventListener('typing', (event) => {
             const data = JSON.parse(event.data);
