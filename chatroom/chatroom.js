@@ -1254,7 +1254,7 @@ class ChatRoomList {
 
         this.eventSource.addEventListener('read', (event) => {
             const data = JSON.parse(event.data);
-            const isSelf = data.userId === this.username;
+            const isSelf = data.userId === localStorage.getItem(uid);
 
             if (isSelf) {
                 // ✅ 自己已讀：移除聊天室列表的未讀 badge，通知外層清除紅點
