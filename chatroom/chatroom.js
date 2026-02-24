@@ -1396,9 +1396,8 @@ window.addEventListener('load', () => {
 function openChatRoomList(roomId) {
     if (!chatRoomList) {
         chatRoomList = new ChatRoomList(roomId);
-        chatRoomList.init().then(() => {
-            if (roomId) chatRoomList.switchRoom(roomId);
-        });
+        // ✅ init() 內部已經會呼叫 switchRoom(currentRoomId)，這裡不要再呼叫一次
+        chatRoomList.init();
     } else if (roomId) {
         chatRoomList.switchRoom(roomId);
     }
