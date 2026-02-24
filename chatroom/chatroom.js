@@ -839,7 +839,8 @@ class ChatRoomList {
         this.alreadyInit = false;
 
         // 每個房間各自記錄 lastReadMessageId 和 lastReadTimestamp
-        this.lastReadMap = new Map(); // roomId -> { id, timestamp }
+        this.lastReadMap = new Map(); // roomId -> { id, timestamp }（自己的已讀進度）
+        this.partnerReadMap = new Map(); // roomId -> { id }（對方的已讀進度）
 
         this.isMarkingRead = false;
         this.readObserver = new IntersectionObserver(entries => {
@@ -1005,7 +1006,11 @@ class ChatRoomList {
                     ${isSelf ? '' : `<strong>${data.username}</strong>`}
                 </div>
                 <div class="d-flex align-items-end">
-                    ${isSelf ? `<small class="text-muted me-2" style="font-size: 0.75rem;">${time}</small>` : ''}
+                    ${isSelf ? `
+                    <div class="d-flex flex-column align-items-center me-2">
+                        <i class="bi bi-check2-all read-receipt d-none" style="font-size: 0.8rem; color: #4CAF50;"></i>
+                        <small class="text-muted" style="font-size: 0.75rem;">${time}</small>
+                    </div>` : ''}
                     <div class="message-image-wrapper" style="margin-top: 8px;">
                         <a href="${imageUrl}" data-pswp-width="auto" data-pswp-height="auto"
                            target="_blank" class="image-link">
@@ -1126,6 +1131,11 @@ class ChatRoomList {
                         timestamp: myself.lastReadAt ?? null
                     });
                 }
+                if (target) {
+                    this.partnerReadMap.set(String(data.id), {
+                        id: target.lastReadMessageId ?? null
+                    });
+                }
 
                 const item = document.createElement('div');
                 item.className = 'chat-item';
@@ -1204,6 +1214,10 @@ class ChatRoomList {
             });
 
             this.scrollToFirstUnread(firstUnread);
+
+            // ✅ 初始載入時套用對方已讀狀態
+            const partnerRead = this.partnerReadMap.get(String(roomId));
+            if (partnerRead?.id) this.updateReadReceipts(partnerRead.id);
         } else {
             container.innerHTML = '<p class="text-center text-muted mt-3">沒有訊息</p>';
         }
@@ -1321,7 +1335,11 @@ class ChatRoomList {
                     ${isSelf ? '' : `<strong>${data.username}</strong>`}
                 </div>
                 <div class="d-flex align-items-end">
-                    ${isSelf ? `<small class="text-muted me-2" style="font-size: 0.75rem;">${timestamp}</small>` : ''}
+                    ${isSelf ? `
+                    <div class="d-flex flex-column align-items-center me-2">
+                        <i class="bi bi-check2-all read-receipt d-none" style="font-size: 0.8rem; color: #4CAF50;"></i>
+                        <small class="text-muted" style="font-size: 0.75rem;">${timestamp}</small>
+                    </div>` : ''}
                     <div class="message-text">${this.escapeHtml(data.message)}</div>
                     ${isSelf ? '' : `<small class="text-muted ms-2" style="font-size: 0.75rem;">${timestamp}</small>`}
                 </div>
@@ -1337,37 +1355,15 @@ class ChatRoomList {
         return div;
     }
 
-    // ✅ 對方讀到某則訊息後，把自己所有 <= lastReadMessageId 的訊息加上「已讀」標記
+    // ✅ 對方讀到 lastReadMessageId 為止，顯示自己訊息上的打勾圖示
     updateReadReceipts(lastReadMessageId) {
         if (!lastReadMessageId) return;
         const container = document.getElementById('messagesContainer');
-        const selfMsgs = container.querySelectorAll('.message-self, .imgmessage.message-self');
+        const selfMsgs = [...container.querySelectorAll('.message-self, .imgmessage.message-self')];
 
-        let found = false;
-        selfMsgs.forEach(el => {
-            if (el.dataset.messageId === lastReadMessageId) found = true;
-
-            // 已找到目標訊息（含）之前的所有自己訊息都標為已讀
-            if (found) return; // 比目標新的訊息不動
-
-            const existing = el.querySelector('.read-receipt');
-            if (!existing) {
-                const receipt = document.createElement('div');
-                receipt.className = 'read-receipt';
-                receipt.textContent = '已讀';
-                el.querySelector('.message-content').appendChild(receipt);
-            }
-        });
-
-        // 也處理目標訊息本身
-        const targetEl = container.querySelector(`[data-message-id="${lastReadMessageId}"]`);
-        if (targetEl?.classList.contains('message-self') || targetEl?.classList.contains('imgmessage')) {
-            if (!targetEl.querySelector('.read-receipt')) {
-                const receipt = document.createElement('div');
-                receipt.className = 'read-receipt';
-                receipt.textContent = '已讀';
-                targetEl.querySelector('.message-content').appendChild(receipt);
-            }
+        for (const el of selfMsgs) {
+            el.querySelector('.read-receipt')?.classList.remove('d-none');
+            if (el.dataset.messageId === lastReadMessageId) break;
         }
     }
 
