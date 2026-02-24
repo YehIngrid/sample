@@ -207,7 +207,8 @@ class ChatRoomList {
         imgWrapper.dataset.timestamp = data.timestamp; // 用於載入更多訊息時的時間戳記
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit', 
+            hour12: false
         });
 
         // 提取圖片 URL
@@ -222,11 +223,11 @@ class ChatRoomList {
             <div class="message-content">
                 <div class="message-header ${isSelf ? 'text-end' : ''}">
                     ${isSelf ? `
-                        <small class="text-muted me-2">${time}</small>
+                        <small class="text-muted me-2" style="font-size: 0.75rem;">${time}</small>
                         <strong>${this.username}</strong>
                     ` : `
                         <strong>${data.username}</strong>
-                        <small class="text-muted ms-2">${time}</small>
+                        <small class="text-muted ms-2" style="font-size: 0.75rem;">${time}</small>
                     `}
                 </div>
                 <div class="message-image-wrapper" style="margin-top: 8px;">
@@ -355,9 +356,13 @@ class ChatRoomList {
             e.preventDefault();
             this.sendMessage();
         });
+        let typingTimer;
+
         this.input.addEventListener('input', () => {
-            if (!this.currentRoomId) return;
-            this.backend.typing(this.currentRoomId);
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                this.backend.typing(this.currentRoomId);
+            }, 300);
         });
         const container = document.getElementById('messagesContainer');
         container.addEventListener('scroll', () => {
@@ -443,9 +448,6 @@ class ChatRoomList {
                 chatList.appendChild(item);
             });
 
-            if (rooms.length > 0) {
-                this.switchRoom(rooms.data.items[0].id, rooms.data.items[0].target.name);
-            }
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
         }
@@ -459,6 +461,7 @@ class ChatRoomList {
     ====================== */
 
     async switchRoom(roomId, targetName) {
+        if (this.currentRoomId === roomId) return;
         // this.chatMainLoader.classList.remove('d-none');
         if(this.isMobile) {
             this.hideSidebar();
@@ -504,8 +507,14 @@ class ChatRoomList {
     ====================== */
 
     async connectSSE(roomId) {
+        if (this.eventSource && this.currentRoomId === roomId) {
+            console.log("SSE already connected");
+            return;
+        }
+
         if (this.eventSource) {
             this.eventSource.close();
+            this.eventSource = null;
         }
 
         this.eventSource = new EventSource(`${this.backend.baseUrl}/api/chat/stream?room=${roomId}`, {
