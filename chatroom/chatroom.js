@@ -15,6 +15,7 @@ class ChatRoomList {
         this.previewArea = document.getElementById('image-upload');
         this.input = document.getElementById('messageInput');
         this.alreadyInit = false;
+        this.lastReadId = null;
     }
 
     async init() {
@@ -205,6 +206,7 @@ class ChatRoomList {
         const isSelf = data.isSelf === true || data.username === this.username;
         imgWrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
         imgWrapper.dataset.timestamp = data.timestamp; // 用於載入更多訊息時的時間戳記
+        imgWrapper.dataset.messageId = data.id; // 用於已讀功能的訊息 ID
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
             minute: '2-digit', 
@@ -421,6 +423,7 @@ class ChatRoomList {
                 myself = data.members.find(m => m.name === this.username);
                 const isMyMessage = data.lastMessage.username == myself.name ? true : false;
                 const isNewMessage = !isMyMessage && myself.lastReadMessageId !== data.lastMessageId;
+                this.lastReadId = myself.lastReadMessageId;
                 console.log('聊天室目標對象:', target);
                 console.log('聊天室自己:', myself);
                 const targetUrl = target.photoURL || '../image/default-avatar.png';
@@ -487,23 +490,49 @@ class ChatRoomList {
         console.log('載入歷史訊息', roomId, before);
         const limit = 50;
         const history = await this.backend.getHistory(roomId, limit, before);
-        if(history.data && history.data.length > 0) {
-            history.data.forEach(msg => this.renderMessage(msg));
-            console.log('歷史訊息載入完成:', history);
+        if (history.data && history.data.length > 0) {
+
+            const container = document.getElementById("messagesContainer");
+
+            const lastReadId = this.lastReadMessageId;
+            const messages = history.data.sort((a,b)=>a.id-b.id);
+            const firstUnread = messages.find(m => m.id > lastReadId);
+
+            messages.forEach(msg => {
+                if (firstUnread && msg.id === firstUnread.id) {
+                    const divider = document.createElement("div");
+                    divider.className = "unread-divider";
+                    divider.innerText = "以下為未讀訊息";
+                    container.appendChild(divider);
+                }
+                this.renderMessage(msg);
+            });
         } else {
             console.log('沒有訊息');
             document.getElementById('messagesContainer').innerHTML = '<p class="text-center text-muted mt-3">沒有訊息</p>';
         }
         // this.chatMainLoader.classList.add('d-none');
         // SSE
-        
-        const readAt = new Date().toISOString();
-        await this.backend.markAsRead(roomId, readAt);
-
-
         await this.connectSSE(roomId);
+        this.scrollToFirstUnread(history.data, myself.lastReadMessageId);
     }
+    scrollToFirstUnread(messages, lastReadId) {
+        if (!messages || !lastReadId) {
+            // 沒已讀紀錄 → 捲到底
+            const container = document.getElementById('messagesContainer');
+            container.scrollTop = container.scrollHeight;
+            return;
+        }
 
+        const firstUnread = messages.find(m => m.id > lastReadId);
+        if (!firstUnread) return;
+
+        const el = document.querySelector(`[data-message-id="${firstUnread.id}"]`);
+        if (el) {
+            el.scrollIntoView({ behavior: "instant", block: "start" });
+            console.log("Scrolled to first unread", firstUnread.id);
+        }
+    }
     /* ======================
        SSE 即時訊息
     ====================== */
@@ -578,8 +607,7 @@ class ChatRoomList {
         const text = input.value.trim();
         if (!text || !this.currentRoomId) return;
 
-        const mes = await this.backend.sendMessage(this.currentRoomId, text);
-        // this.renderMessage(mes.data);
+        await this.backend.sendMessage(this.currentRoomId, text);
         input.value = '';
     }
 
@@ -606,13 +634,10 @@ class ChatRoomList {
             minute: '2-digit', 
             hour12: false
         });
-        const now = new Date().toLocaleTimeString('zh-TW', {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
         const div = document.createElement('div');
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
         div.dataset.timestamp = data.timestamp; // 用於載入更多訊息時的時間戳記
+        div.dataset.messageId = data.id; // 用於已讀功能的訊息 ID
         div.innerHTML = `
             ${!isSelf ? `
                 <div class="message-avatar">
@@ -637,6 +662,10 @@ class ChatRoomList {
             container.appendChild(div); // 插入到最後面
             container.scrollTop = container.scrollHeight; // 只有新訊息才自動滾到底部
         }
+        if (firstUnread) {
+            const el = document.querySelector(`[data-message-id="${firstUnread.id}"]`);
+            el?.scrollIntoView({ block: "start" });
+        }
         this.detectRead(div);
         return div;
     }
@@ -651,16 +680,21 @@ class ChatRoomList {
         }, 1000);
     }
     detectRead(element) {
-        const observer = new IntersectionObserver((entries) => {
+        const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const readAt = new Date().toISOString();
-                    this.backend.markAsRead(this.currentRoomId, readAt);
-                    observer.unobserve(entry.target); // 避免重複觸發
-                }
+                if (!entry.isIntersecting) return;
+
+                const msgId = Number(entry.target.dataset.messageId);
+                if (msgId <= this.lastReadId) return; // ✅ 已讀不送
+
+                this.lastReadId = msgId;
+                const readAt = new Date().toISOString();
+                this.backend.markAsRead(this.currentRoomId, readAt);
+
+                observer.unobserve(entry.target);
             });
-        }, { threshold: 0.5 });
-    
+        }, { threshold: 0.6 });
+
         observer.observe(element);
     }
     // TODO 總訊息量超過五十則
