@@ -1044,19 +1044,21 @@ const timer = setInterval(() => {
             </div>
         </div>
   </div>
-
 <!-- ① HTML：chaticon 加上紅點元素 -->
-<button class="chaticon" id="chaticon" style="position: relative;">
+<button class="chaticon" id="chaticon">
     <img src="../svg/chaticon.svg" alt="">
-    <!-- 紅點，預設隱藏 -->
+    <!-- 紅點，預設隱藏，fixed 定位對齊 chaticon 右上角 -->
     <span id="chatUnreadDot" style="
         display: none;
         position: absolute;
-        top: 2px; right: 2px;
-        width: 10px; height: 10px;
+        top: 0px;
+        right: 0px;
+        width: 12px;
+        height: 12px;
         background: red;
         border-radius: 50%;
         border: 2px solid white;
+        pointer-events: none;
     "></span>
 </button>
 <iframe type="text/html" width="400" height="750"
