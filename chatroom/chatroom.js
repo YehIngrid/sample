@@ -16,16 +16,24 @@ class ChatRoomList {
         this.input = document.getElementById('messageInput');
         this.alreadyInit = false;
         this.lastReadId = null;
+        this.isMarkingRead = false;
         this.readObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
 
                 const msgId = Number(entry.target.dataset.messageId);
-                if (msgId <= this.lastReadId) return;
+                const lastRead = this.lastReadId ?? 0;
+                if (msgId <= lastRead) return;
 
-                this.lastReadId = msgId;
+                if (this.isMarkingRead) return;
+
+                this.isMarkingRead = true;
+
                 this.backend.markAsRead(this.currentRoomId, msgId);
 
+                this.lastReadId = msgId;
+
+                this.isMarkingRead = false;
                 this.readObserver.unobserve(entry.target);
             });
         }, { threshold: 0.6 });
@@ -436,7 +444,7 @@ class ChatRoomList {
                 myself = data.members.find(m => m.name === this.username);
                 const isMyMessage = data.lastMessage.username == myself.name ? true : false;
                 const isNewMessage = !isMyMessage && myself.lastReadMessageId !== data.lastMessageId;
-                this.lastReadId = myself.lastReadMessageId;
+                this.lastReadId = myself.lastReadMessageId ?? 0;
                 console.log('聊天室目標對象:', target);
                 console.log('聊天室自己:', myself);
                 const targetUrl = target.photoURL || '../image/default-avatar.png';
@@ -480,6 +488,9 @@ class ChatRoomList {
     ====================== */
 
     async switchRoom(roomId, targetName) {
+        if (this.readObserver) {
+            this.readObserver.disconnect();
+        }
         // this.chatMainLoader.classList.remove('d-none');
         if(this.isMobile) {
             this.hideSidebar();
@@ -630,7 +641,7 @@ class ChatRoomList {
        UI 渲染
     ====================== */
     renderMessage(data, prepend = false) {
-        if (data.attachments.length > 0) {
+        if (data.attachments && data.attachments.length > 0) {
             this.appendImageMessage({
                 attachments: data.attachments,
                 username: data.username,
