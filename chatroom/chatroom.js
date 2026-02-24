@@ -605,7 +605,8 @@ class ChatRoomList {
         console.log('isSelf', isSelf);
         const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit', 
+            hour12: false
         });
         const now = new Date().toLocaleTimeString('zh-TW', {
             hour: '2-digit',
