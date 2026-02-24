@@ -28,8 +28,8 @@ class ChatRoomList {
                 if (this.isMarkingRead) return;
 
                 this.isMarkingRead = true;
-
-                this.backend.markAsRead(this.currentRoomId, msgId);
+                const readAt = new Date().toISOString();
+                this.backend.markAsRead(this.currentRoomId, readAt);
 
                 this.lastReadId = msgId;
 
