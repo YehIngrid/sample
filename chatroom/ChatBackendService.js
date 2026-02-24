@@ -87,35 +87,28 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    async openSse(roomId) {
-        const eventSource = new EventSource(`${this.baseUrl}/api/chat/stream?room=${roomId}`, {
-            withCredentials: true
-        }, {params: { room: String(roomId) }});
+    openSse(roomId) {
+        const url = `${this.baseUrl}/api/chat/stream?room=${encodeURIComponent(roomId)}`;
+        const eventSource = new EventSource(url, { withCredentials: true });
 
         eventSource.addEventListener('newMessage', (event) => {
-        const data = JSON.parse(event.data);
-            console.log('新訊息:', data);
+            console.log('新訊息:', JSON.parse(event.data));
         });
-
         eventSource.addEventListener('typing', (event) => {
             console.log('使用者正在輸入:', event.data);
         });
-
         eventSource.addEventListener('ready', (event) => {
-            console.log('狀態更新:', event.data);
+            console.log('連線就緒:', event.data);
         });
-
         eventSource.addEventListener('read', (event) => {
             console.log('訊息已讀:', event.data);
         });
-
         eventSource.addEventListener('ping', (event) => {
             console.log('ping:', event.data);
         });
-
         eventSource.onerror = (error) => {
             console.error('連接錯誤:', error);
-        eventSource.close();
+            eventSource.close();
         };
 
         return eventSource;
