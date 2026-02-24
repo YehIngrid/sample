@@ -1142,24 +1142,21 @@ class ChatRoomList {
                 item.dataset.roomId = data.id;
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
-                        <div class="chat-avatar position-relative">
+                        <div class="chat-avatar">
                             <img src="${target?.photoURL || '../image/default-avatar.png'}"
                                  alt="${target?.name}的照片"
                                  style="width: 45px; height: 45px; border-radius: 50px;">
-                            <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
-                                position: absolute;
-                                top: 0; right: 0;
-                                width: 12px; height: 12px;
-                                background: red;
-                                border-radius: 50%;
-                                border: 2px solid white;
-                                pointer-events: none;
-                            "></span>
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${target?.name ?? '未知'}</h6>
                             <small class="text-muted lastMessage">${this.getLastMessageText(data.lastMessage)}</small>
                         </div>
+                        <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
+                            width: 10px; height: 10px;
+                            background: red;
+                            border-radius: 50%;
+                            flex-shrink: 0;
+                        "></span>
                     </div>`;
                 chatList.appendChild(item);
             });
@@ -1209,7 +1206,7 @@ class ChatRoomList {
             );
             const firstUnread = lastReadTimestamp
                 ? messages.find(m => m.timestamp > lastReadTimestamp)
-                : messages[0];
+                : null; // 沒有已讀紀錄 → 捲到最底部
 
             messages.forEach(msg => {
                 if (firstUnread && msg.id === firstUnread.id) {
@@ -1221,7 +1218,8 @@ class ChatRoomList {
                 this.renderMessage(msg);
             });
 
-            this.scrollToFirstUnread(firstUnread);
+            // 等 DOM 渲染完畢再捲動
+            requestAnimationFrame(() => this.scrollToFirstUnread(firstUnread));
 
             // ✅ 初始載入時套用對方已讀狀態
             const partnerRead = this.partnerReadMap.get(String(roomId));
@@ -1282,6 +1280,23 @@ class ChatRoomList {
             this.username = localStorage.getItem('username');
             if (data.username === this.username) return;
             this.showTyping();
+
+            // ✅ 在聊天室列表也顯示「對方正在輸入...」
+            const chatItem = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
+            if (chatItem) {
+                const lastMsgEl = chatItem.querySelector('.lastMessage');
+                if (lastMsgEl) {
+                    if (!lastMsgEl.dataset.originalText) {
+                        lastMsgEl.dataset.originalText = lastMsgEl.textContent;
+                    }
+                    lastMsgEl.textContent = '對方正在輸入...';
+                    clearTimeout(this.typingListTimer);
+                    this.typingListTimer = setTimeout(() => {
+                        lastMsgEl.textContent = lastMsgEl.dataset.originalText || '';
+                        delete lastMsgEl.dataset.originalText;
+                    }, 1000);
+                }
+            }
         });
 
         this.eventSource.addEventListener('read', (event) => {
