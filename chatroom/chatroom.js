@@ -388,7 +388,7 @@ class ChatRoomList {
         const container = document.getElementById('messagesContainer');
         container.addEventListener('scroll', () => {
             // 當捲軸拉到最頂端 (scrollTop === 0) 時觸發
-            if (container.scrollTop === 0) {
+            if (container.scrollTop <= 10) {
                 this.loadMoreMessages();
             }
         });
@@ -464,15 +464,14 @@ class ChatRoomList {
                 console.log('data.lastMessageId:', data.lastMessageId);
                 // 未讀訊息徽章(上面的badge)
                 chatList.appendChild(item);
-                document.getElementById("chatList").addEventListener("click", (e) => {
-                    const item = e.target.closest(".chat-item");
-                    if (!item) return;
-                    const roomId = item.dataset.roomId;
-                    const name = item.querySelector(".roomName").textContent;
-                    this.switchRoom(roomId, name);
-                });
             });
-
+            document.getElementById("chatList").addEventListener("click", (e) => {
+                const item = e.target.closest(".chat-item");
+                if (!item) return;
+                const roomId = item.dataset.roomId;
+                const name = item.querySelector(".roomName").textContent;
+                this.switchRoom(roomId, name);
+            });
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
         }
@@ -750,6 +749,8 @@ class ChatRoomList {
             }
         } catch (err) {
             console.error('載入更多訊息失敗', err);
+        } finally {
+            this.isLoading = false;
         }
     }
     // 提取出來的顯示提示函數
