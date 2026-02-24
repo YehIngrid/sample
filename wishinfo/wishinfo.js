@@ -3,7 +3,7 @@ let backendService;
 let wishId = new URLSearchParams(location.search).get('id');
 document.addEventListener('DOMContentLoaded', () => {
     wpbackendService = new wpBackendService();
-    backendService = new backendService();
+    backendService = new BackendService();
     console.log('id:', wishId);
     if (!wishId) {
         console.warn('缺少願望 id');
