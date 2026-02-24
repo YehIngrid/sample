@@ -59,6 +59,20 @@ async function renderWishInfo(id) {
         return;
     }
 }
+function initPhotoSwipe() {
+    // 從 CDN 引入模組
+    import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe-lightbox.esm.min.js')
+        .then((module) => {
+            const PhotoSwipeLightbox = module.default;
+            const lightbox = new PhotoSwipeLightbox({
+                gallery: '#wish-photo', // 對應 HTML 中的 ID
+                children: 'a',          // 點擊 a 標籤觸發
+                pswpModule: () => import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.esm.min.js')
+            });
+            lightbox.init();
+        })
+        .catch(err => console.error('PhotoSwipe 加載失敗:', err));
+}
 const contactbtn = document.getElementById('contact-wisher');
 const mbcontactbtn = document.getElementById('contact-wisher-mobile');
 
