@@ -1239,6 +1239,10 @@ class ChatRoomList {
             const data = JSON.parse(event.data);
             this.renderMessage(data);
             this.playNotificationSound();
+            // ✅ 通知外層頁面的 chaticon 顯示紅點
+            if (data.username !== this.username) {
+                window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
+            }
         });
 
         this.eventSource.addEventListener('typing', (event) => {
@@ -1250,8 +1254,16 @@ class ChatRoomList {
 
         this.eventSource.addEventListener('read', (event) => {
             const data = JSON.parse(event.data);
-            document.querySelector(`[data-room-id="${data.roomId}"]`)
+
+            // ✅ 移除聊天室列表的未讀 badge
+            document.querySelector(`[data-room-id="${data.room}"]`)
                 ?.querySelector('.badge')?.classList.add('d-none');
+
+            // ✅ 更新已讀狀態：對方讀到 lastReadMessageId 為止，之前的訊息全部加上「已讀」
+            this.updateReadReceipts(data.lastReadMessageId);
+
+            // ✅ 通知外層頁面的 chaticon 清除紅點
+            window.parent?.dispatchEvent(new CustomEvent('chatRead'));
         });
 
         this.eventSource.addEventListener('ping', () => {});
@@ -1322,6 +1334,40 @@ class ChatRoomList {
         }
         this.detectRead(div);
         return div;
+    }
+
+    // ✅ 對方讀到某則訊息後，把自己所有 <= lastReadMessageId 的訊息加上「已讀」標記
+    updateReadReceipts(lastReadMessageId) {
+        if (!lastReadMessageId) return;
+        const container = document.getElementById('messagesContainer');
+        const selfMsgs = container.querySelectorAll('.message-self, .imgmessage.message-self');
+
+        let found = false;
+        selfMsgs.forEach(el => {
+            if (el.dataset.messageId === lastReadMessageId) found = true;
+
+            // 已找到目標訊息（含）之前的所有自己訊息都標為已讀
+            if (found) return; // 比目標新的訊息不動
+
+            const existing = el.querySelector('.read-receipt');
+            if (!existing) {
+                const receipt = document.createElement('div');
+                receipt.className = 'read-receipt';
+                receipt.textContent = '已讀';
+                el.querySelector('.message-content').appendChild(receipt);
+            }
+        });
+
+        // 也處理目標訊息本身
+        const targetEl = container.querySelector(`[data-message-id="${lastReadMessageId}"]`);
+        if (targetEl?.classList.contains('message-self') || targetEl?.classList.contains('imgmessage')) {
+            if (!targetEl.querySelector('.read-receipt')) {
+                const receipt = document.createElement('div');
+                receipt.className = 'read-receipt';
+                receipt.textContent = '已讀';
+                targetEl.querySelector('.message-content').appendChild(receipt);
+            }
+        }
     }
 
     showTyping() {

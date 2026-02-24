@@ -1044,11 +1044,38 @@ const timer = setInterval(() => {
             </div>
         </div>
   </div>
-  <button class="chaticon" id="chaticon">
-    <img src="../svg/chaticon.svg" alt="">
-  </button>
-  <iframe type="text/html" width="400" height="750" style="display: none;" id="talkInterface"></iframe>
 
+<!-- ① HTML：chaticon 加上紅點元素 -->
+<button class="chaticon" id="chaticon" style="position: relative;">
+    <img src="../svg/chaticon.svg" alt="">
+    <!-- 紅點，預設隱藏 -->
+    <span id="chatUnreadDot" style="
+        display: none;
+        position: absolute;
+        top: 2px; right: 2px;
+        width: 10px; height: 10px;
+        background: red;
+        border-radius: 50%;
+        border: 2px solid white;
+    "></span>
+</button>
+<iframe type="text/html" width="400" height="750"
+        style="display: none;" id="talkInterface"></iframe>
+
+<script>
+// ② 收到 iframe（chatroom）傳來的事件
+window.addEventListener('chatUnread', () => {
+    document.getElementById('chatUnreadDot').style.display = 'block';
+});
+window.addEventListener('chatRead', () => {
+    document.getElementById('chatUnreadDot').style.display = 'none';
+});
+
+// ③ 點擊 chaticon 開啟 iframe 時也清除紅點
+document.getElementById('chaticon').addEventListener('click', () => {
+    document.getElementById('chatUnreadDot').style.display = 'none';
+});
+</script>
   <!-- Loading 遮罩 -->
 <div id="loadingOverlay" class="loading-overlay d-none">
   <div class="d-flex flex-column justify-content-center align-items-center">
