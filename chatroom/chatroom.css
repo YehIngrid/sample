@@ -103,7 +103,7 @@ html, body {
 .messages-container {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
+    padding: 16px;
     padding-left: 10px;
     padding-bottom: 15px;
     background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);

@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await initCartFromAPI();
 
   const iframe = document.getElementById('talkInterface');
-
+  iframe.src = '../chatroom/chatroom.html';
 // 必須等待 iframe 載入完成
   iframe.addEventListener('load', () => {
       try {

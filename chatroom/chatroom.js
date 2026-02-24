@@ -180,7 +180,7 @@ class ChatRoomList {
             : (data.attachments || '');
 
         imgWrapper.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${data.photoURL || '../image/default-avatar.png'}"/></div>` : ''}
+            ${!isSelf ? `<div class="message-avatar"><img src="${data.photoURL || '../image/default-avatar.png'}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
@@ -558,7 +558,7 @@ class ChatRoomList {
         div.dataset.timestamp = data.timestamp;  // ISO 字串，用於 markAsRead
         div.dataset.messageId = data.id;          // string
         div.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${data.photoURL || '../image/default-avatar.png'}"/></div>` : ''}
+            ${!isSelf ? `<div class="message-avatar"><img src="${data.photoURL || '../image/default-avatar.png'}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
