@@ -442,6 +442,13 @@ class ChatRoomList {
                 console.log('data.lastMessageId:', data.lastMessageId);
                 // 未讀訊息徽章(上面的badge)
                 chatList.appendChild(item);
+                document.getElementById("chatList").addEventListener("click", (e) => {
+                    const item = e.target.closest(".chat-item");
+                    if (!item) return;
+                    const roomId = item.dataset.roomId;
+                    const name = item.querySelector(".roomName").textContent;
+                    this.switchRoom(roomId, name);
+                });
             });
 
         } catch (err) {
@@ -770,10 +777,3 @@ async function openChatWithTarget(targetUserId) {
         console.error(error);
     }
 }
-document.getElementById("chatList").addEventListener("click", (e) => {
-    const item = e.target.closest(".chat-item");
-    if (!item) return;
-    const roomId = item.dataset.roomId;
-    const name = item.querySelector(".roomName").textContent;
-    this.switchRoom(roomId, name);
-});
