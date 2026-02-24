@@ -1261,6 +1261,16 @@ class ChatRoomList {
             const data = JSON.parse(event.data);
             this.renderMessage(data);
             this.playNotificationSound();
+            // ✅ 更新聊天室列表的最後一則訊息文字與未讀紅點
+            const chatItem = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
+            if (chatItem) {
+                const lastMsgEl = chatItem.querySelector('.lastMessage');
+                if (lastMsgEl) lastMsgEl.textContent = this.getLastMessageText(data);
+                if (data.username !== this.username) {
+                    chatItem.querySelector('.unread-dot')?.classList.remove('d-none');
+                }
+            }
+
             // ✅ 通知外層頁面的 chaticon 顯示紅點
             if (data.username !== this.username) {
                 window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
