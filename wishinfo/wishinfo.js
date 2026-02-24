@@ -32,23 +32,21 @@ async function renderWishInfo(id) {
             3: '緊急'
         };
         // --- 修改圖片生成邏輯 ---
+        // 在 renderWishInfo 內部
         if (res.data.photoURL) {
-            // PhotoSwipe 需要 a 標籤包裹，並註明寬高 (這裡先預設 1200x800)
             imagesContainer.innerHTML = `
                 <a href="${res.data.photoURL}" 
-                   data-pswp-width="1200" 
-                   data-pswp-height="800" 
-                   target="_blank"
-                   class="image-item">
-                    <img src="${res.data.photoURL}" alt="${res.data.itemName}">
+                id="pswp-link"
+                data-pswp-width="1200" 
+                data-pswp-height="800" 
+                target="_blank"
+                class="image-item">
+                    <img src="${res.data.photoURL}" id="wish-img-element" alt="${res.data.itemName}">
                 </a>`;
             
-            // 重要：圖片插入 DOM 後，初始化或重啟 PhotoSwipe
-            initPhotoSwipe(); 
-        } else {
-            imagesContainer.innerHTML = `<div class="no-image-placeholder"> (無圖片 SVG 略...) </div>`;
+            // 呼叫更新尺寸並初始化的函式
+            updateImageSizeAndInit(res.data.photoURL);
         }
-        imagesContainer.innerHTML = image;
         priorityEl.innerText = priorityMap[res.data.priority] || '未設定';
         titleEl.innerText = res.data.itemName || '無標題';
         descEl.innerText = res.data.description || '無描述';
@@ -59,19 +57,42 @@ async function renderWishInfo(id) {
         return;
     }
 }
+/**
+ * 自動偵測圖片比例並初始化 PhotoSwipe
+ */
+function updateImageSizeAndInit(url) {
+    const img = new Image();
+    img.src = url;
+    img.onload = function() {
+        const link = document.getElementById('pswp-link');
+        if (link) {
+            // 這裡拿到圖片真實的寬高
+            link.setAttribute('data-pswp-width', this.naturalWidth);
+            link.setAttribute('data-pswp-height', this.naturalHeight);
+        }
+        // 尺寸設定好後，再初始化
+        initPhotoSwipe();
+    };
+}
+
 function initPhotoSwipe() {
-    // 從 CDN 引入模組
     import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe-lightbox.esm.min.js')
         .then((module) => {
             const PhotoSwipeLightbox = module.default;
             const lightbox = new PhotoSwipeLightbox({
-                gallery: '#wish-photo', // 對應 HTML 中的 ID
-                children: 'a',          // 點擊 a 標籤觸發
+                gallery: '#wish-photo',
+                children: 'a',
                 pswpModule: () => import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.esm.min.js')
             });
+            
+            // 如果這不是第一次執行，先毀掉舊的實例防止衝突
+            if (window.currentLightbox) {
+                window.currentLightbox.destroy();
+            }
+            
+            window.currentLightbox = lightbox;
             lightbox.init();
-        })
-        .catch(err => console.error('PhotoSwipe 加載失敗:', err));
+        });
 }
 const contactbtn = document.getElementById('contact-wisher');
 const mbcontactbtn = document.getElementById('contact-wisher-mobile');

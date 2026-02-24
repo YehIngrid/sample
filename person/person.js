@@ -349,7 +349,7 @@ async function handleAction(action, id, el) {
     }
   } else if (action === '給對方評價') {
     // 這裡可以打開評價的 modal 或頁面
-    openReviewModal();
+    openReviewModal(orderId = id, targetId = findTargetIdByOrderId(goodsOrder, id), targetRole = (sectionId === 'sellProducts' ? 'buyer' : 'seller'));
   } else if (action === 'delete') {
     Swal.fire({
       title: "確定要下架並刪除此商品嗎？",
@@ -1481,17 +1481,19 @@ async function openChatWithTarget(targetUserId) {
   }
 }
 // TODO 評價UI
-function openReviewModal(orderId, sellerId) {
+function openReviewModal(orderId, targetId, targetRole) {
+  const isRatingBuyer = (targetRole === 'buyer');
+  const roleName = isRatingBuyer ? '買家' : '賣家';
   Swal.fire({
-    title: '請為此次訂單的賣家評分',
+    title: `請為此次訂單的${roleName}評分`,
     html: `
       <div id="review-list">
         <div class="d-flex justify-content-between" style="margin-bottom: 10px;">
           <div>
             <div class="d-flex flex-column justify-content-center align-items-center">
-              <img src="../image/default-avatar.png" alt="賣家頭像" style="width: 80px; height: 80px; margin: 0 auto; margin-bottom: 5px;"/>
-              <span style="font-size: 14px;">賣家姓名</span>
-              <span style="font-size: 14px;">信譽積分：100</span>
+              <img src="../image/default-avatar.png" alt="${roleName}頭像" style="width: 80px; height: 80px; margin: 0 auto; margin-bottom: 5px;"/>
+              <span style="font-size: 14px;">${roleName}姓名</span>
+              <span style="font-size: 14px;">信譽積分：</span>
             </div>
           </div>
           <div class="scoreContent">
