@@ -307,11 +307,11 @@ document.getElementById('mainImage').addEventListener('change', function (e) {
 
   const file = e.target.files[0];
   if (!file) return;
-  if (file.size > 500000) {
+  if (file.size > 5000000) {
     Swal.fire({
       icon: 'warning',
       title: '照片太大',
-      text: '單張照片不能超過 500KB，請壓縮後再上傳。'
+      text: '單張照片不能超過 5MB，請壓縮後再上傳。'
     });
   }
   const reader = new FileReader();
@@ -346,11 +346,11 @@ document.getElementById('image').addEventListener('change', function (e) {
       img.style.borderRadius = '8px';
       preview.appendChild(img);
     };
-    if (file.size > 500000) {
+    if (file.size > 5000000) {
       Swal.fire({
         icon: 'warning',
         title: '照片太大',
-        text: '單張照片不能超過 500KB，請壓縮後再上傳。'
+        text: '單張照片不能超過 5MB，請壓縮後再上傳。'
       });
     }
     reader.readAsDataURL(file);
@@ -486,6 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'card product-card position-relative h-100';
       card.dataset.id = product.id;
       card.style.width = '100%';
+      card.style.borderRadius = '0.875rem';
 
       const imgUrl = product.mainImage || '/img/placeholder.png';
       const categoryMap = {
