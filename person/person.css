@@ -685,3 +685,6 @@ small {
   font-size: 12px;
   color: #383838;
 }
+.badge {
+  font-size: 15px;
+}
