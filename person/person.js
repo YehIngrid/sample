@@ -28,7 +28,9 @@ const mProfileName = document.getElementById('mProfileName');
 const mProfileInfo = document.getElementById('mProfileInfo');
 const mProfileAvatar = document.getElementById('mProfileAvatar');
 const uid = document.getElementById('uid');
-uid.textContent = localStorage.getItem('uid');
+const muid = document.getElementById('muid');
+uid.textContent = myUid;
+myUid.textContent = myUid;
 mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"; // 替換為實際使用者名稱
 mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
 if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != 'null' && localStorage.getItem('avatar') != '') {
@@ -39,6 +41,7 @@ if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != 
 // 桌機版
 const userRate = document.getElementById('rate');
 const userRate1 = document.getElementById('rate1');
+const userRate2 = document.getElementById('rate2');
 // const memberShip = document.getElementById('membership');
 const showName = document.getElementById('showName');
 const showIntro = document.getElementById('showIntro');
@@ -70,6 +73,7 @@ if (!iso) {
     }); // 例：2025/08/28
   }
 }
+userRate2.textContent = localStorage.getItem("rate") || "無法顯示";
 userRate1.textContent = localStorage.getItem("rate") || "無法顯示";
 userRate.textContent = localStorage.getItem("rate") || "無法顯示";
 const localIntro = localStorage.getItem("intro") || "使用者介紹";
@@ -720,7 +724,7 @@ function renderCards(list = []) {
 
     return `
       <div class="col" data-id="${esc(id)}">
-        <div class="card h-100 shadow-sm">
+        <div class="cardContainer h-100">
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row">
               <div class="bg-light">
@@ -767,7 +771,7 @@ function renderSellerCards(list = []) {
 
     return `
       <div class="col" data-id="${esc(id)}">
-        <div class="card h-100 shadow-sm">
+        <div class="cardContainer h-100">
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row">
               <div>
@@ -809,7 +813,7 @@ function renderBuyerCards(list = []) {
 
     return `
       <div class="col" data-id="${esc(id)}">
-        <div class="card h-100 shadow-sm">
+        <div class="cardContainer h-100">
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row">
               <div>

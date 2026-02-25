@@ -105,7 +105,7 @@
               <div class="asideicon" id="profileInfo" style="margin: 10px 30px; text-align: center;"></div>
               <div class="scorediv d-flex flex-column">
                 <small>信譽積分</small>
-                <span id="rate">無法顯示</span>
+                <span id="rate"></span>
               </div>
             </div>
             
@@ -292,7 +292,7 @@
       <!-- section settings -->
       <section class="col-lg-9 d-none content-section" id="settings">
         <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
-        <div class="card col-12">
+        <div class="cardContainer col-12">
           <div class="card-body">
             <div class="d-flex align-items-center">
               <h6 class="showStyle">用戶名</h6>
@@ -317,13 +317,13 @@
           </div>
         </div>
         <div class="d-lg-flex py-3">
-          <div class="card col-lg-4 col-12">
+          <div class="cardContainer col-lg-4 col-12">
             <div class="card-body">
               <div class="d-flex align-items-center">
                 <div class="my-tooltip" data-text="每個用戶基本分為 60 分，若被其他用戶檢舉一次扣 5 分，扣到 0 分為止。每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分 0~5 或 0~3 分(買家對賣家/賣家對買家)，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。">
                   <i class="bi bi-question-circle text-secondary" style="cursor: pointer;"></i>
                 </div>
-                <h6 style="background-color: #24B363; color: white; padding: 5px 7px; border-radius: 50px; margin-right: 5px;">信譽積分</h6>
+                <h6 style="background-color: #abdad5; color: white; padding: 5px 7px; border-radius: 50px; margin-right: 5px;">信譽積分</h6>
                 <h6 id="rate1"></h6>
               </div>
             </div>
@@ -340,7 +340,7 @@
           </div> -->
         </div>
         
-        <div class="card" style="border-radius: 20px !important;">
+        <div class="cardContainer" style="border-radius: 20px !important;">
           <div class="card-body" style="padding:20px 20px !important;">
             <p style="font-size: 1.5rem; font-weight: 600;">個人資料更改區</p>
             <div style="margin-top: 30px; margin-bottom: 30px;">
@@ -374,7 +374,7 @@
             </div>
           </div>
         </div>
-        <div class="review card mt-3">
+        <div class="review cardContainer mt-3">
           <div class="card-body">
             <h4>我的評價</h4>
             <div id="reviewsContainer" class="d-flex flex-column">
@@ -409,12 +409,12 @@
             <img id="mProfileAvatar" class="mobile-avatar" alt="頭像">
             <div class="scorediv d-flex flex-column">
               <small>信譽積分</small>
-              <span id="rate">無法顯示</span>
+              <span id="rate2"></span>
             </div>
           </div>
           <div class="d-flex align-items-start col-9">
             <div class="col-10">
-              <div class="uid">uid : <span id="uid"></span></div>
+              <div class="uid">uid : <span id="muid"></span></div>
               <div class="fw-bold" id="mProfileName"></div>
               <div class="text-muted" id="mProfileInfo"></div>
             </div>
@@ -424,7 +424,7 @@
           </div>
         </div>
         <!-- Mobile: 導覽格狀按鈕 -->
-        <div class="col-md-6 col-12">
+        <div class="col-lg-6 col-12">
           <div class="title">快速操作</div>
           <div class="mb-3">
             <div class="fastContainer cardContainer">
@@ -469,7 +469,7 @@
           </div>
         </div>
         
-          <div class="col-md-6 mb-3 col-12">
+          <div class="col-lg-6 mb-3 col-12">
             <div class="title">近期通知</div>
             <div class="cardContainer">
               <div class="card-body">
