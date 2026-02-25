@@ -27,6 +27,8 @@ function htmlEncode(str) {
 const mProfileName = document.getElementById('mProfileName');
 const mProfileInfo = document.getElementById('mProfileInfo');
 const mProfileAvatar = document.getElementById('mProfileAvatar');
+const uid = document.getElementById('uid');
+uid.textContent = localStorage.getItem('uid');
 mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"; // 替換為實際使用者名稱
 mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
 if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != 'null' && localStorage.getItem('avatar') != '') {
@@ -212,7 +214,7 @@ logoutMobileButton.addEventListener('click', function() {
 
 
 // 1. 修改原本的選單點擊監聽 (在 DOMContentLoaded 內)
-document.querySelectorAll('.list-group-item[data-target]').forEach(item => {
+document.querySelectorAll('[data-target]').forEach(item => {
   item.addEventListener('click', function (e) {
     e.preventDefault();
     const target = this.getAttribute('data-target');

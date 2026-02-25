@@ -36,11 +36,13 @@
   border: none;
 }
 .list-group-item.active {
-    background-color: #004b97 !important;
+    background-color: #abdad5 !important;
     color: white !important;
+    border-color: #abdad5 !important;
 }
 .list-group-item {
     padding: 12px 20px;
+    font-weight: bold;
 }
   .profile-name {
     font-size: 1rem;
@@ -530,4 +532,147 @@ small {
   gap: 10px;
   margin-top: 30px;
   margin-bottom: 30px;
+}
+
+/* ── 100vh fill (footer removed) ── */
+#whatcontent {
+
+  display: flex;
+  flex-direction: column;
+}
+#mainContent {
+  flex: 1;
+}
+
+/* ── Mobile profile card ── */
+.cardContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.mobile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* ── Mobile navigation grid (2 columns) ── */
+.mobile-nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.mobile-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 8px;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #383838;
+  font-size: 13px;
+  transition: background 0.15s;
+}
+.mobile-nav-btn:hover,
+.mobile-nav-btn:active {
+  background: #f0f5ff;
+  color: #004b97;
+}
+.mobile-nav-btn img {
+  width: 32px;
+  height: 32px;
+}
+
+/* ── Mobile back button ── */
+.mobile-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #004b97;
+  text-decoration: none;
+}
+#rate {
+  font-size: 10px;
+}
+.uid {
+  color: #383838;
+  font-size: 10px;
+}
+#mProfileInfo {
+  font-size: 12px;
+}
+.setting button {
+  border: none;
+  background-color: #fff;
+}
+.title {
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 2px;
+}
+.fastIcon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: transparent;
+}
+.fastIcon img {
+  height: 30px;
+  width: 30px;
+}
+.fastIcon span {
+  color: #383838;
+  font-size: 12px;
+  margin-top: 5px;
+}
+.itemContainer {
+  background-color: #abdad5;
+}
+.itemContainer button{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: transparent;
+}
+.itemContainer img {
+  width: 40px;
+  height: 40px;
+}
+.itemContainer span {
+  color: white;
+  font-size: 12px;
+  margin-top: 5px;
+  font-weight: bold;
+}
+.mobileNav {
+    background-color: #fbfbfb;
+    margin: 0 auto !important;
+    padding: 5px 3vw !important;
+}
+.menuContainer {
+  background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+.menutitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 2px;
 }

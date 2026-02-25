@@ -60,8 +60,13 @@
               </ul>
             </div>
         
-            <!-- (C) 右側：登入 + 購物車 -->
-            <div class="d-flex align-items-center ms-auto">
+            <!-- (C) 右側：漢堡選單（手機）＋ 購物車 -->
+            <div class="d-flex align-items-center ms-auto gap-2">
+              <button class="navbar-toggler d-lg-none" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                      aria-controls="navbarNav" aria-expanded="false" aria-label="開啟選單">
+                <span class="navbar-toggler-icon"></span>
+              </button>
               <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
                 <img src="../svg/shoppingcart.svg" class="d-none d-lg-block" alt="購物車">
               </a>
@@ -73,51 +78,46 @@
         
           <!-- 手機版導覽選單展開內容 -->
           <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav mobileNav">
               <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
               <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
               <li class="nav-item"><a class="nav-link" href="../shop/shop.html">商品分類</a></li>
               <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
               <li class="nav-item"><a class="nav-link" href="../introduce/introduce.html">團隊介紹</a></li>
-              <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
+              <li class="nav-item"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
+              <li class="nav-item specialpadding d-flex"><a class="nav-link" href="../shoppingcart/shoppingcart.html">購物車</a><img src="../svg/shoppingcart.svg" alt=""></li>
             </ul>
           </div>
         </div>
     </div>
 
-    <!-- TODO: test -->
-<!-- Topbar -->
-  <nav class="navbar bg-white border-bottom d-lg-none">
-    <div class="container-fluid">
-      <div class="d-flex align-items-center gap-2">
-        <!-- Mobile: open offcanvas sidebar -->
-        <button class="btn btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar" aria-label="開啟側邊欄">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm0-4a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm0-4a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11z"/></svg>
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <div class="container-fluid py-3" id="mainContent" style="font-size: 1.2rem;">
+<div class="container-fluid py-3" id="mainContent" style="font-size: 1.2rem;">
     <div class="row g-3">
       <!-- Desktop Sidebar -->
       <aside class="col-lg-3 d-none d-lg-block">
         <div class="sidebar sticky-lg-top">
           <!-- Profile Card -->
-          <div class="card profile-card mb-5">
+          <div class="cardContainer mb-5">
             <div class="card-body text-center">
               <img alt="頭像" class="avatar mb-2" id="profileAvatar">
+              <div class="uid mt-1">uid : <span id="uid"></span></div>
               <div style="margin-top: 20px; margin-bottom: 20px; font-weight: 600;" class="name mb-0" id="profileName"></div>
               <div class="asideicon" id="profileInfo" style="margin: 10px 30px; text-align: center;"></div>
+              <div class="scorediv d-flex flex-column">
+                <small>信譽積分</small>
+                <span id="rate">無法顯示</span>
+              </div>
             </div>
+            
           </div>
 
           <!-- Account Menu -->
-          <div class="card menu">
+          <div class="menutitle mb-3">商品訂單管理</div>
+          <div class="menuContainer menu">
             <div class="list-group list-group-flush">
-              <a class="list-group-item list-group-item-action active" href="#" data-target ="account" style="font-size: 14px;">帳戶管理中心</a>
+              <a class="list-group-item active asideicon" href="#" data-target ="account"> 帳戶管理中心</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="products"><img src="../svg/my.svg" alt="我的商品icon"> 我的商品</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts"><img src="../svg/mysellOrder.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
               <a class="list-group-item list-group-item-action asideicon" id="logout" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
@@ -133,6 +133,7 @@
       </section> -->
       <!-- section products -->
       <section class="col-lg-9 d-none content-section"  id="products">
+        <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
         <div class="col-12">
           <div>
             <div class="card-body">
@@ -155,6 +156,7 @@
       </section>
       <!-- section sellProducts -->
        <section class="col-lg-9 d-none content-section" id="sellProducts">
+  <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
 
   <!-- 🔹 訂單詳情（獨立一塊） -->
   <div id="sellOrderDetail" class="mt-3 d-none">
@@ -225,6 +227,7 @@
 </section>
       <!-- section buyProducts -->
 <section class="col-lg-9 d-none content-section" id="buyProducts">
+  <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
 
   <!-- 訂單詳情 -->
   <div id="buyerOrderDetail" class="mt-3 d-none">
@@ -288,6 +291,7 @@
 
       <!-- section settings -->
       <section class="col-lg-9 d-none content-section" id="settings">
+        <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
         <div class="card col-12">
           <div class="card-body">
             <div class="d-flex align-items-center">
@@ -399,11 +403,76 @@
       </section>
       <!-- Main Content -->
       <main class="col-lg-9 content-section" id="account">
-        <div class="row g-3">
-          <div class="col-md-6">
-            <div class="card">
+        <!-- Mobile: 個人資料卡 -->
+        <div class="d-lg-none mb-3 d-flex align-items-center justify-content-center">
+          <div class="photoAndScore d-flex flex-column justify-content-between align-items-center gap-2 col-3">
+            <img id="mProfileAvatar" class="mobile-avatar" alt="頭像">
+            <div class="scorediv d-flex flex-column">
+              <small>信譽積分</small>
+              <span id="rate">無法顯示</span>
+            </div>
+          </div>
+          <div class="d-flex align-items-start col-9">
+            <div class="col-10">
+              <div class="uid">uid : <span id="uid"></span></div>
+              <div class="fw-bold" id="mProfileName"></div>
+              <div class="text-muted" id="mProfileInfo"></div>
+            </div>
+            <div class="setting col-2">
+              <button data-target="settings"><img src="../svg/settingicon.svg" alt="設定"></button>
+            </div>
+          </div>
+        </div>
+        <!-- Mobile: 導覽格狀按鈕 -->
+        <div class="col-md-6 col-12">
+          <div class="title">快速操作</div>
+          <div class="mb-3">
+            <div class="fastContainer cardContainer">
+              <button class="fastIcon" onclick="window.location.href='../shop/shop.html?page=seller'">
+                <img src="../svg/seller.svg" alt="出售商品icon">
+                <span>出售商品</span>
+              </button>
+              <div class="fastIcon" onclick="goToPage('settings')">
+                <img src="../svg/editIcon.svg" alt="">
+                <span>修改個資</span>
+              </div>
+              <div class="fastIcon" onclick="goToPage('settings')">
+                <img src="../svg/reviewsIcon.svg" alt="">
+                <span>查看評價</span>
+              </div>
+              <div class="fastIcon" onclick="window.location.href='../wishpool/wishpool.html#makewish'">
+                <img src="../svg/wish.svg" alt="">
+                <span>前往許願</span>
+              </div>
+              <div class="fastIcon" id="logoutMobile">
+                <img src="../svg/logouticon.svg" alt="">
+                <span>登出</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 d-lg-none mb-3">
+          <div class="title">商品訂單管理</div>
+          <div class="itemContainer cardContainer">
+            <button data-target="products">
+              <img src="../svg/my.svg" alt="">
+              <span>商品管理</span>
+            </button>
+            <button data-target="sellProducts">
+              <img src="../svg/mysellOrder.svg" alt="">
+              <span>銷售訂單</span>
+            </button>
+            <button data-target="buyProducts">
+              <img src="../svg/buyicon.svg" alt="">
+              <span>消費訂單</span>
+            </button>
+          </div>
+        </div>
+        
+          <div class="col-md-6 mb-3 col-12">
+            <div class="title">近期通知</div>
+            <div class="cardContainer">
               <div class="card-body">
-                <h5 class="card-title">近期通知</h5>
                 <ul class="list-unstyled mb-0" style="font-size: 14px;">
                   <li class="mb-2 d-none" id="newMessageComing"> • 有人對你的商品發出訊息。</li>
                   <li class="mb-2"> • 系統維護公告：8/20 01:00–03:00。</li>
@@ -411,41 +480,10 @@
               </div>
             </div>
           </div>
-        
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">快速動作</h5>
-                <div class="d-flex flex-wrap gap-2 mt-3">
-                  <button class="btn btn-outline-secondary" style="font-size: 14px;" onclick="window.location.href='../shop/shop.html?page=seller'"><img src="../svg/addmerchandiseicon.svg" style="margin-right: 5px;" alt="新增商品button">新增商品</button>
-                  <button class="btn btn-outline-secondary" style="font-size: 14px;" onclick="goToPage('settings')"><i class="bi bi-pencil-square"></i> 修改個人資料</button>
-                  <button class="btn btn-outline-secondary" style="font-size: 14px;" onclick="goToPage('settings')"><i class="bi bi-card-heading"></i> 查看評價</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex flex-wrap gap-2">
-                  <div style="text-align: center;">
-                    <h6 style=" background-color: #24B363; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">信譽積分</h6>
-                    <h6 id="rate">無法顯示</h6>
-                  </div>
-                  <!-- <div style="text-align: center;">
-                    <h6 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 2px;">會員資格</h6>
-                    <h6 id="membership"></h6>
-                  </div> -->
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="col-12">
-            <div class="card">
+            <div class="title">我的商品 / 相關操作說明</div>
+            <div class="cardContainer">
               <div class="card-body">
-                <h5 class="card-title">我的商品 / 相關操作說明</h5>
                 <div class="d-flex flex-column flex-wrap gap-3 mt-3">
                   <div class="myItem">
                       <button class="btn btn-sm btn-outline-success">查看商品</button>
@@ -477,88 +515,10 @@
     </div>
   </div>
 
-  <!-- Mobile Offcanvas Sidebar -->
-  <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="mobileSidebarLabel">我的帳戶</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body d-flex flex-column gap-3">
-      <div class="d-flex align-items-center gap-3">
-        <img alt="頭像" class="avatar" style="width:64px;height:64px;object-fit: cover; border-radius:50%;border:2px solid var(--brand);" id="mProfileAvatar">
-        <div>
-          <div class="fw-bold" id="mProfileName" style="font-size: 1.2rem; font-weight: 600;">使用者名稱</div>
-          <div class="small text-muted" id="mProfileInfo" style="font-size: 1rem;">使用者自介</div>
-        </div>
-      </div>
-      <hr>
-      <div class="list-group">
-        <a class="list-group-item list-group-item-action active standardfontsize" href="#" data-target="account">帳戶管理中心</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="products"><img src="../svg/my.svg" alt="我的商品icon"> 我的商品</a>
-        <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts"><img src="../svg/ordericon.svg" alt="我的銷售訂單icon"> 我的銷售訂單</a>
-        <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 我的購買訂單</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳號設定</a>
-        <a class="list-group-item list-group-item-action asideicon standardfontsize" href="#" id="logoutMobile"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
-      </div>
-      <div class="remind">
-        <p class="text-start" style="font-size: 1rem; color: #383838; margin-top: 10px; margin-left: 20px; margin-right: 20px;">小提醒: <br>點擊按鈕後，須將此側邊欄關閉才可見畫面</p>
-      </div>
-      <div class="link">
-        <h6>常用連結</h6>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item"><a href="../shoppingcart/shoppingcart.html"> 我的購物車<img src="../svg/shoppingcart.svg" alt="購物車icon"></a></li>
-          <li class="list-group-item"><a href="../newhome/newhome.html">首頁</a></li>
-          <li class="list-group-item"><a href="../news/news.html">最新消息</a></li>
-          <li class="list-group-item"><a href="../shop/shop.html">購物首頁</a></li>
-          <li class="list-group-item"><a href="../questions/questions.html">常見問題</a></li>
-          <li class="list-group-item"><a href="../introduce/introduce.html">團隊介紹</a></li>
-          <li class="list-group-item"><a href="../communication/communication.html">客服諮詢</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
 
 
 
   
-  <div class="footer">
-            <div class="container" >
-                <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
-                    <div class="col-md-4" style="padding-left: 30px;">
-                        <h3>聯絡我們</h3>
-                        <p>電子郵件：
-                            <a href="mailto:treasurehub@gmail.com">
-                                treasurehub@gmail.com
-                            </a>
-                        </p>
-                    </div>
-                    <div class="col-md-4" style="padding-left: 30px;">
-                        <h3>關於我們</h3>
-                        <p>一個專為大學生打造的二手商場、校園商機、資訊交易整合平台</p>
-                    </div>
-                    <div class="col-md-4" style="padding-left: 30px;"> 
-                        <h3>社交媒體</h3>
-                        <p class="d-flex">
-                            <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 3rem; padding-right: 18px;"></i></a><br>
-                            <a href="#" target="_blank"><i class="fa-brands fa-line" style="font-size: 3rem;"></i></a>
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <p>Copyright&copy; 2025拾貨寶庫｜All Rights Reserved.</p>
-                        <div class="footer-row d-md-flex justify-content-center d-none">
-                            <li><a href="../introduce/introduce.html">關於我們</a></li>
-                            <li><a href="../questions/questions.html">常見問題</a></li>
-                            <li><a href="../communication/communication.html">客服諮詢</a></li>
-                            <li><a href="../policy/policy.html">隱私政策</a></li>
-                            <li><a href="#">使用條款</a></li>
-                            <li><a href="#">退換貨政策</a></li>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
           </div>
   
 <!-- Drawer 背景 -->
