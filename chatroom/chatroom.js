@@ -5,6 +5,7 @@ class ChatRoomList {
         this.currentRoomName = '';
         this.eventSource = null;
         this.username = localStorage.getItem('username') || '';
+        this.userId = localStorage.getItem('uid');
         this.auth = new BackendService();
         this.isMobile = window.innerWidth < 768;
         this.lightbox = null;
@@ -454,13 +455,13 @@ class ChatRoomList {
                         lastMsgEl.dataset.originalText = newText;
                     }
                 }
-                if (data.username !== this.username) {
+                if (data.userId !== this.userId) {
                     chatItem.querySelector('.unread-dot')?.classList.remove('d-none');
                 }
             }
 
             // ✅ 通知外層頁面的 chaticon 顯示紅點
-            if (data.username !== this.username) {
+            if (data.userId !== this.userId) {
                 window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
             }
         });
