@@ -455,7 +455,9 @@ if (clearAllBtn) {
   });
 }
 function onItemCheckChange(itemId, checked) {
-  const item = cartItems.find(i => i.productId === String(itemId));
+  // 優先用 cart row id 查，找不到再 fallback 到 productId（供 applyPreselectedItem 用）
+  const item = cartItems.find(i => i.id === String(itemId))
+            ?? cartItems.find(i => i.productId === String(itemId));
   if (!item) return;
 
   item.checked = checked;

@@ -367,6 +367,7 @@ class ChatRoomList {
         document.querySelector('.chat-header h6').textContent = targetName;
 
         const container = document.getElementById('messagesContainer');
+        this.isInitialLoading = true;
         container.innerHTML = '';
 
         // ✅ GET /api/chat/history?room=&limit=&before=
@@ -385,7 +386,6 @@ class ChatRoomList {
                 ? messages.find(m => m.timestamp > lastReadTimestamp)
                 : null; // 沒有已讀紀錄 → 捲到最底部
 
-            this.isInitialLoading = true;
             messages.forEach(msg => {
                 if (firstUnread && msg.id === firstUnread.id) {
                     const divider = document.createElement('div');
@@ -409,6 +409,7 @@ class ChatRoomList {
             if (partnerRead?.id) this.updateReadReceipts(partnerRead.id);
         } else {
             container.innerHTML = '<p class="text-center text-muted mt-3">沒有訊息</p>';
+            this.isInitialLoading = false;
         }
 
         this.connectSSE(); // SSE 已在 init() 開啟，此處為 idempotent 保護
@@ -420,7 +421,7 @@ class ChatRoomList {
             container.scrollTop = container.scrollHeight;
             return;
         }
-        const el = document.querySelector(`[data-message-id="${firstUnread.id}"]`);
+        const el = container.querySelector(`[data-message-id="${firstUnread.id}"]`);
         if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
         else container.scrollTop = container.scrollHeight;
     }
@@ -493,7 +494,7 @@ class ChatRoomList {
 
         this.eventSource.addEventListener('read', (event) => {
             const data = JSON.parse(event.data);
-            const isSelf = data.userId === localStorage.getItem('uid');
+            const isSelf = data.username === this.username;
 
             if (isSelf) {
                 // ✅ 自己已讀：移除聊天室列表的未讀 badge，通知外層清除紅點
