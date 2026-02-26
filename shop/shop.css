@@ -1208,6 +1208,8 @@ button {
   aspect-ratio: 1 / 1;
   overflow: hidden;
   background: #f8f9fa; /* 沒圖時的底色 */
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
 }
 .product-thumb img {
   width: 100%;
@@ -1285,12 +1287,16 @@ button {
   color: #fff;
 }
 .hotItemPrice {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  margin: 0;
   font-weight: bold;
   color: var(--brand);
-  margin-bottom: 0px;
   font-size: 1.4rem;
-  text-align: end;
-  padding-right: 3px;
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 6px;
+  padding: 1px 7px;
 }
 .hotItemName {
   padding: 8px;
@@ -1444,6 +1450,7 @@ button {
     opacity 0.25s ease;
 }
 .hot-items-container .img-box {
+  position: relative;
   width: 140px;
   height: 140px;
   margin: 0 auto;          /* 置中 */
@@ -1451,6 +1458,9 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.img-box {
+  border-radius: 0.3rem;
 }
 .img-box img {
    width: 100%;

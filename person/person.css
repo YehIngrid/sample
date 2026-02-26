@@ -679,7 +679,7 @@ small {
 .table {
   border: none;
   border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 .scorediv small {
   font-size: 12px;

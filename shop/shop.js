@@ -98,9 +98,9 @@ function renderItems(items){
         <div class="card">
           <div class="img-box">
             <img src="${item.mainImage}" alt="${item.name}">
+            <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${item.price}</p>
           </div>
           <div class="hotItemName">${item.name}</div>
-          <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${item.price}</p>
         </div>
       `;
     listEl.appendChild(div);
@@ -486,7 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'card product-card position-relative h-100';
       card.dataset.id = product.id;
       card.style.width = '100%';
-      card.style.borderRadius = '0.875rem';
+      card.style.borderRadius = '0.3rem';
 
       const imgUrl = product.mainImage || '/img/placeholder.png';
       const categoryMap = {
