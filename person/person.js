@@ -564,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ===== 工具 =====
 const order_STATUS_MAP = {
   pending: { text: '等待賣家接受訂單', badge: 'text-bg-warning', action: '接受訂單', icon: '../svg/acceptOrder.svg'}, 
-  preparing: { text: '準備訂單', badge: 'text-bg-info', action: '即將出貨面交', icon: '../svg/readyDeliver.svg'}, 
+  preparing: { text: '準備訂單', badge: 'text-bg-info', action: '即將出貨', icon: '../svg/readyDeliver.svg'}, 
   delivered: { text: '已出貨', badge: 'text-bg-primary', action: '等待買家確認收貨', icon: '../svg/waitBuyer.svg'}, 
   completed: { text: '買家成功取貨', badge: 'text-bg-success', action: '給對方評價', icon: '../svg/giveStar.svg'}, 
   canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '給對方評價', icon: '../svg/giveStar.svg'}
