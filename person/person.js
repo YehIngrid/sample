@@ -30,9 +30,9 @@ const mProfileAvatar = document.getElementById('mProfileAvatar');
 const uid = document.getElementById('uid');
 const muid = document.getElementById('muid');
 uid.textContent = myUid;
-myUid.textContent = myUid;
+muid.textContent = myUid;
 mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"; // 替換為實際使用者名稱
-mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹"; // 替換為實際使用者介紹
+mProfileInfo.textContent = localStorage.getItem("intro") || "尚未新增使用者介紹"; // 替換為實際使用者介紹
 if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != 'null' && localStorage.getItem('avatar') != '') {
   mProfileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
 } else { 
@@ -678,10 +678,21 @@ function renderTable(list = []) {
         <td>${price}</td>
         <td>${created}</td>
         <td>${updated}</td>
-        <td class="text-end">
-          <button class="btn btn-sm  btn-outline-success action-btn btn-row-action" data-action="check" data-id="${id}">查看商品</button>
-          <button class="btn btn-sm btn-outline-primary action-btn btn-row-action" data-action="編輯商品" data-id="${id}">編輯商品</button>
-          <button class="btn btn-sm btn-outline-danger action-btn btn-row-action" data-action="delete" data-id="${id}">永久下架商品</button>
+        <td>
+          <div class="d-flex gap-3">
+            <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="check" data-id="${id}">
+              <img src="../svg/checkSell.svg" alt=""/>
+              <div>查看商品</div>
+            </button>
+            <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="編輯商品" data-id="${id}">
+              <img src="../svg/editSell.svg" alt=""/>
+              <div>編輯商品</div>
+            </button>
+            <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="delete" data-id="${id}">
+              <img src="../svg/deleteSell.svg" alt=""/>
+              <div>永久下架</div>
+            </button>
+          </div>
         </td>
       </tr>
     `;
@@ -737,10 +748,19 @@ function renderCards(list = []) {
                 <div class="fw-bold mb-2 text-end">${price}</div>
               </div>
             </div>
-            <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-outline-success btn-sm action-btn btn-card-action" data-id="${id}" data-action="check">查看商品</button>
-              <button class="btn btn-outline-primary btn-sm action-btn btn-card-action" data-id="${id}" data-action="編輯商品">編輯商品</button>
-              <button class="btn btn-outline-danger btn-sm action-btn btn-card-action" data-id="${id}" data-action="delete">永久下架商品</button>
+            <div class="mt-auto d-flex justify-content-around gap-2">
+              <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="check" data-id="${id}">
+                <img src="../svg/checkSell.svg" alt=""/>
+                <div>查看商品</div>
+              </button>
+              <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="編輯商品" data-id="${id}">
+                <img src="../svg/editSell.svg" alt=""/>
+                <div>編輯商品</div>
+              </button>
+              <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="delete" data-id="${id}">
+                <img src="../svg/deleteSell.svg" alt=""/>
+                <div>永久下架</div>
+              </button>
             </div>
           </div>
         </div>

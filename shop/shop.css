@@ -553,7 +553,6 @@ ul{
 }
 
 .card-body {
-  padding: 10px !important;
   justify-content: space-between;
 }
 
@@ -1288,14 +1287,14 @@ button {
 }
 .hotItemPrice {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
+  bottom: 0px;
+  right: 0px;
   margin: 0;
   font-weight: bold;
   color: var(--brand);
   font-size: 1.4rem;
-  background: rgba(255, 255, 255, 0.82);
-  border-radius: 6px;
+  background: rgb(255, 255, 255);
+  border-radius: 18px 0px 0px 0px;
   padding: 1px 7px;
 }
 .hotItemName {

@@ -607,12 +607,16 @@ small {
 #rate {
   font-size: 10px;
 }
+#rate2 {
+  font-size: 10px;
+  text-align: center;
+}
 .uid {
   color: #383838;
   font-size: 10px;
 }
 #mProfileInfo {
-  font-size: 12px;
+  font-size: 0.8rem;
 }
 .setting button {
   border: none;
@@ -721,4 +725,18 @@ small {
   background: #f0f5ff;
   border-color: #004b97;
   color: #004b97;
+}
+.btnSell {
+  border: 1px solid #383838;
+  background: transparent;
+  border-radius: 20px;
+  padding: 3px 8px;
+  color: #383838;
+}
+.btnSell:hover {
+  background: linear-gradient(to right bottom, #abdad5 10%, #004b97);
+  color: #fff;
+}
+.btnSell div {
+  font-size: 1rem;
 }
