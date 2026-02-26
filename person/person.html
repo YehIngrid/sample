@@ -207,6 +207,17 @@
   <div class="order-list-container">
     <h5 id="sellTableTitle">我的銷售訂單</h5>
 
+    <!-- 篩選 tabs -->
+    <div class="order-filter-tabs" id="sellFilter">
+      <button class="filter-tab active" data-status="all">全部</button>
+      <button class="filter-tab" data-status="pending">待確認</button>
+      <button class="filter-tab" data-status="preparing">待出貨</button>
+      <button class="filter-tab" data-status="delivered">待收貨</button>
+      <button class="filter-tab" data-status="review">待評價</button>
+      <button class="filter-tab" data-status="completed">已完成</button>
+      <button class="filter-tab" data-status="cancelled">已取消</button>
+    </div>
+
     <div id="sellTable">
       <table class="table align-middle d-none d-lg-table">
         <thead>
@@ -274,6 +285,18 @@
   <!-- 訂單列表 -->
   <div class="order-list-container">
     <h5 id="buyTableTitle">我的購買訂單</h5>
+
+    <!-- 篩選 tabs -->
+    <div class="order-filter-tabs" id="buyFilter">
+      <button class="filter-tab active" data-status="all">全部</button>
+      <button class="filter-tab" data-status="pending">待確認</button>
+      <button class="filter-tab" data-status="preparing">待出貨</button>
+      <button class="filter-tab" data-status="delivered">待收貨</button>
+      <button class="filter-tab" data-status="review">待評價</button>
+      <button class="filter-tab" data-status="completed">已完成</button>
+      <button class="filter-tab" data-status="cancelled">已取消</button>
+    </div>
+
     <div id="buyTable">
       <table class="table align-middle d-none d-lg-table">
         <thead>
@@ -507,20 +530,14 @@
             </div>
           </div>
 
-        </div>
       </main>
       <!-- 主內容：右（你給的 main 放這裡） -->
       <!-- 編輯區（預設隱藏，顯示時一樣會在右邊） -->
-      
+
     </div>
   </div>
 
 
-
-
-  
-          </div>
-  
 <!-- Drawer 背景 -->
 <div class="drawer-backdrop" id="editDrawerBackdrop" hidden></div>
 
