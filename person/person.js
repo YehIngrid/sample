@@ -403,6 +403,10 @@ async function handleRouting() {
   const targetPane = document.getElementById(page);
   if (targetPane) targetPane.classList.remove('d-none');
 
+  // 進入列表時恢復篩選 tabs（進詳細頁才隱藏）
+  document.getElementById('sellFilter')?.classList.remove('d-none');
+  document.getElementById('buyFilter')?.classList.remove('d-none');
+
   // =========================
   // 詳細頁模式
   // =========================
@@ -413,6 +417,7 @@ async function handleRouting() {
     if (sellCards) sellCards.classList.add('d-none');
     sellTable.style.display = 'none';
     sellTableTitle.style.display = 'none';
+    document.getElementById('sellFilter')?.classList.add('d-none');
     getDetail(orderId);
     return;
   }
@@ -424,6 +429,7 @@ async function handleRouting() {
     if (buyCards) buyCards.classList.add('d-none');
     buyTable.style.display = 'none';
     buyTableTitle.style.display = 'none';
+    document.getElementById('buyFilter')?.classList.add('d-none');
     getDetail(orderId);
     return;
   }
@@ -443,19 +449,31 @@ async function handleRouting() {
   try {
     if (page === 'sellProducts') {
       window.currentOrder = null;
+      document.querySelector('#sellProducts tbody').innerHTML =
+        `<tr><td colspan="4" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
+      document.getElementById('sell-product').innerHTML =
+        `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
       const res = await backendService.getSellerOrders();
       renderSellerOrders(res?.data?.data ?? []);
       renderSellerCards(res?.data?.data ?? []);
     } else if (page === 'buyProducts') {
       window.currentOrder = null;
+      document.querySelector('#buyProducts tbody').innerHTML =
+        `<tr><td colspan="5" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
+      document.getElementById('buy-product').innerHTML =
+        `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
       const res = await backendService.getBuyerOrders();
       renderBuyerOrders(res?.data?.data ?? []);
       renderBuyerCards(res?.data?.data ?? []);
       goodsOrder = res?.data?.data;
     } else if (page === 'products') {
+      document.querySelector('#products tbody').innerHTML =
+        `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
+      document.getElementById('product-cards').innerHTML =
+        `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
       const res = await backendService.getMyItems();
       const list = res?.data?.commodities ?? [];
-      renderTable(list); 
+      renderTable(list);
       renderCards(list);
       goodsOrder = res?.data?.data;
     }
@@ -610,15 +628,15 @@ function renderBuyerOrders(list) {
         <td>${price} 元</td>
         <td>
           <div class="d-flex gap-2">
-            <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
-              <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
-              <div>訂單詳情</div>
-            </button>
             <button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}">
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
             </button>
             ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
+            <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
+              <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
+              <div>訂單詳情</div>
+            </button>
           </div>
         </td>
       </tr>
@@ -652,15 +670,15 @@ function renderSellerOrders(list) {
         <td>${created}</td>
         <td>
           <div class="d-flex gap-2">
-            <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
-              <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
-              <div>訂單詳情</div>
-            </button>
             <button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
             </button>
             ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
+            <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
+              <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
+              <div>訂單詳情</div>
+            </button>
           </div>
         </td>
       </tr>
@@ -822,15 +840,15 @@ function renderSellerCards(list = []) {
               <div class="fw-bold mb-2 text-end">${price}</div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
-                <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
-                <div>訂單詳情</div>
-              </button>
               <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
                 <img src="${st.icon}" alt="${st.action}icon"/>
                 <div>${st.action}</div>
               </button>
               ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
+              <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
+                <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
+                <div>訂單詳情</div>
+              </button>
             </div>
           </div>
         </div>
@@ -870,15 +888,15 @@ function renderBuyerCards(list = []) {
               <div class="fw-bold mb-2 text-end">${price}</div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
-                <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
-                <div>訂單詳情</div>
-              </button>
               <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
                 <img src="${st.icon}" alt="${st.action}icon"/>
                 <div>${st.action}</div>
               </button>
               ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
+              <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
+                <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
+                <div>訂單詳情</div>
+              </button>
             </div>
           </div>
         </div>
@@ -910,6 +928,13 @@ async function getDetail(id) {
     const buyDetail  = document.getElementById('buyerOrderDetail');
 
     const isSell = !sellSection.classList.contains('d-none');
+
+    // 先顯示 loader
+    const earlyInfoBox = isSell
+      ? document.getElementById('sellOrderInfo')
+      : document.getElementById('buyerOrderInfo');
+    if (earlyInfoBox) earlyInfoBox.innerHTML =
+      `<div class="d-flex justify-content-center py-5"><div class="spinner-border text-secondary" role="status"></div></div>`;
 
     const res = await backendService.getOrderDetails(id);
     const data = res.data.data;
