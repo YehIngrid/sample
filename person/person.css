@@ -748,6 +748,12 @@ small {
   .btnSell div {
     font-size: 0.875rem;
   }
+  .checkInfoBtn div{
+    font-size: 1rem;
+  }
+  .cancelOrderBtn div {
+    font-size: 1rem;
+  }
 }
 .showInfo {
   font-size: 1rem;
@@ -766,4 +772,38 @@ small {
 }
 .disableAccount:hover {
   background-color: rgb(241, 0, 0);
+}
+.checkInfoBtn {
+  border: 1px solid #a0a0a0;
+  background-color: #fff;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 5px;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+.checkInfoBtn img {
+  width: 20px;
+}
+.checkInfoBtn:hover {
+  background-color: #abdad5;
+}
+.cancelOrderBtn {
+  border: 1px solid #a0a0a0;
+  background-color: #fff;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 5px;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+.cancelOrderBtn img {
+  width: 20px;
+}
+.cancelOrderBtn:hover {
+  background-color: #abdad5;
 }
