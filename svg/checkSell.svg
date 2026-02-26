@@ -1,4 +1,5 @@
-<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="1" y="1" width="25" height="25" rx="12.5" fill="white"/>
 <line x1="16.3128" y1="15.9578" x2="21.7721" y2="20.3392" stroke="url(#paint0_linear_798_1056)" stroke-width="2" stroke-linecap="round"/>
 <circle cx="10.5" cy="11.5" r="6.5" stroke="url(#paint1_linear_798_1056)" stroke-width="2"/>
 <defs>

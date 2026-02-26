@@ -100,13 +100,13 @@
           <div class="cardContainer mb-5">
             <div class="card-body text-center">
               <img alt="頭像" class="avatar mb-2" id="profileAvatar">
-              <div class="uid mt-1">uid : <span id="uid"></span></div>
-              <div style="margin-top: 20px; margin-bottom: 20px; font-weight: 600;" class="name mb-0" id="profileName"></div>
-              <div class="asideicon" id="profileInfo" style="margin: 10px 30px; text-align: center;"></div>
               <div class="scorediv d-flex flex-column">
                 <small>信譽積分</small>
                 <span id="rate"></span>
               </div>
+              <div style="margin-top: 20px; margin-bottom: 20px; font-weight: 600;" class="name mb-0" id="profileName"></div>
+              <div class="asideicon" id="profileInfo" style="margin: 10px 30px; text-align: center;"></div>
+              <div class="uid mt-1">uid : <span id="uid"></span></div>
             </div>
             
           </div>
@@ -319,23 +319,26 @@
           <div class="card-body">
             <div class="d-flex align-items-center">
               <h6 class="showStyle">用戶名</h6>
-              <h6 id="showName"></h6>
+              <span class="showInfo" id="showName"></span>
             </div>
             <div class="d-flex align-items-center">
               <h6 class="showStyle">關於我</h6>
-              <h6 id="showIntro"></h6>
+              <span class="showInfo" id="showIntro"></span>
             </div>
             <div class="d-flex align-items-center">
               <h6 class="showStyle">加入日期</h6>
-              <h6 id="showTime"></h6>
+              <span class="showInfo" id="showTime"></span>
             </div>
             <div class="d-flex align-items-center">
               <h6 class="showStyle">常用帳號</h6>
-              <h6 id="showEmail">buyer@example.com</h6>
+              <span class="showInfo" id="showEmail">buyer@example.com</span>
             </div>
             <button class="settingEmailbtn">設定常用帳號</button>
-            <div class="text-end">
-              <button class="btn btn-danger" id="disableAccountBtn">停用此帳號</button>
+            <div class="d-flex justify-content-end">
+              <button class="d-flex align-items-center justify-content-center gap-2 disableAccount" id="disableAccountBtn">
+                <img src="../svg/deleteSell.svg"/>
+                <div>停用帳戶</div>
+              </button>
             </div>
           </div>
         </div>
@@ -427,7 +430,7 @@
       <!-- Main Content -->
       <main class="col-lg-9 content-section" id="account">
         <!-- Mobile: 個人資料卡 -->
-        <div class="d-lg-none mb-3 d-flex align-items-center justify-content-center">
+        <div class="d-lg-none mb-2 mt-1 d-flex align-items-start justify-content-center">
           <div class="photoAndScore d-flex flex-column justify-content-between align-items-center gap-2 col-3">
             <img id="mProfileAvatar" class="mobile-avatar" alt="頭像">
             <div class="scorediv d-flex flex-column">
@@ -435,7 +438,7 @@
               <span id="rate2"></span>
             </div>
           </div>
-          <div class="d-flex align-items-start col-9">
+          <div class="d-flex align-items-start col-9 mt-1">
             <div class="col-10">
               <div class="uid">uid : <span id="muid"></span></div>
               <div class="fw-bold" id="mProfileName"></div>
@@ -447,34 +450,35 @@
           </div>
         </div>
         <!-- Mobile: 導覽格狀按鈕 -->
-        <div class="col-lg-6 col-12">
-          <div class="title">快速操作</div>
-          <div class="mb-3">
-            <div class="fastContainer cardContainer">
-              <button class="fastIcon" onclick="window.location.href='../shop/shop.html?page=seller'">
-                <img src="../svg/seller.svg" alt="出售商品icon">
-                <span>出售商品</span>
-              </button>
-              <div class="fastIcon" onclick="goToPage('settings')">
-                <img src="../svg/editIcon.svg" alt="">
-                <span>修改個資</span>
-              </div>
-              <div class="fastIcon" onclick="goToPage('settings')">
-                <img src="../svg/reviewsIcon.svg" alt="">
-                <span>查看評價</span>
-              </div>
-              <div class="fastIcon" onclick="window.location.href='../wishpool/wishpool.html#makewish'">
-                <img src="../svg/wish.svg" alt="">
-                <span>前往許願</span>
-              </div>
-              <div class="fastIcon" id="logoutMobile">
-                <img src="../svg/logouticon.svg" alt="">
-                <span>登出</span>
+        <div class="d-lg-flex gap-4">
+          <div class="col-lg-6 col-12">
+            <div class="title">快速操作</div>
+            <div class="mb-3">
+              <div class="fastContainer cardContainer">
+                <button class="fastIcon" onclick="window.location.href='../shop/shop.html?page=seller'">
+                  <img src="../svg/seller.svg" alt="出售商品icon">
+                  <span>出售商品</span>
+                </button>
+                <div class="fastIcon" onclick="goToPage('settings')">
+                  <img src="../svg/editIcon.svg" alt="">
+                  <span>修改個資</span>
+                </div>
+                <div class="fastIcon" onclick="goToPage('settings')">
+                  <img src="../svg/reviewsIcon.svg" alt="">
+                  <span>查看評價</span>
+                </div>
+                <div class="fastIcon" onclick="window.location.href='../wishpool/wishpool.html#makewish'">
+                  <img src="../svg/wish.svg" alt="">
+                  <span>前往許願</span>
+                </div>
+                <div class="fastIcon" id="logoutMobile">
+                  <img src="../svg/logouticon.svg" alt="">
+                  <span>登出</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-12 d-lg-none mb-3">
+          <div class="col-12 d-lg-none mb-3">
           <div class="title">商品訂單管理</div>
           <div class="itemContainer cardContainer">
             <button data-target="products">
@@ -492,7 +496,7 @@
           </div>
         </div>
         
-          <div class="col-lg-6 mb-3 col-12">
+          <div class="col-lg-4 mb-3 col-12">
             <div class="title">近期通知</div>
             <div class="cardContainer">
               <div class="card-body">
@@ -503,24 +507,36 @@
               </div>
             </div>
           </div>
+        </div>
+        
+        
           <div class="col-12">
             <div class="title">我的商品 / 相關操作說明</div>
             <div class="cardContainer">
               <div class="card-body">
                 <div class="d-flex flex-column flex-wrap gap-3 mt-3">
                   <div class="myItem">
-                      <button class="btn btn-sm btn-outline-success">查看商品</button>
+                      <button class="btnSell d-flex justify-content-center align-items-center gap-1">
+                        <img src="../svg/checkSell.svg" alt=""/>
+                        <div>查看商品</div>
+                      </button>
                       <p>點擊按鈕後，將會跳轉至商品頁面。</p>
                   </div>
                   <div class="myItem">
-                      <button class="btn btn-sm btn-outline-primary">編輯</button>
+                      <button class="btnSell d-flex justify-content-center align-items-center gap-1">
+                        <img src="../svg/editSell.svg" alt=""/>
+                        <div>編輯商品</div>
+                      </button>
                       <p>
                           點擊此按鈕後，下方將會出現該商品的所有資訊，即可進行修改 (可以只更新部分欄位)，最後點擊更新按鈕進行商品編輯。<br>
                           若更改商品中的「多張照片」區域，將會<strong>一次替換之前的所有照片</strong>。<br>
                           若商品無法更新，出現錯誤，請先檢查商品資訊是否符合本商城之規定。</p>
                   </div>
                   <div class="myItem">
-                      <button class="btn btn-sm btn-outline-danger">永久下架商品</button>
+                      <button class="btnSell d-flex justify-content-center align-items-center gap-1">
+                        <img src="../svg/deleteSell.svg" alt=""/>
+                        <div>永久下架</div>
+                      </button>
                       <p>
                         點擊此按鈕後，將會刪除指定的商品，並且<strong>永久不會</strong>出現在「我的商品」清單中與架上。<br>
                         只有在沒有相關的進行中訂單時才能刪除商品。</p>

@@ -609,7 +609,7 @@ function renderBuyerOrders(list) {
         <td>${created}</td>
         <td>${price} 元</td>
         <td class="text-end">
-          <button class="btn btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">查看訂單詳情</button>
+          <button class="btn btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">訂單詳情</button>
           <button class="btn btn-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">${st.action}</button>
           ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-outline-danger action-btn btn-row-action" data-action="cancel" data-id="${id}" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">取消訂單</button>` : ''}
         </td>
@@ -643,7 +643,7 @@ function renderSellerOrders(list) {
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
         <td class="text-end">
-          <button class="btn btn-sm  btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}">查看訂單詳情</button>
+          <button class="btn btn-sm  btn-outline-dark action-btn btn-row-action" data-action="checkInfo" data-id="${id}">訂單詳情</button>
           <button class="btn btn-sm btn-primary action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>${st.action}</button>
           ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm btn-outline-danger action-btn btn-row-action" data-action="cancel" data-id="${id}">取消訂單</button>` : ''}
         </td>
@@ -670,11 +670,12 @@ function renderTable(list = []) {
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
     const quantity = item.stock;
+    const stockStyle = quantity === 0 ? 'color: #dc3545; font-weight: bold;' : '';
 
     return `
       <tr data-id="${esc(id)}">
         <td>${name}</td>
-        <td>${quantity}</td>
+        <td><span style="${stockStyle}">${quantity}</span></td>
         <td>${price}</td>
         <td>${created}</td>
         <td>${updated}</td>
@@ -732,21 +733,24 @@ function renderCards(list = []) {
     const created  = fmtDate(item.createdAt);
     const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
     const quantity = item.stock;
+    const stockStyle = quantity === 0 ? 'color: #dc3545; font-weight: bold;' : '';
 
     return `
       <div class="col" data-id="${esc(id)}">
         <div class="cardContainer h-100">
           <div class="card-body d-flex flex-column">
-            <div class="d-flex flex-row">
-              <div class="bg-light">
-                <img src="${img}" alt="${name}" class="object-cover">
+            <div class="d-flex flex-row justify-content-between align-items-end">
+              <div class="d-flex">
+                <div class="bg-light">
+                  <img src="${img}" alt="${name}" class="object-cover">
+                </div>
+                <div>
+                  <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
+                  <div class="small text-muted mb-2" style="font-size: 12px;">建立：${created}<br>更新：${updated}</div>
+                  <div style="font-size: 12px; color: #004b97;">庫存：<span style="font-weight: bold; ${stockStyle}">${quantity}</span></div>
+                </div>
               </div>
-              <div>
-                <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
-                <div class="small text-muted mb-2" style="font-size: 14px;">建立：${created}<br>更新：${updated}</div>
-                <div style="font-size: 12px;">庫存：${quantity}</div>
-                <div class="fw-bold mb-2 text-end">${price}</div>
-              </div>
+              <div class="fw-bold mb-2 text-end">${price}</div>
             </div>
             <div class="mt-auto d-flex justify-content-around gap-2">
               <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="check" data-id="${id}">
@@ -793,16 +797,16 @@ function renderSellerCards(list = []) {
       <div class="col" data-id="${esc(id)}">
         <div class="cardContainer h-100">
           <div class="card-body d-flex flex-column">
-            <div class="d-flex flex-row">
+            <div class="d-flex flex-row justify-content-between">
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">訂單編號 ${id}</h6>
                 <div class="small text-muted mb-2" style="font-size: 14px;">訂單建立時間：${created}</div>
-                <span class="badge ${st.badge}">${st.text}</span>
-                <div class="fw-bold mb-2 text-end">${price}</div>
+                <span class="badge ${st.badge}" style="margin-bottom: 10px;">${st.text}</span>
               </div>
+              <div class="fw-bold mb-2 text-end">${price}</div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>
+              <button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">訂單詳情</button>
               <button class="btn btn-primary btn-sm action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>${st.action}</button>
               ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm action-btn btn-outline-danger btn-row-action" data-id="${id}" data-action="cancel">取消訂單</button>` : ''}
             </div>
@@ -835,16 +839,16 @@ function renderBuyerCards(list = []) {
       <div class="col" data-id="${esc(id)}">
         <div class="cardContainer h-100">
           <div class="card-body d-flex flex-column">
-            <div class="d-flex flex-row">
+            <div class="d-flex flex-row justify-content-between">
               <div>
                 <h6 class="mb-0 text-truncate" title="${name}">訂單編號 ${id}</h6>
                 <div class="small text-muted mb-2" style="font-size: 14px;">訂單建立時間：${created}</div>
-                <span class="badge ${st.badge}">${st.text}</span>
-                <div class="fw-bold mb-2 text-end">${price}</div>
+                <span class="badge ${st.badge}" style="margin-bottom: 10px;">${st.text}</span>
               </div>
+              <div class="fw-bold mb-2 text-end">${price}</div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">查看訂單詳情</button>
+              <button class="btn btn-sm btn-outline-dark action-btn btn-row-action" data-id="${id}" data-action="checkInfo">訂單詳情</button>
               <button class="btn btn-primary btn-sm action-btn btn-card-action"  data-id="${id}" data-action="${st.action}">${st.action}</button>
               ${item.status == 'pending' || item.status == 'preparing' ? `<button class="btn btn-sm action-btn btn-outline-danger btn-row-action" data-id="${id}" data-action="cancel">取消訂單</button>` : ''}
             </div>

@@ -615,6 +615,9 @@ small {
   color: #383838;
   font-size: 10px;
 }
+#mProfileName {
+  font-size: 1rem;
+}
 #mProfileInfo {
   font-size: 0.8rem;
 }
@@ -727,16 +730,40 @@ small {
   color: #004b97;
 }
 .btnSell {
-  border: 1px solid #383838;
+  border: 1px solid #abdad5;
   background: transparent;
   border-radius: 20px;
-  padding: 3px 8px;
+  padding: 3px 7px;
   color: #383838;
+  transition: background 0.3s;
 }
 .btnSell:hover {
-  background: linear-gradient(to right bottom, #abdad5 10%, #004b97);
-  color: #fff;
+  background:  #abdad5;
+  font-weight: 600;
 }
 .btnSell div {
   font-size: 1rem;
+}
+@media screen and (max-width: 768px){
+  .btnSell div {
+    font-size: 0.875rem;
+  }
+}
+.showInfo {
+  font-size: 1rem;
+}
+.disableAccount {
+  border: none;
+  border-radius: 5px;
+  background: red;
+  padding: 4px 8px;
+  transition: background 0.2s;
+}
+.disableAccount div{
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+.disableAccount:hover {
+  background-color: rgb(241, 0, 0);
 }

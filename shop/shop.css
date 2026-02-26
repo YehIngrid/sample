@@ -552,7 +552,8 @@ ul{
   border-bottom: 1px solid #eee;
 }
 
-.card-body {
+#product-grid .card-body {
+  padding: 10px !important;
   justify-content: space-between;
 }
 
@@ -1291,7 +1292,7 @@ button {
   right: 0px;
   margin: 0;
   font-weight: bold;
-  color: var(--brand);
+  color: #004b97;
   font-size: 1.4rem;
   background: rgb(255, 255, 255);
   border-radius: 18px 0px 0px 0px;
@@ -1459,7 +1460,8 @@ button {
   justify-content: center;
 }
 .img-box {
-  border-radius: 0.3rem;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
 }
 .img-box img {
    width: 100%;
