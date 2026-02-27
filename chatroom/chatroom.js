@@ -20,6 +20,7 @@ class ChatRoomList {
         // 每個房間各自記錄 lastReadMessageId 和 lastReadTimestamp
         this.lastReadMap = new Map(); // roomId -> { id, timestamp }（自己的已讀進度）
         this.partnerReadMap = new Map(); // roomId -> { id }（對方的已讀進度）
+        this.partnerInfoMap = new Map(); // roomId -> { name, photoURL }（對方的個人資訊）
 
         this.isMarkingRead = false;
         this.readObserver = new IntersectionObserver(entries => {
@@ -315,6 +316,10 @@ class ChatRoomList {
                     this.partnerReadMap.set(String(data.id), {
                         id: target.lastReadMessageId ?? null
                     });
+                    this.partnerInfoMap.set(String(data.id), {
+                        name: target.name ?? '未知用戶',
+                        photoURL: target.photoURL || '../image/default-avatar.png'
+                    });
                 }
 
                 const item = document.createElement('div');
@@ -325,7 +330,7 @@ class ChatRoomList {
                         <div class="chat-avatar">
                             <img src="${target?.photoURL || '../image/default-avatar.png'}"
                                  alt="${target?.name}的照片"
-                                 style="width: 45px; height: 45px; border-radius: 50px;">
+                                 style="width: 45px; height: 45px; border-radius: 50px; object-fit: cover; object-position: center;">
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${target?.name ?? '未知'}</h6>
@@ -360,12 +365,14 @@ class ChatRoomList {
         if (this.isMobile) { this.hideSidebar(); this.showChatMain(); }
 
         this.currentRoomId = roomId;
-        this.currentRoomName = targetName;
+        const info = this.partnerInfoMap.get(String(roomId));
+        const resolvedName = targetName || info?.name || '未知用戶';
+        this.currentRoomName = resolvedName;
         this.hasMore = true;
 
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
-        document.querySelector('.chat-header h6').textContent = targetName;
+        document.querySelector('.chat-header h6').textContent = resolvedName;
 
         const container = document.getElementById('messagesContainer');
         this.isInitialLoading = true;
@@ -672,7 +679,11 @@ function openChatRoomList(roomId) {
         // ✅ init() 內部已經會呼叫 switchRoom(currentRoomId)，這裡不要再呼叫一次
         chatRoomList.init();
     } else if (roomId) {
-        chatRoomList.switchRoom(roomId);
+        if (chatRoomList.partnerInfoMap.has(String(roomId))) {
+            chatRoomList.switchRoom(roomId);
+        } else {
+            chatRoomList.loadRooms().then(() => chatRoomList.switchRoom(roomId));
+        }
     }
 }
 
