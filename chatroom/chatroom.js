@@ -181,8 +181,9 @@ class ChatRoomList {
             ? data.attachments[0]
             : (data.attachments || '');
 
+        const partnerPhoto = this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png';
         imgWrapper.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${data.photoURL || '../image/default-avatar.png'}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
+            ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
@@ -318,7 +319,8 @@ class ChatRoomList {
                     });
                     this.partnerInfoMap.set(String(data.id), {
                         name: target.name ?? '未知用戶',
-                        photoURL: target.photoURL || '../image/default-avatar.png'
+                        photoURL: target.photoURL || '../image/default-avatar.png',
+                        id: target.id ?? null
                     });
                 }
 
@@ -502,18 +504,19 @@ class ChatRoomList {
 
         this.eventSource.addEventListener('read', (event) => {
             const data = JSON.parse(event.data);
-            const isSelf = data.username === this.username;
+            const partnerInfo = this.partnerInfoMap.get(String(data.room));
+            const isPartnerRead = partnerInfo?.id != null && String(data.userId) === String(partnerInfo.id);
 
-            if (isSelf) {
-                // ✅ 自己已讀：移除聊天室列表的未讀 badge，通知外層清除紅點
-                document.querySelector(`[data-room-id="${data.room}"]`)
-                    ?.querySelector('.unread-dot')?.classList.add('d-none');
-                window.parent?.dispatchEvent(new CustomEvent('chatRead'));
-            } else {
+            if (isPartnerRead) {
                 // ✅ 對方已讀：更新目前聊天室訊息的「已讀」標記
                 if (String(data.room) === String(this.currentRoomId)) {
                     this.updateReadReceipts(data.lastReadMessageId);
                 }
+            } else {
+                // ✅ 自己已讀：移除聊天室列表的未讀 badge，通知外層清除紅點
+                document.querySelector(`[data-room-id="${data.room}"]`)
+                    ?.querySelector('.unread-dot')?.classList.add('d-none');
+                window.parent?.dispatchEvent(new CustomEvent('chatRead'));
             }
         });
 
@@ -566,8 +569,9 @@ class ChatRoomList {
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
         div.dataset.timestamp = data.timestamp;  // ISO 字串，用於 markAsRead
         div.dataset.messageId = data.id;          // string
+        const partnerPhoto = this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png';
         div.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${data.photoURL || '../image/default-avatar.png'}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
+            ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
