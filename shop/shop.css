@@ -719,7 +719,7 @@ caption {
   font-weight: bold;
 }
 
-thead{
+/* thead{
   background-color: #93ddc4;
 }
 
@@ -735,7 +735,7 @@ td:last-of-type {
 
 tbody > tr:nth-of-type(even) {
   background-color: #94c7fbaa;
-}
+} */
 .adwishpool_ , .admystery_{
   width: 91vw; 
   height: auto; 

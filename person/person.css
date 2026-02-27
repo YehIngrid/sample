@@ -358,7 +358,7 @@ small {
   }
 }
 #products tbody {
-  font-size: 13px;
+  font-size: 15px;
 }
 #sellProducts tbody {
   font-size: 13px;
@@ -490,15 +490,6 @@ small {
   background-image: linear-gradient(to right, #ff6b00, #ff8c00);
   color: transparent;
   background-clip: text;
-}
-.contact {
-  border: none;
-  padding: 2px 5px;
-  font-size: 14px;
-  background: #ffd000;
-  color: white;
-  border-radius: 7px;
-  line-height: 20px;
 }
 .updatebtn {
   display: flex; 

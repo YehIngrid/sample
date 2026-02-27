@@ -356,6 +356,12 @@ async function handleAction(action, id, el) {
   } else if (action === '給對方評價') {
     // 這裡可以打開評價的 modal 或頁面
     openReviewModal(orderId = id, targetId = findTargetIdByOrderId(goodsOrder, id), targetRole = (sectionId === 'sellProducts' ? 'buyer' : 'seller'));
+  } else if (action === 'watchComment') {
+    Swal.fire({
+      title: "點擊查看對方評論",
+      icon: "info",
+      text: "功能尚未實作"
+    })
   } else if (action === 'delete') {
     Swal.fire({
       title: "確定要下架並刪除此商品嗎？",
@@ -956,7 +962,7 @@ async function getDetail(id) {
       : document.getElementById('buyerOrderInfo');
 
     infoBox.innerHTML = `
-      <ul>
+      <ul style="font-size: 1rem;">
         <li><span class="orderstyle">訂單編號</span>${id}</li>
         <li><span class="orderstyle">建立日期</span>${new Date(data.createdAt).toLocaleDateString()}</li>
         <li><span class="orderstyle">商品狀態</span>${orderStatusMap[data.status]}</li>
@@ -965,7 +971,10 @@ async function getDetail(id) {
           <span class="orderstyle">${isSell ? '買家姓名' : '賣家姓名'}</span>
           ${isSell ? data.buyerUser.name : data.sellerUser.name}
         </li>
-        <li><button class="contact action-btn" data-action="contact" data-id="${id}">與對方聯絡<img src="../svg/comment.svg" alt="comment icon"/></button></li>
+        <div class="d-flex gap-2">
+          <button class="checkInfoBtn action-btn" data-action="contact" data-id="${id}" style="font-size: 1rem;">與對方聯絡<img src="../svg/canChat.svg" alt="與對方聯絡，開啟聊天室icon"/></button>
+          <button class="checkInfoBtn action-btn" data-action="watchComment" style="font-size: 1rem;">查看對方評論<img src="../svg/reviewsIcon.svg" alt="查看對方評論icon" style="border-radius: 50%; width: 20px;"/></button>
+        </div>
         <li style="text-align:end;">
           <span class="orderstyle">總計</span>
           <span style="font-weight:600;color:var(--brand-color)">
@@ -975,7 +984,7 @@ async function getDetail(id) {
       </ul>
       <hr>
       <span class="orderstyle">訂購商品</span>
-      <table class="table align-middle responsive-table mt-3">
+      <table class="align-middle responsive-table mt-3" style="border: none;">
         <thead>
           <tr>
             <th>商品編號</th>
