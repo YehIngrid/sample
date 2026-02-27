@@ -604,7 +604,7 @@ async function submit() {
       title: '願望已送出！',
       text: '感謝您的參與，已將您的願望發布。',
     }).then(() => {
-      location.href = '../wishpool/wishpool.html';
+      location.href = '../wishpool/wishpool.html#wishpool';
     });
   } catch (error) {
     console.error('願望建立失敗：', error);

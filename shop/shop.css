@@ -467,7 +467,18 @@ ul{
   color: #383838;
   padding-left: 2px;
   margin-bottom: 0;
-  font-size: 10px;
+  font-size: 12px;
+}
+.stock {
+  font-size: 11px;
+}
+@media screen and (max-width: 768px) {
+  .card-text {
+    font-size: 10px;
+  }
+  .stock {
+    font-size: 9px;
+  }
 }
 .price {
   font-size: 1rem;
@@ -1297,6 +1308,10 @@ button {
   background: rgb(255, 255, 255);
   border-radius: 18px 0px 0px 0px;
   padding: 1px 7px;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .hotItemName {
   padding: 8px;
