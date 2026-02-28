@@ -743,6 +743,15 @@ small {
   font-size: 1rem;
 }
 @media screen and (max-width: 768px){
+  .scoreContent {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      justify-items: start;
+      gap: 10px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+
   .btnSell div {
     font-size: 0.875rem;
   }

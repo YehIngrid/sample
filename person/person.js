@@ -460,6 +460,7 @@ async function handleRouting() {
       document.getElementById('sell-product').innerHTML =
         `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
       const res = await backendService.getSellerOrders();
+      goodsOrder = res?.data?.data;
       renderSellerOrders(res?.data?.data ?? []);
       renderSellerCards(res?.data?.data ?? []);
     } else if (page === 'buyProducts') {
@@ -1576,44 +1577,60 @@ async function openChatWithTarget(targetUserId) {
 function openReviewModal(orderId, targetId, targetRole) {
   const isRatingBuyer = (targetRole === 'buyer');
   const roleName = isRatingBuyer ? '買家' : '賣家';
+  const maxScore = isRatingBuyer ? 3 : 5;
+
+  const order = (goodsOrder || []).find(o => o.id == orderId);
+  const targetUser = isRatingBuyer ? order?.buyerUser : order?.sellerUser;
+  const targetPhoto = targetUser?.photoURL || '../image/default-avatar.png';
+  const targetName = targetUser?.name || roleName;
+  const targetCredit = targetUser?.credit ?? '-';
+
   Swal.fire({
     title: `請為此次訂單的${roleName}評分`,
     html: `
       <div id="review-list">
-        <div class="d-flex justify-content-between" style="margin-bottom: 10px;">
+        <div class="d-flex justify-content-around" style="margin-bottom: 10px;">
           <div>
             <div class="d-flex flex-column justify-content-center align-items-center">
-              <img src="../image/default-avatar.png" alt="${roleName}頭像" style="width: 80px; height: 80px; margin: 0 auto; margin-bottom: 5px;"/>
-              <span style="font-size: 14px;">${roleName}姓名</span>
-              <span style="font-size: 14px;">信譽積分：</span>
+              <img src="${targetPhoto}" alt="${roleName}頭像" style="width: 80px; height: 80px; margin: 0 auto; margin-bottom: 5px; border-radius: 50%; object-fit: cover;"/>
+              <span style="font-size: 14px;">${targetName}</span>
+              <span style="font-size: 14px;">信譽積分：${targetCredit}</span>
             </div>
           </div>
           <div class="scoreContent">
+            ${isRatingBuyer ? `
+            <label class="review-item">
+              <input type="checkbox" class="score-check" data-key="onTime"> 準時度 (+1)
+            </label>
+            <label class="review-item">
+              <input type="checkbox" class="score-check" data-key="communication"> 溝通禮貌度 (+1)
+            </label>
+            <label class="review-item">
+              <input type="checkbox" class="score-check" data-key="reliability"> 交易可靠度 (+1)
+            </label>
+            ` : `
             <label class="review-item">
               <input type="checkbox" class="score-check"> 商品描述準確 (+1)
             </label>
-
             <label class="review-item">
               <input type="checkbox" class="score-check"> 出貨速度快 (+1)
             </label>
-
             <label class="review-item">
               <input type="checkbox" class="score-check"> 溝通禮貌 (+1)
             </label>
-
             <label class="review-item">
               <input type="checkbox" class="score-check"> 交易可靠 (+1)
             </label>
-
             <label class="review-item">
               <input type="checkbox" class="score-check"> 包裝完整 (+1)
             </label>
+            `}
           </div>
         </div>
         <textarea id="review-comment" class="form-control mt-2" rows="3" placeholder="留下評價..."></textarea>
 
         <div class="mt-2 text-end">
-          評分：<span id="score-preview">0</span> / 5
+          評分：<span id="score-preview">0</span> / ${maxScore}
         </div>
       </div>
     `,
@@ -1634,22 +1651,33 @@ function openReviewModal(orderId, targetId, targetRole) {
         return false;
       }
 
-      // 傳到後端
       try {
+        let body;
+        if (isRatingBuyer) {
+          const scores = {};
+          document.querySelectorAll('.score-check').forEach(cb => {
+            scores[cb.dataset.key] = cb.checked ? 1 : 0;
+          });
+          body = {
+            orderId,
+            targetId,
+            onTime: scores.onTime ?? 0,
+            communication: scores.communication ?? 0,
+            reliability: scores.reliability ?? 0,
+            comment
+          };
+        } else {
+          body = { orderId, targetId, score, comment };
+        }
+
         const res = await fetch('/api/reviews', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId,
-            sellerId,
-            score, // 0~5
-            comment
-          })
+          body: JSON.stringify(body)
         });
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || '送出失敗');
-
         return data;
       } catch (err) {
         Swal.showValidationMessage(err.message);

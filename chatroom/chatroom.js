@@ -617,6 +617,7 @@ class ChatRoomList {
     }
 
     detectRead(element) {
+        if (element.classList.contains('message-self')) return;
         this.readObserver.observe(element);
     }
 
