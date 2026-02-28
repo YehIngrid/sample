@@ -599,15 +599,9 @@
     </div>
     <!-- TODO 加入其他沒有寫的屬性，尚未測試排版與功能（還沒寫） -->
     <div class="form-group mb-3">
-      <label for="edit-category" class="edit-text">庫存數量</label>
+      <label for="edit-stock" class="edit-text">庫存數量</label>
       <small>* 必填</small>
-      <select class="form-control" id="edit-category" name="stock">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-      </select>
+      <input type="number" class="form-control" id="edit-stock" name="stock" min="0" step="1" placeholder="請輸入庫存數量">
     </div>
     <div class="mb-3">
       <label class="form-label d-block edit-text">商品大小</label>

@@ -357,11 +357,8 @@ async function handleAction(action, id, el) {
     // 這裡可以打開評價的 modal 或頁面
     openReviewModal(orderId = id, targetId = findTargetIdByOrderId(goodsOrder, id), targetRole = (sectionId === 'sellProducts' ? 'buyer' : 'seller'));
   } else if (action === 'watchComment') {
-    Swal.fire({
-      title: "點擊查看對方評論",
-      icon: "info",
-      text: "功能尚未實作"
-    })
+    const isSell = el.closest('.content-section')?.id === 'sellProducts';
+    openPartnerReviewModal(id, isSell);
   } else if (action === 'delete') {
     Swal.fire({
       title: "確定要下架並刪除此商品嗎？",
@@ -974,7 +971,7 @@ async function getDetail(id) {
         </li>
         <div class="d-flex gap-2">
           <button class="checkInfoBtn action-btn" data-action="contact" data-id="${id}" style="font-size: 1rem;">與對方聯絡<img src="../svg/canChat.svg" alt="與對方聯絡，開啟聊天室icon"/></button>
-          <button class="checkInfoBtn action-btn" data-action="watchComment" style="font-size: 1rem;">查看對方評論<img src="../svg/reviewsIcon.svg" alt="查看對方評論icon" style="border-radius: 50%; width: 20px;"/></button>
+          <button class="checkInfoBtn action-btn" data-action="watchComment" data-id="${id}" style="font-size: 1rem;">查看對方評論<img src="../svg/reviewsIcon.svg" alt="查看對方評論icon" style="border-radius: 50%; width: 20px;"/></button>
         </div>
         <li style="text-align:end;">
           <span class="orderstyle">總計</span>
@@ -1270,6 +1267,7 @@ const updateStatusUI = (data) => {
       formData.append('price', el.price.value);
       formData.append('category', el.category.value);
       formData.append('description', el.description.value);
+      formData.append('stock', el.stock.value);
 
       // 主圖（可選）
       const mainFile = el.image?.files?.[0];
@@ -1325,6 +1323,7 @@ const updateStatusUI = (data) => {
       name: document.getElementById('edit-name'),
       price: document.getElementById('edit-price'),
       category: document.getElementById('edit-category'),
+      stock: document.getElementById('edit-stock'),
       description: document.getElementById('edit-description'),
       image: document.getElementById('edit-image'),
       imagePreview: document.getElementById('edit-image-preview'),
@@ -1343,18 +1342,11 @@ const updateStatusUI = (data) => {
     hideMainPreview();
     resetSecondary();
 
-    // （可選）載入單筆資料填入表單
-    // 若你有 backendService.getMyItem(id, ok, err) 可打開這段
+    // 載入單筆資料填入表單
     try {
-      if (backendService?.getMyItem) {
-        await new Promise((resolve, reject) => {
-          backendService.getMyItem(id, (res) => {
-            const item = res?.data ?? {};
-            fillForm(item);
-            resolve();
-          }, (err) => reject(err));
-        });
-      }
+      const res = await backendService.getItemsInfo(id);
+      const item = res?.data ?? res ?? {};
+      fillForm(item);
     } catch (e) {
       console.warn('讀取商品失敗，將以空白表單開啟', e);
     }
@@ -1387,19 +1379,21 @@ const updateStatusUI = (data) => {
     el.price.value = item.price ?? '';
     el.category.value = item.category ?? '';
     el.description.value = item.description ?? '';
+    el.stock.value = item.stock ?? item.quantity ?? '';
 
-    // 主圖
-    if (item.imageUrl) {
-      el.imagePreview.src = item.imageUrl;
+    // 主圖（欄位名稱相容 mainImage / imageUrl）
+    const mainImg = item.mainImage || item.imageUrl || '';
+    if (mainImg) {
+      el.imagePreview.src = mainImg;
       el.imagePreview.classList.remove('d-none');
     } else {
       hideMainPreview();
     }
 
-    // 次要圖（既有 URL）
-    existingSecondaryUrls = Array.isArray(item.otherImageUrls)
-      ? item.otherImageUrls
-      : (Array.isArray(item.images) ? item.images.slice(1) : []); // 若後端把 images[0] 當主圖
+    // 次要圖（欄位名稱相容 otherImages / otherImageUrls / images[]）
+    existingSecondaryUrls = Array.isArray(item.otherImages) ? item.otherImages
+      : Array.isArray(item.otherImageUrls) ? item.otherImageUrls
+      : (Array.isArray(item.images) ? item.images.slice(1) : []);
     selectedSecondaryFiles = [];
     renderSecondaryPreview();
     updateSecondaryHint();
@@ -1705,8 +1699,51 @@ function calcScore() {
   });
   return score; // 0~5
 }
-function renderStars(score) {
-  return '★'.repeat(score) + '☆'.repeat(5 - score);
+function renderStars(score, max = 5) {
+  return '★'.repeat(score) + '☆'.repeat(Math.max(0, max - score));
+}
+
+async function openPartnerReviewModal(orderId, isSell) {
+  const data = window.currentOrder;
+  const partnerUser = isSell ? data?.buyerUser : data?.sellerUser;
+  const partnerName = partnerUser?.name || '對方';
+  const partnerPhoto = partnerUser?.photoURL || '../image/default-avatar.png';
+  const partnerCredit = partnerUser?.credit ?? '-';
+  const partnerIntro = partnerUser?.intro ?? partnerUser?.description ?? '';
+  const maxScore = isSell ? 3 : 5;
+
+  let review = null;
+  try {
+    const res = await backendService.getOrderReview(orderId);
+    review = res?.data?.data ?? res?.data ?? null;
+  } catch (e) {
+    // 尚無評論
+  }
+
+  const starsHtml = review?.score != null ? renderStars(review.score, maxScore) : '';
+
+  Swal.fire({
+    title: '對方評論',
+    html: `
+      <div class="d-flex align-items-center gap-3 mb-3 p-3" style="background:#f8f9fa;border-radius:12px;text-align:left;">
+        <img src="${partnerPhoto}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="${partnerName}頭像">
+        <div>
+          <div class="fw-bold">${partnerName}</div>
+          <div class="text-muted small">信譽積分：${partnerCredit}</div>
+          ${partnerIntro ? `<div class="text-muted small mt-1">${partnerIntro}</div>` : ''}
+        </div>
+      </div>
+      ${review ? `
+        <div class="text-center mb-1" style="font-size:1.6rem;color:#f5a623;">${starsHtml}</div>
+        <div class="text-muted small mb-2">評分：${review.score ?? '-'} / ${maxScore}</div>
+        <div class="p-3" style="background:#fff;border:1px solid #e9ecef;border-radius:8px;text-align:left;">
+          ${review.comment || '（無文字評論）'}
+        </div>
+      ` : '<div class="text-muted py-3">對方尚未留下評論</div>'}
+    `,
+    confirmButtonText: '關閉',
+    width: 500,
+  });
 }
 const scoreStar = document.querySelector('.score');
 scoreStar.textContent = renderStars(Number(scoreStar.textContent));

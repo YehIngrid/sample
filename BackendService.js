@@ -404,6 +404,15 @@ class BackendService {
             return Promise.reject(error);
         }
     }
+    async getOrderReview(orderId) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/reviews/order/${orderId}`);
+            return response;
+        } catch (error) {
+            console.error("讀取評論失敗", error);
+            return Promise.reject(error);
+        }
+    }
     async sellerAcceptOrders(id) {
         try {
             const response = await axios.post(
