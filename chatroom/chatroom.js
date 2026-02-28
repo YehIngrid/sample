@@ -320,7 +320,7 @@ class ChatRoomList {
                     this.partnerInfoMap.set(String(data.id), {
                         name: target.name ?? '未知用戶',
                         photoURL: target.photoURL || '../image/default-avatar.png',
-                        id: target.id ?? null
+                        id: target.id ?? target.accountId ?? target.userId ?? null
                     });
                 }
 
@@ -464,13 +464,13 @@ class ChatRoomList {
                         lastMsgEl.dataset.originalText = newText;
                     }
                 }
-                if (data.userId !== this.userId) {
+                if (String(data.userId) !== String(this.userId)) {
                     chatItem.querySelector('.unread-dot')?.classList.remove('d-none');
                 }
             }
 
             // ✅ 通知外層頁面的 chaticon 顯示紅點
-            if (data.userId !== this.userId) {
+            if (String(data.userId) !== String(this.userId)) {
                 window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
             }
         });
@@ -505,7 +505,9 @@ class ChatRoomList {
         this.eventSource.addEventListener('read', (event) => {
             const data = JSON.parse(event.data);
             const partnerInfo = this.partnerInfoMap.get(String(data.room));
-            const isPartnerRead = partnerInfo?.id != null && String(data.userId) === String(partnerInfo.id);
+            const isPartnerRead = partnerInfo?.id != null
+                ? String(data.userId) === String(partnerInfo.id)
+                : data.username !== this.username; // fallback: ID 欄位不明時改用 username
 
             if (isPartnerRead) {
                 // ✅ 對方已讀：更新目前聊天室訊息的「已讀」標記
