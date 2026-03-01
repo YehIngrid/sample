@@ -1577,7 +1577,7 @@ function openReviewModal(orderId, targetId, targetRole) {
   const targetUser = isRatingBuyer ? order?.buyerUser : order?.sellerUser;
   const targetPhoto = targetUser?.photoURL || '../image/default-avatar.png';
   const targetName = targetUser?.name || roleName;
-  const targetCredit = targetUser?.credit ?? '-';
+  const targetCredit = targetUser?.rate ?? '-';
 
   Swal.fire({
     title: `請為此次訂單的${roleName}評分`,
