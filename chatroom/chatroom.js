@@ -22,7 +22,7 @@ class ChatRoomList {
         this.partnerReadMap = new Map(); // roomId -> { id }（對方的已讀進度）
         this.partnerInfoMap = new Map(); // roomId -> { name, photoURL }（對方的個人資訊）
 
-        this.isMarkingRead = false;
+        this.markReadTimer = null;
         this.readObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
@@ -32,26 +32,29 @@ class ChatRoomList {
                 if (!msgId || !msgTimestamp) return;
 
                 const roomRead = this.lastReadMap.get(String(this.currentRoomId));
-                const lastReadId = roomRead?.id ?? '';
 
                 // id 是 string，比較時用字串比較會有問題，改用 timestamp 比較
                 if (msgTimestamp <= (roomRead?.timestamp ?? '')) return;
-                if (this.isMarkingRead) return;
 
-                this.isMarkingRead = true;
-
-                // ✅ API: PATCH /api/chat/rooms/{roomId}/read
-                // body: { readAt: "訊息的 timestamp" }  ← 傳訊息本身的時間，不是現在時間
-                this.backend.markAsRead(this.currentRoomId, msgTimestamp)
-                    .finally(() => { this.isMarkingRead = false; });
-
+                // 更新本地已讀進度到最新可見訊息
                 this.lastReadMap.set(String(this.currentRoomId), {
                     id: msgId,
                     timestamp: msgTimestamp
                 });
                 this.readObserver.unobserve(entry.target);
+
+                // 防抖：多則訊息同時進入視窗只送一次 API（帶最新 timestamp）
+                clearTimeout(this.markReadTimer);
+                this.markReadTimer = setTimeout(() => {
+                    const latest = this.lastReadMap.get(String(this.currentRoomId));
+                    if (latest?.timestamp) {
+                        // ✅ API: PATCH /api/chat/rooms/{roomId}/read
+                        // body: { readAt: "最新可見訊息的 timestamp" }
+                        this.backend.markAsRead(this.currentRoomId, latest.timestamp);
+                    }
+                }, 300);
             });
-        }, { threshold: 0 });
+        }, { root: document.getElementById('messagesContainer'), threshold: 0 });
         this.isInitialLoading = false;
     }
 
@@ -393,7 +396,7 @@ class ChatRoomList {
                 new Date(a.timestamp) - new Date(b.timestamp)
             );
             const firstUnread = lastReadTimestamp
-                ? messages.find(m => m.timestamp > lastReadTimestamp)
+                ? messages.find(m => m.timestamp > lastReadTimestamp && m.username !== this.username)
                 : null; // 沒有已讀紀錄 → 捲到最底部
 
             messages.forEach(msg => {
