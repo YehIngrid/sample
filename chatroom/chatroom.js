@@ -22,6 +22,8 @@ class ChatRoomList {
         this.partnerReadMap = new Map(); // roomId -> { id }（對方的已讀進度）
         this.partnerInfoMap = new Map(); // roomId -> { name, photoURL }（對方的個人資訊）
 
+        this.officialRoomsSet = new Set(); // 記錄官方頻道房間 ID
+
         this.markReadTimer = null;
         this.readObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
@@ -184,7 +186,9 @@ class ChatRoomList {
             ? data.attachments[0]
             : (data.attachments || '');
 
-        const partnerPhoto = this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png';
+        const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
+            ? '../webP/treasurehub.webp'
+            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png');
         imgWrapper.innerHTML = `
             ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
             <div class="message-content">
@@ -303,6 +307,7 @@ class ChatRoomList {
 
             rooms.data.items.forEach(data => {
                 const isOfficial = data.type === 'OFFICIAL';
+                if (isOfficial) this.officialRoomsSet.add(String(data.id));
                 const target = isOfficial ? null : data.members.find(m => m.name !== this.username);
                 const myself = isOfficial ? null : data.members.find(m => m.name === this.username);
 
@@ -382,6 +387,14 @@ class ChatRoomList {
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
         document.querySelector('.chat-header h6').textContent = resolvedName;
+
+        // ✅ 官方頻道：停用輸入區域
+        const isOfficialRoom = this.officialRoomsSet.has(String(roomId));
+        this.input.disabled = isOfficialRoom;
+        this.sendImagebtn.disabled = isOfficialRoom;
+        this.previewArea.disabled = isOfficialRoom;
+        this.input.placeholder = isOfficialRoom ? '官方頻道不支援傳送訊息' : '輸入訊息...';
+        this.input.style.backgroundColor = isOfficialRoom ? '#f5f5f5' : '';
 
         const container = document.getElementById('messagesContainer');
         this.isInitialLoading = true;
@@ -586,7 +599,9 @@ class ChatRoomList {
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
         div.dataset.timestamp = data.timestamp;  // ISO 字串，用於 markAsRead
         div.dataset.messageId = data.id;          // string
-        const partnerPhoto = this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png';
+        const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
+            ? '../webP/treasurehub.webp'
+            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png');
         div.innerHTML = `
             ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
             <div class="message-content">
@@ -692,13 +707,18 @@ class ChatRoomList {
             ? new Date(data.timestamp).toLocaleString('zh-TW', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })
             : '';
 
+        // ✅ attachments 可能是陣列或字串，統一取第一個有效值
+        const broadcastImg = Array.isArray(data.attachments)
+            ? (data.attachments[0] || null)
+            : (data.attachments || data.attachment || data.imageUrl || null);
+
         const el = document.createElement('div');
         el.className = 'broadcast-msg';
         el.innerHTML = `
             <div class="broadcast-inner">
                 <div class="broadcast-label">📢 官方公告</div>
                 <div class="broadcast-text">${this.escapeHtml(data.message || '')}</div>
-                ${data.attachments ? `<img src="${data.attachments}" class="broadcast-img" alt="公告圖片">` : ''}
+                ${broadcastImg ? `<img src="${broadcastImg}" class="broadcast-img" alt="公告圖片">` : ''}
                 ${time ? `<div class="broadcast-time">${time}</div>` : ''}
             </div>`;
         container.appendChild(el);
