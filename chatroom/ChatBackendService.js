@@ -87,6 +87,39 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
+    async getBroadcast(channelId, limit, before) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/chat/official-channels/broadcast-history`, 
+                {params: {channelId: String(channelId), limit, before}}
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error getting broadcast history,', error);
+            return Promise.reject(error);
+        }
+    }
+    async createOfficialChannel(name, description) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/chat/official-channels/create`,
+                { name, description }
+            );
+            return response.data;
+        } catch(error) {
+            console.error('Error create official channel,' ,error);
+            return Promise.reject(error);
+        }
+    }
+    async broadCastOfficial(channelId, message, attachments) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/chat/official-channels/broadcast`, 
+                {channelId, message, attachments: String(attachments)}
+            );
+            return response.data;
+        } catch(error) {
+            console.error('Error create official channel,' ,error);
+            return Promise.reject(error);
+        }
+    }
     openSse() {
         const url = `${this.baseUrl}/api/chat/stream`;
         const eventSource = new EventSource(url, { withCredentials: true });

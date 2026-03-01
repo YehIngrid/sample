@@ -302,13 +302,17 @@ class ChatRoomList {
             }
 
             rooms.data.items.forEach(data => {
-                const target = data.members.find(m => m.name !== this.username);
-                const myself = data.members.find(m => m.name === this.username);
-                const isMyMessage = data.lastMessage?.username === myself?.name;
-                const isNewMessage = !isMyMessage && myself?.lastReadMessageId !== data.lastMessageId;
+                const isOfficial = data.type === 'OFFICIAL';
+                const target = isOfficial ? null : data.members.find(m => m.name !== this.username);
+                const myself = isOfficial ? null : data.members.find(m => m.name === this.username);
+
+                const roomName   = isOfficial ? (data.officialChannel?.name ?? '官方帳號') : (target?.name ?? '未知');
+                const roomAvatar = isOfficial ? '../webP/treasurehub.webp' : (target?.photoURL || '../image/default-avatar.png');
+
+                const isMyMessage  = data.lastMessage?.username === myself?.name;
+                const isNewMessage = !isOfficial && !isMyMessage && myself?.lastReadMessageId !== data.lastMessageId;
 
                 // ✅ 用 Map 記錄每個房間的已讀資訊（id + timestamp）
-                // ⚠️ members 的 lastReadMessageId 欄位名稱待截圖確認，先沿用
                 if (myself) {
                     // ✅ members 欄位確認: lastReadMessageId (string), lastReadAt (ISO字串)
                     this.lastReadMap.set(String(data.id), {
@@ -333,12 +337,12 @@ class ChatRoomList {
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
-                            <img src="${target?.photoURL || '../image/default-avatar.png'}"
-                                 alt="${target?.name}的照片"
-                                 style="width: 45px; height: 45px; border-radius: 50px; object-fit: cover; object-position: center;">
+                            <img src="${roomAvatar}"
+                                 alt="${roomName}"
+                                 style="width: 45px; height: 45px; border-radius: 50px; object-fit: cover; object-position: center;${isOfficial ? ' border: 2px solid #004b97;' : ''}">
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0 roomName">${target?.name ?? '未知'}</h6>
+                            <h6 class="mb-0 roomName">${roomName}${isOfficial ? ' <span style="font-size:0.6rem; background:#004b97; color:#fff; border-radius:4px; padding:1px 5px; vertical-align:middle;">官方</span>' : ''}</h6>
                             <small class="text-muted lastMessage">${this.getLastMessageText(data.lastMessage)}</small>
                         </div>
                         <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
@@ -525,6 +529,14 @@ class ChatRoomList {
             }
         });
 
+        // ✅ 官方公告廣播
+        this.eventSource.addEventListener('broadcast', (event) => {
+            const data = JSON.parse(event.data);
+            this.renderBroadcast(data);
+            // 通知外層頁面顯示未讀紅點
+            window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
+        });
+
         this.eventSource.addEventListener('ping', () => {});
         this.eventSource.addEventListener('ready', (event) => {
             console.log('SSE ready:', JSON.parse(event.data));
@@ -669,6 +681,28 @@ class ChatRoomList {
         el.className = 'text-center text-muted nohistory';
         el.textContent = '沒有更多對話紀錄了';
         container.prepend(el);
+    }
+
+    // ✅ 官方公告：顯示為置中系統訊息
+    renderBroadcast(data) {
+        const container = document.getElementById('messagesContainer');
+        if (!container) return;
+
+        const time = data.timestamp
+            ? new Date(data.timestamp).toLocaleString('zh-TW', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })
+            : '';
+
+        const el = document.createElement('div');
+        el.className = 'broadcast-msg';
+        el.innerHTML = `
+            <div class="broadcast-inner">
+                <div class="broadcast-label">📢 官方公告</div>
+                <div class="broadcast-text">${this.escapeHtml(data.message || '')}</div>
+                ${data.attachments ? `<img src="${data.attachments}" class="broadcast-img" alt="公告圖片">` : ''}
+                ${time ? `<div class="broadcast-time">${time}</div>` : ''}
+            </div>`;
+        container.appendChild(el);
+        container.scrollTop = container.scrollHeight;
     }
 
     escapeHtml(text) {

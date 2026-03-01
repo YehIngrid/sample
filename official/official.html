@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <title>官方後台管理</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="../treasurehubIcon.ico">
+  <link rel="stylesheet" href="official.css">
+  <link rel="stylesheet" href="../default/default.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+  <!-- 手機版頂部欄 -->
+  <header class="mobile-topbar">
+    <button id="sidebarToggle" class="sidebar-toggle" aria-label="開啟選單">
+      <i class="fa fa-bars"></i>
+    </button>
+    <span class="mobile-title">拾貨寶庫官方後台</span>
+  </header>
+
+  <!-- 遮罩 -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="official-layout">
+
+    <!-- 側邊欄 -->
+    <aside class="official-sidebar" id="officialSidebar">
+      <div class="sidebar-brand">
+        <img src="../webP/treasurehub.webp" alt="logo" onerror="this.style.display='none'" style="border-radius: 50%;">
+        <span>拾貨寶庫<br><small>官方後台</small></span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-panel="panel-broadcast">
+          <i class="fa fa-bullhorn"></i> 發送公告
+        </button>
+        <button class="nav-btn" data-panel="panel-channel">
+          <i class="fa fa-plus-circle"></i> 建立頻道
+        </button>
+        <button class="nav-btn" data-panel="panel-history">
+          <i class="fa fa-history"></i> 公告紀錄
+        </button>
+      </nav>
+      <div class="sidebar-user">
+        <span id="adminName">載入中...</span>
+        <button class="btn btn-sm btn-danger mt-2" id="logoutBtn">登出</button>
+      </div>
+    </aside>
+
+    <!-- 主內容區 -->
+    <main class="official-main">
+
+      <!-- Panel: 發送公告 -->
+      <section id="panel-broadcast" class="panel active">
+        <h2 class="panel-title"><i class="fa fa-bullhorn me-2"></i>發送官方公告</h2>
+        <form id="broadcastForm" class="official-form">
+          <div class="mb-3">
+            <label class="form-label">頻道 ID <small class="text-muted">（建立頻道後取得）</small></label>
+            <input type="text" id="broadcastChannelId" class="form-control" placeholder="輸入官方頻道 ID" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">公告內容</label>
+            <textarea id="broadcastMessage" class="form-control" rows="5" placeholder="輸入公告內容..." required></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">附件圖片網址 <small class="text-muted">（選填）</small></label>
+            <input type="text" id="broadcastAttachment" class="form-control" placeholder="https://...">
+          </div>
+          <button type="submit" class="btn official-btn w-100" style="color: white;">
+            <i class="fa fa-paper-plane me-1"></i> 發送公告
+          </button>
+        </form>
+        <div id="broadcastResult" class="result-box mt-3 d-none"></div>
+      </section>
+
+      <!-- Panel: 建立頻道 -->
+      <section id="panel-channel" class="panel">
+        <h2 class="panel-title"><i class="fa fa-plus-circle me-2"></i>建立官方頻道</h2>
+        <p class="text-muted">填寫頻道資訊後點擊建立。建立成功後請複製頻道 ID 供發送公告使用。</p>
+        <form id="createChannelForm" class="official-form">
+          <div class="mb-3">
+            <label class="form-label">頻道名稱</label>
+            <input type="text" id="channelName" class="form-control" placeholder="例：拾貨寶庫官方帳號" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">頻道描述 <small class="text-muted">（選填）</small></label>
+            <input type="text" id="channelDescription" class="form-control" placeholder="例：僅作收公告用，無專人服務">
+          </div>
+          <button type="submit" id="createChannelBtn" class="btn official-btn px-5" style="color: white;">
+            <i class="fa fa-plus me-1"></i> 建立官方頻道
+          </button>
+        </form>
+        <div id="channelResult" class="result-box mt-3 d-none"></div>
+      </section>
+
+      <!-- Panel: 公告紀錄 -->
+      <section id="panel-history" class="panel">
+        <h2 class="panel-title"><i class="fa fa-history me-2"></i>公告紀錄</h2>
+        <div class="mb-3 d-flex gap-2">
+          <input type="text" id="historyChannelId" class="form-control" placeholder="輸入頻道 ID 查詢">
+          <button id="loadHistoryBtn" class="btn official-btn px-4" style="color: white;">查詢</button>
+        </div>
+        <div id="historyList" class="history-list">
+          <p class="text-muted text-center py-4">請輸入頻道 ID 後點擊查詢</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../BackendService.js"></script>
+  <script src="../chatroom/ChatBackendService.js"></script>
+  <script src="official.js"></script>
+</body>
+</html>
