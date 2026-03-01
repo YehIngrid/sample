@@ -254,15 +254,15 @@ function findTargetIdByOrderId(goodsOrders, orderId) {
   const order = goodsOrders.find(o => o.id == orderId);
   if (!order) return null;
 
+  // 支援新欄位 id，向下相容 accountId
+  const buyerId  = order.buyerUser?.id  ?? order.buyerUser?.accountId;
+  const sellerId = order.sellerUser?.id ?? order.sellerUser?.accountId;
+
   // 如果我是買家 → 對方是賣家
-  if (order.buyerUser.accountId == myUid) {
-    return order.sellerUser.accountId;
-  }
+  if (String(buyerId) == myUid) return sellerId;
 
   // 如果我是賣家 → 對方是買家
-  if (order.sellerUser.accountId == myUid) {
-    return order.buyerUser.accountId;
-  }
+  if (String(sellerId) == myUid) return buyerId;
 
   return null;
 }
@@ -1575,9 +1575,11 @@ function openReviewModal(orderId, targetId, targetRole) {
 
   const order = (goodsOrder || []).find(o => o.id == orderId);
   const targetUser = isRatingBuyer ? order?.buyerUser : order?.sellerUser;
-  const targetPhoto = targetUser?.photoURL || '../image/default-avatar.png';
-  const targetName = targetUser?.name || roleName;
+  const targetPhoto  = targetUser?.photoURL || '../image/default-avatar.png';
+  const targetName   = targetUser?.name || roleName;
   const targetCredit = targetUser?.rate ?? '-';
+  // 優先使用新欄位 id，fallback 到舊的 accountId 或呼叫方傳入的 targetId
+  const resolvedTargetId = targetUser?.id ?? targetUser?.accountId ?? targetId;
 
   Swal.fire({
     title: `請為此次訂單的${roleName}評分`,
@@ -1654,14 +1656,14 @@ function openReviewModal(orderId, targetId, targetRole) {
           });
           body = {
             orderId,
-            targetId,
+            targetId: resolvedTargetId,
             onTime: scores.onTime ?? 0,
             communication: scores.communication ?? 0,
             reliability: scores.reliability ?? 0,
             comment
           };
         } else {
-          body = { orderId, targetId, score, comment };
+          body = { orderId, targetId: resolvedTargetId, score, comment };
         }
 
         const res = await fetch('/api/reviews', {
@@ -1708,7 +1710,7 @@ async function openPartnerReviewModal(orderId, isSell) {
   const partnerUser = isSell ? data?.buyerUser : data?.sellerUser;
   const partnerName = partnerUser?.name || '對方';
   const partnerPhoto = partnerUser?.photoURL || '../image/default-avatar.png';
-  const partnerCredit = partnerUser?.credit ?? '-';
+  const partnerCredit = partnerUser?.rate ?? '-';
   const partnerIntro = partnerUser?.intro ?? partnerUser?.description ?? '';
   const maxScore = isSell ? 3 : 5;
 
