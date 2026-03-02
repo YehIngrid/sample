@@ -1568,13 +1568,27 @@ async function openChatWithTarget(targetUserId) {
   }
 }
 // TODO 評價UI
-function openReviewModal(orderId, targetId, targetRole) {
+async function openReviewModal(orderId, targetId, targetRole) {
   const isRatingBuyer = (targetRole === 'buyer');
   const roleName = isRatingBuyer ? '買家' : '賣家';
   const maxScore = isRatingBuyer ? 3 : 5;
 
-  const order = (goodsOrder || []).find(o => o.id == orderId);
-  const targetUser = isRatingBuyer ? order?.buyerUser : order?.sellerUser;
+  // 先從列表快取取得使用者資訊
+  let order = (goodsOrder || []).find(o => o.id == orderId);
+  let targetUser = isRatingBuyer ? order?.buyerUser : order?.sellerUser;
+
+  // 若列表資料缺少 name（/api/order/seller 可能未帶完整 buyerUser），
+  // 改從訂單詳情 API 取得完整資訊
+  if (!targetUser?.name) {
+    try {
+      const res = await backendService.getOrderDetails(orderId);
+      const detail = res?.data?.data;
+      targetUser = isRatingBuyer ? detail?.buyerUser : detail?.sellerUser;
+    } catch (e) {
+      console.warn('取得訂單詳情失敗，將以預設值顯示', e);
+    }
+  }
+
   const targetPhoto  = targetUser?.photoURL || '../image/default-avatar.png';
   const targetName   = targetUser?.name || roleName;
   const targetCredit = targetUser?.rate ?? '-';
