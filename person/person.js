@@ -1594,7 +1594,7 @@ async function openReviewModal(orderId, targetId, targetRole) {
   const targetCredit = targetUser?.rate ?? '-';
   // 優先使用新欄位 id，fallback 到舊的 accountId 或呼叫方傳入的 targetId
   const resolvedTargetId = targetUser?.id ?? targetUser?.accountId ?? targetId;
-
+  console.log('targetPhoto: ', targetPhoto, 'targetName: ', targetName, 'targetCredit: ', targetCredit, 'resolvedTargetId: ', targetUser?.accountId);
   Swal.fire({
     title: `請為此次訂單的${roleName}評分`,
     html: `
