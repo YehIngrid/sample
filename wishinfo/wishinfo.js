@@ -104,11 +104,88 @@ async function handleContactWisher() {
       return;
     }
 
-    await wpbackendService.contactWisher(wishId);
-    alert('已聯絡許願者，請等待回覆！');
+    // 取得自己的商品列表
+    const res = await backendService.getMyItems();
+    const commodities = res?.data?.commodities || [];
+
+    if (commodities.length === 0) {
+      const redirectUrl = encodeURIComponent(window.location.pathname + window.location.search);
+      const goSellResult = await Swal.fire({
+        icon: 'info',
+        title: '您目前沒有上架的商品',
+        text: '請先到個人頁面上架商品後再媒合。',
+        showCancelButton: true,
+        confirmButtonText: '去上架商品',
+        cancelButtonText: '關閉'
+      });
+      if (goSellResult.isConfirmed) {
+        window.location.href = `../shop/shop.html?page=seller&redirect=${redirectUrl}`;
+      }
+      return;
+    }
+
+    // 建立商品卡片 HTML
+    const cardsHtml = commodities.map(item => {
+      const name  = item.name?.replace(/</g, '&lt;').replace(/>/g, '&gt;') || '未命名';
+      const price = Number(item.price).toLocaleString();
+      const img   = item.mainImage || '../image/default-avatar.png';
+      return `
+        <div class="wc-card" data-id="${item.id}" tabindex="0">
+          <img src="${img}" alt="${name}" loading="lazy">
+          <div class="wc-info">
+            <div class="wc-name">${name}</div>
+            <div class="wc-price">$${price}</div>
+            <div class="wc-stock">庫存：${item.stock}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const result = await Swal.fire({
+      title: '請選擇要媒合的商品',
+      width: 680,
+      html: `
+        <div class="wc-grid">${cardsHtml}</div>
+        <div style="text-align:right; margin-top:10px;">
+          <a href="../shop/shop.html?page=seller&redirect=${encodeURIComponent(window.location.pathname + window.location.search)}"
+             style="font-size:.8rem; color:#888; text-decoration:underline;">
+            找不到想上架的商品？點此新增商品 
+          </a>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: '確認媒合',
+      cancelButtonText: '取消',
+      didOpen: () => {
+        document.querySelectorAll('.wc-card').forEach(card => {
+          const select = () => {
+            document.querySelectorAll('.wc-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+          };
+          card.addEventListener('click', select);
+          card.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); }
+          });
+        });
+      },
+      preConfirm: () => {
+        const selected = document.querySelector('.wc-card.selected');
+        if (!selected) {
+          Swal.showValidationMessage('請選擇一個商品');
+          return false;
+        }
+        return selected.dataset.id;
+      }
+    });
+
+    if (result.isConfirmed) {
+      const selectedCommodityId = result.value;
+      console.log('選到商品ID:', selectedCommodityId);
+      await wpbackendService.contactWisher(wishId, selectedCommodityId);
+      Swal.fire({ icon: 'success', title: '已聯絡許願者！', text: '請等待對方回覆。' });
+    }
   } catch (error) {
     console.error('Error contacting wisher:', error);
-    alert('聯絡許願者失敗，請稍後再試。');
+    Swal.fire({ icon: 'error', title: '聯絡失敗', text: '請稍後再試。' });
   }
 }
 

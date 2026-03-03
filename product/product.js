@@ -584,9 +584,14 @@ scoreStar.textContent = renderStars(Number(scoreStar.textContent));
  */
 async function checkIsOwnProduct(sellerId) {
     if (!backendService) return;
-    const currentUserId = localStorage.getItem('uid'); // 從 localStorage 取出登入者 ID
-    if (currentUserId && String(currentUserId) === String(sellerId)) {
-        disableActionButtons();
+    try {
+        const res = await backendService.whoami();
+        const currentUserId = res?.data?.uid;
+        if (currentUserId && String(currentUserId) === String(sellerId)) {
+            disableActionButtons();
+        }
+    } catch (_) {
+        // 未登入，無需禁用按鈕
     }
 }
 

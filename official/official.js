@@ -3,14 +3,14 @@ const backendSvc = new BackendService();
 
 // ── 登入驗證 ──────────────────────────────────────────
 (async () => {
-  const uid = localStorage.getItem('uid');
-  const username = localStorage.getItem('username');
-  if (!uid) {
+  try {
+    await backendSvc.whoami();
+    const username = localStorage.getItem('username');
+    document.getElementById('adminName').textContent = username || '管理員';
+  } catch (e) {
     await Swal.fire({ icon: 'warning', title: '請先登入', text: '即將跳轉至登入頁' });
     window.location.href = '../account/account.html';
-    return;
   }
-  document.getElementById('adminName').textContent = username || '管理員';
 })();
 
 // ── 登出 ──────────────────────────────────────────────

@@ -50,6 +50,11 @@ async function renderAuthUI() {
         };
       });
 
+      // Session keep-alive：每 5 分鐘 ping 一次，避免 cookie session 過期
+      setInterval(async () => {
+        try { await backendService.whoami(); } catch (_) {}
+      }, 5 * 60 * 1000);
+
     } catch (err) {
       document.querySelectorAll('.username').forEach((el) => {
         el.textContent = '';

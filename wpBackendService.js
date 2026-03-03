@@ -11,7 +11,7 @@ class wpBackendService {
             const formData = new FormData();
             formData.append('itemName', itemName);
             formData.append('description', description);
-            formData.append('priority', priority);
+            formData.append('priority', String(priority));
             formData.append('maxPrice', maxPrice);
             formData.append('photo', photo);
             const response = await axios.post(
@@ -64,7 +64,7 @@ class wpBackendService {
         try {
             const response = await axios.get(
                 `${this.baseUrl}/my`,
-                {params: {page: page, limit: 12, status: status}}
+                {params: {page: page, limit: 12, status: String(status)}}
             );
             return response.data;
         } catch (error) {

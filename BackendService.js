@@ -10,7 +10,9 @@ class BackendService {
         if (match) return match[2];
         return null;
     }
-
+    ping() {
+        return this.http.get('/api/ping');
+    }
     //在localstorage記住目前是否登入帳號後端，用localstorage記住帳號資訊等
     async signup(userData) {
         let response;

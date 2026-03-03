@@ -377,7 +377,7 @@ if (checkoutBtn) {
       Swal.fire({
         icon: 'success',
         title: '訂單建立成功！',
-        text: '請至「我的購買清單」查看訂單',
+        text: '請至帳戶管理頁面中「消費訂單」查看',
         confirmButtonText: '確定'
       });
 
