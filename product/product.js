@@ -603,19 +603,28 @@ function disableActionButtons() {
     ];
 
     buttonsToDisable.forEach(selector => {
-        document.querySelectorAll(selector).forEach(btn => {
-            btn.disabled = true;
-            btn.style.opacity = '0.5';
-            btn.style.cursor = 'not-allowed';
-            btn.title = '您不能購買或檢舉自己的商品';
+    document.querySelectorAll(selector).forEach(btn => {
+        // 1. 視覺與功能禁用
+        // 注意：如果設了 disabled = true，某些瀏覽器會抓不到 click 事件
+        // 所以我們改用 CSS 的 pointer-events 來控制，或者保留 disabled 但用父層捕捉
+        btn.style.opacity = '0.7';
+        btn.style.cursor = 'not-allowed';
+        btn.title = '您不能購買或檢舉自己的商品';
+
+        // 2. 統一攔截點擊事件
+        btn.onclick = (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation(); // 防止觸發其他綁定的事件
             
-            // 如果是「與賣家聊聊」按鈕，移除 click 事件或讓它無效
-            if (selector === '#sellerChat') {
-                btn.onclick = (e) => {
-                    e.preventDefault();
-                    Swal.fire({ icon: 'info', title: '這是您的商品', text: '您無法與自己發起對話' });
-                };
-            }
-        });
+            Swal.fire({ 
+                icon: 'info', 
+                title: '這是您的商品或資料', 
+                text: '您無法對自己的商品與資料執行此操作' 
+            });
+        };
+        
+        // 如果原本 HTML 有 disabled 屬性，建議移除或改用 pointer-events: none 的邏輯
+        // 這樣 onclick 才能被觸發
     });
+  });
 }
