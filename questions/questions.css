@@ -70,7 +70,7 @@ main {
 }
 /* 每個內容區塊 */
 section {
-  margin-bottom: 100px;
+  margin-bottom: 20vh;
   padding: 20px;
   background-color: transparent;
   padding-left: 4vw;

@@ -504,37 +504,7 @@ ul{
   --bs-bg-opacity: 0 !important;
   background-color: transparent !important;
 }
-.wishad{
-  background-color: #ffecada1;
-  width: 80vw;
-  margin: 0 auto;
-  border-radius: 20px;
-  padding: 3vw;
-  margin-bottom: 7vh;
-}
-.wishad h2{
-  background-color: #ff8952;
-  display: inline;
-  color: #ffecad;
-  font-weight: 400;
-  padding: 5px;
-  border-radius: 5px;
-}
-.wishad h1{
-  color:#803c00;
-  font-size: 2.7rem;
-  font-weight: 700;
-  padding-top: 10px;
-}
-.wishad h3{
-  padding-top: 2rem;
-  color: #803c00;
-  font-size: 1.6rem;
-}
-.wishad p{
-  color: #803c00;
-  font-size: 1.2rem;
-}
+
 .contentwish{
   margin: 0 auto;
   width: 80vw;
@@ -579,12 +549,114 @@ ul{
   max-width: 1200px; 
 } */
 .newsell {
-  background: linear-gradient( to right, #24b68569, #004b972d);
-  border-radius: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   width: 80vw;
   margin: 0 auto;
   margin-top: 10px;
   padding: 20px;
+}
+.cardTitle {
+  margin: 0; 
+  padding-left: 4px; 
+  font-weight: 600; 
+  letter-spacing: 4px; 
+}
+.explainStep {
+  background: #ABDAD5;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  width: 80vw;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding: 20px;
+}
+.rule-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rule-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0px;
+  margin: 0px 10px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* 隐藏滚动条 */
+}
+
+.rule-container::-webkit-scrollbar {
+  display: none;
+}
+
+.rule-card {
+  width: 200px;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.08);
+  scroll-snap-align: start;
+  transition: 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.rule-card h5 {
+  margin-top: 0px;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.rule-card p {
+  margin-bottom: 0px;
+  font-size: 12px;
+}
+.rule-card:hover {
+  transform: translateY(-6px);
+}
+
+.rule-btn {
+  margin-top: auto;         /* 關鍵：把按鈕推到底 */
+  align-self: flex-end;     /* 靠右 */
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 14px;
+  background: #004b97;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.rule-btn:hover {
+  background: #004181;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: white;
+  border: none;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+.arrow.left { left: -10px; }
+.arrow.right { right: -10px; }
+
+@media (max-width: 768px) {
+  .arrow { display: none; }
+  .rule-card { width: 70%; }
 }
 .top {
   /* background: linear-gradient(to right, #ffafb6, var(--brand)); */
@@ -1240,10 +1312,13 @@ button {
 } 
 
 .wishpoollook {
-  background-color: var(--primary-color);
   padding: 10px;
+  padding-top: 15px;
   border-radius: 20px;
   box-shadow: 0 2px 5px rgba(3, 1, 1, 0.1);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   font-weight: 700;
   color: var(--secondary-color);
 }
@@ -1335,9 +1410,11 @@ button {
   .firstlinesell {
     width: 91vw;
   }
+  .explainStep {
+    width: 91vw;
+  }
   .newsell {
     width: 91vw;
-    padding: 2px
   }
   .top {
     padding: 12px;
@@ -1705,13 +1782,13 @@ html{ scroll-behavior:smooth; }
     margin:5px;
     border-radius:25px;
     font-size:13px;
-    color:var(--secondary-color);
+    background-color:var(--secondary-color);
     font-weight:600;
     opacity:0;
     transform:translateY(20px);
     cursor: pointer;
     animation: pop 0.6s forwards ease-out;
-    background-color: #fff;
+    color: #fff;
     max-width: 120px;
     white-space: nowrap;      /* 不換行 */
     overflow: hidden;         /* 超出隱藏 */
@@ -1787,11 +1864,12 @@ html{ scroll-behavior:smooth; }
     z-index:10000;
 }
 .wisher img {
-  width: 25px;
-  height: 25px;
+  width: 27px;
+  height: 27px;
   border-radius: 50px;
   object-fit: cover;
   object-position: center;
+  border: 1px solid #fff;
 }
 .wisher {
   margin-right: 10px;

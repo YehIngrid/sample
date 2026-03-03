@@ -698,7 +698,7 @@ function showWishes(data) {
             <img src="${ownerphoto}" alt="許願者頭像">
           </div>
           <div class="wishtitle">
-            <p style="margin-bottom: 0px;">${cardtitle}</p>
+            <p style="margin-bottom: 0px; font-size: 1rem;">${cardtitle}</p>
           </div>
       </div>
       `
@@ -717,3 +717,16 @@ const talkInterface = document.getElementById('talkInterface');
 chatopen.addEventListener('click', function(e){
     toggleChatInterface();
 })
+const container = document.getElementById("ruleContainer");
+const leftBtn = document.getElementById("ruleLeft");
+const rightBtn = document.getElementById("ruleRight");
+
+const scrollAmount = 300;
+
+rightBtn.addEventListener("click", () => {
+  container.scrollLeft += scrollAmount;
+});
+
+leftBtn.addEventListener("click", () => {
+  container.scrollLeft -= scrollAmount;
+});
