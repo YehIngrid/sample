@@ -33,15 +33,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     onSuccess(response);
   } catch (e) {
     console.error('取得商品失敗', e);
+    const status = e?.response?.status;
+    if (status === 404 || !status) {
+      window.location.replace('../NotFoundPage.html');
+    }
   }
   document.querySelectorAll('.shopcart').forEach(btn => {
     btn.addEventListener('click', async (e) => {
+      if (btn.dataset.ownProduct) return;
       if (!(await requireLogin())) return;
       onAddToCart(e);
     });
   });
   document.querySelectorAll('.buybtn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
+      if (btn.dataset.ownProduct) return;
       if (!(await requireLogin())) return;
       orderNow(e);
     });
@@ -487,6 +493,7 @@ document.addEventListener('click', async (e) => {
   // 判斷點擊的是否為 .order 按鈕
   const btn = e.target.closest('.order');
   if (!btn) return;
+  if (btn.dataset.ownProduct) return;
 
   e.preventDefault();
 
@@ -612,6 +619,7 @@ function disableActionButtons() {
         // 1. 視覺與功能禁用
         // 注意：如果設了 disabled = true，某些瀏覽器會抓不到 click 事件
         // 所以我們改用 CSS 的 pointer-events 來控制，或者保留 disabled 但用父層捕捉
+        btn.dataset.ownProduct = '1';
         btn.style.opacity = '0.7';
         btn.style.cursor = 'not-allowed';
         btn.title = '您不能購買或檢舉自己的商品';
@@ -620,11 +628,11 @@ function disableActionButtons() {
         btn.onclick = (e) => {
             e.preventDefault();
             e.stopImmediatePropagation(); // 防止觸發其他綁定的事件
-            
-            Swal.fire({ 
-                icon: 'info', 
-                title: '這是您的商品或資料', 
-                text: '您無法對自己的商品與資料執行此操作' 
+
+            return Swal.fire({
+                icon: 'info',
+                title: '這是您的商品或資料',
+                text: '您無法對自己的商品與資料執行此操作'
             });
         };
         

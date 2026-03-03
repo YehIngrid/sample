@@ -225,6 +225,21 @@ class BackendService {
             return Promise.reject(error);
         }
     }
+    // 根據分類取得商品列表
+    async getCategoryItems(category, pagingInfo) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/list/category/${category}`, {
+                params: {
+                    page: pagingInfo.page,
+                    limit: pagingInfo.limit
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("無法取得分類資料", error);
+            return Promise.reject(error);
+        }
+    }
     async getItemsInfo(id) {
         try {
             const response = await axios.get(`${this.baseUrl}/api/commodity/item/${id}`);

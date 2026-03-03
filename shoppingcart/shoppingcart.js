@@ -4,6 +4,12 @@ let chatService = null;
 let isCheckingOut = false;
 let chatInnerWin = null;
 
+function esc(str) {
+  return String(str ?? '').replace(/[&<>"']/g, s =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
+  );
+}
+
 // ================== State ==================
 const LS_KEY = 'cart_state_v1';
 let cartItems = [];
@@ -154,15 +160,15 @@ function renderCart() {
       <div class="d-flex justify-content-between align-items-start mb-2">
           <div class="d-flex align-items-center mb-1">
             <img src="${item.owner_photo}" class="owner-avatar me-2">
-            <small>${item.owner_name}</small>
+            <small>${esc(item.owner_name)}</small>
           </div>
           <input type="checkbox" data-id="${item.id}" class="form-check-input me-3 cart-check" ${item.checked ? 'checked' : ''}>
       </div>
       <div class="d-flex align-items-start" style="margin-right: 2px;">
         <img src="${item.img}" class="item-thumb me-2">
         <div class="flex-grow-1" style="min-width: 80px; margin-right: 2px;">
-          <h6>${item.name}</h6>
-          <p class="text-muted ellipsis" style="font-size: 12px;">${item.description}</p>
+          <h6>${esc(item.name)}</h6>
+          <p class="text-muted ellipsis" style="font-size: 12px;">${esc(item.description)}</p>
         </div>
         <div class="text-end">
           <div style="font-size: 16px; font-weight: bold;">

@@ -54,6 +54,11 @@ async function renderWishInfo(id) {
         wisher.innerText = res.data.owner.name || '未知';
     } catch (error) {
         console.error('Error fetching wish info:', error);
+        // 找不到願望（404）或其他錯誤，導向 404 頁面
+        const status = error?.response?.status;
+        if (status === 404 || !status) {
+            window.location.replace('../NotFoundPage.html');
+        }
         return;
     }
 }
@@ -98,6 +103,8 @@ const contactbtn = document.getElementById('contact-wisher');
 const mbcontactbtn = document.getElementById('contact-wisher-mobile');
 
 async function handleContactWisher() {
+  const btns = [contactbtn, mbcontactbtn].filter(Boolean);
+  btns.forEach(b => { b.disabled = true; b.dataset.origText = b.textContent; b.textContent = '載入中...'; });
   try {
     if (!wishId) {
       console.warn('缺少願望 id');
@@ -186,6 +193,8 @@ async function handleContactWisher() {
   } catch (error) {
     console.error('Error contacting wisher:', error);
     Swal.fire({ icon: 'error', title: '聯絡失敗', text: '請稍後再試。' });
+  } finally {
+    btns.forEach(b => { b.disabled = false; b.textContent = b.dataset.origText || '媒合願望'; });
   }
 }
 

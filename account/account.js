@@ -34,8 +34,6 @@ async function callSignUp() {
     password: passwordInput1.value,
     username: nameInput.value.trim()
   };
-  console.log("註冊資訊：", payload);
-
   // 顯示 loader
   const loader = document.getElementById('loader-wrapper');
   loader.style.display = 'flex';

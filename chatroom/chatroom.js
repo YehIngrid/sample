@@ -343,12 +343,12 @@ class ChatRoomList {
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
                             <img src="${roomAvatar}"
-                                 alt="${roomName}"
+                                 alt="${this.escapeHtml(roomName)}"
                                  style="width: 45px; height: 45px; border-radius: 50px; object-fit: cover; object-position: center;${isOfficial ? ' border: 2px solid #004b97;' : ''}">
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0 roomName">${roomName}${isOfficial ? ' <span style="font-size:0.6rem; background:#004b97; color:#fff; border-radius:4px; padding:1px 5px; vertical-align:middle;">官方</span>' : ''}</h6>
-                            <small class="text-muted lastMessage">${this.getLastMessageText(data.lastMessage)}</small>
+                            <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span style="font-size:0.6rem; background:#004b97; color:#fff; border-radius:4px; padding:1px 5px; vertical-align:middle;">官方</span>' : ''}</h6>
+                            <small class="text-muted lastMessage">${this.escapeHtml(this.getLastMessageText(data.lastMessage))}</small>
                         </div>
                         <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
                             width: 10px; height: 10px;

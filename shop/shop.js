@@ -3,6 +3,12 @@ let wpbackendService;
 let chatInnerWin;
 let chatRoomList;
 
+function esc(str) {
+  return String(str ?? '').replace(/[&<>"']/g, s =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
+  );
+}
+
 const midcontent = document.getElementById('midcontent');
 //JavaScript: 控制左右按鈕捲動
 
@@ -97,10 +103,10 @@ function renderItems(items){
       div.innerHTML = `
         <div class="card">
           <div class="img-box">
-            <img src="${item.mainImage}" alt="${item.name}">
-            <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${item.price}</p>
+            <img src="${item.mainImage}" alt="${esc(item.name)}">
+            <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${esc(item.price)}</p>
           </div>
-          <div class="hotItemName">${item.name}</div>
+          <div class="hotItemName">${esc(item.name)}</div>
         </div>
       `;
     listEl.appendChild(div);
@@ -505,15 +511,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       card.innerHTML = `
         <div class="product-thumb">
-          <img src="${imgUrl}" alt="${product.name ?? ''}" loading="lazy">
+          <img src="${imgUrl}" alt="${esc(product.name)}" loading="lazy">
         </div>
         <div class="card-body d-flex flex-column">
-          <h5 class="card-title ellipsis-text">${product.name ?? ''}</h5>
+          <h5 class="card-title ellipsis-text">${esc(product.name)}</h5>
           <p class="card-text text-muted mb-2 ellipsis-text"># ${category} ${newOrOld ? `# ${newOrOld}` : ''}</p>
           <div class="mt-auto">
             <div class="d-flex justify-content-between align-items-center">
-              <span class="fw-bold price">NT$ ${product.price ?? ''}</span>
-              <small class="text-muted stock">庫存 ${product.stock ?? 0}</small>
+              <span class="fw-bold price">NT$ ${esc(product.price)}</span>
+              <small class="text-muted stock">庫存 ${Number(product.stock ?? 0)}</small>
             </div>
           </div>
         </div>
@@ -698,7 +704,7 @@ function showWishes(data) {
             <img src="${ownerphoto}" alt="許願者頭像">
           </div>
           <div class="wishtitle">
-            <p style="margin-bottom: 0px; font-size: 1rem;">${cardtitle}</p>
+            <p style="margin-bottom: 0px; font-size: 1rem;">${esc(cardtitle)}</p>
           </div>
       </div>
       `

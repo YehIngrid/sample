@@ -1261,6 +1261,8 @@ const updateStatusUI = (data) => {
     el.form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!currentEditId) return;
+      const submitBtn = el.form.querySelector('button[type="submit"]');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.orig = submitBtn.textContent; submitBtn.textContent = '儲存中...'; }
 
       const formData = new FormData();
       formData.append('name', el.name.value.trim());
@@ -1304,6 +1306,8 @@ const updateStatusUI = (data) => {
       } catch (err) {
         console.error(err);
         Swal.fire({ icon: 'error', title: '更新失敗', text: String(err || '請稍後再試') });
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.orig || '儲存'; }
       }
     });
 
