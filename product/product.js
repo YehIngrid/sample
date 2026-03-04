@@ -1,3 +1,21 @@
+// ── Skeleton helper ──
+function sellerProductSkeletonHTML(n = 3) {
+  return Array.from({length: n}, () => `
+    <div class="col-12 col-md-6 col-lg-4 mb-3">
+      <div class="card h-100">
+        <div class="row g-0">
+          <div class="col-4">
+            <div class="skeleton" style="height:100%;min-height:100px;border-radius:8px 0 0 8px;"></div>
+          </div>
+          <div class="col-8 card-body">
+            <div class="skeleton skeleton-text" style="width:85%;"></div>
+            <div class="skeleton skeleton-text" style="width:50%;margin-top:8px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
 // 全域變數（不要再用 const/let 重新宣告它）
 let backendService = null;
 let chatService = null;
@@ -407,6 +425,8 @@ async function showSellerCommodities(id) {
   const sellerCommodities = document.querySelector('#otherProducts');
   console.log('sellerCommodities:', sellerCommodities);
   if (!sellerCommodities) return;
+
+  sellerCommodities.innerHTML = sellerProductSkeletonHTML();
 
   const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span> NT$</span>`;
   const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u));

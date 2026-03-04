@@ -37,3 +37,43 @@ collapsibles.forEach(btn => {
     }
   });
 });
+
+// ================== Hash 自動展開 ==================
+function openFaqById(id) {
+  const target = document.getElementById(id);
+  if (!target) return;
+
+  // id 可能在 <li> 上，也可能直接在 <button class="collapsible"> 上
+  const btn = target.classList.contains('collapsible')
+    ? target
+    : target.querySelector('.collapsible');
+  if (!btn) return;
+
+  const content = btn.nextElementSibling;
+  const icon = btn.querySelector('.icon');
+
+  if (content && !content.classList.contains('show')) {
+    content.classList.add('show');
+    if (icon) {
+      icon.classList.remove('fa-plus');
+      icon.classList.add('fa-minus');
+    }
+  }
+
+  // 稍微往上偏移，讓標題不被 navbar 遮住
+  setTimeout(() => {
+    const top = target.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }, 50);
+}
+
+// 頁面載入時根據 hash 展開（例如 questions.html#howtobuy）
+const initHash = window.location.hash.slice(1);
+if (initHash) {
+  openFaqById(initHash);
+}
+
+// 在同一頁點擊側邊欄連結時也能展開
+window.addEventListener('hashchange', () => {
+  openFaqById(window.location.hash.slice(1));
+});

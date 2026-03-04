@@ -1,3 +1,18 @@
+// ── Skeleton helper ──
+function commoditySkeletonHTML(n = 12) {
+  return Array.from({length: n}, () => `
+    <div class="col-6 col-md-4 col-lg-2">
+      <div class="card h-100">
+        <div class="skeleton" style="height:160px;border-radius:4px 4px 0 0;"></div>
+        <div class="card-body">
+          <div class="skeleton skeleton-text" style="width:85%;"></div>
+          <div class="skeleton skeleton-text" style="width:50%;"></div>
+          <div class="skeleton skeleton-text" style="width:40%;margin-top:8px;"></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
 // ====== 設定 ======
 const PAGE_SIZE = 18;
 let currentCategory = 'all';
@@ -112,6 +127,7 @@ function changeCategory(category) {
 async function loadProducts() {
   if (isLoading) return;
   isLoading = true;
+  productRow.innerHTML = commoditySkeletonHTML();
   loaderEl.textContent = '載入中...';
   let currentSource = 'all';     // all | hot | new（資料來源）
 let currentCategory = 'all';   // 書籍 / 生活用品…

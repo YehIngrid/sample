@@ -1,5 +1,19 @@
 let backendService;
 let wpbackendService;
+
+// ── Skeleton helper ──
+function wishSkeletonHTML(n = 6) {
+  return Array.from({length: n}, () => `
+    <div class="card item">
+      <div class="card-body d-flex align-items-center">
+        <div class="skeleton" style="width:80px;height:80px;border-radius:8px;flex-shrink:0;"></div>
+        <div style="margin-left:15px;flex:1">
+          <div class="skeleton skeleton-text" style="width:75%;"></div>
+          <div class="skeleton skeleton-text" style="width:55%;"></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
 let isLoggedIn;
 let currentPage = 1;
 let totalPages = 1; // 如果後端有回 totalPages
@@ -109,6 +123,8 @@ async function checkLogin() {
 
 async function listAll(page = 1) {
   const total = document.getElementById('total');
+  const wishGrid = document.getElementById('wishGrid');
+  if (wishGrid) wishGrid.innerHTML = wishSkeletonHTML();
     wpbackendService = new wpBackendService();
     try {
       const res = await wpbackendService.listWishes(page);
@@ -128,6 +144,8 @@ async function listAll(page = 1) {
 // TODO nextpage previous page 還沒做
 async function listMyWishes(mypage) {
   const mytotal = document.getElementById('my-total');
+  const myWishGrid = document.getElementById('myWishGrid');
+  if (myWishGrid) myWishGrid.innerHTML = wishSkeletonHTML();
     wpbackendService = new wpBackendService();
     try {
       const res = await wpbackendService.myWishes(mypage, null);

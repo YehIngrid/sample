@@ -15,6 +15,13 @@ let filteredData = data;  // 預設為全部資料
       return Math.ceil(filteredData.length / itemsPerPage);
     }
 
+    // HTML 標籤去除，用於產生摘要
+    function stripHtml(html) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      return tmp.textContent || '';
+    }
+
     // 顯示新聞列表
     function renderNews(page) {
       currentPage = page;
@@ -23,25 +30,34 @@ let filteredData = data;  // 預設為全部資料
       const end = page * itemsPerPage;
       const currentItems = filteredData.slice(start, end);
 
+      if (currentItems.length === 0) {
+        document.getElementById("newsList").innerHTML =
+          `<p class="news-empty">此分類目前沒有公告</p>`;
+        renderPagination();
+        return;
+      }
+
       let html = "";
       currentItems.forEach((item, index) => {
-        // 這裡的 index 是當前頁面的局部索引，若要取全域索引需調整計算
-        // 但我們可以直接在 showNewsDetail() 裡用 (start + index)
+        const rawExcerpt = stripHtml(item.detail);
+        const excerpt = rawExcerpt.length > 80
+          ? rawExcerpt.slice(0, 80) + '...'
+          : rawExcerpt;
+        const badgeClass = item.from === '系統公告' ? 'system'
+                         : item.from === '店鋪公告' ? 'store'
+                         : 'other';
         html += `
-          <tr>
-            <td class="announce" style="padding-left: 2vw;">${item.from}</td>
-            <td>
-              <a href="#" 
-                 onclick="showNewsDetail(${start + index})"
-                  class="name">
-                ${item.n_name}
-              </a>
-            </td>
-            <td class="time">${item.time}</td>
-          </tr>
+          <div class="news-card" onclick="showNewsDetail(${start + index})">
+            <div class="news-card-header">
+              <span class="news-badge ${badgeClass}">${item.from}</span>
+              <span class="news-date">${item.time}</span>
+            </div>
+            <h3 class="news-card-title">${item.n_name}</h3>
+            <p class="news-card-excerpt">${excerpt}</p>
+          </div>
         `;
       });
-      document.querySelector(".news tbody").innerHTML = html;
+      document.getElementById("newsList").innerHTML = html;
       renderPagination();
     }
 
@@ -97,29 +113,24 @@ let filteredData = data;  // 預設為全部資料
       document.getElementById("detailTime").textContent = item.time;
       document.getElementById("detailContent").innerHTML = item.detail;
 
-      // 3. 顯示 detail 區塊，隱藏列表
-      document.getElementById("newsListPage").style.display = "none";
+      // 3. 隱藏整個 .content wrapper（含 min-height），顯示 detail
+      document.querySelector(".content").style.display = "none";
       document.getElementById("newsDetailPage").style.display = "block";
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
     // 返回新聞列表
     function showNewsList() {
-      // 隱藏 detail 區塊，顯示列表
       document.getElementById("newsDetailPage").style.display = "none";
-      document.getElementById("newsListPage").style.display = "block";
+      document.querySelector(".content").style.display = "";
     }
 
-    // 假設你的標籤連結（tab-link）可能是這樣：
-    // <a class="tab-link" href="#">全部公告</a>
-    // <a class="tab-link" href="#">系統公告</a>
-    // <a class="tab-link" href="#">店鋪公告</a>
-    const tabs = document.querySelectorAll('.tab-link');
+    const tabs = document.querySelectorAll('.filter-btn');
     tabs.forEach(tab => {
       tab.addEventListener('click', function(e) {
-        e.preventDefault();
         tabs.forEach(t => t.classList.remove('active'));
-        e.target.classList.add('active');
-        filterNews(e.target.textContent.trim());
+        e.currentTarget.classList.add('active');
+        filterNews(e.currentTarget.dataset.category);
       });
     });
 

@@ -3,6 +3,39 @@ let wpbackendService;
 let chatInnerWin;
 let chatRoomList;
 
+// ── Skeleton helpers ──
+function hotSkeletonHTML(n = 6) {
+  return Array.from({length: n}, () => `
+    <div class="hot-item">
+      <div class="card" style="width:148px">
+        <div class="skeleton" style="width:148px;height:148px;border-radius:10px 10px 0 0;"></div>
+        <div style="padding:8px 6px">
+          <div class="skeleton skeleton-text" style="width:85%;margin:0 auto;"></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function productGridSkeletonHTML(n = 6) {
+  return Array.from({length: n}, () => `
+    <div class="col">
+      <div class="card product-card h-100">
+        <div class="skeleton product-thumb" style="height:180px;border-radius:8px 8px 0 0;"></div>
+        <div class="card-body">
+          <div class="skeleton skeleton-text" style="width:90%;"></div>
+          <div class="skeleton skeleton-text" style="width:55%;"></div>
+          <div class="skeleton skeleton-text" style="width:35%;margin-top:10px;"></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function wishAreaSkeletonHTML(n = 3) {
+  return Array.from({length: n}, () => `
+    <div class="wish" style="min-width:120px">
+      <div class="skeleton" style="width:60px;height:60px;border-radius:50%;margin:0 auto 6px;"></div>
+      <div class="skeleton skeleton-text" style="width:70%;margin:0 auto;"></div>
+    </div>`).join('');
+}
+
 function esc(str) {
   return String(str ?? '').replace(/[&<>"']/g, s =>
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
@@ -85,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
   callWish();
 
   async function fetchPage(p){
+  listEl.innerHTML = hotSkeletonHTML();
   const pagingInfo = { page: p, limit: limit };
    const response = await backendService.getHotItems(pagingInfo);
     const items = response?.data?.commodities ?? [];
@@ -441,7 +475,7 @@ document.getElementById('image').addEventListener('change', function (e) {
 //?, orders: [{prop:'price',asc: false}, {prop:'id', asc:true}]
 document.addEventListener('DOMContentLoaded', () => {
   let page = 1;
-  const limit = 12;
+  const limit = 24;
 
   const container = document.getElementById('product-grid');
   const prevBtn   = document.getElementById('newPrev');
@@ -468,8 +502,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 主要流程
    async function fetchPage(p){
-    togglePager(true); // ← 打 API 前先讓按鈕都停用 + 顯示載入中
-
+    togglePager(true);
+    container.innerHTML = productGridSkeletonHTML();
     const pagingInfo = { page: p, limit };
     const response = await backendService.getNewItems(pagingInfo);
       const productList = response?.data?.commodities ?? [];
@@ -675,6 +709,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 // TODO 呼叫 wishpool.js, wpBackendService.js 來展示願望
 async function callWish() {
+  const wishContainer = document.getElementById("wishArea");
+  if (wishContainer) wishContainer.innerHTML = wishAreaSkeletonHTML();
   wpbackendService = new wpBackendService();
   try {
     const res = await wpbackendService.listWishes(1);

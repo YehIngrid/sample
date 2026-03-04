@@ -190,7 +190,7 @@ section li{
 }
 
 .content-news.show {
-  max-height: 500px; /* 給個足夠的高度 */
+  max-height: 5000px; /* 足夠容納多張圖片的 FAQ */
   padding: 12px 16px;
 }
 

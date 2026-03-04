@@ -504,3 +504,22 @@ ul{
   display: block;             /* 確保有效果 (或 inline-block) */
   max-width: 200px;           /* 設定寬度才看得到效果 */
 }
+
+
+/* ================== Skeleton Loading ================== */
+.skeleton {
+  background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-text {
+  height: 13px;
+  border-radius: 4px;
+  display: block;
+  margin-bottom: 6px;
+}

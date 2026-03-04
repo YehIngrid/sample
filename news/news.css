@@ -6,77 +6,126 @@
 /* .content{
     height: 100vh;
 } */
-.news{
-    padding-top: 50px;
-    width: 100%;
-}
-thead th{
-    background-color:#004b97aa;
-    color: #fff;
-    font-weight: 500;
-    font-size:1.2rem;
-    font-family: 'TimeMachine';
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
 .content{
     padding-left: 15vw;
     padding-right: 15vw;
     padding-top: 50px;
+    min-height: calc(100dvh - 60px);
 }
 
-tbody td{
-    border-bottom: solid 1px #004b97aa;
-    font-size: 14px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+/* ================== 卡片列表 ================== */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2rem;
+  padding-top: 1.4rem;
+  padding-bottom: 1rem;
 }
-#all td{
-  padding-left: 2vw;
+
+.news-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.2rem 1.4rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  border: 1px solid #e8edf3;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
-.time{
-    color:#004b97aa;
-    font-size:1rem;
+
+.news-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(0, 75, 151, 0.14);
 }
-thead {
-  display: table-header-group; /* 確保 <th> 保持在表格上方 */
+
+.news-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-tbody {
-  display: table-row-group; /* 讓 <tr> 在 <th> 下方 */
-}
-.content .nav-link{
-  color: #004b97aa !important;
-  border: none !important;
-  font-weight: 600 !important;
-}
-.content .nav-link.active{
-    background-color: #004b97aa !important;
-    color: white !important;
-}
-.content .nav{
-  border-bottom: none !important;
-}
-.announce{
-  color: rgb(74, 75, 80) !important;
-}
-.name{
-  font-size: 1.2rem;
+
+/* 分類標籤 */
+.news-badge {
+  font-size: 0.72rem;
   font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+.news-badge.system {
+  background: #e8f0fb;
   color: #004b97;
-  text-decoration: none;
-  display: block;
 }
-@media (max-width: 400px) {
-  .name{
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 8px;
-  }
-  
+.news-badge.store {
+  background: #e0fff3;
+  color: #23b779;
 }
-.name:hover{
-  font-size: 1.2rem;
-  color: #004b97aa;
+.news-badge.other {
+  background: #f3f3f3;
+  color: #555;
+}
+
+.news-date {
+  font-size: 0.78rem;
+  color: #aaa;
+}
+
+.news-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #222;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.news-card-excerpt {
+  font-size: 0.84rem;
+  color: #777;
+  line-height: 1.65;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #aaa;
+  padding: 3rem 0;
+  font-size: 0.95rem;
+}
+/* ================== 篩選按鈕 ================== */
+.news-filter {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding-top: 0.4rem;
+  padding-bottom: 0.2rem;
+}
+
+.filter-btn {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 20px;
+  border-radius: 20px;
+  border: 1.5px solid #004b97;
+  background: transparent;
+  color: #004b97;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.filter-btn:hover {
+  background: #e8f0fb;
+}
+
+.filter-btn.active {
+  background: #004b97;
+  color: #fff;
 }
 .pagechange{
   display: flex;
@@ -113,63 +162,24 @@ tbody {
   border-radius: 3px;
 }
 @media (max-width: 908px) {
-  .content{
+  .content {
     padding-left: 5vw;
     padding-right: 5vw;
   }
-  .pagechange button{
+  .pagechange button {
     font-size: 1.1rem;
   }
-  
 }
 @media (max-width: 768px) {
-  .content{
-    padding-left: 2vw;
-    padding-right: 2vw;
+  .content {
+    padding-left: 3vw;
+    padding-right: 3vw;
   }
-  .pagechange button{
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+  .pagechange button {
     font-size: 1rem;
-  }
-}
-/* 小螢幕時，改成「卡片」樣式 */
-@media (max-width: 768px) {
-  /* 1. 隱藏表頭 */
-  .news thead {
-    display: none;
-  }
-  /* 2. 每個 tr 改成區塊狀，並加點間距或邊框 */
-  .news tbody tr {
-    display: block;
-    position: relative; /* 讓絕對定位的元素可定位於此 */
-    border: 1px solid #ccc;
-    margin-bottom: 1rem;
-    padding: 2rem 0.8rem; /* 留足空間給左上與右下 */
-  }
-  /* 3. 每個 td 也改成區塊狀，寬度 100% */
-  .news td {
-    display: block;
-    width: 100%;
-    border: none; /* 隱藏小螢幕時格線，可依需求保留 */
-  }
-  /* 4. 將「所屬分類」置於卡片左上 */
-  .news td.announce {
-    position: absolute;
-    top: 0rem;
-    left: 1rem;
-    font-weight: bold;
-  }
-  /* 5. 將「發佈時間」置於卡片右下 */
-  .news td.time {
-    position: absolute;
-    bottom: 0.5rem;
-    left: 2rem;
-    color: #004b97aa; /* 可自行調整色彩 */
-    font-size: 0.9rem; /* 可自行調整大小 */
-  }
-  /* 6. 中間標題留出空間，避免和上方/下方重疊 */
-  .news td.name {
-    margin-top: 1.2rem;  /* 留空給 announce */
-    margin-bottom: 1.2rem; /* 留空給 time */
   }
 }
 .newsimg{
@@ -182,11 +192,12 @@ tbody {
   display: none; /* 預設隱藏 */
   margin-left: 15vw;
   margin-right: 15vw;
+  padding-top: 50px;
   margin-bottom: 30vh;
+  min-height: calc(100dvh - 60px);
 }
 @media (max-width: 500px) {
   #newsDetailPage {
-    margin-top: 5vh;
     margin-left: 5vw;
     margin-right: 5vw;
   }
