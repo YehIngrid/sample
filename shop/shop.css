@@ -182,8 +182,8 @@ ul{
       padding: 0 18px;
     }
     #searchForm .btn img {
-      width: 22px;
       height: 22px;
+      width: auto;
     }
   }
   .my-section {
