@@ -48,7 +48,7 @@
 
 /* 分類標籤 */
 .news-badge {
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 700;
   padding: 3px 10px;
   border-radius: 20px;
@@ -68,7 +68,7 @@
 }
 
 .news-date {
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: #aaa;
 }
 

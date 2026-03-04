@@ -298,10 +298,10 @@ small {
   }
   .stateText {
     margin-top: 5px;
-    font-size: 8px;
+    font-size: 11px;
   }
   .timestamp {
-    font-size: 6px !important;
+    font-size: 11px !important;
   }
 }
 @media screen and (max-width: 768px) {

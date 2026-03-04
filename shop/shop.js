@@ -710,7 +710,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // TODO 呼叫 wishpool.js, wpBackendService.js 來展示願望
 async function callWish() {
   const wishContainer = document.getElementById("wishArea");
-  if (wishContainer) wishContainer.innerHTML = wishAreaSkeletonHTML();
+  if (wishContainer) wishContainer.innerHTML = wishAreaSkeletonHTML(8);
   wpbackendService = new wpBackendService();
   try {
     const res = await wpbackendService.listWishes(1);
@@ -726,7 +726,7 @@ function showWishes(data) {
     return;
   }
   container.innerHTML = '';
-  data.wishes.forEach((wish, i) => {
+  data.wishes.slice(0, 8).forEach((wish, i) => {
     const card = document.createElement("div");
     card.classList.add('wish');
     card.dataset.id = wish.id;

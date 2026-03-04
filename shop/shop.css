@@ -171,6 +171,20 @@ ul{
     #mobileSearchIcon {
       display: none !important;
     }
+    #searchInput {
+      height: 48px;
+      font-size: 1rem;
+      padding: 8px 18px;
+      border-radius: 10px 0 0 10px;
+    }
+    #searchForm .btn {
+      height: 48px;
+      padding: 0 18px;
+    }
+    #searchForm .btn img {
+      width: 22px;
+      height: 22px;
+    }
   }
   .my-section {
 
@@ -467,17 +481,17 @@ ul{
   color: #383838;
   padding-left: 2px;
   margin-bottom: 0;
-  font-size: 12px;
+  font-size: 0.82rem;
 }
 .stock {
-  font-size: 11px;
+  font-size: 0.75rem;
 }
 @media screen and (max-width: 768px) {
   .card-text {
-    font-size: 10px;
+    font-size: 0.8rem;
   }
   .stock {
-    font-size: 9px;
+    font-size: 0.75rem;
   }
 }
 .price {
@@ -556,6 +570,22 @@ ul{
   margin: 0 auto;
   margin-top: 10px;
   padding: 20px;
+}
+.newsell-title {
+  margin: 0;
+  color: #004b97;
+  font-weight: 700;
+  letter-spacing: 3px;
+  font-size: 1.3rem;
+}
+.newsell-more {
+  color: #004b97;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.newsell-more:hover {
+  text-decoration: underline;
 }
 .cardTitle {
   margin: 0; 
@@ -1829,28 +1859,47 @@ html{ scroll-behavior:smooth; }
   .toc-seller a{ white-space:nowrap; border:1px solid var(--border); }
 }
 /* 氣泡樣式 */
+/* 許願池 grid 版面 */
+.wish-area {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
 .wish {
-    display:inline-block;
-    padding:5px 12px;
-    margin:5px;
-    border-radius:25px;
-    font-size:13px;
-    background-color:var(--secondary-color);
-    font-weight:600;
-    opacity:0;
-    transform:translateY(20px);
-    cursor: pointer;
-    animation: pop 0.6s forwards ease-out;
-    color: #fff;
-    max-width: 120px;
-    white-space: nowrap;      /* 不換行 */
-    overflow: hidden;         /* 超出隱藏 */
-    text-overflow: ellipsis; 
-  }
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  background-color: #fff;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  color: #333;
+  overflow: hidden;
+  opacity: 0;
+  border: none;
+  animation: pop 0.6s forwards ease-out;
+  transition: background-color 0.18s;
+}
+/* 欄分隔線：排除每列最後一欄 */
+.wish:not(:nth-child(4n)) {
+  border-right: 1.5px dashed #23b779;
+}
+/* 列分隔線：排除最後一列 */
+.wish:not(:nth-last-child(-n+4)) {
+  border-bottom: 1.5px dashed #23b779;
+}
 .wish:hover {
-    box-shadow:0 4px 8px rgba(0,0,0,0.1);
-    transform:translateY(0) scale(1.05);
-    transition:transform 0.2s, box-shadow 0.2s;
+  background-color: #f0fff8;
+}
+@media (max-width: 768px) {
+  .wish-area {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* 重設桌機版規則，改套 2 欄 */
+  .wish:not(:nth-child(4n))       { border-right: none; }
+  .wish:not(:nth-last-child(-n+4)){ border-bottom: none; }
+  .wish:not(:nth-child(2n))       { border-right: 1.5px dashed #23b779; }
+  .wish:not(:nth-last-child(-n+2)){ border-bottom: 1.5px dashed #23b779; }
 }
 
 /* 出現動畫 */
