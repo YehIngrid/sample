@@ -562,6 +562,12 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (e) {
           console.error("無法存取：可能跨網域或尚未完全載入", e);
       }
+
+      // 手機版：若從其他頁帶入 ?chatWith=<userId>，自動開啟與該用戶的聊天
+      const chatWithId = new URLSearchParams(window.location.search).get('chatWith');
+      if (chatWithId) {
+          openChatWithTarget(chatWithId);
+      }
   });
 });
 

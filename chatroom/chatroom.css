@@ -297,17 +297,18 @@ html, body {
         font-size: 1rem;    
     }
 }/* 桌面版保持原樣 */
-@media (min-width: 768px) {    
-    .sidebar {        
-        display: block !important;    
-    }    
-    .chat-main {        
-        display: flex !important;    
-    }    
-    .mobile-back-btn {        
-        display: none !important;    
+@media (min-width: 768px) {
+    .sidebar {
+        display: block !important;
+    }
+    .chat-main {
+        display: flex !important;
+    }
+    .mobile-back-btn {
+        display: none !important;
     }
 }
+
 /* 手機版返回按鈕 - 預設隱藏 */
 .mobile-back-btn {        
     color: var(--primary-color);    
@@ -422,4 +423,141 @@ html, body {
     margin-top: 6px;
     font-size: 0.72rem;
     color: #999;
+}
+
+/* ================== 訊息主題面板 ================== */
+.theme-panel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 2000;
+}
+
+.theme-panel {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    z-index: 2001;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.14);
+    animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateX(-50%) translateY(60px); opacity: 0; }
+    to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+}
+
+.theme-panel-inner {
+    padding: 20px 20px 28px;
+}
+
+.theme-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.theme-panel-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.theme-hint {
+    font-size: 0.78rem;
+    color: #888;
+    margin-bottom: 14px;
+}
+
+.theme-swatches {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.theme-swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 6px 4px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.theme-swatch:hover {
+    border-color: #aaa;
+}
+
+.theme-swatch.active {
+    border-color: #004b97;
+}
+
+.swatch-preview {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: block;
+    border: 2px solid #e0e0e0;
+}
+
+.swatch-custom-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f06292, #ba68c8, #64b5f6, #81c784);
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.theme-swatch small {
+    font-size: 0.68rem;
+    color: #555;
+    text-align: center;
+}
+
+/* 自訂顏色行 */
+.custom-color-row {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.custom-color-label {
+    font-size: 0.78rem;
+    color: #555;
+    white-space: nowrap;
+}
+
+.color-picker {
+    width: 42px;
+    height: 32px;
+    padding: 2px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    background: none;
+}
+
+.apply-color-btn {
+    background: #004b97 !important;
+    color: #fff !important;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    padding: 4px 14px;
+    margin-left: auto;
 }

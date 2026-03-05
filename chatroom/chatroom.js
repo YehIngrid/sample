@@ -260,6 +260,21 @@ class ChatRoomList {
             await this.loadRooms();
         });
 
+        // Close fullscreen chatroom on mobile
+        const closeChatBtn = document.getElementById('closeChatFullscreen');
+        if (closeChatBtn) {
+            // Show button only when embedded in a mobile-sized parent window
+            const updateCloseBtn = () => {
+                const isMobileParent = window !== window.parent && window.outerWidth <= 991;
+                closeChatBtn.style.display = isMobileParent ? 'inline-flex' : 'none';
+            };
+            updateCloseBtn();
+            window.addEventListener('resize', updateCloseBtn);
+            closeChatBtn.addEventListener('click', () => {
+                window.parent?.postMessage({ type: 'closeChat' }, '*');
+            });
+        }
+
         document.getElementById('messageForm').addEventListener('submit', (e) => {
             e.preventDefault();
             this.sendMessage();
@@ -762,3 +777,87 @@ async function openChatWithTarget(targetUserId) {
         console.error(err);
     }
 }
+
+// ── 訊息主題功能 ──
+(function initMessageTheme() {
+    const THEME_KEY = 'chatBubbleTheme';
+    const root = document.documentElement;
+
+    function applyTheme(from, to) {
+        root.style.setProperty('--primary-color', from);
+        root.style.setProperty('--secondary-color', to);
+    }
+
+    // 恢復已儲存的主題
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) {
+        try {
+            const { from, to } = JSON.parse(saved);
+            if (from && to) applyTheme(from, to);
+        } catch(e) {}
+    }
+
+    const panel     = document.getElementById('themePanel');
+    const overlay   = document.getElementById('themePanelOverlay');
+    const openBtn   = document.getElementById('openThemePanel');
+    const closeBtn  = document.getElementById('closeThemePanel');
+    const swatches  = document.querySelectorAll('.theme-swatch');
+    const customRow = document.getElementById('customColorRow');
+    const color1    = document.getElementById('customColor1');
+    const color2    = document.getElementById('customColor2');
+    const applyBtn  = document.getElementById('applyCustomColor');
+
+    if (!panel) return;
+
+    function markActive(id) {
+        swatches.forEach(s => s.classList.toggle('active', s.dataset.id === id));
+    }
+
+    function syncActiveState() {
+        const s = localStorage.getItem(THEME_KEY);
+        if (!s) { markActive('default'); return; }
+        try { const { id } = JSON.parse(s); markActive(id || 'default'); }
+        catch(e) { markActive('default'); }
+    }
+
+    function openPanel() {
+        syncActiveState();
+        panel.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+    function closePanel() {
+        panel.style.display = 'none';
+        overlay.style.display = 'none';
+        customRow.style.display = 'none';
+    }
+
+    openBtn?.addEventListener('click', (e) => { e.preventDefault(); openPanel(); });
+    closeBtn?.addEventListener('click', closePanel);
+    overlay?.addEventListener('click', closePanel);
+
+    swatches.forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            const id   = swatch.dataset.id;
+            const from = swatch.dataset.from;
+            const to   = swatch.dataset.to;
+
+            if (id === 'custom') {
+                customRow.style.display = 'flex';
+                markActive('custom');
+                return;
+            }
+            customRow.style.display = 'none';
+            markActive(id);
+            applyTheme(from, to);
+            localStorage.setItem(THEME_KEY, JSON.stringify({ id, from, to }));
+        });
+    });
+
+    applyBtn?.addEventListener('click', () => {
+        const from = color1.value;
+        const to   = color2.value;
+        applyTheme(from, to);
+        localStorage.setItem(THEME_KEY, JSON.stringify({ id: 'custom', from, to }));
+        closePanel();
+    });
+})();

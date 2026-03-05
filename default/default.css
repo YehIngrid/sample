@@ -523,3 +523,112 @@ ul{
   display: block;
   margin-bottom: 6px;
 }
+
+/* ================== Bottom Navigation Bar (Mobile) ================== */
+@media (max-width: 991px) {
+  body {
+    padding-bottom: 64px;
+  }
+  /* Hide floating chat button — bottom nav handles chat navigation on mobile */
+  .chaticon {
+    display: none !important;
+  }
+  /* Fullscreen chatroom on mobile — leaves 60px at bottom for the nav bar */
+  #talkInterface {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 100vw !important;
+    height: calc(100dvh - 60px - env(safe-area-inset-bottom, 0px)) !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+  }
+}
+
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #fff;
+  border-top: 1px solid #e5e5e5;
+  z-index: 4000;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (max-width: 991px) {
+  .bottom-nav {
+    display: flex;
+    align-items: stretch;
+  }
+}
+
+.bottom-nav-item {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-decoration: none;
+  color: #888;
+  font-size: 0.68rem;
+  font-weight: 500;
+  transition: color 0.15s;
+  position: relative;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0 2px;
+  -webkit-tap-highlight-color: transparent;
+}
+.bottom-nav-item span:not(.bottom-nav-badge) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
+}
+
+.bottom-nav-item .nav-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+.bottom-nav-item .nav-icon-active  { display: none; }
+.bottom-nav-item .nav-icon-inactive { display: block; }
+.bottom-nav-item.active .nav-icon-active  { display: block; }
+.bottom-nav-item.active .nav-icon-inactive { display: none; }
+
+.bottom-nav-item.active {
+  color: #004b97;
+}
+
+.bottom-nav-item:hover {
+  color: #004b97;
+}
+
+.bottom-nav-badge {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  margin-left: 4px;
+  width: 8px;
+  height: 8px;
+  background: #e63946;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+  display: none;
+}
+
+.bottom-nav-badge.show {
+  display: block;
+}

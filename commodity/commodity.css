@@ -170,3 +170,112 @@
   color: var(--brand-color);
   font-weight: bold;
 }
+
+/* ── 手機版篩選列 ── */
+@media (max-width: 991px) {
+  .mobile-filter-scroll {
+    display: flex !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 8px 10px;
+    background: #f8faff;
+    border-bottom: 1px solid #dde8f5;
+    scrollbar-width: none;
+  }
+  .mobile-filter-scroll::-webkit-scrollbar { display: none; }
+  .filter-item {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .filter-label {
+    font-size: 0.68rem;
+    color: #888;
+    margin-bottom: 2px;
+  }
+  .filter-apply-btn {
+    background: #004b97 !important;
+    color: #fff !important;
+    border-radius: 16px;
+    font-size: 0.78rem;
+    padding: 4px 12px;
+    margin-top: 16px;
+  }
+  .filter-clear-btn {
+    background: #eee !important;
+    color: #444 !important;
+    border-radius: 16px;
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    margin-top: 16px;
+  }
+}
+
+/* ── 手機版 layout 切換列 ── */
+.layout-toggle-bar {
+  padding: 6px 10px;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+}
+.filter-summary {
+  font-size: 0.75rem;
+  color: #888;
+}
+.layout-btn {
+  background: none;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  padding: 3px 7px;
+  color: #888;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  line-height: 1;
+}
+.layout-btn.active {
+  border-color: #004b97;
+  color: #004b97;
+  background: #eaf1fb;
+}
+
+/* ── 列表模式 (list-view) ── */
+@media (max-width: 991px) {
+  #productRow.list-view > div {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  #productRow.list-view .card {
+    flex-direction: row !important;
+    height: 90px !important;
+  }
+  #productRow.list-view .card-img-top,
+  #productRow.list-view .product-card-img {
+    width: 90px !important;
+    min-width: 90px !important;
+    height: 90px !important;
+    border-radius: 6px 0 0 6px;
+    object-fit: cover;
+  }
+  #productRow.list-view .card-body {
+    padding: 8px 10px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  #productRow.list-view .card-body h6 {
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+  #productRow.list-view .card-body p {
+    font-size: 0.75rem;
+    margin-bottom: 4px;
+  }
+}
+}

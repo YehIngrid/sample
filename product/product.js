@@ -324,6 +324,12 @@ async function openChatWithSeller(targetSellerId) {
     return Swal.fire({ icon: 'warning', title: '缺少sellerid' });
   }
 
+  // 手機版：導向 person.html 並帶入目標 ID，由 person.js 自動開啟聊天
+  if (window.innerWidth <= 991) {
+    window.location.href = `../person/person.html?chatWith=${targetSellerId}`;
+    return;
+  }
+
   openCloseChatInterface();
   chatService = new ChatBackendService();
 

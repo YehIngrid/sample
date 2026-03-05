@@ -108,7 +108,7 @@
             <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
               <input class="form-control me-2" style="max-width: 730px;" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
               <button class="btn" type="submit">
-                <img src="../webP/searchicon.webp" alt="點擊搜尋">
+                <img src="../svg/searchicon.svg" alt="點擊搜尋">
               </button>
             </form>
           </div>
@@ -124,6 +124,16 @@
                 <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
           </div>
+        </div>
+
+        <!-- 手機版分類 Pill 列 -->
+        <div class="cat-pills d-lg-none">
+          <a href="../commodity/commodity.html?category=書籍與學籍用品" class="cat-pill">書籍用品</a>
+          <a href="../commodity/commodity.html?category=宿舍與生活用品" class="cat-pill">宿舍生活</a>
+          <a href="../commodity/commodity.html?category=學生專用器材" class="cat-pill">學生器材</a>
+          <a href="../commodity/commodity.html?category=環保生活用品" class="cat-pill">環保用品</a>
+          <a href="../commodity/commodity.html?category=儲物與收納用品" class="cat-pill">收納用品</a>
+          <a href="../commodity/commodity.html?category=其他" class="cat-pill">其他</a>
         </div>
       </div>
     </div>
@@ -176,6 +186,10 @@
           </div>
       </a>
   </div>
+  <div style=" margin: 0px auto; margin-bottom: 3px;" class="smallmysection d-block d-lg-none">
+    <img src="../image/noratead.png" alt="" class="smallmysection">
+  </div>
+
   <div class="col-lg-10 col-12">
     <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
   
@@ -263,47 +277,10 @@
 </div>
 <hr class="smallmysection d-none d-lg-block" style="margin-bottom: 20px;">
 
-<div style=" margin: 0px auto;" class="smallmysection">
+<div style=" margin: 0px auto;" class="smallmysection d-none d-lg-block">
   <img src="../image/noratead.png" alt="" class="smallmysection">
 </div>
-<div class="mobilesort d-lg-none">
-    <a href="../commodity/commodity.html?category=書籍與學籍用品">
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="../svg/mbook.svg" alt="">
-            <div>書籍與學籍用品</div>
-        </div>
-    </a>
-    <a href="../commodity/commodity.html?category=宿舍與生活用品">
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="../svg/mlife.svg" alt="">
-            <div>宿舍與生活用品</div>
-        </div>
-    </a>
-    <a href="../commodity/commodity.html?category=學生專用器材">
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="../svg/mruler.svg" alt="">
-            <div>學生專用器材</div>
-        </div>
-    </a>
-    <a href="../commodity/commodity.html?category=環保生活用品">
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="../svg/mbag.svg" alt="">
-            <div>環保生活用品</div>
-        </div>
-    </a>
-    <a href="../commodity/commodity.html?category=儲物與收納用品">
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="../svg/msave.svg" alt="">
-            <div>儲物與收納用品</div>
-        </div>
-    </a>
-    <a href="../commodity/commodity.html?category=其他">
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="../svg/mother.svg" alt="">
-            <div>其他</div>
-        </div>
-    </a>
-</div>
+
   <!-- TODO: 熱賣區-->
   <div class="firstlinesell d-block justify-content-center gap-lg-4">
     <div class="wishpoollook col-12" style="margin-bottom: 10px;">
@@ -344,7 +321,7 @@
       </div>
       <hr style="color: #004b97; margin-top: 10px;">
     <div class="mgMobile">
-      <div id="product-grid" class="container-card row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mt-0"></div>
+      <div id="product-grid" class="container-card row row-cols-2 row-cols-md-3 g-2 mt-0"></div>
     </div>
     <div class="pager">
       <button id="newPrev">上一頁</button>
@@ -1138,6 +1115,45 @@ document.getElementById('chaticon').addEventListener('click', () => {
     <span style="font-size: 1.3rem;">請勿跳出視窗或做任何操作</span>
   </div>
 </div>
+
+<!-- 底部導航 (手機版) -->
+<nav class="bottom-nav" id="bottomNav">
+  <a href="../shop/shop.html" class="bottom-nav-item active">
+    <img class="nav-icon nav-icon-active" src="../svg/Homekey.svg" alt="">
+    <img class="nav-icon nav-icon-inactive" src="../svg/Homekeynotactive.svg" alt="">
+    <span>購物首頁</span>
+  </a>
+  <a href="../commodity/commodity.html" class="bottom-nav-item">
+    <img class="nav-icon nav-icon-active" src="../svg/commoditypage.svg" alt="">
+    <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="">
+    <span>購物商場</span>
+  </a>
+  <a href="../person/person.html" class="bottom-nav-item" id="bottomNavChat">
+    <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="">
+    <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="">
+    <span id="bottomNavChatUnread" class="bottom-nav-badge"></span>
+    <span>聊天室</span>
+  </a>
+  <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
+    <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="">
+    <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="">
+    <span>購物車</span>
+  </a>
+  <a href="../person/person.html" class="bottom-nav-item">
+    <img class="nav-icon nav-icon-active" src="../webP/default-avatar.webp" alt="">
+    <img class="nav-icon nav-icon-inactive" src="../svg/default-avatarnotactive.svg" alt="">
+    <span>我的帳戶</span>
+  </a>
+</nav>
+<script>
+// 同步 chatUnread 紅點到底部導航
+window.addEventListener('chatUnread', () => {
+  document.getElementById('bottomNavChatUnread')?.classList.add('show');
+});
+window.addEventListener('chatRead', () => {
+  document.getElementById('bottomNavChatUnread')?.classList.remove('show');
+});
+</script>
 
     <!-- script部分-->
     <script src="../default/default.js"></script>

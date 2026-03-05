@@ -334,6 +334,44 @@ document.getElementById('chaticon').addEventListener('click', () => {
     //document.getElementById('chatUnreadDot').style.display = 'none';
 });
 </script>
+  <!-- 底部導航 (手機版) -->
+  <nav class="bottom-nav">
+    <a href="../shop/shop.html" class="bottom-nav-item">
+      <img class="nav-icon nav-icon-active" src="../svg/Homekey.svg" alt="">
+      <img class="nav-icon nav-icon-inactive" src="../svg/Homekeynotactive.svg" alt="">
+      <span>購物首頁</span>
+    </a>
+    <a href="../commodity/commodity.html" class="bottom-nav-item active">
+      <img class="nav-icon nav-icon-active" src="../svg/commoditypage.svg" alt="">
+      <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="">
+      <span>購物商場</span>
+    </a>
+    <a href="../person/person.html" class="bottom-nav-item">
+      <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="">
+      <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="">
+      <span class="bottom-nav-badge" id="bottomNavChatUnread"></span>
+      <span>聊天室</span>
+    </a>
+    <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
+      <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="">
+      <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="">
+      <span>購物車</span>
+    </a>
+    <a href="../person/person.html" class="bottom-nav-item">
+      <img class="nav-icon nav-icon-active" src="../webP/default-avatar.webp" alt="">
+      <img class="nav-icon nav-icon-inactive" src="../svg/default-avatarnotactive.svg" alt="">
+      <span>我的帳戶</span>
+    </a>
+  </nav>
+  <script>
+  window.addEventListener('chatUnread', () => {
+    document.getElementById('bottomNavChatUnread')?.classList.add('show');
+  });
+  window.addEventListener('chatRead', () => {
+    document.getElementById('bottomNavChatUnread')?.classList.remove('show');
+  });
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="product.js"></script>

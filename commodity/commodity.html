@@ -80,7 +80,7 @@
                 <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
                 <input class="form-control me-2" style="max-width: 730px;" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
                 <button class="btn" type="submit">
-                    <img src="../webP/searchicon.webp" alt="點擊搜尋">
+                    <img src="../svg/searchicon.svg" alt="點擊搜尋">
                 </button>
                 </form>
             </div>
@@ -172,44 +172,61 @@
         </div>
         <div class="contentOfCommodity d-lg-flex justify-content-around">
             <div class="sortAndProduct">
-                <div class="d-lg-flex justify-content-center align-items-center sortAndProductdiv">
-                    <div class="me-3">排序方式
-                        <select id="sortSelect" class="form-select">
-                            <option value="default">預設排序</option>
-                            <option value="priceAsc">價格由低到高</option>
-                            <option value="priceDesc">價格由高到低</option>
-                        </select>
+                <div class="d-lg-flex justify-content-center align-items-center sortAndProductdiv mobile-filter-scroll">
+                    <div class="filter-item me-3">
+                      <label class="filter-label">排序</label>
+                      <select id="sortSelect" class="form-select form-select-sm">
+                          <option value="default">預設排序</option>
+                          <option value="priceAsc">價格↑</option>
+                          <option value="priceDesc">價格↓</option>
+                      </select>
                     </div>
-                    <div class="me-3">商品狀態
-                        <select name="" id="new_or_oldInput" class="form-select">
-                            <option value="default">預設不排狀態</option>
-                            <option value="1">僅限全新</option>
-                            <option value="2">稍新以上</option>
-                            <option value="3">半新以上</option>
-                            <option value="4">稍舊以上</option>
-                            <option value="5">半舊以上</option>
-                            <option value="6">全舊以上</option>
-                        </select>
+                    <div class="filter-item me-3">
+                      <label class="filter-label">狀態</label>
+                      <select name="" id="new_or_oldInput" class="form-select form-select-sm">
+                          <option value="default">不限</option>
+                          <option value="1">全新</option>
+                          <option value="2">稍新以上</option>
+                          <option value="3">半新以上</option>
+                          <option value="4">稍舊以上</option>
+                          <option value="5">半舊以上</option>
+                          <option value="6">全舊以上</option>
+                      </select>
                     </div>
-                    <div class="me-3">最高預算
-                        <input type="number" id="maxPriceInput" class="form-control" placeholder="不限">
+                    <div class="filter-item me-3">
+                      <label class="filter-label">預算</label>
+                      <input type="number" id="maxPriceInput" class="form-control form-control-sm" placeholder="不限" style="width:80px;">
                     </div>
-                    <div class="me-3">
-                        <button id="filterBtn" class="btn">篩選</button>
+                    <div class="filter-item me-2">
+                        <button id="filterBtn" class="btn btn-sm filter-apply-btn">篩選</button>
                     </div>
+                    <div class="filter-item">
+                        <button id="cleanFilter" class="btn btn-sm filter-clear-btn">清除</button>
+                    </div>
+                </div>
+                <!-- 手機版 layout 切換列 -->
+                <div class="layout-toggle-bar d-flex justify-content-between align-items-center d-lg-none">
+                  <span class="filter-summary" id="mobileResultCount"></span>
+                  <div class="d-flex gap-1">
+                    <button class="layout-btn active" id="layoutGrid" title="格狀" aria-label="格狀顯示">
+                      <i class="ti ti-layout-grid"></i>
+                    </button>
+                    <button class="layout-btn" id="layoutList" title="列表" aria-label="列表顯示">
+                      <i class="ti ti-layout-list"></i>
+                    </button>
+                  </div>
                 </div>
                 <!-- TODO search function -->
                 <div class="search d-none">以下是您搜尋 <span>商品名稱</span> 的結果：</div>
-                <div class="filterResult">
+                <div class="filterResult d-none d-lg-block">
                     <h6>您的篩選條件: </h6>
                     <p id="filterAll">無</p>
                     <span>共 <span id="filterResultCount"></span> 件商品</span>
-                    <button id="cleanFilter" class="btn">清除</button>
                 </div>
                 <!-- 主要區塊：用 bootstrap row/col 來排版 -->
                 <main class="flex-grow-1">
                 <!-- 這裡放置一個 row，商品會以 col 包裝 (col-6 col-md-4 col-lg-3 等) -->
-                <div id="productRow" class="row g-3">
+                <div id="productRow" class="row g-2">
                     <!-- JS 會把 <div class="col..."> 插入到這裡 -->
                 </div>
 
@@ -233,8 +250,38 @@
             </div>
         </div>
     </div>
+    <!-- 底部導航 (手機版) -->
+    <nav class="bottom-nav">
+      <a href="../shop/shop.html" class="bottom-nav-item">
+        <img class="nav-icon nav-icon-active" src="../svg/Homekey.svg" alt="">
+        <img class="nav-icon nav-icon-inactive" src="../svg/Homekeynotactive.svg" alt="">
+        <span>購物首頁</span>
+      </a>
+      <a href="../commodity/commodity.html" class="bottom-nav-item active">
+        <img class="nav-icon nav-icon-active" src="../svg/commoditypage.svg" alt="">
+        <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="">
+        <span>購物商場</span>
+      </a>
+      <a href="../person/person.html" class="bottom-nav-item" id="bottomNavChat">
+        <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="">
+        <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="">
+        <span class="bottom-nav-badge" id="bottomNavChatUnread"></span>
+        <span>聊天室</span>
+      </a>
+      <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
+        <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="">
+        <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="">
+        <span>購物車</span>
+      </a>
+      <a href="../person/person.html" class="bottom-nav-item">
+        <img class="nav-icon nav-icon-active" src="../webP/default-avatar.webp" alt="">
+        <img class="nav-icon nav-icon-inactive" src="../svg/default-avatarnotactive.svg" alt="">
+        <span>我的帳戶</span>
+      </a>
+    </nav>
+
     <!-- script部分-->
-    
+
     <script src="commodity.js"></script>
     <script src="../BackendService.js"></script>
     </body>

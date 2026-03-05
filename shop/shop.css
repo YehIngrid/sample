@@ -571,6 +571,41 @@ ul{
   margin-top: 10px;
   padding: 20px;
 }
+@media (max-width: 991px) {
+  .newsell {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin-top: 10px;
+    background: transparent;
+  }
+  .newsell .topicoftop {
+    padding: 10px 12px 0;
+  }
+  .newsell hr {
+    margin: 6px 12px 0;
+  }
+  .mgMobile {
+    padding: 0 6px;
+  }
+  #product-grid .card {
+    border-radius: 8px;
+  }
+  #product-grid .card-img-top {
+    height: 140px;
+  }
+  #product-grid .card-body {
+    padding: 6px 8px !important;
+  }
+  #product-grid .card-body .card-title {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  #product-grid .card-body .card-text {
+    font-size: 0.78rem;
+  }
+}
 .newsell-title {
   margin: 0;
   color: #004b97;
@@ -1459,23 +1494,36 @@ button {
     padding-bottom: 12px;
   }
 }
-.mobilesort {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
-  padding-left: 6px;
-  padding-right: 6px;
-  padding-top: 12px;
+/* ── 手機版分類 Pill 列 ── */
+.cat-pills {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 8px 10px 6px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background: #fff;
+  border-bottom: 1px solid #eee;
 }
-.mobilesort a{
-  text-decoration: none;
-  color: #383838;
+.cat-pills::-webkit-scrollbar { display: none; }
+
+.cat-pill {
+  flex-shrink: 0;
+  padding: 5px 14px;
+  border-radius: 7px;
+  color: #004b97;
   font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+  background: rgba(0, 75, 151, 0.1);
 }
-.mobilesort img {
-  width: 90px;
-  height: 90px;
+.cat-pill:hover {
+  background: #004b97;
+  color: #fff;
 }
+
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
 
 .hot-items-container {
@@ -1882,11 +1930,11 @@ html{ scroll-behavior:smooth; }
 }
 /* 欄分隔線：排除每列最後一欄 */
 .wish:not(:nth-child(4n)) {
-  border-right: 1.5px dashed #23b779;
+  border-right: 1.5px dashed #ABDAD5;
 }
 /* 列分隔線：排除最後一列 */
 .wish:not(:nth-last-child(-n+4)) {
-  border-bottom: 1.5px dashed #23b779;
+  border-bottom: 1.5px dashed #ABDAD5;
 }
 .wish:hover {
   background-color: #f0fff8;
@@ -1898,8 +1946,8 @@ html{ scroll-behavior:smooth; }
   /* 重設桌機版規則，改套 2 欄 */
   .wish:not(:nth-child(4n))       { border-right: none; }
   .wish:not(:nth-last-child(-n+4)){ border-bottom: none; }
-  .wish:not(:nth-child(2n))       { border-right: 1.5px dashed #23b779; }
-  .wish:not(:nth-last-child(-n+2)){ border-bottom: 1.5px dashed #23b779; }
+  .wish:not(:nth-child(2n))       { border-right: 1.5px dashed #ABDAD5; }
+  .wish:not(:nth-last-child(-n+2)){ border-bottom: 1.5px dashed #ABDAD5; }
 }
 
 /* 出現動畫 */

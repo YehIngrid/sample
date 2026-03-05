@@ -363,6 +363,8 @@ function applyFilters(items) {
     noProducts.style.display = 'block';
   }
   filterResultCountEl.textContent = `${resultlength === 0 ? 0 : resultlength}`;
+  const mobileCountEl = document.getElementById('mobileResultCount');
+  if (mobileCountEl) mobileCountEl.textContent = `共 ${resultlength} 件`;
   console.log('篩選後的商品:', result);
   return result;
 }
@@ -428,3 +430,19 @@ filterBtn.addEventListener('click', (e) => {
     productRow.innerHTML = '';
     loadProducts();
 });
+
+// ── 手機版格狀/列表切換 ──
+const layoutGridBtn = document.getElementById('layoutGrid');
+const layoutListBtn = document.getElementById('layoutList');
+if (layoutGridBtn && layoutListBtn) {
+  layoutGridBtn.addEventListener('click', () => {
+    productRow.classList.remove('list-view');
+    layoutGridBtn.classList.add('active');
+    layoutListBtn.classList.remove('active');
+  });
+  layoutListBtn.addEventListener('click', () => {
+    productRow.classList.add('list-view');
+    layoutListBtn.classList.add('active');
+    layoutGridBtn.classList.remove('active');
+  });
+}
