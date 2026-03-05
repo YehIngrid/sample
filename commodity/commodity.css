@@ -249,7 +249,6 @@
   }
   #productRow.list-view .card {
     flex-direction: row !important;
-    height: 90px !important;
   }
   #productRow.list-view .card-img-top,
   #productRow.list-view .product-card-img {
@@ -277,5 +276,4 @@
     font-size: 0.75rem;
     margin-bottom: 4px;
   }
-}
 }

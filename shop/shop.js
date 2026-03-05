@@ -475,7 +475,7 @@ document.getElementById('image').addEventListener('change', function (e) {
 //?, orders: [{prop:'price',asc: false}, {prop:'id', asc:true}]
 document.addEventListener('DOMContentLoaded', () => {
   let page = 1;
-  const limit = 24;
+  const limit = 6;
 
   const container = document.getElementById('product-grid');
   const prevBtn   = document.getElementById('newPrev');
@@ -549,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="card-body d-flex flex-column">
           <h5 class="card-title ellipsis-text">${esc(product.name)}</h5>
-          <p class="card-text text-muted mb-2 ellipsis-text"># ${category} ${newOrOld ? `# ${newOrOld}` : ''}</p>
+          <p class="card-text mb-2 ellipsis-text d-flex"><span># ${category} </span><span>${newOrOld ? `# ${newOrOld}` : '#未知'}</span></p>
           <div class="mt-auto">
             <div class="d-flex justify-content-between align-items-center">
               <span class="fw-bold price">NT$ ${esc(product.price)}</span>

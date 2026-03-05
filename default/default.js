@@ -20,7 +20,7 @@ window.onload = function() {
       mobileSearchIcon.addEventListener('click', function() {
         mobileSearchIcon.style.display = 'none';
         searchForm.style.display = 'flex';
-        
+
         // 自動將游標焦點移至搜尋輸入框
         const input = searchForm.querySelector('input');
         if (input) {
@@ -28,6 +28,16 @@ window.onload = function() {
         }
       });
     }
+
+    // 手機版底部導覽列：點擊時設定 sessionStorage 旗標，讓目標頁跳過載入動畫
+    document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
+      item.addEventListener('click', function() {
+        if (window.innerWidth <= 991) {
+          sessionStorage.setItem('skipLoader', '1');
+        }
+      });
+    });
+
   });
 async function renderAuthUI() {
   try {
@@ -57,6 +67,12 @@ async function renderAuthUI() {
           img.src = userAvatar;
           img.style.borderRadius = '50%';
           img.style.border = '1px solid #004b97';
+          img.style.objectFit = 'cover';
+        });
+        document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatarnotactive"]').forEach(img => {
+          img.src = userAvatar;
+          img.style.borderRadius = '50%';
+          img.style.border = '1px solid #ABDAD5';
           img.style.objectFit = 'cover';
         });
       }

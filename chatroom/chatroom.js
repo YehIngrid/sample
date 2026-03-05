@@ -783,9 +783,22 @@ async function openChatWithTarget(targetUserId) {
     const THEME_KEY = 'chatBubbleTheme';
     const root = document.documentElement;
 
+    function hexToRgba(hex, alpha) {
+        var full = hex.replace('#', '');
+        if (full.length === 3) full = full[0]+full[0]+full[1]+full[1]+full[2]+full[2];
+        var r = parseInt(full.slice(0,2),16);
+        var g = parseInt(full.slice(2,4),16);
+        var b = parseInt(full.slice(4,6),16);
+        if (isNaN(r)||isNaN(g)||isNaN(b)) return null;
+        return 'rgba('+r+','+g+','+b+','+alpha+')';
+    }
+
     function applyTheme(from, to) {
         root.style.setProperty('--primary-color', from);
         root.style.setProperty('--secondary-color', to);
+        // 訊息容器背景設為所選顏色的淡色調
+        var tint = hexToRgba(from, 0.07);
+        if (tint) root.style.setProperty('--chat-bg-tint', tint);
     }
 
     // 恢復已儲存的主題

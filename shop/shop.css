@@ -478,20 +478,20 @@ ul{
   padding-right: 3px;
 }
 .card-text{
-  color: #383838;
-  padding-left: 2px;
-  margin-bottom: 0;
-  font-size: 0.82rem;
+  color: #252525;
+}
+.card-text span{
+  background-color: #ABDAD5aa;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 5px;
 }
 .stock {
   font-size: 0.75rem;
 }
 @media screen and (max-width: 768px) {
-  .card-text {
-    font-size: 0.8rem;
-  }
   .stock {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 }
 .price {
@@ -603,7 +603,7 @@ ul{
     margin-bottom: 4px;
   }
   #product-grid .card-body .card-text {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
   }
 }
 .newsell-title {
@@ -1512,12 +1512,11 @@ button {
   padding: 5px 14px;
   border-radius: 7px;
   color: #004b97;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
   transition: background 0.15s, color 0.15s;
-  background: rgba(0, 75, 151, 0.1);
 }
 .cat-pill:hover {
   background: #004b97;

@@ -39,6 +39,18 @@ if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != 
   mProfileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
 }
 
+// 更新底部導覽列「我的帳戶」icon 為使用者頭像
+const _navAvatar = localStorage.getItem('avatar');
+if (_navAvatar && _navAvatar !== 'null' && _navAvatar !== '') {
+  document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatar"]').forEach(function(img) {
+    img.src = _navAvatar;
+    img.style.borderRadius = '50%';
+    img.style.border = '1px solid #004b97';
+    img.style.objectFit = 'cover';
+  });
+}
+
+
 // ── 未登入時的手機版處理 ──
 if (!myUid) {
   // 名稱改為登入/註冊連結

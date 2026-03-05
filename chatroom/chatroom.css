@@ -25,7 +25,7 @@ html, body {
 
 /* 側邊欄樣式 */
 .sidebar {
-    background-color: var(--sidebar-bg);
+    background-color: #fff;
     height: 100vh;
     overflow-y: auto;
     display: flex;
@@ -106,7 +106,8 @@ html, body {
     padding: 16px;
     padding-left: 10px;
     padding-bottom: 15px;
-    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+    background: linear-gradient(to bottom, var(--chat-bg-tint, #f8f9fa) 0%, #ffffff 100%);
+    transition: background 0.4s ease;
 }
 
 /* 訊息樣式 */
@@ -187,7 +188,7 @@ html, body {
     color: var(--brand-color);
 }
 .message-self .message-text {
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    background:  linear-gradient(to right, #84a2d4, #82d3d3 );
     color: white;
 }
 

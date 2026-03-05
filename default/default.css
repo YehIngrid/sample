@@ -151,7 +151,7 @@ ul{
     border-color: rgb(36,182,133);
   }
   
-/* .talk {
+.talk {
   position: fixed;
   bottom: 14vh;
   right: 1vw;
@@ -161,7 +161,7 @@ ul{
   padding: 2px 11px;
   width: 30px;
   text-decoration: none;
-} */
+}
 .username{
   text-decoration: none !important;
   color: #004b97;
@@ -388,30 +388,6 @@ ul{
     border-radius: 0; /* 去掉圓角 */
   }
 }
-.ufo {
-  position: fixed;
-  width: 60px;
-  height: 60px;
-  z-index: 1001;
-  transition: transform 1s ease-in-out, top 1s ease-in-out, left 1s ease-in-out;
-}
-.beam {
-  position: fixed;
-  width: 80px;
-  height: 100px;
-  background: radial-gradient(ellipse at center, rgba(255,255,0,0.5), transparent);
-  z-index: 1000;
-  opacity: 0;
-  transition: opacity 0.3s ease-in;
-}
-
-.gift {
-  position: fixed;
-  width: 40px;
-  height: 40px;
-  z-index: 1002;
-  transition: top 0.8s ease-in, left 0.8s ease-in, transform 0.8s ease-in;
-}
 .cart-count {
   font-size: 14px;
   background: rgb(231, 72, 82);
@@ -540,10 +516,6 @@ ul{
   .navbar a.nav-link[href*="shoppingcart"] {
     display: none !important;
   }
-  /* Hide floating chat button — bottom nav handles chat navigation on mobile */
-  .chaticon {
-    display: none !important;
-  }
   /* Fullscreen chatroom on mobile — leaves 60px at bottom for the nav bar */
   #talkInterface {
     position: fixed !important;
@@ -620,11 +592,11 @@ ul{
 .bottom-nav-item.active .nav-icon-inactive { display: none; }
 
 .bottom-nav-item.active {
-  color: #004b97;
+  color: #383838;
 }
 
 .bottom-nav-item:hover {
-  color: #004b97;
+  color: #383838;
 }
 
 .bottom-nav-badge {
@@ -643,3 +615,8 @@ ul{
 .bottom-nav-badge.show {
   display: block;
 }
+
+
+/* Skip-loader: hide the full-page loading animation when navigating via bottom nav */
+html.skip-loader #loader { display: none !important; }
+html.skip-loader #whatcontent { display: block !important; }

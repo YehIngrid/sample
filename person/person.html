@@ -696,6 +696,12 @@ window.addEventListener('chatRead', () => {
 document.getElementById('chaticon').addEventListener('click', () => {
     document.getElementById('chatUnreadDot').style.display = 'none';
 });
+// 底部導覽列：點擊時設定 skipLoader 旗標（person.html 不載入 default.js，需在此獨立設定）
+document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
+  item.addEventListener('click', function() {
+    if (window.innerWidth <= 991) sessionStorage.setItem('skipLoader', '1');
+  });
+});
 </script>
 
     <!-- 底部導航 (手機版) -->
