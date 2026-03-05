@@ -529,6 +529,17 @@ ul{
   body {
     padding-bottom: 64px;
   }
+  /* Sticky header (navbar + search bar) on mobile */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 3000;
+    background-color: #fff;
+  }
+  /* Hide navbar shopping cart link — bottom nav already has a cart tab */
+  .navbar a.nav-link[href*="shoppingcart"] {
+    display: none !important;
+  }
   /* Hide floating chat button — bottom nav handles chat navigation on mobile */
   .chaticon {
     display: none !important;

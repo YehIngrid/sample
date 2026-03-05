@@ -35,8 +35,29 @@ mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"
 mProfileInfo.textContent = localStorage.getItem("intro") || "尚未新增使用者介紹"; // 替換為實際使用者介紹
 if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != 'null' && localStorage.getItem('avatar') != '') {
   mProfileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
-} else { 
+} else {
   mProfileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
+}
+
+// ── 未登入時的手機版處理 ──
+if (!myUid) {
+  // 名稱改為登入/註冊連結
+  mProfileName.innerHTML = '<a href="../account/account.html" style="color:#004b97;text-decoration:none;font-weight:600;">登入 / 註冊</a>';
+  // 隱藏登出 icon
+  const logoutMobileEl = document.getElementById('logoutMobile');
+  if (logoutMobileEl) logoutMobileEl.style.display = 'none';
+  // 停用快速操作 icon（出售商品、修改個資、查看評價、前往許願）
+  document.querySelectorAll('.fastContainer .fastIcon, .fastContainer button').forEach(el => {
+    el.style.opacity = '0.35';
+    el.style.pointerEvents = 'none';
+    el.style.cursor = 'default';
+  });
+  // 停用商品訂單管理按鈕（商品管理、銷售訂單、消費訂單）
+  document.querySelectorAll('.itemContainer button').forEach(el => {
+    el.style.opacity = '0.35';
+    el.style.pointerEvents = 'none';
+    el.style.cursor = 'default';
+  });
 }
 // 桌機版
 const userRate = document.getElementById('rate');

@@ -128,11 +128,11 @@
 
         <!-- 手機版分類 Pill 列 -->
         <div class="cat-pills d-lg-none">
-          <a href="../commodity/commodity.html?category=書籍與學籍用品" class="cat-pill">書籍用品</a>
-          <a href="../commodity/commodity.html?category=宿舍與生活用品" class="cat-pill">宿舍生活</a>
-          <a href="../commodity/commodity.html?category=學生專用器材" class="cat-pill">學生器材</a>
-          <a href="../commodity/commodity.html?category=環保生活用品" class="cat-pill">環保用品</a>
-          <a href="../commodity/commodity.html?category=儲物與收納用品" class="cat-pill">收納用品</a>
+          <a href="../commodity/commodity.html?category=書籍與學籍用品" class="cat-pill">書籍與學籍用品</a>
+          <a href="../commodity/commodity.html?category=宿舍與生活用品" class="cat-pill">宿舍與生活用品</a>
+          <a href="../commodity/commodity.html?category=學生專用器材" class="cat-pill">學生專用器材</a>
+          <a href="../commodity/commodity.html?category=環保生活用品" class="cat-pill">環保生活用品</a>
+          <a href="../commodity/commodity.html?category=儲物與收納用品" class="cat-pill">儲物與收納用品</a>
           <a href="../commodity/commodity.html?category=其他" class="cat-pill">其他</a>
         </div>
       </div>
@@ -1128,12 +1128,6 @@ document.getElementById('chaticon').addEventListener('click', () => {
     <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="">
     <span>購物商場</span>
   </a>
-  <a href="../person/person.html" class="bottom-nav-item" id="bottomNavChat">
-    <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="">
-    <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="">
-    <span id="bottomNavChatUnread" class="bottom-nav-badge"></span>
-    <span>聊天室</span>
-  </a>
   <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
     <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="">
     <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="">
@@ -1146,13 +1140,6 @@ document.getElementById('chaticon').addEventListener('click', () => {
   </a>
 </nav>
 <script>
-// 同步 chatUnread 紅點到底部導航
-window.addEventListener('chatUnread', () => {
-  document.getElementById('bottomNavChatUnread')?.classList.add('show');
-});
-window.addEventListener('chatRead', () => {
-  document.getElementById('bottomNavChatUnread')?.classList.remove('show');
-});
 </script>
 
     <!-- script部分-->

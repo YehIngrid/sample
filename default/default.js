@@ -50,6 +50,17 @@ async function renderAuthUI() {
         };
       });
 
+      // 更新底部導覽列「我的帳戶」icon 為使用者頭像（已登入時）
+      const userAvatar = localStorage.getItem('avatar');
+      if (userAvatar && userAvatar !== 'null' && userAvatar !== '') {
+        document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatar"]').forEach(img => {
+          img.src = userAvatar;
+          img.style.borderRadius = '50%';
+          img.style.border = '1px solid #004b97';
+          img.style.objectFit = 'cover';
+        });
+      }
+
       // Session keep-alive：每 5 分鐘 ping 一次，避免 cookie session 過期
       setInterval(async () => {
         try { await backendService.whoami(); } catch (_) {}
