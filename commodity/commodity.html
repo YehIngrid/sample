@@ -53,11 +53,18 @@
         <div class="header d-block ">
             <nav class="navbar navbar-expand-lg navbar-color bg-color header_new d-block d-lg-none" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
             <div class="container-fluid d-flex align-items-center sticky-top">
-            
+
+                <!-- 手機版漢堡選單（移至此處，Logo 左邊） -->
+                <button class="navbar-toggler d-lg-none mobile-hamburger" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                  <span>
+                    <img src="../svg/navbar.svg" alt="手機版選單" style="width: 20px;">
+                  </span>
+                </button>
+
                 <a class="navbar-brand picture me-4" href="../newhome/newhome.html">
                 <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
                 </a>
-            
+
                 <div class="d-flex align-items-center ms-auto">
                 
                 <div class="login">
@@ -73,16 +80,11 @@
             
             <div class="container-fluid1 d-block d-lg-none">
             <div class="d-flex align-items-center">
-                <button class="navbar-toggler me-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon">
-                    <img src="../webP/navbar.webp" alt="手機版選單" style="width: 20px;">
-                </span>
-                </button>
-                <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
-                <input class="form-control me-2" style="max-width: 730px;" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
-                <button class="btn" type="submit">
-                    <img src="../svg/searchicon.svg" alt="點擊搜尋">
-                </button>
+                <form id="searchForm" class="form-search w-100 d-flex justify-content-center align-items-center">
+                  <div class="search-input-wrap" style="max-width: 730px; width: 100%; position: relative;">
+                    <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
+                    <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
+                  </div>
                 </form>
             </div>
             

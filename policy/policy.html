@@ -24,8 +24,15 @@
             <!--TODO 響應式選單-->
         <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
           <div class="container-fluid d-flex align-items-center sticky-top">
-        
-            <!-- (A) LOGO 放在最左邊 -->
+
+            <!-- 手機版漢堡選單（移至此處，Logo 左邊） -->
+            <button class="navbar-toggler d-lg-none mobile-hamburger" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span>
+                <img src="../svg/navbar.svg" alt="手機版選單" style="width: 20px;">
+              </span>
+            </button>
+
+            <!-- (A) LOGO -->
             <a class="navbar-brand picture me-4" href="https://yehingrid.github.io/sample/%E6%8B%BE%E8%B2%A8%E5%AF%B6%E5%BA%AB/home.html">
               <svg class="logoo" style="padding-left:4px;margin-top:4px" xmlns="http://www.w3.org/2000/svg" width="100" height="50" viewBox="0 0 100 50">
                 <defs>
@@ -95,36 +102,11 @@
         <!-- 桌機版也顯示的搜尋欄 -->
         <div class="container-fluid1">
           <div class="d-flex align-items-center">
-            <!-- 手機版：漢堡選單按鈕放最左邊 -->
-            <button class="navbar-toggler me-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon">
-                <svg style="padding-right: 7px;" width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2 2H22" stroke="#9CBED2" stroke-width="3" stroke-linecap="round"/>
-                  <path d="M2 8H22" stroke="#83ADC5" stroke-width="3" stroke-linecap="round"/>
-                  <path d="M2 14H22" stroke="#689EBE" stroke-width="3" stroke-linecap="round"/>
-                </svg>
-                  
-              </span>
-            </button>
-            <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
-              <input class="form-control me-2" style="max-width: 730px;" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
-              <button class="btn" type="submit">
-                <svg width="28" height="21" viewBox="0 0 28 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10Z" fill="white"/>
-                  <path d="M18.5 10C18.5 14.6944 14.6944 18.5 10 18.5C5.30558 18.5 1.5 14.6944 1.5 10C1.5 5.30558 5.30558 1.5 10 1.5C14.6944 1.5 18.5 5.30558 18.5 10Z" stroke="url(#paint0_linear_83_152)" stroke-opacity="0.8" stroke-width="3"/>
-                  <path d="M25.1252 20.5166C25.8409 20.9339 26.7593 20.6919 27.1765 19.9762C27.5937 19.2605 27.3518 18.3421 26.6361 17.9249L25.1252 20.5166ZM18.3639 16.5751L25.1252 20.5166L26.6361 17.9249L19.8748 13.9834L18.3639 16.5751Z" fill="url(#paint1_linear_83_152)" fill-opacity="0.6"/>
-                  <defs>
-                  <linearGradient id="paint0_linear_83_152" x1="3" y1="44" x2="3" y2="64" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#24B685" stop-opacity="0.6"/>
-                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
-                  </linearGradient>
-                  <linearGradient id="paint1_linear_83_152" x1="22.6763" y1="14.5057" x2="22.4519" y2="17.9985" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#24B685"/>
-                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
-                  </linearGradient>
-                  </defs>
-                  </svg>
-              </button>
+            <form id="searchForm" class="form-search w-100 d-flex justify-content-center align-items-center">
+              <div class="search-input-wrap" style="max-width: 730px; width: 100%; position: relative;">
+                <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
+                <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
+              </div>
             </form>
           </div>
         

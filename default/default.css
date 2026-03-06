@@ -50,9 +50,8 @@ ul{
 }
 
 .container-fluid1{
-    background-color: #fbfbfb;
     margin: 0 auto !important;
-    padding: 5px 3vw !important;
+    padding: 1vh 3vw !important;
 }
 .specialpadding{
     padding-right: 30px;
@@ -116,25 +115,105 @@ ul{
   #loginornot {
     font-size: 1.2rem;
   }
-  /* 手機版 (max-width: 991px)：
-     - 搜尋表單預設隱藏，且在換行後佔滿整行 */
+
+  /* ── 搜尋欄共用樣式（手機 + 桌面相同外觀） ── */
+
+  /* 搜尋輸入框包裝層 */
+  .search-input-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  /* 輸入框內的搜尋 icon */
+  .search-icon-inner {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* 輸入框：藥丸形、左留 icon 空間 */
+  #searchInput {
+    border-radius: 99px !important;
+    padding-left: 42px !important;
+    border: 1.5px solid #d0d7e3 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+
+  /* 舊版手機搜尋 icon toggle 隱藏 */
+  #mobileSearchIcon {
+    display: none !important;
+  }
+
+  /* ── 手機版 Navbar 重設計 (max-width: 991px) ── */
   @media (max-width: 991px) {
+    /* 導覽列：三欄 grid — [漢堡] [Logo 置中] [登入] */
+    .container-fluid.sticky-top {
+      display: grid !important;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      padding: 6px 12px !important;
+      width: 100vw !important;
+    }
+
+    /* 漢堡按鈕 → 第 1 欄 */
+    .mobile-hamburger {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      background: transparent;
+      padding: 4px;
+      line-height: 1;
+    }
+
+    /* Logo → 第 2 欄 (置中) */
+    .container-fluid.sticky-top .navbar-brand.picture {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: center;
+      margin: 0 !important;
+    }
+
+    /* 右側登入區 → 第 3 欄 */
+    .container-fluid.sticky-top .d-flex.ms-auto {
+      grid-column: 3;
+      grid-row: 1;
+      margin-left: 0 !important;
+    }
+
+    /* 手機隱藏用戶名 */
+    .username {
+      display: none !important;
+    }
+
+    /* 手機隱藏購物車圖示（底部導覽列已有） */
+    .container-fluid.sticky-top .nav-link.specialpadding.ms-2 {
+      display: none !important;
+    }
+
+    /* 搜尋欄 — 滿版 */
     #searchForm {
-      display: none;
-      order: 2;         /* 放在第二排 */
+      display: flex !important;
       width: 100% !important;
+      justify-content: flex-start !important;
+      padding: 6px 12px;
     }
-    /* 品牌與搜尋圖示維持原有順序 */
-    .navbar-brand {
-      order: 0;
-    }
-    #mobileSearchIcon {
-      order: 1;
+
+    /* 手機版輸入框高度 */
+    #searchInput {
+      height: 40px;
     }
   }
-  
-  /* 桌面版 (min-width: 992px)：
-     - 搜尋表單直接顯示，並維持原寬度；手機版搜尋圖示隱藏 */
+
+  /* ── 桌面版 (min-width: 992px) ── */
   @media (min-width: 992px) {
     #searchForm {
       display: flex !important;

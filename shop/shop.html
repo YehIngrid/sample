@@ -65,10 +65,17 @@
     <!-- TODO header -->
     <div class="header ">
         <!--TODO 響應式選單-->
-        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
+        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new navtb">
           <div class="container-fluid d-flex align-items-center sticky-top">
-        
-            <!-- (A) LOGO 放在最左邊 -->
+
+            <!-- 手機版漢堡選單（移至此處，Logo 左邊） -->
+            <button class="navbar-toggler d-lg-none mobile-hamburger" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span>
+                <img src="../svg/navbar.svg" alt="手機版選單" style="width: 20px;">
+              </span>
+            </button>
+
+            <!-- (A) LOGO -->
             <a class="navbar-brand picture me-4" href="../newhome/newhome.html">
               <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" style="width: 150px; font-size: 3rem; border-radius: 0;">
             </a>
@@ -103,17 +110,11 @@
         <!-- 桌機版也顯示的搜尋欄 -->
         <div class="container-fluid1">
           <div class="d-flex align-items-center">
-            <!-- 手機版：漢堡選單按鈕放最左邊 -->
-            <button class="navbar-toggler me-3 d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon">
-                <img src="../webP/navbar.webp" alt="手機版選單" style="width: 20px;">
-              </span>
-            </button>
-            <form id="searchForm" class="form-search w-100 d-flex justify-content-center">
-              <input class="form-control me-2" style="max-width: 730px;" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
-              <button class="btn" type="submit">
-                <img src="../svg/searchicon.svg" alt="點擊搜尋">
-              </button>
+            <form id="searchForm" class="form-search w-100 d-flex justify-content-center align-items-center">
+              <div class="search-input-wrap" style="max-width: 730px; width: 100%; position: relative;">
+                <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
+                <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
+              </div>
             </form>
           </div>
         
@@ -132,67 +133,25 @@
 
         <!-- 手機版分類 Pill 列 -->
         <div class="cat-pills d-lg-none">
-          <a href="../commodity/commodity.html?category=書籍與學籍用品" class="cat-pill">書籍與學籍用品</a>
-          <a href="../commodity/commodity.html?category=宿舍與生活用品" class="cat-pill">宿舍與生活用品</a>
-          <a href="../commodity/commodity.html?category=學生專用器材" class="cat-pill">學生專用器材</a>
-          <a href="../commodity/commodity.html?category=環保生活用品" class="cat-pill">環保生活用品</a>
-          <a href="../commodity/commodity.html?category=儲物與收納用品" class="cat-pill">儲物與收納用品</a>
-          <a href="../commodity/commodity.html?category=其他" class="cat-pill">其他</a>
+          <a href="../commodity/commodity.html?category=書籍與學籍用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/book.svg" alt=""></div>書籍與學籍用品</a>
+          <a href="../commodity/commodity.html?category=宿舍與生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/life.svg" alt=""></div>宿舍與生活用品</a>
+          <a href="../commodity/commodity.html?category=學生專用器材" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/ruler.svg" alt=""></div>學生專用器材</a>
+          <a href="../commodity/commodity.html?category=環保生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/bag.svg" alt=""></div>環保生活用品</a>
+          <a href="../commodity/commodity.html?category=儲物與收納用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/save.svg" alt=""></div>儲物與收納用品</a>
+          <a href="../commodity/commodity.html?category=其他" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/Other.svg" alt=""></div>其他</a>
         </div>
       </div>
     </div>
   <main id="midcontent">
   <div class="my-section">  
 
-<div class="d-lg-flex d-block justify-content-center smallmysection">
-  <div class="col-lg-2 d-lg-flex flex-column categorylist justify-content-around my-lg-cat d-none" style="min-width: 210px;">
-      <h6 class="ps-3 mb-3 fw-bold">商品分類</h6>
-      
-      <a href="../commodity/commodity.html?category=書籍與學籍用品">
-          <div class="d-flex align-items-center">
-              <div class="icon-box"><img src="../svg/book.svg" alt=""></div>
-              <div>書籍與學籍用品</div>
-          </div>
-      </a>
+<!-- 電腦版：noratead 廣告橫排（最上方） -->
+<div class="d-none d-lg-block smallmysection" style="margin-bottom: 16px;">
+  <img src="../image/noratead.png" alt="" style="width:100%;display:block;">
+</div>
 
-      <a href="../commodity/commodity.html?category=宿舍與生活用品">
-          <div class="d-flex align-items-center">
-              <div class="icon-box"><img src="../svg/life.svg" alt=""></div>
-              <div>宿舍與生活用品</div>
-          </div>
-      </a>
-
-      <a href="../commodity/commodity.html?category=學生專用器材">
-          <div class="d-flex align-items-center">
-              <div class="icon-box"><img src="../svg/ruler.svg" alt=""></div>
-              <div>學生專用器材</div>
-          </div>
-      </a>
-
-      <a href="../commodity/commodity.html?category=環保生活用品">
-          <div class="d-flex align-items-center">
-              <div class="icon-box"><img src="../svg/bag.svg" alt=""></div>
-              <div>環保生活用品</div>
-          </div>
-      </a>
-
-      <a href="../commodity/commodity.html?category=儲物與收納用品">
-          <div class="d-flex align-items-center">
-              <div class="icon-box"><img src="../svg/save.svg" alt=""></div>
-              <div>儲物與收納用品</div>
-          </div>
-      </a>
-
-      <a href="../commodity/commodity.html?category=其他">
-          <div class="d-flex align-items-center">
-              <div class="icon-box"><img src="../svg/Other.svg" alt=""></div>
-              <div>其他</div>
-          </div>
-      </a>
-  </div>
-
-  <div class="col-lg-10 col-12">
-    <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+<div class="smallmysection">
+  <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
   
       <div class="carousel-inner">
         <div class="carousel-item active">
@@ -222,65 +181,56 @@
     </div>
   
 
-       <!-- TODO (更新版)功能清單:賣家專區，許願池等等 -->
-       <div class="seriesofbutton">
-        <ul>
-            <li>
-              <button onclick="location.href='shop.html?page=seller'">
-                <img src="../svg/seller.svg" alt="賣家專區">
-              </button>賣家專區
-            </li>
-            <li>
-              <button id="wishpoolbtn" onclick="window.location.href = '../wishpool/wishpool.html#wishpool'">
-                <img src="../svg/wish.svg" alt="許願池專區">
-              </button>許願專區
-            </li>
-            <li>
-              <button onclick="window.location.href = '../questions/questions.html'">
-                <img src="../svg/fandq.svg" alt="常見問題">
-              </button>常見問題
-            </li>
-            <!-- <li>
-              <button id="memberbtn">
-                <img src="../webP/Diamond.webp" alt="加入會員">
-              </button>加入會員
-            </li> -->
-            <!-- <li>
-              <button id="mysterybtn">
-                <img src="../webP/mystery.webp" alt="神秘箱">
-              </button>神秘箱
-            </li> -->
-            <!-- <li>
-              <button id="everydaybtn">
-                <img src="../webP/everyday.webp" alt="每日登入">
-              </button>每日登入
-            </li> -->
-            <!-- <li>
-              <button id="donatebtn">
-                <img src="../webP/donate.webp" alt="我要捐款">
-              </button>我要捐款
-            </li> -->
-            <!-- <li>
-              <button id="campusbtn" onclick="window.open('../school/school.html', '_blank')">
-                <img src="../webP/article.webp" alt="校園攻略站">
-              </button>校園攻略站
-            </li> -->
-            <!-- <li>
-              <button>
-                <img src="../webP/cooperate.webp" alt="學力銀行">
-              </button>學力銀行
-            </li> -->
-        </ul>
-    </div>
-    </div>
-    
+  <!-- 功能按鈕（賣家、許願、問題）一整排 -->
+  <div class="seriesofbutton">
+    <ul>
+      <li>
+        <button onclick="location.href='shop.html?page=seller'">
+          <img src="../svg/seller.svg" alt="賣家專區">
+        </button>賣家專區
+      </li>
+      <li>
+        <button id="wishpoolbtn" onclick="window.location.href = '../wishpool/wishpool.html#wishpool'">
+          <img src="../svg/wish.svg" alt="許願池專區">
+        </button>許願專區
+      </li>
+      <li>
+        <button onclick="window.location.href = '../questions/questions.html'">
+          <img src="../svg/fandq.svg" alt="常見問題">
+        </button>常見問題
+      </li>
+    </ul>
   </div>
-</div>
-<hr class="smallmysection d-none d-lg-block" style="margin-bottom: 20px;">
+</div><!-- /.smallmysection (carousel + buttons) -->
 
-<div style=" margin: 0px auto;" class="smallmysection d-none d-lg-block">
-  <img src="../image/noratead.png" alt="" class="smallmysection">
+<!-- 電腦版：商品分類一整橫排（icon + 文字 flex-column） -->
+<div class="d-none d-lg-flex smallmysection" style="justify-content:space-around;margin-top:16px;margin-bottom:16px;">
+  <a href="../commodity/commodity.html?category=書籍與學籍用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+    <div class="icon-box"><img src="../svg/book.svg" alt=""></div>
+    <span>書籍與學籍用品</span>
+  </a>
+  <a href="../commodity/commodity.html?category=宿舍與生活用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+    <div class="icon-box"><img src="../svg/life.svg" alt=""></div>
+    <span>宿舍與生活用品</span>
+  </a>
+  <a href="../commodity/commodity.html?category=學生專用器材" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+    <div class="icon-box"><img src="../svg/ruler.svg" alt=""></div>
+    <span>學生專用器材</span>
+  </a>
+  <a href="../commodity/commodity.html?category=環保生活用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+    <div class="icon-box"><img src="../svg/bag.svg" alt=""></div>
+    <span>環保生活用品</span>
+  </a>
+  <a href="../commodity/commodity.html?category=儲物與收納用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+    <div class="icon-box"><img src="../svg/save.svg" alt=""></div>
+    <span>儲物與收納用品</span>
+  </a>
+  <a href="../commodity/commodity.html?category=其他" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+    <div class="icon-box"><img src="../svg/Other.svg" alt=""></div>
+    <span>其他</span>
+  </a>
 </div>
+</div><!-- /.my-section -->
 
   <!-- TODO: 熱賣區-->
   <div class="firstlinesell d-block justify-content-center gap-lg-4">

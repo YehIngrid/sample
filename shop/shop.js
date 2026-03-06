@@ -475,7 +475,7 @@ document.getElementById('image').addEventListener('change', function (e) {
 //?, orders: [{prop:'price',asc: false}, {prop:'id', asc:true}]
 document.addEventListener('DOMContentLoaded', () => {
   let page = 1;
-  const limit = 6;
+  const limit = 12;
 
   const container = document.getElementById('product-grid');
   const prevBtn   = document.getElementById('newPrev');

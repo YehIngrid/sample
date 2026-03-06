@@ -40,7 +40,9 @@
   .arrow:hover {
     background: rgba(255,255,255,1);
   }
-  
+  .navtb {
+    box-shadow: 0 0 2px rgb(0,0,0,0.2);
+  }
 .header {
     display: block;
     background-color: rgba(255, 255, 255);
@@ -80,6 +82,9 @@ ul{
         margin-right: 2%;
         font-size: 1rem;
     }
+    .navtb {
+    box-shadow: 0 0 0px rgb(0,0,0,0);
+  }
 }
 #mainImagePreview img {
   max-width: 100%;
@@ -143,47 +148,11 @@ ul{
     flex-wrap: wrap;
   }
   
-  /* 手機版 (max-width: 991px)：
-     - 搜尋表單預設隱藏，且在換行後佔滿整行 */
-  @media (max-width: 991px) {
-    #searchForm {
-      display: none;
-      order: 2;         /* 放在第二排 */
-      width: 100% !important;
-    }
-    /* 品牌與搜尋圖示維持原有順序 */
-    .navbar-brand {
-      order: 0;
-    }
-    #mobileSearchIcon {
-      order: 1;
-    }
-  }
-  
-  /* 桌面版 (min-width: 992px)：
-     - 搜尋表單直接顯示，並維持原寬度；手機版搜尋圖示隱藏 */
+  /* 桌面版搜尋欄高度 */
   @media (min-width: 992px) {
-    #searchForm {
-      display: flex !important;
-      order: 0;
-      width: 42%;
-    }
-    #mobileSearchIcon {
-      display: none !important;
-    }
     #searchInput {
       height: 48px;
       font-size: 1rem;
-      padding: 8px 18px;
-      border-radius: 10px 0 0 10px;
-    }
-    #searchForm .btn {
-      height: 48px;
-      padding: 0 18px;
-    }
-    #searchForm .btn img {
-      height: 22px;
-      width: auto;
     }
   }
   .my-section {
@@ -191,7 +160,7 @@ ul{
     background-size: cover;      /* 調整背景圖片尺寸 */
     background-repeat: no-repeat; /* 防止重複 */
     background-position: center;  /* 置中 */
-    padding-top: 40px;
+    padding-top: 10px;
 }           /* 上下內距 */
 /* .my-lg-cat {
   padding-top: 10px;
@@ -227,6 +196,24 @@ ul{
     font-size: 1rem;
     padding-left: 5px;
 } */
+/* 電腦版商品分類橫排 */
+.desktop-cat-item {
+  text-decoration: none;
+  color: #4a4a4a;
+  flex: 1;
+  padding: 10px 6px;
+  border-radius: 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+.desktop-cat-item:hover {
+  background-color: #eef6ff;
+  color: var(--brand-color);
+}
+.desktop-cat-item span {
+  font-size: 0.82rem;
+  text-align: center;
+}
+
 /* 修改分類列表容器 */
 .categorylist {
     padding: 15px;
@@ -1510,8 +1497,9 @@ button {
 .cat-pill {
   flex-shrink: 0;
   padding: 5px 14px;
-  border-radius: 7px;
+  border-radius: 30px;
   color: #004b97;
+  border: 1px solid #d0d7e3;
   font-size: 0.8rem;
   font-weight: 600;
   text-decoration: none;
