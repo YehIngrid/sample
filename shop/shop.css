@@ -82,8 +82,13 @@ ul{
         margin-right: 2%;
         font-size: 1rem;
     }
-    .navtb {
-    box-shadow: 0 0 0px rgb(0,0,0,0);
+}
+@media (max-width: 991.98px) {
+  .navtb {
+    --bs-navbar-padding-y: 0;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    box-shadow: none;
   }
 }
 #mainImagePreview img {
@@ -1490,7 +1495,6 @@ button {
   scrollbar-width: none;
   -ms-overflow-style: none;
   background: #fff;
-  border-bottom: 1px solid #eee;
 }
 .cat-pills::-webkit-scrollbar { display: none; }
 
@@ -2013,6 +2017,28 @@ html{ scroll-behavior:smooth; }
 }
 .empty {
   text-align: center;
+}
+
+/* ===== Carousel 高度不崩潰修正 ===== */
+#mainCarousel .carousel-inner {
+  aspect-ratio: 1940 / 483;
+}
+#mainCarousel .carousel-item {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+}
+#mainCarousel .carousel-item.active,
+#mainCarousel .carousel-item-next,
+#mainCarousel .carousel-item-prev {
+  position: relative;
+}
+#mainCarousel .carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 /* ===== 對齊 header / footer 與內容區塊 (80vw) ===== */
