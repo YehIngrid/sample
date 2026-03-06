@@ -2014,3 +2014,22 @@ html{ scroll-behavior:smooth; }
 .empty {
   text-align: center;
 }
+
+/* ===== 對齊 header / footer 與內容區塊 (80vw) ===== */
+@media (min-width: 992px) {
+  .header_new .container-fluid {
+    max-width: 80vw;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    --bs-gutter-x: 0;
+  }
+  .container-fluid1 {
+    max-width: 80vw !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .footer .container {
+    max-width: 80vw !important;
+    width: 100%;
+  }
+}
