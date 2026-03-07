@@ -501,7 +501,9 @@ ul{
   background-color: #ABDAD5aa;
   padding: 1px 5px;
   border-radius: 3px;
-  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 0.75rem;
+  margin-top: 2px;
 }
 .stock {
   font-size: 0.75rem;
@@ -553,11 +555,21 @@ ul{
   justify-content: space-between;
 } */
 
-.card.product-card:hover {
-  transform: translateY(-5px);
+.product-card:hover {
+  transform: translateY(-5px) ease-in-out 0.4s;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
-
+.product-card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.product-card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: aliceblue;
+}
 .card-img-top {
   object-fit: cover;
   object-position: center;
@@ -750,13 +762,16 @@ ul{
   color: white;
   border-radius: 50%;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 20px;
 }
 
 .rule-btn:hover {
   background: #004181;
+  transform: translateX(3px);
 }
-
+.ruleArray:hover {
+  transform: translateX(1px) ease-in-out 0.2s;
+}
 .arrow {
   position: absolute;
   top: 50%;
@@ -2130,7 +2145,7 @@ html{ scroll-behavior:smooth; }
     width: 50px;
     height: 50px;
     position: fixed;        /* 保留 fixed，讓按鈕釘在右下角 */
-    bottom: 54px;
+    bottom: 64px;
     right: 30px;
     border-radius: 50%;
     border: none;

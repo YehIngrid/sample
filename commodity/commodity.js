@@ -137,13 +137,22 @@ let currentCategory = 'all';   // 書籍 / 生活用品…
     const backendService = new BackendService();
     const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
 
-    // === 1️⃣ 依「來源」決定要撈哪支 API ===
+    // === 1️⃣ 依「來源」及排序決定要撈哪支 API ===
+    const sortselected = sortSelect ? sortSelect.value : 'default';
     if (currentSource === 'hot') {
       const response = await backendService.getHotItems(pagingInfo);
       items = response?.data?.commodities || [];
 
     } else if (currentSource === 'new') {
       const response = await backendService.getNewItems(pagingInfo);
+      items = response?.data?.commodities || [];
+
+    } else if (sortselected === 'priceAsc') {
+      const response = await backendService.getPriceLowItems(pagingInfo);
+      items = response?.data?.commodities || [];
+
+    } else if (sortselected === 'priceDesc') {
+      const response = await backendService.getPriceHighItems(pagingInfo);
       items = response?.data?.commodities || [];
 
     } else {
@@ -348,11 +357,6 @@ function applyFilters(items) {
   // 新舊程度篩選（假設 p.newOrOld 是 1~6 的數字）
   if (newOrOld !== null) {
     result = result.filter(p => p.newOrOld <= newOrOld);
-  }
-  if (sortselected === 'priceAsc') {
-    result.sort((a, b) => a.price - b.price);
-  } else if (sortselected === 'priceDesc') {
-    result.sort((a, b) => b.price - a.price);
   }
   const filterResultCountEl = document.getElementById('filterResultCount');
   resultlength = result.length;

@@ -314,42 +314,42 @@
         <div class="rule-card">
           <h5>如何賣東西?</h5>
           <p>賣家專區相關操作</p>
-          <a href="../questions/questions.html#howtosell" class="rule-btn">›</a>
+          <a href="../questions/questions.html#howtosell" class="rule-btn"><span class="ruleArray">›</span></a>
         </div>
         <div class="rule-card">
           <h5>如何買東西?</h5>
           <p>買家如何購買二手商品</p>
-          <a href="../questions/questions.html#howtobuy" class="rule-btn">›</a>
+          <a href="../questions/questions.html#howtobuy" class="rule-btn"><span class="ruleArray">›</span></a>
         </div>
         <div class="rule-card">
           <h5>如何許願?</h5>
           <p>許願專區相關操作</p>
-          <a href="../questions/questions.html#howtowish" class="rule-btn">›</a>
+          <a href="../questions/questions.html#howtowish" class="rule-btn"><span class="ruleArray">›</span></a>
         </div>
         <div class="rule-card">
           <h5>如何媒合願望?</h5>
           <p>賣家媒合許願商品相關操作</p>
-          <a href="../questions/questions.html#howtomatch" class="rule-btn">›</a>
+          <a href="../questions/questions.html#howtomatch" class="rule-btn"><span class="ruleArray">›</span></a>
         </div>
         <div class="rule-card">
           <h5>如何使用聊天室?</h5>
           <p>賣家與買家之間的溝通方式</p>
-          <a href="../questions/questions.html#howtochat" class="rule-btn">›</a>
+          <a href="../questions/questions.html#howtochat" class="rule-btn"><span class="ruleArray">›</span></a>
         </div>
         <div class="rule-card">
           <h5>如何查看/編輯自己上架的商品?</h5>
           <p>賣家查看自己上架商品相關操作</p>
-          <a href="../questions/questions.html#howtoviewedit" class="rule-btn">›</a>
+          <a href="../questions/questions.html#howtoviewedit" class="rule-btn"><span class="ruleArray">›</span></a>
         </div>
         <div class="rule-card">
           <h5>如何查看/操作購買訂單?</h5>
           <p>買家查看自己購買訂單相關操作</p>
-          <a href="../questions/questions.html#howtobuyorder" class="rule-btn">›</a>
+          <a href="../questions/questions.html#howtobuyorder" class="rule-btn"><span class="ruleArray">›</span></a>
         </div>
         <div class="rule-card">
           <h5>如何查看/操作售出訂單?</h5>
           <p>賣家查看操作訂單相關操作</p>
-          <a href="../questions/questions.html#howtosellorder" class="rule-btn">›</a>
+          <a href="../questions/questions.html#howtosellorder" class="rule-btn"><span class="ruleArray">›</span></a>
         </div>
       </div>
       <button class="arrow right" id="ruleRight">›</button>
@@ -393,10 +393,12 @@
   <div class="newsell">
     <!-- TODO 商品卡片 -->
       <div class="d-flex justify-content-between align-items-center" style="color: #383838; margin-bottom: 10px;">
+        <div>
           <h3 class="cardTitle" style="color: #004b97;">最新上架</h3>
+          <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">每天都有新發現</p>
+        </div>
           <a href="../commodity/commodity.html?category=new" class="more"><span class="more-btn">查看更多 →</span></a>
       </div>
-      <hr style="color: #004b97; margin-top: 10px;">
     <div class="mgMobile">
       <!-- 手機版滑動提示 (hidden on desktop) -->
       <div class="new-swipe-hint d-flex d-lg-none align-items-center justify-content-between mb-2" id="newSwipeHint">
@@ -1068,7 +1070,10 @@ const timer = setInterval(() => {
 <div class="footer">
             <div class="container" >
                 <div class="row" style="padding-bottom: 30px;" data-aos="fade-up">
-                    <div class="col-md-4" style="padding-left: 30px;">
+                    <div class="col-md-3" style="padding-left: 30px; display:flex; align-items:center;">
+                        <img src="../svg/TREASUREHUBwhite.svg" alt="拾貨寶庫" style="max-width:130px;">
+                    </div>
+                    <div class="col-md-3" style="padding-left: 30px;">
                         <h3>聯絡我們</h3>
                         <p>電子郵件：
                             <a href="mailto:treasurehub@gmail.com">
@@ -1076,11 +1081,11 @@ const timer = setInterval(() => {
                             </a>
                         </p>
                     </div>
-                    <div class="col-md-4" style="padding-left: 30px;">
+                    <div class="col-md-3" style="padding-left: 30px;">
                         <h3>關於我們</h3>
                         <p>一個專為大學生打造的二手商場、校園商機、資訊交易整合平台</p>
                     </div>
-                    <div class="col-md-4" style="padding-left: 30px;"> 
+                    <div class="col-md-3" style="padding-left: 30px;">
                         <h3>社交媒體</h3>
                         <p class="d-flex">
                             <a href="https://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram" style="font-size: 3rem; padding-right: 18px;"></i></a><br>

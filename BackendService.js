@@ -196,6 +196,34 @@ class BackendService {
             return Promise.reject(error);
         }
     }
+    async getPriceLowItems(pagingInfo) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/list/price-low`, {
+                params: {
+                    page: pagingInfo.page,
+                    limit: pagingInfo.limit
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("無法取得價格低到高商品資料", error);
+            return Promise.reject(error);
+        }
+    }
+    async getPriceHighItems(pagingInfo) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/commodity/list/price-high`, {
+                params: {
+                    page: pagingInfo.page,
+                    limit: pagingInfo.limit
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("無法取得價格高到低商品資料", error);
+            return Promise.reject(error);
+        }
+    }
 
      async getHotItems(pagingInfo) {
         try {
