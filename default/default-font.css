@@ -1,0 +1,10 @@
+/* ===== 字體設定：移自 default.css ===== */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700&display=swap');
+
+* {
+  font-family: "Zen Kaku Gothic New", sans-serif;
+}
+
+.swal2-popup {
+  font-family: 'Noto Sans TC', sans-serif;
+}

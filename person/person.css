@@ -372,7 +372,6 @@ small {
   padding: 2px 8px;
   width: 300px;
 }
-
 .chaticon {
     width: 50px;
     height: 50px;
@@ -751,7 +750,10 @@ small {
       margin-top: 30px;
       margin-bottom: 30px;
     }
-
+    .itemlist td{
+      border-bottom: 1px dashed #383838;
+      border-top: none;
+    }
   .btnSell div {
     font-size: 0.875rem;
   }

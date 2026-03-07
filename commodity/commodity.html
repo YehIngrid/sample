@@ -21,6 +21,7 @@
     <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
     <link rel="shortcut icon" href="../treasurehubIcon.ico">
     <link rel="stylesheet" href="../default/default.css">
+    <link rel="stylesheet" href="../default/default-font.css">
     <link rel="stylesheet" href="commodity.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -66,7 +67,6 @@
                 </a>
 
                 <div class="d-flex align-items-center ms-auto">
-                
                 <div class="login">
                     <a class="username" href="../person/person.html"></a>
                     <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
@@ -78,17 +78,15 @@
             </div>
             </nav>
             
-            <div class="container-fluid1 d-block d-lg-none">
+            <div class="container-fluid1 d-lg-none">
+            <!-- 手機版搜尋欄（點擊開啟 offcanvas，與 shop.html 位置相同） -->
             <div class="d-flex align-items-center">
-                <form id="searchForm" class="form-search w-100 d-flex justify-content-center align-items-center">
-                  <div class="search-input-wrap" style="max-width: 730px; width: 100%; position: relative;">
+                <div class="search-input-wrap w-100" style="position:relative;">
                     <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-                    <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
-                  </div>
-                </form>
+                    <input class="form-control" type="search" placeholder="搜尋商品..." id="searchTriggerMobile" autocomplete="off" readonly>
+                </div>
             </div>
-            
-            <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
+            <div class="collapse navbar-collapse mt-2" id="navbarNav">
                 <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
                     <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
@@ -126,14 +124,28 @@
                 <div class="d-flex align-items-center">
                     <a href="../newhome/newhome.html"><img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫Logo" style="width: 150px; border-radius: 0%;"></a>
                 </div>
-                <div class="d-flex align-items-center">
-                    <div class="me-3">
-                        <input type="text" id="searchInput" class="form-control" placeholder="搜尋商品..." style="width: 500px;">
+                <!-- 搜尋欄（桌機版，navbar 中間） -->
+                <form id="searchForm" class="form-search flex-grow-1 mx-4" style="max-width: 500px;">
+                    <div class="search-input-wrap" style="width: 100%; position: relative;">
+                        <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
+                        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
+                        <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
+                            <div class="search-drop-section" id="desktopHistorySection">
+                                <div class="search-drop-header">
+                                    <span>搜尋紀錄</span>
+                                    <button type="button" id="desktopClearHistory">清除</button>
+                                </div>
+                                <div id="desktopHistoryList" class="search-drop-tags"></div>
+                            </div>
+                            <div class="search-drop-section">
+                                <div class="search-drop-header"><span>🔥 大家都在搜</span></div>
+                                <div id="desktopTrendList" class="search-drop-tags">
+                                    <span class="text-muted" style="font-size:0.82rem;">暫無資料</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="me-3">
-                        <img src="../svg/searchicon.svg" alt="">
-                    </div>
-                </div>
+                </form>
                 <div class="d-flex align-items-center">
                     
                     <div class="me-3">
@@ -161,15 +173,15 @@
         <div class="sort_list">
             <div class="d-flex justify-content-lg-center align-items-center overflow-x-scroll">
                 <div class="d-flex flex-nowrap">
-                    <div class="me-3 flex-shrink-0" style="padding-top: 10px; padding-bottom: 10px; padding-left: 10px;"><a href="?category=all" class="sort_item active" data-category="all">全部商品</a></div>
-                    <div class="me-3 flex-shrink-0" style="padding-top: 10px; padding-bottom: 10px;"><a href="?category=hot" class="sort_item" data-category="hot">熱門商品</a></div>
-                    <div class="me-3 flex-shrink-0" style="padding-top: 10px; padding-bottom: 10px;"><a href="?category=new" class="sort_item" data-category="new">最新上架</a></div>
-                    <div class="me-3 flex-shrink-0" style="padding-top: 10px; padding-bottom: 10px;"><a href="?category=書籍與學籍用品" class="sort_item" data-category="書籍與學籍用品">書籍與學籍用品</a></div>
-                    <div class="me-3 flex-shrink-0" style="padding-top: 10px; padding-bottom: 10px;"><a href="?category=宿舍與生活用品" class="sort_item" data-category="宿舍與生活用品">宿舍與生活用品</a></div>
-                    <div class="me-3 flex-shrink-0" style="padding-top: 10px; padding-bottom: 10px;"><a href="?category=學生專用器材" class="sort_item" data-category="學生專用器材">學生專用器材</a></div>
-                    <div class="me-3 flex-shrink-0" style="padding-top: 10px; padding-bottom: 10px;"><a href="?category=環保生活用品" class="sort_item" data-category="環保生活用品">環保生活用品</a></div>
-                    <div class="me-3 flex-shrink-0" style="padding-top: 10px; padding-bottom: 10px;"><a href="?category=儲物與收納用品" class="sort_item" data-category="儲物與收納用品">儲物與收納用品</a></div>
-                    <div class="me-3 flex-shrink-0" style="padding-top: 10px; padding-bottom: 10px; padding-right: 10px;"><a href="?category=其他" class="sort_item" data-category="其他">其他</a></div>
+                    <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=all" class="sort_item active" data-category="all">全部商品</a></div>
+                    <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=hot" class="sort_item" data-category="hot">熱門商品</a></div>
+                    <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=new" class="sort_item" data-category="new">最新上架</a></div>
+                    <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=書籍與學籍用品" class="sort_item d-flex align-items-center gap-1" data-category="書籍與學籍用品"><img src="../svg/book.svg" class="sort-cat-icon" alt="">書籍與學籍用品</a></div>
+                    <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=宿舍與生活用品" class="sort_item d-flex align-items-center gap-1" data-category="宿舍與生活用品"><img src="../svg/life.svg" class="sort-cat-icon" alt="">宿舍與生活用品</a></div>
+                    <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=學生專用器材" class="sort_item d-flex align-items-center gap-1" data-category="學生專用器材"><img src="../svg/ruler.svg" class="sort-cat-icon" alt="">學生專用器材</a></div>
+                    <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=環保生活用品" class="sort_item d-flex align-items-center gap-1" data-category="環保生活用品"><img src="../svg/bag.svg" class="sort-cat-icon" alt="">環保生活用品</a></div>
+                    <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=儲物與收納用品" class="sort_item d-flex align-items-center gap-1" data-category="儲物與收納用品"><img src="../svg/save.svg" class="sort-cat-icon" alt="">儲物與收納用品</a></div>
+                    <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=其他" class="sort_item d-flex align-items-center gap-1" data-category="其他"><img src="../svg/Other.svg" class="sort-cat-icon" alt="">其他</a></div>
                 </div>
             </div>
         </div>
@@ -276,6 +288,164 @@
         <span>我的帳戶</span>
       </a>
     </nav>
+
+<!-- 搜尋 Offcanvas (手機版) -->
+<div class="offcanvas offcanvas-top d-lg-none" id="searchOffcanvas" tabindex="-1" style="height:auto;max-height:85vh;border-radius:0 0 20px 20px;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+  <div class="offcanvas-body p-0" style="overflow-y:auto;overflow-x:hidden;">
+    <div class="d-flex align-items-center px-3 py-2 border-bottom gap-2">
+      <div class="search-input-wrap flex-grow-1" style="position:relative;">
+        <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
+        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInputOC" style="border-radius:99px;padding-left:42px;">
+      </div>
+      <button class="btn btn-link text-secondary text-decoration-none p-0" data-bs-dismiss="offcanvas">取消</button>
+    </div>
+    <div class="px-3 pt-3 pb-1">
+      <small class="fw-bold text-muted">商品分類</small>
+    </div>
+    <div class="cat-pills border-bottom pb-2" style="flex-wrap:wrap;overflow-x:visible;">
+      <a href="?category=all" class="cat-pill">全部商品</a>
+      <a href="?category=hot" class="cat-pill">熱門商品</a>
+      <a href="?category=new" class="cat-pill">最新上架</a>
+      <a href="?category=書籍與學籍用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/book.svg" alt=""></div>書籍與學籍用品</a>
+      <a href="?category=宿舍與生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/life.svg" alt=""></div>宿舍與生活用品</a>
+      <a href="?category=學生專用器材" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/ruler.svg" alt=""></div>學生專用器材</a>
+      <a href="?category=環保生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/bag.svg" alt=""></div>環保生活用品</a>
+      <a href="?category=儲物與收納用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/save.svg" alt=""></div>儲物與收納用品</a>
+      <a href="?category=其他" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/Other.svg" alt=""></div>其他</a>
+    </div>
+    <div class="px-3 pt-3 pb-1">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <small class="fw-bold">搜尋紀錄</small>
+        <button class="btn btn-link btn-sm text-muted p-0 text-decoration-none" id="clearHistoryBtn">清除</button>
+      </div>
+      <div id="searchHistoryList" class="d-flex flex-wrap gap-2 pb-1"></div>
+    </div>
+    <div class="px-3 pt-2 pb-3 border-top mt-2">
+      <small class="fw-bold d-block mb-2">🔥 搜尋排行榜</small>
+      <div id="searchRankList"><small class="text-muted">暫無資料</small></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const HISTORY_KEY = 'searchHistory';
+  function getHistory() { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
+  function saveHistory(arr) { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr.slice(0, 10))); }
+
+  function addSearchHistory(term) {
+    let h = getHistory().filter(t => t !== term);
+    h.unshift(term);
+    saveHistory(h);
+    renderMobileHistory();
+    renderDesktopHistory();
+  }
+
+  function renderMobileHistory() {
+    const list = document.getElementById('searchHistoryList');
+    if (!list) return;
+    const h = getHistory();
+    list.innerHTML = h.length
+      ? h.map(t => `<span class="search-history-tag" onclick="document.getElementById('searchInputOC').value='${t.replace(/'/g,"\\'")}'">${t}<button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${t.replace(/'/g,"\\'")}','mobile')">×</button></span>`).join('')
+      : '<small class="text-muted">尚無搜尋紀錄</small>';
+  }
+
+  function renderDesktopHistory() {
+    const list = document.getElementById('desktopHistoryList');
+    if (!list) return;
+    const h = getHistory();
+    list.innerHTML = h.length
+      ? h.map(t => `<span class="search-drop-tag" onclick="window._pickHistory('${t.replace(/'/g,"\\'")}')">
+          ${t}<button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${t.replace(/'/g,"\\'")}','desktop')">×</button>
+        </span>`).join('')
+      : '<span class="text-muted" style="font-size:0.82rem;">尚無搜尋紀錄</span>';
+  }
+
+  window._removeHistory = function (term, src) {
+    saveHistory(getHistory().filter(t => t !== term));
+    renderMobileHistory();
+    renderDesktopHistory();
+  };
+
+  window._pickHistory = function (term) {
+    const input = document.getElementById('searchInput');
+    if (input) {
+      input.value = term;
+      closeDropdown();
+      document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+    }
+  };
+
+  function openDropdown() {
+    const dd = document.getElementById('searchDropdown');
+    if (!dd) return;
+    renderDesktopHistory();
+    dd.style.removeProperty('display');
+    dd.classList.add('active');
+  }
+  function closeDropdown() {
+    const dd = document.getElementById('searchDropdown');
+    if (!dd) return;
+    dd.classList.remove('active');
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const mainInput = document.getElementById('searchInput');
+    const ocInput   = document.getElementById('searchInputOC');
+    const ocEl      = document.getElementById('searchOffcanvas');
+    const dropdown  = document.getElementById('searchDropdown');
+    if (!mainInput) return;
+
+    if (ocEl) {
+      const bsOC = new bootstrap.Offcanvas(ocEl, { scroll: true, backdrop: true });
+      // 手機：搜尋欄點擊 → 開啟 offcanvas（與 shop.html 相同行為）
+      const mobileTrigger = document.getElementById('searchTriggerMobile');
+      if (mobileTrigger) {
+        mobileTrigger.addEventListener('click', function () {
+          bsOC.show();
+          setTimeout(() => ocInput && ocInput.focus(), 350);
+        });
+      }
+      if (ocInput) {
+        ocInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            const val = ocInput.value.trim();
+            if (!val) return;
+            addSearchHistory(val);
+            bsOC.hide();
+            mainInput.value = val;
+            document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+          }
+        });
+      }
+      document.getElementById('clearHistoryBtn')?.addEventListener('click', function () {
+        saveHistory([]); renderMobileHistory();
+      });
+      ocEl.addEventListener('show.bs.offcanvas', renderMobileHistory);
+    }
+
+    mainInput.addEventListener('focus', openDropdown);
+    mainInput.addEventListener('input', function () {
+      if (window.innerWidth >= 992 && !mainInput.value.trim()) openDropdown();
+    });
+    mainInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && window.innerWidth >= 992) {
+        const val = mainInput.value.trim();
+        if (val) addSearchHistory(val);
+        closeDropdown();
+      }
+    });
+    document.addEventListener('mousedown', function (e) {
+      if (dropdown && !dropdown.contains(e.target) && e.target !== mainInput) {
+        closeDropdown();
+      }
+    });
+    document.getElementById('desktopClearHistory')?.addEventListener('click', function () {
+      saveHistory([]); renderDesktopHistory();
+    });
+  });
+})();
+</script>
 
     <!-- script部分-->
 

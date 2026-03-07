@@ -28,12 +28,13 @@ function productGridSkeletonHTML(n = 6) {
       </div>
     </div>`).join('');
 }
-function wishAreaSkeletonHTML(n = 3) {
-  return Array.from({length: n}, () => `
-    <div class="wish" style="min-width:120px">
-      <div class="skeleton" style="width:60px;height:60px;border-radius:50%;margin:0 auto 6px;"></div>
-      <div class="skeleton skeleton-text" style="width:70%;margin:0 auto;"></div>
+function wishAreaSkeletonHTML(n = 8) {
+  const items = Array.from({length: n * 2}, () => `
+    <div class="wish">
+      <div class="skeleton" style="width:68px;height:68px;border-radius:50%;"></div>
+      <div class="skeleton skeleton-text" style="width:64px;margin-top:7px;"></div>
     </div>`).join('');
+  return `<div class="wish-track" style="animation:none;">${items}</div>`;
 }
 
 function esc(str) {
@@ -137,7 +138,8 @@ function renderItems(items){
       div.innerHTML = `
         <div class="card">
           <div class="img-box">
-            <img src="${item.mainImage}" alt="${esc(item.name)}">
+            <img src="../svg/topicon.svg" class="hot-top-icon" alt="">
+            <img class="main" src="${item.mainImage}" alt="${esc(item.name)}">
             <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${esc(item.price)}</p>
           </div>
           <div class="hotItemName">${esc(item.name)}</div>
@@ -472,77 +474,217 @@ document.getElementById('image').addEventListener('change', function (e) {
 // TODO 陳列商品
 
 
-//?, orders: [{prop:'price',asc: false}, {prop:'id', asc:true}]
+// ── 最新上架：電腦版分頁 / 手機版左右滑切換 ──
 document.addEventListener('DOMContentLoaded', () => {
-  let page = 1;
-  const limit = 12;
+  const container  = document.getElementById('product-grid');
+  const prevBtn    = document.getElementById('newPrev');
+  const nextBtn    = document.getElementById('newNext');
+  const pageInfo   = document.getElementById('newInfo');
+  const dotsEl     = document.getElementById('newMobileDots');
+  const swipeHint  = document.getElementById('newSwipeHint');
 
-  const container = document.getElementById('product-grid');
-  const prevBtn   = document.getElementById('newPrev');
-  const nextBtn   = document.getElementById('newNext');
-  const pageInfo  = document.getElementById('newInfo');
+  if (!container) { console.warn('#product-grid 容器不存在'); return; }
 
-  if (!container) {
-    console.warn('#product-grid 容器不存在');
-    return;
-  }
-
-  // 初始化排版（只做一次）
+  // 初始化排版
   [...container.classList].forEach(cls => {
     if (cls.startsWith('row-cols-')) container.classList.remove(cls);
   });
   container.classList.add('row', 'row-cols-2', 'row-cols-md-3', 'row-cols-lg-6', 'g-3', 'container-card');
 
-  // 進入點
-  fetchPage(page);
+  const DESKTOP_LIMIT = 12;
+  const MOBILE_CHUNK  = 6;
 
-  // 事件
-  prevBtn.addEventListener('click', () => { if (!prevBtn.disabled) fetchPage(page - 1); });
-  nextBtn.addEventListener('click', () => { if (!nextBtn.disabled) fetchPage(page + 1); });
+  // 電腦版狀態
+  let desktopPage = 1;
 
-  // 主要流程
-   async function fetchPage(p){
-    togglePager(true);
-    container.innerHTML = productGridSkeletonHTML();
-    const pagingInfo = { page: p, limit };
-    const response = await backendService.getNewItems(pagingInfo);
-      const productList = response?.data?.commodities ?? [];
-      const pg = response?.data?.pagination ?? { currentPage: p, totalPages: 1, hasPrevPage: p>1, hasNextPage: false };
+  // 手機版狀態
+  let mobileBuffer   = [];   // 已抓到的所有商品
+  let mobileChunk    = 0;    // 目前顯示第幾塊（每塊 6 個）
+  let backendPage    = 1;    // 下次要跟後端要的頁碼
+  let backendHasMore = true; // 後端是否還有更多
+  let isFetching     = false;
 
-      renderItems(productList);
-      updatePager(pg); // ← API 回來後才決定按鈕狀態（enabled/disabled）
+  function isDesktop() { return window.innerWidth >= 992; }
+
+  // ── 初始化 ──
+  if (isDesktop()) {
+    showDesktopUI();
+    fetchDesktopPage(1);
+  } else {
+    showMobileUI();
+    initMobile();
   }
 
-  function renderItems(productList){
+  // ── 視窗縮放切換模式 ──
+  let wasDesktop = isDesktop();
+  window.addEventListener('resize', () => {
+    const nowDesktop = isDesktop();
+    if (nowDesktop === wasDesktop) return;
+    wasDesktop = nowDesktop;
+    if (nowDesktop) {
+      showDesktopUI();
+      fetchDesktopPage(desktopPage);
+    } else {
+      showMobileUI();
+      if (mobileBuffer.length === 0) initMobile();
+      else renderMobileChunk(mobileChunk);
+    }
+  });
+
+  function showDesktopUI() {
+    if (swipeHint) swipeHint.style.display = 'none';
+    if (dotsEl)    dotsEl.style.display    = 'none';
+  }
+  function showMobileUI() {
+    if (swipeHint) swipeHint.style.display = '';
+    if (dotsEl)    dotsEl.style.display    = '';
+  }
+
+  // ────────── 電腦版 ──────────
+  prevBtn.addEventListener('click', () => { if (!prevBtn.disabled) fetchDesktopPage(desktopPage - 1); });
+  nextBtn.addEventListener('click', () => { if (!nextBtn.disabled) fetchDesktopPage(desktopPage + 1); });
+
+  async function fetchDesktopPage(p) {
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    pageInfo.textContent = '載入中…';
+    container.innerHTML = productGridSkeletonHTML(12);
+    const response = await backendService.getNewItems({ page: p, limit: DESKTOP_LIMIT });
+    const productList = response?.data?.commodities ?? [];
+    const pg = response?.data?.pagination ?? { currentPage: p, totalPages: 1, hasPrevPage: p > 1, hasNextPage: false };
+    desktopPage = pg.currentPage ?? p;
+    renderItems(productList);
+    prevBtn.disabled = !pg.hasPrevPage;
+    nextBtn.disabled = !pg.hasNextPage;
+    pageInfo.textContent = `第 ${pg.currentPage} / ${pg.totalPages} 頁`;
+  }
+
+  // ────────── 手機版 ──────────
+  async function initMobile() {
+    container.innerHTML = productGridSkeletonHTML(6);
+    await fetchMobileNextBatch();
+    renderMobileChunk(0);
+  }
+
+  // 靜默地抓下一批，不主動更新畫面
+  async function fetchMobileNextBatch() {
+    if (isFetching || !backendHasMore) return;
+    isFetching = true;
+    try {
+      const response = await backendService.getNewItems({ page: backendPage, limit: DESKTOP_LIMIT });
+      const items = response?.data?.commodities ?? [];
+      const pg    = response?.data?.pagination ?? {};
+      backendHasMore = !!pg.hasNextPage;
+      backendPage    = (pg.currentPage ?? backendPage) + 1;
+      mobileBuffer.push(...items);
+    } finally {
+      isFetching = false;
+    }
+    updateDots();
+  }
+
+  function renderMobileChunk(idx) {
+    mobileChunk = idx;
+    const start = idx * MOBILE_CHUNK;
+    renderItems(mobileBuffer.slice(start, start + MOBILE_CHUNK));
+    updateDots();
+    // 在最後一塊時預先靜默抓取下一批
+    const totalChunks = Math.ceil(mobileBuffer.length / MOBILE_CHUNK);
+    if (idx >= totalChunks - 1 && backendHasMore && !isFetching) {
+      fetchMobileNextBatch();
+    }
+  }
+
+  function updateDots() {
+    if (!dotsEl) return;
+    const totalChunks = Math.max(1, Math.ceil(mobileBuffer.length / MOBILE_CHUNK));
+    let html = '';
+    for (let i = 0; i < totalChunks; i++) {
+      html += `<span class="swipe-dot${i === mobileChunk ? ' active' : ''}"></span>`;
+    }
+    if (backendHasMore) html += `<span class="swipe-dot swipe-dot-more"></span>`;
+    dotsEl.innerHTML = html;
+
+    // 更新左右箭頭透明度
+    const leftArrow  = swipeHint?.querySelector('.swipe-arrow-left');
+    const rightArrow = swipeHint?.querySelector('.swipe-arrow-right');
+    if (leftArrow)  leftArrow.style.opacity  = mobileChunk > 0 ? '1' : '0.25';
+    if (rightArrow) rightArrow.style.opacity = (mobileChunk < totalChunks - 1 || backendHasMore) ? '1' : '0.25';
+  }
+
+  // ── 觸控滑動偵測 ──
+  let touchX = 0, touchY = 0;
+  container.addEventListener('touchstart', e => {
+    touchX = e.touches[0].clientX;
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
+  container.addEventListener('touchend', e => {
+    if (isDesktop()) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    const dy = e.changedTouches[0].clientY - touchY;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return; // 不夠水平
+    if (dx < 0) swipeToNext();
+    else         swipeToPrev();
+  }, { passive: true });
+
+  function swipeToNext() {
+    const totalChunks = Math.ceil(mobileBuffer.length / MOBILE_CHUNK);
+    if (mobileChunk < totalChunks - 1) {
+      animateSwitch('left', () => renderMobileChunk(mobileChunk + 1));
+    } else if (backendHasMore && !isFetching) {
+      // 現有資料已顯示完，再跟後端要一批
+      fetchMobileNextBatch().then(() => {
+        const newTotal = Math.ceil(mobileBuffer.length / MOBILE_CHUNK);
+        if (mobileChunk < newTotal - 1) {
+          animateSwitch('left', () => renderMobileChunk(mobileChunk + 1));
+        }
+      });
+    }
+  }
+
+  function swipeToPrev() {
+    if (mobileChunk > 0) animateSwitch('right', () => renderMobileChunk(mobileChunk - 1));
+  }
+
+  function animateSwitch(dir, callback) {
+    container.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+    container.style.opacity    = '0';
+    container.style.transform  = `translateX(${dir === 'left' ? '-20px' : '20px'})`;
+    setTimeout(() => {
+      callback();
+      container.style.transform = `translateX(${dir === 'left' ? '20px' : '-20px'})`;
+      void container.offsetHeight; // force reflow
+      container.style.opacity   = '1';
+      container.style.transform = 'translateX(0)';
+      setTimeout(() => {
+        container.style.transition = '';
+        container.style.transform  = '';
+        container.style.opacity    = '';
+      }, 160);
+    }, 150);
+  }
+
+  // ── 共用 renderItems ──
+  function renderItems(productList) {
     container.innerHTML = '';
+    const categoryMap = {
+      book: '書籍與學籍用品', life: '宿舍與生活用品',
+      student: '學生專用器材', other: '其他',
+      recycle: '環保生活用品', clean: '儲物與收納用品',
+    };
+    const newOrOldMap = { 1:'全新',2:'幾乎全新',3:'半新',4:'適中',5:'稍舊',6:'全舊' };
 
     productList.forEach((product) => {
-      // col
-      const col = document.createElement('div');
+      const col  = document.createElement('div');
       col.className = 'col';
-
-      // card
       const card = document.createElement('div');
       card.className = 'card product-card position-relative h-100';
       card.dataset.id = product.id;
       card.style.width = '100%';
       card.style.borderRadius = '0.3rem';
-
-      const imgUrl = product.mainImage || '/img/placeholder.png';
-      const categoryMap = {
-        book: '書籍與學籍用品',
-        life: '宿舍與生活用品',
-        student: '學生專用器材',
-        other: '其他',
-        recycle: '環保生活用品',
-        clean: '儲物與收納用品',
-      };
-      const newOrOldMap = {
-        1:'全新',2:'幾乎全新',3:'半新',4:'適中',5:'稍舊',6:'全舊',
-      };
+      const imgUrl   = product.mainImage || '/img/placeholder.png';
       const category = categoryMap[product.category] ?? '其他';
       const newOrOld = newOrOldMap[product.newOrOld] ?? '';
-
       card.innerHTML = `
         <div class="product-thumb">
           <img src="${imgUrl}" alt="${esc(product.name)}" loading="lazy">
@@ -558,34 +700,14 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
       `;
-
-      // 卡片導頁
       card.addEventListener('click', () => {
         const pid = card.dataset.id;
         if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
       });
-
       col.appendChild(card);
       container.appendChild(col);
     });
   }
-
-  function updatePager(pg){
-    page = pg.currentPage;
-    pageInfo.textContent = `第 ${pg.currentPage} / ${pg.totalPages} 頁`;
-    prevBtn.disabled = !pg.hasPrevPage;
-    nextBtn.disabled = !pg.hasNextPage;
-  }
-
-  function togglePager(loading){
-  if (loading) {
-    prevBtn.disabled = true;
-    nextBtn.disabled = true;
-    pageInfo.textContent = '載入中…';
-  }
-  // ❌ 不要在這裡加 else 去改按鈕，否則會覆蓋 updatePager 的判斷
-}
-
 });
 
 
@@ -721,35 +843,48 @@ async function callWish() {
 }
 function showWishes(data) {
   const container = document.getElementById("wishArea");
-  if(!data.wishes || data.pagination.total === 0) {
+  if (!data.wishes || data.pagination.total === 0) {
     container.innerHTML = '<p class="empty">目前還沒有願望</p>';
     return;
   }
-  container.innerHTML = '';
-  data.wishes.slice(0, 8).forEach((wish, i) => {
-    const card = document.createElement("div");
-    card.classList.add('wish');
-    card.dataset.id = wish.id;
-    const defaultphoto = "../webP/default-avatar.webp"
-    const ownerphoto = wish.owner.photoURL || defaultphoto;
-    const cardtitle = wish.itemName;
-    card.style.animationDelay = `${i * 0.15}s`;
-    card.innerHTML = `
-      <div class="d-flex align-items-center">
-          <div class="wisher">
-            <img src="${ownerphoto}" alt="許願者頭像">
-          </div>
-          <div class="wishtitle">
-            <p style="margin-bottom: 0px; font-size: 1rem;">${esc(cardtitle)}</p>
-          </div>
-      </div>
-      `
-      card.addEventListener('click', () => {
-        const pid = card.dataset.id;
-        if (pid) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(pid)}`;
+  const wishes = data.wishes.slice(0, 10).map(w => ({
+    ...w,
+    _size: Math.floor(Math.random() * 51) + 50,    // 50–100px
+    _marginTop: Math.floor(Math.random() * 160) - 80, // -80~+80px, large height spread
+    _gap: Math.floor(Math.random() * 40) + 5        // 5–44px 不固定間距
+  }));
+
+  // 建立一條 track：4份複製 → translateX(-25%) 完全無縫
+  function makeTrack(layerClass, list) {
+    const track = document.createElement('div');
+    track.className = `wish-track ${layerClass}`;
+    [...list, ...list, ...list, ...list].forEach((wish) => {
+      const b = document.createElement('div');
+      b.className = 'wish';
+      b.dataset.id = wish.id;
+      b.style.width = `${wish._size + 10}px`;
+      b.style.marginTop = `${wish._marginTop}px`;
+      b.style.marginRight = `${wish._gap}px`;
+      const photo = wish.owner?.photoURL || '../webP/default-avatar.webp';
+      b.innerHTML = `
+        <img class="wish-avatar" src="${esc(photo)}" alt="許願者頭像"
+             style="width:${wish._size}px;height:${wish._size}px;"
+             onerror="this.src='../webP/default-avatar.webp'">
+        <span class="wish-label">${esc(wish.itemName)}</span>
+      `;
+      b.addEventListener('click', () => {
+        if (wish.id) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(wish.id)}`;
       });
-      container.appendChild(card);
-  })
+      track.appendChild(b);
+    });
+    return track;
+  }
+
+  // 保留 HTML 裡的波浪層，只重建泡泡 track
+  const waveLayers = Array.from(container.querySelectorAll('.wish-wave-layer'));
+  container.innerHTML = '';
+  waveLayers.forEach(el => container.appendChild(el));
+  container.appendChild(makeTrack('wish-track--front', wishes));
 }
 
 // 聊天室介面顯示與隱藏

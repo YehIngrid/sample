@@ -34,7 +34,9 @@
     <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
     <link rel="shortcut icon" href="../treasurehubIcon.ico">
     <link rel="stylesheet" href="shop.css">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../default/default.css">
+    <link rel="stylesheet" href="../default/default-font.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -114,6 +116,29 @@
               <div class="search-input-wrap" style="max-width: 730px; width: 100%; position: relative;">
                 <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
                 <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
+
+                <!-- 電腦版搜尋下拉面板 -->
+                <div id="searchDropdown" class="search-dropdown d-none d-lg-block" style="display:none!important;">
+                  <!-- 搜尋紀錄 -->
+                  <div class="search-drop-section" id="desktopHistorySection">
+                    <div class="search-drop-header">
+                      <span>搜尋紀錄</span>
+                      <button type="button" id="desktopClearHistory">清除</button>
+                    </div>
+                    <div id="desktopHistoryList" class="search-drop-tags"></div>
+                  </div>
+
+                  <!-- 大家都在搜 -->
+                  <div class="search-drop-section">
+                    <div class="search-drop-header">
+                      <span>🔥 大家都在搜</span>
+                    </div>
+                    <div id="desktopTrendList" class="search-drop-tags">
+                      <!-- 預留：由 API 填入 -->
+                      <span class="text-muted" style="font-size:0.82rem;">暫無資料</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </form>
           </div>
@@ -131,8 +156,8 @@
           </div>
         </div>
 
-        <!-- 手機版分類 Pill 列 -->
-        <div class="cat-pills d-lg-none">
+        <!-- 手機版分類 Pill 列（已移入搜尋 offcanvas） -->
+        <div class="cat-pills d-none">
           <a href="../commodity/commodity.html?category=書籍與學籍用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/book.svg" alt=""></div>書籍與學籍用品</a>
           <a href="../commodity/commodity.html?category=宿舍與生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/life.svg" alt=""></div>宿舍與生活用品</a>
           <a href="../commodity/commodity.html?category=學生專用器材" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/ruler.svg" alt=""></div>學生專用器材</a>
@@ -144,7 +169,25 @@
     </div>
   <main id="midcontent">
   <div class="my-section">  
-
+  <div class="seriesofbutton">
+    <ul>
+      <li class="hover-underline"  onclick="location.href='shop.html?page=seller'">
+        <button>
+          <img src="../svg/seller.svg" alt="賣家專區">
+        </button>賣家專區
+      </li>
+      <li class="hover-underline"  onclick="window.location.href = '../wishpool/wishpool.html#wishpool'">
+        <button id="wishpoolbtn">
+          <img src="../svg/wish.svg" alt="許願池專區">
+        </button>許願專區
+      </li>
+      <li class="hover-underline"  onclick="window.location.href = '../questions/questions.html'">
+        <button>
+          <img src="../svg/fandq.svg" alt="常見問題">
+        </button>常見問題
+      </li>
+    </ul>
+</div>
 <!-- 電腦版：noratead 廣告橫排（最上方） -->
 <div class="d-none d-lg-block smallmysection" style="margin-bottom: 16px;">
   <img src="../image/noratead.png" alt="" style="width:100%;display:block;">
@@ -181,49 +224,75 @@
       </button>
   
     </div>
-  
 
   <!-- 功能按鈕（賣家、許願、問題）一整排 -->
-  <div class="seriesofbutton">
+  <!-- <div class="seriesofbutton">
     <ul>
-      <li>
+      <li class="hvr-underline-from-center">
         <button onclick="location.href='shop.html?page=seller'">
           <img src="../svg/seller.svg" alt="賣家專區">
         </button>賣家專區
       </li>
-      <li>
+      <li class="hvr-underline-from-center">
         <button id="wishpoolbtn" onclick="window.location.href = '../wishpool/wishpool.html#wishpool'">
           <img src="../svg/wish.svg" alt="許願池專區">
         </button>許願專區
       </li>
-      <li>
+      <li class="hvr-underline-from-center">
         <button onclick="window.location.href = '../questions/questions.html'">
           <img src="../svg/fandq.svg" alt="常見問題">
         </button>常見問題
       </li>
     </ul>
-  </div>
 </div><!-- /.smallmysection (carousel + buttons) -->
+
+<!-- 手機版商品分類 3×2 格（輪播下方） -->
+<div class="d-lg-none mobile-cat-grid">
+  <a href="../commodity/commodity.html?category=書籍與學籍用品" class="mobile-cat-item">
+    <img src="../svg/book.svg" alt="">
+    <span>書籍與學籍用品</span>
+  </a>
+  <a href="../commodity/commodity.html?category=宿舍與生活用品" class="mobile-cat-item">
+    <img src="../svg/life.svg" alt="">
+    <span>宿舍與生活用品</span>
+  </a>
+  <a href="../commodity/commodity.html?category=學生專用器材" class="mobile-cat-item">
+    <img src="../svg/ruler.svg" alt="">
+    <span>學生專用器材</span>
+  </a>
+  <a href="../commodity/commodity.html?category=環保生活用品" class="mobile-cat-item">
+    <img src="../svg/bag.svg" alt="">
+    <span>環保生活用品</span>
+  </a>
+  <a href="../commodity/commodity.html?category=儲物與收納用品" class="mobile-cat-item">
+    <img src="../svg/save.svg" alt="">
+    <span>儲物與收納用品</span>
+  </a>
+  <a href="../commodity/commodity.html?category=其他" class="mobile-cat-item">
+    <img src="../svg/Other.svg" alt="">
+    <span>其他</span>
+  </a>
+</div>
 
 <!-- 電腦版：商品分類一整橫排（icon + 文字 flex-column） -->
 <div class="d-none d-lg-flex smallmysection" style="justify-content:space-around;margin-top:16px;margin-bottom:16px;">
-  <a href="../commodity/commodity.html?category=書籍與學籍用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+  <a href="../commodity/commodity.html?category=書籍與學籍用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item" style="border-right: 1px #ddd solid;">
     <div class="icon-box"><img src="../svg/book.svg" alt=""></div>
     <span>書籍與學籍用品</span>
   </a>
-  <a href="../commodity/commodity.html?category=宿舍與生活用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+  <a href="../commodity/commodity.html?category=宿舍與生活用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item" style="border-right: 1px #ddd solid;">
     <div class="icon-box"><img src="../svg/life.svg" alt=""></div>
     <span>宿舍與生活用品</span>
   </a>
-  <a href="../commodity/commodity.html?category=學生專用器材" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+  <a href="../commodity/commodity.html?category=學生專用器材" class="d-flex flex-column align-items-center gap-2 desktop-cat-item" style="border-right: 1px #ddd solid;">
     <div class="icon-box"><img src="../svg/ruler.svg" alt=""></div>
     <span>學生專用器材</span>
   </a>
-  <a href="../commodity/commodity.html?category=環保生活用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+  <a href="../commodity/commodity.html?category=環保生活用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item" style="border-right: 1px #ddd solid;">
     <div class="icon-box"><img src="../svg/bag.svg" alt=""></div>
     <span>環保生活用品</span>
   </a>
-  <a href="../commodity/commodity.html?category=儲物與收納用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item">
+  <a href="../commodity/commodity.html?category=儲物與收納用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item" style="border-right: 1px #ddd solid;">
     <div class="icon-box"><img src="../svg/save.svg" alt=""></div>
     <span>儲物與收納用品</span>
   </a>
@@ -233,78 +302,84 @@
   </a>
 </div>
 </div><!-- /.my-section -->
-
   <!-- TODO: 熱賣區-->
   <div class="firstlinesell d-block justify-content-center gap-lg-4">
-    <div class="wishpoollook col-12" style="margin-bottom: 10px;">
-      <div class="d-flex justify-content-between">
-        <h5 style="margin: 0; padding-left: 10px; font-weight: 600; letter-spacing: 4px;">許願池</h5>
-        <a href="../wishpool/wishpool.html#wishpool" style="color: var(--secondary-color); text-decoration: none; padding-right: 5px;">查看更多</a>
-      </div>
-      <hr>
-      <div id="wishArea" class="wish-area">
-        <!-- 動態插入 -->
-      </div>
-    </div>
-  
-<div class="explainStep">
-    <div class="topicoftop d-flex align-items-end justify-content-between">
-      <div>
-        <h5 class="cardTitle" style="color: #383838;">拾貨寶庫操作說明</h5>
-      </div>
-    </div>
-    <hr style="color: #383838;">
+    <div class="d-flex justify-content-between" style="margin-bottom: 20px; margin-top: 40px;">
+    <h3 class="cardTitle" style="color: #383838;">拾貨寶庫<span style="color: #004b97;">操作說明</span></h3>
+  </div>
+  <div class="explainStep" style="margin-bottom: 40px;">
     <div class="rule-wrapper">
       <button class="arrow left" id="ruleLeft">‹</button>
       <div class="rule-container" id="ruleContainer">
         <div class="rule-card">
           <h5>如何賣東西?</h5>
           <p>賣家專區相關操作</p>
-          <a href="../questions/questions.html#howtosell" class="rule-btn">查看詳情</a>
+          <a href="../questions/questions.html#howtosell" class="rule-btn">›</a>
         </div>
         <div class="rule-card">
           <h5>如何買東西?</h5>
           <p>買家如何購買二手商品</p>
-          <a href="../questions/questions.html#howtobuy" class="rule-btn">查看詳情</a>
+          <a href="../questions/questions.html#howtobuy" class="rule-btn">›</a>
         </div>
         <div class="rule-card">
           <h5>如何許願?</h5>
           <p>許願專區相關操作</p>
-          <a href="../questions/questions.html#howtowish" class="rule-btn">查看詳情</a>
+          <a href="../questions/questions.html#howtowish" class="rule-btn">›</a>
         </div>
         <div class="rule-card">
           <h5>如何媒合願望?</h5>
           <p>賣家媒合許願商品相關操作</p>
-          <a href="../questions/questions.html#howtomatch" class="rule-btn">查看詳情</a>
+          <a href="../questions/questions.html#howtomatch" class="rule-btn">›</a>
         </div>
         <div class="rule-card">
           <h5>如何使用聊天室?</h5>
           <p>賣家與買家之間的溝通方式</p>
-          <a href="../questions/questions.html#howtochat" class="rule-btn">查看詳情</a>
+          <a href="../questions/questions.html#howtochat" class="rule-btn">›</a>
         </div>
         <div class="rule-card">
           <h5>如何查看/編輯自己上架的商品?</h5>
           <p>賣家查看自己上架商品相關操作</p>
-          <a href="../questions/questions.html#howtoviewedit" class="rule-btn">查看詳情</a>
+          <a href="../questions/questions.html#howtoviewedit" class="rule-btn">›</a>
         </div>
         <div class="rule-card">
           <h5>如何查看/操作購買訂單?</h5>
           <p>買家查看自己購買訂單相關操作</p>
-          <a href="../questions/questions.html#howtobuyorder" class="rule-btn">查看詳情</a>
+          <a href="../questions/questions.html#howtobuyorder" class="rule-btn">›</a>
         </div>
         <div class="rule-card">
           <h5>如何查看/操作售出訂單?</h5>
           <p>賣家查看操作訂單相關操作</p>
-          <a href="../questions/questions.html#howtosellorder" class="rule-btn">查看詳情</a>
+          <a href="../questions/questions.html#howtosellorder" class="rule-btn">›</a>
         </div>
       </div>
       <button class="arrow right" id="ruleRight">›</button>
     </div>
   </div>
+    <div class="wishpoollook col-12" style="margin-bottom: 10px;">
+      <div class=" d-flex justify-content-between align-items-center" style="color: #383838;">
+        <div>
+          <h3 class="cardTitle" style="color: #004b97;">許願池</h3>
+          <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">買家許願，賣家實現</p>
+        </div>
+        <a class="more" href="../wishpool/wishpool.html#wishpool"><span class="more-btn">查看更多 →</span></a>
+      </div>
+      <div id="wishArea" class="wish-area">
+        <!-- 波浪形狀背景層 -->
+        <div class="wish-wave-layer wish-wave-layer--1"></div>
+        <div class="wish-wave-layer wish-wave-layer--2"></div>
+        <div class="wish-wave-layer wish-wave-layer--3"></div>
+        <!-- 泡泡由 JS 插入 -->
+      </div>
+    </div>
+  
+
     <div class="top d-flex flex-column">
-      <img src="../svg/hotImage1.svg" class="hot-section-img" alt="">
-      <div class="hot-info-bar">
-        <a href="../commodity/commodity.html?category=hot" class="hot-more">查看更多 ›</a>
+      <div class="d-flex justify-content-between align-items-center" style="color: #383838; margin-bottom: 10px;">
+        <div>
+          <h3 class="cardTitle" style="color: #004b97;">熱賣專區</h3>
+          <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">校園最受歡迎二手精選</p>
+        </div>
+        <a class="more" href="../commodity/commodity.html?category=hot"><span class="more-btn">查看更多 →</span></a>
       </div>
       <div class="hot-items-container" id="hotItems"></div>
       <div class="fake-scrollbar" style="display:none"><div class="fake-thumb"></div></div>
@@ -317,20 +392,24 @@
   </div>
   <div class="newsell">
     <!-- TODO 商品卡片 -->
-      <div class="topicoftop d-flex align-items-end justify-content-between">
-        <div class="d-flex align-items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" style="color: #004b97;" width="22" height="22" fill="currentColor" class="bi bi-stars" viewBox="0 0 16 16">
-            <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.73 1.73 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.73 1.73 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.73 1.73 0 0 0 3.407 2.31zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
-          </svg>
-          <h4 class="newsell-title">最新上架</h4>
-        </div>
-        <a href="../commodity/commodity.html?category=new" class="newsell-more">查看更多 ›</a>
+      <div class="d-flex justify-content-between align-items-center" style="color: #383838; margin-bottom: 10px;">
+          <h3 class="cardTitle" style="color: #004b97;">最新上架</h3>
+          <a href="../commodity/commodity.html?category=new" class="more"><span class="more-btn">查看更多 →</span></a>
       </div>
       <hr style="color: #004b97; margin-top: 10px;">
     <div class="mgMobile">
+      <!-- 手機版滑動提示 (hidden on desktop) -->
+      <div class="new-swipe-hint d-flex d-lg-none align-items-center justify-content-between mb-2" id="newSwipeHint">
+        <span class="swipe-arrow swipe-arrow-left"><i class="fa-solid fa-chevron-left"></i></span>
+        <span class="swipe-hint-text">向左右滑動切換</span>
+        <span class="swipe-arrow swipe-arrow-right"><i class="fa-solid fa-chevron-right"></i></span>
+      </div>
       <div id="product-grid" class="container-card row row-cols-2 row-cols-md-3 g-2 mt-0"></div>
+      <!-- 手機版頁碼小點 (hidden on desktop) -->
+      <div id="newMobileDots" class="d-flex d-lg-none justify-content-center align-items-center gap-1 mt-2" style="min-height:16px;"></div>
     </div>
-    <div class="pager">
+    <!-- 電腦版分頁按鈕 (hidden on mobile) -->
+    <div class="pager" id="newPager">
       <button id="newPrev">上一頁</button>
       <span id="newInfo"></span>
       <button id="newNext">下一頁</button>
@@ -1092,7 +1171,186 @@ document.getElementById('chaticon').addEventListener('click', () => {
     <span>我的帳戶</span>
   </a>
 </nav>
+<!-- 搜尋 Offcanvas (手機版) -->
+<div class="offcanvas offcanvas-top d-lg-none" id="searchOffcanvas" tabindex="-1" style="height:auto;max-height:85vh;border-radius:0 0 20px 20px;box-shadow:0 8px 32px rgba(0,0,0,0.18);backdrop-filter:blur(2px);">
+  <div class="offcanvas-body p-0" style="overflow-y:auto;overflow-x:hidden;">
+    <!-- offcanvas 內搜尋欄 -->
+    <div class="d-flex align-items-center px-3 py-2 border-bottom gap-2">
+      <div class="search-input-wrap flex-grow-1" style="position:relative;">
+        <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
+        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInputOC" style="border-radius:99px;padding-left:42px;">
+      </div>
+      <button class="btn btn-link text-secondary text-decoration-none p-0" data-bs-dismiss="offcanvas">取消</button>
+    </div>
+
+    <!-- 商品分類 -->
+    <div class="px-3 pt-3 pb-1">
+      <small class="fw-bold text-muted">商品分類</small>
+    </div>
+    <div class="cat-pills border-bottom pb-2" style="flex-wrap:wrap;overflow-x:visible;">
+      <a href="../commodity/commodity.html?category=書籍與學籍用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/book.svg" alt=""></div>書籍與學籍用品</a>
+      <a href="../commodity/commodity.html?category=宿舍與生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/life.svg" alt=""></div>宿舍與生活用品</a>
+      <a href="../commodity/commodity.html?category=學生專用器材" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/ruler.svg" alt=""></div>學生專用器材</a>
+      <a href="../commodity/commodity.html?category=環保生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/bag.svg" alt=""></div>環保生活用品</a>
+      <a href="../commodity/commodity.html?category=儲物與收納用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/save.svg" alt=""></div>儲物與收納用品</a>
+      <a href="../commodity/commodity.html?category=其他" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/Other.svg" alt=""></div>其他</a>
+    </div>
+
+    <!-- 搜尋紀錄 -->
+    <div class="px-3 pt-3 pb-1">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <small class="fw-bold">搜尋紀錄</small>
+        <button class="btn btn-link btn-sm text-muted p-0 text-decoration-none" id="clearHistoryBtn">清除</button>
+      </div>
+      <div id="searchHistoryList" class="d-flex flex-wrap gap-2 pb-1">
+        <!-- 由 JS 填入 -->
+      </div>
+    </div>
+
+    <!-- 搜尋排行榜（預留） -->
+    <div class="px-3 pt-2 pb-3 border-top mt-2">
+      <small class="fw-bold d-block mb-2">🔥 搜尋排行榜</small>
+      <div id="searchRankList">
+        <!-- 預留：之後由 API 填入排行資料 -->
+        <small class="text-muted">暫無資料</small>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+(function () {
+  const HISTORY_KEY = 'searchHistory';
+  function getHistory() { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
+  function saveHistory(arr) { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr.slice(0, 10))); }
+
+  function addSearchHistory(term) {
+    let h = getHistory().filter(t => t !== term);
+    h.unshift(term);
+    saveHistory(h);
+    renderMobileHistory();
+    renderDesktopHistory();
+  }
+
+  // ── 手機 offcanvas 搜尋紀錄 ──
+  function renderMobileHistory() {
+    const list = document.getElementById('searchHistoryList');
+    if (!list) return;
+    const h = getHistory();
+    list.innerHTML = h.length
+      ? h.map(t => `<span class="search-history-tag" onclick="document.getElementById('searchInputOC').value='${t.replace(/'/g,"\\'")}'">${t}<button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${t.replace(/'/g,"\\'")}','mobile')">×</button></span>`).join('')
+      : '<small class="text-muted">尚無搜尋紀錄</small>';
+  }
+
+  // ── 電腦 dropdown 搜尋紀錄 ──
+  function renderDesktopHistory() {
+    const list = document.getElementById('desktopHistoryList');
+    const section = document.getElementById('desktopHistorySection');
+    if (!list) return;
+    const h = getHistory();
+    if (!h.length) {
+      list.innerHTML = '<span class="text-muted" style="font-size:0.82rem;">尚無搜尋紀錄</span>';
+    } else {
+      list.innerHTML = h.map(t =>
+        `<span class="search-drop-tag" onclick="window._pickHistory('${t.replace(/'/g,"\\'")}')">
+          ${t}<button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${t.replace(/'/g,"\\'")}','desktop')">×</button>
+        </span>`
+      ).join('');
+    }
+  }
+
+  window._removeHistory = function (term, src) {
+    saveHistory(getHistory().filter(t => t !== term));
+    renderMobileHistory();
+    renderDesktopHistory();
+  };
+
+  window._pickHistory = function (term) {
+    const input = document.getElementById('searchInput');
+    if (input) {
+      input.value = term;
+      closeDropdown();
+      document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+    }
+  };
+
+  // ── 電腦 dropdown 顯示/隱藏 ──
+  function openDropdown() {
+    const dd = document.getElementById('searchDropdown');
+    if (!dd) return;
+    renderDesktopHistory();
+    dd.style.removeProperty('display');
+    dd.classList.add('active');
+  }
+  function closeDropdown() {
+    const dd = document.getElementById('searchDropdown');
+    if (!dd) return;
+    dd.classList.remove('active');
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const mainInput = document.getElementById('searchInput');
+    const ocInput   = document.getElementById('searchInputOC');
+    const ocEl      = document.getElementById('searchOffcanvas');
+    const dropdown  = document.getElementById('searchDropdown');
+    if (!mainInput) return;
+
+    // ── 手機：focus → offcanvas ──
+    if (ocEl) {
+      const bsOC = new bootstrap.Offcanvas(ocEl, { scroll: true, backdrop: true });
+      mainInput.addEventListener('focus', function () {
+        if (window.innerWidth < 992) {
+          mainInput.blur();
+          bsOC.show();
+          setTimeout(() => ocInput && ocInput.focus(), 350);
+        }
+      });
+      if (ocInput) {
+        ocInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            const val = ocInput.value.trim();
+            if (!val) return;
+            addSearchHistory(val);
+            bsOC.hide();
+            mainInput.value = val;
+            document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+          }
+        });
+      }
+      document.getElementById('clearHistoryBtn')?.addEventListener('click', function () {
+        saveHistory([]); renderMobileHistory();
+      });
+      ocEl.addEventListener('show.bs.offcanvas', renderMobileHistory);
+    }
+
+    // ── 電腦：focus → dropdown ──
+    mainInput.addEventListener('focus', function () {
+      if (window.innerWidth >= 992) openDropdown();
+    });
+    mainInput.addEventListener('input', function () {
+      if (window.innerWidth >= 992 && !mainInput.value.trim()) openDropdown();
+    });
+    // 電腦 Enter 記錄搜尋
+    mainInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && window.innerWidth >= 992) {
+        const val = mainInput.value.trim();
+        if (val) addSearchHistory(val);
+        closeDropdown();
+      }
+    });
+    // 點外面關掉 dropdown
+    document.addEventListener('mousedown', function (e) {
+      if (dropdown && !dropdown.contains(e.target) && e.target !== mainInput) {
+        closeDropdown();
+      }
+    });
+
+    // 電腦清除紀錄
+    document.getElementById('desktopClearHistory')?.addEventListener('click', function () {
+      saveHistory([]); renderDesktopHistory();
+    });
+  });
+})();
 </script>
 
     <!-- script部分-->

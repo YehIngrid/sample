@@ -13,86 +13,93 @@
     min-height: calc(100dvh - 60px);
 }
 
-/* ================== 卡片列表 ================== */
-.news-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.2rem;
-  padding-top: 1.4rem;
-  padding-bottom: 1rem;
-}
-
-.news-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1.2rem 1.4rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-  border: 1px solid #e8edf3;
-  cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+/* ================== 標題區塊 ================== */
+.news-section-header {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.news-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 22px rgba(0, 75, 151, 0.14);
-}
-
-.news-card-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 16px;
+  margin-top: 8px;
+}
+.news-section-bar {
+  display: inline-block;
+  width: 32px;
+  height: 3px;
+  background: #004b97;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ================== 列表樣式 ================== */
+.news-list {
+  border-top: 1px solid #e0e0e0;
+}
+
+.news-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 4px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.news-row:hover {
+  background: #f7f9ff;
+}
+
+.news-row-date {
+  font-size: 0.88rem;
+  color: #888;
+  white-space: nowrap;
+  min-width: 90px;
 }
 
 /* 分類標籤 */
 .news-badge {
   font-size: 0.78rem;
-  font-weight: 700;
-  padding: 3px 10px;
+  font-weight: 600;
+  padding: 3px 12px;
   border-radius: 20px;
   letter-spacing: 0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .news-badge.system {
-  background: #e8f0fb;
+  border: 1.5px solid #004b97;
   color: #004b97;
+  background: transparent;
 }
 .news-badge.store {
-  background: #e0fff3;
-  color: #23b779;
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(to right, #24b6856f, #004b976c) border-box;
+  color: #1a9e68;
+}
+.news-badge.rules {
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(to right, #e53935, #6baee8) border-box;
+  color: #c0392b;
 }
 .news-badge.other {
-  background: #f3f3f3;
-  color: #555;
+  border: 1.5px solid #888;
+  color: #888;
+  background: transparent;
 }
 
-.news-date {
-  font-size: 0.82rem;
-  color: #aaa;
-}
-
-.news-card-title {
-  font-size: 1rem;
-  font-weight: 700;
+.news-row-title {
+  font-size: 0.95rem;
   color: #222;
-  margin: 0;
-  line-height: 1.45;
-}
-
-.news-card-excerpt {
-  font-size: 0.84rem;
-  color: #777;
-  line-height: 1.65;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.5;
 }
 
 .news-empty {
-  grid-column: 1 / -1;
   text-align: center;
   color: #aaa;
   padding: 3rem 0;
@@ -104,7 +111,7 @@
   gap: 0.6rem;
   flex-wrap: wrap;
   padding-top: 0.4rem;
-  padding-bottom: 0.2rem;
+  padding-bottom: 1rem;
 }
 
 .filter-btn {
@@ -175,8 +182,15 @@
     padding-left: 3vw;
     padding-right: 3vw;
   }
-  .news-grid {
-    grid-template-columns: 1fr;
+  .news-row {
+    gap: 10px;
+  }
+  .news-row-date {
+    min-width: 72px;
+    font-size: 0.8rem;
+  }
+  .news-row-title {
+    font-size: 0.88rem;
   }
   .pagechange button {
     font-size: 1rem;
@@ -205,6 +219,9 @@
     padding-top: 20px;
   }
   
+}
+.detail-meta {
+  margin-bottom: 10px;
 }
 .detail-title {
   font-size: 1.5rem;
