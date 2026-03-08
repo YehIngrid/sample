@@ -88,8 +88,8 @@ ul{
 }
 @media (max-width:452px) {
     .seriesofbutton li{
-        padding-left: 2%;
-        padding-right: 2%;
+        padding-left: 1%;
+        padding-right: 1%;
         font-size: 1rem;
     }
 }
@@ -99,7 +99,7 @@ ul{
     width: 100vw;
   }
   .seriesofbutton li {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
   .navtb {
     --bs-navbar-padding-y: 0;
@@ -561,6 +561,7 @@ ul{
 }
 .product-card {
   border: none;
+  cursor: pointer;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
@@ -2038,9 +2039,6 @@ html{ scroll-behavior:smooth; }
   0%   { background-position-x: 0; }
   100% { background-position-x: 1200px; }
 }
-.wish-area:hover .wish-track    { animation-play-state: paused; }
-.wish-area:hover .wish-wave-layer { animation-play-state: paused; }
-.wish-area:hover::before        { animation-play-state: paused; }
 
 /* ── 第二層帶狀波浪（不同相位，增加深度感） ── */
 .wish-wave-layer {

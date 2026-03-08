@@ -137,7 +137,7 @@ ul{
   }
 
   /* 輸入框：藥丸形、左留 icon 空間 */
-  #searchInput {
+  #searchInput, #searchTriggerMobile {
     border-radius: 99px !important;
     padding-top: 4px !important;
     padding-bottom: 4px !important;

@@ -63,11 +63,13 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    async sendAttach(roomId, image) {
+    async sendAttach(roomId, image, message = '') {
         try {
+            const body = { room: String(roomId), image };
+            if (message) body.message = message;
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/attachment`,
-                { room: String(roomId), image: image }
+                body
             );
             return response.data;
         } catch (error) {

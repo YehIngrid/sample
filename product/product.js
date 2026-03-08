@@ -334,7 +334,7 @@ async function openChatWithSeller(targetSellerId) {
   chatService = new ChatBackendService();
 
   try {
-    chatInnerWin.openChatWithSeller(targetSellerId);
+    chatInnerWin.openChatWithTarget(targetSellerId);
   } catch (err) {
     console.error(err);
     Swal.fire({ icon: 'error', title: '無法建立聊天室' });

@@ -15,6 +15,8 @@ class ChatRoomList {
         this.sendImagebtn = document.getElementById('send-image-btn');
         this.previewArea = document.getElementById('image-upload');
         this.input = document.getElementById('messageInput');
+        this.submitBtn = document.querySelector('#messageForm button[type="submit"]');
+        this.isSending = false;
         this.alreadyInit = false;
 
         // 每個房間各自記錄 lastReadMessageId 和 lastReadTimestamp
@@ -148,24 +150,88 @@ class ChatRoomList {
                 <div class="position-relative d-inline-block">
                     <button type="button" class="btn-close" aria-label="Close"></button>
                     <img src="${reader.result}">
-                </div>`;
+                </div>
+                <span class="preview-hint">可在下方輸入文字一起傳送</span>`;
             container.appendChild(preview);
         };
         reader.readAsDataURL(file);
     }
 
-    async sendImage(file) {
-        const reader = new FileReader();
-        reader.onload = async () => {
-            try {
-                // ✅ API: POST /api/chat/attachment
-                // body: { room: roomId, image: base64字串 }
-                await this.backend.sendAttach(this.currentRoomId, reader.result);
-            } catch (err) {
-                console.error('發送圖片錯誤:', err);
+    async sendImage(file, caption = '') {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = async () => {
+                try {
+                    await this.backend.sendAttach(this.currentRoomId, reader.result, caption);
+                    resolve();
+                } catch (err) {
+                    console.error('發送圖片錯誤:', err);
+                    reject(err);
+                }
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // 圖片 + 文字 caption 合併泡泡
+    appendCombinedMessage(data, prepend = false) {
+        const container = document.getElementById('messagesContainer');
+        const wrapper = document.createElement('div');
+        const isSelf = data.isSelf === true || data.username === this.username;
+        wrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
+        wrapper.dataset.timestamp = data.timestamp;
+        wrapper.dataset.messageId = data.id ?? '';
+
+        const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
+            hour: '2-digit', minute: '2-digit', hour12: false
+        });
+        const imageUrl = Array.isArray(data.attachments) ? data.attachments[0] : '';
+        const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
+            ? '../webP/treasurehub.webp'
+            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png');
+
+        wrapper.innerHTML = `
+            ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;"/></div>` : ''}
+            <div class="message-content">
+                <div class="d-flex align-items-end">
+                    ${isSelf ? `
+                    <div class="d-flex flex-column align-items-center me-2">
+                        <i class="bi bi-check2-all read-receipt d-none" style="font-size:0.8rem;color:#4CAF50;"></i>
+                        <small class="text-muted" style="font-size:0.75rem;">${time}</small>
+                    </div>` : ''}
+                    <div class="combined-bubble">
+                        <a href="${imageUrl}" data-pswp-width="auto" data-pswp-height="auto"
+                           target="_blank" class="image-link">
+                            <img src="${imageUrl}" alt="Image" loading="lazy">
+                        </a>
+                        <div class="combined-caption">${this.escapeHtml(data.message)}</div>
+                    </div>
+                    ${isSelf ? '' : `<small class="text-muted ms-2" style="font-size:0.75rem;">${time}</small>`}
+                </div>
+            </div>`;
+
+        if (prepend) {
+            container.prepend(wrapper);
+        } else {
+            container.appendChild(wrapper);
+            requestAnimationFrame(() => {
+                if (!this.isInitialLoading) container.scrollTop = container.scrollHeight;
+            });
+        }
+
+        const tempImg = new Image();
+        tempImg.onload = () => {
+            const link = wrapper.querySelector('.image-link');
+            if (link) {
+                link.setAttribute('data-pswp-width', tempImg.naturalWidth);
+                link.setAttribute('data-pswp-height', tempImg.naturalHeight);
             }
+            this.initPhotoSwipeGallery();
+            if (!prepend && !this.isInitialLoading) container.scrollTop = container.scrollHeight;
         };
-        reader.readAsDataURL(file);
+        tempImg.src = imageUrl;
+        this.detectRead(wrapper);
     }
 
     // ✅ attachments 是陣列 ["url1", ...]，取第一個元素顯示
@@ -577,29 +643,57 @@ class ChatRoomList {
     }
 
     async sendMessage() {
-        if (this.pendingImage) {
-            await this.sendImage(this.pendingImage);
-            this.pendingImage = null;
-            document.querySelector('.preview')?.remove();
-            return;
-        }
+        if (this.isSending) return;
         const input = document.getElementById('messageInput');
         const text = input.value.trim();
-        if (!text || !this.currentRoomId) return;
-        await this.backend.sendMessage(this.currentRoomId, text);
-        input.value = '';
+        const hasImage = !!this.pendingImage;
+        const hasText = !!text;
+        if (!hasImage && !hasText) return;
+        if (!this.currentRoomId) return;
+
+        // 鎖定，防止重複送出
+        this.isSending = true;
+        if (this.submitBtn) this.submitBtn.disabled = true;
+
+        // 立即清除輸入狀態，提升回應感
+        const imageFile = this.pendingImage;
+        if (hasImage) {
+            this.pendingImage = null;
+            document.querySelector('.preview')?.remove();
+            this.previewArea.value = '';
+        }
+        if (hasText) input.value = '';
+
+        try {
+            if (hasImage && hasText) {
+                // 圖片 + 文字：一次送出（caption 帶入文字）
+                await this.sendImage(imageFile, text);
+            } else if (hasImage) {
+                await this.sendImage(imageFile);
+            } else {
+                await this.backend.sendMessage(this.currentRoomId, text);
+            }
+        } finally {
+            this.isSending = false;
+            if (this.submitBtn) this.submitBtn.disabled = false;
+        }
     }
 
     renderMessage(data, prepend = false) {
         // ✅ attachments 是陣列，有內容才視為圖片訊息
         if (Array.isArray(data.attachments) && data.attachments.length > 0) {
-            this.appendImageMessage({
-                id: data.id,
-                attachments: data.attachments,  // 直接傳陣列
-                username: data.username,
-                photoURL: data.photoURL,
-                timestamp: data.timestamp
-            }, prepend);
+            if (data.message && data.message.trim()) {
+                // 圖片 + 文字 caption：合併顯示
+                this.appendCombinedMessage(data, prepend);
+            } else {
+                this.appendImageMessage({
+                    id: data.id,
+                    attachments: data.attachments,
+                    username: data.username,
+                    photoURL: data.photoURL,
+                    timestamp: data.timestamp
+                }, prepend);
+            }
             return;
         }
 
