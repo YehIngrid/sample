@@ -2,15 +2,14 @@ let backendService;
 let wpbackendService;
 
 // ── Skeleton helper ──
-function wishSkeletonHTML(n = 6) {
+function wishSkeletonHTML(n = 8) {
   return Array.from({length: n}, () => `
     <div class="card item">
-      <div class="card-body d-flex align-items-center">
-        <div class="skeleton" style="width:80px;height:80px;border-radius:8px;flex-shrink:0;"></div>
-        <div style="margin-left:15px;flex:1">
-          <div class="skeleton skeleton-text" style="width:75%;"></div>
-          <div class="skeleton skeleton-text" style="width:55%;"></div>
-        </div>
+      <div class="wish-thumb skeleton"></div>
+      <div class="card-body">
+        <div class="skeleton skeleton-text" style="width:80%;margin-bottom:6px;"></div>
+        <div class="skeleton skeleton-text" style="width:55%;margin-bottom:6px;"></div>
+        <div class="skeleton skeleton-text" style="width:35%;"></div>
       </div>
     </div>`).join('');
 }
@@ -26,24 +25,58 @@ document.addEventListener("DOMContentLoaded", (e) => {
       listAll(currentPage - 1);
     }
   });
-  
+
   document.getElementById('nextPage')?.addEventListener('click', () => {
     if (currentPage < totalPages) {
       listAll(currentPage + 1);
     }
   });
-  
+
   document.getElementById('myprevPage')?.addEventListener('click', () => {
     if (mycurrentPage > 1) {
       listMyWishes(mycurrentPage - 1);
     }
   });
-  
+
   document.getElementById('mynextPage')?.addEventListener('click', () => {
     if (mycurrentPage < mytotalPages) {
       listMyWishes(mycurrentPage + 1);
     }
   });
+
+  // ── 許願池 layout toggle ──
+  const wpGridBtn  = document.getElementById('wpGridBtn');
+  const wpListBtn  = document.getElementById('wpListBtn');
+  const wishGridEl = document.getElementById('wishGrid');
+  if (wpGridBtn && wpListBtn && wishGridEl) {
+    wpGridBtn.addEventListener('click', () => {
+      wishGridEl.classList.remove('list-view');
+      wpGridBtn.classList.add('active');
+      wpListBtn.classList.remove('active');
+    });
+    wpListBtn.addEventListener('click', () => {
+      wishGridEl.classList.add('list-view');
+      wpListBtn.classList.add('active');
+      wpGridBtn.classList.remove('active');
+    });
+  }
+
+  // ── 我的願望 layout toggle ──
+  const myWpGridBtn  = document.getElementById('myWpGridBtn');
+  const myWpListBtn  = document.getElementById('myWpListBtn');
+  const myWishGridEl = document.getElementById('myWishGrid');
+  if (myWpGridBtn && myWpListBtn && myWishGridEl) {
+    myWpGridBtn.addEventListener('click', () => {
+      myWishGridEl.classList.remove('list-view');
+      myWpGridBtn.classList.add('active');
+      myWpListBtn.classList.remove('active');
+    });
+    myWpListBtn.addEventListener('click', () => {
+      myWishGridEl.classList.add('list-view');
+      myWpListBtn.classList.add('active');
+      myWpGridBtn.classList.remove('active');
+    });
+  }
 })
 const pages = document.querySelectorAll('.page');
 const links = document.querySelectorAll('.nav-link');
@@ -203,17 +236,18 @@ function showInfo(data) {
     const expiresAt = new Date(wish.expiresAt);
     card.dataset.id = wish.id;
     const showImage = wish.photoURL != null;
-    const image = showImage ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px; max-height: 100px; object-fit: cover; object-position: center;">`: `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
-" alt="No Image" style="width: 100px;">`;
     card.innerHTML = `
-        <div class="card-header" style="color: white;">${expiresAt.toLocaleDateString()} 截止</div>
-        <div class="card-body d-flex align-items-center">
-          <div class="left">
-            ${image}
-          </div>
-          <div class="right" style="margin-left: 15px;">
-            <h5 class="card-title">${wish.itemName}</h5>
-            <p class="card-text ellipsis-text-wp">${wish.description}</p>
+        <div class="wish-thumb">
+          ${showImage
+            ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片">`
+            : `<div class="wish-thumb-placeholder"><i class="fa fa-camera"></i></div>`}
+        </div>
+        <div class="card-body">
+          <h6 class="card-title">${wish.itemName}</h6>
+          <p class="card-text">${wish.description}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="wish-price">收購價 NT$${wish.maxPrice}</span>
+            <span class="wish-expire text-muted">${expiresAt.toLocaleDateString()} 截止</span>
           </div>
         </div>
     `;
@@ -238,43 +272,44 @@ function showMyInfo(data) {
     card.classList.add('card', 'item','text-dark', 'bg-light');
     const tagsString = generateTags(wish);
     const showImage = wish.photoURL != null;
-    const image = showImage ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片" style="width: 100px; max-height: 100px; object-fit: cover; object-position: center;">`: `<img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f2f2f2'/><rect x='18' y='22' width='64' height='44' rx='4' ry='4' fill='none' stroke='%23999999' stroke-width='3'/><polyline points='22,58 40,40 52,52 66,38 78,50' fill='none' stroke='%23999999' stroke-width='3'/><circle cx='60' cy='34' r='4' fill='%23999999'/><text x='50' y='82' font-size='12' text-anchor='middle' fill='%23999999' font-family='Arial, Helvetica, sans-serif'>No Image</text></svg>
-" alt="No Image" style="width: 100px;">`;
     card.setAttribute('data-tags', tagsString);
     card.dataset.id = wish.id;
-    
+
     const statusMap = {
-      1: '上架中',
-      2: '已過期',
-      3: '已刪除'
-    }
+      "ACTIVE": '上架中',
+      "EXPIRED": '已過期',
+      "DELETED": '已刪除'
+    };
+    const statusColor = wish.status === 'ACTIVE' ? '#28a745' : '#aaa';
+    const showDeleteBtn = wish.status === 'ACTIVE';
     card.innerHTML = `
-        <div class="card-header">願望狀態：${statusMap[wish.status]}</div>
-        <div class="card-body d-flex align-items-center">
-          <div class="left">
-            ${image}
-          </div>
-          <div class="right" style="margin-left: 15px;">
-            <h5 class="card-title">${wish.itemName}</h5>
-            <p class="card-text ellipsis-text-wp">${wish.description}</p>
-          </div>
+        <div class="wish-thumb">
+          ${showImage
+            ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片">`
+            : `<div class="wish-thumb-placeholder"><i class="fa fa-camera"></i></div>`}
+          <span class="wish-status-badge" style="background:${statusColor};">${statusMap[wish.status]}</span>
+        </div>
+        <div class="card-body">
+          <h6 class="card-title">${wish.itemName}</h6>
+          <p class="card-text">${wish.description}</p>
+          <span class="wish-price">收購價 NT$${wish.maxPrice}</span>
+          ${showDeleteBtn ? `<button class="btn btn-sm btn-danger mt-2 w-100 wish-delete-btn">刪除願望</button>` : ''}
         </div>
     `;
-    const showDeleteBtn = wish.status === 1;
-    const deleteButton = showDeleteBtn ? document.createElement('button'): null;
-    if(deleteButton) {
-      deleteButton.classList.add('btn', 'btn-danger');
-      deleteButton.innerHTML = '刪除願望';
-      card.appendChild(deleteButton);
-      deleteButton.addEventListener('click', (e) => {
+    if (showDeleteBtn) {
+      card.querySelector('.wish-delete-btn').addEventListener('click', (e) => {
         e.stopPropagation();
         deleteWish(card.dataset.id);
       });
     }
-    card.addEventListener('click', () => {
-      const pid = card.dataset.id;
-      if (pid) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(pid)}`;
-    });
+    if (wish.status === 'ACTIVE') {
+      card.addEventListener('click', () => {
+        const pid = card.dataset.id;
+        if (pid) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(pid)}`;
+      });
+    } else {
+      card.classList.add('wish-disabled');
+    }
     container.appendChild(card);
   });
   

@@ -19,93 +19,161 @@ html {
   font-size: 1rem;
 }
 body {
-    background-color: var(--background-color) !important;
+    background-color: #eef6ff !important;
     color: #042f37 !important;
     overflow-x: hidden;
 }
-nav {
-    background-color: var(--background-color);
-    padding-left: 100px !important;
-    padding-right: 12px !important;
+
+/* ── Header & Navbar ── */
+.header {
+    display: block;
+    background-color: #fff;
 }
-@media screen and (max-width: 768px) {
-    nav {
-        padding-left: 20px !important;
-    }
-    .nav {
-      --bs-nav-link-padding-y: 0.25rem !important;
-    }
-    .nav-link {
-      --bs-nav-link-padding-y: 0.25rem !important;
-    }
-    .nav-item a {
-        font-size: 12px;
-    }
-    .card-title {
-      font-size: 14px;
-    }
-    .card-header {
-      font-size: 12px;
-    }
-    .ulstep {
-      padding-left: 10px;
-    }
-    .step {
-      padding-right: 15px;
-    }
-    .formwish {
-      padding: 10px;
-    }
-    .leftsort {
-      margin-left: 10px;
-      margin-right: 10px;
-    }
-    .contactbtn {
-      padding: 8px 8px;
-      border-radius: 0px;
+.navtb {
+    box-shadow: 0 0 2px rgb(0,0,0,0.2);
+}
+@media (max-width: 991.98px) {
+    .navtb {
+        --bs-navbar-padding-y: 0;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        box-shadow: none;
     }
 }
-nav a {
-    color: var(--light-text-color);
+
+/* ── Navbar SPA tabs ── */
+.navbar .spa-tab {
+    color: #555 !important;
+    font-size: 14px;
+    position: relative;
+    padding-bottom: 6px;
+    transition: color 0.2s;
 }
-.loginornot , .username{
+.navbar .spa-tab:hover {
+    color: var(--brand-color) !important;
+}
+.navbar .spa-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0.5rem;
+    right: 0.5rem;
+    height: 2px;
+    background: var(--brand-color);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.22s ease;
+}
+.navbar .spa-tab.active {
+    color: var(--brand-color) !important;
+    font-weight: 600;
+}
+.navbar .spa-tab.active::after {
+    transform: scaleX(1);
+}
+
+/* ── 返回購物首頁 button ── */
+.wp-back-btn {
+    color: var(--brand-color);
+    background-color: transparent;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 50px;
+    border: 1.5px solid var(--brand-color);
+    transition: background 0.25s, color 0.25s;
+    white-space: nowrap;
+}
+.wp-back-btn:hover {
+    color: #fff;
+    background-color: var(--brand-color);
+}
+
+/* ── cardTitle & section-subtitle ── */
+.cardTitle {
+    margin: 0;
+    padding-left: 4px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: #383838;
+}
+.section-subtitle {
+    color: #667;
+    font-size: 0.92rem;
+    margin-top: 4px;
+    margin-bottom: 18px;
+    padding-left: 5px;
+}
+
+/* ── Login / username ── */
+.loginornot, .username {
     color: var(--brand-color);
     font-size: 14px;
     text-decoration: none;
 }
-.nav{
-    background-color: var(--light-text-color) !important;
+
+/* ── SPA Pages ── */
+.page {
+    display: none;
 }
-.nav-item a {
-    color: var(--background-color) !important;
+.page.active {
+    display: block;
+    animation: pageIn 0.38s ease both;
 }
-.nav-item a:hover {
-    color: var(--text-color) !important;
-}
-.nav-item a.active {
-    color: var(--text-color) !important;
-}
-.ulstep {
-  margin-bottom: 0px;
-}
-.ulstep {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+@keyframes pageIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Section backgrounds */
+.page {
+    margin: 4vh 0;
+    border-radius: 16px;
+    padding: 28px 24px;
+    min-height: 50vh;
+}
+#mywishes.page {
+    background: #fff;
+    margin-bottom: 30vh;
+}
+#about.page {
+    background: #fff;
+}
+#wishpool.page {
+    background: #fff;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 30vh;
+}
+#makewish.page {
+    background: #fff;
+}
+@media screen and (max-width: 768px) {
+    .page {
+        margin: 2vh 0;
+        padding: 16px 12px;
+    }
+}
+
+/* ── Wish step list ── */
+.ulstep {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 0px;
+}
 .listep {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 8px;
 }
-
 .step {
-  min-width: 80px; /* 控制 STEP 欄位寬度 */
-  font-weight: bold;
-  display: inline-block;
-  color: var(--brand-color);
-  font-size: 18px;
+    min-width: 80px;
+    font-weight: bold;
+    display: inline-block;
+    color: var(--brand-color);
+    font-size: 18px;
 }
 .ulstepdiv {
     background: linear-gradient(to right bottom, var(--focus-color), var(--focus-border-color));
@@ -119,59 +187,71 @@ nav a {
     padding: 5px 0px;
     font-size: 16px;
 }
+@media screen and (max-width: 768px) {
+    .ulstep {
+        padding-left: 10px;
+    }
+    .step {
+        padding-right: 15px;
+    }
+}
+
+/* ── Form ── */
 .formwish {
     background: linear-gradient(to right bottom, var(--focus-color), rgb(106, 148, 176));
     padding: 20px;
     border-radius: 8px;
 }
 .formwish label {
-  color: #383838 !important;
+    color: #383838 !important;
 }
+@media screen and (max-width: 768px) {
+    .formwish {
+        padding: 10px;
+    }
+}
+
+/* ── Image preview ── */
 .img-preview {
-    width: 210px;                 /* 你也可以改成 100% 做自適應 */
-    aspect-ratio: 1 / 1;          /* 正方形重點 */
-    border: 2px dashed #7bcdd6;   /* 沒圖時的邊框 */
+    width: 210px;
+    aspect-ratio: 1 / 1;
+    border: 2px dashed #7bcdd6;
     border-radius: 16px;
     color: #4d8187;
     background-color: #fff;
     display: grid;
-    place-items: center;          /* 置中 placeholder */
+    place-items: center;
     position: relative;
     overflow: hidden;
     transition: border-color .2s, box-shadow .2s;
     margin-bottom: 20px;
-  }
-  
-  .img-preview:hover {
+}
+.img-preview:hover {
     box-shadow: 0 2px 10px rgba(0,0,0,.06);
-  }
-  
-  .img-preview .placeholder {
+}
+.img-preview .placeholder {
     font-size: 14px;
-    pointer-events: none;         /* 讓文字不擋到點擊 */
+    pointer-events: none;
     color: #4d8187;
     background-color: transparent !important;
-  }
-  
-  .img-preview img {
+}
+.img-preview img {
     position: absolute;
-    inset: 0;                     /* top/right/bottom/left: 0 */
+    inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;            /* 等比裁切填滿 */
-    display: none;                /* 預設不顯示，等有圖再顯示 */
-  }
-  
-  /* 有圖片時的狀態 */
-  .img-preview.has-image .placeholder { display: none; }
-  .img-preview.has-image img { display: block; }
-  
-  /* 可選：拖曳進來時的狀態（若加上 JS 監聽 drop/dragover） */
-  .img-preview.dragover {
+    object-fit: cover;
+    display: none;
+}
+.img-preview.has-image .placeholder { display: none; }
+.img-preview.has-image img { display: block; }
+.img-preview.dragover {
     border-color: #4D81B7;
     box-shadow: 0 0 0 4px rgba(77,129,183,.12);
-  }
-  .blob-btn {
+}
+
+/* ── Blob button ── */
+.blob-btn {
     z-index: 1;
     position: relative;
     padding: 10px 30px;
@@ -186,9 +266,8 @@ nav a {
     transition: color 0.5s;
     cursor: pointer;
     border-radius: 30px;
-  }
-  
-  .blob-btn:before {
+}
+.blob-btn:before {
     content: "";
     z-index: 1;
     position: absolute;
@@ -196,35 +275,31 @@ nav a {
     top: 0;
     width: 100%;
     height: 100%;
-    border: 2px solid #7bcdd6; /* $borderW + $cyan */
+    border: 2px solid #7bcdd6;
     border-radius: 30px;
-  }
-  
-  .blob-btn:after {
+}
+.blob-btn:after {
     content: "";
     z-index: -2;
     position: absolute;
-    left: 3px; /* $borderW*1.5 = 3px */
+    left: 3px;
     top: 3px;
     width: 100%;
     height: 100%;
     transition: all 0.3s 0.2s;
     border-radius: 30px;
-  }
-  
-  .blob-btn:hover {
-    color: #FFFFFF; /* $dark */
+}
+.blob-btn:hover {
+    color: #FFFFFF;
     border-radius: 30px;
-  }
-  
-  .blob-btn:hover:after {
+}
+.blob-btn:hover:after {
     transition: all 0.3s;
     left: 0;
     top: 0;
     border-radius: 30px;
-  }
-  
-  .blob-btn__inner {
+}
+.blob-btn__inner {
     z-index: -1;
     overflow: hidden;
     position: absolute;
@@ -234,94 +309,378 @@ nav a {
     height: 100%;
     border-radius: 30px;
     background: #ffffff;
-  }
-  
-  .blob-btn__blobs {
+}
+.blob-btn__blobs {
     position: relative;
     display: block;
     height: 100%;
     filter: url('#goo');
-  }
-  
-  .blob-btn__blob {
+}
+.blob-btn__blob {
     position: absolute;
-    top: 2px; /* $borderW */
-    width: 25%; /* 100% / 4 */
+    top: 2px;
+    width: 25%;
     height: 100%;
-    background: linear-gradient(0deg,#004b97 0%, #c2cffb 100%);
+    background: linear-gradient(0deg, #004b97 0%, #c2cffb 100%);
     border-radius: 100%;
     transform: translate3d(0,150%,0) scale(1.7);
     transition: transform 0.45s;
-  }
-  
-  @supports (filter: url('#goo')) {
+}
+@supports (filter: url('#goo')) {
     .blob-btn__blob {
-      transform: translate3d(0,150%,0) scale(1.4);
+        transform: translate3d(0,150%,0) scale(1.4);
     }
-  }
-  
-  /* nth-child 展開 ($numOfBlobs = 4) */
-  .blob-btn__blob:nth-child(1) {
-    left: 0%;
-    transition-delay: 0s;
-  }
-  
-.blob-btn__blob:nth-child(2) {
-    left: 30%;
-    transition-delay: 0.08s;
 }
-
-.blob-btn__blob:nth-child(3) {
-    left: 60%;
-    transition-delay: 0.16s;
-}
-.blob-btn__blob:nth-child(4) {
-    left: 90%;
-    transition-delay: 0.24s;
-}
+.blob-btn__blob:nth-child(1) { left: 0%;  transition-delay: 0s; }
+.blob-btn__blob:nth-child(2) { left: 30%; transition-delay: 0.08s; }
+.blob-btn__blob:nth-child(3) { left: 60%; transition-delay: 0.16s; }
+.blob-btn__blob:nth-child(4) { left: 90%; transition-delay: 0.24s; }
 
 .blob-btn:hover .blob-btn__blob {
     transform: translateZ(0) scale(1.7);
 }
-
 @supports (filter: url('#goo')) {
     .blob-btn:hover .blob-btn__blob {
-    transform: translateZ(0) scale(1.4);
+        transform: translateZ(0) scale(1.4);
     }
 }
 
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
+/* ── Tags ── */
 .tag-list {
     display: flex;
     flex-wrap: wrap;
     gap: 7px;
-  }
-  
-  .tag {
+}
+.tag {
     padding: 4px 8px;
     border: 1px solid var(--background-color);
     background: var(--light-text-color);
     border-radius: 50px;
     color: var(--background-color);
     cursor: pointer;
-    transition: 0.2s;
+    transition: transform 0.15s, background 0.2s;
     font-size: 12px;
-  }
-  
-  .tag.active {
+}
+.tag:hover {
+    transform: scale(1.05);
+}
+.tag.active {
     background: linear-gradient(to right bottom, var(--focus-color), var(--focus-border-color));
     color: #383838;
     border-color: var(--focus-border-color);
-  }
+}
 
-/* *footer */
-.footer , .footer a{
+/* ── Navbar two-row layout (desktop) ── */
+/* Bootstrap .navbar-expand-lg sets flex-wrap:nowrap on ≥992px; override so second row works */
+@media (min-width: 992px) {
+    .navbar-expand-lg.navtb {
+        flex-wrap: wrap !important;
+        padding-bottom: 0;
+    }
+}
+.wp-tab-row {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding-top: 2px;
+    padding-bottom: 5px;
+    width: 100%;
+}
+
+/* ── Layout toggle buttons ── */
+.wp-layout-toggle-bar {
+    display: none;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 4px 4px 8px;
+}
+@media (max-width: 991px) {
+    .wp-layout-toggle-bar { display: flex; }
+}
+.layout-btn {
+    background: none;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    padding: 3px 7px;
+    color: #888;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1;
+}
+.layout-btn.active {
+    border-color: var(--brand-color);
+    color: var(--brand-color);
+    background: #eaf1fb;
+}
+
+/* ── Cards grid ── */
+.wishgrid {
+    display: grid;
+    gap: 12px;
+    padding: 4px 0;
+}
+.item-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+.my-item-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+/* ── Wish card (vertical) ── */
+.card.item {
+    max-width: none !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 6px rgba(0, 75, 151, 0.1);
+    cursor: pointer;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.card.item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 75, 151, 0.18);
+}
+.wish-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f4f4f4;
+    position: relative;
+    flex-shrink: 0;
+}
+.wish-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+.wish-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    font-size: 2rem;
+}
+.wish-status-badge {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+.card.item .card-body {
+    padding: 8px 10px !important;
+    background: aliceblue;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.card.item .card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.card.item .card-text {
+    font-size: 0.72rem;
+    color: #555;
+    margin-bottom: 6px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    flex: 1;
+}
+.wish-price {
+    color: #c0392b;
+    font-weight: 700;
+    font-size: 0.82rem;
+}
+.wish-expire {
+    font-size: 0.68rem;
+}
+
+.wish-disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    filter: grayscale(40%);
+}
+.wish-disabled:hover {
+    transform: none !important;
+    box-shadow: 0 1px 6px rgba(0, 75, 151, 0.1) !important;
+}
+
+/* ── Mobile grid: 2-col, or list-view ── */
+@media (max-width: 991px) {
+    .item-list:not(.list-view),
+    .my-item-list:not(.list-view) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    /* List view */
+    .item-list.list-view,
+    .my-item-list.list-view {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .item-list.list-view .card.item,
+    .my-item-list.list-view .card.item {
+        flex-direction: row !important;
+        align-items: center;
+        background-color: aliceblue !important;
+        height: auto;
+    }
+    .item-list.list-view .wish-thumb,
+    .my-item-list.list-view .wish-thumb {
+        width: 80px !important;
+        min-width: 80px !important;
+        height: 80px !important;
+        aspect-ratio: unset !important;
+        border-radius: 8px 0 0 8px;
+        border-right: 1px solid #c8ddf0;
+    }
+    .item-list.list-view .card.item .card-body,
+    .my-item-list.list-view .card.item .card-body {
+        flex: 1;
+        min-width: 0;
+    }
+    .item-list.list-view .card.item .card-title,
+    .my-item-list.list-view .card.item .card-title {
+        -webkit-line-clamp: 1;
+    }
+    .item-list.list-view .card.item .card-text,
+    .my-item-list.list-view .card.item .card-text {
+        -webkit-line-clamp: 1;
+    }
+}
+@media (max-width: 768px) {
+    .wishpool-tabs .nav-item a { font-size: 11px; padding: 5px 8px; }
+}
+
+/* ── Pagination ── */
+.wishpage {
+    border: 1px solid var(--background-color);
+    background-color: var(--light-text-color);
+    border-radius: 50px;
+    color: var(--background-color);
+    transition: background 0.2s, color 0.2s;
+    padding: 6px 16px;
+}
+.wishpage:hover {
+    background: linear-gradient(to right bottom, var(--focus-color), var(--focus-border-color));
+    color: #383838;
+}
+
+/* ── Loading overlay ── */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── pageContainer ── */
+.pageContainer {
+    position: relative;
+    min-height: 40vh;
+}
+
+/* ── Notification panel ── */
+.message {
+    border-bottom: #cccccc 1px solid;
+    padding: 10px 12px;
+}
+.time { font-size: 10px; }
+.receive { font-size: 14px; }
+#notificationPanel {
+    width: min(340px, calc(100vw - 20px)) !important;
+    max-height: 60vh !important;
+    height: auto !important;
+    top: 68px !important;
+    right: 12px !important;
+    border-radius: 12px !important;
+}
+
+/* ── About page ── */
+.cometrue {
+    color: var(--brand-color);
+    font-size: 20px;
+    margin-top: 30px;
+}
+.wishNum {
+    background-image: linear-gradient(to left top, var(--brand-color), var(--focus-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 70px;
+    font-weight: 600;
+}
+
+/* ── Misc ── */
+.ellipsis-text-wp {
+    width: 180px;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 11px;
+    line-height: 1.4;
+    color: #333333;
+}
+.warning {
+    color: red;
+    font-weight: 600;
+    font-size: 18px;
+}
+.loginfirst {
+    color: var(--brand-color);
+    font-size: large;
+    font-weight: 600;
+    background-color: #fff;
+    padding: 3px 8px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.small {
+    color: red;
+    margin-left: 3px;
+}
+@media screen and (max-width: 768px) {
+    .card-title { font-size: 14px; }
+    .card-header { font-size: 12px; }
+    .leftsort {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .contactbtn {
+        padding: 8px 8px;
+        border-radius: 0px;
+    }
+}
+
+/* ── Footer ── */
+.footer, .footer a {
     background-color: var(--brand-color);
     color: var(--background-color);
 }
@@ -334,144 +693,14 @@ nav a {
 .footer h4 {
     padding-top: 15px;
 }
-.footer li{
+.footer li {
     padding: 15px;
     text-align: center;
     font-size: 14px;
     list-style: none;
 }
 @media screen and (max-width: 768px) {
-    .footer h4 {
-        padding-top: 5px;
-        font-size: 16px;
-    }
-    .footer li {
-        padding: 10px;
-        font-size: 12px;
-    }
-    .footer {
-        padding: 10px;
-        padding-top: 20px;
-    }
-}
-.ellipsis-text-wp {
-    width: 180px;
-    text-wrap: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 11px;
-    line-height: 1.4;
-    color: #333333;
-}
-.wishgrid {
-  display: grid;
-  gap: 20px;
-  padding: 15px;
-}
-.item-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-}
-.my-item-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.card {
-  max-width: 30rem !important;
-  border: 1px solid var(--background-color) !important;
-  cursor: pointer;
-}
-.card-header {
-  background-color: var(--brand-color) !important;
-  color: var(--background-color) !important;
-}
-@media screen and (max-width: 768px) {
-  .wishgrid {
-    display: block;
-  }
-  .item-list {
-    display: block;
-    margin-bottom: 10px;
-  }
-  .card {
-    margin-bottom: 10px !important;
-  }
-  .my-item-list {
-    display: block;
-  }
-}
-.warning {
-  color: red;
-  font-weight: 600;
-  font-size: 18px;
-}
-.loginfirst {
-  color: var(--brand-color);
-  font-size: large;
-  font-weight: 600;
-  background-color: #fff;
-  padding: 3px 8px;
-  margin-left: 3px;
-  margin-right: 3px;
-}
-.small {
-  color: red;
-  margin-left: 3px;
-}
-
-.wishpage {
-  border: 1px solid var(--background-color);
-  background-color: var(--light-text-color);
-  border-radius: 50px;
-  color: var(--background-color);
-  transition: color 0.2s;
-}
-.wishpage:hover {
-  background: linear-gradient(to right bottom, var(--focus-color), var(--focus-border-color));
-  color: #383838;
-}
-.loading-overlay {
-  position: fixed;
-  inset: 0; /* top/right/bottom/left = 0 */
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 9999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.page {
-  margin: 10vh 8vw;
-}
-.pageContainer {
-  position: relative;
-  min-height: 40vh; /* 確保頁面至少佔滿整個視窗高度 */
-}
-.message {
-  border-bottom: #cccccc 1px solid;
-  padding: 10px 12px;
-}
-.time {
-  font-size: 10px;
-}
-.receive {
-  font-size: 14px;
-}
-.cometrue {
-  color: var(--brand-color);
-  font-size: 20px;
-  margin-top: 30px;
-}
-.wishNum {
-  background-image: linear-gradient(to left top, var(--brand-color), var(--focus-color));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    padding-right: 10px;
-    padding-left: 10px;
-    font-size: 70px;
-    font-weight: 600;
+    .footer h4 { padding-top: 5px; font-size: 16px; }
+    .footer li { padding: 10px; font-size: 12px; }
+    .footer { padding: 10px; padding-top: 20px; }
 }

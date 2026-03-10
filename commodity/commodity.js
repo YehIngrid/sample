@@ -1,9 +1,9 @@
 // ── Skeleton helper ──
 function commoditySkeletonHTML(n = 12) {
   return Array.from({length: n}, () => `
-    <div class="col-6 col-md-4 col-lg-2">
-      <div class="card h-100">
-        <div class="skeleton" style="height:160px;border-radius:4px 4px 0 0;"></div>
+    <div class="col">
+      <div class="product-card h-100">
+        <div class="skeleton" style="aspect-ratio:1/1;border-radius:8px 8px 0 0;"></div>
         <div class="card-body">
           <div class="skeleton skeleton-text" style="width:85%;"></div>
           <div class="skeleton skeleton-text" style="width:50%;"></div>
@@ -230,34 +230,43 @@ function renderProductsBootstrap(items) {
     // 有商品 → 隱藏無商品提示
     noProducts.style.display = 'none';
 
+  const categoryMap = {
+    book: '書籍', life: '生活', student: '器材',
+    other: '其他', recycle: '環保', clean: '收納',
+  };
+  const newOrOldMap = {
+    1:'全新', 2:'幾乎全新', 3:'半新', 4:'適中', 5:'稍舊', 6:'全舊',
+  };
+
   items.forEach(p => {
     const col = document.createElement('div');
-    col.className = 'col-6 col-md-4 col-lg-2';
-    const categoryMap = {
-        book: '書籍與學籍用品',
-        life: '宿舍與生活用品',
-        student: '學生專用器材',
-        other: '其他',
-        recycle: '環保生活用品',
-        clean: '儲物與收納用品',
-    };
-    const newOrOldMap = {
-      1:'全新',2:'幾乎全新',3:'半新',4:'適中',5:'稍舊',6:'全舊',
-    };
-    const newOrOld =  (p.newOrOld <= 6 && p.newOrOld >= 0) ? newOrOldMap[p.newOrOld] : '無法評估';
+    col.className = 'col';
+    const category = categoryMap[p.category] ?? '其他';
+    const newOrOld = newOrOldMap[p.newOrOld] ?? '';
+    const imgUrl   = p.mainImage || '';
     col.innerHTML = `
-      <div class="card h-100" style="cursor:pointer;" onclick="window.location.href='../product/product.html?id=${escapeHtml(p.id)}'">
-        ${p.mainImage ? `<img src="${escapeHtml(p.mainImage)}" class="card-img-top product-card-img" alt="${escapeHtml(p.name)}">` :
-        `<div class="product-card-img d-flex align-items-center justify-content-center text-secondary">${escapeHtml(p.name.slice(0,6))}</div>`}
+      <div class="product-card position-relative h-100" data-id="${escapeHtml(p.id)}">
+        <div class="product-thumb">
+          ${imgUrl
+            ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(p.name)}" loading="lazy">`
+            : `<div class="product-thumb-placeholder">${escapeHtml(p.name.slice(0,6))}</div>`}
+        </div>
         <div class="card-body d-flex flex-column">
-          <h6 class="card-title" style="font-size:14px;">${escapeHtml(p.name)}</h6>
-          <p class="mb-2 text-muted" style="font-size:13px;"># ${escapeHtml(newOrOld)}</p>
+          <h5 class="card-title ellipsis-text" style="font-size:13px;">${escapeHtml(p.name)}</h5>
+          <p class="card-text mb-2 ellipsis-text d-flex gap-1" style="font-size:11px;">
+            <span># ${escapeHtml(category)}</span>
+            ${newOrOld ? `<span># ${escapeHtml(newOrOld)}</span>` : ''}
+          </p>
           <div class="mt-auto d-flex justify-content-between align-items-center">
-            <div class="fw-bold text-danger">NT$${escapeHtml(p.price)}</div>
+            <span class="fw-bold price" style="font-size:13px;">NT$ ${escapeHtml(String(p.price))}</span>
+            <small class="text-muted" style="font-size:11px;">庫存 ${Number(p.stock ?? 0)}</small>
           </div>
         </div>
       </div>
     `;
+    col.querySelector('.product-card').addEventListener('click', () => {
+      location.href = `../product/product.html?id=${encodeURIComponent(p.id)}`;
+    });
     frag.appendChild(col);
   });
   productRow.appendChild(frag);
@@ -319,6 +328,14 @@ function renderPagination(totalCount) {
 
 // 初始載入（修改後的版本）
 document.addEventListener('DOMContentLoaded', () => {
+  // 搜尋表單提交（桌機 Enter / 手機 offcanvas）
+  document.getElementById('searchForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    pageIndex = 0;
+    productRow.innerHTML = '';
+    loadProducts();
+  });
+
   // 取得 URL 參數
   const urlParams = new URLSearchParams(window.location.search);
   const categoryFromUrl = urlParams.get('category');
@@ -349,6 +366,15 @@ function applyFilters(items) {
   const sortselected = sortSelect.value;
   let result = items;
 
+  // 關鍵字搜尋
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput && searchInput.value.trim()) {
+    const kw = searchInput.value.trim().toLowerCase();
+    result = result.filter(p =>
+      (p.name || p.title || '').toLowerCase().includes(kw) ||
+      (p.description || '').toLowerCase().includes(kw)
+    );
+  }
 
   if (maxPrice !== null) {
     result = result.filter(p => p.price <= maxPrice);

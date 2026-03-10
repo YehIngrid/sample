@@ -38,30 +38,35 @@
       <div></div>
       <div></div>
     </div>
-    <div><p style="color: #383838; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;"><br><br>拾貨寶庫加載中... </p></div>
+    <div><p style="color: #383838; font-weight: bold; letter-spacing: 3px;"><br><br>拾貨寶庫加載中... </p></div>
   </div>
   <div id="whatcontent" class="d-none">
     <!-- TODO header -->
     <div class="header ">
         <!--TODO 響應式選單-->
-        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
-          <div class="container-fluid d-flex align-items-end justify-content-center ">
-        
-            <!-- (A) LOGO 放在最左邊 -->
-            <a class="me-4" href="wishpool.html#wishpool">
+        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new navtb sticky-top">
+          <!-- 第一行：Logo + 右側 -->
+          <div class="container-fluid d-flex align-items-center">
+            <!-- Logo -->
+            <a class="me-4" href="../wishpool/wishpool.html#wishpool">
               <img src="../svg/treasurehub_wishpoolLogo.svg" alt="拾貨寶庫 Logo" style="width: 150px;">
             </a>
-        
-        
-            <!-- (C) 右側：登入 + 購物車 -->
+            <!-- 右側：登入 -->
             <div class="d-flex align-items-center ms-auto">
-              
               <div class="login">
                 <a class="username" href="../person/person.html"></a>
-                <!-- TODO 登入登出id -->
                 <a class="loginornot" href="../account/account.html">登入</a>
               </div>
             </div>
+          </div>
+          <!-- 第二行：SPA 頁籤（居中，桌機） -->
+          <div class="d-none d-lg-flex justify-content-center w-100 wp-tab-row">
+            <ul class="navbar-nav flex-row gap-3">
+              <li class="nav-item"><a class="nav-link spa-tab" href="../wishpool/wishpool.html#about">創立理念</a></li>
+              <li class="nav-item"><a class="nav-link spa-tab" href="../wishpool/wishpool.html#wishpool">許願池</a></li>
+              <li class="nav-item"><a class="nav-link spa-tab" href="../wishpool/wishpool.html#makewish">我要許願</a></li>
+              <li class="nav-item"><a class="nav-link spa-tab" href="../wishpool/wishpool.html#mywishes">我的願望</a></li>
+            </ul>
           </div>
         </nav>
       </div>

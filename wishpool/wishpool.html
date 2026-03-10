@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <script>(function(){if(window.innerWidth<=991&&sessionStorage.getItem('skipLoader')==='1'){sessionStorage.removeItem('skipLoader');document.documentElement.classList.add('skip-loader');}})();</script>
-    <title>許願池</title>
+    <title>拾貨寶庫 | 許願池</title>
     <!-- meta部分 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,57 +52,79 @@
   </div>
   <div id="whatcontent" class="d-none">
     <!-- TODO header -->
-    <div class="header ">
-        <!--TODO 響應式選單-->
-        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
-          <div class="container-fluid d-flex align-items-end justify-content-between">
-        
-            <!-- (A) LOGO 放在最左邊 -->
-            <a class="me-4" href="wishpool.html#wishpool">
-              <img src="../svg/treasurehub_wishpoolLogo.svg" alt="拾貨寶庫 Logo" style="width: 150px;">
-            </a>
-        
-        
-            <!-- (C) 右側：登入 + 購物車 -->
-            <div class="d-flex align-items-center ms-auto">
-              <div class="position-relative me-3">
-                <i class="fa-solid fa-bell fs-5" id="notificationBtn" style="cursor:pointer; color: var(--brand-color);"></i>
-                <span id="notificationBadge"
-                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
-                      0
-                </span>
-              </div>
-              <div class="login">
-                <a class="username" href="../person/person.html"></a>
-                <!-- TODO 登入登出id -->
-                <a class="loginornot" href="../account/account.html">登入</a>
-              </div>
+    <div class="header">
+        <!-- 主要導覽列 -->
+        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new navtb sticky-top">
+            <!-- 第一行：Logo + 右側操作 -->
+            <div class="container-fluid d-flex align-items-center">
+                <!-- 手機漢堡 -->
+                <button class="navbar-toggler d-lg-none mobile-hamburger" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span><img src="../svg/navbar.svg" alt="手機版選單" style="width: 20px;"></span>
+                </button>
+                <!-- Logo -->
+                <a class="me-4" href="../newhome/newhome.html">
+                    <img src="../svg/treasurehub_wishpoolLogo.svg" alt="許願池 Logo" style="width: 150px;">
+                </a>
+                <!-- 右側：返回 + 通知鈴 + 登入 -->
+                <div class="d-flex align-items-center ms-auto">
+                    <a class="wp-back-btn d-none d-lg-inline-block me-3" href="../shop/shop.html">← 返回購物首頁</a>
+                    <div class="position-relative me-2">
+                        <i class="fa-solid fa-bell fs-5" id="notificationBtn" style="cursor:pointer; color: var(--brand-color);"></i>
+                        <span id="notificationBadge"
+                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
+                    </div>
+                    <div class="login">
+                        <a class="username" href="../person/person.html"></a>
+                        <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
+                    </div>
+                </div>
             </div>
-          </div>
+            <!-- 第二行：桌機 SPA 頁籤（居中偏下） -->
+            <div class="d-none d-lg-flex justify-content-center w-100 wp-tab-row">
+                <ul class="navbar-nav flex-row gap-3">
+                    <li class="nav-item"><a class="nav-link spa-tab" href="#about" data-spa>創立理念</a></li>
+                    <li class="nav-item"><a class="nav-link spa-tab active" href="#wishpool" data-spa>許願池</a></li>
+                    <li class="nav-item"><a class="nav-link spa-tab" href="#makewish" data-spa>我要許願</a></li>
+                    <li class="nav-item"><a class="nav-link spa-tab" href="#mywishes" data-spa>我的願望</a></li>
+                </ul>
+            </div>
         </nav>
-        <ul class="nav justify-content-center">
-          <li class="nav-item">
-            <a class="nav-link" href="#about" data-spa>創立理念</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#wishpool" data-spa>許願池</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#makewish" data-spa>我要許願</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#mywishes" data-spa>我的願望</a>
-          </li>
-        </ul>
-      </div>
+        <!-- 手機搜尋 + 折疊選單 -->
+        <div class="container-fluid1 d-lg-none">
+            <div class="collapse navbar-collapse mt-2" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shop.html">購物首頁</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                    <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
+                </ul>
+                <!-- 許願池 SPA 分頁 -->
+                <div class="border-top mt-2 pt-2">
+                    <p style="font-size: 11px; color: #999; margin-bottom: 4px; padding-left: 8px;">許願池導覽</p>
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link spa-tab" style="color: #004b97;" href="#about" data-spa>創立理念</a></li>
+                        <li class="nav-item"><a class="nav-link spa-tab" style="color: #004b97;" href="#wishpool" data-spa>許願池</a></li>
+                        <li class="nav-item"><a class="nav-link spa-tab" style="color: #004b97;" href="#makewish" data-spa>我要許願</a></li>
+                        <li class="nav-item"><a class="nav-link spa-tab" style="color: #004b97;" href="#mywishes" data-spa>我的願望</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- TODO 主要內容 -->
     <main class="container">
-      <section id="mywishes" class="page" style="margin: 0 auto; margin-bottom: 36vh; margin-top: 4vh;">
-        <h4>我的願望</h4>
-        <p>共 <span id="my-total">0</span> 件</p>
+      <section id="mywishes" class="page">
+        <h3 class="cardTitle" style="margin-bottom: 4px;">我的<span style="color: #004b97;">願望</span></h3>
+        <p class="section-subtitle">共 <span id="my-total">0</span> 件</p>
         <div class="wishpoolcontainer col-12">
+          <!-- 手機版 layout 切換 -->
+          <div class="wp-layout-toggle-bar">
+            <button class="layout-btn active" id="myWpGridBtn" title="卡片模式"><i class="ti ti-layout-grid"></i></button>
+            <button class="layout-btn ms-1" id="myWpListBtn" title="列表模式"><i class="ti ti-list"></i></button>
+          </div>
           <div class="wishgrid">
             <div id="empty" class="d-flex justify-content-center"></div>
             <div class="my-item-list" id="myWishGrid">
@@ -118,14 +140,15 @@
       </section>
       <section id="about" class="page">
         <div class="pageContainer" style="margin-bottom: 150px;">
-          <h3 style="margin-bottom: 20px;">創立理念</h3>
+          <h3 class="cardTitle" style="margin-bottom: 16px;">創立<span style="color: #004b97;">理念</span></h3>
           <p>在資源有限的校園生活中，有些需求不應只是運氣，更該被主動滿足。</p>
           <p>「許願池」的創立理念在於建立一種「買家主動、賣家響應」的「反向媒合機制」。</p>
           <p>透過公開許願，讓閒置資源能精準流向最需要的人手中，打破「找不到、買不到」的困境，打造一個更具數位溫度與信任感的校園經濟生態。</p>
           <div class="cometrue text-center">截至目前，已成功媒合 <span class="wishNum" id="wishNum"></span> 組願望，拾貨寶庫持續為更多心願牽起連結</div>
         </div>
       </section>
-      <section id="wishpool" class="page" style="margin: 0 auto; margin-top: 4vh;">
+      <section id="wishpool" class="page">
+        <h3 class="cardTitle" style="margin-bottom: 16px;">許願<span style="color: #004b97;">池</span></h3>
         <div class="wpcontainer d-lg-flex d-block">
           <div class="leftsort col-lg-3 col-12">
             <p>全部共 <span id="total">0</span> 件（未篩選）</p>
@@ -142,6 +165,11 @@
             </div>
           </div>
           <div class="wishpoolcontainer col-lg-9 col-12" style="margin-bottom: 36vh;">
+            <!-- 手機版 layout 切換 -->
+            <div class="wp-layout-toggle-bar">
+              <button class="layout-btn active" id="wpGridBtn" title="卡片模式"><i class="ti ti-layout-grid"></i></button>
+              <button class="layout-btn ms-1" id="wpListBtn" title="列表模式"><i class="ti ti-list"></i></button>
+            </div>
             <div class="wishgrid">
               <div class="item-list" id="wishGrid">
                 <!-- 許願卡片會在這裡動態生成 -->
@@ -155,9 +183,9 @@
           </div>
         </div>
       </section>
-      <section id="makewish" class="page" style="margin-top: 5vh;">
-        <h3>許願步驟</h3>
-        <p>拾貨許願池：讓你的需求被看見</p>
+      <section id="makewish" class="page">
+        <h3 class="cardTitle">許願<span style="color: #004b97;">步驟</span></h3>
+        <p class="section-subtitle">拾貨許願池：讓你的需求被看見</p>
         <span>「在校園裡，有些東西不該只是運氣，更該被主動滿足。」<br>
         傳統平台讓你大海撈針，「許願池」則讓資源主動找上你。</span>
         <p>無論是絕版課本、宿舍神器，甚至是學長姐的推甄秘笈，只要投下心願，全校都是你的後援會！ </p>
@@ -175,7 +203,7 @@
         我們鼓勵大家積極參與許願池，不僅是許下願望，也可以幫助他人實現他們的夢想。讓我們一起創造一個充滿愛心和支持的社群，讓每個人的願望都能成真！</p>
         <p class="warning">注意事項：每位用戶 7 天內只可以許 1 個願望！！並且上傳後 7 天，願望將會自動過期消失，僅可以在「我的願望」裡檢視。</p>
         <p>請先<span class="loginfirst">登入會員</span>才可提交許願表單！</p>
-        <h3 style="margin-top: 20px;">許願表單</h3>
+        <h3 class="cardTitle" style="margin-top: 28px; margin-bottom: 12px;">許願<span style="color: #004b97;">表單</span></h3>
         <div class="formwish">
           <form id="wishForm">
             <div class="mb-3">
@@ -184,7 +212,7 @@
                 <img id="imgPreviewImg" alt="">
               </div>
               <label for="wishPhoto" class="form-label">商品照片</label>
-              <small class="small"> < 5 MB (jpg/jpeg/png/webp)</small>
+              <small class="small"> &lt; 5 MB (jpg/jpeg/png/webp)</small>
               <input class="form-control" type="file" id="wish-image" name="image" accept="image/jpeg, image/jpg, image/png, image/webp">
               <div class="invalid-feedback"></div>
               <div class="valid-feedback">Looks good!</div>
@@ -260,6 +288,7 @@
                 </defs>
               </svg>
             </div>
+          </div>
           </form>
         </div>
       </section>
@@ -358,6 +387,7 @@
         <span>我的帳戶</span>
       </a>
     </nav>
+  </div><!-- /#whatcontent -->
 
     <script src="../default/default.js"></script>
     <script src="../questions/questions.js"></script>

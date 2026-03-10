@@ -49,31 +49,60 @@
 /* 隱藏類別 */
 .hidden { display: none !important; }
 
-/* 商品卡的簡單樣式（可以改成 bootstrap 卡片或你用的樣式） */
+/* ── 商品卡 (最新上架風格) ── */
 .product-card {
-  width: 180px;
-  height: 240px;
   background: #fff;
-  border-radius: 6px;
-  margin: 8px;
-  padding: 10px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-  display:flex;
-  flex-direction: column;
-  justify-content: space-between;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  overflow: hidden;
 }
-
-.product-card-img {
-  width: 130px;
-  height: 160px;
-  object-fit: cover;       /* 填滿容器、維持比例，必要時裁切 */
-  object-position: center; /* 需要改裁切錨點就改這裡：center top 等 */
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.13);
+}
+.product-card .product-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #f4f4f4;
+  border-bottom: 1px solid #eee;
+}
+.product-card .product-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   display: block;
-  background-color: #f8f9fa;
+}
+.product-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+.product-card .card-body {
+  padding: 8px 10px !important;
+  background-color: aliceblue;
+}
+.product-card .price {
+  color: #c0392b;
+}
+.product-card .card-text span {
+  background-color: #ABDAD5aa;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-right: 5px;
+  color: #252525;
 }
 .contentOfCommodity {
-    margin: 2vw 4vw;
-    /* TODO 會去要看一下桌機排版 */
+    width: 80vw;
+    margin: 2vw auto;
     align-items: flex-start;
 }
 #no-products i {
@@ -104,12 +133,13 @@
 @media (max-width: 1000px) {
 
   .contentOfCommodity {
-    margin: 10px 10px;
+    width: 91vw;
+    margin: 10px auto;
     display: block;
   }
 
   .sortAndProductdiv {
-    width: 90vw;
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
   }
@@ -256,34 +286,57 @@
     max-width: 100% !important;
     width: 100% !important;
   }
-  #productRow.list-view .card {
+  #productRow.list-view .product-card {
+    display: flex !important;
     flex-direction: row !important;
+    align-items: center;
+    background-color: aliceblue !important;
+    border-radius: 8px;
+    overflow: hidden;
+    height: auto !important;
   }
-  #productRow.list-view .card-img-top,
-  #productRow.list-view .product-card-img {
-    width: 90px !important;
-    min-width: 90px !important;
-    height: 90px !important;
-    border-radius: 6px 0 0 6px;
+  #productRow.list-view .product-thumb {
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 80px !important;
+    aspect-ratio: unset !important;
+    border-radius: 8px 0 0 8px;
+    flex-shrink: 0;
+    border-bottom: none;
+    border-right: 1px solid #c8ddf0;
+  }
+  #productRow.list-view .product-thumb img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
   }
+  #productRow.list-view .product-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    font-size: 0.7rem;
+  }
   #productRow.list-view .card-body {
+    flex: 1;
+    min-width: 0;
     padding: 8px 10px !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: aliceblue !important;
   }
-  #productRow.list-view .card-body h6 {
-    font-size: 0.85rem;
-    margin-bottom: 4px;
+  #productRow.list-view .card-title {
+    font-size: 0.85rem !important;
+    margin-bottom: 3px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px;
   }
-  #productRow.list-view .card-body p {
-    font-size: 0.75rem;
+  #productRow.list-view .card-text {
+    font-size: 0.72rem !important;
     margin-bottom: 4px;
+  }
+  #productRow.list-view .price {
+    font-size: 0.85rem !important;
   }
 }
 .sortdiv {

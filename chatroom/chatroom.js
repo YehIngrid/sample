@@ -186,7 +186,9 @@ class ChatRoomList {
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
         });
-        const imageUrl = Array.isArray(data.attachments) ? data.attachments[0] : '';
+        const imageUrl = Array.isArray(data.attachments)
+            ? (data.attachments[0] || '')
+            : (data.attachments || '');
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
             : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png');
@@ -205,7 +207,7 @@ class ChatRoomList {
                            target="_blank" class="image-link">
                             <img src="${imageUrl}" alt="Image" loading="lazy">
                         </a>
-                        <div class="combined-caption">${this.escapeHtml(data.message)}</div>
+                        <div class="combined-caption">${this.escapeHtml(data.message || '')}</div>
                     </div>
                     ${isSelf ? '' : `<small class="text-muted ms-2" style="font-size:0.75rem;">${time}</small>`}
                 </div>
@@ -623,10 +625,37 @@ class ChatRoomList {
             }
         });
 
-        // ✅ 官方公告廣播
+        // ✅ 官方公告廣播（舊事件，保留相容）
         this.eventSource.addEventListener('broadcast', (event) => {
             const data = JSON.parse(event.data);
             this.renderBroadcast(data);
+            // 通知外層頁面顯示未讀紅點
+            window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
+        });
+
+        // ✅ 官方頻道廣播（新格式，含 channelId 及時間戳）
+        this.eventSource.addEventListener('newBroadcast', (event) => {
+            const data = JSON.parse(event.data);
+            const channelId = String(data.channelId ?? data.room ?? '');
+
+            // 若目前開著對應官方頻道，直接渲染廣播訊息
+            if (channelId && String(this.currentRoomId) === channelId) {
+                this.renderBroadcast(data);
+            }
+
+            // 更新聊天室列表對應頻道的最後訊息預覽
+            if (channelId) {
+                const chatItem = document.querySelector(`[data-room-id="${channelId}"]`);
+                if (chatItem) {
+                    const lastMsgEl = chatItem.querySelector('.lastMessage');
+                    if (lastMsgEl) lastMsgEl.textContent = `📢 ${data.message || '官方公告'}`;
+                    // 非目前開著的房間才顯示未讀紅點
+                    if (channelId !== String(this.currentRoomId)) {
+                        chatItem.querySelector('.unread-dot')?.classList.remove('d-none');
+                    }
+                }
+            }
+
             // 通知外層頁面顯示未讀紅點
             window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
         });
@@ -680,8 +709,10 @@ class ChatRoomList {
     }
 
     renderMessage(data, prepend = false) {
-        // ✅ attachments 是陣列，有內容才視為圖片訊息
-        if (Array.isArray(data.attachments) && data.attachments.length > 0) {
+        // ✅ attachments 可能是陣列或字串，統一判斷是否有圖片
+        const hasAttachments = (Array.isArray(data.attachments) && data.attachments.length > 0)
+            || (typeof data.attachments === 'string' && data.attachments.trim() !== '');
+        if (hasAttachments) {
             if (data.message && data.message.trim()) {
                 // 圖片 + 文字 caption：合併顯示
                 this.appendCombinedMessage(data, prepend);

@@ -519,6 +519,7 @@
       height: 100%;
       object-fit: contain;       /* 不裁切、不變形地塞進容器 */
     }
+    .main-preview { cursor: zoom-in; }
 
     /* 縮圖樣式 */
     .thumbnail-list {
@@ -579,11 +580,112 @@
   width: 120px;
   height: 120px;
 }
+
+/* ── 賣家其他商品：mobile 2×3 grid, desktop centered flex ── */
+.seller-items-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 6px 4px 14px;
+}
+#sellerMobileDots { display: none; }
+
+.seller-items-container .hot-item {
+  cursor: pointer;
+  width: 100%;
+}
+.seller-items-container .hot-item .card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.seller-items-container .hot-item .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+.seller-items-container .img-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+.seller-items-container .img-box .main {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.seller-items-container .hotItemPrice {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  text-align: right;
+}
+.seller-items-container .hotItemName {
+  font-size: 12px;
+  padding: 6px 6px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #333;
+}
+
+/* Desktop: centered flex row */
+@media (min-width: 992px) {
+  .seller-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .seller-items-container .hot-item { width: auto; }
+  .seller-items-container .hot-item .card { width: 180px; }
+  .seller-items-container .img-box { aspect-ratio: unset; width: 180px; height: 180px; }
+  .seller-items-container .hotItemName { font-size: 13px; }
+}
+
+/* ── Seller pager ── */
+.seller-pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+.seller-pager button {
+  border: 1px solid #004b97;
+  border-radius: 50px;
+  background: #fff;
+  color: #004b97;
+  padding: 3px 14px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.seller-pager button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.seller-pager button:not(:disabled):hover {
+  background: #004b97;
+  color: #fff;
+}
 .chaticon {
     width: 50px;
     height: 50px;
     position: fixed;        /* 保留 fixed，讓按鈕釘在右下角 */
-    bottom: 64px;
+    bottom: 74px;
     right: 30px;
     border-radius: 50%;
     border: none;

@@ -2143,7 +2143,7 @@ html{ scroll-behavior:smooth; }
     width: 50px;
     height: 50px;
     position: fixed;        /* 保留 fixed，讓按鈕釘在右下角 */
-    bottom: 64px;
+    bottom: 74px;
     right: 30px;
     border-radius: 50%;
     border: none;

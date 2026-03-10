@@ -27,9 +27,9 @@ async function renderWishInfo(id) {
         const priorityEl = document.getElementById('wish-priority');
         const imagesContainer = document.getElementById('wish-photo');
         priorityMap = {
-            1: '不急',
-            2: '一般',
-            3: '緊急'
+            "LOW": '不急',
+            "MEDIUM": '一般',
+            "HIGH": '緊急'
         };
         // --- 修改圖片生成邏輯 ---
         // 在 renderWishInfo 內部

@@ -58,20 +58,45 @@
       <!-- Panel: 發送公告 -->
       <section id="panel-broadcast" class="panel active">
         <h2 class="panel-title"><i class="fa fa-bullhorn me-2"></i>發送官方公告</h2>
+
+        <!-- 步驟一：選擇頻道 -->
+        <div class="mb-4">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <label class="form-label mb-0 fw-bold">① 選擇頻道</label>
+            <button id="refreshChannelsBtn" class="btn btn-sm btn-outline-secondary" type="button">
+              <i class="fa fa-refresh me-1"></i>重新載入
+            </button>
+          </div>
+          <div id="channelSelector" class="channel-selector">
+            <div class="text-muted text-center py-3 small">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入頻道中...
+            </div>
+          </div>
+          <input type="hidden" id="broadcastChannelId">
+          <div id="selectedChannelBadge" class="selected-badge d-none mt-2">
+            <i class="fa fa-check-circle me-1"></i><span id="selectedChannelName"></span>
+          </div>
+        </div>
+
+        <!-- 步驟二：撰寫公告 -->
         <form id="broadcastForm" class="official-form">
+          <label class="form-label fw-bold mb-2">② 撰寫公告</label>
           <div class="mb-3">
-            <label class="form-label">頻道 ID <small class="text-muted">（建立頻道後取得）</small></label>
-            <input type="text" id="broadcastChannelId" class="form-control" placeholder="輸入官方頻道 ID" required>
+            <textarea id="broadcastMessage" class="form-control" rows="5" placeholder="輸入公告內容..."></textarea>
           </div>
           <div class="mb-3">
-            <label class="form-label">公告內容</label>
-            <textarea id="broadcastMessage" class="form-control" rows="5" placeholder="輸入公告內容..." required></textarea>
+            <label class="form-label">附件圖片 <small class="text-muted">（選填，可拖曳）</small></label>
+            <div class="img-upload-area" id="broadcastImgArea">
+              <input type="file" id="broadcastImgInput" accept="image/*" class="d-none">
+              <div id="broadcastImgPlaceholder" class="img-placeholder">
+                <i class="fa fa-image fa-2x mb-2 d-block text-muted"></i>
+                <span class="text-muted small">點擊或拖曳上傳圖片</span>
+              </div>
+              <img id="broadcastImgPreview" class="img-preview-thumb d-none" alt="預覽">
+              <button type="button" id="clearImgBtn" class="clear-img-btn d-none">×</button>
+            </div>
           </div>
-          <div class="mb-3">
-            <label class="form-label">附件圖片網址 <small class="text-muted">（選填）</small></label>
-            <input type="text" id="broadcastAttachment" class="form-control" placeholder="https://...">
-          </div>
-          <button type="submit" class="btn official-btn w-100" style="color: white;">
+          <button type="submit" id="broadcastSubmitBtn" class="btn official-btn w-100" style="color: white;">
             <i class="fa fa-paper-plane me-1"></i> 發送公告
           </button>
         </form>

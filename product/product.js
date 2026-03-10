@@ -1,19 +1,75 @@
 // ── Skeleton helper ──
-function sellerProductSkeletonHTML(n = 3) {
+function sellerProductSkeletonHTML(n = 6) {
   return Array.from({length: n}, () => `
-    <div class="col-12 col-md-6 col-lg-4 mb-3">
-      <div class="card h-100">
-        <div class="row g-0">
-          <div class="col-4">
-            <div class="skeleton" style="height:100%;min-height:100px;border-radius:8px 0 0 8px;"></div>
-          </div>
-          <div class="col-8 card-body">
-            <div class="skeleton skeleton-text" style="width:85%;"></div>
-            <div class="skeleton skeleton-text" style="width:50%;margin-top:8px;"></div>
-          </div>
+    <div class="hot-item">
+      <div class="card">
+        <div class="img-box skeleton" style="width:100%;height:148px;border-radius:10px 10px 0 0;"></div>
+        <div style="padding:8px 6px">
+          <div class="skeleton skeleton-text" style="width:85%;margin:0 auto;"></div>
         </div>
       </div>
     </div>`).join('');
+}
+
+// ── Seller items pagination state ──
+let _sellerAllProducts = [];
+let _sellerCurrentPage = 1;
+const SELLER_PER_PAGE = 6;
+
+function _renderSellerPage(page) {
+  const container = document.getElementById('otherProducts');
+  const dotsEl    = document.getElementById('sellerMobileDots');
+  const infoEl    = document.getElementById('sellerPageInfo');
+  const prevBtn   = document.getElementById('prevSellerBtn');
+  const nextBtn   = document.getElementById('nextSellerBtn');
+  if (!container) return;
+
+  const totalPages = Math.ceil(_sellerAllProducts.length / SELLER_PER_PAGE);
+  const start = (page - 1) * SELLER_PER_PAGE;
+  const slice = _sellerAllProducts.slice(start, start + SELLER_PER_PAGE);
+
+  container.innerHTML = '';
+  slice.forEach(product => {
+    const div = document.createElement('div');
+    div.className = 'hot-item';
+    div.dataset.id = product.id ?? product._id ?? product.commodityId ?? '';
+    const imgSrc = product.mainImage || '';
+    const name   = product.name || '未命名';
+    const price  = Number(product.price ?? 0).toLocaleString('zh-TW');
+    div.innerHTML = `
+      <div class="card">
+        <div class="img-box">
+          <img class="main" src="${imgSrc}" alt="${name}" loading="lazy"
+               onerror="this.src='../image/placeholder.png'">
+          <p class="hotItemPrice"><span style="font-size:0.8rem">NT$</span> ${price}</p>
+        </div>
+        <div class="hotItemName">${name}</div>
+      </div>`;
+    div.addEventListener('click', () => {
+      const pid = div.dataset.id;
+      if (pid) location.href = `./product.html?id=${encodeURIComponent(pid)}`;
+    });
+    container.appendChild(div);
+  });
+
+  // Pagination info
+  if (infoEl) infoEl.textContent = totalPages > 1 ? `${page} / ${totalPages}` : '';
+  if (prevBtn) prevBtn.disabled = page <= 1;
+  if (nextBtn) nextBtn.disabled = page >= totalPages;
+
+  // Mobile dots
+  if (dotsEl) {
+    dotsEl.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const dot = document.createElement('span');
+      dot.style.cssText = `width:7px;height:7px;border-radius:50%;display:inline-block;background:${i === page ? '#004b97' : '#ccc'};transition:background 0.2s;`;
+      dotsEl.appendChild(dot);
+    }
+  }
+
+  // Hide pager entirely if only 1 page
+  const pagerEl = document.getElementById('sellerPager');
+  if (pagerEl) pagerEl.style.display = totalPages <= 1 ? 'none' : '';
 }
 
 // 全域變數（不要再用 const/let 重新宣告它）
@@ -256,6 +312,37 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
 
   // 初始化主圖
   setMainByIndex(0);
+
+  // 3.5 PhotoSwipe 點擊放大（使用圖片實際尺寸）
+  if (mainImg && typeof PhotoSwipeLightbox !== 'undefined' && list.length > 0) {
+    // 預先載入各圖片的真實尺寸
+    function getImgSize(src) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload  = () => resolve({ src, width: img.naturalWidth,  height: img.naturalHeight });
+        img.onerror = () => resolve({ src, width: 1200, height: 900 });
+        img.src = src;
+      });
+    }
+
+    let pswpDataSource = null;
+    async function openPswp(idx) {
+      if (!pswpDataSource) {
+        pswpDataSource = await Promise.all(list.map(getImgSize));
+      }
+      const pswp = new PhotoSwipe({
+        dataSource: pswpDataSource,
+        index: idx,
+        bgOpacity: 0.88,
+        showHideAnimationType: 'zoom',
+        clickToCloseNonZoomable: true,
+      });
+      pswp.on('change', () => setMainByIndex(pswp.currIndex));
+      pswp.init();
+    }
+
+    mainImg.parentElement.addEventListener('click', () => openPswp(currentIdx));
+  }
 })();
 
   
@@ -426,93 +513,51 @@ async function onAddToCart(e) {
     btn.disabled = false;
   }
 }
-// Promise 版
 async function showSellerCommodities(id) {
-  const sellerCommodities = document.querySelector('#otherProducts');
-  console.log('sellerCommodities:', sellerCommodities);
-  if (!sellerCommodities) return;
+  const container = document.getElementById('otherProducts');
+  if (!container) return;
 
-  sellerCommodities.innerHTML = sellerProductSkeletonHTML();
-
-  const formatPrice = (v) => `${Number(v ?? 0).toLocaleString('zh-TW')}<span> NT$</span>`;
-  const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u));
+  // Skeleton while loading
+  container.innerHTML = sellerProductSkeletonHTML();
+  document.getElementById('sellerPager').style.display = 'none';
 
   try {
-    const response = await backendService.getUserCommodities(id); // ← 這裡假設回傳 Promise
+    const response = await backendService.getUserCommodities(id);
     const products = response?.data?.data.commodities ?? [];
-    console.log('賣家商品：', products);
     if (!Array.isArray(products) || products.length === 0) {
-      sellerCommodities.style.display = 'none';
+      container.closest('.sellerCommodities').style.display = 'none';
       return;
     }
 
-    sellerCommodities.style.display = ''; // 確保顯示
-    sellerCommodities.innerHTML = '';
+    _sellerAllProducts = products;
+    _sellerCurrentPage = 1;
+    _renderSellerPage(1);
 
-    const frag = document.createDocumentFragment();
-
-    products.forEach((product) => {
-      const col = document.createElement('div');
-      col.className = 'col-12 col-md-6 col-lg-4 mb-3'; // 手機1排、平板2排、電腦4排
-    
-      const card = document.createElement('div');
-      card.className = 'card h-100';
-    
-      const row = document.createElement('div');
-      row.className = 'row g-5'; // 去掉間距，讓圖片與內容貼齊
-    
-      // 左邊圖片
-      const imgCol = document.createElement('div');
-      imgCol.className = 'col-4'; // 圖片占左側寬度
-    
-      const img = document.createElement('img');
-      img.src = toFullURL(product.mainImage) || 'https://picsum.photos/300/300?grayscale';
-      img.className = 'rounded-start otherimg object-fit-cover'; // 確保圖片不變形
-      img.alt = product.name || '商品圖片';
-      img.loading = 'lazy';
-      img.referrerPolicy = 'no-referrer';
-      img.onerror = () => { img.src = 'https://picsum.photos/300/300?grayscale'; };
-      imgCol.appendChild(img);
-    
-      // 右邊文字區塊
-      const bodyCol = document.createElement('div');
-      bodyCol.className = 'col-8 d-flex flex-column'; // 右側資訊區
-    
-      const cardBody = document.createElement('div');
-      cardBody.className = 'card-body d-flex flex-column';
-    
-      const title = document.createElement('h5');
-      title.className = 'card-title ellipsis-text';
-      title.textContent = product.name || '未命名';
-    
-      const price = document.createElement('p');
-      price.className = 'card-text mt-auto mb-2 text-end fw-bold';
-      price.innerHTML = formatPrice(product.price);
-    
-      const link = document.createElement('a');
-      const pid = product.id ?? product._id ?? product.commodityId ?? '';
-      link.href = `./product.html?id=${encodeURIComponent(pid)}`;
-      link.className = 'btn btn-light w-100 mt-auto';
-      link.textContent = '查看商品';
-    
-      cardBody.appendChild(title);
-      cardBody.appendChild(price);
-      cardBody.appendChild(link);
-      bodyCol.appendChild(cardBody);
-    
-      // 組合結構
-      row.appendChild(imgCol);
-      row.appendChild(bodyCol);
-      card.appendChild(row);
-      col.appendChild(card);
-      frag.appendChild(col);
+    // Wire pagination buttons
+    const prevBtn = document.getElementById('prevSellerBtn');
+    const nextBtn = document.getElementById('nextSellerBtn');
+    prevBtn?.addEventListener('click', () => {
+      if (_sellerCurrentPage > 1) { _sellerCurrentPage--; _renderSellerPage(_sellerCurrentPage); }
     });
-    
-    sellerCommodities.appendChild(frag);
-    
+    nextBtn?.addEventListener('click', () => {
+      const total = Math.ceil(_sellerAllProducts.length / SELLER_PER_PAGE);
+      if (_sellerCurrentPage < total) { _sellerCurrentPage++; _renderSellerPage(_sellerCurrentPage); }
+    });
+
+    // Touch swipe (mobile)
+    let touchStartX = 0;
+    container.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    container.addEventListener('touchend', e => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      const total = Math.ceil(_sellerAllProducts.length / SELLER_PER_PAGE);
+      if (diff > 40 && _sellerCurrentPage < total) { _sellerCurrentPage++; _renderSellerPage(_sellerCurrentPage); }
+      else if (diff < -40 && _sellerCurrentPage > 1) { _sellerCurrentPage--; _renderSellerPage(_sellerCurrentPage); }
+    }, { passive: true });
+
   } catch (err) {
     console.error('取得賣家商品失敗：', err);
-    sellerCommodities.style.display = 'none';
+    const wrap = container.closest('.sellerCommodities');
+    if (wrap) wrap.style.display = 'none';
   }
 }
 document.addEventListener('click', async (e) => {

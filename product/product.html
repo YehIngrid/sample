@@ -26,6 +26,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <!-- PhotoSwipe v5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css">
+    <script src="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/umd/photoswipe.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/umd/photoswipe-lightbox.umd.min.js"></script>
 </head>
 <body>
   <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
@@ -274,8 +278,12 @@
 <!-- TODO sellerCommodities -->
 <div class="sellerCommodities">
   <h5 class="sellertopic topic">賣家其他商品</h5>
-  <div id="otherProducts" class="d-flex flex-wrap gap-3">
-    <!-- 其他商品卡片會由 JS 動態生成 -->
+  <div class="seller-items-container" id="otherProducts"></div>
+  <div id="sellerMobileDots" class="d-flex d-lg-none justify-content-center align-items-center gap-1 mt-1" style="min-height:14px;"></div>
+  <div class="pager seller-pager" id="sellerPager">
+    <button id="prevSellerBtn">‹ 上一頁</button>
+    <span id="sellerPageInfo"></span>
+    <button id="nextSellerBtn">下一頁 ›</button>
   </div>
 </div>
     </div>

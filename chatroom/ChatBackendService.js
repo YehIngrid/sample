@@ -122,6 +122,15 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
+    async listOfficialChannels(page, limit) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/chat/official-channels`, {params: {page: page, limit: limit}});
+            return response.data;
+        } catch(error) {
+            console.error('Error listing official channels,' ,error);
+            return Promise.reject(error);
+        }
+    }
     openSse() {
         const url = `${this.baseUrl}/api/chat/stream`;
         const eventSource = new EventSource(url, { withCredentials: true });
@@ -131,6 +140,9 @@ class ChatBackendService {
         });
         eventSource.addEventListener('typing', (event) => {
             console.log('使用者正在輸入:', event.data);
+        });
+        eventSource.addEventListener('newBroadcast', (event) => {
+            console.log('新公告:', JSON.parse(event.data));
         });
         eventSource.addEventListener('ready', (event) => {
             console.log('連線就緒:', event.data);
