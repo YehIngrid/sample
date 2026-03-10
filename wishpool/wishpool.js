@@ -1,17 +1,18 @@
 let backendService;
 let wpbackendService;
 
+// ── Constants ──
+const CARD_COLORS = ['#FFD966','#FF9F9F','#A8D8EA','#B5EAD7','#FFDAC1','#C7CEEA','#E2F0CB','#F7CAC9'];
+const PRIORITY_LABEL = { LOW:'不急', MEDIUM:'一般', HIGH:'緊急', 1:'不急', 2:'一般', 3:'急需' };
+const PRIORITY_COLOR  = { LOW:'#6bb56b', MEDIUM:'#e6a817', HIGH:'#e05353', 1:'#6bb56b', 2:'#e6a817', 3:'#e05353' };
+
+function randomCardColor() {
+  return CARD_COLORS[Math.floor(Math.random() * CARD_COLORS.length)];
+}
+
 // ── Skeleton helper ──
 function wishSkeletonHTML(n = 8) {
-  return Array.from({length: n}, () => `
-    <div class="card item">
-      <div class="wish-thumb skeleton"></div>
-      <div class="card-body">
-        <div class="skeleton skeleton-text" style="width:80%;margin-bottom:6px;"></div>
-        <div class="skeleton skeleton-text" style="width:55%;margin-bottom:6px;"></div>
-        <div class="skeleton skeleton-text" style="width:35%;"></div>
-      </div>
-    </div>`).join('');
+  return Array.from({length: n}, () => `<div class="wish-skel-wrapper"></div>`).join('');
 }
 let isLoggedIn;
 let currentPage = 1;
@@ -19,7 +20,7 @@ let totalPages = 1; // 如果後端有回 totalPages
 let mycurrentPage = 1;
 let mytotalPages = 1;
 
-document.addEventListener("DOMContentLoaded", (e) => {
+document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('prevPage')?.addEventListener('click', () => {
     if (currentPage > 1) {
       listAll(currentPage - 1);
@@ -43,40 +44,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
       listMyWishes(mycurrentPage + 1);
     }
   });
-
-  // ── 許願池 layout toggle ──
-  const wpGridBtn  = document.getElementById('wpGridBtn');
-  const wpListBtn  = document.getElementById('wpListBtn');
-  const wishGridEl = document.getElementById('wishGrid');
-  if (wpGridBtn && wpListBtn && wishGridEl) {
-    wpGridBtn.addEventListener('click', () => {
-      wishGridEl.classList.remove('list-view');
-      wpGridBtn.classList.add('active');
-      wpListBtn.classList.remove('active');
-    });
-    wpListBtn.addEventListener('click', () => {
-      wishGridEl.classList.add('list-view');
-      wpListBtn.classList.add('active');
-      wpGridBtn.classList.remove('active');
-    });
-  }
-
-  // ── 我的願望 layout toggle ──
-  const myWpGridBtn  = document.getElementById('myWpGridBtn');
-  const myWpListBtn  = document.getElementById('myWpListBtn');
-  const myWishGridEl = document.getElementById('myWishGrid');
-  if (myWpGridBtn && myWpListBtn && myWishGridEl) {
-    myWpGridBtn.addEventListener('click', () => {
-      myWishGridEl.classList.remove('list-view');
-      myWpGridBtn.classList.add('active');
-      myWpListBtn.classList.remove('active');
-    });
-    myWpListBtn.addEventListener('click', () => {
-      myWishGridEl.classList.add('list-view');
-      myWpListBtn.classList.add('active');
-      myWpGridBtn.classList.remove('active');
-    });
-  }
 })
 const pages = document.querySelectorAll('.page');
 const links = document.querySelectorAll('.nav-link');
@@ -227,36 +194,11 @@ function showInfo(data) {
     container.innerHTML = '<p class="empty">目前還沒有願望</p>';
     return;
   }
-  container.innerHTML = ''; //清除資料
+  container.innerHTML = '';
   data.wishes.forEach(wish => {
-    const card = document.createElement('div');
-    card.classList.add('card', 'item','text-dark', 'bg-light');
-    const tagsString = generateTags(wish);
-    card.setAttribute('data-tags', tagsString);
-    const expiresAt = new Date(wish.expiresAt);
-    card.dataset.id = wish.id;
-    const showImage = wish.photoURL != null;
-    card.innerHTML = `
-        <div class="wish-thumb">
-          ${showImage
-            ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片">`
-            : `<div class="wish-thumb-placeholder"><i class="fa fa-camera"></i></div>`}
-        </div>
-        <div class="card-body">
-          <h6 class="card-title">${wish.itemName}</h6>
-          <p class="card-text">${wish.description}</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="wish-price">收購價 NT$${wish.maxPrice}</span>
-            <span class="wish-expire text-muted">${expiresAt.toLocaleDateString()} 截止</span>
-          </div>
-        </div>
-    `;
-    card.addEventListener('click', () => {
-      const pid = card.dataset.id;
-      if (pid) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(pid)}`;
-    });
-    container.appendChild(card);
+    container.appendChild(createWishCard(wish, false));
   });
+  handleAutoFocus();
 }
 
 function showMyInfo(data) {
@@ -268,89 +210,32 @@ function showMyInfo(data) {
   }
   container.innerHTML = '';
   data.wishes.forEach(wish => {
-    const card = document.createElement('div');
-    card.classList.add('card', 'item','text-dark', 'bg-light');
-    const tagsString = generateTags(wish);
-    const showImage = wish.photoURL != null;
-    card.setAttribute('data-tags', tagsString);
-    card.dataset.id = wish.id;
-
-    const statusMap = {
-      "ACTIVE": '上架中',
-      "EXPIRED": '已過期',
-      "DELETED": '已刪除'
-    };
-    const statusColor = wish.status === 'ACTIVE' ? '#28a745' : '#aaa';
-    const showDeleteBtn = wish.status === 'ACTIVE';
-    card.innerHTML = `
-        <div class="wish-thumb">
-          ${showImage
-            ? `<img src="${wish.photoURL}" alt="${wish.itemName}的照片">`
-            : `<div class="wish-thumb-placeholder"><i class="fa fa-camera"></i></div>`}
-          <span class="wish-status-badge" style="background:${statusColor};">${statusMap[wish.status]}</span>
-        </div>
-        <div class="card-body">
-          <h6 class="card-title">${wish.itemName}</h6>
-          <p class="card-text">${wish.description}</p>
-          <span class="wish-price">收購價 NT$${wish.maxPrice}</span>
-          ${showDeleteBtn ? `<button class="btn btn-sm btn-danger mt-2 w-100 wish-delete-btn">刪除願望</button>` : ''}
-        </div>
-    `;
-    if (showDeleteBtn) {
-      card.querySelector('.wish-delete-btn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        deleteWish(card.dataset.id);
-      });
-    }
-    if (wish.status === 'ACTIVE') {
-      card.addEventListener('click', () => {
-        const pid = card.dataset.id;
-        if (pid) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(pid)}`;
-      });
-    } else {
-      card.classList.add('wish-disabled');
-    }
-    container.appendChild(card);
+    container.appendChild(createWishCard(wish, true));
   });
-  
 }
 async function deleteWish(id) {
-  wpbackendService = new wpBackendService;
-  Swal.fire({
+  wpbackendService = wpbackendService || new wpBackendService();
+  const confirm = await Swal.fire({
     icon: 'warning',
     title: '確定刪除？',
     text: '願望刪除後僅能在「我的願望」裡查看。',
     showCancelButton: true,
     confirmButtonText: '確定刪除',
     cancelButtonText: '取消'
-  }).then(async result => {
-    if (result.isConfirmed) {
-      try {
-        await wpbackendService.deleteWish(id);
-        Swal.fire({
-          icon: 'success', 
-          title: '刪除成功',
-          confirmButtonText: 'ok',
-        }).then (async result => {
-          if(result.isConfirmed) {
-            try {
-              await wpbackendService.listMyWishes();
-            } catch(error) {
-              console.log('error: ',error);
-            }
-          }
-        }); //TODO 加入重新載入
-      } catch (error) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...刪除失敗',
-          text: error.message
-        });
-      }
-    }
   });
-  
-  
+  if (!confirm.isConfirmed) return;
+  try {
+    await wpbackendService.deleteWish(id);
+    const wrapper = document.querySelector(`[data-id="${id}"]`);
+    if (wrapper) {
+      wrapper.querySelector('.wish-card')?.classList.remove('flipped');
+      wrapper.classList.add('wish-disabled');
+    }
+    Swal.fire({ icon: 'success', title: '刪除成功', timer: 1500, showConfirmButton: false });
+    setTimeout(() => listMyWishes(mycurrentPage), 1600);
+  } catch (error) {
+    Swal.fire({ icon: 'error', title: 'Oops...刪除失敗', text: error.message });
+  }
 }
 
 function generateTags(data) {
@@ -392,26 +277,19 @@ function generateTags(data) {
   });
 
   function filterItems() {
-    const items = document.querySelectorAll('.item');
-    // 目前被選取的 tags
+    const items = document.querySelectorAll('#wishGrid .wish-card-wrapper');
     const activeTags = Array.from(tags)
       .filter(tag => tag.classList.contains('active'))
       .map(tag => tag.dataset.tag);
-  
+
     items.forEach(item => {
-      const itemTags = item.dataset.tags.split(' ');
-  
-      // 沒選任何 tag → 全顯示
+      const itemTags = (item.dataset.tags || '').split(' ');
       if (activeTags.length === 0) {
-        item.style.display = 'block';
+        item.style.display = '';
         return;
       }
-  
-      const match = activeTags.every(tag =>
-        itemTags.includes(tag)
-      );
-  
-      item.style.display = match ? 'block' : 'none';
+      const match = activeTags.every(tag => itemTags.includes(tag));
+      item.style.display = match ? '' : 'none';
     });
   }
   
@@ -707,4 +585,342 @@ function animateCountUp(id, target, duration = 2000) {
   }
 
   requestAnimationFrame(update);
+}
+
+// ════════════════════════════════════════════════════
+//  Square sticky-note card system
+// ════════════════════════════════════════════════════
+
+/**
+ * Build and return a square sticky-note card wrapper element.
+ */
+function createWishCard(wish, isMyWish) {
+  const isActive = !isMyWish || wish.status === 'ACTIVE';
+  const isRead = !!localStorage.getItem('readWish_' + wish.id);
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'wish-card-wrapper' +
+    (isRead ? ' read' : '') +
+    (isActive ? '' : ' wish-disabled');
+  wrapper.dataset.id = wish.id;
+  wrapper.style.setProperty('--card-color', randomCardColor());
+  wrapper.dataset.tags = generateTags(wish);
+
+  const expiresAt = wish.expiresAt ? new Date(wish.expiresAt) : null;
+  const deadlineText = expiresAt
+    ? `截止 ${(expiresAt.getMonth()+1).toString().padStart(2,'0')}/${expiresAt.getDate().toString().padStart(2,'0')}`
+    : '';
+  const avatarSrc = wish.owner?.photoURL || '../webP/default-avatar.webp';
+
+  const statusMap = { ACTIVE: '上架中', EXPIRED: '已過期', DELETED: '已刪除' };
+  const statusColor = wish.status === 'ACTIVE' ? '#28a745' : '#aaa';
+  const statusBadgeHtml = (isMyWish && wish.status !== 'ACTIVE')
+    ? `<span class="wf-status-badge" style="background:${statusColor};">${statusMap[wish.status] || wish.status}</span>`
+    : '';
+
+  const mediaHtml = wish.photoURL
+    ? `<img class="wf-photo" src="${wish.photoURL}" alt="${wish.itemName}" loading="lazy">`
+    : `<img class="wf-logo" src="../webP/treasurehub.webp" alt="拾貨寶庫">`;
+
+  wrapper.innerHTML = `
+    <div class="wish-card">
+      <div class="wish-card-front">
+        <div class="wf-header">
+          <img class="wf-avatar" src="${avatarSrc}" alt=""
+               onerror="this.src='../webP/default-avatar.webp'">
+          <div class="wf-title">${wish.itemName}</div>
+          <div class="wf-deadline">${deadlineText}</div>
+        </div>
+        <div class="wf-price">收購 NT$${wish.maxPrice}</div>
+        ${statusBadgeHtml}
+        <div class="wf-media">${mediaHtml}</div>
+      </div>
+      <div class="wish-card-back">
+        <div class="wb-scroll">
+          <div class="wb-top-bar"><button class="wb-close-btn">✕</button></div>
+          <div class="wb-loading">
+            <span class="spinner-border spinner-border-sm me-2"></span>載入中...
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (isActive) {
+    wrapper.querySelector('.wish-card-front').addEventListener('click', () => {
+      flipCard(wrapper, wish.id, isMyWish);
+    });
+  }
+
+  wrapper.querySelector('.wb-close-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    wrapper.querySelector('.wish-card').classList.remove('flipped');
+  });
+
+  return wrapper;
+}
+
+/**
+ * Flip a card in-place (3D rotation). Lazy-loads detail on first open.
+ */
+async function flipCard(wrapper, wishId, isMyWish) {
+  if (wrapper.dataset.loading) return;
+
+  const inner = wrapper.querySelector('.wish-card');
+
+  // Already loaded — just toggle
+  if (wrapper.dataset.loaded) {
+    inner.classList.toggle('flipped');
+    return;
+  }
+
+  wrapper.dataset.loading = '1';
+  localStorage.setItem('readWish_' + wishId, '1');
+  wrapper.classList.add('read');
+  inner.classList.add('flipped');
+
+  try {
+    wpbackendService = wpbackendService || new wpBackendService();
+    const res = await wpbackendService.getWishInfo(wishId);
+    const d   = res.data ?? res;
+    const backScrollEl = wrapper.querySelector('.wb-scroll');
+    renderCardBack(backScrollEl, d, wishId, isMyWish, inner);
+    if (d.photoURL) initCardPhotoSwipe(backScrollEl, wishId, d.photoURL);
+    wrapper.dataset.loaded = '1';
+  } catch (err) {
+    const backScrollEl = wrapper.querySelector('.wb-scroll');
+    backScrollEl.innerHTML = `
+      <div class="wb-top-bar"><button class="wb-close-btn">✕</button></div>
+      <div class="wb-content" style="display:flex;align-items:center;justify-content:center;
+           color:#dc3545;font-size:.85rem;padding:24px;">載入失敗，請重試</div>`;
+    backScrollEl.querySelector('.wb-close-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      inner.classList.remove('flipped');
+    });
+  } finally {
+    delete wrapper.dataset.loading;
+  }
+}
+
+/**
+ * Populate the back face (wb-scroll) with full wish detail.
+ * inner = the .wish-card element (needed to remove .flipped on close).
+ */
+function renderCardBack(backScrollEl, d, wishId, isMyWish, inner) {
+  const priorityLabel = PRIORITY_LABEL[d.priority] || '未設定';
+  const priorityColor = PRIORITY_COLOR[d.priority] || '#888';
+  const ownerAvatar   = d.owner?.photoURL || '../webP/default-avatar.webp';
+  const ownerName     = d.owner?.name || '未知';
+
+  const photoHtml = d.photoURL ? `
+    <div class="pswp-gallery" id="wb-gallery-${wishId}">
+      <a href="${d.photoURL}" data-pswp-width="1200" data-pswp-height="800" target="_blank">
+        <img class="wb-photo" src="${d.photoURL}" alt="${d.itemName}">
+      </a>
+    </div>` : '';
+
+  const actionHtml = isMyWish
+    ? `<button class="wb-delete-btn" data-wish-id="${wishId}">刪除願望</button>`
+    : `<button class="wb-contact-btn wb-contact-js">聯絡許願者</button>`;
+
+  backScrollEl.innerHTML = `
+    <div class="wb-top-bar"><button class="wb-close-btn">✕</button></div>
+    <div class="wb-content">
+      ${photoHtml}
+      <div class="wb-title">${d.itemName || '無標題'}</div>
+      <div class="wb-meta">
+        <span class="wb-priority-badge" style="background:${priorityColor};">${priorityLabel}</span>
+        <span class="wb-price">收購 NT$${d.maxPrice || 0}</span>
+      </div>
+      <div class="wb-wisher">
+        <img class="wb-wisher-avatar" src="${ownerAvatar}" alt=""
+             onerror="this.src='../webP/default-avatar.webp'">
+        <span class="wb-wisher-name">${ownerName}</span>
+      </div>
+      <div class="wb-desc">${d.description || '無描述'}</div>
+      <div class="wb-actions">${actionHtml}</div>
+    </div>`;
+
+  backScrollEl.querySelector('.wb-close-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    inner.classList.remove('flipped');
+  });
+
+  if (!isMyWish) {
+    const contactBtn = backScrollEl.querySelector('.wb-contact-js');
+    if (contactBtn) {
+      contactBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleContactWisher(wishId, contactBtn);
+      });
+    }
+  }
+  if (isMyWish) {
+    const deleteBtn = backScrollEl.querySelector('.wb-delete-btn');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        deleteWish(deleteBtn.dataset.wishId);
+      });
+    }
+  }
+}
+
+/**
+ * Initialise a per-card PhotoSwipe gallery after measuring natural image size.
+ */
+function initCardPhotoSwipe(backEl, wishId, photoUrl) {
+  const galleryEl = backEl.querySelector(`#wb-gallery-${wishId}`);
+  if (!galleryEl) return;
+  const linkEl = galleryEl.querySelector('a');
+  if (!linkEl) return;
+
+  const img = new Image();
+  img.src = photoUrl;
+  img.onload = function () {
+    linkEl.setAttribute('data-pswp-width',  this.naturalWidth  || 1200);
+    linkEl.setAttribute('data-pswp-height', this.naturalHeight || 800);
+    import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe-lightbox.esm.min.js')
+      .then(module => {
+        const PhotoSwipeLightbox = module.default;
+        const lightbox = new PhotoSwipeLightbox({
+          gallery: `#wb-gallery-${wishId}`,
+          children: 'a',
+          pswpModule: () => import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.esm.min.js')
+        });
+        lightbox.init();
+      });
+  };
+}
+
+/**
+ * Contact-wisher flow (adapted from wishinfo.js, runs inside wishpool).
+ */
+async function handleContactWisher(wishId, btn) {
+  if (!btn) return;
+  const origText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '載入中...';
+
+  try {
+    backendService = backendService || new BackendService();
+    const res = await backendService.getMyItems();
+    const commodities = res?.data?.commodities || [];
+
+    if (commodities.length === 0) {
+      const redirectUrl = encodeURIComponent(window.location.pathname + window.location.hash);
+      const goSell = await Swal.fire({
+        icon: 'info',
+        title: '您目前沒有上架的商品',
+        text: '請先到個人頁面上架商品後再媒合。',
+        showCancelButton: true,
+        confirmButtonText: '去上架商品',
+        cancelButtonText: '關閉'
+      });
+      if (goSell.isConfirmed) {
+        window.location.href = `../shop/shop.html?page=seller&redirect=${redirectUrl}`;
+      }
+      return;
+    }
+
+    const cardsHtml = commodities.map(item => {
+      const name  = item.name?.replace(/</g, '&lt;').replace(/>/g, '&gt;') || '未命名';
+      const price = Number(item.price).toLocaleString();
+      const img   = item.mainImage || '../image/default-avatar.png';
+      return `
+        <div class="wc-card" data-id="${item.id}" tabindex="0">
+          <img src="${img}" alt="${name}" loading="lazy">
+          <div class="wc-info">
+            <div class="wc-name">${name}</div>
+            <div class="wc-price">$${price}</div>
+            <div class="wc-stock">庫存：${item.stock}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const result = await Swal.fire({
+      title: '請選擇要媒合的商品',
+      width: 680,
+      html: `
+        <div class="wc-grid">${cardsHtml}</div>
+        <div style="text-align:right;margin-top:10px;">
+          <a href="../shop/shop.html?page=seller&redirect=${encodeURIComponent(window.location.pathname + window.location.hash)}"
+             style="font-size:.8rem;color:#888;text-decoration:underline;">
+            找不到想上架的商品？點此新增商品
+          </a>
+        </div>`,
+      showCancelButton: true,
+      confirmButtonText: '確認媒合',
+      cancelButtonText: '取消',
+      didOpen: () => {
+        document.querySelectorAll('.wc-card').forEach(card => {
+          const select = () => {
+            document.querySelectorAll('.wc-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+          };
+          card.addEventListener('click', select);
+          card.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); }
+          });
+        });
+      },
+      preConfirm: () => {
+        const selected = document.querySelector('.wc-card.selected');
+        if (!selected) { Swal.showValidationMessage('請選擇一個商品'); return false; }
+        return selected.dataset.id;
+      }
+    });
+
+    if (result.isConfirmed) {
+      wpbackendService = wpbackendService || new wpBackendService();
+      await wpbackendService.contactWisher(wishId, result.value);
+      Swal.fire({ icon: 'success', title: '已聯絡許願者！', text: '請等待對方回覆。' });
+    }
+  } catch (error) {
+    console.error('Error contacting wisher:', error);
+    Swal.fire({ icon: 'error', title: '聯絡失敗', text: '請稍後再試。' });
+  } finally {
+    btn.disabled  = false;
+    btn.textContent = origText;
+  }
+}
+
+/**
+ * Auto-focus: if sessionStorage has a focusWishId, scroll to and flip that card.
+ * Called at the end of showInfo() after cards are rendered.
+ */
+async function handleAutoFocus() {
+  const focusId = sessionStorage.getItem('focusWishId');
+  if (!focusId) return;
+  sessionStorage.removeItem('focusWishId');
+
+  let wrapper = document.querySelector(`#wishGrid [data-id="${focusId}"]`);
+
+  if (!wrapper) {
+    // Card not in current page — fetch detail and prepend
+    try {
+      wpbackendService = wpbackendService || new wpBackendService();
+      const res = await wpbackendService.getWishInfo(focusId);
+      const d   = res.data ?? res;
+      const wishObj = {
+        id:        focusId,
+        itemName:  d.itemName,
+        maxPrice:  d.maxPrice,
+        expiresAt: d.expiresAt,
+        photoURL:  d.photoURL,
+        priority:  d.priority,
+        owner:     d.owner
+      };
+      wrapper = createWishCard(wishObj, false);
+      wrapper.style.outline       = '3px solid var(--brand-color)';
+      wrapper.style.outlineOffset = '2px';
+      document.getElementById('wishGrid')?.prepend(wrapper);
+    } catch (err) {
+      console.warn('handleAutoFocus: 無法載入願望', err);
+      return;
+    }
+  }
+
+  wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => flipCard(wrapper, focusId, false), 650);
 }

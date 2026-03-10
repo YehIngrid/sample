@@ -385,193 +385,384 @@ body {
     width: 100%;
 }
 
-/* ── Layout toggle buttons ── */
-.wp-layout-toggle-bar {
-    display: none;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 4px 4px 8px;
-}
-@media (max-width: 991px) {
-    .wp-layout-toggle-bar { display: flex; }
-}
-.layout-btn {
-    background: none;
-    border: 1.5px solid #ccc;
-    border-radius: 6px;
-    padding: 3px 7px;
-    color: #888;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    line-height: 1;
-}
-.layout-btn.active {
-    border-color: var(--brand-color);
-    color: var(--brand-color);
-    background: #eaf1fb;
-}
-
 /* ── Cards grid ── */
 .wishgrid {
-    display: grid;
-    gap: 12px;
     padding: 4px 0;
 }
-.item-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-}
+.item-list,
 .my-item-list {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
 }
-
-/* ── Wish card (vertical) ── */
-.card.item {
-    max-width: none !important;
-    border: none !important;
-    border-radius: 8px !important;
-    box-shadow: 0 1px 6px rgba(0, 75, 151, 0.1);
-    cursor: pointer;
-    transition: transform 0.22s ease, box-shadow 0.22s ease;
-    overflow: hidden;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-.card.item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 20px rgba(0, 75, 151, 0.18);
-}
-.wish-thumb {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    background: #f4f4f4;
-    position: relative;
-    flex-shrink: 0;
-}
-.wish-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-}
-.wish-thumb-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ccc;
-    font-size: 2rem;
-}
-.wish-status-badge {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    padding: 2px 7px;
-    border-radius: 20px;
-    color: #fff;
-    font-size: 0.68rem;
-    font-weight: 600;
-}
-.card.item .card-body {
-    padding: 8px 10px !important;
-    background: aliceblue;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-.card.item .card-title {
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 4px;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-}
-.card.item .card-text {
-    font-size: 0.72rem;
-    color: #555;
-    margin-bottom: 6px;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    flex: 1;
-}
-.wish-price {
-    color: #c0392b;
-    font-weight: 700;
-    font-size: 0.82rem;
-}
-.wish-expire {
-    font-size: 0.68rem;
-}
-
-.wish-disabled {
-    cursor: not-allowed;
-    opacity: 0.55;
-    filter: grayscale(40%);
-}
-.wish-disabled:hover {
-    transform: none !important;
-    box-shadow: 0 1px 6px rgba(0, 75, 151, 0.1) !important;
-}
-
-/* ── Mobile grid: 2-col, or list-view ── */
 @media (max-width: 991px) {
-    .item-list:not(.list-view),
-    .my-item-list:not(.list-view) {
+    .item-list,
+    .my-item-list {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
-    /* List view */
-    .item-list.list-view,
-    .my-item-list.list-view {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-    .item-list.list-view .card.item,
-    .my-item-list.list-view .card.item {
-        flex-direction: row !important;
-        align-items: center;
-        background-color: aliceblue !important;
-        height: auto;
-    }
-    .item-list.list-view .wish-thumb,
-    .my-item-list.list-view .wish-thumb {
-        width: 80px !important;
-        min-width: 80px !important;
-        height: 80px !important;
-        aspect-ratio: unset !important;
-        border-radius: 8px 0 0 8px;
-        border-right: 1px solid #c8ddf0;
-    }
-    .item-list.list-view .card.item .card-body,
-    .my-item-list.list-view .card.item .card-body {
-        flex: 1;
-        min-width: 0;
-    }
-    .item-list.list-view .card.item .card-title,
-    .my-item-list.list-view .card.item .card-title {
-        -webkit-line-clamp: 1;
-    }
-    .item-list.list-view .card.item .card-text,
-    .my-item-list.list-view .card.item .card-text {
-        -webkit-line-clamp: 1;
-    }
 }
-@media (max-width: 768px) {
-    .wishpool-tabs .nav-item a { font-size: 11px; padding: 5px 8px; }
+
+/* ── Square sticky-note card wrapper ── */
+.wish-card-wrapper {
+    perspective: 1200px;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    position: relative;
 }
+
+/* ── 3D flip inner container ── */
+.wish-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s ease;
+}
+.wish-card.flipped {
+    transform: rotateY(180deg);
+}
+.wish-card-front,
+.wish-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 14px;
+}
+
+/* ── Front face ── */
+.wish-card-front {
+    background: var(--card-color, #FFD966);
+    display: flex;
+    flex-direction: column;
+    padding: 12px 12px 16px;
+    box-shadow: 2px 4px 14px rgba(0,0,0,0.14);
+    overflow: hidden;
+}
+/* Corner fold — white lift, starts hidden */
+.wish-card-front::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    background: linear-gradient(
+        to top left,
+        #f0f0f0 44%,
+        rgba(0,0,0,0.1) 45%,
+        rgba(0,0,0,0.05) 48%,
+        transparent 53%
+    );
+    border-radius: 0 0 14px 0;
+    transition: width 0.28s ease, height 0.28s ease;
+    pointer-events: none;
+}
+.wish-card-wrapper:hover .wish-card-front::after,
+.wish-card-wrapper.read .wish-card-front::after {
+    width: 46px;
+    height: 46px;
+}
+
+/* Front inner elements */
+.wf-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 5px;
+}
+.wf-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(0,0,0,0.1);
+}
+.wf-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.3;
+    flex: 1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    color: #333;
+    min-width: 0;
+}
+.wf-deadline {
+    font-size: 0.6rem;
+    color: #555;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-top: 2px;
+}
+.wf-price {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #c0392b;
+    margin-bottom: 4px;
+}
+.wf-status-badge {
+    font-size: 0.62rem;
+    padding: 2px 6px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: 600;
+    align-self: flex-start;
+    margin-bottom: 4px;
+}
+.wf-media {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.3);
+    min-height: 0;
+}
+.wf-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+.wf-logo {
+    width: 50%;
+    max-width: 72px;
+    opacity: 0.45;
+}
+
+/* ── Card back face ── */
+.wish-card-back {
+    background: #fff;
+    transform: rotateY(180deg);
+    box-shadow: 2px 4px 14px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.wb-scroll {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.wb-top-bar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 6px 0;
+    flex-shrink: 0;
+}
+.wb-close-btn {
+    background: rgba(230,230,230,0.9);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    color: #555;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+.wb-close-btn:hover { background: #bbb; }
+.wb-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2px 10px 10px;
+    scrollbar-width: thin;
+}
+.wb-photo-link {
+    display: block;
+    width: 100%;
+    margin-bottom: 7px;
+}
+.wb-photo {
+    width: 100%;
+    border-radius: 7px;
+    object-fit: cover;
+    max-height: 110px;
+    display: block;
+    cursor: pointer;
+}
+.wb-title {
+    font-size: 0.83rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #222;
+    word-break: break-word;
+}
+.wb-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+}
+.wb-priority-badge {
+    font-size: 0.62rem;
+    padding: 2px 7px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: 600;
+}
+.wb-price {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #c0392b;
+}
+.wb-wisher {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+.wb-wisher-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.wb-wisher-name {
+    font-size: 0.72rem;
+    color: #555;
+}
+.wb-desc {
+    font-size: 0.72rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+.wb-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.wb-contact-btn {
+    width: 100%;
+    padding: 5px 0;
+    font-size: 0.75rem;
+    border-radius: 7px;
+    border: none;
+    background: var(--brand-color);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+.wb-contact-btn:hover { opacity: 0.82; }
+.wb-delete-btn {
+    width: 100%;
+    padding: 5px 0;
+    font-size: 0.75rem;
+    border-radius: 7px;
+    border: 1.5px solid #dc3545;
+    background: #fff;
+    color: #dc3545;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+.wb-delete-btn:hover { background: #dc3545; color: #fff; }
+.wb-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    padding: 20px;
+    color: #888;
+    font-size: 0.78rem;
+}
+
+/* ── Disabled card (my wishes, non-ACTIVE) ── */
+.wish-card-wrapper.wish-disabled {
+    cursor: default;
+    opacity: 0.62;
+    filter: grayscale(30%);
+}
+.wish-card-wrapper.wish-disabled .wish-card-front::after {
+    display: none;
+}
+
+/* ── Skeleton placeholder ── */
+.wish-skel-wrapper {
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #dde6f0;
+    position: relative;
+}
+.wish-skel-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 30%, rgba(255,255,255,0.5) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: skelShimmer 1.4s infinite;
+}
+@keyframes skelShimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+}
+
+/* ── Contact-wisher product selector (Swal dialog) ── */
+.wc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 4px;
+    text-align: left;
+}
+.wc-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.wc-card:hover, .wc-card.selected {
+    border-color: var(--brand-color);
+    box-shadow: 0 0 0 2px rgba(0,75,151,0.15);
+}
+.wc-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    display: block;
+}
+.wc-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-bottom: 2px;
+    color: #333;
+}
+.wc-price { font-size: 0.72rem; color: #c0392b; font-weight: 700; }
+.wc-stock { font-size: 0.68rem; color: #888; }
 
 /* ── Pagination ── */
 .wishpage {

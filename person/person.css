@@ -409,6 +409,10 @@ small {
   overflow:hidden;
   z-index:10000;
 }
+@media (min-width: 992px) {
+  .chaticon     { bottom: 100px; }
+  #talkInterface { bottom: 116px; }
+}
 .review-item {
   font-size: 14px;
   display: block;

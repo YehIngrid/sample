@@ -873,7 +873,10 @@ function showWishes(data) {
         <span class="wish-label">${esc(wish.itemName)}</span>
       `;
       b.addEventListener('click', () => {
-        if (wish.id) location.href = `../wishinfo/wishinfo.html?id=${encodeURIComponent(wish.id)}`;
+        if (wish.id) {
+          sessionStorage.setItem('focusWishId', String(wish.id));
+          location.href = '../wishpool/wishpool.html#wishpool';
+        }
       });
       track.appendChild(b);
     });

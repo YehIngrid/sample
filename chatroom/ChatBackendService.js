@@ -4,11 +4,15 @@ class ChatBackendService {
         this.baseUrl = 'https://thpr.hlc23.dev';
         this.http = axios.create({ baseURL: this.baseUrl });
     }
-    async sendMessage(roomId, message) {
+    async sendMessage(roomId, message, attachments = []) {
         try {
+            const formData = new FormData();
+            formData.append('room', String(roomId));
+            if (message) formData.append('message', message);
+            attachments.forEach(att => formData.append('attachments', att));
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/send-message`,
-                { room: String(roomId), message: message }
+                formData
             );
             return response.data;
         } catch (error) {
@@ -63,20 +67,6 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    async sendAttach(roomId, image, message = '') {
-        try {
-            const body = { room: String(roomId), image };
-            if (message) body.message = message;
-            const response = await axios.post(
-                `${this.baseUrl}/api/chat/attachment`,
-                body
-            );
-            return response.data;
-        } catch (error) {
-            console.error('Error sending attachment:', error);
-            return Promise.reject(error);
-        }
-    }
     async markAsRead(roomId, readAt) {
         try {
             const response = await axios.patch(
@@ -111,14 +101,19 @@ class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    async broadCastOfficial(channelId, message, attachments) {
+    async broadCastOfficial(channelId, message, attachments = []) {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/chat/official-channels/broadcast`, 
-                {channelId, message, attachments: String(attachments)}
+            const formData = new FormData();
+            formData.append('channelId', String(channelId));
+            if (message) formData.append('message', message);
+            attachments.forEach(att => formData.append('attachments', att));
+            const response = await axios.post(
+                `${this.baseUrl}/api/chat/official-channels/broadcast`,
+                formData
             );
             return response.data;
         } catch(error) {
-            console.error('Error create official channel,' ,error);
+            console.error('Error broadcasting to official channel:', error);
             return Promise.reject(error);
         }
     }

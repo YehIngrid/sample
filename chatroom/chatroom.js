@@ -25,6 +25,7 @@ class ChatRoomList {
         this.partnerInfoMap = new Map(); // roomId -> { name, photoURL }（對方的個人資訊）
 
         this.officialRoomsSet = new Set(); // 記錄官方頻道房間 ID
+        this.officialChannelToRoomMap = new Map(); // channelId → roomId（SSE channelId 轉換用）
 
         this.markReadTimer = null;
         this.readObserver = new IntersectionObserver(entries => {
@@ -158,20 +159,12 @@ class ChatRoomList {
     }
 
     async sendImage(file, caption = '') {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = async () => {
-                try {
-                    await this.backend.sendAttach(this.currentRoomId, reader.result, caption);
-                    resolve();
-                } catch (err) {
-                    console.error('發送圖片錯誤:', err);
-                    reject(err);
-                }
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
+        try {
+            await this.backend.sendMessage(this.currentRoomId, caption || undefined, [file]);
+        } catch (err) {
+            console.error('發送圖片錯誤:', err);
+            throw err;
+        }
     }
 
     // 圖片 + 文字 caption 合併泡泡
@@ -390,15 +383,24 @@ class ChatRoomList {
 
             rooms.data.items.forEach(data => {
                 const isOfficial = data.type === 'OFFICIAL';
-                if (isOfficial) this.officialRoomsSet.add(String(data.id));
-                const target = isOfficial ? null : data.members.find(m => m.name !== this.username);
-                const myself = isOfficial ? null : data.members.find(m => m.name === this.username);
+                if (isOfficial) {
+                    this.officialRoomsSet.add(String(data.id));
+                    // ✅ 建立 channelId → roomId 對應，供 newBroadcast SSE 查找
+                    const chId = data.officialChannel?.id ?? data.channelId;
+                    if (chId) this.officialChannelToRoomMap.set(String(chId), String(data.id));
+                }
+                const target = isOfficial ? null : data.members?.find(m => m.name !== this.username);
+                // ✅ 官方頻道也要找到自己，才能判斷已讀狀態
+                const myself = data.members?.find(m => m.name === this.username);
 
                 const roomName   = isOfficial ? (data.officialChannel?.name ?? '官方帳號') : (target?.name ?? '未知');
                 const roomAvatar = isOfficial ? '../webP/treasurehub.webp' : (target?.photoURL || '../image/default-avatar.png');
 
                 const isMyMessage  = data.lastMessage?.username === myself?.name;
-                const isNewMessage = !isOfficial && !isMyMessage && myself?.lastReadMessageId !== data.lastMessageId;
+                // ✅ 官方頻道：有 lastMessageId 且未讀就顯示紅點；一般頻道：對方訊息未讀才顯示
+                const isNewMessage = data.lastMessageId != null
+                    && myself?.lastReadMessageId !== data.lastMessageId
+                    && (isOfficial || !isMyMessage);
 
                 // ✅ 用 Map 記錄每個房間的已讀資訊（id + timestamp）
                 if (myself) {
@@ -431,7 +433,7 @@ class ChatRoomList {
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span style="font-size:0.6rem; background:#004b97; color:#fff; border-radius:4px; padding:1px 5px; vertical-align:middle;">官方</span>' : ''}</h6>
-                            <small class="text-muted lastMessage">${this.escapeHtml(this.getLastMessageText(data.lastMessage))}</small>
+                            <small class="text-muted lastMessage">${this.escapeHtml(isOfficial ? `📢 ${this.getLastMessageText(data.lastMessage)}` : this.getLastMessageText(data.lastMessage))}</small>
                         </div>
                         <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
                             width: 10px; height: 10px;
@@ -478,6 +480,14 @@ class ChatRoomList {
         this.previewArea.disabled = isOfficialRoom;
         this.input.placeholder = isOfficialRoom ? '官方頻道不支援傳送訊息' : '輸入訊息...';
         this.input.style.backgroundColor = isOfficialRoom ? '#f5f5f5' : '';
+
+        // ✅ 開啟官方頻道：立即清除列表上的未讀紅點，並通知後端已讀
+        if (isOfficialRoom) {
+            document.querySelector(`[data-room-id="${roomId}"]`)
+                ?.querySelector('.unread-dot')?.classList.add('d-none');
+            const readAt = new Date().toISOString();
+            this.backend.markAsRead(roomId, readAt).catch(() => {});
+        }
 
         const container = document.getElementById('messagesContainer');
         this.isInitialLoading = true;
@@ -637,20 +647,22 @@ class ChatRoomList {
         this.eventSource.addEventListener('newBroadcast', (event) => {
             const data = JSON.parse(event.data);
             const channelId = String(data.channelId ?? data.room ?? '');
+            // ✅ SSE 送來的是 channelId，DOM 上是 roomId；透過 Map 轉換
+            const roomId = this.officialChannelToRoomMap.get(channelId) ?? channelId;
 
             // 若目前開著對應官方頻道，直接渲染廣播訊息
-            if (channelId && String(this.currentRoomId) === channelId) {
+            if (roomId && String(this.currentRoomId) === roomId) {
                 this.renderBroadcast(data);
             }
 
             // 更新聊天室列表對應頻道的最後訊息預覽
-            if (channelId) {
-                const chatItem = document.querySelector(`[data-room-id="${channelId}"]`);
+            if (roomId) {
+                const chatItem = document.querySelector(`[data-room-id="${roomId}"]`);
                 if (chatItem) {
                     const lastMsgEl = chatItem.querySelector('.lastMessage');
-                    if (lastMsgEl) lastMsgEl.textContent = `📢 ${data.message || '官方公告'}`;
+                    if (lastMsgEl) lastMsgEl.textContent = `📢 ${data.message || (data.attachments?.length ? '傳送了一張圖片' : '官方公告')}`;
                     // 非目前開著的房間才顯示未讀紅點
-                    if (channelId !== String(this.currentRoomId)) {
+                    if (roomId !== String(this.currentRoomId)) {
                         chatItem.querySelector('.unread-dot')?.classList.remove('d-none');
                     }
                 }

@@ -115,7 +115,7 @@ loadChannels();
 // ════════════════════════════════════════════════════
 //  圖片上傳 & 預覽
 // ════════════════════════════════════════════════════
-let broadcastImageBase64 = '';
+let broadcastImageFile = null;
 
 const imgArea        = document.getElementById('broadcastImgArea');
 const imgInput       = document.getElementById('broadcastImgInput');
@@ -143,9 +143,9 @@ clearImgBtn.addEventListener('click', (e) => {
 });
 
 function setImageFile(file) {
+  broadcastImageFile = file;
   const reader = new FileReader();
   reader.onload = () => {
-    broadcastImageBase64 = reader.result;
     imgPreview.src = reader.result;
     imgPreview.classList.remove('d-none');
     imgPlaceholder.classList.add('d-none');
@@ -155,7 +155,7 @@ function setImageFile(file) {
 }
 
 function clearImage() {
-  broadcastImageBase64 = '';
+  broadcastImageFile = null;
   imgInput.value = '';
   imgPreview.src = '';
   imgPreview.classList.add('d-none');
@@ -178,8 +178,8 @@ document.getElementById('broadcastForm').addEventListener('submit', async (e) =>
     Swal.fire({ icon: 'warning', title: '請先選擇頻道' });
     return;
   }
-  if (!message) {
-    Swal.fire({ icon: 'warning', title: '請輸入公告內容' });
+  if (!message && !broadcastImageFile) {
+    Swal.fire({ icon: 'warning', title: '請輸入公告內容或選擇圖片' });
     return;
   }
 
@@ -188,7 +188,7 @@ document.getElementById('broadcastForm').addEventListener('submit', async (e) =>
   resultBox.className = 'result-box mt-3 d-none';
 
   try {
-    await chatSvc.broadCastOfficial(channelId, message, broadcastImageBase64 || '');
+    await chatSvc.broadCastOfficial(channelId, message || undefined, broadcastImageFile ? [broadcastImageFile] : []);
     resultBox.className = 'result-box mt-3 success';
     resultBox.innerHTML = '<div class="fw-bold">✅ 公告發送成功！</div>';
     document.getElementById('broadcastMessage').value = '';
@@ -267,9 +267,10 @@ document.getElementById('loadHistoryBtn').addEventListener('click', async () => 
       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
       .map(item => {
         const time    = new Date(item.timestamp).toLocaleString('zh-TW');
-        const imgHtml = item.attachments
-          ? `<img src="${item.attachments}" class="hi-img" alt="附件">`
-          : '';
+        const attachUrls = Array.isArray(item.attachments)
+          ? item.attachments
+          : (item.attachments ? [item.attachments] : []);
+        const imgHtml = attachUrls.map(src => `<img src="${src}" class="hi-img" alt="附件">`).join('');
         return `
           <div class="history-item">
             <div class="hi-time">${time}</div>
