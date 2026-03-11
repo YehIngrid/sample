@@ -231,9 +231,59 @@ class ChatRoomList {
                 alert('圖片大小超過 5MB 限制');
                 return;
             }
-            this.pendingImage = file;
-            this.previewImage(file);
+            this.previewArea.value = ''; // 清空，下次選同張也能觸發
+            this._openCropModal(file);
         });
+    }
+
+    _openCropModal(file) {
+        const modalEl = document.getElementById('chatCropModal');
+        const cropImg = document.getElementById('chatCropImg');
+        const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+        if (this._cropper) { this._cropper.destroy(); this._cropper = null; }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            cropImg.src = e.target.result;
+            bsModal.show();
+        };
+        reader.readAsDataURL(file);
+
+        // modal 完全顯示後再初始化 Cropper，並確保圖片已載入
+        modalEl.addEventListener('shown.bs.modal', () => {
+            if (this._cropper) this._cropper.destroy();
+            const init = () => {
+                this._cropper = new Cropper(cropImg, {
+                    viewMode: 1,
+                    autoCropArea: 0.9,
+                    responsive: true,
+                });
+            };
+            if (cropImg.complete && cropImg.naturalWidth > 0) {
+                init();
+            } else {
+                cropImg.addEventListener('load', init, { once: true });
+            }
+        }, { once: true });
+
+        // 確認裁切
+        document.getElementById('chatCropConfirm').onclick = async () => {
+            if (!this._cropper) return;
+            const canvas = this._cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200 });
+            bsModal.hide();
+            canvas.toBlob(async (blob) => {
+                const compressed = await compressImage(blob, 1200, 0.82);
+                this.pendingImage = compressed;
+                this.previewImage(compressed);
+            }, 'image/webp', 0.92);
+        };
+
+        // 關閉時銷毀 cropper
+        modalEl.addEventListener('hidden.bs.modal', () => {
+            if (this._cropper) { this._cropper.destroy(); this._cropper = null; }
+            cropImg.src = '';
+        }, { once: true });
     }
 
     closePreview() {
@@ -1029,6 +1079,27 @@ class ChatRoomList {
         div.textContent = text;
         return div.innerHTML;
     }
+}
+
+// ---- 圖片壓縮 helper ----
+function compressImage(blob, maxWidth = 1200, quality = 0.82) {
+    return new Promise(resolve => {
+        const img = new Image();
+        const url = URL.createObjectURL(blob);
+        img.onload = () => {
+            const scale = Math.min(1, maxWidth / img.width);
+            const canvas = document.createElement('canvas');
+            canvas.width  = Math.round(img.width  * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            URL.revokeObjectURL(url);
+            canvas.toBlob(
+                b => resolve(new File([b], 'image.webp', { type: 'image/webp' })),
+                'image/webp', quality
+            );
+        };
+        img.src = url;
+    });
 }
 
 let chatRoomList = null;

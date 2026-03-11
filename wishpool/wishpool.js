@@ -389,6 +389,83 @@ budgetMax.addEventListener('input', () => { validateBudgetMax(); });
 urgency.addEventListener('change', validateUrgency);
 
 
+// ---- 圖片壓縮 helper ----
+function compressImage(blob, maxWidth = 1200, quality = 0.82) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(blob);
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(
+        b => resolve(new File([b], 'image.webp', { type: 'image/webp' })),
+        'image/webp', quality
+      );
+    };
+    img.src = url;
+  });
+}
+
+// ---- 裁切 Modal 邏輯 ----
+let wishCropper = null;
+const wishCropModalEl = document.getElementById('wishCropModal');
+const wishCropImg     = document.getElementById('wishCropImg');
+const wishCropModal   = bootstrap.Modal.getOrCreateInstance(wishCropModalEl);
+
+function openWishCrop(file) {
+  if (wishCropper) { wishCropper.destroy(); wishCropper = null; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    wishCropImg.src = e.target.result;
+    wishCropModal.show();
+  };
+  reader.readAsDataURL(file);
+}
+
+// modal 完全顯示後再初始化 Cropper，並確保圖片已載入
+wishCropModalEl.addEventListener('shown.bs.modal', () => {
+  if (wishCropper) wishCropper.destroy();
+  const init = () => {
+    wishCropper = new Cropper(wishCropImg, {
+      viewMode: 1,
+      autoCropArea: 0.9,
+      responsive: true,
+    });
+  };
+  if (wishCropImg.complete && wishCropImg.naturalWidth > 0) {
+    init();
+  } else {
+    wishCropImg.addEventListener('load', init, { once: true });
+  }
+});
+
+document.getElementById('wishCropConfirm').addEventListener('click', () => {
+  if (!wishCropper) return;
+  const canvas = wishCropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200 });
+  wishCropModal.hide();
+  canvas.toBlob(async (blob) => {
+    const compressed = await compressImage(blob, 1200, 0.82);
+    const dt = new DataTransfer();
+    dt.items.add(compressed);
+    fileInput.files = dt.files;
+    const url = URL.createObjectURL(compressed);
+    imgEl.onload = () => URL.revokeObjectURL(url);
+    imgEl.src = url;
+    preview.classList.add('has-image');
+    clearErr(fileInput);
+  }, 'image/webp', 0.92);
+});
+
+wishCropModalEl.addEventListener('hidden.bs.modal', () => {
+  if (wishCropper) { wishCropper.destroy(); wishCropper = null; }
+  wishCropImg.src = '';
+});
+
+// ---- file input change → 開裁切視窗 ----
 fileInput.addEventListener('change', (e) => {
   const file = e.target.files?.[0];
   if (!file) {
@@ -396,7 +473,6 @@ fileInput.addEventListener('change', (e) => {
     imgEl.removeAttribute('src');
     return;
   }
-
   const MAX_SIZE = 5 * 1024 * 1024;
   if (file.size > MAX_SIZE) {
     setErr(fileInput, '照片大小不能超過 5MB');
@@ -405,21 +481,17 @@ fileInput.addEventListener('change', (e) => {
     imgEl.removeAttribute('src');
     return;
   }
-
-  const url = URL.createObjectURL(file);
-  imgEl.onload = () => URL.revokeObjectURL(url);
-  imgEl.src = url;
-  preview.classList.add('has-image');
+  fileInput.value = ''; // 清空以便下次選同張圖也能觸發
+  openWishCrop(file);
 });
 
-
-  //（可選）支援拖曳上傳
-  ['dragenter','dragover'].forEach(evt =>
-    preview.addEventListener(evt, (e) => {
-      e.preventDefault();
-      e.dataTransfer && (e.dataTransfer.dropEffect = 'copy');
-      preview.classList.add('dragover');
-    })
+// ---- 拖曳上傳 ----
+['dragenter','dragover'].forEach(evt =>
+  preview.addEventListener(evt, (e) => {
+    e.preventDefault();
+    e.dataTransfer && (e.dataTransfer.dropEffect = 'copy');
+    preview.classList.add('dragover');
+  })
 );
 ['dragleave','drop'].forEach(evt =>
   preview.addEventListener(evt, (e) => {
@@ -428,16 +500,9 @@ fileInput.addEventListener('change', (e) => {
   })
 );
 preview.addEventListener('drop', (e) => {
-  const file = e.dataTransfer.files && e.dataTransfer.files[0];
+  const file = e.dataTransfer.files?.[0];
   if (!file) return;
-  // --- 新增：把拖進來的檔案同步到 <input type="file">，讓下方顯示檔名 ---
-  const dt = new DataTransfer();       // 新增
-  dt.items.add(file);                  // 新增
-  fileInput.files = dt.files;          // 新增
-  const url = URL.createObjectURL(file);
-  imgEl.onload = () => URL.revokeObjectURL(url);
-  imgEl.src = url;
-  preview.classList.add('has-image');
+  openWishCrop(file);
 });
 
 

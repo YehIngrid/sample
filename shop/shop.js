@@ -343,60 +343,154 @@ nextHotBtn.addEventListener("click", () => {
   }
 }
 })
-document.getElementById('mainImage').addEventListener('change', function (e) {
-  const preview = document.getElementById('mainImagePreview');
-  preview.innerHTML = ''; // 清除舊圖
+// ---- 圖片壓縮 helper ----
+function compressImage(blob, maxWidth = 1200, quality = 0.82) {
+  return new Promise(resolve => {
+    const img = new Image();
+    const url = URL.createObjectURL(blob);
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(
+        b => resolve(new File([b], 'image.webp', { type: 'image/webp' })),
+        'image/webp', quality
+      );
+    };
+    img.src = url;
+  });
+}
 
+// ---- 裁切 Modal 共用邏輯 ----
+let shopCropper      = null;
+let shopCropQueue    = [];   // 待裁切的原始 File 物件
+let shopCroppedFiles = [];   // 已裁切+壓縮的結果
+let shopCropTarget   = '';   // 'main' | 'multi'
+let shopCropFromConfirm = false;
+
+const shopCropModalEl = document.getElementById('shopCropModal');
+const shopCropImg     = document.getElementById('shopCropImg');
+const shopCropCounter = document.getElementById('shopCropCounter');
+const shopCropModal   = bootstrap.Modal.getOrCreateInstance(shopCropModalEl);
+
+function openShopCrop(files, target) {
+  shopCropQueue    = Array.from(files);
+  shopCroppedFiles = [];
+  shopCropTarget   = target;
+  processNextShopCrop();
+}
+
+function processNextShopCrop() {
+  if (shopCropQueue.length === 0) { finishShopCrop(); return; }
+  const total   = shopCroppedFiles.length + shopCropQueue.length;
+  const current = shopCroppedFiles.length + 1;
+  shopCropCounter.textContent = total > 1 ? `(${current} / ${total})` : '';
+  if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    shopCropImg.src = e.target.result;
+    shopCropModal.show();
+  };
+  reader.readAsDataURL(shopCropQueue[0]);
+}
+
+// modal 完全顯示後才初始化 Cropper，並確保圖片已載入
+shopCropModalEl.addEventListener('shown.bs.modal', () => {
+  if (shopCropper) shopCropper.destroy();
+  const init = () => {
+    shopCropper = new Cropper(shopCropImg, {
+      viewMode: 1,
+      autoCropArea: 0.9,
+      responsive: true,
+    });
+  };
+  if (shopCropImg.complete && shopCropImg.naturalWidth > 0) {
+    init();
+  } else {
+    shopCropImg.addEventListener('load', init, { once: true });
+  }
+});
+
+document.getElementById('shopCropConfirm').addEventListener('click', () => {
+  if (!shopCropper) return;
+  shopCropFromConfirm = true;
+  const canvas = shopCropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200 });
+  shopCropModal.hide();
+  canvas.toBlob(async (blob) => {
+    const compressed = await compressImage(blob, 1200, 0.82);
+    shopCroppedFiles.push(compressed);
+    shopCropQueue.shift();
+    processNextShopCrop();
+  }, 'image/webp', 0.92);
+});
+
+shopCropModalEl.addEventListener('hidden.bs.modal', () => {
+  if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
+  shopCropImg.src = '';
+  if (!shopCropFromConfirm) {
+    // 使用者取消 → 清空佇列，不更新 input
+    shopCropQueue    = [];
+    shopCroppedFiles = [];
+  }
+  shopCropFromConfirm = false;
+});
+
+function finishShopCrop() {
+  if (shopCropTarget === 'main') {
+    const input = document.getElementById('mainImage');
+    const dt = new DataTransfer();
+    dt.items.add(shopCroppedFiles[0]);
+    input.files = dt.files;
+    const preview = document.getElementById('mainImagePreview');
+    preview.innerHTML = '';
+    const img = document.createElement('img');
+    const url = URL.createObjectURL(shopCroppedFiles[0]);
+    img.onload = () => URL.revokeObjectURL(url);
+    img.src = url;
+    img.style.cssText = 'width:150px;border-radius:8px;border:1px solid #ccc;box-shadow:0 0 6px rgba(0,0,0,0.1);';
+    preview.appendChild(img);
+  } else {
+    const input = document.getElementById('image');
+    const dt = new DataTransfer();
+    shopCroppedFiles.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+    const preview = document.getElementById('previewArea');
+    preview.innerHTML = '';
+    shopCroppedFiles.forEach(f => {
+      const img = document.createElement('img');
+      const url = URL.createObjectURL(f);
+      img.onload = () => URL.revokeObjectURL(url);
+      img.src = url;
+      img.style.cssText = 'width:100px;margin:5px;object-fit:cover;border:1px solid #ccc;border-radius:8px;';
+      preview.appendChild(img);
+    });
+  }
+}
+
+document.getElementById('mainImage').addEventListener('change', function (e) {
   const file = e.target.files[0];
   if (!file) return;
   if (file.size > 5000000) {
-    Swal.fire({
-      icon: 'warning',
-      title: '照片太大',
-      text: '單張照片不能超過 5MB，請壓縮後再上傳。'
-    });
+    Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
+    return;
   }
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    const img = document.createElement('img');
-    img.src = event.target.result;
-    img.style.width = '150px';
-    img.style.borderRadius = '8px';
-    img.style.border = '1px solid #ccc';
-    img.style.boxShadow = '0 0 6px rgba(0,0,0,0.1)';
-    preview.appendChild(img);
-  };
-  reader.readAsDataURL(file);
+  e.target.value = '';
+  openShopCrop([file], 'main');
 });
 
 document.getElementById('image').addEventListener('change', function (e) {
-  const preview = document.getElementById('previewArea');
-  preview.innerHTML = ''; // 清空舊的
-
-  const files = e.target.files;
-  console.log("共選了", files.length, "張圖片");
-
-  Array.from(files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      const img = document.createElement('img');
-      img.src = event.target.result;
-      img.style.width = '100px';
-      img.style.margin = '5px';
-      img.style.objectFit = 'cover';
-      img.style.border = '1px solid #ccc';
-      img.style.borderRadius = '8px';
-      preview.appendChild(img);
-    };
-    if (file.size > 5000000) {
-      Swal.fire({
-        icon: 'warning',
-        title: '照片太大',
-        text: '單張照片不能超過 5MB，請壓縮後再上傳。'
-      });
-    }
-    reader.readAsDataURL(file);
-  });
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+  const oversized = files.find(f => f.size > 5000000);
+  if (oversized) {
+    Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
+    return;
+  }
+  e.target.value = '';
+  openShopCrop(files, 'multi');
 });
 
 // TODO member
