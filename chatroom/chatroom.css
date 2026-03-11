@@ -125,7 +125,11 @@ html, body {
     margin-left: 10px;
     margin-bottom: 15px;
 }
-
+.imgAndMessage {
+    display: flex;
+    margin-top: 5px;
+    animation: fadeIn 0.1s ease-in;
+}
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -188,7 +192,8 @@ html, body {
     color: var(--brand-color);
 }
 .message-self .message-text {
-    background:  linear-gradient(to right, #84a2d4, #82d3d3 );
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    opacity: 0.85;
     color: white;
 }
 
@@ -343,6 +348,7 @@ html, body {
     overflow: hidden;
     border: 1px solid #dde4f0;
     background: #fff;
+    margin-bottom: 15px;
 }
 .combined-bubble img {
     width: 100%;
@@ -357,8 +363,8 @@ html, body {
     white-space: pre-wrap;
 }
 .message-self .combined-bubble {
-    background: #ddf1ff;
-    border-color: #b3d9f5;
+    background: var(--self-bubble-bg, #ddf1ff);
+    border-color: var(--self-bubble-border, #b3d9f5);
 }
 .sendicon:disabled {
     opacity: 0.4;
@@ -478,6 +484,8 @@ html, body {
     transform: translateX(-50%);
     width: 100%;
     max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
     background: #fff;
     border-radius: 20px 20px 0 0;
     z-index: 2001;

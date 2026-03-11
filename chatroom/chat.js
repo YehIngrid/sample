@@ -30,29 +30,30 @@ window.addEventListener('message', function(e) {
     }
 });
 async function canEnterChat() {
-  try {
-      await backendService.whoami();
-      return true;
-  } catch (error) {
-      console.error('Error fetching user info:', error);
-      if (error.response && (error.response.status === 401 || error.response.data.message === 'No JWT token provided')) {
-          Swal.fire({ title: '請先登入會員', icon: 'warning', text: '您需要登入才能使用聊天室功能', showConfirmButton: true, confirmButtonText: '前往登入', showCancelButton: true }).then((result) => {
-              if (result.isConfirmed) {
-                  const currentUrl = window.location.pathname + window.location.search;
-                  window.location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
-              }
-          });
-      } else {
-          Swal.fire({ title: '發生錯誤，請稍後再試', icon: 'error' });
-      }
-      return false;
-  }
+    // 官方公告不需要登入；私人訊息在 chatroom 內部處理
+    return true;
 }
 
 // 帳號層級 SSE：頁面載入即建立連線，接收所有聊天室即時通知（顯示 chaticon 紅點）
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
     if (typeof ChatBackendService === 'undefined') return; // 未引入 ChatBackendService 則略過
     const _notifSvc = new ChatBackendService();
+
+    // 初始未讀檢查：頁面載入時若已有未讀訊息，立即亮紅點
+    try {
+        const rooms = await _notifSvc.listRooms();
+        const username = localStorage.getItem('username');
+        const hasUnread = rooms.data.items?.some(data => {
+            const isOfficial = data.type === 'OFFICIAL';
+            const myself = data.members?.find(m => m.name === username);
+            const isMyMessage = data.lastMessage?.username === myself?.name;
+            return data.lastMessageId != null
+                && myself?.lastReadMessageId !== data.lastMessageId
+                && (isOfficial || !isMyMessage);
+        });
+        if (hasUnread) window.dispatchEvent(new CustomEvent('chatUnread'));
+    } catch (e) { /* 未登入或錯誤，略過 */ }
+
     const _notifSse = new EventSource(
         `${_notifSvc.baseUrl}/api/chat/stream`,
         { withCredentials: true }
@@ -62,6 +63,9 @@ window.addEventListener('load', () => {
         if (data.username !== localStorage.getItem('username')) {
             window.dispatchEvent(new CustomEvent('chatUnread'));
         }
+    });
+    _notifSse.addEventListener('newBroadcast', () => {
+        window.dispatchEvent(new CustomEvent('chatUnread'));
     });
     _notifSse.addEventListener('ping', () => {});
     _notifSse.addEventListener('ready', () => {});

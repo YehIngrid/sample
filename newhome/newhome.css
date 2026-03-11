@@ -5,6 +5,7 @@ html, body {
   width: 100%;
   scroll-behavior: smooth;
   overflow-y: visible;
+  overflow-x: hidden; /* 防止 data-aos 動畫造成水平捲軸 */
 }
 
 #loader {
@@ -157,9 +158,9 @@ border: 1.5px solid #fff
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    height: 90vh;
-    max-width: 80vw;
+    justify-content: space-around;
+    height: 80vh;
+    max-width: 64vw;
     margin: 0 auto;
     gap: 16vw;
     padding: 0 1rem;
@@ -185,7 +186,7 @@ border: 1.5px solid #fff
     backdrop-filter: blur(6px);
 }
 .titlecenter h1 {
-    font-size: 3.8rem;
+    font-size: 5rem;
     color: #fff;
     font-weight: 800;
     margin-bottom: 1rem;
@@ -212,7 +213,7 @@ border: 1.5px solid #fff
 }
 .hero-phone-wrap {
     position: relative;
-    width: 270px;
+    width: 300px;
     animation: heroFloat 3.5s ease-in-out infinite;
 }
 .hero-phone {
@@ -451,6 +452,11 @@ border: 1.5px solid #fff
     padding: 28px;
     border-radius: 16px;
 }
+.function img {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+}
 .questions {
     background-color: #ABDAD5;
     border-radius: 20px;
@@ -648,6 +654,11 @@ right: 0;
 .scroll-btn {
     display: none;
 }
+    .function img {
+        width: 120px;
+        height: 120px;
+        margin: 20px 0px;
+    }
 }
 /* ── Partner section typography ── */
 .partner h2 {
@@ -666,7 +677,23 @@ right: 0;
     font-size: 1.05rem;
     line-height: 2;
 }
-
+@media screen and (max-width: 1020px) {
+    .partner p {
+        font-size: 0.9rem;
+    }
+    .partner li {
+        font-size: 0.9rem;
+    }
+    .partner h2 {
+        font-size: 1.4rem;
+    }
+    .hero-phone-wrap {
+        width: 200px;
+    }
+    .titlecenter h1 {
+        font-size: 3.5rem;
+    }
+}
 @media screen and (max-width: 768px) {
     .questions {
         width: 91vw;
@@ -687,12 +714,13 @@ right: 0;
     }
     .titlecenter {
         flex-direction: column;
+        justify-content: center;
         text-align: center;
         max-width: 91vw;
         gap: 1.5rem;
-        padding: 2rem 0.5rem 5rem;
+        padding: 2rem 0.5rem 100px; /* padding-bottom 讓中心稍微偏上，避免被手機圖擋到 */
         height: auto;
-        min-height: 90vh;
+        min-height: 70vh;
     }
     .hero-left {
         align-items: center;
@@ -710,6 +738,11 @@ right: 0;
     }
     .hero-right {
         order: 2;
+        position: absolute;
+        bottom: -150px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
     }
     .hero-phone-wrap {
         width: 160px;
@@ -742,6 +775,16 @@ right: 0;
     .phonemargin {
         padding-bottom: 1rem;
     }
+    #hero {
+        overflow: visible !important;
+    }
+    #contentofnewhome {
+        overflow: visible;
+    }
+    #next-section {
+        margin-top: 80px !important;
+        padding-top: 120px !important; /* 讓內容從手機圖下方開始，避免被遮住 */
+    }
 }
 @media screen and (max-width: 1020px) {
     .service p {
@@ -770,9 +813,6 @@ right: 0;
 /** 平板以上 */
 @media (max-width: 750px) {
   .goal {
-    padding: 0px 30px;
-  }
-  .infor p {
     padding: 0px 30px;
   }
 }
@@ -869,6 +909,7 @@ right: 0;
     max-width: 600px;
     margin: 0.8rem auto 0;
     line-height: 1.7;
+    margin-top: 100px;
 }
 .members-grid {
     margin-top: 2rem;

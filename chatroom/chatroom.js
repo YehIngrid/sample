@@ -67,19 +67,122 @@ class ChatRoomList {
         if (this.alreadyInit) return;
         this.alreadyInit = true;
         this.setupMobileView();
-        await this.loadRooms();
-        this.connectSSE(); // 帳號層級 SSE，開啟一次即可
-        if (this.currentRoomId) {
-            const roomEl = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
-            if (roomEl) {
-                const name = roomEl.querySelector('.roomName')?.textContent || '未知';
-                await this.switchRoom(this.currentRoomId, name);
+        if (this.userId) {
+            await this.loadRooms();
+            this.connectSSE(); // 帳號層級 SSE，開啟一次即可
+            if (this.currentRoomId) {
+                const roomEl = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
+                if (roomEl) {
+                    const name = roomEl.querySelector('.roomName')?.textContent || '未知';
+                    await this.switchRoom(this.currentRoomId, name);
+                }
             }
+        } else {
+            // 未登入：只載入官方公告（不需登入）
+            await this.loadPublicRooms();
         }
         window.addEventListener('resize', () => this.handleResize());
         this.bindEvents();
         this.putImage();
         this.closePreview();
+    }
+
+    // 未登入用戶：只載入官方公告頻道
+    async loadPublicRooms() {
+        const chatList = document.getElementById('chatList');
+        if (!chatList) return;
+        chatList.innerHTML = '';
+
+        const officialHeader = document.createElement('div');
+        officialHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom';
+        officialHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
+        officialHeader.textContent = '📢 官方公告';
+        chatList.appendChild(officialHeader);
+
+        try {
+            const result = await this.backend.listOfficialChannels(1, 20);
+            const channels = result.data?.items ?? result.data ?? [];
+            if (!channels.length) {
+                const empty = document.createElement('p');
+                empty.className = 'text-center text-muted mt-2 mb-1';
+                empty.style.fontSize = '0.85rem';
+                empty.textContent = '目前沒有官方公告';
+                chatList.appendChild(empty);
+            } else {
+                channels.forEach(ch => {
+                    const item = document.createElement('div');
+                    item.className = 'chat-item';
+                    item.dataset.channelId = ch.id;
+                    item.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <div class="chat-avatar">
+                                <img src="../webP/treasurehub.webp" alt="${this.escapeHtml(ch.name ?? '官方公告')}"
+                                     style="width:45px;height:45px;border-radius:50px;object-fit:cover;border:2px solid #004b97;">
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0 roomName">${this.escapeHtml(ch.name ?? '官方公告')} <span style="font-size:0.6rem;background:#004b97;color:#fff;border-radius:4px;padding:1px 5px;vertical-align:middle;">官方</span></h6>
+                                <small class="text-muted lastMessage">${this.escapeHtml(ch.description ?? '官方公告頻道')}</small>
+                            </div>
+                        </div>`;
+                    chatList.appendChild(item);
+                    item.addEventListener('click', () => {
+                        this.switchPublicChannel(ch.id, ch.name ?? '官方公告');
+                    });
+                });
+            }
+        } catch (err) {
+            const errEl = document.createElement('p');
+            errEl.className = 'text-center text-muted mt-2 mb-1';
+            errEl.style.fontSize = '0.85rem';
+            errEl.textContent = '載入官方公告失敗';
+            chatList.appendChild(errEl);
+        }
+
+        // 私人訊息區：引導登入
+        const privateHeader = document.createElement('div');
+        privateHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom mt-2';
+        privateHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
+        privateHeader.textContent = '私人訊息';
+        chatList.appendChild(privateHeader);
+
+        const loginPrompt = document.createElement('div');
+        loginPrompt.className = 'text-center p-3';
+        loginPrompt.innerHTML = `<p class="text-muted mb-0" style="font-size:0.88rem;">請<a href="../account/account.html" target="_parent" class="text-primary">登入</a>以查看私人訊息</p>`;
+        chatList.appendChild(loginPrompt);
+    }
+
+    // 未登入用戶：切換官方公告頻道（用 channelId 讀廣播歷史）
+    async switchPublicChannel(channelId, name) {
+        if (this.isMobile) { this.hideSidebar(); this.showChatMain(); }
+        this.currentRoomId = null;
+        this.currentRoomName = name;
+        document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+        document.querySelector(`[data-channel-id="${channelId}"]`)?.classList.add('active');
+        document.querySelector('.chat-header h6').textContent = name;
+        this.input.disabled = true;
+        this.sendImagebtn.disabled = true;
+        this.input.placeholder = '官方頻道不支援傳送訊息';
+        this.input.style.backgroundColor = '#f5f5f5';
+
+        const container = document.getElementById('messagesContainer');
+        container.innerHTML = '';
+        this.isInitialLoading = true;
+        try {
+            const before = new Date().toISOString();
+            const history = await this.backend.getBroadcast(channelId, 50, before);
+            const items = (history.data?.items ?? history.data ?? [])
+                .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            if (!items.length) {
+                container.innerHTML = '<p class="text-center text-muted mt-3">沒有公告訊息</p>';
+            } else {
+                items.forEach(msg => this.renderBroadcast(msg));
+                container.scrollTop = container.scrollHeight;
+            }
+        } catch (err) {
+            container.innerHTML = '<p class="text-center text-muted mt-3">載入公告失敗</p>';
+        } finally {
+            this.isInitialLoading = false;
+        }
     }
 
     initPhotoSwipeGallery() {
@@ -172,7 +275,7 @@ class ChatRoomList {
         const container = document.getElementById('messagesContainer');
         const wrapper = document.createElement('div');
         const isSelf = data.isSelf === true || data.username === this.username;
-        wrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
+        wrapper.className = `imgAndMessage ${isSelf ? 'message-self' : 'message-other'}`;
         wrapper.dataset.timestamp = data.timestamp;
         wrapper.dataset.messageId = data.id ?? '';
 
@@ -381,7 +484,18 @@ class ChatRoomList {
                 return;
             }
 
+            const officialRooms = [];
+            const privateRooms = [];
+
             rooms.data.items.forEach(data => {
+                if (data.type === 'OFFICIAL') {
+                    officialRooms.push(data);
+                } else {
+                    privateRooms.push(data);
+                }
+            });
+
+            const renderRoomItem = (data) => {
                 const isOfficial = data.type === 'OFFICIAL';
                 if (isOfficial) {
                     this.officialRoomsSet.add(String(data.id));
@@ -404,7 +518,6 @@ class ChatRoomList {
 
                 // ✅ 用 Map 記錄每個房間的已讀資訊（id + timestamp）
                 if (myself) {
-                    // ✅ members 欄位確認: lastReadMessageId (string), lastReadAt (ISO字串)
                     this.lastReadMap.set(String(data.id), {
                         id: myself.lastReadMessageId ?? null,
                         timestamp: myself.lastReadAt ?? null
@@ -443,7 +556,27 @@ class ChatRoomList {
                         "></span>
                     </div>`;
                 chatList.appendChild(item);
-            });
+            };
+
+            // 官方公告 section
+            if (officialRooms.length > 0) {
+                const offHeader = document.createElement('div');
+                offHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom';
+                offHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
+                offHeader.textContent = '📢 官方公告';
+                chatList.appendChild(offHeader);
+                officialRooms.forEach(renderRoomItem);
+            }
+
+            // 私人訊息 section
+            if (privateRooms.length > 0) {
+                const pvtHeader = document.createElement('div');
+                pvtHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom';
+                pvtHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
+                pvtHeader.textContent = '私人訊息';
+                chatList.appendChild(pvtHeader);
+                privateRooms.forEach(renderRoomItem);
+            }
 
             // ✅ 用 cloneNode 斷開舊的 click listener，避免重複綁定
             const newChatList = chatList.cloneNode(true);
@@ -453,6 +586,17 @@ class ChatRoomList {
                 if (!item) return;
                 this.switchRoom(item.dataset.roomId, item.querySelector('.roomName').textContent);
             });
+
+            // 初始未讀檢查：通知外層 chaticon 顯示紅點
+            const hasUnread = rooms.data.items.some(data => {
+                const isOfficial = data.type === 'OFFICIAL';
+                const myself = data.members?.find(m => m.name === this.username);
+                const isMyMessage = data.lastMessage?.username === myself?.name;
+                return data.lastMessageId != null
+                    && myself?.lastReadMessageId !== data.lastMessageId
+                    && (isOfficial || !isMyMessage);
+            });
+            if (hasUnread) window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
 
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
@@ -519,13 +663,11 @@ class ChatRoomList {
                 this.renderMessage(msg);
             });
 
-            // 等 DOM 渲染完畢再捲動
-            requestAnimationFrame(() => {
+            // 等 DOM 與圖片都算好高度後再捲動
+            setTimeout(() => {
                 this.scrollToFirstUnread(firstUnread);
-                // 用 setTimeout 確保 scrollToFirstUnread 觸發的 scroll 事件
-                // 在 isInitialLoading 重置前被攔截，避免誤觸 loadMoreMessages
                 setTimeout(() => { this.isInitialLoading = false; }, 100);
-            });
+            }, 50);
 
             // ✅ 初始載入時套用對方已讀狀態
             const partnerRead = this.partnerReadMap.get(String(roomId));
@@ -545,8 +687,13 @@ class ChatRoomList {
             return;
         }
         const el = container.querySelector(`[data-message-id="${firstUnread.id}"]`);
-        if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
-        else container.scrollTop = container.scrollHeight;
+        if (el) {
+            // 用相對偏移量直接設定 scrollTop，避免 scrollIntoView 同時捲動 window
+            const offset = el.getBoundingClientRect().top - container.getBoundingClientRect().top;
+            container.scrollTop += offset;
+        } else {
+            container.scrollTop = container.scrollHeight;
+        }
     }
 
     // ✅ 帳號層級 SSE：只連線一次，接收所有聊天室的事件
@@ -936,6 +1083,11 @@ async function openChatWithTarget(targetUserId) {
         // 訊息容器背景設為所選顏色的淡色調
         var tint = hexToRgba(from, 0.07);
         if (tint) root.style.setProperty('--chat-bg-tint', tint);
+        // 自己訊息泡泡背景
+        var selfBg = hexToRgba(from, 0.18);
+        if (selfBg) root.style.setProperty('--self-bubble-bg', selfBg);
+        var selfBorder = hexToRgba(from, 0.38);
+        if (selfBorder) root.style.setProperty('--self-bubble-border', selfBorder);
     }
 
     // 恢復已儲存的主題

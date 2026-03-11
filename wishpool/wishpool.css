@@ -157,42 +157,92 @@ body {
 }
 
 /* ── Wish step list ── */
+.ulstepdiv {
+    padding: 28px 40px;
+    background: linear-gradient(to right bottom, var(--focus-color), var(--focus-border-color));
+    border-radius: 12px;
+    color: #383838;
+    margin: 20px 0;
+}
 .ulstep {
     list-style: none;
     padding: 0;
     margin: 0;
-    margin-bottom: 0px;
-}
-.listep {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 8px;
-}
-.step {
-    min-width: 80px;
-    font-weight: bold;
-    display: inline-block;
-    color: var(--brand-color);
-    font-size: 18px;
-}
-.ulstepdiv {
-    background: linear-gradient(to right bottom, var(--focus-color), var(--focus-border-color));
-    padding: 5px 10px;
-    border-radius: 8px;
-    color: #383838;
-    margin: 20px 0px;
 }
 .ulstepdiv li {
     list-style: none;
-    padding: 5px 0px;
-    font-size: 16px;
+}
+.listep {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+.step-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    border-radius: 50%;
+    background-color: var(--brand-color);
+    color: #fff;
+    flex-shrink: 0;
+}
+.step-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+.step-num {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+}
+.listep-content h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--brand-color);
+    margin: 0 0 4px;
+}
+.listep-content p {
+    font-size: 0.88rem;
+    color: #555;
+    margin: 0;
+}
+.step-arrow {
+    text-align: center;
+    color: var(--brand-color);
+    font-size: 1.1rem;
+    padding: 4px 0;
 }
 @media screen and (max-width: 768px) {
-    .ulstep {
-        padding-left: 10px;
+    .ulstepdiv {
+        padding: 18px 14px;
     }
-    .step {
-        padding-right: 15px;
+    .listep {
+        padding: 14px 16px;
+        gap: 14px;
+    }
+    .step-badge {
+        width: 52px;
+        height: 52px;
+        min-width: 52px;
+    }
+    .step-num {
+        font-size: 1.15rem;
+    }
+    .listep-content h3 {
+        font-size: 0.95rem;
+    }
+    .listep-content p {
+        font-size: 0.82rem;
     }
 }
 
