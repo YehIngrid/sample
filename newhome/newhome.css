@@ -1011,3 +1011,86 @@ right: 0;
     0%   { transform: translate(0, 0) scale(1); }
     100% { transform: translate(30px, 20px) scale(1.08); }
 }
+
+/* ── Step list (ulstep) ── */
+.ulstep {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ulstepdiv li {
+  list-style: none;
+}
+.listep {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+.step-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  border-radius: 50%;
+  background-color: #24b685;
+  color: #fff;
+  flex-shrink: 0;
+}
+.step-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.step-num {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.listep-content h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #24b685;
+  margin: 0 0 4px;
+}
+.listep-content p {
+  font-size: 0.88rem;
+  color: #555;
+  margin: 0;
+}
+.step-arrow {
+  text-align: center;
+  color: #24b685;
+  font-size: 1.1rem;
+  padding: 4px 0;
+}
+@media screen and (max-width: 768px) {
+  .ulstepdiv {
+    padding: 18px 14px;
+  }
+  .listep {
+    padding: 14px 16px;
+    gap: 14px;
+  }
+  .step-badge {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+  }
+  .step-num {
+    font-size: 1.15rem;
+  }
+  .listep-content h3 {
+    font-size: 0.95rem;
+  }
+  .listep-content p {
+    font-size: 0.82rem;
+  }
+}
