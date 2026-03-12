@@ -452,20 +452,38 @@
 
     <section id="所屬分類" class="sec">
       <h2 style="margin-bottom: 20px;">所屬分類 <span class="badge-seller">必填</span></h2>
-      <ul class="bullet">
-        <li><strong>書籍與學籍用品</strong></li>
-        <li>教科書、參考書、文具用品（如計算機、繪圖工具、筆記本）、學習卡片、筆記/習題集等。</li>
-        <li><strong>宿舍與生活用品</strong></li>
-        <li>床墊、衣架、燈具等宿舍用品、小型廚房用品（如電鍋、餐具）、風扇、暖風機等生活設備。</li>
-        <li><strong>學生專用器材</strong></li>
-        <li>實驗器材（護目鏡、手套等）、測量工具（如尺規、測量儀）等。</li>
-        <li><strong>環保生活用品</strong></li>
-        <li>環保餐具（如可重複使用的餐具組、餐盒、水瓶）、購物袋、手提袋等。</li>
-        <li><strong>儲物與收納用品</strong></li>
-        <li>收納盒、文件夾、掛鉤、收納架等。</li>
-        <li><strong>其他</strong></li>
-        <li>若不知道自己販賣的商品類別為何，請選擇其他。</li>
-      </ul>
+      <div class="cat-card-grid">
+        <div class="cat-card">
+          <div class="cat-card-icon"><img src="../svg/book.svg"/></div>
+          <h4>書籍與學籍用品</h4>
+          <p>教科書、參考書、文具用品（如計算機、繪圖工具、筆記本）、學習卡片、筆記/習題集等。</p>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-icon"><img src="../svg/life.svg"/></div>
+          <h4>宿舍與生活用品</h4>
+          <p>床墊、衣架、燈具等宿舍用品、小型廚房用品（如電鍋、餐具）、風扇、暖風機等生活設備。</p>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-icon"><img src="../svg/ruler.svg"/></div>
+          <h4>學生專用器材</h4>
+          <p>實驗器材（護目鏡、手套等）、測量工具（如尺規、測量儀）等。</p>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-icon"><img src="../svg/bag.svg" alt=""></div>
+          <h4>環保生活用品</h4>
+          <p>環保餐具（如可重複使用的餐具組、餐盒、水瓶）、購物袋、手提袋等。</p>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-icon"><img src="../svg/save.svg" alt=""></div>
+          <h4>儲物與收納用品</h4>
+          <p>收納盒、文件夾、掛鉤、收納架等。</p>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-icon"><img src="../svg/Other.svg" alt=""></div>
+          <h4>其他</h4>
+          <p>若不知道自己販賣的商品類別為何，請選擇其他。</p>
+        </div>
+      </div>
     </section>
 
     <section id="商品尺寸" class="sec">
@@ -527,12 +545,12 @@
       <h2>次要照片 <span class="badge-seller">必填</span></h2>
       <p><strong>最多上傳 5 張</strong>，次要照片可以展示商品的其他角度、細節或使用情境，幫助買家更好地了解商品。</p>
       <p>e.g</p>
-      <div class="d-flex exampleContainer" style="overflow-x: scroll;">
-        <img src="../image/ex1.jpg" alt="範例次要圖片1" loading="lazy" style="margin-bottom:10px;width:150px;margin-right:10px;">
-        <img src="../image/ex2.jpg" alt="範例次要圖片2" loading="lazy" style="margin-bottom:10px;width:150px;margin-right:10px;">
-        <img src="../image/ex3.jpg" alt="範例次要圖片3" loading="lazy" style="margin-bottom:10px;width:150px;margin-right:10px;">
-        <img src="../image/ex4.jpg" alt="範例次要圖片4" loading="lazy" style="margin-bottom:10px;width:150px;margin-right:10px;">
-        <img src="../image/ex5.jpg" alt="範例次要圖片5" loading="lazy" style="margin-bottom:10px;width:150px;">
+      <div class="exampleContainer">
+        <img src="../image/ex1.jpg" alt="範例次要圖片1" loading="lazy" style="margin-bottom:10px;margin-right:10px;" width="120">
+        <img src="../image/ex2.jpg" alt="範例次要圖片2" loading="lazy" style="margin-bottom:10px;margin-right:10px;" width="120">
+        <img src="../image/ex3.jpg" alt="範例次要圖片3" loading="lazy" style="margin-bottom:10px;margin-right:10px;" width="120">
+        <img src="../image/ex4.jpg" alt="範例次要圖片4" loading="lazy" style="margin-bottom:10px;margin-right:10px;" width="120">
+        <img src="../image/ex5.jpg" alt="範例次要圖片5" loading="lazy" style="margin-bottom:10px;" width="120">
       </div>
     </section>
 
@@ -623,9 +641,9 @@
               
               <br/>
       
-              <label for="price" class="form-label">售價</label>
+              <label for="price" class="form-label">售價（元）</label>
               <div class="d-flex">
-                  <input type="number" id="price" name="price" class="formprice form-control"/><span class="formpricespan">新台幣（元）</span>
+                  <input type="number" id="price" name="price" class="formprice form-control"/>
               </div>
               <br />
               <label for="category" class="form-label">所屬分類</label>
@@ -648,20 +666,27 @@
           </div>
           
           <div class="right_form">
-            <label for="size">商品尺寸</label><br>
-              <input type="radio" id="size_big" name="size" value="2"/><label for="size_big" class="formpricespan">大</label>
-              <input type="radio" id="size_medium" name="size" value="1"/><label for="size_medium" class="formpricespan">中</label>
-              <input type="radio" id="size_small" name="size" value="0"/><label for="size_small" class="formpricespan">小</label>
+            <label for="size" class="form-label">商品尺寸</label>
+            <select name="size" id="size" class="form-control">
+              <option value="">請選擇商品尺寸</option>
+              <option value="2">大（大型家具、電器等，長寬高 &gt; 150cm）</option>
+              <option value="1">中（書籍、文具用品等，30cm–150cm）</option>
+              <option value="0">小（小型電子產品、配件等，&lt; 30cm）</option>
+            </select>
               <br />
-              <label for="neworold">新舊程度</label>
+            <label for="new_or_old" class="form-label">新舊程度</label>
               <br>
-              <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">商品外觀狀態 ; 若不清楚請點擊此表單左上角詳細資訊</small><br>
-              <input type="radio" id="neworold_1" name="new_or_old" value="1"><label for="neworold_1" class="formpricespan">全新</label>
-              <input type="radio" id="neworold_2" name="new_or_old" value="2"><label for="neworold_2" class="formpricespan">幾乎全新</label>
-              <input type="radio" id="neworold_3" name="new_or_old" value="3"><label for="neworold_3" class="formpricespan">半新</label><br>
-              <input type="radio" id="neworold_4" name="new_or_old" value="4"><label for="neworold_4" class="formpricespan">適中</label>
-              <input type="radio" id="neworold_5" name="new_or_old" value="5"><label for="neworold_5" class="formpricespan">稍舊</label>
-              <input type="radio" id="neworold_6" name="new_or_old" value="6"><label for="neworold_6" class="formpricespan">全舊</label><br><br>
+            <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">商品外觀狀態 ; 若不清楚請點擊此表單左上角詳細資訊</small>
+            <select name="new_or_old" id="new_or_old" class="form-control" style="margin-top: 10px;">
+              <option value="">請選擇新舊程度</option>
+              <option value="1">全新（未使用過的商品）</option>
+              <option value="2">幾乎全新（使用次數極少，狀態良好）</option>
+              <option value="3">半新（使用過，但狀態良好）</option>
+              <option value="4">適中（有明顯使用痕跡，仍可正常使用）</option>
+              <option value="5">稍舊（有較多使用痕跡，可能有輕微損壞）</option>
+              <option value="6">全舊（明顯使用痕跡，可能有較大損壞或缺陷）</option>
+            </select>
+            <br><br>
               <label for="age">物品年齡(年)</label><br>
               <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">單位為年，若不到一年請選 0 年，若未知請填 -1</small>
               <div class="col-lg-6 col-12" style="margin-top: 10px;">

@@ -5,6 +5,6 @@
       "key": "/Users/ingridyeh/localhost-key.pem",
       "passphrase": ""   // 如果有設定密碼要填
     },
-    "liveServer.settings.port": 5501
+    "liveServer.settings.port": 5500
   }
   

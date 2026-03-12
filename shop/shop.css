@@ -2004,9 +2004,6 @@ html{ scroll-behavior:smooth; }
 /* RWD：手機把左欄改為頂部水平目錄 */
 @media (max-width: 992px){
   .wrap-seller{ grid-template-columns:1fr; }
-  .exampleContainer {
-    max-width: 70%;
-  }
   .toc-seller{
     position:static; display:grid; grid-auto-flow:column; gap:8px;
     overflow-x:auto; scrollbar-width:thin; align-items:center;
@@ -2443,4 +2440,53 @@ html{ scroll-behavior:smooth; }
 .swipe-dot-more {
   background: #e4e4e4;
   opacity: 0.7;
+}
+
+/* ── 所屬分類 card grid ── */
+.cat-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.cat-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  background: #f8fbff;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.cat-card:hover {
+  box-shadow: 0 4px 16px rgba(77,129,183,0.13);
+  transform: translateY(-2px);
+}
+.cat-card-icon {
+  font-size: 1.6rem;
+  color: var(--brand);
+}
+.cat-card-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.cat-card h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--brand);
+}
+.cat-card p {
+  margin: 0px 5px 1px;
+  font-size: 0.83rem;
+  color: #555;
+  line-height: 1.6;
+}
+@media (max-width: 768px) {
+  .cat-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

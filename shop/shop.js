@@ -252,13 +252,13 @@ nextHotBtn.addEventListener("click", () => {
   }
 
   // 4. 尺寸
-  if (![...document.getElementsByName('size')].some(x => x.checked)) {
+  if (!document.getElementById('size').value) {
     Swal.fire({ title: "請選擇商品尺寸", icon: "warning" });
     return;
   }
 
   // 5. 新舊程度
-  if (![...document.getElementsByName('new_or_old')].some(x => x.checked)) {
+  if (!document.getElementById('new_or_old').value) {
     Swal.fire({ title: "請選擇商品的新舊程度", icon: "warning" });
     return;
   }
