@@ -197,8 +197,10 @@ updateScrollbarVisibility();
 
 
 window.addEventListener('resize', () => {
-updateFakeScrollbar();
-updateScrollbarVisibility();
+requestAnimationFrame(() => {
+  updateFakeScrollbar();
+  updateScrollbarVisibility();
+});
 });
 
 

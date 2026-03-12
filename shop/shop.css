@@ -1246,21 +1246,17 @@ button {
 }
 .fontspecial {
   border-radius: 50%;
-  background-color: #004b97; 
-  border: 3px solid #7abafa;
+  color: #004b97; 
   padding: 2px 6px;
   font-size: 1.5rem;
   margin-right: 10px;
-  color: #fff;
 }
 .specialsort {
-  background-color: #004b97;
+  color: #004b97;
   padding: 3px;
-  color: #fff;
   font-size: 1.2rem;
   border-radius: 5px;
-  margin-right: 30px;
-  border: #7abafa 2px solid;
+  margin-right: 10px;
 }
 #seller .nav-link {
   color: #000 !important;
@@ -1388,6 +1384,9 @@ button {
   }
   .mobile-news-slider {
     display: block;
+  }
+  .exampleContainer {
+    max-width: 270px;
   }
 }
 .glass {
@@ -2005,6 +2004,9 @@ html{ scroll-behavior:smooth; }
 /* RWD：手機把左欄改為頂部水平目錄 */
 @media (max-width: 992px){
   .wrap-seller{ grid-template-columns:1fr; }
+  .exampleContainer {
+    max-width: 70%;
+  }
   .toc-seller{
     position:static; display:grid; grid-auto-flow:column; gap:8px;
     overflow-x:auto; scrollbar-width:thin; align-items:center;
