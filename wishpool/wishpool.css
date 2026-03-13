@@ -871,14 +871,92 @@ body {
 }
 .time { font-size: 10px; }
 .receive { font-size: 14px; }
-#notificationPanel {
-    width: min(340px, calc(100vw - 20px)) !important;
-    max-height: 60vh !important;
-    height: auto !important;
-    top: 68px !important;
-    right: 12px !important;
-    border-radius: 12px !important;
+
+.notif-panel {
+    width: min(340px, calc(100vw - 20px));
+    max-height: 70vh;
+    top: 64px;
+    right: 12px;
+    border-radius: 14px;
+    z-index: 1080;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
 }
+.notif-panel.open { display: flex; }
+
+.notif-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0;
+}
+.notif-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111;
+}
+
+.notif-list {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background 0.15s;
+    cursor: pointer;
+}
+.notif-item:hover { background: #f7faff; }
+.notif-item.notif-unread { background: #eef5ff; }
+.notif-item.notif-unread:hover { background: #e0ecff; }
+
+.notif-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.notif-body {
+    flex: 1;
+    min-width: 0;
+}
+.notif-text {
+    font-size: 0.84rem;
+    color: #222;
+    line-height: 1.45;
+    word-break: break-word;
+}
+.notif-time {
+    font-size: 0.72rem;
+    color: #999;
+    margin-top: 3px;
+}
+
+.notif-footer {
+    padding: 10px 16px;
+    border-top: 1px solid #f0f0f0;
+    flex-shrink: 0;
+    text-align: center;
+}
+.notif-view-all {
+    background: none;
+    border: none;
+    color: var(--brand-color);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 0;
+    width: 100%;
+    transition: opacity 0.2s;
+}
+.notif-view-all:hover { opacity: 0.75; }
 
 /* ── About page ── */
 .cometrue {
