@@ -11,6 +11,15 @@
     margin-top: 3vh;
     margin-bottom: 10vh;
   }
+  .icon-button {
+  color: #004b97;
+  cursor: pointer !important;
+  font-size: 1.2rem;
+  display: inline-block;
+  font-weight: 700;
+  padding: 8px 16px;
+  transition: background-color 0.3s, color 0.3s;
+}
   @media (max-width: 400px) {
     .product-container {
       max-width: 95vw;
@@ -232,7 +241,6 @@
   display: flex;
   overflow-x: auto;
   gap: 0.5rem;
-  padding: 0.5rem 0;
   margin-top: 1rem;
   scroll-behavior: smooth;
 }
@@ -444,6 +452,7 @@
 .rate {
   background-color: #cfe2ff;
   padding: 10px;
+  border-radius:1.375rem;
 }
 .rate h3 {
   font-size: 4rem;
@@ -509,10 +518,9 @@
       width: 100%;
       max-width: 480px;          /* 你可以依需求調整 */
       aspect-ratio: 1 / 1;       /* 固定為正方形容器 */
-      border: 1px solid #e5e7eb;
+      box-shadow: 0 0 0 1px rgba(202, 229, 255, 0.35);
       border-radius: .5rem;
       overflow: hidden;
-      background: #fafafa;
     }
     .main-preview img {
       width: 100%;
@@ -618,6 +626,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 15px;
 }
 .seller-items-container .hotItemPrice {
   position: absolute;
@@ -625,7 +634,7 @@
   left: 0;
   right: 0;
   margin: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(36, 61, 117, 0.45);
   color: #fff;
   font-size: 0.82rem;
   font-weight: 600;

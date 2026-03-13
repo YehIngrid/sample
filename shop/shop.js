@@ -108,6 +108,15 @@ window.addEventListener('click', (event) => {
 
 
 document.addEventListener('DOMContentLoaded', function() {
+  // 目錄連結用 scrollIntoView，避免 hash 寫入 history 造成需多按一次返回
+  document.querySelectorAll('.toc-seller a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
   backendService = new BackendService();
   let page = 1;
   let limit = 6;
@@ -138,8 +147,8 @@ function renderItems(items){
       div.innerHTML = `
         <div class="card">
           <div class="img-box">
-            <img src="../svg/topicon.svg" class="hot-top-icon" alt="">
-            <img class="main" src="${item.mainImage}" alt="${esc(item.name)}">
+            <img src="../svg/topicon.svg" class="hot-top-icon" alt="" width="46" height="46" decoding="async">
+            <img class="main" src="${item.mainImage}" alt="${esc(item.name)}" width="148" height="148" loading="lazy" decoding="async">
             <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${esc(item.price)}</p>
           </div>
           <div class="hotItemName">${esc(item.name)}</div>
@@ -151,6 +160,8 @@ function renderItems(items){
       if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
     })
   });
+  // 等瀏覽器排版完再判斷是否溢出
+  requestAnimationFrame(updateHotAlignment);
 }
 function updatePager(pg){
   prevHotBtn.disabled = !pg.hasPrevPage;
@@ -187,6 +198,11 @@ container.scrollLeft + container.clientWidth < container.scrollWidth - 1;
 fakeBar.classList.toggle('show', canScrollRight);
 }
 
+function updateHotAlignment() {
+  const overflows = container.scrollWidth > container.clientWidth;
+  container.classList.toggle('overflows', overflows);
+}
+
 
 container.addEventListener('scroll', () => {
 requestAnimationFrame(() => {
@@ -200,6 +216,7 @@ window.addEventListener('resize', () => {
 requestAnimationFrame(() => {
   updateFakeScrollbar();
   updateScrollbarVisibility();
+  updateHotAlignment();
 });
 });
 
@@ -207,6 +224,7 @@ requestAnimationFrame(() => {
 // 初始化
 updateFakeScrollbar();
 updateScrollbarVisibility();
+updateHotAlignment();
 
 prevHotBtn.addEventListener("click", () => {
   if (page > 1) fetchPage(page - 1);

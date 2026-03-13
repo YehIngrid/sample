@@ -997,21 +997,16 @@ tbody > tr:nth-of-type(even) {
 }
 
 .icon-button {
-  background-color: #4D81B7;
-  color: #fff;
-  border-radius: 50px;
+  color: #004b97;
   cursor: pointer !important;
   font-size: 1.2rem;
   display: inline-block;
   font-weight: 700;
-  padding: 10px 20px;
+  padding: 8px 16px;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .icon-button:hover, .icon-button:focus {
-  background-color: #004b9769;
-  color: #fff;
-  text-decoration: none;
 }
 .wishadd{
   background-image: url('../svg/wishadd.svg');
@@ -1657,11 +1652,9 @@ button {
 .top {
   margin-bottom: 40px;
 }
-@media screen and (max-width: 768px) {
-  .hot-items-container {
-    justify-content: flex-start;
-  }
-  
+/* 超出容器寬度時改靠左，由 JS 動態切換 */
+.hot-items-container.overflows {
+  justify-content: flex-start;
 }
   
   .hot-items-container::-webkit-scrollbar {

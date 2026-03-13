@@ -3,6 +3,7 @@ let wpbackendService;
 
 // ── Constants ──
 const CARD_COLORS = ['#FFD966','#FF9F9F','#A8D8EA','#B5EAD7','#FFDAC1','#C7CEEA','#E2F0CB','#F7CAC9'];
+const PHOTO_CARD_COLORS = ['#C1E8DD','#BDD6E1'];
 const PRIORITY_LABEL = { LOW:'不急', MEDIUM:'一般', HIGH:'緊急', 1:'不急', 2:'一般', 3:'急需' };
 const PRIORITY_COLOR  = { LOW:'#6bb56b', MEDIUM:'#e6a817', HIGH:'#e05353', 1:'#6bb56b', 2:'#e6a817', 3:'#e05353' };
 
@@ -668,7 +669,9 @@ function createWishCard(wish, isMyWish) {
     (isRead ? ' read' : '') +
     (isActive ? '' : ' wish-disabled');
   wrapper.dataset.id = wish.id;
-  wrapper.style.setProperty('--card-color', randomCardColor());
+  wrapper.style.setProperty('--card-color', wish.photoURL
+    ? PHOTO_CARD_COLORS[Math.floor(Math.random() * PHOTO_CARD_COLORS.length)]
+    : '#ffffff');
   wrapper.dataset.tags = generateTags(wish);
 
   const expiresAt = wish.expiresAt ? new Date(wish.expiresAt) : null;
@@ -684,8 +687,8 @@ function createWishCard(wish, isMyWish) {
     : '';
 
   const mediaHtml = wish.photoURL
-    ? `<img class="wf-photo" src="${wish.photoURL}" alt="${wish.itemName}" loading="lazy">`
-    : `<img class="wf-logo" src="../webP/treasurehub.webp" alt="拾貨寶庫">`;
+    ? `<div class="wf-media"><img class="wf-photo" src="${wish.photoURL}" alt="${wish.itemName}" loading="lazy"></div>`
+    : `<img class="wf-wishbg" src="../svg/wishbg.svg" alt="" aria-hidden="true">`;
 
   wrapper.innerHTML = `
     <div class="wish-card">
@@ -698,7 +701,7 @@ function createWishCard(wish, isMyWish) {
         </div>
         <div class="wf-price">收購 NT$${wish.maxPrice}</div>
         ${statusBadgeHtml}
-        <div class="wf-media">${mediaHtml}</div>
+        ${mediaHtml}
       </div>
       <div class="wish-card-back">
         <div class="wb-scroll">

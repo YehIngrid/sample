@@ -434,6 +434,18 @@ body {
     padding-bottom: 5px;
     width: 100%;
 }
+.wp-mobile-tabs {
+    justify-content: space-around;
+    padding: 2px 0 6px;
+}
+.wp-mobile-tabs .spa-tab {
+    font-size: 12px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.container-fluid1 {
+    padding: 0 !important;
+}
 
 /* ── Cards grid ── */
 .wishgrid {
@@ -479,7 +491,7 @@ body {
     height: 100%;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-    border-radius: 14px;
+    border-radius: 8px;
 }
 
 /* ── Front face ── */
@@ -506,7 +518,7 @@ body {
         rgba(0,0,0,0.05) 48%,
         transparent 53%
     );
-    border-radius: 0 0 14px 0;
+    border-radius: 0 0 8px 0;
     transition: width 0.28s ease, height 0.28s ease;
     pointer-events: none;
 }
@@ -524,8 +536,8 @@ body {
     margin-bottom: 5px;
 }
 .wf-avatar {
-    width: 26px;
-    height: 26px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -587,6 +599,13 @@ body {
     max-width: 72px;
     opacity: 0.45;
 }
+.wf-wishbg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+}
 
 /* ── Card back face ── */
 .wish-card-back {
@@ -642,7 +661,7 @@ body {
     width: 100%;
     border-radius: 7px;
     object-fit: cover;
-    max-height: 110px;
+    max-height: 130px;
     display: block;
     cursor: pointer;
 }
@@ -911,8 +930,7 @@ body {
     .card-title { font-size: 14px; }
     .card-header { font-size: 12px; }
     .leftsort {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-bottom: 10px;
     }
     .contactbtn {
         padding: 8px 8px;
