@@ -24,7 +24,7 @@ async function loadNotifications() {
     item.className = "notif-item" + (n.isRead ? "" : " notif-unread");
 
     item.innerHTML = `
-      <img src="${n.seller.avatar}" class="notif-avatar" width="40" height="40" alt="">
+      <img src="${n.seller.avatar}" class="notif-avatar" width="40" height="40" alt="賣家頭像">
       <div class="notif-body">
         <div class="notif-text">
           <strong>${n.seller.name}</strong> 回應了你的願望，媒合商品：${n.product.name}

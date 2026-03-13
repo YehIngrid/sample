@@ -759,15 +759,15 @@ function renderTable(list = []) {
         <td>
           <div class="d-flex gap-3">
             <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="check" data-id="${id}">
-              <img src="../svg/checkSell.svg" alt=""/>
+              <img src="../svg/checkSell.svg" alt="查看商品按鈕"/>
               <div>查看商品</div>
             </button>
             <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="編輯商品" data-id="${id}">
-              <img src="../svg/editSell.svg" alt=""/>
+              <img src="../svg/editSell.svg" alt="編輯此商品按鈕"/>
               <div>編輯商品</div>
             </button>
             <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="delete" data-id="${id}">
-              <img src="../svg/deleteSell.svg" alt=""/>
+              <img src="../svg/deleteSell.svg" alt="永久下架此商品按鈕"/>
               <div>永久下架</div>
             </button>
           </div>
@@ -831,15 +831,15 @@ function renderCards(list = []) {
             </div>
             <div class="mt-auto d-flex justify-content-around gap-2">
               <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="check" data-id="${id}">
-                <img src="../svg/checkSell.svg" alt=""/>
+                <img src="../svg/checkSell.svg" alt="查看商品按鈕"/>
                 <div>查看商品</div>
               </button>
               <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="編輯商品" data-id="${id}">
-                <img src="../svg/editSell.svg" alt=""/>
+                <img src="../svg/editSell.svg" alt="編輯此商品按鈕"/>
                 <div>編輯商品</div>
               </button>
               <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="delete" data-id="${id}">
-                <img src="../svg/deleteSell.svg" alt=""/>
+                <img src="../svg/deleteSell.svg" alt="永久下架此商品按鈕"/>
                 <div>永久下架</div>
               </button>
             </div>

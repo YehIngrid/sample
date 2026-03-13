@@ -688,13 +688,13 @@ function createWishCard(wish, isMyWish) {
 
   const mediaHtml = wish.photoURL
     ? `<div class="wf-media"><img class="wf-photo" src="${wish.photoURL}" alt="${wish.itemName}" loading="lazy"></div>`
-    : `<img class="wf-wishbg" src="../svg/wishbg.svg" alt="" aria-hidden="true">`;
+    : `<img class="wf-wishbg" src="../svg/wishbg.svg" alt="拾貨寶庫，校園二手電商平台" aria-hidden="true">`;
 
   wrapper.innerHTML = `
     <div class="wish-card">
       <div class="wish-card-front">
         <div class="wf-header">
-          <img class="wf-avatar" src="${avatarSrc}" alt=""
+          <img class="wf-avatar" src="${avatarSrc}" alt="許願者頭像"
                onerror="this.src='../webP/default-avatar.webp'">
           <div class="wf-title">${wish.itemName}</div>
           <div class="wf-deadline">${deadlineText}</div>
@@ -801,7 +801,7 @@ function renderCardBack(backScrollEl, d, wishId, isMyWish, inner) {
         <span class="wb-price">收購 NT$${d.maxPrice || 0}</span>
       </div>
       <div class="wb-wisher">
-        <img class="wb-wisher-avatar" src="${ownerAvatar}" alt=""
+        <img class="wb-wisher-avatar" src="${ownerAvatar}" alt="許願者頭像"
              onerror="this.src='../webP/default-avatar.webp'">
         <span class="wb-wisher-name">${ownerName}</span>
       </div>

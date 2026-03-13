@@ -147,7 +147,7 @@ function renderItems(items){
       div.innerHTML = `
         <div class="card">
           <div class="img-box">
-            <img src="../svg/topicon.svg" class="hot-top-icon" alt="" width="46" height="46" decoding="async">
+            <img src="../svg/topicon.svg" class="hot-top-icon" alt="熱門商品標誌" width="46" height="46" decoding="async">
             <img class="main" src="${item.mainImage}" alt="${esc(item.name)}" width="148" height="148" loading="lazy" decoding="async">
             <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${esc(item.price)}</p>
           </div>

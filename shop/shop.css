@@ -353,7 +353,7 @@ ul{
   padding-bottom: 3%;
 }
 .form-store{
-  background-color: #fbfbfb;
+  background-color: aliceblue;
   margin: 1.2rem;
   box-shadow: 0 0 6px rgba(0,0,0,0.2);
   border-radius: 10px;
@@ -389,7 +389,7 @@ ul{
     padding-bottom: 3%;
   }
   .form-store{
-    background-color: #fbfbfb;
+    background-color: aliceblue;
     border-radius: 5px;
     padding: 1.5rem;
     padding-bottom: 7rem;
