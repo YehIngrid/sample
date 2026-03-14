@@ -1,3 +1,7 @@
+import BackendService from '../BackendService.js';
+import wpBackendService from '../wpBackendService.js';
+import '../default/default.js';
+
 let wpbackendService;
 let backendService;
 let wishId = new URLSearchParams(location.search).get('id');

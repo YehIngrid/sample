@@ -1,6 +1,4 @@
-axios.defaults.withCredentials = true;
-
-class wpBackendService {
+export default class wpBackendService {
     constructor() {
         this.baseUrl = 'https://thpr.hlc23.dev/api/wishpool';
         this.http = axios.create({ baseURL: this.baseUrl });

@@ -1,3 +1,6 @@
+import BackendService from '../BackendService.js';
+import '../default/default.js';
+
 // ── Skeleton helper ──
 function commoditySkeletonHTML(n = 12) {
   return Array.from({length: n}, () => `

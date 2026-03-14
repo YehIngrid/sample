@@ -1,6 +1,11 @@
+import BackendService from '../BackendService.js';
+import wpBackendService from '../wpBackendService.js';
+import '../default/default.js';
+
 let backendService;
 let wpbackendService;
 let chatInnerWin;
+let chatInnerDoc;
 let chatRoomList;
 
 // ── Skeleton helpers ──

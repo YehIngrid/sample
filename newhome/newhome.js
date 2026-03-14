@@ -345,3 +345,7 @@ questions.forEach(q => {
 
   });
 });
+
+window.toggleLang = toggleLang;
+window.scrollToNext = scrollToNext;
+window.scrollCards = scrollCards;

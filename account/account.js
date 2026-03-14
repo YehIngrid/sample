@@ -1,3 +1,6 @@
+import BackendService from '../BackendService.js';
+import '../default/default.js';
+
 //TODO 當頁面載入完畢後隱藏 loader，顯示內容
 window.onload = function() {
   var loader = document.getElementById('loader');
@@ -393,3 +396,5 @@ document.querySelectorAll(".pwd").forEach((pwd) => {
 //   e.preventDefault();
 //   sendResetEmail();
 // });
+
+window.startCountdown = startCountdown;

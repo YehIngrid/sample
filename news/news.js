@@ -138,3 +138,8 @@ let filteredData = data;  // 預設為全部資料
     // 預設載入「全部公告」
     filterNews("全部公告");
 
+window.renderNews = renderNews;
+window.showNewsDetail = showNewsDetail;
+window.filterNews = filterNews;
+window.showNewsList = showNewsList;
+

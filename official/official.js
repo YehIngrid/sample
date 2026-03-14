@@ -1,3 +1,6 @@
+import BackendService from '../BackendService.js';
+import ChatBackendService from '../chatroom/ChatBackendService.js';
+
 const chatSvc = new ChatBackendService();
 const backendSvc = new BackendService();
 

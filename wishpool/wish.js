@@ -1,3 +1,18 @@
+import BackendService from '../BackendService.js';
+
+const backendService = new BackendService();
+
+function updateBadge(count) {
+  const badge = document.getElementById('notificationBadge');
+  if (!badge) return;
+  if (count > 0) {
+    badge.textContent = count;
+    badge.classList.remove('d-none');
+  } else {
+    badge.classList.add('d-none');
+  }
+}
+
 function relativeTime(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);

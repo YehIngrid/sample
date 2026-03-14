@@ -1,3 +1,7 @@
+import BackendService from '../BackendService.js';
+import ChatBackendService from '../chatroom/ChatBackendService.js';
+import wpBackendService from '../wpBackendService.js';
+
 let backendService;
 let chatService;
 let chatInnerWin; // 用於存放 iframe 的 window 物件
@@ -1804,5 +1808,7 @@ async function openPartnerReviewModal(orderId, isSell) {
     width: 500,
   });
 }
+window.goToPage = goToPage;
+
 const scoreStar = document.querySelector('.score');
 scoreStar.textContent = renderStars(Number(scoreStar.textContent));

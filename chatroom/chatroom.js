@@ -1,3 +1,6 @@
+import BackendService from '../BackendService.js';
+import ChatBackendService from './ChatBackendService.js';
+
 class ChatRoomList {
     constructor(initialRoomId = null) {
         this.backend = new ChatBackendService();

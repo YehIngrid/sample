@@ -1,3 +1,7 @@
+import BackendService from '../BackendService.js';
+import ChatBackendService from '../chatroom/ChatBackendService.js';
+import { formatTaipeiTime, requireLogin } from '../default/default.js';
+
 // ── Skeleton helper ──
 function sellerProductSkeletonHTML(n = 6) {
   return Array.from({length: n}, () => `

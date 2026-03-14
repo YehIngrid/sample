@@ -1,3 +1,7 @@
+import BackendService from '../BackendService.js';
+import ChatBackendService from '../chatroom/ChatBackendService.js';
+import '../default/default.js';
+
 // ================== Service ==================
 let backendService = null;
 let chatService = null;

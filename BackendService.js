@@ -1,6 +1,6 @@
 axios.defaults.withCredentials = true;
 
-class BackendService {
+export default class BackendService {
     constructor() {
         this.baseUrl = 'https://thpr.hlc23.dev';
         this.http = axios.create({ baseURL: this.baseUrl });

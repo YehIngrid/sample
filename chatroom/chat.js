@@ -1,3 +1,8 @@
+import ChatBackendService from './ChatBackendService.js';
+
+const talkInterface = document.getElementById('talkInterface');
+const chatopen = document.getElementById('chaticon');
+
 async function toggleChatInterface() {
   const isMobile = window.innerWidth <= 991;
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
@@ -36,7 +41,6 @@ async function canEnterChat() {
 
 // 帳號層級 SSE：頁面載入即建立連線，接收所有聊天室即時通知（顯示 chaticon 紅點）
 window.addEventListener('load', async () => {
-    if (typeof ChatBackendService === 'undefined') return; // 未引入 ChatBackendService 則略過
     const _notifSvc = new ChatBackendService();
 
     // 初始未讀檢查：頁面載入時若已有未讀訊息，立即亮紅點
@@ -71,3 +75,6 @@ window.addEventListener('load', async () => {
     _notifSse.addEventListener('ready', () => {});
     _notifSse.onerror = () => { _notifSse.close(); };
 });
+
+window.toggleChatInterface = toggleChatInterface;
+window.canEnterChat = canEnterChat;

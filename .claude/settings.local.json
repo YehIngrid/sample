@@ -3,7 +3,10 @@
     "allow": [
       "Bash(grep -n \"font-size.*0\\\\.\" \"c:\\\\Users\\\\ingridyeh\\\\Desktop\\\\sample\\\\sample\"/**/*.css)",
       "Bash(find \"c:\\\\Users\\\\ingridyeh\\\\Desktop\\\\sample\\\\sample\" -name \"*.css\" -exec grep -h \"font-size.*rem\" {} ;)",
-      "Bash(dir \"C:\\\\Users\\\\ingridyeh\\\\Desktop\\\\sample\\\\sample\")"
+      "Bash(dir \"C:\\\\Users\\\\ingridyeh\\\\Desktop\\\\sample\\\\sample\")",
+      "Bash(grep -E \"\\\\.\\(json|yaml|yml|js|html\\)$\")",
+      "Bash(find /c/Users/ingridyeh/Desktop/sample/sample -maxdepth 1 -type f \\\\\\(-name *.json -o -name *.yaml -o -name *.yml -o -name *.config.* -o -name .env* \\\\\\))",
+      "Bash(grep -v \"^.*//.*backendService\")"
     ]
   }
 }

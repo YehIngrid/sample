@@ -1,5 +1,4 @@
-axios.defaults.withCredentials = true;
-class ChatBackendService {
+export default class ChatBackendService {
     constructor() {
         this.baseUrl = 'https://thpr.hlc23.dev';
         this.http = axios.create({ baseURL: this.baseUrl });
