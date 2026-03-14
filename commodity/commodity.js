@@ -388,7 +388,7 @@ function applyFilters(items) {
     result = result.filter(p => p.newOrOld <= newOrOld);
   }
   const filterResultCountEl = document.getElementById('filterResultCount');
-  resultlength = result.length;
+  let resultlength = result.length;
   if(!resultlength || resultlength === 0){
     resultlength = 0;
     productRow.innerHTML = '';
