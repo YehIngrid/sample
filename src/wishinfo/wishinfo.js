@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
-import '../../default/default.js';
+import '../default/default.js';
 
 let wpbackendService;
 let backendService;
