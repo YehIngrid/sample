@@ -196,7 +196,14 @@
 </div>
 <div class="smallmysection">
   <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
-  
+
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      </div>
+
       <div class="carousel-inner">
         <div class="carousel-item active">
           <a href="../shop/shop.html?page=seller"><img src="../svg/treasurehubad.svg" class="d-block w-100" alt="讓寶物找到新的歸屬，拾貨寶庫提供二手商品販賣平台banner" fetchpriority="high"></a>
@@ -411,9 +418,9 @@
     </div>
     <!-- 電腦版分頁按鈕 (hidden on mobile) -->
     <div class="pager" id="newPager">
-      <button id="newPrev">上一頁</button>
+      <button id="newPrev">‹ 上一頁</button>
       <span id="newInfo"></span>
-      <button id="newNext">下一頁</button>
+      <button id="newNext">下一頁 ›</button>
     </div>
   </div>
 </main>

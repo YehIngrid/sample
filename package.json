@@ -1,0 +1,12 @@
+{
+  "name": "treasurehub",
+  "version": "1.0.0",
+  "description": "TreasureHub 拾貨寶庫 — local dev server",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
