@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
-import '../default/default.js';
+import '../../default/default.js';
 
 let backendService;
 let wpbackendService;
@@ -890,7 +890,7 @@ async function handleContactWisher(wishId, btn) {
         cancelButtonText: '關閉'
       });
       if (goSell.isConfirmed) {
-        window.location.href = `../shop/shop.html?page=seller&redirect=${redirectUrl}`;
+        window.location.href = `../../shop/shop.html`;
       }
       return;
     }

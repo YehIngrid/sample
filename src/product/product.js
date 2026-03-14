@@ -51,7 +51,7 @@ function _renderSellerPage(page) {
       </div>`;
     div.addEventListener('click', () => {
       const pid = div.dataset.id;
-      if (pid) location.href = `./product.html?id=${encodeURIComponent(pid)}`;
+      if (pid) location.href = `product.html`;
     });
     container.appendChild(div);
   });
@@ -436,7 +436,7 @@ async function openChatWithSeller(targetSellerId) {
 
   // 手機版：導向 person.html 並帶入目標 ID，由 person.js 自動開啟聊天
   if (window.innerWidth <= 991) {
-    window.location.href = `../person/person.html?chatWith=${targetSellerId}`;
+    window.location.href = `../person/person.html`;
     return;
   }
 

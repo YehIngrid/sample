@@ -4,7 +4,7 @@
   "description": "TreasureHub 拾貨寶庫 — local dev server",
   "type": "module",
   "scripts": {
-    "dev": "node server.js"
+    "dev-server": "node server.js"
   },
   "dependencies": {
     "express": "^5.2.1"

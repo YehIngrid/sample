@@ -162,7 +162,7 @@ function renderItems(items){
     listEl.appendChild(div);
     div.addEventListener('click', function() {
       const pid = this.dataset.id;
-      if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
+      if (pid) location.href = `../product/product.html`;
     })
   });
   // 等瀏覽器排版完再判斷是否溢出
@@ -821,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       card.addEventListener('click', () => {
         const pid = card.dataset.id;
-        if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
+        if (pid) location.href = `../product/product.html`;
       });
       col.appendChild(card);
       container.appendChild(col);

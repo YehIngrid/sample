@@ -230,7 +230,7 @@ cartList.addEventListener('click', async e => {
   if (!item) return;
 
   if (e.target.classList.contains('btn-look')) {
-    location.href = `../product/product.html?id=${item.productId}`;
+    location.href = `../product/product.html`;
   }
 
   if (e.target.classList.contains('btn-remove')) {

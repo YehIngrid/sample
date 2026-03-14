@@ -7,7 +7,7 @@ const app = express();
 const PORT = 5500;
 
 // 直接將整個專案根目錄作為靜態資源
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'src')));
 
 // 根路徑導向購物首頁
 app.get('/', (req, res) => {
