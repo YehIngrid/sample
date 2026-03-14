@@ -313,6 +313,25 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   // 初始化主圖
   setMainByIndex(0);
 
+  // 3.4 左右箭頭切換
+  const prevBtn = document.getElementById('imgPrev');
+  const nextBtn = document.getElementById('imgNext');
+  if (prevBtn && nextBtn) {
+    if (list.length <= 1) {
+      prevBtn.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+    } else {
+      prevBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        setMainByIndex((currentIdx - 1 + list.length) % list.length);
+      });
+      nextBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        setMainByIndex((currentIdx + 1) % list.length);
+      });
+    }
+  }
+
   // 3.5 PhotoSwipe 點擊放大（使用圖片實際尺寸）
   if (mainImg && typeof PhotoSwipeLightbox !== 'undefined' && list.length > 0) {
     // 預先載入各圖片的真實尺寸
