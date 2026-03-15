@@ -262,7 +262,10 @@ function renderProductsBootstrap(items) {
           </p>
           <div class="mt-auto d-flex justify-content-between align-items-center">
             <span class="fw-bold price" style="font-size:13px;">NT$ ${escapeHtml(String(p.price))}</span>
-            <small class="text-muted" style="font-size:11px;">庫存 ${Number(p.stock ?? 0)}</small>
+            <div class="card-seller">
+              <img class="seller-avatar" src="${escapeHtml(p.owner?.photoURL || '../webP/default-avatar.webp')}" alt="${escapeHtml(p.owner?.name || '賣家')}" onerror="this.src='../webP/default-avatar.webp'">
+              <span class="seller-name">${escapeHtml(p.owner?.name || '賣家')}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -366,7 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function applyFilters(items) {
   const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
   const newOrOld = newOrOldInput.value !== 'default' ? parseInt(newOrOldInput.value) : null;
-  const sortselected = sortSelect.value;
   let result = items;
 
   // 關鍵字搜尋
@@ -383,85 +385,48 @@ function applyFilters(items) {
     result = result.filter(p => p.price <= maxPrice);
   }
 
-  // 新舊程度篩選（假設 p.newOrOld 是 1~6 的數字）
   if (newOrOld !== null) {
     result = result.filter(p => p.newOrOld <= newOrOld);
   }
-  const filterResultCountEl = document.getElementById('filterResultCount');
-  let resultlength = result.length;
-  if(!resultlength || resultlength === 0){
-    resultlength = 0;
-    productRow.innerHTML = '';
-    const noProducts = document.getElementById('no-products');
-    noProducts.style.display = 'block';
-  }
-  filterResultCountEl.textContent = `${resultlength === 0 ? 0 : resultlength}`;
+
   const mobileCountEl = document.getElementById('mobileResultCount');
-  if (mobileCountEl) mobileCountEl.textContent = `共 ${resultlength} 件`;
-  console.log('篩選後的商品:', result);
+  if (mobileCountEl) mobileCountEl.textContent = `共 ${result.length} 件`;
+
   return result;
 }
+
 function clearFilters() {
     maxPriceInput.value = '';
     newOrOldInput.value = 'default';
     sortSelect.value = 'default';
     pageIndex = 0;
     productRow.innerHTML = '';
-    document.getElementById('filterAll').textContent = '';
     loadProducts();
 }
+
+const sortSelect = document.getElementById('sortSelect');
+const maxPriceInput = document.getElementById('maxPriceInput');
+const newOrOldInput = document.getElementById('new_or_oldInput');
+
+function triggerFilter() {
+  pageIndex = 0;
+  productRow.innerHTML = '';
+  loadProducts();
+}
+
+sortSelect.addEventListener('change', triggerFilter);
+newOrOldInput.addEventListener('change', triggerFilter);
+
+let priceDebounce;
+maxPriceInput.addEventListener('input', () => {
+  clearTimeout(priceDebounce);
+  priceDebounce = setTimeout(triggerFilter, 500);
+});
+
 const cleanFilterBtn = document.getElementById('cleanFilter');
 cleanFilterBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    console.log('點擊清除篩選按鈕');
     clearFilters();
-});
-const sortSelect = document.getElementById('sortSelect');
-const maxPriceInput = document.getElementById('maxPriceInput');
-
-const newOrOldInput = document.getElementById('new_or_oldInput');
-const filterBtn = document.getElementById('filterBtn');
-filterBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    console.log('點擊篩選按鈕');
-    const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
-    const newOrOld = newOrOldInput.value !== 'default' ? newOrOldInput.value : null;
-    let newOrOldMap = {
-      1:'僅限全新',2:'稍新以上',3:'半新以上',4:'適中以上',5:'稍舊以上',6:'全舊以上',
-    };
-    console.log('篩選條件:', { maxPrice, newOrOld: newOrOld ? newOrOldMap[newOrOld] : null });
-    // 在這裡可以根據篩選條件進行商品篩選
-    const filterAllEl = document.getElementById('filterAll');
-    let filterText = '';
-    if (sortSelect.value == 'priceDesc') {
-        filterText +=  `價格由高到低排序`;
-        filterText +=  `\n`;
-    } else if (sortSelect.value == 'priceAsc') {
-        filterText +=  `價格由低到高排序`;
-        filterText +=  `\n`;
-    } else {
-        filterText +=  ``;
-    }
-    if (maxPrice !== null){
-      filterText += `最高接受價格: ${maxPrice} 元`;
-      filterText +=  `\n`;
-    } else filterText += ``; 
-    if (newOrOld !== null) {
-      filterText += `最低可接受之商品狀態: ${newOrOldMap[newOrOld]}`;
-      filterText +=  `\n`;
-    }
-    else filterText += ``;
-    if(filterText === '') filterText = '無篩選條件\n';
-    filterAllEl.textContent = filterText;
-
-    
-    // 假設這裡有一個函式可以根據篩選條件取得符合的商品數量
-    // 這裡暫時用一個假設的數字來示範
-
-    // 例如，重新載入商品並應用篩選條件
-    pageIndex = 0;
-    productRow.innerHTML = '';
-    loadProducts();
 });
 
 // ── 手機版格狀/列表切換 ──

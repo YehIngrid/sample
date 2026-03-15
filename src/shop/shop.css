@@ -564,12 +564,12 @@ ul{
   cursor: pointer;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  background-color: aliceblue;
 }
 .product-card .card-body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: aliceblue;
 }
 .card-img-top {
   object-fit: cover;
@@ -1530,9 +1530,20 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.hot-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px 6px;
+  gap: 4px;
+}
 .hotItemName {
-  padding: 8px;
   font-size: 12px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .firstlinesell {
   width: 80vw;
@@ -2482,4 +2493,27 @@ html{ scroll-behavior:smooth; }
   .cat-card-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* ── 卡片賣家資訊 ── */
+.card-seller {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+.seller-avatar {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.seller-name {
+  font-size: 0.75rem;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
 }

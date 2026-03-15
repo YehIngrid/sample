@@ -93,6 +93,48 @@ backbtn.addEventListener('click', function(e){
     window.history.back();
 })
 
+// ── 分享功能 ──
+function getShareInfo() {
+  const name = document.getElementById('product-name')?.textContent?.trim() || '商品';
+  const url  = location.href;
+  return { name, url };
+}
+
+
+// 各平台分享連結（電腦版 + 手機版一起更新）
+function updateDesktopShareLinks() {
+  const { name, url } = getShareInfo();
+  const enc = encodeURIComponent(url);
+  const encText = encodeURIComponent(`拾貨寶庫｜${name}`);
+  const fbUrl   = `https://www.facebook.com/sharer/sharer.php?u=${enc}`;
+  const lineUrl = `https://social-plugins.line.me/lineit/share?url=${enc}`;
+  const xUrl    = `https://twitter.com/intent/tweet?url=${enc}&text=${encText}`;
+
+  ['shareFb', 'shareFbM'].forEach(id => { const el = document.getElementById(id); if (el) el.href = fbUrl; });
+  ['shareLine', 'shareLineM'].forEach(id => { const el = document.getElementById(id); if (el) el.href = lineUrl; });
+  ['shareX', 'shareXM'].forEach(id => { const el = document.getElementById(id); if (el) el.href = xUrl; });
+}
+
+// IG 和複製連結
+async function copyLink() {
+  const { url } = getShareInfo();
+  try {
+    await navigator.clipboard.writeText(url);
+    Swal.fire({ icon: 'success', title: '已複製連結', showConfirmButton: false, timer: 1400 });
+  } catch (_) {
+    Swal.fire({ icon: 'info', title: '分享連結', text: url });
+  }
+}
+['shareIg', 'shareIgM'].forEach(id => {
+  document.getElementById(id)?.addEventListener('click', async () => {
+    await copyLink();
+    Swal.fire({ icon: 'info', title: 'Instagram 分享', text: '連結已複製，請到 Instagram 貼上分享！', showConfirmButton: true });
+  });
+});
+['shareCopy', 'shareCopyM'].forEach(id => {
+  document.getElementById(id)?.addEventListener('click', copyLink);
+});
+
 document.addEventListener('DOMContentLoaded', async () => {
   backendService = new BackendService();
   itemId = new URLSearchParams(location.search).get('id');
@@ -203,6 +245,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   // 名稱
   const nameEl = document.getElementById('product-name');
   if (nameEl) nameEl.textContent = product?.name ?? '';
+  updateDesktopShareLinks();
 
   // 價格（只放數字；右邊的 NT$ 已在 HTML）
   const priceEl = document.getElementById('price');
@@ -336,9 +379,25 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     }
   }
 
-  // 3.5 PhotoSwipe 點擊放大（使用圖片實際尺寸）
-  if (mainImg && typeof PhotoSwipeLightbox !== 'undefined' && list.length > 0) {
-    // 預先載入各圖片的真實尺寸
+  // 3.5 手機左右滑動切換
+  if (list.length > 1 && mainImg) {
+    let swipeStartX = 0;
+    mainImg.addEventListener('touchstart', e => {
+      swipeStartX = e.touches[0].clientX;
+    }, { passive: true });
+    mainImg.addEventListener('touchend', e => {
+      const diff = swipeStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) < 40) return;
+      if (diff > 0) {
+        setMainByIndex((currentIdx + 1) % list.length);
+      } else {
+        setMainByIndex((currentIdx - 1 + list.length) % list.length);
+      }
+    }, { passive: true });
+  }
+
+  // 3.6 PhotoSwipe 點擊放大（使用圖片實際尺寸）
+  if (mainImg && typeof PhotoSwipe !== 'undefined' && list.length > 0) {
     function getImgSize(src) {
       return new Promise(resolve => {
         const img = new Image();
@@ -364,7 +423,8 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
       pswp.init();
     }
 
-    mainImg.parentElement.addEventListener('click', () => openPswp(currentIdx));
+    // 只在主圖 img 本身上監聽，避免箭頭按鈕觸發（箭頭已有 stopPropagation）
+    mainImg.addEventListener('click', () => openPswp(currentIdx));
   }
 })();
 

@@ -78,11 +78,19 @@
             </nav>
             
             <div class="container-fluid1 d-lg-none">
-            <!-- 手機版搜尋欄（點擊開啟 offcanvas，與 shop.html 位置相同） -->
-            <div class="d-flex align-items-center">
+            <!-- 手機版搜尋欄（直接輸入，下方顯示記錄） -->
+            <div class="d-flex align-items-center" style="position:relative;">
                 <div class="search-input-wrap w-100" style="position:relative;">
                     <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-                    <input class="form-control" type="search" placeholder="搜尋商品..." id="searchTriggerMobile" autocomplete="off" readonly>
+                    <input class="form-control" type="search" placeholder="搜尋商品..." id="searchTriggerMobile" autocomplete="off">
+                </div>
+                <!-- 手機搜尋記錄下拉 -->
+                <div id="mobileSearchDropdown" class="mobile-search-dropdown" style="display:none;">
+                    <div class="d-flex justify-content-between align-items-center px-3 pt-2 pb-1">
+                        <small class="fw-bold text-muted">搜尋紀錄</small>
+                        <button class="btn btn-link btn-sm text-muted p-0 text-decoration-none" id="mClearHistoryBtn">清除</button>
+                    </div>
+                    <div id="mobileHistoryList" class="d-flex flex-wrap gap-2 px-3 pb-3"></div>
                 </div>
             </div>
             <div class="collapse navbar-collapse mt-2" id="navbarNav">
@@ -185,37 +193,23 @@
         </div>
         <div class="contentOfCommodity d-lg-flex justify-content-around">
             <div class="sortAndProduct">
-                <div class="d-lg-flex justify-content-lg-center justify-content-start align-items-center sortAndProductdiv mobile-filter-scroll">
-                    <div class="filter-item me-3">
-                      <label class="filter-label">排序</label>
-                      <select id="sortSelect" class="form-select form-select-sm">
-                          <option value="default">預設排序</option>
-                          <option value="priceAsc">價格↑</option>
-                          <option value="priceDesc">價格↓</option>
-                      </select>
-                    </div>
-                    <div class="filter-item me-3">
-                      <label class="filter-label">狀態</label>
-                      <select name="" id="new_or_oldInput" class="form-select form-select-sm">
-                          <option value="default">不限</option>
-                          <option value="1">全新</option>
-                          <option value="2">稍新以上</option>
-                          <option value="3">半新以上</option>
-                          <option value="4">稍舊以上</option>
-                          <option value="5">半舊以上</option>
-                          <option value="6">全舊以上</option>
-                      </select>
-                    </div>
-                    <div class="filter-item me-3">
-                      <label class="filter-label">預算</label>
-                      <input type="number" id="maxPriceInput" class="form-control form-control-sm" placeholder="不限" style="width:80px;">
-                    </div>
-                    <div class="filter-item me-2">
-                        <button id="filterBtn" class="btn btn-sm filter-apply-btn">篩選</button>
-                    </div>
-                    <div class="filter-item">
-                        <button id="cleanFilter" class="btn btn-sm filter-clear-btn">清除</button>
-                    </div>
+                <div class="filter-bar">
+                    <select id="sortSelect" class="form-select form-select-sm filter-select">
+                        <option value="default">排序</option>
+                        <option value="priceAsc">價格↑</option>
+                        <option value="priceDesc">價格↓</option>
+                    </select>
+                    <select id="new_or_oldInput" class="form-select form-select-sm filter-select">
+                        <option value="default">狀態</option>
+                        <option value="1">全新</option>
+                        <option value="2">稍新以上</option>
+                        <option value="3">半新以上</option>
+                        <option value="4">稍舊以上</option>
+                        <option value="5">半舊以上</option>
+                        <option value="6">全舊以上</option>
+                    </select>
+                    <input type="number" id="maxPriceInput" class="form-control form-control-sm filter-price" placeholder="最高預算">
+                    <button id="cleanFilter" class="btn btn-sm filter-clear-btn">清除</button>
                 </div>
                 <!-- 手機版 layout 切換列 -->
                 <div class="layout-toggle-bar d-flex justify-content-between align-items-center d-lg-none">
@@ -231,11 +225,6 @@
                 </div>
                 <!-- TODO search function -->
                 <div class="search d-none">以下是您搜尋 <span>商品名稱</span> 的結果：</div>
-                <div class="filterResult d-none d-lg-block">
-                    <h6>您的篩選條件: </h6>
-                    <p id="filterAll">無</p>
-                    <span>共 <span id="filterResultCount"></span> 件商品</span>
-                </div>
                 <!-- 主要區塊：用 bootstrap row/col 來排版 -->
                 <main class="flex-grow-1">
                 <!-- 這裡放置一個 row，商品會以 col 包裝 (col-6 col-md-4 col-lg-3 等) -->
@@ -339,49 +328,92 @@
     renderDesktopHistory();
   }
 
+  // ── 手機下拉記錄 ──
   function renderMobileHistory() {
-    const list = document.getElementById('searchHistoryList');
+    const list = document.getElementById('mobileHistoryList');
     if (!list) return;
     const h = getHistory();
-    list.innerHTML = h.length
-      ? h.map(t => `<span class="search-history-tag" onclick="document.getElementById('searchInputOC').value='${t.replace(/'/g,"\\'")}'">${t}<button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${t.replace(/'/g,"\\'")}','mobile')">×</button></span>`).join('')
-      : '<small class="text-muted">尚無搜尋紀錄</small>';
+    if (!h.length) {
+      list.innerHTML = '<small class="text-muted">尚無搜尋紀錄</small>';
+      return;
+    }
+    list.innerHTML = h.map(t =>
+      `<span class="search-history-tag" data-term="${encodeURIComponent(t)}">${t}<button class="del-tag" data-del="${encodeURIComponent(t)}">×</button></span>`
+    ).join('');
+    list.querySelectorAll('.search-history-tag').forEach(tag => {
+      tag.addEventListener('click', function (e) {
+        if (e.target.classList.contains('del-tag')) return;
+        const term = decodeURIComponent(this.dataset.term);
+        const mi = document.getElementById('searchTriggerMobile');
+        if (mi) mi.value = term;
+        runMobileSearch(term);
+      });
+    });
+    list.querySelectorAll('.del-tag').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        saveHistory(getHistory().filter(t => t !== decodeURIComponent(this.dataset.del)));
+        renderMobileHistory();
+      });
+    });
   }
 
+  function showMobileDropdown() {
+    const dd = document.getElementById('mobileSearchDropdown');
+    if (dd) { renderMobileHistory(); dd.style.display = ''; }
+  }
+  function hideMobileDropdown() {
+    const dd = document.getElementById('mobileSearchDropdown');
+    if (dd) dd.style.display = 'none';
+  }
+
+  function runMobileSearch(term) {
+    const mainInput = document.getElementById('searchInput');
+    if (mainInput) mainInput.value = term;
+    hideMobileDropdown();
+    document.getElementById('searchForm')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  }
+
+  // ── 桌機下拉記錄 ──
   function renderDesktopHistory() {
     const list = document.getElementById('desktopHistoryList');
     if (!list) return;
     const h = getHistory();
     list.innerHTML = h.length
-      ? h.map(t => `<span class="search-drop-tag" onclick="window._pickHistory('${t.replace(/'/g,"\\'")}')">
-          ${t}<button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${t.replace(/'/g,"\\'")}','desktop')">×</button>
-        </span>`).join('')
+      ? h.map(t => `<span class="search-drop-tag" data-term="${encodeURIComponent(t)}">${t}<button class="del-tag" data-del="${encodeURIComponent(t)}">×</button></span>`).join('')
       : '<span class="text-muted" style="font-size:0.82rem;">尚無搜尋紀錄</span>';
+    list.querySelectorAll('.search-drop-tag').forEach(tag => {
+      tag.addEventListener('click', function (e) {
+        if (e.target.classList.contains('del-tag')) return;
+        window._pickHistory(decodeURIComponent(this.dataset.term));
+      });
+    });
+    list.querySelectorAll('.del-tag').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        saveHistory(getHistory().filter(t => t !== decodeURIComponent(this.dataset.del)));
+        renderDesktopHistory();
+      });
+    });
   }
-
-  window._removeHistory = function (term, src) {
-    saveHistory(getHistory().filter(t => t !== term));
-    renderMobileHistory();
-    renderDesktopHistory();
-  };
 
   window._pickHistory = function (term) {
     const input = document.getElementById('searchInput');
     if (input) {
       input.value = term;
-      closeDropdown();
-      document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+      closeDesktopDropdown();
+      document.getElementById('searchForm')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     }
   };
 
-  function openDropdown() {
+  function openDesktopDropdown() {
     const dd = document.getElementById('searchDropdown');
     if (!dd) return;
     renderDesktopHistory();
     dd.style.removeProperty('display');
     dd.classList.add('active');
   }
-  function closeDropdown() {
+  function closeDesktopDropdown() {
     const dd = document.getElementById('searchDropdown');
     if (!dd) return;
     dd.classList.remove('active');
@@ -389,58 +421,54 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     const mainInput = document.getElementById('searchInput');
-    const ocInput   = document.getElementById('searchInputOC');
-    const ocEl      = document.getElementById('searchOffcanvas');
     const dropdown  = document.getElementById('searchDropdown');
-    if (!mainInput) return;
+    const mobileTrigger = document.getElementById('searchTriggerMobile');
 
-    if (ocEl) {
-      const bsOC = new bootstrap.Offcanvas(ocEl, { scroll: true, backdrop: true });
-      // 手機：搜尋欄點擊 → 開啟 offcanvas（與 shop.html 相同行為）
-      const mobileTrigger = document.getElementById('searchTriggerMobile');
-      if (mobileTrigger) {
-        mobileTrigger.addEventListener('click', function () {
-          bsOC.show();
-          setTimeout(() => ocInput && ocInput.focus(), 350);
-        });
-      }
-      if (ocInput) {
-        ocInput.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter') {
-            const val = ocInput.value.trim();
-            if (!val) return;
-            addSearchHistory(val);
-            bsOC.hide();
-            mainInput.value = val;
-            document.getElementById('searchForm').dispatchEvent(new Event('submit'));
-          }
-        });
-      }
-      document.getElementById('clearHistoryBtn')?.addEventListener('click', function () {
-        saveHistory([]); renderMobileHistory();
+    // ── 手機搜尋欄（直接可輸入）──
+    if (mobileTrigger) {
+      mobileTrigger.addEventListener('focus', showMobileDropdown);
+      mobileTrigger.addEventListener('blur', function () {
+        setTimeout(hideMobileDropdown, 200);
       });
-      ocEl.addEventListener('show.bs.offcanvas', renderMobileHistory);
+      function handleMobileEnter(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = mobileTrigger.value.trim();
+          if (!val) return;
+          addSearchHistory(val);
+          runMobileSearch(val);
+        }
+      }
+      mobileTrigger.addEventListener('keydown', handleMobileEnter);
+      mobileTrigger.addEventListener('keyup', handleMobileEnter);
     }
 
-    mainInput.addEventListener('focus', openDropdown);
-    mainInput.addEventListener('input', function () {
-      if (window.innerWidth >= 992 && !mainInput.value.trim()) openDropdown();
+    document.getElementById('mClearHistoryBtn')?.addEventListener('click', function () {
+      saveHistory([]); renderMobileHistory();
     });
-    mainInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && window.innerWidth >= 992) {
-        const val = mainInput.value.trim();
-        if (val) addSearchHistory(val);
-        closeDropdown();
-      }
-    });
-    document.addEventListener('mousedown', function (e) {
-      if (dropdown && !dropdown.contains(e.target) && e.target !== mainInput) {
-        closeDropdown();
-      }
-    });
-    document.getElementById('desktopClearHistory')?.addEventListener('click', function () {
-      saveHistory([]); renderDesktopHistory();
-    });
+
+    // ── 桌機搜尋欄 ──
+    if (mainInput) {
+      mainInput.addEventListener('focus', openDesktopDropdown);
+      mainInput.addEventListener('input', function () {
+        if (!mainInput.value.trim()) openDesktopDropdown();
+      });
+      mainInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          const val = mainInput.value.trim();
+          if (val) addSearchHistory(val);
+          closeDesktopDropdown();
+        }
+      });
+      document.addEventListener('mousedown', function (e) {
+        if (dropdown && !dropdown.contains(e.target) && e.target !== mainInput) {
+          closeDesktopDropdown();
+        }
+      });
+      document.getElementById('desktopClearHistory')?.addEventListener('click', function () {
+        saveHistory([]); renderDesktopHistory();
+      });
+    }
   });
 })();
 </script>

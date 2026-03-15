@@ -796,3 +796,72 @@
 @media (hover: none) {
   .img-nav-btn { opacity: 1; }
 }
+
+/* 主圖欄（主圖 + 電腦版分享列）在 left-pane flex-row 中佔滿剩餘寬度 */
+.main-photo-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── 分享列 ── */
+.desktop-share-bar {
+  flex-wrap: wrap;
+}
+.share-label {
+  font-size: 0.85rem;
+  color: #888;
+  white-space: nowrap;
+}
+.share-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+  text-decoration: none;
+  color: #fff;
+}
+.share-icon-btn:hover { transform: scale(1.12); opacity: 0.88; color: #fff; }
+.share-fb   { background: #1877f2; }
+.share-line { background: #06c755; }
+.share-x    { background: #000; }
+.share-ig   { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+.share-copy { background: #6c757d; }
+
+/* ── 手機版 CTA 按鈕 ── */
+.mobile-cta {
+  gap: 0;
+}
+.mobile-order-btn,
+.mobile-cart-btn {
+  width: 50%;
+  font-size: 1.2rem;
+  border: none;
+  padding: 10px 12px !important;
+  border-radius: 0 !important;
+}
+.mobile-order-btn {
+  background-color: rgb(199, 244, 229) !important;
+  color: rgb(36, 182, 133) !important;
+}
+.mobile-order-btn:hover {
+  background-color: rgb(199, 244, 229) !important;
+  color: rgb(36, 182, 133) !important;
+  scale: 1.005;
+}
+.mobile-cart-btn {
+  background-color: #cfe2ff !important;
+  color: #004b97 !important;
+}
+.mobile-cart-btn:hover {
+  background-color: #cfe2ff !important;
+  color: #004b97 !important;
+  scale: 1.005;
+}

@@ -51,7 +51,7 @@
 
 /* ── 商品卡 (最新上架風格) ── */
 .product-card {
-  background: #fff;
+  background: aliceblue;
   border: none;
   border-radius: 8px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.1);
@@ -88,7 +88,6 @@
 }
 .product-card .card-body {
   padding: 8px 10px !important;
-  background-color: aliceblue;
 }
 .product-card .price {
   color: #c0392b;
@@ -138,12 +137,8 @@
     display: block;
   }
 
-  .sortAndProductdiv {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
 }
+
 .skeleton {
   background-color: #e0e0e0;
   border-radius: 6px;
@@ -177,30 +172,41 @@
 #productRow .row {
   margin-top: 1.5rem;
 }
-#filterBtn {
-  background-color: var(--brand-color) !important;
-  color: white !important;
+/* ── 篩選列 ── */
+.filter-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #f8faff;
+  border-bottom: 1px solid #dde8f5;
+  overflow: hidden;
+}
+.filter-select {
+  flex: 1 1 80px;
+  min-width: 0;
+}
+.filter-price {
+  flex: 1 1 70px;
+  min-width: 0;
+}
+#cleanFilter {
+  flex-shrink: 0;
 }
 #cleanFilter {
   background-color: var(--second-brand-color) !important;
   color: black !important;
-  display: inline-block;
-  margin-left: 30px;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  padding: 4px 12px;
 }
-#filterAll {
-  white-space: pre-line;
-}
-.filterResult {
-  margin-left: 10px;
-  margin-bottom: 12px;
-  max-width: 300px;
-  padding: 10px;
-  border-radius: 6px;
-  box-shadow: var(--second-brand-color) 2px 4px 6px -1px, var(--brand-color) 2px 2px 4px -1px;
-}
-#filterResultCount {
-  color: var(--brand-color);
-  font-weight: bold;
+.filter-clear-btn {
+  background: #eee !important;
+  color: #444 !important;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  padding: 4px 10px;
 }
 .search {
   margin-bottom: 7px;
@@ -208,48 +214,6 @@
 .search span {
   color: var(--brand-color);
   font-weight: bold;
-}
-
-/* ── 手機版篩選列 ── */
-@media (max-width: 991px) {
-  .mobile-filter-scroll {
-    display: flex !important;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 6px;
-    padding: 8px 10px;
-    background: #f8faff;
-    border-bottom: 1px solid #dde8f5;
-    scrollbar-width: none;
-  }
-  .mobile-filter-scroll::-webkit-scrollbar { display: none; }
-  .filter-item {
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-  }
-  .filter-label {
-    font-size: 0.68rem;
-    color: #888;
-    margin-bottom: 2px;
-  }
-  .filter-apply-btn {
-    background: #004b97 !important;
-    color: #fff !important;
-    border-radius: 16px;
-    font-size: 0.78rem;
-    padding: 4px 12px;
-    margin-top: 16px;
-  }
-  .filter-clear-btn {
-    background: #eee !important;
-    color: #444 !important;
-    border-radius: 16px;
-    font-size: 0.78rem;
-    padding: 4px 10px;
-    margin-top: 16px;
-  }
 }
 
 /* ── 手機版 layout 切換列 ── */
@@ -322,7 +286,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: aliceblue !important;
   }
   #productRow.list-view .card-title {
     font-size: 0.85rem !important;
@@ -468,4 +431,40 @@
 .search-history-tag .del-tag {
   background: none; border: none; padding: 0;
   font-size: 0.9rem; color: #999; cursor: pointer; line-height: 1;
+}
+
+/* ── 手機搜尋下拉（搜尋欄正下方） ── */
+.mobile-search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+  z-index: 9999;
+  min-height: 40px;
+}
+
+/* ── 卡片賣家資訊 ── */
+.card-seller {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+.seller-avatar {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.seller-name {
+  font-size: 0.72rem;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70px;
 }

@@ -2,6 +2,12 @@ import BackendService from '../BackendService.js';
 
 let backendService;
 
+// ── 登入狀態快取 ──
+// _authReady 在 whoami 完成後 resolve，之後所有 requireLogin() 直接查快取
+let _authResolve;
+window._authReady = new Promise(resolve => { _authResolve = resolve; });
+window.isLoggedIn = false;
+
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
@@ -47,6 +53,8 @@ async function renderAuthUI() {
   try {
       backendService = new BackendService();
       const user = await backendService.whoami(); // 成功代表已登入
+      window.isLoggedIn = true;
+      _authResolve(true);
       console.log("目前使用", user);
       console.log("test userid", user.data.uid);
 
@@ -87,6 +95,8 @@ async function renderAuthUI() {
       }, 5 * 60 * 1000);
 
     } catch (err) {
+      window.isLoggedIn = false;
+      _authResolve(false);
       document.querySelectorAll('.username').forEach((el) => {
         el.textContent = '';
         el.style.display = 'none';
@@ -148,28 +158,26 @@ export const formatTaipeiTime = (dateStr) => {
   });
 };
 export async function requireLogin() {
-  try {
-    await backendService.whoami();
-    return true;
-  } catch (err) {
-    const currentUrl = window.location.pathname + window.location.search;
+  // 等 whoami 完成後查快取，不重複發請求
+  await window._authReady;
+  if (window.isLoggedIn) return true;
 
-    const result = await Swal.fire({
-      title: "尚未登入",
-      text: "此功能需要登入，是否前往登入？",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "前往登入",
-      cancelButtonText: "取消"
-    });
+  const currentUrl = window.location.pathname + window.location.search;
+  const result = await Swal.fire({
+    title: "尚未登入",
+    text: "此功能需要登入，是否前往登入？",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "前往登入",
+    cancelButtonText: "取消"
+  });
 
-    if (result.isConfirmed) {
-      window.location.href =
-        `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
-    }
-
-    return false;
+  if (result.isConfirmed) {
+    window.location.href =
+      `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
   }
+
+  return false;
 }

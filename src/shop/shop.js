@@ -156,13 +156,19 @@ function renderItems(items){
             <img class="main" src="${item.mainImage}" alt="${esc(item.name)}" width="148" height="148" loading="lazy" decoding="async">
             <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${esc(item.price)}</p>
           </div>
-          <div class="hotItemName">${esc(item.name)}</div>
+          <div class="hot-item-footer">
+            <div class="hotItemName">${esc(item.name)}</div>
+            <div class="card-seller">
+              <img class="seller-avatar" src="${esc(item.owner?.photoURL || '../webP/default-avatar.webp')}" alt="${esc(item.owner?.name || '賣家')}" onerror="this.src='../webP/default-avatar.webp'">
+              <span class="seller-name">${esc(item.owner?.name || '賣家')}</span>
+            </div>
+          </div>
         </div>
       `;
     listEl.appendChild(div);
     div.addEventListener('click', function() {
       const pid = this.dataset.id;
-      if (pid) location.href = `../product/product.html`;
+      if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
     })
   });
   // 等瀏覽器排版完再判斷是否溢出
@@ -814,14 +820,17 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="mt-auto">
             <div class="d-flex justify-content-between align-items-center">
               <span class="fw-bold price">NT$ ${esc(product.price)}</span>
-              <small class="text-muted stock">庫存 ${Number(product.stock ?? 0)}</small>
+              <div class="card-seller">
+                <img class="seller-avatar" src="${esc(product.owner?.photoURL || '../webP/default-avatar.webp')}" alt="${esc(product.owner?.name || '賣家')}" onerror="this.src='../webP/default-avatar.webp'">
+                <span class="seller-name">${esc(product.owner?.name || '賣家')}</span>
+              </div>
             </div>
           </div>
         </div>
       `;
       card.addEventListener('click', () => {
         const pid = card.dataset.id;
-        if (pid) location.href = `../product/product.html`;
+        if (pid) location.href = `../product/product.html?id=${encodeURIComponent(pid)}`;
       });
       col.appendChild(card);
       container.appendChild(col);
