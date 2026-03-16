@@ -508,15 +508,8 @@ async function handleRouting() {
       renderBuyerCards(res?.data?.data ?? []);
       goodsOrder = res?.data?.data;
     } else if (page === 'products') {
-      document.querySelector('#products tbody').innerHTML =
-        `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
-      document.getElementById('product-cards').innerHTML =
-        `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
-      const res = await backendService.getMyItems();
-      const list = res?.data?.commodities ?? [];
-      renderTable(list);
-      renderCards(list);
-      goodsOrder = res?.data?.data;
+      myItemsPage = 1;
+      await loadMyItems(1);
     }
   } catch (err) {
     console.error(err);
@@ -1808,6 +1801,52 @@ async function openPartnerReviewModal(orderId, isSell) {
     width: 500,
   });
 }
+// ===== 商品管理分頁 =====
+const MY_ITEMS_LIMIT = 10;
+let myItemsPage = 1;
+
+async function loadMyItems(p = 1) {
+  myItemsPage = p;
+  if (!backendService) backendService = new BackendService();
+  document.querySelector('#products tbody').innerHTML =
+    `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
+  document.getElementById('product-cards').innerHTML =
+    `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
+  try {
+    const res = await backendService.getMyItems({ page: p, limit: MY_ITEMS_LIMIT });
+    const list = res?.data?.commodities ?? [];
+    const pg   = res?.data?.pagination ?? null;
+    renderTable(list);
+    renderCards(list);
+    renderProductsPager(pg, p);
+    goodsOrder = res?.data?.data;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderProductsPager(pg, currentPage) {
+  const el = document.getElementById('products-pager');
+  if (!el) return;
+  if (!pg || pg.totalPages <= 1) { el.innerHTML = ''; return; }
+
+  const { totalPages, hasPrevPage, hasNextPage } = pg;
+  const btnClass = (extra = '') => `pager-nav-btn${extra}`;
+
+  let html = `<button class="${btnClass()}" ${hasPrevPage ? '' : 'disabled'} data-p="${currentPage - 1}">‹ 上一頁</button>`;
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<button class="${btnClass(i === currentPage ? ' pager-nav-btn--active' : '')}" data-p="${i}">${i}</button>`;
+  }
+  html += `<button class="${btnClass()}" ${hasNextPage ? '' : 'disabled'} data-p="${currentPage + 1}">下一頁 ›</button>`;
+  el.innerHTML = html;
+
+  el.querySelectorAll('button[data-p]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!btn.disabled) loadMyItems(Number(btn.dataset.p));
+    });
+  });
+}
+
 window.goToPage = goToPage;
 
 const scoreStar = document.querySelector('.score');

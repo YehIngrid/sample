@@ -820,3 +820,30 @@ small {
 .cancelOrderBtn:hover {
   background-color: #abdad5;
 }
+
+/* ── 商品管理分頁按鈕 ── */
+.pager-nav-btn {
+  border: 1px solid #004b97;
+  border-radius: 50px;
+  color: #004b97;
+  background: transparent;
+  font-size: 0.88rem;
+  padding: 4px 14px;
+  cursor: pointer;
+  margin: 0 2px;
+  transition: background 0.15s;
+}
+.pager-nav-btn:hover:not(:disabled) {
+  background-color: rgba(0,75,151,0.08);
+}
+.pager-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.pager-nav-btn--active {
+  background-color: #004b97;
+  color: #fff;
+}
+.pager-nav-btn--active:hover {
+  background-color: #004b97;
+}

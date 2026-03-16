@@ -78,19 +78,11 @@
             </nav>
             
             <div class="container-fluid1 d-lg-none">
-            <!-- 手機版搜尋欄（直接輸入，下方顯示記錄） -->
+            <!-- 手機版搜尋欄（點擊開啟 offcanvas） -->
             <div class="d-flex align-items-center" style="position:relative;">
                 <div class="search-input-wrap w-100" style="position:relative;">
                     <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-                    <input class="form-control" type="search" placeholder="搜尋商品..." id="searchTriggerMobile" autocomplete="off">
-                </div>
-                <!-- 手機搜尋記錄下拉 -->
-                <div id="mobileSearchDropdown" class="mobile-search-dropdown" style="display:none;">
-                    <div class="d-flex justify-content-between align-items-center px-3 pt-2 pb-1">
-                        <small class="fw-bold text-muted">搜尋紀錄</small>
-                        <button class="btn btn-link btn-sm text-muted p-0 text-decoration-none" id="mClearHistoryBtn">清除</button>
-                    </div>
-                    <div id="mobileHistoryList" class="d-flex flex-wrap gap-2 px-3 pb-3"></div>
+                    <input class="form-control" type="search" placeholder="搜尋商品..." id="searchTriggerMobile" autocomplete="off" readonly>
                 </div>
             </div>
             <div class="collapse navbar-collapse mt-2" id="navbarNav">
@@ -135,19 +127,22 @@
                     <div class="search-input-wrap" style="width: 100%; position: relative;">
                         <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
                         <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
-                        <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
+                        <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
+                        <div id="searchDropdown" class="search-dropdown d-none d-lg-block" style="display:none!important;">
                             <div class="search-drop-section" id="desktopHistorySection">
                                 <div class="search-drop-header">
                                     <span>搜尋紀錄</span>
-                                    <button type="button" id="desktopClearHistory">清除</button>
+                                    <button type="button" id="desktopClearHistory">清除全部</button>
                                 </div>
-                                <div id="desktopHistoryList" class="search-drop-tags"></div>
+                                <ul id="desktopHistoryList" class="search-drop-list"></ul>
                             </div>
                             <div class="search-drop-section">
-                                <div class="search-drop-header"><span>🔥 大家都在搜</span></div>
-                                <div id="desktopTrendList" class="search-drop-tags">
-                                    <span class="text-muted" style="font-size:0.82rem;">暫無資料</span>
+                                <div class="search-drop-header">
+                                    <span><i class="fa-solid fa-fire" style="color:#ff6b35;margin-right:4px;"></i>大家都在搜</span>
                                 </div>
+                                <ul id="desktopTrendList" class="search-drop-list search-drop-trend">
+                                    <li class="search-drop-empty">暫無資料</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -282,7 +277,8 @@
     <div class="d-flex align-items-center px-3 py-2 border-bottom gap-2">
       <div class="search-input-wrap flex-grow-1" style="position:relative;">
         <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInputOC" style="border-radius:99px;padding-left:42px;">
+        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInputOC" style="border-radius:99px;padding-left:42px;padding-right:36px;">
+        <button class="search-clear-btn" id="searchClearBtnOC" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <button class="btn btn-link text-secondary text-decoration-none p-0" data-bs-dismiss="offcanvas">取消</button>
     </div>
@@ -301,15 +297,20 @@
       <a href="?category=其他" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/Other.svg" alt="其他商品篩選按鈕"></div>其他</a>
     </div>
     <div class="px-3 pt-3 pb-1">
-      <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="d-flex justify-content-between align-items-center mb-1">
         <small class="fw-bold">搜尋紀錄</small>
-        <button class="btn btn-link btn-sm text-muted p-0 text-decoration-none" id="clearHistoryBtn">清除</button>
+        <button class="btn btn-link btn-sm text-muted p-0 text-decoration-none" id="clearHistoryBtn">清除全部</button>
       </div>
-      <div id="searchHistoryList" class="d-flex flex-wrap gap-2 pb-1"></div>
+      <ul id="searchHistoryList" class="search-drop-list"></ul>
     </div>
     <div class="px-3 pt-2 pb-3 border-top mt-2">
-      <small class="fw-bold d-block mb-2">🔥 搜尋排行榜</small>
-      <div id="searchRankList"><small class="text-muted">暫無資料</small></div>
+      <div class="d-flex align-items-center gap-1 mb-1">
+        <i class="fa-solid fa-fire" style="color:#ff6b35;font-size:0.82rem;"></i>
+        <small class="fw-bold">搜尋排行榜</small>
+      </div>
+      <ul id="searchRankList" class="search-drop-list search-drop-trend">
+        <li class="search-drop-empty">暫無資料</li>
+      </ul>
     </div>
   </div>
 </div>
@@ -328,147 +329,188 @@
     renderDesktopHistory();
   }
 
-  // ── 手機下拉記錄 ──
+  // ── 手機 offcanvas 搜尋紀錄 ──
   function renderMobileHistory() {
-    const list = document.getElementById('mobileHistoryList');
+    const list = document.getElementById('searchHistoryList');
     if (!list) return;
     const h = getHistory();
-    if (!h.length) {
-      list.innerHTML = '<small class="text-muted">尚無搜尋紀錄</small>';
-      return;
-    }
-    list.innerHTML = h.map(t =>
-      `<span class="search-history-tag" data-term="${encodeURIComponent(t)}">${t}<button class="del-tag" data-del="${encodeURIComponent(t)}">×</button></span>`
-    ).join('');
-    list.querySelectorAll('.search-history-tag').forEach(tag => {
-      tag.addEventListener('click', function (e) {
-        if (e.target.classList.contains('del-tag')) return;
-        const term = decodeURIComponent(this.dataset.term);
-        const mi = document.getElementById('searchTriggerMobile');
-        if (mi) mi.value = term;
-        runMobileSearch(term);
-      });
-    });
-    list.querySelectorAll('.del-tag').forEach(btn => {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        saveHistory(getHistory().filter(t => t !== decodeURIComponent(this.dataset.del)));
-        renderMobileHistory();
-      });
-    });
+    list.innerHTML = h.length
+      ? h.map(t => {
+          const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');
+          return `<li class="search-drop-item" onclick="window._pickMobile('${safe}')">
+            <i class="fa-regular fa-clock search-drop-icon"></i>
+            <span class="search-drop-text">${t.replace(/</g,'&lt;')}</span>
+            <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillMobile('${safe}')">↗</button>
+            <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','mobile')"><i class="fa-solid fa-xmark"></i></button>
+          </li>`;
+        }).join('')
+      : '<li class="search-drop-empty">尚無搜尋紀錄</li>';
   }
 
-  function showMobileDropdown() {
-    const dd = document.getElementById('mobileSearchDropdown');
-    if (dd) { renderMobileHistory(); dd.style.display = ''; }
-  }
-  function hideMobileDropdown() {
-    const dd = document.getElementById('mobileSearchDropdown');
-    if (dd) dd.style.display = 'none';
-  }
-
-  function runMobileSearch(term) {
-    const mainInput = document.getElementById('searchInput');
-    if (mainInput) mainInput.value = term;
-    hideMobileDropdown();
-    document.getElementById('searchForm')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-  }
-
-  // ── 桌機下拉記錄 ──
+  // ── 電腦 dropdown 搜尋紀錄 ──
   function renderDesktopHistory() {
     const list = document.getElementById('desktopHistoryList');
     if (!list) return;
     const h = getHistory();
-    list.innerHTML = h.length
-      ? h.map(t => `<span class="search-drop-tag" data-term="${encodeURIComponent(t)}">${t}<button class="del-tag" data-del="${encodeURIComponent(t)}">×</button></span>`).join('')
-      : '<span class="text-muted" style="font-size:0.82rem;">尚無搜尋紀錄</span>';
-    list.querySelectorAll('.search-drop-tag').forEach(tag => {
-      tag.addEventListener('click', function (e) {
-        if (e.target.classList.contains('del-tag')) return;
-        window._pickHistory(decodeURIComponent(this.dataset.term));
-      });
-    });
-    list.querySelectorAll('.del-tag').forEach(btn => {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        saveHistory(getHistory().filter(t => t !== decodeURIComponent(this.dataset.del)));
-        renderDesktopHistory();
-      });
-    });
+    if (!h.length) {
+      list.innerHTML = '<li class="search-drop-empty">尚無搜尋紀錄</li>';
+    } else {
+      list.innerHTML = h.map(t => {
+        const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');
+        return `<li class="search-drop-item" onclick="window._pickHistory('${safe}')">
+          <i class="fa-regular fa-clock search-drop-icon"></i>
+          <span class="search-drop-text">${t.replace(/</g,'&lt;')}</span>
+          <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillDesktop('${safe}')">↗</button>
+          <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','desktop')"><i class="fa-solid fa-xmark"></i></button>
+        </li>`;
+      }).join('');
+    }
   }
 
+  window._removeHistory = function (term, src) {
+    saveHistory(getHistory().filter(t => t !== term));
+    renderMobileHistory();
+    renderDesktopHistory();
+  };
+
+  // 點擊文字 → 直接搜尋（電腦版）
   window._pickHistory = function (term) {
     const input = document.getElementById('searchInput');
     if (input) {
       input.value = term;
-      closeDesktopDropdown();
-      document.getElementById('searchForm')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      updateClearBtn(input, document.getElementById('searchClearBtn'));
+      closeDropdown();
+      addSearchHistory(term);
+      document.getElementById('searchForm').dispatchEvent(new Event('submit'));
     }
   };
 
-  function openDesktopDropdown() {
+  // 點擊 ↗ → 只填入 input，不搜尋（電腦版）
+  window._fillDesktop = function (term) {
+    const input = document.getElementById('searchInput');
+    if (input) {
+      input.value = term;
+      input.focus();
+      updateClearBtn(input, document.getElementById('searchClearBtn'));
+    }
+  };
+
+  // 點擊文字 → 直接搜尋（手機版）
+  window._pickMobile = function (term) {
+    const ocInput = document.getElementById('searchInputOC');
+    const mainInput = document.getElementById('searchInput');
+    if (!ocInput) return;
+    addSearchHistory(term);
+    const bsOC = bootstrap.Offcanvas.getInstance(document.getElementById('searchOffcanvas'));
+    if (bsOC) bsOC.hide();
+    if (mainInput) mainInput.value = term;
+    document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+  };
+
+  // 點擊 ↗ → 只填入 input，不搜尋（手機版）
+  window._fillMobile = function (term) {
+    const ocInput = document.getElementById('searchInputOC');
+    if (ocInput) {
+      ocInput.value = term;
+      ocInput.focus();
+      updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
+    }
+  };
+
+  function updateClearBtn(input, btn) {
+    if (btn) btn.classList.toggle('visible', input.value.length > 0);
+  }
+
+  // ── 電腦 dropdown 顯示/隱藏 ──
+  function openDropdown() {
     const dd = document.getElementById('searchDropdown');
     if (!dd) return;
     renderDesktopHistory();
     dd.style.removeProperty('display');
     dd.classList.add('active');
   }
-  function closeDesktopDropdown() {
+  function closeDropdown() {
     const dd = document.getElementById('searchDropdown');
     if (!dd) return;
     dd.classList.remove('active');
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    const mainInput = document.getElementById('searchInput');
-    const dropdown  = document.getElementById('searchDropdown');
+    const mainInput     = document.getElementById('searchInput');
+    const ocInput       = document.getElementById('searchInputOC');
+    const ocEl          = document.getElementById('searchOffcanvas');
+    const dropdown      = document.getElementById('searchDropdown');
     const mobileTrigger = document.getElementById('searchTriggerMobile');
 
-    // ── 手機搜尋欄（直接可輸入）──
-    if (mobileTrigger) {
-      mobileTrigger.addEventListener('focus', showMobileDropdown);
-      mobileTrigger.addEventListener('blur', function () {
-        setTimeout(hideMobileDropdown, 200);
+    // ── 手機觸發按鈕 → 開 offcanvas ──
+    if (ocEl && mobileTrigger) {
+      const bsOC = new bootstrap.Offcanvas(ocEl, { scroll: true, backdrop: true });
+      mobileTrigger.addEventListener('focus', function () {
+        mobileTrigger.blur();
+        bsOC.show();
       });
-      function handleMobileEnter(e) {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const val = mobileTrigger.value.trim();
-          if (!val) return;
-          addSearchHistory(val);
-          runMobileSearch(val);
-        }
+      mobileTrigger.addEventListener('click', function () {
+        bsOC.show();
+      });
+      ocEl.addEventListener('shown.bs.offcanvas', function () {
+        ocInput && ocInput.focus();
+      });
+      ocEl.addEventListener('show.bs.offcanvas', renderMobileHistory);
+      if (ocInput) {
+        ocInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') {
+            const val = ocInput.value.trim();
+            if (!val) return;
+            addSearchHistory(val);
+            bsOC.hide();
+            if (mainInput) mainInput.value = val;
+            document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+          }
+        });
+        ocInput.addEventListener('input', function () {
+          updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
+        });
       }
-      mobileTrigger.addEventListener('keydown', handleMobileEnter);
-      mobileTrigger.addEventListener('keyup', handleMobileEnter);
+      document.getElementById('clearHistoryBtn')?.addEventListener('click', function () {
+        saveHistory([]); renderMobileHistory();
+      });
     }
 
-    document.getElementById('mClearHistoryBtn')?.addEventListener('click', function () {
-      saveHistory([]); renderMobileHistory();
-    });
-
-    // ── 桌機搜尋欄 ──
+    // ── 電腦搜尋欄 ──
     if (mainInput) {
-      mainInput.addEventListener('focus', openDesktopDropdown);
+      mainInput.addEventListener('focus', openDropdown);
       mainInput.addEventListener('input', function () {
-        if (!mainInput.value.trim()) openDesktopDropdown();
+        updateClearBtn(mainInput, document.getElementById('searchClearBtn'));
+        if (!mainInput.value.trim()) openDropdown();
       });
       mainInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
           const val = mainInput.value.trim();
           if (val) addSearchHistory(val);
-          closeDesktopDropdown();
+          closeDropdown();
+          document.getElementById('searchForm').dispatchEvent(new Event('submit'));
         }
       });
       document.addEventListener('mousedown', function (e) {
         if (dropdown && !dropdown.contains(e.target) && e.target !== mainInput) {
-          closeDesktopDropdown();
+          closeDropdown();
         }
+      });
+      document.getElementById('searchClearBtn')?.addEventListener('click', function () {
+        mainInput.value = '';
+        mainInput.focus();
+        updateClearBtn(mainInput, this);
+        openDropdown();
       });
       document.getElementById('desktopClearHistory')?.addEventListener('click', function () {
         saveHistory([]); renderDesktopHistory();
       });
     }
+
+    document.getElementById('searchClearBtnOC')?.addEventListener('click', function () {
+      if (ocInput) { ocInput.value = ''; ocInput.focus(); }
+      updateClearBtn(ocInput, this);
+    });
   });
 })();
 </script>

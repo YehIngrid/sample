@@ -791,3 +791,120 @@ ul{
 /* Skip-loader: hide the full-page loading animation when navigating via bottom nav */
 html.skip-loader #loader { display: none !important; }
 html.skip-loader #whatcontent { display: block !important; }
+
+/* ===== 搜尋下拉面板（電腦版）共用樣式 ===== */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+  z-index: 9999;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.search-dropdown.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  display: block !important;
+}
+.search-drop-section { padding: 12px 16px 10px; }
+.search-drop-section + .search-drop-section { border-top: 1px solid #f0f0f0; }
+.search-drop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #666;
+}
+.search-drop-header button {
+  background: none;
+  border: none;
+  font-size: 0.78rem;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0;
+}
+.search-drop-header button:hover { color: #555; }
+
+/* ── 搜尋紀錄 / 排行榜 list ── */
+.search-drop-list { list-style: none; padding: 0; margin: 0; }
+.search-drop-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.search-drop-item:hover { background: #f5f5f5; }
+.search-drop-icon { font-size: 0.82rem; color: #bbb; flex-shrink: 0; width: 16px; text-align: center; }
+.search-drop-text { flex: 1; font-size: 0.88rem; color: #383838; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.search-drop-fill {
+  background: none; border: none; padding: 2px 6px;
+  font-size: 0.85rem; color: #ccc; cursor: pointer;
+  flex-shrink: 0; line-height: 1; transition: color 0.15s;
+}
+.search-drop-fill:hover { color: #004b97; }
+.search-drop-item .del-tag {
+  background: none; border: none; padding: 2px 6px;
+  font-size: 0.82rem; color: #ccc; cursor: pointer;
+  flex-shrink: 0; line-height: 1; transition: color 0.15s;
+}
+.search-drop-item .del-tag:hover { color: #888; }
+.search-drop-empty { font-size: 0.82rem; color: #bbb; padding: 4px 6px; }
+
+/* ── 排行榜排名數字 ── */
+.search-drop-rank { min-width: 18px; font-size: 0.85rem; font-weight: 700; text-align: center; flex-shrink: 0; }
+.search-drop-trend li:nth-child(1) .search-drop-rank { color: #f03e3e; }
+.search-drop-trend li:nth-child(2) .search-drop-rank { color: #fd7e14; }
+.search-drop-trend li:nth-child(3) .search-drop-rank { color: #fab005; }
+.search-drop-trend li:nth-child(n+4) .search-drop-rank { color: #adb5bd; }
+
+/* ===== 搜尋 Offcanvas 動畫效果 ===== */
+#searchOffcanvas { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+#searchOffcanvas.showing, #searchOffcanvas.show { transform: translateY(0) !important; }
+#searchOffcanvas:not(.show):not(.showing) { transform: translateY(-110%) !important; }
+
+/* ── 搜尋欄 focus 高亮 ── */
+#searchInput:focus, #searchInputOC:focus {
+  border-color: #004b97 !important;
+  box-shadow: 0 0 0 3px rgba(0,75,151,0.1) !important;
+}
+
+/* ── 隱藏瀏覽器原生 type="search" 清除按鈕 ── */
+#searchInput::-webkit-search-cancel-button,
+#searchInputOC::-webkit-search-cancel-button,
+#searchTriggerMobile::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  display: none;
+}
+
+/* ── 搜尋欄自訂清除按鈕（×）── */
+.search-clear-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0 2px;
+  color: #aaa;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: none;
+  z-index: 3;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.search-clear-btn:hover { color: #555; }
+.search-clear-btn.visible { display: block; }

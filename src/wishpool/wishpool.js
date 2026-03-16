@@ -682,8 +682,6 @@ function createWishCard(wish, isMyWish) {
   const deadlineText = expiresAt
     ? `截止 ${(expiresAt.getMonth()+1).toString().padStart(2,'0')}/${expiresAt.getDate().toString().padStart(2,'0')}`
     : '';
-  const avatarSrc = wish.owner?.photoURL || '../webP/default-avatar.webp';
-
   const statusMap = { ACTIVE: '上架中', EXPIRED: '已過期', DELETED: '已刪除' };
   const statusColor = wish.status === 'ACTIVE' ? '#28a745' : '#aaa';
   const statusBadgeHtml = (isMyWish && wish.status !== 'ACTIVE')
@@ -698,8 +696,6 @@ function createWishCard(wish, isMyWish) {
     <div class="wish-card">
       <div class="wish-card-front">
         <div class="wf-header">
-          <img class="wf-avatar" src="${avatarSrc}" alt="許願者頭像"
-               onerror="this.src='../webP/default-avatar.webp'">
           <div class="wf-title">${wish.itemName}</div>
           <div class="wf-deadline">${deadlineText}</div>
         </div>

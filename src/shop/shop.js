@@ -12,10 +12,14 @@ let chatRoomList;
 function hotSkeletonHTML(n = 6) {
   return Array.from({length: n}, () => `
     <div class="hot-item">
-      <div class="card" style="width:148px">
-        <div class="skeleton" style="width:148px;height:148px;border-radius:10px 10px 0 0;"></div>
-        <div style="padding:8px 6px">
-          <div class="skeleton skeleton-text" style="width:85%;margin:0 auto;"></div>
+      <div class="card">
+        <div class="img-box skeleton" style="border-radius:10px 10px 0 0;"></div>
+        <div class="hot-item-footer">
+          <div class="skeleton skeleton-text" style="width:65%;margin:0;flex:1;"></div>
+          <div class="card-seller" style="flex-shrink:0;">
+            <div class="skeleton" style="width:16px;height:16px;border-radius:50%;"></div>
+            <div class="skeleton skeleton-text" style="width:32px;margin:0;"></div>
+          </div>
         </div>
       </div>
     </div>`).join('');
@@ -125,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
   backendService = new BackendService();
   let page = 1;
   let limit = 6;
+  let hotDirection = 1; // 1 = 下一頁（從右進入），-1 = 上一頁（從左進入）
   const listEl = document.getElementById('hotItems');
   const prevHotBtn = document.getElementById("prevHotBtn");
   const nextHotBtn = document.getElementById("nextHotBtn");
@@ -145,6 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 function renderItems(items){
   listEl.innerHTML = '';
+  // 套用滑入動畫
+  const slideClass = hotDirection > 0 ? 'hot-slide-in-right' : 'hot-slide-in-left';
+  listEl.classList.remove('hot-slide-in-right', 'hot-slide-in-left');
+  void listEl.offsetWidth; // 強制 reflow 重置動畫
+  listEl.classList.add(slideClass);
+  setTimeout(() => listEl.classList.remove(slideClass), 350);
+
   items.forEach(item => {
     const div = document.createElement("div");
       div.className = "hot-item";
@@ -238,10 +250,10 @@ updateScrollbarVisibility();
 updateHotAlignment();
 
 prevHotBtn.addEventListener("click", () => {
-  if (page > 1) fetchPage(page - 1);
+  if (page > 1) { hotDirection = -1; fetchPage(page - 1); }
 });
 nextHotBtn.addEventListener("click", () => {
-  fetchPage(page + 1);
+  hotDirection = 1; fetchPage(page + 1);
 });
   // 確保所有 DOM 元素都已經載入
   const openModalBtn = document.getElementById('create');
@@ -619,6 +631,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const DESKTOP_LIMIT = 12;
   const MOBILE_CHUNK  = 6;
 
+  // 高度鎖定：防止換頁時因商品數量不足而縮小
+  let _minHDesktop = 0;
+  let _minHMobile  = 0;
+
   // 電腦版狀態
   let desktopPage = 1;
 
@@ -646,6 +662,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const nowDesktop = isDesktop();
     if (nowDesktop === wasDesktop) return;
     wasDesktop = nowDesktop;
+    // 切換版型時重置高度鎖定（欄數不同，原高度不適用）
+    _minHDesktop = 0;
+    _minHMobile  = 0;
+    container.style.minHeight = '';
     if (nowDesktop) {
       showDesktopUI();
       fetchDesktopPage(desktopPage);
@@ -834,6 +854,19 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       col.appendChild(card);
       container.appendChild(col);
+    });
+
+    // 首次滿版渲染後鎖定高度，防止換頁時因商品數量不足而縮小
+    requestAnimationFrame(() => {
+      const h = container.offsetHeight;
+      if (h <= 0) return;
+      if (isDesktop()) {
+        if (_minHDesktop === 0 && productList.length >= DESKTOP_LIMIT) _minHDesktop = h;
+        if (_minHDesktop > 0) container.style.minHeight = _minHDesktop + 'px';
+      } else {
+        if (_minHMobile === 0 && productList.length >= MOBILE_CHUNK) _minHMobile = h;
+        if (_minHMobile > 0) container.style.minHeight = _minHMobile + 'px';
+      }
     });
   }
 });

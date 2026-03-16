@@ -6,11 +6,17 @@ function commoditySkeletonHTML(n = 12) {
   return Array.from({length: n}, () => `
     <div class="col">
       <div class="product-card h-100">
-        <div class="skeleton" style="aspect-ratio:1/1;border-radius:8px 8px 0 0;"></div>
-        <div class="card-body">
-          <div class="skeleton skeleton-text" style="width:85%;"></div>
-          <div class="skeleton skeleton-text" style="width:50%;"></div>
-          <div class="skeleton skeleton-text" style="width:40%;margin-top:8px;"></div>
+        <div class="product-thumb skeleton" style="border-radius:8px 8px 0 0;"></div>
+        <div class="card-body d-flex flex-column">
+          <div class="skeleton skeleton-text" style="width:80%;"></div>
+          <div class="skeleton skeleton-text" style="width:55%;"></div>
+          <div class="mt-auto d-flex justify-content-between align-items-center" style="margin-top:10px;">
+            <div class="skeleton skeleton-text" style="width:38%;margin:0;"></div>
+            <div class="d-flex align-items-center gap-1">
+              <div class="skeleton" style="width:16px;height:16px;border-radius:50%;flex-shrink:0;"></div>
+              <div class="skeleton skeleton-text" style="width:36px;margin:0;"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>`).join('');
@@ -130,7 +136,7 @@ function changeCategory(category) {
 async function loadProducts() {
   if (isLoading) return;
   isLoading = true;
-  productRow.innerHTML = commoditySkeletonHTML();
+  productRow.innerHTML = commoditySkeletonHTML(PAGE_SIZE);
   loaderEl.textContent = '載入中...';
   let currentSource = 'all';     // all | hot | new（資料來源）
 let currentCategory = 'all';   // 書籍 / 生活用品…
@@ -295,8 +301,9 @@ function renderPagination(totalCount) {
 
   // 上一頁
   const prevBtn = document.createElement('button');
-  prevBtn.textContent = '<';
-  prevBtn.className = 'btn btn-sm mx-1 ' + (pageIndex === 0 ? 'btn-secondary disabled' : 'btn-outline-primary');
+  prevBtn.textContent = '‹ 上一頁';
+  prevBtn.className = 'pager-nav-btn' + (pageIndex === 0 ? ' disabled' : '');
+  prevBtn.disabled = pageIndex === 0;
   prevBtn.addEventListener('click', () => {
     if (pageIndex > 0) {
       pageIndex--;
@@ -309,7 +316,7 @@ function renderPagination(totalCount) {
   for (let i = 0; i < totalPages; i++) {
     const btn = document.createElement('button');
     btn.textContent = i + 1;
-    btn.className = 'btn btn-sm mx-1 ' + (i === pageIndex ? 'btn-primary' : 'btn-outline-primary');
+    btn.className = 'pager-nav-btn' + (i === pageIndex ? ' pager-nav-btn--active' : '');
     btn.addEventListener('click', () => {
       if (i !== pageIndex) {
         pageIndex = i;
@@ -321,8 +328,9 @@ function renderPagination(totalCount) {
 
   // 下一頁
   const nextBtn = document.createElement('button');
-  nextBtn.textContent = '>';
-  nextBtn.className = 'btn btn-sm mx-1 ' + (pageIndex === totalPages - 1 ? 'btn-secondary disabled' : 'btn-outline-primary');
+  nextBtn.textContent = '下一頁 ›';
+  nextBtn.className = 'pager-nav-btn' + (pageIndex === totalPages - 1 ? ' disabled' : '');
+  nextBtn.disabled = pageIndex === totalPages - 1;
   nextBtn.addEventListener('click', () => {
     if (pageIndex < totalPages - 1) {
       pageIndex++;
@@ -345,7 +353,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // 取得 URL 參數
   const urlParams = new URLSearchParams(window.location.search);
   const categoryFromUrl = urlParams.get('category');
-  
+  const qFromUrl = urlParams.get('q');
+
+  // 若從 shop.html 帶入搜尋關鍵字，預填搜尋欄
+  if (qFromUrl) {
+    const si = document.getElementById('searchInput');
+    if (si) si.value = qFromUrl;
+  }
+
   let initialCategory = 'all';
 
   // 如果 URL 有帶 category 參數，就用它的值作為初始分類

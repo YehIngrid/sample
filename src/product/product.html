@@ -28,6 +28,7 @@
     <!-- PhotoSwipe v5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css">
     <script src="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/umd/photoswipe.umd.min.js"></script>
+  <link rel="stylesheet" href="../shop/shop.css">
 </head>
 <body>
   <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
@@ -86,17 +87,7 @@
           </div>
         </nav>
         
-        <!-- 桌機版也顯示的搜尋欄 -->
         <div class="container-fluid1">
-          <div class="d-flex align-items-center">
-            <form id="searchForm" class="form-search w-100 d-flex justify-content-center align-items-center">
-              <div class="search-input-wrap" style="max-width: 730px; width: 100%; position: relative;">
-                <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-                <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
-              </div>
-            </form>
-          </div>
-        
           <!-- 手機版導覽選單展開內容 -->
           <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
             <ul class="navbar-nav">
@@ -136,7 +127,6 @@
             <a id="shareFb" href="#" target="_blank" rel="noopener" class="share-icon-btn share-fb" title="分享到 Facebook"><i class="fa-brands fa-facebook-f"></i></a>
             <a id="shareLine" href="#" target="_blank" rel="noopener" class="share-icon-btn share-line" title="分享到 LINE"><i class="fa-brands fa-line"></i></a>
             <a id="shareX" href="#" target="_blank" rel="noopener" class="share-icon-btn share-x" title="分享到 X"><i class="fa-brands fa-x-twitter"></i></a>
-            <button id="shareIg" class="share-icon-btn share-ig" title="複製連結（Instagram）"><i class="fa-brands fa-instagram"></i></button>
             <button id="shareCopy" class="share-icon-btn share-copy" title="複製連結"><i class="fa-regular fa-copy"></i></button>
           </div>
         </div>
@@ -155,19 +145,18 @@
       <h1 id="product-name" class="product-title h2 mb-2"></h1>
 
       <!-- 價格列：手機版左側放分享圖示，右側放價格 -->
-      <div class="d-flex align-items-center justify-content-between" style="margin-right: 3vw;">
+      <div class="d-flex align-items-center justify-content-between" style="margin-right: 3vw; margin-left: 2vw; margin-bottom: 1vh;">
         <!-- 手機版分享圖示（無標籤文字） -->
         <div class="d-flex d-lg-none align-items-center gap-1">
           <a id="shareFbM" href="#" target="_blank" rel="noopener" class="share-icon-btn share-fb" title="分享到 Facebook"><i class="fa-brands fa-facebook-f"></i></a>
           <a id="shareLineM" href="#" target="_blank" rel="noopener" class="share-icon-btn share-line" title="分享到 LINE"><i class="fa-brands fa-line"></i></a>
           <a id="shareXM" href="#" target="_blank" rel="noopener" class="share-icon-btn share-x" title="分享到 X"><i class="fa-brands fa-x-twitter"></i></a>
-          <button id="shareIgM" class="share-icon-btn share-ig" title="複製連結（Instagram）"><i class="fa-brands fa-instagram"></i></button>
           <button id="shareCopyM" class="share-icon-btn share-copy" title="複製連結"><i class="fa-regular fa-copy"></i></button>
         </div>
         <!-- 價格 -->
         <div class="d-flex align-items-baseline gap-2 ms-auto">
           <div id="price" class="price mobilesetting"></div>
-          <div class="fs-6 fw-semibold">NT$</div>
+          <div class="fs-5 fw-semibold">NT$</div>
         </div>
       </div>
 
@@ -179,12 +168,12 @@
 
       <!-- 庫存 + 數量調整器同一行 -->
       <div class="d-flex align-items-center gap-3 my-3 mobilesetting flex-wrap">
-        <span class="text-muted" style="white-space:nowrap;">庫存：<span id="stock"></span> 件</span>
         <div class="d-flex align-items-center gap-2">
           <button id="minus" class="btn btn-outline-secondary" type="button" aria-label="減少">−</button>
           <input id="qty" class="form-control text-center qty-input" type="text" value="1" readonly style="max-width:70px; cursor:default;">
           <button id="plus" class="btn btn-outline-secondary" type="button" aria-label="增加">＋</button>
         </div>
+        <span class="text-muted" style="white-space:nowrap;">庫存：<span id="stock"></span> 件</span>
       </div>
 
       <div class="cta-wrap d-sm-flex gap-3 mt-5 d-none">
@@ -259,7 +248,12 @@
           <div class="card-body">
               <div class="d-lg-flex d-block justify-content-between gap-2">
                 <div class="photo col-lg-2 text-center d-flex align-items-center">
-                  <img src="../webP/default-avatar.webp" alt="賣家頭像" class="sellerphoto" id="sellerPhoto">
+                  <div style="position:relative;width:fit-content;margin:0 auto;">
+                    <img src="../webP/default-avatar.webp" alt="賣家頭像" class="sellerphoto" id="sellerPhoto">
+                    <button id="followSellerBtn" class="follow-seller-btn" title="關注賣家">
+                      <i class="fa-solid fa-plus"></i> 關注
+                    </button>
+                  </div>
                 </div>
                 <div class="info col-lg-7 d-flex flex-column justify-content-around">
                   <div class="centerseller">

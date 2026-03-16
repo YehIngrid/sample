@@ -277,9 +277,13 @@ export default class BackendService {
             return Promise.reject(error);
         } 
     }
-    async getMyItems() {
+    async getMyItems(pagingInfo = {}) {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/commodity/my`, { headers: { "Cache-Control": "no-cache" } });
+            const response = await axios.get(`${this.baseUrl}/api/commodity/my`, {
+                params: pagingInfo,
+                headers: { "Cache-Control": "no-cache" },
+                withCredentials: true,
+            });
             return response.data;
         } catch (error) {
             console.error(error);

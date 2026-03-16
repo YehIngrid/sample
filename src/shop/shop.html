@@ -116,6 +116,7 @@
               <div class="search-input-wrap" style="max-width: 730px; width: 100%; position: relative;">
                 <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
                 <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
+                <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
 
                 <!-- 電腦版搜尋下拉面板 -->
                 <div id="searchDropdown" class="search-dropdown d-none d-lg-block" style="display:none!important;">
@@ -123,20 +124,19 @@
                   <div class="search-drop-section" id="desktopHistorySection">
                     <div class="search-drop-header">
                       <span>搜尋紀錄</span>
-                      <button type="button" id="desktopClearHistory">清除</button>
+                      <button type="button" id="desktopClearHistory">清除全部</button>
                     </div>
-                    <div id="desktopHistoryList" class="search-drop-tags"></div>
+                    <ul id="desktopHistoryList" class="search-drop-list"></ul>
                   </div>
 
                   <!-- 大家都在搜 -->
                   <div class="search-drop-section">
                     <div class="search-drop-header">
-                      <span>🔥 大家都在搜</span>
+                      <span><i class="fa-solid fa-fire" style="color:#ff6b35;margin-right:4px;"></i>大家都在搜</span>
                     </div>
-                    <div id="desktopTrendList" class="search-drop-tags">
-                      <!-- 預留：由 API 填入 -->
-                      <span class="text-muted" style="font-size:0.82rem;">暫無資料</span>
-                    </div>
+                    <ul id="desktopTrendList" class="search-drop-list search-drop-trend">
+                      <li class="search-drop-empty">暫無資料</li>
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -294,7 +294,7 @@
 
   <!-- 3. 分類 -->
   <!-- 手機版商品分類 3×2 格 -->
-  <div class="d-lg-none mobile-cat-grid">
+  <div class="d-lg-none mobile-cat-grid mbcategory">
     <a href="../commodity/commodity.html?category=書籍與學籍用品" class="mobile-cat-item">
       <img src="../svg/book.svg" alt="書籍與學籍用品篩選按鈕">
       <span>書籍與學籍用品</span>
@@ -321,7 +321,7 @@
     </a>
   </div>
   <!-- 電腦版：商品分類一整橫排 -->
-  <div class="d-none d-lg-flex smallmysection" style="justify-content:space-around;margin-top:16px;margin-bottom:16px;">
+  <div class="d-none d-lg-flex smallmysection category" style="justify-content:space-around;">
     <a href="../commodity/commodity.html?category=書籍與學籍用品" class="d-flex flex-column align-items-center gap-2 desktop-cat-item" style="border-right: 1px #ddd solid;">
       <div class="icon-box"><img src="../svg/book.svg" alt="書籍與學籍用品篩選按鈕"></div>
       <span>書籍與學籍用品</span>
@@ -374,54 +374,57 @@
   </div>
 
   <!-- 4. 操作說明 -->
-  <div class="firstlinesell d-block justify-content-center gap-lg-4">
-    <div class="d-flex justify-content-between" style="margin-bottom: 20px; margin-top: 40px;">
+  <div class="firstlinesell d-block justify-content-center gap-lg-4" id="guideSection">
+    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 20px; margin-top: 40px;">
       <h3 class="cardTitle" style="color: #383838;">拾貨寶庫<span style="color: #004b97;">操作說明</span></h3>
+      <button id="dismissGuide" class="dismiss-guide-btn" title="永久不再顯示此區塊">
+        <i class="fa-solid fa-xmark"></i> 不再顯示
+      </button>
     </div>
     <div class="explainStep" style="margin-bottom: 40px;">
       <div class="rule-wrapper">
         <button class="arrow left" id="ruleLeft">‹</button>
         <div class="rule-container" id="ruleContainer">
-          <div class="rule-card">
+          <a class="rule-card" href="../questions/questions.html#howtosell">
             <h5>如何賣東西?</h5>
             <p>賣家專區相關操作</p>
-            <a href="../questions/questions.html#howtosell" class="rule-btn"><span class="ruleArray">›</span></a>
-          </div>
-          <div class="rule-card">
+            <span class="rule-btn"><span class="ruleArray">›</span></span>
+          </a>
+          <a class="rule-card" href="../questions/questions.html#howtobuy">
             <h5>如何買東西?</h5>
             <p>買家如何購買二手商品</p>
-            <a href="../questions/questions.html#howtobuy" class="rule-btn"><span class="ruleArray">›</span></a>
-          </div>
-          <div class="rule-card">
+            <span class="rule-btn"><span class="ruleArray">›</span></span>
+          </a>
+          <a class="rule-card" href="../questions/questions.html#howtowish">
             <h5>如何許願?</h5>
             <p>許願專區相關操作</p>
-            <a href="../questions/questions.html#howtowish" class="rule-btn"><span class="ruleArray">›</span></a>
-          </div>
-          <div class="rule-card">
+            <span class="rule-btn"><span class="ruleArray">›</span></span>
+          </a>
+          <a class="rule-card" href="../questions/questions.html#howtomatch">
             <h5>如何媒合願望?</h5>
             <p>賣家媒合許願商品相關操作</p>
-            <a href="../questions/questions.html#howtomatch" class="rule-btn"><span class="ruleArray">›</span></a>
-          </div>
-          <div class="rule-card">
+            <span class="rule-btn"><span class="ruleArray">›</span></span>
+          </a>
+          <a class="rule-card" href="../questions/questions.html#howtochat">
             <h5>如何使用聊天室?</h5>
             <p>賣家與買家之間的溝通方式</p>
-            <a href="../questions/questions.html#howtochat" class="rule-btn"><span class="ruleArray">›</span></a>
-          </div>
-          <div class="rule-card">
+            <span class="rule-btn"><span class="ruleArray">›</span></span>
+          </a>
+          <a class="rule-card" href="../questions/questions.html#howtoviewedit">
             <h5>如何查看/編輯自己上架的商品?</h5>
             <p>賣家查看自己上架商品相關操作</p>
-            <a href="../questions/questions.html#howtoviewedit" class="rule-btn"><span class="ruleArray">›</span></a>
-          </div>
-          <div class="rule-card">
+            <span class="rule-btn"><span class="ruleArray">›</span></span>
+          </a>
+          <a class="rule-card" href="../questions/questions.html#howtobuyorder">
             <h5>如何查看/操作購買訂單?</h5>
             <p>買家查看自己購買訂單相關操作</p>
-            <a href="../questions/questions.html#howtobuyorder" class="rule-btn"><span class="ruleArray">›</span></a>
-          </div>
-          <div class="rule-card">
+            <span class="rule-btn"><span class="ruleArray">›</span></span>
+          </a>
+          <a class="rule-card" href="../questions/questions.html#howtosellorder">
             <h5>如何查看/操作售出訂單?</h5>
             <p>賣家查看操作訂單相關操作</p>
-            <a href="../questions/questions.html#howtosellorder" class="rule-btn"><span class="ruleArray">›</span></a>
-          </div>
+            <span class="rule-btn"><span class="ruleArray">›</span></span>
+          </a>
         </div>
         <button class="arrow right" id="ruleRight">›</button>
       </div>
@@ -1218,7 +1221,8 @@ document.getElementById('chaticon').addEventListener('click', () => {
     <div class="d-flex align-items-center px-3 py-2 border-bottom gap-2">
       <div class="search-input-wrap flex-grow-1" style="position:relative;">
         <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInputOC" style="border-radius:99px;padding-left:42px;">
+        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInputOC" style="border-radius:99px;padding-left:42px;padding-right:36px;">
+        <button class="search-clear-btn" id="searchClearBtnOC" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <button class="btn btn-link text-secondary text-decoration-none p-0" data-bs-dismiss="offcanvas">取消</button>
     </div>
@@ -1238,25 +1242,41 @@ document.getElementById('chaticon').addEventListener('click', () => {
 
     <!-- 搜尋紀錄 -->
     <div class="px-3 pt-3 pb-1">
-      <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="d-flex justify-content-between align-items-center mb-1">
         <small class="fw-bold">搜尋紀錄</small>
-        <button class="btn btn-link btn-sm text-muted p-0 text-decoration-none" id="clearHistoryBtn">清除</button>
+        <button class="btn btn-link btn-sm text-muted p-0 text-decoration-none" id="clearHistoryBtn">清除全部</button>
       </div>
-      <div id="searchHistoryList" class="d-flex flex-wrap gap-2 pb-1">
+      <ul id="searchHistoryList" class="search-drop-list">
         <!-- 由 JS 填入 -->
-      </div>
+      </ul>
     </div>
 
     <!-- 搜尋排行榜（預留） -->
     <div class="px-3 pt-2 pb-3 border-top mt-2">
-      <small class="fw-bold d-block mb-2">🔥 搜尋排行榜</small>
-      <div id="searchRankList">
-        <!-- 預留：之後由 API 填入排行資料 -->
-        <small class="text-muted">暫無資料</small>
+      <div class="d-flex align-items-center gap-1 mb-1">
+        <i class="fa-solid fa-fire" style="color:#ff6b35;font-size:0.82rem;"></i>
+        <small class="fw-bold">搜尋排行榜</small>
       </div>
+      <ul id="searchRankList" class="search-drop-list search-drop-trend">
+        <li class="search-drop-empty">暫無資料</li>
+      </ul>
     </div>
   </div>
 </div>
+
+<script>
+// ── 操作說明區塊 永久不顯示 ──
+(function () {
+  const GUIDE_KEY = 'hideGuideSection';
+  const section = document.getElementById('guideSection');
+  if (!section) return;
+  if (localStorage.getItem(GUIDE_KEY) === '1') { section.style.display = 'none'; return; }
+  document.getElementById('dismissGuide')?.addEventListener('click', function () {
+    localStorage.setItem(GUIDE_KEY, '1');
+    section.style.display = 'none';
+  });
+})();
+</script>
 
 <script>
 (function () {
@@ -1278,24 +1298,35 @@ document.getElementById('chaticon').addEventListener('click', () => {
     if (!list) return;
     const h = getHistory();
     list.innerHTML = h.length
-      ? h.map(t => `<span class="search-history-tag" onclick="document.getElementById('searchInputOC').value='${t.replace(/'/g,"\\'")}'">${t}<button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${t.replace(/'/g,"\\'")}','mobile')">×</button></span>`).join('')
-      : '<small class="text-muted">尚無搜尋紀錄</small>';
+      ? h.map(t => {
+          const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');
+          return `<li class="search-drop-item" onclick="window._pickMobile('${safe}')">
+            <i class="fa-regular fa-clock search-drop-icon"></i>
+            <span class="search-drop-text">${t.replace(/</g,'&lt;')}</span>
+            <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillMobile('${safe}')">↗</button>
+            <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','mobile')"><i class="fa-solid fa-xmark"></i></button>
+          </li>`;
+        }).join('')
+      : '<li class="search-drop-empty">尚無搜尋紀錄</li>';
   }
 
   // ── 電腦 dropdown 搜尋紀錄 ──
   function renderDesktopHistory() {
     const list = document.getElementById('desktopHistoryList');
-    const section = document.getElementById('desktopHistorySection');
     if (!list) return;
     const h = getHistory();
     if (!h.length) {
-      list.innerHTML = '<span class="text-muted" style="font-size:0.82rem;">尚無搜尋紀錄</span>';
+      list.innerHTML = '<li class="search-drop-empty">尚無搜尋紀錄</li>';
     } else {
-      list.innerHTML = h.map(t =>
-        `<span class="search-drop-tag" onclick="window._pickHistory('${t.replace(/'/g,"\\'")}')">
-          ${t}<button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${t.replace(/'/g,"\\'")}','desktop')">×</button>
-        </span>`
-      ).join('');
+      list.innerHTML = h.map(t => {
+        const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');
+        return `<li class="search-drop-item" onclick="window._pickHistory('${safe}')">
+          <i class="fa-regular fa-clock search-drop-icon"></i>
+          <span class="search-drop-text">${t.replace(/</g,'&lt;')}</span>
+          <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillDesktop('${safe}')">↗</button>
+          <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','desktop')"><i class="fa-solid fa-xmark"></i></button>
+        </li>`;
+      }).join('');
     }
   }
 
@@ -1305,14 +1336,53 @@ document.getElementById('chaticon').addEventListener('click', () => {
     renderDesktopHistory();
   };
 
+  // 點擊文字 → 直接搜尋（電腦版）
   window._pickHistory = function (term) {
     const input = document.getElementById('searchInput');
     if (input) {
       input.value = term;
+      updateClearBtn(input, document.getElementById('searchClearBtn'));
       closeDropdown();
+      addSearchHistory(term);
       document.getElementById('searchForm').dispatchEvent(new Event('submit'));
     }
   };
+
+  // 點擊 ↗ → 只填入 input，不搜尋（電腦版）
+  window._fillDesktop = function (term) {
+    const input = document.getElementById('searchInput');
+    if (input) {
+      input.value = term;
+      input.focus();
+      updateClearBtn(input, document.getElementById('searchClearBtn'));
+    }
+  };
+
+  // 點擊文字 → 直接搜尋（手機版）
+  window._pickMobile = function (term) {
+    const ocInput = document.getElementById('searchInputOC');
+    const mainInput = document.getElementById('searchInput');
+    if (!ocInput) return;
+    addSearchHistory(term);
+    const bsOC = bootstrap.Offcanvas.getInstance(document.getElementById('searchOffcanvas'));
+    if (bsOC) bsOC.hide();
+    if (mainInput) mainInput.value = term;
+    document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+  };
+
+  // 點擊 ↗ → 只填入 input，不搜尋（手機版）
+  window._fillMobile = function (term) {
+    const ocInput = document.getElementById('searchInputOC');
+    if (ocInput) {
+      ocInput.value = term;
+      ocInput.focus();
+      updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
+    }
+  };
+
+  function updateClearBtn(input, btn) {
+    if (btn) btn.classList.toggle('visible', input.value.length > 0);
+  }
 
   // ── 電腦 dropdown 顯示/隱藏 ──
   function openDropdown() {
@@ -1342,8 +1412,10 @@ document.getElementById('chaticon').addEventListener('click', () => {
         if (window.innerWidth < 992) {
           mainInput.blur();
           bsOC.show();
-          setTimeout(() => ocInput && ocInput.focus(), 350);
         }
+      });
+      ocEl.addEventListener('shown.bs.offcanvas', function () {
+        ocInput && ocInput.focus();
       });
       if (ocInput) {
         ocInput.addEventListener('keydown', function (e) {
@@ -1368,14 +1440,16 @@ document.getElementById('chaticon').addEventListener('click', () => {
       if (window.innerWidth >= 992) openDropdown();
     });
     mainInput.addEventListener('input', function () {
+      updateClearBtn(mainInput, document.getElementById('searchClearBtn'));
       if (window.innerWidth >= 992 && !mainInput.value.trim()) openDropdown();
     });
-    // 電腦 Enter 記錄搜尋
+    // 電腦 Enter 搜尋
     mainInput.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && window.innerWidth >= 992) {
         const val = mainInput.value.trim();
         if (val) addSearchHistory(val);
         closeDropdown();
+        document.getElementById('searchForm').dispatchEvent(new Event('submit'));
       }
     });
     // 點外面關掉 dropdown
@@ -1385,9 +1459,37 @@ document.getElementById('chaticon').addEventListener('click', () => {
       }
     });
 
+    // ── 電腦：清除按鈕 ──
+    document.getElementById('searchClearBtn')?.addEventListener('click', function () {
+      mainInput.value = '';
+      mainInput.focus();
+      updateClearBtn(mainInput, this);
+      openDropdown();
+    });
+
+    // ── 手機：input 事件 + 清除按鈕 ──
+    if (ocInput) {
+      ocInput.addEventListener('input', function () {
+        updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
+      });
+    }
+    document.getElementById('searchClearBtnOC')?.addEventListener('click', function () {
+      if (ocInput) { ocInput.value = ''; ocInput.focus(); }
+      updateClearBtn(ocInput, this);
+    });
+
     // 電腦清除紀錄
     document.getElementById('desktopClearHistory')?.addEventListener('click', function () {
       saveHistory([]); renderDesktopHistory();
+    });
+
+    // 搜尋送出 → 跳至 commodity.html
+    document.getElementById('searchForm')?.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const val = mainInput.value.trim();
+      if (!val) return;
+      addSearchHistory(val);
+      location.href = `../commodity/commodity.html?q=${encodeURIComponent(val)}`;
     });
   });
 })();

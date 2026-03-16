@@ -96,10 +96,24 @@ backbtn.addEventListener('click', function(e){
 // ── 分享功能 ──
 function getShareInfo() {
   const name = document.getElementById('product-name')?.textContent?.trim() || '商品';
+  const desc = document.getElementById('product-description')?.textContent?.trim() || '';
+  const img  = document.querySelector('.tryimg')?.src || '';
   const url  = location.href;
-  return { name, url };
+  return { name, desc, img, url };
 }
 
+// 動態更新 OG meta tags（影響 LINE、Facebook 等平台的分享預覽）
+function updateOGTags(name, description, imageUrl) {
+  function setMeta(property, content) {
+    let el = document.querySelector(`meta[property="${property}"]`);
+    if (!el) { el = document.createElement('meta'); el.setAttribute('property', property); document.head.appendChild(el); }
+    el.setAttribute('content', content);
+  }
+  setMeta('og:title', `${name} ｜ 拾貨寶庫`);
+  setMeta('og:description', description || '拾貨寶庫是中興大學最方便的二手拍賣市集');
+  if (imageUrl) setMeta('og:image', imageUrl);
+  setMeta('og:url', location.href);
+}
 
 // 各平台分享連結（電腦版 + 手機版一起更新）
 function updateDesktopShareLinks() {
@@ -125,12 +139,6 @@ async function copyLink() {
     Swal.fire({ icon: 'info', title: '分享連結', text: url });
   }
 }
-['shareIg', 'shareIgM'].forEach(id => {
-  document.getElementById(id)?.addEventListener('click', async () => {
-    await copyLink();
-    Swal.fire({ icon: 'info', title: 'Instagram 分享', text: '連結已複製，請到 Instagram 貼上分享！', showConfirmButton: true });
-  });
-});
 ['shareCopy', 'shareCopyM'].forEach(id => {
   document.getElementById(id)?.addEventListener('click', copyLink);
 });
@@ -245,6 +253,8 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   // 名稱
   const nameEl = document.getElementById('product-name');
   if (nameEl) nameEl.textContent = product?.name ?? '';
+  document.title = `${product?.name ?? '商品'} ｜ 詳細資訊`;
+  updateOGTags(product?.name ?? '商品', product?.description ?? '', product?.mainImage ?? '');
   updateDesktopShareLinks();
 
   // 價格（只放數字；右邊的 NT$ 已在 HTML）

@@ -511,6 +511,27 @@
   object-position: center;   /* 以中心裁切 */
   display: block;
 }
+.follow-seller-btn {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #004b97;
+  color: #fff;
+  border: none;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+}
+.follow-seller-btn:hover { background: #003579; }
+.follow-seller-btn.followed {
+  background: #6c757d;
+}
 .successgreen {
   border: 3px solid #a5dc86 !important;
 }
@@ -534,7 +555,10 @@
     .thumbnail-list {
       max-height: 520px;
       overflow: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
+    .thumbnail-list::-webkit-scrollbar { display: none; }
     .thumb {
       width: 72px;
       height: 72px;
@@ -579,7 +603,8 @@
 
     /* 大標與價格權重 */
     .product-title { font-weight: 800; letter-spacing: .02em; }
-    .price { font-size: clamp(28px, 5vw, 48px); font-weight: 800; }
+    .price { font-size: clamp(36px, 6vw, 56px); font-weight: 800; }
+#price { font-size: clamp(36px, 6vw, 56px); font-weight: 800; color: #004b97; }
 
     /* 兩顆主要按鈕做滿版並列 */
     .cta-wrap > .btn { min-height: 48px; }
