@@ -229,7 +229,7 @@ document.getElementById('update-profile').addEventListener('click', async () => 
   });
   
 const logoutButton = document.getElementById('logout');
-logoutButton.addEventListener('click', function() {
+logoutButton?.addEventListener('click', function() {
   Swal.fire({
     title: '確定要登出嗎？',
     icon: 'warning',
@@ -253,7 +253,7 @@ logoutButton.addEventListener('click', function() {
   });
 });
 const logoutMobileButton = document.getElementById('logoutMobile');
-logoutMobileButton.addEventListener('click', function() {
+logoutMobileButton?.addEventListener('click', function() {
   Swal.fire({
     title: '確定要登出嗎？',
     icon: 'warning',

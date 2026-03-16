@@ -4,7 +4,6 @@ export default class wpBackendService {
         this.http = axios.create({ baseURL: this.baseUrl });
     }
     async createWish(itemName, description, priority, maxPrice, photo) {
-        console.log('建立願望：', itemName, description, priority, maxPrice, photo);
         try {
             const formData = new FormData();
             formData.append('itemName', itemName);
@@ -18,6 +17,7 @@ export default class wpBackendService {
             );
             return response.data;
         } catch (error) {
+            if (error?.response?.status === 403) throw new Error('超過一周上傳上限');
             console.error('Error posting wish:', error);
             return Promise.reject(error);
         }

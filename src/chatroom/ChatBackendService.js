@@ -3,6 +3,9 @@ export default class ChatBackendService {
         this.baseUrl = 'https://thpr.hlc23.dev';
         this.http = axios.create({ baseURL: this.baseUrl });
     }
+    _forbidden(error) {
+        if (error?.response?.status === 403) throw new Error('存取被禁止 - 帳號已停用或電子郵件未驗證');
+    }
     async sendMessage(roomId, message, attachments = []) {
         try {
             const formData = new FormData();
@@ -15,6 +18,7 @@ export default class ChatBackendService {
             );
             return response.data;
         } catch (error) {
+            this._forbidden(error);
             console.error('Error sending message:', error);
             return Promise.reject(error);
         }
@@ -27,6 +31,7 @@ export default class ChatBackendService {
             );
             return response.data;
         } catch (error) {
+            this._forbidden(error);
             console.error('Error sending typing status:', error);
             return Promise.reject(error);
         }
@@ -38,12 +43,12 @@ export default class ChatBackendService {
             );
             return response.data;
         } catch (error) {
+            this._forbidden(error);
             console.error('Error fetching chat history:', error);
             return Promise.reject(error);
         }
     }
     async createRoom(targetUserId) {
-        console.log("發送請求前的最後確認:", { targetUserId });
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/create-room`,
@@ -51,6 +56,7 @@ export default class ChatBackendService {
             );
             return response.data;
         } catch (error) {
+            this._forbidden(error);
             console.error('Error creating room:', error);
             return Promise.reject(error);
         }
@@ -62,6 +68,7 @@ export default class ChatBackendService {
             );
             return response.data;
         } catch (error) {
+            this._forbidden(error);
             console.error('Error listing rooms:', error);
             return Promise.reject(error);
         }
@@ -74,6 +81,7 @@ export default class ChatBackendService {
             );
             return response.data;
         } catch (error) {
+            this._forbidden(error);
             console.error('Error marking messages as read:', error);
             return Promise.reject(error);
         }

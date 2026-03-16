@@ -138,8 +138,6 @@ async function loadProducts() {
   isLoading = true;
   productRow.innerHTML = commoditySkeletonHTML(PAGE_SIZE);
   loaderEl.textContent = '載入中...';
-  let currentSource = 'all';     // all | hot | new（資料來源）
-let currentCategory = 'all';   // 書籍 / 生活用品…
 
   try {
     let items = [];
@@ -384,8 +382,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function applyFilters(items) {
-  const maxPrice = maxPriceInput.value ? parseInt(maxPriceInput.value) : null;
-  const newOrOld = newOrOldInput.value !== 'default' ? parseInt(newOrOldInput.value) : null;
+  const maxPrice = maxPriceInput?.value ? parseInt(maxPriceInput.value) : null;
+  const newOrOld = newOrOldInput?.value !== 'default' ? parseInt(newOrOldInput?.value) : null;
   let result = items;
 
   // 關鍵字搜尋

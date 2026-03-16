@@ -5,6 +5,9 @@ export default class BackendService {
         this.baseUrl = 'https://thpr.hlc23.dev';
         this.http = axios.create({ baseURL: this.baseUrl });
     }
+    _forbidden(error) {
+        if (error?.response?.status === 403) throw new Error('存取被禁止 - 帳號已停用或電子郵件未驗證');
+    }
     getCookie(name) {
         const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
         if (match) return match[2];
@@ -55,6 +58,7 @@ export default class BackendService {
             const status = error?.response?.status;
             const msg    = error?.response?.data?.message;
 
+            if (status === 403) throw new Error('存取被禁止 - 帳號已停用或電子郵件未驗證');
             if (status === 401 || /invalid/i.test(msg)) {
             throw new Error('帳號或密碼錯誤');
             }
@@ -87,25 +91,6 @@ export default class BackendService {
         const savedUsername = localStorage.getItem('username');
         const savedIntro = localStorage.getItem('intro');
         const savedRate = localStorage.getItem('rate');
-        if(savedRate) {
-            console.log('已儲存信譽積分', savedRate);
-        } else {
-            console.log('找不到信譽積分!');
-        }
-        if (savedUsername) {
-            console.log('已儲存的使用者名稱:', savedUsername);
-        }
-        if (savedIntro) {
-            console.log('已儲存的使用者介紹:', savedIntro);
-        } else {
-            console.log('尚未設定使用者介紹');
-        }
-        if (savedUid) {
-            console.log('已儲存的 UID:', savedUid);
-        // 這裡可以用來呼叫 API 或顯示用戶資訊
-        } else {
-            console.log('尚未儲存 UID');
-        }
         try {
             const response = await axios.get(`${this.baseUrl}/api/account/${savedUid}`, {
                 withCredentials: true
@@ -146,6 +131,7 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/whoami`, {withCredentials: true });
             return response.data;   // 通常直接回傳 data
         } catch (error) {
+            this._forbidden(error);
             console.error("無法取得使用者資訊", error);
             return Promise.reject(error);
         }
@@ -295,6 +281,7 @@ export default class BackendService {
             const response = await axios.delete(`${this.baseUrl}/api/commodity/delete/${id}`);
             return response.data;
         } catch (error) {
+            this._forbidden(error);
             console.error(error);
             return Promise.reject(new Error("無法刪除商品"));
         }
@@ -334,9 +321,9 @@ export default class BackendService {
                 { quantity }, // <-- 必填 body
                 { headers: { "Content-Type": "application/json" }, withCredentials: true }
             );
-            console.log('quantity:', quantity);
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
@@ -345,9 +332,9 @@ export default class BackendService {
     async getMyCart() {
         try {
             const response = await axios.get(`${this.baseUrl}/api/cart`, { withCredentials: true });
-            console.log("購物車內容：", response.data);
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
@@ -357,6 +344,7 @@ export default class BackendService {
             const response = await axios.post(`${this.baseUrl}/api/cart/remove/${commodityId}`);
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
@@ -372,9 +360,9 @@ export default class BackendService {
                 { quantity },
                 { headers: { "Content-Type": "application/json" }, withCredentials: true }
             );
-            console.log('Updated quantity to:', quantity);
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
@@ -384,6 +372,7 @@ export default class BackendService {
             const response = await axios.delete(`${this.baseUrl}/api/cart/clear`);
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
@@ -402,6 +391,7 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/order`, { headers: { "Cache-Control": "no-cache" } });
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
@@ -421,6 +411,7 @@ export default class BackendService {
 
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error('建立訂單失敗', error);
             return Promise.reject(error);
         }
@@ -431,6 +422,7 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/order/buyer`, { headers: { "Cache-Control": "no-cache" } });
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
@@ -440,6 +432,7 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/order/seller`, { headers: { "Cache-Control": "no-cache" } });
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }
@@ -449,6 +442,7 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/order/${id}`);
             return response;
         } catch (error) {
+            this._forbidden(error);
             console.error("發生錯誤", error);
             return Promise.reject(error);
         }

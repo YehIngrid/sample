@@ -104,7 +104,7 @@ const openBtn = document.getElementById('openModal');
 
 
 // 點擊按鈕時打開模態視窗
-openBtn.addEventListener('click', () => {
+openBtn?.addEventListener('click', () => {
   modal.style.display = 'block';
 });
 
@@ -257,10 +257,9 @@ nextHotBtn.addEventListener("click", () => {
 });
   // 確保所有 DOM 元素都已經載入
   const openModalBtn = document.getElementById('create');
-  console.log('openModal 按鈕:', openModalBtn);
-  
+
   // 將 submit 事件綁定到 form 上
-  openModalBtn.addEventListener('click', function(e) {
+  openModalBtn?.addEventListener('click', function(e) {
     e.preventDefault(); // 防止表單預設送出
     createCommodity();
   });
