@@ -25,6 +25,7 @@ function commoditySkeletonHTML(n = 12) {
 // ====== 設定 ======
 const PAGE_SIZE = 18;
 let currentCategory = 'all';
+let currentSource = 'all';   // 'all' | 'hot' | 'new' — 決定呼叫哪支 API
 let pageIndex = 0;
 let isLoading = false;
 
@@ -50,6 +51,7 @@ sortItems.forEach(el => {
 // 切換大分類
 function changeCategory(category) {
   currentCategory = category;
+  currentSource = (category === 'hot' || category === 'new') ? category : 'all';
   pageIndex = 0;
   productRow.innerHTML = '';
   loadProducts();
