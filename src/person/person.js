@@ -26,99 +26,129 @@ function htmlEncode(str) {
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#39;");
 }
-// 判斷是否有 uid，顯示使用者資料
-// 手機版
-const mProfileName = document.getElementById('mProfileName');
-const mProfileInfo = document.getElementById('mProfileInfo');
+// ── DOM refs ──
+const mProfileName   = document.getElementById('mProfileName');
+const mProfileInfo   = document.getElementById('mProfileInfo');
 const mProfileAvatar = document.getElementById('mProfileAvatar');
-const uid = document.getElementById('uid');
-const muid = document.getElementById('muid');
-uid.textContent = myUid;
-muid.textContent = myUid;
-mProfileName.textContent = localStorage.getItem("username") || "使用者名稱"; // 替換為實際使用者名稱
-mProfileInfo.textContent = localStorage.getItem("intro") || "尚未新增使用者介紹"; // 替換為實際使用者介紹
-if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != 'null' && localStorage.getItem('avatar') != '') {
-  mProfileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
-} else {
-  mProfileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
-}
+const uid            = document.getElementById('uid');
+const muid           = document.getElementById('muid');
+const userRate       = document.getElementById('rate');
+const userRate1      = document.getElementById('rate1');
+const userRate2      = document.getElementById('rate2');
+const showName       = document.getElementById('showName');
+const showIntro      = document.getElementById('showIntro');
+const profileName    = document.getElementById('profileName');
+const profileInfo    = document.getElementById('profileInfo');
+const profileAvatar  = document.getElementById('profileAvatar');
 
-// 更新底部導覽列「我的帳戶」icon 為使用者頭像
-const _navAvatar = localStorage.getItem('avatar');
-if (_navAvatar && _navAvatar !== 'null' && _navAvatar !== '') {
-  document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatar"]').forEach(function(img) {
-    img.src = _navAvatar;
-    img.style.borderRadius = '50%';
-    img.style.border = '1px solid #004b97';
-    img.style.objectFit = 'cover';
-  });
-}
+// 驗證前先顯示灰色預設頭像，其餘欄位留空
+const DEFAULT_AVATAR = '../webP/default-avatar.webp';
+if (mProfileAvatar) mProfileAvatar.src = DEFAULT_AVATAR;
+if (profileAvatar)  profileAvatar.src  = DEFAULT_AVATAR;
 
+// ── 等 whoami 驗證完成後再決定顯示內容（不依賴 localStorage 判斷登入狀態）──
+window._authReady.then(loggedIn => {
+  if (loggedIn) {
+    // ── 已登入：從 localStorage 填入資料 ──
+    const name      = localStorage.getItem('username') || '使用者名稱';
+    const intro     = localStorage.getItem('intro')    || '尚未新增使用者介紹';
+    const avatarUrl = localStorage.getItem('avatar');
+    const rate      = localStorage.getItem('rate')     || '無法顯示';
+    const uidVal    = localStorage.getItem('uid')      || '';
+    const createdAt = localStorage.getItem('userCreatedAt');
 
-// ── 未登入時的手機版處理 ──
-if (!myUid) {
-  // 名稱改為登入/註冊連結
-  mProfileName.innerHTML = '<a href="../account/account.html" style="color:#004b97;text-decoration:none;font-weight:600;">登入 / 註冊</a>';
-  // 隱藏登出 icon
-  const logoutMobileEl = document.getElementById('logoutMobile');
-  if (logoutMobileEl) logoutMobileEl.style.display = 'none';
-  // 停用快速操作 icon（出售商品、修改個資、查看評價、前往許願）
-  document.querySelectorAll('.fastContainer .fastIcon, .fastContainer button').forEach(el => {
-    el.style.opacity = '0.35';
-    el.style.pointerEvents = 'none';
-    el.style.cursor = 'default';
-  });
-  // 停用商品訂單管理按鈕（商品管理、銷售訂單、消費訂單）
-  document.querySelectorAll('.itemContainer button').forEach(el => {
-    el.style.opacity = '0.35';
-    el.style.pointerEvents = 'none';
-    el.style.cursor = 'default';
-  });
-}
-// 桌機版
-const userRate = document.getElementById('rate');
-const userRate1 = document.getElementById('rate1');
-const userRate2 = document.getElementById('rate2');
-// const memberShip = document.getElementById('membership');
-const showName = document.getElementById('showName');
-const showIntro = document.getElementById('showIntro');
-const profileName = document.getElementById('profileName');
-const profileInfo = document.getElementById('profileInfo');
-const profileAvatar = document.getElementById('profileAvatar');
-  console.log("使用者名稱：", localStorage.getItem('username'));
-  console.log("使用者介紹：", localStorage.getItem('intro'));
-if (localStorage.getItem('avatar') != null && localStorage.getItem('avatar') != 'null' && localStorage.getItem('avatar') != '') {
-  profileAvatar.src = localStorage.getItem('avatar'); // 更新顯示的圖片
-} else {
-  profileAvatar.src = '../image/default-avatar.png'; // 替換為預設圖片的 URL
-}
-const el = document.getElementById('showTime');
-const iso = localStorage.getItem('userCreatedAt'); // 例如 "2025-08-28T11:23:45.000Z"
+    if (uid)  uid.textContent  = uidVal;
+    if (muid) muid.textContent = uidVal;
+    if (mProfileName) mProfileName.textContent = name;
+    if (mProfileInfo) mProfileInfo.textContent = intro;
+    if (profileName)  profileName.textContent  = name;
+    if (showName)     showName.textContent      = name;
+    if (profileInfo)  profileInfo.textContent  = intro;
+    if (showIntro)    showIntro.textContent     = intro;
+    if (userRate)     userRate.textContent      = rate;
+    if (userRate1)    userRate1.textContent     = rate;
+    if (userRate2)    userRate2.textContent     = rate;
 
-if (!iso) {
-  el.textContent = '無法顯示';
-} else {
-  const dt = new Date(iso); // 解析 UTC ISO
-  if (isNaN(dt.getTime())) {
-    el.textContent = '無法顯示';
+    const validAvatar = avatarUrl && avatarUrl !== 'null' && avatarUrl !== '';
+    const avatarSrc   = validAvatar ? avatarUrl : DEFAULT_AVATAR;
+    if (mProfileAvatar) mProfileAvatar.src = avatarSrc;
+    if (profileAvatar)  profileAvatar.src  = avatarSrc;
+
+    // 底部導覽列頭像
+    if (validAvatar) {
+      document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatar"]').forEach(img => {
+        img.src = avatarUrl;
+        img.style.borderRadius = '50%';
+        img.style.border = '1px solid #004b97';
+        img.style.objectFit = 'cover';
+      });
+    }
+
+    // 加入時間
+    const showTimeEl = document.getElementById('showTime');
+    if (showTimeEl) {
+      if (!createdAt) {
+        showTimeEl.textContent = '無法顯示';
+      } else {
+        const dt = new Date(createdAt);
+        showTimeEl.textContent = isNaN(dt.getTime()) ? '無法顯示' : dt.toLocaleDateString('zh-TW', {
+          timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit'
+        });
+      }
+    }
+
   } else {
-    el.textContent = dt.toLocaleDateString('zh-TW', {
-      timeZone: 'Asia/Taipei',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }); // 例：2025/08/28
+    // ── 未登入：灰色頭像 + 登入/註冊 + 停用所有入口 ──
+    if (uid)  uid.textContent  = '';
+    if (muid) muid.textContent = '';
+    document.querySelectorAll('.uid').forEach(el => el.style.display = 'none');
+
+    const loginLink = '<a href="../account/account.html" style="color:#004b97;text-decoration:none;font-weight:600;">登入 / 註冊</a>';
+    if (mProfileName) mProfileName.innerHTML = loginLink;
+    if (profileName)  profileName.innerHTML  = loginLink;
+    if (mProfileInfo) mProfileInfo.textContent = '';
+    if (profileInfo)  profileInfo.textContent  = '';
+    if (showName)     showName.textContent  = '';
+    if (showIntro)    showIntro.textContent  = '';
+    if (userRate)     userRate.textContent   = '';
+    if (userRate1)    userRate1.textContent  = '';
+    if (userRate2)    userRate2.textContent  = '';
+    const showTimeEl = document.getElementById('showTime');
+    if (showTimeEl) showTimeEl.textContent = '';
+
+    // 隱藏手機版登出按鈕
+    const logoutMobileEl = document.getElementById('logoutMobile');
+    if (logoutMobileEl) logoutMobileEl.style.display = 'none';
+
+    // 停用快速操作
+    document.querySelectorAll('.fastContainer .fastIcon, .fastContainer button').forEach(el => {
+      el.style.opacity = '0.35';
+      el.style.pointerEvents = 'none';
+      el.style.cursor = 'default';
+    });
+    // 停用手機版商品訂單管理按鈕
+    document.querySelectorAll('.itemContainer button').forEach(el => {
+      el.style.opacity = '0.35';
+      el.style.pointerEvents = 'none';
+      el.style.cursor = 'default';
+    });
+    // 停用桌機側欄選單（除帳戶管理中心本身）
+    document.querySelectorAll('.list-group-item[data-target]').forEach(el => {
+      if (el.dataset.target !== 'account') {
+        el.style.opacity = '0.35';
+        el.style.pointerEvents = 'none';
+        el.style.cursor = 'default';
+      }
+    });
+    // 桌機版登出按鈕改為「登入」
+    const lgLogout = document.getElementById('logout');
+    if (lgLogout) {
+      lgLogout.innerHTML = '登入 / 註冊';
+      lgLogout.href = '../account/account.html';
+      lgLogout.onclick = null;
+    }
   }
-}
-userRate2.textContent = localStorage.getItem("rate") || "無法顯示";
-userRate1.textContent = localStorage.getItem("rate") || "無法顯示";
-userRate.textContent = localStorage.getItem("rate") || "無法顯示";
-const localIntro = localStorage.getItem("intro") || "使用者介紹";
-profileInfo.textContent = localIntro; // 替換為實際使用者介紹
-showIntro.textContent = localIntro;
-const localName = localStorage.getItem("username") ||"使用者名稱"; 
-profileName.textContent = localName;// 替換為實際使用者名稱
-showName.textContent = localName;
+});
 // TODO 使用者加入時間
 //更新資料動作
 document.getElementById('update-profile').addEventListener('click', async () => {
@@ -1804,6 +1834,7 @@ async function openPartnerReviewModal(orderId, isSell) {
 // ===== 商品管理分頁 =====
 const MY_ITEMS_LIMIT = 10;
 let myItemsPage = 1;
+let _allMyItems = [];   // 前端分頁用快取
 
 async function loadMyItems(p = 1) {
   myItemsPage = p;
@@ -1813,13 +1844,23 @@ async function loadMyItems(p = 1) {
   document.getElementById('product-cards').innerHTML =
     `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
   try {
-    const res = await backendService.getMyItems({ page: p, limit: MY_ITEMS_LIMIT });
-    const list = res?.data?.commodities ?? [];
-    const pg   = res?.data?.pagination ?? null;
+    // p===1 時重新抓，其餘頁直接用快取
+    if (p === 1 || _allMyItems.length === 0) {
+      const res = await backendService.getMyItems();
+      // getMyItems 回傳 response.data；items 在 res.data（陣列）
+      const raw = res?.data;
+      _allMyItems = Array.isArray(raw) ? raw : (raw?.commodities ?? raw?.data ?? []);
+    }
+
+    const total      = _allMyItems.length;
+    const totalPages = Math.max(1, Math.ceil(total / MY_ITEMS_LIMIT));
+    const start      = (p - 1) * MY_ITEMS_LIMIT;
+    const list       = _allMyItems.slice(start, start + MY_ITEMS_LIMIT);
+
     renderTable(list);
     renderCards(list);
-    renderProductsPager(pg, p);
-    goodsOrder = res?.data?.data;
+    renderProductsPager({ totalPages, total, hasPrevPage: p > 1, hasNextPage: p < totalPages }, p);
+    goodsOrder = _allMyItems;
   } catch (err) {
     console.error(err);
   }
@@ -1828,16 +1869,21 @@ async function loadMyItems(p = 1) {
 function renderProductsPager(pg, currentPage) {
   const el = document.getElementById('products-pager');
   if (!el) return;
-  if (!pg || pg.totalPages <= 1) { el.innerHTML = ''; return; }
+  if (!pg || pg.total === 0) { el.innerHTML = ''; return; }
 
   const { totalPages, hasPrevPage, hasNextPage } = pg;
-  const btnClass = (extra = '') => `pager-nav-btn${extra}`;
 
-  let html = `<button class="${btnClass()}" ${hasPrevPage ? '' : 'disabled'} data-p="${currentPage - 1}">‹ 上一頁</button>`;
-  for (let i = 1; i <= totalPages; i++) {
-    html += `<button class="${btnClass(i === currentPage ? ' pager-nav-btn--active' : '')}" data-p="${i}">${i}</button>`;
+  // 只有 1 頁：顯示件數就好，不顯示按鈕
+  if (totalPages <= 1) {
+    el.innerHTML = `<span class="text-muted" style="font-size:0.82rem;">共 ${pg.total} 件</span>`;
+    return;
   }
-  html += `<button class="${btnClass()}" ${hasNextPage ? '' : 'disabled'} data-p="${currentPage + 1}">下一頁 ›</button>`;
+
+  let html = `<button class="pager-nav-btn" ${hasPrevPage ? '' : 'disabled'} data-p="${currentPage - 1}">‹ 上一頁</button>`;
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<button class="pager-nav-btn${i === currentPage ? ' pager-nav-btn--active' : ''}" data-p="${i}">${i}</button>`;
+  }
+  html += `<button class="pager-nav-btn" ${hasNextPage ? '' : 'disabled'} data-p="${currentPage + 1}">下一頁 ›</button>`;
   el.innerHTML = html;
 
   el.querySelectorAll('button[data-p]').forEach(btn => {
