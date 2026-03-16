@@ -355,10 +355,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const categoryFromUrl = urlParams.get('category');
   const qFromUrl = urlParams.get('q');
 
-  // 若從 shop.html 帶入搜尋關鍵字，預填搜尋欄
+  // 若從 shop.html 帶入搜尋關鍵字，預填搜尋欄（桌機 + 手機觸發欄）
   if (qFromUrl) {
     const si = document.getElementById('searchInput');
     if (si) si.value = qFromUrl;
+    const mt = document.getElementById('searchTriggerMobile');
+    if (mt) mt.value = qFromUrl;
   }
 
   let initialCategory = 'all';

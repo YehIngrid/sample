@@ -171,7 +171,7 @@
                 </div>
             </div>
         </div>
-        <div class="sort_list">
+        <div class="sort_list d-none d-lg-block">
             <div class="d-flex justify-content-lg-center align-items-center overflow-x-scroll">
                 <div class="d-flex flex-nowrap">
                     <div class="me-3 flex-shrink-0 sortdiv"><a href="?category=all" class="sort_item active" data-category="all">全部商品</a></div>
@@ -186,7 +186,8 @@
                 </div>
             </div>
         </div>
-        <div class="contentOfCommodity d-lg-flex justify-content-around">
+    </div><!-- /.header -->
+    <div class="contentOfCommodity d-lg-flex justify-content-around">
             <div class="sortAndProduct">
                 <div class="filter-bar">
                     <select id="sortSelect" class="form-select form-select-sm filter-select">
@@ -240,8 +241,7 @@
 
             </div>
         </div>
-        </div>
-        <div class="footerofcommodity">
+    <div class="footerofcommodity">
             <div class="d-flex justify-content-center" style="color:#004b978c; margin-top: 30px; margin-bottom: 20px;">
                 Copyright&copy; 2025拾貨寶庫｜All Rights Reserved.
             </div>
@@ -399,11 +399,13 @@
   window._pickMobile = function (term) {
     const ocInput = document.getElementById('searchInputOC');
     const mainInput = document.getElementById('searchInput');
+    const mobileTrigger = document.getElementById('searchTriggerMobile');
     if (!ocInput) return;
     addSearchHistory(term);
     const bsOC = bootstrap.Offcanvas.getInstance(document.getElementById('searchOffcanvas'));
     if (bsOC) bsOC.hide();
     if (mainInput) mainInput.value = term;
+    if (mobileTrigger) mobileTrigger.value = term;
     document.getElementById('searchForm').dispatchEvent(new Event('submit'));
   };
 
@@ -451,11 +453,18 @@
       });
       mobileTrigger.addEventListener('click', function () {
         bsOC.show();
+        if (ocInput) ocInput.focus();
       });
       ocEl.addEventListener('shown.bs.offcanvas', function () {
         ocInput && ocInput.focus();
       });
-      ocEl.addEventListener('show.bs.offcanvas', renderMobileHistory);
+      ocEl.addEventListener('show.bs.offcanvas', function () {
+        renderMobileHistory();
+        if (ocInput) {
+          ocInput.value = mobileTrigger ? mobileTrigger.value : '';
+          updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
+        }
+      });
       if (ocInput) {
         ocInput.addEventListener('keydown', function (e) {
           if (e.key === 'Enter') {
@@ -464,6 +473,7 @@
             addSearchHistory(val);
             bsOC.hide();
             if (mainInput) mainInput.value = val;
+            if (mobileTrigger) mobileTrigger.value = val;
             document.getElementById('searchForm').dispatchEvent(new Event('submit'));
           }
         });

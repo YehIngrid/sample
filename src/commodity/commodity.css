@@ -410,9 +410,15 @@
 /* ===== 搜尋 Offcanvas 動畫 ===== */
 #searchOffcanvas {
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  z-index: 3200 !important;
 }
 #searchOffcanvas.showing, #searchOffcanvas.show { transform: translateY(0) !important; }
 #searchOffcanvas:not(.show):not(.showing) { transform: translateY(-110%) !important; }
+/* backdrop 也需高於 sticky header (z-index:3000) */
+body:has(#searchOffcanvas.show) .offcanvas-backdrop,
+body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
+  z-index: 3100 !important;
+}
 
 /* ===== 搜尋紀錄標籤 ===== */
 .search-history-tag {
