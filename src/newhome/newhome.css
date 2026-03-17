@@ -467,14 +467,13 @@ border: 1.5px solid #fff
 .faq-box{
   background:#fff;
   border-radius:20px;
-  padding:30px;
   box-shadow:0 10px 25px rgba(0,0,0,0.08);
   margin: 3vh auto;
 }
 
 .faq-item{
   border-bottom:1px solid #ddd;
-  padding:20px 0;
+  padding:20px 0px;
 }
 
 .faq-item:last-child{
@@ -486,6 +485,8 @@ border: 1.5px solid #fff
   align-items:center;
   justify-content:space-between;
   cursor:pointer;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .q{
@@ -689,6 +690,50 @@ right: 0;
     }
     .hero-phone-wrap {
         width: 200px;
+    }
+    .titlecenter h1 {
+        font-size: 3.5rem;
+    }
+}
+/* ── Tablet (769px–1100px): hero phone below buttons ── */
+@media screen and (min-width: 769px) and (max-width: 1100px) {
+    .titlecenter {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        max-width: 91vw;
+        gap: 1.5rem;
+        padding: 2rem 1rem 120px;
+        height: auto;
+        min-height: 70vh;
+    }
+    .hero-left {
+        align-items: center;
+        order: 1;
+    }
+    .buttontwo {
+        justify-content: center;
+    }
+    .hero-right {
+        order: 2;
+        position: absolute;
+        bottom: -150px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+    }
+    #hero {
+        overflow: visible !important;
+    }
+    #contentofnewhome {
+        overflow: visible;
+    }
+    #next-section {
+        margin-top: 80px !important;
+        padding-top: 120px !important;
+    }
+    .titlecenter h4 {
+        max-width: 100%;
     }
     .titlecenter h1 {
         font-size: 3.5rem;
