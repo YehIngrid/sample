@@ -1846,7 +1846,7 @@ async function loadMyItems(p = 1) {
   try {
     // p===1 時重新抓，其餘頁直接用快取
     if (p === 1 || _allMyItems.length === 0) {
-      const res = await backendService.getMyItems();
+      const res = await backendService.getMyItems({ page: 1, limit: 1000 });
       // getMyItems 回傳 response.data；items 在 res.data（陣列）
       const raw = res?.data;
       _allMyItems = Array.isArray(raw) ? raw : (raw?.commodities ?? raw?.data ?? []);
