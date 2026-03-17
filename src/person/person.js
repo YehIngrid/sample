@@ -1834,7 +1834,6 @@ async function openPartnerReviewModal(orderId, isSell) {
 // ===== 商品管理分頁 =====
 const MY_ITEMS_LIMIT = 10;
 let myItemsPage = 1;
-let _allMyItems = [];   // 前端分頁用快取
 
 async function loadMyItems(p = 1) {
   myItemsPage = p;
@@ -1844,23 +1843,30 @@ async function loadMyItems(p = 1) {
   document.getElementById('product-cards').innerHTML =
     `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
   try {
-    // p===1 時重新抓，其餘頁直接用快取
-    if (p === 1 || _allMyItems.length === 0) {
-      const res = await backendService.getMyItems({ page: 1, limit: 1000 });
-      // getMyItems 回傳 response.data；items 在 res.data（陣列）
-      const raw = res?.data;
-      _allMyItems = Array.isArray(raw) ? raw : (raw?.commodities ?? raw?.data ?? []);
+    const res = await backendService.getMyItems({ page: p, limit: MY_ITEMS_LIMIT });
+    const raw = res?.data;
+
+    // 解析 items 與 total（相容多種 API 回傳格式）
+    let list = [];
+    let total = 0;
+    if (Array.isArray(raw)) {
+      list  = raw;
+      total = res?.total ?? res?.count ?? null;
+    } else if (raw && typeof raw === 'object') {
+      list  = raw?.commodities ?? raw?.data ?? raw?.items ?? [];
+      if (!Array.isArray(list)) list = [];
+      total = raw?.total ?? raw?.count ?? res?.total ?? res?.count ?? null;
     }
 
-    const total      = _allMyItems.length;
-    const totalPages = Math.max(1, Math.ceil(total / MY_ITEMS_LIMIT));
-    const start      = (p - 1) * MY_ITEMS_LIMIT;
-    const list       = _allMyItems.slice(start, start + MY_ITEMS_LIMIT);
+    // 若 API 無回傳 total，用「拿到的筆數 < limit」判斷是否最後一頁
+    const isLastPage = list.length < MY_ITEMS_LIMIT;
+    const totalCalc  = total !== null ? total : (p - 1) * MY_ITEMS_LIMIT + list.length + (isLastPage ? 0 : 1);
+    const totalPages = Math.max(1, Math.ceil(totalCalc / MY_ITEMS_LIMIT));
 
     renderTable(list);
     renderCards(list);
-    renderProductsPager({ totalPages, total, hasPrevPage: p > 1, hasNextPage: p < totalPages }, p);
-    goodsOrder = _allMyItems;
+    renderProductsPager({ totalPages, total: totalCalc, hasPrevPage: p > 1, hasNextPage: p < totalPages }, p);
+    goodsOrder = list;
   } catch (err) {
     console.error(err);
   }
