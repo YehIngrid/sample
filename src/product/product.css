@@ -615,10 +615,11 @@
   height: 120px;
 }
 
-/* ── 賣家其他商品：mobile 2×3 grid, desktop centered flex ── */
+/* ── 賣家其他商品：mobile 2-col flex, desktop centered flex ── */
 .seller-items-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
   padding: 6px 4px 14px;
 }
@@ -626,7 +627,8 @@
 
 .seller-items-container .hot-item {
   cursor: pointer;
-  width: 100%;
+  flex: 0 0 calc(50% - 6px);
+  max-width: calc(50% - 6px);
 }
 .seller-items-container .hot-item .card {
   background: #fff;
@@ -666,6 +668,9 @@
   font-weight: 600;
   padding: 2px 6px;
   text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .seller-items-container .hotItemName {
   font-size: 12px;
@@ -684,7 +689,7 @@
     justify-content: center;
     gap: 12px;
   }
-  .seller-items-container .hot-item { width: auto; }
+  .seller-items-container .hot-item { flex: 0 0 auto; max-width: none; width: auto; }
   .seller-items-container .hot-item .card { width: 180px; }
   .seller-items-container .img-box { aspect-ratio: unset; width: 180px; height: 180px; }
   .seller-items-container .hotItemName { font-size: 13px; }

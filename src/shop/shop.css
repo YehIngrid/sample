@@ -1672,7 +1672,7 @@ tbody > tr:nth-of-type(even) {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 .hot-item .img-box {
-  width: 148px;
+  width: 100%;
   height: 148px;
   position: relative;
   overflow: hidden;
@@ -1787,7 +1787,7 @@ tbody > tr:nth-of-type(even) {
     width: 190px;
   }
   .hot-item .img-box {
-    width: 190px;
+    width: 100%;
     height: 190px;
   }
   .hot-items-container .img-box {

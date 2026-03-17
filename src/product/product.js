@@ -121,7 +121,7 @@ function updateDesktopShareLinks() {
   const enc = encodeURIComponent(url);
   const encText = encodeURIComponent(`拾貨寶庫｜${name}`);
   const fbUrl   = `https://www.facebook.com/sharer/sharer.php?u=${enc}`;
-  const lineUrl = `https://social-plugins.line.me/lineit/share?url=${enc}`;
+  const lineUrl = `https://social-plugins.line.me/lineit/share?url=${enc}&text=${encText}`;
   const xUrl    = `https://twitter.com/intent/tweet?url=${enc}&text=${encText}`;
 
   ['shareFb', 'shareFbM'].forEach(id => { const el = document.getElementById(id); if (el) el.href = fbUrl; });
