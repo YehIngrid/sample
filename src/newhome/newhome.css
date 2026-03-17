@@ -1066,6 +1066,10 @@ right: 0;
 .ulstepdiv li {
   list-style: none;
 }
+.ulstepdiv {
+    padding-left: 10px;
+    padding-right: 10px;
+}
 .listep {
   display: flex;
   align-items: center;

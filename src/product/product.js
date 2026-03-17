@@ -51,7 +51,7 @@ function _renderSellerPage(page) {
       </div>`;
     div.addEventListener('click', () => {
       const pid = div.dataset.id;
-      if (pid) location.href = `product.html`;
+      if (pid) location.href = `product.html?id=${pid}`;
     });
     container.appendChild(div);
   });
