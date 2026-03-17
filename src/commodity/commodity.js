@@ -182,8 +182,8 @@ async function loadProducts() {
 
     let filteredItems = items;
 
-    // 👉 大分類（不是 all 才篩）
-    if (currentCategory && currentCategory !== 'all') {
+    // 👉 大分類（不是 all / hot / new 才做前端篩選）
+    if (currentCategory && currentCategory !== 'all' && currentCategory !== 'hot' && currentCategory !== 'new') {
       filteredItems = filteredItems.filter(
         p => categoryMap[p.category] === currentCategory
       );
