@@ -1147,41 +1147,6 @@ const timer = setInterval(() => {
             </div>
         </div>
   </div>
-<!-- ① HTML：chaticon 加上紅點元素 -->
-<button class="chaticon" id="chaticon">
-    <img src="../svg/chaticon.svg" alt="聊天室icon點擊開啟聊天室">
-    <!-- 紅點，預設隱藏，fixed 定位對齊 chaticon 右上角 -->
-    <span id="chatUnreadDot" style="
-        display: none;
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        width: 12px;
-        height: 12px;
-        background: red;
-        border-radius: 50%;
-        border: 2px solid white;
-        pointer-events: none;
-    "></span>
-</button>
-<iframe type="text/html" width="400" height="750"
-        style="display: none;" id="talkInterface"></iframe>
-
-<script>
-// ② 收到 iframe（chatroom）傳來的事件
-window.addEventListener('chatUnread', () => {
-    document.getElementById('chatUnreadDot').style.display = 'block';
-    document.getElementById('newMessageComing')?.classList.remove('d-none');
-});
-window.addEventListener('chatRead', () => {
-    document.getElementById('chatUnreadDot').style.display = 'none';
-    //document.getElementById('newMessageComing')?.classList.add('d-none');
-});
-// ③ 點擊 chaticon 開啟 iframe 時也清除紅點
-document.getElementById('chaticon').addEventListener('click', () => {
-    //document.getElementById('chatUnreadDot').style.display = 'none';
-});
-</script>
   <!-- Loading 遮罩 -->
 <div id="loadingOverlay" class="loading-overlay d-none">
   <div class="d-flex flex-column justify-content-center align-items-center">
@@ -1202,6 +1167,12 @@ document.getElementById('chaticon').addEventListener('click', () => {
     <img class="nav-icon nav-icon-active" src="../svg/commoditypage.svg" alt="正在購物商場">
     <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="點擊前往購物商場">
     <span>購物商場</span>
+  </a>
+  <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-center">
+    <div class="nav-center-circle">
+      <img class="nav-icon" src="../svg/chaticonmobile.svg" alt="聊天室">
+    </div>
+    <span>聊天室</span>
   </a>
   <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
     <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="正在購物車頁">
@@ -1270,10 +1241,64 @@ document.getElementById('chaticon').addEventListener('click', () => {
   const GUIDE_KEY = 'hideGuideSection';
   const section = document.getElementById('guideSection');
   if (!section) return;
-  if (localStorage.getItem(GUIDE_KEY) === '1') { section.style.display = 'none'; return; }
-  document.getElementById('dismissGuide')?.addEventListener('click', function () {
-    localStorage.setItem(GUIDE_KEY, '1');
+
+  // 已設定過 → 直接隱藏（不動畫）
+  if (localStorage.getItem(GUIDE_KEY) === '1') {
     section.style.display = 'none';
+    return;
+  }
+
+  document.getElementById('dismissGuide')?.addEventListener('click', function () {
+    // 淡出 + 收縮動畫
+    section.style.transition = 'opacity 0.35s ease, max-height 0.45s ease, margin 0.45s ease, padding 0.45s ease';
+    section.style.overflow = 'hidden';
+    section.style.maxHeight = section.offsetHeight + 'px';
+    // 強制 reflow 讓 transition 從目前值開始
+    section.getBoundingClientRect();
+    section.style.opacity = '0';
+    section.style.maxHeight = '0';
+    section.style.marginTop = '0';
+    section.style.marginBottom = '0';
+    section.style.paddingTop = '0';
+    section.style.paddingBottom = '0';
+
+    // 動畫結束後真正隱藏
+    section.addEventListener('transitionend', function handler(e) {
+      if (e.propertyName !== 'max-height') return;
+      section.style.display = 'none';
+      section.removeEventListener('transitionend', handler);
+    });
+
+    // 存入 localStorage（稍微延遲，讓使用者有機會按復原）
+    let saveTimer = setTimeout(() => localStorage.setItem(GUIDE_KEY, '1'), 4000);
+
+    // ── 復原 toast ──
+    const toast = document.createElement('div');
+    toast.className = 'guide-undo-toast';
+    toast.innerHTML = '操作說明已隱藏 <button id="undoGuide">復原</button>';
+    document.body.appendChild(toast);
+
+    // 顯示 toast
+    requestAnimationFrame(() => toast.classList.add('show'));
+
+    // 4 秒後自動移除
+    let removeTimer = setTimeout(() => toast.remove(), 4500);
+
+    // 復原按鈕
+    toast.querySelector('#undoGuide').addEventListener('click', function () {
+      clearTimeout(saveTimer);
+      clearTimeout(removeTimer);
+      toast.remove();
+      // 還原 section
+      section.style.display = '';
+      section.style.transition = 'opacity 0.35s ease, max-height 0.45s ease';
+      section.style.maxHeight = '1000px';
+      section.style.opacity = '1';
+      section.style.marginTop = '';
+      section.style.marginBottom = '';
+      section.style.paddingTop = '';
+      section.style.paddingBottom = '';
+    });
   });
 })();
 </script>
@@ -1517,6 +1542,22 @@ document.getElementById('chaticon').addEventListener('click', () => {
         </div>
       </div>
     </div>
+
+    <!-- 聊天室 -->
+    <button class="chaticon" id="chaticon">
+      <img src="../svg/chaticon.svg" alt="聊天室icon點擊開啟聊天室">
+      <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
+    </button>
+    <iframe type="text/html" width="400" height="750" style="display:none;" id="talkInterface"></iframe>
+
+    <script>
+      window.addEventListener('chatUnread', () => {
+        document.getElementById('chatUnreadDot').style.display = 'block';
+      });
+      window.addEventListener('chatRead', () => {
+        document.getElementById('chatUnreadDot').style.display = 'none';
+      });
+    </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
     <script type="module" src="../chatroom/chat.js"></script>

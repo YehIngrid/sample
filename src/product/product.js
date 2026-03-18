@@ -5,11 +5,12 @@ import { formatTaipeiTime, requireLogin } from '../default/default.js';
 // ── Skeleton helper ──
 function sellerProductSkeletonHTML(n = 6) {
   return Array.from({length: n}, () => `
-    <div class="hot-item">
-      <div class="card">
-        <div class="img-box skeleton" style="width:100%;height:148px;border-radius:10px 10px 0 0;"></div>
-        <div style="padding:8px 6px">
-          <div class="skeleton skeleton-text" style="width:85%;margin:0 auto;"></div>
+    <div class="col">
+      <div class="product-card seller-product-card h-100">
+        <div class="product-thumb skeleton" style="width:100%;aspect-ratio:1/1;"></div>
+        <div style="padding:10px">
+          <div class="skeleton skeleton-text" style="width:85%;"></div>
+          <div class="skeleton skeleton-text" style="width:50%;margin-top:6px;"></div>
         </div>
       </div>
     </div>`).join('');
@@ -34,26 +35,29 @@ function _renderSellerPage(page) {
 
   container.innerHTML = '';
   slice.forEach(product => {
-    const div = document.createElement('div');
-    div.className = 'hot-item';
-    div.dataset.id = product.id ?? product._id ?? product.commodityId ?? '';
+    const col = document.createElement('div');
+    col.className = 'col';
+    const pid = product.id ?? product._id ?? product.commodityId ?? '';
     const imgSrc = product.mainImage || '';
     const name   = product.name || '未命名';
     const price  = Number(product.price ?? 0).toLocaleString('zh-TW');
-    div.innerHTML = `
-      <div class="card">
-        <div class="img-box">
-          <img class="main" src="${imgSrc}" alt="${name}" loading="lazy"
+    col.innerHTML = `
+      <div class="product-card seller-product-card h-100" data-id="${pid}">
+        <div class="product-thumb">
+          <img src="${imgSrc}" alt="${name}" loading="lazy"
                onerror="this.src='../image/placeholder.png'">
-          <p class="hotItemPrice"><span style="font-size:0.8rem">NT$</span> ${price}</p>
         </div>
-        <div class="hotItemName">${name}</div>
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title ellipsis-text">${name}</h5>
+          <div class="mt-auto">
+            <span class="fw-bold" style="color:#004b97;">NT$ ${price}</span>
+          </div>
+        </div>
       </div>`;
-    div.addEventListener('click', () => {
-      const pid = div.dataset.id;
+    col.addEventListener('click', () => {
       if (pid) location.href = `product.html?id=${pid}`;
     });
-    container.appendChild(div);
+    container.appendChild(col);
   });
 
   // Pagination info
@@ -89,9 +93,9 @@ const toArray = (v) => Array.isArray(v) ? v : (v ? [v] : []);
 const toFullURL = (u) => (!u ? '' : (/^https?:\/\//.test(u) ? u : u)); // 如需前綴可在此加
 
 const backbtn = document.querySelector('#back-btn');
-backbtn.addEventListener('click', function(e){
-    window.history.back();
-})
+if (backbtn) backbtn.addEventListener('click', () => window.history.back());
+const mobileBackBtn = document.querySelector('#mobileBackBtn');
+if (mobileBackBtn) mobileBackBtn.addEventListener('click', () => window.history.back());
 
 // ── 分享功能 ──
 function getShareInfo() {
@@ -250,16 +254,20 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
 
 /* ---------- 1) 標題／價格／庫存／數量加減 ---------- */
 (function renderBasics(){
-  // 名稱
+  // 名稱（桌機 + 手機）
   const nameEl = document.getElementById('product-name');
   if (nameEl) nameEl.textContent = product?.name ?? '';
+  const nameMobileEl = document.getElementById('product-name-mobile');
+  if (nameMobileEl) nameMobileEl.textContent = product?.name ?? '';
   document.title = `${product?.name ?? '商品'} ｜ 詳細資訊`;
   updateOGTags(product?.name ?? '商品', product?.description ?? '', product?.mainImage ?? '');
   updateDesktopShareLinks();
 
-  // 價格（只放數字；右邊的 NT$ 已在 HTML）
+  // 價格（桌機版 + 手機版）
   const priceEl = document.getElementById('price');
   if (priceEl) priceEl.textContent = fmt(product?.price);
+  const priceMobileEl = document.getElementById('price-mobile');
+  if (priceMobileEl) priceMobileEl.textContent = fmt(product?.price);
 
   // 庫存
   const stockEl = document.getElementById('stock');
@@ -282,11 +290,10 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     return v;
   }
   if (qtyInput){
-    qtyInput.value = clampQty(qtyInput.value);
-    qtyInput.addEventListener('input', () => qtyInput.value = clampQty(qtyInput.value));
+    qtyInput.textContent = clampQty(qtyInput.textContent);
   }
-  plusBtn?.addEventListener('click', () => { qtyInput.value = clampQty(num(qtyInput.value) + 1); });
-  minusBtn?.addEventListener('click', () => { qtyInput.value = clampQty(num(qtyInput.value) - 1); });
+  plusBtn?.addEventListener('click', () => { qtyInput.textContent = clampQty(num(qtyInput.textContent) + 1); });
+  minusBtn?.addEventListener('click', () => { qtyInput.textContent = clampQty(num(qtyInput.textContent) - 1); });
 })();
 
 /* ---------- 2) 規格／屬性（使用 <dl>） ---------- */
@@ -306,12 +313,20 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     ['更新時間',  updatedTime ?? '-'],
   ];
 
-  wrap.innerHTML = fields.map(([k, v]) => `
-    <div class="row gy-2 align-items-center mb-1 meta-row">
+  // 桌機版：原本的兩欄表格
+  const desktopHTML = fields.map(([k, v]) => `
+    <div class="row gy-2 align-items-center mb-1 meta-row d-none d-lg-flex">
       <div class="col-4 col-md-3 text-muted">${k}</div>
       <div class="col-8 col-md-9">${v}</div>
     </div>
   `).join('');
+
+  // 手機版：簡潔分隔列
+  const mobileHTML = `<div class="meta-spec-list d-lg-none">${
+    fields.map(([k, v]) => `<div class="meta-spec-row"><span class="meta-spec-label">${k}</span><span class="meta-spec-value">${v}</span></div>`).join('')
+  }</div>`;
+
+  wrap.innerHTML = desktopHTML + mobileHTML;
 })();
 
 
@@ -498,26 +513,41 @@ function renderSellerInfo(data) {
   if (reportBtn) reportBtn.onclick = () => reportSeller(data.id);
 }
 
-// === 事件處理：依你的實作調整 ===
+// === chatReady handshake ===
+let _iframeChatReady = false;
+let _pendingChatSellerId = null;
+
+window.addEventListener('message', (e) => {
+  if (e.data?.type === 'chatReady') {
+    _iframeChatReady = true;
+    if (_pendingChatSellerId) {
+      document.getElementById('talkInterface')
+        .contentWindow.postMessage({ type: 'openChatWithSeller', sellerId: _pendingChatSellerId }, '*');
+      _pendingChatSellerId = null;
+    }
+  }
+});
+
+// === 事件處理 ===
 async function openChatWithSeller(targetSellerId) {
   if (!targetSellerId) {
     return Swal.fire({ icon: 'warning', title: '缺少sellerid' });
   }
 
-  // 手機版：導向 person.html 並帶入目標 ID，由 person.js 自動開啟聊天
+  // 手機版：導向 chatroom.html，記住返回位址
   if (window.innerWidth <= 991) {
-    window.location.href = `../person/person.html`;
+    sessionStorage.setItem('chatroomReturnUrl', window.location.href);
+    window.location.href = `../chatroom/chatroom.html`;
     return;
   }
 
-  openCloseChatInterface();
-  chatService = new ChatBackendService();
+  await openCloseChatInterface();
 
-  try {
-    chatInnerWin.openChatWithTarget(targetSellerId);
-  } catch (err) {
-    console.error(err);
-    Swal.fire({ icon: 'error', title: '無法建立聊天室' });
+  const iframe = document.getElementById('talkInterface');
+  if (_iframeChatReady) {
+    iframe.contentWindow.postMessage({ type: 'openChatWithSeller', sellerId: targetSellerId }, '*');
+  } else {
+    _pendingChatSellerId = targetSellerId;
   }
 }
 
@@ -580,9 +610,9 @@ async function onAddToCart(e) {
     return;
   }
 
-  // 取數量：找同區塊的 .qty-input，找不到就用 1
-  const qtyEl = btn.closest('.card, .product, body').querySelector?.('.qty-input');
-  const quantity = Number(qtyEl ? qtyEl.value : 1) || 1;
+  // 取數量：從 #qty span 讀取 textContent
+  const qtyEl = document.getElementById('qty');
+  const quantity = Math.max(1, Number(qtyEl?.textContent) || 1);
 
   btn.disabled = true;
   try {
@@ -625,6 +655,10 @@ async function showSellerCommodities(id) {
     _sellerAllProducts = products;
     _sellerCurrentPage = 1;
     _renderSellerPage(1);
+
+    // 更新賣家上架商品數
+    const itemCountEl = document.getElementById('sellerItemCount');
+    if (itemCountEl) itemCountEl.textContent = products.length;
 
     // Wire pagination buttons
     const prevBtn = document.getElementById('prevSellerBtn');
@@ -685,7 +719,7 @@ async function orderNow(e) {
 
   // 3. 取得數量
   const qtyInput = document.getElementById('qty');
-  const quantity = Math.max(1, Number(qtyInput?.value) || 1);
+  const quantity = Math.max(1, Number(qtyInput?.textContent) || 1);
 
   // --- 開始執行 ---
   btn.disabled = true; // 禁用按鈕防止重複送出
@@ -770,38 +804,32 @@ async function checkIsOwnProduct(sellerId) {
  * 禁用按鈕的具體實作
  */
 function disableActionButtons() {
-    // 定義所有需要禁用的按鈕選擇器
-    const buttonsToDisable = [
-        '.order',          // 馬上下單 (含手機版)
-        '.shopcart',       // 加入購物車 (含手機版)
-        '#sellerChat',     // 與賣家聊聊
-        '#sellerBad'       // 檢舉賣家
-    ];
+    const ownProductAlert = (e) => {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        Swal.fire({
+            icon: 'info',
+            title: '這是您的商品或資料',
+            text: '您無法對自己的商品與資料執行此操作'
+        });
+    };
 
-    buttonsToDisable.forEach(selector => {
-    document.querySelectorAll(selector).forEach(btn => {
-        // 1. 視覺與功能禁用
-        // 注意：如果設了 disabled = true，某些瀏覽器會抓不到 click 事件
-        // 所以我們改用 CSS 的 pointer-events 來控制，或者保留 disabled 但用父層捕捉
-        btn.dataset.ownProduct = '1';
-        btn.style.opacity = '0.7';
-        btn.style.cursor = 'not-allowed';
-        btn.title = '您不能購買或檢舉自己的商品';
-
-        // 2. 統一攔截點擊事件
-        btn.onclick = (e) => {
-            e.preventDefault();
-            e.stopImmediatePropagation(); // 防止觸發其他綁定的事件
-
-            return Swal.fire({
-                icon: 'info',
-                title: '這是您的商品或資料',
-                text: '您無法對自己的商品與資料執行此操作'
-            });
-        };
-        
-        // 如果原本 HTML 有 disabled 屬性，建議移除或改用 pointer-events: none 的邏輯
-        // 這樣 onclick 才能被觸發
+    // 購買按鈕：不改樣式，只攔截點擊顯示提示
+    ['.order', '.shopcart'].forEach(selector => {
+        document.querySelectorAll(selector).forEach(btn => {
+            btn.dataset.ownProduct = '1';
+            btn.onclick = ownProductAlert;
+        });
     });
-  });
+
+    // 其他按鈕：保留視覺禁用
+    ['#sellerChat', '#sellerBad'].forEach(selector => {
+        document.querySelectorAll(selector).forEach(btn => {
+            btn.dataset.ownProduct = '1';
+            btn.style.opacity = '0.7';
+            btn.style.cursor = 'not-allowed';
+            btn.title = '您不能購買或檢舉自己的商品';
+            btn.onclick = ownProductAlert;
+        });
+    });
 }

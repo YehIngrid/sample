@@ -74,10 +74,19 @@ class ChatRoomList {
             await this.loadRooms();
             this.connectSSE(); // 帳號層級 SSE，開啟一次即可
             if (this.currentRoomId) {
+                // 直接聯絡對方：進入指定房間
                 const roomEl = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
                 if (roomEl) {
                     const name = roomEl.querySelector('.roomName')?.textContent || '未知';
                     await this.switchRoom(this.currentRoomId, name);
+                }
+            } else if (!this.isMobile) {
+                // 電腦版預設進入官方帳號房間
+                const officialItem = [...document.querySelectorAll('.chat-item[data-room-id]')]
+                    .find(el => this.officialRoomsSet.has(String(el.dataset.roomId)));
+                if (officialItem) {
+                    const name = officialItem.querySelector('.roomName')?.textContent || '拾貨寶庫提醒您';
+                    await this.switchRoom(officialItem.dataset.roomId, name);
                 }
             }
         } else {
@@ -452,16 +461,31 @@ class ChatRoomList {
     }
 
     setupMobileView() {
-        this.isMobile = window.innerWidth < 768;
-        if (this.isMobile) { this.showSidebar(); this.hideChatMain(); }
-        else { this.showSidebar(); this.showChatMain(); }
+        if (this.isMobile) {
+            this.showSidebar();
+            this.hideChatMain();
+        }
     }
 
     handleResize() {
         const wasMobile = this.isMobile;
         this.isMobile = window.innerWidth < 768;
-        if (wasMobile && !this.isMobile) { this.showSidebar(); this.showChatMain(); }
-        else if (!wasMobile && this.isMobile) { this.showSidebar(); this.hideChatMain(); }
+        if (wasMobile !== this.isMobile) {
+            if (this.isMobile) {
+                // 切到手機：若有開著的房間保持聊天，否則顯示列表
+                if (this.currentRoomId) {
+                    this.hideSidebar();
+                    this.showChatMain();
+                } else {
+                    this.showSidebar();
+                    this.hideChatMain();
+                }
+            } else {
+                // 切到電腦：移除所有 mobile-hidden，讓 Bootstrap 並排
+                this.showSidebar();
+                this.showChatMain();
+            }
+        }
     }
 
     showSidebar() { document.getElementById('sidebar')?.classList.remove('mobile-hidden'); }
@@ -477,18 +501,24 @@ class ChatRoomList {
             await this.loadRooms();
         });
 
-        // Close fullscreen chatroom on mobile
+        // 關閉按鈕：iframe 內傳訊息給父頁面；獨立頁面直接 history.back()
         const closeChatBtn = document.getElementById('closeChatFullscreen');
         if (closeChatBtn) {
-            // Show button only when embedded in a mobile-sized parent window
-            const updateCloseBtn = () => {
-                const isMobileParent = window !== window.parent && window.outerWidth <= 991;
-                closeChatBtn.style.display = isMobileParent ? 'inline-flex' : 'none';
-            };
-            updateCloseBtn();
-            window.addEventListener('resize', updateCloseBtn);
+            const isInIframe = window !== window.parent;
+            // 永遠顯示關閉按鈕（列表→聊天模式下一律需要）
+            closeChatBtn.style.display = 'inline-flex';
             closeChatBtn.addEventListener('click', () => {
-                window.parent?.postMessage({ type: 'closeChat' }, '*');
+                if (isInIframe) {
+                    window.parent?.postMessage({ type: 'closeChat' }, '*');
+                } else {
+                    const returnUrl = sessionStorage.getItem('chatroomReturnUrl');
+                    if (returnUrl) {
+                        sessionStorage.removeItem('chatroomReturnUrl');
+                        window.location.href = returnUrl;
+                    } else {
+                        history.back();
+                    }
+                }
             });
         }
 
@@ -1106,33 +1136,64 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
 }
 
 let chatRoomList = null;
+let _chatReady = false;
+let _pendingSellerId = null;
+
 window.addEventListener('load', () => {
     openChatRoomList(null);
+    _chatReady = true;
+    // 通知父頁面 iframe 已準備好
+    if (window.parent !== window) {
+        window.parent.postMessage({ type: 'chatReady' }, '*');
+    }
+    // 如果有在 ready 前就收到的 pending 請求，立刻執行
+    if (_pendingSellerId) {
+        openChatWithTarget(_pendingSellerId);
+        _pendingSellerId = null;
+    }
 });
 
 function openChatRoomList(roomId) {
     if (!chatRoomList) {
         chatRoomList = new ChatRoomList(roomId);
-        // ✅ init() 內部已經會呼叫 switchRoom(currentRoomId)，這裡不要再呼叫一次
         chatRoomList.init();
     } else if (roomId) {
-        if (chatRoomList.partnerInfoMap.has(String(roomId))) {
-            chatRoomList.switchRoom(roomId);
-        } else {
-            chatRoomList.loadRooms().then(() => chatRoomList.switchRoom(roomId));
-        }
+        chatRoomList.loadRooms().then(() => {
+            const info = chatRoomList.partnerInfoMap.get(String(roomId));
+            const name = info?.name || '聊天';
+            chatRoomList.switchRoom(roomId, name);
+        });
     }
 }
 
+window.openChatWithSeller = openChatWithTarget;
+
+// 接收父頁面 postMessage 開啟聊天室
+window.addEventListener('message', (e) => {
+    if (e.data?.type === 'openChatWithSeller' && e.data.sellerId) {
+        if (_chatReady) {
+            openChatWithTarget(e.data.sellerId);
+        } else {
+            // 還沒 ready，先存起來等 load 完再執行
+            _pendingSellerId = e.data.sellerId;
+        }
+    }
+});
+
 async function openChatWithTarget(targetUserId) {
-    if (!targetUserId) return alert('無法開啟聊天室，缺少 User ID');
+    if (!targetUserId) return alert('無法開啟聯天室，缺少 User ID');
     const chatService = new ChatBackendService();
     try {
         const res = await chatService.createRoom(targetUserId);
-        const roomId = res?.data?.room?.id;
+        const roomId = res?.data?.room?.id || res?.data?.id;
+        console.log('[Chat] createRoom response:', res?.data, 'roomId:', roomId);
+        if (!roomId) {
+            console.error('[Chat] createRoom 沒有回傳 roomId');
+            return;
+        }
         openChatRoomList(roomId);
     } catch (err) {
-        console.error(err);
+        console.error('[Chat] createRoom 失敗:', err);
     }
 }
 

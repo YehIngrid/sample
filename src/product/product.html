@@ -1,190 +1,265 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <script>(function(){if(window.innerWidth<=991&&sessionStorage.getItem('skipLoader')==='1'){sessionStorage.removeItem('skipLoader');document.documentElement.classList.add('skip-loader');}})();</script>
-    <title>商品詳細資訊 | 拾貨寶庫</title>
+  <script>(function(){if(window.innerWidth<=991&&sessionStorage.getItem('skipLoader')==='1'){sessionStorage.removeItem('skipLoader');document.documentElement.classList.add('skip-loader');}})();</script>
+  <title>商品詳細資訊 | 拾貨寶庫</title>
 
-    <!-- meta部分 -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
-    <meta property="og:title" content="商品詳細資訊 | 拾貨寶庫">
-    <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
-    <meta property="og:image" content="https://yehingrid.github.io/sample/webP/treasurehub.webp">
-    <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-    <!-- link部分 -->
-    <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
-    <link rel="shortcut icon" href="../treasurehubIcon.ico">
-    <link rel="stylesheet" href="product.css">
-    <link rel="stylesheet" href="../default/default.css">
-    <link rel="stylesheet" href="../default/default-font.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-    <!-- PhotoSwipe v5 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css">
-    <script src="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/umd/photoswipe.umd.min.js"></script>
+  <!-- meta -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
+  <meta property="og:title" content="商品詳細資訊 | 拾貨寶庫">
+  <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+  <meta property="og:image" content="https://yehingrid.github.io/sample/webP/treasurehub.webp">
+  <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+  <!-- CSS & Fonts -->
+  <link rel="shortcut icon" href="../treasurehubIcon.ico">
+  <link rel="stylesheet" href="product.css">
+  <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="../shop/shop.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- PhotoSwipe v5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css">
+  <script src="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/umd/photoswipe.umd.min.js"></script>
 </head>
+
 <body>
-  <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
+  <!-- Loading -->
+  <div class="d-flex flex-column justify-content-center align-items-center" id="loader">
     <div class="spinner">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <div></div><div></div><div></div>
+      <div></div><div></div><div></div>
     </div>
-    <div><p style="color: #383838; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;"><br><br>拾貨寶庫加載中... </p></div>
+    <div>
+      <p style="color: #383838; font-family: 'TimeMachine'; font-weight: bold; letter-spacing: 3px;">
+        <br><br>拾貨寶庫加載中...
+      </p>
+    </div>
   </div>
+
   <div id="whatcontent" class="d-none">
-    <!-- TODO header -->
-    <div class="header ">
-        <!--TODO 響應式選單-->
-        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
-          <div class="container-fluid d-flex align-items-center sticky-top">
 
-            <!-- 手機版漢堡選單（移至此處，Logo 左邊） -->
-            <button class="navbar-toggler d-lg-none mobile-hamburger" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span>
-                <img src="../svg/navbar.svg" alt="手機版選單" style="width: 20px;">
-              </span>
-            </button>
+    <!-- ===== 手機版導覽列 ===== -->
+    <nav class="mobile-product-nav d-lg-none sticky-top">
+      <button class="mobile-nav-back" id="mobileBackBtn" aria-label="返回上一頁">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <span class="mobile-nav-title">商品詳情</span>
+      <a href="../shoppingcart/shoppingcart.html" class="mobile-nav-cart" aria-label="購物車">
+        <img src="../svg/shoppingcart.svg" alt="購物車">
+      </a>
+    </nav>
 
-            <!-- (A) LOGO -->
-            <a class="navbar-brand picture me-4" href="../newhome/newhome.html">
-              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
-            </a>
-        
-            <!-- (B) 桌機版導覽選單 -->
-            <div class="d-none d-lg-flex">
-              <ul class="navbar-nav" >
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
-                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
-                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
-              </ul>
-            </div>
-        
-            <!-- (C) 右側：登入 + 購物車 -->
-            <div class="d-flex align-items-center ms-auto">
-              <div class="login">
-                <a class="username" href="../person/person.html"></a>
-                <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
-              </div>
-              <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html" id="cartIcon">
-                <img src="../svg/shoppingcart.svg" alt="購物車圖示，點擊進入購物車頁">
-              </a>
-            </div>
-          </div>
-        </nav>
-        
-        <div class="container-fluid1">
-          <!-- 手機版導覽選單展開內容 -->
-          <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
+    <!-- ===== 桌機版導覽列 ===== -->
+    <div class="header d-none d-lg-block">
+      <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
+        <div class="container-fluid d-flex align-items-center sticky-top">
+          <a class="navbar-brand picture me-4" href="../newhome/newhome.html">
+            <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
+          </a>
+          <div class="d-none d-lg-flex">
             <ul class="navbar-nav">
-              <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
-              <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
-              <li class="nav-item"><a class="nav-link" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
-              <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
-              <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
+              <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
+              <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+              <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+              <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+              <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
           </div>
-        </div>
-    </div>
-     
-  
+          <div class="d-flex align-items-center ms-auto">
+            <div class="login">
+              <a class="username" href="../person/person.html"></a>
+              <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
+            </div>
+            <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html" id="cartIcon">
+              <img src="../svg/shoppingcart.svg" alt="購物車圖示，點擊進入購物車頁">
+            </a>
           </div>
-<i class="fa-solid fa-circle-arrow-left icon-button" id="back-btn"></i>
+        </div>
+      </nav>
+    </div>
 
-<div class="container my-1">
-  <div class="row g-4 justify-content-center">
-    <!-- 左側：主圖＋縮圖 -->
-    <div class="col-lg-5 order-1">
-      <div class="left-pane">
-        <!-- 主圖區（電腦版分享列跟著主圖走，不跟縮圖同一 flex row） -->
-        <div class="main-photo-col">
-          <div class="d-flex justify-content-center">
-            <div class="main-preview">
-              <img class="tryimg" alt="商品主要圖片">
-              <button class="img-nav-btn img-nav-prev" id="imgPrev" aria-label="上一張">&#8249;</button>
-              <button class="img-nav-btn img-nav-next" id="imgNext" aria-label="下一張">&#8250;</button>
+    <!-- 桌機版返回鍵 -->
+    <i class="fa-solid fa-circle-arrow-left icon-button d-none d-lg-inline-block" id="back-btn"></i>
+
+    <!-- ===== 商品主體 ===== -->
+    <div class="container my-1">
+      <div class="row g-4 justify-content-center">
+
+        <!-- 左側：主圖＋縮圖 -->
+        <div class="col-lg-5 order-1">
+          <div class="left-pane">
+            <div class="main-photo-col">
+              <div class="d-flex justify-content-center">
+                <div class="main-preview">
+                  <img class="tryimg" alt="商品主要圖片">
+                  <button class="img-nav-btn img-nav-prev" id="imgPrev" aria-label="上一張">&#8249;</button>
+                  <button class="img-nav-btn img-nav-next" id="imgNext" aria-label="下一張">&#8250;</button>
+                </div>
+              </div>
+              <!-- 縮圖容器（主圖下方、分享上方） -->
+              <div class="thumbnail-list mt-3" aria-label="商品縮圖列表"></div>
+              <!-- 電腦版分享列 -->
+              <div class="d-none d-lg-flex align-items-center gap-2 mt-3 desktop-share-bar">
+                <span class="share-label">分享：</span>
+                <a id="shareFb" href="#" target="_blank" rel="noopener" class="share-icon-btn share-fb" title="分享到 Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a id="shareLine" href="#" target="_blank" rel="noopener" class="share-icon-btn share-line" title="分享到 LINE"><i class="fa-brands fa-line"></i></a>
+                <a id="shareX" href="#" target="_blank" rel="noopener" class="share-icon-btn share-x" title="分享到 X"><i class="fa-brands fa-x-twitter"></i></a>
+                <button id="shareCopy" class="share-icon-btn share-copy" title="複製連結"><i class="fa-regular fa-copy"></i></button>
+              </div>
             </div>
           </div>
-          <!-- 電腦版分享列（主圖正下方） -->
-          <div class="d-none d-lg-flex align-items-center gap-2 mt-3 desktop-share-bar">
-            <span class="share-label">分享：</span>
-            <a id="shareFb" href="#" target="_blank" rel="noopener" class="share-icon-btn share-fb" title="分享到 Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-            <a id="shareLine" href="#" target="_blank" rel="noopener" class="share-icon-btn share-line" title="分享到 LINE"><i class="fa-brands fa-line"></i></a>
-            <a id="shareX" href="#" target="_blank" rel="noopener" class="share-icon-btn share-x" title="分享到 X"><i class="fa-brands fa-x-twitter"></i></a>
-            <button id="shareCopy" class="share-icon-btn share-copy" title="複製連結"><i class="fa-regular fa-copy"></i></button>
+        </div>
+
+        <!-- 右側：商品資訊 -->
+        <div class="col-lg-6 order-2">
+
+          <!-- 手機版：名稱＋價格同行，左右平衡 -->
+          <div class="mobile-name-price d-lg-none">
+            <h1 id="product-name-mobile" class="product-title h2 mb-0"></h1>
+            <div class="mobile-price-row">
+              <span class="mobile-price-currency">NT$</span>
+              <span id="price-mobile" class="mobile-price-number"></span>
+            </div>
+          </div>
+          <!-- 桌機版：名稱＋價格並排 -->
+          <div class="desktop-name-price d-none d-lg-flex">
+            <h1 id="product-name" class="product-title h2 mb-0"></h1>
+            <div class="d-flex align-items-baseline gap-2 flex-shrink-0">
+              <div id="price" class="desktop-price-number"></div>
+              <div class="desktop-price-currency">NT$</div>
+            </div>
+          </div>
+
+          <hr style="margin: 0 auto;">
+
+          <!-- 分類屬性 -->
+          <div class="meta mobilesetting">
+            <dl class="row" id="product-category"></dl>
+          </div>
+
+          <!-- 庫存 + 數量 -->
+          <div class="qty-section my-3 mobilesetting">
+            <span class="qty-label">數量</span>
+            <div class="qty-control">
+              <button id="minus" class="qty-btn" type="button" aria-label="減少">
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <span id="qty" class="qty-value">1</span>
+              <button id="plus" class="qty-btn" type="button" aria-label="增加">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+            <span class="qty-stock">庫存 <span id="stock"></span> 件</span>
+          </div>
+
+          <!-- 手機版分享（放在數量下面，低調小圖示） -->
+          <div class="mobile-share-row d-lg-none">
+            <span class="mobile-share-label">分享</span>
+            <div class="d-flex align-items-center gap-1">
+              <a id="shareFbM" href="#" target="_blank" rel="noopener" class="share-icon-btn share-fb" title="分享到 Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+              <a id="shareLineM" href="#" target="_blank" rel="noopener" class="share-icon-btn share-line" title="分享到 LINE"><i class="fa-brands fa-line"></i></a>
+              <a id="shareXM" href="#" target="_blank" rel="noopener" class="share-icon-btn share-x" title="分享到 X"><i class="fa-brands fa-x-twitter"></i></a>
+              <button id="shareCopyM" class="share-icon-btn share-copy" title="複製連結"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>
+
+          <!-- 桌機版 CTA -->
+          <div class="cta-wrap d-none d-lg-flex gap-3 mt-auto pt-4">
+            <button class="btn flex-fill buybtn order" type="button">馬上下單</button>
+            <button class="btn flex-fill shopcart" type="button">加入購物車</button>
           </div>
         </div>
-        <!-- 縮圖容器：交給 JS 產生 -->
-        <div class="thumbnail-list mt-3 mt-md-0" aria-label="商品縮圖列表"></div>
-        <!-- 手機版 CTA 按鈕 -->
-        <div class="d-flex d-lg-none mt-3 mobile-cta">
-          <button class="btn buybtn order mobile-order-btn" type="button">馬上下單</button>
-          <button class="btn shopcart mobile-cart-btn" type="button">加入購物車</button>
-        </div>
+
       </div>
     </div>
 
-    <!-- 右側：資訊 -->
-    <div class="col-lg-6 order-2">
-      <h1 id="product-name" class="product-title h2 mb-2"></h1>
-
-      <!-- 價格列：手機版左側放分享圖示，右側放價格 -->
-      <div class="d-flex align-items-center justify-content-between" style="margin-right: 3vw; margin-left: 2vw; margin-bottom: 1vh;">
-        <!-- 手機版分享圖示（無標籤文字） -->
-        <div class="d-flex d-lg-none align-items-center gap-1">
-          <a id="shareFbM" href="#" target="_blank" rel="noopener" class="share-icon-btn share-fb" title="分享到 Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-          <a id="shareLineM" href="#" target="_blank" rel="noopener" class="share-icon-btn share-line" title="分享到 LINE"><i class="fa-brands fa-line"></i></a>
-          <a id="shareXM" href="#" target="_blank" rel="noopener" class="share-icon-btn share-x" title="分享到 X"><i class="fa-brands fa-x-twitter"></i></a>
-          <button id="shareCopyM" class="share-icon-btn share-copy" title="複製連結"><i class="fa-regular fa-copy"></i></button>
-        </div>
-        <!-- 價格 -->
-        <div class="d-flex align-items-baseline gap-2 ms-auto">
-          <div id="price" class="price mobilesetting"></div>
-          <div class="fs-5 fw-semibold">NT$</div>
-        </div>
-      </div>
-
-      <hr class="" style="margin: 0 auto;">
-
-      <div class="meta mobilesetting">
-        <dl class="row" id="product-category"></dl>
-      </div>
-
-      <!-- 庫存 + 數量調整器同一行 -->
-      <div class="d-flex align-items-center gap-3 my-3 mobilesetting flex-wrap">
-        <div class="d-flex align-items-center gap-2">
-          <button id="minus" class="btn btn-outline-secondary" type="button" aria-label="減少">−</button>
-          <input id="qty" class="form-control text-center qty-input" type="text" value="1" readonly style="max-width:70px; cursor:default;">
-          <button id="plus" class="btn btn-outline-secondary" type="button" aria-label="增加">＋</button>
-        </div>
-        <span class="text-muted" style="white-space:nowrap;">庫存：<span id="stock"></span> 件</span>
-      </div>
-
-      <div class="cta-wrap d-none d-lg-flex gap-3 mt-5">
-        <button class="btn flex-fill buybtn order" type="button" style="width: 50%; margin-top: 10px; font-size: 1.2rem; color: rgb(36,182,133); background-color: rgb(199, 244, 229);">馬上下單</button>
-        <button class="btn flex-fill shopcart" type="button" style="width: 50%; margin-top: 10px; font-size: 1.2rem; background-color: #cfe2ff; color: #004b97;" >加入購物車</button>
-      </div>
-    </div>
-  </div>
-</div>
+    <!-- ===== 商品描述 & 其他資訊 ===== -->
     <div class="mix">
+
+      <!-- 商品描述 -->
       <div class="describe typeofcommodity">
-          <h5 class="topic">商品描述</h5>
-          <p id="product-description" class="description-text"></p>
+        <h5 class="topic">商品描述</h5>
+        <p id="product-description" class="description-text"></p>
       </div>
 
+      <!-- 賣家資訊（方案 C：雙欄資訊風格） -->
+      <div class="typeofcommodity">
+        <h5 class="sellertopic topic">賣家資訊</h5>
+        <div id="sellerInfo" class="seller-card">
+          <div class="seller-card-top">
+            <!-- 左：頭像 + 名稱 + 簡介 + 按鈕 -->
+            <div class="seller-left">
+              <div class="seller-avatar-wrap">
+                <img src="../webP/default-avatar.webp" alt="賣家頭像" class="seller-avatar" id="sellerPhoto">
+                <button id="followSellerBtn" class="seller-follow-btn" title="關注賣家">
+                  <i class="fa-solid fa-plus"></i> 關注
+                </button>
+              </div>
+              <div class="seller-profile">
+                <h3 class="seller-name" id="sellerName"></h3>
+                <p class="seller-intro" id="sellerIntro"></p>
+              </div>
+            </div>
+            <!-- 右：數據格 -->
+            <div class="seller-stats">
+              <div class="seller-stat-item">
+                <span class="seller-stat-value" id="sellerRate">0</span>
+                <span class="seller-stat-label">信譽積分</span>
+              </div>
+              <div class="seller-stat-divider"></div>
+              <div class="seller-stat-item">
+                <span class="seller-stat-value" id="sellerItemCount">—</span>
+                <span class="seller-stat-label">上架商品</span>
+              </div>
+            </div>
+          </div>
+          <!-- 按鈕列 -->
+          <div class="seller-card-actions">
+            <button class="seller-action-btn seller-action-primary" id="sellerChat">
+              <i class="fa-regular fa-comment-dots"></i> 與賣家聊聊
+            </button>
+            <button class="seller-action-btn seller-action-secondary" id="sellerRatebtn">
+              <i class="fa-regular fa-star"></i> 查看評價
+            </button>
+            <button class="seller-action-btn seller-action-report" id="sellerBad">
+              <i class="fa-regular fa-flag"></i> 檢舉
+            </button>
+          </div>
+          <!-- 評價展開區 -->
+          <div class="d-none fade-down" id="sellerReviews">
+            <div class="seller-card-divider"></div>
+            <div class="reviewerInfo d-flex justify-content-between" id="reviewerInfo">
+              <div class="d-flex align-items-center gap-2">
+                <img src="../image/default-avatar.png" alt="預設頭像" class="reviewer-avatar">
+                <div>
+                  <span class="reviewerName">評價者姓名</span>
+                  <div class="d-flex align-items-center gap-1">
+                    <div class="score">4</div>
+                    <div class="itemNames">｜商品名稱</div>
+                  </div>
+                </div>
+              </div>
+              <div class="reviewTime">2026-02-03</div>
+            </div>
+            <div class="reviewText" id="reviewText">
+              <span>Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 其他注意事項 -->
       <div class="typeofcommodity">
         <h5 style="margin-bottom: 20px;" class="topic">其他注意事項</h5>
         <div class="accordion" id="accordionExample">
@@ -196,7 +271,7 @@
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                <p style="color: #383838;">平台以<strong style="color: #004b97;"> 面交 </strong>為主要交易方式，買賣雙方也可自行協調其他取貨方式。建議於面交時立即<strong style="color: #004b97;"> 確認商品是否符合需求，再進行付款 </strong>；若後續出現問題，請由買賣雙方自行協商處理。</p>
+                <p style="color: #383838;">平台以<strong style="color: #5b8ec9;"> 面交 </strong>為主要交易方式，買賣雙方也可自行協調其他取貨方式。建議於面交時立即<strong style="color: #5b8ec9;"> 確認商品是否符合需求，再進行付款 </strong>；若後續出現問題，請由買賣雙方自行協商處理。</p>
               </div>
             </div>
           </div>
@@ -238,135 +313,47 @@
         </div>
       </div>
 
-      <div class="typeofcommodity">
-        <h5 class="sellertopic topic">賣家資訊</h5>
-        <div id="sellerInfo" class="card col-12">
-          <div class="card-body">
-              <div class="d-lg-flex d-block justify-content-between gap-2">
-                <div class="photo col-lg-2 text-center d-flex align-items-center">
-                  <div style="position:relative;width:fit-content;margin:0 auto;">
-                    <img src="../webP/default-avatar.webp" alt="賣家頭像" class="sellerphoto" id="sellerPhoto">
-                    <button id="followSellerBtn" class="follow-seller-btn" title="關注賣家">
-                      <i class="fa-solid fa-plus"></i> 關注
-                    </button>
-                  </div>
-                </div>
-                <div class="info col-lg-7 d-flex flex-column justify-content-around">
-                  <div class="centerseller">
-                      <h3 id="sellerName"></h3>
-                      <p id="sellerIntro"></p>
-                  </div>
-                  <div class="d-flex checkbtn justify-content-center gap-4">
-                      <button class="col-5" id="sellerChat">與賣家聊聊</button>
-                      <button id="sellerRatebtn" class="col-5">查看賣家評價</button>
-                  </div>
-                </div>
-                <div class="rate col-lg-2 text-center">
-                  <div class="score-box d-flex align-items-center justify-content-center">
-                    <span class="display-4 fw-bold" id="sellerRate"></span>
-                  </div>
-                  <h5>信譽積分</h5>
-                  <button class="btn btn-sm btn-danger" id="sellerBad">檢舉賣家</button>
-                </div>
-              </div>
-              <div class="d-none fade-down" id="sellerReviews">
-                <hr>
-                <div class="reviewerInfo d-flex justify-content-between" id="reviewerInfo">
-                  <div class="d-flex align-items-center gap-1">
-                    <img src="../image/default-avatar.png" alt="預設頭像" style="width: 45px; height: 45px;">
-                    <div class="d-block d-lg-flex gap-1 align-items-center">
-                        <span class="reviewerName">評價者姓名</span>
-                        <div class="score">4</div>
-                        <div class="itemNames">｜商品名稱</div>
-                    </div>
-                  </div>
-                  <div class="reviewTime">2026-02-03</div>
-                </div>
-                <div class="reviewText" id="reviewText">
-                  <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia quasi obcaecati sint impedit in repellat placeat magni voluptates deleniti eligendi.</span>
-                </div>
-              </div>
-          </div>
+      <!-- 賣家其他商品 -->
+      <div class="sellerCommodities">
+        <h5 class="sellertopic topic">賣家其他商品</h5>
+        <div id="otherProducts" class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 mt-0"></div>
+        <div id="sellerMobileDots" class="d-flex d-lg-none justify-content-center align-items-center gap-1 mt-2" style="min-height:14px;"></div>
+        <div class="pager seller-pager" id="sellerPager">
+          <button id="prevSellerBtn">‹ 上一頁</button>
+          <span id="sellerPageInfo"></span>
+          <button id="nextSellerBtn">下一頁 ›</button>
         </div>
       </div>
-    
-<!-- TODO sellerCommodities -->
-<div class="sellerCommodities">
-  <h5 class="sellertopic topic">賣家其他商品</h5>
-  <div class="seller-items-container" id="otherProducts"></div>
-  <div id="sellerMobileDots" class="d-flex d-lg-none justify-content-center align-items-center gap-1 mt-1" style="min-height:14px;"></div>
-  <div class="pager seller-pager" id="sellerPager">
-    <button id="prevSellerBtn">‹ 上一頁</button>
-    <span id="sellerPageInfo"></span>
-    <button id="nextSellerBtn">下一頁 ›</button>
-  </div>
-</div>
+
     </div>
-  <div class="phonebuy d-flex d-sm-none fixed-bottom">
-    <button class="buy order">直接下單</button>
-    <button class="shopcart">加入購物車</button>
+
+    <!-- 手機版固定底部下單列 -->
+    <div class="phonebuy d-flex d-lg-none fixed-bottom">
+      <button class="buy order">馬上下單</button>
+      <button class="shopcart">加入購物車</button>
+    </div>
+
   </div>
-  </div>
+
+  <!-- 聊天室 -->
   <button class="chaticon" id="chaticon">
     <img src="../svg/chaticon.svg" alt="聊天室logo，點擊進入聊天室">
-    <!-- 紅點，預設隱藏，fixed 定位對齊 chaticon 右上角 -->
-    <span id="chatUnreadDot" style="
-        display: none;
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        width: 12px;
-        height: 12px;
-        background: red;
-        border-radius: 50%;
-        border: 2px solid white;
-        pointer-events: none;
-    "></span>
-</button>
-<iframe type="text/html" width="400" height="750"
-        style="display: none;" id="talkInterface"></iframe>
+    <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
+  </button>
+  <iframe type="text/html" width="400" height="750" style="display:none;" id="talkInterface"></iframe>
 
-<script>
-// ② 收到 iframe（chatroom）傳來的事件
-window.addEventListener('chatUnread', () => {
-    document.getElementById('chatUnreadDot').style.display = 'block';
-    document.getElementById('newMessageComing')?.classList.remove('d-none');
-});
-window.addEventListener('chatRead', () => {
-    document.getElementById('chatUnreadDot').style.display = 'none';
-    //document.getElementById('newMessageComing')?.classList.add('d-none');
-});
-// ③ 點擊 chaticon 開啟 iframe 時也清除紅點
-document.getElementById('chaticon').addEventListener('click', () => {
-    //document.getElementById('chatUnreadDot').style.display = 'none';
-});
-</script>
-  <!-- 底部導航 (手機版) -->
-  <nav class="bottom-nav">
-    <a href="../shop/shop.html" class="bottom-nav-item">
-      <img class="nav-icon nav-icon-active" src="../svg/Homekey.svg" alt="正在購物首頁">
-      <img class="nav-icon nav-icon-inactive" src="../svg/Homekeynotactive.svg" alt="點擊前往購物首頁">
-      <span>購物首頁</span>
-    </a>
-    <a href="../commodity/commodity.html" class="bottom-nav-item active">
-      <img class="nav-icon nav-icon-active" src="../svg/commoditypage.svg" alt="正在購物商場">
-      <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="點擊前往購物商場">
-      <span>購物商場</span>
-    </a>
-    <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
-      <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="正在購物車頁">
-      <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="點擊前往購物車頁">
-      <span>購物車</span>
-    </a>
-    <a href="../person/person.html" class="bottom-nav-item">
-      <img class="nav-icon nav-icon-active" src="../webP/default-avatar.webp" alt="正在我的帳戶">
-      <img class="nav-icon nav-icon-inactive" src="../svg/default-avatarnotactive.svg" alt="點擊前往我的帳戶">
-      <span>我的帳戶</span>
-    </a>
-  </nav>
   <script>
+    window.addEventListener('chatUnread', () => {
+      document.getElementById('chatUnreadDot').style.display = 'block';
+      document.getElementById('newMessageComing')?.classList.remove('d-none');
+    });
+    window.addEventListener('chatRead', () => {
+      document.getElementById('chatUnreadDot').style.display = 'none';
+    });
+    document.getElementById('chaticon').addEventListener('click', () => {});
   </script>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="module" src="../chatroom/chat.js"></script>

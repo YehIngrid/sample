@@ -192,7 +192,18 @@ async function handleContactWisher() {
       const selectedCommodityId = result.value;
       console.log('選到商品ID:', selectedCommodityId);
       await wpbackendService.contactWisher(wishId, selectedCommodityId);
-      Swal.fire({ icon: 'success', title: '已聯絡許願者！', text: '請等待對方回覆。' });
+      const goChat = await Swal.fire({
+        icon: 'success',
+        title: '已聯絡許願者！',
+        text: '訊息已送出，前往聊天室查看對話。',
+        confirmButtonText: '前往聊天室',
+        showCancelButton: true,
+        cancelButtonText: '繼續瀏覽'
+      });
+      if (goChat.isConfirmed) {
+        sessionStorage.setItem('chatroomReturnUrl', window.location.href);
+        window.location.href = '../chatroom/chatroom.html';
+      }
     }
   } catch (error) {
     console.error('Error contacting wisher:', error);

@@ -87,7 +87,6 @@ function normalizeCartResponse(res) {
   return list.map(row => {
     const item = row.item || {};
     const owner = item.owner || {};
-
     return {
       id: String(row.id),
       productId: String(row.itemId || ''),
@@ -96,10 +95,11 @@ function normalizeCartResponse(res) {
       qty: Number(row.quantity || 1),
       img: item.mainImage || item.imageUrl || 'https://via.placeholder.com/120',
       description: item.description || '',
+      ownerId: String(owner.accountId || owner.id || owner._id || row.sellerId || ''),
       owner_name: owner.name || '未知賣家',
       owner_photo: owner.photoURL || '../image/default-avatar.png',
       checked: false,
-      _needEnrich: !item.description || !item.mainImage
+      _needEnrich: !item.description || !item.mainImage || !owner.accountId
     };
   });
 }
@@ -127,6 +127,7 @@ async function enrichMissingProductFields(items) {
       ...items[it._idx],
       description: p.description || items[it._idx].description,
       img: p.mainImage || items[it._idx].img,
+      ownerId: String(p.owner?.accountId || p.owner?.id || p.owner?._id || items[it._idx].ownerId || ''),
       owner_name: p.owner?.name || items[it._idx].owner_name,
       owner_photo: p.owner?.photoURL || items[it._idx].owner_photo,
       _needEnrich: false
@@ -146,46 +147,49 @@ function renderCart() {
 
   if (cartItems.length === 0) {
     cartList.innerHTML = `
-    <div class="d-flex flex-column align-items-center alert alert-light ">
-      <i class="fas fa-box-open fa-4x text-muted py-1"></i>
-      <div class="text-center">目前沒有商品</div>
+    <div class="cart-empty">
+      <i class="bi bi-bag-x"></i>
+      <p>購物車是空的</p>
+      <a href="../commodity/commodity.html" class="cart-empty-btn">去逛逛</a>
     </div>`;
     return;
   }
 
   cartItems.forEach(item => {
     const el = document.createElement('div');
-    el.className = 'list-group-item';
+    el.className = 'cart-card';
     el.dataset.id = item.id;
-    el.dataset.itemId = item.itemId;
+    el.dataset.itemId = item.productId;
     el.dataset.sellerId = item.ownerId;
 
     el.innerHTML = `
-      <div class="d-flex justify-content-between align-items-start mb-2">
-          <div class="d-flex align-items-center mb-1">
-            <img src="${item.owner_photo}" class="owner-avatar me-2">
-            <small>${esc(item.owner_name)}</small>
-          </div>
-          <input type="checkbox" data-id="${item.id}" class="form-check-input me-3 cart-check" ${item.checked ? 'checked' : ''}>
-      </div>
-      <div class="d-flex align-items-start" style="margin-right: 2px;">
-        <img src="${item.img}" class="item-thumb me-2">
-        <div class="flex-grow-1" style="min-width: 80px; margin-right: 2px;">
-          <h6>${esc(item.name)}</h6>
-          <p class="text-muted ellipsis" style="font-size: 12px;">${esc(item.description)}</p>
+      <label class="cart-card-check">
+        <input type="checkbox" data-id="${item.id}" class="form-check-input cart-check" ${item.checked ? 'checked' : ''}>
+      </label>
+      <div class="cart-card-body">
+        <div class="cart-card-img-wrap">
+          <img src="${item.img}" alt="${esc(item.name)}" class="cart-card-img">
         </div>
-        <div class="text-end">
-          <div style="font-size: 16px; font-weight: bold;">
-            NT$ ${item.price.toLocaleString()}
+        <div class="cart-card-info">
+          <div class="cart-card-seller">
+            <img src="${item.owner_photo}" class="cart-card-seller-avatar">
+            <span>${esc(item.owner_name)}</span>
           </div>
-          <input type="number" class="form-control form-control-sm qty-input"
-                min="1" value="${item.qty}">
+          <h6 class="cart-card-name">${esc(item.name)}</h6>
+          <p class="cart-card-desc">${esc(item.description)}</p>
+          <div class="cart-card-bottom">
+            <div class="cart-card-price">NT$ ${item.price.toLocaleString()}</div>
+            <div class="cart-card-qty">
+              <label>數量</label>
+              <input type="number" class="qty-input" min="1" value="${item.qty}">
+            </div>
+          </div>
+          <div class="cart-card-actions">
+            <button class="cart-action-btn btn-look"><i class="bi bi-eye"></i> 查看</button>
+            <button class="cart-action-btn btn-talk"><i class="bi bi-chat-dots"></i> 聯絡賣家</button>
+            <button class="cart-action-btn btn-remove"><i class="bi bi-trash3"></i></button>
+          </div>
         </div>
-      </div>
-      <div class="mt-1 d-flex justify-content-end gap-2">
-        <button class="btn btn-sm btn-primary btn-look">查看商品</button>
-        <button class="btn btn-sm btn-warning btn-talk">聯絡賣家</button>
-        <button class="btn btn-sm btn-light btn-remove">移除</button>
       </div>
     `;
     cartList.appendChild(el);
@@ -194,7 +198,7 @@ function renderCart() {
 
 // ================== Events ==================
 cartList.addEventListener('change', async e => {
-  const row = e.target.closest('.list-group-item');
+  const row = e.target.closest('.cart-card');
   if (!row) return;
 
   const item = cartItems.find(i => i.id === row.dataset.id);
@@ -223,17 +227,18 @@ cartList.addEventListener('change', async e => {
 });
 
 cartList.addEventListener('click', async e => {
-  const row = e.target.closest('.list-group-item');
+  const row = e.target.closest('.cart-card');
   if (!row) return;
 
   const item = cartItems.find(i => i.id === row.dataset.id);
   if (!item) return;
 
-  if (e.target.classList.contains('btn-look')) {
-    location.href = `../product/product.html`;
+  if (e.target.closest('.btn-look')) {
+    location.href = `../product/product.html?id=${item.productId}`;
+    return;
   }
 
-  if (e.target.classList.contains('btn-remove')) {
+  if (e.target.closest('.btn-remove')) {
     try {
       await backendService.removeItemsFromCart(item.id);
       cartItems = cartItems.filter(i => i.id !== item.id);
@@ -245,8 +250,8 @@ cartList.addEventListener('click', async e => {
     }
   }
 
-  if (e.target.classList.contains('btn-talk')) {
-    openChatWithSeller(row.dataset.sellerId);
+  if (e.target.closest('.btn-talk')) {
+    openChatWithSeller(item.ownerId || row.dataset.sellerId);
   }
 });
 
@@ -310,8 +315,12 @@ function updateSummary() {
     `;
   });
 
+  const subtotalEl = document.getElementById('subtotal');
+  if (subtotalEl) subtotalEl.textContent = `NT$ ${total.toLocaleString()}`;
   const totalEl = document.getElementById('grand-total');
   if (totalEl) totalEl.textContent = `NT$ ${total.toLocaleString()}`;
+  const mobileTotalEl = document.getElementById('grand-total-mobile');
+  if (mobileTotalEl) mobileTotalEl.textContent = `NT$ ${total.toLocaleString()}`;
 }
 function showCheckoutLoading() {
   Swal.fire({
@@ -408,10 +417,15 @@ if (checkoutBtn) {
     }
   });
 }
+// 手機版結帳按鈕：觸發桌面版同一邏輯
+const checkoutBtnMobile = document.getElementById('checkout-btn-mobile');
+if (checkoutBtnMobile && checkoutBtn) {
+  checkoutBtnMobile.addEventListener('click', () => checkoutBtn.click());
+}
 const clearCheckedBtn = document.getElementById('clear-checked');
 
 if (clearCheckedBtn) {
-  clearCheckedBtn.addEventListener('click', () => {
+  clearCheckedBtn.addEventListener('click', async () => {
     const checkedItems = cartItems.filter(i => i.checked);
 
     if (checkedItems.length === 0) {
@@ -419,14 +433,28 @@ if (clearCheckedBtn) {
       return;
     }
 
-    // 取消勾選
-    cartItems.forEach(item => {
-      item.checked = false;
+    const result = await Swal.fire({
+      title: `確定移除 ${checkedItems.length} 件商品？`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '移除',
+      cancelButtonText: '取消'
     });
 
-    saveState();
-    renderCart();
-    updateSummary();
+    if (!result.isConfirmed) return;
+
+    try {
+      await Promise.all(
+        checkedItems.map(i => backendService.removeItemsFromCart(i.id))
+      );
+      cartItems = cartItems.filter(i => !i.checked);
+      saveState();
+      renderCart();
+      updateSummary();
+    } catch (err) {
+      console.error(err);
+      Swal.fire('移除失敗');
+    }
   });
 }
 
@@ -486,19 +514,41 @@ function onItemCheckChange(itemId, checked) {
   renderCart();
   updateSummary();
 }
-async function openChatWithSeller(targetSellerId) {
+let _iframeChatReady = false;
+let _pendingChatSellerId = null;
+
+// 監聽 iframe 的 chatReady 訊號
+window.addEventListener('message', (e) => {
+  if (e.data?.type === 'chatReady') {
+    _iframeChatReady = true;
+    // 如果有 pending 的賣家 ID，立刻發送
+    if (_pendingChatSellerId) {
+      talkInterface.contentWindow.postMessage(
+        { type: 'openChatWithSeller', sellerId: _pendingChatSellerId }, '*'
+      );
+      _pendingChatSellerId = null;
+    }
+  }
+});
+
+function openChatWithSeller(targetSellerId) {
   if (!targetSellerId) {
     return Swal.fire({ icon: 'warning', title: '缺少sellerId' });
   }
 
-  openCloseChatInterface();
-  chatService = new ChatBackendService();
+  // 用 toggleChatInterface 打開聊天室
+  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
+    toggleChatInterface();
+  }
 
-  try {
-    chatInnerWin.openChatWithSeller(targetSellerId);
-  } catch (err) {
-    console.error(err);
-    Swal.fire({ icon: 'error', title: '無法建立聊天室' });
+  if (_iframeChatReady) {
+    // iframe 已 ready，直接發送
+    talkInterface.contentWindow.postMessage(
+      { type: 'openChatWithSeller', sellerId: targetSellerId }, '*'
+    );
+  } else {
+    // iframe 還沒 ready，存起來等 chatReady 事件觸發時再發
+    _pendingChatSellerId = targetSellerId;
   }
 }
 function applyPreselectedItem() {

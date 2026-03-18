@@ -14,6 +14,13 @@
   padding: 40px;
 }
 
+.shopcartfont {
+  margin: 0;
+  padding-left: 4px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  color: #004b97;
+}
 /* 個人頭像與簡介 */
 .profile-info {
   display: flex;
@@ -193,12 +200,216 @@
     flex-direction: column;
   }
 }
-.item-thumb{ width:70px; height:70px; object-fit:cover; border-radius:.5rem; border: 1px solid beige; }
-    .list-group-item{ border:0; border-radius:1rem; box-shadow:0 4px 14px rgba(0,0,0,.05); margin-bottom:12px; }
-    .summary-card{ border:0; border-radius:1rem; box-shadow:0 6px 18px rgba(0,0,0,.08); position:sticky; top:24px; }
     .price{ white-space:nowrap; }
-    .qty-input{ max-width:70px; }
-    .muted-sm{ font-size:1.2rem; color:#6c757d; }
+
+/* ====== 購物車商品卡片 ====== */
+.cart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cart-card {
+  display: flex;
+  align-items: flex-start;
+  background: aliceblue;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  padding: 16px;
+  gap: 12px;
+  transition: transform 0.4s ease, box-shadow 0.3s, border 0.4s ease;
+  border: 1px solid transparent;
+}
+.cart-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border: 1px solid #004b975e;
+}
+.cart-card:has(.cart-check:checked) {
+  border: 1px solid #004b97;
+  box-shadow: 0 2px 8px rgba(0,75,151,0.15);
+}
+
+/* checkbox 區 */
+.cart-card-check {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 28px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.cart-card-check .form-check-input {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.cart-card-check .form-check-input:checked {
+  background-color: #004b97;
+  border-color: #004b97;
+}
+
+/* 主體 */
+.cart-card-body {
+  display: flex;
+  flex: 1;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* 商品圖 */
+.cart-card-img-wrap {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+.cart-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 文字資訊 */
+.cart-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 賣家 */
+.cart-card-seller {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #888;
+}
+.cart-card-seller-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 商品名 */
+.cart-card-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 描述 */
+.cart-card-desc {
+  font-size: 0.78rem;
+  color: #aaa;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 價格 + 數量 */
+.cart-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+  gap: 10px;
+}
+.cart-card-price {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #004b97;
+  white-space: nowrap;
+}
+.cart-card-qty {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cart-card-qty label {
+  font-size: 0.75rem;
+  color: #999;
+  margin: 0;
+}
+.cart-card-qty .qty-input {
+  width: 56px;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.cart-card-qty .qty-input:focus {
+  border-color: #004b97;
+}
+
+/* 操作按鈕列 */
+.cart-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.cart-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.76rem;
+  color: #004b97;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cart-action-btn:hover {
+  background: aliceblue;
+  border-color: #004b975e;
+  color: #004b97;
+}
+.cart-action-btn.btn-remove {
+  margin-left: auto;
+  border-color: transparent;
+  color: #ccc;
+}
+.cart-action-btn.btn-remove:hover {
+  color: #c0392b;
+  background: #fef5f5;
+}
+
+/* ── 手機版適配 ── */
+@media (max-width: 575px) {
+  .cart-card {
+    padding: 12px;
+    border-radius: 8px;
+  }
+  .cart-card-img-wrap {
+    width: 76px;
+    height: 76px;
+    border-radius: 6px;
+  }
+  .cart-card-name {
+    font-size: 0.88rem;
+  }
+  .cart-card-bottom {
+    flex-wrap: wrap;
+  }
+  .cart-card-actions {
+    flex-wrap: wrap;
+  }
+}
 
 .owner-avatar{
   width: 24px;
@@ -206,13 +417,249 @@
   border-radius: 50%;
   object-fit: cover;
 }
-#checkout-btn {
-  background-color: #004b97 !important;
-  color: white !important;
+
+/* ====== 空購物車 ====== */
+.cart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #bbb;
 }
-#checkout-btn:hover {
-  background-color: #0058af !important;
-  color: white !important;
+.cart-empty i {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+}
+.cart-empty p {
+  font-size: 1rem;
+  margin-bottom: 16px;
+  color: #999;
+}
+.cart-empty-btn {
+  padding: 8px 28px;
+  border-radius: 8px;
+  background: #004b97;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.cart-empty-btn:hover {
+  background: rgb(36,182,133);
+  color: #fff;
+  transition: 0.2s;
+}
+
+/* ====== 結帳摘要卡片 ====== */
+.summary-card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 24px;
+  overflow: hidden;
+  background: aliceblue;
+}
+
+.summary-section {
+  padding: 20px 24px;
+}
+
+.summary-heading {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 14px;
+  letter-spacing: 0.02em;
+}
+
+.summary-card .table {
+  font-size: 0.82rem;
+  color: #555;
+}
+.summary-card .table thead th {
+  font-weight: 600;
+  color: #999;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+.summary-card .table tbody td {
+  border: none;
+  padding: 6px 0;
+}
+
+/* 金額摘要區 */
+.summary-bottom {
+  background: aliceblue;
+  border-top: 1px solid #eee;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.summary-free {
+  color: #ABDAD5 !important;
+  font-weight: 600;
+}
+
+.summary-divider {
+  border-top: 1px solid #e0e0e0;
+  margin: 12px 0;
+}
+
+.summary-row.summary-total {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #222;
+  padding: 2px 0 8px;
+}
+.summary-row.summary-total .price {
+  color: #004b97;
+  font-size: 1.25rem;
+}
+
+/* 運送方式 badge */
+.summary-shipping-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 10px;
+  padding: 10px 14px;
+  background: #ABDAD5aa;
+  border-radius: 8px;
+}
+.badge-cod {
+  background: #004b97;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.badge-cod-text {
+  font-size: 0.78rem;
+  color: #888;
+}
+
+/* 確認 checkbox */
+.summary-agree {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0 4px;
+  font-size: 0.82rem;
+  color: #555;
+  cursor: pointer;
+  line-height: 1.45;
+}
+.summary-agree .form-check-input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+/* 結帳按鈕 */
+.summary-checkout-btn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: #004b97;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.summary-checkout-btn:hover {
+  background: rgb(36,182,133);
+  transition: 0.2s;
+}
+.summary-checkout-btn:active {
+  background: rgb(30,160,115);
+}
+
+.summary-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+/* ====== 手機版固定底部結帳列 ====== */
+.mobile-checkout-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3000;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.mobile-checkout-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.mobile-checkout-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.mobile-checkout-label {
+  font-size: 0.72rem;
+  color: #999;
+  font-weight: 500;
+}
+.mobile-checkout-price {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #004b97;
+  white-space: nowrap;
+}
+.mobile-checkout-btn {
+  flex-shrink: 0;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  background: #004b97;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.mobile-checkout-btn:active {
+  background: rgb(36,182,133);
+}
+
+/* 手機版：隱藏卡片內的結帳按鈕與確認區，只保留固定底部列 */
+@media (max-width: 991px) {
+  .summary-card {
+    margin-bottom: 90px;
+  }
+  .summary-checkout-btn,
+  .summary-hint {
+    display: none !important;
+  }
 }
 .chaticon {
     width: 50px;
@@ -242,7 +689,7 @@
     bottom:114px;
     right:30px;
     width:330px;
-    max-height:550px;
+    height:550px;
     border-radius:10px;
     box-shadow:0 4px 16px rgba(0,0,0,0.3);
     background-color:#fff;
@@ -250,6 +697,15 @@
     flex-direction:column;
     overflow:hidden;
     z-index:10000;
+    border: none;
+}
+@media (max-width: 991px) {
+  #talkInterface {
+    bottom: 80px;
+    right: 10px;
+    width: calc(100vw - 20px);
+    height: calc(100vh - 160px);
+  }
 }
 main {
   padding-bottom: 100px;
@@ -264,6 +720,68 @@ text-overflow: ellipsis;
   font-size: 14px;
   color: var(--bs-secondary-color);
 }
+/* ====== 購物車 Toolbar ====== */
+.cart-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  background: aliceblue;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  border: none;
+  flex-wrap: wrap;
+}
+.cart-select-all {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.cart-select-all .form-check-input:checked {
+  background-color: #004b97;
+  border-color: #004b97;
+}
+.cart-toolbar-hint {
+  font-size: 0.78rem;
+  color: #999;
+  flex: 1;
+  min-width: 0;
+}
+.cart-toolbar-hint strong {
+  color: #666;
+}
+.cart-toolbar-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+.cart-toolbar-btn {
+  padding: 4px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.78rem;
+  color: #004b97;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.cart-toolbar-btn:hover {
+  border-color: #004b975e;
+  color: #004b97;
+}
+.cart-toolbar-btn-danger:hover {
+  background: #fff5f5;
+  border-color: #f5c6c6;
+  color: #e74c3c;
+}
+
 .warnSameSeller {
   font-size: 14px;
   color: black;

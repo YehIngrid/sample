@@ -806,6 +806,45 @@ ul{
   background: #f0f0f0;
   color: #444;
 }
+
+/* ── 操作說明：復原 toast ── */
+.guide-undo-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #383838;
+  color: #fff;
+  border-radius: 99px;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.22);
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 9000;
+  white-space: nowrap;
+}
+.guide-undo-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.guide-undo-toast button {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.5);
+  color: #fff;
+  border-radius: 99px;
+  padding: 2px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.guide-undo-toast button:hover {
+  background: rgba(255,255,255,0.15);
+}
+
 .top {
   overflow: hidden;
 }

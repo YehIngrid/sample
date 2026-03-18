@@ -659,39 +659,7 @@
     </div>
   </form>
 </aside>
-<button class="chaticon" id="chaticon">
-    <img src="../svg/chaticon.svg" alt="點擊進入聊天室">
-    <!-- 紅點，預設隱藏，fixed 定位對齊 chaticon 右上角 -->
-    <span id="chatUnreadDot" style="
-        display: none;
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        width: 12px;
-        height: 12px;
-        background: red;
-        border-radius: 50%;
-        border: 2px solid white;
-        pointer-events: none;
-    "></span>
-</button>
-<iframe type="text/html" width="400" height="750"
-        style="display: none;" id="talkInterface"></iframe>
-
 <script>
-// ② 收到 iframe（chatroom）傳來的事件
-window.addEventListener('chatUnread', () => {
-    document.getElementById('chatUnreadDot').style.display = 'block';
-    document.getElementById('newMessageComing')?.classList.remove('d-none');
-});
-window.addEventListener('chatRead', () => {
-    document.getElementById('chatUnreadDot').style.display = 'none';
-    document.getElementById('newMessageComing')?.classList.add('d-none');
-});
-// ③ 點擊 chaticon 開啟 iframe 時也清除紅點
-document.getElementById('chaticon').addEventListener('click', () => {
-    document.getElementById('chatUnreadDot').style.display = 'none';
-});
 // 底部導覽列：點擊時設定 skipLoader 旗標（person.html 不載入 default.js，需在此獨立設定）
 document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
   item.addEventListener('click', function() {
@@ -712,6 +680,12 @@ document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
         <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="點擊前往購物商場">
         <span>購物商場</span>
       </a>
+      <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-center">
+        <div class="nav-center-circle">
+          <img class="nav-icon" src="../svg/chaticonmobile.svg" alt="聊天室">
+        </div>
+        <span>聊天室</span>
+      </a>
       <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
         <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="正在購物車頁">
         <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="點擊前往購物車頁">
@@ -730,7 +704,6 @@ document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script type="module" src="../default/default.js"></script>
-    <script type="module" src="../chatroom/chat.js"></script>
     <script type="module" src="../person/person.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

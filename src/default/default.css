@@ -623,6 +623,7 @@ ul{
   z-index: 4000;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
   padding-bottom: env(safe-area-inset-bottom, 0px);
+  overflow: visible;
 }
 
 @media (max-width: 991px) {
@@ -635,7 +636,7 @@ ul{
 .bottom-nav-item {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -678,6 +679,36 @@ ul{
 
 .bottom-nav-item:hover {
   color: #383838;
+}
+
+/* ── 中間 FAB 圓形突出 ── */
+.bottom-nav-item.nav-center {
+  position: relative;
+  top: -18px;
+  overflow: visible;
+}
+.nav-center-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #84a2d4, #82d3d3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(130, 162, 212, 0.5);
+  border: 3px solid #fff;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.bottom-nav-item.nav-center:hover .nav-center-circle,
+.bottom-nav-item.nav-center.active .nav-center-circle {
+  box-shadow: 0 6px 20px rgba(130, 162, 212, 0.7);
+  transform: scale(1.06);
+}
+.bottom-nav-item.nav-center .nav-icon {
+  width: 26px !important;
+  height: 26px !important;
+  display: block !important;
+  filter: brightness(0) invert(1);
 }
 
 .bottom-nav-badge {

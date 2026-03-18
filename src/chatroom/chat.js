@@ -3,31 +3,42 @@ import ChatBackendService from './ChatBackendService.js';
 const talkInterface = document.getElementById('talkInterface');
 const chatopen = document.getElementById('chaticon');
 
+// 判斷目前頁面是否有底部導覽列（手機版頁面）
+function hasBottomNav() {
+  return !!document.querySelector('.bottom-nav');
+}
+
 async function toggleChatInterface() {
-  const isMobile = window.innerWidth <= 991;
+  // 有底部導覽列（手機版頁面）→ 直接跳轉到聊天室頁面
+  if (hasBottomNav()) {
+    window.location.href = '../chatroom/chatroom.html';
+    return;
+  }
+
+  // 沒有底部導覽列（桌機版頁面）→ 保持原本 iframe 浮動視窗
   if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-    if(!await canEnterChat()) {
+    if (!await canEnterChat()) {
       talkInterface.style.display = 'none';
       return;
     }
     talkInterface.style.display = 'block';
-    if (isMobile) document.body.classList.add('chat-open-mobile');
   } else {
     talkInterface.style.display = 'none';
-    document.body.classList.remove('chat-open-mobile');
   }
 }
-// 2. 全域監聽：用來處理「點擊外部關閉」（桌機版才作用）
+
+// 桌機版：點擊外部關閉浮動視窗
 window.addEventListener('click', function(e) {
-    if (window.innerWidth <= 991) return; // fullscreen on mobile — no outside-click dismiss
+    if (hasBottomNav()) return; // 手機版已跳頁，不需要此邏輯
     if (talkInterface.style.display === 'block' &&
         !talkInterface.contains(e.target) &&
         !chatopen.contains(e.target) &&
-    !document.querySelector('.swal2-container')) {
+        !document.querySelector('.swal2-container')) {
         talkInterface.style.display = 'none';
     }
 });
-// 3. 接收 iframe 內傳來的關閉訊號（手機版全螢幕關閉按鈕）
+
+// 接收 iframe 內傳來的關閉訊號（桌機版浮動視窗關閉按鈕）
 window.addEventListener('message', function(e) {
     if (e.data?.type === 'closeChat') {
         talkInterface.style.display = 'none';
