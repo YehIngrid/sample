@@ -61,7 +61,11 @@ async function renderAuthUI() {
       });
 
       document.querySelectorAll('.loginornot').forEach((el) => {
-        el.textContent = '登出';
+        if (el.classList.contains('nav-menu-item')) {
+          el.innerHTML = '<i class="ti ti-logout me-2"></i>登出';
+        } else {
+          el.textContent = '登出';
+        }
         el.href = '#';
         el.onclick = (e) => {
           e.preventDefault();
@@ -86,6 +90,13 @@ async function renderAuthUI() {
         });
       }
 
+      // 桌機版 navbar 下拉選單：已登入狀態
+      const avatarSrc = (userAvatar && userAvatar !== 'null' && userAvatar !== '') ? userAvatar : '../image/default-avatar.png';
+      document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = avatarSrc; });
+      document.querySelectorAll('.nav-guest-label').forEach(el => el.classList.add('d-none'));
+      document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.remove('d-none'));
+      document.querySelectorAll('.nav-user-menu-header').forEach(el => el.classList.remove('d-none'));
+
       // Session keep-alive：每 5 分鐘 ping 一次，避免 cookie session 過期
       setInterval(async () => {
         try { await backendService.whoami(); } catch (_) {}
@@ -100,13 +111,22 @@ async function renderAuthUI() {
       });
 
       document.querySelectorAll('.loginornot').forEach((el) => {
-        el.textContent = '登入';
-      
+        if (el.classList.contains('nav-menu-item')) {
+          el.innerHTML = '<i class="ti ti-login me-2"></i>登入';
+        } else {
+          el.textContent = '登入';
+        }
+
         const currentUrl = window.location.pathname + window.location.search;
         el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
-      
+
         el.onclick = null;
       });
+
+      // 桌機版 navbar 下拉選單：未登入狀態
+      document.querySelectorAll('.nav-guest-label').forEach(el => el.classList.remove('d-none'));
+      document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.add('d-none'));
+      document.querySelectorAll('.nav-user-menu-header').forEach(el => el.classList.add('d-none'));
     }
 }
 

@@ -2246,6 +2246,8 @@ html{ scroll-behavior:smooth; }
 }
 .empty {
   text-align: center;
+    margin-top: 1rem !important;
+    margin-bottom: 0rem !important;
 }
 
 /* ===== Carousel 高度不崩潰修正 ===== */

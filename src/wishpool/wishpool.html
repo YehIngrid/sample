@@ -66,7 +66,7 @@
                 </button>
                 <!-- Logo -->
                 <a class="me-4" href="../newhome/newhome.html">
-                    <img src="../svg/treasurehub_wishpoolLogo.svg" alt="許願池 Logo" style="width: 150px;">
+                    <img src="../svg/wishpoolicon.svg" alt="許願池 Logo" style="width: 88px; margin-bottom: 10px;">
                 </a>
                 <!-- 右側：返回 + 通知鈴 + 登入 -->
                 <div class="d-flex align-items-center ms-auto">
@@ -76,8 +76,11 @@
                         <span id="notificationBadge"
                               class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
                     </div>
-                    <div class="login">
-                        <a class="username" href="../person/person.html"></a>
+                    <div class="login d-flex align-items-center">
+                        <a href="../person/person.html" style="margin-right: 10px; cursor: pointer;">
+                            <img class="nav-user-avatar"/>
+                        </a>
+
                         <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
                     </div>
                 </div>
@@ -91,15 +94,7 @@
                     <li class="nav-item"><a class="nav-link spa-tab" href="#mywishes" data-spa>我的願望</a></li>
                 </ul>
             </div>
-            <!-- 第三行：手機 SPA 頁籤（navbar 下方，不在漢堡選單） -->
-            <div class="d-flex d-lg-none w-100 wp-tab-row wp-mobile-tabs">
-                <ul class="navbar-nav flex-row w-100">
-                    <li class="nav-item flex-fill text-center"><a class="nav-link spa-tab" href="#about" data-spa>創立理念</a></li>
-                    <li class="nav-item flex-fill text-center"><a class="nav-link spa-tab active" href="#wishpool" data-spa>許願池</a></li>
-                    <li class="nav-item flex-fill text-center"><a class="nav-link spa-tab" href="#makewish" data-spa>我要許願</a></li>
-                    <li class="nav-item flex-fill text-center"><a class="nav-link spa-tab" href="#mywishes" data-spa>我的願望</a></li>
-                </ul>
-            </div>
+
         </nav>
         <!-- 手機搜尋 + 折疊選單 -->
         <div class="container-fluid1 d-lg-none">
@@ -140,186 +135,242 @@
           <p>在資源有限的校園生活中，有些需求不應只是運氣，更該被主動滿足。</p>
           <p>「許願池」的創立理念在於建立一種「買家主動、賣家響應」的「反向媒合機制」。</p>
           <p>透過公開許願，讓閒置資源能精準流向最需要的人手中，打破「找不到、買不到」的困境，打造一個更具數位溫度與信任感的校園經濟生態。</p>
-          <div class="cometrue text-center">截至目前，已成功媒合 <span class="wishNum" id="wishNum"></span> 組願望，拾貨寶庫持續為更多心願牽起連結</div>
+            <p>傳統平台讓你大海撈針，「許願池」則讓資源主動找上你。</p>
+          <!-- ∞ 示意圖 -->
+          <div class="about-infinity-wrap">
+            <div class="about-infinity-label">買家許願</div>
+            <svg class="about-infinity-svg" viewBox="0 0 600 300">
+              <defs>
+                <linearGradient id="infGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="0">
+                  <stop offset="0%"   stop-color="#5a7bd8"/>
+                  <stop offset="50%"  stop-color="#ABDAD5"/>
+                  <stop offset="100%" stop-color="#6aaed6"/>
+                  <animateTransform
+                    attributeName="gradientTransform"
+                    type="translate"
+                    from="-600 0"
+                    to="600 0"
+                    dur="6s"
+                    repeatCount="indefinite"/>
+                </linearGradient>
+              </defs>
+              <path
+                d="M 300,150
+                   C 340,70  470,70  470,150
+                   C 470,230 340,230 300,150
+                   C 260,230 130,230 130,150
+                   C 130,70  260,70  300,150 Z"
+                fill="none"
+                stroke="url(#infGrad)"
+                stroke-width="18"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+            </svg>
+            <div class="about-infinity-label">賣家實現</div>
+          </div>
         </div>
       </section>
       <section id="wishpool" class="page">
-        <h3 class="cardTitle" style="margin-bottom: 16px;">許願池</h3>
-        <div class="wpcontainer d-lg-flex d-block">
-          <div class="leftsort col-lg-3 col-12">
-            <p>全部共 <span id="total">0</span> 件（未篩選）</p>
-            <h6 style="margin-bottom: 10px;">篩選條件</h6>
-            <div class="tag-list">
-              <button class="tag" data-tag="hundred">0~100 元收購</button>
-              <button class="tag" data-tag="necessary">急迫度高</button>
-              <button class="tag" data-tag="fiveh">100~500 元收購</button>
-              <button class="tag" data-tag="normal">一般急迫度</button>
-              <button class="tag" data-tag="nonecessary">急迫度低</button>
-              <button class="tag" data-tag="tothous">500~1000 元收購</button>
-              <button class="tag" data-tag="thousand">1000 元以上收購</button>
-              <button class="tag" data-tag="trithou">3000 元以上收購</button>
+        <!-- Hero -->
+        <div class="wp-hero">
+          <div class="wp-hero-text">
+            <h1 class="wp-hero-title">將心願投進<br><span class="wp-hero-accent">拾貨寶庫許願池</span></h1>
+            <p class="wp-hero-count">目前已累積實現 <span class="wp-hero-num" id="wishNum">0</span> 組願望</p>
+            <div class="wp-hero-btns">
+              <a href="#makewish" data-spa class="wp-btn-primary">
+                <i class="ti ti-wave-saw-tool"></i> 前往許願
+              </a>
+              <button class="wp-btn-secondary" id="exploreBtn">探索心願</button>
             </div>
           </div>
-          <div class="wishpoolcontainer col-lg-9 col-12" style="margin-bottom: 36vh;">
-            <div class="wishgrid">
-              <div class="item-list" id="wishGrid">
-                <!-- 許願卡片會在這裡動態生成 -->
-              </div>
+          <div class="wp-hero-img">
+            <img src="../svg/bigwish.svg" alt="許願池" class="wp-hero-illus">
+          </div>
+        </div>
+
+        <!-- 篩選條件 -->
+        <div class="wp-filter-card">
+          <div class="wp-filter-header">
+            <span class="wp-filter-title">篩選條件</span>
+            <small class="wp-filter-count">共 <span id="total">0</span> 件（未篩選）</small>
+          </div>
+          <div class="tag-list">
+            <button class="tag" data-tag="necessary">急迫度高</button>
+            <button class="tag" data-tag="normal">一般急迫度</button>
+            <button class="tag" data-tag="nonecessary">急迫度低</button>
+          </div>
+          <div class="tag-list" style="margin-top: 8px;">
+            <button class="tag" data-tag="hundred">0~100 元收購</button>
+            <button class="tag" data-tag="fiveh">100~500 元收購</button>
+            <button class="tag" data-tag="tothous">500~1000 元收購</button>
+            <button class="tag" data-tag="thousand">1000 元以上收購</button>
+            <button class="tag" data-tag="trithou">3000 元以上收購</button>
+          </div>
+        </div>
+
+        <!-- 卡片列表 -->
+        <div class="wishpoolcontainer" style="margin-bottom: 36vh;">
+          <div class="wishgrid">
+            <div class="item-list" id="wishGrid">
+              <!-- 許願卡片會在這裡動態生成 -->
             </div>
-            <div class="pagination-controls text-center my-3">
-              <button id="prevPage" class="wishpage">上一頁</button>
-              <span id="pageInfo" class="mx-2" style="color: var(--brand-color);"></span>
-              <button id="nextPage" class="wishpage">下一頁</button>
-            </div>
+          </div>
+          <div class="pagination-controls text-center my-3">
+            <button id="prevPage" class="wishpage">上一頁</button>
+            <span id="pageInfo" class="mx-2" style="color: var(--brand-color);"></span>
+            <button id="nextPage" class="wishpage">下一頁</button>
           </div>
         </div>
       </section>
       <section id="makewish" class="page">
-        <h3 class="cardTitle">許願步驟</h3>
-        <p class="section-subtitle">拾貨許願池：讓你的需求被看見</p>
-        <span>「在校園裡，有些東西不該只是運氣，更該被主動滿足。」<br>
-        傳統平台讓你大海撈針，「許願池」則讓資源主動找上你。</span>
-        <p>無論是絕版課本、宿舍神器，甚至是學長姐的推甄秘笈，只要投下心願，全校都是你的後援會！ </p>
-        <p>按照以下步驟許下你的心願，並等待願望成真吧！</p>
+        <div class="mw-layout">
 
-        <div class="ulstepdiv">
-          <ul class="ulstep">
-            <li class="listep">
-              <div class="step-badge">
-                <small class="step-label">步</small>
-                <span class="step-num">01</span>
-              </div>
-              <div class="listep-content">
-                <h3>登入填寫表單</h3>
-                <p>買家填寫許願單 (需登入會員）</p>
-              </div>
-            </li>
-            <li class="step-arrow">▼</li>
-            <li class="listep">
-              <div class="step-badge">
-                <small class="step-label">步</small>
-                <span class="step-num">02</span>
-              </div>
-              <div class="listep-content">
-                <h3>系統展示願望</h3>
-                <p>系統將願望集中展示在許願池區域</p>
-              </div>
-            </li>
-            <li class="step-arrow">▼</li>
-            <li class="listep">
-              <div class="step-badge">
-                <small class="step-label">步</small>
-                <span class="step-num">03</span>
-              </div>
-              <div class="listep-content">
-                <h3>賣家回應願望</h3>
-                <p>賣家可依照願望內容選擇上架商品並標註「回應許願」</p>
-              </div>
-            </li>
-            <li class="step-arrow">▼</li>
-            <li class="listep">
-              <div class="step-badge">
-                <small class="step-label">步</small>
-                <span class="step-num">04</span>
-              </div>
-              <div class="listep-content">
-                <h3>平台通知買家</h3>
-                <p>平台會通知買家，完成配對並引導交易</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <p>當你提交願望後，我們會將其展示在許願池中，讓其他用戶可以看到並回應你的需求。你也可以隨時查看你的願望狀態，了解是否有賣家對你的願望感興趣。<br>
-        我們鼓勵大家積極參與許願池，不僅是許下願望，也可以幫助他人實現他們的夢想。讓我們一起創造一個充滿愛心和支持的社群，讓每個人的願望都能成真！</p>
-        <p class="warning">注意事項：每位用戶 7 天內只可以許 1 個願望！！並且上傳後 7 天，願望將會自動過期消失，僅可以在「我的願望」裡檢視。</p>
-        <p>請先<span class="loginfirst">登入會員</span>才可提交許願表單！</p>
-        <h3 class="cardTitle" style="margin-top: 28px; margin-bottom: 12px;">許願<span style="color: #004b97;">表單</span></h3>
-        <div class="formwish">
-          <form id="wishForm">
-            <div class="mb-3">
-              <div class="img-preview" id="imgPreview">
-                <span class="placeholder">可拖曳圖片到此</span>
-                <img id="imgPreviewImg" alt="圖片容器">
-              </div>
-              <label for="wishPhoto" class="form-label">商品照片</label>
-              <small class="small"> &lt; 5 MB (jpg/jpeg/png/webp)</small>
-              <input class="form-control" type="file" id="wish-image" name="image" accept="image/jpeg, image/jpg, image/png, image/webp">
-              <div class="invalid-feedback"></div>
-              <div class="valid-feedback">Looks good!</div>
-            </div>
-          
-            <div class="mb-3">
-              <label for="wishName" class="form-label">商品名稱</label>
-              <small class="small">*必填</small>
-              <input type="text" id="wishName" class="form-control" placeholder="例：iPad 10 代 64GB（粉）">
-              <div class="invalid-feedback">請輸入商品名稱</div>
-              <div class="valid-feedback">Looks good!</div>
-            </div>
-          
-            <div class="row mb-3">
-              <div class="col">
-                <label for="budgetMax" class="form-label">預算最高</label>
-                <small class="small">*必填（單位: 元）</small>
-                <input type="number" id="budgetMax" class="form-control" placeholder="0">
-                <div class="invalid-feedback"></div>
-                <div class="valid-feedback">Looks good!</div>
-              </div>
-              <!-- <div class="col">
-                <label for="expireDate" class="form-label">願望過期日<br>(過期後3天後刪除)</label>
-                <input type="date" id="expireDate" class="form-control" placeholder="0">
-                <div class="invalid-feedback"></div>
-                <div class="valid-feedback">Looks good!</div>
-              </div> -->
-            </div>
-          
-            <div class="mb-3">
-              <label for="wishDesc" class="form-label">內容說明</label>
-              <small class="small">*必填</small>
-              <textarea id="wishDesc" rows="3" class="form-control" placeholder="型號、顏色、尺寸、方便聯絡時間等"></textarea>
-              <div class="invalid-feedback">請至少輸入 10 字以上的說明</div>
-              <div class="valid-feedback">Looks good!</div>
-            </div>
-          
-            <div class="mb-3">
-              <label for="urgency" class="form-label">急迫度</label>
-              <small class="small">*必填</small>
-              <select id="urgency" class="form-select">
-                <option value="" selected disabled>請選擇急迫度</option>
-                <option value="3">急需</option>
-                <option value="2">一般</option>
-                <option value="1">不急</option>
-              </select>
-              <div class="invalid-feedback"></div>
-              <div class="valid-feedback">Looks good!</div>
-            </div>
-          
-            <div class="form-actions d-flex justify-content-start align-items-start">
-              <button type="reset" class="btn btn-ghost" style="font-size: 0.9rem;">清除</button>
-              <div class="buttons">
-                <button class="blob-btn" type="submit" id="wishFormbtn">
-                  送出許願
-                  <span class="blob-btn__inner">
-                    <span class="blob-btn__blobs">
-                      <span class="blob-btn__blob"></span>
-                      <span class="blob-btn__blob"></span>
-                      <span class="blob-btn__blob"></span>
-                      <span class="blob-btn__blob"></span>
-                    </span>
-                  </span>
-                </button>
-                <br>
-              <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-                <defs>
-                  <filter id="goo">
-                    <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
-                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
-                    <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
-                  </filter>
-                </defs>
-              </svg>
+          <!-- ① 許願步驟（手機第1、桌機左上） -->
+          <div class="mw-card mw-steps">
+            <h6 class="cardTitle mw-card-title">許願步驟</h6>
+            <p class="section-subtitle">拾貨許願池：讓你的需求被看見</p>
+              <ul class="ulstep">
+                <li class="listep">
+                  <div class="step-badge">
+                    <small class="step-label">步</small>
+                    <span class="step-num">01</span>
+                  </div>
+                  <div class="listep-content">
+                    <h3>登入填寫表單</h3>
+                    <p>買家填寫許願單 (需登入會員）</p>
+                  </div>
+                </li>
+                <li class="listep">
+                  <div class="step-badge">
+                    <small class="step-label">步</small>
+                    <span class="step-num">02</span>
+                  </div>
+                  <div class="listep-content">
+                    <h3>系統展示願望</h3>
+                    <p>系統將願望集中展示在許願池區域</p>
+                  </div>
+                </li>
+                <li class="listep">
+                  <div class="step-badge">
+                    <small class="step-label">步</small>
+                    <span class="step-num">03</span>
+                  </div>
+                  <div class="listep-content">
+                    <h3>賣家回應願望</h3>
+                    <p>賣家可依照願望內容選擇上架商品並標註「回應許願」</p>
+                  </div>
+                </li>
+                <li class="listep">
+                  <div class="step-badge">
+                    <small class="step-label">步</small>
+                    <span class="step-num">04</span>
+                  </div>
+                  <div class="listep-content">
+                    <h3>平台通知買家</h3>
+                    <p>平台會通知買家，完成配對並引導交易</p>
+                  </div>
+                </li>
+              </ul>
+              <p style="font-size:0.9rem;color:#555; margin-top: 10px;">按照以上步驟許下你的心願，並等待願望成真吧！</p>
+          </div>
+
+          <!-- ② 許願表單（手機第2、桌機右） -->
+          <div class="mw-card mw-form">
+            <h6 class="cardTitle mw-card-title">許願表單</h6>
+            <p style="font-size:0.88rem;color:#555;margin-bottom:16px;">請先<span class="loginfirst">登入會員</span>才可提交許願表單！</p>
+            <div class="formwish">
+              <form id="wishForm">
+                <div class="mb-3">
+                  <div class="img-preview" id="imgPreview">
+                    <span class="placeholder">可拖曳圖片到此</span>
+                    <img id="imgPreviewImg" alt="圖片容器">
+                  </div>
+                  <label for="wishPhoto" class="form-label">商品照片</label>
+                  <small class="small"> &lt; 5 MB (jpg/jpeg/png/webp)</small>
+                  <input class="form-control" type="file" id="wish-image" name="image" accept="image/jpeg, image/jpg, image/png, image/webp">
+                  <div class="invalid-feedback"></div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="wishName" class="form-label">商品名稱</label>
+                  <small class="small">*必填</small>
+                  <input type="text" id="wishName" class="form-control" placeholder="例：iPad 10 代 64GB（粉）">
+                  <div class="invalid-feedback">請輸入商品名稱</div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col">
+                    <label for="budgetMax" class="form-label">預算最高</label>
+                    <small class="small">*必填（單位: 元）</small>
+                    <input type="number" id="budgetMax" class="form-control" placeholder="0">
+                    <div class="invalid-feedback"></div>
+                    <div class="valid-feedback">Looks good!</div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="wishDesc" class="form-label">內容說明</label>
+                  <small class="small">*必填</small>
+                  <textarea id="wishDesc" rows="3" class="form-control" placeholder="型號、顏色、尺寸、方便聯絡時間等"></textarea>
+                  <div class="invalid-feedback">請至少輸入 10 字以上的說明</div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="urgency" class="form-label">急迫度</label>
+                  <small class="small">*必填</small>
+                  <select id="urgency" class="form-select">
+                    <option value="" selected disabled>請選擇急迫度</option>
+                    <option value="3">急需</option>
+                    <option value="2">一般</option>
+                    <option value="1">不急</option>
+                  </select>
+                  <div class="invalid-feedback"></div>
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+
+                <div class="form-actions d-flex justify-content-start align-items-start">
+                  <button type="reset" class="btn btn-ghost" style="font-size: 0.9rem;">清除</button>
+                  <div class="buttons">
+                    <button class="blob-btn" type="submit" id="wishFormbtn">
+                      送出許願
+                      <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                          <span class="blob-btn__blob"></span>
+                          <span class="blob-btn__blob"></span>
+                          <span class="blob-btn__blob"></span>
+                          <span class="blob-btn__blob"></span>
+                        </span>
+                      </span>
+                    </button>
+                    <br>
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                      <defs>
+                        <filter id="goo">
+                          <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                          <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                        </filter>
+                      </defs>
+                    </svg>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-          </form>
+
+          <!-- ③ 注意事項（手機第3、桌機左下） -->
+          <div class="mw-card mw-notice">
+            <h3 class="cardTitle mw-card-title">注意事項</h3>
+              <ul style="list-style: none; line-height: 2;">
+                  <li style="border-bottom: #abdad5 2px dashed;">需登入才可提交表單</li>
+                  <li style="border-bottom: #abdad5 2px dashed;">7 天內只可以許 1 個願望</li>
+                  <li style="border-bottom: #abdad5 2px dashed;">1 個願望展示 7 天後過期</li>
+              </ul>
+          </div>
+
         </div>
       </section>
     </main>
@@ -380,6 +431,25 @@
             <button class="notif-view-all">查看全部</button>
           </div>
         </div>
+    <!-- 許願池手機版底部 SPA 導覽列 -->
+    <nav class="wp-spa-nav d-lg-none" id="wpSpaNav">
+      <a class="wp-spa-item spa-tab nav-link" href="#about" data-spa>
+        <i class="ti ti-bulb"></i>
+        <span>創立理念</span>
+      </a>
+      <a class="wp-spa-item spa-tab nav-link active" href="#wishpool" data-spa>
+        <i class="ti ti-star"></i>
+        <span>許願池</span>
+      </a>
+      <a class="wp-spa-item spa-tab nav-link" href="#makewish" data-spa>
+        <i class="ti ti-wand"></i>
+        <span>我要許願</span>
+      </a>
+      <a class="wp-spa-item spa-tab nav-link" href="#mywishes" data-spa>
+        <i class="ti ti-heart"></i>
+        <span>我的願望</span>
+      </a>
+    </nav>
     <!-- 底部導航 (手機版) -->
     <nav class="bottom-nav">
       <a href="../shop/shop.html" class="bottom-nav-item">

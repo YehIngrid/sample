@@ -175,6 +175,7 @@
   background: #f8faff;
   border-bottom: 1px solid #dde8f5;
   overflow: hidden;
+  margin-bottom: 1rem;
 }
 .filter-select {
   flex: 1 1 80px;
@@ -494,4 +495,103 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
 }
 .pager-nav-btn--active:hover {
   background-color: #004b97;
+}
+
+/* ── 桌機版使用者下拉選單 ── */
+.nav-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #383838 !important;
+  text-decoration: none !important;
+  padding: 5px 10px;
+  border-radius: 20px;
+  transition: background 0.18s;
+}
+.nav-user-btn:hover,
+.nav-user-btn:focus,
+.nav-user-btn[aria-expanded="true"] {
+  background: #eef3fb;
+  color: #004b97 !important;
+  text-decoration: none !important;
+}
+/* 隱藏 Bootstrap 預設箭頭，改用自訂 icon */
+.nav-user-btn::after { display: none !important; }
+.nav-user-chevron {
+  font-size: 0.78rem;
+  color: #84a2d4;
+  margin-left: 1px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.nav-user-btn[aria-expanded="true"] .nav-user-chevron {
+  transform: rotate(180deg);
+}
+.nav-guest-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #004b97;
+}
+.nav-user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #BEE4DA;
+  flex-shrink: 0;
+}
+.nav-user-menu {
+  border: none;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.13);
+  border-radius: 14px;
+  padding: 6px;
+  min-width: 170px;
+  margin-top: 6px !important;
+}
+.nav-menu-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 8px;
+  overflow: hidden;
+}
+.nav-user-avatar-sm {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #BEE4DA;
+  flex-shrink: 0;
+}
+.nav-menu-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #383838;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.nav-menu-item {
+  display: flex !important;
+  align-items: center;
+  border-radius: 8px !important;
+  padding: 8px 14px !important;
+  font-size: 0.88rem;
+  color: #383838 !important;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.nav-menu-item i {
+  font-size: 1rem;
+  color: #84a2d4;
+  flex-shrink: 0;
+}
+.nav-menu-item:hover {
+  background: #eef3fb !important;
+  color: #004b97 !important;
+}
+.nav-menu-item:hover i {
+  color: #004b97;
 }

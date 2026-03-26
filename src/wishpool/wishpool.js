@@ -49,6 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
       listMyWishes(mycurrentPage + 1);
     }
   });
+
+  document.getElementById('exploreBtn')?.addEventListener('click', () => {
+    document.getElementById('wishGrid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 })
 const pages = document.querySelectorAll('.page');
 const links = document.querySelectorAll('.nav-link');
@@ -59,10 +63,9 @@ async function showPage(hash) {
   links.forEach(l => l.classList.remove('active'));
 
   const target = document.querySelector(hash);
-  const activeLink = document.querySelector(`a[href="${hash}"]`);
+  document.querySelectorAll(`a[href="${hash}"]`).forEach(el => el.classList.add('active'));
 
   if (target) target.classList.add('active');
-  if (activeLink) activeLink.classList.add('active');
 
   // ===== 公開願望池 =====
   if (hash === '#wishpool') {
@@ -140,6 +143,8 @@ async function listAll(page = 1) {
       }
       if(res.data.pagination.total) {
         total.innerText = res.data.pagination.total;
+        const wishNumEl = document.getElementById('wishNum');
+        if (wishNumEl) animateCountUp('wishNum', res.data.pagination.total);
       }
       updatePaginationUI();
     } catch (error) {
@@ -658,72 +663,94 @@ function animateCountUp(id, target, duration = 2000) {
 }
 
 // ════════════════════════════════════════════════════
-//  Square sticky-note card system
+//  Wish card system
 // ════════════════════════════════════════════════════
 
+function relativeTime(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return '剛剛';
+  if (minutes < 60) return `${minutes} 分鐘前`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} 小時前`;
+  const days = Math.floor(hours / 24);
+  return `${days} 天前`;
+}
+
 /**
- * Build and return a square sticky-note card wrapper element.
+ * Build and return a wish card element.
  */
 function createWishCard(wish, isMyWish) {
   const isActive = !isMyWish || wish.status === 'ACTIVE';
-  const isRead = !!localStorage.getItem('readWish_' + wish.id);
 
   const wrapper = document.createElement('div');
-  wrapper.className = 'wish-card-wrapper' +
-    (isRead ? ' read' : '') +
-    (isActive ? '' : ' wish-disabled');
+  wrapper.className = 'wish-card-wrapper' + (isActive ? '' : ' wish-disabled');
   wrapper.dataset.id = wish.id;
-  wrapper.style.setProperty('--card-color', wish.photoURL
-    ? PHOTO_CARD_COLORS[Math.floor(Math.random() * PHOTO_CARD_COLORS.length)]
-    : '#ffffff');
   wrapper.dataset.tags = generateTags(wish);
 
-  const expiresAt = wish.expiresAt ? new Date(wish.expiresAt) : null;
-  const deadlineText = expiresAt
-    ? `截止 ${(expiresAt.getMonth()+1).toString().padStart(2,'0')}/${expiresAt.getDate().toString().padStart(2,'0')}`
-    : '';
+  const priorityLabel = PRIORITY_LABEL[wish.priority] || '';
+  const priorityColor = PRIORITY_COLOR[wish.priority] || '#888';
+
   const statusMap = { ACTIVE: '上架中', EXPIRED: '已過期', DELETED: '已刪除' };
-  const statusColor = wish.status === 'ACTIVE' ? '#28a745' : '#aaa';
   const statusBadgeHtml = (isMyWish && wish.status !== 'ACTIVE')
-    ? `<span class="wf-status-badge" style="background:${statusColor};">${statusMap[wish.status] || wish.status}</span>`
+    ? `<span class="wn-status-badge" style="background:#aaa;">${statusMap[wish.status] || wish.status}</span>`
     : '';
 
   const mediaHtml = wish.photoURL
-    ? `<div class="wf-media"><img class="wf-photo" src="${wish.photoURL}" alt="${wish.itemName}" loading="lazy"></div>`
-    : `<img class="wf-wishbg" src="../svg/wishbg.svg" alt="拾貨寶庫，校園二手電商平台" aria-hidden="true">`;
+    ? `<img class="wn-photo" src="${wish.photoURL}" alt="${wish.itemName}" loading="lazy">`
+    : `<div class="wn-placeholder"><img src="../svg/wishbg.svg" alt="" class="wn-placeholder-bg" aria-hidden="true"></div>`;
+
+  const ownerAvatar = wish.owner?.photoURL || '../webP/default-avatar.webp';
+  const ownerName = wish.owner?.name || '許願者';
+  const dateText = wish.createdAt ? relativeTime(wish.createdAt) : '';
+  const priceFormatted = Number(wish.maxPrice || 0).toLocaleString();
+
+  const actionHtml = isMyWish
+    ? `<button class="wn-delete-btn wn-action-js">刪除願望</button>`
+    : `<button class="wn-contact-btn wn-action-js"><i class="ti ti-mail"></i> 聯絡許願者</button>`;
 
   wrapper.innerHTML = `
-    <div class="wish-card">
-      <div class="wish-card-front">
-        <div class="wf-header">
-          <div class="wf-title">${wish.itemName}</div>
-          <div class="wf-deadline">${deadlineText}</div>
-        </div>
-        <div class="wf-price">收購 NT$${wish.maxPrice}</div>
-        ${statusBadgeHtml}
+    <div class="wn-card">
+      <div class="wn-media">
         ${mediaHtml}
+        ${priorityLabel ? `<span class="wn-priority-badge" style="background:${priorityColor};">${priorityLabel}</span>` : ''}
+        ${statusBadgeHtml}
       </div>
-      <div class="wish-card-back">
-        <div class="wb-scroll">
-          <div class="wb-top-bar"><button class="wb-close-btn">✕</button></div>
-          <div class="wb-loading">
-            <span class="spinner-border spinner-border-sm me-2"></span>載入中...
-          </div>
+      <div class="wn-body">
+        <div class="wn-title">${wish.itemName}</div>
+        ${wish.description ? `<div class="wn-desc">${wish.description}</div>` : ''}
+        <div class="wn-user">
+          <img class="wn-avatar" src="${ownerAvatar}" alt="許願者頭像" onerror="this.src='../webP/default-avatar.webp'">
+          <span class="wn-username">${ownerName}</span>
         </div>
+        <div class="wn-footer">
+          <div class="wn-budget-col">
+            <span class="wn-budget-label">預算</span>
+            <span class="wn-budget">NT$ ${priceFormatted}</span>
+          </div>
+          ${dateText ? `<div class="wn-date-col"><span class="wn-date-label">發布於</span><span class="wn-date">${dateText}</span></div>` : ''}
+        </div>
+        <div class="wn-actions">${actionHtml}</div>
       </div>
     </div>
   `;
 
   if (isActive) {
-    wrapper.querySelector('.wish-card-front').addEventListener('click', () => {
-      flipCard(wrapper, wish.id, isMyWish);
-    });
+    const btn = wrapper.querySelector('.wn-action-js');
+    if (btn) {
+      if (isMyWish) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteWish(wish.id);
+        });
+      } else {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          handleContactWisher(wish.id, btn);
+        });
+      }
+    }
   }
-
-  wrapper.querySelector('.wb-close-btn').addEventListener('click', (e) => {
-    e.stopPropagation();
-    wrapper.querySelector('.wish-card').classList.remove('flipped');
-  });
 
   return wrapper;
 }
@@ -977,11 +1004,10 @@ async function handleAutoFocus() {
         expiresAt: d.expiresAt,
         photoURL:  d.photoURL,
         priority:  d.priority,
+        createdAt: d.createdAt,
         owner:     d.owner
       };
       wrapper = createWishCard(wishObj, false);
-      wrapper.style.outline       = '3px solid var(--brand-color)';
-      wrapper.style.outlineOffset = '2px';
       document.getElementById('wishGrid')?.prepend(wrapper);
     } catch (err) {
       console.warn('handleAutoFocus: 無法載入願望', err);
@@ -990,5 +1016,7 @@ async function handleAutoFocus() {
   }
 
   wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  setTimeout(() => flipCard(wrapper, focusId, false), 650);
+  wrapper.style.outline       = '3px solid var(--brand-color)';
+  wrapper.style.outlineOffset = '2px';
+  setTimeout(() => { wrapper.style.outline = ''; wrapper.style.outlineOffset = ''; }, 2000);
 }

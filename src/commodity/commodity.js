@@ -42,7 +42,15 @@ sortItems.forEach(el => {
     e.preventDefault();
     sortItems.forEach(x => x.classList.remove('active'));
     el.classList.add('active');
-    const cat = el.dataset.category || el.textContent.trim();
+    const catMap = {
+      "書籍與學籍用品": "book",
+      "宿舍與生活用品": "life",
+      "學生專用器材": "special",
+      "環保生活用品": "reuse",
+      "儲物與收納用品": "storage",
+      "其他": "other"
+    }
+    const cat = el.dataset.category || catMap[el.textContent.trim()];
     changeCategory(cat);
   });
 });
@@ -142,63 +150,70 @@ async function loadProducts() {
   loaderEl.textContent = '載入中...';
 
   try {
-    let items = [];
     const backendService = new BackendService();
     const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
-
-    // === 1️⃣ 依「來源」及排序決定要撈哪支 API ===
     const sortselected = sortSelect ? sortSelect.value : 'default';
+    const keyword = document.getElementById('searchInput')?.value.trim() || '';
+    const maxPrice = maxPriceInput?.value ? parseInt(maxPriceInput.value) : null;
+    const newOrOld = newOrOldInput?.value !== 'default' ? parseInt(newOrOldInput?.value) : null;
+    const validCategories = ['book', 'life', 'student', 'recycle', 'clean', 'other'];
+
+    let items = [];
+    let totalCount = 0;
+
+    // === 1️⃣ 決定呼叫哪支 API ===
     if (currentSource === 'hot') {
       const response = await backendService.getHotItems(pagingInfo);
       items = response?.data?.commodities || [];
+      totalCount = response?.data?.pagination?.totalItems ?? items.length;
 
     } else if (currentSource === 'new') {
       const response = await backendService.getNewItems(pagingInfo);
       items = response?.data?.commodities || [];
+      totalCount = response?.data?.pagination?.totalItems ?? items.length;
+
+    } else if (keyword || maxPrice) {
+      // === 伺服器端搜尋（有關鍵字或最高價格篩選時）===
+      const searchParams = { page: pageIndex + 1, limit: PAGE_SIZE };
+      if (keyword) searchParams.keyword = keyword;
+      if (maxPrice) searchParams.maxPrice = maxPrice;
+      if (validCategories.includes(currentCategory)) searchParams.category = currentCategory;
+      const response = await backendService.searchCommodities(searchParams);
+      items = response?.data?.commodities || [];
+      totalCount = response?.data?.pagination?.totalItems ?? items.length;
 
     } else if (sortselected === 'priceAsc') {
       const response = await backendService.getPriceLowItems(pagingInfo);
       items = response?.data?.commodities || [];
+      totalCount = response?.data?.pagination?.totalItems ?? items.length;
 
     } else if (sortselected === 'priceDesc') {
       const response = await backendService.getPriceHighItems(pagingInfo);
       items = response?.data?.commodities || [];
+      totalCount = response?.data?.pagination?.totalItems ?? items.length;
+
+    } else if (validCategories.includes(currentCategory)) {
+      // 分類篩選（伺服器端）
+      const response = await backendService.getCategoryItems(currentCategory, pagingInfo);
+      items = response?.data?.commodities || [];
+      totalCount = response?.data?.pagination?.totalItems ?? items.length;
 
     } else {
-      // all
       const response = await backendService.getAllCommodities(pagingInfo);
       items = response?.data?.commodities || [];
+      totalCount = response?.data?.pagination?.totalItems ?? items.length;
     }
 
-    // === 2️⃣ 前端分類 / 篩選 ===
-    const categoryMap = {
-      book: '書籍與學籍用品',
-      life: '宿舍與生活用品',
-      student: '學生專用器材',
-      recycle: '環保生活用品',
-      clean: '儲物與收納用品',
-      other: '其他',
-    };
-
-    let filteredItems = items;
-
-    // 👉 大分類（不是 all / hot / new 才做前端篩選）
-    if (currentCategory && currentCategory !== 'all' && currentCategory !== 'hot' && currentCategory !== 'new') {
-      filteredItems = filteredItems.filter(
-        p => categoryMap[p.category] === currentCategory
-      );
+    // === 2️⃣ 新舊程度：僅剩前端篩選（搜尋 API 不支援）===
+    if (newOrOld !== null) {
+      items = items.filter(p => p.newOrOld <= newOrOld);
     }
 
-    // 👉 其他條件（價格、關鍵字…）
-    filteredItems = applyFilters(filteredItems);
-
-    // === 3️⃣ 分頁 ===
-    const totalCount = filteredItems.length;
-    const start = pageIndex * PAGE_SIZE;
-    const pagedItems = filteredItems.slice(start, start + PAGE_SIZE);
+    const mobileCountEl = document.getElementById('mobileResultCount');
+    if (mobileCountEl) mobileCountEl.textContent = `共 ${totalCount} 件`;
 
     productRow.innerHTML = '';
-    renderProductsBootstrap(pagedItems);
+    renderProductsBootstrap(items);
     renderPagination(totalCount);
 
     loaderEl.textContent = '';
@@ -383,32 +398,13 @@ document.addEventListener('DOMContentLoaded', () => {
   changeCategory(initialCategory);
 });
 
+// 僅保留不支援伺服器端篩選的條件（新舊程度），其餘由 loadProducts 的 API 呼叫處理
 function applyFilters(items) {
-  const maxPrice = maxPriceInput?.value ? parseInt(maxPriceInput.value) : null;
   const newOrOld = newOrOldInput?.value !== 'default' ? parseInt(newOrOldInput?.value) : null;
   let result = items;
-
-  // 關鍵字搜尋
-  const searchInput = document.getElementById('searchInput');
-  if (searchInput && searchInput.value.trim()) {
-    const kw = searchInput.value.trim().toLowerCase();
-    result = result.filter(p =>
-      (p.name || p.title || '').toLowerCase().includes(kw) ||
-      (p.description || '').toLowerCase().includes(kw)
-    );
-  }
-
-  if (maxPrice !== null) {
-    result = result.filter(p => p.price <= maxPrice);
-  }
-
   if (newOrOld !== null) {
     result = result.filter(p => p.newOrOld <= newOrOld);
   }
-
-  const mobileCountEl = document.getElementById('mobileResultCount');
-  if (mobileCountEl) mobileCountEl.textContent = `共 ${result.length} 件`;
-
   return result;
 }
 

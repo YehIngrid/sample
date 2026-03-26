@@ -74,6 +74,26 @@ document.addEventListener("DOMContentLoaded", () => {
     seller.style.display = "none";
     midcontent.style.display = "block";
   }
+
+  // 搜尋：導向 commodity.html 並帶入關鍵字
+  function doSearch(keyword) {
+    const kw = keyword.trim();
+    if (!kw) return;
+    window.location.href = `../commodity/commodity.html?q=${encodeURIComponent(kw)}`;
+  }
+
+  document.getElementById('searchForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    doSearch(document.getElementById('searchInput')?.value || '');
+  });
+
+  // 手機版 offcanvas 搜尋
+  document.getElementById('searchInputOC')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      doSearch(e.target.value);
+    }
+  });
   const iframe = document.getElementById('talkInterface');
   iframe.src = '../chatroom/chatroom.html';
 // 必須等待 iframe 載入完成

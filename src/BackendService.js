@@ -240,6 +240,21 @@ export default class BackendService {
         }
     }
     // 根據分類取得商品列表
+    async searchCommodities({ keyword, category, maxPrice, page, limit } = {}) {
+        try {
+            const params = {};
+            if (keyword) params.keyword = keyword;
+            if (category && category !== 'all') params.category = category;
+            if (maxPrice) params.maxPrice = maxPrice;
+            if (page) params.page = page;
+            if (limit) params.limit = limit;
+            const response = await axios.get(`${this.baseUrl}/api/commodity/search`, { params });
+            return response.data;
+        } catch (error) {
+            console.error("搜尋商品失敗", error);
+            return Promise.reject(error);
+        }
+    }
     async getCategoryItems(category, pagingInfo) {
         try {
             const response = await axios.get(`${this.baseUrl}/api/commodity/list/category/${category}`, {

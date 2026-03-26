@@ -155,15 +155,24 @@
                     </div>
                     <div class="me-3">
                         <div class="dropdown">
-                            <button class="btn btn-link dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <div class="d-flex justify-content-center align-items-center">
-                                    <img src="../image/default-avatar.png" alt="預設頭像" style="width: 30px;">
+                            <button class="btn btn-link dropdown-toggle nav-user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="nav-guest-label">登入</span>
+                                <div class="nav-loggedin-area d-none d-flex align-items-center gap-1">
+                                    <img class="nav-user-avatar" src="../image/default-avatar.png" alt="頭像">
                                     <span class="username"></span>
+                                    <i class="ti ti-chevron-down nav-user-chevron"></i>
                                 </div>
                             </button>
-                            <ul class="dropdown-menu">
-                                <li><button class="dropdown-item" type="button"><a href="../account/account.html" class="loginornot" style="text-decoration: none; color: #383838;"></a></button></li>
-                                <li><button class="dropdown-item" type="button"><a href="../person/person.html" style="text-decoration: none; color: #383838;">個人資訊</a></button></li>
+                            <ul class="dropdown-menu dropdown-menu-end nav-user-menu">
+                                <li class="nav-user-menu-header d-none">
+                                    <div class="nav-menu-profile">
+                                        <img class="nav-user-avatar-sm" src="../image/default-avatar.png" alt="頭像">
+                                        <span class="username nav-menu-name"></span>
+                                    </div>
+                                    <hr class="dropdown-divider my-1">
+                                </li>
+                                <li><a class="dropdown-item nav-menu-item" href="../person/person.html"><i class="ti ti-user me-2"></i>個人資訊</a></li>
+                                <li><a class="dropdown-item nav-menu-item loginornot" href="../account/account.html"></a></li>
                             </ul>
                         </div>
                     </div>

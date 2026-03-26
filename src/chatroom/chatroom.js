@@ -488,9 +488,19 @@ class ChatRoomList {
         }
     }
 
-    showSidebar() { document.getElementById('sidebar')?.classList.remove('mobile-hidden'); }
+    showSidebar() {
+        document.getElementById('sidebar')?.classList.remove('mobile-hidden');
+        const nav = document.getElementById('bottomNav');
+        if (nav) nav.style.display = '';
+    }
     hideSidebar() { document.getElementById('sidebar')?.classList.add('mobile-hidden'); }
-    showChatMain() { document.getElementById('chatMain')?.classList.remove('mobile-hidden'); }
+    showChatMain() {
+        document.getElementById('chatMain')?.classList.remove('mobile-hidden');
+        if (this.isMobile) {
+            const nav = document.getElementById('bottomNav');
+            if (nav) nav.style.display = 'none';
+        }
+    }
     hideChatMain() { document.getElementById('chatMain')?.classList.add('mobile-hidden'); }
     backToSidebar() { if (this.isMobile) { this.showSidebar(); this.hideChatMain(); } }
 

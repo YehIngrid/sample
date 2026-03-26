@@ -20,7 +20,7 @@ html, body {
     height: 100vh;
     padding: 0;
 }
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .container-fluid {
         height: calc(100vh - 60px);
     }
@@ -38,7 +38,7 @@ html, body {
     display: flex;
     flex-direction: column;
 }
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .sidebar {
         height: calc(100vh - 60px);
     }
@@ -106,7 +106,7 @@ html, body {
     display: flex;
     flex-direction: column;
 }
-@media (max-width: 767px) {
+@media (max-width: 991px) {
     .chat-main {
         height: calc(100vh - 60px);
     }
@@ -139,7 +139,6 @@ html, body {
     animation: fadeIn 0.1s ease-in;
 }
 .imgmessage img {
-    margin-left: 10px;
     margin-bottom: 15px;
 }
 .imgAndMessage {
