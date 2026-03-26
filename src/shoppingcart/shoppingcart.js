@@ -251,6 +251,7 @@ cartList.addEventListener('click', async e => {
   }
 
   if (e.target.closest('.btn-talk')) {
+    e.stopPropagation();
     openChatWithSeller(item.ownerId || row.dataset.sellerId);
   }
 });
@@ -536,10 +537,8 @@ function openChatWithSeller(targetSellerId) {
     return Swal.fire({ icon: 'warning', title: '缺少sellerId' });
   }
 
-  // 用 toggleChatInterface 打開聊天室
-  if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-    toggleChatInterface();
-  }
+  // 直接顯示 iframe（不用 toggle，避免非同步時序問題）
+  talkInterface.style.display = 'block';
 
   if (_iframeChatReady) {
     // iframe 已 ready，直接發送

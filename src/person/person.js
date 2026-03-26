@@ -6,6 +6,8 @@ let backendService;
 let chatService;
 let chatInnerWin; // 用於存放 iframe 的 window 物件
 let goodsOrder;
+const MY_ITEMS_LIMIT = 10;
+let myItemsPage = 1;
 const myUid = localStorage.getItem("uid");
 window.currentOrder = null;
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
@@ -608,6 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const iframe = document.getElementById('talkInterface');
+  if (iframe) {
   iframe.src = '../chatroom/chatroom.html';
 // 必須等待 iframe 載入完成
   iframe.addEventListener('load', () => {
@@ -629,6 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
           openChatWithTarget(chatWithId);
       }
   });
+  } // end if (iframe)
 });
 
 // ===== 工具 =====
@@ -1608,7 +1612,7 @@ if (disableAccountBtn) {
 const chatopen = document.getElementById('chaticon');
 const chatclose = document.getElementById('closechat');
 const talkInterface = document.getElementById('talkInterface');
-chatopen.addEventListener('click', function(e){
+chatopen?.addEventListener('click', function(e){
     toggleChatInterface();
 })
 
@@ -1832,9 +1836,6 @@ async function openPartnerReviewModal(orderId, isSell) {
   });
 }
 // ===== 商品管理分頁 =====
-const MY_ITEMS_LIMIT = 10;
-let myItemsPage = 1;
-
 async function loadMyItems(p = 1) {
   myItemsPage = p;
   if (!backendService) backendService = new BackendService();
