@@ -4,9 +4,13 @@
   "description": "TreasureHub 拾貨寶庫 — local dev server",
   "type": "module",
   "scripts": {
-    "dev-server": "node server.js"
+    "dev-server": "node server.js",
+    "dev": "node server.js & npx browser-sync start --proxy 'localhost:5500' --files 'src/**/*' --port 3000 --no-open"
   },
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.4"
   }
 }

@@ -439,7 +439,7 @@
     <i class="fa-solid fa-circle-arrow-left icon-button" id="back-btn" style="margin-top: 10px; margin-bottom: 10px;"></i>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">販賣規則</button>
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">我要賣商品！</button>
@@ -581,165 +581,221 @@
       </div>
       <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         <div class="form-store">
-          <h2 class="infortitle">商品資料填寫(需登入)</h2>
-          <!-- 按鈕 -->
-          <button id="openModal" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#myModal">
-            請點擊我看詳細資訊！
-          </button>
 
-            <!-- Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-scrollable">
-                <div class="modal-content">
-                  
-                  <!-- 標題列 -->
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">商品分類與規格說明</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
-                  </div>
+          <!-- 步驟指示器 -->
+          <div class="sell-steps">
+            <div class="sell-step active" data-step="1">
+              <div class="sell-step-badge">1</div>
+              <span class="sell-step-label">基本資訊</span>
+            </div>
+            <div class="sell-step-line"></div>
+            <div class="sell-step" data-step="2">
+              <div class="sell-step-badge">2</div>
+              <span class="sell-step-label">規格與定價</span>
+            </div>
+            <div class="sell-step-line"></div>
+            <div class="sell-step" data-step="3">
+              <div class="sell-step-badge">3</div>
+              <span class="sell-step-label">照片上傳</span>
+            </div>
+          </div>
 
-                  <!-- 內容 -->
-                  <div class="modal-body">
-                    <p><strong>所屬分類</strong></p>
-                    <ol>
-                      <li>書籍與學習用品：<br>教科書、參考書、文具用品（如計算機、繪圖工具、筆記本）、學習卡片、筆記/習題集等。</li>
-                      <li>宿舍與生活用品：<br>床墊、衣架、燈具等宿舍用品、小型廚房用品（如電鍋、餐具）、風扇、暖風機等生活設備。</li>
-                      <li>學生專用器材：<br>實驗器材（護目鏡、手套等）、測量工具（如尺規、測量儀）等。</li>
-                      <li>環保生活用品：<br>環保餐具（如可重複使用的餐具組、餐盒、水瓶）、購物袋、手提袋等。</li>
-                      <li>儲物與收納用品：<br>收納盒、文件夾、掛鉤、收納架等。</li>
-                      <li>其他：<br>若不知道自己販賣的商品類別為何，請選擇其他。</li>
-                    </ol>
+          <form id="createCommodityForm" enctype="multipart/form-data">
 
-                    <p><strong>商品尺寸</strong></p>
-                    <ol>
-                      <li>大型：<br>長度/寬度/高度大於150cm，容量大於5L。</li>
-                      <li>中型：<br>長度/寬度/高度30cm到150cm，容量1L到5L。</li>
-                      <li>小型：<br>長度/寬度/高度小於30cm，容量小於1L。</li>
-                    </ol>
+            <!-- ── Step 1：基本資訊 ── -->
+            <div class="sell-panel active" id="sellStep1">
+              <p class="mw-login-hint" id="sellLoginHint" style="display:none">請先<span class="loginfirst">登入會員</span>才可提交商品表單！</p>
+              <div class="sell-field">
+                <label for="name" class="sell-label">商品名稱 <span class="sell-required">*</span></label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="建議使用正式名稱，例如：台大有機化學課本第三版" />
+              </div>
 
-                    <p><strong>新舊程度</strong></p>
-                    <ol>
-                      <li>全新：完全未使用，包裝完好。</li>
-                      <li>幾乎全新：使用過一次或兩次，狀況極佳，幾乎沒有磨損。</li>
-                      <li>半新：使用過，狀況良好，可能有輕微磨損。</li>
-                      <li>適中：明顯使用過，狀況普通，可能有明顯的使用痕跡，但仍可正常使用。</li>
-                      <li>稍舊：使用時間較長，狀況一般，有顯著的磨損或損壞，但仍可使用。</li>
-                      <li>全舊：使用過度，可能有重大缺陷或損壞，建議僅用於某些用途或需要修理。</li>
-                    </ol>
+              <div class="sell-field">
+                <label for="description" class="sell-label">商品狀態描述 <span class="sell-required">*</span></label>
+                <small class="sell-hint">可列出商品規格、注意事項、BSMI、ISBN；說明販售原因、瑕疵部位等，建議 30 字以上</small>
+                <textarea class="form-control" id="description" name="description" rows="5" placeholder="例如：九成新，只用了一學期，無劃線無書寫..."></textarea>
+              </div>
 
-                    <p><strong>主要照片：</strong>一張，且為封面照</p>
-                    <p><strong>其他照片：</strong>可傳多張（最多5張），會放在商品的詳細資訊內</p>
-                  </div>
-
-                  <!-- 底部 -->
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                  </div>
-
+              <div class="sell-field">
+                <label for="category" class="sell-label">所屬分類 <span class="sell-required">*</span>
+                  <button type="button" class="sell-info-btn" id="catInfoBtn"
+                    data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" data-bs-trigger="click"
+                    data-bs-content="<ul class='sell-cat-popover-list'><li><b>書籍與學籍用品</b>：教科書、參考書、文具、計算機等</li><li><b>宿舍與生活用品</b>：床墊、衣架、燈具、電鍋等</li><li><b>學生專用器材</b>：實驗器材、護目鏡、測量工具等</li><li><b>環保生活用品</b>：環保餐具、購物袋、水瓶等</li><li><b>儲物與收納用品</b>：收納盒、文件夾、掛鉤等</li><li><b>其他</b>：不確定分類請選此項</li></ul>"
+                    aria-label="分類說明">
+                    <i class="ti ti-info-circle"></i>
+                  </button>
+                </label>
+                <div class="sell-cat-grid">
+                  <label class="sell-cat-card">
+                    <input type="radio" name="categoryRadio" value="book">
+                    <img src="../svg/book.svg" alt="書籍">
+                    <span>書籍與學籍用品</span>
+                  </label>
+                  <label class="sell-cat-card">
+                    <input type="radio" name="categoryRadio" value="life">
+                    <img src="../svg/life.svg" alt="生活">
+                    <span>宿舍與生活用品</span>
+                  </label>
+                  <label class="sell-cat-card">
+                    <input type="radio" name="categoryRadio" value="student">
+                    <img src="../svg/ruler.svg" alt="器材">
+                    <span>學生專用器材</span>
+                  </label>
+                  <label class="sell-cat-card">
+                    <input type="radio" name="categoryRadio" value="recycle">
+                    <img src="../svg/bag.svg" alt="環保">
+                    <span>環保生活用品</span>
+                  </label>
+                  <label class="sell-cat-card">
+                    <input type="radio" name="categoryRadio" value="clean">
+                    <img src="../svg/save.svg" alt="收納">
+                    <span>儲物與收納用品</span>
+                  </label>
+                  <label class="sell-cat-card">
+                    <input type="radio" name="categoryRadio" value="other">
+                    <img src="../svg/Other.svg" alt="其他">
+                    <span>其他</span>
+                  </label>
                 </div>
+                <!-- 隱藏的 select 供送出使用 -->
+                <select name="category" id="category" class="d-none">
+                  <option value="notselyet">請選擇商品分類</option>
+                  <option value="book">書籍與學籍用品</option>
+                  <option value="life">宿舍與生活用品</option>
+                  <option value="student">學生專用器材</option>
+                  <option value="recycle">環保生活用品</option>
+                  <option value="clean">儲物與收納用品</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+
+              <div class="sell-nav">
+                <span></span>
+                <button type="button" class="sell-next-btn" id="step1Next">下一步：規格與定價 <i class="ti ti-arrow-right"></i></button>
               </div>
             </div>
 
-          <form
-              id="createCommodityForm"
-              enctype="multipart/form-data" 
-          >
-          <div class="df">
-          <div class="left_form">
-              <label for="name" class="form-label">商品名稱</label>
-              <input type="text" id="name" name="name" class="form-control" placeholder="建議使用正式名稱" /><br />
-              <div class="d-flex flex-column">
-                  <label for="description" class="form-label">商品狀態描述</label>
-                  <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">可以詳細列出: 商品規格、注意事項、BSMI、ISBN等</small>
-                  <textarea class="form-control" placeholder="可以說明販售原因、商品瑕疵部位等，建議30字以上" id="description" name="description" rows="8" cols="30"></textarea>
-              </div>
-              
-              <br/>
-      
-              <label for="price" class="form-label">售價（元）</label>
-              <div class="d-flex">
-                  <input type="number" id="price" name="price" class="formprice form-control"/>
-              </div>
-              <br />
-              <label for="category" class="form-label">所屬分類</label>
-              <select name="category" id="category" class="form-control">
-                <option value="notselyet">請選擇商品分類</option>
-                <option value="book">書籍與學籍用品</option>
-                <option value="life">宿舍與生活用品</option>
-                <option value="student">學生專用器材</option>
-                <option value="recycle">環保生活用品</option>
-                <option value="clean">儲物與收納用品</option>
-                <option value="other">其他</option>
-              </select>
-              <br />
-              <div class="d-block">
-                  <label for="stock">庫存</label>
-                  <div class="col-lg-6 col-12" style="margin-top: 10px;">
-                      <input type="number" id="stock" name="stock" class="form-control" placeholder="可販賣數量"/><br />
+            <!-- ── Step 2：規格與定價 ── -->
+            <div class="sell-panel" id="sellStep2">
+              <div class="sell-step2-grid">
+
+                <!-- 左欄：商品大小 + 定價資訊 -->
+                <div class="sell-step2-left">
+                  <div class="sell-field">
+                    <label for="size" class="sell-label">商品尺寸 <span class="sell-required">*</span></label>
+                    <div class="sell-size-group">
+                      <label class="sell-size-card">
+                        <input type="radio" name="sizeRadio" value="2">
+                        <div class="sell-size-icon"><i class="ti ti-package"></i></div>
+                        <strong>大型</strong>
+                        <small>長寬高 &gt; 150cm</small>
+                      </label>
+                      <label class="sell-size-card">
+                        <input type="radio" name="sizeRadio" value="1">
+                        <div class="sell-size-icon"><i class="ti ti-box"></i></div>
+                        <strong>中型</strong>
+                        <small>30cm – 150cm</small>
+                      </label>
+                      <label class="sell-size-card">
+                        <input type="radio" name="sizeRadio" value="0">
+                        <div class="sell-size-icon"><i class="ti ti-device-mobile"></i></div>
+                        <strong>小型</strong>
+                        <small>&lt; 30cm</small>
+                      </label>
+                    </div>
+                    <select name="size" id="size" class="d-none">
+                      <option value="">請選擇商品尺寸</option>
+                      <option value="2">大</option>
+                      <option value="1">中</option>
+                      <option value="0">小</option>
+                    </select>
                   </div>
+
+                  <div class="sell-two-col">
+                    <div class="sell-field">
+                      <label for="price" class="sell-label">售價（元）<span class="sell-required">*</span></label>
+                      <div class="sell-price-wrap">
+                        <span class="sell-price-prefix">NT$</span>
+                        <input type="number" id="price" name="price" class="form-control" placeholder="0" min="0" />
+                      </div>
+                    </div>
+                    <div class="sell-field">
+                      <label for="stock" class="sell-label">庫存數量 <span class="sell-required">*</span></label>
+                      <input type="number" id="stock" name="stock" class="form-control" placeholder="可販賣數量" min="1" />
+                    </div>
+                  </div>
+
+                  <div class="sell-field">
+                    <label for="age" class="sell-label">物品年齡（年）<span class="sell-required">*</span></label>
+                    <small class="sell-hint">不到一年填 0；未知填 -1</small>
+                    <input type="number" id="age" name="age" class="form-control" placeholder="-1" min="-1" value="-1" />
+                  </div>
+                </div>
+
+                <!-- 右欄：新舊程度 -->
+                <div class="sell-step2-right">
+                  <div class="sell-field">
+                    <label for="new_or_old" class="sell-label">新舊程度 <span class="sell-required">*</span></label>
+                    <div class="sell-condition-group">
+                      <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="1"><span class="sell-cond-dot cond-1"></span>全新<span class="sell-cond-desc">（未使用過）</span></label>
+                      <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="2"><span class="sell-cond-dot cond-2"></span>幾乎全新<span class="sell-cond-desc">（使用次數極少）</span></label>
+                      <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="3"><span class="sell-cond-dot cond-3"></span>半新<span class="sell-cond-desc">（使用過，狀態良好）</span></label>
+                      <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="4"><span class="sell-cond-dot cond-4"></span>適中<span class="sell-cond-desc">（有明顯使用痕跡）</span></label>
+                      <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="5"><span class="sell-cond-dot cond-5"></span>稍舊<span class="sell-cond-desc">（有較多痕跡或輕微損壞）</span></label>
+                      <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="6"><span class="sell-cond-dot cond-6"></span>全舊<span class="sell-cond-desc">（明顯損壞或缺陷）</span></label>
+                    </div>
+                    <select name="new_or_old" id="new_or_old" class="d-none">
+                      <option value="">請選擇新舊程度</option>
+                      <option value="1">全新</option>
+                      <option value="2">幾乎全新</option>
+                      <option value="3">半新</option>
+                      <option value="4">適中</option>
+                      <option value="5">稍舊</option>
+                      <option value="6">全舊</option>
+                    </select>
+                  </div>
+                </div>
+
               </div>
-          </div>
-          
-          <div class="right_form">
-            <label for="size" class="form-label">商品尺寸</label>
-            <select name="size" id="size" class="form-control">
-              <option value="">請選擇商品尺寸</option>
-              <option value="2">大（大型家具、電器等，長寬高 &gt; 150cm）</option>
-              <option value="1">中（書籍、文具用品等，30cm–150cm）</option>
-              <option value="0">小（小型電子產品、配件等，&lt; 30cm）</option>
-            </select>
-              <br />
-            <label for="new_or_old" class="form-label">新舊程度</label>
-              <br>
-            <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">商品外觀狀態 ; 若不清楚請點擊此表單左上角詳細資訊</small>
-            <select name="new_or_old" id="new_or_old" class="form-control" style="margin-top: 10px;">
-              <option value="">請選擇新舊程度</option>
-              <option value="1">全新（未使用過的商品）</option>
-              <option value="2">幾乎全新（使用次數極少，狀態良好）</option>
-              <option value="3">半新（使用過，但狀態良好）</option>
-              <option value="4">適中（有明顯使用痕跡，仍可正常使用）</option>
-              <option value="5">稍舊（有較多使用痕跡，可能有輕微損壞）</option>
-              <option value="6">全舊（明顯使用痕跡，可能有較大損壞或缺陷）</option>
-            </select>
-            <br><br>
-              <label for="age">物品年齡(年)</label><br>
-              <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">單位為年，若不到一年請選 0 年，若未知請填 -1</small>
-              <div class="col-lg-6 col-12" style="margin-top: 10px;">
-                  <input type="number" id="age" name="age" class="form-control col-lg-6 col-12" placeholder="未知請填-1"/><br />
+
+              <div class="sell-nav">
+                <button type="button" class="sell-prev-btn" id="step2Prev"><i class="ti ti-arrow-left"></i> 上一步</button>
+                <button type="button" class="sell-next-btn" id="step2Next">下一步：照片上傳 <i class="ti ti-arrow-right"></i></button>
               </div>
-              <label for="mainImage">主要照片</label>
-              <br>
-              <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">照片需 ≤ 5MB，必須為實體照，格式僅支援JPEG, PNG, JPG, WebP</small>
-              <div class="col-lg-6 col-12" style="margin-top: 10px;">
-                  <input
-                      type="file"
-                      id="mainImage"
-                      name="mainImage"
-                      class="form-control"
-                      accept="image/jpeg,image/png,image/gif,image/webp"
-                  />
+            </div>
+
+            <!-- ── Step 3：照片上傳 ── -->
+            <div class="sell-panel" id="sellStep3">
+              <div class="sell-field">
+                <label class="sell-label">主要照片（封面）<span class="sell-required">*</span></label>
+                <small class="sell-hint">≤ 5MB，格式：JPEG / PNG / WebP；建議清晰明亮，能展示商品外觀</small>
+                <label class="sell-upload-zone" id="mainUploadZone" for="mainImage">
+                  <i class="ti ti-photo-up"></i>
+                  <span>點擊或拖曳上傳封面照</span>
+                </label>
+                <input type="file" id="mainImage" name="mainImage" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp" />
+                <div id="mainImagePreview" class="sell-preview-single"></div>
               </div>
-              <br/>
-                <div id="mainImagePreview"></div>
-              <label for="images">其他照片</label>
-              <br>
-              <small class="text-muted" style="font-size: 1rem; color: #004b97 !important;">最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB</small>
-              <div class="col-lg-6 col-12" style="margin-top: 10px;">
-                  <input
-                      type="file"
-                      id="image"
-                      name="images"
-                      accept="image/jpeg,image/png,image/gif,image/webp"
-                      multiple
-                      class="form-control"
-                  />
+
+              <div class="sell-field">
+                <label class="sell-label">其他照片（最多 5 張）<span class="sell-required">*</span></label>
+                <small class="sell-hint">展示商品其他角度或細節；選擇新檔案會覆蓋全部次要照片；每張 ≤ 5MB</small>
+                <label class="sell-upload-zone" id="subUploadZone" for="image">
+                  <i class="ti ti-photos"></i>
+                  <span>點擊或拖曳上傳（可多選）</span>
+                </label>
+                <input type="file" id="image" name="images" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp" multiple />
+                <div id="previewArea" class="sell-preview-grid"></div>
               </div>
-              <br />
-              <div id="previewArea" class="d-flex flex-wrap"></div>
-                <br>
-              <button id="create" type="submit" class="submitbtn">一鍵販賣</button>
-          </div>
-        </div>
+
+              <div class="sell-nav">
+                <button type="button" class="sell-prev-btn" id="step3Prev"><i class="ti ti-arrow-left"></i> 上一步</button>
+                <button id="create" type="submit" class="submitbtn sell-submit-btn">
+                  <i class="ti ti-check"></i> 上架商品
+                </button>
+              </div>
+            </div>
+
           </form>
         </div>
       </div>
@@ -1244,7 +1300,8 @@ const timer = setInterval(() => {
 
   // 已設定過 → 直接隱藏（不動畫）
   if (localStorage.getItem(GUIDE_KEY) === '1') {
-    section.style.display = 'none';
+    section.classList.remove('d-block');
+    section.classList.add('d-none');
     return;
   }
 
@@ -1265,7 +1322,8 @@ const timer = setInterval(() => {
     // 動畫結束後真正隱藏
     section.addEventListener('transitionend', function handler(e) {
       if (e.propertyName !== 'max-height') return;
-      section.style.display = 'none';
+      section.classList.remove('d-block');
+      section.classList.add('d-none');
       section.removeEventListener('transitionend', handler);
     });
 
@@ -1290,7 +1348,8 @@ const timer = setInterval(() => {
       clearTimeout(removeTimer);
       toast.remove();
       // 還原 section
-      section.style.display = '';
+      section.classList.remove('d-none');
+      section.classList.add('d-block');
       section.style.transition = 'opacity 0.35s ease, max-height 0.45s ease';
       section.style.maxHeight = '1000px';
       section.style.opacity = '1';
@@ -1562,5 +1621,119 @@ const timer = setInterval(() => {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
     <script type="module" src="../chatroom/chat.js"></script>
     <script type="module" src="shop.js"></script>
+
+<script>
+// ── 分類說明 Popover ──
+document.addEventListener('DOMContentLoaded', () => {
+  const catBtn = document.getElementById('catInfoBtn');
+  if (catBtn) {
+    new bootstrap.Popover(catBtn, { container: 'body' });
+    // 點其他地方關閉
+    document.addEventListener('click', e => {
+      if (!catBtn.contains(e.target)) bootstrap.Popover.getInstance(catBtn)?.hide();
+    });
+  }
+});
+
+// ── 賣家表單多步驟 Wizard ──
+(function () {
+  let currentStep = 1;
+  const totalSteps = 3;
+
+  function setStep(next, goingBack) {
+    const panels = document.querySelectorAll('.sell-panel');
+    const stepEls = document.querySelectorAll('.sell-step');
+    const lines = document.querySelectorAll('.sell-step-line');
+
+    panels.forEach(p => p.classList.remove('active', 'going-back'));
+    const nextPanel = document.getElementById('sellStep' + next);
+    if (goingBack) nextPanel.classList.add('going-back');
+    nextPanel.classList.add('active');
+
+    stepEls.forEach((el, i) => {
+      const s = i + 1;
+      el.classList.remove('active', 'done');
+      if (s < next) el.classList.add('done');
+      else if (s === next) el.classList.add('active');
+    });
+    lines.forEach((line, i) => {
+      line.classList.toggle('done', i + 1 < next);
+    });
+
+    currentStep = next;
+    // 捲回表單頂端
+    document.getElementById('createCommodityForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // 分類 radio → 隱藏 select 同步
+  document.querySelectorAll('input[name="categoryRadio"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('category').value = r.value;
+    });
+  });
+  // 尺寸 radio → 隱藏 select 同步
+  document.querySelectorAll('input[name="sizeRadio"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('size').value = r.value;
+    });
+  });
+  // 新舊程度 radio → 隱藏 select 同步
+  document.querySelectorAll('input[name="conditionRadio"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('new_or_old').value = r.value;
+    });
+  });
+
+  // Step 1 → 2 驗證
+  document.getElementById('step1Next')?.addEventListener('click', () => {
+    const name = document.getElementById('name').value.trim();
+    const category = document.getElementById('category').value;
+    const desc = document.getElementById('description').value.trim();
+    if (!name) { alert('請填寫商品名稱'); return; }
+    if (!category || category === 'notselyet') { alert('請選擇商品分類'); return; }
+    if (!desc) { alert('請填寫商品狀態描述'); return; }
+    setStep(2, false);
+  });
+
+  // Step 2 → 1
+  document.getElementById('step2Prev')?.addEventListener('click', () => setStep(1, true));
+
+  // Step 2 → 3 驗證
+  document.getElementById('step2Next')?.addEventListener('click', () => {
+    const size = document.getElementById('size').value;
+    const cond = document.getElementById('new_or_old').value;
+    const priceStr = document.getElementById('price').value.trim();
+    const stockStr = document.getElementById('stock').value.trim();
+    const ageStr = document.getElementById('age').value.trim();
+    if (!size) { alert('請選擇商品尺寸'); return; }
+    if (!cond) { alert('請選擇新舊程度'); return; }
+    if (priceStr === '' || Number(priceStr) < 0) { alert('請輸入正確售價'); return; }
+    if (stockStr === '' || Number(stockStr) < 1) { alert('請輸入庫存數量'); return; }
+    if (ageStr === '' || Number(ageStr) < -1) { alert('物品年齡請填 -1 以上'); return; }
+    setStep(3, false);
+  });
+
+  // Step 3 → 2
+  document.getElementById('step3Prev')?.addEventListener('click', () => setStep(2, true));
+
+  // 上傳區 label 拖曳支援
+  ['mainUploadZone', 'subUploadZone'].forEach(id => {
+    const zone = document.getElementById(id);
+    if (!zone) return;
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor = '#004b97'; });
+    zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; });
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.style.borderColor = '';
+      const inputId = id === 'mainUploadZone' ? 'mainImage' : 'image';
+      const input = document.getElementById(inputId);
+      const dt = new DataTransfer();
+      Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    });
+  });
+})();
+</script>
 </body>
 </html>

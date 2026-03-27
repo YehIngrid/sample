@@ -56,23 +56,33 @@
     <!-- TODO header -->
     <div class="header">
         <!-- 主要導覽列 -->
-        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new navtb sticky-top">
-            <!-- 第一行：Logo + 右側操作 -->
-            <div class="container-fluid d-flex align-items-center">
+        <nav class="navbar navbar-expand-lg navtb wp-navbar sticky-top">
+            <div class="container d-flex align-items-center wp-navbar-inner">
                 <!-- 手機漢堡 -->
                 <button class="navbar-toggler d-lg-none mobile-hamburger" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span><img src="../svg/navbar.svg" alt="手機版選單" style="width: 20px;"></span>
                 </button>
-                <!-- Logo -->
-                <a class="me-4" href="../newhome/newhome.html">
-                    <img src="../svg/wishpoolicon.svg" alt="許願池 Logo" style="width: 88px; margin-bottom: 10px;">
-                </a>
-                <!-- 右側：返回 + 通知鈴 + 登入 -->
-                <div class="d-flex align-items-center ms-auto">
-                    <a class="wp-back-btn d-none d-lg-inline-block me-3" href="../shop/shop.html">← 返回購物首頁</a>
-                    <div class="position-relative me-2">
-                        <i class="fa-solid fa-bell fs-5" id="notificationBtn" style="cursor:pointer; color: var(--brand-color);"></i>
+                <!-- Logo + 返回按鈕 -->
+                <div class="d-flex align-items-center me-4 flex-shrink-0 gap-2">
+                    <a href="../newhome/newhome.html">
+                        <img src="../svg/wishpoolicon.svg" alt="許願池 Logo" style="width: 88px;">
+                    </a>
+                    <a class="wp-back-btn d-none d-lg-inline-block" href="../shop/shop.html">← 返回購物首頁</a>
+                </div>
+                <!-- 桌機 SPA 頁籤：絕對置中 -->
+                <div class="d-none d-lg-flex wp-nav-tabs-wrap">
+                    <ul class="navbar-nav flex-row wp-nav-pill">
+                        <li class="nav-item"><a class="nav-link spa-tab" href="#about" data-spa>創立理念</a></li>
+                        <li class="nav-item"><a class="nav-link spa-tab active" href="#wishpool" data-spa>許願池</a></li>
+                        <li class="nav-item"><a class="nav-link spa-tab" href="#makewish" data-spa>我要許願</a></li>
+                        <li class="nav-item"><a class="nav-link spa-tab" href="#mywishes" data-spa>我的願望</a></li>
+                    </ul>
+                </div>
+                <!-- 右側：通知鈴 + 登入 -->
+                <div class="d-flex align-items-center ms-auto gap-2">
+                    <div class="position-relative">
+                        <i class="fa-solid fa-bell fs-5" id="notificationBtn" style="cursor:pointer;"></i>
                         <span id="notificationBadge"
                               class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
                     </div>
@@ -80,21 +90,10 @@
                         <a href="../person/person.html" style="margin-right: 10px; cursor: pointer;">
                             <img class="nav-user-avatar"/>
                         </a>
-
                         <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
                     </div>
                 </div>
             </div>
-            <!-- 第二行：桌機 SPA 頁籤（居中偏下） -->
-            <div class="d-none d-lg-flex justify-content-center w-100 wp-tab-row">
-                <ul class="navbar-nav flex-row gap-3">
-                    <li class="nav-item"><a class="nav-link spa-tab" href="#about" data-spa>創立理念</a></li>
-                    <li class="nav-item"><a class="nav-link spa-tab active" href="#wishpool" data-spa>許願池</a></li>
-                    <li class="nav-item"><a class="nav-link spa-tab" href="#makewish" data-spa>我要許願</a></li>
-                    <li class="nav-item"><a class="nav-link spa-tab" href="#mywishes" data-spa>我的願望</a></li>
-                </ul>
-            </div>
-
         </nav>
         <!-- 手機搜尋 + 折疊選單 -->
         <div class="container-fluid1 d-lg-none">
@@ -113,7 +112,7 @@
     <!-- TODO 主要內容 -->
     <main class="container">
       <section id="mywishes" class="page">
-        <h3 class="cardTitle" style="margin-bottom: 4px;">我的願望</h3>
+        <h3 class="cardTitle" style="margin-bottom: 4px; color: #004b97;">我的願望</h3>
         <p class="section-subtitle">共 <span id="my-total">0</span> 件</p>
         <div class="wishpoolcontainer col-12">
           <div class="wishgrid">
@@ -129,46 +128,53 @@
           </div>
         </div>
       </section>
-      <section id="about" class="page">
-        <div class="pageContainer" style="margin-bottom: 150px;">
-          <h3 class="cardTitle" style="margin-bottom: 16px;">創立理念</h3>
-          <p>在資源有限的校園生活中，有些需求不應只是運氣，更該被主動滿足。</p>
-          <p>「許願池」的創立理念在於建立一種「買家主動、賣家響應」的「反向媒合機制」。</p>
-          <p>透過公開許願，讓閒置資源能精準流向最需要的人手中，打破「找不到、買不到」的困境，打造一個更具數位溫度與信任感的校園經濟生態。</p>
-            <p>傳統平台讓你大海撈針，「許願池」則讓資源主動找上你。</p>
-          <!-- ∞ 示意圖 -->
-          <div class="about-infinity-wrap">
-            <div class="about-infinity-label">買家許願</div>
-            <svg class="about-infinity-svg" viewBox="0 0 600 300">
+      <section id="about" class="page about-section">
+        <div class="pageContainer about-layout">
+          <!-- 左欄：文字 -->
+          <div class="about-text">
+            <h3 class="cardTitle about-anim-title" style="margin-bottom: 16px;">創立理念</h3>
+            <p class="about-anim-p" style="--i:0">在資源有限的校園生活中，有些需求不應只是運氣，更該被主動滿足。</p>
+            <p class="about-anim-p" style="--i:1">「許願池」的創立理念在於建立一種「買家主動、賣家響應」的「反向媒合機制」。</p>
+            <p class="about-anim-p" style="--i:2">透過公開許願，讓閒置資源能精準流向最需要的人手中，打破「找不到、買不到」的困境，打造一個更具數位溫度與信任感的校園經濟生態。</p>
+            <p class="about-anim-p" style="--i:3">傳統平台讓你大海撈針，「許願池」則讓資源主動找上你。</p>
+          </div>
+          <!-- 右欄：雙圓示意圖 -->
+          <div class="about-circles-section about-anim-circles">
+            <svg class="about-circles-svg" viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <linearGradient id="infGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="600" y2="0">
-                  <stop offset="0%"   stop-color="#5a7bd8"/>
-                  <stop offset="50%"  stop-color="#ABDAD5"/>
-                  <stop offset="100%" stop-color="#6aaed6"/>
-                  <animateTransform
-                    attributeName="gradientTransform"
-                    type="translate"
-                    from="-600 0"
-                    to="600 0"
-                    dur="6s"
-                    repeatCount="indefinite"/>
+                <linearGradient id="circleGradL" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%"   stop-color="#7aaed6"/>
+                  <stop offset="55%"  stop-color="#b8d8f0"/>
+                  <stop offset="100%" stop-color="#f0f8ff"/>
+                </linearGradient>
+                <linearGradient id="circleGradR" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%"   stop-color="#f0f8ff"/>
+                  <stop offset="50%"  stop-color="#abdad5"/>
+                  <stop offset="100%" stop-color="#7aaed6"/>
                 </linearGradient>
               </defs>
-              <path
-                d="M 300,150
-                   C 340,70  470,70  470,150
-                   C 470,230 340,230 300,150
-                   C 260,230 130,230 130,150
-                   C 130,70  260,70  300,150 Z"
-                fill="none"
-                stroke="url(#infGrad)"
-                stroke-width="18"
-                stroke-linecap="round"
-                stroke-linejoin="round"/>
+              <!-- 左圓 -->
+              <circle class="about-circle-breath about-circle-L" cx="196" cy="140" r="118" fill="white" fill-opacity="0.75" stroke="url(#circleGradL)" stroke-width="13"/>
+              <!-- 右圓（呼吸延遲） -->
+              <circle class="about-circle-breath about-circle-R" cx="364" cy="140" r="118" fill="white" fill-opacity="0.75" stroke="url(#circleGradR)" stroke-width="13"/>
+              <!-- 中間連結箭頭 -->
+              <g class="about-arrow-group">
+                <line x1="268" y1="140" x2="292" y2="140" stroke="#abdad5" stroke-width="2.5" stroke-linecap="round"/>
+                <polyline points="286,134 294,140 286,146" fill="none" stroke="#abdad5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+              <!-- 左圓文字 -->
+              <text x="162" y="147" text-anchor="middle" font-family="'Noto Sans TC', sans-serif" font-size="21" font-weight="700" fill="#004b97" letter-spacing="3">買家許願</text>
+              <!-- 右圓文字 -->
+              <text x="398" y="147" text-anchor="middle" font-family="'Noto Sans TC', sans-serif" font-size="21" font-weight="700" fill="#004b97" letter-spacing="3">賣家實現</text>
             </svg>
-            <div class="about-infinity-label">賣家實現</div>
           </div>
         </div>
+        <!-- 底部大字浮水印 -->
+        <svg class="about-philosophy-bg" viewBox="0 0 1000 110" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <text x="500" y="96" text-anchor="middle" textLength="1000" lengthAdjust="spacingAndGlyphs"
+            font-family="'Noto Sans TC', sans-serif" font-size="108" font-weight="900"
+            fill="rgba(0,75,151,0.06)">OUR PHILOSOPHY</text>
+        </svg>
       </section>
       <section id="wishpool" class="page">
         <!-- Hero -->
@@ -184,27 +190,105 @@
             </div>
           </div>
           <div class="wp-hero-img">
-            <img src="../svg/bigwish.svg" alt="許願池" class="wp-hero-illus">
+            <svg class="wp-hero-illus" width="428" height="465" viewBox="0 0 428 465" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="許願池">
+              <style>
+                /* ── 水柱動畫：整條彩色段落從底部沿路徑往上跑 ── */
+                /* 長水柱(path0/1)：路徑約200px；段落160px，空隙280px */
+                .ws-flow-long {
+                  stroke-dasharray: 160 280;
+                  stroke-dashoffset: 0;
+                  animation: flowUp 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                }
+                /* 短水柱(path2/3)：路徑約110px；段落95px，空隙200px */
+                .ws-flow-short {
+                  stroke-dasharray: 95 200;
+                  stroke-dashoffset: 0;
+                  animation: flowUpShort 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                }
+                .wsd2 { animation-delay: -1.3s; }
+                .wsd3 { animation-delay: -0.7s; }
+                .wsd4 { animation-delay: -2.0s; }
+                @keyframes flowUp      { to { stroke-dashoffset: -440; } }
+                @keyframes flowUpShort { to { stroke-dashoffset: -295; } }
+
+                /* ── 硬幣漂浮 ── */
+                .coin { animation: coinFloat 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+                .coin2 { animation-delay: -0.9s; animation-duration: 2.2s; }
+                .coin3 { animation-delay: -1.6s; animation-duration: 3s; }
+                @keyframes coinFloat {
+                  0%, 100% { transform: translateY(0); }
+                  50%       { transform: translateY(-6px); }
+                }
+              </style>
+
+              <!-- 噴嘴頂部（靜態） -->
+              <path d="M212.5 158.569L275.287 83.5685H149.713L212.5 158.569Z" fill="#E2C9C9"/>
+              <path d="M220 57.5685C220 50.9905 218.378 44.514 215.277 38.7127C212.176 32.9114 207.692 27.9643 202.223 24.3098C196.753 20.6552 190.467 18.4059 183.921 17.7612C177.374 17.1164 170.77 18.0961 164.693 20.6134C158.615 23.1307 153.253 27.1079 149.08 32.1928C144.907 37.2777 142.052 43.3133 140.769 49.7649C139.485 56.2166 139.813 62.8851 141.722 69.1799C143.632 75.4747 147.064 81.2014 151.716 85.8528L180 57.5685H220Z" fill="#E2C9C9"/>
+              <path d="M274.284 84.8528C278.936 80.2014 282.368 74.4747 284.278 68.1799C286.187 61.8851 286.515 55.2166 285.231 48.7649C283.948 42.3133 281.093 36.2777 276.92 31.1928C272.747 26.1079 267.385 22.1307 261.307 19.6134C255.23 17.0961 248.626 16.1164 242.079 16.7612C235.533 17.4059 229.247 19.6552 223.777 23.3098C218.308 26.9643 213.824 31.9114 210.723 37.7127C207.622 43.514 206 49.9905 206 56.5685L246 56.5685L274.284 84.8528Z" fill="#E2C9C9"/>
+              <rect x="153" y="50.5685" width="120" height="35" fill="#E2C9C9"/>
+
+              <!-- 水柱動畫層（整條彩色段落從底往上跑） -->
+              <path class="ws-flow-long"       d="M172.5 275C176.557 225.822 155.5 129 113 99"       stroke="url(#paint0_linear_965_1767)" stroke-width="15" stroke-linecap="round" fill="none"/>
+              <path class="ws-flow-long wsd2"  d="M246.494 275.5C242.436 226.322 263.494 129.5 305.994 99.5" stroke="url(#paint1_linear_965_1767)" stroke-width="15" stroke-linecap="round" fill="none"/>
+              <path class="ws-flow-short wsd3" d="M123.5 275C126.372 226.291 121.684 207.772 96 180"  stroke="url(#paint2_linear_965_1767)" stroke-width="15" stroke-linecap="round" fill="none"/>
+              <path class="ws-flow-short wsd4" d="M303.744 275.5C300.872 226.791 305.559 208.272 331.244 180.5" stroke="url(#paint3_linear_965_1767)" stroke-width="15" stroke-linecap="round" fill="none"/>
+
+              <!-- 水池 -->
+              <path d="M0 302C72.5 508 329.5 528.5 428 302H0Z" fill="url(#paint4_linear_965_1767)"/>
+
+              <!-- 硬幣（動畫） -->
+              <circle class="coin"  cx="141" cy="363" r="17" fill="white"/>
+              <circle class="coin coin2" cx="287" cy="363" r="17" fill="white"/>
+              <circle class="coin coin3" cx="214" cy="363" r="17" fill="white"/>
+
+              <defs>
+                <linearGradient id="paint0_linear_965_1767" x1="142.75" y1="99" x2="142.75" y2="275" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#24B685" stop-opacity="0.6"/>
+                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
+                </linearGradient>
+                <linearGradient id="paint1_linear_965_1767" x1="276.244" y1="99.5" x2="276.244" y2="275.5" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#24B685" stop-opacity="0.6"/>
+                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
+                </linearGradient>
+                <linearGradient id="paint2_linear_965_1767" x1="110.006" y1="180" x2="110.006" y2="275" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#24B685" stop-opacity="0.6"/>
+                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
+                </linearGradient>
+                <linearGradient id="paint3_linear_965_1767" x1="317.238" y1="180.5" x2="317.238" y2="275.5" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#24B685" stop-opacity="0.6"/>
+                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
+                </linearGradient>
+                <linearGradient id="paint4_linear_965_1767" x1="214" y1="302" x2="214" y2="457.593" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#8395BB"/>
+                  <stop offset="1" stop-color="#A1C9B8"/>
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
         </div>
 
         <!-- 篩選條件 -->
         <div class="wp-filter-card">
-          <div class="wp-filter-header">
-            <span class="wp-filter-title">篩選條件</span>
-            <small class="wp-filter-count">共 <span id="total">0</span> 件（未篩選）</small>
+          <div class="wp-filter-header" id="filterToggle">
+            <div class="wp-filter-header-left">
+              <span class="wp-filter-title">篩選條件</span>
+              <small class="wp-filter-count">共 <span id="total">0</span> 件（未篩選）</small>
+            </div>
+            <i class="ti ti-chevron-down wp-filter-chevron"></i>
           </div>
-          <div class="tag-list">
-            <button class="tag" data-tag="necessary">急迫度高</button>
-            <button class="tag" data-tag="normal">一般急迫度</button>
-            <button class="tag" data-tag="nonecessary">急迫度低</button>
-          </div>
-          <div class="tag-list" style="margin-top: 8px;">
-            <button class="tag" data-tag="hundred">0~100 元收購</button>
-            <button class="tag" data-tag="fiveh">100~500 元收購</button>
-            <button class="tag" data-tag="tothous">500~1000 元收購</button>
-            <button class="tag" data-tag="thousand">1000 元以上收購</button>
-            <button class="tag" data-tag="trithou">3000 元以上收購</button>
+          <div class="wp-filter-body" id="filterBody">
+            <div class="tag-list">
+              <button class="tag" data-tag="necessary">急迫度高</button>
+              <button class="tag" data-tag="normal">一般急迫度</button>
+              <button class="tag" data-tag="nonecessary">急迫度低</button>
+            </div>
+            <div class="tag-list" style="margin-top: 8px;">
+              <button class="tag" data-tag="hundred">0~100 元收購</button>
+              <button class="tag" data-tag="fiveh">100~500 元收購</button>
+              <button class="tag" data-tag="tothous">500~1000 元收購</button>
+              <button class="tag" data-tag="thousand">1000 元以上收購</button>
+              <button class="tag" data-tag="trithou">3000 元以上收購</button>
+            </div>
           </div>
         </div>
 
@@ -225,102 +309,57 @@
       <section id="makewish" class="page">
         <div class="mw-layout">
 
-          <!-- ① 許願步驟（手機第1、桌機左上） -->
-          <div class="mw-card mw-steps">
-            <h6 class="cardTitle mw-card-title">許願步驟</h6>
-            <p class="section-subtitle">拾貨許願池：讓你的需求被看見</p>
-              <ul class="ulstep">
-                <li class="listep">
-                  <div class="step-badge">
-                    <small class="step-label">步</small>
-                    <span class="step-num">01</span>
-                  </div>
-                  <div class="listep-content">
-                    <h3>登入填寫表單</h3>
-                    <p>買家填寫許願單 (需登入會員）</p>
-                  </div>
-                </li>
-                <li class="listep">
-                  <div class="step-badge">
-                    <small class="step-label">步</small>
-                    <span class="step-num">02</span>
-                  </div>
-                  <div class="listep-content">
-                    <h3>系統展示願望</h3>
-                    <p>系統將願望集中展示在許願池區域</p>
-                  </div>
-                </li>
-                <li class="listep">
-                  <div class="step-badge">
-                    <small class="step-label">步</small>
-                    <span class="step-num">03</span>
-                  </div>
-                  <div class="listep-content">
-                    <h3>賣家回應願望</h3>
-                    <p>賣家可依照願望內容選擇上架商品並標註「回應許願」</p>
-                  </div>
-                </li>
-                <li class="listep">
-                  <div class="step-badge">
-                    <small class="step-label">步</small>
-                    <span class="step-num">04</span>
-                  </div>
-                  <div class="listep-content">
-                    <h3>平台通知買家</h3>
-                    <p>平台會通知買家，完成配對並引導交易</p>
-                  </div>
-                </li>
-              </ul>
-              <p style="font-size:0.9rem;color:#555; margin-top: 10px;">按照以上步驟許下你的心願，並等待願望成真吧！</p>
-          </div>
-
-          <!-- ② 許願表單（手機第2、桌機右） -->
+          <!-- ① 許願表單（桌機左、手機最後） -->
           <div class="mw-card mw-form">
             <h6 class="cardTitle mw-card-title">許願表單</h6>
-            <p style="font-size:0.88rem;color:#555;margin-bottom:16px;">請先<span class="loginfirst">登入會員</span>才可提交許願表單！</p>
+            <p class="mw-login-hint" id="mwLoginHint" style="display:none">請先<span class="loginfirst">登入會員</span>才可提交許願表單！</p>
             <div class="formwish">
               <form id="wishForm">
+
                 <div class="mb-3">
-                  <div class="img-preview" id="imgPreview">
-                    <span class="placeholder">可拖曳圖片到此</span>
-                    <img id="imgPreviewImg" alt="圖片容器">
+                  <div class="mw-field-label">
+                    <label class="form-label">商品照片</label>
+                    <small class="mw-hint">非必填 &middot; &lt; 5 MB（jpg / png / webp）</small>
                   </div>
-                  <label for="wishPhoto" class="form-label">商品照片</label>
-                  <small class="small"> &lt; 5 MB (jpg/jpeg/png/webp)</small>
-                  <input class="form-control" type="file" id="wish-image" name="image" accept="image/jpeg, image/jpg, image/png, image/webp">
+                  <div class="img-preview" id="imgPreview">
+                    <span class="placeholder"><i class="ti ti-photo-up"></i> 點擊或拖曳上傳</span>
+                    <img id="imgPreviewImg" alt="圖片容器">
+                    <span class="img-filename" id="imgFilename"></span>
+                  </div>
+                  <input type="file" id="wish-image" name="image" accept="image/jpeg, image/jpg, image/png, image/webp" style="display:none">
                   <div class="invalid-feedback"></div>
-                  <div class="valid-feedback">Looks good!</div>
                 </div>
 
                 <div class="mb-3">
-                  <label for="wishName" class="form-label">商品名稱</label>
-                  <small class="small">*必填</small>
+                  <div class="mw-field-label">
+                    <label for="wishName" class="form-label">商品名稱 <span class="mw-required">*</span></label>
+                  </div>
                   <input type="text" id="wishName" class="form-control" placeholder="例：iPad 10 代 64GB（粉）">
                   <div class="invalid-feedback">請輸入商品名稱</div>
-                  <div class="valid-feedback">Looks good!</div>
                 </div>
 
-                <div class="row mb-3">
-                  <div class="col">
-                    <label for="budgetMax" class="form-label">預算最高</label>
-                    <small class="small">*必填（單位: 元）</small>
-                    <input type="number" id="budgetMax" class="form-control" placeholder="0">
-                    <div class="invalid-feedback"></div>
-                    <div class="valid-feedback">Looks good!</div>
+                <div class="mb-3">
+                  <div class="mw-field-label">
+                    <label for="budgetMax" class="form-label">預算上限 <span class="mw-required">*</span></label>
+                    <small class="mw-hint">單位：元</small>
                   </div>
+                  <input type="number" id="budgetMax" class="form-control" placeholder="0">
+                  <div class="invalid-feedback"></div>
                 </div>
 
                 <div class="mb-3">
-                  <label for="wishDesc" class="form-label">內容說明</label>
-                  <small class="small">*必填</small>
-                  <textarea id="wishDesc" rows="3" class="form-control" placeholder="型號、顏色、尺寸、方便聯絡時間等"></textarea>
+                  <div class="mw-field-label">
+                    <label for="wishDesc" class="form-label">內容說明 <span class="mw-required">*</span></label>
+                    <small class="mw-hint">至少 10 字</small>
+                  </div>
+                  <textarea id="wishDesc" rows="4" class="form-control" placeholder="型號、顏色、尺寸、方便聯絡時間等…"></textarea>
                   <div class="invalid-feedback">請至少輸入 10 字以上的說明</div>
-                  <div class="valid-feedback">Looks good!</div>
                 </div>
 
-                <div class="mb-3">
-                  <label for="urgency" class="form-label">急迫度</label>
-                  <small class="small">*必填</small>
+                <div class="mb-4">
+                  <div class="mw-field-label">
+                    <label for="urgency" class="form-label">急迫度 <span class="mw-required">*</span></label>
+                  </div>
                   <select id="urgency" class="form-select">
                     <option value="" selected disabled>請選擇急迫度</option>
                     <option value="3">急需</option>
@@ -328,11 +367,10 @@
                     <option value="1">不急</option>
                   </select>
                   <div class="invalid-feedback"></div>
-                  <div class="valid-feedback">Looks good!</div>
                 </div>
 
-                <div class="form-actions d-flex justify-content-start align-items-start">
-                  <button type="reset" class="btn btn-ghost" style="font-size: 0.9rem;">清除</button>
+                <div class="form-actions">
+                  <button type="reset" class="btn btn-ghost mw-reset-btn">清除表單</button>
                   <div class="buttons">
                     <button class="blob-btn" type="submit" id="wishFormbtn">
                       送出許願
@@ -345,8 +383,7 @@
                         </span>
                       </span>
                     </button>
-                    <br>
-                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="position:absolute;width:0;height:0;overflow:hidden">
                       <defs>
                         <filter id="goo">
                           <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
@@ -361,15 +398,55 @@
             </div>
           </div>
 
-          <!-- ③ 注意事項（手機第3、桌機左下） -->
-          <div class="mw-card mw-notice">
-            <h3 class="cardTitle mw-card-title">注意事項</h3>
-              <ul style="list-style: none; line-height: 2;">
-                  <li style="border-bottom: #abdad5 2px dashed;">需登入才可提交表單</li>
-                  <li style="border-bottom: #abdad5 2px dashed;">7 天內只可以許 1 個願望</li>
-                  <li style="border-bottom: #abdad5 2px dashed;">1 個願望展示 7 天後過期</li>
-              </ul>
+          <!-- 右欄：步驟 + 注意事項 -->
+          <div class="mw-right">
+
+          <!-- ② 許願步驟（手機第1、桌機右上） -->
+          <div class="mw-card mw-steps">
+            <h6 class="cardTitle mw-card-title">許願步驟</h6>
+            <ul class="ulstep">
+              <li class="listep">
+                <div class="step-badge"><span class="step-num">1</span></div>
+                <div class="listep-content">
+                  <h3>登入填寫表單</h3>
+                  <p>買家填寫許願單（需登入會員）</p>
+                </div>
+              </li>
+              <li class="listep">
+                <div class="step-badge"><span class="step-num">2</span></div>
+                <div class="listep-content">
+                  <h3>系統展示願望</h3>
+                  <p>系統將願望集中展示在許願池區域</p>
+                </div>
+              </li>
+              <li class="listep">
+                <div class="step-badge"><span class="step-num">3</span></div>
+                <div class="listep-content">
+                  <h3>賣家回應願望</h3>
+                  <p>賣家依願望內容上架商品並標註「回應許願」</p>
+                </div>
+              </li>
+              <li class="listep">
+                <div class="step-badge"><span class="step-num">4</span></div>
+                <div class="listep-content">
+                  <h3>平台通知買家</h3>
+                  <p>平台通知買家，完成配對並引導交易</p>
+                </div>
+              </li>
+            </ul>
           </div>
+
+          <!-- ③ 注意事項（手機第2、桌機右下） -->
+          <div class="mw-card mw-notice">
+            <h6 class="cardTitle mw-card-title">注意事項</h6>
+            <ul class="mw-notice-list">
+              <li><i class="ti ti-lock"></i>需登入才可提交表單</li>
+              <li><i class="ti ti-calendar-time"></i>7 天內只可以許 1 個願望</li>
+              <li><i class="ti ti-clock-off"></i>1 個願望展示 7 天後過期</li>
+            </ul>
+          </div>
+
+          </div><!-- /.mw-right -->
 
         </div>
       </section>
@@ -422,9 +499,11 @@
           </div>
         </div>
         
-        <div id="notificationPanel" class="notif-panel position-fixed bg-white shadow">
+        <div id="notifBackdrop" class="notif-backdrop"></div>
+        <div id="notificationPanel" class="notif-panel position-fixed bg-white">
           <div class="notif-header">
-            <span class="notif-title">通知</span>
+            <span class="notif-title"><i class="ti ti-bell me-2"></i>通知</span>
+            <button class="notif-close" id="notifCloseBtn" aria-label="關閉通知"><i class="ti ti-x"></i></button>
           </div>
           <div class="notif-list" id="notifList"></div>
           <div class="notif-footer">

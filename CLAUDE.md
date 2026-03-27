@@ -69,6 +69,27 @@ JS: `wish.js` — `loadNotifications()` renders into `#notifList`; `relativeTime
 ### Hot Items Alignment (shop)
 `.hot-items-container.overflows` → `justify-content: flex-start` (CSS class toggled by JS after `requestAnimationFrame` measuring `scrollWidth > clientWidth`).
 
+## UI / Design System
+
+All new UI components and style adjustments must follow the design language established in `src/shoppingcart/shoppingcart.css`. Key tokens:
+
+| Token | Value |
+|---|---|
+| Primary blue | `#004b97` |
+| Hover / success green | `rgb(36, 182, 133)` |
+| Soft accent | `#abdad5` |
+| Card background | `aliceblue` |
+| Border radius (cards/buttons) | `8px` |
+| Card shadow | `0 1px 4px rgba(0,0,0,0.1)` |
+| Card hover | `translateY(-1px)` + `0 8px 20px rgba(0,0,0,0.1)` + `border: 1px solid rgba(0,75,151,0.2)` |
+| Card selected/active border | `1px solid #004b97` |
+| Price color | `#004b97` (not red) |
+| Price format | `NT$ X,XXX` |
+| SweetAlert2 confirm btn | `#004b97` → hover `rgb(36,182,133)` (set globally in `default.css`) |
+| SweetAlert2 cancel btn | `#f0f0f0` with `#555` text |
+
+**Do not** use the old teal `#7bcdd6` as a primary accent — use `#abdad5` instead.
+
 ## Common Gotchas
 
 - **PhotoSwipe CDN**: Must use jsDelivr (`cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css`), not cdnjs (which 404s for v5.4.4).

@@ -35,6 +35,50 @@
 .sort_list a:hover {
   color: #004b97;
 }
+
+/* ── 分類篩選按鈕（chip 風格）── */
+.sort_item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.83rem;
+    font-weight: 500;
+    color: #5a7399 !important;
+    background: #f0f4f9;
+    border: 1.5px solid transparent;
+    text-decoration: none !important;
+    transition: background 0.18s, color 0.18s, border-color 0.18s, box-shadow 0.18s;
+    white-space: nowrap;
+}
+.sort_item:hover {
+    color: #004b97 !important;
+    background: #ddeaf7;
+    border-color: transparent;
+}
+.sort_item:focus,
+.sort_item:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: transparent;
+}
+.sort_item.active {
+    color: #fff !important;
+    background: #004b97;
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(0, 75, 151, 0.20);
+}
+.sort-cat-icon {
+    filter: opacity(0.65);
+    transition: filter 0.18s;
+}
+.sort_item:hover .sort-cat-icon {
+    filter: opacity(1);
+}
+.sort_item.active .sort-cat-icon {
+    filter: opacity(1) brightness(0) invert(1);
+}
 .sort-cat-icon {
   width: 16px;
   height: 16px;
@@ -297,24 +341,7 @@
   }
 }
 .sortdiv {
-  padding: 5px 9px;
-  border: 1.5px solid #004b97;
-  border-radius: 50px;
-  transition: background-color 0.2s, border-color 0.2s;
-}
-.sortdiv:hover {
-  background-color: #e8f0fb;
-}
-/* active state: the JS adds .active to the <a>.sort_item */
-.sortdiv:has(.sort_item.active) {
-  background-color: #004b97;
-  border-color: #004b97;
-}
-.sortdiv:has(.sort_item.active) .sort_item {
-  color: white !important;
-}
-.sortdiv:has(.sort_item.active) .sort-cat-icon {
-  filter: brightness(0) invert(1);
+  /* plain wrapper — no border, no padding, no visual state */
 }
 
 /* ── 商品分類 Pill 列（offcanvas 用） ── */

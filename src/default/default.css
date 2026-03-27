@@ -57,22 +57,56 @@ ul{
 .specialpadding{
     padding-right: 30px;
 }
+/* ── SweetAlert2 全站統一風格 ── */
 .swal2-popup {
-  background: #fbfbfb;
+  border-radius: 12px !important;
+  background: aliceblue !important;
+  padding: 24px !important;
 }
-
 .swal2-title {
-  color: #383838;
-  font-size: 1.2rem;
+  color: #222 !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
 }
-
+.swal2-html-container {
+  color: #666 !important;
+  font-size: 0.88rem !important;
+  line-height: 1.6;
+}
 .swal2-confirm {
-  background: linear-gradient(to left bottom, #c8f5e6, #c4def7);
-  color: #383838;
-  font-size: 1rem;
+  background: #abdad5 !important;
+  color: #383838 !important;
+  border-radius: 8px !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  padding: 10px 26px !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s !important;
+}
+.swal2-confirm:hover,
+.swal2-confirm:focus {
+  background-color: #8fcac3 !important;
+  box-shadow: none !important;
 }
 .swal2-cancel {
-  background-color: #bbb;
+  background-color: #f0f0f0 !important;
+  color: #555 !important;
+  border-radius: 8px !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  padding: 10px 26px !important;
+  box-shadow: none !important;
+}
+.swal2-cancel:hover,
+.swal2-cancel:focus {
+  background-color: #e0e0e0 !important;
+  color: #333 !important;
+  box-shadow: none !important;
+}
+.swal2-icon {
+  margin: 16px auto 12px !important;
+  transform: scale(0.85);
 }
 
 @media (max-width:1200px) {

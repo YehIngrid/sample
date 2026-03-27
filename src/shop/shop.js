@@ -60,7 +60,7 @@ const midcontent = document.getElementById('midcontent');
   const nextBtn = document.getElementById('nextBtn');
 
 // TODO seller
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const page = params.get("page");
 
@@ -70,6 +70,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (page === "seller") {
     seller.style.display = "block";
     midcontent.style.display = "none";
+    // 登入提示：已登入則隱藏
+    try {
+      const bs = new BackendService();
+      const res = await bs.whoami();
+      const hint = document.getElementById('sellLoginHint');
+      if (hint) hint.style.display = res.data ? 'none' : '';
+    } catch {
+      const hint = document.getElementById('sellLoginHint');
+      if (hint) hint.style.display = '';
+    }
   } else {
     seller.style.display = "none";
     midcontent.style.display = "block";
@@ -512,7 +522,6 @@ function finishShopCrop() {
     const url = URL.createObjectURL(shopCroppedFiles[0]);
     img.onload = () => URL.revokeObjectURL(url);
     img.src = url;
-    img.style.cssText = 'width:150px;border-radius:8px;border:1px solid #ccc;box-shadow:0 0 6px rgba(0,0,0,0.1);';
     preview.appendChild(img);
   } else {
     const input = document.getElementById('image');
@@ -526,7 +535,6 @@ function finishShopCrop() {
       const url = URL.createObjectURL(f);
       img.onload = () => URL.revokeObjectURL(url);
       img.src = url;
-      img.style.cssText = 'width:100px;margin:5px;object-fit:cover;border:1px solid #ccc;border-radius:8px;';
       preview.appendChild(img);
     });
   }
@@ -1045,11 +1053,11 @@ function showWishes(data) {
       b.style.width = `${wish._size + 10}px`;
       b.style.marginTop = `${wish._marginTop}px`;
       b.style.marginRight = `${wish._gap}px`;
-      const photo = wish.owner?.photoURL || '../webP/default-avatar.webp';
+      const photo = wish.photoURL || '../svg/bigwish.svg';
       b.innerHTML = `
-        <img class="wish-avatar" src="${esc(photo)}" alt="許願者頭像"
+        <img class="wish-avatar" src="${esc(photo)}" alt="${esc(wish.itemName)}"
              style="width:${wish._size}px;height:${wish._size}px;"
-             onerror="this.src='../webP/default-avatar.webp'">
+             onerror="this.src='../svg/bigwish.svg'">
         <span class="wish-label">${esc(wish.itemName)}</span>
       `;
       b.addEventListener('click', () => {

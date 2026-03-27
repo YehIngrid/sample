@@ -147,14 +147,6 @@ ul{
   color: #383838;
 }
 
-.swal2-confirm {
-  background: linear-gradient(to left bottom, #c8f5e6, #c4def7);
-  color: #383838;
-}
-
-.swal2-cancel {
-  background-color: #bbb;
-}
 
 @media (max-width:1200px) {
     .specialpadding{
@@ -415,6 +407,382 @@ ul{
 .submitbtn:hover{
   background-color: rgb(36,182,133);
   transition: 0.2s;
+}
+
+/* ══════════════════════════════════════
+   賣家表單：多步驟 Wizard
+══════════════════════════════════════ */
+
+/* 步驟指示器 */
+.sell-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 24px 0 32px;
+}
+.sell-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+.sell-step.active,
+.sell-step.done { opacity: 1; }
+.sell-step-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e0e8f0;
+  color: #666;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, color 0.3s;
+}
+.sell-step.active .sell-step-badge {
+  background: #004b97;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,75,151,0.3);
+}
+.sell-step.done .sell-step-badge {
+  background: rgb(36,182,133);
+  color: #fff;
+}
+.sell-step-label {
+  font-size: 0.78rem;
+  color: #666;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sell-step.active .sell-step-label { color: #004b97; }
+.sell-step.done .sell-step-label { color: rgb(36,182,133); }
+.sell-step-line {
+  flex: 1;
+  height: 2px;
+  background: #d0dbe8;
+  margin: 0 8px;
+  margin-bottom: 22px;
+  max-width: 80px;
+  transition: background 0.3s;
+}
+.sell-step-line.done { background: rgb(36,182,133); }
+
+/* 步驟面板 */
+.sell-panel {
+  display: none;
+  animation: sellPanelIn 0.25s ease;
+}
+.sell-panel.active { display: block; }
+@keyframes sellPanelIn {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.sell-panel.going-back { animation: sellPanelBack 0.25s ease; }
+@keyframes sellPanelBack {
+  from { opacity: 0; transform: translateX(-18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* 欄位 */
+.sell-field {
+  margin-bottom: 22px;
+}
+.sell-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #222;
+  display: block;
+  margin-bottom: 6px;
+}
+.sell-required { color: #e03; font-size: 0.85rem; }
+.mw-login-hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 18px;
+  padding: 8px 12px;
+  background: rgba(171,218,213,0.15);
+  border-left: 3px solid #abdad5;
+  border-radius: 0 6px 6px 0;
+}
+.loginfirst {
+  color: #004b97;
+  font-weight: 600;
+  cursor: pointer;
+}
+.sell-info-btn {
+  background: none;
+  border: none;
+  padding: 0 0 0 4px;
+  color: #abdad5;
+  font-size: 1rem;
+  cursor: pointer;
+  vertical-align: middle;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.sell-info-btn:hover { color: #004b97; }
+.sell-cat-popover-list {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 0.82rem;
+  line-height: 1.8;
+}
+.sell-hint {
+  display: block;
+  font-size: 0.82rem;
+  color: #004b97;
+  margin-bottom: 8px;
+}
+
+/* 分類卡片 grid */
+.sell-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+.sell-cat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #444;
+  text-align: center;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.sell-cat-card input { display: none; }
+.sell-cat-card img { width: 36px; height: 36px; object-fit: contain; }
+.sell-cat-card span { font-size: 0.68rem; }
+.sell-cat-card:hover { border-color: rgba(0,75,151,0.25); background: aliceblue; }
+.sell-cat-card:has(input:checked) {
+  border-color: #004b97;
+  background: #e8f0fb;
+  color: #004b97;
+  box-shadow: 0 2px 8px rgba(0,75,151,0.15);
+}
+
+/* 兩欄佈局 */
+.sell-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 640px) {
+  .sell-two-col { grid-template-columns: 1fr; }
+  .sell-cat-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* 尺寸選卡 */
+.sell-size-group {
+  display: flex;
+  gap: 10px;
+}
+.sell-size-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 8px;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  transition: border 0.2s, background 0.2s;
+}
+.sell-size-card input { display: none; }
+.sell-size-icon { font-size: 1.5rem; color: #888; margin-bottom: 2px; }
+.sell-size-card strong { font-size: 0.9rem; color: #333; }
+.sell-size-card small { font-size: 0.72rem; color: #999; }
+.sell-size-card:hover { border-color: rgba(0,75,151,0.2); background: aliceblue; }
+.sell-size-card:has(input:checked) {
+  border-color: #004b97;
+  background: #e8f0fb;
+}
+.sell-size-card:has(input:checked) .sell-size-icon,
+.sell-size-card:has(input:checked) strong { color: #004b97; }
+
+/* Step 2 兩欄佈局 */
+.sell-step2-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+.sell-step2-left,
+.sell-step2-right { display: flex; flex-direction: column; }
+@media (max-width: 640px) {
+  .sell-step2-grid { grid-template-columns: 1fr; gap: 0; }
+}
+
+/* 新舊程度 */
+.sell-condition-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sell-condition-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: border 0.2s, background 0.2s;
+}
+.sell-condition-card input { display: none; }
+.sell-condition-card:hover { background: aliceblue; }
+.sell-condition-card:has(input:checked) { border-color: #004b97; background: #e8f0fb; color: #004b97; }
+.sell-cond-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.cond-1 { background: #004b97; }
+.cond-2 { background: #3a7bd5; }
+.cond-3 { background: #abdad5; }
+.cond-4 { background: rgb(36,182,133); }
+.cond-5 { background: #f0b429; }
+.cond-6 { background: #bbb; }
+.sell-cond-desc {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: #888;
+  margin-left: 2px;
+}
+
+/* 售價 */
+.sell-price-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.sell-price-prefix {
+  padding: 0 12px;
+  font-weight: 700;
+  color: #004b97;
+  background: aliceblue;
+  border-right: 1px solid #ced4da;
+  white-space: nowrap;
+  line-height: 38px;
+}
+.sell-price-wrap .form-control {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* 上傳區域 */
+.sell-upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 120px;
+  border: 2px dashed #abdad5;
+  border-radius: 12px;
+  background: aliceblue;
+  cursor: pointer;
+  color: #004b97;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 12px;
+}
+.sell-upload-zone i { font-size: 2rem; opacity: 0.7; }
+.sell-upload-zone:hover { border-color: #004b97; background: #ddeeff; }
+
+/* 照片預覽 */
+.sell-preview-single img {
+  max-width: 180px;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1.5px solid #abdad5;
+  margin-top: 4px;
+}
+.sell-preview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.sell-preview-grid img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1.5px solid #abdad5;
+}
+
+/* 導航按鈕列 */
+.sell-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #e8eef4;
+}
+.sell-prev-btn {
+  background: none;
+  border: 1.5px solid #abdad5;
+  color: #004b97;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 9px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+.sell-prev-btn:hover { background: aliceblue; }
+.sell-next-btn {
+  background: #004b97;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+.sell-next-btn:hover { background: rgb(36,182,133); }
+.sell-submit-btn {
+  width: auto;
+  padding: 10px 32px;
+  font-size: 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 /* 模態視窗的背景覆蓋層 */
 .modal {
@@ -2161,6 +2529,7 @@ html{ scroll-behavior:smooth; }
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #fff;
+  background: #fff;
   box-shadow: 0 3px 12px rgba(0, 75, 151, 0.18);
   display: block;
 }

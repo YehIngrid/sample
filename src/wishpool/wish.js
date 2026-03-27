@@ -53,7 +53,17 @@ async function loadNotifications() {
 
   updateBadge(unreadCount);
 }
-document.getElementById("notificationBtn")
-  .addEventListener("click", () => {
-    document.getElementById("notificationPanel").classList.toggle("open");
-});
+function openNotifPanel() {
+  document.getElementById("notificationPanel").classList.add("open");
+  document.getElementById("notifBackdrop").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeNotifPanel() {
+  document.getElementById("notificationPanel").classList.remove("open");
+  document.getElementById("notifBackdrop").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+document.getElementById("notificationBtn").addEventListener("click", openNotifPanel);
+document.getElementById("notifCloseBtn").addEventListener("click", closeNotifPanel);
+document.getElementById("notifBackdrop").addEventListener("click", closeNotifPanel);

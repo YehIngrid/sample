@@ -145,8 +145,8 @@ async function handleContactWisher() {
           <img src="${img}" alt="${name}" loading="lazy">
           <div class="wc-info">
             <div class="wc-name">${name}</div>
-            <div class="wc-price">$${price}</div>
-            <div class="wc-stock">庫存：${item.stock}</div>
+            <div class="wc-price">NT$ ${price}</div>
+            <div class="wc-stock">庫存 ${item.stock} 件</div>
           </div>
         </div>`;
     }).join('');

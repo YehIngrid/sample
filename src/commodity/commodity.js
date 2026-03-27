@@ -28,6 +28,7 @@ let currentCategory = 'all';
 let currentSource = 'all';   // 'all' | 'hot' | 'new' — 決定呼叫哪支 API
 let pageIndex = 0;
 let isLoading = false;
+let activeKeyword = '';  // 只在搜尋表單提交時更新，sort/filter 不觸發搜尋 API
 
 // DOM 元素
 const productRow = document.getElementById('productRow');
@@ -36,22 +37,24 @@ const sortItems = document.querySelectorAll('.sort_item');
 const paginationEl = document.getElementById('pagination');
 
 
+// 中文分類名稱 → API key 對照表（HTML data-category 與 URL param 均可能為中文）
+const catMap = {
+  "書籍與學籍用品": "book",
+  "宿舍與生活用品": "life",
+  "學生專用器材": "special",
+  "環保生活用品": "reuse",
+  "儲物與收納用品": "storage",
+  "其他": "other"
+};
+
 // ====== 初始化分類按鈕事件 ======
 sortItems.forEach(el => {
   el.addEventListener('click', (e) => {
     e.preventDefault();
     sortItems.forEach(x => x.classList.remove('active'));
     el.classList.add('active');
-    const catMap = {
-      "書籍與學籍用品": "book",
-      "宿舍與生活用品": "life",
-      "學生專用器材": "special",
-      "環保生活用品": "reuse",
-      "儲物與收納用品": "storage",
-      "其他": "other"
-    }
-    const cat = el.dataset.category || catMap[el.textContent.trim()];
-    changeCategory(cat);
+    const rawCat = el.dataset.category || el.textContent.trim();
+    changeCategory(catMap[rawCat] ?? rawCat);
   });
 });
 
@@ -60,6 +63,12 @@ sortItems.forEach(el => {
 function changeCategory(category) {
   currentCategory = category;
   currentSource = (category === 'hot' || category === 'new') ? category : 'all';
+  // 切換分類時清除搜尋關鍵字，避免搜尋結果污染分類瀏覽
+  activeKeyword = '';
+  const si = document.getElementById('searchInput');
+  if (si) si.value = '';
+  const mt = document.getElementById('searchTriggerMobile');
+  if (mt) mt.value = '';
   pageIndex = 0;
   productRow.innerHTML = '';
   loadProducts();
@@ -153,16 +162,26 @@ async function loadProducts() {
     const backendService = new BackendService();
     const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
     const sortselected = sortSelect ? sortSelect.value : 'default';
-    const keyword = document.getElementById('searchInput')?.value.trim() || '';
+    const keyword = activeKeyword;
     const maxPrice = maxPriceInput?.value ? parseInt(maxPriceInput.value) : null;
     const newOrOld = newOrOldInput?.value !== 'default' ? parseInt(newOrOldInput?.value) : null;
-    const validCategories = ['book', 'life', 'student', 'recycle', 'clean', 'other'];
+    const validCategories = ['book', 'life', 'special', 'reuse', 'storage', 'other'];
 
     let items = [];
     let totalCount = 0;
 
     // === 1️⃣ 決定呼叫哪支 API ===
-    if (currentSource === 'hot') {
+    // 有關鍵字或最高價格 → 優先走搜尋 API（涵蓋所有分類/排序狀態）
+    if (keyword || maxPrice) {
+      const searchParams = { page: pageIndex + 1, limit: PAGE_SIZE };
+      if (keyword) searchParams.keyword = keyword;
+      if (maxPrice) searchParams.maxPrice = maxPrice;
+      if (validCategories.includes(currentCategory)) searchParams.category = currentCategory;
+      const response = await backendService.searchCommodities(searchParams);
+      items = response?.data?.commodities || [];
+      totalCount = response?.data?.pagination?.totalItems ?? items.length;
+
+    } else if (currentSource === 'hot') {
       const response = await backendService.getHotItems(pagingInfo);
       items = response?.data?.commodities || [];
       totalCount = response?.data?.pagination?.totalItems ?? items.length;
@@ -172,28 +191,24 @@ async function loadProducts() {
       items = response?.data?.commodities || [];
       totalCount = response?.data?.pagination?.totalItems ?? items.length;
 
-    } else if (keyword || maxPrice) {
-      // === 伺服器端搜尋（有關鍵字或最高價格篩選時）===
-      const searchParams = { page: pageIndex + 1, limit: PAGE_SIZE };
-      if (keyword) searchParams.keyword = keyword;
-      if (maxPrice) searchParams.maxPrice = maxPrice;
-      if (validCategories.includes(currentCategory)) searchParams.category = currentCategory;
-      const response = await backendService.searchCommodities(searchParams);
-      items = response?.data?.commodities || [];
-      totalCount = response?.data?.pagination?.totalItems ?? items.length;
-
     } else if (sortselected === 'priceAsc') {
       const response = await backendService.getPriceLowItems(pagingInfo);
       items = response?.data?.commodities || [];
       totalCount = response?.data?.pagination?.totalItems ?? items.length;
+      // 排序 API 不支援分類參數，前端補篩
+      if (validCategories.includes(currentCategory)) {
+        items = items.filter(p => p.category === currentCategory);
+      }
 
     } else if (sortselected === 'priceDesc') {
       const response = await backendService.getPriceHighItems(pagingInfo);
       items = response?.data?.commodities || [];
       totalCount = response?.data?.pagination?.totalItems ?? items.length;
+      if (validCategories.includes(currentCategory)) {
+        items = items.filter(p => p.category === currentCategory);
+      }
 
     } else if (validCategories.includes(currentCategory)) {
-      // 分類篩選（伺服器端）
       const response = await backendService.getCategoryItems(currentCategory, pagingInfo);
       items = response?.data?.commodities || [];
       totalCount = response?.data?.pagination?.totalItems ?? items.length;
@@ -255,8 +270,8 @@ function renderProductsBootstrap(items) {
     noProducts.style.display = 'none';
 
   const categoryMap = {
-    book: '書籍', life: '生活', student: '器材',
-    other: '其他', recycle: '環保', clean: '收納',
+    book: '書籍', life: '生活', special: '器材',
+    other: '其他', reuse: '環保', storage: '收納',
   };
   const newOrOldMap = {
     1:'全新', 2:'幾乎全新', 3:'半新', 4:'適中', 5:'稍舊', 6:'全舊',
@@ -360,6 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 搜尋表單提交（桌機 Enter / 手機 offcanvas）
   document.getElementById('searchForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
+    activeKeyword = document.getElementById('searchInput')?.value.trim() || '';
     pageIndex = 0;
     productRow.innerHTML = '';
     loadProducts();
@@ -370,8 +386,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const categoryFromUrl = urlParams.get('category');
   const qFromUrl = urlParams.get('q');
 
-  // 若從 shop.html 帶入搜尋關鍵字，預填搜尋欄（桌機 + 手機觸發欄）
+  // 若從 shop.html 帶入搜尋關鍵字，預填搜尋欄並設定 activeKeyword
   if (qFromUrl) {
+    activeKeyword = qFromUrl;
     const si = document.getElementById('searchInput');
     if (si) si.value = qFromUrl;
     const mt = document.getElementById('searchTriggerMobile');
@@ -380,19 +397,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let initialCategory = 'all';
 
-  // 如果 URL 有帶 category 參數，就用它的值作為初始分類
+  // 如果 URL 有帶 category 參數，就用它的值作為初始分類（支援中文或英文 key）
   if (categoryFromUrl) {
-    initialCategory = categoryFromUrl;
+    initialCategory = catMap[categoryFromUrl] ?? categoryFromUrl;
   }
 
   // 移除所有按鈕的 active 樣式
   sortItems.forEach(x => x.classList.remove('active'));
 
-  // 找到對應的按鈕並加上 active 樣式
-  const activeBtn = document.querySelector(`.sort_item[data-category="${initialCategory}"]`);
-  if (activeBtn) {
-    activeBtn.classList.add('active');
-  }
+  // 找到對應的按鈕並加上 active 樣式（data-category 可能為中文或英文 key）
+  const activeBtn = Array.from(sortItems).find(el => {
+    const raw = el.dataset.category || '';
+    return raw === initialCategory || (catMap[raw] ?? raw) === initialCategory;
+  });
+  if (activeBtn) activeBtn.classList.add('active');
   
   // 使用初始分類來載入商品
   changeCategory(initialCategory);
@@ -409,6 +427,9 @@ function applyFilters(items) {
 }
 
 function clearFilters() {
+    activeKeyword = '';
+    const si = document.getElementById('searchInput');
+    if (si) si.value = '';
     maxPriceInput.value = '';
     newOrOldInput.value = 'default';
     sortSelect.value = 'default';

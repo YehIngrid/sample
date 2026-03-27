@@ -26,6 +26,18 @@ let mycurrentPage = 1;
 let mytotalPages = 1;
 
 document.addEventListener("DOMContentLoaded", () => {
+  // ── 手機版篩選條件伸縮 ──
+  const filterToggle = document.getElementById('filterToggle');
+  const filterBody   = document.getElementById('filterBody');
+  const filterCard   = filterToggle?.closest('.wp-filter-card');
+  if (filterToggle && filterBody) {
+    filterToggle.addEventListener('click', () => {
+      if (window.innerWidth > 991) return;
+      const isOpen = filterBody.classList.toggle('open');
+      filterCard.classList.toggle('open', isOpen);
+    });
+  }
+
   document.getElementById('prevPage')?.addEventListener('click', () => {
     if (currentPage > 1) {
       listAll(currentPage - 1);
@@ -91,6 +103,8 @@ async function showPage(hash) {
   }
   if(hash === '#makewish') {
     isLoggedIn = await checkLogin();
+    const mwHint = document.getElementById('mwLoginHint');
+    if (mwHint) mwHint.style.display = isLoggedIn ? 'none' : '';
     if (!isLoggedIn) {
       Swal.fire({
         title: '請先登入會員',
@@ -100,6 +114,11 @@ async function showPage(hash) {
   }
   if(hash === '#about') {
     animateCountUp("wishNum", 128);
+    const aboutEl = document.getElementById('about');
+    if (aboutEl) {
+      aboutEl.classList.remove('about-animate');
+      requestAnimationFrame(() => requestAnimationFrame(() => aboutEl.classList.add('about-animate')));
+    }
   }
 }
 
@@ -223,6 +242,44 @@ function showMyInfo(data) {
     container.appendChild(createWishCard(wish, true));
   });
 }
+async function resendWish(wish) {
+  // 切換到許願表單頁
+  location.hash = '#makewish';
+  await new Promise(r => setTimeout(r, 80));
+
+  // 填入文字欄位
+  const nameEl    = document.getElementById('wishName');
+  const budgetEl  = document.getElementById('budgetMax');
+  const descEl    = document.getElementById('wishDesc');
+  const urgencyEl = document.getElementById('urgency');
+  if (nameEl)    nameEl.value    = wish.itemName    || '';
+  if (budgetEl)  budgetEl.value  = wish.maxPrice    || '';
+  if (descEl)    descEl.value    = wish.description || '';
+  const priorityToValue = { HIGH: '3', MEDIUM: '2', LOW: '1', 3: '3', 2: '2', 1: '1' };
+  if (urgencyEl) urgencyEl.value = priorityToValue[wish.priority] || '';
+
+  // 嘗試把原有照片載回 fileInput
+  if (wish.photoURL) {
+    try {
+      const res  = await fetch(wish.photoURL, { credentials: 'include' });
+      const blob = await res.blob();
+      const fname = wish.photoURL.split('/').pop() || 'wish-photo.webp';
+      const file  = new File([blob], fname, { type: blob.type });
+      const dt    = new DataTransfer();
+      dt.items.add(file);
+      fileInput.files = dt.files;
+      imgEl.src = URL.createObjectURL(blob);
+      preview.classList.add('has-image');
+      imgFilename.textContent = fname;
+    } catch {
+      // fetch 失敗時不顯示預覽，避免誤以為照片已設定
+    }
+  }
+
+  // 捲動到表單頂部
+  document.getElementById('makewish')?.scrollIntoView({ behavior: 'smooth' });
+}
+
 async function deleteWish(id) {
   wpbackendService = wpbackendService || new wpBackendService();
   const confirm = await Swal.fire({
@@ -426,8 +483,11 @@ const wishCropModalEl = document.getElementById('wishCropModal');
 const wishCropImg     = document.getElementById('wishCropImg');
 const wishCropModal   = bootstrap.Modal.getOrCreateInstance(wishCropModalEl);
 
+const imgFilename = document.getElementById('imgFilename');
+
 function openWishCrop(file) {
   if (wishCropper) { wishCropper.destroy(); wishCropper = null; }
+  openWishCrop._pendingName = file.name;
   const reader = new FileReader();
   reader.onload = (e) => {
     wishCropImg.src = e.target.result;
@@ -466,6 +526,7 @@ document.getElementById('wishCropConfirm').addEventListener('click', () => {
     imgEl.onload = () => URL.revokeObjectURL(url);
     imgEl.src = url;
     preview.classList.add('has-image');
+    imgFilename.textContent = openWishCrop._pendingName ?? '';
     clearErr(fileInput);
   }, 'image/webp', 0.92);
 });
@@ -493,6 +554,16 @@ fileInput.addEventListener('change', (e) => {
   }
   fileInput.value = ''; // 清空以便下次選同張圖也能觸發
   openWishCrop(file);
+});
+
+// ---- 點擊開啟檔案選擇 ----
+preview.addEventListener('click', () => fileInput.click());
+
+// ---- 清除表單時重置預覽 ----
+document.getElementById('wishForm').addEventListener('reset', () => {
+  preview.classList.remove('has-image');
+  imgEl.removeAttribute('src');
+  imgFilename.textContent = '';
 });
 
 // ---- 拖曳上傳 ----
@@ -706,7 +777,9 @@ function createWishCard(wish, isMyWish) {
   const priceFormatted = Number(wish.maxPrice || 0).toLocaleString();
 
   const actionHtml = isMyWish
-    ? `<button class="wn-delete-btn wn-action-js">刪除願望</button>`
+    ? wish.status === 'EXPIRED'
+      ? `<button class="wn-resend-btn wn-action-js"><i class="ti ti-refresh"></i> 重新發送願望</button>`
+      : `<button class="wn-delete-btn wn-action-js">刪除願望</button>`
     : `<button class="wn-contact-btn wn-action-js"><i class="ti ti-mail"></i> 聯絡許願者</button>`;
 
   wrapper.innerHTML = `
@@ -749,6 +822,14 @@ function createWishCard(wish, isMyWish) {
           handleContactWisher(wish.id, btn);
         });
       }
+    }
+  } else if (isMyWish && wish.status === 'EXPIRED') {
+    const btn = wrapper.querySelector('.wn-action-js');
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        resendWish(wish);
+      });
     }
   }
 
