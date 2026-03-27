@@ -55,11 +55,6 @@ async function renderAuthUI() {
       const user = await backendService.whoami(); // 成功代表已登入
       window.isLoggedIn = true;
       _authResolve(true);
-      document.querySelectorAll('.username').forEach((el) => {
-        el.textContent = localStorage.getItem("username") || '使用者';
-        el.style.display = '';
-      });
-
       document.querySelectorAll('.loginornot').forEach((el) => {
         if (el.classList.contains('nav-menu-item')) {
           el.innerHTML = '<i class="ti ti-logout me-2"></i>登出';
@@ -92,6 +87,10 @@ async function renderAuthUI() {
 
       // 桌機版 navbar 下拉選單：已登入狀態
       const avatarSrc = (userAvatar && userAvatar !== 'null' && userAvatar !== '') ? userAvatar : '../image/default-avatar.png';
+      document.querySelectorAll('.username').forEach((el) => {
+        el.innerHTML = `<img class="nav-username-avatar" src="${avatarSrc}" alt="頭像">`;
+        el.style.display = '';
+      });
       document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = avatarSrc; });
       document.querySelectorAll('.nav-guest-label').forEach(el => el.classList.add('d-none'));
       document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.remove('d-none'));
@@ -106,7 +105,7 @@ async function renderAuthUI() {
       window.isLoggedIn = false;
       _authResolve(false);
       document.querySelectorAll('.username').forEach((el) => {
-        el.textContent = '';
+        el.innerHTML = '';
         el.style.display = 'none';
       });
 

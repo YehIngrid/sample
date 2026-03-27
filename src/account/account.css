@@ -1,18 +1,74 @@
+/* ── 背景裝飾 ── */
+.auth-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: linear-gradient(160deg, #eef4ff 0%, #f7fbff 50%, #edfaf6 100%);
+}
+.auth-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.55;
+}
+.auth-blob-1 {
+  width: 480px; height: 480px;
+  top: -120px; right: -120px;
+  background: radial-gradient(circle, #abdad5, #c5e8f0);
+  animation: blobFloat1 5s ease-in-out infinite;
+}
+.auth-blob-2 {
+  width: 380px; height: 380px;
+  bottom: -100px; left: -100px;
+  background: radial-gradient(circle, rgba(0,75,151,0.18), rgba(0,75,151,0.05));
+  animation: blobFloat2 6s ease-in-out infinite;
+}
+.auth-blob-3 {
+  width: 260px; height: 260px;
+  top: 40%; left: 20%;
+  background: radial-gradient(circle, rgba(171,218,213,0.35), transparent);
+  animation: blobFloat3 4s ease-in-out infinite;
+}
+
+@keyframes blobFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-30px, 40px) scale(1.06); }
+  66%       { transform: translate(20px, -20px) scale(0.96); }
+}
+@keyframes blobFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%       { transform: translate(40px, -30px) scale(1.08); }
+  70%       { transform: translate(-20px, 20px) scale(0.95); }
+}
+@keyframes blobFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%       { transform: translate(25px, -35px) scale(1.1); }
+}
+
+/* ── 表單容器 ── */
 .content{
-  height: 86vh;
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 56px);
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
+  padding: 40px 16px;
 }
 .modalwhat{
-  background-color: aliceblue;
-  border-radius: 8px;
-  padding: 30px;
-  min-width: 350px;
+  background-color: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 36px 32px;
+  min-width: 340px;
+  width: 100%;
+  max-width: 400px;
   z-index: 9000;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  border: 1px solid rgba(0,75,151,0.08);
+  box-shadow: 0 8px 32px rgba(0,75,151,0.12);
+  border: 1px solid rgba(255,255,255,0.7);
 }
 .modalwhat button{
   width: 100%;

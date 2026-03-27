@@ -386,15 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const categoryFromUrl = urlParams.get('category');
   const qFromUrl = urlParams.get('q');
 
-  // 若從 shop.html 帶入搜尋關鍵字，預填搜尋欄並設定 activeKeyword
-  if (qFromUrl) {
-    activeKeyword = qFromUrl;
-    const si = document.getElementById('searchInput');
-    if (si) si.value = qFromUrl;
-    const mt = document.getElementById('searchTriggerMobile');
-    if (mt) mt.value = qFromUrl;
-  }
-
   let initialCategory = 'all';
 
   // 如果 URL 有帶 category 參數，就用它的值作為初始分類（支援中文或英文 key）
@@ -411,9 +402,21 @@ document.addEventListener('DOMContentLoaded', () => {
     return raw === initialCategory || (catMap[raw] ?? raw) === initialCategory;
   });
   if (activeBtn) activeBtn.classList.add('active');
-  
-  // 使用初始分類來載入商品
-  changeCategory(initialCategory);
+
+  // 若從 shop.html 帶入搜尋關鍵字，預填搜尋欄並直接 loadProducts（跳過 changeCategory 以免清除 keyword）
+  if (qFromUrl) {
+    activeKeyword = qFromUrl;
+    currentCategory = initialCategory;
+    currentSource = 'all';
+    pageIndex = 0;
+    const si = document.getElementById('searchInput');
+    if (si) si.value = qFromUrl;
+    const mt = document.getElementById('searchTriggerMobile');
+    if (mt) mt.value = qFromUrl;
+    loadProducts();
+  } else {
+    changeCategory(initialCategory);
+  }
 });
 
 // 僅保留不支援伺服器端篩選的條件（新舊程度），其餘由 loadProducts 的 API 呼叫處理

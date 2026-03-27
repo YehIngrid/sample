@@ -106,20 +106,30 @@
       </div>
     </div>
         <!-- TODO content -->
-      <section class="contentofcommunication  d-flex flex-column justify-content-center align-items-center">
-        <div class="form-container">
-          <h4 style="text-align: center; margin-bottom: 20px;">對我們有什麼疑問嗎？<br>歡迎留下您的問題</h4>
-          <div class="form-content">
-            <textarea placeholder="請輸入您的問題"></textarea>
-            <div class="input-group">
-              <label>姓名</label>
-              <input type="text" placeholder="王小明">
-              <label>電話</label>
-              <input type="text" placeholder="0912345678">
-              <label>信箱</label>
-              <input type="email" placeholder="treasure@mail.com">
-              <button type="submit">送出</button>
+      <section class="contentofcommunication">
+        <div class="comm-form-outer">
+          <div class="comm-page-header">
+            <h1>客服諮詢</h1>
+            <p>對我們有什麼疑問嗎？歡迎留下您的問題，我們將盡快回覆。</p>
+          </div>
+          <div class="comm-card">
+            <div class="comm-field">
+              <label class="comm-label">姓名</label>
+              <input type="text" class="form-control" placeholder="王小明">
             </div>
+            <div class="comm-field">
+              <label class="comm-label">電話</label>
+              <input type="text" class="form-control" placeholder="0912345678">
+            </div>
+            <div class="comm-field">
+              <label class="comm-label">信箱</label>
+              <input type="email" class="form-control" placeholder="treasure@mail.com">
+            </div>
+            <div class="comm-field">
+              <label class="comm-label">問題描述</label>
+              <textarea class="form-control" rows="6" placeholder="請輸入您的問題..."></textarea>
+            </div>
+            <button type="submit" class="comm-submit">送出</button>
           </div>
         </div>
       </section>
@@ -129,6 +139,8 @@
       <img src="../svg/TREASUREHUBwhite.svg" alt="拾貨寶庫" loading="lazy">
       <p class="footer-tagline">專為大學生打造的校園二手拍賣市集</p>
     </div>
+    <div class="footer-links-row">
+
     <div class="footer-col">
       <h4 class="footer-heading">快速連結</h4>
       <ul class="footer-links">
@@ -146,6 +158,8 @@
         <li><a href="../policy/policy.html">隱私政策</a></li>
         <li><a href="#">使用條款</a></li>
       </ul>
+    </div>
+
     </div>
     <div class="footer-col">
       <h4 class="footer-heading">聯絡我們</h4>

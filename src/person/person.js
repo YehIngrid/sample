@@ -525,20 +525,14 @@ async function handleRouting() {
         `<tr><td colspan="4" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('sell-product').innerHTML =
         `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
-      const res = await backendService.getSellerOrders();
-      goodsOrder = res?.data?.data;
-      renderSellerOrders(res?.data?.data ?? []);
-      renderSellerCards(res?.data?.data ?? []);
+      await loadSellerOrders(1);
     } else if (page === 'buyProducts') {
       window.currentOrder = null;
       document.querySelector('#buyProducts tbody').innerHTML =
         `<tr><td colspan="5" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('buy-product').innerHTML =
         `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
-      const res = await backendService.getBuyerOrders();
-      renderBuyerOrders(res?.data?.data ?? []);
-      renderBuyerCards(res?.data?.data ?? []);
-      goodsOrder = res?.data?.data;
+      await loadBuyerOrders(1);
     } else if (page === 'products') {
       myItemsPage = 1;
       await loadMyItems(1);
@@ -572,6 +566,46 @@ document.getElementById('backToBuyTable')?.addEventListener('click', () => {
 function resetOrderView() {
   document.getElementById('sellOrderDetail')?.classList.add('d-none');
   document.getElementById('buyerOrderDetail')?.classList.add('d-none');
+}
+
+async function loadSellerOrders(page) {
+  const res = await backendService.getSellerOrders(page);
+  const list = res?.data?.data?.orders ?? [];
+  const pagination = res?.data?.data?.pagination ?? {};
+  goodsOrder = list;
+  renderSellerOrders(list);
+  renderSellerCards(list);
+  renderOrderPagination('sellPagination', pagination, loadSellerOrders);
+}
+
+async function loadBuyerOrders(page) {
+  const res = await backendService.getBuyerOrders(page);
+  const list = res?.data?.data?.orders ?? [];
+  const pagination = res?.data?.data?.pagination ?? {};
+  goodsOrder = list;
+  renderBuyerOrders(list);
+  renderBuyerCards(list);
+  renderOrderPagination('buyPagination', pagination, loadBuyerOrders);
+}
+
+function renderOrderPagination(containerId, pagination, loadFn) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const { currentPage = 1, totalPages = 1, hasPrevPage, hasNextPage } = pagination;
+  if (totalPages < 1) { el.innerHTML = ''; return; }
+
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  el.innerHTML = `
+    <button class="order-page-btn" data-page="${currentPage - 1}" ${!hasPrevPage ? 'disabled' : ''}>&#8592; 上一頁</button>
+    ${pages.map(p => `<button class="order-page-num ${p === currentPage ? 'active' : ''}" data-page="${p}">${p}</button>`).join('')}
+    <button class="order-page-btn" data-page="${currentPage + 1}" ${!hasNextPage ? 'disabled' : ''}>下一頁 &#8594;</button>
+  `;
+  el.querySelectorAll('button[data-page]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const p = parseInt(btn.dataset.page);
+      if (!isNaN(p)) loadFn(p);
+    });
+  });
 }
 
 // TODO 更改大頭照預覽
@@ -687,11 +721,11 @@ function renderBuyerOrders(list) {
     const id       = item.id;
     const name     = esc(item.name);
     const price    = fmtPrice(item.totalAmount);
-    const seller = item.sellerUser.name;
+    const seller = item.sellerUser?.name ?? '';
     const type = item.type || '未知交易方式';
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.listed;
+    const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
     const log = esc(item.log || '無詳細資訊');
     
   return `
@@ -731,11 +765,11 @@ function renderSellerOrders(list) {
     const id       = item.id;
     const name     = esc(item.name);
     const price    = fmtPrice(item.totalAmount);
-    const buyer = item.buyerUser.name;
+    const buyer = item.buyerUser?.name ?? '';
     const type = item.type || '未知交易方式';
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
+    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
     const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
     return `
       <tr data-id="${esc(id)}">
@@ -898,7 +932,7 @@ function renderSellerCards(list = []) {
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.listed;
+    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
     const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
 
     return `
@@ -947,7 +981,7 @@ function renderBuyerCards(list = []) {
     const price    = fmtPrice(item.totalAmount);
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.listed;
+    const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
 
     return `
       <div class="col" data-id="${esc(id)}">

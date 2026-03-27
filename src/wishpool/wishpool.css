@@ -1459,30 +1459,6 @@ body {
 }
 
 /* ── Footer ── */
-.footer, .footer a {
-    background-color: var(--brand-color);
-    color: var(--background-color);
-}
-.footer a:hover {
-    color: var(--focus-border-color);
-}
-.footer a {
-    text-decoration: none;
-}
-.footer h4 {
-    padding-top: 15px;
-}
-.footer li {
-    padding: 15px;
-    text-align: center;
-    font-size: 14px;
-    list-style: none;
-}
-@media screen and (max-width: 768px) {
-    .footer h4 { padding-top: 5px; font-size: 16px; }
-    .footer li { padding: 10px; font-size: 12px; }
-    .footer { padding: 10px; padding-top: 20px; }
-}
 .nav-user-avatar {
     width: 30px;
     height: 30px;

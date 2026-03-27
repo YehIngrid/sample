@@ -134,7 +134,9 @@
   padding: 8px 10px !important;
 }
 .product-card .price {
-  color: #c0392b;
+  color: #004b97;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 .product-card .card-text span {
   background-color: #ABDAD5aa;
@@ -479,6 +481,9 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
   align-items: center;
   gap: 5px;
   margin-top: 4px;
+  min-width: 0;
+  max-width: 55%;
+  flex-shrink: 1;
 }
 .seller-avatar {
   width: 16px;

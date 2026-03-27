@@ -777,7 +777,7 @@ function createWishCard(wish, isMyWish) {
   const priceFormatted = Number(wish.maxPrice || 0).toLocaleString();
 
   const actionHtml = isMyWish
-    ? wish.status === 'EXPIRED'
+    ? (wish.status === 'EXPIRED' || wish.status === 'DELETED')
       ? `<button class="wn-resend-btn wn-action-js"><i class="ti ti-refresh"></i> 重新發送願望</button>`
       : `<button class="wn-delete-btn wn-action-js">刪除願望</button>`
     : `<button class="wn-contact-btn wn-action-js"><i class="ti ti-mail"></i> 聯絡許願者</button>`;
@@ -823,7 +823,7 @@ function createWishCard(wish, isMyWish) {
         });
       }
     }
-  } else if (isMyWish && wish.status === 'EXPIRED') {
+  } else if (isMyWish && (wish.status === 'EXPIRED' || wish.status === 'DELETED')) {
     const btn = wrapper.querySelector('.wn-action-js');
     if (btn) {
       btn.addEventListener('click', (e) => {

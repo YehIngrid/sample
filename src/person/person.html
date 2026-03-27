@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  <script>(function(){if(window.innerWidth<=991&&sessionStorage.getItem('skipLoader')==='1'){sessionStorage.removeItem('skipLoader');document.documentElement.classList.add('skip-loader');}})();</script>
   <title>帳戶管理中心 | 拾貨寶庫</title>
     <!-- meta部分 -->
     <meta charset="UTF-8">
@@ -19,17 +20,16 @@
     <!-- link部分 -->
     <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
     <link rel="shortcut icon" href="../treasurehubIcon.ico">
-    <link rel="stylesheet" href="../shop/shop.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="person.css">
     <link rel="stylesheet" href="../default/default.css">
     <link rel="stylesheet" href="../default/default-font.css">
+    <link rel="stylesheet" href="person.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
   <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
@@ -45,51 +45,67 @@
   </div>
   <div id="whatcontent" class="d-none">
     <!-- TODO header -->
-    <div class="header ">
-        <!--TODO 響應式選單-->
-        <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); padding-top: 10px; padding-bottom: 10px;">
-          <div class="container-fluid d-flex align-items-center sticky-top">
-                    <a class="navbar-brand" href="#">
-                        <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫·帳戶管理中心" style="width: 100px; margin-right: 10px;">
-                    </a>
-            <!-- (B) 桌機版導覽選單 -->
-            <div class="d-none d-lg-flex">
-              <ul class="navbar-nav" >
+    <div class="header">
+        <!-- 響應式選單 -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
+          <div class="container-fluid d-flex align-items-center">
+
+            <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
+            <button class="navbar-toggler d-lg-none me-2 order-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+              <img src="../svg/navbar.svg" alt="選單" style="width:20px;">
+            </button>
+
+            <!-- (ALL) Logo -->
+            <a class="navbar-brand picture order-1 me-4"
+              href="../newhome/newhome.html">
+              <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫·帳戶管理中心"
+                   style="width: 100px; margin-right: 10px; border-radius: 0%;">
+            </a>
+
+            <!-- (DESKTOP) 導覽選單：桌機顯示 -->
+            <div class="d-none d-lg-flex order-2">
+              <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shop.html">購物首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../commodity/commodity.html">購物商場</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
                 <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
               </ul>
             </div>
-        
-            <!-- (C) 右側：漢堡選單（手機）＋ 購物車 -->
-            <div class="d-flex align-items-center ms-auto gap-2">
-              <button class="navbar-toggler d-lg-none" type="button"
-                      data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                      aria-controls="navbarNav" aria-expanded="false" aria-label="開啟選單">
-                <img src="../svg/navbar.svg" alt="選單" style="width:20px;">
-              </button>
+
+            <!-- (RIGHT) 右側：登入 + 購物車（所有尺寸都有；用 ms-auto 推到最右） -->
+            <div class="d-flex align-items-center ms-auto order-3">
+              <div class="login me-2">
+                <a class="username" href="../person/person.html"></a>
+                <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
+              </div>
               <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
-                <img src="../svg/shoppingcart.svg" class="d-none d-lg-block" alt="購物車">
+                <img src="../svg/shoppingcart.svg" alt="我的購物車">
               </a>
             </div>
           </div>
-        </nav>
-        
-        <!-- 桌機版也顯示的搜尋欄 -->
-        
-          <!-- 手機版導覽選單展開內容 -->
-          <div class="collapse navbar-collapse mt-2 d-lg-none" id="navbarNav">
+
+          <!-- (MOBILE) 手機版導覽選單展開內容 -->
+          <div class="collapse mt-2 d-lg-none" id="navbarNav">
             <ul class="navbar-nav mobileNav">
               <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
               <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
+              <li class="nav-item"><a class="nav-link" href="../shop/shop.html">購物首頁</a></li>
+              <li class="nav-item"><a class="nav-link" href="../commodity/commodity.html">購物商場</a></li>
               <li class="nav-item"><a class="nav-link" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
               <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
               <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
           </div>
-        </div>
+        </nav>
     </div>
 
 <div class="container-fluid py-3" id="mainContent" style="font-size: 1.2rem;">
@@ -97,33 +113,33 @@
       <!-- Desktop Sidebar -->
       <aside class="col-lg-3 d-none d-lg-block">
         <div class="sidebar sticky-lg-top">
+
           <!-- Profile Card -->
-          <div class="cardContainer mb-5">
-            <div class="card-body text-center">
-              <img alt="頭像" class="avatar mb-2" id="profileAvatar">
-              <div class="scorediv d-flex flex-column">
-                <small>信譽積分</small>
-                <span id="rate"></span>
-              </div>
-              <div style="margin-top: 20px; margin-bottom: 20px; font-weight: 600;" class="name mb-0" id="profileName"></div>
-              <div class="asideicon" id="profileInfo" style="margin: 10px 30px; text-align: center;"></div>
-              <div class="uid mt-1">uid : <span id="uid"></span></div>
+          <div class="sidebar-profile-card mb-3">
+            <img alt="頭像" id="profileAvatar" class="sidebar-avatar">
+            <div class="sidebar-profile-name" id="profileName"></div>
+            <div class="sidebar-profile-uid">uid：<span id="uid"></span></div>
+            <div class="sidebar-profile-intro asideicon" id="profileInfo"></div>
+            <div class="sidebar-score-badge my-tooltip" data-text="每個用戶基本分為 60 分，若被其他用戶檢舉一次扣 5 分，扣到 0 分為止。每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分 0~5 或 0~3 分(買家對賣家/賣家對買家)，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。">
+              <i class="ti ti-star-filled"></i>
+              <span>信譽積分</span>
+              <strong id="rate"></strong>
             </div>
-            
           </div>
 
           <!-- Account Menu -->
-          <div class="menutitle mb-3">商品訂單管理</div>
           <div class="menuContainer menu">
+            <div class="menutitle-inside">商品訂單管理</div>
             <div class="list-group list-group-flush">
-              <a class="list-group-item active asideicon" href="#" data-target ="account"> 帳戶管理中心</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="products"><img src="../svg/my.svg" alt="我的商品icon"> 商品管理</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="sellProducts"><img src="../svg/mysellOrder.svg" alt="我的銷售訂單icon"> 銷售訂單</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 消費訂單</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target ="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳戶設定</a>
+              <a class="list-group-item active asideicon menu-home" href="#" data-target="account">帳戶管理中心 <span class="menu-home-badge">首頁</span></a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="products"><img src="../svg/my.svg" alt="我的商品icon"> 商品管理</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="sellProducts"><img src="../svg/mysellOrder.svg" alt="我的銷售訂單icon"> 銷售訂單</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 消費訂單</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳戶設定</a>
               <a class="list-group-item list-group-item-action asideicon" id="logout" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
             </div>
           </div>
+
         </div>
       </aside>
       <!-- ?section productEdit沒有解決顯示不了的問題 -->
@@ -236,6 +252,7 @@
     </div>
 
     <div id="sell-product" class="row g-3 d-block d-lg-none"></div>
+    <div id="sellPagination" class="order-pagination"></div>
   </div>
 
 </section>
@@ -311,6 +328,7 @@
       </table>
     </div>
     <div id="buy-product" class="row g-3 d-block d-lg-none"></div>
+    <div id="buyPagination" class="order-pagination"></div>
   </div>
 
 </section>
@@ -318,99 +336,92 @@
       <!-- section settings -->
       <section class="col-lg-9 d-none content-section" id="settings">
         <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
-        <div class="cardContainer col-12">
-          <div class="card-body">
-            <div class="d-flex align-items-center">
-              <h6 class="showStyle">用戶名</h6>
-              <span class="showInfo" id="showName"></span>
+        <div class="profile-info-card col-12">
+          <div class="profile-info-header">
+            <i class="ti ti-id-badge-2"></i>
+            <span>帳號資訊</span>
+          </div>
+          <div class="profile-info-body">
+            <div class="info-row">
+              <span class="info-label"><i class="ti ti-user"></i>用戶名</span>
+              <span class="info-value" id="showName"></span>
             </div>
-            <div class="d-flex align-items-center">
-              <h6 class="showStyle">關於我</h6>
-              <span class="showInfo" id="showIntro"></span>
+            <div class="info-row">
+              <span class="info-label"><i class="ti ti-file-description"></i>關於我</span>
+              <span class="info-value" id="showIntro"></span>
             </div>
-            <div class="d-flex align-items-center">
-              <h6 class="showStyle">加入日期</h6>
-              <span class="showInfo" id="showTime"></span>
+            <div class="info-row">
+              <span class="info-label"><i class="ti ti-calendar"></i>加入日期</span>
+              <span class="info-value" id="showTime"></span>
             </div>
-            <div class="d-flex align-items-center">
-              <h6 class="showStyle">常用帳號</h6>
-              <span class="showInfo" id="showEmail">buyer@example.com</span>
+            <div class="info-row">
+              <span class="info-label"><i class="ti ti-mail"></i>常用帳號</span>
+              <span class="info-value" id="showEmail">buyer@example.com</span>
             </div>
+          </div>
+          <div class="profile-info-footer">
             <button class="checkInfoBtn">
               <img src="../svg/settingicon.svg" alt="設定常用帳號icon">
-              <div style="font-size: 1rem;">設定常用帳號</div>
+              <div>設定常用帳號</div>
             </button>
-            <div class="d-flex justify-content-end">
-              <button class="d-flex align-items-center justify-content-center gap-2 disableAccount" id="disableAccountBtn">
-                <img src="../svg/deleteSell.svg"/>
-                <div>停用帳戶</div>
-              </button>
-            </div>
+            <button class="d-flex align-items-center justify-content-center gap-2 disableAccount" id="disableAccountBtn">
+              <img src="../svg/deleteSell.svg"/>
+              <div>停用帳戶</div>
+            </button>
           </div>
-        </div>
-        <div class="d-lg-flex py-3">
-          <div class="cardContainer col-lg-4 col-12">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="my-tooltip" data-text="每個用戶基本分為 60 分，若被其他用戶檢舉一次扣 5 分，扣到 0 分為止。每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分 0~5 或 0~3 分(買家對賣家/賣家對買家)，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。">
-                  <i class="bi bi-question-circle text-secondary" style="cursor: pointer;"></i>
-                </div>
-                <h6 style="background-color: #abdad5; color: white; padding: 5px 7px; border-radius: 50px; margin-right: 5px;">信譽積分</h6>
-                <h6 id="rate1"></h6>
-              </div>
-            </div>
-          </div>
-          <!-- <div class="card col-lg-4 col-12">
-            <div class="card-body">
-              <div class="d-flex align-items-center mb-4">
-                <h6 style=" background-color: #51abff; color: white; padding: 5px 10px; border-radius: 50px; margin-right: 5px;">會員資格</h6>
-                <h6 id="membership1">尚未開放此功能，敬請期待</h6>
-              </div>
-              <p style="padding: 0px 10px;">如果尚未加入會員要顯示: </p>
-              <button class="btn btn-light" style="font-size: 1rem;">立即加入會員</button>
-            </div>
-          </div> -->
         </div>
         
-        <div class="cardContainer" style="border-radius: 20px !important;">
-          <div class="card-body" style="padding:20px 20px !important;">
-            <p style="font-size: 1.5rem; font-weight: 600;">個人資料更改區</p>
-            <div style="margin-top: 30px; margin-bottom: 30px;">
-              <div class="d-lg-flex align-items-end d-block" style="margin-bottom: 10px;">
-                <div>
-                  <label for="edit-image" class="form-label">大頭照
-                    <br><small class="text-muted">(照片大小需 ≤ 5MB，上傳格式限 png, jpg, jpeg, webp)</small>
-                  </label>
-                  <input class="form-control" type="file" id="photo" name="image" accept="image/png, image/jpg, image/jpeg, image/webp">
-                </div>
-                <div id="myAvatarPreview"></div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="validationTooltipUsername">暱稱</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="validationTooltipUsernamePrepend">@</span>
-                  </div>
-                  <input type="text" class="form-control" id="display-name" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend">
-                  <div class="invalid-tooltip">
-                    Please choose a unique and valid username.
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="exampleFormControlTextarea1">個人簡介</label>
-                <textarea class="form-control" id="bio" rows="3"></textarea>
-              </div>
-              <button class="updatebtn" id="update-profile">更新個人資料</button>
-              <span class="loader" id="loader1" style="display: none;"></span>
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header">
+            <i class="ti ti-user-edit"></i>
+            <span>個人資料更改</span>
+          </div>
+          <div class="profile-edit-body">
+
+            <!-- 大頭照 -->
+            <div class="sell-field">
+              <label class="sell-label">大頭照</label>
+              <small class="sell-hint">照片大小需 ≤ 5MB，格式限 png / jpg / jpeg / webp</small>
+              <label class="sell-upload-zone" for="photo">
+                <i class="ti ti-user-circle" style="font-size: 2rem; opacity: 0.6;"></i>
+                <span>點擊上傳大頭照</span>
+              </label>
+              <input class="d-none" type="file" id="photo" name="image" accept="image/png, image/jpg, image/jpeg, image/webp">
+              <div id="myAvatarPreview" class="sell-preview-single"></div>
             </div>
+
+            <!-- 暱稱 -->
+            <div class="sell-field">
+              <label for="display-name" class="sell-label">暱稱</label>
+              <div class="input-group">
+                <span class="input-group-text">@</span>
+                <input type="text" class="form-control" id="display-name" placeholder="Username">
+              </div>
+            </div>
+
+            <!-- 個人簡介 -->
+            <div class="sell-field">
+              <label for="bio" class="sell-label">個人簡介</label>
+              <textarea class="form-control" id="bio" rows="4" placeholder="簡單介紹一下自己..."></textarea>
+            </div>
+
+            <!-- 送出 -->
+            <div class="profile-edit-footer">
+              <span class="loader" id="loader1" style="display: none;"></span>
+              <button class="profile-submit-btn" id="update-profile">
+                <i class="ti ti-check"></i> 更新個人資料
+              </button>
+            </div>
+
           </div>
         </div>
-        <div class="review cardContainer mt-3">
-          <div class="card-body">
-            <h4>我的評價</h4>
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header">
+            <i class="ti ti-star"></i>
+            <span>我的評價</span>
+          </div>
+          <div class="profile-edit-body">
             <div id="reviewsContainer" class="d-flex flex-column">
-              <hr style="margin-top: 0px;">
               <!-- 評價卡片會動態生成在這裡 -->
               <div class="d-flex align-items-center">
                 <span style="font-size: 12px;">您購買/販賣的商品</span>
@@ -439,7 +450,7 @@
         <div class="d-lg-none mb-2 mt-1 d-flex align-items-start justify-content-center">
           <div class="photoAndScore d-flex flex-column justify-content-between align-items-center gap-2 col-3">
             <img id="mProfileAvatar" class="mobile-avatar" alt="頭像">
-            <div class="scorediv d-flex flex-column">
+            <div class="scorediv d-flex flex-column my-tooltip" data-text="每個用戶基本分為 60 分，若被其他用戶檢舉一次扣 5 分，扣到 0 分為止。每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分 0~5 或 0~3 分(買家對賣家/賣家對買家)，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。">
               <small>信譽積分</small>
               <span id="rate2"></span>
             </div>

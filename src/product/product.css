@@ -594,13 +594,13 @@
   white-space: nowrap;
 }
 .seller-action-primary {
-  background: #004b97;
-  color: #fff;
+  background: #abdad5;
+  color: #383838;
 }
 .seller-action-primary:hover { opacity: 0.85; }
 .seller-action-secondary {
-  background: #f0f7ff;
-  color: #004b97;
+  background: #abdad5;
+  color: #383838;
 }
 .seller-action-secondary:hover { background: #dfeeff; }
 .seller-action-report {
