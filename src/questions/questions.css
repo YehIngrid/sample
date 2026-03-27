@@ -1,9 +1,7 @@
-@import url(https://fonts.googleapis.com/css?family=Righteous);
 :root {
   --brand-color: #004b97;
 }
-/* 基本重置 */
-/* 啟用平滑滾動 */
+
 html {
   scroll-behavior: smooth;
 }
@@ -12,22 +10,16 @@ html, body {
   padding: 0;
 }
 *, *:before, *:after {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
-  position: relative;
-  }
-  body:before {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 0;
-    }
-/* 整體排版採用 Flex */
+}
+
+/* ── 整體排版 ── */
 .content {
   font-family: sans-serif;
   display: flex;
 }
-/* 側邊欄設定 */
+
+/* ── 側邊欄 ── */
 .content nav {
   background-color: transparent;
   color: #000;
@@ -36,232 +28,254 @@ html, body {
   padding-top: 10vh;
   position: sticky;
   top: 0;
-  height: 100vh; /* 讓側邊欄撐滿整個視窗高度 */
+  height: 100vh;
   overflow-y: auto;
 }
 .content nav ul {
   list-style: none !important;
+  padding: 0;
 }
 .content nav ul li {
   margin-bottom: 20px;
   transition: transform 0.3s;
 }
 .content nav ul li a {
-  color: #000;
+  color: #555;
   text-decoration: none;
   font-size: 0.9rem;
 }
-/* 當側邊欄 li 處於 active 狀態時放大並顯示小點 */
 .content nav ul li.active {
-  transform: scale(1.1);
+  transform: scale(1.08);
   font-weight: bold;
+}
+.content nav ul li.active a {
+  color: var(--brand-color);
 }
 .content nav ul li.active::before {
   content: '●';
-  color: black;
+  color: var(--brand-color);
   margin-right: 6px;
 }
-.mobileNav {
-    background-color: #fbfbfb;
-    margin: 0 auto !important;
-    padding: 5px 3vw !important;
+.content nav {
+  border-right: 2px solid #e0e8f0;
 }
-/* 主內容區 */
+
+.mobileNav {
+  background-color: #fbfbfb;
+  margin: 0 auto !important;
+  padding: 5px 3vw !important;
+}
+
+/* ── 主內容 ── */
 main {
   flex: 1;
   padding: 20px;
 }
-/* 每個內容區塊 */
+
+/* ── 大標題 FAQ ── */
+.content h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: #004b97;
+  display: inline-block;
+  padding: 8px 4px;
+  margin: 30px 50px 16px;
+  position: relative;
+}
+.content h1::after { display: none; }
+
+/* A. 螢光筆掃過 */
+@keyframes faqHighlight {
+  from { background-size: 0% 40%; }
+  to   { background-size: 100% 40%; }
+}
+.faq-anim-a {
+  background-image: linear-gradient(transparent 55%, #abdad5 55%);
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 0% 40%;
+  animation: faqHighlight 0.7s 0.3s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+
+/* B. 底線自己畫出來 */
+@keyframes faqUnderline {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+.faq-anim-b::after {
+  content: '';
+  display: block !important;
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: #abdad5;
+  width: 0;
+  animation: faqUnderline 0.6s 0.8s ease forwards;
+}
+
+/* C. 逐字跳入 */
+@keyframes faqLetterPop {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.85); }
+  70%  { transform: translateY(-3px) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.faq-anim-c .faq-letter {
+  display: inline-block;
+  opacity: 0;
+  animation: faqLetterPop 0.4s ease forwards;
+}
+.faq-anim-c .faq-letter:nth-child(1) { animation-delay: 0.1s; }
+.faq-anim-c .faq-letter:nth-child(2) { animation-delay: 0.22s; }
+.faq-anim-c .faq-letter:nth-child(3) { animation-delay: 0.34s; }
+
+/* D. Slide up + fade */
+@keyframes faqSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.faq-anim-d {
+  opacity: 0;
+  animation: faqSlideUp 0.55s 0.2s ease forwards;
+}
+
+/* ── 各 section ── */
 section {
-  margin-bottom: 20vh;
+  margin-bottom: 60px;
   padding: 20px;
-  background-color: transparent;
   padding-left: 4vw;
   padding-right: 4vw;
+  background-color: transparent;
 }
+
 section h2 {
-  margin-bottom: 10px;
-  background-color: hsla(230,40%,50%,1);
-  color: #fff;
-  font-size: 1.6rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--brand-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e8f0;
+}
+section h2::before {
+  content: '';
   display: inline-block;
-  padding: 6px 8px;
-  border-radius: 15px;
-  margin-bottom: 3vw;
-  
+  width: 5px;
+  height: 1.15em;
+  background: var(--brand-color);
+  border-radius: 3px;
+  flex-shrink: 0;
 }
-section ul{
+
+section ul {
   list-style: none;
-}
-section li{
-  font-size: 1.3rem;
-  font-weight: 500;
+  padding: 0;
 }
 
-.content h1{
-  font-size: 7rem;
-  padding-left: 50px;
-  padding-top: 30px;
-  padding-bottom: 20px;
-  color: #002346;
-  z-index: 1000;
-}
-.content nav{
-  border-right: 2px black dotted;
-}
-@media (max-width: 792px) {
-  .content nav ul li a {
-    color: #000;
-    text-decoration: none;
-    font-size: 1rem;
-  }
-  .content h1{
-    font-size: 5rem;
-   padding-left: 30px;
-    color: #002346;
-
-    z-index: 1000;
-  }
-  section {
-    margin-bottom: 100px;
-    padding: 20px;
-    background-color: transparent;
-    padding-left: 3vw;
-    padding-right: 3vw;
-  }
-}
-@media (max-width: 500px){
-  .content nav{
-    display: none;
-  }
-  .content h1{
-    font-size: 4rem;
-    color: #002346;
-  
-    z-index: 1000;
-  }
-  section {
-    margin-bottom: 100px;
-    padding: 20px;
-    background-color: transparent;
-    padding-left: 1vw;
-    padding-right: 1vw;
-  }
-}
-/* 按鈕樣式 */
+/* ── FAQ 列表 ── */
 .faq-list {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .faq-item {
-  border-bottom: 1px solid #ddd;
+  background: aliceblue;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+  overflow: hidden;
+}
+.faq-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,75,151,0.2);
 }
 
+/* ── 摺疊按鈕 ── */
 .collapsible {
   width: 100%;
   text-align: left;
-  background: none;
+  background: transparent;
   border: none;
-  padding: 12px 16px;
-  font-size: 16px;
+  padding: 14px 16px;
+  font-size: 0.95rem;
   font-weight: 600;
+  color: #222;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: color 0.2s;
 }
-
+.collapsible:hover {
+  color: var(--brand-color);
+}
 .collapsible:focus {
   outline: none;
-  background: #f9f9f9;
+}
+.collapsible.active {
+  color: var(--brand-color);
 }
 
 .icon {
   margin-left: 10px;
+  flex-shrink: 0;
   transition: transform 0.2s ease;
+  color: var(--brand-color);
+  font-size: 0.8rem;
 }
 
+/* ── 答案展開區 ── */
 .content-news {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
   padding: 0 16px;
-  font-size: 14px;
-  color: #333;
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.7;
 }
-
 .content-news.show {
-  max-height: 5000px; /* 足夠容納多張圖片的 FAQ */
-  padding: 12px 16px;
+  max-height: 5000px;
+  padding: 4px 16px 16px;
 }
 
-h1 {
-  display: inline-block;
-  color: white;
-  font-family: 'Righteous', serif;
-  font-size: 8em; 
-  text-shadow: .03em .03em 0 hsla(230,40%,50%,1);
-  }
-  h1:after {
-    content: attr(data-shadow);
-    position: absolute;
-    bottom: .01em; 
-    right: .06em;
-    z-index: -1;
-    text-shadow: none;
-    background-image:
-      linear-gradient(
-        45deg,
-        transparent 45%,
-        hsla(48,20%,90%,1) 45%,
-        hsla(48,20%,90%,1) 55%,
-        transparent 0
-        );
-    background-size: .05em .05em;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  
-    animation: shad-anim 15s linear infinite;
-    }
-
-@keyframes shad-anim {
-  0% {background-position: 0 0}
-  0% {background-position: 100% -100%}
-  }
+/* ── 步驟圖片 grid ── */
+.stepImg {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+@media (min-width: 768px) {
   .stepImg {
-    display: grid;
-    gap: 10px;
+    grid-template-columns: repeat(7, 1fr);
   }
-  
-  /* 電腦版：全部一排 */
-  @media (min-width: 768px) {
-    .stepImg {
-      grid-template-columns: repeat(7, 1fr); 
-    }
+}
+@media (max-width: 767px) {
+  .stepImg {
+    grid-template-columns: repeat(4, 1fr);
   }
-  
-  /* 手機版：四個一排 */
-  @media (max-width: 767px) {
-    .stepImg {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-  
-  .stepImg img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .stepImg img:hover {
-    transform: scale(1.05);
-  }
-  
-/* ── Wish step list ── */
+}
+.stepImg img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.stepImg img:hover {
+  transform: scale(1.05);
+}
+
+/* ── 步驟清單 ── */
 .ulstep {
   list-style: none;
   padding: 0;
@@ -275,71 +289,91 @@ h1 {
   align-items: center;
   gap: 18px;
   background: #fff;
-  border-radius: 14px;
-  padding: 18px 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  border-radius: 8px;
+  padding: 14px 18px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  border: 1px solid transparent;
+  transition: border 0.2s;
+}
+.listep:hover {
+  border: 1px solid rgba(0,75,151,0.15);
 }
 .step-badge {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
-  min-width: 64px;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
   border-radius: 50%;
-  background-color: var(--brand-color);
+  background: linear-gradient(135deg, var(--brand-color), rgb(36,182,133));
   color: #fff;
   flex-shrink: 0;
 }
 .step-label {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 600;
   line-height: 1;
   margin-bottom: 2px;
 }
 .step-num {
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: 700;
   line-height: 1;
 }
 .listep-content h3 {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--brand-color);
   margin: 0 0 4px;
 }
 .listep-content p {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   color: #555;
   margin: 0;
 }
 .step-arrow {
   text-align: center;
   color: var(--brand-color);
-  font-size: 1.1rem;
-  padding: 4px 0;
+  font-size: 1rem;
+  padding: 2px 0;
+  opacity: 0.5;
+}
+
+/* ── RWD ── */
+@media (max-width: 792px) {
+  .content nav ul li a { font-size: 1rem; }
+  section {
+    margin-bottom: 60px;
+    padding-left: 3vw;
+    padding-right: 3vw;
+  }
+}
+@media (max-width: 500px) {
+  .content nav { display: none; }
+  .content h1 {
+    font-size: 1.6rem;
+    margin: 20px 16px 12px;
+  }
+  section {
+    margin-bottom: 40px;
+    padding-left: 1vw;
+    padding-right: 1vw;
+  }
 }
 @media screen and (max-width: 768px) {
-  .ulstepdiv {
-      padding: 18px 14px;
-  }
+  .ulstepdiv { padding: 10px 8px; }
   .listep {
-      padding: 14px 16px;
-      gap: 14px;
+    padding: 12px 14px;
+    gap: 12px;
   }
   .step-badge {
-      width: 52px;
-      height: 52px;
-      min-width: 52px;
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
   }
-  .step-num {
-      font-size: 1.15rem;
-  }
-  .listep-content h3 {
-      font-size: 0.95rem;
-  }
-  .listep-content p {
-      font-size: 0.82rem;
-  }
+  .step-num { font-size: 1.05rem; }
+  .listep-content h3 { font-size: 0.88rem; }
+  .listep-content p { font-size: 0.8rem; }
 }

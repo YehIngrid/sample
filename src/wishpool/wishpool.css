@@ -603,23 +603,60 @@ body {
     justify-content: center;
     gap: 2px;
     text-decoration: none !important;
-    color: #888;
-    font-size: 0.68rem;
+    color: #b4b4b4;
+    font-size: 0.62rem;
     font-weight: 500;
     transition: color 0.15s;
     padding: 0 2px;
     -webkit-tap-highlight-color: transparent;
 }
-.wp-spa-item i {
-    font-size: 1.35rem;
-    line-height: 1;
+.wp-spa-item span {
+    font-size: 0.62rem !important;
+}
+.wp-tab-icon {
+    width: 24px;
+    height: 24px;
+}
+.wp-tab-active {
+    display: none;
+}
+.wp-spa-item.active .wp-tab-inactive {
+    display: none;
+}
+.wp-spa-item.active .wp-tab-active {
+    display: block;
 }
 .wp-spa-item.active {
     color: var(--brand-color);
 }
-.wp-spa-item.active i {
-    color: var(--brand-color);
+/* ── 選商品 modal (wc-grid) ── */
+.wc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 4px 2px;
 }
+.wc-card {
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+}
+.wc-card:hover { border-color: #abdad5; }
+.wc-card.selected { border-color: #004b97; box-shadow: 0 0 0 2px rgba(0,75,151,0.15); }
+.wc-card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+.wc-info { padding: 6px 8px; }
+.wc-name { font-size: 0.8rem; font-weight: 600; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wc-price { font-size: 0.78rem; color: #004b97; font-weight: 700; }
+.wc-stock { font-size: 0.72rem; color: #888; }
+@media (max-width: 600px) {
+    .wc-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* 在許願池頁隱藏原本的全站底部導覽列（由 wp-spa-nav 取代） */
 @media (max-width: 991px) {
     .bottom-nav { display: none !important; }

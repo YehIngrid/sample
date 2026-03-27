@@ -1,28 +1,31 @@
 .content{
-  /* background: linear-gradient(135deg, rgba(36, 182, 133, 0.4), #004b97aa); */
   height: 86vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: transparent;
 }
 .modalwhat{
-  background-color: #fff;
-  border-radius: 10px;
+  background-color: aliceblue;
+  border-radius: 8px;
   padding: 30px;
   min-width: 350px;
   z-index: 9000;
-  box-shadow: rgba(0,0,0,0.3)0 0 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,75,151,0.08);
 }
 .modalwhat button{
   width: 100%;
   padding: 10px;
   margin: 10px 0;
-  border: 1px solid #ccc;
+  border: none;
   background-color: #004b97;
   color: #fff;
   cursor: pointer;
   margin-top: 40px;
-  border-radius: 50px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
 }
 .modalwhat button:hover{
   background-color: rgb(36,182,133);
@@ -210,20 +213,18 @@ input::placeholder {
   height: 40px;
   color: #fff;
   padding: 5px 10px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
+  transition: background-color 0.2s ease;
   display: inline-block;
   outline: none;
-  border-radius: 5px;
+  border-radius: 8px;
   border: none;
-  background-size: 120% auto;
-  background-image: linear-gradient(315deg, #43cea2 0%, #185a9d 75%);
+  background-color: #004b97;
 }
 .css-button-gradient--4:hover {
-  background-position: right center;
+  background-color: rgb(36,182,133);
 }
 .css-button-gradient--4:active {
-  top: 2px;
+  opacity: 0.9;
 }

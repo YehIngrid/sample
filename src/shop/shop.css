@@ -880,6 +880,7 @@ ul{
 }
 .price {
   font-size: 1rem;
+  flex-shrink: 0;
 }
 .login{
   text-align: right;
@@ -2820,6 +2821,8 @@ html{ scroll-behavior:smooth; }
   align-items: center;
   gap: 5px;
   margin-top: 4px;
+  min-width: 0;
+  max-width: 55%;
 }
 .seller-avatar {
   width: 16px;
