@@ -318,6 +318,11 @@ html, body {
 .message-input-container .btn i {
     font-size: 1rem;
 }
+.in-iframe .container-fluid,
+.in-iframe .chat-main,
+.in-iframe .sidebar {
+    height: 100vh !important;
+}
 .else {
     width: 50%;
 }

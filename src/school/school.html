@@ -1,132 +1,185 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <title>校園攻略站 | 拾貨寶庫</title>
-    <!-- meta部分 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
+    <meta name="description" content="校園攻略站 — 中興大學同學的學習、生活、實習攻略平台"/>
     <meta property="og:title" content="校園攻略站 | 拾貨寶庫">
-    <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+    <meta property="og:description" content="分享你的校園智慧，幫助更多同學少走彎路。">
     <meta property="og:image" content="https://yourdomain.com/webP/treasurehub.webp">
-    <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-    <meta http-equiv="cache-control" content="max-age=0" />
-    <meta http-equiv="cache-control" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-    <meta http-equiv="pragma" content="no-cache" />
-    <!-- link部分 -->
-    <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
+    <meta name="keywords" content="校園攻略、中興大學、選課、實習、宿舍、二手"/>
     <link rel="shortcut icon" href="../treasurehubIcon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-    <link rel="stylesheet" href="school.css">
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <link rel="stylesheet" href="../default/default.css">
     <link rel="stylesheet" href="../default/default-font.css">
+    <link rel="stylesheet" href="school.css">
+    <script type="module" src="../default/default.js"></script>
 </head>
 <body>
-    <div id="mainContent">
-    <!-- TODO: 這是校園攻略站的首頁，請在此處添加相關內容。 -->
-    <div class="header">
-        <!-- 第一層：logo + 搜尋 + 登入 -->
-        <nav class="navbar navbar-light bg-light sticky-top">
-            <div class="container-fluid d-flex justify-content-between align-items-center">
-                <div class="left d-flex align-items-center">
-                    <!-- Logo 區 -->
-                    <a class="navbar-brand d-flex align-items-center" href="../newhome/newhome.html">
-                        <img src="../svg/treasurehubblack.svg" alt="treasure hub 校園攻略站" style="height: 24px;">
-                    </a>
-                    <!-- 搜尋按鈕 -->
-                    <form class="d-flex">
-                        <!-- <input class="form-control me-2" type="search" placeholder="搜尋商品" aria-label="Search"> -->
-                        <button class="btn" type="submit">
-                            <img src="../svg/searchiconblack.svg" alt="搜尋" style="height: 20px;">
-                        </button>
-                    </form>
-                </div>
-            <!-- 登入圖示 -->
-            <button class ="nav-link" id="createbtn">
-                <img src="../svg/createicon.svg" alt="開始創作">
+
+<!-- ── Navbar ── -->
+<div class="header">
+    <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgba(0,0,0,0.15); display: block !important;">
+        <div class="container-fluid d-flex align-items-center">
+            <button class="navbar-toggler d-lg-none me-2 order-0" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#schoolNavbarNav"
+                    aria-controls="schoolNavbarNav" aria-expanded="false">
+                <img src="../svg/navbar.svg" alt="選單" style="width:20px;">
             </button>
-            <a class="nav-link" href="../account/account.html" style="font-family: 'Zen Old Mincho';">
-                登入
+            <a class="navbar-brand order-1 me-3 d-flex align-items-center gap-2" href="../newhome/newhome.html">
+                <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫" style="width:100px;">
             </a>
-            
-            </div>
-        </nav>
+            <span class="school-nav-divider d-none d-lg-inline"></span>
+            <span class="school-nav-label d-none d-lg-inline">校園攻略站</span>
 
-        <!-- 第二層：主要導覽列（可折疊） -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-top border-bottom">
-            <div class="container-fluid">
-                <!-- 展開按鈕（手機版） -->
-                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <img src="../svg/navbar.svg" alt="選單" style="width:20px;">
+            <div class="d-none d-lg-flex order-2 ms-3">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" style="color:#383838;" href="../newhome/newhome.html">首頁</a></li>
+                    <li class="nav-item"><a class="nav-link school-nav-active" style="color:#004b97;font-weight:600;" href="school.html">校園攻略</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color:#383838;" href="../shop/shop.html">購物首頁</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color:#383838;" href="../commodity/commodity.html">購物商場</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color:#383838;" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+                </ul>
+            </div>
+
+            <div class="d-flex align-items-center ms-auto order-3 gap-2">
+                <button class="school-create-btn d-none d-lg-flex align-items-center gap-1" id="openOnboarding">
+                    <i class="ti ti-pencil-plus"></i> 開始創作
                 </button>
-                <!-- 導覽項目 -->
-                <div class="collapse navbar-collapse" id="mainNav">
-                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0" style="font-family: 'Zen Old Mincho'; color: #004b97;">
-                        <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
-                        <li class="nav-item"><a class="nav-link" href="../shop/shop.html">購物商場</a></li>
-                        <li class="nav-item"><a class="nav-link" href="introduce.html">關於我們</a></li>
-                        <li class="nav-item"><a class="nav-link" href="questions.html">常見問題</a></li>
-                        <li class="nav-item"><a class="nav-link" href="communication.html">客服諮詢</a></li>
-                    </ul>
+                <div class="login me-1">
+                    <a class="username" href="../person/person.html"></a>
+                    <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
                 </div>
-            </div>
-        </nav>
-    </div>
-    <!-- TODO: content -->
-    <div class="contentofschool"></div>
-    </div>
-
-    <div class="header finisher-header" style="width: 100%; height: 110vh; " id ="startCreate">
-        <main id="main" class="wrap" role="main" aria-labelledby="title">
-    <section class="card" aria-label="歡迎創作者">
-      <header class="hero">
-        <div class="badge" aria-hidden="true">CREATOR ONBOARDING</div>
-        <div class="typewriterbody">
-            <div class="typewriter">
-                <h1>🎉 歡迎來到校園攻略站創作平台！</h1>
+                <a class="nav-link ms-1 d-none d-lg-inline" href="../shoppingcart/shoppingcart.html">
+                    <img src="../svg/shoppingcart.svg" alt="購物車" style="width:22px;">
+                </a>
             </div>
         </div>
-        <p class="subtitle">在這裡，你的經驗與故事會成為同學們的寶貴資源。每一篇攻略，都是未來同學的指路燈。</p>
-      </header>
+        <div class="collapse mt-2 d-lg-none" id="schoolNavbarNav">
+            <ul class="navbar-nav mobileNav">
+                <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" href="school.html">校園攻略</a></li>
+                <li class="nav-item"><a class="nav-link" href="../shop/shop.html">購物首頁</a></li>
+                <li class="nav-item"><a class="nav-link" href="../commodity/commodity.html">購物商場</a></li>
+                <li class="nav-item"><a class="nav-link" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+                <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
 
-      <!-- 分享對話泡泡 -->
-      <ul class="bubbles" aria-label="同學分享片段">
-        <li class="bubble bubble--w1" style="--i:0">📚 「這門課怎麼選？攻略幫你分析！」</li>
-        <li class="bubble bubble--w2" style="--i:1">💡 「二手教科書這裡超省🔥」</li>
-        <li class="bubble bubble--w3" style="--i:2">🧭 「新生必看：校園踩雷地圖」</li>
-        <li class="bubble bubble--w4" style="--i:3">🚀 「實習面試心得一次看懂」</li>
-        <li class="bubble bubble--w2" style="--i:4">👜 「宿舍收納與生活小技巧」</li>
-        <li class="bubble bubble--w1" style="--i:5">🧾 「二手交易保護自己三步驟」</li>
-      </ul>
-
-      <!-- 創作小提醒 -->
-      <div class="tips" role="note" aria-label="創作小提醒">
-        <div>1️⃣ <b>選主題</b>：學習、生活、實習、交易心得…</div>
-        <div>2️⃣ <b>寫內容</b>：可加入圖片、連結讓資訊更清楚</div>
-        <div>3️⃣ <b>一鍵發布</b>：立刻幫助更多同學少踩坑</div>
-      </div>
-
-      <!-- 行動 -->
-      <div class="actions">
-        <button id="startBtn" class="btn btn-primary" aria-label="開始撰寫">好的，我準備好了 ✍️</button>
-        <button id="skipBtn" class="btn btn-ghost" aria-label="略過介紹">稍後再看</button>
-      </div>
-
-      <p class="footnote">點擊「好的，我準備好了」即可進入編輯器；或選擇「稍後再看」直接開始。</p>
-    </section>
-  </main>
-        
+<!-- ── Hero ── -->
+<div class="school-hero">
+    <div class="school-hero-inner container">
+        <div class="school-hero-text">
+            <div class="school-hero-badge"><i class="ti ti-book-2"></i> 校園攻略站</div>
+            <h1 class="school-hero-title">分享你的校園智慧</h1>
+            <p class="school-hero-sub">讓每一位同學少走彎路，把你的經驗變成別人的養分</p>
+            <div class="school-hero-tags">
+                <button class="school-hero-tag active" data-cat="all">全部</button>
+                <button class="school-hero-tag" data-cat="study">學習攻略</button>
+                <button class="school-hero-tag" data-cat="life">生活指南</button>
+                <button class="school-hero-tag" data-cat="career">實習求職</button>
+                <button class="school-hero-tag" data-cat="trade">二手交易</button>
+                <button class="school-hero-tag" data-cat="newbie">新生必看</button>
+            </div>
+        </div>
+        <div class="school-hero-art d-none d-md-block">
+            <img src="../svg/studybook.svg" alt="" class="school-hero-img" aria-hidden="true">
+        </div>
     </div>
+</div>
 
+<!-- ── Main Content ── -->
+<div class="container school-content py-4">
+    <div class="row g-4">
+
+        <!-- ── Left: Article feed ── -->
+        <div class="col-lg-8">
+
+            <!-- Filter row -->
+            <div class="school-filter-row d-flex align-items-center justify-content-between mb-3">
+                <div class="school-sort-tabs d-flex gap-2">
+                    <button class="school-sort-tab active" data-sort="latest">
+                        <i class="ti ti-clock me-1"></i>最新
+                    </button>
+                    <button class="school-sort-tab" data-sort="hot">
+                        <i class="ti ti-flame me-1"></i>熱門
+                    </button>
+                </div>
+                <span class="school-result-count text-muted small" id="resultCount"></span>
+            </div>
+
+            <!-- Featured card -->
+            <div class="school-featured-wrap mb-3" id="featuredWrap"></div>
+
+            <!-- Article list -->
+            <div class="school-article-list" id="articleList"></div>
+
+            <!-- Load more -->
+            <div class="text-center mt-4 mb-2" id="loadMoreWrap" style="display:none!important;">
+                <button class="school-loadmore-btn" id="loadMoreBtn">載入更多</button>
+            </div>
+
+            <!-- Empty state -->
+            <div class="school-empty d-none" id="emptyState">
+                <img src="../svg/noschoolbook.svg" alt="沒有文章" style="width:80px;opacity:.5;">
+                <p class="mt-3 text-muted">目前還沒有這個分類的文章</p>
+                <button class="school-create-btn-sm" id="emptyCreateBtn">成為第一個分享者</button>
+            </div>
+        </div>
+
+        <!-- ── Right: Sidebar ── -->
+        <div class="col-lg-4">
+
+            <!-- Create CTA -->
+            <div class="school-create-card mb-4">
+                <div class="school-create-card-inner">
+                    <img src="../svg/newarticle.svg" alt="" class="school-create-icon" aria-hidden="true">
+                    <h3 class="school-create-title">開始創作</h3>
+                    <p class="school-create-desc">把你的攻略分享給更多同學，一起打造最強校園知識庫</p>
+                    <button class="school-create-cta-btn w-100" id="sidebarCreateBtn">
+                        <i class="ti ti-pencil-plus me-1"></i>寫一篇攻略
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hot tags -->
+            <div class="school-sidebar-card mb-4">
+                <div class="school-sidebar-header">
+                    <i class="ti ti-hash"></i> 熱門標籤
+                </div>
+                <div class="school-tag-cloud" id="tagCloud"></div>
+            </div>
+
+            <!-- Popular authors -->
+            <div class="school-sidebar-card mb-4">
+                <div class="school-sidebar-header">
+                    <i class="ti ti-user-star"></i> 活躍創作者
+                </div>
+                <div class="school-author-list" id="authorList"></div>
+            </div>
+
+            <!-- School platform intro -->
+            <div class="school-sidebar-card school-intro-card">
+                <div class="school-sidebar-header">
+                    <i class="ti ti-info-circle"></i> 關於校園攻略站
+                </div>
+                <p class="school-intro-text">校園攻略站是拾貨寶庫推出的知識分享平台，讓中興大學同學互相分享學習、生活與實習心得。</p>
+                <div class="school-intro-stats d-flex gap-3 mt-2">
+                    <div class="school-stat"><span class="school-stat-num" id="totalArticles">—</span><span class="school-stat-label">篇攻略</span></div>
+                    <div class="school-stat"><span class="school-stat-num" id="totalAuthors">—</span><span class="school-stat-label">位創作者</span></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ── Footer ── -->
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-col footer-brand">
@@ -134,26 +187,24 @@
       <p class="footer-tagline">專為大學生打造的校園二手拍賣市集</p>
     </div>
     <div class="footer-links-row">
-
-    <div class="footer-col">
-      <h4 class="footer-heading">快速連結</h4>
-      <ul class="footer-links">
-        <li><a href="../newhome/newhome.html">首頁</a></li>
-        <li><a href="../shop/shop.html">購物首頁</a></li>
-        <li><a href="../commodity/commodity.html">購物商場</a></li>
-        <li><a href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4 class="footer-heading">幫助中心</h4>
-      <ul class="footer-links">
-        <li><a href="../questions/questions.html">常見問題</a></li>
-        <li><a href="../communication/communication.html">客服諮詢</a></li>
-        <li><a href="../policy/policy.html">隱私政策</a></li>
-        <li><a href="#">使用條款</a></li>
-      </ul>
-    </div>
-
+      <div class="footer-col">
+        <h4 class="footer-heading">快速連結</h4>
+        <ul class="footer-links">
+          <li><a href="../newhome/newhome.html">首頁</a></li>
+          <li><a href="school.html">校園攻略站</a></li>
+          <li><a href="../shop/shop.html">購物首頁</a></li>
+          <li><a href="../commodity/commodity.html">購物商場</a></li>
+          <li><a href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-heading">幫助中心</h4>
+        <ul class="footer-links">
+          <li><a href="../questions/questions.html">常見問題</a></li>
+          <li><a href="../communication/communication.html">客服諮詢</a></li>
+          <li><a href="../policy/policy.html">隱私政策</a></li>
+        </ul>
+      </div>
     </div>
     <div class="footer-col">
       <h4 class="footer-heading">聯絡我們</h4>
@@ -168,9 +219,70 @@
     <span>Copyright &copy; 2025 拾貨寶庫｜All Rights Reserved.</span>
   </div>
 </footer>
-    <!-- TODO script -->
-    <script src="../finisher-header.es5.min.js" type="text/javascript"></script>
-    <script src="school.js"></script>
-    
+
+<!-- ── Creator Onboarding Modal ── -->
+<div class="modal fade" id="onboardingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content school-onboarding-modal">
+            <button type="button" class="btn-close school-onboarding-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+            <div class="school-onboarding-hero finisher-header" id="onboardingHero">
+                <div class="school-onboarding-badge">CREATOR ONBOARDING</div>
+                <h2 class="school-onboarding-title">歡迎來到校園攻略站 ✍️</h2>
+                <p class="school-onboarding-sub">你的經驗與故事，將成為同學們的寶貴資源</p>
+            </div>
+            <div class="school-onboarding-body">
+                <ul class="school-bubbles">
+                    <li class="school-bubble" style="--i:0">📚 「這門課怎麼選？攻略幫你分析！」</li>
+                    <li class="school-bubble" style="--i:1">💡 「二手教科書超省錢攻略🔥」</li>
+                    <li class="school-bubble" style="--i:2">🧭 「新生必看：校園踩雷地圖」</li>
+                    <li class="school-bubble" style="--i:3">🚀 「實習面試心得一次看懂」</li>
+                </ul>
+                <div class="school-onboarding-steps">
+                    <div class="school-step"><span class="school-step-num">1</span><div><b>選主題</b><p>學習、生活、實習、交易心得…</p></div></div>
+                    <div class="school-step"><span class="school-step-num">2</span><div><b>寫內容</b><p>可加入圖片、連結讓資訊更清楚</p></div></div>
+                    <div class="school-step"><span class="school-step-num">3</span><div><b>一鍵發布</b><p>立刻幫助更多同學少踩坑</p></div></div>
+                </div>
+                <div class="d-flex gap-2 justify-content-center mt-3">
+                    <button class="school-create-cta-btn px-4" id="goWriteBtn">好的，我準備好了 ✍️</button>
+                    <button class="school-ghost-btn" data-bs-dismiss="modal">稍後再看</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Bottom nav (mobile) ── -->
+<script>if(window !== window.parent) document.write('<style>#schoolBottomNav{display:none!important}</style>');</script>
+<nav class="bottom-nav" id="schoolBottomNav">
+    <a href="../shop/shop.html" class="bottom-nav-item nav-tab-home">
+        <img class="nav-icon nav-icon-active" src="../svg/Homekey.svg" alt="購物首頁">
+        <img class="nav-icon nav-icon-inactive" src="../svg/Homekeynotactive.svg" alt="購物首頁">
+        <span>購物首頁</span>
+    </a>
+    <a href="../commodity/commodity.html" class="bottom-nav-item nav-tab-market">
+        <img class="nav-icon nav-icon-active" src="../svg/commoditypage.svg" alt="購物商場">
+        <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="購物商場">
+        <span>購物商場</span>
+    </a>
+    <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-tab-chat">
+        <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="聊天室">
+        <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="聊天室">
+        <span>聊天室</span>
+    </a>
+    <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item nav-tab-cart">
+        <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="購物車">
+        <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="購物車">
+        <span>購物車</span>
+    </a>
+    <a href="../person/person.html" class="bottom-nav-item nav-tab-account">
+        <img class="nav-icon nav-icon-active" src="../webP/default-avatar.webp" alt="我的帳戶">
+        <img class="nav-icon nav-icon-inactive" src="../svg/default-avatarnotactive.svg" alt="我的帳戶">
+        <span>我的帳戶</span>
+    </a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../finisher-header.es5.min.js" type="text/javascript"></script>
+<script src="school.js"></script>
 </body>
 </html>

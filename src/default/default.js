@@ -96,6 +96,10 @@ async function renderAuthUI() {
       document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.remove('d-none'));
       document.querySelectorAll('.nav-user-menu-header').forEach(el => el.classList.remove('d-none'));
 
+      // 下拉選單 header 顯示姓名
+      const userName = localStorage.getItem('username') || '';
+      document.querySelectorAll('.nav-menu-name').forEach(el => { el.textContent = userName; });
+
       // Session keep-alive：每 5 分鐘 ping 一次，避免 cookie session 過期
       setInterval(async () => {
         try { await backendService.whoami(); } catch (_) {}

@@ -98,7 +98,7 @@ border: 1.5px solid #fff
     height: 40px;
     fill: #fff; /* 你的主題色 */
 }
-#hero{ position:relative; min-height:320px; overflow: hidden; }
+#hero{ position:relative; min-height:320px; overflow: hidden; background-color: transparent !important; }
 
 @keyframes float {
     0%, 100% {
@@ -116,11 +116,19 @@ border: 1.5px solid #fff
     position: sticky;
     top: 0;
     z-index: 1000;
+    background: transparent !important;
+}
+.titlepage .nav-link,
+.titlepage .nav-link.active {
+    color: rgba(255,255,255,0.9) !important;
+}
+.titlepage .nav-link:hover {
+    color: #abdad5 !important;
 }
 .lang-toggle-btn {
     background: transparent;
-    border: 1.5px solid #004b97;
-    color: #004b97;
+    border: 1.5px solid rgba(255,255,255,0.8);
+    color: #fff;
     border-radius: 50px;
     padding: 4px 14px;
     font-size: 0.82rem;
@@ -132,7 +140,7 @@ border: 1.5px solid #fff
     flex-shrink: 0;
 }
 .lang-toggle-btn:hover {
-    background: #004b97;
+    background: rgba(255,255,255,0.2);
     color: #fff;
 }
 .picture {
@@ -929,7 +937,7 @@ right: 0;
     margin-top: 2rem;
 }
 .team-member-card {
-    background: #fff;
+    background: aliceblue;
     border-radius: 20px;
     padding: 1.8rem 1rem 1.6rem;
     text-align: center;
@@ -953,7 +961,7 @@ right: 0;
 }
 .team-role-badge {
     display: inline-block;
-    background: rgba(0, 75, 151, 0.08);
+    background: #abdad5;
     color: #004b97;
     font-size: 0.75rem;
     font-weight: 600;

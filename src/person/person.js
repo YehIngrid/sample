@@ -4,7 +4,6 @@ import wpBackendService from '../wpBackendService.js';
 
 let backendService;
 let chatService;
-let chatInnerWin; // 用於存放 iframe 的 window 物件
 let goodsOrder;
 const MY_ITEMS_LIMIT = 10;
 let myItemsPage = 1;
@@ -490,6 +489,7 @@ async function handleRouting() {
     sellTable.style.display = 'none';
     sellTableTitle.style.display = 'none';
     document.getElementById('sellFilter')?.classList.add('d-none');
+    document.getElementById('sellPagination')?.classList.add('d-none');
     getDetail(orderId);
     return;
   }
@@ -502,6 +502,7 @@ async function handleRouting() {
     buyTable.style.display = 'none';
     buyTableTitle.style.display = 'none';
     document.getElementById('buyFilter')?.classList.add('d-none');
+    document.getElementById('buyPagination')?.classList.add('d-none');
     getDetail(orderId);
     return;
   }
@@ -643,30 +644,6 @@ document.addEventListener('DOMContentLoaded', () => {
     handleRouting();
   };
 
-  const iframe = document.getElementById('talkInterface');
-  if (iframe) {
-  iframe.src = '../chatroom/chatroom.html';
-// 必須等待 iframe 載入完成
-  iframe.addEventListener('load', () => {
-      try {
-          // 取得 iframe 內部的 document
-          const innerDoc = iframe.contentDocument;
-          chatInnerWin = iframe.contentWindow;
-          // 抓取裡面的元素，例如一個 ID 為 "message-input" 的輸入框
-          const element = innerDoc.getElementById('chatList');
-          console.log('抓到的元素：', element);
-          //element.value = "從外部設定的文字";
-      } catch (e) {
-          console.error("無法存取：可能跨網域或尚未完全載入", e);
-      }
-
-      // 手機版：若從其他頁帶入 ?chatWith=<userId>，自動開啟與該用戶的聊天
-      const chatWithId = new URLSearchParams(window.location.search).get('chatWith');
-      if (chatWithId) {
-          openChatWithTarget(chatWithId);
-      }
-  });
-  } // end if (iframe)
 });
 
 // ===== 工具 =====
@@ -745,6 +722,7 @@ function renderBuyerOrders(list) {
               <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
               <div>訂單詳情</div>
             </button>
+            ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
           </div>
         </td>
       </tr>
@@ -787,6 +765,7 @@ function renderSellerOrders(list) {
               <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
               <div>訂單詳情</div>
             </button>
+            ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
           </div>
         </td>
       </tr>
@@ -957,6 +936,7 @@ function renderSellerCards(list = []) {
                 <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
                 <div>訂單詳情</div>
               </button>
+              ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
             </div>
           </div>
         </div>
@@ -1005,6 +985,7 @@ function renderBuyerCards(list = []) {
                 <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
                 <div>訂單詳情</div>
               </button>
+              ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
             </div>
           </div>
         </div>
@@ -1079,7 +1060,7 @@ async function getDetail(id) {
         </div>
         <li style="text-align:end;">
           <span class="orderstyle">總計</span>
-          <span style="font-weight:600;color:var(--brand-color)">
+          <span style="font-weight:600;color:#004b97">
             ${data.totalAmount}
           </span> 元
         </li>
@@ -1643,37 +1624,13 @@ if (disableAccountBtn) {
     }
   });
 }
-const chatopen = document.getElementById('chaticon');
-const chatclose = document.getElementById('closechat');
-const talkInterface = document.getElementById('talkInterface');
-chatopen?.addEventListener('click', function(e){
-    toggleChatInterface();
-})
-
-async function openCloseChatInterface() {
-  if(await canEnterChat()) {
-    if (talkInterface.style.display === 'none' || talkInterface.style.display === '') {
-        talkInterface.style.display = 'block'; 
-    }
-  } else {
-    talkInterface.style.display = 'none';
-  }
-}
 
 async function openChatWithTarget(targetUserId) {
   if (!targetUserId) {
     return Swal.fire({ icon: 'warning', title: '缺少userid' });
   }
-
-  openCloseChatInterface();
-  chatService = new ChatBackendService();
-
-  try {
-    chatInnerWin.openChatWithTarget(targetUserId);
-  } catch (err) {
-    console.error(err);
-    Swal.fire({ icon: 'error', title: '無法建立聊天室' });
-  }
+  sessionStorage.setItem('chatroomReturnUrl', window.location.href);
+  window.location.href = `../chatroom/chatroom.html?openChat=${targetUserId}`;
 }
 // TODO 評價UI
 async function openReviewModal(orderId, targetId, targetRole) {

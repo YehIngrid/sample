@@ -2621,14 +2621,14 @@ html{ scroll-behavior:smooth; }
     bottom:90px;
     right:30px;
     width:330px;
-    max-height:550px;
+    height:550px;
     border-radius:10px;
     box-shadow:0 4px 16px rgba(0,0,0,0.3);
     background-color:#fff;
     display:none;
-    flex-direction:column;
     overflow:hidden;
     z-index:10000;
+    border:none;
 }
 .wisher img {
   width: 27px;

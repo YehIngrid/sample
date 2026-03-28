@@ -779,10 +779,11 @@ class ChatRoomList {
             container.scrollTop = container.scrollHeight;
             return;
         }
-        const el = container.querySelector(`[data-message-id="${firstUnread.id}"]`);
-        if (el) {
-            // 用相對偏移量直接設定 scrollTop，避免 scrollIntoView 同時捲動 window
-            const offset = el.getBoundingClientRect().top - container.getBoundingClientRect().top;
+        // 優先捲到 divider，讓「以下為未讀訊息」標記可見
+        const divider = container.querySelector('.unread-divider');
+        const target = divider || container.querySelector(`[data-message-id="${firstUnread.id}"]`);
+        if (target) {
+            const offset = target.getBoundingClientRect().top - container.getBoundingClientRect().top;
             container.scrollTop += offset;
         } else {
             container.scrollTop = container.scrollHeight;
@@ -1155,11 +1156,17 @@ window.addEventListener('load', () => {
     // 通知父頁面 iframe 已準備好
     if (window.parent !== window) {
         window.parent.postMessage({ type: 'chatReady' }, '*');
+        document.body.classList.add('in-iframe');
     }
     // 如果有在 ready 前就收到的 pending 請求，立刻執行
     if (_pendingSellerId) {
         openChatWithTarget(_pendingSellerId);
         _pendingSellerId = null;
+    }
+    // 讀取 URL 參數，自動開啟與指定用戶的聊天（手機版跳轉時使用）
+    const openChatId = new URLSearchParams(window.location.search).get('openChat');
+    if (openChatId) {
+        openChatWithTarget(openChatId);
     }
 });
 

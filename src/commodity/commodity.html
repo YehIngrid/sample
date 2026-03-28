@@ -78,11 +78,30 @@
             </nav>
             
             <div class="container-fluid1 d-lg-none">
-            <!-- 手機版搜尋欄（點擊開啟 offcanvas） -->
+            <!-- 手機版搜尋欄 -->
             <div class="d-flex align-items-center" style="position:relative;">
                 <div class="search-input-wrap w-100" style="position:relative;">
                     <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-                    <input class="form-control" type="search" placeholder="搜尋商品..." id="searchTriggerMobile" autocomplete="off" readonly>
+                    <input class="form-control" type="search" placeholder="搜尋商品..." id="searchTriggerMobile" autocomplete="off">
+                    <button class="search-clear-btn" id="searchClearBtnMobile" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
+                    <!-- 手機版搜尋下拉面板 -->
+                    <div id="searchDropdownMobile" class="search-dropdown" style="display:none!important;">
+                      <div class="search-drop-section">
+                        <div class="search-drop-header">
+                          <span>搜尋紀錄</span>
+                          <button type="button" id="mobileClearHistory">清除全部</button>
+                        </div>
+                        <ul id="mobileHistoryList" class="search-drop-list"></ul>
+                      </div>
+                      <div class="search-drop-section">
+                        <div class="search-drop-header">
+                          <span><i class="fa-solid fa-fire" style="color:#ff6b35;margin-right:4px;"></i>大家都在搜</span>
+                        </div>
+                        <ul id="mobileTrendList" class="search-drop-list search-drop-trend">
+                          <li class="search-drop-empty">暫無資料</li>
+                        </ul>
+                      </div>
+                    </div>
                 </div>
             </div>
             <div class="collapse navbar-collapse mt-2" id="navbarNav">
@@ -127,7 +146,7 @@
                         <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
                         <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
                         <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
-                        <div id="searchDropdown" class="search-dropdown d-none d-lg-block" style="display:none!important;">
+                        <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
                             <div class="search-drop-section" id="desktopHistorySection">
                                 <div class="search-drop-header">
                                     <span>搜尋紀錄</span>
@@ -166,7 +185,7 @@
                                 <li class="nav-user-menu-header d-none">
                                     <div class="nav-menu-profile">
                                         <img class="nav-user-avatar-sm" src="../image/default-avatar.png" alt="頭像">
-                                        <span class="username nav-menu-name"></span>
+                                        <span class="nav-menu-name"></span>
                                     </div>
                                     <hr class="dropdown-divider my-1">
                                 </li>
@@ -292,28 +311,27 @@
     </div>
     <!-- 底部導航 (手機版) -->
     <nav class="bottom-nav">
-      <a href="../shop/shop.html" class="bottom-nav-item">
+      <a href="../shop/shop.html" class="bottom-nav-item nav-tab-home">
         <img class="nav-icon nav-icon-active" src="../svg/Homekey.svg" alt="正在購物首頁">
         <img class="nav-icon nav-icon-inactive" src="../svg/Homekeynotactive.svg" alt="點選進入購物首頁">
         <span>購物首頁</span>
       </a>
-      <a href="../commodity/commodity.html" class="bottom-nav-item active">
+      <a href="../commodity/commodity.html" class="bottom-nav-item nav-tab-market active">
         <img class="nav-icon nav-icon-active" src="../svg/commoditypage.svg" alt="正在購物商場">
         <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="點選進入購物商場">
         <span>購物商場</span>
       </a>
-      <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-center">
-        <div class="nav-center-circle">
-          <img class="nav-icon" src="../svg/chaticonmobile.svg" alt="聊天室">
-        </div>
+      <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-tab-chat">
+        <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="正在聊天室">
+        <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="前往聊天室">
         <span>聊天室</span>
       </a>
-      <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
+      <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item nav-tab-cart">
         <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="正在購物車頁">
         <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="點選進入購物車頁">
         <span>購物車</span>
       </a>
-      <a href="../person/person.html" class="bottom-nav-item">
+      <a href="../person/person.html" class="bottom-nav-item nav-tab-account">
         <img class="nav-icon nav-icon-active" src="../webP/default-avatar.webp" alt="正在我的帳戶">
         <img class="nav-icon nav-icon-inactive" src="../svg/default-avatarnotactive.svg" alt="點選進入我的帳戶">
         <span>我的帳戶</span>
@@ -374,22 +392,22 @@
     let h = getHistory().filter(t => t !== term);
     h.unshift(term);
     saveHistory(h);
-    renderMobileHistory();
+    renderMobileDropdownHistory();
     renderDesktopHistory();
   }
 
-  // ── 手機 offcanvas 搜尋紀錄 ──
-  function renderMobileHistory() {
-    const list = document.getElementById('searchHistoryList');
+  // ── 手機 dropdown 搜尋紀錄 ──
+  function renderMobileDropdownHistory() {
+    const list = document.getElementById('mobileHistoryList');
     if (!list) return;
-    const h = getHistory();
+    const h = getHistory().slice(0, 5);
     list.innerHTML = h.length
       ? h.map(t => {
           const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');
-          return `<li class="search-drop-item" onclick="window._pickMobile('${safe}')">
+          return `<li class="search-drop-item" onclick="window._pickMobileDD('${safe}')">
             <i class="fa-regular fa-clock search-drop-icon"></i>
             <span class="search-drop-text">${t.replace(/</g,'&lt;')}</span>
-            <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillMobile('${safe}')">↗</button>
+            <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillMobileDD('${safe}')">↗</button>
             <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','mobile')"><i class="fa-solid fa-xmark"></i></button>
           </li>`;
         }).join('')
@@ -400,7 +418,7 @@
   function renderDesktopHistory() {
     const list = document.getElementById('desktopHistoryList');
     if (!list) return;
-    const h = getHistory();
+    const h = getHistory().slice(0, 5);
     if (!h.length) {
       list.innerHTML = '<li class="search-drop-empty">尚無搜尋紀錄</li>';
     } else {
@@ -418,7 +436,7 @@
 
   window._removeHistory = function (term, src) {
     saveHistory(getHistory().filter(t => t !== term));
-    renderMobileHistory();
+    renderMobileDropdownHistory();
     renderDesktopHistory();
   };
 
@@ -444,27 +462,24 @@
     }
   };
 
-  // 點擊文字 → 直接搜尋（手機版）
-  window._pickMobile = function (term) {
-    const ocInput = document.getElementById('searchInputOC');
+  // 點擊文字 → 直接搜尋（手機 dropdown）
+  window._pickMobileDD = function (term) {
     const mainInput = document.getElementById('searchInput');
     const mobileTrigger = document.getElementById('searchTriggerMobile');
-    if (!ocInput) return;
     addSearchHistory(term);
-    const bsOC = bootstrap.Offcanvas.getInstance(document.getElementById('searchOffcanvas'));
-    if (bsOC) bsOC.hide();
+    closeMobileDropdown();
     if (mainInput) mainInput.value = term;
     if (mobileTrigger) mobileTrigger.value = term;
     document.getElementById('searchForm').dispatchEvent(new Event('submit'));
   };
 
-  // 點擊 ↗ → 只填入 input，不搜尋（手機版）
-  window._fillMobile = function (term) {
-    const ocInput = document.getElementById('searchInputOC');
-    if (ocInput) {
-      ocInput.value = term;
-      ocInput.focus();
-      updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
+  // 點擊 ↗ → 只填入 input，不搜尋（手機 dropdown）
+  window._fillMobileDD = function (term) {
+    const mobileTrigger = document.getElementById('searchTriggerMobile');
+    if (mobileTrigger) {
+      mobileTrigger.value = term;
+      mobileTrigger.focus();
+      updateClearBtn(mobileTrigger, document.getElementById('searchClearBtnMobile'));
     }
   };
 
@@ -472,11 +487,36 @@
     if (btn) btn.classList.toggle('visible', input.value.length > 0);
   }
 
+  // ── 熱門搜尋（API 還沒好時顯示 fallback） ──
+  const FALLBACK_TRENDS = ['課本', '腳踏車', '桌椅', '電風扇', '書包', '鍋碗瓢盆', '床單被套', '耳機'];
+  let _trendsLoaded = false;
+  async function renderTrending() {
+    if (_trendsLoaded) return;
+    let terms = [];
+    try {
+      // TODO: const res = await axios.get('https://thpr.hlc23.dev/api/search/trending'); terms = res.data;
+    } catch (e) {}
+    if (!terms.length) terms = FALLBACK_TRENDS;
+    _trendsLoaded = true;
+    const makeHtml = (handler) => terms.map((t, i) => {
+      const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');
+      return `<li class="search-drop-item" onclick="window.${handler}('${safe}')">
+        <span class="search-drop-rank">${i + 1}</span>
+        <span class="search-drop-text">${t.replace(/</g, '&lt;')}</span>
+      </li>`;
+    }).join('');
+    const desk = document.getElementById('desktopTrendList');
+    if (desk) desk.innerHTML = makeHtml('_pickHistory');
+    const mob = document.getElementById('mobileTrendList');
+    if (mob) mob.innerHTML = makeHtml('_pickMobileDD');
+  }
+
   // ── 電腦 dropdown 顯示/隱藏 ──
   function openDropdown() {
     const dd = document.getElementById('searchDropdown');
     if (!dd) return;
     renderDesktopHistory();
+    renderTrending();
     dd.style.removeProperty('display');
     dd.classList.add('active');
   }
@@ -486,52 +526,63 @@
     dd.classList.remove('active');
   }
 
+  // ── 手機 dropdown 顯示/隱藏 ──
+  function openMobileDropdown() {
+    const dd = document.getElementById('searchDropdownMobile');
+    if (!dd) return;
+    renderMobileDropdownHistory();
+    renderTrending();
+    dd.style.removeProperty('display');
+    dd.classList.add('active');
+  }
+  function closeMobileDropdown() {
+    const dd = document.getElementById('searchDropdownMobile');
+    if (!dd) return;
+    dd.classList.remove('active');
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     const mainInput     = document.getElementById('searchInput');
-    const ocInput       = document.getElementById('searchInputOC');
-    const ocEl          = document.getElementById('searchOffcanvas');
     const dropdown      = document.getElementById('searchDropdown');
     const mobileTrigger = document.getElementById('searchTriggerMobile');
+    const mobileDD      = document.getElementById('searchDropdownMobile');
 
-    // ── 手機觸發按鈕 → 開 offcanvas ──
-    if (ocEl && mobileTrigger) {
-      const bsOC = new bootstrap.Offcanvas(ocEl, { scroll: true, backdrop: true });
-      mobileTrigger.addEventListener('focus', function () {
-        mobileTrigger.blur();
-        bsOC.show();
+    // ── 手機搜尋欄 → dropdown ──
+    if (mobileTrigger) {
+      mobileTrigger.addEventListener('focus', openMobileDropdown);
+      mobileTrigger.addEventListener('input', function () {
+        updateClearBtn(mobileTrigger, document.getElementById('searchClearBtnMobile'));
+        if (!mobileTrigger.value.trim()) openMobileDropdown();
       });
-      mobileTrigger.addEventListener('click', function () {
-        bsOC.show();
-        if (ocInput) ocInput.focus();
-      });
-      ocEl.addEventListener('shown.bs.offcanvas', function () {
-        ocInput && ocInput.focus();
-      });
-      ocEl.addEventListener('show.bs.offcanvas', function () {
-        renderMobileHistory();
-        if (ocInput) {
-          ocInput.value = mobileTrigger ? mobileTrigger.value : '';
-          updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
+      mobileTrigger.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          const val = mobileTrigger.value.trim();
+          if (val) addSearchHistory(val);
+          closeMobileDropdown();
+          if (mainInput) mainInput.value = val;
+          document.getElementById('searchForm').dispatchEvent(new Event('submit'));
         }
       });
-      if (ocInput) {
-        ocInput.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter') {
-            const val = ocInput.value.trim();
-            if (!val) return;
-            addSearchHistory(val);
-            bsOC.hide();
-            if (mainInput) mainInput.value = val;
-            if (mobileTrigger) mobileTrigger.value = val;
-            document.getElementById('searchForm').dispatchEvent(new Event('submit'));
-          }
-        });
-        ocInput.addEventListener('input', function () {
-          updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
-        });
-      }
-      document.getElementById('clearHistoryBtn')?.addEventListener('click', function () {
-        saveHistory([]); renderMobileHistory();
+      document.addEventListener('mousedown', function (e) {
+        if (mobileDD && !mobileDD.contains(e.target) && e.target !== mobileTrigger) {
+          closeMobileDropdown();
+        }
+      });
+      document.addEventListener('touchstart', function (e) {
+        if (mobileDD && !mobileDD.contains(e.target) && e.target !== mobileTrigger) {
+          closeMobileDropdown();
+        }
+      }, { passive: true });
+      document.getElementById('searchClearBtnMobile')?.addEventListener('click', function () {
+        mobileTrigger.value = '';
+        if (mainInput) mainInput.value = '';
+        mobileTrigger.focus();
+        updateClearBtn(mobileTrigger, this);
+        openMobileDropdown();
+        document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+      });
+      document.getElementById('mobileClearHistory')?.addEventListener('click', function () {
+        saveHistory([]); renderMobileDropdownHistory();
       });
     }
 
@@ -560,16 +611,12 @@
         mainInput.focus();
         updateClearBtn(mainInput, this);
         openDropdown();
+        document.getElementById('searchForm').dispatchEvent(new Event('submit'));
       });
       document.getElementById('desktopClearHistory')?.addEventListener('click', function () {
         saveHistory([]); renderDesktopHistory();
       });
     }
-
-    document.getElementById('searchClearBtnOC')?.addEventListener('click', function () {
-      if (ocInput) { ocInput.value = ''; ocInput.focus(); }
-      updateClearBtn(ocInput, this);
-    });
   });
 })();
 </script>

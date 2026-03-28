@@ -1,220 +1,659 @@
-.navbar {
-    --bs-navbar-padding-y: 0rem;
+/* ── School 全域變數 ── */
+:root {
+  --school-brand:   #004b97;
+  --school-green:   rgb(36, 182, 133);
+  --school-accent:  #abdad5;
+  --school-card-bg: aliceblue;
+  --school-radius:  8px;
+  --school-shadow:  0 1px 4px rgba(0,0,0,0.1);
+  --school-shadow-hover: 0 8px 20px rgba(0,0,0,0.1);
 }
-.bg-light {
-    background-color: #fbfbfb !important;
+
+/* ── Navbar 校園攻略站 標籤 ── */
+.school-nav-divider {
+  display: inline-block;
+  width: 1px;
+  height: 18px;
+  background: #d0d7e3;
+  margin: 0 10px;
 }
-.nav-link {
-    color: #4D81B7 !important;
-    font-size: 1.1rem;
-    font-family: 'Zen Old Mincho', serif;
+.school-nav-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--school-brand);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
-.footer {
-    background-color: #004b97;
-    color: white;
-    padding: 2rem;
-    margin-top: 20vh;
-    padding-bottom: 10px;
-    font-size:1rem;
-}
-.footer h3 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    color: #f0f6fd;
-}
-.footer a {
-    color: white;
-    text-decoration: none;
-}
-.footer-row {
-    display: flex;
-    justify-content: center;
-    list-style: none;
-    padding: 0;
-}
-.footer-row li {
-    margin: 0 10px;
-}
-.footer-row li a {
-    color: white;
-    text-decoration: none;
-    font-size: 0.8rem;
-}
-.typewriterbody {
-    padding-top: 5em;
-    display: flex;
-    justify-content: center;
-}
-/* DEMO-SPECIFIC STYLES */
-.typewriter h1 {
-  font-size:clamp(22px, 4vw, 32px);
+.school-create-btn {
+  background: var(--school-brand);
   color: #fff;
-  line-height:1.25;
-  font-family: monospace;
-  overflow: hidden; /* Ensures the content is not revealed until the animation */
-  border-right: .15em solid white; /* The typwriter cursor */
-  white-space: nowrap; /* Keeps the content on a single line */
-  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-  letter-spacing: .15em; /* Adjust as needed */
-  animation: 
-    typing 3.5s steps(30, end),
-    blink-caret .5s step-end infinite;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+  gap: 4px;
+}
+.school-create-btn:hover {
+  background: var(--school-green);
+  transform: translateY(-1px);
 }
 
-/* The typing effect */
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+/* ── Hero ── */
+.school-hero {
+  background: linear-gradient(135deg, #eef4ff 0%, #f7fbff 50%, #edfaf6 100%);
+  border-bottom: 1px solid rgba(0,75,151,0.08);
+  padding: 36px 0 28px;
+}
+.school-hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.school-hero-text { flex: 1; }
+.school-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,75,151,0.08);
+  color: var(--school-brand);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-bottom: 10px;
+}
+.school-hero-title {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+.school-hero-sub {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0 0 18px;
+  max-width: 44ch;
+}
+.school-hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.school-hero-tag {
+  background: #fff;
+  border: 1.5px solid #d0d7e3;
+  color: #555;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.school-hero-tag:hover,
+.school-hero-tag.active {
+  background: var(--school-brand);
+  border-color: var(--school-brand);
+  color: #fff;
+}
+.school-hero-art { flex-shrink: 0; }
+.school-hero-img {
+  width: 120px;
+  opacity: 0.85;
+  filter: drop-shadow(0 4px 12px rgba(0,75,151,0.15));
 }
 
-/* The typewriter cursor effect */
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: orange }
+/* ── Main layout ── */
+.school-content { max-width: 1100px; }
+
+/* ── Filter row ── */
+.school-sort-tab {
+  background: transparent;
+  border: 1.5px solid #d0d7e3;
+  color: #666;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
 }
-    .wrap{
-      min-height:100%;
-      place-items:center;
-      padding:50px 5vw;
-    }
-    .card{
-      width:100%;
-      background:var(--card);
-      border-radius:28px;
-      box-shadow:var(--shadow);
-      padding:32px 24px;
-      overflow:hidden;
-    }
+.school-sort-tab:hover,
+.school-sort-tab.active {
+  background: var(--school-brand);
+  border-color: var(--school-brand);
+  color: #fff;
+}
+.school-result-count { font-size: 0.8rem; }
 
-    .hero{
-      text-align:center;
-      padding:8px 8px 0;
-    }
-    .badge{
-      display:inline-block;
-      padding:6px 12px;
-      border-radius:999px;
-      font-size:12px;
-      letter-spacing:.06em;
-      background:rgba(77,129,183,.12);
-      color:var(--brand);
-      margin-bottom:8px;
-    }
-    h1{
-      margin:8px 0 6px;
-      font-size:clamp(22px, 4vw, 32px);
-      line-height:1.25;
-    }
-    .subtitle{
-      color:var(--muted);
-      margin:0 auto;
-      max-width:52ch;
-      font-size:clamp(14px, 2.2vw, 16px);
-    }
+/* ── Category badge ── */
+.article-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+.badge-study   { background: #e8f4fd; color: #004b97; }
+.badge-life    { background: #e8faf4; color: #1a9e6b; }
+.badge-career  { background: #fff4e8; color: #c47a1e; }
+.badge-trade   { background: #f0eaff; color: #6c3cbf; }
+.badge-newbie  { background: #ffe8ec; color: #c0392b; }
+.badge-all     { background: #f0f0f0; color: #555; }
 
-    .bubbles{
-      margin:28px auto 0;
-      display:grid;
-      grid-template-columns:repeat(12, 1fr);
-      gap:14px;
-      max-width:900px;
-      padding:0 8px;
-      list-style:none;
-    }
-    .bubble{
-      grid-column:span 6;
-      background:var(--bubble);
-      border-radius:18px;
-      padding:12px 16px;
-      font-size:14px;
-      line-height:1.45;
-      position:relative;
-      box-shadow:0 2px 10px rgba(77,129,183,.10);
-      opacity:0;
-      transform:translateY(12px) scale(.98);
-      animation:pop .6s cubic-bezier(.2,.8,.2,1) forwards;
-      border:1px solid rgba(77,129,183,.15);
-    }
-    .bubble::after{
-      content:"";
-      position:absolute;
-      left:24px; bottom:-10px;
-      border:10px solid transparent;
-      border-top-color:var(--bubble);
-      filter:drop-shadow(0 1px 0 rgba(77,129,183,.15));
-    }
-    /* 可用 data-delay 做交錯入場 */
-    .bubble{ animation-delay:calc(var(--i, 0)*120ms + 120ms); }
+/* ── Featured card ── */
+.school-featured-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: var(--school-shadow);
+  overflow: hidden;
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(0,75,151,0.08);
+  transition: transform 0.18s, box-shadow 0.18s;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 4px;
+}
+.school-featured-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--school-shadow-hover);
+  border-color: rgba(0,75,151,0.2);
+  color: inherit;
+  text-decoration: none;
+}
+.school-featured-thumb {
+  flex-shrink: 0;
+  width: 220px;
+  min-height: 160px;
+  background: linear-gradient(135deg, #abdad5, #004b97);
+  position: relative;
+  overflow: hidden;
+}
+.school-featured-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.school-featured-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  opacity: 0.6;
+}
+.school-featured-body {
+  padding: 20px 20px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.school-featured-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--school-brand);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.school-featured-label::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  background: var(--school-brand);
+  border-radius: 2px;
+}
+.school-featured-title {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.4;
+  margin: 0 0 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.school-featured-excerpt {
+  font-size: 0.86rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: #999;
+  flex-wrap: wrap;
+}
+.article-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #d0d7e3;
+}
+.article-author { color: #555; font-weight: 600; }
+.article-meta-dot { color: #d0d0d0; }
+.article-likes {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #bbb;
+  font-size: 0.78rem;
+}
+.article-likes.liked { color: #e74c3c; }
 
-    /* 讓不同寬度更像對話 */
-    .bubble--w1{ grid-column:span 7; }
-    .bubble--w2{ grid-column:span 5; }
-    .bubble--w3{ grid-column:span 8; }
-    .bubble--w4{ grid-column:span 4; }
+/* ── Article card (Vocus-style horizontal) ── */
+.school-article-card {
+  background: #fff;
+  border-radius: var(--school-radius);
+  box-shadow: var(--school-shadow);
+  border: 1px solid rgba(0,75,151,0.07);
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 10px;
+}
+.school-article-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--school-shadow-hover);
+  border-color: rgba(0,75,151,0.2);
+  color: inherit;
+  text-decoration: none;
+}
+.article-card-body { flex: 1; min-width: 0; }
+.article-card-title {
+  font-size: 0.97rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 5px;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.article-card-excerpt {
+  font-size: 0.83rem;
+  color: #777;
+  line-height: 1.55;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.article-thumb {
+  flex-shrink: 0;
+  width: 88px;
+  height: 72px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #eef4ff, #abdad5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+.article-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-    @keyframes pop{
-      0%{opacity:0; transform:translateY(12px) scale(.98)}
-      60%{opacity:1; transform:translateY(0) scale(1.01)}
-      100%{opacity:1; transform:translateY(0) scale(1)}
-    }
+/* ── Load more ── */
+.school-loadmore-btn {
+  background: transparent;
+  border: 1.5px solid var(--school-brand);
+  color: var(--school-brand);
+  border-radius: 20px;
+  padding: 8px 28px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.school-loadmore-btn:hover {
+  background: var(--school-brand);
+  color: #fff;
+}
 
-    /* 偏好減少動效者：停用動畫 */
-    @media (prefers-reduced-motion: reduce){
-      .bubble{animation:none; opacity:1; transform:none}
-    }
+/* ── Empty state ── */
+.school-empty {
+  text-align: center;
+  padding: 48px 0;
+}
+.school-create-btn-sm {
+  background: var(--school-brand);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.school-create-btn-sm:hover { background: var(--school-green); }
 
-    .tips{
-      margin:26px auto 0;
-      padding:16px 18px;
-      border-radius:16px;
-      background:linear-gradient(0deg, rgba(77,129,183,.06), rgba(77,129,183,.06));
-      width:min(820px, 100%);
-      display:grid;
-      gap:10px;
-      font-size:15px;
-    }
-    .tips b{ color:var(--brand); }
+/* ── Sidebar ── */
+.school-create-card {
+  background: linear-gradient(135deg, var(--school-brand), #1a6bbf);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.school-create-card-inner {
+  padding: 20px;
+  text-align: center;
+  color: #fff;
+}
+.school-create-icon {
+  width: 48px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  margin-bottom: 10px;
+}
+.school-create-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.school-create-desc {
+  font-size: 0.82rem;
+  opacity: 0.85;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.school-create-cta-btn {
+  background: #fff;
+  color: var(--school-brand);
+  border: none;
+  border-radius: 20px;
+  padding: 9px 20px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.school-create-cta-btn:hover {
+  background: var(--school-accent);
+  transform: translateY(-1px);
+}
 
-    .actions{
-      margin:22px auto 4px;
-      display:flex;
-      gap:12px;
-      justify-content:center;
-      align-items:center;
-      flex-wrap:wrap;
-    }
+.school-sidebar-card {
+  background: #fff;
+  border-radius: var(--school-radius);
+  box-shadow: var(--school-shadow);
+  border: 1px solid rgba(0,75,151,0.07);
+  overflow: hidden;
+}
+.school-sidebar-header {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #333;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.school-sidebar-header i { color: var(--school-brand); }
 
-    .btn{
-      appearance:none;
-      border:0;
-      padding:12px 20px;
-      border-radius:999px;
-      font-size:16px;
-      cursor:pointer;
-      transition:transform .08s ease, box-shadow .2s ease, background .2s ease;
-    }
-    .btn-primary{
-      background:var(--brand);
-      color:#fff;
-      box-shadow:0 8px 20px rgba(77,129,183,.35);
-    }
-    .btn-primary:hover{ transform:translateY(-1px) }
-    .btn-ghost{
-      background:transparent;
-      color:var(--brand);
-    }
+/* ── Tag cloud ── */
+.school-tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 12px 14px;
+}
+.school-tag {
+  background: aliceblue;
+  color: var(--school-brand);
+  border: 1px solid rgba(0,75,151,0.15);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.school-tag:hover {
+  background: var(--school-brand);
+  color: #fff;
+  border-color: var(--school-brand);
+}
 
-    .footnote{
-      text-align:center;
-      color:var(--muted);
-      font-size:12px;
-      margin-top:8px;
-    }
+/* ── Author list ── */
+.school-author-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.12s;
+}
+.school-author-item:last-child { border-bottom: none; }
+.school-author-item:hover { background: aliceblue; }
+.school-author-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--school-accent);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #eef4ff, #abdad5);
+}
+.school-author-info { flex: 1; min-width: 0; }
+.school-author-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.school-author-count {
+  font-size: 0.75rem;
+  color: #999;
+}
+.school-follow-btn {
+  background: transparent;
+  border: 1.5px solid var(--school-brand);
+  color: var(--school-brand);
+  border-radius: 14px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.school-follow-btn:hover {
+  background: var(--school-brand);
+  color: #fff;
+}
 
-    /* 響應式 */
-    @media (max-width:720px){
-      .card{ padding:24px 16px }
-      .bubble{ grid-column:span 12 }
-      .bubble::after{ left:18px }
-      .tips{ font-size:14px }
-    }
+/* ── Intro card ── */
+.school-intro-card .school-sidebar-header { border-bottom: 1px solid #f0f0f0; }
+.school-intro-text {
+  font-size: 0.82rem;
+  color: #666;
+  line-height: 1.6;
+  padding: 10px 14px 4px;
+  margin: 0;
+}
+.school-intro-stats { padding: 0 14px 14px; }
+.school-stat { text-align: center; }
+.school-stat-num { font-size: 1.15rem; font-weight: 800; color: var(--school-brand); display: block; }
+.school-stat-label { font-size: 0.72rem; color: #999; }
+
+/* ── Onboarding Modal ── */
+.school-onboarding-modal {
+  border-radius: 16px;
+  overflow: hidden;
+  border: none;
+}
+.school-onboarding-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 10;
+  background: rgba(255,255,255,0.85);
+  border-radius: 50%;
+  padding: 4px;
+}
+.school-onboarding-hero {
+  padding: 40px 24px 32px;
+  text-align: center;
+  position: relative;
+  background: linear-gradient(135deg, #826cff, #3d40fc);
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.school-onboarding-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-bottom: 10px;
+}
+.school-onboarding-title {
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 6px;
+}
+.school-onboarding-sub {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.85);
+  margin: 0;
+}
+.school-onboarding-body {
+  padding: 20px 24px 24px;
+  background: #fff;
+}
+.school-bubbles {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.school-bubble {
+  background: aliceblue;
+  border: 1px solid rgba(0,75,151,0.1);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.83rem;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: schoolBubblePop 0.5s cubic-bezier(.2,.8,.2,1) forwards;
+  animation-delay: calc(var(--i, 0) * 100ms + 200ms);
+}
+@keyframes schoolBubblePop {
+  0%   { opacity: 0; transform: translateY(10px) scale(0.97); }
+  60%  { opacity: 1; transform: translateY(-2px) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.school-onboarding-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: aliceblue;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.school-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.school-step-num {
+  width: 24px;
+  height: 24px;
+  background: var(--school-brand);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.school-step b { font-size: 0.9rem; color: #333; }
+.school-step p { font-size: 0.8rem; color: #777; margin: 2px 0 0; }
+.school-ghost-btn {
+  background: transparent;
+  border: 1.5px solid #d0d7e3;
+  color: #666;
+  border-radius: 20px;
+  padding: 9px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.school-ghost-btn:hover { border-color: #999; color: #333; }
+
+/* ── Responsive ── */
+@media (max-width: 767px) {
+  .school-hero { padding: 24px 0 20px; }
+  .school-hero-title { font-size: 1.5rem; }
+  .school-featured-card { flex-direction: column; }
+  .school-featured-thumb { width: 100%; min-height: 140px; }
+  .school-bubbles { grid-template-columns: 1fr; }
+}
+@media (max-width: 575px) {
+  .school-article-card { flex-direction: column-reverse; }
+  .article-thumb { width: 100%; height: 130px; }
+}

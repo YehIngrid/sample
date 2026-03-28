@@ -311,7 +311,7 @@
 }
 small {
   font-size: 10px;
-  color: var(--brand-color);
+  color: #004b97;
 }
 #sellOrderDetail li {
   list-style: none;
@@ -323,7 +323,7 @@ small {
 }
 .orderstyle {
   margin-right: 10px;
-  background-color: var(--brand-color);
+  background-color: #004b97;
   color: white;
   padding: 5px 8px;
   border-radius: 5px;
@@ -342,9 +342,23 @@ small {
   box-shadow: 1px 2px 1px 2px rgba(32, 32, 32, 0.114);
   border-radius: 50px;
 }
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.status-item > .d-flex {
+  flex-direction: column;
+  align-items: center;
+}
+.timestamp {
+  margin-top: auto;
+}
 .stateText {
   margin-top: 10px;
   font-size: 12px;
+  text-align: center;
 }
 @media screen and (max-width: 1100px) {
   .stateContainer {
@@ -369,20 +383,44 @@ small {
 }
 @media screen and (max-width: 543px) {
   .stateContainer {
-    width: 90vw;
+    width: 92vw;
+  }
+  .stateContainer > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 0;
+  }
+  .status-item {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 12px;
+    width: 100%;
+    padding: 8px 0;
+  }
+  .status-item > .d-flex {
+    flex-direction: row !important;
+    align-items: center !important;
   }
   .stateContainer img {
-    width: 50%;
+    width: 44px !important;
+    height: 44px !important;
+    flex-shrink: 0;
     box-shadow: 0px 1px 0px 1px rgba(32, 32, 32, 0.114);
   }
   .stateText {
-    margin-top: 5px;
-    font-size: 11px;
+    margin-top: 0;
+    font-size: 12px;
+    text-align: left !important;
   }
   .timestamp {
     font-size: 11px !important;
+    margin-top: 0;
+    margin-left: auto;
   }
 }
+
 @media screen and (max-width: 768px) {
   /* 隱藏原本的表頭 */
   .responsive-table thead {
@@ -404,6 +442,11 @@ small {
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .itemlist tr {
+    background: aliceblue;
+    border: none !important;
+    box-shadow: none;
   }
   .table {
     border: none !important;
@@ -623,17 +666,25 @@ small {
 }
 .profile-info-header i { font-size: 1.1rem; }
 .profile-info-body {
-  padding: 4px 20px;
+  padding: 4px 20px 16px;
 }
 .info-row {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
+  align-items: center;
+  gap: 12px;
   padding: 12px 0;
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 .info-row:last-child { border-bottom: none; }
+.info-row-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.info-row-right .info-value {
+  margin-left: 0;
+}
 .info-label {
   display: flex;
   align-items: center;
@@ -651,14 +702,7 @@ small {
   font-size: 0.88rem;
   text-align: right;
   word-break: break-all;
-}
-.profile-info-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  background: #fff;
-  border-top: 1px solid #eee;
+  margin-left: auto;
 }
 
 /* ── 個人資料更改區（仿販賣表單） ── */
@@ -1024,7 +1068,7 @@ small {
       margin-bottom: 30px;
     }
     .itemlist td{
-      border-bottom: 1px dashed #383838;
+      border-bottom: 1px dashed #abdad5;
       border-top: none;
     }
   .btnSell div {
@@ -1044,12 +1088,12 @@ small {
   border: none;
   border-radius: 5px;
   background: red;
-  padding: 4px 8px;
+  padding: 2px 7px;
   transition: background 0.2s;
 }
 .disableAccount div{
   color: #fff;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
 }
 .disableAccount:hover {
@@ -1069,6 +1113,14 @@ small {
 }
 .checkInfoBtn img {
   width: 18px;
+}
+.profile-info-body .checkInfoBtn {
+  padding: 2px 8px;
+  font-size: 12px;
+  gap: 4px;
+}
+.profile-info-body .checkInfoBtn img {
+  width: 14px;
 }
 .checkInfoBtn:hover {
   background: #abdad5;
@@ -1090,6 +1142,27 @@ small {
 }
 .cancelOrderBtn:hover {
   background: #fff5f5;
+}
+.order-chat-btn {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #abdad5;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  margin-left: auto;
+}
+.order-chat-btn img {
+  width: 16px;
+  height: 16px;
+}
+.order-chat-btn:hover {
+  background: #abdad5;
 }
 .btnSell[data-action="delete"] {
   border-color: #f5c6c6;
@@ -1163,3 +1236,36 @@ small {
 }
 .order-page-num:hover { background: rgba(0,75,151,0.08); }
 .order-page-num.active { background: #004b97; color: #fff; }
+
+/* ── 小螢幕：訂單操作按鈕縮小 ── */
+@media (max-width: 400px) {
+  .action-btn {
+    font-size: 0.72rem !important;
+    padding: 3px 6px !important;
+  }
+  .action-btn img {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  .action-btn div {
+    font-size: 0.72rem !important;
+  }
+  .checkInfoBtn div,
+  .cancelOrderBtn div {
+    font-size: 0.72rem !important;
+  }
+}
+@media (max-width: 360px) {
+  .action-btn {
+    font-size: 0.65rem !important;
+    padding: 2px 5px !important;
+    gap: 2px !important;
+  }
+  .action-btn img {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  .action-btn div {
+    font-size: 0.65rem !important;
+  }
+}

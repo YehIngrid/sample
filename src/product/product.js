@@ -508,7 +508,7 @@ function renderSellerInfo(data) {
   if (scoreEl) scoreEl.textContent = Number.isFinite(+data.score) ? +data.score : 0;
 
   // 綁事件（依你的路由調整）
-  if (chatBtn)   chatBtn.onclick   = () => openChatWithSeller(data.id);
+  if (chatBtn)   chatBtn.onclick   = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
   if (rateBtn)   rateBtn.onclick   = () => toggleSellerReviews();
   if (reportBtn) reportBtn.onclick = () => reportSeller(data.id);
 }
@@ -534,10 +534,10 @@ async function openChatWithSeller(targetSellerId) {
     return Swal.fire({ icon: 'warning', title: '缺少sellerid' });
   }
 
-  // 手機版：導向 chatroom.html，記住返回位址
+  // 手機版：導向 chatroom.html，帶入目標用戶 ID 並記住返回位址
   if (window.innerWidth <= 991) {
     sessionStorage.setItem('chatroomReturnUrl', window.location.href);
-    window.location.href = `../chatroom/chatroom.html`;
+    window.location.href = `../chatroom/chatroom.html?openChat=${targetSellerId}`;
     return;
   }
 

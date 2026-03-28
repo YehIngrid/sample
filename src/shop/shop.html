@@ -118,8 +118,20 @@
                 <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
                 <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
 
-                <!-- 電腦版搜尋下拉面板 -->
-                <div id="searchDropdown" class="search-dropdown d-none d-lg-block" style="display:none!important;">
+                <!-- 搜尋下拉面板（手機 + 電腦） -->
+                <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
+                  <!-- 商品分類 -->
+                  <div class="search-drop-section">
+                    <div class="search-drop-header"><span>商品分類</span></div>
+                    <div class="cat-pills" style="padding:6px 0 4px;background:transparent;flex-wrap:wrap;overflow-x:visible;gap:6px;">
+                      <a href="../commodity/commodity.html?category=書籍與學籍用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/book.svg" alt="書籍與學籍用品"></div>書籍與學籍用品</a>
+                      <a href="../commodity/commodity.html?category=宿舍與生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/life.svg" alt="宿舍與生活用品"></div>宿舍與生活用品</a>
+                      <a href="../commodity/commodity.html?category=學生專用器材" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/ruler.svg" alt="學生專用器材"></div>學生專用器材</a>
+                      <a href="../commodity/commodity.html?category=環保生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/bag.svg" alt="環保生活用品"></div>環保生活用品</a>
+                      <a href="../commodity/commodity.html?category=儲物與收納用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/save.svg" alt="儲物與收納用品"></div>儲物與收納用品</a>
+                      <a href="../commodity/commodity.html?category=其他" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/Other.svg" alt="其他"></div>其他</a>
+                    </div>
+                  </div>
                   <!-- 搜尋紀錄 -->
                   <div class="search-drop-section" id="desktopHistorySection">
                     <div class="search-drop-header">
@@ -1217,28 +1229,27 @@ const timer = setInterval(() => {
 
 <!-- 底部導航 (手機版) -->
 <nav class="bottom-nav" id="bottomNav">
-  <a href="../shop/shop.html" class="bottom-nav-item active">
+  <a href="../shop/shop.html" class="bottom-nav-item nav-tab-home active">
     <img class="nav-icon nav-icon-active" src="../svg/Homekey.svg" alt="正在購物首頁">
     <img class="nav-icon nav-icon-inactive" src="../svg/Homekeynotactive.svg" alt="點擊前往購物首頁">
     <span>購物首頁</span>
   </a>
-  <a href="../commodity/commodity.html" class="bottom-nav-item">
+  <a href="../commodity/commodity.html" class="bottom-nav-item nav-tab-market">
     <img class="nav-icon nav-icon-active" src="../svg/commoditypage.svg" alt="正在購物商場">
     <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="點擊前往購物商場">
     <span>購物商場</span>
   </a>
-  <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-center">
-    <div class="nav-center-circle">
-      <img class="nav-icon" src="../svg/chaticonmobile.svg" alt="聊天室">
-    </div>
+  <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-tab-chat">
+    <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="正在聊天室">
+    <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="前往聊天室">
     <span>聊天室</span>
   </a>
-  <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
+  <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item nav-tab-cart">
     <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="正在購物車頁">
     <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="點擊前往購物車頁">
     <span>購物車</span>
   </a>
-  <a href="../person/person.html" class="bottom-nav-item">
+  <a href="../person/person.html" class="bottom-nav-item nav-tab-account">
     <img class="nav-icon nav-icon-active" src="../webP/default-avatar.webp" alt="正在我的帳戶">
     <img class="nav-icon nav-icon-inactive" src="../svg/default-avatarnotactive.svg" alt="前往我的帳戶">
     <span>我的帳戶</span>
@@ -1401,7 +1412,7 @@ const timer = setInterval(() => {
   function renderDesktopHistory() {
     const list = document.getElementById('desktopHistoryList');
     if (!list) return;
-    const h = getHistory();
+    const h = getHistory().slice(0, 5);
     if (!h.length) {
       list.innerHTML = '<li class="search-drop-empty">尚無搜尋紀錄</li>';
     } else {
@@ -1445,30 +1456,34 @@ const timer = setInterval(() => {
     }
   };
 
-  // 點擊文字 → 直接搜尋（手機版）
-  window._pickMobile = function (term) {
-    const ocInput = document.getElementById('searchInputOC');
-    const mainInput = document.getElementById('searchInput');
-    if (!ocInput) return;
-    addSearchHistory(term);
-    const bsOC = bootstrap.Offcanvas.getInstance(document.getElementById('searchOffcanvas'));
-    if (bsOC) bsOC.hide();
-    if (mainInput) mainInput.value = term;
-    document.getElementById('searchForm').dispatchEvent(new Event('submit'));
-  };
-
-  // 點擊 ↗ → 只填入 input，不搜尋（手機版）
-  window._fillMobile = function (term) {
-    const ocInput = document.getElementById('searchInputOC');
-    if (ocInput) {
-      ocInput.value = term;
-      ocInput.focus();
-      updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
-    }
-  };
+  // 手機版：重導向至電腦版行為（搜尋欄統一使用 dropdown）
+  window._pickMobile = function (term) { window._pickHistory(term); };
+  window._fillMobile = function (term) { window._fillDesktop(term); };
 
   function updateClearBtn(input, btn) {
     if (btn) btn.classList.toggle('visible', input.value.length > 0);
+  }
+
+  // ── 熱門搜尋（API 還沒好時顯示 fallback） ──
+  const FALLBACK_TRENDS = ['課本', '腳踏車', '桌椅', '電風扇', '書包', '鍋碗瓢盆', '床單被套', '耳機'];
+  let _trendsLoaded = false;
+  async function renderTrending() {
+    if (_trendsLoaded) return;
+    let terms = [];
+    try {
+      // TODO: const res = await axios.get('https://thpr.hlc23.dev/api/search/trending'); terms = res.data;
+    } catch (e) {}
+    if (!terms.length) terms = FALLBACK_TRENDS;
+    _trendsLoaded = true;
+    const html = terms.map((t, i) => {
+      const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');
+      return `<li class="search-drop-item" onclick="window._pickHistory('${safe}')">
+        <span class="search-drop-rank">${i + 1}</span>
+        <span class="search-drop-text">${t.replace(/</g, '&lt;')}</span>
+      </li>`;
+    }).join('');
+    const el = document.getElementById('desktopTrendList');
+    if (el) el.innerHTML = html;
   }
 
   // ── 電腦 dropdown 顯示/隱藏 ──
@@ -1476,6 +1491,7 @@ const timer = setInterval(() => {
     const dd = document.getElementById('searchDropdown');
     if (!dd) return;
     renderDesktopHistory();
+    renderTrending();
     dd.style.removeProperty('display');
     dd.classList.add('active');
   }
@@ -1487,52 +1503,17 @@ const timer = setInterval(() => {
 
   document.addEventListener('DOMContentLoaded', function () {
     const mainInput = document.getElementById('searchInput');
-    const ocInput   = document.getElementById('searchInputOC');
-    const ocEl      = document.getElementById('searchOffcanvas');
     const dropdown  = document.getElementById('searchDropdown');
     if (!mainInput) return;
 
-    // ── 手機：focus → offcanvas ──
-    if (ocEl) {
-      const bsOC = new bootstrap.Offcanvas(ocEl, { scroll: true, backdrop: true });
-      mainInput.addEventListener('focus', function () {
-        if (window.innerWidth < 992) {
-          mainInput.blur();
-          bsOC.show();
-        }
-      });
-      ocEl.addEventListener('shown.bs.offcanvas', function () {
-        ocInput && ocInput.focus();
-      });
-      if (ocInput) {
-        ocInput.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter') {
-            const val = ocInput.value.trim();
-            if (!val) return;
-            addSearchHistory(val);
-            bsOC.hide();
-            mainInput.value = val;
-            document.getElementById('searchForm').dispatchEvent(new Event('submit'));
-          }
-        });
-      }
-      document.getElementById('clearHistoryBtn')?.addEventListener('click', function () {
-        saveHistory([]); renderMobileHistory();
-      });
-      ocEl.addEventListener('show.bs.offcanvas', renderMobileHistory);
-    }
-
-    // ── 電腦：focus → dropdown ──
-    mainInput.addEventListener('focus', function () {
-      if (window.innerWidth >= 992) openDropdown();
-    });
+    // ── 搜尋欄（手機 + 電腦共用 dropdown） ──
+    mainInput.addEventListener('focus', openDropdown);
     mainInput.addEventListener('input', function () {
       updateClearBtn(mainInput, document.getElementById('searchClearBtn'));
-      if (window.innerWidth >= 992 && !mainInput.value.trim()) openDropdown();
+      if (!mainInput.value.trim()) openDropdown();
     });
-    // 電腦 Enter 搜尋
     mainInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && window.innerWidth >= 992) {
+      if (e.key === 'Enter') {
         const val = mainInput.value.trim();
         if (val) addSearchHistory(val);
         closeDropdown();
@@ -1545,8 +1526,13 @@ const timer = setInterval(() => {
         closeDropdown();
       }
     });
+    document.addEventListener('touchstart', function (e) {
+      if (dropdown && !dropdown.contains(e.target) && e.target !== mainInput) {
+        closeDropdown();
+      }
+    }, { passive: true });
 
-    // ── 電腦：清除按鈕 ──
+    // ── 清除按鈕 ──
     document.getElementById('searchClearBtn')?.addEventListener('click', function () {
       mainInput.value = '';
       mainInput.focus();
@@ -1554,18 +1540,7 @@ const timer = setInterval(() => {
       openDropdown();
     });
 
-    // ── 手機：input 事件 + 清除按鈕 ──
-    if (ocInput) {
-      ocInput.addEventListener('input', function () {
-        updateClearBtn(ocInput, document.getElementById('searchClearBtnOC'));
-      });
-    }
-    document.getElementById('searchClearBtnOC')?.addEventListener('click', function () {
-      if (ocInput) { ocInput.value = ''; ocInput.focus(); }
-      updateClearBtn(ocInput, this);
-    });
-
-    // 電腦清除紀錄
+    // 清除紀錄
     document.getElementById('desktopClearHistory')?.addEventListener('click', function () {
       saveHistory([]); renderDesktopHistory();
     });
