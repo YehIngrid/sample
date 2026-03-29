@@ -627,3 +627,39 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
 .nav-menu-item:hover i {
   color: #004b97;
 }
+
+/* ── 聊天室浮動按鈕 + iframe（桌機版） ── */
+.chaticon {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  border-radius: 50%;
+  background-color: #004b97;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  isolation: isolate;
+}
+.chaticon img {
+  width: 90%;
+  height: 90%;
+}
+#talkInterface {
+  position: fixed;
+  bottom: 90px;
+  right: 30px;
+  width: 330px;
+  height: 550px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  background-color: #fff;
+  display: none;
+  overflow: hidden;
+  z-index: 10000;
+  border: none;
+}

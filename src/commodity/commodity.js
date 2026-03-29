@@ -372,6 +372,9 @@ function renderPagination(totalCount) {
 
 // 初始載入（修改後的版本）
 document.addEventListener('DOMContentLoaded', () => {
+  // 設定聊天室 iframe src（桌機版）
+  const iframe = document.getElementById('talkInterface');
+  if (iframe) iframe.src = '../chatroom/chatroom.html';
   // 搜尋表單提交（桌機 Enter / 手機 offcanvas）
   document.getElementById('searchForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -410,9 +413,9 @@ document.addEventListener('DOMContentLoaded', () => {
     currentSource = 'all';
     pageIndex = 0;
     const si = document.getElementById('searchInput');
-    if (si) si.value = qFromUrl;
+    if (si) { si.value = qFromUrl; si.dispatchEvent(new Event('input')); }
     const mt = document.getElementById('searchTriggerMobile');
-    if (mt) mt.value = qFromUrl;
+    if (mt) { mt.value = qFromUrl; mt.dispatchEvent(new Event('input')); }
     loadProducts();
   } else {
     changeCategory(initialCategory);

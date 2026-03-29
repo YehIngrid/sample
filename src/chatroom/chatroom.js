@@ -80,8 +80,8 @@ class ChatRoomList {
                     const name = roomEl.querySelector('.roomName')?.textContent || '未知';
                     await this.switchRoom(this.currentRoomId, name);
                 }
-            } else if (!this.isMobile) {
-                // 電腦版預設進入官方帳號房間
+            } else if (!this.isMobile && !new URLSearchParams(window.location.search).get('openChat')) {
+                // 電腦版預設進入官方帳號房間（openChat 參數存在時跳過，由 openChatWithTarget 負責）
                 const officialItem = [...document.querySelectorAll('.chat-item[data-room-id]')]
                     .find(el => this.officialRoomsSet.has(String(el.dataset.roomId)));
                 if (officialItem) {
@@ -388,7 +388,10 @@ class ChatRoomList {
                 link.setAttribute('data-pswp-height', tempImg.naturalHeight);
             }
             this.initPhotoSwipeGallery();
-            if (!prepend && !this.isInitialLoading) container.scrollTop = container.scrollHeight;
+            if (!prepend && !this.isInitialLoading) {
+                const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+                if (isNearBottom) container.scrollTop = container.scrollHeight;
+            }
         };
         tempImg.src = imageUrl;
         this.detectRead(wrapper);
@@ -453,7 +456,10 @@ class ChatRoomList {
                 link.setAttribute('data-pswp-height', tempImg.naturalHeight);
             }
             this.initPhotoSwipeGallery();
-            if (!prepend && !this.isInitialLoading) container.scrollTop = container.scrollHeight;
+            if (!prepend && !this.isInitialLoading) {
+                const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+                if (isNearBottom) container.scrollTop = container.scrollHeight;
+            }
         };
         tempImg.src = imageUrl;
 
@@ -724,6 +730,8 @@ class ChatRoomList {
                 ?.querySelector('.unread-dot')?.classList.add('d-none');
             const readAt = new Date().toISOString();
             this.backend.markAsRead(roomId, readAt).catch(() => {});
+            // 官方頻道的 read SSE 事件不一定會回傳，直接通知外層清除紅點
+            window.parent?.dispatchEvent(new CustomEvent('chatRead'));
         }
 
         const container = document.getElementById('messagesContainer');
@@ -759,8 +767,8 @@ class ChatRoomList {
             // 等 DOM 與圖片都算好高度後再捲動
             setTimeout(() => {
                 this.scrollToFirstUnread(firstUnread);
-                setTimeout(() => { this.isInitialLoading = false; }, 100);
-            }, 50);
+                setTimeout(() => { this.isInitialLoading = false; }, 200);
+            }, 150);
 
             // ✅ 初始載入時套用對方已讀狀態
             const partnerRead = this.partnerReadMap.get(String(roomId));
@@ -776,17 +784,23 @@ class ChatRoomList {
     scrollToFirstUnread(firstUnread) {
         const container = document.getElementById('messagesContainer');
         if (!firstUnread) {
-            container.scrollTop = container.scrollHeight;
+            container.scrollTo({ top: container.scrollHeight, behavior: 'instant' });
             return;
         }
         // 優先捲到 divider，讓「以下為未讀訊息」標記可見
         const divider = container.querySelector('.unread-divider');
         const target = divider || container.querySelector(`[data-message-id="${firstUnread.id}"]`);
         if (target) {
-            const offset = target.getBoundingClientRect().top - container.getBoundingClientRect().top;
-            container.scrollTop += offset;
+            // 用 offsetTop 直接計算相對容器的位置，避免 getBoundingClientRect 受到 scroll-behavior 動畫影響
+            let offsetTop = 0;
+            let el = target;
+            while (el && el !== container) {
+                offsetTop += el.offsetTop;
+                el = el.offsetParent;
+            }
+            container.scrollTo({ top: offsetTop, behavior: 'instant' });
         } else {
-            container.scrollTop = container.scrollHeight;
+            container.scrollTo({ top: container.scrollHeight, behavior: 'instant' });
         }
     }
 
@@ -1012,8 +1026,9 @@ class ChatRoomList {
         if (prepend) {
             container.prepend(div);
         } else {
+            const wasNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
             container.appendChild(div);
-            if (!this.isInitialLoading) {
+            if (wasNearBottom) {
                 container.scrollTop = container.scrollHeight;
             }
         }

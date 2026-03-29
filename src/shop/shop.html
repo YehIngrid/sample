@@ -1179,7 +1179,7 @@ const timer = setInterval(() => {
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-col footer-brand">
-      <img src="../svg/TREASUREHUBwhite.svg" alt="拾貨寶庫" loading="lazy">
+      <a href="../newhome/newhome.html"><img src="../svg/TREASUREHUBwhite.svg" alt="拾貨寶庫" loading="lazy"></a>
       <p class="footer-tagline">專為大學生打造的校園二手拍賣市集</p>
     </div>
     <div class="footer-links-row">
@@ -1187,9 +1187,9 @@ const timer = setInterval(() => {
     <div class="footer-col">
       <h4 class="footer-heading">快速連結</h4>
       <ul class="footer-links">
-        <li><a href="../newhome/newhome.html">首頁</a></li>
         <li><a href="../shop/shop.html">購物首頁</a></li>
         <li><a href="../commodity/commodity.html">購物商場</a></li>
+        <li><a href="../shop/shop.html?page=seller">賣家專區</a></li>
         <li><a href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
       </ul>
     </div>
@@ -1581,7 +1581,7 @@ const timer = setInterval(() => {
     </div>
 
     <!-- 聊天室 -->
-    <button class="chaticon" id="chaticon">
+    <button class="chaticon d-none d-lg-flex" id="chaticon">
       <img src="../svg/chaticon.svg" alt="聊天室icon點擊開啟聊天室">
       <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
     </button>

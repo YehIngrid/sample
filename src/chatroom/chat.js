@@ -21,6 +21,10 @@ async function toggleChatInterface() {
       talkInterface.style.display = 'none';
       return;
     }
+    // 第一次開啟才設定 src，避免重複載入
+    if (!talkInterface.src || talkInterface.src === 'about:blank' || talkInterface.src === window.location.href) {
+      talkInterface.src = '../chatroom/chatroom.html';
+    }
     talkInterface.style.display = 'block';
   } else {
     talkInterface.style.display = 'none';
@@ -29,10 +33,10 @@ async function toggleChatInterface() {
 
 // 桌機版：點擊外部關閉浮動視窗
 window.addEventListener('click', function(e) {
-    if (hasBottomNav()) return; // 手機版已跳頁，不需要此邏輯
-    if (talkInterface.style.display === 'block' &&
+    if (hasBottomNav()) return;
+    if (talkInterface && talkInterface.style.display === 'block' &&
         !talkInterface.contains(e.target) &&
-        !chatopen.contains(e.target) &&
+        !chatopen?.contains(e.target) &&
         !document.querySelector('.swal2-container')) {
         talkInterface.style.display = 'none';
     }
@@ -41,31 +45,286 @@ window.addEventListener('click', function(e) {
 // 接收 iframe 內傳來的關閉訊號（桌機版浮動視窗關閉按鈕）
 window.addEventListener('message', function(e) {
     if (e.data?.type === 'closeChat') {
-        talkInterface.style.display = 'none';
+        if (talkInterface) talkInterface.style.display = 'none';
         document.body.classList.remove('chat-open-mobile');
     }
 });
+
 async function canEnterChat() {
-    // 官方公告不需要登入；私人訊息在 chatroom 內部處理
     return true;
 }
 
-// 帳號層級 SSE：頁面載入即建立連線，接收所有聊天室即時通知（顯示 chaticon 紅點）
+// ── Toast Notification System ──
+const _TOAST_MAX = 5;
+const _TOAST_DURATION = 5000;
+const _partnerCache = new Map(); // username → { name, photoURL, userId }
+const _toastMap = new Map();     // username → { el, timer, count }
+
+// 注入 toast 樣式（僅一次）
+(function _injectToastStyles() {
+  if (document.getElementById('chat-toast-style')) return;
+  const s = document.createElement('style');
+  s.id = 'chat-toast-style';
+  s.textContent = `
+    #chat-toast-container {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 8px;
+      pointer-events: none;
+    }
+    @media (min-width: 992px) {
+      #chat-toast-container {
+        left: auto;
+        right: 30px;
+        bottom: 150px;
+      }
+    }
+    .chat-toast {
+      position: relative;
+      background: #fff;
+      border-radius: 14px;
+      padding: 10px 12px 10px 12px;
+      padding-top: 22px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.07);
+      pointer-events: auto;
+      cursor: pointer;
+      max-width: 290px;
+      min-width: 210px;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateX(14px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .chat-toast--visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .chat-toast:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+    }
+    .chat-toast__badge {
+      position: absolute;
+      top: 6px;
+      left: 10px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #004b97;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+    .chat-toast__progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 100%;
+      background: #abdad5;
+      border-radius: 0 0 12px 12px;
+      transform-origin: left;
+      transform: scaleX(1);
+    }
+    .chat-toast__progress--running {
+      transition: transform linear;
+      transform: scaleX(0);
+    }
+    .chat-toast__close {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 14px;
+      color: #bbb;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+    .chat-toast__close:hover { color: #555; }
+    .chat-toast__content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chat-toast__avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .chat-toast__body {
+      flex: 1;
+      overflow: hidden;
+    }
+    .chat-toast__name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .chat-toast__preview {
+      font-size: 12px;
+      color: #777;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .chat-toast__img-thumb {
+      width: 42px;
+      height: 42px;
+      border-radius: 6px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid #eee;
+    }
+  `;
+  document.head.appendChild(s);
+})();
+
+const _toastContainer = (() => {
+  const el = document.createElement('div');
+  el.id = 'chat-toast-container';
+  document.body.appendChild(el);
+  return el;
+})();
+
+function _esc(str) {
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _dismissToast(username) {
+  const entry = _toastMap.get(username);
+  if (!entry) return;
+  clearTimeout(entry.timer);
+  entry.el.classList.remove('chat-toast--visible');
+  setTimeout(() => { entry.el.remove(); _toastMap.delete(username); }, 300);
+}
+
+function _getAttachmentUrl(attachments) {
+  if (!attachments) return null;
+  if (Array.isArray(attachments) && attachments.length > 0) return attachments[0];
+  if (typeof attachments === 'string' && attachments.trim()) return attachments.trim();
+  return null;
+}
+
+function _showChatToast(data) {
+  const username = data.username;
+  const partner = _partnerCache.get(username) || {
+    name: username,
+    photoURL: '../image/default-avatar.png',
+    userId: null
+  };
+  const isMobile = hasBottomNav();
+  const hasIframe = !!talkInterface;
+  const imgUrl = _getAttachmentUrl(data.attachments);
+  const hasText = !!data.message?.trim();
+  const previewText = hasText ? data.message.slice(0, 45) : (imgUrl ? '傳送一張圖片' : '');
+
+  // 合併：同一人已有 toast → 更新計數
+  if (_toastMap.has(username)) {
+    const entry = _toastMap.get(username);
+    clearTimeout(entry.timer);
+    entry.count++;
+    const previewEl = entry.el.querySelector('.chat-toast__preview');
+    if (previewEl) previewEl.textContent = `${entry.count} 則新訊息`;
+    entry.timer = setTimeout(() => _dismissToast(username), _TOAST_DURATION);
+    return;
+  }
+
+  // 超過上限：移除最舊的
+  if (_toastMap.size >= _TOAST_MAX) {
+    _dismissToast(_toastMap.keys().next().value);
+  }
+
+  const el = document.createElement('div');
+  el.className = 'chat-toast';
+  el.innerHTML = `
+    <span class="chat-toast__badge">New Message</span>
+    <div class="chat-toast__progress"></div>
+    <button class="chat-toast__close" aria-label="關閉">×</button>
+    <div class="chat-toast__content">
+      <img class="chat-toast__avatar" src="${_esc(partner.photoURL)}" onerror="this.src='../image/default-avatar.png'" alt="">
+      <div class="chat-toast__body">
+        <div class="chat-toast__name">${_esc(partner.name)}</div>
+        <div class="chat-toast__preview">${_esc(previewText)}</div>
+      </div>
+      ${imgUrl ? `<img class="chat-toast__img-thumb" src="${_esc(imgUrl)}" alt="圖片預覽">` : ''}
+    </div>
+  `;
+
+  el.querySelector('.chat-toast__close').addEventListener('click', (e) => {
+    e.stopPropagation();
+    _dismissToast(username);
+  });
+
+  el.addEventListener('click', () => {
+    _dismissToast(username);
+    const uid = partner.userId;
+    if (!isMobile && hasIframe && uid) {
+      // 桌機版且頁面有 iframe → 在 iframe 中開啟指定對話
+      talkInterface.src = `../chatroom/chatroom.html?openChat=${uid}`;
+      talkInterface.style.display = 'block';
+    } else {
+      window.location.href = `../chatroom/chatroom.html${uid ? '?openChat=' + uid : ''}`;
+    }
+  });
+
+  _toastContainer.appendChild(el);
+  requestAnimationFrame(() => {
+    el.classList.add('chat-toast--visible');
+    const bar = el.querySelector('.chat-toast__progress');
+    if (bar) {
+      bar.style.transitionDuration = `${_TOAST_DURATION}ms`;
+      requestAnimationFrame(() => bar.classList.add('chat-toast__progress--running'));
+    }
+  });
+  const timer = setTimeout(() => _dismissToast(username), _TOAST_DURATION);
+  _toastMap.set(username, { el, timer, count: 1 });
+}
+
+// 帳號層級 SSE：頁面載入即建立連線，接收所有聊天室即時通知（顯示 chaticon 紅點 + toast）
 window.addEventListener('load', async () => {
     const _notifSvc = new ChatBackendService();
+    const myUsername = localStorage.getItem('username');
 
-    // 初始未讀檢查：頁面載入時若已有未讀訊息，立即亮紅點
+    // 初始未讀檢查 + 建立 partner cache
     try {
         const rooms = await _notifSvc.listRooms();
-        const username = localStorage.getItem('username');
-        const hasUnread = rooms.data.items?.some(data => {
+        let hasUnread = false;
+
+        rooms.data.items?.forEach(data => {
+            // 建立 partner cache（私人聊天室）
+            if (data.type !== 'OFFICIAL') {
+                const partner = data.members?.find(m => m.name !== myUsername);
+                if (partner) {
+                    _partnerCache.set(partner.name, {
+                        name: partner.name,
+                        photoURL: partner.photoURL || '../image/default-avatar.png',
+                        userId: partner.id ?? partner.accountId ?? partner.userId ?? null
+                    });
+                }
+            }
+            // 判斷是否有未讀
             const isOfficial = data.type === 'OFFICIAL';
-            const myself = data.members?.find(m => m.name === username);
+            const myself = data.members?.find(m => m.name === myUsername);
             const isMyMessage = data.lastMessage?.username === myself?.name;
-            return data.lastMessageId != null
-                && myself?.lastReadMessageId !== data.lastMessageId
-                && (isOfficial || !isMyMessage);
+            // 官方頻道：若 members 中找不到自己，改用 lastReadMessageId 欄位（部分 API 直接回傳）
+            const myLastRead = myself?.lastReadMessageId ?? data.lastReadMessageId ?? null;
+            if (data.lastMessageId != null
+                && myLastRead !== data.lastMessageId
+                && (isOfficial || !isMyMessage)) {
+                hasUnread = true;
+            }
         });
+
         if (hasUnread) window.dispatchEvent(new CustomEvent('chatUnread'));
     } catch (e) { /* 未登入或錯誤，略過 */ }
 
@@ -75,8 +334,9 @@ window.addEventListener('load', async () => {
     );
     _notifSse.addEventListener('newMessage', (event) => {
         const data = JSON.parse(event.data);
-        if (data.username !== localStorage.getItem('username')) {
+        if (data.username !== myUsername) {
             window.dispatchEvent(new CustomEvent('chatUnread'));
+            _showChatToast(data);
         }
     });
     _notifSse.addEventListener('newBroadcast', () => {
