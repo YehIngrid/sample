@@ -323,6 +323,9 @@ html, body {
 .in-iframe .sidebar {
     height: 100vh !important;
 }
+.in-iframe #toggleMaximizeBtn {
+    display: inline-flex !important;
+}
 .else {
     width: 50%;
 }

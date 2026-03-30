@@ -8,6 +8,44 @@ function hasBottomNav() {
   return !!document.querySelector('.bottom-nav');
 }
 
+// ── 放大/縮小按鈕（父頁面直接建立，不依賴 iframe 內部）──
+let _maxBtn = null;
+function _getOrCreateMaxBtn() {
+  if (_maxBtn) return _maxBtn;
+  if (!talkInterface) return null;
+  _maxBtn = document.createElement('button');
+  _maxBtn.id = 'chatMaxBtn';
+  _maxBtn.title = '全螢幕';
+  _maxBtn.innerHTML = '⛶';
+  _maxBtn.style.display = 'none';
+  document.body.appendChild(_maxBtn);
+  _maxBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    _toggleMaximize();
+  });
+  return _maxBtn;
+}
+
+function _toggleMaximize(forceRestore = false) {
+  if (!talkInterface) return;
+  const isMax = forceRestore ? false : !talkInterface.classList.contains('maximized');
+  talkInterface.classList.toggle('maximized', isMax);
+  talkInterface.contentWindow?.postMessage({ type: isMax ? 'maximizeChat' : 'restoreFromParent' }, '*');
+  if (_maxBtn) {
+    _maxBtn.classList.toggle('maximized', isMax);
+    _maxBtn.innerHTML = isMax ? '⊡' : '⛶';
+    _maxBtn.title = isMax ? '縮小視窗' : '全螢幕';
+  }
+}
+
+function _showMaxBtn() {
+  const btn = _getOrCreateMaxBtn();
+  if (btn) btn.style.display = 'block';
+}
+function _hideMaxBtn() {
+  if (_maxBtn) _maxBtn.style.display = 'none';
+}
+
 async function toggleChatInterface() {
   // 有底部導覽列（手機版頁面）→ 直接跳轉到聊天室頁面
   if (hasBottomNav()) {
@@ -26,15 +64,19 @@ async function toggleChatInterface() {
       talkInterface.src = '../chatroom/chatroom.html';
     }
     talkInterface.style.display = 'block';
+    _showMaxBtn();
   } else {
+    talkInterface.classList.remove('maximized');
     talkInterface.style.display = 'none';
+    _hideMaxBtn();
   }
 }
 
-// 桌機版：點擊外部關閉浮動視窗
+// 桌機版：點擊外部關閉浮動視窗（放大狀態時不觸發）
 window.addEventListener('click', function(e) {
     if (hasBottomNav()) return;
     if (talkInterface && talkInterface.style.display === 'block' &&
+        !talkInterface.classList.contains('maximized') &&
         !talkInterface.contains(e.target) &&
         !chatopen?.contains(e.target) &&
         !document.querySelector('.swal2-container')) {
@@ -42,11 +84,30 @@ window.addEventListener('click', function(e) {
     }
 });
 
-// 接收 iframe 內傳來的關閉訊號（桌機版浮動視窗關閉按鈕）
+// 桌機版 Esc：放大 → 縮小；縮小 → 關閉
+document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape' || !talkInterface || talkInterface.style.display === 'none') return;
+    if (talkInterface.classList.contains('maximized')) {
+        _toggleMaximize(true);
+    } else {
+        talkInterface.style.display = 'none';
+        _hideMaxBtn();
+    }
+});
+
+// 接收 iframe 內傳來的訊號
 window.addEventListener('message', function(e) {
     if (e.data?.type === 'closeChat') {
-        if (talkInterface) talkInterface.style.display = 'none';
+        if (talkInterface) {
+            talkInterface.classList.remove('maximized');
+            talkInterface.style.display = 'none';
+        }
+        _hideMaxBtn();
         document.body.classList.remove('chat-open-mobile');
+    } else if (e.data?.type === 'maximizeChat') {
+        _toggleMaximize(false);
+    } else if (e.data?.type === 'restoreChat') {
+        _toggleMaximize(true);
     }
 });
 
@@ -82,6 +143,39 @@ const _toastMap = new Map();     // username → { el, timer, count }
         right: 30px;
         bottom: 150px;
       }
+    }
+    #talkInterface {
+      transition: top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease,
+                  width 0.25s ease, height 0.25s ease, border-radius 0.25s ease;
+    }
+    #talkInterface.maximized {
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      border-radius: 0 !important;
+    }
+    #chatMaxBtn {
+      position: fixed;
+      bottom: 625px;
+      right: 38px;
+      z-index: 10002;
+      background: rgba(0,75,151,0.82);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 3px 8px;
+      font-size: 14px;
+      cursor: pointer;
+      line-height: 1.5;
+    }
+    #chatMaxBtn:hover { background: rgba(36,182,133,0.9); }
+    #chatMaxBtn.maximized {
+      bottom: auto;
+      top: 10px;
+      right: 10px;
     }
     .chat-toast {
       position: relative;

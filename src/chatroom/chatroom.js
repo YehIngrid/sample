@@ -538,6 +538,31 @@ class ChatRoomList {
             });
         }
 
+        // 放大/縮小按鈕（僅 iframe 模式顯示）
+        const toggleMaxBtn = document.getElementById('toggleMaximizeBtn');
+        if (toggleMaxBtn && window !== window.parent) {
+            toggleMaxBtn.style.display = 'inline-flex';
+            toggleMaxBtn.addEventListener('click', () => {
+                const isMaximized = document.body.classList.toggle('chat-maximized');
+                window.parent?.postMessage({ type: isMaximized ? 'maximizeChat' : 'restoreChat' }, '*');
+                toggleMaxBtn.querySelector('i').className = isMaximized ? 'bi bi-fullscreen-exit' : 'bi bi-arrows-fullscreen';
+                toggleMaxBtn.title = isMaximized ? '縮小視窗' : '放大視窗';
+            });
+        }
+
+        // Esc：放大 → 縮小；縮小 → 關閉
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape' || window === window.parent) return;
+            if (document.body.classList.contains('chat-maximized')) {
+                document.body.classList.remove('chat-maximized');
+                const btn = document.getElementById('toggleMaximizeBtn');
+                if (btn) { btn.querySelector('i').className = 'bi bi-arrows-fullscreen'; btn.title = '放大視窗'; }
+                window.parent?.postMessage({ type: 'restoreChat' }, '*');
+            } else {
+                window.parent?.postMessage({ type: 'closeChat' }, '*');
+            }
+        });
+
         document.getElementById('messageForm').addEventListener('submit', (e) => {
             e.preventDefault();
             this.sendMessage();
@@ -1166,12 +1191,15 @@ let _chatReady = false;
 let _pendingSellerId = null;
 
 window.addEventListener('load', () => {
+    // 優先標記 iframe 模式，讓 CSS 立即生效（#toggleMaximizeBtn 等依賴此 class）
+    if (window.parent !== window) {
+        document.body.classList.add('in-iframe');
+    }
     openChatRoomList(null);
     _chatReady = true;
     // 通知父頁面 iframe 已準備好
     if (window.parent !== window) {
         window.parent.postMessage({ type: 'chatReady' }, '*');
-        document.body.classList.add('in-iframe');
     }
     // 如果有在 ready 前就收到的 pending 請求，立刻執行
     if (_pendingSellerId) {
@@ -1209,6 +1237,12 @@ window.addEventListener('message', (e) => {
             // 還沒 ready，先存起來等 load 完再執行
             _pendingSellerId = e.data.sellerId;
         }
+    }
+    // 父頁面觸發縮小（Esc）→ 同步 iframe 內狀態
+    if (e.data?.type === 'restoreFromParent') {
+        document.body.classList.remove('chat-maximized');
+        const btn = document.getElementById('toggleMaximizeBtn');
+        if (btn) { btn.querySelector('i').className = 'bi bi-arrows-fullscreen'; btn.title = '放大視窗'; }
     }
 });
 

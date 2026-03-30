@@ -708,8 +708,8 @@ ul{
   .navbar a.nav-link[href*="shoppingcart"] {
     display: none !important;
   }
-  /* Fullscreen chatroom on mobile — leaves 60px at bottom for the nav bar */
-  #talkInterface {
+  /* Fullscreen chatroom on mobile — only on pages with bottom-nav */
+  body:has(.bottom-nav) #talkInterface {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;

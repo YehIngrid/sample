@@ -662,4 +662,6 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
   overflow: hidden;
   z-index: 10000;
   border: none;
+  transition: top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease,
+              width 0.25s ease, height 0.25s ease, border-radius 0.25s ease;
 }
