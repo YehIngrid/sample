@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
-import '../default/default.js';
+import { requireLogin } from '../default/default.js';
 
 let backendService;
 let wpbackendService;
@@ -974,6 +974,10 @@ function initCardPhotoSwipe(backEl, wishId, photoUrl) {
  */
 async function handleContactWisher(wishId, btn) {
   if (!btn) return;
+
+  const loggedIn = await requireLogin();
+  if (!loggedIn) return;
+
   const origText = btn.textContent;
   btn.disabled = true;
   btn.textContent = '載入中...';

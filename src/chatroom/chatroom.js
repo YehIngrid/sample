@@ -521,7 +521,11 @@ class ChatRoomList {
         document.addEventListener('click', async (e) => {
             if (!e.target.closest('#backButton')) return;
             this.backToSidebar();
-            await this.loadRooms();
+            if (this.userId) {
+                await this.loadRooms();
+            } else {
+                await this.loadPublicRooms();
+            }
         });
 
         // 關閉按鈕：iframe 內傳訊息給父頁面；獨立頁面直接 history.back()

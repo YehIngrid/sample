@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
-import '../default/default.js';
+import { requireLogin } from '../default/default.js';
 
 // ================== Service ==================
 let backendService = null;
@@ -36,6 +36,9 @@ function saveState() {
 
 // ================== Init ==================
 document.addEventListener('DOMContentLoaded', async () => {
+  const loggedIn = await requireLogin();
+  if (!loggedIn) return;
+
   backendService = new BackendService();
   chatService = new ChatBackendService();
   await initCartFromAPI();
