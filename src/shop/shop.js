@@ -721,7 +721,7 @@ document.addEventListener('DOMContentLoaded', () => {
     nextBtn.disabled = true;
     pageInfo.textContent = '載入中…';
     container.innerHTML = productGridSkeletonHTML(12);
-    const response = await backendService.getNewItems({ page: p, limit: DESKTOP_LIMIT });
+    const response = await backendService.getCommodityList('all', { page: p, limit: DESKTOP_LIMIT, sort: 'new' });
     const productList = response?.data?.commodities ?? [];
     const pg = response?.data?.pagination ?? { currentPage: p, totalPages: 1, hasPrevPage: p > 1, hasNextPage: false };
     desktopPage = pg.currentPage ?? p;
@@ -743,7 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isFetching || !backendHasMore) return;
     isFetching = true;
     try {
-      const response = await backendService.getNewItems({ page: backendPage, limit: DESKTOP_LIMIT });
+      const response = await backendService.getCommodityList('all', { page: backendPage, limit: DESKTOP_LIMIT, sort: 'new' });
       const items = response?.data?.commodities ?? [];
       const pg    = response?.data?.pagination ?? {};
       backendHasMore = !!pg.hasNextPage;

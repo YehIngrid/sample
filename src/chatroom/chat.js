@@ -441,5 +441,14 @@ window.addEventListener('load', async () => {
     _notifSse.onerror = () => { _notifSse.close(); };
 });
 
+// 手機版底部導覽列：未讀訊息紅點
+function _updateNavBadge(show) {
+  const badge = document.getElementById('chatNavBadge');
+  if (!badge) return;
+  badge.classList.toggle('show', show);
+}
+
+window.addEventListener('chatUnread', () => _updateNavBadge(true));
+
 window.toggleChatInterface = toggleChatInterface;
 window.canEnterChat = canEnterChat;

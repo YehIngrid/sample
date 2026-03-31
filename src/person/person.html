@@ -606,24 +606,44 @@
   <form id="editItemForm" class="drawer-body">
     <input type="hidden" id="edit-id" name="id">
 
-    <div class="mb-3">
-      <label for="edit-name" class="form-label edit-text">商品名稱</label>
-      <small>* 必填</small>
-      <input type="text" class="form-control" id="edit-name" name="name">
+    <!-- 商品名稱 -->
+    <div class="sell-field">
+      <label for="edit-name" class="sell-label">商品名稱</label>
+      <input type="text" class="form-control" id="edit-name" name="name" placeholder="請輸入商品名稱">
     </div>
 
-    <div class="mb-3">
-      <label for="edit-price" class="form-label edit-text">價格 (NT$)</label>
-      <small>* 必填</small>
-      <input type="number" class="form-control" id="edit-price" name="price" min="0" step="1">
-    </div>
-
-    <div class="mb-3">
-      <label for="edit-category" class="form-label edit-text">分類</label>
-      <small>* 必填</small>
-      <select class="form-select" id="edit-category" name="category">
-        <option value="">請選擇商品類型</option>
-        <option value="book">書籍與學習用品</option>
+    <!-- 所屬分類 -->
+    <div class="sell-field">
+      <label class="sell-label">所屬分類</label>
+      <div class="sell-cat-grid edit-cat-grid">
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="book">
+          <img src="../svg/book.svg" alt="書籍"><span>書籍與學籍用品</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="life">
+          <img src="../svg/life.svg" alt="生活"><span>宿舍與生活用品</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="student">
+          <img src="../svg/ruler.svg" alt="器材"><span>學生專用器材</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="recycle">
+          <img src="../svg/bag.svg" alt="環保"><span>環保生活用品</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="clean">
+          <img src="../svg/save.svg" alt="收納"><span>儲物與收納用品</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="other">
+          <img src="../svg/Other.svg" alt="其他"><span>其他</span>
+        </label>
+      </div>
+      <!-- 隱藏的 select 供 JS 讀取送出 -->
+      <select id="edit-category" name="category" class="d-none">
+        <option value="book">書籍與學籍用品</option>
         <option value="life">宿舍與生活用品</option>
         <option value="student">學生專用器材</option>
         <option value="recycle">環保生活用品</option>
@@ -631,64 +651,96 @@
         <option value="other">其他</option>
       </select>
     </div>
-    <!-- TODO 加入其他沒有寫的屬性，尚未測試排版與功能（還沒寫） -->
-    <div class="form-group mb-3">
-      <label for="edit-stock" class="edit-text">庫存數量</label>
-      <small>* 必填</small>
-      <input type="number" class="form-control" id="edit-stock" name="stock" min="0" step="1" placeholder="請輸入庫存數量">
-    </div>
-    <div class="mb-3">
-      <label class="form-label d-block edit-text">商品大小</label>
-      <small>* 必填</small>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1">
-        <label class="form-check-label" for="inlineRadio1">小</label>
+
+    <!-- 售價 + 庫存 -->
+    <div class="sell-two-col">
+      <div class="sell-field">
+        <label for="edit-price" class="sell-label">售價（元）<span class="sell-required">*</span></label>
+        <div class="sell-price-wrap">
+          <span class="sell-price-prefix">NT$</span>
+          <input type="number" class="form-control" id="edit-price" name="price" placeholder="0" min="0" step="1">
+        </div>
       </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2">
-        <label class="form-check-label" for="inlineRadio2">中</label>
+      <div class="sell-field">
+        <label for="edit-stock" class="sell-label">庫存數量</label>
+        <input type="number" class="form-control" id="edit-stock" name="stock" min="0" step="1" placeholder="可販賣數量">
       </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="3">
-        <label class="form-check-label" for="inlineRadio3">大</label>
-      </div>
-    </div>
-    <!-- TODO size部分尚未完成，還有新舊程度跟年齡 -->
-    <!--? stop here -->
-    <div class="mb-3">
-      <label for="edit-description" class="form-label edit-text">商品描述</label>
-      <small>* 必填</small>
-      <textarea class="form-control" id="edit-description" name="description" rows="5"></textarea>
     </div>
 
-    <div class="mb-4">
-      <label for="edit-image" class="form-label edit-text">商品主要圖片
-        <small>* 必填</small>
-        <br><small class="text-muted">(照片大小需 ≤ 5MB)</small>
+    <!-- 商品尺寸 -->
+    <div class="sell-field">
+      <label class="sell-label">商品尺寸</label>
+      <div class="sell-size-group">
+        <label class="sell-size-card">
+          <input type="radio" name="editSizeRadio" value="2">
+          <div class="sell-size-icon"><i class="ti ti-package"></i></div>
+          <strong>大型</strong><small>&gt; 150cm</small>
+        </label>
+        <label class="sell-size-card">
+          <input type="radio" name="editSizeRadio" value="1">
+          <div class="sell-size-icon"><i class="ti ti-box"></i></div>
+          <strong>中型</strong><small>30–150cm</small>
+        </label>
+        <label class="sell-size-card">
+          <input type="radio" name="editSizeRadio" value="0">
+          <div class="sell-size-icon"><i class="ti ti-device-mobile"></i></div>
+          <strong>小型</strong><small>&lt; 30cm</small>
+        </label>
+      </div>
+      <input type="hidden" id="edit-size" name="size">
+    </div>
+
+    <!-- 新舊程度 -->
+    <div class="sell-field">
+      <label class="sell-label">新舊程度</label>
+      <div class="sell-condition-group">
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="1"><span class="sell-cond-dot cond-1"></span>全新<span class="sell-cond-desc">（未使用過）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="2"><span class="sell-cond-dot cond-2"></span>幾乎全新<span class="sell-cond-desc">（使用次數極少）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="3"><span class="sell-cond-dot cond-3"></span>半新<span class="sell-cond-desc">（使用過，狀態良好）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="4"><span class="sell-cond-dot cond-4"></span>適中<span class="sell-cond-desc">（有明顯使用痕跡）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="5"><span class="sell-cond-dot cond-5"></span>稍舊<span class="sell-cond-desc">（有較多痕跡或輕微損壞）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="6"><span class="sell-cond-dot cond-6"></span>全舊<span class="sell-cond-desc">（明顯損壞或缺陷）</span></label>
+      </div>
+      <input type="hidden" id="edit-condition" name="new_or_old">
+    </div>
+
+    <!-- 商品描述 -->
+    <div class="sell-field">
+      <label for="edit-description" class="sell-label">商品狀態描述</label>
+      <small class="sell-hint">說明販售原因、瑕疵部位、規格等，建議 30 字以上</small>
+      <textarea class="form-control" id="edit-description" name="description" rows="4" placeholder="例如：九成新，只用了一學期，無劃線無書寫..."></textarea>
+    </div>
+
+    <!-- 主要照片 -->
+    <div class="sell-field">
+      <label class="sell-label">主要照片（封面）</label>
+      <small class="sell-hint">不更換請留空；≤ 5MB；JPEG / PNG / WebP</small>
+      <label class="sell-upload-zone" for="edit-image">
+        <i class="ti ti-photo-up"></i>
+        <span>點擊上傳新封面照</span>
       </label>
-      <input class="form-control" type="file" id="edit-image" name="image" accept="image/*">
-      <div class="mt-2">
-        <img id="edit-image-preview" alt="預覽" class="img-fluid rounded d-none" style="max-height: 180px;object-fit: cover;">
+      <input type="file" id="edit-image" name="image" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp">
+      <div class="sell-preview-single">
+        <img id="edit-image-preview" alt="預覽" class="d-none">
       </div>
     </div>
 
-    <!-- 次要圖片（最多 5 張） -->
-    <div class="mb-4">
-      <label for="edit-images" class="form-label edit-text">
-        商品其他圖片
-        <br><small class="text-muted">* 必填(最多五張；選擇任何新檔案將覆蓋目前所有次要圖片；每張 ≤ 5MB)</small>
+    <!-- 其他照片 -->
+    <div class="sell-field">
+      <label class="sell-label">其他照片（最多 5 張）</label>
+      <small class="sell-hint">選擇新檔案將覆蓋全部次要照片；每張 ≤ 5MB</small>
+      <label class="sell-upload-zone" for="edit-images">
+        <i class="ti ti-photos"></i>
+        <span>點擊上傳（可多選）</span>
       </label>
-      <input class="form-control" type="file" id="edit-images" name="otherImages" accept="image/*" multiple>
-      <div class="form-text edit-text" id="edit-images-hint">已選 0 / 5</div>
-
-      <!-- 縮圖預覽區 -->
-      <div id="edit-images-preview" class="row g-2 mt-2"></div>
+      <input type="file" id="edit-images" name="otherImages" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp" multiple>
+      <div class="sell-hint" id="edit-images-hint" style="margin-top:4px;">已選 0 / 5</div>
+      <div id="edit-images-preview" class="sell-preview-grid mt-2"></div>
     </div>
 
-
-    <div class="drawer-footer border-top">
-      <button type="button" class="btn btn-outline-secondary" id="editDrawerCancelBtn">取消</button>
-      <button type="submit" class="btn btn-primary">儲存</button>
+    <div class="drawer-footer border-top pt-3 mt-2 d-flex justify-content-between">
+      <button type="button" class="sell-prev-btn" id="editDrawerCancelBtn">取消</button>
+      <button type="submit" class="sell-next-btn"><i class="ti ti-check"></i> 儲存變更</button>
     </div>
   </form>
 </aside>
@@ -716,6 +768,7 @@ document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
       <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-tab-chat">
         <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="正在聊天室">
         <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="前往聊天室">
+        <span class="bottom-nav-badge" id="chatNavBadge"></span>
         <span>聊天室</span>
       </a>
       <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item nav-tab-cart">
@@ -731,6 +784,22 @@ document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
     </nav>
 
     <!-- script部分-->
+    <!-- 聊天室 -->
+    <button class="chaticon d-none d-lg-flex" id="chaticon">
+      <img src="../svg/chaticon.svg" alt="聊天室icon點擊開啟聊天室">
+      <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
+    </button>
+    <iframe id="talkInterface" style="display:none;"></iframe>
+
+    <script>
+      window.addEventListener('chatUnread', () => {
+        document.getElementById('chatUnreadDot').style.display = 'block';
+      });
+      window.addEventListener('chatRead', () => {
+        document.getElementById('chatUnreadDot').style.display = 'none';
+      });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>

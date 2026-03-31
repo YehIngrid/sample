@@ -168,77 +168,27 @@ export default class BackendService {
         }
     }
 
-    async getAllCommodities(pagingInfo) {
+    // 統一商品列表 API：GET /api/commodity/list/{listName}
+    // listName: all | hot | book | life | special | reuse | storage | other
+    // sort: default | new | price-low | price-high
+    async getCommodityList(listName = 'all', { page, limit, sort, maxPrice } = {}) {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/commodity/list/all`, {
-                params: {
-                    page: pagingInfo.page,
-                    limit: pagingInfo.limit
-                }
-            });
+            const params = {};
+            if (page) params.page = page;
+            if (limit) params.limit = limit;
+            if (sort && sort !== 'default') params.sort = sort;
+            if (maxPrice) params.maxPrice = maxPrice;
+            const response = await axios.get(`${this.baseUrl}/api/commodity/list/${listName}`, { params });
             return response.data;
         } catch (error) {
-            console.error("無法取得分類資料", error);
+            console.error("無法取得商品列表", error);
             return Promise.reject(error);
         }
     }
-    async getPriceLowItems(pagingInfo) {
-        try {
-            const response = await axios.get(`${this.baseUrl}/api/commodity/list/price-low`, {
-                params: {
-                    page: pagingInfo.page,
-                    limit: pagingInfo.limit
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error("無法取得價格低到高商品資料", error);
-            return Promise.reject(error);
-        }
-    }
-    async getPriceHighItems(pagingInfo) {
-        try {
-            const response = await axios.get(`${this.baseUrl}/api/commodity/list/price-high`, {
-                params: {
-                    page: pagingInfo.page,
-                    limit: pagingInfo.limit
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error("無法取得價格高到低商品資料", error);
-            return Promise.reject(error);
-        }
-    }
-
-     async getHotItems(pagingInfo) {
-        try {
-            const response = await axios.get(`${this.baseUrl}/api/commodity/list/hot`, {
-                params: {
-                    page: pagingInfo.page,
-                    limit: pagingInfo.limit
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error("無法取得熱門商品資料", error);
-            return Promise.reject(error);
-        }
-    }
-    async getNewItems(pagingInfo) {
-        try {
-            const response = await axios.get(`${this.baseUrl}/api/commodity/list/new`, {
-                params: {
-                    page: pagingInfo.page, 
-                    limit: pagingInfo.limit
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error("無法取得最新商品資料", error);
-            return Promise.reject(error);
-        }
-    }
+    // 保留舊方法以向下相容（內部改呼叫新 API）
+    async getAllCommodities(pagingInfo) { return this.getCommodityList('all', pagingInfo); }
+    async getHotItems(pagingInfo) { return this.getCommodityList('hot', pagingInfo); }
+    async getNewItems(pagingInfo) { return this.getCommodityList('all', { ...pagingInfo, sort: 'new' }); }
     // 根據分類取得商品列表
     async searchCommodities({ keyword, category, maxPrice, page, limit } = {}) {
         try {
@@ -256,18 +206,7 @@ export default class BackendService {
         }
     }
     async getCategoryItems(category, pagingInfo) {
-        try {
-            const response = await axios.get(`${this.baseUrl}/api/commodity/list/category/${category}`, {
-                params: {
-                    page: pagingInfo.page,
-                    limit: pagingInfo.limit
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error("無法取得分類資料", error);
-            return Promise.reject(error);
-        }
+        return this.getCommodityList(category, pagingInfo);
     }
     async getItemsInfo(id) {
         try {

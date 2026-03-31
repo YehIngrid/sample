@@ -1,3 +1,30 @@
+/* ── 聊天室載入遮罩 ── */
+.chat-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+.chat-loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.chat-loader__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e0eaf5;
+  border-top-color: #004b97;
+  border-radius: 50%;
+  animation: chatLoaderSpin 0.75s linear infinite;
+}
+@keyframes chatLoaderSpin {
+  to { transform: rotate(360deg); }
+}
+
 :root {
     --sidebar-bg: #f8f9fa;
     --chat-bg: #ffffff;
@@ -322,9 +349,6 @@ html, body {
 .in-iframe .chat-main,
 .in-iframe .sidebar {
     height: 100vh !important;
-}
-.in-iframe #toggleMaximizeBtn {
-    display: inline-flex !important;
 }
 .else {
     width: 50%;

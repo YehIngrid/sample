@@ -1148,6 +1148,9 @@ body {
 }
 .wc-price { font-size: 0.72rem; color: #c0392b; font-weight: 700; }
 .wc-stock { font-size: 0.68rem; color: #888; }
+@media (max-width: 600px) {
+    .wc-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* ── Pagination ── */
 .wishpage {

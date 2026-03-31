@@ -25,7 +25,6 @@ function commoditySkeletonHTML(n = 12) {
 // ====== 設定 ======
 const PAGE_SIZE = 18;
 let currentCategory = 'all';
-let currentSource = 'all';   // 'all' | 'hot' | 'new' — 決定呼叫哪支 API
 let pageIndex = 0;
 let isLoading = false;
 let activeKeyword = '';  // 只在搜尋表單提交時更新，sort/filter 不觸發搜尋 API
@@ -62,7 +61,6 @@ sortItems.forEach(el => {
 // 切換大分類
 function changeCategory(category) {
   currentCategory = category;
-  currentSource = (category === 'hot' || category === 'new') ? category : 'all';
   // 切換分類時清除搜尋關鍵字，避免搜尋結果污染分類瀏覽
   activeKeyword = '';
   const si = document.getElementById('searchInput');
@@ -160,7 +158,6 @@ async function loadProducts() {
 
   try {
     const backendService = new BackendService();
-    const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
     const sortselected = sortSelect ? sortSelect.value : 'default';
     const keyword = activeKeyword;
     const maxPrice = maxPriceInput?.value ? parseInt(maxPriceInput.value) : null;
@@ -170,56 +167,41 @@ async function loadProducts() {
     let items = [];
     let totalCount = 0;
 
-    // === 1️⃣ 決定呼叫哪支 API ===
-    // 有關鍵字或最高價格 → 優先走搜尋 API（涵蓋所有分類/排序狀態）
-    if (keyword || maxPrice) {
+    if (keyword) {
+      // 有關鍵字 → 走搜尋 API（支援 keyword、category、maxPrice）
       const searchParams = { page: pageIndex + 1, limit: PAGE_SIZE };
-      if (keyword) searchParams.keyword = keyword;
+      searchParams.keyword = keyword;
       if (maxPrice) searchParams.maxPrice = maxPrice;
       if (validCategories.includes(currentCategory)) searchParams.category = currentCategory;
       const response = await backendService.searchCommodities(searchParams);
       items = response?.data?.commodities || [];
       totalCount = response?.data?.pagination?.totalItems ?? items.length;
 
-    } else if (currentSource === 'hot') {
-      const response = await backendService.getHotItems(pagingInfo);
-      items = response?.data?.commodities || [];
-      totalCount = response?.data?.pagination?.totalItems ?? items.length;
-
-    } else if (currentSource === 'new') {
-      const response = await backendService.getNewItems(pagingInfo);
-      items = response?.data?.commodities || [];
-      totalCount = response?.data?.pagination?.totalItems ?? items.length;
-
-    } else if (sortselected === 'priceAsc') {
-      const response = await backendService.getPriceLowItems(pagingInfo);
-      items = response?.data?.commodities || [];
-      totalCount = response?.data?.pagination?.totalItems ?? items.length;
-      // 排序 API 不支援分類參數，前端補篩
-      if (validCategories.includes(currentCategory)) {
-        items = items.filter(p => p.category === currentCategory);
-      }
-
-    } else if (sortselected === 'priceDesc') {
-      const response = await backendService.getPriceHighItems(pagingInfo);
-      items = response?.data?.commodities || [];
-      totalCount = response?.data?.pagination?.totalItems ?? items.length;
-      if (validCategories.includes(currentCategory)) {
-        items = items.filter(p => p.category === currentCategory);
-      }
-
-    } else if (validCategories.includes(currentCategory)) {
-      const response = await backendService.getCategoryItems(currentCategory, pagingInfo);
-      items = response?.data?.commodities || [];
-      totalCount = response?.data?.pagination?.totalItems ?? items.length;
-
     } else {
-      const response = await backendService.getAllCommodities(pagingInfo);
+      // 無關鍵字 → 統一使用 /api/commodity/list/{listName}
+      // 決定 listName：'new' tab 用 all+sort=new，'hot' 用 hot，分類用該分類，其餘 all
+      const listName = currentCategory === 'new' ? 'all'
+                     : currentCategory === 'hot' ? 'hot'
+                     : validCategories.includes(currentCategory) ? currentCategory
+                     : 'all';
+
+      // 決定 sort：'new' tab 強制 new；否則依下拉選單
+      const sort = currentCategory === 'new' ? 'new'
+                 : sortselected === 'priceAsc'  ? 'price-low'
+                 : sortselected === 'priceDesc' ? 'price-high'
+                 : 'default';
+
+      const response = await backendService.getCommodityList(listName, {
+        page: pageIndex + 1,
+        limit: PAGE_SIZE,
+        sort,
+        maxPrice,
+      });
       items = response?.data?.commodities || [];
       totalCount = response?.data?.pagination?.totalItems ?? items.length;
     }
 
-    // === 2️⃣ 新舊程度：僅剩前端篩選（搜尋 API 不支援）===
+    // 新舊程度：前端篩選（API 不支援）
     if (newOrOld !== null) {
       items = items.filter(p => p.newOrOld <= newOrOld);
     }
@@ -384,6 +366,24 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProducts();
   });
 
+  // 當搜尋欄清空時自動重新載入（不需要按 Enter）
+  document.getElementById('searchInput')?.addEventListener('input', (e) => {
+    if (e.target.value.trim() === '' && activeKeyword !== '') {
+      activeKeyword = '';
+      pageIndex = 0;
+      productRow.innerHTML = '';
+      loadProducts();
+    }
+  });
+  document.getElementById('searchTriggerMobile')?.addEventListener('input', (e) => {
+    if (e.target.value.trim() === '' && activeKeyword !== '') {
+      activeKeyword = '';
+      pageIndex = 0;
+      productRow.innerHTML = '';
+      loadProducts();
+    }
+  });
+
   // 取得 URL 參數
   const urlParams = new URLSearchParams(window.location.search);
   const categoryFromUrl = urlParams.get('category');
@@ -410,7 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (qFromUrl) {
     activeKeyword = qFromUrl;
     currentCategory = initialCategory;
-    currentSource = 'all';
     pageIndex = 0;
     const si = document.getElementById('searchInput');
     if (si) { si.value = qFromUrl; si.dispatchEvent(new Event('input')); }

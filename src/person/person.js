@@ -1334,6 +1334,17 @@ const updateStatusUI = (data) => {
       updateSecondaryHint();
     });
 
+    // 分類 / 尺寸 / 新舊程度 卡片 → 同步隱藏欄位
+    el.form.querySelectorAll('input[name="editCategoryRadio"]').forEach(r => {
+      r.addEventListener('change', () => { el.category.value = r.value; });
+    });
+    el.form.querySelectorAll('input[name="editSizeRadio"]').forEach(r => {
+      r.addEventListener('change', () => { if (el.size) el.size.value = r.value; });
+    });
+    el.form.querySelectorAll('input[name="editConditionRadio"]').forEach(r => {
+      r.addEventListener('change', () => { if (el.condition) el.condition.value = r.value; });
+    });
+
     // 取消/關閉/ESC
     el.cancelBtn?.addEventListener('click', closeEditDrawer);
     el.closeBtn?.addEventListener('click', closeEditDrawer);
@@ -1355,6 +1366,8 @@ const updateStatusUI = (data) => {
       formData.append('category', el.category.value);
       formData.append('description', el.description.value);
       formData.append('stock', el.stock.value);
+      if (el.size?.value !== '') formData.append('size', el.size.value);
+      if (el.condition?.value !== '') formData.append('new_or_old', el.condition.value);
 
       // 主圖（可選）
       const mainFile = el.image?.files?.[0];
@@ -1414,6 +1427,8 @@ const updateStatusUI = (data) => {
       category: document.getElementById('edit-category'),
       stock: document.getElementById('edit-stock'),
       description: document.getElementById('edit-description'),
+      size: document.getElementById('edit-size'),
+      condition: document.getElementById('edit-condition'),
       image: document.getElementById('edit-image'),
       imagePreview: document.getElementById('edit-image-preview'),
       imagesInput: document.getElementById('edit-images'),
@@ -1466,9 +1481,28 @@ const updateStatusUI = (data) => {
   function fillForm(item) {
     el.name.value = item.name ?? '';
     el.price.value = item.price ?? '';
-    el.category.value = item.category ?? '';
     el.description.value = item.description ?? '';
     el.stock.value = item.stock ?? item.quantity ?? '';
+
+    // 分類：設定隱藏 select + 勾選對應卡片
+    el.category.value = item.category ?? '';
+    el.form.querySelectorAll('input[name="editCategoryRadio"]').forEach(r => {
+      r.checked = r.value === item.category;
+    });
+
+    // 尺寸
+    const sizeVal = String(item.size ?? '');
+    if (el.size) el.size.value = sizeVal;
+    el.form.querySelectorAll('input[name="editSizeRadio"]').forEach(r => {
+      r.checked = r.value === sizeVal;
+    });
+
+    // 新舊程度
+    const condVal = String(item.newOrOld ?? item.new_or_old ?? '');
+    if (el.condition) el.condition.value = condVal;
+    el.form.querySelectorAll('input[name="editConditionRadio"]').forEach(r => {
+      r.checked = r.value === condVal;
+    });
 
     // 主圖（欄位名稱相容 mainImage / imageUrl）
     const mainImg = item.mainImage || item.imageUrl || '';

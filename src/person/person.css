@@ -306,13 +306,107 @@
   border: 1px solid #e9ecef;
   border-radius: 8px;
 }
-.edit-text {
-  font-size: 14px;
+.edit-text { font-size: 14px; }
+small { font-size: 10px; color: #004b97; }
+
+/* ── 編輯商品表單 sell-* 元件（風格同 shop.html 賣家區） ── */
+.sell-field { margin-bottom: 20px; }
+.sell-label { font-size: 0.95rem; font-weight: 700; color: #222; display: block; margin-bottom: 6px; }
+.sell-required { color: #e03; font-size: 0.82rem; }
+.sell-hint { display: block; font-size: 0.8rem; color: #004b97; margin-bottom: 8px; }
+
+/* 分類卡片（3 欄，適合 drawer 寬度） */
+.edit-cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
-small {
-  font-size: 10px;
-  color: #004b97;
+.sell-cat-card {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  padding: 10px 6px; border: 1.5px solid transparent; border-radius: 10px;
+  background: #fff; cursor: pointer; font-size: 0.75rem; font-weight: 600;
+  color: #444; text-align: center;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
 }
+.sell-cat-card input { display: none; }
+.sell-cat-card img { width: 30px; height: 30px; object-fit: contain; }
+.sell-cat-card span { font-size: 0.65rem; }
+.sell-cat-card:hover { border-color: rgba(0,75,151,0.25); background: aliceblue; }
+.sell-cat-card:has(input:checked) { border-color: #004b97; background: #e8f0fb; color: #004b97; box-shadow: 0 2px 8px rgba(0,75,151,0.15); }
+
+/* 兩欄 */
+.sell-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* 尺寸卡片 */
+.sell-size-group { display: flex; gap: 8px; }
+.sell-size-card {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 12px 6px; border: 1.5px solid transparent; border-radius: 10px;
+  background: #fff; cursor: pointer; text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  transition: border 0.2s, background 0.2s;
+}
+.sell-size-card input { display: none; }
+.sell-size-icon { font-size: 1.4rem; color: #888; margin-bottom: 2px; }
+.sell-size-card strong { font-size: 0.85rem; color: #333; }
+.sell-size-card small { font-size: 0.7rem; color: #999; }
+.sell-size-card:hover { border-color: rgba(0,75,151,0.2); background: aliceblue; }
+.sell-size-card:has(input:checked) { border-color: #004b97; background: #e8f0fb; }
+.sell-size-card:has(input:checked) .sell-size-icon,
+.sell-size-card:has(input:checked) strong { color: #004b97; }
+
+/* 新舊程度 */
+.sell-condition-group { display: flex; flex-direction: column; gap: 5px; }
+.sell-condition-card {
+  display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+  border: 1.5px solid transparent; border-radius: 8px; background: #fff;
+  cursor: pointer; font-size: 0.85rem; font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: border 0.2s, background 0.2s;
+}
+.sell-condition-card input { display: none; }
+.sell-condition-card:hover { background: aliceblue; }
+.sell-condition-card:has(input:checked) { border-color: #004b97; background: #e8f0fb; color: #004b97; }
+.sell-cond-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.cond-1 { background: #004b97; } .cond-2 { background: #3a7bd5; }
+.cond-3 { background: #abdad5; } .cond-4 { background: rgb(36,182,133); }
+.cond-5 { background: #f0b429; } .cond-6 { background: #bbb; }
+.sell-cond-desc { font-size: 0.75rem; font-weight: 400; color: #888; margin-left: 2px; }
+
+/* 售價 */
+.sell-price-wrap { display: flex; align-items: center; border: 1px solid #ced4da; border-radius: 6px; overflow: hidden; }
+.sell-price-prefix { padding: 0 10px; font-weight: 700; color: #004b97; background: aliceblue; border-right: 1px solid #ced4da; white-space: nowrap; line-height: 38px; font-size: 0.9rem; }
+.sell-price-wrap .form-control { border: none; border-radius: 0; box-shadow: none; }
+
+/* 上傳區 */
+.sell-upload-zone {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; width: 100%; min-height: 100px;
+  border: 2px dashed #abdad5; border-radius: 12px; background: aliceblue;
+  cursor: pointer; color: #004b97; font-size: 0.88rem; font-weight: 600;
+  transition: border-color 0.2s, background 0.2s; margin-bottom: 10px;
+}
+.sell-upload-zone i { font-size: 1.8rem; opacity: 0.7; }
+.sell-upload-zone:hover { border-color: #004b97; background: #ddeeff; }
+
+/* 照片預覽 */
+.sell-preview-single img { max-width: 160px; max-height: 160px; object-fit: cover; border-radius: 10px; border: 1.5px solid #abdad5; margin-top: 4px; }
+.sell-preview-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.sell-preview-grid img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1.5px solid #abdad5; }
+
+/* 按鈕 */
+.sell-prev-btn {
+  background: none; border: 1.5px solid #abdad5; color: #004b97;
+  font-weight: 600; font-size: 0.88rem; padding: 8px 18px; border-radius: 8px;
+  cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.2s;
+}
+.sell-prev-btn:hover { background: aliceblue; }
+.sell-next-btn {
+  background: #004b97; border: none; color: #fff; font-weight: 700;
+  font-size: 0.9rem; padding: 9px 22px; border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; transition: background 0.2s;
+}
+.sell-next-btn:hover { background: rgb(36,182,133); }
 #sellOrderDetail li {
   list-style: none;
   line-height: 40px;

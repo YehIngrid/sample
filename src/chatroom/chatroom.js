@@ -97,6 +97,13 @@ class ChatRoomList {
         this.bindEvents();
         this.putImage();
         this.closePreview();
+
+        // 隱藏載入遮罩
+        const loader = document.getElementById('chatLoader');
+        if (loader) {
+            loader.classList.add('hidden');
+            setTimeout(() => loader.remove(), 350);
+        }
     }
 
     // 未登入用戶：只載入官方公告頻道
@@ -107,8 +114,8 @@ class ChatRoomList {
 
         const officialHeader = document.createElement('div');
         officialHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom';
-        officialHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
-        officialHeader.textContent = '📢 官方公告';
+        officialHeader.style.cssText = 'font-size:0.72rem;background:aliceblue;letter-spacing:0.05em;';
+        officialHeader.textContent = '官方公告';
         chatList.appendChild(officialHeader);
 
         try {
@@ -153,7 +160,7 @@ class ChatRoomList {
         // 私人訊息區：引導登入
         const privateHeader = document.createElement('div');
         privateHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom mt-2';
-        privateHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
+        privateHeader.style.cssText = 'font-size:0.72rem;background:aliceblue;letter-spacing:0.05em;';
         privateHeader.textContent = '私人訊息';
         chatList.appendChild(privateHeader);
 
@@ -538,25 +545,12 @@ class ChatRoomList {
             });
         }
 
-        // 放大/縮小按鈕（僅 iframe 模式顯示）
-        const toggleMaxBtn = document.getElementById('toggleMaximizeBtn');
-        if (toggleMaxBtn && window !== window.parent) {
-            toggleMaxBtn.style.display = 'inline-flex';
-            toggleMaxBtn.addEventListener('click', () => {
-                const isMaximized = document.body.classList.toggle('chat-maximized');
-                window.parent?.postMessage({ type: isMaximized ? 'maximizeChat' : 'restoreChat' }, '*');
-                toggleMaxBtn.querySelector('i').className = isMaximized ? 'bi bi-fullscreen-exit' : 'bi bi-arrows-fullscreen';
-                toggleMaxBtn.title = isMaximized ? '縮小視窗' : '放大視窗';
-            });
-        }
 
         // Esc：放大 → 縮小；縮小 → 關閉
         document.addEventListener('keydown', (e) => {
             if (e.key !== 'Escape' || window === window.parent) return;
             if (document.body.classList.contains('chat-maximized')) {
                 document.body.classList.remove('chat-maximized');
-                const btn = document.getElementById('toggleMaximizeBtn');
-                if (btn) { btn.querySelector('i').className = 'bi bi-arrows-fullscreen'; btn.title = '放大視窗'; }
                 window.parent?.postMessage({ type: 'restoreChat' }, '*');
             } else {
                 window.parent?.postMessage({ type: 'closeChat' }, '*');
@@ -1191,7 +1185,7 @@ let _chatReady = false;
 let _pendingSellerId = null;
 
 window.addEventListener('load', () => {
-    // 優先標記 iframe 模式，讓 CSS 立即生效（#toggleMaximizeBtn 等依賴此 class）
+    // 優先標記 iframe 模式，讓 CSS 立即生效
     if (window.parent !== window) {
         document.body.classList.add('in-iframe');
     }
@@ -1241,8 +1235,6 @@ window.addEventListener('message', (e) => {
     // 父頁面觸發縮小（Esc）→ 同步 iframe 內狀態
     if (e.data?.type === 'restoreFromParent') {
         document.body.classList.remove('chat-maximized');
-        const btn = document.getElementById('toggleMaximizeBtn');
-        if (btn) { btn.querySelector('i').className = 'bi bi-arrows-fullscreen'; btn.title = '放大視窗'; }
     }
 });
 

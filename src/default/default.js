@@ -109,8 +109,10 @@ async function renderAuthUI() {
       window.isLoggedIn = false;
       _authResolve(false);
       document.querySelectorAll('.username').forEach((el) => {
-        el.innerHTML = '';
-        el.style.display = 'none';
+        el.innerHTML = `<img class="nav-username-avatar" src="../image/default-avatar.png" alt="頭像">`;
+        el.style.display = '';
+        const currentUrl = window.location.pathname + window.location.search;
+        el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
       });
 
       document.querySelectorAll('.loginornot').forEach((el) => {
