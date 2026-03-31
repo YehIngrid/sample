@@ -581,12 +581,13 @@ class ChatRoomList {
         audio.play().catch(() => {});
     }
 
-    getLastMessageText(lastMsg) {
-        if (!lastMsg) return '無訊息';
-        if (lastMsg.message) return lastMsg.message;
+    getLastMessageText(lastMsg, fallback = '尚無訊息') {
+        if (!lastMsg) return fallback;
+        if (lastMsg.message?.trim()) return lastMsg.message;
         // ✅ attachments 是陣列
         if (Array.isArray(lastMsg.attachments) && lastMsg.attachments.length > 0) return '傳送了一張圖片';
-        return '無訊息';
+        if (typeof lastMsg.attachments === 'string' && lastMsg.attachments.trim()) return '傳送了一張圖片';
+        return fallback;
     }
 
     async loadRooms() {
@@ -664,7 +665,13 @@ class ChatRoomList {
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span style="font-size:0.6rem; background:#004b97; color:#fff; border-radius:4px; padding:1px 5px; vertical-align:middle;">官方</span>' : ''}</h6>
-                            <small class="text-muted lastMessage">${this.escapeHtml(isOfficial ? `📢 ${this.getLastMessageText(data.lastMessage)}` : this.getLastMessageText(data.lastMessage))}</small>
+                            <small class="text-muted lastMessage">${this.escapeHtml(isOfficial
+                                ? this.getLastMessageText(
+                                    data.lastMessage ?? data.officialChannel?.lastMessage ?? data.lastBroadcast,
+                                    data.officialChannel?.description || '官方公告頻道'
+                                  )
+                                : this.getLastMessageText(data.lastMessage)
+                            )}</small>
                         </div>
                         <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
                             width: 10px; height: 10px;
@@ -995,6 +1002,12 @@ class ChatRoomList {
     }
 
     renderMessage(data, prepend = false) {
+        // 官方頻道訊息改用公告卡片風格
+        if (this.officialRoomsSet.has(String(this.currentRoomId))) {
+            this.renderBroadcast(data);
+            return;
+        }
+
         // ✅ attachments 可能是陣列或字串，統一判斷是否有圖片
         const hasAttachments = (Array.isArray(data.attachments) && data.attachments.length > 0)
             || (typeof data.attachments === 'string' && data.attachments.trim() !== '');
@@ -1139,11 +1152,17 @@ class ChatRoomList {
             ? (data.attachments[0] || null)
             : (data.attachments || data.attachment || data.imageUrl || null);
 
+        const channelName = data.channelName || data.channel?.name || '拾貨寶庫提醒您';
+
         const el = document.createElement('div');
         el.className = 'broadcast-msg';
         el.innerHTML = `
             <div class="broadcast-inner">
-                <div class="broadcast-label">📢 官方公告</div>
+                <div class="broadcast-header">
+                    <img src="../webP/treasurehub.webp" class="broadcast-avatar" alt="官方">
+                    <span class="broadcast-label">${this.escapeHtml(channelName)}</span>
+                    <span class="broadcast-tag">官方</span>
+                </div>
                 <div class="broadcast-text">${this.escapeHtml(data.message || '')}</div>
                 ${broadcastImg ? `<img src="${broadcastImg}" class="broadcast-img" alt="公告圖片">` : ''}
                 ${time ? `<div class="broadcast-time">${time}</div>` : ''}

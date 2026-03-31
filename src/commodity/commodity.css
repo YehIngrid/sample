@@ -636,13 +636,14 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
   bottom: 30px;
   right: 30px;
   border-radius: 50%;
-  background-color: #004b97;
-  align-items: center;
-  justify-content: center;
+  background: none;
   border: none;
   cursor: pointer;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
   isolation: isolate;
 }
 .chaticon img {
