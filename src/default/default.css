@@ -907,6 +907,17 @@ ul{
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+/* 電腦版：一次顯示一則，fade 切換 */
+@media (min-width: 992px) {
+  .safety-ticker__text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    animation: none;
+    transition: opacity 0.4s ease;
+  }
+  .safety-ticker__text.ticker-fade { opacity: 0; }
+}
 
 /* ── 跑馬燈 inline 變體（嵌在 nav bar 內） ── */
 .safety-ticker--inline {

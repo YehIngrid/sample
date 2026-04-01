@@ -275,8 +275,18 @@
                     '使用平台溝通：切勿輕信外部聯絡方式，保護個人資訊與交易安全。',
                     '一鍵檢舉：發現違規商品請利用檢舉功能，共同維護純淨校園環境。'
                   ];
-                  const strip = slogans.join('　　　　　') + '　　　　　';
-                  document.querySelectorAll('.safety-ticker__text').forEach(el => { el.textContent = strip + strip; });
+                  const els = [...document.querySelectorAll('.safety-ticker__text')];
+                  if (window.matchMedia('(min-width:992px)').matches) {
+                    let i = 0;
+                    els.forEach(el => { el.textContent = slogans[0]; });
+                    setInterval(() => {
+                      els.forEach(el => el.classList.add('ticker-fade'));
+                      setTimeout(() => { i=(i+1)%slogans.length; els.forEach(el => { el.textContent=slogans[i]; el.classList.remove('ticker-fade'); }); }, 400);
+                    }, 5000);
+                  } else {
+                    const strip = slogans.join('　　　　　') + '　　　　　';
+                    els.forEach(el => { el.textContent = strip + strip; });
+                  }
                 })();
                 </script>
                 <!-- 主要區塊：用 bootstrap row/col 來排版 -->
