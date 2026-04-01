@@ -422,7 +422,6 @@ async function handleAction(action, id, el) {
       Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
     }
   } else if (action === '給對方評價') {
-    console.log('[review] action triggered', { id, sectionId });
     openReviewModal(id, findTargetIdByOrderId(goodsOrder, id), sectionId === 'sellProducts' ? 'buyer' : 'seller');
   } else if (action === 'watchComment') {
     const isSell = el.closest('.content-section')?.id === 'sellProducts';
@@ -441,7 +440,7 @@ async function handleAction(action, id, el) {
             Swal.fire({ icon: "success", title: "商品下架成功" });
             window.location.reload(); // 刪除後重新載入頁面以更新列表
           })
-          .catch(err => alert('刪除失敗：' + err));
+          .catch(err => Swal.fire({ icon: 'error', title: '刪除失敗', text: String(err) }));
       }
     });
   }
@@ -1671,7 +1670,6 @@ async function openChatWithTarget(targetUserId) {
 }
 // TODO 評價UI
 async function openReviewModal(orderId, targetId, targetRole) {
-  console.log('[review] openReviewModal called', { orderId, targetId, targetRole });
   const isRatingBuyer = (targetRole === 'buyer');
   const roleName = isRatingBuyer ? '買家' : '賣家';
   const maxScore = isRatingBuyer ? 3 : 5;

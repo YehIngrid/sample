@@ -90,8 +90,39 @@ class ChatRoomList {
                 }
             }
         } else {
-            // 未登入：只載入官方公告（不需登入）
-            await this.loadPublicRooms();
+            // 未登入：顯示登入提示，不載入任何資料
+            const loader = document.getElementById('chatLoader');
+            if (loader) loader.style.display = 'none';
+
+            // 顯示返回按鈕
+            const closeChatBtn = document.getElementById('closeChatFullscreen');
+            if (closeChatBtn) {
+                closeChatBtn.style.display = 'inline-flex';
+                closeChatBtn.addEventListener('click', () => {
+                    if (window !== window.parent) {
+                        window.parent?.postMessage({ type: 'closeChat' }, '*');
+                    } else {
+                        const returnUrl = sessionStorage.getItem('chatroomReturnUrl');
+                        if (returnUrl) { sessionStorage.removeItem('chatroomReturnUrl'); location.href = returnUrl; }
+                        else history.back();
+                    }
+                });
+            }
+
+            const chatList = document.getElementById('chatList');
+            if (chatList) {
+                const redirect = encodeURIComponent(location.pathname + location.search);
+                chatList.innerHTML = `
+                    <div style="padding:32px 16px;text-align:center;color:#888;">
+                        <i class="bi bi-lock" style="font-size:2.2rem;display:block;margin-bottom:12px;color:#004b97;"></i>
+                        <p style="margin-bottom:16px;font-size:0.9rem;line-height:1.6;">請先登入<br>才能使用聊天室</p>
+                        <a href="../account/account.html?redirect=${redirect}"
+                           style="display:inline-block;padding:8px 24px;background:#004b97;color:#fff;border-radius:8px;text-decoration:none;font-size:0.85rem;">
+                            前往登入
+                        </a>
+                    </div>`;
+            }
+            return;
         }
         window.addEventListener('resize', () => this.handleResize());
         this.bindEvents();
@@ -247,7 +278,7 @@ class ChatRoomList {
             const file = e.target.files[0];
             if (!file) return;
             if (file.size > 5 * 1024 * 1024) {
-                alert('圖片大小超過 5MB 限制');
+                Swal.fire({ icon: 'warning', title: '圖片大小超過 5MB 限制' });
                 return;
             }
             this.previewArea.value = ''; // 清空，下次選同張也能觸發
@@ -1266,7 +1297,7 @@ window.addEventListener('message', (e) => {
 });
 
 async function openChatWithTarget(targetUserId) {
-    if (!targetUserId) return alert('無法開啟聯天室，缺少 User ID');
+    if (!targetUserId) { Swal.fire({ icon: 'error', title: '無法開啟聊天室', text: '缺少 User ID' }); return; }
     const chatService = new ChatBackendService();
     try {
         const res = await chatService.createRoom(targetUserId);

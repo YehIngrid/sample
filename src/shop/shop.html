@@ -67,6 +67,17 @@
   <div id="whatcontent" class="d-none">
     <!-- TODO header -->
     <div class="header ">
+        <!-- 跑馬燈：手機版顯示在 navbar 上方（僅 ?page=seller 時顯示） -->
+        <div class="safety-ticker d-lg-none" id="mobileSellerTicker" style="display:none!important">
+          <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
+          <div class="safety-ticker__track">
+            <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+          </div>
+        </div>
+        <script>
+          if(new URLSearchParams(location.search).get('page')==='seller')
+            document.getElementById('mobileSellerTicker').style.removeProperty('display');
+        </script>
         <!--TODO 響應式選單-->
         <nav class="navbar navbar-expand-lg navbar-color bg-color header_new navtb">
           <div class="container-fluid d-flex align-items-center sticky-top">
@@ -463,27 +474,27 @@
       <!-- 跑馬燈：電腦版顯示在 tab 右側 -->
       <div class="safety-ticker safety-ticker--inline d-none d-lg-flex">
         <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
-        <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+        <div class="safety-ticker__track">
+          <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+        </div>
       </div>
     </div>
   <script>
   (function(){
     const slogans=[
-      '守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。',
-      '支持正版，校園更美：請上架正版二手教科書，拒絕盜版講義流入。',
-      '合規交易提醒：嚴禁販售藥品、醫療器材及菸酒類商品，違者將下架帳號。',
-      '誠實描述，安心買賣：上架即代表您保證商品來源合法且描述屬實。',
-      '安全面交小撇步：建議約在校內人潮聚集處，現場驗貨後再付款。',
-      '守護你的權益：請透過平台內建訊息溝通，切勿私下匯款或提供個資。',
-      '公平排序機制：我們重視每一筆真實交易，嚴禁利用程式惡意刷屏置頂。',
-      '發現異常？一鍵檢舉：共同維護校內互助環境，杜絕不法行為。'
+      '支持正版教材：嚴禁販售非法影印書籍及未授權電子檔。',
+      '拒絕盜版講義：嚴禁翻印他人講義，請上架正版二手教科書。',
+      '筆記交易須知：僅支持個人原創心得，嚴禁翻印或截圖老師投影片。',
+      '食安守門員：僅限原裝包裝且在效期內之食品，嚴禁自製或拆封食品。',
+      '合規食品：嚴禁販售含酒精飲品及具療效宣稱之健康食品。',
+      '法律底線：嚴禁藥品、醫療器材及菸酒類商品，違者立即封鎖帳號。',
+      '誠實描述：商品有瑕疵請於照片或文字中如實說明。',
+      '校內面交優先：建議在圖書館、便利商店等人潮處現場驗貨後再付款。',
+      '使用平台溝通：切勿輕信外部聯絡方式，保護個人資訊與交易安全。',
+      '一鍵檢舉：發現違規商品請利用檢舉功能，共同維護純淨校園環境。'
     ];
-    let i=0;
-    const els=document.querySelectorAll('.safety-ticker__text');
-    setInterval(()=>{
-      els.forEach(el=>el.classList.add('ticker-fade'));
-      setTimeout(()=>{ i=(i+1)%slogans.length; els.forEach(el=>{ el.textContent=slogans[i]; el.classList.remove('ticker-fade'); }); },400);
-    },5000);
+    const strip = slogans.join('　　　　　') + '　　　　　';
+    document.querySelectorAll('.safety-ticker__text').forEach(el => { el.textContent = strip + strip; });
   })();
   </script>
     <div class="tab-content" id="myTabContent">
@@ -645,22 +656,48 @@
 
     <section id="平台規範" class="sec">
       <h2>平台規範</h2>
-      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">法律規範與智財保護</p>
+
+      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">1. 智慧財產權與筆記規範</p>
       <div class="rule-item" style="margin-bottom:20px;">
         <div class="rule-grid">
-          <strong>守護智慧財產</strong><span>本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
-          <strong>支持正版，校園更美</strong><span>請上架正版二手教科書，拒絕盜版講義流入。</span>
-          <strong>合規交易提醒</strong><span>嚴禁販售藥品、醫療器材及菸酒類商品，違者將下架帳號。</span>
-          <strong>誠實描述，安心買賣</strong><span>上架即代表您保證商品來源合法且描述屬實。</span>
+          <strong>支持正版教材</strong><span>本平台嚴禁販售非法影印、掃描書籍及未授權之教材電子檔。</span>
+          <strong>拒絕盜版講義</strong><span>請上架正版二手教科書，嚴禁翻印他人講義或補習班教材流入。</span>
+          <strong>筆記交易須知</strong><span>僅支持個人原創整理之心得筆記，嚴禁直接翻印、截圖或掃描老師之講義、投影片原檔。</span>
+          <strong>尊重教學創作</strong><span>分享個人精華心得是美德，但請確保內容不侵害教授與校方之著作權。</span>
         </div>
       </div>
-      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">交易安全與防詐騙</p>
+
+      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">2. 食品衛生與安全規範</p>
+      <div class="rule-item" style="margin-bottom:20px;">
+        <div class="rule-grid">
+          <strong>食安守門員</strong><span>僅限販售標示完整且在有效期內之「原裝包裝食品」，嚴禁販售自製、拆封或過期食品。</span>
+          <strong>包裝完整最安心</strong><span>上架食品時請務必確認包裝密封，並於描述中誠實標註有效期限。</span>
+          <strong>合規食品交易</strong><span>嚴禁販售具療效宣稱之健康食品，以及任何含酒精之飲品（如：調酒、啤酒）。</span>
+        </div>
+      </div>
+
+      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">3. 合規交易與禁售項目</p>
+      <div class="rule-item" style="margin-bottom:20px;">
+        <div class="rule-grid">
+          <strong>法律底線</strong><span>嚴禁販售藥品、醫療器材（如：隱形眼鏡、OK 繃）及菸酒類商品，違者將立即下架並封鎖帳號。</span>
+          <strong>誠實描述</strong><span>上架商品即代表您保證來源合法且描述屬實。若商品有瑕疵，請務必於照片或文字中說明。</span>
+        </div>
+      </div>
+
+      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">4. 交易安全與防詐騙</p>
+      <div class="rule-item" style="margin-bottom:20px;">
+        <div class="rule-grid">
+          <strong>校內面交優先</strong><span>建議約在校內人潮聚集處（如圖書館、便利商店），現場驗貨後再付款。</span>
+          <strong>內建溝通保護</strong><span>請務必透過平台內建訊息溝通，切勿輕信外部聯絡方式，以確保雙方權益。</span>
+          <strong>一鍵檢舉機制</strong><span>若發現可疑商品或不法行為，請利用檢舉功能，共同維護純淨的校園環境。</span>
+        </div>
+      </div>
+
+      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">5. 平台營運秩序</p>
       <div class="rule-item">
         <div class="rule-grid">
-          <strong>安全面交小撇步</strong><span>建議約在校內人潮聚集處，現場驗貨後再付款。</span>
-          <strong>守護你的權益</strong><span>請透過平台內建訊息溝通，切勿私下匯款或提供個資。</span>
-          <strong>公平排序機制</strong><span>我們重視每一筆真實交易，嚴禁利用程式惡意刷屏置頂。</span>
-          <strong>發現異常？一鍵檢舉</strong><span>共同維護校內互助環境，杜絕不法行為。</span>
+          <strong>公平排序機制</strong><span>我們重視每一筆真實交易，嚴禁利用程式或惡意頻繁登入進行「刷屏置頂」。</span>
+          <strong>上架額度限制</strong><span>每位用戶預設具備 10 件免費商品上架額度，請精選優質好物分享給校友。</span>
         </div>
       </div>
     </section>
@@ -676,26 +713,26 @@
 </div>
       </div>
       <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <div class="form-store">
 
-          <!-- 步驟指示器 -->
-          <div class="sell-steps">
-            <div class="sell-step active" data-step="1">
-              <div class="sell-step-badge">1</div>
-              <span class="sell-step-label">基本資訊</span>
-            </div>
-            <div class="sell-step-line"></div>
-            <div class="sell-step" data-step="2">
-              <div class="sell-step-badge">2</div>
-              <span class="sell-step-label">規格與定價</span>
-            </div>
-            <div class="sell-step-line"></div>
-            <div class="sell-step" data-step="3">
-              <div class="sell-step-badge">3</div>
-              <span class="sell-step-label">照片上傳</span>
-            </div>
+        <!-- 步驟指示器（表單上方） -->
+        <div class="sell-steps">
+          <div class="sell-step active" data-step="1">
+            <div class="sell-step-badge">1</div>
+            <span class="sell-step-label">基本資訊</span>
           </div>
+          <div class="sell-step-line"></div>
+          <div class="sell-step" data-step="2">
+            <div class="sell-step-badge">2</div>
+            <span class="sell-step-label">規格與定價</span>
+          </div>
+          <div class="sell-step-line"></div>
+          <div class="sell-step" data-step="3">
+            <div class="sell-step-badge">3</div>
+            <span class="sell-step-label">照片上傳</span>
+          </div>
+        </div>
 
+        <div class="form-store">
           <form id="createCommodityForm" enctype="multipart/form-data">
 
             <!-- ── Step 1：基本資訊 ── -->
@@ -1197,7 +1234,7 @@ const paths = Array.from(document.querySelectorAll('#spinwheelnew path'))
   .filter(p => p.dataset.name);
 
 if (paths.length === 0) {
-  alert("⚠️ 沒有任何可抽獎的區塊！");
+  Swal.fire({ icon: 'warning', title: '沒有任何可抽獎的區塊！' });
   return;
 }
 
@@ -1226,7 +1263,7 @@ const timer = setInterval(() => {
 
     // 🎯 等動畫完全結束再跳出中獎訊息
     setTimeout(() => {
-      alert(`🎉 抽中：${currentPath.dataset.name}`);
+      Swal.fire({ icon: 'success', title: `🎉 抽中：${currentPath.dataset.name}` });
     }, 200); // 這裡的 200ms 是為了讓最後一格 highlight 顯示完一點點時間
   }
 }, interval);
@@ -1746,13 +1783,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Step 1 → 2 驗證
-  document.getElementById('step1Next')?.addEventListener('click', () => {
+  document.getElementById('step1Next')?.addEventListener('click', async () => {
     const name = document.getElementById('name').value.trim();
     const category = document.getElementById('category').value;
     const desc = document.getElementById('description').value.trim();
-    if (!name) { alert('請填寫商品名稱'); return; }
-    if (!category || category === 'notselyet') { alert('請選擇商品分類'); return; }
-    if (!desc) { alert('請填寫商品狀態描述'); return; }
+    if (!name) { await Swal.fire({ icon: 'warning', title: '請填寫商品名稱' }); return; }
+    if (!category || category === 'notselyet') { await Swal.fire({ icon: 'warning', title: '請選擇商品分類' }); return; }
+    if (!desc) { await Swal.fire({ icon: 'warning', title: '請填寫商品狀態描述' }); return; }
     setStep(2, false);
   });
 
@@ -1760,17 +1797,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('step2Prev')?.addEventListener('click', () => setStep(1, true));
 
   // Step 2 → 3 驗證
-  document.getElementById('step2Next')?.addEventListener('click', () => {
+  document.getElementById('step2Next')?.addEventListener('click', async () => {
     const size = document.getElementById('size').value;
     const cond = document.getElementById('new_or_old').value;
     const priceStr = document.getElementById('price').value.trim();
     const stockStr = document.getElementById('stock').value.trim();
     const ageStr = document.getElementById('age').value.trim();
-    if (!size) { alert('請選擇商品尺寸'); return; }
-    if (!cond) { alert('請選擇新舊程度'); return; }
-    if (priceStr === '' || Number(priceStr) < 0) { alert('請輸入正確售價'); return; }
-    if (stockStr === '' || Number(stockStr) < 1) { alert('請輸入庫存數量'); return; }
-    if (ageStr === '' || Number(ageStr) < -1) { alert('物品年齡請填 -1 以上'); return; }
+    if (!size) { await Swal.fire({ icon: 'warning', title: '請選擇商品尺寸' }); return; }
+    if (!cond) { await Swal.fire({ icon: 'warning', title: '請選擇新舊程度' }); return; }
+    if (priceStr === '' || Number(priceStr) < 0) { await Swal.fire({ icon: 'warning', title: '請輸入正確售價' }); return; }
+    if (stockStr === '' || Number(stockStr) < 1) { await Swal.fire({ icon: 'warning', title: '請輸入庫存數量' }); return; }
+    if (ageStr === '' || Number(ageStr) < -1) { await Swal.fire({ icon: 'warning', title: '物品年齡請填 -1 以上' }); return; }
     setStep(3, false);
   });
 

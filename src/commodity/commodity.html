@@ -51,6 +51,13 @@
     </div>
     <div id="whatcontent" class="d-none">
         <div class="header d-block " style="padding-bottom: 10px;">
+            <!-- 跑馬燈：手機版顯示在 navbar 上方 -->
+            <div class="safety-ticker d-flex d-lg-none">
+              <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
+              <div class="safety-ticker__track">
+                <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+              </div>
+            </div>
             <nav class="navbar navbar-expand-lg navbar-color bg-color header_new d-block d-lg-none" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
             <div class="container-fluid d-flex align-items-center sticky-top">
 
@@ -248,28 +255,28 @@
                 <!-- TODO search function -->
                 <div class="search d-none">以下是您搜尋 <span>商品名稱</span> 的結果：</div>
                 <!-- 安全提示跑馬燈 -->
-                <div class="safety-ticker">
+                <div class="safety-ticker d-none d-lg-flex">
                   <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
-                  <span class="safety-ticker__text" id="safetyTickerText">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+                  <div class="safety-ticker__track">
+                    <span class="safety-ticker__text" id="safetyTickerText">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+                  </div>
                 </div>
                 <script>
                 (function(){
                   const slogans=[
-                    '守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。',
-                    '支持正版，校園更美：請上架正版二手教科書，拒絕盜版講義流入。',
-                    '合規交易提醒：嚴禁販售藥品、醫療器材及菸酒類商品，違者將下架帳號。',
-                    '誠實描述，安心買賣：上架即代表您保證商品來源合法且描述屬實。',
-                    '安全面交小撇步：建議約在校內人潮聚集處，現場驗貨後再付款。',
-                    '守護你的權益：請透過平台內建訊息溝通，切勿私下匯款或提供個資。',
-                    '公平排序機制：我們重視每一筆真實交易，嚴禁利用程式惡意刷屏置頂。',
-                    '發現異常？一鍵檢舉：共同維護校內互助環境，杜絕不法行為。'
+                    '支持正版教材：嚴禁販售非法影印書籍及未授權電子檔。',
+                    '拒絕盜版講義：嚴禁翻印他人講義，請上架正版二手教科書。',
+                    '筆記交易須知：僅支持個人原創心得，嚴禁翻印或截圖老師投影片。',
+                    '食安守門員：僅限原裝包裝且在效期內之食品，嚴禁自製或拆封食品。',
+                    '合規食品：嚴禁販售含酒精飲品及具療效宣稱之健康食品。',
+                    '法律底線：嚴禁藥品、醫療器材及菸酒類商品，違者立即封鎖帳號。',
+                    '誠實描述：商品有瑕疵請於照片或文字中如實說明。',
+                    '校內面交優先：建議在圖書館、便利商店等人潮處現場驗貨後再付款。',
+                    '使用平台溝通：切勿輕信外部聯絡方式，保護個人資訊與交易安全。',
+                    '一鍵檢舉：發現違規商品請利用檢舉功能，共同維護純淨校園環境。'
                   ];
-                  let i=0;
-                  const els=document.querySelectorAll('.safety-ticker__text');
-                  setInterval(()=>{
-                    els.forEach(el=>el.classList.add('ticker-fade'));
-                    setTimeout(()=>{ i=(i+1)%slogans.length; els.forEach(el=>{ el.textContent=slogans[i]; el.classList.remove('ticker-fade'); }); },400);
-                  },5000);
+                  const strip = slogans.join('　　　　　') + '　　　　　';
+                  document.querySelectorAll('.safety-ticker__text').forEach(el => { el.textContent = strip + strip; });
                 })();
                 </script>
                 <!-- 主要區塊：用 bootstrap row/col 來排版 -->
