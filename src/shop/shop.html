@@ -448,17 +448,44 @@
 
 <!-- TODO 商品資訊表單 -->
   <section class="formsection" id="seller">
-    <div class="seller-header-row">
-      <i class="fa-solid fa-circle-arrow-left icon-button" id="back-btn"></i>
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">販賣規則</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">我要賣商品！</button>
-        </li>
-      </ul>
+    <div class="seller-header-with-notice">
+      <div class="seller-header-row">
+        <i class="fa-solid fa-circle-arrow-left icon-button" id="back-btn"></i>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">販賣規則</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">我要賣商品！</button>
+          </li>
+        </ul>
+      </div>
+      <!-- 跑馬燈：電腦版顯示在 tab 右側 -->
+      <div class="safety-ticker safety-ticker--inline d-none d-lg-flex">
+        <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
+        <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+      </div>
     </div>
+  <script>
+  (function(){
+    const slogans=[
+      '守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。',
+      '支持正版，校園更美：請上架正版二手教科書，拒絕盜版講義流入。',
+      '合規交易提醒：嚴禁販售藥品、醫療器材及菸酒類商品，違者將下架帳號。',
+      '誠實描述，安心買賣：上架即代表您保證商品來源合法且描述屬實。',
+      '安全面交小撇步：建議約在校內人潮聚集處，現場驗貨後再付款。',
+      '守護你的權益：請透過平台內建訊息溝通，切勿私下匯款或提供個資。',
+      '公平排序機制：我們重視每一筆真實交易，嚴禁利用程式惡意刷屏置頂。',
+      '發現異常？一鍵檢舉：共同維護校內互助環境，杜絕不法行為。'
+    ];
+    let i=0;
+    const els=document.querySelectorAll('.safety-ticker__text');
+    setInterval(()=>{
+      els.forEach(el=>el.classList.add('ticker-fade'));
+      setTimeout(()=>{ i=(i+1)%slogans.length; els.forEach(el=>{ el.textContent=slogans[i]; el.classList.remove('ticker-fade'); }); },400);
+    },5000);
+  })();
+  </script>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <!-- ========== 新版：左側目錄 + 右側內容（含 Back） ========== -->
@@ -467,15 +494,17 @@
   <nav class="toc-seller" id="tocSeller">
     <h4>分類索引</h4>
     <a href="#所屬分類">所屬分類</a>
+    <a href="#禁售物品清單">禁售物品清單</a>
     <a href="#商品尺寸">商品尺寸</a>
     <a href="#新舊程度">新舊程度</a>
     <a href="#照片">照片</a>
+    <a href="#平台規範">平台規範</a>
     <a href="#常見錯誤示範">常見錯誤示範</a>
   </nav>
 
   <!-- 右側內容 -->
   <main class="content-seller">
-    <header class="page-title">
+    <header class="page-title d-none d-lg-block">
       <h1>拾貨寶庫商品分類方法</h1>
     </header>
 
@@ -511,6 +540,37 @@
           <div class="cat-card-icon"><img src="../svg/Other.svg" alt="其他商品說明"></div>
           <h4>其他</h4>
           <p>若不知道自己販賣的商品類別為何，請選擇其他。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="禁售物品清單" class="sec">
+      <h2>禁售物品清單 <span class="badge-seller" style="background:#e63946;color:#fff;">禁止</span></h2>
+      <p style="color:#555;font-size:0.9rem;margin-bottom:16px;">除盜版書籍外，以下物品常被誤上架，請特別留意，違者將下架帳號。</p>
+      <div class="banned-list">
+        <div class="banned-item">
+          <div class="banned-body">
+            <div class="banned-title">藥品／醫療器材</div>
+            <div class="banned-desc">如隱形眼鏡、OK 繃、感冒藥等，在網路上轉賣均屬違法。</div>
+          </div>
+        </div>
+        <div class="banned-item">
+          <div class="banned-body">
+            <div class="banned-title">菸酒類</div>
+            <div class="banned-desc">校園平台嚴禁出現任何菸酒販售資訊。</div>
+          </div>
+        </div>
+        <div class="banned-item">
+          <div class="banned-body">
+            <div class="banned-title">校園帳號／權利</div>
+            <div class="banned-desc">例如租借學生證、販售校內研習時數，均屬違規行為。</div>
+          </div>
+        </div>
+        <div class="banned-item">
+          <div class="banned-body">
+            <div class="banned-title">盜版書籍／未授權電子檔</div>
+            <div class="banned-desc">非法影印、掃描書籍及未授權電子檔嚴禁上架，請販售正版二手教科書。</div>
+          </div>
         </div>
       </div>
     </section>
@@ -580,6 +640,28 @@
         <img src="../image/ex3.jpg" alt="範例次要圖片3" loading="lazy" style="margin-bottom:10px;margin-right:10px;" width="120">
         <img src="../image/ex4.jpg" alt="範例次要圖片4" loading="lazy" style="margin-bottom:10px;margin-right:10px;" width="120">
         <img src="../image/ex5.jpg" alt="範例次要圖片5" loading="lazy" style="margin-bottom:10px;" width="120">
+      </div>
+    </section>
+
+    <section id="平台規範" class="sec">
+      <h2>平台規範</h2>
+      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">法律規範與智財保護</p>
+      <div class="rule-item" style="margin-bottom:20px;">
+        <div class="rule-grid">
+          <strong>守護智慧財產</strong><span>本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+          <strong>支持正版，校園更美</strong><span>請上架正版二手教科書，拒絕盜版講義流入。</span>
+          <strong>合規交易提醒</strong><span>嚴禁販售藥品、醫療器材及菸酒類商品，違者將下架帳號。</span>
+          <strong>誠實描述，安心買賣</strong><span>上架即代表您保證商品來源合法且描述屬實。</span>
+        </div>
+      </div>
+      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">交易安全與防詐騙</p>
+      <div class="rule-item">
+        <div class="rule-grid">
+          <strong>安全面交小撇步</strong><span>建議約在校內人潮聚集處，現場驗貨後再付款。</span>
+          <strong>守護你的權益</strong><span>請透過平台內建訊息溝通，切勿私下匯款或提供個資。</span>
+          <strong>公平排序機制</strong><span>我們重視每一筆真實交易，嚴禁利用程式惡意刷屏置頂。</span>
+          <strong>發現異常？一鍵檢舉</strong><span>共同維護校內互助環境，杜絕不法行為。</span>
+        </div>
       </div>
     </section>
 

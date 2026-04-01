@@ -54,7 +54,10 @@
       <button class="mobile-nav-back" id="mobileBackBtn" aria-label="返回上一頁">
         <i class="fa-solid fa-arrow-left"></i>
       </button>
-      <span class="mobile-nav-title">商品詳情</span>
+      <div class="safety-ticker safety-ticker--inline">
+        <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
+        <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+      </div>
       <a href="../shoppingcart/shoppingcart.html" class="mobile-nav-cart" aria-label="購物車">
         <img src="../svg/shoppingcart.svg" alt="購物車">
       </a>
@@ -89,8 +92,14 @@
       </nav>
     </div>
 
-    <!-- 桌機版返回鍵 -->
-    <i class="fa-solid fa-circle-arrow-left icon-button d-none d-lg-inline-block" id="back-btn"></i>
+    <!-- 桌機版返回鍵 + 跑馬燈 -->
+    <div class="product-back-ticker d-none d-lg-flex">
+      <i class="fa-solid fa-circle-arrow-left icon-button" id="back-btn"></i>
+      <div class="safety-ticker safety-ticker--inline">
+        <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
+        <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+      </div>
+    </div>
 
     <!-- ===== 商品主體 ===== -->
     <div class="container my-1">
@@ -359,5 +368,25 @@
   <script type="module" src="../chatroom/chat.js"></script>
   <script type="module" src="product.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  (function(){
+    const slogans=[
+      '守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。',
+      '支持正版，校園更美：請上架正版二手教科書，拒絕盜版講義流入。',
+      '合規交易提醒：嚴禁販售藥品、醫療器材及菸酒類商品，違者將下架帳號。',
+      '誠實描述，安心買賣：上架即代表您保證商品來源合法且描述屬實。',
+      '安全面交小撇步：建議約在校內人潮聚集處，現場驗貨後再付款。',
+      '守護你的權益：請透過平台內建訊息溝通，切勿私下匯款或提供個資。',
+      '公平排序機制：我們重視每一筆真實交易，嚴禁利用程式惡意刷屏置頂。',
+      '發現異常？一鍵檢舉：共同維護校內互助環境，杜絕不法行為。'
+    ];
+    let i=0;
+    const els=document.querySelectorAll('.safety-ticker__text');
+    setInterval(()=>{
+      els.forEach(el=>el.classList.add('ticker-fade'));
+      setTimeout(()=>{ i=(i+1)%slogans.length; els.forEach(el=>{ el.textContent=slogans[i]; el.classList.remove('ticker-fade'); }); },400);
+    },5000);
+  })();
+  </script>
 </body>
 </html>

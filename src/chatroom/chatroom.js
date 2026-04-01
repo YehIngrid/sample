@@ -692,7 +692,7 @@ class ChatRoomList {
                 const offHeader = document.createElement('div');
                 offHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom';
                 offHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
-                offHeader.textContent = '📢 官方公告';
+                offHeader.innerHTML = '<img src="../svg/alarm.svg" style="width:13px;height:13px;margin-right:4px;vertical-align:middle;"> 官方公告';
                 chatList.appendChild(offHeader);
                 officialRooms.forEach(renderRoomItem);
             }
@@ -945,7 +945,11 @@ class ChatRoomList {
                 const chatItem = document.querySelector(`[data-room-id="${roomId}"]`);
                 if (chatItem) {
                     const lastMsgEl = chatItem.querySelector('.lastMessage');
-                    if (lastMsgEl) lastMsgEl.textContent = `📢 ${data.message || (data.attachments?.length ? '傳送了一張圖片' : '官方公告')}`;
+                    if (lastMsgEl) {
+                        const msgText = data.message || (data.attachments?.length ? '傳送了一張圖片' : '官方公告');
+                        lastMsgEl.innerHTML = '<img src="../svg/alarm.svg" style="width:12px;height:12px;margin-right:3px;vertical-align:middle;">';
+                        lastMsgEl.appendChild(document.createTextNode(msgText));
+                    }
                     // 非目前開著的房間才顯示未讀紅點
                     if (roomId !== String(this.currentRoomId)) {
                         chatItem.querySelector('.unread-dot')?.classList.remove('d-none');

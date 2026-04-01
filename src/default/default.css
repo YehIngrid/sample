@@ -62,6 +62,7 @@ ul{
     padding-right: 30px;
 }
 /* ── SweetAlert2 全站統一風格 ── */
+.swal2-container { z-index: 9999 !important; }
 .swal2-popup {
   border-radius: 12px !important;
   background: aliceblue !important;
@@ -879,6 +880,99 @@ ul{
 .bottom-nav-badge.show {
   display: block;
 }
+/* ── 安全提示跑馬燈 ── */
+.safety-ticker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: aliceblue;
+  border-bottom: 1px solid rgba(0,75,151,0.12);
+  padding: 6px 16px;
+  font-size: 0.78rem;
+  color: #444;
+  min-height: 30px;
+}
+.safety-ticker__icon { flex-shrink: 0; width: 16px; height: 16px; }
+.safety-ticker__text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.4s ease;
+}
+.safety-ticker__text.ticker-fade { opacity: 0; }
+
+/* ── 跑馬燈 inline 變體（嵌在 nav bar 內） ── */
+.safety-ticker--inline {
+  background: transparent;
+  border-bottom: none;
+  padding: 0 8px;
+  flex: 1;
+  min-width: 0;
+}
+.safety-ticker--inline .safety-ticker__text {
+  font-size: 0.72rem;
+  color: #555;
+}
+
+/* 桌機版返回鍵 + 跑馬燈列 (product.html) */
+.product-back-ticker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 16px 0;
+}
+
+/* 賣家區塊：電腦版 tab 右側顯示 ticker */
+.seller-header-with-notice {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.seller-header-with-notice .seller-header-row {
+  flex-shrink: 0;
+}
+.seller-header-with-notice .safety-ticker--inline {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── 上架提示卡（賣家表單） ── */
+.sell-notice {
+  background: aliceblue;
+  border-radius: 8px;
+  border-left: 3px solid #004b97;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.sell-notice__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 11px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #004b97;
+  cursor: pointer;
+  text-align: left;
+}
+.sell-notice__toggle:hover { background: rgba(0,75,151,0.05); }
+.sell-notice__chevron { transition: transform 0.25s ease; font-size: 0.72rem; }
+.sell-notice.collapsed .sell-notice__chevron { transform: rotate(180deg); }
+.sell-notice__list {
+  margin: 0;
+  padding: 0 16px 12px 32px;
+  font-size: 0.8rem;
+  color: #444;
+  line-height: 1.9;
+  list-style: disc;
+}
+.sell-notice.collapsed .sell-notice__list { display: none; }
+
 /* Underline From Center */
 .hvr-underline-from-center {
   display: inline-block;

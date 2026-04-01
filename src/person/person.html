@@ -251,7 +251,7 @@
       <table class="table align-middle d-none d-lg-table">
         <thead>
           <tr>
-            <th>訂單編號</th>
+            <th>商品</th>
             <th>狀態</th>
             <th>買家下單時間</th>
             <th>相關操作</th>
@@ -593,18 +593,18 @@
   </div>
 
 
-<!-- Drawer 背景 -->
-<div class="drawer-backdrop" id="editDrawerBackdrop" hidden></div>
+<!-- 編輯商品 Modal -->
+<div class="modal fade" id="editDrawer" tabindex="-1" aria-labelledby="editDrawerTitle" aria-modal="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title" id="editDrawerTitle">編輯商品</h5>
+        <button type="button" class="btn-close" id="editDrawerCloseBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-<!-- 右側滑出編輯面板 -->
-<aside class="drawer" id="editDrawer" role="dialog" aria-modal="true" aria-labelledby="editDrawerTitle" hidden>
-  <header class="drawer-header border-bottom d-flex align-items-end">
-    <button type="button" class="btn-close" aria-label="Close" id="editDrawerCloseBtn"></button>
-    <h5 id="editDrawerTitle" class="mb-0" style="margin-left: 10px;">編輯商品</h5>
-  </header>
-
-  <form id="editItemForm" class="drawer-body">
-    <input type="hidden" id="edit-id" name="id">
+      <div class="modal-body">
+      <form id="editItemForm">
+        <input type="hidden" id="edit-id" name="id">
 
     <!-- 商品名稱 -->
     <div class="sell-field">
@@ -738,12 +738,15 @@
       <div id="edit-images-preview" class="sell-preview-grid mt-2"></div>
     </div>
 
-    <div class="drawer-footer border-top pt-3 mt-2 d-flex justify-content-between">
-      <button type="button" class="sell-prev-btn" id="editDrawerCancelBtn">取消</button>
-      <button type="submit" class="sell-next-btn"><i class="ti ti-check"></i> 儲存變更</button>
-    </div>
-  </form>
-</aside>
+      </form>
+      </div><!-- modal-body -->
+      <div class="modal-footer d-flex justify-content-between">
+        <button type="button" class="sell-prev-btn" id="editDrawerCancelBtn" data-bs-dismiss="modal">取消</button>
+        <button type="submit" form="editItemForm" class="sell-next-btn"><i class="ti ti-check"></i> 儲存變更</button>
+      </div>
+    </div><!-- modal-content -->
+  </div><!-- modal-dialog -->
+</div><!-- #editDrawer modal -->
 <script>
 // 底部導覽列：點擊時設定 skipLoader 旗標（person.html 不載入 default.js，需在此獨立設定）
 document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
@@ -797,6 +800,14 @@ document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
       });
       window.addEventListener('chatRead', () => {
         document.getElementById('chatUnreadDot').style.display = 'none';
+      });
+      document.getElementById('chaticon')?.addEventListener('click', () => {
+        const iframe = document.getElementById('talkInterface');
+        const isOpen = iframe.style.display !== 'none';
+        iframe.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen && !iframe.src) {
+          iframe.src = '../chatroom/chatroom.html';
+        }
       });
     </script>
 

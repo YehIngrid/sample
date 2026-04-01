@@ -422,8 +422,8 @@ async function handleAction(action, id, el) {
       Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
     }
   } else if (action === '給對方評價') {
-    // 這裡可以打開評價的 modal 或頁面
-    openReviewModal(orderId = id, targetId = findTargetIdByOrderId(goodsOrder, id), targetRole = (sectionId === 'sellProducts' ? 'buyer' : 'seller'));
+    console.log('[review] action triggered', { id, sectionId });
+    openReviewModal(id, findTargetIdByOrderId(goodsOrder, id), sectionId === 'sellProducts' ? 'buyer' : 'seller');
   } else if (action === 'watchComment') {
     const isSell = el.closest('.content-section')?.id === 'sellProducts';
     openPartnerReviewModal(id, isSell);
@@ -685,6 +685,17 @@ function esc(str) {
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])
   );
 }
+function fmtOrderLabel(item) {
+  const orderItems = item.orderItems;
+  if (Array.isArray(orderItems) && orderItems.length > 0) {
+    const first = orderItems[0];
+    const productName = first?.item?.name || first?.name || item.name || '商品';
+    const qty = first?.quantity ?? 1;
+    const suffix = orderItems.length > 1 ? '…' : '';
+    return `${esc(productName)} × ${qty}${suffix}`;
+  }
+  return esc(item.name || `訂單 ${item.id}`);
+}
 //TODO 剛剛調整按鈕樣式
 function renderBuyerOrders(list) {
   const tbody = document.querySelector('#buyProducts tbody');
@@ -697,6 +708,7 @@ function renderBuyerOrders(list) {
   const rows = list.map(item => {
     const id       = item.id;
     const name     = esc(item.name);
+    const label    = fmtOrderLabel(item);
     const price    = fmtPrice(item.totalAmount);
     const seller = item.sellerUser?.name ?? '';
     const type = item.type || '未知交易方式';
@@ -704,10 +716,10 @@ function renderBuyerOrders(list) {
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
     const log = esc(item.log || '無詳細資訊');
-    
+
   return `
       <tr data-id="${esc(id)}">
-        <td>${id}</td>
+        <td>${label}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
         <td>${price} 元</td>
@@ -742,6 +754,7 @@ function renderSellerOrders(list) {
   const rows = list.map(item => {
     const id       = item.id;
     const name     = esc(item.name);
+    const label    = fmtOrderLabel(item);
     const price    = fmtPrice(item.totalAmount);
     const buyer = item.buyerUser?.name ?? '';
     const type = item.type || '未知交易方式';
@@ -751,7 +764,7 @@ function renderSellerOrders(list) {
     const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
     return `
       <tr data-id="${esc(id)}">
-        <td>${id}</td>
+        <td>${label}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
         <td>
@@ -907,6 +920,7 @@ function renderSellerCards(list = []) {
   const html = list.map(item => {
     const id       = item.id;
     const name     = esc(item.name);
+    const label    = fmtOrderLabel(item);
     const price    = fmtPrice(item.totalAmount);
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
@@ -920,8 +934,8 @@ function renderSellerCards(list = []) {
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row justify-content-between align-items-end">
               <div>
-                <h6 class="mb-0 text-truncate" title="${name}">訂單編號 ${id}</h6>
-                <div class="small text-muted mb-2" style="font-size: 14px;">訂單建立時間：${created}</div>
+                <h6 class="mb-0 text-truncate" title="${name}" style="font-size:0.88rem;">${label}</h6>
+                <div class="small text-muted mb-2" style="font-size:12px;">建立日期：${created}</div>
                 <span class="badge ${st.badge}" style="margin-bottom: 10px;">${st.text}</span>
               </div>
               <div class="fw-bold mb-2 text-end">${price}</div>
@@ -938,6 +952,7 @@ function renderSellerCards(list = []) {
               </button>
               ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
             </div>
+            <div class="text-muted mt-2" style="font-size:11px;">訂單編號 ${id}</div>
           </div>
         </div>
       </div>
@@ -958,6 +973,7 @@ function renderBuyerCards(list = []) {
   const html = list.map(item => {
     const id       = item.id;
     const name     = esc(item.name);
+    const label    = fmtOrderLabel(item);
     const price    = fmtPrice(item.totalAmount);
     const created  = fmtDate(item.createdAt);
     const key      = (item.status ?? 'listed').toLowerCase();
@@ -969,8 +985,8 @@ function renderBuyerCards(list = []) {
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row justify-content-between align-items-end">
               <div>
-                <h6 class="mb-0 text-truncate" title="${name}">訂單編號 ${id}</h6>
-                <div class="small text-muted mb-2" style="font-size: 14px;">訂單建立時間：${created}</div>
+                <h6 class="mb-0 text-truncate" title="${name}" style="font-size:0.88rem;">${label}</h6>
+                <div class="small text-muted mb-2" style="font-size:12px;">建立日期：${created}</div>
                 <span class="badge ${st.badge}" style="margin-bottom: 10px;">${st.text}</span>
               </div>
               <div class="fw-bold mb-2 text-end">${price}</div>
@@ -987,6 +1003,7 @@ function renderBuyerCards(list = []) {
               </button>
               ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
             </div>
+            <div class="text-muted mt-2" style="font-size:11px;">訂單編號 ${id}</div>
           </div>
         </div>
       </div>
@@ -1296,8 +1313,8 @@ const updateStatusUI = (data) => {
 
   function init() {
     el = getEls();
-    if (!el.drawer || !el.form) {
-      console.error('[edit-drawer] 缺少 Drawer 必要節點 (#editDrawer / #editItemForm)');
+    if (!el.modal || !el.form) {
+      console.error('[edit-modal] 缺少 Modal 必要節點 (#editDrawer / #editItemForm)');
       return;
     }
 
@@ -1345,12 +1362,13 @@ const updateStatusUI = (data) => {
       r.addEventListener('change', () => { if (el.condition) el.condition.value = r.value; });
     });
 
-    // 取消/關閉/ESC
-    el.cancelBtn?.addEventListener('click', closeEditDrawer);
-    el.closeBtn?.addEventListener('click', closeEditDrawer);
-    el.backdrop?.addEventListener('click', closeEditDrawer);
-    window.addEventListener('keydown', (ev) => {
-      if (ev.key === 'Escape' && !el.drawer.hidden) closeEditDrawer();
+    // 開啟時讓 backdrop z-index 提高（避免被 navbar/bottom-nav 遮住）
+    el.modal.addEventListener('show.bs.modal', () => document.body.classList.add('edit-modal-open'));
+    // 關閉後清理
+    el.modal.addEventListener('hidden.bs.modal', () => {
+      document.body.classList.remove('edit-modal-open');
+      hideMainPreview();
+      resetSecondary();
     });
 
     // 送出儲存
@@ -1416,8 +1434,7 @@ const updateStatusUI = (data) => {
 
   function getEls() {
     return {
-      drawer: document.getElementById('editDrawer'),
-      backdrop: document.getElementById('editDrawerBackdrop'),
+      modal: document.getElementById('editDrawer'),
       closeBtn: document.getElementById('editDrawerCloseBtn'),
       cancelBtn: document.getElementById('editDrawerCancelBtn'),
       form: document.getElementById('editItemForm'),
@@ -1455,27 +1472,13 @@ const updateStatusUI = (data) => {
       console.warn('讀取商品失敗，將以空白表單開啟', e);
     }
 
-    // 顯示 Drawer
-    el.drawer.hidden = false;
-    el.backdrop.hidden = false;
-    requestAnimationFrame(() => {
-      el.drawer.classList.add('show');
-      el.backdrop.classList.add('show');
-      document.body.classList.add('overflow-hidden');
-      el.name?.focus();
-    });
+    // 顯示 Modal
+    bootstrap.Modal.getOrCreateInstance(el.modal).show();
+    el.modal.addEventListener('shown.bs.modal', () => el.name?.focus(), { once: true });
   }
 
   function closeEditDrawer() {
-    el.drawer.classList.remove('show');
-    el.backdrop.classList.remove('show');
-    document.body.classList.remove('overflow-hidden');
-    setTimeout(() => {
-      el.drawer.hidden = true;
-      el.backdrop.hidden = true;
-      hideMainPreview();
-      resetSecondary();
-    }, 200);
+    bootstrap.Modal.getInstance(el.modal)?.hide();
   }
 
   function fillForm(item) {
@@ -1668,6 +1671,7 @@ async function openChatWithTarget(targetUserId) {
 }
 // TODO 評價UI
 async function openReviewModal(orderId, targetId, targetRole) {
+  console.log('[review] openReviewModal called', { orderId, targetId, targetRole });
   const isRatingBuyer = (targetRole === 'buyer');
   const roleName = isRatingBuyer ? '買家' : '賣家';
   const maxScore = isRatingBuyer ? 3 : 5;

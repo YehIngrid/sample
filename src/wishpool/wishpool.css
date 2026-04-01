@@ -24,7 +24,11 @@ body {
 .header {
     display: block;
 }
-
+.mobileNav {
+    background-color: #fbfbfb;
+    margin: 0 auto !important;
+    padding: 5px 3vw !important;
+}
 /* ── 電腦版漸層 Navbar ── */
 .wp-navbar {
     background: transparent !important;
