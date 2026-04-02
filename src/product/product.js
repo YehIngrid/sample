@@ -224,9 +224,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categoryMap = {
       book: '書籍與學籍用品',
       life: '宿舍與生活用品',
-      student: '學生專用器材',
-      recycle: '環保生活用品',
-      clean: '儲物與收納用品',
+      special: '學生專用器材',
+      reuse: '環保生活用品',
+      storage: '儲物與收納用品',
       other: '其他',
     };
     const newOrOldMap = {

@@ -114,6 +114,7 @@ async function renderAuthUI() {
         const currentUrl = window.location.pathname + window.location.search;
         el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
       });
+      document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = '../image/default-avatar.png'; });
 
       document.querySelectorAll('.loginornot').forEach((el) => {
         if (el.classList.contains('nav-menu-item')) {

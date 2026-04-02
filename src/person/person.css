@@ -600,7 +600,8 @@ small { font-size: 10px; color: #004b97; }
     right: 30px;
     border-radius: 50%;
     border: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     cursor: pointer;
     z-index: 1000;
     display: flex;

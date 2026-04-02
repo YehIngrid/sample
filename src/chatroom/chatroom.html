@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>聊天室</title>
+    <link rel="shortcut icon" href="../treasurehubIcon.ico">
     <meta property="og:title" content="聊天室">
     <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
     <meta property="og:image" content="https://yourdomain.com/webP/treasurehub.webp">
@@ -71,17 +72,23 @@
                                 <i class="bi bi-circle-fill text-success"></i> 已連接
                             </button> -->
                             <div class="dropdown">
-                                <button class="col-10 btn btn-sm" type="button" data-bs-toggle="dropdown" >
-                                    <img src="../webP/else.webp" alt="聊天室其他功能" class="else">
+                                <button class="chat-more-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
                                 </button>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu dropdown-menu-end chat-dropdown">
                                     <li>
-                                        <a class="dropdown-item d-flex align-items-center gap-2" href="#" id="openThemePanel">
-                                            <i class="bi bi-palette2"></i> 訊息主題
+                                        <a class="chat-dropdown-item" href="#" id="openThemePanel">
+                                            <span class="chat-dropdown-icon"><i class="bi bi-palette2"></i></span>
+                                            訊息主題
                                         </a>
                                     </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#" style="color: red;">檢舉</a></li>
+                                    <li><hr class="chat-dropdown-divider"></li>
+                                    <li>
+                                        <a class="chat-dropdown-item chat-dropdown-danger" href="#">
+                                            <span class="chat-dropdown-icon"><i class="bi bi-flag"></i></span>
+                                            檢舉
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                             
@@ -89,30 +96,50 @@
                     </div>
                 </div>
 
+                <!-- SSE 斷線提示 -->
+                <div id="sseDisconnectBanner" class="sse-disconnect-banner" style="display:none;">
+                    <i class="bi bi-wifi-off me-2"></i>連線中斷，嘗試重新連線中…
+                </div>
+
                 <!-- 訊息顯示區 -->
                 <div class="messages-container" id="messagesContainer"></div>
-                
+
+                <!-- 捲動到底部按鈕 -->
+                <button id="scrollToBottomBtn" class="scroll-to-bottom-btn" style="display:none;" title="捲動到最新訊息">
+                    <i class="bi bi-chevron-double-down"></i>
+                </button>
+
                 <div id="typingIndicator" class="typing-indicator mt-2" style="display: none;">
                 </div>
                 <!-- 輸入區域 -->
                 <div class="message-input-container p-3 border-top">
+                    <!-- 快速回覆 -->
+                    <div id="quickReplyBar" class="quick-reply-bar" style="display:none;">
+                        <button class="quick-reply-chip" data-text="請問還有嗎？">請問還有嗎？</button>
+                        <button class="quick-reply-chip" data-text="方便約在哪裡交易？">方便約在哪裡交易？</button>
+                        <button class="quick-reply-chip" data-text="請問有瑕疵嗎？">請問有瑕疵嗎？</button>
+                        <button class="quick-reply-chip" data-text="可以拍更多照片嗎？">可以拍更多照片嗎？</button>
+                        <button class="quick-reply-chip" data-text="什麼時候方便？">什麼時候方便？</button>
+                    </div>
                     <div id="img-input-container"></div>
                     <form id="messageForm" class="d-flex gap-2">
                         <input type="file" id="image-upload" accept="image/*" hidden>
                         <button type="button" class="sendothericon" id="send-image-btn">
                             <img src="../webP/sendother.webp" alt="傳送照片按鈕" style="width: 80%;">
                         </button>
-                        <input 
-                            type="text" 
-                            class="form-control" 
-                            id="messageInput" 
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="messageInput"
                             placeholder="輸入訊息..."
                             autocomplete="off"
+                            maxlength="500"
                         >
                         <button type="submit" class="sendicon">
                             <img src="../svg/newsend.svg" alt="送出訊息按鈕" style="width: 100%;">
                         </button>
                     </form>
+                    <div id="msgCharCount" class="msg-char-count" style="display:none;">0 / 500</div>
                 </div>
             </div>
         </div>
@@ -126,33 +153,49 @@
         </div>
         <p class="theme-hint">選擇自己訊息泡泡的顏色主題</p>
         <div class="theme-swatches" id="themeSwatches">
-          <button class="theme-swatch" data-id="default"  data-from="#84a2d4" data-to="#82d3d3"  title="藍綠（預設）">
-            <span class="swatch-preview" style="background: linear-gradient(to right, #84a2d4, #82d3d3 )"></span>
+          <button class="theme-swatch" data-id="default" data-from="#84a2d4" data-to="#82d3d3" title="藍綠（預設）">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #84a2d4, #82d3d3)"></span>
             <small>預設</small>
-          </button>
-          <button class="theme-swatch" data-id="sky" data-from="#ff9a9e" data-to="#fad0c4"  title="天空藍">
-            <span class="swatch-preview" style="background: linear-gradient(to right, #ff9a9e, #fad0c4)"></span>
-            <small>蜜桃</small>
           </button>
           <button class="theme-swatch" data-id="rose" data-from="#3d4e81" data-to="#6e7ff3" title="星空">
             <span class="swatch-preview" style="background: linear-gradient(to right, #3d4e81, #6e7ff3)"></span>
             <small>星空</small>
           </button>
+          <button class="theme-swatch" data-id="mono" data-from="#607d8b" data-to="#90a4ae" title="霧灰藍">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #607d8b, #90a4ae)"></span>
+            <small>霧灰藍</small>
+          </button>
+          <button class="theme-swatch" data-id="berry" data-from="#6b4fa0" data-to="#a07cc9" title="莓紫">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #6b4fa0, #a07cc9)"></span>
+            <small>莓紫</small>
+          </button>
           <button class="theme-swatch" data-id="forest" data-from="#f0ada0" data-to="#ac9ef0" title="糖果">
             <span class="swatch-preview" style="background: linear-gradient(to right, #f0ada0, #ac9ef0)"></span>
             <small>糖果</small>
           </button>
-          <button class="theme-swatch" data-id="purple" data-from="#f7de98" data-to="#dd97f7" title="夢幻">
-            <span class="swatch-preview" style="background: linear-gradient(to right, #f7de98, #dd97f7)"></span>
-            <small>夢幻</small>
+          <button class="theme-swatch" data-id="sky" data-from="#ff9a9e" data-to="#fad0c4" title="蜜桃">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #ff9a9e, #fad0c4)"></span>
+            <small>蜜桃</small>
           </button>
           <button class="theme-swatch" data-id="sunset" data-from="#e65100" data-to="#ffd54f" title="夕陽橙">
             <span class="swatch-preview" style="background: linear-gradient(to right, #e65100, #ffd54f)"></span>
             <small>夕陽橙</small>
           </button>
-          <button class="theme-swatch" data-id="mono" data-from="#424242" data-to="#9e9e9e" title="深灰">
-            <span class="swatch-preview" style="background: linear-gradient(to right, #424242, #9e9e9e)"></span>
-            <small>深灰</small>
+          <button class="theme-swatch" data-id="warmbrown" data-from="#c17c5a" data-to="#e8b89a" title="暖橘棕">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #c17c5a, #e8b89a)"></span>
+            <small>暖橘棕</small>
+          </button>
+          <button class="theme-swatch" data-id="purple" data-from="#f7de98" data-to="#dd97f7" title="夢幻">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #f7de98, #dd97f7)"></span>
+            <small>夢幻</small>
+          </button>
+          <button class="theme-swatch" data-id="matcha" data-from="#6b8f71" data-to="#a8c5a0" title="抹茶">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #6b8f71, #a8c5a0)"></span>
+            <small>抹茶</small>
+          </button>
+          <button class="theme-swatch" data-id="dark" data-from="#5b8dd9" data-to="#5bbdbd" data-dark="1" title="暗黑">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #1e1e2e, #5b8dd9)"></span>
+            <small>暗黑</small>
           </button>
           <button class="theme-swatch theme-swatch-custom" data-id="custom" title="自訂顏色">
             <span class="swatch-preview swatch-custom-icon"><i class="bi bi-eyedropper"></i></span>
@@ -174,6 +217,11 @@
       </div>
     </div>
     <div id="themePanelOverlay" class="theme-panel-overlay" style="display:none;"></div>
+
+    <!-- 訊息右鍵選單 -->
+    <div id="msgContextMenu" class="msg-context-menu" style="display:none;">
+        <button id="msgMenuCopy"><i class="bi bi-copy me-2"></i>複製文字</button>
+    </div>
 
     <!-- Crop Modal -->
     <div class="modal fade" id="chatCropModal" tabindex="-1" aria-hidden="true">

@@ -63,7 +63,6 @@ ul{
   gap: 24px 0px; /* 控制間距 */
   align-items: end;
   justify-items: center;
-  margin-top: 10px;
 }
 .seriesofbutton li{
     display: flex;
@@ -74,7 +73,6 @@ ul{
     padding-left: 3%;
     padding-right: 3%;
     width: stretch;
-    padding-bottom: 15px;
     transition: color 0.3s ease-in-out, font-weight 0.3s ease-in-out;
 }
 .seriesofbutton li:hover {
@@ -165,7 +163,7 @@ ul{
   /* 桌面版搜尋欄高度 */
   @media (min-width: 992px) {
     #searchInput {
-      height: 48px;
+      height: 43px;
       font-size: 1rem;
     }
   }
@@ -2634,7 +2632,8 @@ html{ scroll-behavior:smooth; }
     right: 30px;
     border-radius: 50%;
     border: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     cursor: pointer;
     z-index: 1000;
     display: flex;
@@ -2908,4 +2907,30 @@ html{ scroll-behavior:smooth; }
 }
 .mbcategory {
     margin: 20px auto 60px;
+}
+
+/* 常見錯誤示範 grid */
+.wrong-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+.wrong-photo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.wrong-photo-item img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(0,75,151,0.15);
+}
+.wrong-photo-item span {
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.4;
 }

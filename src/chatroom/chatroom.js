@@ -116,10 +116,10 @@ class ChatRoomList {
                     <div style="padding:32px 16px;text-align:center;color:#888;">
                         <i class="bi bi-lock" style="font-size:2.2rem;display:block;margin-bottom:12px;color:#004b97;"></i>
                         <p style="margin-bottom:16px;font-size:0.9rem;line-height:1.6;">請先登入<br>才能使用聊天室</p>
-                        <a href="../account/account.html?redirect=${redirect}"
-                           style="display:inline-block;padding:8px 24px;background:#004b97;color:#fff;border-radius:8px;text-decoration:none;font-size:0.85rem;">
+                        <button onclick="location.replace('../account/account.html?redirect=${redirect}')"
+                           style="display:inline-block;padding:8px 24px;background:#004b97;color:#fff;border-radius:8px;border:none;font-size:0.85rem;cursor:pointer;">
                             前往登入
-                        </a>
+                        </button>
                     </div>`;
             }
             return;
@@ -167,10 +167,10 @@ class ChatRoomList {
                         <div class="d-flex align-items-center">
                             <div class="chat-avatar">
                                 <img src="../webP/treasurehub.webp" alt="${this.escapeHtml(ch.name ?? '官方公告')}"
-                                     style="width:45px;height:45px;border-radius:50px;object-fit:cover;border:2px solid #004b97;">
+                                     style="width:45px;height:45px;border-radius:50px;object-fit:cover;border:2px solid var(--primary-color,#004b97);">
                             </div>
                             <div class="flex-grow-1">
-                                <h6 class="mb-0 roomName">${this.escapeHtml(ch.name ?? '官方公告')} <span style="font-size:0.6rem;background:#004b97;color:#fff;border-radius:4px;padding:1px 5px;vertical-align:middle;">官方</span></h6>
+                                <h6 class="mb-0 roomName">${this.escapeHtml(ch.name ?? '官方公告')} <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span></h6>
                                 <small class="text-muted lastMessage">${this.escapeHtml(ch.description ?? '官方公告頻道')}</small>
                             </div>
                         </div>`;
@@ -208,10 +208,12 @@ class ChatRoomList {
         this.currentRoomName = name;
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-channel-id="${channelId}"]`)?.classList.add('active');
-        document.querySelector('.chat-header h6').textContent = name;
+        document.querySelector('.chat-header h6').innerHTML = `${this.escapeHtml(name)} <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>`;
         this.input.disabled = true;
         this.sendImagebtn.disabled = true;
         this.input.placeholder = '官方頻道不支援傳送訊息';
+        const quickReplyBar = document.getElementById('quickReplyBar');
+        if (quickReplyBar) quickReplyBar.style.display = 'none';
         this.input.style.backgroundColor = '#f5f5f5';
 
         const container = document.getElementById('messagesContainer');
@@ -236,14 +238,14 @@ class ChatRoomList {
     }
 
     initPhotoSwipeGallery() {
-        import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe-lightbox.esm.min.js')
+        import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js')
             .then(module => {
                 const PhotoSwipeLightbox = module.default;
                 if (this.lightbox) this.lightbox.destroy();
                 this.lightbox = new PhotoSwipeLightbox({
                     gallery: '#messagesContainer',
                     children: 'a.image-link',
-                    pswpModule: () => import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.esm.min.js'),
+                    pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js'),
                     padding: { top: 50, bottom: 50, left: 100, right: 100 },
                     bgOpacity: 0.9,
                     preload: [1, 2],
@@ -437,6 +439,7 @@ class ChatRoomList {
 
     // ✅ attachments 是陣列 ["url1", ...]，取第一個元素顯示
     appendImageMessage(data, prepend = false) {
+        this.hideEmptyHint();
         const container = document.getElementById('messagesContainer');
         const imgWrapper = document.createElement('div');
         const isSelf = data.isSelf === true || data.username === this.username;
@@ -608,6 +611,95 @@ class ChatRoomList {
         const container = document.getElementById('messagesContainer');
         container.addEventListener('scroll', () => {
             if (container.scrollTop <= 10) this.loadMoreMessages();
+            // 捲動到底部按鈕
+            const scrollToBtn = document.getElementById('scrollToBottomBtn');
+            if (scrollToBtn) {
+                const distFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+                scrollToBtn.style.display = distFromBottom > 200 ? 'flex' : 'none';
+            }
+        });
+
+        // 捲動到底部按鈕點擊
+        document.getElementById('scrollToBottomBtn')?.addEventListener('click', () => {
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        });
+
+        // 字數提示
+        const charCount = document.getElementById('msgCharCount');
+        this.input.addEventListener('input', () => {
+            const len = this.input.value.length;
+            if (len > 0) {
+                charCount.textContent = `${len} / 500`;
+                charCount.style.display = 'block';
+                charCount.classList.toggle('near-limit', len >= 450);
+            } else {
+                charCount.style.display = 'none';
+            }
+        });
+
+        // 快速回覆
+        document.getElementById('quickReplyBar')?.addEventListener('click', (e) => {
+            const chip = e.target.closest('.quick-reply-chip');
+            if (!chip) return;
+            this.input.value = chip.dataset.text;
+            this.input.focus();
+            this.input.dispatchEvent(new Event('input')); // 觸發字數更新
+        });
+
+        // 自訂右鍵/長按選單
+        const msgMenu = document.getElementById('msgContextMenu');
+        let _menuTarget = null;
+
+        const showMsgMenu = (x, y, msgText) => {
+            _menuTarget = msgText;
+            msgMenu.style.left = x + 'px';
+            msgMenu.style.top  = y + 'px';
+            msgMenu.style.display = 'block';
+            // 防止選單超出視窗
+            const rect = msgMenu.getBoundingClientRect();
+            if (rect.right  > window.innerWidth)  msgMenu.style.left = (x - rect.width)  + 'px';
+            if (rect.bottom > window.innerHeight) msgMenu.style.top  = (y - rect.height) + 'px';
+        };
+        const hideMsgMenu = () => {
+            msgMenu.style.display = 'none';
+            _menuTarget = null;
+        };
+
+        // 右鍵（桌機）
+        container.addEventListener('contextmenu', (e) => {
+            const msgText = e.target.closest('.message-text');
+            if (!msgText) return;
+            e.preventDefault();
+            showMsgMenu(e.clientX, e.clientY, msgText);
+        });
+
+        // 長按（手機）
+        let _longPressTimer;
+        container.addEventListener('touchstart', (e) => {
+            const msgText = e.target.closest('.message-text');
+            if (!msgText) return;
+            const touch = e.touches[0];
+            _longPressTimer = setTimeout(() => {
+                showMsgMenu(touch.clientX, touch.clientY, msgText);
+            }, 600);
+        }, { passive: true });
+        container.addEventListener('touchend',  () => clearTimeout(_longPressTimer));
+        container.addEventListener('touchmove', () => clearTimeout(_longPressTimer));
+
+        // 點擊選單外關閉
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#msgContextMenu')) hideMsgMenu();
+        });
+        document.addEventListener('touchstart', (e) => {
+            if (!e.target.closest('#msgContextMenu')) hideMsgMenu();
+        }, { passive: true });
+
+        // 選單操作
+        document.getElementById('msgMenuCopy')?.addEventListener('click', () => {
+            if (!_menuTarget) return;
+            navigator.clipboard?.writeText(_menuTarget.textContent).then(() => {
+                hideMsgMenu();
+            });
         });
     }
 
@@ -696,10 +788,10 @@ class ChatRoomList {
                         <div class="chat-avatar">
                             <img src="${roomAvatar}"
                                  alt="${this.escapeHtml(roomName)}"
-                                 style="width: 45px; height: 45px; border-radius: 50px; object-fit: cover; object-position: center;${isOfficial ? ' border: 2px solid #004b97;' : ''}">
+                                 style="width: 45px; height: 45px; border-radius: 50px; object-fit: cover; object-position: center;${isOfficial ? ' border: 2px solid var(--primary-color,#004b97);' : ''}">
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span style="font-size:0.6rem; background:#004b97; color:#fff; border-radius:4px; padding:1px 5px; vertical-align:middle;">官方</span>' : ''}</h6>
+                            <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}</h6>
                             <small class="text-muted lastMessage">${this.escapeHtml(isOfficial
                                 ? this.getLastMessageText(
                                     data.lastMessage ?? data.officialChannel?.lastMessage ?? data.lastBroadcast,
@@ -775,15 +867,23 @@ class ChatRoomList {
 
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
-        document.querySelector('.chat-header h6').textContent = resolvedName;
+        const isOfficialRoom = this.officialRoomsSet.has(String(roomId));
+        const headerH6 = document.querySelector('.chat-header h6');
+        if (isOfficialRoom) {
+            headerH6.innerHTML = `${this.escapeHtml(resolvedName)} <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>`;
+        } else {
+            headerH6.textContent = resolvedName;
+        }
 
         // ✅ 官方頻道：停用輸入區域
-        const isOfficialRoom = this.officialRoomsSet.has(String(roomId));
         this.input.disabled = isOfficialRoom;
         this.sendImagebtn.disabled = isOfficialRoom;
         this.previewArea.disabled = isOfficialRoom;
         this.input.placeholder = isOfficialRoom ? '官方頻道不支援傳送訊息' : '輸入訊息...';
         this.input.style.backgroundColor = isOfficialRoom ? '#f5f5f5' : '';
+        // 快速回覆只在私人聊天顯示
+        const quickReplyBar = document.getElementById('quickReplyBar');
+        if (quickReplyBar) quickReplyBar.style.display = isOfficialRoom ? 'none' : 'flex';
 
         // ✅ 開啟官方頻道：立即清除列表上的未讀紅點，並通知後端已讀
         if (isOfficialRoom) {
@@ -835,7 +935,8 @@ class ChatRoomList {
             const partnerRead = this.partnerReadMap.get(String(roomId));
             if (partnerRead?.id) this.updateReadReceipts(partnerRead.id);
         } else {
-            container.innerHTML = '<p class="text-center text-muted mt-3">沒有訊息</p>';
+            container.innerHTML = '';
+            this.showEmptyHint();
             this.isInitialLoading = false;
         }
 
@@ -993,13 +1094,19 @@ class ChatRoomList {
         });
 
         this.eventSource.addEventListener('ping', () => {});
-        this.eventSource.addEventListener('ready', (event) => {
-            console.log('SSE ready:', JSON.parse(event.data));
+        this.eventSource.addEventListener('ready', () => {
+            document.getElementById('sseDisconnectBanner').style.display = 'none';
         });
+        this.eventSource.onopen = () => {
+            document.getElementById('sseDisconnectBanner').style.display = 'none';
+        };
 
         this.eventSource.onerror = () => {
             this.eventSource?.close();
             this.eventSource = null;
+            document.getElementById('sseDisconnectBanner').style.display = 'flex';
+            clearTimeout(this._reconnectTimer);
+            this._reconnectTimer = setTimeout(() => this.connectSSE(), 4000);
         };
     }
 
@@ -1040,7 +1147,22 @@ class ChatRoomList {
         }
     }
 
+    showEmptyHint() {
+        const container = document.getElementById('messagesContainer');
+        if (!container || container.querySelector('.empty-chat-hint')) return;
+        const el = document.createElement('div');
+        el.className = 'empty-chat-hint';
+        el.innerHTML = `<i class="bi bi-chat-dots" style="font-size:2.5rem;color:var(--primary-color,#84a2d4);opacity:0.5;"></i>
+            <p style="margin:0;">還沒有訊息<br><small>傳送第一則訊息開始對話吧！</small></p>`;
+        container.appendChild(el);
+    }
+
+    hideEmptyHint() {
+        document.querySelector('.empty-chat-hint')?.remove();
+    }
+
     renderMessage(data, prepend = false) {
+        this.hideEmptyHint();
         // 官方頻道訊息改用公告卡片風格
         if (this.officialRoomsSet.has(String(this.currentRoomId))) {
             this.renderBroadcast(data);
@@ -1200,14 +1322,31 @@ class ChatRoomList {
                 <div class="broadcast-header">
                     <img src="../webP/treasurehub.webp" class="broadcast-avatar" alt="官方">
                     <span class="broadcast-label">${this.escapeHtml(channelName)}</span>
-                    <span class="broadcast-tag">官方</span>
+                    <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>
                 </div>
-                <div class="broadcast-text">${this.escapeHtml(data.message || '')}</div>
-                ${broadcastImg ? `<img src="${broadcastImg}" class="broadcast-img" alt="公告圖片">` : ''}
+                ${broadcastImg ? `
+                <a href="${broadcastImg}" class="image-link broadcast-img-link"
+                   data-pswp-width="auto" data-pswp-height="auto" target="_blank">
+                    <img src="${broadcastImg}" class="broadcast-img" alt="公告圖片" loading="lazy">
+                </a>` : ''}
+                ${data.message ? `<div class="broadcast-text">${this.escapeHtml(data.message)}</div>` : ''}
                 ${time ? `<div class="broadcast-time">${time}</div>` : ''}
             </div>`;
         container.appendChild(el);
         container.scrollTop = container.scrollHeight;
+
+        if (broadcastImg) {
+            const tempImg = new Image();
+            tempImg.onload = () => {
+                const link = el.querySelector('.image-link');
+                if (link) {
+                    link.setAttribute('data-pswp-width', tempImg.naturalWidth);
+                    link.setAttribute('data-pswp-height', tempImg.naturalHeight);
+                }
+                this.initPhotoSwipeGallery();
+            };
+            tempImg.src = broadcastImg;
+        }
     }
 
     escapeHtml(text) {
@@ -1241,6 +1380,11 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
 let chatRoomList = null;
 let _chatReady = false;
 let _pendingSellerId = null;
+
+// 防止 bfcache 還原舊的未登入狀態
+window.addEventListener('pageshow', (e) => {
+    if (e.persisted) location.reload();
+});
 
 window.addEventListener('load', () => {
     // 優先標記 iframe 模式，讓 CSS 立即生效
@@ -1328,7 +1472,7 @@ async function openChatWithTarget(targetUserId) {
         return 'rgba('+r+','+g+','+b+','+alpha+')';
     }
 
-    function applyTheme(from, to) {
+    function applyTheme(from, to, dark = false) {
         root.style.setProperty('--primary-color', from);
         root.style.setProperty('--secondary-color', to);
         // 訊息容器背景設為所選顏色的淡色調
@@ -1339,14 +1483,27 @@ async function openChatWithTarget(targetUserId) {
         if (selfBg) root.style.setProperty('--self-bubble-bg', selfBg);
         var selfBorder = hexToRgba(from, 0.38);
         if (selfBorder) root.style.setProperty('--self-bubble-border', selfBorder);
+        // 聊天列表 active 背景 & 官方公告分隔線
+        var listActive = hexToRgba(from, 0.1);
+        if (listActive) root.style.setProperty('--list-active-bg', listActive);
+        var borderTint = hexToRgba(from, 0.1);
+        if (borderTint) root.style.setProperty('--primary-border-tint', borderTint);
+        // Dark mode
+        if (dark) {
+            root.setAttribute('data-theme-dark', '1');
+            root.style.setProperty('--chat-bg-tint', '#252536');
+            root.style.setProperty('--list-active-bg', '#313244');
+        } else {
+            root.removeAttribute('data-theme-dark');
+        }
     }
 
     // 恢復已儲存的主題
     const saved = localStorage.getItem(THEME_KEY);
     if (saved) {
         try {
-            const { from, to } = JSON.parse(saved);
-            if (from && to) applyTheme(from, to);
+            const { from, to, dark } = JSON.parse(saved);
+            if (from && to) applyTheme(from, to, !!dark);
         } catch(e) {}
     }
 
@@ -1401,8 +1558,9 @@ async function openChatWithTarget(targetUserId) {
             }
             customRow.style.display = 'none';
             markActive(id);
-            applyTheme(from, to);
-            localStorage.setItem(THEME_KEY, JSON.stringify({ id, from, to }));
+            const dark = swatch.dataset.dark === '1';
+            applyTheme(from, to, dark);
+            localStorage.setItem(THEME_KEY, JSON.stringify({ id, from, to, dark }));
         });
     });
 
