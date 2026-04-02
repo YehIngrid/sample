@@ -312,10 +312,12 @@ function _getAttachmentUrl(attachments) {
 function _showChatToast(data) {
   const username = data.username;
   const partner = _partnerCache.get(username) || {
-    name: username,
-    photoURL: '../image/default-avatar.png',
+    name: data._overrideName ?? username,
+    photoURL: data._overrideAvatar ?? '../image/default-avatar.png',
     userId: null
   };
+  if (data._overrideName) partner.name = data._overrideName;
+  if (data._overrideAvatar) partner.photoURL = data._overrideAvatar;
   const isMobile = hasBottomNav();
   const hasIframe = !!talkInterface;
   const imgUrl = _getAttachmentUrl(data.attachments);
@@ -433,8 +435,18 @@ window.addEventListener('load', async () => {
             _showChatToast(data);
         }
     });
-    _notifSse.addEventListener('newBroadcast', () => {
+    _notifSse.addEventListener('newBroadcast', (event) => {
         window.dispatchEvent(new CustomEvent('chatUnread'));
+        try {
+            const data = JSON.parse(event.data);
+            _showChatToast({
+                username: '__official__',
+                message: data.message || '新的官方公告',
+                attachments: data.attachments,
+                _overrideName: data.channelName || data.channel?.name || '拾貨寶庫公告',
+                _overrideAvatar: '../webP/treasurehub.webp',
+            });
+        } catch (e) {}
     });
     _notifSse.addEventListener('ping', () => {});
     _notifSse.addEventListener('ready', () => {});

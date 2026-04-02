@@ -209,6 +209,8 @@ class ChatRoomList {
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-channel-id="${channelId}"]`)?.classList.add('active');
         document.querySelector('.chat-header h6').innerHTML = `${this.escapeHtml(name)} <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>`;
+        const headerSubtitlePub = document.getElementById('chatHeaderSubtitle');
+        if (headerSubtitlePub) headerSubtitlePub.style.display = '';
         this.input.disabled = true;
         this.sendImagebtn.disabled = true;
         this.input.placeholder = '官方頻道不支援傳送訊息';
@@ -869,10 +871,13 @@ class ChatRoomList {
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
         const isOfficialRoom = this.officialRoomsSet.has(String(roomId));
         const headerH6 = document.querySelector('.chat-header h6');
+        const headerSubtitle = document.getElementById('chatHeaderSubtitle');
         if (isOfficialRoom) {
             headerH6.innerHTML = `${this.escapeHtml(resolvedName)} <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>`;
+            if (headerSubtitle) headerSubtitle.style.display = '';
         } else {
             headerH6.textContent = resolvedName;
+            if (headerSubtitle) headerSubtitle.style.display = 'none';
         }
 
         // ✅ 官方頻道：停用輸入區域
