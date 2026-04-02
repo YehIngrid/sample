@@ -386,6 +386,29 @@ function _showChatToast(data) {
   _toastMap.set(username, { el, timer, count: 1 });
 }
 
+// ── 瀏覽器桌面通知 ──────────────────────────────────────────
+function _requestNotifPermission() {
+    if (!('Notification' in window) || Notification.permission !== 'default') return;
+    Notification.requestPermission();
+}
+
+function _showBrowserNotif(title, body, icon, openUrl) {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+    if (!document.hidden) return; // 使用者正在看頁面，toast 已夠用
+    const n = new Notification(title, {
+        body,
+        icon: icon || '../webP/treasurehub.webp',
+        badge: '../webP/treasurehub.webp',
+        tag: 'treasurehub-chat', // 多則通知合併，不堆疊
+    });
+    n.onclick = () => {
+        window.focus();
+        if (openUrl) window.location.href = openUrl;
+        n.close();
+    };
+}
+
 // 帳號層級 SSE：頁面載入即建立連線，接收所有聊天室即時通知（顯示 chaticon 紅點 + toast）
 window.addEventListener('load', async () => {
     const _notifSvc = new ChatBackendService();
@@ -422,6 +445,7 @@ window.addEventListener('load', async () => {
         });
 
         if (hasUnread) window.dispatchEvent(new CustomEvent('chatUnread'));
+        _requestNotifPermission(); // 登入確認後請求授權
     } catch (e) { /* 未登入或錯誤，略過 */ }
 
     const _notifSse = new EventSource(
@@ -433,19 +457,33 @@ window.addEventListener('load', async () => {
         if (data.username !== myUsername) {
             window.dispatchEvent(new CustomEvent('chatUnread'));
             _showChatToast(data);
+            const partner = _partnerCache.get(data.username);
+            _showBrowserNotif(
+                `拾貨寶庫 — ${partner?.name ?? data.username}`,
+                data.message?.trim() || '傳送了一張圖片',
+                partner?.photoURL ?? '../webP/treasurehub.webp',
+                `../chatroom/chatroom.html${partner?.userId ? '?openChat=' + partner.userId : ''}`
+            );
         }
     });
     _notifSse.addEventListener('newBroadcast', (event) => {
         window.dispatchEvent(new CustomEvent('chatUnread'));
         try {
             const data = JSON.parse(event.data);
+            const channelName = data.channelName || data.channel?.name || '拾貨寶庫公告';
             _showChatToast({
                 username: '__official__',
                 message: data.message || '新的官方公告',
                 attachments: data.attachments,
-                _overrideName: data.channelName || data.channel?.name || '拾貨寶庫公告',
+                _overrideName: channelName,
                 _overrideAvatar: '../webP/treasurehub.webp',
             });
+            _showBrowserNotif(
+                `拾貨寶庫 — ${channelName}`,
+                data.message || '新的官方公告',
+                '../webP/treasurehub.webp',
+                '../chatroom/chatroom.html'
+            );
         } catch (e) {}
     });
     _notifSse.addEventListener('ping', () => {});
