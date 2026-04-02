@@ -1130,7 +1130,11 @@ class ChatRoomList {
             document.querySelector('.preview')?.remove();
             this.previewArea.value = '';
         }
-        if (hasText) input.value = '';
+        if (hasText) {
+            input.value = '';
+            const charCount = document.getElementById('msgCharCount');
+            if (charCount) charCount.style.display = 'none';
+        }
 
         try {
             if (hasImage && hasText) {
