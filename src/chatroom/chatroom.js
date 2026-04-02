@@ -680,11 +680,12 @@ class ChatRoomList {
         container.addEventListener('touchstart', (e) => {
             const msgText = e.target.closest('.message-text');
             if (!msgText) return;
+            e.preventDefault(); // 必須同步呼叫，阻止系統長按選單
             const touch = e.touches[0];
             _longPressTimer = setTimeout(() => {
                 showMsgMenu(touch.clientX, touch.clientY, msgText);
             }, 600);
-        }, { passive: true });
+        }, { passive: false }); // 必須 non-passive 才能 preventDefault
         container.addEventListener('touchend',  () => clearTimeout(_longPressTimer));
         container.addEventListener('touchmove', () => clearTimeout(_longPressTimer));
 

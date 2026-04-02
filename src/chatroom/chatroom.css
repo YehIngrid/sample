@@ -222,6 +222,9 @@ html, body {
     max-width: 180px;
     text-align: left;
     word-wrap: break-word;
+    -webkit-touch-callout: none; /* iOS 長按不彈出系統選單 */
+    -webkit-user-select: none;
+    user-select: none;
 }
 .roomName {
     font-size: 14px;
