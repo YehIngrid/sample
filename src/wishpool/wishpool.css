@@ -866,6 +866,8 @@ body {
 .wish-card-wrapper {
     cursor: default;
     position: relative;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 /* ── New wish card ── */

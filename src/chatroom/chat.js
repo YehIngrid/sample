@@ -340,6 +340,11 @@ function _showChatToast(data) {
     _dismissToast(_toastMap.keys().next().value);
   }
 
+  // 播放 toast 音效
+  if (localStorage.getItem('chatSound') !== '0') {
+      new Audio('../sound/toast.mp3').play().catch(() => {});
+  }
+
   const el = document.createElement('div');
   el.className = 'chat-toast';
   el.innerHTML = `
@@ -445,7 +450,6 @@ window.addEventListener('load', async () => {
         });
 
         if (hasUnread) window.dispatchEvent(new CustomEvent('chatUnread'));
-        _requestNotifPermission(); // 登入確認後請求授權
     } catch (e) { /* 未登入或錯誤，略過 */ }
 
     const _notifSse = new EventSource(

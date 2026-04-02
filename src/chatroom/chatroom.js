@@ -707,6 +707,7 @@ class ChatRoomList {
     }
 
     playNotificationSound() {
+        if (localStorage.getItem('chatSound') === '0') return;
         const audio = new Audio('../sound/mes.mp3');
         audio.play().catch(() => {});
     }
@@ -1256,7 +1257,24 @@ class ChatRoomList {
         indicator.style.display = 'block';
         indicator.innerHTML = `<small>對方正在輸入...</small>`;
         clearTimeout(this.typingTimer);
-        this.typingTimer = setTimeout(() => { indicator.style.display = 'none'; }, 1000);
+
+        // 播放打字音效（只建一次，重複觸發時從頭播）
+        if (localStorage.getItem('chatSound') !== '0') {
+            if (!this._typingAudio) {
+                this._typingAudio = new Audio('../sound/typing.mp3');
+                this._typingAudio.volume = 0.5;
+            }
+            this._typingAudio.currentTime = 0;
+            this._typingAudio.play().catch(() => {});
+        }
+
+        this.typingTimer = setTimeout(() => {
+            indicator.style.display = 'none';
+            if (this._typingAudio) {
+                this._typingAudio.pause();
+                this._typingAudio.currentTime = 0;
+            }
+        }, 1000);
     }
 
     detectRead(element) {
@@ -1554,6 +1572,45 @@ async function openChatWithTarget(targetUserId) {
     openBtn?.addEventListener('click', (e) => { e.preventDefault(); openPanel(); });
     closeBtn?.addEventListener('click', closePanel);
     overlay?.addEventListener('click', closePanel);
+
+    // ── 音效開關 ──────────────────────────────────────────
+    function _isSoundOn() { return localStorage.getItem('chatSound') !== '0'; }
+    function _updateSoundUI() {
+        const icon  = document.getElementById('soundToggleIcon');
+        const label = document.getElementById('soundToggleLabel');
+        const on = _isSoundOn();
+        if (icon)  icon.className  = on ? 'bi bi-volume-up-fill' : 'bi bi-volume-mute-fill';
+        if (label) label.textContent = on ? '訊息音效（開）' : '訊息音效（關）';
+    }
+    _updateSoundUI();
+    document.getElementById('toggleSoundBtn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.setItem('chatSound', _isSoundOn() ? '0' : '1');
+        _updateSoundUI();
+    });
+
+    // ── 桌面通知按鈕 ─────────────────────────────────────
+    function _updateNotifUI() {
+        const icon  = document.getElementById('notifBellIcon');
+        const label = document.getElementById('notifBtnLabel');
+        const btn   = document.getElementById('enableNotifBtn');
+        if (!('Notification' in window)) {
+            if (btn) btn.style.display = 'none';
+            return;
+        }
+        const p = Notification.permission;
+        if (icon)  icon.className  = p === 'granted' ? 'bi bi-bell-fill' : 'bi bi-bell';
+        if (label) label.textContent = p === 'granted' ? '桌面通知（已開啟）' : p === 'denied' ? '桌面通知（已封鎖）' : '開啟桌面通知';
+        if (btn)   btn.style.opacity = p === 'denied' ? '0.45' : '1';
+    }
+    _updateNotifUI();
+    document.getElementById('enableNotifBtn')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (!('Notification' in window) || Notification.permission === 'denied') return;
+        if (Notification.permission === 'granted') return;
+        await Notification.requestPermission();
+        _updateNotifUI();
+    });
 
     swatches.forEach(swatch => {
         swatch.addEventListener('click', () => {

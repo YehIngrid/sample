@@ -489,6 +489,7 @@ async function handleRouting() {
     sellTableTitle.style.display = 'none';
     document.getElementById('sellFilter')?.classList.add('d-none');
     document.getElementById('sellPagination')?.classList.add('d-none');
+    document.querySelector('#sellProducts .mobile-back-btn')?.classList.add('d-none');
     getDetail(orderId);
     return;
   }
@@ -502,6 +503,7 @@ async function handleRouting() {
     buyTableTitle.style.display = 'none';
     document.getElementById('buyFilter')?.classList.add('d-none');
     document.getElementById('buyPagination')?.classList.add('d-none');
+    document.querySelector('#buyProducts .mobile-back-btn')?.classList.add('d-none');
     getDetail(orderId);
     return;
   }
@@ -566,6 +568,8 @@ document.getElementById('backToBuyTable')?.addEventListener('click', () => {
 function resetOrderView() {
   document.getElementById('sellOrderDetail')?.classList.add('d-none');
   document.getElementById('buyerOrderDetail')?.classList.add('d-none');
+  document.querySelector('#sellProducts .mobile-back-btn')?.classList.remove('d-none');
+  document.querySelector('#buyProducts .mobile-back-btn')?.classList.remove('d-none');
 }
 
 async function loadSellerOrders(page) {
@@ -1269,16 +1273,13 @@ const updateStatusUI = (data) => {
         img.src = img.src.replace('yet.svg', '.svg');
         timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
         item.classList.add('active');
-      } 
-      else {
-        // cancel 後的步驟 → cancel icon
+      } else if (statusName === 'scored') {
+        // scored 保持灰色，等雙方評分完才亮（不改 icon、不改文字、不加時間）
+      } else {
+        // 中間未完成的步驟 → cancel icon + 取消時間（時間只放 timeBox，不重複放 text）
         img.src = '../svg/cancel.svg';
         timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
-
-        // ⭐ 修改文字
-        if (text) {
-          text.innerHTML = `訂單已取消<br>${formatter.format(new Date(cancelLog.timestamp))}`;
-        }
+        if (text) text.innerHTML = '訂單已取消';
       }
     }
     // 🟢 正常流程

@@ -837,6 +837,8 @@ ul{
 .card{
   margin: 1px;
   transition: transform 0.4s ease, border 0.4s ease;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .card:hover {
   transform: translateY(-1px);

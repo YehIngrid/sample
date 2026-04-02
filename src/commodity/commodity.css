@@ -102,6 +102,8 @@
   cursor: pointer;
   transition: transform 0.22s ease, box-shadow 0.22s ease;
   overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .product-card:hover {
   transform: translateY(-4px);

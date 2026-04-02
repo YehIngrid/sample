@@ -792,6 +792,7 @@ html, body {
 .chat-dropdown {
     border: none;
     border-radius: 10px;
+    white-space: nowrap;
     box-shadow: 0 4px 20px rgba(0,0,0,0.13);
     padding: 6px;
     min-width: 160px;
