@@ -1,7 +1,31 @@
 import BackendService from '../BackendService.js';
 import '../default/default.js';
 
-//TODO 當頁面載入完畢後隱藏 loader，顯示內容
+// ── 頁面切換 ──────────────────────────────────────────────
+function showPage(nextId) {
+  const current = document.querySelector('.auth-step.active');
+  const next = document.getElementById(nextId);
+  if (!next || (current && current === next)) return;
+
+  if (!current) {
+    // 第一次顯示，直接帶入
+    next.style.display = 'block';
+    void next.offsetWidth;
+    next.classList.add('active');
+    return;
+  }
+
+  // 舊頁淡出 → 新頁淡入（sequential，避免兩頁同時佔位）
+  current.classList.remove('active');
+  current.addEventListener('transitionend', () => {
+    current.style.display = 'none';
+    next.style.display = 'block';
+    void next.offsetWidth;
+    next.classList.add('active');
+  }, { once: true });
+}
+
+// ── 載入完成後隱藏 loader，顯示內容，並展示登入頁 ──────────
 window.onload = function() {
   var loader = document.getElementById('loader');
   var content = document.getElementById('whatcontent');
@@ -9,15 +33,18 @@ window.onload = function() {
     loader.style.setProperty('display', 'none', 'important');
     content.style.setProperty('display', 'block', 'important');
   }
+  showPage('loginModal');
 };
+
+// ── 註冊 ──────────────────────────────────────────────────
 const signuppage = document.getElementById('signuppage');
+
 async function callSignUp() {
   const emailInput = document.getElementById('email');
   const passwordInput1 = document.getElementById('password1');
   const passwordInput2 = document.getElementById('password2');
   const nameInput = document.getElementById('name');
   const checkBackLogin = document.getElementById('checkBackLogin');
-  const checkEmailPage = document.getElementById('checkEmailPage');
 
   // 密碼格式：至少 8 碼，含英數
   const pwd = passwordInput1.value.trim();
@@ -37,27 +64,23 @@ async function callSignUp() {
     password: passwordInput1.value,
     username: nameInput.value.trim()
   };
-  // 顯示 loader
+
   const loader = document.getElementById('loader-wrapper');
   loader.style.display = 'flex';
 
   const backendService = new BackendService();
 
   try {
-    const resp = await backendService.signup(payload); // <— 用 resp
+    const resp = await backendService.signup(payload);
     console.log("回傳資料：", resp.data);
 
-    checkEmailPage.classList.remove('d-none');
-    signuppage.classList.add('d-none');
-    checkBackLogin.addEventListener('click', function(e){
+    showPage('checkEmailPage');
+    startResendCountdown(60);
+    checkBackLogin.addEventListener('click', function(e) {
       e.preventDefault();
       window.location.href = "account.html";
     });
-
-    // // 導回登入頁
-    // window.location.href = "account.html";
   } catch (e) {
-    // 這裡的 e 會是 BackendService.signup() 丟出的 Error("此帳號已被註冊") 等
     console.log("回傳錯誤：", e.message);
     Swal.fire({
       icon: "error",
@@ -65,44 +88,30 @@ async function callSignUp() {
       text: e.message || "系統發生錯誤，請稍後再試"
     });
   } finally {
-    // 無論成功失敗都關掉 loader
     loader.style.display = 'none';
   }
 }
-  //TODO:email's limit
-  // if(!emailInput.value.endsWith('@mail.nchu.edu.tw')){
-  //   Swal.fire({
-  //     title:"帳號不符合註冊要求",
-  //     icon:"warning", 
-  //     text:"請使用 @mail.nchu.edu.tw 結尾的學校帳號註冊！"
-  //   });
-  //   return;
-  // } 
 
+// ── 登入 ──────────────────────────────────────────────────
 async function callLogin() {
   const emailEl = document.getElementById('floatingInput');
   const pwdEl   = document.getElementById('floatingPassword');
-  // const rememberMe = document.getElementById('rememberMe').checked;
 
-  // 簡單輸入檢查
   const email = emailEl.value.trim();
   const password = pwdEl.value;
   if (!email || !password) {
     Swal.fire({ icon: 'warning', title: '請輸入帳號與密碼' });
     return;
   }
+
   const loaderLogin = document.getElementById('loaderLogin');
   loaderLogin.style.display = 'flex';
   const backendService = new BackendService();
-  // 顯示 loader
-  
+
   try {
     const resp = await backendService.login({ email, password });
     console.log('回傳資料：', resp.data);
 
-    // // 記住 email（選擇性）
-    // if (rememberMe) localStorage.setItem('rememberEmail', email);
-    // else localStorage.removeItem('rememberEmail');
     loaderLogin.style.display = 'none';
     await Swal.fire({
       icon: 'success',
@@ -112,19 +121,15 @@ async function callLogin() {
       timer: 2100
     });
 
-    // 可選：拿使用者資料（若 login 內已拿就可省略）
     await backendService.getUserData?.();
 
-    // 導頁
     const params = new URLSearchParams(window.location.search);
     const redirectUrl = params.get("redirect");
-
     if (redirectUrl && redirectUrl.startsWith("/")) {
-        window.location.replace(redirectUrl);
+      window.location.replace(redirectUrl);
     } else {
-        window.location.replace("../shop/shop.html");
+      window.location.replace("../shop/shop.html");
     }
-
   } catch (e) {
     console.error('登入錯誤：', e);
     Swal.fire({
@@ -133,111 +138,86 @@ async function callLogin() {
       text: e?.message || '登入失敗，請稍後再試'
     });
   } finally {
-    // 無論成功失敗都關掉 loader
     loaderLogin.style.display = 'none';
   }
 }
 
-
+// ── 按鈕事件 ──────────────────────────────────────────────
 const signbtn = document.getElementById('sign');
-signbtn.addEventListener('click', function(e){
-    e.preventDefault();
-    if(!document.getElementById('email').value || !document.getElementById('password1').value || !document.getElementById('password2').value || !document.getElementById('name').value){
-      Swal.fire({
-        title: "請填寫所有必填資訊",
-        icon: "warning"
-      });
-      return;
-    }
-    callSignUp();
-  })
-const loginbtn = document.getElementById('send');
-loginbtn.addEventListener('click', function(e){
-    e.preventDefault();
-    if(!document.getElementById('floatingInput').value || !document.getElementById('floatingPassword').value){
-      Swal.fire({
-        title: "請填寫所有必填資訊",
-        icon: "warning"
-      });
-      return;
-    }
-    callLogin();
-});
-
-  //TODO : 切換登入與註冊頁面
-  const signup = document.getElementById('signupLink');
-  const backlogin = document.getElementById('backlogin');
-  
-  const loginpage = document.getElementById('loginModal');
-  signup.addEventListener('click', function(e){
-  
-    if (signuppage && loginpage) {
-      signuppage.style.setProperty('display', 'block', 'important');
-      loginpage.style.setProperty('display', 'none', 'important');
-    }
-  })
-  backlogin.addEventListener('click', function(e){
-    if (signuppage && loginpage) {
-      signuppage.style.setProperty('display', 'none', 'important');
-      loginpage.style.setProperty('display', 'block', 'important');
-    }
-  })
-
-  function handleScroll() {
-    const scrollY = window.scrollY;
-    document.querySelectorAll('.parallax').forEach(el => {
-      el.style.setProperty('--scroll', `${scrollY * 0.1}px`);
-    });
+signbtn.addEventListener('click', function(e) {
+  e.preventDefault();
+  if (!document.getElementById('email').value ||
+      !document.getElementById('password1').value ||
+      !document.getElementById('password2').value ||
+      !document.getElementById('name').value) {
+    Swal.fire({ title: "請填寫所有必填資訊", icon: "warning" });
+    return;
   }
-  window.addEventListener('scroll', handleScroll);
-const forgetPasswordbtn = document.getElementById("forgetPasswordbtn");
-forgetPasswordbtn.addEventListener("click", function (e) {
-  e.preventDefault();
-  // 隱藏 loginpage、顯示 forgetpwdpage
-  document.getElementById("loginModal").classList.add("d-none");
-  document.getElementById("forgetpwdpage").classList.remove("d-none");
+  callSignUp();
 });
-const forgetBacklogin = document.getElementById("forgetBacklogin");
-forgetBacklogin.addEventListener("click", function (e) {
+
+const loginbtn = document.getElementById('send');
+loginbtn.addEventListener('click', function(e) {
   e.preventDefault();
-  // 隱藏 forgetpwdpage、顯示 loginpage
-  document.getElementById("forgetpwdpage").classList.add("d-none");
-  document.getElementById("loginModal").classList.remove("d-none");
+  if (!document.getElementById('floatingInput').value ||
+      !document.getElementById('floatingPassword').value) {
+    Swal.fire({ title: "請填寫所有必填資訊", icon: "warning" });
+    return;
+  }
+  callLogin();
 });
-// TODO timer 5 minute
+
+// ── 切換登入 ↔ 註冊 ──────────────────────────────────────
+document.getElementById('signupLink').addEventListener('click', function(e) {
+  e.preventDefault();
+  showPage('signuppage');
+});
+document.getElementById('backlogin').addEventListener('click', function(e) {
+  e.preventDefault();
+  showPage('loginModal');
+});
+
+// ── 視差 ──────────────────────────────────────────────────
+window.addEventListener('scroll', function() {
+  const scrollY = window.scrollY;
+  document.querySelectorAll('.parallax').forEach(el => {
+    el.style.setProperty('--scroll', `${scrollY * 0.1}px`);
+  });
+});
+
+// ── 忘記密碼流程 ──────────────────────────────────────────
+document.getElementById('forgetPasswordbtn').addEventListener('click', function(e) {
+  e.preventDefault();
+  showPage('forgetpwdpage');
+});
+document.getElementById('forgetBacklogin').addEventListener('click', function(e) {
+  e.preventDefault();
+  showPage('loginModal');
+});
+
+// ── 倒數計時 ──────────────────────────────────────────────
 let countdownTimer = null;
 let endTime = null;
-let counting = false;   // 是否正在計時
-let finished = false;   // 是否已經結束（避免 alert 無限跳）
+let counting = false;
+let finished = false;
 
 function startCountdown() {
   counting = true;
   finished = false;
-
-  // 5 分鐘後的時間
   endTime = Date.now() + 300000;
-
   updateCountdown();
-
   countdownTimer = setInterval(updateCountdown, 200);
 }
 
 function updateCountdown() {
-  // 如果不在計時狀態，直接停止
   if (!counting) return;
-
   const timerEl = document.getElementById("timer");
-  if (!timerEl) return; // 該區塊不在畫面上 → 自動停止
-
+  if (!timerEl) return;
   const diff = endTime - Date.now();
-
-  // 計時到了
   if (diff <= 0) {
     finishCountdown();
     return;
   }
-
-  // 顯示剩餘時間
   const sec = Math.floor(diff / 1000);
   const min = String(Math.floor(sec / 60)).padStart(2, '0');
   const s = String(sec % 60).padStart(2, '0');
@@ -245,156 +225,107 @@ function updateCountdown() {
 }
 
 function finishCountdown() {
-  if (finished) return; // 已經 alert 過了 → 不要再跳
-
+  if (finished) return;
   finished = true;
   counting = false;
-
   clearInterval(countdownTimer);
   countdownTimer = null;
 
-  // 顯示 00:00
   const timerEl = document.getElementById("timer");
   if (timerEl) timerEl.textContent = "00:00";
 
-    Swal.fire({
+  Swal.fire({
     title: "Oops...",
     text: "驗證連結已過期，請重新申請。",
     icon: "warning",
-  }).then (() => {
-    // 倒數結束後，返回登入頁
-    document.getElementById("getLinkPage").classList.add("d-none");
-    document.getElementById("loginModal").classList.remove("d-none");
+  }).then(() => {
+    showPage('loginModal');
   });
 }
 
-// 🔥 監聽頁面區塊是否被隱藏
+// 偵測 getLinkPage 被隱藏時停止倒數
 const observer = new MutationObserver(() => {
   const page = document.getElementById("getLinkPage");
-  if (!page || page.classList.contains("d-none")) {
-    // 被隱藏 → 停止倒數
+  if (!page || page.classList.contains("d-none") || !page.classList.contains("active")) {
     counting = false;
     clearInterval(countdownTimer);
     countdownTimer = null;
   }
 });
-
-// 偵測 getLinkPage 的 d-none
 observer.observe(document.body, { attributes: true, childList: true, subtree: true });
-const forgetSendBtn = document.getElementById("forgetSendbtn");
-forgetSendBtn.addEventListener("click", function(e) {
+
+document.getElementById('forgetSendbtn').addEventListener('click', function(e) {
   e.preventDefault();
-
-  // 切換畫面
-  document.getElementById("forgetpwdpage").classList.add("d-none");
-  document.getElementById("getLinkPage").classList.remove("d-none");
-
-  // 開始倒數
+  showPage('getLinkPage');
   startCountdown();
 });
 
+// ── 重設密碼流程 ──────────────────────────────────────────
+document.getElementById('checkBackLogin1').addEventListener('click', function(e) {
+  e.preventDefault();
+  showPage('resetpwdpage');
+  clearInterval(countdownTimer);
+});
 
-const resetpwdpage = document.getElementById("resetpwdpage");
-const checkBackLogin1 = document.getElementById("checkBackLogin1");
-checkBackLogin1.addEventListener("click", function (e) {
+document.getElementById('resetbtn').addEventListener('click', function(e) {
   e.preventDefault();
-  // 隱藏 getLinkPage、顯示 resetpwdpage
-  document.getElementById("getLinkPage").classList.add("d-none");
-  document.getElementById("resetpwdpage").classList.remove("d-none");
-  // 停止倒數
-  clearInterval(countdown);
+  showPage('resetsuccesspage');
 });
-const resetsuccesspage = document.getElementById("resetsuccesspage");
-const resetpwdbtn = document.getElementById("resetbtn");
-resetpwdbtn.addEventListener("click", function (e) {
+
+document.getElementById('resetSuccessBackLogin').addEventListener('click', function(e) {
   e.preventDefault();
-  // 隱藏 resetpwdpage、顯示 resetsuccesspage
-  document.getElementById("resetpwdpage").classList.add("d-none");
-  document.getElementById("resetsuccesspage").classList.remove("d-none");
+  showPage('loginModal');
 });
-const resetsuccessBackLogin = document.getElementById("resetSuccessBackLogin");
-resetsuccessBackLogin.addEventListener("click", function (e) {
-  e.preventDefault();
-  // 隱藏 resetsuccesspage、顯示 loginpage
-  document.getElementById("resetsuccesspage").classList.add("d-none");
-  document.getElementById("loginModal").classList.remove("d-none");
+
+// ── 認證信倒數 + 重新發送 ─────────────────────────────────
+let _resendTimer = null;
+
+function startResendCountdown(seconds = 60) {
+  const btn = document.getElementById('resendVerifyBtn');
+  const display = document.getElementById('resendCountdown');
+  if (!btn || !display) return;
+
+  let remaining = seconds;
+  btn.disabled = true;
+  display.textContent = remaining;
+  btn.style.display = 'block';
+
+  clearInterval(_resendTimer);
+  _resendTimer = setInterval(() => {
+    remaining -= 1;
+    display.textContent = remaining;
+    if (remaining <= 0) {
+      clearInterval(_resendTimer);
+      _resendTimer = null;
+      btn.disabled = false;
+      display.textContent = '';
+      btn.innerHTML = '重新發送認證信';
+    }
+  }, 1000);
+}
+
+document.getElementById('resendVerifyBtn').addEventListener('click', async function() {
+  // TODO: 等後端實作 resend verification email API
+  Swal.fire({
+    icon: 'info',
+    title: '功能即將開放',
+    text: '重新發送認證信功能正在準備中，請稍後再試。',
+    confirmButtonText: '好的'
+  });
+  // 點擊後重新開始倒數（避免重複點擊）
+  // startResendCountdown(60);
 });
-// TODO 密碼顯示1秒後隱藏功能
+
+// ── 密碼顯示 300ms 後隱藏 ────────────────────────────────
 let timer;
-
 document.querySelectorAll(".pwd").forEach((pwd) => {
-  pwd.addEventListener("input", function () {
-    // 顯示明碼
+  pwd.addEventListener("input", function() {
     pwd.type = "text";
-
-    // 清掉前一個計時器
     clearTimeout(timer);
-
-    // 1 秒後恢復 password
     timer = setTimeout(() => {
       pwd.type = "password";
     }, 300);
   });
 });
-// // TODO 檢查重設密碼電子郵件寄信 + function
-// const forgetemailInput = document.getElementById("forgetemail");
-// const backendService = new BackendService();
-// async function sendResetEmail() {
-//   const email = forgetemailInput.value.trim();
-//   if (!email) {
-//     Swal.fire({ title: "請輸入電子郵件地址", icon: "warning" });
-//     return;
-//   }
-//   try {
-//     const resp = await backendService.sendResetPasswordEmail({ email });
-//     console.log("回傳資料：", resp.data);
-//   } catch (e) {
-//     console.log("回傳錯誤：", e.message);
-//     Swal.fire({
-//       icon: "error",
-//       title: "Oops...",
-//       text: e.message || "系統發生錯誤，請稍後再試"
-//     });
-//   }
-// }
-// // TODO 重設密碼功能 + function
-// const newPassword1Input = document.getElementById("newPassword1");
-// const newPassword2Input = document.getElementById("newPassword2");
-// async function resetPassword() {
-//   const newPassword1 = newPassword1Input.value;
-//   const newPassword2 = newPassword2Input.value;
-//   // 密碼格式：至少 8 碼，含英數
-//   const isValid = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(newPassword1);
-//   if (!isValid) {
-//     Swal.fire({ title: "密碼不符合最低要求", icon: "warning", text: "密碼需至少8位，且同時包含英文字母與數字" });
-//     return;
-//   }
-//   if (newPassword1 !== newPassword2) {
-//     Swal.fire({ title: "密碼輸入不一致", icon: "warning" });
-//     return;
-//   }
-//   try {
-//     const resp = await backendService.resetPassword({ newPassword: newPassword1 });
-//     console.log("回傳資料：", resp.data);
-//   } catch (e) {
-//     console.log("回傳錯誤：", e.message);
-//     Swal.fire({
-//       icon: "error",
-//       title: "Oops...",
-//       text: e.message || "系統發生錯誤，請稍後再試"
-//     });
-//   }
-// }
-// const resetpwdForm = document.getElementById("resetpwdForm");
-// resetpwdForm.addEventListener("submit", function (e) {
-//   e.preventDefault();
-//   resetPassword();
-// });
-// // TODO 發送重設密碼郵件功能按鈕
-// const forgetSendbtn = document.getElementById("forgetSendbtn");
-// forgetSendbtn.addEventListener("click", function (e) {
-//   e.preventDefault();
-//   sendResetEmail();
-// });
 
 window.startCountdown = startCountdown;

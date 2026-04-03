@@ -114,15 +114,14 @@
         </div>
         <div class="form-signin">
           <div class="content">
-            <div id="loginModal" class="contentoflogin">
+            <div id="loginModal" class="auth-step">
               <div class="modalwhat glass-card">
                 <form id="loginForm">
-                  <h2>登入<br><br></h2>
+                  <h2>登入</h2>
                   <div class="form-floating">
                     <input type="email" class="form-control form-control-lg" id="floatingInput" placeholder="s4113001001@mail.nchu.edu.tw">
                     <label for="floatingInput">請輸入您的電子信箱</label>
                   </div>
-                  <br>
                   <div class="form-floating">
                     <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password">
                     <label for="floatingPassword">請輸入密碼</label>
@@ -137,7 +136,7 @@
               </div>
             </div>
             <!-- TODO forgetpwdpage1 -->
-            <div id="forgetpwdpage" class="signuppage d-none">
+            <div id="forgetpwdpage" class="auth-step">
               <div id="forgetpwdModal" class="modalwhat glass-card" >
                 <form id="forgetpwdForm">
                   <a class="backlogin" id="forgetBacklogin">返回登入頁</a>
@@ -152,7 +151,7 @@
               </div>
             </div>
             <!-- TODO get the 驗證碼 page2 -->
-            <div id="getLinkPage" class="signuppage d-none">
+            <div id="getLinkPage" class="auth-step">
               <div id="getLinkModal" class="modalwhat glass-card" >
                 <form id="getLinkForm">
                   <h3>請點擊信箱重設密碼連結<br></h3>
@@ -164,10 +163,10 @@
               </div>
             </div>
             <!-- TODO reset password page3 -->
-            <div id="resetpwdpage" class="signuppage d-none">
+            <div id="resetpwdpage" class="auth-step">
               <div id="resetpwdModal" class="modalwhat glass-card" >
                 <form id="resetpwdForm">
-                  <h2>設定您的新密碼<br><br></h2>
+                  <h2>設定您的新密碼</h2>
                   <div class="form-floating form-resettpass">
                   <input class="pwd form-control" type="password" id="newPwd1" placeholder="請輸入至少8位英數字混合密碼">
                   <label for="floatingPassword" class="p">設定您的密碼，至少 8 位英數字混合</label>
@@ -181,7 +180,7 @@
               </div>
             </div>
             <!-- TODO reset success page4 -->
-            <div id="resetsuccesspage" class="signuppage d-none">
+            <div id="resetsuccesspage" class="auth-step">
               <div id="resetsuccessModal" class="modalwhat glass-card" >
                 <form id="resetsuccessForm">
                   <h2>密碼重設成功！<br></h2>
@@ -192,11 +191,11 @@
               </div>
             </div>
             <!-- TODO signup page -->
-            <div id="signuppage" class="signuppage d-none">
+            <div id="signuppage" class="auth-step">
               <div id="signupModal" class="modalwhat glass-card" >
                 <form id="signupForm">
                   <a class="backlogin" id="backlogin">返回登入頁</a>
-                  <h2>註冊<br><br></h2>
+                  <h2>註冊</h2>
                   <div class="form-floating form-signemail">
                   <input class="form-control" type="email" id="email" placeholder="請使用學校的電子郵件註冊">
                   <label for="floatingInput">請使用學校的電子郵件註冊</label>
@@ -219,13 +218,17 @@
                 </form>
               </div>
             </div>
-            <div id="checkEmailPage" class="signuppage d-none">
+            <div id="checkEmailPage" class="auth-step">
               <div id="checkModal" class="modalwhat glass-card" >
                 <form id="checkForm">
-                  <h2>請確認信箱有無認證信<br></h2>
-                  <p class="checkalert">請在 1 天內點擊認證連結</p>
-                  <p class="checkRemind">註冊帳號後系統將會傳送認證連結至註冊帳號，請點擊郵件連結即可成功開通帳號，開通帳號後即可登入。</p>
-                  <button type="submit" id="checkBackLogin" class="checkBackbtn css-button-gradient--4">我瞭解了，返回登入頁</button>
+                  <h2>請確認信箱有無認證信</h2>
+                  <i class="fa-regular fa-envelope" style="display:block; font-size:2.4rem; color:#004b97; margin:10px 0 18px;"></i>
+                  <p class="checkRemind">系統已將認證連結寄至您的電子信箱，請點擊郵件連結即可成功開通帳號。開通後即可登入。</p>
+                  <p class="checkRemind" style="margin-top:8px; color:#555;">沒收到信？請先檢查垃圾郵件資料夾。</p>
+                  <button type="button" id="resendVerifyBtn" class="css-button-gradient--4 resend-btn" disabled>
+                    重新發送認證信&ensp;<span id="resendCountdown">60</span>s
+                  </button>
+                  <button type="button" id="checkBackLogin" class="checkBackbtn css-button-gradient--4">我瞭解了，返回登入頁</button>
                 </form>
               </div>
             </div>
