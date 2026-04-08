@@ -1,9 +1,41 @@
 axios.defaults.withCredentials = true;
 
+// ── 全域 401 攔截：session 過期時統一導回登入頁 ────────────
+let _handlingExpiry = false;
+const _SKIP_401 = ['/api/account/login', '/api/account/signup', '/api/whoami'];
+
+function _attach401Handler(instance) {
+    instance.interceptors.response.use(
+        res => res,
+        err => {
+            const url = err?.config?.url || '';
+            const skip = _SKIP_401.some(p => url.includes(p));
+            if (err?.response?.status === 401 && !skip && !_handlingExpiry) {
+                _handlingExpiry = true;
+                window.isLoggedIn = false;
+                const currentUrl = window.location.pathname + window.location.search;
+                Swal.fire({
+                    icon: 'warning',
+                    title: '登入已過期',
+                    text: '請重新登入',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    _handlingExpiry = false;
+                    location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+                });
+            }
+            return Promise.reject(err);
+        }
+    );
+}
+_attach401Handler(axios); // 覆蓋絕大多數 API 呼叫
+
 export default class BackendService {
     constructor() {
         this.baseUrl = 'https://thpr.hlc23.dev';
-        this.http = axios.create({ baseURL: this.baseUrl });
+        this.http = axios.create({ baseURL: this.baseUrl, withCredentials: true });
+        _attach401Handler(this.http); // 覆蓋少數用 this.http 的呼叫
     }
     _forbidden(error) {
         if (error?.response?.status === 403) throw new Error('存取被禁止 - 帳號已停用或電子郵件未驗證');

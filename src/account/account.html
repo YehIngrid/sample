@@ -122,10 +122,12 @@
                     <input type="email" class="form-control form-control-lg" id="floatingInput" placeholder="s4113001001@mail.nchu.edu.tw">
                     <label for="floatingInput">請輸入您的電子信箱</label>
                   </div>
+                  <p class="field-error" id="err-login-email"></p>
                   <div class="form-floating">
                     <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password">
                     <label for="floatingPassword">請輸入密碼</label>
                   </div>
+                  <p class="field-error" id="err-login-pwd"></p>
                   <button type="submit" id="send" class="css-button-gradient--4">登入</button>
                   <br>
                   <a href="#" class="p" id="forgetPasswordbtn">忘記密碼？</a>
@@ -145,6 +147,7 @@
                   <input class="form-control" type="email" id="forgetemail" placeholder="請輸入您的帳號電子郵件">
                   <label for="floatingInput">請輸入您的帳號電子郵件</label>
                   </div>
+                  <p class="field-error" id="err-forget-email"></p>
                   <p class="remindForget">請輸入您的 Email，我們會寄送重設密碼的連結，如果該 Email 已註冊，我們會寄送信件。</p>
                   <button type="submit" onclick="startCountdown()" id="forgetSendbtn" class="forgetbtn css-button-gradient--4">送出</button>
                 </form>
@@ -200,18 +203,22 @@
                   <input class="form-control" type="email" id="email" placeholder="請使用學校的電子郵件註冊">
                   <label for="floatingInput">請使用學校的電子郵件註冊</label>
                   </div>
+                  <p class="field-error" id="err-signup-email"></p>
                   <div class="form-floating form-signpass">
                   <input class="form-control pwd" type="password" id="password1" placeholder="請輸入至少6位以上">
                   <label for="floatingPassword" class="p">設定您的密碼，至少 8 位英數字混合</label>
                   </div>
+                  <p class="field-error" id="err-signup-pwd1"></p>
                   <div class="form-floating form-signpass">
                   <input class="form-control pwd" type="password" id="password2" placeholder="請再次輸入密碼">
                   <label for="floatingPassword" class="p">請再次輸入密碼</label>
                   </div>
+                  <p class="field-error" id="err-signup-pwd2"></p>
                   <div class="form-floating form-signnick">
                   <input class="form-control" type="text" id="name" placeholder="請輸入暱稱">
                   <label for="floatingInput" >請輸入您的暱稱</label>
                   </div>
+                  <p class="field-error" id="err-signup-name"></p>
                   <button type="submit" id="sign" class="signbtn css-button-gradient--4">註冊</button>
                   <p class="remind">註冊帳號後系統將會傳送認證連結至註冊帳號，請點擊郵件連結即可成功開通帳號，開通帳號後即可登入。</p>
                   <p class="policy">註冊即表示您同意<a>服務條款</a>與<a href="../policy/policy.html">隱私權政策</a></p>

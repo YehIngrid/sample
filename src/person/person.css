@@ -621,7 +621,7 @@ small { font-size: 10px; color: #004b97; }
   bottom:90px;
   right:30px;
   width:330px;
-  max-height:550px;
+  height:550px;
   border-radius:10px;
   box-shadow:0 4px 16px rgba(0,0,0,0.3);
   background-color:#fff;
@@ -632,7 +632,7 @@ small { font-size: 10px; color: #004b97; }
 }
 @media (min-width: 992px) {
   .chaticon     { bottom: 100px; }
-  #talkInterface { bottom: 116px; }
+  #talkInterface { bottom: 160px; }
 }
 .review-item {
   font-size: 14px;

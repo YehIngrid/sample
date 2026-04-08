@@ -382,6 +382,7 @@ class ChatRoomList {
         wrapper.className = `imgAndMessage ${isSelf ? 'message-self' : 'message-other'}`;
         wrapper.dataset.timestamp = data.timestamp;
         wrapper.dataset.messageId = data.id ?? '';
+        wrapper.dataset.username = data.username ?? '';
 
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
@@ -400,7 +401,7 @@ class ChatRoomList {
                     ${isSelf ? `
                     <div class="d-flex flex-column align-items-center me-2">
                         <i class="bi bi-check2-all read-receipt d-none" style="font-size:0.8rem;color:#4CAF50;"></i>
-                        <small class="text-muted" style="font-size:0.75rem;">${time}</small>
+                        <small class="text-muted msg-time" style="font-size:0.75rem;">${time}</small>
                     </div>` : ''}
                     <div class="combined-bubble">
                         <a href="${imageUrl}" data-pswp-width="auto" data-pswp-height="auto"
@@ -409,17 +410,20 @@ class ChatRoomList {
                         </a>
                         <div class="combined-caption">${this.escapeHtml(data.message || '')}</div>
                     </div>
-                    ${isSelf ? '' : `<small class="text-muted ms-2" style="font-size:0.75rem;">${time}</small>`}
+                    ${isSelf ? '' : `<small class="text-muted ms-2 msg-time" style="font-size:0.75rem;">${time}</small>`}
                 </div>
             </div>`;
 
+        const wasNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
         if (prepend) {
             container.prepend(wrapper);
         } else {
             container.appendChild(wrapper);
-            requestAnimationFrame(() => {
-                if (!this.isInitialLoading) container.scrollTop = container.scrollHeight;
-            });
+            this._insertDateDividerBefore(wrapper);
+            this._applyGrouping(wrapper);
+            if (!this.isInitialLoading && wasNearBottom) {
+                requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
+            }
         }
 
         const tempImg = new Image();
@@ -430,9 +434,8 @@ class ChatRoomList {
                 link.setAttribute('data-pswp-height', tempImg.naturalHeight);
             }
             this.initPhotoSwipeGallery();
-            if (!prepend && !this.isInitialLoading) {
-                const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
-                if (isNearBottom) container.scrollTop = container.scrollHeight;
+            if (!prepend && !this.isInitialLoading && wasNearBottom) {
+                container.scrollTop = container.scrollHeight;
             }
         };
         tempImg.src = imageUrl;
@@ -448,6 +451,7 @@ class ChatRoomList {
         imgWrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
         imgWrapper.dataset.timestamp = data.timestamp;
         imgWrapper.dataset.messageId = data.id ?? '';
+        imgWrapper.dataset.username = data.username ?? '';
 
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
@@ -468,7 +472,7 @@ class ChatRoomList {
                     ${isSelf ? `
                     <div class="d-flex flex-column align-items-center me-2">
                         <i class="bi bi-check2-all read-receipt d-none" style="font-size: 0.8rem; color: #4CAF50;"></i>
-                        <small class="text-muted" style="font-size: 0.75rem;">${time}</small>
+                        <small class="text-muted msg-time" style="font-size: 0.75rem;">${time}</small>
                     </div>` : ''}
                     <div class="message-image-wrapper" style="margin-top: 8px;">
                         <a href="${imageUrl}" data-pswp-width="auto" data-pswp-height="auto"
@@ -478,17 +482,20 @@ class ChatRoomList {
                                  loading="lazy">
                         </a>
                     </div>
-                    ${isSelf ? '' : `<small class="text-muted me-2" style="font-size: 0.75rem;">${time}</small>`}
+                    ${isSelf ? '' : `<small class="text-muted me-2 msg-time" style="font-size: 0.75rem;">${time}</small>`}
                 </div>
             </div>`;
 
+        const wasNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
         if (prepend) {
             container.prepend(imgWrapper);
         } else {
             container.appendChild(imgWrapper);
-            requestAnimationFrame(() => {
-                if (!this.isInitialLoading) container.scrollTop = container.scrollHeight;
-            });
+            this._insertDateDividerBefore(imgWrapper);
+            this._applyGrouping(imgWrapper);
+            if (!this.isInitialLoading && wasNearBottom) {
+                requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
+            }
         }
 
         const tempImg = new Image();
@@ -499,9 +506,8 @@ class ChatRoomList {
                 link.setAttribute('data-pswp-height', tempImg.naturalHeight);
             }
             this.initPhotoSwipeGallery();
-            if (!prepend && !this.isInitialLoading) {
-                const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
-                if (isNearBottom) container.scrollTop = container.scrollHeight;
+            if (!prepend && !this.isInitialLoading && wasNearBottom) {
+                container.scrollTop = container.scrollHeight;
             }
         };
         tempImg.src = imageUrl;
@@ -1210,6 +1216,7 @@ class ChatRoomList {
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
         div.dataset.timestamp = data.timestamp;  // ISO 字串，用於 markAsRead
         div.dataset.messageId = data.id;          // string
+        div.dataset.username = data.username;
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
             : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png');
@@ -1220,10 +1227,10 @@ class ChatRoomList {
                     ${isSelf ? `
                     <div class="d-flex flex-column align-items-center me-2">
                         <i class="bi bi-check2-all read-receipt d-none" style="font-size: 0.8rem; color: #4CAF50;"></i>
-                        <small class="text-muted" style="font-size: 0.75rem;">${timestamp}</small>
+                        <small class="text-muted msg-time" style="font-size: 0.75rem;">${timestamp}</small>
                     </div>` : ''}
                     <div class="message-text">${this.escapeHtml(data.message)}</div>
-                    ${isSelf ? '' : `<small class="text-muted ms-2" style="font-size: 0.75rem;">${timestamp}</small>`}
+                    ${isSelf ? '' : `<small class="text-muted ms-2 msg-time" style="font-size: 0.75rem;">${timestamp}</small>`}
                 </div>
             </div>`;
 
@@ -1232,6 +1239,8 @@ class ChatRoomList {
         } else {
             const wasNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
             container.appendChild(div);
+            this._insertDateDividerBefore(div);
+            this._applyGrouping(div);
             if (wasNearBottom) {
                 container.scrollTop = container.scrollHeight;
             }
@@ -1244,11 +1253,17 @@ class ChatRoomList {
     updateReadReceipts(lastReadMessageId) {
         if (!lastReadMessageId) return;
         const container = document.getElementById('messagesContainer');
-        const selfMsgs = [...container.querySelectorAll('.message-self, .imgmessage.message-self')];
+        // 從所有訊息（含對方訊息）裡找 lastReadMessageId 的位置，
+        // 避免對方的 lastReadMessageId 指向自己送的訊息（不在 selfMsgs 裡），
+        // 導致迴圈跑完整個陣列、錯誤地把所有自己的訊息都標成已讀。
+        const allMsgs = [...container.querySelectorAll('[data-message-id]')];
+        const readIdx = allMsgs.findIndex(el => el.dataset.messageId === lastReadMessageId);
+        if (readIdx === -1) return;
 
-        for (const el of selfMsgs) {
-            el.querySelector('.read-receipt')?.classList.remove('d-none');
-            if (el.dataset.messageId === lastReadMessageId) break;
+        for (const el of allMsgs.slice(0, readIdx + 1)) {
+            if (el.classList.contains('message-self')) {
+                el.querySelector('.read-receipt')?.classList.remove('d-none');
+            }
         }
     }
 
@@ -1277,6 +1292,64 @@ class ChatRoomList {
         }, 1000);
     }
 
+    // ✅ 同一分鐘同一人的訊息群組：隱藏前一則的時間、縮小間距、隱藏頭像
+    _applyGrouping(el) {
+        let prev = el.previousElementSibling;
+        while (prev && !prev.dataset.messageId) prev = prev.previousElementSibling;
+        if (!prev) return;
+
+        const sameUser = prev.dataset.username === el.dataset.username;
+        const sameMinute = prev.dataset.timestamp?.slice(0, 16) === el.dataset.timestamp?.slice(0, 16);
+        if (!sameUser || !sameMinute) return;
+
+        prev.classList.add('message-continues');
+        prev.querySelector('.msg-time')?.classList.add('msg-time-hidden');
+        el.classList.add('message-grouped');
+    }
+
+    _formatDateLabel(dateKey) {
+        const today = new Date();
+        const todayKey = today.toLocaleDateString('sv'); // "YYYY-MM-DD"
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayKey = yesterday.toLocaleDateString('sv');
+        if (dateKey === todayKey) return '今天';
+        if (dateKey === yesterdayKey) return '昨天';
+        const [year, month, day] = dateKey.split('-');
+        if (year === String(today.getFullYear())) return `${parseInt(month)}月${parseInt(day)}日`;
+        return `${year}年${parseInt(month)}月${parseInt(day)}日`;
+    }
+
+    // ✅ 若與前一則訊息跨天（或是第一則），在 el 前插入日期分隔線
+    _insertDateDividerBefore(el) {
+        let prev = el.previousElementSibling;
+        while (prev && !prev.dataset.messageId) prev = prev.previousElementSibling;
+
+        const curDate = el.dataset.timestamp?.slice(0, 10);
+        const prevDate = prev?.dataset.timestamp?.slice(0, 10) ?? null;
+        if (!curDate || curDate === prevDate) return;
+
+        const divider = document.createElement('div');
+        divider.className = 'date-divider';
+        divider.innerHTML = `<span>${this._formatDateLabel(curDate)}</span>`;
+        el.before(divider);
+    }
+
+    // ✅ 向上載入舊訊息後重新套用整批群組與日期分隔（prepend 後呼叫）
+    regroupAll() {
+        const container = document.getElementById('messagesContainer');
+        container.querySelectorAll('.date-divider').forEach(el => el.remove());
+        const msgs = [...container.querySelectorAll('[data-message-id]')];
+        msgs.forEach(el => {
+            el.classList.remove('message-continues', 'message-grouped');
+            el.querySelector('.msg-time')?.classList.remove('msg-time-hidden');
+        });
+        for (let i = 0; i < msgs.length; i++) {
+            this._insertDateDividerBefore(msgs[i]);
+            if (i > 0) this._applyGrouping(msgs[i]);
+        }
+    }
+
     detectRead(element) {
         if (element.classList.contains('message-self')) return;
         this.readObserver.observe(element);
@@ -1303,6 +1376,7 @@ class ChatRoomList {
                 for (const msg of sorted) {
                     this.renderMessage(msg, true);
                 }
+                this.regroupAll();
                 container.scrollTop = container.scrollHeight - oldScrollHeight;
                 if (history.data.length < 50) {
                     this.hasMore = false;

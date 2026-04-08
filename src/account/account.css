@@ -236,6 +236,21 @@ input::placeholder {
   cursor: not-allowed;
   opacity: 0.75;
 }
+/* ── Inline 欄位錯誤提示 ── */
+.field-error {
+  display: none;
+  color: #e03e3e;
+  font-size: 12px;
+  margin: 4px 0 2px 2px;
+}
+.field-error.show {
+  display: block;
+}
+.form-control.is-invalid-custom {
+  border-color: #e03e3e !important;
+  box-shadow: 0 0 0 0.15rem rgba(224,62,62,0.15) !important;
+}
+
 .policy{
   color: #b1b1b1;
   font-size: 14px;

@@ -224,8 +224,11 @@ function showInfo(data) {
     return;
   }
   container.innerHTML = '';
+  const myUid = String(localStorage.getItem('uid') || '');
   data.wishes.forEach(wish => {
-    container.appendChild(createWishCard(wish, false));
+    const ownerUid = String(wish.owner?.accountId || wish.owner?.id || wish.owner?._id || '');
+    const isMyWish = !!(myUid && ownerUid && myUid === ownerUid);
+    container.appendChild(createWishCard(wish, isMyWish));
   });
   handleAutoFocus();
 }
@@ -819,7 +822,7 @@ function createWishCard(wish, isMyWish) {
       } else {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          handleContactWisher(wish.id, btn);
+          handleContactWisher(wish.id, btn, wish.owner?.accountId || wish.owner?.id || wish.owner?._id || '');
         });
       }
     }
@@ -927,7 +930,7 @@ function renderCardBack(backScrollEl, d, wishId, isMyWish, inner) {
     if (contactBtn) {
       contactBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        handleContactWisher(wishId, contactBtn);
+        handleContactWisher(wishId, contactBtn, d.owner?.accountId || d.owner?.id || d.owner?._id || '');
       });
     }
   }
@@ -972,11 +975,17 @@ function initCardPhotoSwipe(backEl, wishId, photoUrl) {
 /**
  * Contact-wisher flow (adapted from wishinfo.js, runs inside wishpool).
  */
-async function handleContactWisher(wishId, btn) {
+async function handleContactWisher(wishId, btn, ownerUid = '') {
   if (!btn) return;
 
   const loggedIn = await requireLogin();
   if (!loggedIn) return;
+
+  const myUid = String(localStorage.getItem('uid') || '');
+  if (myUid && ownerUid && myUid === String(ownerUid)) {
+    Swal.fire({ icon: 'info', title: '這是您自己的許願', text: '無法聯絡自己！' });
+    return;
+  }
 
   const origText = btn.textContent;
   btn.disabled = true;
@@ -1092,7 +1101,9 @@ async function handleAutoFocus() {
         createdAt: d.createdAt,
         owner:     d.owner
       };
-      wrapper = createWishCard(wishObj, false);
+      const _myUid = String(localStorage.getItem('uid') || '');
+      const _ownerUid = String(wishObj.owner?.accountId || wishObj.owner?.id || wishObj.owner?._id || '');
+      wrapper = createWishCard(wishObj, !!(  _myUid && _ownerUid && _myUid === _ownerUid));
       document.getElementById('wishGrid')?.prepend(wrapper);
     } catch (err) {
       console.warn('handleAutoFocus: 無法載入願望', err);

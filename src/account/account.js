@@ -36,6 +36,32 @@ window.onload = function() {
   showPage('loginModal');
 };
 
+// ── Inline 欄位錯誤 helper ────────────────────────────────
+function fieldError(inputId, errorId, msg) {
+  const el = document.getElementById(inputId);
+  const err = document.getElementById(errorId);
+  if (el) el.classList.add('is-invalid-custom');
+  if (err) { err.textContent = msg; err.classList.add('show'); }
+}
+function fieldClear(inputId, errorId) {
+  const el = document.getElementById(inputId);
+  const err = document.getElementById(errorId);
+  if (el) el.classList.remove('is-invalid-custom');
+  if (err) err.classList.remove('show');
+}
+// 使用者輸入時自動清除該欄錯誤
+[
+  ['floatingInput',  'err-login-email'],
+  ['floatingPassword','err-login-pwd'],
+  ['email',          'err-signup-email'],
+  ['password1',      'err-signup-pwd1'],
+  ['password2',      'err-signup-pwd2'],
+  ['name',           'err-signup-name'],
+  ['forgetemail',    'err-forget-email'],
+].forEach(([inputId, errorId]) => {
+  document.getElementById(inputId)?.addEventListener('input', () => fieldClear(inputId, errorId));
+});
+
 // ── 註冊 ──────────────────────────────────────────────────
 const signuppage = document.getElementById('signuppage');
 
@@ -50,12 +76,12 @@ async function callSignUp() {
   const pwd = passwordInput1.value.trim();
   const isValid = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(pwd);
   if (!isValid) {
-    Swal.fire({ title: "密碼不符合最低要求", icon: "warning", text: "密碼需至少8位，且同時包含英文字母與數字" });
+    fieldError('password1', 'err-signup-pwd1', '密碼需至少 8 位，且同時包含英文字母與數字');
     return;
   }
 
   if (passwordInput1.value !== passwordInput2.value) {
-    Swal.fire({ title: "密碼輸入不一致", icon: "warning" });
+    fieldError('password2', 'err-signup-pwd2', '兩次輸入的密碼不一致');
     return;
   }
 
@@ -146,24 +172,34 @@ async function callLogin() {
 const signbtn = document.getElementById('sign');
 signbtn.addEventListener('click', function(e) {
   e.preventDefault();
-  if (!document.getElementById('email').value ||
-      !document.getElementById('password1').value ||
-      !document.getElementById('password2').value ||
-      !document.getElementById('name').value) {
-    Swal.fire({ title: "請填寫所有必填資訊", icon: "warning" });
-    return;
+  let hasError = false;
+  if (!document.getElementById('email').value.trim()) {
+    fieldError('email', 'err-signup-email', '請輸入電子信箱'); hasError = true;
   }
+  if (!document.getElementById('password1').value) {
+    fieldError('password1', 'err-signup-pwd1', '請輸入密碼'); hasError = true;
+  }
+  if (!document.getElementById('password2').value) {
+    fieldError('password2', 'err-signup-pwd2', '請再次輸入密碼'); hasError = true;
+  }
+  if (!document.getElementById('name').value.trim()) {
+    fieldError('name', 'err-signup-name', '請輸入暱稱'); hasError = true;
+  }
+  if (hasError) return;
   callSignUp();
 });
 
 const loginbtn = document.getElementById('send');
 loginbtn.addEventListener('click', function(e) {
   e.preventDefault();
-  if (!document.getElementById('floatingInput').value ||
-      !document.getElementById('floatingPassword').value) {
-    Swal.fire({ title: "請填寫所有必填資訊", icon: "warning" });
-    return;
+  let hasError = false;
+  if (!document.getElementById('floatingInput').value.trim()) {
+    fieldError('floatingInput', 'err-login-email', '請輸入電子信箱'); hasError = true;
   }
+  if (!document.getElementById('floatingPassword').value) {
+    fieldError('floatingPassword', 'err-login-pwd', '請輸入密碼'); hasError = true;
+  }
+  if (hasError) return;
   callLogin();
 });
 
@@ -256,6 +292,10 @@ observer.observe(document.body, { attributes: true, childList: true, subtree: tr
 
 document.getElementById('forgetSendbtn').addEventListener('click', function(e) {
   e.preventDefault();
+  if (!document.getElementById('forgetemail').value.trim()) {
+    fieldError('forgetemail', 'err-forget-email', '請輸入您的電子信箱');
+    return;
+  }
   showPage('getLinkPage');
   startCountdown();
 });

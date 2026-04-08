@@ -651,18 +651,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== 工具 =====
 const order_STATUS_MAP = {
-  pending: { text: '等待賣家接受訂單', badge: 'text-bg-warning', action: '接受訂單', icon: '../svg/acceptOrder.svg'}, 
-  preparing: { text: '準備訂單', badge: 'text-bg-info', action: '即將出貨', icon: '../svg/readyDeliver.svg'}, 
-  delivered: { text: '已出貨', badge: 'text-bg-primary', action: '等待買家確認收貨', icon: '../svg/waitBuyer.svg'}, 
-  completed: { text: '買家成功取貨', badge: 'text-bg-success', action: '給對方評價', icon: '../svg/giveStar.svg'}, 
-  canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '給對方評價', icon: '../svg/giveStar.svg'}
+  pending: { text: '待確認', badge: 'text-bg-warning', action: '接受訂單', icon: '../svg/acceptOrder.svg'},
+  preparing: { text: '待出貨', badge: 'text-bg-info', action: '即將出貨', icon: '../svg/readyDeliver.svg'},
+  delivered: { text: '待收貨', badge: 'text-bg-primary', action: '等待買家確認收貨', icon: '../svg/waitBuyer.svg'},
+  completed: { text: '待評價', badge: 'text-bg-success', action: '給對方評價', icon: '../svg/giveStar.svg'},
+  canceled: { text: '已取消', badge: 'text-bg-danger' , action: '給對方評價', icon: '../svg/giveStar.svg'}
 }
 const buyer_STATUS_MAP = {
-  pending: { text: '等待賣家接受訂單', badge: 'text-bg-warning', action: '聯絡賣家', icon: '../svg/canChat.svg'}, 
-  preparing: { text: '賣家正在準備訂單', badge: 'text-bg-info', action: '聯絡賣家', icon: '../svg/canChat.svg'}, 
-  delivered: { text: '已出貨', badge: 'text-bg-primary', action: '成功取貨', icon: '../svg/acceptOrder.svg'}, 
-  completed: { text: '已取貨', badge: 'text-bg-success', action: '給對方評價', icon: '../svg/giveStar.svg'}, 
-  canceled: { text: '訂單已被取消', badge: 'text-bg-danger' , action: '給對方評價', icon: '../svg/giveStar.svg'}
+  pending: { text: '待確認', badge: 'text-bg-warning', action: '聯絡賣家', icon: '../svg/canChat.svg'},
+  preparing: { text: '待出貨', badge: 'text-bg-info', action: '聯絡賣家', icon: '../svg/canChat.svg'},
+  delivered: { text: '待收貨', badge: 'text-bg-primary', action: '成功取貨', icon: '../svg/acceptOrder.svg'},
+  completed: { text: '待評價', badge: 'text-bg-success', action: '給對方評價', icon: '../svg/giveStar.svg'},
+  canceled: { text: '已取消', badge: 'text-bg-danger' , action: '給對方評價', icon: '../svg/giveStar.svg'}
 }
 const nt = new Intl.NumberFormat('zh-TW', {
   style: 'currency', currency: 'TWD', maximumFractionDigits: 0
@@ -935,13 +935,15 @@ function renderSellerCards(list = []) {
       <div class="col" data-id="${esc(id)}">
         <div class="cardContainer h-100">
           <div class="card-body d-flex flex-column">
-            <div class="d-flex flex-row justify-content-between align-items-end">
-              <div>
+            <div class="d-flex flex-row justify-content-between align-items-start">
+              <div style="flex:1;min-width:0;">
                 <h6 class="mb-0 text-truncate" title="${name}" style="font-size:0.88rem;">${label}</h6>
-                <div class="small text-muted mb-2" style="font-size:12px;">建立日期：${created}</div>
-                <span class="badge ${st.badge}" style="margin-bottom: 10px;">${st.text}</span>
+                <div class="small text-muted mt-1 mb-2" style="font-size:12px;">建立日期：${created}</div>
               </div>
-              <div class="fw-bold mb-2 text-end">${price}</div>
+              <div class="d-flex flex-column align-items-end ms-2 flex-shrink-0">
+                <span class="badge ${st.badge} mb-1">${st.text}</span>
+                <div class="fw-bold">${price}</div>
+              </div>
             </div>
             <div class="mt-auto d-flex gap-2">
               <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
@@ -953,9 +955,11 @@ function renderSellerCards(list = []) {
                 <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
                 <div>訂單詳情</div>
               </button>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <div class="text-muted" style="font-size:11px;">訂單編號 ${id}</div>
               ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
             </div>
-            <div class="text-muted mt-2" style="font-size:11px;">訂單編號 ${id}</div>
           </div>
         </div>
       </div>
@@ -986,13 +990,15 @@ function renderBuyerCards(list = []) {
       <div class="col" data-id="${esc(id)}">
         <div class="cardContainer h-100">
           <div class="card-body d-flex flex-column">
-            <div class="d-flex flex-row justify-content-between align-items-end">
-              <div>
+            <div class="d-flex flex-row justify-content-between align-items-start">
+              <div style="flex:1;min-width:0;">
                 <h6 class="mb-0 text-truncate" title="${name}" style="font-size:0.88rem;">${label}</h6>
-                <div class="small text-muted mb-2" style="font-size:12px;">建立日期：${created}</div>
-                <span class="badge ${st.badge}" style="margin-bottom: 10px;">${st.text}</span>
+                <div class="small text-muted mt-1 mb-2" style="font-size:12px;">建立日期：${created}</div>
               </div>
-              <div class="fw-bold mb-2 text-end">${price}</div>
+              <div class="d-flex flex-column align-items-end ms-2 flex-shrink-0">
+                <span class="badge ${st.badge} mb-1">${st.text}</span>
+                <div class="fw-bold">${price}</div>
+              </div>
             </div>
             <div class="mt-auto d-flex gap-2">
               <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
@@ -1004,9 +1010,11 @@ function renderBuyerCards(list = []) {
                 <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
                 <div>訂單詳情</div>
               </button>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <div class="text-muted" style="font-size:11px;">訂單編號 ${id}</div>
               ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
             </div>
-            <div class="text-muted mt-2" style="font-size:11px;">訂單編號 ${id}</div>
           </div>
         </div>
       </div>

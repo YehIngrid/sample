@@ -173,6 +173,24 @@ html, body {
     margin-top: 5px;
     animation: fadeIn 0.1s ease-in;
 }
+/* 同一分鐘同一人：緊縮間距 */
+.message-continues {
+    margin-bottom: 3px !important;
+}
+.imgmessage.message-continues,
+.imgAndMessage.message-continues {
+    margin-bottom: 3px;
+}
+.imgmessage.message-grouped,
+.imgAndMessage.message-grouped {
+    margin-top: 0 !important;
+}
+.message-grouped .message-avatar {
+    visibility: hidden;
+}
+.msg-time-hidden {
+    display: none;
+}
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -458,6 +476,20 @@ html, body {
 
 .unread-divider::before { left: 0; }
 .unread-divider::after { right: 0; }
+
+.date-divider {
+  text-align: center;
+  margin: 14px 0 6px;
+}
+.date-divider span {
+  display: inline-block;
+  font-size: 11px;
+  color: #888;
+  background: #ebebeb;
+  border-radius: 999px;
+  padding: 2px 12px;
+}
+[data-theme-dark] .date-divider span { background: #313244; color: #6c7086; }
 
 /* ── 官方公告訊息（卡片風格） ── */
 .broadcast-msg {
