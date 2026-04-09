@@ -318,6 +318,230 @@ body {
 }
 .clear-img-btn:hover { background: rgba(220,53,69,0.85); }
 
+/* ── 最新資訊 ── */
+.news-editor-card {
+  background: #fff;
+  border: 1.5px solid #e0e6ef;
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+.news-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #333;
+}
+.form-select-official {
+  border-radius: 10px;
+  border: 1.5px solid #d0d7e3;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+}
+.form-select-official:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(0,75,151,0.1);
+  outline: none;
+}
+/* ── 草稿 badge ── */
+.draft-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: #856404;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 999px;
+  padding: 3px 10px 3px 12px;
+}
+.draft-clear-btn {
+  background: none;
+  border: none;
+  color: #856404;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+  opacity: 0.7;
+}
+.draft-clear-btn:hover { opacity: 1; }
+
+/* ── 預覽 Modal ── */
+.news-preview-body {
+  padding: 28px 32px;
+}
+
+/* ── Quill 編輯器 ── */
+#newsEditor {
+  border-radius: 0 0 10px 10px;
+  border: 1.5px solid #d0d7e3;
+  border-top: none;
+  min-height: 260px;
+  font-size: 0.95rem;
+  background: #fff;
+}
+#newsEditor .ql-editor {
+  min-height: 240px;
+  line-height: 1.75;
+}
+.ql-toolbar.ql-snow {
+  border: 1.5px solid #d0d7e3;
+  border-radius: 10px 10px 0 0;
+  background: #f8faff;
+}
+.ql-container.ql-snow {
+  border: none;
+}
+#newsEditor.ql-error {
+  border-color: #dc3545;
+}
+
+.news-admin-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.news-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.news-admin-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1.5px solid #e0e6ef;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: border-color 0.15s;
+}
+.news-admin-item:hover { border-color: var(--brand); }
+.news-admin-item-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.news-admin-item-badge.system  { background: #e8f0fe; color: #1a73e8; }
+.news-admin-item-badge.store   { background: #e6f4ea; color: #28a745; }
+.news-admin-item-badge.rules   { background: #fff3cd; color: #856404; }
+.news-admin-item-badge.other   { background: #f0f0f0; color: #555; }
+.news-admin-item-title {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.news-admin-item-date {
+  font-size: 0.78rem;
+  color: #888;
+  flex-shrink: 0;
+}
+.news-admin-item-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ── 數據分析 ── */
+.badge-na {
+  background: #f0f0f0;
+  color: #888;
+  font-size: 0.75rem;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-style: normal;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.stat-card {
+  background: #fff;
+  border: 1.5px solid #e0e6ef;
+  border-radius: 14px;
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: box-shadow 0.15s;
+}
+.stat-card:hover { box-shadow: 0 4px 16px rgba(0,75,151,0.08); }
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.stat-label {
+  font-size: 0.78rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222;
+  line-height: 1.1;
+}
+.analytics-section-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid #e0e6ef;
+}
+.analytics-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.analytics-item-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1.5px solid #e0e6ef;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+.analytics-item-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #f0f0f0;
+}
+.analytics-item-name {
+  flex: 1;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.analytics-item-price {
+  font-size: 0.85rem;
+  color: var(--brand);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
 /* ── RWD ── */
 @media (max-width: 640px) {
   .mobile-topbar { display: flex; }
@@ -333,5 +557,8 @@ body {
     margin-left: 0;
     padding: 24px 16px;
     max-width: 100%;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

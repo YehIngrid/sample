@@ -45,6 +45,12 @@
         <button class="nav-btn" data-panel="panel-history">
           <i class="fa fa-history"></i> 公告紀錄
         </button>
+        <button class="nav-btn" data-panel="panel-news">
+          <i class="fa fa-newspaper-o"></i> 最新資訊
+        </button>
+        <button class="nav-btn" data-panel="panel-analytics">
+          <i class="fa fa-bar-chart"></i> 數據分析
+        </button>
       </nav>
       <div class="sidebar-user">
         <span id="adminName">載入中...</span>
@@ -105,7 +111,7 @@
 
       <!-- Panel: 建立頻道 -->
       <section id="panel-channel" class="panel">
-        <h2 class="panel-title"><i class="fa fa-plus-circle me-2"></i>建立官方頻道</h2>
+        <h2 class="panel-title"><i class="fa fa-plus-circle me-2"></i>建立官方頻道<span style="color: red;">（目前只限建立一個官方頻道）</span></h2>
         <p class="text-muted">填寫頻道資訊後點擊建立。建立成功後請複製頻道 ID 供發送公告使用。</p>
         <form id="createChannelForm" class="official-form">
           <div class="mb-3">
@@ -135,12 +141,161 @@
         </div>
       </section>
 
+      <!-- Panel: 最新資訊管理 -->
+      <section id="panel-news" class="panel">
+        <h2 class="panel-title"><i class="fa fa-newspaper-o me-2"></i>最新資訊管理</h2>
+
+        <!-- 新增 / 編輯文章 -->
+        <div class="news-editor-card">
+          <div class="news-editor-header">
+            <span id="newsEditorLabel">新增文章</span>
+            <button type="button" class="btn btn-sm btn-outline-secondary d-none" id="newsCancelEditBtn">取消編輯</button>
+          </div>
+          <form id="newsForm" class="official-form mt-3">
+            <input type="hidden" id="newsEditIndex">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-4">
+                <label class="form-label">分類</label>
+                <select id="newsCategory" class="form-select form-select-official">
+                  <option value="系統公告">系統公告</option>
+                  <option value="店鋪公告">店鋪公告</option>
+                  <option value="平台規則">平台規則</option>
+                </select>
+              </div>
+              <div class="col-sm-5">
+                <label class="form-label">標題</label>
+                <input type="text" id="newsTitle" class="form-control" placeholder="文章標題" required>
+              </div>
+              <div class="col-sm-3">
+                <label class="form-label">日期</label>
+                <input type="date" id="newsDate" class="form-control" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">內容</label>
+              <div id="newsEditor"></div>
+            </div>
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+              <button type="submit" id="newsSubmitBtn" class="btn official-btn" style="color:white;">
+                <i class="fa fa-paper-plane me-1"></i> 發布文章
+              </button>
+              <button type="button" id="newsPreviewBtn" class="btn btn-outline-secondary">
+                <i class="fa fa-eye me-1"></i> 預覽
+              </button>
+              <span id="newsDraftBadge" class="draft-badge d-none">
+                <i class="fa fa-clock-o me-1"></i>已有暫存草稿
+                <button type="button" id="newsClearDraftBtn" class="draft-clear-btn" title="清除草稿">×</button>
+              </span>
+            </div>
+          </form>
+          <div id="newsFormResult" class="result-box mt-3 d-none"></div>
+        </div>
+
+        <!-- 預覽 Modal -->
+        <div class="modal fade" id="newsPreviewModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header" style="border-bottom:1px solid #eee;">
+                <span class="fw-bold" style="color:#333;">文章預覽</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body news-preview-body">
+                <div class="detail-meta">
+                  <span id="previewBadge" class="news-badge"></span>
+                </div>
+                <h2 class="detail-title" id="previewTitle"></h2>
+                <div class="detail-info" id="previewDate"></div>
+                <div class="detailcontent" id="previewContent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 文章列表 -->
+        <div class="news-admin-list-header mt-4 mb-2">
+          <span class="fw-bold" style="color:#333;">現有文章</span>
+          <button class="btn btn-sm btn-outline-primary" id="refreshNewsBtn">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+        <div id="newsAdminList" class="news-admin-list">
+          <div class="text-muted text-center py-3 small">
+            <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: 數據分析 -->
+      <section id="panel-analytics" class="panel">
+        <h2 class="panel-title"><i class="fa fa-bar-chart me-2"></i>數據分析</h2>
+        <p class="text-muted mb-4" style="font-size:0.88rem;">數據每次開啟頁面時自動更新。標示 <span class="badge-na">–</span> 表示後端尚未提供該統計 API。</p>
+
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-shopping-bag" style="color:#1a73e8;"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">上架商品總數</div>
+              <div class="stat-value" id="stat-products"><span class="spinner-border spinner-border-sm"></span></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#e6f4ea;"><i class="fa fa-users" style="color:#28a745;"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">註冊用戶數</div>
+              <div class="stat-value" id="stat-users">–</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fff3e0;"><i class="fa fa-file-text-o" style="color:#f57c00;"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">總訂單數</div>
+              <div class="stat-value" id="stat-orders">–</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#fce8e6;"><i class="fa fa-fire" style="color:#d93025;"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">熱門商品數</div>
+              <div class="stat-value" id="stat-hot"><span class="spinner-border spinner-border-sm"></span></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#f3e8fd;"><i class="fa fa-star" style="color:#7b1fa2;"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">許願池心願數</div>
+              <div class="stat-value" id="stat-wishes">–</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#e8f5e9;"><i class="fa fa-check-circle-o" style="color:#388e3c;"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">最新資訊文章數</div>
+              <div class="stat-value" id="stat-news">–</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 最新上架商品 -->
+        <div class="analytics-section mt-4">
+          <div class="analytics-section-title">最新上架商品</div>
+          <div id="analyticsNewItems" class="analytics-item-list">
+            <div class="text-muted text-center py-3 small">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
   <!-- Scripts -->
+  <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="../news/news.css">
+  <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script type="module" src="official.js"></script>
 </body>
 </html>
