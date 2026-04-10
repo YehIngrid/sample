@@ -651,18 +651,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== 工具 =====
 const order_STATUS_MAP = {
-  pending: { text: '待確認', badge: 'text-bg-warning', action: '接受訂單', icon: '../svg/acceptOrder.svg'},
-  preparing: { text: '待出貨', badge: 'text-bg-info', action: '即將出貨', icon: '../svg/readyDeliver.svg'},
-  delivered: { text: '待收貨', badge: 'text-bg-primary', action: '等待買家確認收貨', icon: '../svg/waitBuyer.svg'},
-  completed: { text: '待評價', badge: 'text-bg-success', action: '給對方評價', icon: '../svg/giveStar.svg'},
-  canceled: { text: '已取消', badge: 'text-bg-danger' , action: '給對方評價', icon: '../svg/giveStar.svg'}
+  pending: { text: '待確認', badge: 'order-badge-pending', action: '接受訂單', icon: '../svg/acceptOrder.svg'},
+  preparing: { text: '待出貨', badge: 'order-badge-preparing', action: '即將出貨', icon: '../svg/readyDeliver.svg'},
+  delivered: { text: '待收貨', badge: 'order-badge-delivered', action: '等待買家確認收貨', icon: '../svg/waitBuyer.svg'},
+  completed: { text: '待評價', badge: 'order-badge-completed', action: '給對方評價', icon: '../svg/giveStar.svg'},
+  canceled: { text: '已取消', badge: 'order-badge-canceled', action: '給對方評價', icon: '../svg/giveStar.svg'}
 }
 const buyer_STATUS_MAP = {
-  pending: { text: '待確認', badge: 'text-bg-warning', action: '聯絡賣家', icon: '../svg/canChat.svg'},
-  preparing: { text: '待出貨', badge: 'text-bg-info', action: '聯絡賣家', icon: '../svg/canChat.svg'},
-  delivered: { text: '待收貨', badge: 'text-bg-primary', action: '成功取貨', icon: '../svg/acceptOrder.svg'},
-  completed: { text: '待評價', badge: 'text-bg-success', action: '給對方評價', icon: '../svg/giveStar.svg'},
-  canceled: { text: '已取消', badge: 'text-bg-danger' , action: '給對方評價', icon: '../svg/giveStar.svg'}
+  pending: { text: '待確認', badge: 'order-badge-pending', action: '聯絡賣家', icon: '../svg/canChat.svg'},
+  preparing: { text: '待出貨', badge: 'order-badge-preparing', action: '聯絡賣家', icon: '../svg/canChat.svg'},
+  delivered: { text: '待收貨', badge: 'order-badge-delivered', action: '成功取貨', icon: '../svg/acceptOrder.svg'},
+  completed: { text: '待評價', badge: 'order-badge-completed', action: '給對方評價', icon: '../svg/giveStar.svg'},
+  canceled: { text: '已取消', badge: 'order-badge-canceled', action: '給對方評價', icon: '../svg/giveStar.svg'}
 }
 const nt = new Intl.NumberFormat('zh-TW', {
   style: 'currency', currency: 'TWD', maximumFractionDigits: 0

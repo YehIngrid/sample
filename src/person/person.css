@@ -1108,6 +1108,26 @@ small { font-size: 10px; color: #004b97; }
 .badge {
   font-size: 15px;
 }
+.order-badge-pending {
+  background-color: #FFC857;
+  color: #383838;
+}
+.order-badge-preparing {
+  background-color: #abdad5;
+  color: #004b97;
+}
+.order-badge-delivered {
+  background-color: #004b97;
+  color: #fff;
+}
+.order-badge-completed {
+  background-color: #24b685;
+  color: #fff;
+}
+.order-badge-canceled {
+  background-color: #e0e0e0;
+  color: #666;
+}
 
 /* ── 訂單篩選 tabs ── */
 .order-filter-tabs {
