@@ -328,6 +328,7 @@ border: 1.5px solid #fff
     min-height: 90vh;
 } */
 .halfsection {
+    width: 100%;
     padding: 5rem 2rem;
     max-width: 80vw;
     margin-left: auto;
@@ -354,7 +355,7 @@ border: 1.5px solid #fff
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: aliceblue;
+    background-color: #abdad5;
 }
 /* ── Shared section title style ── */
 .section-title {
@@ -371,16 +372,18 @@ border: 1.5px solid #fff
     padding-bottom: 2rem;
 }
 .reason-card {
-    background: #fff;
-    border-radius: 20px;
+    background: aliceblue;
+    border-radius: 8px;
     padding: 2rem 1.5rem;
-    box-shadow: 0 4px 24px rgba(0, 75, 151, 0.08);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    border: 1px solid transparent;
     height: 100%;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s, border-color 0.2s;
 }
 .reason-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 36px rgba(0, 75, 151, 0.14);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: rgba(0,75,151,0.2);
 }
 .reason > h3 {
     font-size: 2rem;
@@ -438,7 +441,7 @@ border: 1.5px solid #fff
 .nback {
     background-color: #FFC857;
     padding: 20px 16px;
-    border-radius: 10px;
+    border-radius: 8px;
     width: 320px;
 }
 .service {
@@ -451,31 +454,46 @@ border: 1.5px solid #fff
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 7vw;
+    gap: 24px;
 }
 .function {
-    flex: 1 1 320px;
-    max-width: 500px;
-    box-shadow: #ddd 0px 6px 18px;
-    padding: 28px;
-    border-radius: 16px;
+    flex: 1 1 280px;
+    max-width: 440px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    border: 1px solid transparent;
+    padding: 32px 28px;
+    border-radius: 8px;
+    background: aliceblue;
+    transition: transform 0.2s ease, box-shadow 0.2s, border-color 0.2s;
 }
-.function img {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto;
+.function:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: rgba(0,75,151,0.2);
+}
+.function h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #004b97;
+    margin-bottom: 12px;
+}
+.function p {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.75;
+    margin: 0;
 }
 .questions {
     background-color: #ABDAD5;
-    border-radius: 20px;
+    border-radius: 8px;
     width: 80vw;
     margin: 0 auto 5vh;
     padding: 3.5rem 4rem;
 }
 .faq-box{
   background:#fff;
-  border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   margin: 3vh auto;
 }
 
@@ -530,14 +548,20 @@ border: 1.5px solid #fff
 .more-btn{
   margin:40px auto;
   display:block;
-  padding:15px 40px;
-  border:none;
-  border-radius:30px;
-  background:white;
-  color:#60d8d8;
-  font-size:16px;
-  box-shadow:0 10px 20px rgba(0,0,0,0.1);
+  padding:12px 36px;
+  border: 1px solid rgba(0,75,151,0.2);
+  border-radius: 8px;
+  background: #fff;
+  color: #004b97;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   cursor:pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.more-btn:hover {
+  background: aliceblue;
+  box-shadow: 0 4px 12px rgba(0,75,151,0.12);
 }
 /* .service .row {
     padding-top: 1.6rem;
@@ -728,9 +752,6 @@ right: 0;
     .service {
         max-width: 91vw;
     }
-    .introduce {
-        max-width: 91vw;
-    }
     .reason .row {
         max-width: 91vw;
     }
@@ -844,33 +865,40 @@ right: 0;
 }
 .topic {
     text-align: center;
-    font-size: 7rem !important;
+    font-size: 1.25rem !important;
     color: #004b97;
-    opacity: 0.1;
-    margin-top: 2rem;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    line-height: 1;
+    opacity: 1;
+    margin-top: 0;
+    margin-bottom: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: none;
+    line-height: 1.3;
     user-select: none;
     pointer-events: none;
 }
 .goal {
   color: #004b97;
   text-align: center;
-  margin-bottom: 3rem;
-  margin-top: 3rem;
-  font-weight: 400;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
 }
 .infor p {
   text-align: center;
-  color: #383838;
-  font-weight: 300;
-  padding-bottom: 10px;
+  color: #555;
+  font-weight: 400;
+  padding-bottom: 8px;
+  line-height: 1.8;
 }
 /* ── Introduce section ── */
 .introduce {
     position: relative;
-    padding: 5rem 0;
+    width: 100%;
+    padding: 5rem 0 4rem;
+    background: aliceblue;
     overflow: hidden;
 }
 .introduce::before {
@@ -879,7 +907,7 @@ right: 0;
     width: min(900px, 120vw);
     height: min(900px, 120vw);
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,75,151,0.07) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(0,75,151,0.04) 0%, transparent 70%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -894,83 +922,110 @@ right: 0;
 }
 .introduce > h3 {
     text-align: center;
-    padding: 0 0 2.5rem;
+    padding: 0 0 3rem;
     position: relative;
     z-index: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.introduce > h3::before {
+    content: 'ABOUT US';
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    color: #abdad5;
+    animation: overlineExpand 0.7s cubic-bezier(0.22,1,0.36,1) both;
 }
 .introduce > h3 span.about-circle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #004b97, #3a8fd4);
-    color: #fff;
-    font-size: 1.3rem;
+    display: inline-block;
+    position: relative;
+    font-size: 1.9rem;
     font-weight: 700;
-    box-shadow: 0 8px 32px rgba(0, 75, 151, 0.25);
-    letter-spacing: 0.05em;
+    color: #004b97;
+    letter-spacing: 0.04em;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    width: auto;
+    height: auto;
+    padding-bottom: 12px;
+}
+.introduce > h3 span.about-circle::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 3px;
+    width: 0;
+    background: #abdad5;
+    transition: width 0.8s cubic-bezier(0.22,1,0.36,1) 0.35s;
+}
+.introduce > h3.aos-animate span.about-circle::after {
+    width: 100%;
 }
 .infor {
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 /* ── Team blocks ── */
 .team-block {
-    padding: 4rem 0 3rem;
+    padding: 4rem 0 3.5rem;
 }
 .team-block + .team-block {
     border-top: 1px solid rgba(0, 75, 151, 0.1);
+    padding-top: 4.5rem;
 }
 /* ── Team member cards ── */
 .team-desc {
     text-align: center;
     color: #666;
     max-width: 600px;
-    margin: 0.8rem auto 0;
+    margin: 1rem auto 2rem;
     line-height: 1.7;
-    margin-top: 100px;
 }
 .members-grid {
     margin-top: 2rem;
 }
 .team-member-card {
     background: aliceblue;
-    border-radius: 20px;
-    padding: 1.8rem 1rem 1.6rem;
+    border-radius: 8px;
+    padding: 1.6rem 1rem 1.4rem;
     text-align: center;
-    box-shadow: 0 4px 24px rgba(0, 75, 151, 0.08);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    border: 1px solid transparent;
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s, border-color 0.2s;
 }
 .team-member-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 40px rgba(0, 75, 151, 0.16);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: rgba(0,75,151,0.2);
 }
 .team-name {
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 700;
-    color: #383838;
+    color: #222;
     margin: 0;
 }
 .team-role-badge {
     display: inline-block;
     background: #abdad5;
     color: #004b97;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
     padding: 3px 12px;
-    border-radius: 50px;
-    margin-bottom: 0.8rem;
+    border-radius: 4px;
+    margin-bottom: 0.6rem;
 }
 .team-school-text {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     color: #888;
     margin: 0;
     line-height: 1.5;
@@ -1051,10 +1106,11 @@ right: 0;
   display: flex;
   align-items: center;
   gap: 18px;
-  background: #fff;
-  border-radius: 14px;
+  background: aliceblue;
+  border-radius: 8px;
   padding: 18px 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  border: 1px solid transparent;
 }
 .step-badge {
   display: flex;
@@ -1119,4 +1175,65 @@ right: 0;
   .listep-content p {
     font-size: 0.82rem;
   }
+}
+
+/* ── 新增動畫 keyframes ── */
+
+/* ABOUT US 標籤：letter-spacing 從緊縮展開 */
+@keyframes overlineExpand {
+    from { opacity: 0; letter-spacing: 0.08em; }
+    to   { opacity: 1; letter-spacing: 0.28em; }
+}
+
+/* reason-card / function card 內的 icon hover 縮放 */
+.reason-card:hover .icon {
+    transform: scale(1.08);
+}
+.reason-card .icon {
+    transition: transform 0.25s ease;
+}
+
+/* section-title 淡入底線效果（純 CSS，配合 AOS fade-up） */
+.section-title {
+    position: relative;
+    padding-bottom: 10px;
+}
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 2px;
+    width: 0;
+    background: #abdad5;
+    transition: width 0.6s cubic-bezier(0.22,1,0.36,1) 0.2s;
+}
+.section-title.aos-animate::after {
+    width: 40px;
+}
+.introduce .section-title::after {
+    content: none;
+}
+
+/* partner 區塊圖片柔化進場 */
+.book img, .schooladgif {
+    transition: transform 0.4s ease;
+}
+.book:hover img, .col-md-5:hover .schooladgif {
+    transform: scale(1.02);
+}
+
+/* step-badge 數字進場脈動 */
+.listep.aos-animate .step-badge {
+    animation: badgePop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes badgePop {
+    from { transform: scale(0.7); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+/* team-member-card 進場後 badge 微彈 */
+.team-member-card.aos-animate .team-role-badge {
+    animation: badgePop 0.45s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
 }

@@ -3,7 +3,17 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 .picture img{
     width: 40px;
     height: 39px;
@@ -124,7 +134,7 @@ ul{
     background-color: #004b97;
     color: rgba(255,255,255,0.85);
     border-top: 3px solid #abdad5;
-    margin-top: 60px;
+    margin-top: auto;
 }
 .footer-inner {
     display: grid;

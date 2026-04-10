@@ -140,7 +140,7 @@
     background-color: #f5f8fa;
     padding: 14px;
     border-radius: 8px;
-    margin-top: 8px;
+    margin-top: 16px;
     line-height: 1.7;
     color: #444;
   }
@@ -1408,7 +1408,7 @@
     line-height: 1.7;
     color: #444;
     padding: 14px !important;
-    margin-top: 8px !important;
+    margin-top: 16px !important;
   }
 
   /* ── 手風琴 — 乾淨無邊框 ── */
