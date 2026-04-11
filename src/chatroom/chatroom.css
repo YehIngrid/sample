@@ -181,6 +181,12 @@ html, body {
 .imgAndMessage.message-continues {
     margin-bottom: 3px;
 }
+.imgmessage.message-continues img {
+    margin-bottom: 0 !important;
+}
+.imgAndMessage.message-continues .combined-bubble {
+    margin-bottom: 0 !important;
+}
 .imgmessage.message-grouped,
 .imgAndMessage.message-grouped {
     margin-top: 0 !important;
@@ -190,6 +196,42 @@ html, body {
 }
 .msg-time-hidden {
     display: none;
+}
+
+/* ── Messenger 泡泡圓角群組效果 ─────────────────────────────────────
+   message-continues = 後面還有同群組訊息（非最後一則）
+   message-grouped   = 前面有同群組訊息（非第一則）
+   inner radius → 4px；outer radius 維持原本 18px / 12px
+   ----------------------------------------------------------------- */
+
+/* 自己的訊息（右側）：壓平右側的內邊角 */
+.message-self.message-continues:not(.message-grouped) .message-text,
+.message-self.message-continues:not(.message-grouped) .combined-bubble {
+    border-bottom-right-radius: 4px;
+}
+.message-self.message-continues.message-grouped .message-text,
+.message-self.message-continues.message-grouped .combined-bubble {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+.message-self.message-grouped:not(.message-continues) .message-text,
+.message-self.message-grouped:not(.message-continues) .combined-bubble {
+    border-top-right-radius: 4px;
+}
+
+/* 對方的訊息（左側）：壓平左側的內邊角 */
+.message-other.message-continues:not(.message-grouped) .message-text,
+.message-other.message-continues:not(.message-grouped) .combined-bubble {
+    border-bottom-left-radius: 4px;
+}
+.message-other.message-continues.message-grouped .message-text,
+.message-other.message-continues.message-grouped .combined-bubble {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.message-other.message-grouped:not(.message-continues) .message-text,
+.message-other.message-grouped:not(.message-continues) .combined-bubble {
+    border-top-left-radius: 4px;
 }
 @keyframes fadeIn {
     from {
@@ -212,10 +254,13 @@ html, body {
 }
 
 .message-avatar {
-    font-size: 2rem;
     color: var(--primary-color);
     opacity: 0.7;
     margin-right: 10px;
+    line-height: 0;
+}
+.message-avatar img {
+    display: block;
 }
 
 .message-content {
@@ -501,7 +546,6 @@ html, body {
     background: var(--chat-bg-tint, aliceblue);
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    border-left: 3px solid var(--primary-color, #004b97);
     padding: 12px 16px;
     width: 90%;
     max-width: 480px;

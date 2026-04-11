@@ -105,6 +105,9 @@ async function renderAuthUI() {
         try { await backendService.whoami(); } catch (_) {}
       }, 5 * 60 * 1000);
 
+      // 登入後立即更新購物車數量
+      refreshCartBadge();
+
     } catch (err) {
       window.isLoggedIn = false;
       _authResolve(false);
@@ -160,7 +163,74 @@ async function doLogout() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', renderAuthUI);
+// ── 購物車數量 badge ──────────────────────────────────────────────
+async function refreshCartBadge() {
+  try {
+    const res = await backendService.getMyCart();
+    const items =
+      res?.data?.data?.cartItems ??
+      res?.data?.cartItems ??
+      [];
+    const count = items.reduce((sum, row) => sum + (Number(row.quantity) || 1), 0);
+    _setCartBadge(count);
+  } catch (_) {
+    // 未登入或失敗時不顯示 badge
+    _setCartBadge(0);
+  }
+}
+
+function _setCartBadge(count) {
+  document.querySelectorAll('a[href*="shoppingcart"]').forEach(link => {
+    let badge = link.querySelector('.cart-badge');
+    if (count > 0) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'cart-count cart-badge';
+        link.style.position = 'relative';
+        link.style.display = link.style.display || 'inline-flex';
+        link.appendChild(badge);
+      }
+      badge.textContent = count > 99 ? '99+' : count;
+      // 彈跳動畫
+      badge.classList.remove('bump');
+      void badge.offsetWidth; // reflow
+      badge.classList.add('bump');
+    } else if (badge) {
+      badge.remove();
+    }
+  });
+}
+
+// 暴露給各頁面（加入購物車後呼叫更新）
+window.refreshCartBadge = refreshCartBadge;
+
+// ── Tooltip 初始化 ────────────────────────────────────────────────
+function initTooltips() {
+  if (typeof bootstrap === 'undefined') return;
+  // 補上沒有描述文字的常見 icon 按鈕
+  const chatBtn = document.getElementById('chaticon');
+  if (chatBtn && !chatBtn.title && !chatBtn.getAttribute('aria-label')) {
+    chatBtn.title = '開啟聊天室';
+  }
+  // 自動將 button/a 上的 aria-label 或 title 升級為 Bootstrap tooltip
+  document.querySelectorAll('button[aria-label], a[aria-label], button[title], a[title]').forEach(el => {
+    if (el.getAttribute('data-bs-toggle') === 'tooltip') return; // 已手動設定
+    const text = el.title || el.getAttribute('aria-label');
+    if (!text) return;
+    new bootstrap.Tooltip(el, {
+      title: text,
+      trigger: 'hover focus',
+      placement: window.innerWidth <= 991 ? 'bottom' : 'top',
+    });
+  });
+}
+
+window.initTooltips = initTooltips;
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderAuthUI();
+  initTooltips();
+});
 export const formatTaipeiTime = (dateStr) => {
   if (!dateStr) return '-'; // 如果沒有資料，直接回傳 '-'
   

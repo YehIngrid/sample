@@ -1,3 +1,21 @@
+// ── 重試工具（同 BackendService）────────────────────────────────
+async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
+    let lastErr;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (err) {
+            lastErr = err;
+            const status = err?.response?.status;
+            if (status && status < 500) throw err;
+            if (attempt < maxRetries) {
+                await new Promise(r => setTimeout(r, baseDelay * Math.pow(2, attempt)));
+            }
+        }
+    }
+    throw lastErr;
+}
+
 export default class wpBackendService {
     constructor() {
         this.baseUrl = 'https://thpr.hlc23.dev/api/wishpool';
@@ -25,10 +43,10 @@ export default class wpBackendService {
     // List wishes with pagination and priority filter
     async listWishes(page) {
         try {
-            const response = await axios.get(
-                `${this.baseUrl}`, 
-                {params: {page: page, limit: 12}}
-            );
+            const response = await withRetry(() => axios.get(
+                `${this.baseUrl}`,
+                { params: { page, limit: 12 } }
+            ));
             return response.data;
         } catch (error) {
             console.error('Error listing wishes:', error);
@@ -72,9 +90,9 @@ export default class wpBackendService {
     }
     async contactWisher(id) {
         try {
-            const response = await axios.post(
+            const response = await withRetry(() => axios.post(
                 `${this.baseUrl}/${id}/contact`
-            );
+            ), 2); // 最多重試 2 次（POST 聯絡操作保守一點）
             return response.data;
         } catch (error) {
             console.error('Error contacting wisher:', error);

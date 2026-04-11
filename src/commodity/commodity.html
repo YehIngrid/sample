@@ -238,7 +238,7 @@
                         <option value="6">全舊以上</option>
                     </select>
                     <input type="number" id="maxPriceInput" class="form-control form-control-sm filter-price" placeholder="最高預算">
-                    <button id="cleanFilter" class="btn btn-sm filter-clear-btn">清除</button>
+                    <button id="cleanFilter" class="btn btn-sm filter-clear-btn" title="清除所有篩選條件">清除</button>
                 </div>
                 <!-- 手機版 layout 切換列 -->
                 <div class="layout-toggle-bar d-flex justify-content-between align-items-center d-lg-none">
@@ -669,7 +669,7 @@
 </script>
 
     <!-- 聊天室（桌機版） -->
-    <button class="chaticon d-none d-lg-flex" id="chaticon" onclick="toggleChatInterface()">
+    <button class="chaticon d-none d-lg-flex" id="chaticon" onclick="toggleChatInterface()" title="開啟聊天室">
       <img src="../svg/chaticon.svg" alt="聊天室icon點擊開啟聊天室">
       <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
     </button>

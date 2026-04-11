@@ -151,6 +151,7 @@
       <!-- section products -->
       <section class="col-lg-9 d-none content-section"  id="products">
         <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
+        <h5>上架商品管理</h5>
         <div class="col-12">
           <div>
             <div class="card-body">
@@ -180,7 +181,7 @@
   <!-- 🔹 訂單詳情（獨立一塊） -->
   <div id="sellOrderDetail" class="mt-3 d-none">
     <div class="text-start mt-3">
-      <button class="back" id="backToSellTable">
+      <button class="back" id="backToSellTable" title="返回訂單列表">
         <img src="../svg/page.svg" alt="返回訂單列表">
       </button>
     </div>
@@ -273,7 +274,7 @@
   <!-- 訂單詳情 -->
   <div id="buyerOrderDetail" class="mt-3 d-none">
     <div class="text-start mt-3">
-      <button class="back" id="backToBuyTable">
+      <button class="back" id="backToBuyTable" title="返回訂單列表">
         <img src="../svg/page.svg" alt="返回訂單列表">
       </button>
     </div>
@@ -788,7 +789,7 @@ document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
 
     <!-- script部分-->
     <!-- 聊天室 -->
-    <button class="chaticon d-none d-lg-flex" id="chaticon">
+    <button class="chaticon d-none d-lg-flex" id="chaticon" title="開啟聊天室">
       <img src="../svg/chaticon.svg" alt="聊天室icon點擊開啟聊天室">
       <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
     </button>

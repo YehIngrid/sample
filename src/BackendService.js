@@ -1,5 +1,23 @@
 axios.defaults.withCredentials = true;
 
+// ── 重試工具：network 錯誤或 5xx 才重試，4xx 直接拋出 ────────────
+async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
+    let lastErr;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (err) {
+            lastErr = err;
+            const status = err?.response?.status;
+            if (status && status < 500) throw err; // 4xx：不重試
+            if (attempt < maxRetries) {
+                await new Promise(r => setTimeout(r, baseDelay * Math.pow(2, attempt)));
+            }
+        }
+    }
+    throw lastErr;
+}
+
 // ── 全域 401 攔截：session 過期時統一導回登入頁 ────────────
 let _handlingExpiry = false;
 const _SKIP_401 = ['/api/account/login', '/api/account/signup', '/api/whoami'];
@@ -302,12 +320,11 @@ export default class BackendService {
         }
 
         try {
-            const response = await axios.post(
+            return await withRetry(() => axios.post(
                 `${this.baseUrl}/api/cart/add/${commodityId}`,
-                { quantity }, // <-- 必填 body
+                { quantity },
                 { headers: { "Content-Type": "application/json" }, withCredentials: true }
-            );
-            return response;
+            ));
         } catch (error) {
             this._forbidden(error);
             console.error("發生錯誤", error);

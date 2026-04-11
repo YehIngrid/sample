@@ -1034,6 +1034,13 @@ body {
     background: rgb(36, 182, 133);
     color: #fff;
 }
+.wn-contact-btn.contacted,
+.wb-contact-btn.contacted {
+    background: rgb(199, 244, 229);
+    color: rgb(36, 182, 133);
+    cursor: default;
+    pointer-events: none;
+}
 .wn-delete-btn {
     width: 100%;
     padding: 9px 0;

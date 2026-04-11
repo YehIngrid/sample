@@ -297,21 +297,28 @@
     </div>
   </div>
 
-  <!-- 2. 許願池 -->
-  <div class="firstlinesell d-block justify-content-center gap-lg-4">
-    <div class="wishpoollook col-12" style="margin-bottom: 10px;">
-      <div class="d-flex justify-content-between align-items-center" style="color: #383838;">
-        <div>
-          <h3 class="cardTitle" style="color: #004b97;">許願池</h3>
-          <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">買家許願，賣家實現</p>
-        </div>
-        <a class="more" href="../wishpool/wishpool.html#wishpool"><span class="more-btn">查看更多 →</span></a>
+  <!-- 2. 最新上架 -->
+  <div class="newsell">
+    <div class="d-flex justify-content-between align-items-center" style="color: #383838; margin-bottom: 10px;">
+      <div>
+        <h3 class="cardTitle" style="color: #004b97;">最新上架</h3>
+        <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">每天都有新發現</p>
       </div>
-      <div id="wishArea" class="wish-area">
-        <div class="wish-wave-layer wish-wave-layer--1"></div>
-        <div class="wish-wave-layer wish-wave-layer--2"></div>
-        <div class="wish-wave-layer wish-wave-layer--3"></div>
+      <a href="../commodity/commodity.html?category=new" class="more"><span class="more-btn">查看更多 →</span></a>
+    </div>
+    <div class="mgMobile">
+      <div class="new-swipe-hint d-flex d-lg-none align-items-center justify-content-between mb-2" id="newSwipeHint">
+        <span class="swipe-arrow swipe-arrow-left"><i class="fa-solid fa-chevron-left"></i></span>
+        <span class="swipe-hint-text">向左右滑動切換</span>
+        <span class="swipe-arrow swipe-arrow-right"><i class="fa-solid fa-chevron-right"></i></span>
       </div>
+      <div id="product-grid" class="container-card row row-cols-2 row-cols-md-3 g-2 mt-0"></div>
+      <div id="newMobileDots" class="d-flex d-lg-none justify-content-center align-items-center gap-1 mt-2" style="min-height:16px;"></div>
+    </div>
+    <div class="pager" id="newPager">
+      <button id="newPrev">‹ 上一頁</button>
+      <span id="newInfo"></span>
+      <button id="newNext">下一頁 ›</button>
     </div>
   </div>
 
@@ -371,28 +378,21 @@
     </a>
   </div>
 
-  <!-- 3. 最新上架 -->
-  <div class="newsell">
-    <div class="d-flex justify-content-between align-items-center" style="color: #383838; margin-bottom: 10px;">
-      <div>
-        <h3 class="cardTitle" style="color: #004b97;">最新上架</h3>
-        <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">每天都有新發現</p>
+  <!-- 4. 許願池 -->
+  <div class="firstlinesell d-block justify-content-center gap-lg-4">
+    <div class="wishpoollook col-12" style="margin-bottom: 10px;">
+      <div class="d-flex justify-content-between align-items-center" style="color: #383838;">
+        <div>
+          <h3 class="cardTitle" style="color: #004b97;">許願池</h3>
+          <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">買家許願，賣家實現</p>
+        </div>
+        <a class="more" href="../wishpool/wishpool.html#wishpool"><span class="more-btn">查看更多 →</span></a>
       </div>
-      <a href="../commodity/commodity.html?category=new" class="more"><span class="more-btn">查看更多 →</span></a>
-    </div>
-    <div class="mgMobile">
-      <div class="new-swipe-hint d-flex d-lg-none align-items-center justify-content-between mb-2" id="newSwipeHint">
-        <span class="swipe-arrow swipe-arrow-left"><i class="fa-solid fa-chevron-left"></i></span>
-        <span class="swipe-hint-text">向左右滑動切換</span>
-        <span class="swipe-arrow swipe-arrow-right"><i class="fa-solid fa-chevron-right"></i></span>
+      <div id="wishArea" class="wish-area">
+        <div class="wish-wave-layer wish-wave-layer--1"></div>
+        <div class="wish-wave-layer wish-wave-layer--2"></div>
+        <div class="wish-wave-layer wish-wave-layer--3"></div>
       </div>
-      <div id="product-grid" class="container-card row row-cols-2 row-cols-md-3 g-2 mt-0"></div>
-      <div id="newMobileDots" class="d-flex d-lg-none justify-content-center align-items-center gap-1 mt-2" style="min-height:16px;"></div>
-    </div>
-    <div class="pager" id="newPager">
-      <button id="newPrev">‹ 上一頁</button>
-      <span id="newInfo"></span>
-      <button id="newNext">下一頁 ›</button>
     </div>
   </div>
 
@@ -470,6 +470,16 @@
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">我要賣商品！</button>
           </li>
         </ul>
+        <div class="seller-quick-links ms-auto">
+          <a href="../person/person.html?page=products" class="seller-quick-btn" title="管理我上架的商品">
+            <img src="../svg/my.svg" alt="商品管理" style="width:16px;height:16px;">
+            <span>商品管理</span>
+          </a>
+          <a href="../person/person.html?page=sellProducts" class="seller-quick-btn" title="查看銷售訂單">
+            <img src="../svg/mysellOrder.svg" alt="銷售訂單" style="width:16px;height:16px;">
+            <span>銷售訂單</span>
+          </a>
+        </div>
       </div>
       <!-- 跑馬燈：電腦版顯示在 tab 右側 -->
       <div class="safety-ticker safety-ticker--inline d-none d-lg-flex">
@@ -1730,7 +1740,7 @@ const timer = setInterval(() => {
     </div>
 
     <!-- 聊天室 -->
-    <button class="chaticon d-none d-lg-flex" id="chaticon">
+    <button class="chaticon d-none d-lg-flex" id="chaticon" title="開啟聊天室">
       <img src="../svg/chaticon.svg" alt="聊天室icon點擊開啟聊天室">
       <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
     </button>

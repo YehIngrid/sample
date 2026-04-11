@@ -2,6 +2,11 @@
   --brand-color: #004b97;
   --second-brand-color: #BEE4DA;
 }
+#whatcontent {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
 .header_secondary {
     padding-left: 200px;
     padding-right: 200px;
@@ -151,10 +156,13 @@
     width: 80vw;
     margin: 2vw auto;
     align-items: flex-start;
+    flex: 1;
 }
 .sortAndProduct {
     width: 100%;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
 }
 #productRow > .col {
     min-width: 130px;

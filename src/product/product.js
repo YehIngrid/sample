@@ -614,16 +614,25 @@ async function onAddToCart(e) {
   const qtyEl = document.getElementById('qty');
   const quantity = Math.max(1, Number(qtyEl?.textContent) || 1);
 
+  // 樂觀更新：立即回饋，失敗再還原
+  const origHtml = btn.innerHTML;
+  const origClass = btn.className;
   btn.disabled = true;
+  btn.innerHTML = '加入中...';
+
   try {
     await backendService.addItemsToCart(id, quantity);
-    await Swal.fire({
-      title: '已加入購物車！',
-      icon: 'success', 
-      showConfirmButton: false,
-      timer: 1600,
-    });
+    // 成功：保持已加入狀態
+    btn.innerHTML = '✓ 已加入購物車';
+    btn.classList.add('cart-added');
+    btn.disabled = false;
+    window.refreshCartBadge?.();
+    Swal.fire({ title: '已加入購物車！', icon: 'success', showConfirmButton: false, timer: 1200 });
   } catch (err) {
+    // 失敗：還原原始狀態
+    btn.innerHTML = origHtml;
+    btn.className = origClass;
+    btn.disabled = false;
     const msg = err?.response?.data?.message || err?.message || '請稍後再試';
     if (String(msg).toLowerCase().includes('stock')) {
       Swal.fire({ icon: 'warning', title: '庫存不足，您在購物車已有這個商品', text: msg });
@@ -632,8 +641,6 @@ async function onAddToCart(e) {
     } else {
       Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
     }
-  } finally {
-    btn.disabled = false;
   }
 }
 async function showSellerCommodities(id) {

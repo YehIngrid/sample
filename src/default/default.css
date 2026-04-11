@@ -590,8 +590,8 @@ ul{
 }
 .cart-count {
   font-size: 14px;
-  background: rgb(231, 72, 82);
-  color: white;
+  background: #abdad5;
+  color: #383838;
   padding: 0px 3px;
   border-radius: 50%;
   margin-left: 0px;
@@ -602,6 +602,25 @@ ul{
 }
 .cart-count.bump {
   transform: scale(1.4);
+}
+/* icon 右上角 badge */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 10px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  line-height: 16px;
+  border-radius: 8px;
+  pointer-events: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+/* 手機底部導覽列：badge 相對於 icon（24px 寬，水平置中）定位 */
+.bottom-nav-item .cart-badge {
+  top: 2px;
+  right: calc(50% - 18px);
 }
  #loader {
     position: fixed;

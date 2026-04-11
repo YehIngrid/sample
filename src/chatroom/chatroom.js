@@ -399,7 +399,7 @@ class ChatRoomList {
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
-                    <div class="d-flex flex-column align-items-center me-2">
+                    <div class="d-flex flex-row align-items-center gap-1 me-2">
                         <i class="bi bi-check2-all read-receipt d-none" style="font-size:0.8rem;color:#4CAF50;"></i>
                         <small class="text-muted msg-time" style="font-size:0.75rem;">${time}</small>
                     </div>` : ''}
@@ -470,7 +470,7 @@ class ChatRoomList {
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
-                    <div class="d-flex flex-column align-items-center me-2">
+                    <div class="d-flex flex-row align-items-center gap-1 me-2">
                         <i class="bi bi-check2-all read-receipt d-none" style="font-size: 0.8rem; color: #4CAF50;"></i>
                         <small class="text-muted msg-time" style="font-size: 0.75rem;">${time}</small>
                     </div>` : ''}
@@ -1225,7 +1225,7 @@ class ChatRoomList {
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
-                    <div class="d-flex flex-column align-items-center me-2">
+                    <div class="d-flex flex-row align-items-center gap-1 me-2">
                         <i class="bi bi-check2-all read-receipt d-none" style="font-size: 0.8rem; color: #4CAF50;"></i>
                         <small class="text-muted msg-time" style="font-size: 0.75rem;">${timestamp}</small>
                     </div>` : ''}

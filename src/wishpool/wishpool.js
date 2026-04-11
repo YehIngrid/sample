@@ -1061,15 +1061,31 @@ async function handleContactWisher(wishId, btn, ownerUid = '') {
     });
 
     if (result.isConfirmed) {
-      wpbackendService = wpbackendService || new wpBackendService();
-      await wpbackendService.contactWisher(wishId, result.value);
-      Swal.fire({ icon: 'success', title: '已聯絡許願者！', text: '請等待對方回覆。' });
+      // 樂觀更新：確認後立即更新按鈕狀態，不等 API 回應
+      btn.textContent = '✓ 已聯絡許願者';
+      btn.disabled = true;
+      btn.classList.add('contacted');
+
+      try {
+        wpbackendService = wpbackendService || new wpBackendService();
+        await wpbackendService.contactWisher(wishId, result.value);
+        Swal.fire({ icon: 'success', title: '已聯絡許願者！', text: '請等待對方回覆。', timer: 1500, showConfirmButton: false });
+        return; // 保持按鈕「已聯絡」狀態
+      } catch (error) {
+        // 失敗：還原按鈕
+        btn.textContent = origText;
+        btn.disabled = false;
+        btn.classList.remove('contacted');
+        console.error('Error contacting wisher:', error);
+        Swal.fire({ icon: 'error', title: '聯絡失敗', text: '請稍後再試。' });
+        return;
+      }
     }
   } catch (error) {
     console.error('Error contacting wisher:', error);
     Swal.fire({ icon: 'error', title: '聯絡失敗', text: '請稍後再試。' });
   } finally {
-    btn.disabled  = false;
+    btn.disabled = false;
     btn.textContent = origText;
   }
 }

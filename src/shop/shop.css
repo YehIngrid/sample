@@ -351,6 +351,38 @@ ul{
 .seller-header-row .nav-tabs {
   border-bottom: none;
 }
+.seller-quick-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.seller-quick-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #004b97;
+  background: aliceblue;
+  border: 1px solid rgba(0,75,151,0.2);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.seller-quick-btn:hover {
+  background: #abdad5;
+  border-color: #abdad5;
+  color: #383838;
+}
+@media (max-width: 480px) {
+  .seller-quick-links span {
+    display: none;
+  }
+  .seller-quick-btn {
+    padding: 5px 7px;
+  }
+}
 .form-store{
   background-color: aliceblue;
   margin: 1.2rem;
