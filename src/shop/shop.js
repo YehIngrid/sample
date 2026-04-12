@@ -46,6 +46,20 @@ function wishAreaSkeletonHTML(n = 8) {
   return `<div class="wish-track" style="animation:none;">${items}</div>`;
 }
 
+// ── Image skeleton: fade-in when photo finishes loading ──
+document.addEventListener('load', e => {
+  const img = e.target;
+  if (img.tagName !== 'IMG') return;
+  // product-thumb（商品格線）
+  const thumb = img.closest('.product-thumb');
+  if (thumb) { thumb.classList.add('img-loaded'); return; }
+  // img-box（熱門商品）：只對 .main 圖片，不對 topicon
+  if (img.classList.contains('main')) {
+    const box = img.closest('.img-box');
+    if (box) box.classList.add('img-loaded');
+  }
+}, true); // useCapture: load 不 bubble，必須用 capture
+
 function esc(str) {
   return String(str ?? '').replace(/[&<>"']/g, s =>
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])

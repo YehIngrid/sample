@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <title>校園攻略站 | 拾貨寶庫</title>
+    <title>TreasureHub 校園攻略站 | 拾貨寶庫</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="校園攻略站 — 中興大學同學的學習、生活、實習攻略平台"/>
@@ -29,11 +29,9 @@
                     aria-controls="schoolNavbarNav" aria-expanded="false">
                 <img src="../svg/navbar.svg" alt="選單" style="width:20px;">
             </button>
-            <a class="navbar-brand order-1 me-3 d-flex align-items-center gap-2" href="../newhome/newhome.html">
-                <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫" style="width:100px;">
+            <a class="navbar-brand order-1 me-3" href="../newhome/newhome.html">
+                <span class="school-nav-label">TreasureHub 校園攻略站</span>
             </a>
-            <span class="school-nav-divider d-none d-lg-inline"></span>
-            <span class="school-nav-label d-none d-lg-inline">校園攻略站</span>
 
             <div class="d-none d-lg-flex order-2 ms-3">
                 <ul class="navbar-nav">
@@ -46,6 +44,9 @@
             </div>
 
             <div class="d-flex align-items-center ms-auto order-3 gap-2">
+                <button class="school-theme-toggle" id="themeToggle" aria-label="切換主題">
+                    <i class="ti ti-moon" id="themeIcon"></i>
+                </button>
                 <button class="school-create-btn d-none d-lg-flex align-items-center gap-1" id="openOnboarding">
                     <i class="ti ti-pencil-plus"></i> 開始創作
                 </button>
@@ -75,7 +76,7 @@
 <div class="school-hero">
     <div class="school-hero-inner container">
         <div class="school-hero-text">
-            <div class="school-hero-badge"><i class="ti ti-book-2"></i> 校園攻略站</div>
+            <div class="school-hero-badge"><i class="ti ti-book-2"></i> TreasureHub 校園攻略站</div>
             <h1 class="school-hero-title">分享你的校園智慧</h1>
             <p class="school-hero-sub">讓每一位同學少走彎路，把你的經驗變成別人的養分</p>
             <div class="school-hero-tags">
@@ -88,7 +89,7 @@
             </div>
         </div>
         <div class="school-hero-art d-none d-md-block">
-            <img src="../svg/studybook.svg" alt="" class="school-hero-img" aria-hidden="true">
+            <img src="../webP/newschoolad.webp" alt="" class="school-hero-img" aria-hidden="true">
         </div>
     </div>
 </div>
@@ -283,6 +284,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../finisher-header.es5.min.js" type="text/javascript"></script>
+<script src="school-theme.js"></script>
+<script src="school-data.js"></script>
 <script src="school.js"></script>
 </body>
 </html>

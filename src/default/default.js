@@ -54,6 +54,7 @@ async function renderAuthUI() {
       backendService = new BackendService();
       const user = await backendService.whoami(); // 成功代表已登入
       window.isLoggedIn = true;
+      sessionStorage.removeItem('_loginExpiredDeclined');
       _authResolve(true);
       document.querySelectorAll('.loginornot').forEach((el) => {
         if (el.classList.contains('nav-menu-item')) {
@@ -138,6 +139,34 @@ async function renderAuthUI() {
       document.querySelectorAll('.nav-user-menu-header').forEach(el => el.classList.add('d-none'));
     }
 }
+
+// 供 BackendService 401 攔截器呼叫：更新 navbar 為未登入狀態（不跳頁）
+window._showLoggedOutUI = function() {
+  window.isLoggedIn = false;
+  localStorage.removeItem('uid');
+  localStorage.removeItem('username');
+  localStorage.removeItem('avatar');
+  document.querySelectorAll('.username').forEach((el) => {
+    el.innerHTML = `<img class="nav-username-avatar" src="../image/default-avatar.png" alt="頭像">`;
+    el.style.display = '';
+    const currentUrl = window.location.pathname + window.location.search;
+    el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+  });
+  document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = '../image/default-avatar.png'; });
+  document.querySelectorAll('.loginornot').forEach((el) => {
+    if (el.classList.contains('nav-menu-item')) {
+      el.innerHTML = '<i class="ti ti-login me-2"></i>登入';
+    } else {
+      el.textContent = '登入';
+    }
+    const currentUrl = window.location.pathname + window.location.search;
+    el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+    el.onclick = null;
+  });
+  document.querySelectorAll('.nav-guest-label').forEach(el => el.classList.remove('d-none'));
+  document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.add('d-none'));
+  document.querySelectorAll('.nav-user-menu-header').forEach(el => el.classList.add('d-none'));
+};
 
 async function doLogout() {
   await backendService.logout(); // 清除 token

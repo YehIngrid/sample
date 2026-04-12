@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>寫攻略 | TreasureHub 校園攻略站</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../treasurehubIcon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="../default/default.css">
+    <link rel="stylesheet" href="../default/default-font.css">
+    <link rel="stylesheet" href="school-editor.css">
+    <script type="module" src="../default/default.js"></script>
+</head>
+<body>
+
+<!-- ── Top bar ── -->
+<div class="se-topbar">
+    <div class="se-topbar-inner">
+        <a href="school.html" class="se-back-btn">
+            <i class="ti ti-arrow-left"></i>
+            <span class="d-none d-sm-inline">返回攻略站</span>
+        </a>
+        <div class="se-topbar-brand">
+            <i class="ti ti-book-2"></i>
+            <span>TreasureHub 校園攻略站</span>
+        </div>
+        <div class="se-topbar-actions">
+            <button class="school-theme-toggle" id="themeToggle" aria-label="切換主題">
+                <i class="ti ti-moon" id="themeIcon"></i>
+            </button>
+            <button class="se-draft-btn" id="saveDraftBtn">
+                <i class="ti ti-device-floppy"></i>
+                <span class="d-none d-sm-inline">儲存草稿</span>
+            </button>
+            <button class="se-publish-btn" id="publishBtn">
+                <i class="ti ti-send"></i> 發布攻略
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Editor main ── -->
+<div class="se-container">
+
+    <!-- Title -->
+    <div class="se-title-wrap">
+        <input
+            type="text"
+            class="se-title-input"
+            id="articleTitle"
+            placeholder="下一個標題…"
+            maxlength="80"
+        >
+        <span class="se-title-counter"><span id="titleLen">0</span>/80</span>
+    </div>
+
+    <!-- Meta row -->
+    <div class="se-meta-row">
+        <div class="se-meta-item">
+            <label class="se-label">分類</label>
+            <select class="se-select" id="articleCat">
+                <option value="">選擇分類</option>
+                <option value="study">📚 學習攻略</option>
+                <option value="life">🏠 生活指南</option>
+                <option value="career">💼 實習求職</option>
+                <option value="trade">🔒 二手交易</option>
+                <option value="newbie">🏫 新生必看</option>
+            </select>
+        </div>
+        <div class="se-meta-item se-meta-tags">
+            <label class="se-label">標籤 <span class="se-label-hint">（最多 5 個，按 Enter 新增）</span></label>
+            <div class="se-tag-input-wrap" id="tagInputWrap">
+                <div class="se-tags-display" id="tagsDisplay"></div>
+                <input
+                    type="text"
+                    class="se-tag-input"
+                    id="tagInput"
+                    placeholder="例如：選課、宿舍…"
+                    maxlength="20"
+                >
+            </div>
+        </div>
+    </div>
+
+    <!-- Quill toolbar + editor -->
+    <div class="se-editor-wrap">
+        <div id="quillToolbar">
+            <span class="ql-formats">
+                <select class="ql-header">
+                    <option selected></option>
+                    <option value="2">標題</option>
+                    <option value="3">小標</option>
+                </select>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-blockquote"></button>
+                <button class="ql-code-block"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-link"></button>
+                <button class="ql-image"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-clean"></button>
+            </span>
+        </div>
+        <div id="quillEditor"></div>
+    </div>
+
+    <!-- Word count -->
+    <div class="se-word-count">
+        <span id="wordCount">0</span> 字
+        <span class="se-sep">·</span>
+        預計閱讀 <span id="readTimeEst">0</span> 分鐘
+    </div>
+
+</div>
+
+<!-- ── Publish confirm modal ── -->
+<div class="modal fade" id="publishModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content se-publish-modal">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">確認發布攻略</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <p class="text-muted small mb-3">發布後將公開顯示在校園攻略站，讓所有同學看見你的分享。</p>
+                <div class="se-publish-preview" id="publishPreview"></div>
+            </div>
+            <div class="modal-footer border-0 pt-0 gap-2">
+                <button class="se-ghost-btn" data-bs-dismiss="modal">取消</button>
+                <button class="se-confirm-publish-btn" id="confirmPublishBtn">
+                    <i class="ti ti-send me-1"></i>確認發布
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<script src="school-theme.js"></script>
+<script src="school-editor.js"></script>
+</body>
+</html>

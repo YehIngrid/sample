@@ -1,6 +1,14 @@
 import BackendService from '../BackendService.js';
 import '../default/default.js';
 
+// ── Image skeleton: fade-in when photo loads ──
+document.addEventListener('load', e => {
+  const img = e.target;
+  if (img.tagName !== 'IMG') return;
+  const thumb = img.closest('.product-card .product-thumb');
+  if (thumb) thumb.classList.add('img-loaded');
+}, true);
+
 // ── Skeleton helper ──
 function commoditySkeletonHTML(n = 12) {
   return Array.from({length: n}, () => `

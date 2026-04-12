@@ -32,15 +32,32 @@ function _attach401Handler(instance) {
                 _handlingExpiry = true;
                 window.isLoggedIn = false;
                 const currentUrl = window.location.pathname + window.location.search;
+
+                // 使用者本 session 已拒絕重新登入 → 靜默更新 UI，不再詢問
+                if (sessionStorage.getItem('_loginExpiredDeclined') === '1') {
+                    _handlingExpiry = false;
+                    if (typeof window._showLoggedOutUI === 'function') window._showLoggedOutUI();
+                    return Promise.reject(err);
+                }
+
                 Swal.fire({
                     icon: 'warning',
                     title: '登入已過期',
-                    text: '請重新登入',
-                    showConfirmButton: false,
-                    timer: 2000
-                }).then(() => {
+                    text: '是否前往重新登入？',
+                    showCancelButton: true,
+                    confirmButtonText: '前往登入',
+                    cancelButtonText: '取消',
+                    allowOutsideClick: false
+                }).then(async (result) => {
                     _handlingExpiry = false;
-                    location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+                    if (result.isConfirmed) {
+                        sessionStorage.removeItem('_loginExpiredDeclined');
+                        location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+                    } else {
+                        sessionStorage.setItem('_loginExpiredDeclined', '1');
+                        try { await axios.post('https://thpr.hlc23.dev/api/account/logout', {}, { withCredentials: true }); } catch (_) {}
+                        if (typeof window._showLoggedOutUI === 'function') window._showLoggedOutUI();
+                    }
                 });
             }
             return Promise.reject(err);

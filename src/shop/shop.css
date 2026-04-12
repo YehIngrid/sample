@@ -1876,16 +1876,27 @@ tbody > tr:nth-of-type(even) {
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: #f8f9fa; /* 沒圖時的底色 */
+  background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
   border-top-left-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
+}
+.product-thumb.img-loaded {
+  animation: none;
+  background: #f8f9fa;
 }
 .product-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;       /* 填滿容器、維持比例，必要時裁切 */
-  object-position: center; /* 需要改裁切錨點就改這裡：center top 等 */
+  object-fit: cover;
+  object-position: center;
   display: block;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.product-thumb.img-loaded img {
+  opacity: 1;
 }
 .mgMobile {
   max-width: 1200px;
@@ -2258,10 +2269,25 @@ tbody > tr:nth-of-type(even) {
   border-top-left-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
 }
+/* skeleton shimmer on real hot-item cards while main image loads */
+.img-box:not(.skeleton) {
+  background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+}
+.img-box.img-loaded {
+  animation: none;
+  background: transparent;
+}
 .img-box .main {
   width: 100%;
   height: 100%;
-  object-fit: cover;  
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.img-box.img-loaded .main {
+  opacity: 1;
 }
   /* .hot-item{ 
     flex: none; 

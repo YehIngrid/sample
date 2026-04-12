@@ -5,6 +5,14 @@ import { requireLogin } from '../default/default.js';
 let backendService;
 let wpbackendService;
 
+// ── Image skeleton: fade-in when wish photo loads ──
+document.addEventListener('load', e => {
+  const img = e.target;
+  if (img.tagName !== 'IMG') return;
+  const media = img.closest('.wn-media');
+  if (media && img.classList.contains('wn-photo')) media.classList.add('img-loaded');
+}, true);
+
 // ── Constants ──
 const CARD_COLORS = ['#FFD966','#FF9F9F','#A8D8EA','#B5EAD7','#FFDAC1','#C7CEEA','#E2F0CB','#F7CAC9'];
 const PHOTO_CARD_COLORS = ['#C1E8DD','#BDD6E1'];
