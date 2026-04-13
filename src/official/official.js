@@ -1,8 +1,10 @@
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
+import wpBackendService from '../wpBackendService.js';
 
 const chatSvc = new ChatBackendService();
 const backendSvc = new BackendService();
+const wpSvc = new wpBackendService();
 
 // ── 登入驗證（以 cookie 為準，不依賴 localStorage）──────
 (async () => {
@@ -535,8 +537,32 @@ document.getElementById('refreshNewsBtn').addEventListener('click', loadNewsAdmi
 // ════════════════════════════════════════════════════
 //  數據分析
 // ════════════════════════════════════════════════════
+let _categoryChart = null;
+
+const CATEGORY_MAP = [
+  { key: 'book',    label: '課本講義', color: '#1a73e8' },
+  { key: 'life',    label: '生活用品', color: '#28a745' },
+  { key: 'special', label: '限定商品', color: '#f57c00' },
+  { key: 'reuse',   label: '二手回收', color: '#7b1fa2' },
+  { key: 'storage', label: '宿舍收納', color: '#d93025' },
+  { key: 'other',   label: '其他',     color: '#888888' },
+];
+
 async function loadAnalytics() {
-  // ① 上架商品總數
+  document.getElementById('stat-news').textContent = newsData.length;
+
+  await Promise.allSettled([
+    _loadScaleStats(),
+    _loadWishpoolInsights(),
+    _loadCategoryChart(),
+    _loadNewItems(),
+  ]);
+
+  _renderSearchKeywords();
+  _updatePitchSummary();
+}
+
+async function _loadScaleStats() {
   try {
     const res = await backendSvc.getCommodityList('all', { page: 1, limit: 1 });
     const total = res?.total ?? res?.data?.total ?? res?.pagination?.total ?? '–';
@@ -545,7 +571,6 @@ async function loadAnalytics() {
     document.getElementById('stat-products').textContent = '–';
   }
 
-  // ② 熱門商品數
   try {
     const res = await backendSvc.getCommodityList('hot', { page: 1, limit: 1 });
     const total = res?.total ?? res?.data?.total ?? res?.pagination?.total ?? '–';
@@ -553,27 +578,172 @@ async function loadAnalytics() {
   } catch {
     document.getElementById('stat-hot').textContent = '–';
   }
+}
 
-  // ③ 最新資訊文章數（已由 loadNewsAdmin 填入）
-  document.getElementById('stat-news').textContent = newsData.length;
+async function _loadCategoryChart() {
+  const loader = document.getElementById('categoryChartLoader');
+  const canvas = document.getElementById('categoryChart');
+  if (!canvas) return;
 
-  // ④ 最新上架商品列表
+  try {
+    const counts = await Promise.all(
+      CATEGORY_MAP.map(c =>
+        backendSvc.getCommodityList(c.key, { page: 1, limit: 1 })
+          .then(res => res?.total ?? res?.data?.total ?? res?.pagination?.total ?? 0)
+          .catch(() => 0)
+      )
+    );
+
+    if (loader) loader.style.display = 'none';
+    canvas.style.display = 'block';
+
+    if (_categoryChart) _categoryChart.destroy();
+
+    _categoryChart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: CATEGORY_MAP.map(c => c.label),
+        datasets: [{
+          label: '商品數量',
+          data: counts,
+          backgroundColor: CATEGORY_MAP.map(c => c.color + 'bb'),
+          borderColor: CATEGORY_MAP.map(c => c.color),
+          borderWidth: 1.5,
+          borderRadius: 6,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} 件` } },
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f0f4fa' } },
+          x: { grid: { display: false } },
+        },
+      },
+    });
+  } catch {
+    if (loader) loader.textContent = '圖表載入失敗';
+  }
+}
+
+async function _loadWishpoolInsights() {
+  const el = document.getElementById('wishpoolInsights');
+  const statEl = document.getElementById('stat-wishes');
+  if (!el) return;
+  try {
+    const res = await wpSvc.listWishes(1);
+    const items = res?.items ?? res?.data?.items ?? [];
+    const total = res?.total ?? res?.data?.total;
+
+    if (statEl) statEl.textContent = total != null ? total : items.length;
+
+    if (!items.length) {
+      el.innerHTML = '<p class="text-muted text-center py-3 small">尚無心願資料</p>';
+      return;
+    }
+
+    el.innerHTML = items.slice(0, 8).map(wish => {
+      const name  = wish.itemName ?? wish.name ?? '未命名';
+      const desc  = wish.description ?? '';
+      const price = wish.maxPrice ? `最高 NT$\u00a0${Number(wish.maxPrice).toLocaleString()}` : '';
+      const stars = Number(wish.priority) > 0
+        ? `<span class="wish-stars">${'★'.repeat(Math.min(5, Number(wish.priority)))}</span>` : '';
+      return `
+        <div class="analytics-item-row">
+          ${stars}
+          <span class="analytics-item-name" title="${desc || name}">${name}</span>
+          ${price ? `<span class="analytics-item-price">${price}</span>` : ''}
+        </div>`;
+    }).join('');
+  } catch {
+    el.innerHTML = '<p class="text-muted text-center py-3 small">無法載入許願池資料</p>';
+    if (statEl) statEl.textContent = '–';
+  }
+}
+
+function _renderSearchKeywords() {
+  const wrap = document.getElementById('searchKeywordsWrap');
+  if (!wrap) return;
+  const raw = localStorage.getItem('th_search_log');
+  if (!raw) {
+    wrap.innerHTML = '<p class="text-muted small">尚無搜尋紀錄。在搜尋頁加入追蹤後將自動累積。</p>';
+    return;
+  }
+  try {
+    const log = JSON.parse(raw);
+    const sorted = Object.entries(log).sort((a, b) => b[1] - a[1]).slice(0, 20);
+    if (!sorted.length) {
+      wrap.innerHTML = '<p class="text-muted small">尚無搜尋紀錄。</p>';
+      return;
+    }
+    const maxCnt = sorted[0][1] || 1;
+    wrap.innerHTML = '<div class="keyword-tags">' +
+      sorted.map(([kw, cnt]) => {
+        const size = (0.78 + (cnt / maxCnt) * 0.42).toFixed(2);
+        return `<span class="kw-tag" style="font-size:${size}rem">${kw}<sup class="kw-cnt">${cnt}</sup></span>`;
+      }).join('') +
+      '</div>';
+  } catch {
+    wrap.innerHTML = '<p class="text-muted small">無法讀取搜尋紀錄。</p>';
+  }
+}
+
+async function _loadNewItems() {
+  const el = document.getElementById('analyticsNewItems');
+  if (!el) return;
   try {
     const res = await backendSvc.getCommodityList('all', { page: 1, limit: 8, sort: 'new' });
     const items = res?.data?.items ?? res?.data ?? res?.items ?? [];
-    const el = document.getElementById('analyticsNewItems');
     if (!items.length) { el.innerHTML = '<p class="text-muted text-center py-3 small">無資料</p>'; return; }
     el.innerHTML = items.map(item => {
-      const img = Array.isArray(item.images) ? item.images[0] : (item.image || '');
-      const price = item.price != null ? `NT$ ${Number(item.price).toLocaleString()}` : '–';
+      const img   = Array.isArray(item.images) ? item.images[0] : (item.image || '');
+      const price = item.price != null ? `NT$\u00a0${Number(item.price).toLocaleString()}` : '–';
       return `
         <div class="analytics-item-row">
-          ${img ? `<img class="analytics-item-img" src="${img}" alt="${item.name}" onerror="this.style.display='none'">` : '<div class="analytics-item-img"></div>'}
+          ${img ? `<img class="analytics-item-img" src="${img}" alt="" onerror="this.style.display='none'">` : '<div class="analytics-item-img"></div>'}
           <span class="analytics-item-name">${item.name ?? '未知商品'}</span>
           <span class="analytics-item-price">${price}</span>
         </div>`;
     }).join('');
   } catch {
-    document.getElementById('analyticsNewItems').innerHTML = '<p class="text-muted text-center py-3 small">無法載入商品資料</p>';
+    el.innerHTML = '<p class="text-muted text-center py-3 small">無法載入商品資料</p>';
   }
 }
+
+function _updatePitchSummary() {
+  const el = document.getElementById('pitchSummary');
+  if (!el) return;
+  const products = document.getElementById('stat-products')?.textContent || '–';
+  const hot      = document.getElementById('stat-hot')?.textContent || '–';
+  const wishes   = document.getElementById('stat-wishes')?.textContent || '–';
+
+  el.innerHTML = `
+    <div class="pitch-grid">
+      <div class="pitch-item">
+        <div class="pitch-num">${products}</div>
+        <div class="pitch-label">件商品在平台流通</div>
+      </div>
+      <div class="pitch-item">
+        <div class="pitch-num">${hot}</div>
+        <div class="pitch-label">件熱門競標商品</div>
+      </div>
+      <div class="pitch-item">
+        <div class="pitch-num">${wishes}</div>
+        <div class="pitch-label">則未被滿足的學生需求</div>
+      </div>
+      <div class="pitch-item">
+        <div class="pitch-num">中興大學</div>
+        <div class="pitch-label">精準學生受眾群</div>
+      </div>
+    </div>
+    <p class="pitch-note mt-3 mb-0">
+      <i class="fa fa-info-circle me-1"></i>
+      以上為可立即對外提供的平台數據。DAU/MAU、用戶畫像、全體搜尋熱詞等進階指標需後端依上方規格補充 API 後啟用。
+    </p>`;
+}
+
+document.getElementById('refreshAnalyticsBtn')?.addEventListener('click', loadAnalytics);

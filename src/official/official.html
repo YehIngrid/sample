@@ -227,57 +227,194 @@
 
       <!-- Panel: 數據分析 -->
       <section id="panel-analytics" class="panel">
-        <h2 class="panel-title"><i class="fa fa-bar-chart me-2"></i>數據分析</h2>
-        <p class="text-muted mb-4" style="font-size:0.88rem;">數據每次開啟頁面時自動更新。標示 <span class="badge-na">–</span> 表示後端尚未提供該統計 API。</p>
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h2 class="panel-title mb-0"><i class="fa fa-bar-chart me-2"></i>數據分析</h2>
+          <button class="btn btn-sm btn-outline-primary" id="refreshAnalyticsBtn">
+            <i class="fa fa-refresh me-1"></i>重新整理
+          </button>
+        </div>
+        <p class="text-muted mb-4" style="font-size:0.82rem;">
+          <span class="badge-live">即時</span> 資料來自平台 API。
+          <span class="badge-na">需後端</span> 需新增統計 API。
+          <span class="badge-local">本機</span> 資料來自此瀏覽器。
+        </p>
 
-        <div class="stats-grid" id="statsGrid">
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-shopping-bag" style="color:#1a73e8;"></i></div>
-            <div class="stat-body">
-              <div class="stat-label">上架商品總數</div>
-              <div class="stat-value" id="stat-products"><span class="spinner-border spinner-border-sm"></span></div>
-            </div>
+        <!-- 流量關鍵指標（需後端） -->
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-tachometer me-1"></i> 流量關鍵指標
+            <span class="badge-na ms-2">需後端 API</span>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#e6f4ea;"><i class="fa fa-users" style="color:#28a745;"></i></div>
-            <div class="stat-body">
-              <div class="stat-label">註冊用戶數</div>
-              <div class="stat-value" id="stat-users">–</div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#dbeafe;"><i class="fa fa-user-plus" style="color:#2563eb;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">日活躍人數 (DAU)</div>
+                <div class="stat-value" id="stat-dau">–</div>
+              </div>
             </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#fff3e0;"><i class="fa fa-file-text-o" style="color:#f57c00;"></i></div>
-            <div class="stat-body">
-              <div class="stat-label">總訂單數</div>
-              <div class="stat-value" id="stat-orders">–</div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#dcfce7;"><i class="fa fa-calendar" style="color:#16a34a;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">月活躍人數 (MAU)</div>
+                <div class="stat-value" id="stat-mau">–</div>
+              </div>
             </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#fce8e6;"><i class="fa fa-fire" style="color:#d93025;"></i></div>
-            <div class="stat-body">
-              <div class="stat-label">熱門商品數</div>
-              <div class="stat-value" id="stat-hot"><span class="spinner-border spinner-border-sm"></span></div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fff7ed;"><i class="fa fa-clock-o" style="color:#ea580c;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">平均停留時間</div>
+                <div class="stat-value stat-value-sm" id="stat-session">–</div>
+              </div>
             </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#f3e8fd;"><i class="fa fa-star" style="color:#7b1fa2;"></i></div>
-            <div class="stat-body">
-              <div class="stat-label">許願池心願數</div>
-              <div class="stat-value" id="stat-wishes">–</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#e8f5e9;"><i class="fa fa-check-circle-o" style="color:#388e3c;"></i></div>
-            <div class="stat-body">
-              <div class="stat-label">最新資訊文章數</div>
-              <div class="stat-value" id="stat-news">–</div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fef2f2;"><i class="fa fa-repeat" style="color:#dc2626;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">次日留存率</div>
+                <div class="stat-value" id="stat-retention">–</div>
+              </div>
             </div>
           </div>
         </div>
 
+        <!-- 平台規模 -->
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-cubes me-1"></i> 平台規模
+            <span class="badge-live ms-2">即時</span>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-shopping-bag" style="color:#1a73e8;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">上架商品總數</div>
+                <div class="stat-value" id="stat-products"><span class="spinner-border spinner-border-sm"></span></div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fce8e6;"><i class="fa fa-fire" style="color:#d93025;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">熱門競標商品</div>
+                <div class="stat-value" id="stat-hot"><span class="spinner-border spinner-border-sm"></span></div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#f3e8fd;"><i class="fa fa-star" style="color:#7b1fa2;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">許願池心願數</div>
+                <div class="stat-value" id="stat-wishes"><span class="spinner-border spinner-border-sm"></span></div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e6f4ea;"><i class="fa fa-users" style="color:#28a745;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">註冊用戶數 <span class="badge-na">需後端</span></div>
+                <div class="stat-value" id="stat-users">–</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fff3e0;"><i class="fa fa-file-text-o" style="color:#f57c00;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">總訂單數 <span class="badge-na">需後端</span></div>
+                <div class="stat-value" id="stat-orders">–</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e8f5e9;"><i class="fa fa-check-circle-o" style="color:#388e3c;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">最新資訊文章數</div>
+                <div class="stat-value" id="stat-news">–</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 分類商品數量圖表 -->
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-pie-chart me-1"></i> 分類商品數量分佈
+            <span class="badge-live ms-2">即時</span>
+          </div>
+          <div style="position:relative; height:220px;">
+            <div class="text-muted text-center py-4" id="categoryChartLoader">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+            </div>
+            <canvas id="categoryChart" style="display:none;"></canvas>
+          </div>
+        </div>
+
+        <!-- 許願池未滿足需求 -->
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-lightbulb-o me-1"></i> 許願池最新心願（未被滿足的需求）
+            <span class="badge-live ms-2">即時</span>
+          </div>
+          <div id="wishpoolInsights" class="analytics-item-list">
+            <div class="text-muted text-center py-3 small">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+            </div>
+          </div>
+        </div>
+
+        <!-- 熱門搜尋關鍵字 -->
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-search me-1"></i> 熱門搜尋關鍵字
+            <span class="badge-local ms-2">本機資料</span>
+          </div>
+          <p class="text-muted mb-2" style="font-size:0.8rem;">
+            目前顯示此瀏覽器的搜尋紀錄。全體用戶統計需後端新增 <code>POST /api/analytics/search</code> 並在搜尋頁呼叫。
+          </p>
+          <div id="searchKeywordsWrap"></div>
+        </div>
+
+        <!-- 用戶畫像（需後端） -->
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-id-card-o me-1"></i> 用戶畫像
+            <span class="badge-na ms-2">需後端 API</span>
+          </div>
+          <div class="demographics-placeholder">
+            <div class="demo-row">
+              <i class="fa fa-graduation-cap demo-icon"></i>
+              <div>
+                <div class="demo-title">系所 / 年級分佈</div>
+                <div class="demo-desc">後端需提供 <code>GET /api/admin/analytics/user-demographics</code>，回傳各系所與年級的用戶比例，可繪製圓餅圖。招商時可精準對接目標補習班（大四→公職班、法律/會計系→證照班）。</div>
+              </div>
+            </div>
+            <div class="demo-row">
+              <i class="fa fa-clock-o demo-icon"></i>
+              <div>
+                <div class="demo-title">熱門上線時段（24hr）</div>
+                <div class="demo-desc">後端需提供 <code>GET /api/admin/analytics/peak-hours</code>，回傳各小時的 session 數。可繪製折線圖，告知廣告主最佳限時廣告投放時段（例：深夜 23:00–01:00）。</div>
+              </div>
+            </div>
+            <div class="demo-row">
+              <i class="fa fa-line-chart demo-icon"></i>
+              <div>
+                <div class="demo-title">DAU / MAU 趨勢（近 30 天）</div>
+                <div class="demo-desc">後端需提供 <code>GET /api/admin/analytics/dau-mau?days=30</code>，回傳每日活躍用戶數。這是招商的基本門檻數據，向廠商證明平台「有人氣、活躍中」。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 招商數據摘要 -->
+        <div class="analytics-block pitch-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-handshake-o me-1"></i> 招商數據摘要
+          </div>
+          <div id="pitchSummary">
+            <span class="spinner-border spinner-border-sm"></span>
+          </div>
+        </div>
+
         <!-- 最新上架商品 -->
-        <div class="analytics-section mt-4">
-          <div class="analytics-section-title">最新上架商品</div>
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-tag me-1"></i> 最新上架商品
+            <span class="badge-live ms-2">即時</span>
+          </div>
           <div id="analyticsNewItems" class="analytics-item-list">
             <div class="text-muted text-center py-3 small">
               <span class="spinner-border spinner-border-sm me-1"></span>載入中...
@@ -296,6 +433,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <script type="module" src="official.js"></script>
 </body>
 </html>
