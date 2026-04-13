@@ -1,3 +1,16 @@
+// ── Navbar scroll cover effect ──
+(function () {
+  const nav = document.querySelector('.header_new');
+  const hero = document.querySelector('.school-hero');
+  if (!nav || !hero) return;
+  function onScroll() {
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    nav.classList.toggle('school-nav-scrolled', heroBottom <= 0);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
 // ── State ──
 let currentCat = 'all';
 let currentSort = 'latest';
@@ -141,10 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAuthors();
   renderStats();
 
-  // Hero category pills
-  document.querySelectorAll('.school-hero-tag').forEach(btn => {
+  // Category tabs
+  document.querySelectorAll('.school-cat-tab').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.school-hero-tag').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.school-cat-tab').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentCat = btn.dataset.cat;
       renderFeatured();
@@ -181,6 +194,22 @@ document.addEventListener('DOMContentLoaded', () => {
     bsModal?.hide();
     window.location.href = 'school-editor.html';
   });
+
+  // Search toggle
+  const searchToggle = document.getElementById('searchToggle');
+  const searchWrap = document.getElementById('schoolSearchWrap');
+  const searchInput = document.getElementById('schoolSearchInput');
+  if (searchToggle && searchWrap) {
+    searchToggle.addEventListener('click', () => {
+      const isOpen = searchWrap.classList.toggle('open');
+      if (isOpen && searchInput) searchInput.focus();
+    });
+    document.addEventListener('click', (e) => {
+      if (!searchWrap.contains(e.target) && !searchToggle.contains(e.target)) {
+        searchWrap.classList.remove('open');
+      }
+    });
+  }
 
   // FinisherHeader on modal open
   if (modalEl) {

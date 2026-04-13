@@ -19,7 +19,7 @@
 <!-- ── Navbar ── -->
 <div class="header">
     <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgba(0,0,0,0.15); display: block !important;">
-        <div class="container-fluid d-flex align-items-center">
+        <div class="container-fluid d-flex align-items-center" style="padding-bottom: 8px;">
             <button class="navbar-toggler d-lg-none me-2 order-0" type="button"
                     data-bs-toggle="collapse" data-bs-target="#postNavbarNav"
                     aria-controls="postNavbarNav" aria-expanded="false">
@@ -71,10 +71,12 @@
         <!-- ── Article ── -->
         <article class="sp-article" id="spArticle">
 
-            <!-- Back -->
-            <a href="school.html" class="sp-back">
-                <i class="ti ti-arrow-left"></i> 返回攻略站
-            </a>
+            <!-- Back + TOC btn -->
+            <div class="sp-topbar">
+                <a href="school.html" class="sp-back">
+                    <i class="ti ti-arrow-left"></i> 返回攻略站
+                </a>
+            </div>
 
             <!-- Header -->
             <div class="sp-header">
@@ -86,88 +88,96 @@
             <!-- Body -->
             <div class="sp-body" id="spBody"></div>
 
-            <!-- Footer -->
+            <!-- Footer tags -->
             <div class="sp-footer">
                 <div class="sp-tags" id="spTags"></div>
-                <div class="sp-actions">
-                    <button class="sp-like-btn" id="spLikeBtn">
-                        <i class="ti ti-heart"></i>
-                        <span id="spLikeCount"></span>
-                    </button>
-                    <button class="sp-share-btn" id="spShareBtn">
-                        <i class="ti ti-share"></i> 分享
-                    </button>
+            </div>
+
+            <!-- ── 留言區 ── -->
+            <section class="sp-comments mt-4" id="spComments">
+                <h3 class="sp-comments-title" id="spCommentsTitle">
+                    <i class="ti ti-message-circle me-2"></i>留言 <span id="spCommentCount" class="sp-comment-count">0</span>
+                    <i class="ti ti-chevron-down sp-comments-toggle"></i>
+                </h3>
+                <div class="sp-comments-body" id="spCommentsBody">
+                    <div class="sp-comment-form">
+                        <div class="sp-comment-avatar sp-comment-avatar-me">我</div>
+                        <div class="sp-comment-input-wrap">
+                            <textarea class="sp-comment-input" id="spCommentInput" rows="1" placeholder="留下你的想法..."></textarea>
+                            <div class="sp-comment-form-actions" id="spCommentFormActions" style="display:none;">
+                                <button class="sp-comment-cancel" id="spCommentCancel">取消</button>
+                                <button class="sp-comment-submit" id="spCommentSubmit">送出</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sp-comment-list" id="spCommentList"></div>
                 </div>
+            </section>
+
+            <!-- 上一篇 / 下一篇 -->
+            <nav class="sp-pagination" id="spPagination" aria-label="文章導覽"></nav>
+
+            <!-- 更多攻略 + 創作 -->
+            <div class="sp-bottom-row d-flex gap-3">
+
+                <!-- Related articles -->
+                <div class="school-sidebar-card flex-grow-1">
+                    <div class="school-sidebar-header">
+                        <i class="ti ti-layout-list"></i> 更多攻略
+                    </div>
+                    <div id="spRelated"></div>
+                </div>
+
+                <!-- Write CTA -->
+                <div class="school-create-card sp-create-inline">
+                    <div class="school-create-card-inner">
+                        <img src="../svg/newarticle.svg" alt="" class="school-create-icon" aria-hidden="true">
+                        <h3 class="school-create-title">分享你的故事</h3>
+                        <p class="school-create-desc">把你的攻略分享給更多同學</p>
+                        <a href="school-editor.html" class="school-create-cta-btn w-100">
+                            <i class="ti ti-pencil-plus me-1"></i>寫一篇攻略
+                        </a>
+                    </div>
+                </div>
+
             </div>
 
         </article>
 
-        <!-- ── Sidebar ── -->
-        <aside class="sp-sidebar">
-
-            <!-- Related articles -->
-            <div class="school-sidebar-card mb-4">
-                <div class="school-sidebar-header">
-                    <i class="ti ti-layout-list"></i> 更多攻略
-                </div>
-                <div id="spRelated"></div>
-            </div>
-
-            <!-- Write CTA -->
-            <div class="school-create-card">
-                <div class="school-create-card-inner">
-                    <img src="../svg/newarticle.svg" alt="" class="school-create-icon" aria-hidden="true">
-                    <h3 class="school-create-title">分享你的故事</h3>
-                    <p class="school-create-desc">把你的攻略分享給更多同學</p>
-                    <a href="school-editor.html" class="school-create-cta-btn w-100">
-                        <i class="ti ti-pencil-plus me-1"></i>寫一篇攻略
-                    </a>
-                </div>
-            </div>
-
-        </aside>
     </div>
 </div>
 
+<!-- ── 藥丸型 Action Bar ── -->
+<div class="sp-action-bar" id="spActionBar">
+    <button class="sp-action-btn" id="spLikeBtn">
+        <i class="ti ti-heart"></i>
+        <span id="spLikeCount">0</span>
+    </button>
+    <div class="sp-action-divider"></div>
+    <button class="sp-action-btn" id="spCommentScrollBtn">
+        <i class="ti ti-message-circle"></i>
+        <span id="spActionCommentCount">0</span>
+    </button>
+    <div class="sp-action-divider"></div>
+    <button class="sp-action-btn" id="spShareBtn">
+        <i class="ti ti-share"></i>
+    </button>
+</div>
+
+<!-- ── TOC Panel ── -->
+<!-- fab removed -->
+<div class="sp-toc-panel" id="spTocPanel">
+    <div class="sp-toc-panel-header" id="spTocPanelClose">
+        <span class="sp-toc-panel-title"><i class="ti ti-list me-1"></i>目錄</span>
+        <i class="ti ti-chevron-up sp-toc-panel-arrow"></i>
+    </div>
+    <ul class="sp-toc-list" id="spTocList"></ul>
+</div>
+
 <!-- ── Footer ── -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-col footer-brand">
-      <a href="../newhome/newhome.html"><img src="../svg/TREASUREHUBwhite.svg" alt="拾貨寶庫" loading="lazy"></a>
-      <p class="footer-tagline">專為大學生打造的校園二手拍賣市集</p>
-    </div>
-    <div class="footer-links-row">
-      <div class="footer-col">
-        <h4 class="footer-heading">快速連結</h4>
-        <ul class="footer-links">
-          <li><a href="../shop/shop.html">購物首頁</a></li>
-          <li><a href="../commodity/commodity.html">購物商場</a></li>
-          <li><a href="../shop/shop.html?page=seller">賣家專區</a></li>
-          <li><a href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4 class="footer-heading">幫助中心</h4>
-        <ul class="footer-links">
-          <li><a href="../questions/questions.html">常見問題</a></li>
-          <li><a href="../communication/communication.html">客服諮詢</a></li>
-          <li><a href="../policy/policy.html">隱私政策</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-col">
-      <h4 class="footer-heading">聯絡我們</h4>
-      <p class="footer-email"><a href="mailto:treasurehub@gmail.com">treasurehub@gmail.com</a></p>
-      <div class="footer-social">
-        <a href="https://www.instagram.com" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>Copyright &copy; 2025 拾貨寶庫｜All Rights Reserved.</span>
-  </div>
-</footer>
+<div class="school-copyright">
+  <span>Copyright &copy; 2025 拾貨寶庫｜All Rights Reserved.</span>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="school-theme.js"></script>
