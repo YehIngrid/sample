@@ -282,7 +282,7 @@ html, body {
     padding: 10px 14px;
     border-radius: 18px;
     display: inline-block;
-    max-width: 180px;
+    max-width: 100%;
     text-align: left;
     word-wrap: break-word;
     -webkit-touch-callout: none; /* iOS 長按不彈出系統選單 */
@@ -310,6 +310,13 @@ html, body {
 
 #messageInput {
     flex: 1;
+    resize: none;
+    overflow-y: hidden;
+    min-height: 38px;
+    max-height: 120px;
+    line-height: 1.45;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 
 .typing-indicator {
@@ -356,6 +363,10 @@ html, body {
     border: none;
     padding: 0;
     background: transparent;
+}
+.sendothericon i {
+    color: var(--primary-color, #84a2d4);
+    transition: color 0.2s;
 }
 /* ====== 手機版：列表 → 聊天 滑動佈局 ====== */
 @media (max-width: 767px) {
@@ -1059,6 +1070,57 @@ html, body {
     color: #fff;
 }
 
+/* ── 面交輔助面板（時間 / 地點選擇器）── */
+.chat-picker-panel {
+    background: #fff;
+    border: 1px solid #e0e8f4;
+    border-radius: 12px;
+    padding: 10px 14px 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+}
+.picker-label {
+    font-size: 0.72rem;
+    color: #999;
+    margin-bottom: 5px;
+    margin-top: 2px;
+    letter-spacing: 0.03em;
+}
+.picker-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.picker-chip {
+    background: none;
+    border: 1px solid var(--primary-color, #84a2d4);
+    color: var(--primary-color, #84a2d4);
+    border-radius: 16px;
+    padding: 3px 12px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+}
+.picker-chip.selected,
+.picker-chip:hover { background: var(--primary-color, #84a2d4); color: #fff; }
+.picker-confirm-btn {
+    background: var(--primary-color, #004b97);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 18px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.picker-confirm-btn:hover { background: rgb(36,182,133); }
+[data-theme-dark] .chat-picker-panel { background: #1e1e2e; border-color: #45475a; }
+[data-theme-dark] .picker-chip { border-color: var(--primary-color); color: var(--primary-color); }
+[data-theme-dark] .picker-chip.selected,
+[data-theme-dark] .picker-chip:hover { background: var(--primary-color); color: #fff; }
+
 /* ── 字數提示 ── */
 .msg-char-count {
     text-align: right;
@@ -1067,3 +1129,109 @@ html, body {
     margin-top: 3px;
 }
 .msg-char-count.near-limit { color: #e65100; font-weight: 600; }
+
+/* ── 操作引導（Onboarding）── */
+.chat-onboarding {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    pointer-events: none;
+}
+.onboarding-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.48);
+    pointer-events: all;
+}
+.onboarding-tooltip {
+    position: fixed;
+    width: 230px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    pointer-events: all;
+    z-index: 9995;
+}
+.onboarding-step-label {
+    font-size: 0.68rem;
+    color: #bbb;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+}
+.onboarding-icon {
+    font-size: 1.6rem;
+    color: var(--primary-color, #004b97);
+    margin-bottom: 6px;
+    line-height: 1;
+}
+.onboarding-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #222;
+}
+.onboarding-desc {
+    font-size: 0.78rem;
+    color: #666;
+    line-height: 1.55;
+    margin-bottom: 14px;
+}
+.onboarding-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.onboarding-skip {
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0;
+}
+.onboarding-skip:hover { color: #888; }
+.onboarding-next {
+    background: var(--primary-color, #004b97);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.onboarding-next:hover { background: rgb(36,182,133); }
+/* 目標元素高亮 */
+.onboarding-highlight {
+    position: relative !important;
+    z-index: 9992 !important;
+    border-radius: 8px;
+    animation: ob-pulse 1.4s ease-in-out infinite;
+}
+@keyframes ob-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px var(--primary-color, #84a2d4), 0 0 0 7px rgba(132,162,212,0.25); }
+    50%       { box-shadow: 0 0 0 3px var(--primary-color, #84a2d4), 0 0 0 12px rgba(132,162,212,0); }
+}
+/* 工具提示箭頭 */
+.onboarding-tooltip::after {
+    content: '';
+    position: absolute;
+    left: var(--ob-arrow-left, 24px);
+    width: 0; height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+}
+.onboarding-tooltip.arrow-down::after {
+    bottom: -8px;
+    border-top: 8px solid #fff;
+}
+.onboarding-tooltip.arrow-up::after {
+    top: -8px;
+    border-bottom: 8px solid #fff;
+}
+[data-theme-dark] .onboarding-tooltip { background: #1e1e2e; }
+[data-theme-dark] .onboarding-title { color: #cdd6f4; }
+[data-theme-dark] .onboarding-desc { color: #9399b2; }
+[data-theme-dark] .onboarding-tooltip.arrow-down::after { border-top-color: #1e1e2e; }
+[data-theme-dark] .onboarding-tooltip.arrow-up::after { border-bottom-color: #1e1e2e; }

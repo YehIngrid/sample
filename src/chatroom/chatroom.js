@@ -216,6 +216,10 @@ class ChatRoomList {
         this.input.placeholder = '官方頻道不支援傳送訊息';
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = 'none';
+        document.getElementById('time-picker-btn')?.style.setProperty('display', 'none');
+        document.getElementById('location-picker-btn')?.style.setProperty('display', 'none');
+        document.getElementById('timePicker').style.display = 'none';
+        document.getElementById('locationPicker').style.display = 'none';
         this.input.style.backgroundColor = '#f5f5f5';
 
         const container = document.getElementById('messagesContainer');
@@ -408,7 +412,7 @@ class ChatRoomList {
                            target="_blank" class="image-link">
                             <img src="${imageUrl}" alt="Image" loading="lazy">
                         </a>
-                        <div class="combined-caption">${this.escapeHtml(data.message || '')}</div>
+                        <div class="combined-caption">${this.escapeHtml(data.message || '').replace(/\n/g, '<br>')}</div>
                     </div>
                     ${isSelf ? '' : `<small class="text-muted ms-2 msg-time" style="font-size:0.75rem;">${time}</small>`}
                 </div>
@@ -608,6 +612,20 @@ class ChatRoomList {
             this.sendMessage();
         });
 
+        // Enter 送出，Shift+Enter 換行；IME 選字時不觸發送出
+        this.input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+                e.preventDefault();
+                this.sendMessage();
+            }
+        });
+
+        // 隨內容自動撐高
+        this.input.addEventListener('input', () => {
+            this.input.style.height = 'auto';
+            this.input.style.height = Math.min(this.input.scrollHeight, 120) + 'px';
+        });
+
         let typingTimer;
         this.input.addEventListener('input', () => {
             clearTimeout(typingTimer);
@@ -651,7 +669,81 @@ class ChatRoomList {
             if (!chip) return;
             this.input.value = chip.dataset.text;
             this.input.focus();
-            this.input.dispatchEvent(new Event('input')); // 觸發字數更新
+            this.input.dispatchEvent(new Event('input'));
+        });
+
+        // ── 時間 / 地點選擇器 ──
+        const timePicker = document.getElementById('timePicker');
+        const locPicker  = document.getElementById('locationPicker');
+
+        document.getElementById('time-picker-btn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const open = timePicker.style.display !== 'none';
+            locPicker.style.display = 'none';
+            timePicker.style.display = open ? 'none' : 'block';
+        });
+        document.getElementById('location-picker-btn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const open = locPicker.style.display !== 'none';
+            timePicker.style.display = 'none';
+            locPicker.style.display = open ? 'none' : 'block';
+        });
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#timePicker') && !e.target.closest('#time-picker-btn'))
+                timePicker.style.display = 'none';
+            if (!e.target.closest('#locationPicker') && !e.target.closest('#location-picker-btn'))
+                locPicker.style.display = 'none';
+        });
+
+        // 時間選擇 chips
+        let _selDay = '', _selSlot = '';
+        document.getElementById('timePickerDays')?.addEventListener('click', (e) => {
+            const chip = e.target.closest('.picker-chip');
+            if (!chip) return;
+            document.querySelectorAll('#timePickerDays .picker-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            _selDay = chip.dataset.val;
+        });
+        document.getElementById('timePickerSlots')?.addEventListener('click', (e) => {
+            const chip = e.target.closest('.picker-chip');
+            if (!chip) return;
+            document.querySelectorAll('#timePickerSlots .picker-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            _selSlot = chip.dataset.val;
+        });
+        document.getElementById('timePickerConfirm')?.addEventListener('click', () => {
+            if (!_selDay && !_selSlot) return;
+            if (this.input.disabled) return;
+            const text = `面交時間：${_selDay}${_selSlot}`;
+            const existing = this.input.value.trim();
+            this.input.value = existing ? `${existing} ${text}` : text;
+            this.input.dispatchEvent(new Event('input'));
+            timePicker.style.display = 'none';
+            this.input.focus();
+            _selDay = ''; _selSlot = '';
+            document.querySelectorAll('#timePickerDays .picker-chip, #timePickerSlots .picker-chip').forEach(c => c.classList.remove('selected'));
+        });
+
+        // 地點選擇 chips
+        let _selLoc = '';
+        document.getElementById('locationPickerChips')?.addEventListener('click', (e) => {
+            const chip = e.target.closest('.picker-chip');
+            if (!chip) return;
+            document.querySelectorAll('#locationPickerChips .picker-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            _selLoc = chip.dataset.val;
+        });
+        document.getElementById('locationPickerConfirm')?.addEventListener('click', () => {
+            if (!_selLoc) return;
+            if (this.input.disabled) return;
+            const text = `面交地點：${_selLoc}`;
+            const existing = this.input.value.trim();
+            this.input.value = existing ? `${existing} ${text}` : text;
+            this.input.dispatchEvent(new Event('input'));
+            locPicker.style.display = 'none';
+            this.input.focus();
+            _selLoc = '';
+            document.querySelectorAll('#locationPickerChips .picker-chip').forEach(c => c.classList.remove('selected'));
         });
 
         // 自訂右鍵/長按選單
@@ -716,6 +808,87 @@ class ChatRoomList {
         if (localStorage.getItem('chatSound') === '0') return;
         const audio = new Audio('../sound/mes.mp3');
         audio.play().catch(() => {});
+    }
+
+    startOnboarding() {
+        const steps = [
+            {
+                targets: ['send-image-btn'],
+                icon: 'bi-image',
+                title: '傳送照片',
+                desc: '點這裡可以傳送商品圖片，讓對方更清楚了解你要的東西。',
+                arrowDir: 'down',
+            },
+            {
+                targets: ['time-picker-btn', 'location-picker-btn'],
+                icon: 'bi-clock',
+                title: '快速填入面交時間 / 地點',
+                desc: '點 🕐 選時間、點 📍 選地點，一鍵插入訊息，省去來回確認的麻煩。',
+                arrowDir: 'down',
+            },
+            {
+                targets: ['chatMoreBtn'],
+                icon: 'bi-palette2',
+                title: '自訂主題顏色',
+                desc: '點右上角三點選單 → 訊息主題，選你喜歡的泡泡顏色！',
+                arrowDir: 'up',
+            },
+        ];
+
+        let cur = 0;
+        const overlay  = document.getElementById('chatOnboarding');
+        const tooltip  = document.getElementById('onboardingTooltip');
+        const stepEl   = document.getElementById('onboardingStep');
+        const iconEl   = document.getElementById('onboardingIcon');
+        const titleEl  = document.getElementById('onboardingTitle');
+        const descEl   = document.getElementById('onboardingDesc');
+        const nextBtn  = document.getElementById('onboardingNext');
+        const skipBtn  = document.getElementById('onboardingSkip');
+
+        const show = (i) => {
+            const step = steps[i];
+            document.querySelectorAll('.onboarding-highlight').forEach(el => el.classList.remove('onboarding-highlight'));
+            step.targets.forEach(id => document.getElementById(id)?.classList.add('onboarding-highlight'));
+
+            stepEl.textContent  = `${i + 1} / ${steps.length}`;
+            iconEl.innerHTML    = `<i class="bi ${step.icon}"></i>`;
+            titleEl.textContent = step.title;
+            descEl.textContent  = step.desc;
+            nextBtn.textContent = i === steps.length - 1 ? '完成 🎉' : '下一步';
+
+            // 定位 tooltip 到目標元素旁
+            const target = document.getElementById(step.targets[0]);
+            const rect   = target?.getBoundingClientRect();
+            tooltip.className = `onboarding-tooltip arrow-${step.arrowDir}`;
+            if (rect) {
+                const TW = 238;
+                const left = Math.max(8, Math.min(rect.left + rect.width / 2 - TW / 2, window.innerWidth - TW - 8));
+                tooltip.style.left = left + 'px';
+                if (step.arrowDir === 'down') {
+                    tooltip.style.top  = 'auto';
+                    tooltip.style.bottom = (window.innerHeight - rect.top + 12) + 'px';
+                } else {
+                    tooltip.style.bottom = 'auto';
+                    tooltip.style.top    = (rect.bottom + 12) + 'px';
+                }
+                // 箭頭水平對齊目標中心
+                const arrowLeft = Math.max(12, Math.min(rect.left + rect.width / 2 - left - 8, TW - 28));
+                tooltip.style.setProperty('--ob-arrow-left', arrowLeft + 'px');
+            }
+            overlay.style.display = 'block';
+        };
+
+        const finish = () => this.finishOnboarding();
+        nextBtn.onclick = () => { cur++; if (cur >= steps.length) finish(); else show(cur); };
+        skipBtn.onclick = finish;
+
+        show(0);
+    }
+
+    finishOnboarding() {
+        localStorage.setItem('chatOnboardingDone', '1');
+        document.querySelectorAll('.onboarding-highlight').forEach(el => el.classList.remove('onboarding-highlight'));
+        document.getElementById('chatOnboarding').style.display = 'none';
     }
 
     getLastMessageText(lastMsg, fallback = '尚無訊息') {
@@ -894,9 +1067,16 @@ class ChatRoomList {
         this.previewArea.disabled = isOfficialRoom;
         this.input.placeholder = isOfficialRoom ? '官方頻道不支援傳送訊息' : '輸入訊息...';
         this.input.style.backgroundColor = isOfficialRoom ? '#f5f5f5' : '';
-        // 快速回覆只在私人聊天顯示
+        // 快速回覆 / 面交工具只在私人聊天顯示
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = isOfficialRoom ? 'none' : 'flex';
+        const _pickerDisplay = isOfficialRoom ? 'none' : '';
+        document.getElementById('time-picker-btn')?.style.setProperty('display', _pickerDisplay);
+        document.getElementById('location-picker-btn')?.style.setProperty('display', _pickerDisplay);
+        if (isOfficialRoom) {
+            document.getElementById('timePicker').style.display = 'none';
+            document.getElementById('locationPicker').style.display = 'none';
+        }
 
         // ✅ 開啟官方頻道：立即清除列表上的未讀紅點，並通知後端已讀
         if (isOfficialRoom) {
@@ -954,6 +1134,21 @@ class ChatRoomList {
         }
 
         this.connectSSE(); // SSE 已在 init() 開啟，此處為 idempotent 保護
+
+        // 第一次進入非官方房間 → 顯示操作引導
+        if (!this.officialRoomsSet.has(String(roomId)) && !localStorage.getItem('chatOnboardingDone')) {
+            setTimeout(() => this.startOnboarding(), 400);
+        }
+
+        // 若從商品頁進入，預填商品詢問訊息
+        if (_pendingProductCtx) {
+            const { productName, productPrice } = _pendingProductCtx;
+            _pendingProductCtx = null;
+            const priceText = productPrice ? `（NT$ ${Number(productPrice).toLocaleString()}）` : '';
+            this.input.value = `你好，我對「${productName}」有興趣${priceText}`;
+            this.input.dispatchEvent(new Event('input'));
+            this.input.focus();
+        }
     }
 
     scrollToFirstUnread(firstUnread) {
@@ -1145,6 +1340,7 @@ class ChatRoomList {
         }
         if (hasText) {
             input.value = '';
+            input.style.height = 'auto';
             const charCount = document.getElementById('msgCharCount');
             if (charCount) charCount.style.display = 'none';
         }
@@ -1229,7 +1425,7 @@ class ChatRoomList {
                         <i class="bi bi-check2-all read-receipt d-none" style="font-size: 0.8rem; color: #4CAF50;"></i>
                         <small class="text-muted msg-time" style="font-size: 0.75rem;">${timestamp}</small>
                     </div>` : ''}
-                    <div class="message-text">${this.escapeHtml(data.message)}</div>
+                    <div class="message-text">${this.escapeHtml(data.message).replace(/\n/g, '<br>')}</div>
                     ${isSelf ? '' : `<small class="text-muted ms-2 msg-time" style="font-size: 0.75rem;">${timestamp}</small>`}
                 </div>
             </div>`;
@@ -1482,6 +1678,7 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
 let chatRoomList = null;
 let _chatReady = false;
 let _pendingSellerId = null;
+let _pendingProductCtx = null; // { productName, productPrice } 商品資訊，開聊後預填
 
 // 防止 bfcache 還原舊的未登入狀態
 window.addEventListener('pageshow', (e) => {
@@ -1505,8 +1702,12 @@ window.addEventListener('load', () => {
         _pendingSellerId = null;
     }
     // 讀取 URL 參數，自動開啟與指定用戶的聊天（手機版跳轉時使用）
-    const openChatId = new URLSearchParams(window.location.search).get('openChat');
+    const _urlParams = new URLSearchParams(window.location.search);
+    const openChatId = _urlParams.get('openChat');
     if (openChatId) {
+        const productName = _urlParams.get('productName') || '';
+        const productPrice = _urlParams.get('productPrice') || '';
+        if (productName) _pendingProductCtx = { productName, productPrice };
         openChatWithTarget(openChatId);
     }
 });
@@ -1529,6 +1730,8 @@ window.openChatWithSeller = openChatWithTarget;
 // 接收父頁面 postMessage 開啟聊天室
 window.addEventListener('message', (e) => {
     if (e.data?.type === 'openChatWithSeller' && e.data.sellerId) {
+        const { productName, productPrice } = e.data;
+        if (productName) _pendingProductCtx = { productName, productPrice: productPrice ?? '' };
         if (_chatReady) {
             openChatWithTarget(e.data.sellerId);
         } else {

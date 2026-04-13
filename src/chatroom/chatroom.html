@@ -73,7 +73,7 @@
                                 <i class="bi bi-circle-fill text-success"></i> 已連接
                             </button> -->
                             <div class="dropdown">
-                                <button class="chat-more-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="chat-more-btn" id="chatMoreBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-three-dots-vertical"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end chat-dropdown">
@@ -129,25 +129,66 @@
                     <!-- 快速回覆 -->
                     <div id="quickReplyBar" class="quick-reply-bar" style="display:none;">
                         <button class="quick-reply-chip" data-text="請問還有嗎？">請問還有嗎？</button>
-                        <button class="quick-reply-chip" data-text="方便約在哪裡交易？">方便約在哪裡交易？</button>
                         <button class="quick-reply-chip" data-text="請問有瑕疵嗎？">請問有瑕疵嗎？</button>
                         <button class="quick-reply-chip" data-text="可以拍更多照片嗎？">可以拍更多照片嗎？</button>
-                        <button class="quick-reply-chip" data-text="什麼時候方便？">什麼時候方便？</button>
+                        <button class="quick-reply-chip" data-text="好的，沒問題！">好的，沒問題！</button>
+                        <button class="quick-reply-chip" data-text="抱歉，我再考慮一下">抱歉，我再考慮一下</button>
                     </div>
+
+                    <!-- 時間選擇面板 -->
+                    <div id="timePicker" class="chat-picker-panel" style="display:none;">
+                        <div class="picker-label">日期</div>
+                        <div class="picker-row" id="timePickerDays">
+                            <button class="picker-chip" data-val="今天">今天</button>
+                            <button class="picker-chip" data-val="明天">明天</button>
+                            <button class="picker-chip" data-val="後天">後天</button>
+                        </div>
+                        <div class="picker-label">時段</div>
+                        <div class="picker-row" id="timePickerSlots">
+                            <button class="picker-chip" data-val="早上">早上</button>
+                            <button class="picker-chip" data-val="中午">中午</button>
+                            <button class="picker-chip" data-val="下午">下午</button>
+                            <button class="picker-chip" data-val="晚上">晚上</button>
+                        </div>
+                        <button id="timePickerConfirm" class="picker-confirm-btn">插入時間</button>
+                    </div>
+
+                    <!-- 地點選擇面板 -->
+                    <div id="locationPicker" class="chat-picker-panel" style="display:none;">
+                        <div class="picker-label">中興大學常見面交地點</div>
+                        <div class="picker-row" id="locationPickerChips">
+                            <button class="picker-chip" data-val="中興湖旁">中興湖旁</button>
+                            <button class="picker-chip" data-val="圖書館正門">圖書館正門</button>
+                            <button class="picker-chip" data-val="綜合大樓1F">綜合大樓1F</button>
+                            <button class="picker-chip" data-val="惠蓀堂前">惠蓀堂前</button>
+                            <button class="picker-chip" data-val="小木屋廣場">小木屋廣場</button>
+                            <button class="picker-chip" data-val="理工學院廊道">理工學院廊道</button>
+                            <button class="picker-chip" data-val="人文大樓前">人文大樓前</button>
+                            <button class="picker-chip" data-val="農業陳列館前">農業陳列館前</button>
+                        </div>
+                        <button id="locationPickerConfirm" class="picker-confirm-btn">插入地點</button>
+                    </div>
+
                     <div id="img-input-container"></div>
                     <form id="messageForm" class="d-flex gap-2">
                         <input type="file" id="image-upload" accept="image/*" hidden>
                         <button type="button" class="sendothericon" id="send-image-btn">
-                            <img src="../webP/sendother.webp" alt="傳送照片按鈕" style="width: 80%;">
+                            <i class="bi bi-image" style="font-size:1.05rem;"></i>
                         </button>
-                        <input
-                            type="text"
+                        <button type="button" class="sendothericon" id="time-picker-btn" title="面交時間">
+                            <i class="bi bi-clock" style="font-size:1.05rem;"></i>
+                        </button>
+                        <button type="button" class="sendothericon" id="location-picker-btn" title="面交地點">
+                            <i class="bi bi-geo-alt" style="font-size:1.05rem;"></i>
+                        </button>
+                        <textarea
                             class="form-control"
                             id="messageInput"
                             placeholder="輸入訊息..."
                             autocomplete="off"
                             maxlength="500"
-                        >
+                            rows="1"
+                        ></textarea>
                         <button type="submit" class="sendicon">
                             <img src="../svg/newsend.svg" alt="送出訊息按鈕" style="width: 100%;">
                         </button>
@@ -230,6 +271,21 @@
       </div>
     </div>
     <div id="themePanelOverlay" class="theme-panel-overlay" style="display:none;"></div>
+
+    <!-- 操作引導 -->
+    <div id="chatOnboarding" class="chat-onboarding" style="display:none;">
+        <div class="onboarding-backdrop"></div>
+        <div class="onboarding-tooltip arrow-down" id="onboardingTooltip">
+            <div class="onboarding-step-label" id="onboardingStep">1 / 3</div>
+            <div class="onboarding-icon" id="onboardingIcon"></div>
+            <div class="onboarding-title" id="onboardingTitle"></div>
+            <div class="onboarding-desc" id="onboardingDesc"></div>
+            <div class="onboarding-actions">
+                <button class="onboarding-skip" id="onboardingSkip">跳過引導</button>
+                <button class="onboarding-next" id="onboardingNext">下一步</button>
+            </div>
+        </div>
+    </div>
 
     <!-- 訊息右鍵選單 -->
     <div id="msgContextMenu" class="msg-context-menu" style="display:none;">

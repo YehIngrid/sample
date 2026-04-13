@@ -21,6 +21,9 @@ let _sellerAllProducts = [];
 let _sellerCurrentPage = 1;
 const SELLER_PER_PAGE = 6;
 
+// ── 目前瀏覽的商品（傳給聊天室用）──
+let _currentProduct = null;
+
 function _renderSellerPage(page) {
   const container = document.getElementById('otherProducts');
   const dotsEl    = document.getElementById('sellerMobileDots');
@@ -57,6 +60,18 @@ function _renderSellerPage(page) {
     col.addEventListener('click', () => {
       if (pid) location.href = `product.html?id=${pid}`;
     });
+
+    const img = col.querySelector('.product-thumb img');
+    if (img) {
+      if (img.complete && img.naturalWidth > 0) {
+        img.closest('.product-thumb').classList.add('img-loaded');
+      } else {
+        img.addEventListener('load', () => {
+          img.closest('.product-thumb').classList.add('img-loaded');
+        }, { once: true });
+      }
+    }
+
     container.appendChild(col);
   });
 
@@ -208,6 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const onSuccess =  async(response) => {
     const product = response?.data ?? {};
+    _currentProduct = product;
     console.log('product:', product);
 
     // === 基本資訊 ===
@@ -516,14 +532,20 @@ function renderSellerInfo(data) {
 // === chatReady handshake ===
 let _iframeChatReady = false;
 let _pendingChatSellerId = null;
+let _pendingChatProductCtx = null;
 
 window.addEventListener('message', (e) => {
   if (e.data?.type === 'chatReady') {
     _iframeChatReady = true;
     if (_pendingChatSellerId) {
       document.getElementById('talkInterface')
-        .contentWindow.postMessage({ type: 'openChatWithSeller', sellerId: _pendingChatSellerId }, '*');
+        .contentWindow.postMessage({
+          type: 'openChatWithSeller',
+          sellerId: _pendingChatSellerId,
+          ..._pendingChatProductCtx
+        }, '*');
       _pendingChatSellerId = null;
+      _pendingChatProductCtx = null;
     }
   }
 });
@@ -534,20 +556,31 @@ async function openChatWithSeller(targetSellerId) {
     return Swal.fire({ icon: 'warning', title: '缺少sellerid' });
   }
 
+  const productCtx = _currentProduct ? {
+    productName: _currentProduct.name || '',
+    productPrice: _currentProduct.price ?? '',
+  } : null;
+
   // 手機版：導向 chatroom.html，帶入目標用戶 ID 並記住返回位址
   if (window.innerWidth <= 991) {
     sessionStorage.setItem('chatroomReturnUrl', window.location.href);
-    window.location.href = `../chatroom/chatroom.html?openChat=${targetSellerId}`;
+    let url = `../chatroom/chatroom.html?openChat=${targetSellerId}`;
+    if (productCtx?.productName) {
+      url += `&productName=${encodeURIComponent(productCtx.productName)}&productPrice=${encodeURIComponent(productCtx.productPrice)}`;
+    }
+    window.location.href = url;
     return;
   }
 
   await openCloseChatInterface();
 
   const iframe = document.getElementById('talkInterface');
+  const msg = { type: 'openChatWithSeller', sellerId: targetSellerId, ...productCtx };
   if (_iframeChatReady) {
-    iframe.contentWindow.postMessage({ type: 'openChatWithSeller', sellerId: targetSellerId }, '*');
+    iframe.contentWindow.postMessage(msg, '*');
   } else {
     _pendingChatSellerId = targetSellerId;
+    _pendingChatProductCtx = productCtx;
   }
 }
 
