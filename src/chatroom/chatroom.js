@@ -100,7 +100,7 @@ class ChatRoomList {
                 closeChatBtn.style.display = 'inline-flex';
                 closeChatBtn.addEventListener('click', () => {
                     if (window !== window.parent) {
-                        window.parent?.postMessage({ type: 'closeChat' }, '*');
+                        window.parent?.postMessage({ type: 'closeChat' }, window.location.origin);
                     } else {
                         const returnUrl = sessionStorage.getItem('chatroomReturnUrl');
                         if (returnUrl) { sessionStorage.removeItem('chatroomReturnUrl'); location.href = returnUrl; }
@@ -582,7 +582,7 @@ class ChatRoomList {
             closeChatBtn.style.display = 'inline-flex';
             closeChatBtn.addEventListener('click', () => {
                 if (isInIframe) {
-                    window.parent?.postMessage({ type: 'closeChat' }, '*');
+                    window.parent?.postMessage({ type: 'closeChat' }, window.location.origin);
                 } else {
                     const returnUrl = sessionStorage.getItem('chatroomReturnUrl');
                     if (returnUrl) {
@@ -601,9 +601,9 @@ class ChatRoomList {
             if (e.key !== 'Escape' || window === window.parent) return;
             if (document.body.classList.contains('chat-maximized')) {
                 document.body.classList.remove('chat-maximized');
-                window.parent?.postMessage({ type: 'restoreChat' }, '*');
+                window.parent?.postMessage({ type: 'restoreChat' }, window.location.origin);
             } else {
-                window.parent?.postMessage({ type: 'closeChat' }, '*');
+                window.parent?.postMessage({ type: 'closeChat' }, window.location.origin);
             }
         });
 
@@ -1714,7 +1714,7 @@ window.addEventListener('load', () => {
     _chatReady = true;
     // 通知父頁面 iframe 已準備好
     if (window.parent !== window) {
-        window.parent.postMessage({ type: 'chatReady' }, '*');
+        window.parent.postMessage({ type: 'chatReady' }, window.location.origin);
     }
     // 如果有在 ready 前就收到的 pending 請求，立刻執行
     if (_pendingSellerId) {
@@ -1749,6 +1749,7 @@ window.openChatWithSeller = openChatWithTarget;
 
 // 接收父頁面 postMessage 開啟聊天室
 window.addEventListener('message', (e) => {
+    if (e.origin !== window.location.origin) return;
     if (e.data?.type === 'openChatWithSeller' && e.data.sellerId) {
         const { productName, productPrice } = e.data;
         if (productName) _pendingProductCtx = { productName, productPrice: productPrice ?? '' };

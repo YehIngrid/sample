@@ -280,6 +280,13 @@
                 </script>
                 <!-- 主要區塊：用 bootstrap row/col 來排版 -->
                 <main class="flex-grow-1">
+                <!-- 搜尋結果提示列 -->
+                <div id="searchResultBar" style="display:none;" class="search-result-bar">
+                  <span id="searchResultText"></span>
+                  <button id="clearSearchBtn" class="search-result-clear" aria-label="清除搜尋">
+                    <i class="ti ti-x"></i>
+                  </button>
+                </div>
                 <!-- 這裡放置一個 row，商品會以 col 包裝 (col-6 col-md-4 col-lg-3 等) -->
                 <div id="productRow" class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2">
                     <!-- JS 會把 <div class="col..."> 插入到這裡 -->

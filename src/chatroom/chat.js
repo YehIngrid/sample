@@ -30,7 +30,7 @@ function _toggleMaximize(forceRestore = false) {
   if (!talkInterface) return;
   const isMax = forceRestore ? false : !talkInterface.classList.contains('maximized');
   talkInterface.classList.toggle('maximized', isMax);
-  talkInterface.contentWindow?.postMessage({ type: isMax ? 'maximizeChat' : 'restoreFromParent' }, '*');
+  talkInterface.contentWindow?.postMessage({ type: isMax ? 'maximizeChat' : 'restoreFromParent' }, window.location.origin);
   if (_maxBtn) {
     _maxBtn.classList.toggle('maximized', isMax);
     _maxBtn.innerHTML = isMax ? '⊡' : '⛶';

@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <span class="article-likes"><i class="ti ti-heart" style="font-size:0.9rem;"></i> ${art.likes}</span>`;
 
   // ── Body ──
-  document.getElementById('spBody').innerHTML = art.body || `<p>${art.excerpt}</p>`;
+  document.getElementById('spBody').innerHTML = DOMPurify.sanitize(art.body || `<p>${art.excerpt}</p>`);
 
   // ── TOC ──
   const bodyEl = document.getElementById('spBody');

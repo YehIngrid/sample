@@ -151,8 +151,17 @@ async function callLogin() {
 
     const params = new URLSearchParams(window.location.search);
     const redirectUrl = params.get("redirect");
-    if (redirectUrl && redirectUrl.startsWith("/")) {
-      window.location.replace(redirectUrl);
+    if (redirectUrl) {
+      try {
+        const target = new URL(redirectUrl, window.location.origin);
+        if (target.origin === window.location.origin) {
+          window.location.replace(target.href);
+        } else {
+          window.location.replace("../shop/shop.html");
+        }
+      } catch {
+        window.location.replace("../shop/shop.html");
+      }
     } else {
       window.location.replace("../shop/shop.html");
     }

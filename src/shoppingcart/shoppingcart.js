@@ -523,12 +523,13 @@ let _pendingChatSellerId = null;
 
 // 監聽 iframe 的 chatReady 訊號
 window.addEventListener('message', (e) => {
+  if (e.origin !== window.location.origin) return;
   if (e.data?.type === 'chatReady') {
     _iframeChatReady = true;
     // 如果有 pending 的賣家 ID，立刻發送
     if (_pendingChatSellerId) {
       talkInterface.contentWindow.postMessage(
-        { type: 'openChatWithSeller', sellerId: _pendingChatSellerId }, '*'
+        { type: 'openChatWithSeller', sellerId: _pendingChatSellerId }, window.location.origin
       );
       _pendingChatSellerId = null;
     }
@@ -546,7 +547,7 @@ function openChatWithSeller(targetSellerId) {
   if (_iframeChatReady) {
     // iframe 已 ready，直接發送
     talkInterface.contentWindow.postMessage(
-      { type: 'openChatWithSeller', sellerId: targetSellerId }, '*'
+      { type: 'openChatWithSeller', sellerId: targetSellerId }, window.location.origin
     );
   } else {
     // iframe 還沒 ready，存起來等 chatReady 事件觸發時再發

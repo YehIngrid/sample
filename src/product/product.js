@@ -535,6 +535,7 @@ let _pendingChatSellerId = null;
 let _pendingChatProductCtx = null;
 
 window.addEventListener('message', (e) => {
+  if (e.origin !== window.location.origin) return;
   if (e.data?.type === 'chatReady') {
     _iframeChatReady = true;
     if (_pendingChatSellerId) {
@@ -543,7 +544,7 @@ window.addEventListener('message', (e) => {
           type: 'openChatWithSeller',
           sellerId: _pendingChatSellerId,
           ..._pendingChatProductCtx
-        }, '*');
+        }, window.location.origin);
       _pendingChatSellerId = null;
       _pendingChatProductCtx = null;
     }

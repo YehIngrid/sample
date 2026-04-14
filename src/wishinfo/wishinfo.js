@@ -2,6 +2,9 @@ import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
 import '../default/default.js';
 
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const isSafeUrl = u => typeof u === 'string' && /^https?:\/\//i.test(u);
+
 let wpbackendService;
 let backendService;
 let wishId = new URLSearchParams(location.search).get('id');
@@ -37,15 +40,15 @@ async function renderWishInfo(id) {
         };
         // --- 修改圖片生成邏輯 ---
         // 在 renderWishInfo 內部
-        if (res.data.photoURL) {
+        if (res.data.photoURL && isSafeUrl(res.data.photoURL)) {
             imagesContainer.innerHTML = `
-                <a href="${res.data.photoURL}" 
+                <a href="${esc(res.data.photoURL)}"
                 id="pswp-link"
-                data-pswp-width="1200" 
-                data-pswp-height="800" 
+                data-pswp-width="1200"
+                data-pswp-height="800"
                 target="_blank"
                 class="image-item">
-                    <img src="${res.data.photoURL}" id="wish-img-element" alt="${res.data.itemName}">
+                    <img src="${esc(res.data.photoURL)}" id="wish-img-element" alt="${esc(res.data.itemName)}">
                 </a>`;
             
             // 呼叫更新尺寸並初始化的函式

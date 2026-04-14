@@ -112,7 +112,7 @@ let filteredData = data;  // 預設為全部資料
       badge.className = `news-badge ${badgeClass}`;
       document.getElementById("detailTitle").textContent = item.n_name;
       document.getElementById("detailTime").textContent = item.time;
-      document.getElementById("detailContent").innerHTML = item.detail;
+      document.getElementById("detailContent").innerHTML = DOMPurify.sanitize(item.detail);
 
       // 3. 隱藏整個 .content wrapper（含 min-height），顯示 detail
       document.querySelector(".content").style.display = "none";

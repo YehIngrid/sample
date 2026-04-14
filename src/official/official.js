@@ -2,6 +2,8 @@ import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
 import wpBackendService from '../wpBackendService.js';
 
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
 const chatSvc = new ChatBackendService();
 const backendSvc = new BackendService();
 const wpSvc = new wpBackendService();
@@ -99,7 +101,7 @@ async function loadChannels() {
       selector.appendChild(card);
     });
   } catch (err) {
-    selector.innerHTML = `<div class="text-danger text-center py-3 small">載入失敗：${err?.message || '請稍後再試'}</div>`;
+    selector.innerHTML = `<div class="text-danger text-center py-3 small">載入失敗：${esc(err?.message) || '請稍後再試'}</div>`;
   }
 }
 
@@ -201,7 +203,7 @@ document.getElementById('broadcastForm').addEventListener('submit', async (e) =>
     clearImage();
   } catch (err) {
     resultBox.className = 'result-box mt-3 error';
-    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 發送失敗</div><div>${err?.response?.data?.message || err?.message || '請稍後再試'}</div>`;
+    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 發送失敗</div><div>${esc(err?.response?.data?.message || err?.message) || '請稍後再試'}</div>`;
   } finally {
     submitBtn.disabled = false;
     submitBtn.innerHTML = '<i class="fa fa-paper-plane me-1"></i> 發送公告';
@@ -237,7 +239,7 @@ document.getElementById('createChannelForm').addEventListener('submit', async (e
     `;
   } catch (err) {
     resultBox.className = 'result-box mt-3 error';
-    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 建立失敗</div><div>${err?.response?.data?.message || err?.message || '請稍後再試'}</div>`;
+    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 建立失敗</div><div>${esc(err?.response?.data?.message || err?.message) || '請稍後再試'}</div>`;
   } finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="fa fa-plus me-1"></i> 建立官方頻道';
@@ -285,7 +287,7 @@ document.getElementById('loadHistoryBtn').addEventListener('click', async () => 
           </div>`;
       }).join('');
   } catch (err) {
-    listEl.innerHTML = `<p class="text-danger text-center py-4">載入失敗：${err?.message || '請稍後再試'}</p>`;
+    listEl.innerHTML = `<p class="text-danger text-center py-4">載入失敗：${esc(err?.message) || '請稍後再試'}</p>`;
   }
 });
 
@@ -486,7 +488,7 @@ document.getElementById('newsForm').addEventListener('submit', async (e) => {
     document.getElementById('stat-news').textContent = newsData.length;
   } catch (err) {
     resultBox.className = 'result-box mt-3 error';
-    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 發布失敗</div><div>${err?.response?.data?.message || err?.message || '請稍後再試'}</div>`;
+    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 發布失敗</div><div>${esc(err?.response?.data?.message || err?.message) || '請稍後再試'}</div>`;
   } finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="fa fa-paper-plane me-1"></i> 發布文章';

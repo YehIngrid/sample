@@ -216,6 +216,18 @@ async function loadProducts() {
     const mobileCountEl = document.getElementById('mobileResultCount');
     if (mobileCountEl) mobileCountEl.textContent = `共 ${totalCount} 件`;
 
+    // 搜尋結果提示列
+    const searchResultBar = document.getElementById('searchResultBar');
+    const searchResultText = document.getElementById('searchResultText');
+    if (searchResultBar && searchResultText) {
+      if (keyword) {
+        searchResultText.textContent = `搜尋「${keyword}」的結果 · 共 ${totalCount} 件`;
+        searchResultBar.style.display = 'flex';
+      } else {
+        searchResultBar.style.display = 'none';
+      }
+    }
+
     productRow.innerHTML = '';
     renderProductsBootstrap(items);
     renderPagination(totalCount);
@@ -381,6 +393,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('searchForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
     activeKeyword = document.getElementById('searchInput')?.value.trim() || '';
+    pageIndex = 0;
+    productRow.innerHTML = '';
+    loadProducts();
+  });
+
+  // 清除搜尋按鈕
+  document.getElementById('clearSearchBtn')?.addEventListener('click', () => {
+    activeKeyword = '';
+    const si = document.getElementById('searchInput');
+    if (si) si.value = '';
+    const mt = document.getElementById('searchTriggerMobile');
+    if (mt) mt.value = '';
     pageIndex = 0;
     productRow.innerHTML = '';
     loadProducts();
