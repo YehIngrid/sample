@@ -201,10 +201,10 @@ document.getElementById('update-profile').addEventListener('click', async () => 
             // 更新 DOM
             mProfileName.textContent = localStorage.getItem("username") || "使用者名稱";
             mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹";
-            mProfileAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.png';
+            mProfileAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.webp';
             profileName.textContent = localStorage.getItem("username") || "使用者名稱";
             profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹";
-            profileAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.png';
+            profileAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.webp';
 
             window.location.reload(); // 重新載入頁面以顯示最新資料
           } catch (errorMessage) {
@@ -868,7 +868,7 @@ function renderCards(list = []) {
     const price    = fmtPrice(item.price);
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
-    const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.png');
+    const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.webp');
     const quantity = item.stock;
     const stockStyle = quantity === 0 ? 'color: #dc3545; font-weight: bold;' : '';
 
@@ -1119,7 +1119,7 @@ async function getDetail(id) {
         <tr>
           <td data-label="商品編號">${item.itemId}</td>
           <td data-label="商品照片">
-            <img src="${item.item.mainImage || '../image/placeholder.png'}"
+            <img src="${item.item.mainImage || '../image/placeholder.webp'}"
                  style="width:80px;height:80px;object-fit:cover;">
           </td>
           <td data-label="名稱">${htmlEncode(item?.item.name)}</td>
@@ -1699,7 +1699,7 @@ async function openReviewModal(orderId, targetId, targetRole) {
     }
   }
 
-  const targetPhoto  = targetUser?.photoURL || '../image/default-avatar.png';
+  const targetPhoto  = targetUser?.photoURL || '../image/default-avatar.webp';
   const targetName   = targetUser?.name || roleName;
   const targetCredit = targetUser?.rate ?? '-';
   // 優先使用新欄位 id，fallback 到舊的 accountId 或呼叫方傳入的 targetId
@@ -1833,7 +1833,7 @@ async function openPartnerReviewModal(orderId, isSell) {
   const data = window.currentOrder;
   const partnerUser = isSell ? data?.buyerUser : data?.sellerUser;
   const partnerName = partnerUser?.name || '對方';
-  const partnerPhoto = partnerUser?.photoURL || '../image/default-avatar.png';
+  const partnerPhoto = partnerUser?.photoURL || '../image/default-avatar.webp';
   const partnerCredit = partnerUser?.rate ?? '-';
   const partnerIntro = partnerUser?.intro ?? partnerUser?.description ?? '';
   const maxScore = isSell ? 3 : 5;

@@ -87,7 +87,7 @@ async function renderAuthUI() {
       }
 
       // 桌機版 navbar 下拉選單：已登入狀態
-      const avatarSrc = (userAvatar && userAvatar !== 'null' && userAvatar !== '') ? userAvatar : '../image/default-avatar.png';
+      const avatarSrc = (userAvatar && userAvatar !== 'null' && userAvatar !== '') ? userAvatar : '../image/default-avatar.webp';
       document.querySelectorAll('.username').forEach((el) => {
         el.innerHTML = `<img class="nav-username-avatar" src="${avatarSrc}" alt="頭像">`;
         el.style.display = '';
@@ -113,12 +113,12 @@ async function renderAuthUI() {
       window.isLoggedIn = false;
       _authResolve(false);
       document.querySelectorAll('.username').forEach((el) => {
-        el.innerHTML = `<img class="nav-username-avatar" src="../image/default-avatar.png" alt="頭像">`;
+        el.innerHTML = `<img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像">`;
         el.style.display = '';
         const currentUrl = window.location.pathname + window.location.search;
         el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
       });
-      document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = '../image/default-avatar.png'; });
+      document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = '../image/default-avatar.webp'; });
 
       document.querySelectorAll('.loginornot').forEach((el) => {
         if (el.classList.contains('nav-menu-item')) {
@@ -147,12 +147,12 @@ window._showLoggedOutUI = function() {
   localStorage.removeItem('username');
   localStorage.removeItem('avatar');
   document.querySelectorAll('.username').forEach((el) => {
-    el.innerHTML = `<img class="nav-username-avatar" src="../image/default-avatar.png" alt="頭像">`;
+    el.innerHTML = `<img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像">`;
     el.style.display = '';
     const currentUrl = window.location.pathname + window.location.search;
     el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
   });
-  document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = '../image/default-avatar.png'; });
+  document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = '../image/default-avatar.webp'; });
   document.querySelectorAll('.loginornot').forEach((el) => {
     if (el.classList.contains('nav-menu-item')) {
       el.innerHTML = '<i class="ti ti-login me-2"></i>登入';

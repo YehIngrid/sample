@@ -396,7 +396,7 @@ class ChatRoomList {
             : (data.attachments || '');
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png');
+            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
 
         wrapper.innerHTML = `
             ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;"/></div>` : ''}
@@ -468,7 +468,7 @@ class ChatRoomList {
 
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png');
+            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
         imgWrapper.innerHTML = `
             ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
             <div class="message-content">
@@ -612,13 +612,17 @@ class ChatRoomList {
             this.sendMessage();
         });
 
-        // Enter 送出，Shift+Enter 換行；IME 選字時不觸發送出
-        this.input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
-                e.preventDefault();
-                this.sendMessage();
-            }
-        });
+        // 桌機：Enter 送出，Shift+Enter 換行；IME 選字時不觸發送出
+        // 手機：不攔截 Enter（讓 textarea 原生換行），改由送出按鈕送出
+        const isTouchDevice = navigator.maxTouchPoints > 0;
+        if (!isTouchDevice) {
+            this.input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+                    e.preventDefault();
+                    this.sendMessage();
+                }
+            });
+        }
 
         // 隨內容自動撐高
         this.input.addEventListener('input', () => {
@@ -710,17 +714,33 @@ class ChatRoomList {
             document.querySelectorAll('#timePickerSlots .picker-chip').forEach(c => c.classList.remove('selected'));
             chip.classList.add('selected');
             _selSlot = chip.dataset.val;
+            // 選了時段就清掉確切時間（互斥）
+            const exactInput = document.getElementById('timePickerExact');
+            if (exactInput) exactInput.value = '';
+        });
+        // 填入確切時間時，清除時段選擇（互斥）
+        document.getElementById('timePickerExact')?.addEventListener('input', () => {
+            document.querySelectorAll('#timePickerSlots .picker-chip').forEach(c => c.classList.remove('selected'));
+            _selSlot = '';
+        });
+        document.getElementById('timePickerExactClear')?.addEventListener('click', () => {
+            const exactInput = document.getElementById('timePickerExact');
+            if (exactInput) exactInput.value = '';
         });
         document.getElementById('timePickerConfirm')?.addEventListener('click', () => {
-            if (!_selDay && !_selSlot) return;
+            const exactVal = document.getElementById('timePickerExact')?.value;
+            const timeStr = exactVal ? exactVal : _selSlot;
+            if (!_selDay && !timeStr) return;
             if (this.input.disabled) return;
-            const text = `面交時間：${_selDay}${_selSlot}`;
+            const text = `面交時間：${_selDay}${timeStr}`;
             const existing = this.input.value.trim();
             this.input.value = existing ? `${existing} ${text}` : text;
             this.input.dispatchEvent(new Event('input'));
             timePicker.style.display = 'none';
             this.input.focus();
             _selDay = ''; _selSlot = '';
+            const exactInput = document.getElementById('timePickerExact');
+            if (exactInput) exactInput.value = '';
             document.querySelectorAll('#timePickerDays .picker-chip, #timePickerSlots .picker-chip').forEach(c => c.classList.remove('selected'));
         });
 
@@ -937,7 +957,7 @@ class ChatRoomList {
                 const myself = data.members?.find(m => m.name === this.username);
 
                 const roomName   = isOfficial ? (data.officialChannel?.name ?? '官方帳號') : (target?.name ?? '未知');
-                const roomAvatar = isOfficial ? '../webP/treasurehub.webp' : (target?.photoURL || '../image/default-avatar.png');
+                const roomAvatar = isOfficial ? '../webP/treasurehub.webp' : (target?.photoURL || '../image/default-avatar.webp');
 
                 const isMyMessage  = data.lastMessage?.username === myself?.name;
                 // ✅ 官方頻道：有 lastMessageId 且未讀就顯示紅點；一般頻道：對方訊息未讀才顯示
@@ -958,7 +978,7 @@ class ChatRoomList {
                     });
                     this.partnerInfoMap.set(String(data.id), {
                         name: target.name ?? '未知用戶',
-                        photoURL: target.photoURL || '../image/default-avatar.png',
+                        photoURL: target.photoURL || '../image/default-avatar.webp',
                         id: target.id ?? target.accountId ?? target.userId ?? null
                     });
                 }
@@ -1415,7 +1435,7 @@ class ChatRoomList {
         div.dataset.username = data.username;
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.png');
+            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
         div.innerHTML = `
             ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
             <div class="message-content">

@@ -197,6 +197,10 @@ html, body {
 .msg-time-hidden {
     display: none;
 }
+.msg-time {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
 
 /* ── Messenger 泡泡圓角群組效果 ─────────────────────────────────────
    message-continues = 後面還有同群組訊息（非最後一則）
@@ -265,6 +269,7 @@ html, body {
 
 .message-content {
     max-width: 60%;
+    min-width: 0;
 }
 
 .message-self .message-content {
@@ -283,8 +288,11 @@ html, body {
     border-radius: 18px;
     display: inline-block;
     max-width: 100%;
+    min-width: 0;
+    flex-shrink: 1;
     text-align: left;
     word-wrap: break-word;
+    overflow-wrap: break-word;
     -webkit-touch-callout: none; /* iOS 長按不彈出系統選單 */
     -webkit-user-select: none;
     user-select: none;
@@ -1085,6 +1093,49 @@ html, body {
     margin-bottom: 5px;
     margin-top: 2px;
     letter-spacing: 0.03em;
+}
+.picker-label-hint {
+    font-size: 0.68rem;
+    color: #bbb;
+    font-weight: 400;
+}
+.picker-time-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.picker-time-input {
+    flex: 1;
+    border: 1.5px solid #d0d7e3;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    color: #333;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.picker-time-input:focus {
+    border-color: var(--primary-color, #004b97);
+}
+.picker-time-clear {
+    background: none;
+    border: 1.5px solid #d0d7e3;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+    color: #999;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.15s, color 0.15s;
+}
+.picker-time-clear:hover {
+    border-color: #dc3545;
+    color: #dc3545;
 }
 .picker-row {
     display: flex;

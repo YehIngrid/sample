@@ -1023,7 +1023,7 @@ async function handleContactWisher(wishId, btn, ownerUid = '') {
     const cardsHtml = commodities.map(item => {
       const name  = item.name?.replace(/</g, '&lt;').replace(/>/g, '&gt;') || '未命名';
       const price = Number(item.price).toLocaleString();
-      const img   = item.mainImage || '../image/default-avatar.png';
+      const img   = item.mainImage || '../image/default-avatar.webp';
       return `
         <div class="wc-card" data-id="${item.id}" tabindex="0">
           <img src="${img}" alt="${name}" loading="lazy">

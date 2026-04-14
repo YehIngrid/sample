@@ -48,7 +48,7 @@ function _renderSellerPage(page) {
       <div class="product-card seller-product-card h-100" data-id="${pid}">
         <div class="product-thumb">
           <img src="${imgSrc}" alt="${name}" loading="lazy"
-               onerror="this.src='../image/placeholder.png'">
+               onerror="this.src='../image/placeholder.webp'">
         </div>
         <div class="card-body d-flex flex-column">
           <h5 class="card-title ellipsis-text">${name}</h5>
@@ -475,7 +475,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         const u = product.owner;
 
         // 先取出你原本的欄位（給預設值）
-        const photo               = u.photoURL || '../image/default-avatar.png';
+        const photo               = u.photoURL || '../image/default-avatar.webp';
         const sellerName          = u.name || '賣家名稱';
         const sellerIntroduction  = u.introduction || '賣家簡介';
         // 這裡確保是數字；u.rate 可能是字串

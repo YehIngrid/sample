@@ -5,12 +5,18 @@
   "type": "module",
   "scripts": {
     "dev-server": "node server.js",
-    "dev": "node server.js & npx browser-sync start --proxy 'localhost:5500' --files 'src/**/*' --port 3000 --no-open"
+    "dev": "node server.js & npx browser-sync start --proxy 'localhost:5500' --files 'src/**/*' --port 3000 --no-open",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:smoke": "playwright test tests/smoke.spec.js",
+    "test:chatroom": "playwright test tests/chatroom.spec.js",
+    "test:report": "playwright show-report"
   },
   "dependencies": {
     "express": "^5.2.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "browser-sync": "^3.0.4"
   }
 }

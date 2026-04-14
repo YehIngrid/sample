@@ -313,7 +313,7 @@ function _showChatToast(data) {
   const username = data.username;
   const partner = _partnerCache.get(username) || {
     name: data._overrideName ?? username,
-    photoURL: data._overrideAvatar ?? '../image/default-avatar.png',
+    photoURL: data._overrideAvatar ?? '../image/default-avatar.webp',
     userId: null
   };
   if (data._overrideName) partner.name = data._overrideName;
@@ -352,7 +352,7 @@ function _showChatToast(data) {
     <div class="chat-toast__progress"></div>
     <button class="chat-toast__close" aria-label="關閉">×</button>
     <div class="chat-toast__content">
-      <img class="chat-toast__avatar" src="${_esc(partner.photoURL)}" onerror="this.src='../image/default-avatar.png'" alt="">
+      <img class="chat-toast__avatar" src="${_esc(partner.photoURL)}" onerror="this.src='../image/default-avatar.webp'" alt="">
       <div class="chat-toast__body">
         <div class="chat-toast__name">${_esc(partner.name)}</div>
         <div class="chat-toast__preview">${_esc(previewText)}</div>
@@ -431,7 +431,7 @@ window.addEventListener('load', async () => {
                 if (partner) {
                     _partnerCache.set(partner.name, {
                         name: partner.name,
-                        photoURL: partner.photoURL || '../image/default-avatar.png',
+                        photoURL: partner.photoURL || '../image/default-avatar.webp',
                         userId: partner.id ?? partner.accountId ?? partner.userId ?? null
                     });
                 }

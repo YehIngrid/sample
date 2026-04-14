@@ -143,12 +143,17 @@
                             <button class="picker-chip" data-val="明天">明天</button>
                             <button class="picker-chip" data-val="後天">後天</button>
                         </div>
-                        <div class="picker-label">時段</div>
+                        <div class="picker-label">時段 <span class="picker-label-hint">（與確切時間擇一）</span></div>
                         <div class="picker-row" id="timePickerSlots">
                             <button class="picker-chip" data-val="早上">早上</button>
                             <button class="picker-chip" data-val="中午">中午</button>
                             <button class="picker-chip" data-val="下午">下午</button>
                             <button class="picker-chip" data-val="晚上">晚上</button>
+                        </div>
+                        <div class="picker-label">確切時間 <span class="picker-label-hint">（填入後優先使用）</span></div>
+                        <div class="picker-time-row">
+                            <input type="time" id="timePickerExact" class="picker-time-input">
+                            <button type="button" id="timePickerExactClear" class="picker-time-clear" title="清除時間">×</button>
                         </div>
                         <button id="timePickerConfirm" class="picker-confirm-btn">插入時間</button>
                     </div>

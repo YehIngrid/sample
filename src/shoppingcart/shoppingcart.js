@@ -100,7 +100,7 @@ function normalizeCartResponse(res) {
       description: item.description || '',
       ownerId: String(owner.accountId || owner.id || owner._id || row.sellerId || ''),
       owner_name: owner.name || '未知賣家',
-      owner_photo: owner.photoURL || '../image/default-avatar.png',
+      owner_photo: owner.photoURL || '../image/default-avatar.webp',
       checked: false,
       _needEnrich: !item.description || !item.mainImage || !owner.accountId
     };

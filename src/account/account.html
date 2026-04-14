@@ -124,7 +124,7 @@
                   </div>
                   <p class="field-error" id="err-login-email"></p>
                   <div class="form-floating">
-                    <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password">
+                    <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password" maxlength="128">
                     <label for="floatingPassword">請輸入密碼</label>
                   </div>
                   <p class="field-error" id="err-login-pwd"></p>
@@ -171,11 +171,11 @@
                 <form id="resetpwdForm">
                   <h2>設定您的新密碼</h2>
                   <div class="form-floating form-resettpass">
-                  <input class="pwd form-control" type="password" id="newPwd1" placeholder="請輸入至少8位英數字混合密碼">
+                  <input class="pwd form-control" type="password" id="newPwd1" placeholder="請輸入至少8位英數字混合密碼" maxlength="128">
                   <label for="floatingPassword" class="p">設定您的密碼，至少 8 位英數字混合</label>
                   </div>
                   <div class="form-floating form-resetbpass">
-                  <input class="form-control pwd" type="password" id="newPwd2" placeholder="請再次輸入密碼">
+                  <input class="form-control pwd" type="password" id="newPwd2" placeholder="請再次輸入密碼" maxlength="128">
                   <label for="floatingPassword" class="p">請再次輸入密碼</label>
                   </div>
                   <button type="submit" id="resetbtn" class="signbtn css-button-gradient--4">重設新密碼</button>
@@ -205,12 +205,12 @@
                   </div>
                   <p class="field-error" id="err-signup-email"></p>
                   <div class="form-floating form-signpass">
-                  <input class="form-control pwd" type="password" id="password1" placeholder="請輸入至少6位以上">
+                  <input class="form-control pwd" type="password" id="password1" placeholder="請輸入至少6位以上" maxlength="128">
                   <label for="floatingPassword" class="p">設定您的密碼，至少 8 位英數字混合</label>
                   </div>
                   <p class="field-error" id="err-signup-pwd1"></p>
                   <div class="form-floating form-signpass">
-                  <input class="form-control pwd" type="password" id="password2" placeholder="請再次輸入密碼">
+                  <input class="form-control pwd" type="password" id="password2" placeholder="請再次輸入密碼" maxlength="128">
                   <label for="floatingPassword" class="p">請再次輸入密碼</label>
                   </div>
                   <p class="field-error" id="err-signup-pwd2"></p>
