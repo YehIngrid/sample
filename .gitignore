@@ -21,3 +21,6 @@ Thumbs.db
 # Build output
 dist/
 build/
+/preview-review.html
+/src/REVIEW_API_SPEC.md
+/src/NEWS_API_SPEC.md

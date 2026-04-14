@@ -588,18 +588,17 @@ function toggleSellerReviews() {
   const reviewContainer = document.getElementById('sellerReviews');
 
   if (reviewContainer.classList.contains('d-none')) {
-    // 顯示邏輯
+    // 渲染評價（TODO: 換成真實 API 資料後傳入 review 物件）
+    const listEl = document.getElementById('reviewerInfo');
+    if (listEl && listEl.innerHTML === '') {
+      listEl.innerHTML = `<div class="review-empty">目前尚無評價紀錄</div>`;
+    }
+
     reviewContainer.classList.remove('d-none');
-    
-    // 強制瀏覽器重繪 (Reflow)，確保動畫能觸發
-    void reviewContainer.offsetWidth; 
-    
+    void reviewContainer.offsetWidth;
     reviewContainer.classList.add('show');
   } else {
-    // 隱藏邏輯
     reviewContainer.classList.remove('show');
-
-    // 等動畫結束 (300ms) 再加上 d-none 節省效能
     setTimeout(() => {
       reviewContainer.classList.add('d-none');
     }, 300);
@@ -818,12 +817,44 @@ async function openCloseChatInterface() {
   }
 }
 
-// TODO 顯示評價
-function renderStars(score) {
-  return '★'.repeat(score) + '☆'.repeat(5 - score);
+// 評價 chip 標籤對應表（賣家）
+const SELLER_POSITIVE_LABELS = { accurate: '商品描述準確', fast: '出貨速度快', polite: '溝通禮貌', reliable: '交易可靠', packaging: '包裝完整' };
+const SELLER_NEGATIVE_LABELS = { mismatch: '商品與描述嚴重不符', late: '遲到超過 10 分鐘' };
+
+function renderReviewCard(review) {
+  const name    = review?.reviewerName ?? review?.reviewerUser?.name ?? '評價者';
+  const photo   = review?.reviewerUser?.photoURL ?? '../image/default-avatar.webp';
+  const item    = review?.itemName ?? '';
+  const time    = review?.createdAt ? new Date(review.createdAt).toLocaleDateString('zh-TW') : '';
+  const comment = review?.comment ?? '';
+
+  const positiveChips = Object.entries(SELLER_POSITIVE_LABELS)
+    .filter(([key]) => review?.[key] === 1 || review?.[key] === true)
+    .map(([, label]) => `<span class="review-display-chip positive">${label}</span>`)
+    .join('');
+
+  const negativeChips = (Array.isArray(review?.reportedIssues) ? review.reportedIssues : [])
+    .map(key => `<span class="review-display-chip negative">${SELLER_NEGATIVE_LABELS[key] ?? key}</span>`)
+    .join('');
+
+  return `
+    <div class="review-card">
+      <div class="review-card__header">
+        <img src="${photo}" alt="${name}" class="reviewer-avatar">
+        <div class="review-card__meta">
+          <span class="reviewerName">${name}</span>
+          ${item ? `<div class="itemNames">${item}</div>` : ''}
+        </div>
+        ${time ? `<div class="reviewTime">${time}</div>` : ''}
+      </div>
+      ${positiveChips || negativeChips ? `
+        <div class="review-card__chips">
+          ${positiveChips}${negativeChips}
+        </div>` : ''}
+      ${comment ? `<div class="reviewText">${comment}</div>` : ''}
+    </div>
+  `;
 }
-const scoreStar = document.querySelector('.score');
-scoreStar.textContent = renderStars(Number(scoreStar.textContent));
 /**
  * 檢查登入者是否為賣家本人，若是則禁用相關按鈕
  */

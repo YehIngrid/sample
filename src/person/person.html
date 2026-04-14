@@ -120,7 +120,7 @@
             <div class="sidebar-profile-name" id="profileName"></div>
             <div class="sidebar-profile-uid">uid：<span id="uid"></span></div>
             <div class="sidebar-profile-intro asideicon" id="profileInfo"></div>
-            <div class="sidebar-score-badge my-tooltip" data-text="每個用戶基本分為 60 分，若被其他用戶檢舉一次扣 5 分，扣到 0 分為止。每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分 0~5 或 0~3 分(買家對賣家/賣家對買家)，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。">
+            <div class="sidebar-score-badge my-tooltip" data-text="信用積分制度：起始 100 分，上限 150 分。完成一筆交易雙方各 +5、獲得良好評價 +2。爽約失聯 -15、商品嚴重不符 -10、遲到超過 10 分鐘 -5。積分低於 80 分限制上架 5 件，低於 50 分暫停交易 7 天，歸零則永久停權。">
               <i class="ti ti-star-filled"></i>
               <span>信譽積分</span>
               <strong id="rate"></strong>
@@ -444,26 +444,8 @@
             <span>我的評價</span>
           </div>
           <div class="profile-edit-body">
-            <div id="reviewsContainer" class="d-flex flex-column">
-              <!-- 評價卡片會動態生成在這裡 -->
-              <div class="d-flex align-items-center">
-                <span style="font-size: 12px;">您購買/販賣的商品</span>
-                <div class="itemNames">｜商品名稱</div>
-              </div>
-              <div class="reviewerInfo d-flex justify-content-between align-items-center" id="reviewerInfo">
-                <div class="d-flex align-items-center gap-1">
-                  <img src="../image/default-avatar.webp" alt="預設頭像" style="width: 27px; height: 27px;">
-                  <div class="d-block d-lg-flex gap-1 align-items-center">
-                      <span class="reviewerName">評價者姓名</span>
-                      <div class="score">4</div>
-                  </div>
-                </div>
-                <div class="reviewTime">2026-02-03</div>
-              </div>
-              <div class="reviewText" id="reviewText">
-                <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia quasi obcaecati sint impedit in repellat placeat magni voluptates deleniti eligendi.</span>
-              </div>
-            </div>
+            <!-- 評價卡片由 JS 動態渲染至此 -->
+            <div id="reviewsContainer"></div>
           </div>
         </div>
       </section>
@@ -473,7 +455,7 @@
         <div class="d-lg-none mb-2 mt-1 d-flex align-items-start justify-content-center">
           <div class="photoAndScore d-flex flex-column justify-content-between align-items-center gap-2 col-3">
             <img id="mProfileAvatar" class="mobile-avatar" alt="頭像">
-            <div class="scorediv d-flex flex-column my-tooltip" data-text="每個用戶基本分為 60 分，若被其他用戶檢舉一次扣 5 分，扣到 0 分為止。每次消費或者販賣一件商品結束後會詢問對方體驗分及感想，評分 0~5 或 0~3 分(買家對賣家/賣家對買家)，您的信譽分數將往上爬升，有機會獲得更多用戶的信任。">
+            <div class="scorediv d-flex flex-column my-tooltip" data-text="信用積分制度：起始 100 分，上限 150 分。完成一筆交易雙方各 +5、獲得良好評價 +2。爽約失聯 -15、商品嚴重不符 -10、遲到超過 10 分鐘 -5。積分低於 80 分限制上架 5 件，低於 50 分暫停交易 7 天，歸零則永久停權。">
               <small>信譽積分</small>
               <span id="rate2"></span>
             </div>
