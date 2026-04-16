@@ -243,7 +243,8 @@ function initTooltips() {
   }
   // 自動將 button/a 上的 aria-label 或 title 升級為 Bootstrap tooltip
   document.querySelectorAll('button[aria-label], a[aria-label], button[title], a[title]').forEach(el => {
-    if (el.getAttribute('data-bs-toggle') === 'tooltip') return; // 已手動設定
+    const bsToggle = el.getAttribute('data-bs-toggle');
+    if (bsToggle === 'tooltip' || bsToggle === 'popover') return; // 已有 BS 元件，跳過
     const text = el.title || el.getAttribute('aria-label');
     if (!text) return;
     new bootstrap.Tooltip(el, {
@@ -259,7 +260,100 @@ window.initTooltips = initTooltips;
 document.addEventListener('DOMContentLoaded', () => {
   renderAuthUI();
   initTooltips();
+  _initMobileDrawer();
+
+  // #whatcontent 的 pageEnter animation 會建立 stacking context，
+  // 導致內部 z-index（searchbar dropdown、navbar）被後續 content 覆蓋。
+  // 動畫結束後立即移除 animation，解除 stacking context。
+  const wc = document.getElementById('whatcontent');
+  if (wc) {
+    wc.addEventListener('animationend', () => {
+      wc.style.animation = 'none';
+    }, { once: true });
+  }
 });
+
+// ── Mobile Side Drawer ───────────────────────────────────────────────────────
+function _initMobileDrawer() {
+  // Create backdrop
+  const backdrop = document.createElement('div');
+  backdrop.className = 'mobile-nav-backdrop';
+  backdrop.id = 'mobileNavBackdrop';
+  backdrop.addEventListener('click', _closeDrawer);
+
+  // Create drawer shell
+  const drawer = document.createElement('div');
+  drawer.className = 'mobile-nav-drawer';
+  drawer.id = 'mobileNavDrawer';
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'mobile-drawer-header';
+  header.innerHTML = `
+    <span class="mobile-drawer-logo">拾貨寶庫</span>
+    <button class="mobile-drawer-close" aria-label="關閉選單"><i class="ti ti-x"></i></button>
+  `;
+  header.querySelector('.mobile-drawer-close').addEventListener('click', _closeDrawer);
+
+  // Nav content — clone .nav-item entries from whichever navbar collapse exists
+  const navWrap = document.createElement('ul');
+  navWrap.className = 'mobile-drawer-nav list-unstyled mb-0';
+  const sourceNav = document.querySelector('.mobileNav')
+                 || document.querySelector('.navbar-collapse .navbar-nav');
+  if (sourceNav) {
+    sourceNav.querySelectorAll('.nav-item').forEach(item => {
+      const clone = item.cloneNode(true);
+      clone.className = 'drawer-nav-item';
+      // Close drawer when any link inside is tapped
+      clone.querySelectorAll('a').forEach(a => a.addEventListener('click', _closeDrawer));
+      navWrap.appendChild(clone);
+    });
+  }
+
+  drawer.appendChild(header);
+  drawer.appendChild(navWrap);
+  document.body.appendChild(backdrop);
+  document.body.appendChild(drawer);
+
+  // Intercept the hamburger toggler — mobile only, capture phase fires before Bootstrap
+  const toggler = document.querySelector('.navbar-toggler');
+  if (toggler) {
+    toggler.addEventListener('click', (e) => {
+      if (window.innerWidth > 991) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      _openDrawer();
+    }, true);
+  }
+
+  // ESC key closes the drawer
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') _closeDrawer();
+  });
+}
+
+function _openDrawer() {
+  const drawer = document.getElementById('mobileNavDrawer');
+  const toggler = document.querySelector('.navbar-toggler');
+  drawer?.classList.add('open');
+  document.getElementById('mobileNavBackdrop')?.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  toggler?.setAttribute('aria-expanded', 'true');
+  // Re-trigger stagger animation each open
+  document.querySelectorAll('.mobile-drawer-nav .drawer-nav-item').forEach(el => {
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = '';
+  });
+}
+
+function _closeDrawer() {
+  const toggler = document.querySelector('.navbar-toggler');
+  document.getElementById('mobileNavDrawer')?.classList.remove('open');
+  document.getElementById('mobileNavBackdrop')?.classList.remove('open');
+  document.body.style.overflow = '';
+  toggler?.setAttribute('aria-expanded', 'false');
+}
 export const formatTaipeiTime = (dateStr) => {
   if (!dateStr) return '-'; // 如果沒有資料，直接回傳 '-'
   

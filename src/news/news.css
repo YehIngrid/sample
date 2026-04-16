@@ -11,6 +11,7 @@
     padding-right: 15vw;
     padding-top: 50px;
     min-height: calc(100dvh - 60px);
+    animation: pageEnter 0.35s ease both;
 }
 
 /* ================== 標題區塊 ================== */
@@ -218,6 +219,7 @@
 /* 讓兩個區塊擺在同一頁，只顯示其中一個 */
 #newsDetailPage {
   display: none; /* 預設隱藏 */
+  animation: pageEnter 0.35s ease both;
   margin-left: 15vw;
   margin-right: 15vw;
   padding-top: 50px;

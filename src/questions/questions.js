@@ -20,20 +20,29 @@ const observer = new IntersectionObserver((entries) => {
 
 // 為每個內容區塊啟用觀察
 sections.forEach(section => observer.observe(section));
+function expandContent(content) {
+  content.classList.add('show');
+  content.closest('.faq-item').classList.add('open');
+}
+
+function collapseContent(content) {
+  content.classList.remove('show');
+  content.closest('.faq-item').classList.remove('open');
+}
+
 const collapsibles = document.querySelectorAll('.collapsible');
 collapsibles.forEach(btn => {
   btn.addEventListener('click', function () {
     const content = this.nextElementSibling;
     const icon = this.querySelector('.icon');
+    const isOpen = content.classList.contains('show');
 
-    content.classList.toggle('show');
-
-    if (content.classList.contains('show')) {
-      icon.classList.remove('fa-plus');
-      icon.classList.add('fa-minus');
+    if (isOpen) {
+      collapseContent(content);
+      icon.classList.replace('fa-minus', 'fa-plus');
     } else {
-      icon.classList.remove('fa-minus');
-      icon.classList.add('fa-plus');
+      expandContent(content);
+      icon.classList.replace('fa-plus', 'fa-minus');
     }
   });
 });
@@ -53,11 +62,8 @@ function openFaqById(id) {
   const icon = btn.querySelector('.icon');
 
   if (content && !content.classList.contains('show')) {
-    content.classList.add('show');
-    if (icon) {
-      icon.classList.remove('fa-plus');
-      icon.classList.add('fa-minus');
-    }
+    expandContent(content);
+    if (icon) icon.classList.replace('fa-plus', 'fa-minus');
   }
 
   // 稍微往上偏移，讓標題不被 navbar 遮住

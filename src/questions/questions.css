@@ -190,11 +190,16 @@ section ul {
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   border: 1px solid transparent;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
   overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 0fr;
+  transition: box-shadow 0.2s ease, border 0.2s ease,
+              grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.faq-item.open {
+  grid-template-rows: auto 1fr;
 }
 .faq-item:hover {
-  transform: translateY(-1px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   border: 1px solid rgba(0,75,151,0.2);
 }
@@ -235,16 +240,15 @@ section ul {
 
 /* ── 答案展開區 ── */
 .content-news {
-  max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
+  min-height: 0;
   padding: 0 16px;
   font-size: 0.9rem;
   color: #444;
   line-height: 1.7;
+  transition: padding 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .content-news.show {
-  max-height: 5000px;
   padding: 4px 16px 16px;
 }
 

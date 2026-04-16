@@ -20,6 +20,7 @@ let cartItems = [];
 
 // ================== DOM ==================
 const cartList = document.getElementById('cart-items');
+let _cartAnimated = false; // 只有第一次 render 才播入場動畫
 
 // ================== Utils ==================
 function loadState() {
@@ -158,9 +159,12 @@ function renderCart() {
     return;
   }
 
-  cartItems.forEach(item => {
+  const animate = !_cartAnimated;
+  _cartAnimated = true;
+  cartItems.forEach((item, i) => {
     const el = document.createElement('div');
     el.className = 'cart-card';
+    if (animate) el.style.animationDelay = `${i * 0.07}s`;
     el.dataset.id = item.id;
     el.dataset.itemId = item.productId;
     el.dataset.sellerId = item.ownerId;

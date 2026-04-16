@@ -708,7 +708,7 @@ function renderBuyerOrders(list) {
     tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
     return;
   }
-  const rows = list.map(item => {
+  const rows = list.map((item, i) => {
     const id       = item.id;
     const name     = esc(item.name);
     const label    = fmtOrderLabel(item);
@@ -721,7 +721,7 @@ function renderBuyerOrders(list) {
     const log = esc(item.log || '無詳細資訊');
 
   return `
-      <tr data-id="${esc(id)}">
+      <tr data-id="${esc(id)}" style="animation-delay:${i * 0.05}s">
         <td>${label}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
@@ -754,7 +754,7 @@ function renderSellerOrders(list) {
     tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
     return;
   }
-  const rows = list.map(item => {
+  const rows = list.map((item, i) => {
     const id       = item.id;
     const name     = esc(item.name);
     const label    = fmtOrderLabel(item);
@@ -766,7 +766,7 @@ function renderSellerOrders(list) {
     const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
     const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
     return `
-      <tr data-id="${esc(id)}">
+      <tr data-id="${esc(id)}" style="animation-delay:${i * 0.05}s">
         <td>${label}</td>
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
@@ -800,7 +800,7 @@ function renderTable(list = []) {
     return;
   }
 
-  const rows = list.map(item => {
+  const rows = list.map((item, i) => {
     const id       = item.id;
     const name     = esc(item.name);
     const price    = fmtPrice(item.price);
@@ -810,7 +810,7 @@ function renderTable(list = []) {
     const stockStyle = quantity === 0 ? 'color: #dc3545; font-weight: bold;' : '';
 
     return `
-      <tr data-id="${esc(id)}">
+      <tr data-id="${esc(id)}" style="animation-delay:${i * 0.05}s">
         <td>${name}</td>
         <td><span style="${stockStyle}">${quantity}</span></td>
         <td>${price}</td>
@@ -862,7 +862,7 @@ function renderCards(list = []) {
     return;
   }
 
-  const html = list.map(item => {
+  const html = list.map((item, i) => {
     const id       = item.id;
     const name     = esc(item.name);
     const price    = fmtPrice(item.price);
@@ -874,7 +874,7 @@ function renderCards(list = []) {
 
     return `
       <div class="col" data-id="${esc(id)}">
-        <div class="cardContainer h-100">
+        <div class="cardContainer h-100" style="animation-delay:${i * 0.07}s">
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row justify-content-between align-items-end">
               <div class="d-flex">
@@ -920,7 +920,7 @@ function renderSellerCards(list = []) {
     return;
   }
 
-  const html = list.map(item => {
+  const html = list.map((item, i) => {
     const id       = item.id;
     const name     = esc(item.name);
     const label    = fmtOrderLabel(item);
@@ -933,7 +933,7 @@ function renderSellerCards(list = []) {
 
     return `
       <div class="col" data-id="${esc(id)}">
-        <div class="cardContainer h-100">
+        <div class="cardContainer h-100" style="animation-delay:${i * 0.07}s">
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row justify-content-between align-items-start">
               <div style="flex:1;min-width:0;">
@@ -977,7 +977,7 @@ function renderBuyerCards(list = []) {
     return;
   }
 
-  const html = list.map(item => {
+  const html = list.map((item, i) => {
     const id       = item.id;
     const name     = esc(item.name);
     const label    = fmtOrderLabel(item);
@@ -988,7 +988,7 @@ function renderBuyerCards(list = []) {
 
     return `
       <div class="col" data-id="${esc(id)}">
-        <div class="cardContainer h-100">
+        <div class="cardContainer h-100" style="animation-delay:${i * 0.07}s">
           <div class="card-body d-flex flex-column">
             <div class="d-flex flex-row justify-content-between align-items-start">
               <div style="flex:1;min-width:0;">

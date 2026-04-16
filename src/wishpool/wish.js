@@ -1,3 +1,4 @@
+import '../default/default.js';
 import BackendService from '../BackendService.js';
 
 const backendService = new BackendService();

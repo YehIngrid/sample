@@ -123,7 +123,12 @@ let filteredData = data;  // 預設為全部資料
     // 返回新聞列表
     function showNewsList() {
       document.getElementById("newsDetailPage").style.display = "none";
-      document.querySelector(".content").style.display = "";
+      const content = document.querySelector(".content");
+      content.style.display = "";
+      content.style.animation = 'none';
+      // 強制 reflow 後重新觸發動畫
+      void content.offsetWidth;
+      content.style.animation = '';
     }
 
     const tabs = document.querySelectorAll('.filter-btn');

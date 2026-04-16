@@ -98,6 +98,11 @@
 /* 隱藏類別 */
 .hidden { display: none !important; }
 
+/* ── 商品卡入場動畫 ── */
+#productRow .col {
+  animation: pageEnter 0.32s ease both;
+}
+
 /* ── 商品卡 (最新上架風格) ── */
 .product-card {
   background: aliceblue;

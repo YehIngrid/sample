@@ -1173,6 +1173,21 @@ small { font-size: 10px; color: #004b97; }
 }
 
 /* ── Mobile profile card ── */
+/* ── Desktop table row entrance ── */
+#products tbody tr,
+#sellProducts tbody tr,
+#buyProducts tbody tr {
+  animation: pageEnter 0.3s ease both;
+}
+
+/* ── Settings cards stagger ── */
+#settings .profile-edit-card {
+  animation: pageEnter 0.38s ease both;
+}
+#settings .profile-edit-card:nth-child(1) { animation-delay: 0.05s; }
+#settings .profile-edit-card:nth-child(2) { animation-delay: 0.12s; }
+#settings .profile-edit-card:nth-child(3) { animation-delay: 0.19s; }
+
 .cardContainer {
   display: flex;
   justify-content: space-around;
@@ -1184,6 +1199,7 @@ small { font-size: 10px; color: #004b97; }
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   border: 1px solid transparent;
   transition: transform 0.4s ease, box-shadow 0.3s, border 0.4s ease;
+  animation: pageEnter 0.35s ease both;
 }
 .cardContainer:hover {
   transform: translateY(-1px);

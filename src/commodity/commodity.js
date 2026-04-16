@@ -278,9 +278,10 @@ function renderProductsBootstrap(items) {
     1:'全新', 2:'幾乎全新', 3:'半新', 4:'適中', 5:'稍舊', 6:'全舊',
   };
 
-  items.forEach(p => {
+  items.forEach((p, i) => {
     const col = document.createElement('div');
     col.className = 'col';
+    col.style.animationDelay = `${Math.min(i, 11) * 0.04}s`;
     const category = categoryMap[p.category] ?? '其他';
     const newOrOld = newOrOldMap[p.newOrOld] ?? '';
     const imgUrl   = p.mainImage || '';

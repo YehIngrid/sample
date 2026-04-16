@@ -1,3 +1,8 @@
+/* ── 入場動畫 ── */
+.col-lg-5.order-1   { animation: pageEnter 0.4s ease both; }
+.product-info-col   { animation: pageEnter 0.4s 0.08s ease both; }
+.mix                { animation: pageEnter 0.4s 0.14s ease both; }
+
   .product-container {
     max-width: 80vw;
     margin: auto;

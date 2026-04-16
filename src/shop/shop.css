@@ -336,6 +336,7 @@ ul{
   }
 #seller{
   display: none;
+  animation: pageEnter 0.35s ease both;
 }
 .formsection{
   padding-left: 7%;
@@ -2785,13 +2786,13 @@ html{ scroll-behavior:smooth; }
   }
 }
 
-/* ── 搜尋 Offcanvas z-index：蓋過 header (z-index:3000) ── */
+/* ── 搜尋 Offcanvas z-index：蓋過 header (3000) 和 bottom-nav (4000) ── */
 @media (max-width: 991.98px) {
   #searchOffcanvas {
-    z-index: 3100 !important;
+    z-index: 4500 !important;
   }
   .offcanvas-backdrop {
-    z-index: 3050 !important;
+    z-index: 4400 !important;
   }
 }
 /* ===== 手機版商品分類 3×2 格 ===== */
