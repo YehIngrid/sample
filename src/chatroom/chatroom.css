@@ -1286,3 +1286,34 @@ html, body {
 [data-theme-dark] .onboarding-desc { color: #9399b2; }
 [data-theme-dark] .onboarding-tooltip.arrow-down::after { border-top-color: #1e1e2e; }
 [data-theme-dark] .onboarding-tooltip.arrow-up::after { border-bottom-color: #1e1e2e; }
+
+/* ── 購物車數量 badge（from default.css）── */
+.cart-count {
+  font-size: 14px;
+  background: #abdad5;
+  color: #383838;
+  padding: 0px 3px;
+  min-width: 20px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+.cart-count.bump {
+  transform: scale(1.4);
+}
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 10px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  line-height: 16px;
+  border-radius: 8px;
+  pointer-events: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+}
+.bottom-nav-item .cart-badge {
+  top: 2px;
+  right: calc(50% - 18px);
+}
