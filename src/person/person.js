@@ -1253,6 +1253,7 @@ const updateStatusUI = (data) => {
     img.src = `../svg/${statusName}yet.svg`;
     timeBox.innerText = '';
     item.classList.remove('active');
+    item.style.display = '';
 
     // reset text（可依你的原本 HTML 定義）
     const defaultTextMap = {
@@ -1282,7 +1283,7 @@ const updateStatusUI = (data) => {
         timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
         item.classList.add('active');
       } else if (statusName === 'scored') {
-        // scored 保持灰色，等雙方評分完才亮（不改 icon、不改文字、不加時間）
+        item.style.display = 'none';
       } else {
         // 中間未完成的步驟 → cancel icon + 取消時間（時間只放 timeBox，不重複放 text）
         img.src = '../svg/cancel.svg';
