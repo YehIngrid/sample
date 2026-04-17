@@ -1370,6 +1370,106 @@ html.skip-loader #whatcontent { display: block !important; }
   .mobile-nav-backdrop { transition: none; }
 }
 
+/* ── 檢舉表單 (report-form-popup) ── */
+.report-form-popup {
+  width: 480px !important;
+  max-width: 92vw !important;
+}
+.report-form-popup .swal2-title {
+  font-size: 1rem !important;
+  padding-bottom: 4px !important;
+}
+.report-form-popup .swal2-html-container {
+  padding: 0 2px !important;
+  margin-top: 8px !important;
+}
+.report-form-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #004b97;
+  margin-bottom: 4px;
+  text-align: left;
+  letter-spacing: 0.02em;
+}
+.report-form-select,
+.report-form-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #c8d8e8;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #333;
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+.report-form-select:focus,
+.report-form-input:focus {
+  border-color: #004b97;
+  box-shadow: 0 0 0 3px rgba(0,75,151,0.1);
+}
+.report-form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23004b97' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.report-form-textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #c8d8e8;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #333;
+  background: #fff;
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 80px;
+  margin-bottom: 0;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+  line-height: 1.5;
+}
+.report-form-textarea:focus {
+  border-color: #004b97;
+  box-shadow: 0 0 0 3px rgba(0,75,151,0.1);
+}
+.report-form-popup .swal2-confirm {
+  background: #e53935 !important;
+  color: #fff !important;
+}
+.report-form-popup .swal2-confirm:hover,
+.report-form-popup .swal2-confirm:focus {
+  background: #c62828 !important;
+}
+.report-form-target {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 0 0 14px;
+  text-align: left;
+}
+.report-form-target strong {
+  color: #333;
+}
+@media (max-width: 576px) {
+  .report-form-popup {
+    width: 92vw !important;
+    padding: 16px 12px !important;
+  }
+  .report-form-select,
+  .report-form-input,
+  .report-form-textarea {
+    font-size: 16px; /* prevent iOS zoom */
+  }
+}
+
 /* ── Swal 圖片放大共用樣式 ── */
 .swal2-image {
   max-height: 75vh !important;

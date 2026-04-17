@@ -388,6 +388,16 @@ if (checkoutBtn) {
       return;
     }
 
+    const confirm = await Swal.fire({
+      icon: 'question',
+      title: '確認送出訂單？',
+      text: `共 ${selected.length} 件商品，送出後將通知賣家。`,
+      showCancelButton: true,
+      confirmButtonText: '確認送出',
+      cancelButtonText: '再想想'
+    });
+    if (!confirm.isConfirmed) return;
+
     try {
       isCheckingOut = true;
       checkoutBtn.disabled = true;

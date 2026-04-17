@@ -285,6 +285,101 @@ logoutMobileButton?.addEventListener('click', function() {
 });
 
 
+// ===== 常用帳號（Gmail）設定 =====
+// ===== Google 帳號綁定 =====
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // 後端給 client ID 後填入
+
+function initGoogleBind() {
+  if (typeof google === 'undefined') return;
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleBindCredential,
+    auto_select: false,
+    cancel_on_tap_outside: true,
+  });
+}
+window.addEventListener('load', initGoogleBind);
+
+async function handleGoogleBindCredential(response) {
+  Swal.close();
+  Swal.fire({ title: '綁定中...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+  try {
+    // ⚠️ 後端 API 準備好後，取消下方註解並移除 fallback
+    // const res = await axios.post('https://thpr.hlc23.dev/api/auth/google/bind',
+    //   { token: response.credential }, { withCredentials: true });
+    // const email = res.data?.email;
+
+    // Fallback：後端好了之後移除
+    const payload = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    const email = payload.email;
+
+    const formData = new FormData();
+    formData.append('email', email);
+    await backendService.updateProfile(formData);
+    document.getElementById('showEmail').textContent = email;
+    Swal.fire({ icon: 'success', title: '綁定成功', text: email, timer: 2000, showConfirmButton: false });
+  } catch {
+    Swal.fire({ icon: 'error', title: '綁定失敗', text: '請稍後再試' });
+  }
+}
+
+document.getElementById('setEmailBtn')?.addEventListener('click', async () => {
+  const current = document.getElementById('showEmail')?.textContent?.trim();
+  const currentVal = current === '尚未設定' ? '' : current;
+
+  const { isConfirmed } = await Swal.fire({
+    title: '設定常用帳號',
+    html: `
+      <input
+        id="swal-email-input"
+        type="email"
+        autocomplete="email"
+        class="swal2-input"
+        placeholder="輸入 Email"
+        value="${currentVal}"
+      >
+      <div style="display:flex;align-items:center;gap:8px;margin:14px 0 4px;">
+        <div style="flex:1;height:1px;background:#e0e0e0;"></div>
+        <span style="font-size:12px;color:#aaa;">或</span>
+        <div style="flex:1;height:1px;background:#e0e0e0;"></div>
+      </div>
+      <div id="google-bind-btn" style="display:flex;justify-content:center;margin-top:10px;"></div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: '儲存',
+    cancelButtonText: '取消',
+    focusConfirm: false,
+    didOpen: () => {
+      if (typeof google !== 'undefined') {
+        google.accounts.id.renderButton(
+          document.getElementById('google-bind-btn'),
+          { theme: 'outline', size: 'large', text: 'continue_with', locale: 'zh-TW' }
+        );
+      }
+    },
+    preConfirm: () => {
+      const val = document.getElementById('swal-email-input').value.trim();
+      if (!val) { Swal.showValidationMessage('請輸入 Email'); return false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { Swal.showValidationMessage('Email 格式不正確'); return false; }
+      return val;
+    }
+  });
+
+  if (!isConfirmed) return;
+  const email = document.getElementById('swal-email-input')?.value?.trim();
+  if (!email) return;
+
+  try {
+    const formData = new FormData();
+    formData.append('email', email);
+    await backendService.updateProfile(formData);
+    document.getElementById('showEmail').textContent = email;
+    Swal.fire({ icon: 'success', title: '儲存成功', timer: 1500, showConfirmButton: false });
+  } catch {
+    Swal.fire({ icon: 'error', title: '儲存失敗', text: '請稍後再試' });
+  }
+});
+
 // 1. 修改原本的選單點擊監聽 (在 DOMContentLoaded 內)
 document.querySelectorAll('[data-target]').forEach(item => {
   item.addEventListener('click', function (e) {
@@ -580,6 +675,7 @@ async function loadSellerOrders(page) {
   renderSellerOrders(list);
   renderSellerCards(list);
   renderOrderPagination('sellPagination', pagination, loadSellerOrders);
+  updateFilterTabCounts(list, 'sellFilter', pagination);
 }
 
 async function loadBuyerOrders(page) {
@@ -590,6 +686,86 @@ async function loadBuyerOrders(page) {
   renderBuyerOrders(list);
   renderBuyerCards(list);
   renderOrderPagination('buyPagination', pagination, loadBuyerOrders);
+  updateFilterTabCounts(list, 'buyFilter', pagination);
+}
+
+// API status → filter tab data-status
+const API_TO_TAB = { pending:'pending', preparing:'preparing', delivered:'delivered', completed:'review', scored:'completed', canceled:'cancelled' };
+// Filter tabs that show red dot when count > 0 (active/action-needed statuses)
+const ACTIVE_TAB_STATUSES = new Set(['pending','preparing','delivered','review']);
+
+function updateFilterTabCounts(list, filterId, pagination) {
+  const container = document.getElementById(filterId);
+  if (!container) return;
+
+  // Count by tab-status key
+  const counts = { all: list.length };
+  list.forEach(item => {
+    const tabKey = API_TO_TAB[(item.status ?? '').toLowerCase()] ?? 'pending';
+    counts[tabKey] = (counts[tabKey] || 0) + 1;
+  });
+
+  const hasMore = (pagination.totalPages ?? 1) > 1;
+
+  container.querySelectorAll('.filter-tab').forEach(btn => {
+    const status = btn.dataset.status;
+    const count = counts[status] || 0;
+    const showCount = count > 0;
+
+    // Count badge inside tab
+    let countSpan = btn.querySelector('.tab-count');
+    if (!countSpan) {
+      countSpan = document.createElement('span');
+      countSpan.className = 'tab-count';
+      btn.appendChild(countSpan);
+    }
+    countSpan.textContent = (hasMore && status === 'all') ? `${count}+` : count;
+
+    // Red dot for active statuses
+    btn.classList.toggle('tab-has-dot', showCount && ACTIVE_TAB_STATUSES.has(status));
+  });
+}
+
+async function loadOrderBadges() {
+  try {
+    const [sellRes, buyRes] = await Promise.all([
+      backendService.getSellerOrders(1),
+      backendService.getBuyerOrders(1)
+    ]);
+    const sellList = sellRes?.data?.data?.orders ?? [];
+    const buyList  = buyRes?.data?.data?.orders  ?? [];
+    const sellPag  = sellRes?.data?.data?.pagination ?? {};
+    const buyPag   = buyRes?.data?.data?.pagination  ?? {};
+    updateSidebarBadge('sellProducts', sellList, sellPag);
+    updateSidebarBadge('buyProducts',  buyList,  buyPag);
+  } catch { /* silent */ }
+}
+
+function updateSidebarBadge(target, list, pagination) {
+  const total    = pagination.totalItems ?? list.length;
+  const hasMore  = (pagination.totalPages ?? 1) > 1;
+  const label    = hasMore ? `${list.length}+` : `${total}`;
+  const hasActive = list.some(item => ACTIVE_TAB_STATUSES.has(API_TO_TAB[(item.status ?? '').toLowerCase()]));
+
+  document.querySelectorAll(`[data-target="${target}"]`).forEach(el => {
+    // Count badge
+    let badge = el.querySelector('.order-sidebar-count');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'order-sidebar-count';
+      el.appendChild(badge);
+    }
+    badge.textContent = total > 0 ? label : '';
+
+    // Red dot
+    let dot = el.querySelector('.order-red-dot');
+    if (!dot) {
+      dot = document.createElement('span');
+      dot.className = 'order-red-dot';
+      el.appendChild(dot);
+    }
+    dot.style.display = hasActive ? '' : 'none';
+  });
 }
 
 function renderOrderPagination(containerId, pagination, loadFn) {
@@ -638,9 +814,12 @@ document.getElementById('photo').addEventListener('change', function (e) {
 // 在 DOMContentLoaded 裡面加入
 document.addEventListener('DOMContentLoaded', () => {
   backendService = new BackendService();
-  
+
   // 初始化：根據當前 URL 決定顯示哪個頁面
   handleRouting();
+
+  // 預載入側邊欄 / 手機按鈕的訂單計數紅點
+  loadOrderBadges();
 
   // 監聽瀏覽器上一頁/下一頁
   window.onpopstate = function() {
@@ -655,7 +834,7 @@ const order_STATUS_MAP = {
   preparing: { text: '待出貨', badge: 'order-badge-preparing', action: '即將出貨', icon: '../svg/readyDeliver.svg'},
   delivered: { text: '待收貨', badge: 'order-badge-delivered', action: '等待買家確認收貨', icon: '../svg/waitBuyer.svg'},
   completed: { text: '待評價', badge: 'order-badge-completed', action: '給對方評價', icon: '../svg/giveStar.svg'},
-  canceled: { text: '已取消', badge: 'order-badge-canceled', action: '給對方評價', icon: '../svg/giveStar.svg'}
+  canceled: { text: '已取消', badge: 'order-badge-canceled', action: null, icon: null}
 }
 const buyer_STATUS_MAP = {
   pending: { text: '待確認', badge: 'order-badge-pending', action: '聯絡賣家', icon: '../svg/canChat.svg'},
@@ -663,7 +842,7 @@ const buyer_STATUS_MAP = {
   delivered: { text: '待收貨', badge: 'order-badge-delivered', action: '成功取貨', icon: '../svg/acceptOrder.svg'},
   completed: { text: '待評價', badge: 'order-badge-completed', action: '給對方評價', icon: '../svg/giveStar.svg'},
   scored:   { text: '已完成', badge: 'order-badge-scored', action: '查看評價', icon: '../svg/giveStar.svg'},
-  canceled: { text: '已取消', badge: 'order-badge-canceled', action: '給對方評價', icon: '../svg/giveStar.svg'}
+  canceled: { text: '已取消', badge: 'order-badge-canceled', action: null, icon: null}
 }
 const nt = new Intl.NumberFormat('zh-TW', {
   style: 'currency', currency: 'TWD', maximumFractionDigits: 0
@@ -729,10 +908,10 @@ function renderBuyerOrders(list) {
         <td>${price} 元</td>
         <td>
           <div class="d-flex gap-2">
-            <button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}">
+            ${item.status !== 'canceled' ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}">
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
-            </button>
+            </button>` : ''}
             ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
             <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
               <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
@@ -773,10 +952,10 @@ function renderSellerOrders(list) {
         <td>${created}</td>
         <td>
           <div class="d-flex gap-2">
-            <button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>
+            ${item.status !== 'canceled' ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
-            </button>
+            </button>` : ''}
             ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
             <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
               <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
@@ -2064,7 +2243,12 @@ function renderReviewsContainer(reviews) {
   const container = document.getElementById('reviewsContainer');
   if (!container) return;
   if (!reviews || reviews.length === 0) {
-    container.innerHTML = `<div class="review-empty">尚無評價紀錄</div>`;
+    container.innerHTML = `
+      <div class="review-empty">
+        <i class="fa-regular fa-star review-empty-icon"></i>
+        <div class="review-empty-title">目前還沒有評價</div>
+        <div class="review-empty-sub">完成交易後，買賣雙方可互相留下評價</div>
+      </div>`;
     return;
   }
   const POSITIVE_LABELS = { onTime: '準時赴約', communication: '溝通禮貌', reliability: '交易可靠', accurate: '商品描述準確', fast: '出貨速度快', polite: '溝通禮貌', reliable: '交易可靠', packaging: '包裝完整' };

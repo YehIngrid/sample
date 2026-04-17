@@ -8,9 +8,9 @@
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": "image/bigLogo.png",
+      "src": "image/bigLogo.jpg",
       "sizes": "192x192 512x512 937x929",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     }
   ]

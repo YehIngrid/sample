@@ -72,11 +72,11 @@ async function callSignUp() {
   const nameInput = document.getElementById('name');
   const checkBackLogin = document.getElementById('checkBackLogin');
 
-  // 密碼格式：至少 8 碼，含英數
+  // 密碼格式：至少 10 碼，需含大寫、小寫、數字、特殊符號
   const pwd = passwordInput1.value.trim();
-  const isValid = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(pwd);
+  const isValid = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).{10,}$/.test(pwd);
   if (!isValid) {
-    fieldError('password1', 'err-signup-pwd1', '密碼需至少 8 位，且同時包含英文字母與數字');
+    fieldError('password1', 'err-signup-pwd1', '密碼需至少 10 位，且包含大寫字母、小寫字母、數字及特殊符號（如 !@#$%）');
     return;
   }
 

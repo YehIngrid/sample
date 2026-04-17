@@ -586,20 +586,56 @@ function toggleSellerReviews() {
 async function reportSeller(sellerId) {
   if (!sellerId) return;
 
-  const res = await Swal.fire({
+  const { isConfirmed, value } = await Swal.fire({
     title: '檢舉賣家',
-    input: 'textarea',
-    inputPlaceholder: '請描述檢舉原因',
+    customClass: { popup: 'report-form-popup' },
+    html: `
+      <label class="report-form-label" for="report-category">檢舉類型</label>
+      <select id="report-category" class="report-form-select">
+        <option value="" disabled selected>請選擇檢舉類型</option>
+        <option value="illegal_goods">違法或禁售商品（菸、酒、藥品、醫療器材）</option>
+        <option value="ip_infringement">智財權侵權（非法講義、電子書、盜錄課程）</option>
+        <option value="fraud">疑似詐騙行為（私下匯款、釣魚網站）</option>
+        <option value="false_description">商品描述不實（照片不符、隱瞞瑕疵、分類錯誤）</option>
+        <option value="spam_harassment">惡意刷屏／騷擾（重複上架、人身攻擊）</option>
+        <option value="other">其他原因</option>
+      </select>
+      <label class="report-form-label" for="report-subject">標題</label>
+      <input id="report-subject" class="report-form-input" placeholder="請輸入標題" maxlength="50">
+      <label class="report-form-label" for="report-detail">內文補充說明（選填）</label>
+      <textarea id="report-detail" class="report-form-textarea" placeholder="請描述詳細情況"></textarea>
+    `,
     showCancelButton: true,
+    confirmButtonText: '送出檢舉',
+    cancelButtonText: '取消',
+    focusConfirm: false,
+    preConfirm: () => {
+      const category = document.getElementById('report-category').value;
+      const subject  = document.getElementById('report-subject').value.trim();
+      const detail   = document.getElementById('report-detail').value.trim();
+      if (!category) {
+        Swal.showValidationMessage('請選擇檢舉類型');
+        return false;
+      }
+      if (!subject) {
+        Swal.showValidationMessage('請填寫標題');
+        return false;
+      }
+      return { category, subject, detail };
+    }
   });
 
-  if (!res.isConfirmed) return;
+  if (!isConfirmed || !value) return;
 
   try {
-    await backendService.reportSeller(sellerId, { reason: res.value });
-    Swal.fire('已送出', '', 'success');
+    await backendService.reportSeller(sellerId, {
+      reason: value.category,
+      subject: value.subject,
+      detail: value.detail
+    });
+    Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
   } catch (e) {
-    Swal.fire('送出失敗', '', 'error');
+    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
   }
 }
 

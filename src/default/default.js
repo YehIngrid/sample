@@ -250,7 +250,7 @@ function initTooltips() {
     new bootstrap.Tooltip(el, {
       title: text,
       trigger: 'hover focus',
-      placement: window.innerWidth <= 991 ? 'bottom' : 'top',
+      placement: 'bottom',
     });
   });
 }

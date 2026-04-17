@@ -113,6 +113,9 @@
   flex-wrap: wrap;
   padding-top: 0.4rem;
   padding-bottom: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .filter-btn {
@@ -125,6 +128,9 @@
   color: #004b97;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
+  flex-shrink: 1;
+  min-width: 0;
+  white-space: nowrap;
 }
 
 .filter-btn:hover {
