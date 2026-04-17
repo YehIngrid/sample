@@ -432,6 +432,10 @@ small { font-size: 10px; color: #004b97; }
   background-color: white;
   margin-bottom: 10px;
 }
+.back img {
+  width: 28px;
+  height: 28px;
+}
 .stateContainer {
   width: 50vw;
   margin: 0 auto;

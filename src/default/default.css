@@ -135,6 +135,19 @@ ul{
     color: rgba(255,255,255,0.85);
     border-top: 3px solid #abdad5;
     margin-top: auto;
+    position: relative;
+}
+/* 手機版：footer 下方 64px body padding 區域補藍色，避免白色缺口 */
+@media (max-width: 991px) {
+    .footer::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        height: 64px;
+        background-color: #004b97;
+    }
 }
 .footer-inner {
     display: grid;
@@ -1355,4 +1368,14 @@ html.skip-loader #whatcontent { display: block !important; }
 @media (prefers-reduced-motion: reduce) {
   .mobile-nav-drawer,
   .mobile-nav-backdrop { transition: none; }
+}
+
+/* ── Swal 圖片放大共用樣式 ── */
+.swal2-image {
+  max-height: 75vh !important;
+  max-width: 85vw !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+  border-radius: 8px;
 }

@@ -1,0 +1,17 @@
+{
+  "name": "拾貨寶庫",
+  "short_name": "拾貨寶庫",
+  "description": "中興大學最方便的二手拍賣市集",
+  "start_url": "./newhome/newhome.html",
+  "display": "standalone",
+  "theme_color": "#004b97",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "image/bigLogo.png",
+      "sizes": "192x192 512x512 937x929",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

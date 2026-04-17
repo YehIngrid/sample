@@ -437,35 +437,12 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     }, { passive: true });
   }
 
-  // 3.6 PhotoSwipe 點擊放大（使用圖片實際尺寸）
-  if (mainImg && typeof PhotoSwipe !== 'undefined' && list.length > 0) {
-    function getImgSize(src) {
-      return new Promise(resolve => {
-        const img = new Image();
-        img.onload  = () => resolve({ src, width: img.naturalWidth,  height: img.naturalHeight });
-        img.onerror = () => resolve({ src, width: 1200, height: 900 });
-        img.src = src;
-      });
-    }
-
-    let pswpDataSource = null;
-    async function openPswp(idx) {
-      if (!pswpDataSource) {
-        pswpDataSource = await Promise.all(list.map(getImgSize));
-      }
-      const pswp = new PhotoSwipe({
-        dataSource: pswpDataSource,
-        index: idx,
-        bgOpacity: 0.88,
-        showHideAnimationType: 'zoom',
-        clickToCloseNonZoomable: true,
-      });
-      pswp.on('change', () => setMainByIndex(pswp.currIndex));
-      pswp.init();
-    }
-
-    // 只在主圖 img 本身上監聽，避免箭頭按鈕觸發（箭頭已有 stopPropagation）
-    mainImg.addEventListener('click', () => openPswp(currentIdx));
+  // 3.6 點擊主圖放大
+  if (mainImg) {
+    mainImg.style.cursor = 'pointer';
+    mainImg.addEventListener('click', () => {
+      Swal.fire({ imageUrl: mainImg.src, imageAlt: '商品圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
+    });
   }
 })();
 

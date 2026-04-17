@@ -662,6 +662,7 @@ const buyer_STATUS_MAP = {
   preparing: { text: '待出貨', badge: 'order-badge-preparing', action: '聯絡賣家', icon: '../svg/canChat.svg'},
   delivered: { text: '待收貨', badge: 'order-badge-delivered', action: '成功取貨', icon: '../svg/acceptOrder.svg'},
   completed: { text: '待評價', badge: 'order-badge-completed', action: '給對方評價', icon: '../svg/giveStar.svg'},
+  scored:   { text: '已完成', badge: 'order-badge-scored', action: '查看評價', icon: '../svg/giveStar.svg'},
   canceled: { text: '已取消', badge: 'order-badge-canceled', action: '給對方評價', icon: '../svg/giveStar.svg'}
 }
 const nt = new Intl.NumberFormat('zh-TW', {
@@ -1120,16 +1121,29 @@ async function getDetail(id) {
           <td data-label="商品編號">${item.itemId}</td>
           <td data-label="商品照片">
             <img src="${item.item.mainImage || '../image/placeholder.webp'}"
-                 style="width:80px;height:80px;object-fit:cover;">
+                 style="width:80px;height:80px;object-fit:cover;cursor:pointer;border-radius:6px;transition:opacity 0.2s;"
+                 onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
           </td>
           <td data-label="名稱">${htmlEncode(item?.item.name)}</td>
           <td data-label="購買數量">${item.quantity}</td>
           <td data-label="單價(元)">${item.price}</td>
         </tr>
       `).join('');
+      itemlist.querySelectorAll('td[data-label="商品照片"] img').forEach(img => {
+        img.addEventListener('click', () => {
+          Swal.fire({
+            imageUrl: img.src,
+            imageAlt: '商品照片',
+            showConfirmButton: false,
+            showCloseButton: true,
+            background: '#fff',
+            width: 'auto',
+          });
+        });
+      });
     }
 
-    updateStatusUI(data);
+    updateStatusUI(data, isSell ? sellDetail : buyDetail);
 
     // 切換畫面
     if (isSell) {
@@ -1235,9 +1249,9 @@ const formatter = new Intl.DateTimeFormat('zh-TW', {
 //   });
 // };
 
-const updateStatusUI = (data) => {
+const updateStatusUI = (data, container) => {
   const logs = data.logs || [];
-  const statusItems = document.querySelectorAll('.status-item');
+  const statusItems = container.querySelectorAll('.status-item');
 
   const cancelLog = logs.find(log => log.status === 'canceled');
   const scoreLog = logs.find(log => log.status === 'scored');
@@ -1267,6 +1281,7 @@ const updateStatusUI = (data) => {
   });
 
   // 2️⃣ fill logs
+  let cancelShown = false;
   statusItems.forEach(item => {
     const statusName = item.dataset.status;
     const logEntry = logs.find(l => l.status === statusName);
@@ -1282,10 +1297,18 @@ const updateStatusUI = (data) => {
         img.src = img.src.replace('yet.svg', '.svg');
         timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
         item.classList.add('active');
-      } else if (statusName === 'scored') {
-        item.style.display = 'none';
+      } else if (window.innerWidth <= 991) {
+        // 手機版：只顯示第一個 cancel icon，其餘隱藏
+        if (!cancelShown) {
+          img.src = '../svg/cancel.svg';
+          timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
+          if (text) text.innerHTML = '訂單已取消';
+          cancelShown = true;
+        } else {
+          item.style.display = 'none';
+        }
       } else {
-        // 中間未完成的步驟 → cancel icon + 取消時間（時間只放 timeBox，不重複放 text）
+        // 桌機版：所有未完成的步驟都補上 cancel icon + 時間
         img.src = '../svg/cancel.svg';
         timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
         if (text) text.innerHTML = '訂單已取消';

@@ -1317,3 +1317,12 @@ html, body {
   top: 2px;
   right: calc(50% - 18px);
 }
+
+.swal2-image {
+  max-height: 75vh !important;
+  max-width: 85vw !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+  border-radius: 8px;
+}

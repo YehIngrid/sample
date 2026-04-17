@@ -12,7 +12,7 @@ class ChatRoomList {
         this.userId = localStorage.getItem('uid');
         this.auth = new BackendService();
         this.isMobile = window.innerWidth < 768;
-        this.lightbox = null;
+
         this.pendingImage = null;
         this.hasMore = true;
         this.isLoading = false;
@@ -71,6 +71,11 @@ class ChatRoomList {
         if (this.alreadyInit) return;
         this.alreadyInit = true;
         this.setupMobileView();
+        document.getElementById('messagesContainer')?.addEventListener('click', e => {
+            const img = e.target.closest('.chat-image');
+            if (!img) return;
+            Swal.fire({ imageUrl: img.src, imageAlt: '圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
+        });
         if (this.userId) {
             await this.loadRooms();
             this.connectSSE(); // 帳號層級 SSE，開啟一次即可
@@ -244,41 +249,6 @@ class ChatRoomList {
         }
     }
 
-    initPhotoSwipeGallery() {
-        import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js')
-            .then(module => {
-                const PhotoSwipeLightbox = module.default;
-                if (this.lightbox) this.lightbox.destroy();
-                this.lightbox = new PhotoSwipeLightbox({
-                    gallery: '#messagesContainer',
-                    children: 'a.image-link',
-                    pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js'),
-                    padding: { top: 50, bottom: 50, left: 100, right: 100 },
-                    bgOpacity: 0.9,
-                    preload: [1, 2],
-                    maxWidthToAnimate: 4000,
-                    imageClickAction: 'zoom',
-                    tapAction: 'close',
-                    doubleTapAction: 'zoom'
-                });
-                this.lightbox.on('contentLoad', (e) => {
-                    const { content } = e;
-                    if (content.data.w === 'auto' || content.data.h === 'auto') {
-                        const img = new Image();
-                        img.onload = () => {
-                            content.data.w = img.naturalWidth;
-                            content.data.h = img.naturalHeight;
-                            content.onLoaded();
-                        };
-                        img.src = content.data.src;
-                        e.preventDefault();
-                    }
-                });
-                this.lightbox.init();
-            })
-            .catch(err => console.error('PhotoSwipe 載入失敗:', err));
-    }
-
     putImage() {
         this.sendImagebtn.addEventListener('click', () => {
             this.previewArea.click();
@@ -409,10 +379,7 @@ class ChatRoomList {
                         <small class="text-muted msg-time" style="font-size:0.75rem;">${time}</small>
                     </div>` : ''}
                     <div class="combined-bubble">
-                        <a href="${imageUrl}" data-pswp-width="auto" data-pswp-height="auto"
-                           target="_blank" class="image-link">
-                            <img src="${imageUrl}" alt="Image" loading="lazy">
-                        </a>
+                        <img src="${imageUrl}" alt="Image" loading="lazy" class="chat-image" style="cursor:pointer;">
                         <div class="combined-caption">${this.escapeHtml(data.message || '').replace(/\n/g, '<br>')}</div>
                     </div>
                     ${isSelf ? '' : `<small class="text-muted ms-2 msg-time" style="font-size:0.75rem;">${time}</small>`}
@@ -431,19 +398,6 @@ class ChatRoomList {
             }
         }
 
-        const tempImg = new Image();
-        tempImg.onload = () => {
-            const link = wrapper.querySelector('.image-link');
-            if (link) {
-                link.setAttribute('data-pswp-width', tempImg.naturalWidth);
-                link.setAttribute('data-pswp-height', tempImg.naturalHeight);
-            }
-            this.initPhotoSwipeGallery();
-            if (!prepend && !this.isInitialLoading && wasNearBottom) {
-                container.scrollTop = container.scrollHeight;
-            }
-        };
-        tempImg.src = imageUrl;
         this.detectRead(wrapper);
     }
 
@@ -480,12 +434,9 @@ class ChatRoomList {
                         <small class="text-muted msg-time" style="font-size: 0.75rem;">${time}</small>
                     </div>` : ''}
                     <div class="message-image-wrapper" style="margin-top: 8px;">
-                        <a href="${imageUrl}" data-pswp-width="auto" data-pswp-height="auto"
-                           target="_blank" class="image-link">
-                            <img src="${imageUrl}" alt="Image"
-                                 style="width: 200px; background: #f0f0f0; border-radius: 8px; cursor: pointer;"
-                                 loading="lazy">
-                        </a>
+                        <img src="${imageUrl}" alt="Image" class="chat-image"
+                             style="width: 200px; background: #f0f0f0; border-radius: 8px; cursor: pointer;"
+                             loading="lazy">
                     </div>
                     ${isSelf ? '' : `<small class="text-muted me-2 msg-time" style="font-size: 0.75rem;">${time}</small>`}
                 </div>
@@ -502,20 +453,6 @@ class ChatRoomList {
                 requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
             }
         }
-
-        const tempImg = new Image();
-        tempImg.onload = () => {
-            const link = imgWrapper.querySelector('.image-link');
-            if (link) {
-                link.setAttribute('data-pswp-width', tempImg.naturalWidth);
-                link.setAttribute('data-pswp-height', tempImg.naturalHeight);
-            }
-            this.initPhotoSwipeGallery();
-            if (!prepend && !this.isInitialLoading && wasNearBottom) {
-                container.scrollTop = container.scrollHeight;
-            }
-        };
-        tempImg.src = imageUrl;
 
         this.detectRead(imgWrapper);
     }
@@ -1644,28 +1581,13 @@ class ChatRoomList {
                     <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>
                 </div>
                 ${broadcastImg ? `
-                <a href="${broadcastImg}" class="image-link broadcast-img-link"
-                   data-pswp-width="auto" data-pswp-height="auto" target="_blank">
-                    <img src="${broadcastImg}" class="broadcast-img" alt="公告圖片" loading="lazy">
-                </a>` : ''}
+                <img src="${broadcastImg}" class="broadcast-img chat-image" alt="公告圖片" loading="lazy" style="cursor:pointer;">` : ''}
                 ${data.message ? `<div class="broadcast-text">${this.escapeHtml(data.message)}</div>` : ''}
                 ${time ? `<div class="broadcast-time">${time}</div>` : ''}
             </div>`;
         container.appendChild(el);
         container.scrollTop = container.scrollHeight;
 
-        if (broadcastImg) {
-            const tempImg = new Image();
-            tempImg.onload = () => {
-                const link = el.querySelector('.image-link');
-                if (link) {
-                    link.setAttribute('data-pswp-width', tempImg.naturalWidth);
-                    link.setAttribute('data-pswp-height', tempImg.naturalHeight);
-                }
-                this.initPhotoSwipeGallery();
-            };
-            tempImg.src = broadcastImg;
-        }
     }
 
     escapeHtml(text) {

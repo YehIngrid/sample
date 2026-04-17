@@ -9,7 +9,9 @@
       "Bash(grep -v \"^.*//.*backendService\")",
       "Bash(ls:*)",
       "Bash(cd:*)",
-      "WebFetch(domain:yehingrid.github.io)"
+      "WebFetch(domain:yehingrid.github.io)",
+      "Bash(python3 -c \"from PIL import Image; img=Image.open\\('src/image/bigLogo.png'\\); print\\(img.size\\)\")",
+      "Bash(sips -g pixelWidth -g pixelHeight src/image/bigLogo.png)"
     ]
   }
 }

@@ -900,11 +900,7 @@ function renderCardBack(backScrollEl, d, wishId, isMyWish, inner) {
   const ownerName     = d.owner?.name || '未知';
 
   const photoHtml = d.photoURL ? `
-    <div class="pswp-gallery" id="wb-gallery-${wishId}">
-      <a href="${d.photoURL}" data-pswp-width="1200" data-pswp-height="800" target="_blank">
-        <img class="wb-photo" src="${d.photoURL}" alt="${d.itemName}">
-      </a>
-    </div>` : '';
+    <img class="wb-photo" src="${d.photoURL}" alt="${d.itemName}" style="cursor:pointer;">` : '';
 
   const actionHtml = isMyWish
     ? `<button class="wb-delete-btn" data-wish-id="${wishId}">刪除願望</button>`
@@ -953,31 +949,12 @@ function renderCardBack(backScrollEl, d, wishId, isMyWish, inner) {
   }
 }
 
-/**
- * Initialise a per-card PhotoSwipe gallery after measuring natural image size.
- */
 function initCardPhotoSwipe(backEl, wishId, photoUrl) {
-  const galleryEl = backEl.querySelector(`#wb-gallery-${wishId}`);
-  if (!galleryEl) return;
-  const linkEl = galleryEl.querySelector('a');
-  if (!linkEl) return;
-
-  const img = new Image();
-  img.src = photoUrl;
-  img.onload = function () {
-    linkEl.setAttribute('data-pswp-width',  this.naturalWidth  || 1200);
-    linkEl.setAttribute('data-pswp-height', this.naturalHeight || 800);
-    import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe-lightbox.esm.min.js')
-      .then(module => {
-        const PhotoSwipeLightbox = module.default;
-        const lightbox = new PhotoSwipeLightbox({
-          gallery: `#wb-gallery-${wishId}`,
-          children: 'a',
-          pswpModule: () => import('https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.esm.min.js')
-        });
-        lightbox.init();
-      });
-  };
+  const img = backEl.querySelector('.wb-photo');
+  if (!img) return;
+  img.addEventListener('click', () => {
+    Swal.fire({ imageUrl: img.src, imageAlt: img.alt || '許願圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
+  });
 }
 
 /**
