@@ -585,6 +585,7 @@ async function handleRouting() {
     document.getElementById('sellFilter')?.classList.add('d-none');
     document.getElementById('sellPagination')?.classList.add('d-none');
     document.querySelector('#sellProducts .mobile-back-btn')?.classList.add('d-none');
+    document.querySelector('#sellProducts .order-guide-wrap')?.classList.add('d-none');
     getDetail(orderId);
     return;
   }
@@ -599,6 +600,7 @@ async function handleRouting() {
     document.getElementById('buyFilter')?.classList.add('d-none');
     document.getElementById('buyPagination')?.classList.add('d-none');
     document.querySelector('#buyProducts .mobile-back-btn')?.classList.add('d-none');
+    document.querySelector('#buyProducts .order-guide-wrap')?.classList.add('d-none');
     getDetail(orderId);
     return;
   }
@@ -665,6 +667,8 @@ function resetOrderView() {
   document.getElementById('buyerOrderDetail')?.classList.add('d-none');
   document.querySelector('#sellProducts .mobile-back-btn')?.classList.remove('d-none');
   document.querySelector('#buyProducts .mobile-back-btn')?.classList.remove('d-none');
+  document.querySelector('#sellProducts .order-guide-wrap')?.classList.remove('d-none');
+  document.querySelector('#buyProducts .order-guide-wrap')?.classList.remove('d-none');
 }
 
 async function loadSellerOrders(page) {
@@ -912,11 +916,11 @@ function renderBuyerOrders(list) {
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
             </button>` : ''}
-            ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
             <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
               <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
               <div>訂單詳情</div>
             </button>
+            ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
             ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
           </div>
         </td>
@@ -956,11 +960,11 @@ function renderSellerOrders(list) {
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
             </button>` : ''}
-            ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
             <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
               <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
               <div>訂單詳情</div>
             </button>
+            ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
             ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
           </div>
         </td>
@@ -1126,15 +1130,15 @@ function renderSellerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
+              ${item.status !== 'canceled' ? `<button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
                 <img src="${st.icon}" alt="${st.action}icon"/>
                 <div>${st.action}</div>
-              </button>
-              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
+              </button>` : ''}
               <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
                 <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
                 <div>訂單詳情</div>
               </button>
+              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
             </div>
             <div class="d-flex justify-content-between align-items-center mt-2">
               <div class="text-muted" style="font-size:11px;">訂單編號 ${id}</div>
@@ -1181,15 +1185,15 @@ function renderBuyerCards(list = []) {
               </div>
             </div>
             <div class="mt-auto d-flex gap-2">
-              <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
+              ${item.status !== 'canceled' ? `<button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
                 <img src="${st.icon}" alt="${st.action}icon"/>
                 <div>${st.action}</div>
-              </button>
-              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
+              </button>` : ''}
               <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
                 <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
                 <div>訂單詳情</div>
               </button>
+              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
             </div>
             <div class="d-flex justify-content-between align-items-center mt-2">
               <div class="text-muted" style="font-size:11px;">訂單編號 ${id}</div>

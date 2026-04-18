@@ -1343,6 +1343,24 @@ small { font-size: 10px; color: #004b97; }
   align-items: center;
   border: none;
   background: transparent;
+  position: relative;
+}
+.itemContainer button .order-sidebar-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-left: 0;
+  font-size: 10px;
+  padding: 0 4px;
+  line-height: 15px;
+  min-width: 15px;
+  text-align: center;
+}
+.itemContainer button .order-red-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  margin-left: 0;
 }
 .itemContainer img {
   width: 40px;
@@ -1378,29 +1396,24 @@ small { font-size: 10px; color: #004b97; }
   font-size: 12px;
   color: #383838;
 }
-.badge {
-  font-size: 15px;
-}
-.order-badge-pending {
-  background-color: #FFC857;
-  color: #383838;
-}
-.order-badge-preparing {
-  background-color: #abdad5;
-  color: #004b97;
-}
-.order-badge-delivered {
-  background-color: #004b97;
-  color: #fff;
-}
-.order-badge-completed {
-  background-color: #24b685;
-  color: #fff;
-}
+.order-badge-pending,
+.order-badge-preparing,
+.order-badge-delivered,
+.order-badge-completed,
+.order-badge-scored,
 .order-badge-canceled {
-  background-color: #e0e0e0;
-  color: #666;
+  border-radius: 20px !important;
+  padding: 5px 10px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  white-space: nowrap;
 }
+.order-badge-pending   { background-color: #FFC857; color: #383838; }
+.order-badge-preparing { background-color: #abdad5; color: #004b97; }
+.order-badge-delivered { background-color: #004b97; color: #fff; }
+.order-badge-completed { background-color: #24b685; color: #fff; }
+.order-badge-scored    { background: linear-gradient(135deg, #4f6fd4, #7c5cbf); color: #fff; }
+.order-badge-canceled  { background-color: #e0e0e0; color: #666; }
 
 /* ── 訂單進度說明 ── */
 .order-guide-wrap {
@@ -1453,13 +1466,45 @@ small { font-size: 10px; color: #004b97; }
 .badge-preparing{ background: #abdad5; color: #004b97; }
 .badge-delivered{ background: #004b97; color: #fff; }
 .badge-completed{ background: #24b685; color: #fff; }
-.badge-scored   { background: #7c3aed; color: #fff; }
+.badge-scored   { background: linear-gradient(135deg, #4f6fd4, #7c5cbf); color: #fff; }
 .order-guide-note {
   font-size: 11px;
   color: #aaa;
   margin: 4px 0 0;
   padding-top: 8px;
   border-top: 1px solid #e0f0ee;
+}
+
+/* ── 帳戶頁訂單進度表格 ── */
+.order-guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  color: #444;
+}
+.order-guide-table thead th {
+  background: #f0f8ff;
+  color: #004b97;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-bottom: 2px solid #daeaf7;
+  white-space: nowrap;
+}
+.order-guide-table tbody td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #eef4f8;
+  vertical-align: middle;
+  line-height: 1.5;
+}
+.order-guide-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.order-guide-table tbody tr:hover td {
+  background: #f8fdfc;
+}
+.order-guide-table td:first-child {
+  white-space: nowrap;
+  text-align: center;
 }
 
 /* ── 訂單篩選 tabs ── */
@@ -1627,6 +1672,14 @@ small { font-size: 10px; color: #004b97; }
 }
 .checkInfoBtn:hover {
   background: #abdad5;
+}
+.checkInfoBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.checkInfoBtn:disabled:hover {
+  background: transparent;
+  cursor: not-allowed;
 }
 .cancelOrderBtn {
   border: 1px solid #f5c6c6;

@@ -647,44 +647,45 @@
           <div class="col-12 mt-3">
             <div class="title">訂單進度說明</div>
             <div class="cardContainer">
-              <div class="card-body">
-                <div class="d-flex flex-column gap-3">
-                  <div class="myItem align-items-start">
-                    <span class="order-guide-badge badge-pending" style="margin-top:2px;">待確認</span>
-                    <div>
-                      <strong>買家：</strong>已送出訂單，等待賣家確認。若需取消請先聯絡賣家。<br>
-                      <strong>賣家：</strong>請盡快確認庫存，可接單點「接受訂單」，不能接單請先聯絡買家再取消。
-                    </div>
-                  </div>
-                  <div class="myItem align-items-start">
-                    <span class="order-guide-badge badge-preparing" style="margin-top:2px;">待出貨</span>
-                    <div>
-                      <strong>買家：</strong>賣家已接受訂單，正在準備商品，請耐心等候並確認面交時間地點。<br>
-                      <strong>賣家：</strong>請準備商品，確認完整無誤後點「準備出貨」。
-                    </div>
-                  </div>
-                  <div class="myItem align-items-start">
-                    <span class="order-guide-badge badge-delivered" style="margin-top:2px;">待收貨</span>
-                    <div>
-                      <strong>買家：</strong>請準時赴約，確認商品無誤後點「成功取貨」。<br>
-                      <strong>賣家：</strong>請準時攜帶商品赴約，等待買家確認收貨。
-                    </div>
-                  </div>
-                  <div class="myItem align-items-start">
-                    <span class="order-guide-badge badge-completed" style="margin-top:2px;">待評價</span>
-                    <div>
-                      <strong>買家：</strong>已確認收貨，請為賣家留下評價。<br>
-                      <strong>賣家：</strong>買家已確認收貨，請為買家留下評價。
-                    </div>
-                  </div>
-                  <div class="myItem align-items-start">
-                    <span class="order-guide-badge badge-scored" style="margin-top:2px;">已完成</span>
-                    <div>雙方皆已完成評價，本筆交易正式結束。</div>
-                  </div>
-                  <p style="font-size:12px;color:#aaa;margin:4px 0 0;padding-top:8px;border-top:1px solid #e0f0ee;">
-                    若交易過程有任何問題，請務必提前與對方溝通，避免爭議。
-                  </p>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="order-guide-table">
+                    <thead>
+                      <tr>
+                        <th>狀態</th>
+                        <th>買家</th>
+                        <th>賣家</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><span class="order-guide-badge badge-pending">待確認</span></td>
+                        <td>已送出訂單，等待賣家確認。若需取消請先聯絡賣家。</td>
+                        <td>請盡快確認庫存，可接單點「接受訂單」，不能接單請先聯絡買家再取消。</td>
+                      </tr>
+                      <tr>
+                        <td><span class="order-guide-badge badge-preparing">待出貨</span></td>
+                        <td>賣家已接受訂單，正在準備商品，請耐心等候並確認面交時間地點。</td>
+                        <td>請準備商品，確認完整無誤後點「準備出貨」。</td>
+                      </tr>
+                      <tr>
+                        <td><span class="order-guide-badge badge-delivered">待收貨</span></td>
+                        <td>請準時赴約，確認商品無誤後點「成功取貨」。</td>
+                        <td>請準時攜帶商品赴約，等待買家確認收貨。</td>
+                      </tr>
+                      <tr>
+                        <td><span class="order-guide-badge badge-completed">待評價</span></td>
+                        <td>已確認收貨，請為賣家留下評價。</td>
+                        <td>買家已確認收貨，請為買家留下評價。</td>
+                      </tr>
+                      <tr>
+                        <td><span class="order-guide-badge badge-scored">已完成</span></td>
+                        <td colspan="2">雙方皆已完成評價，本筆交易正式結束。</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
+                <p class="order-guide-note px-3 pb-2" style="border-top:1px solid #e0f0ee;padding-top:8px;margin-top:0;">若交易過程有任何問題，請務必提前與對方溝通，避免爭議。</p>
               </div>
             </div>
           </div>
