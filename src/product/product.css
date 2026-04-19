@@ -175,16 +175,19 @@
     margin-bottom: 10vh;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 0;
+  }
+  .mix > * + * {
+    border-top: var(--divider);
   }
   .typeofcommodity {
     background: #fff;
-    border-radius: 14px;
+    border-radius: 0;
     padding: 28px;
   }
   .sellerCommodities {
     background: #fff;
-    border-radius: 14px;
+    border-radius: 0;
     padding: 28px;
   }
 @media (max-width:700px) {
@@ -199,8 +202,49 @@
     padding: 5px;
     margin: 0 auto;
   }
-.sellertopic{
-    margin-bottom: 15px;
+/* ── 三個區塊的統一標題樣式 ── */
+.topic {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+/* 移除賣家資訊卡中卡：seller-card 在 typeofcommodity 內不需要再當一層卡片 */
+.typeofcommodity > .seller-card {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  overflow: visible;
+}
+/* ── 統一邊框／分隔線色（學 meta-spec-row）── */
+:root { --divider: 1px dashed #ABDAD5; }
+
+/* 手風琴邊框清除（全域） */
+.accordion-item {
+  border: none !important;
+  border-bottom: var(--divider) !important;
+  background: transparent;
+}
+.accordion-item:last-child { border-bottom: none !important; }
+.accordion-button {
+  background: transparent !important;
+  color: #383838;
+  font-size: 0.92rem;
+}
+.accordion-button:not(.collapsed) {
+  background: transparent !important;
+  color: #004b97 !important;
+  box-shadow: none !important;
+}
+.accordion-body {
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  padding-top: 0;
+}
+.sellertopic {
+  /* kept for backward compat, topic handles spacing now */
 }
 
   .description-text {
@@ -586,7 +630,6 @@
   gap: 8px;
   margin-top: 18px;
   padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
 }
 .seller-action-btn {
   flex: 1;
@@ -612,7 +655,7 @@
   background: #abdad5;
   color: #383838;
 }
-.seller-action-secondary:hover { background: #dfeeff; }
+.seller-action-secondary:hover { opacity: 0.85; }
 .seller-action-report {
   flex: 0 0 auto;
   background: transparent;
@@ -624,7 +667,7 @@
 /* 評價展開區 */
 .seller-card-divider {
   height: 1px;
-  background: #f0f0f0;
+  background: #ABDAD5;
   margin: 16px 0;
 }
 .reviewer-avatar {
@@ -636,7 +679,7 @@
 .reviewerName { font-size: 0.85rem; font-weight: 600; color: #333; }
 .reviewTime { font-size: 0.78rem; color: #bbb; white-space: nowrap; }
 .reviewText { padding: 8px 0 0; font-size: 0.88rem; color: #555; line-height: 1.6; }
-.review-card { padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+.review-card { padding: 12px 0; border-bottom: var(--divider); }
 .review-card:last-child { border-bottom: none; }
 .review-card__header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .review-card__meta { flex: 1; min-width: 0; }
@@ -780,13 +823,6 @@
       color: #004b97;
       border: 1.5px solid #004b97 !important;
     }
-/* ── 手風琴（其他注意事項）── */
-.accordion-button:not(.collapsed) {
-  background-color: #f0f5fa !important;
-  color: #5b8ec9 !important;
-  box-shadow: none !important;
-  font-weight: 600;
-}
 .accordion-button:focus {
   box-shadow: none !important;
   border-color: transparent !important;
@@ -1389,24 +1425,27 @@
     margin-bottom: 80px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 0;
+  }
+  .mix > * + * {
+    border-top: var(--divider);
   }
   .typeofcommodity {
     background: #fff;
     padding: 16px;
     margin-bottom: 0;
-    border-radius: 12px;
+    border-radius: 0;
   }
   .sellerCommodities {
     background: #fff;
     padding: 16px;
-    border-radius: 12px;
+    border-radius: 0;
   }
   .topic {
     font-size: 1rem;
     font-weight: 700;
     color: #1a1a1a;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
   }
   .describe p {
     background-color: #f5f8fa !important;
@@ -1418,25 +1457,10 @@
     margin-top: 16px !important;
   }
 
-  /* ── 手風琴 — 乾淨無邊框 ── */
-  .accordion-item {
-    border: none !important;
-    border-bottom: 1px solid rgba(0,0,0,0.06) !important;
-    background: transparent;
-  }
-  .accordion-item:last-child { border-bottom: none !important; }
+  /* ── 手風琴（手機微調） ── */
   .accordion-button {
-    font-size: 0.92rem;
     padding: 14px 0;
-    background: transparent;
-    color: #333;
     font-weight: 500;
-  }
-  .accordion-button:not(.collapsed) {
-    background: transparent;
-    color: #5b8ec9;
-    box-shadow: none;
-    font-weight: 600;
   }
   .accordion-button::after { width: 14px; height: 14px; }
   .accordion-body {
