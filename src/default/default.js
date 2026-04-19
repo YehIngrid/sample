@@ -275,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── Mobile Side Drawer ───────────────────────────────────────────────────────
 function _initMobileDrawer() {
+  if (!document.querySelector('.navbar-toggler')) return;
   // Create backdrop
   const backdrop = document.createElement('div');
   backdrop.className = 'mobile-nav-backdrop';
