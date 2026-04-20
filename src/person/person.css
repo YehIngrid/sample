@@ -725,6 +725,22 @@ small { font-size: 10px; color: #004b97; }
   border-color: #004b97;
   color: #fff;
 }
+.review-stars-row {
+  display: flex;
+  gap: 6px;
+  margin: 6px 0 14px;
+}
+.review-star {
+  font-size: 1.8rem;
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.1s;
+  line-height: 1;
+}
+.review-star.active,
+.review-star.hover {
+  color: #f5a623;
+}
 /* Negative report cards */
 .review-neg-list {
   display: flex;
@@ -926,6 +942,40 @@ small { font-size: 10px; color: #004b97; }
 .review-empty-sub {
   font-size: 12px;
   color: #aaa;
+}
+.review-suspension-badge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #e74c3c;
+  background: #fff0f0;
+  border: 1px dashed #e74c3c;
+  border-radius: 6px;
+  padding: 4px 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.review-stats-stars {
+  color: #f5a623;
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+.review-strike-hint {
+  font-size: 0.75rem;
+  color: #e67e22;
+  margin-top: 2px;
+}
+.review-empty-inline {
+  font-size: 0.8rem;
+  color: #aaa;
+  padding: 8px 0;
+  flex: 1;
+  text-align: center;
+}
+.seller-review-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
 }
 #negative-preview {
   color: #dc2626;
@@ -1414,6 +1464,25 @@ small { font-size: 10px; color: #004b97; }
 .order-badge-completed { background-color: #24b685; color: #fff; }
 .order-badge-scored    { background: linear-gradient(135deg, #4f6fd4, #7c5cbf); color: #fff; }
 .order-badge-canceled  { background-color: #e0e0e0; color: #666; }
+
+/* ── 評價狀態文字 ── */
+.review-done-wrap,
+.review-action-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.review-done-text {
+  font-size: 0.8rem;
+  color: #24b685;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.review-deadline-hint {
+  font-size: 0.72rem;
+  color: #888;
+  white-space: nowrap;
+}
 
 /* ── 訂單進度說明 ── */
 .order-guide-wrap {

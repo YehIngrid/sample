@@ -467,12 +467,30 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
-    async getOrderReview(orderId) {
+    async getOrderBothReviews(orderId) {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/reviews/order/${orderId}`);
+            const response = await axios.get(`${this.baseUrl}/api/review/order/${orderId}`);
             return response;
         } catch (error) {
-            console.error("讀取評論失敗", error);
+            console.error("讀取訂單雙方評論失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async getUserReviews(userId, page = 1, limit = 10) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/review/user/${userId}`, { params: { page, limit } });
+            return response;
+        } catch (error) {
+            console.error("讀取用戶評價失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async postReview(orderId, payload) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/review/order/${orderId}`, payload);
+            return response;
+        } catch (error) {
+            console.error("送出評價失敗", error);
             return Promise.reject(error);
         }
     }

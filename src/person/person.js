@@ -85,6 +85,9 @@ window._authReady.then(loggedIn => {
       });
     }
 
+    // 我的評價統計
+    loadMyReviewStats();
+
     // 加入時間
     const showTimeEl = document.getElementById('showTime');
     if (showTimeEl) {
@@ -512,7 +515,8 @@ async function handleAction(action, id, el) {
   } else if (action === '成功取貨') {
     try {
       await backendService.buyerCompletedOrders(id);
-      Swal.fire({ title: "交易完成！", icon: "success" }).then(() => handleRouting()).then(() => window.location.reload());
+      Swal.fire({ title: "交易完成！", icon: "success", timer: 2000, showConfirmButton: false });
+      await loadBuyerOrders(1);
     } catch (error) {
       Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
     }
@@ -568,9 +572,11 @@ async function handleRouting() {
   const targetPane = document.getElementById(page);
   if (targetPane) targetPane.classList.remove('d-none');
 
-  // 進入列表時恢復篩選 tabs（進詳細頁才隱藏）
+  // 進入列表時恢復篩選 tabs 與分頁（進詳細頁才隱藏）
   document.getElementById('sellFilter')?.classList.remove('d-none');
   document.getElementById('buyFilter')?.classList.remove('d-none');
+  document.getElementById('sellPagination')?.classList.remove('d-none');
+  document.getElementById('buyPagination')?.classList.remove('d-none');
 
   // =========================
   // 詳細頁模式
@@ -694,18 +700,19 @@ async function loadBuyerOrders(page) {
 }
 
 // API status → filter tab data-status
-const API_TO_TAB = { pending:'pending', preparing:'preparing', delivered:'delivered', completed:'review', scored:'completed', canceled:'cancelled' };
+const API_TO_TAB = { pending:'pending', preparing:'preparing', delivered:'delivered', review_pending:'review', completed:'completed', canceled:'cancelled' };
 // Filter tabs that show red dot when count > 0 (active/action-needed statuses)
 const ACTIVE_TAB_STATUSES = new Set(['pending','preparing','delivered','review']);
 
 function updateFilterTabCounts(list, filterId, pagination) {
   const container = document.getElementById(filterId);
   if (!container) return;
+  const map = API_TO_TAB;
 
   // Count by tab-status key
   const counts = { all: list.length };
   list.forEach(item => {
-    const tabKey = API_TO_TAB[(item.status ?? '').toLowerCase()] ?? 'pending';
+    const tabKey = map[(item.status ?? '').toLowerCase()] ?? 'pending';
     counts[tabKey] = (counts[tabKey] || 0) + 1;
   });
 
@@ -834,20 +841,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== 工具 =====
 const order_STATUS_MAP = {
-  pending: { text: '待確認', badge: 'order-badge-pending', action: '接受訂單', icon: '../svg/acceptOrder.svg'},
-  preparing: { text: '待出貨', badge: 'order-badge-preparing', action: '即將出貨', icon: '../svg/readyDeliver.svg'},
-  delivered: { text: '待收貨', badge: 'order-badge-delivered', action: '等待買家確認收貨', icon: '../svg/waitBuyer.svg'},
-  completed: { text: '待評價', badge: 'order-badge-completed', action: '給對方評價', icon: '../svg/giveStar.svg'},
-  canceled: { text: '已取消', badge: 'order-badge-canceled', action: null, icon: null}
+  pending:        { text: '待確認', badge: 'order-badge-pending',    action: '接受訂單',         icon: '../svg/acceptOrder.svg'},
+  preparing:      { text: '待出貨', badge: 'order-badge-preparing',  action: '即將出貨',         icon: '../svg/readyDeliver.svg'},
+  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '等待買家確認收貨',  icon: '../svg/waitBuyer.svg'},
+  review_pending: { text: '待評價', badge: 'order-badge-completed',  action: '給對方評價',       icon: '../svg/giveStar.svg'},
+  completed:      { text: '已完成', badge: 'order-badge-scored',     action: null,               icon: null},
+  canceled:       { text: '已取消', badge: 'order-badge-canceled',   action: null,               icon: null}
 }
 const buyer_STATUS_MAP = {
-  pending: { text: '待確認', badge: 'order-badge-pending', action: '聯絡賣家', icon: '../svg/canChat.svg'},
-  preparing: { text: '待出貨', badge: 'order-badge-preparing', action: '聯絡賣家', icon: '../svg/canChat.svg'},
-  delivered: { text: '待收貨', badge: 'order-badge-delivered', action: '成功取貨', icon: '../svg/acceptOrder.svg'},
-  completed: { text: '待評價', badge: 'order-badge-completed', action: '給對方評價', icon: '../svg/giveStar.svg'},
-  scored:   { text: '已完成', badge: 'order-badge-scored', action: '查看評價', icon: '../svg/giveStar.svg'},
-  canceled: { text: '已取消', badge: 'order-badge-canceled', action: null, icon: null}
+  pending:        { text: '待確認', badge: 'order-badge-pending',    action: '聯絡賣家',   icon: '../svg/canChat.svg'},
+  preparing:      { text: '待出貨', badge: 'order-badge-preparing',  action: '聯絡賣家',   icon: '../svg/canChat.svg'},
+  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '成功取貨',   icon: '../svg/acceptOrder.svg'},
+  review_pending: { text: '待評價', badge: 'order-badge-completed',  action: '給對方評價', icon: '../svg/giveStar.svg'},
+  completed:      { text: '已完成', badge: 'order-badge-scored',     action: null,         icon: null},
+  canceled:       { text: '已取消', badge: 'order-badge-canceled',   action: null,         icon: null}
 }
+// 渲染評價操作區塊（review_pending 狀態）
+// isSeller: true = 賣家視角，false = 買家視角
+function renderReviewAction(item, isSeller, orderId) {
+  const status = (item.status ?? '').toLowerCase();
+  if (status !== 'review_pending') return null; // 非 review_pending，不處理
+
+  const rp = item.reviewProgress ?? {};
+  const hasReviewed = isSeller ? !!rp.sellerReviewed : !!rp.buyerReviewed;
+  const deadlineHtml = rp.reviewDeadline
+    ? `<div class="review-deadline-hint">評論截止：${fmtDate(rp.reviewDeadline)}</div>`
+    : '';
+
+  if (hasReviewed) {
+    return `<div class="review-done-wrap">
+      <span class="review-done-text">您已評論，等待對方評論</span>
+      ${deadlineHtml}
+    </div>`;
+  }
+  return `<div class="review-action-wrap">
+    <button class="checkInfoBtn action-btn btn-row-action" data-action="給對方評價" data-id="${esc(orderId)}">
+      <img src="../svg/giveStar.svg" alt="給對方評價icon"/>
+      <div>給對方評價</div>
+    </button>
+    ${deadlineHtml}
+  </div>`;
+}
+
 const nt = new Intl.NumberFormat('zh-TW', {
   style: 'currency', currency: 'TWD', maximumFractionDigits: 0
 });
@@ -911,11 +946,11 @@ function renderBuyerOrders(list) {
         <td>${created}</td>
         <td>${price} 元</td>
         <td>
-          <div class="d-flex gap-2">
-            ${item.status !== 'canceled' ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}">
+          <div class="d-flex gap-2 flex-wrap align-items-center">
+            ${renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}">
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
-            </button>` : ''}
+            </button>` : '')}
             <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
               <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
               <div>訂單詳情</div>
@@ -946,8 +981,8 @@ function renderSellerOrders(list) {
     const buyer = item.buyerUser?.name ?? '';
     const type = item.type || '未知交易方式';
     const created  = fmtDate(item.createdAt);
-    const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
+    const key = (item.status ?? 'listed').toLowerCase();
+    const st  = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
     const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
     return `
       <tr data-id="${esc(id)}" style="animation-delay:${i * 0.05}s">
@@ -955,11 +990,11 @@ function renderSellerOrders(list) {
         <td><span class="badge ${st.badge}">${st.text}</span></td>
         <td>${created}</td>
         <td>
-          <div class="d-flex gap-2">
-            ${item.status !== 'canceled' ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>
+          <div class="d-flex gap-2 flex-wrap align-items-center">
+            ${renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
-            </button>` : ''}
+            </button>` : '')}
             <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
               <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
               <div>訂單詳情</div>
@@ -1111,8 +1146,8 @@ function renderSellerCards(list = []) {
     const price    = fmtPrice(item.totalAmount);
     const updated  = fmtDate(item.updatedAt);
     const created  = fmtDate(item.createdAt);
-    const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
+    const key = (item.status ?? 'listed').toLowerCase();
+    const st  = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
     const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
 
     return `
@@ -1129,11 +1164,11 @@ function renderSellerCards(list = []) {
                 <div class="fw-bold">${price}</div>
               </div>
             </div>
-            <div class="mt-auto d-flex gap-2">
-              ${item.status !== 'canceled' ? `<button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
+            <div class="mt-auto d-flex gap-2 flex-wrap align-items-center">
+              ${renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
                 <img src="${st.icon}" alt="${st.action}icon"/>
                 <div>${st.action}</div>
-              </button>` : ''}
+              </button>` : '')}
               <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
                 <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
                 <div>訂單詳情</div>
@@ -1184,11 +1219,11 @@ function renderBuyerCards(list = []) {
                 <div class="fw-bold">${price}</div>
               </div>
             </div>
-            <div class="mt-auto d-flex gap-2">
-              ${item.status !== 'canceled' ? `<button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
+            <div class="mt-auto d-flex gap-2 flex-wrap align-items-center">
+              ${renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
                 <img src="${st.icon}" alt="${st.action}icon"/>
                 <div>${st.action}</div>
-              </button>` : ''}
+              </button>` : '')}
               <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
                 <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
                 <div>訂單詳情</div>
@@ -1241,11 +1276,12 @@ async function getDetail(id) {
     const data = res.data.data;
     window.currentOrder = data;
     const orderStatusMap = {
-      pending: "訂單已建立，等待賣家接受",
-      preparing: "賣家已接受訂單，正在準備商品",
-      delivered: "賣家已出貨，等待買家確認收貨",
-      completed: "買家已確認收貨，訂單完成",
-      canceled: "訂單已取消"
+      pending:        "訂單已建立，等待賣家接受",
+      preparing:      "賣家已接受訂單，正在準備商品",
+      delivered:      "賣家已出貨，等待買家確認收貨",
+      review_pending: "買家已確認收貨，等待雙方評價",
+      completed:      "訂單已完成",
+      canceled:       "訂單已取消"
     };
 
     const orderTypeMap = {
@@ -1256,11 +1292,19 @@ async function getDetail(id) {
       ? document.getElementById('sellOrderInfo')
       : document.getElementById('buyerOrderInfo');
 
+    const rp = data.reviewProgress ?? {};
+    const deadlineSuffix = (data.status === 'review_pending' && rp.reviewDeadline)
+      ? `<span style="font-size:0.8em;color:#e07b39;margin-left:4px;">（截止：${fmtDate(rp.reviewDeadline)}）</span>`
+      : '';
+
+    const reviewBoth = await backendService.getOrderBothReviews(id);
+    const reviewBothData = reviewBoth.data?.data;
+
     infoBox.innerHTML = `
       <ul style="font-size: 1rem;">
         <li><span class="orderstyle">訂單編號</span>${id}</li>
         <li><span class="orderstyle">建立日期</span>${new Date(data.createdAt).toLocaleDateString()}</li>
-        <li><span class="orderstyle">商品狀態</span>${orderStatusMap[data.status]}</li>
+        <li><span class="orderstyle">商品狀態</span>${orderStatusMap[data.status] ?? data.status}${deadlineSuffix}</li>
         <li><span class="orderstyle">交貨方式</span>${orderTypeMap[data.type]}</li>
         <li>
           <span class="orderstyle">${isSell ? '買家姓名' : '賣家姓名'}</span>
@@ -1291,6 +1335,10 @@ async function getDetail(id) {
         </thead>
         <tbody class="itemlist"></tbody>
       </table>
+      <hr>
+      <span class="orderstyle">此訂單評價</span>
+      <div>${reviewBothData.reviews}</div>
+      <div>TODO</div>
     `;
 
     const itemlist = infoBox.querySelector('.itemlist');
@@ -1437,7 +1485,20 @@ const updateStatusUI = (data, container) => {
   const statusItems = container.querySelectorAll('.status-item');
 
   const cancelLog = logs.find(log => log.status === 'canceled');
-  const scoreLog = logs.find(log => log.status === 'scored');
+  const scoreLog  = logs.find(log => log.status === 'completed');
+
+  const defaultTextMap = {
+    pending:        "訂單已建立<br>等待賣家接受",
+    preparing:      "賣家已接受訂單<br>正在準備商品",
+    delivered:      "賣家已出貨<br>等待買家確認收貨",
+    review_pending: "買家已確認收貨<br>等待雙方評價",
+    completed:      "訂單已完成",
+  };
+  // statusName → SVG 檔名前綴（review_pending → completed.svg、completed → scored.svg）
+  const svgNameMap = {
+    review_pending: 'completed',
+    completed:      'scored',
+  };
 
   // 1️⃣ reset
   statusItems.forEach(item => {
@@ -1447,19 +1508,12 @@ const updateStatusUI = (data, container) => {
     const statusName = item.dataset.status;
 
     // reset icon
-    img.src = `../svg/${statusName}yet.svg`;
+    const svgPrefix = svgNameMap[statusName] ?? statusName;
+    img.src = `../svg/${svgPrefix}yet.svg`;
     timeBox.innerText = '';
     item.classList.remove('active');
     item.style.display = '';
 
-    // reset text（可依你的原本 HTML 定義）
-    const defaultTextMap = {
-      pending: "訂單已建立<br>等待賣家接受",
-      preparing: "賣家已接受訂單<br>正在準備商品",
-      delivered: "賣家已出貨<br>等待買家確認收貨",
-      completed: "買家已確認收貨<br>訂單完成",
-      scored: "雙方皆已<br>評分完成"
-    };
     if (text) text.innerHTML = defaultTextMap[statusName];
   });
 
@@ -1983,6 +2037,13 @@ async function openReviewModal(orderId, targetId, targetRole) {
         </div>
         <div class="review-neg-list">${negativeHtml}</div>
 
+        <!-- 星評 -->
+        <div class="review-section-label">整體評分 <span class="review-section-hint">（必選）</span></div>
+        <div class="review-stars-row" id="review-stars">
+          ${[1,2,3,4,5].map(n => `<span class="review-star" data-value="${n}">★</span>`).join('')}
+        </div>
+        <input type="hidden" id="review-rating" value="0">
+
         <!-- 文字評價 -->
         <textarea id="review-comment" class="review-comment-input" rows="3" placeholder="留下文字評價（選填）..."></textarea>
 
@@ -2000,55 +2061,44 @@ async function openReviewModal(orderId, targetId, targetRole) {
 
     didOpen: () => {
       initScoreCheckbox();
+      const stars = document.querySelectorAll('.review-star');
+      const ratingInput = document.getElementById('review-rating');
+      stars.forEach(star => {
+        star.addEventListener('click', () => {
+          const val = Number(star.dataset.value);
+          ratingInput.value = val;
+          stars.forEach(s => s.classList.toggle('active', Number(s.dataset.value) <= val));
+        });
+        star.addEventListener('mouseenter', () => {
+          const val = Number(star.dataset.value);
+          stars.forEach(s => s.classList.toggle('hover', Number(s.dataset.value) <= val));
+        });
+        star.addEventListener('mouseleave', () => {
+          stars.forEach(s => s.classList.remove('hover'));
+        });
+      });
     },
 
     preConfirm: async () => {
-      const positiveScore = calcScore();
-      const negativeKeys  = [];
-      document.querySelectorAll('.negative-check:checked').forEach(cb => {
-        negativeKeys.push(cb.dataset.key);
-      });
+      const rating  = Number(document.getElementById('review-rating').value);
       const comment = document.getElementById('review-comment').value.trim();
 
-      if (positiveScore === 0 && negativeKeys.length === 0) {
-        Swal.showValidationMessage('請至少勾選一項正評或回報問題');
+      if (!rating) {
+        Swal.showValidationMessage('請選擇星評（1–5 顆星）');
         return false;
       }
 
       try {
-        const scores = {};
-        document.querySelectorAll('.score-check').forEach(cb => {
-          scores[cb.dataset.key] = cb.checked ? 1 : 0;
-        });
-
-        const body = {
-          orderId,
-          targetId: resolvedTargetId,
-          comment,
-          // 正評欄位
-          ...scores,
-          // 負評回報
-          reportedIssues: negativeKeys,
-          // 總正評分（供後端計算 +2 是否達標）
-          positiveScore,
-          maxPositive,
-        };
-
-        const res = await fetch('/api/reviews', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || '送出失敗');
+        const res = await backendService.postReview(orderId, { rating, comment });
+        const data = res?.data;
+        if (!data?.success) throw new Error(data?.message || '送出失敗');
         return data;
       } catch (err) {
         Swal.showValidationMessage(err.message);
         return false;
       }
     }
-  }).then(result => {
+  }).then(async result => {
     if (result.isConfirmed) {
       Swal.fire({
         icon: 'success',
@@ -2057,6 +2107,11 @@ async function openReviewModal(orderId, targetId, targetRole) {
         timer: 2500,
         showConfirmButton: false,
       });
+      if (isRatingBuyer) {
+        await loadSellerOrders(1);
+      } else {
+        await loadBuyerOrders(1);
+      }
     }
   });
 }
@@ -2097,58 +2152,40 @@ async function openPartnerReviewModal(orderId, isSell) {
   const partnerPhoto = partnerUser?.photoURL || '../image/default-avatar.webp';
   const partnerCredit = partnerUser?.rate ?? '-';
   const partnerIntro = partnerUser?.intro ?? partnerUser?.description ?? '';
-
-  // Label maps (reviewer is buyer when isSell=true, seller when isSell=false)
-  const buyerPositiveLabels = { onTime: '準時赴約', communication: '溝通禮貌', reliability: '交易可靠' };
-  const sellerPositiveLabels = { accurate: '商品描述準確', fast: '出貨速度快', polite: '溝通禮貌', reliable: '交易可靠', packaging: '包裝完整' };
-  const buyerNegativeLabels  = { noShow: '無故爽約或失聯', late: '遲到超過 10 分鐘' };
-  const sellerNegativeLabels = { mismatch: '商品與描述嚴重不符', late: '遲到超過 10 分鐘' };
-
-  const positiveLabels = isSell ? buyerPositiveLabels : sellerPositiveLabels;
-  const negativeLabels = isSell ? buyerNegativeLabels : sellerNegativeLabels;
+  const partnerId = partnerUser?.id ?? partnerUser?.accountId;
 
   let review = null;
+  let partnerStats = null;
+
   try {
-    const res = await backendService.getOrderReview(orderId);
-    review = res?.data?.data ?? res?.data ?? null;
+    const [orderRes, statsRes] = await Promise.all([
+      backendService.getOrderBothReviews(orderId),
+      partnerId ? backendService.getUserReviews(partnerId) : Promise.resolve(null),
+    ]);
+    const reviews = orderRes?.data?.data?.reviews ?? [];
+    const myUid = localStorage.getItem('uid');
+    review = reviews.find(r => r.reviewer?.accountId !== myUid) ?? null;
+    partnerStats = statsRes?.data?.data?.stats ?? null;
   } catch (e) {
     // 尚無評論
   }
 
+  const avgRating = Number(partnerStats?.averageRating ?? 0);
+  const reviewCount = Number(partnerStats?.reviewCount ?? 0);
+  const statsHtml = reviewCount > 0
+    ? `<div style="font-size:12px;color:#555;margin-top:2px;">
+        ${'★'.repeat(Math.round(avgRating))}${'☆'.repeat(5 - Math.round(avgRating))}
+        <span style="margin-left:4px;">${avgRating.toFixed(1)} · ${reviewCount} 則評價</span>
+       </div>`
+    : `<div style="font-size:12px;color:#aaa;margin-top:2px;">尚無評價紀錄</div>`;
+
   let bodyHtml = '';
   if (review) {
-    // New format: individual keys + reportedIssues
-    const checkedPositive = Object.entries(positiveLabels)
-      .filter(([key]) => review[key] === 1 || review[key] === true);
-    const reportedIssues = Array.isArray(review.reportedIssues) ? review.reportedIssues : [];
-
-    const positiveChips = checkedPositive.length
-      ? checkedPositive.map(([, label]) =>
-          `<span class="review-display-chip positive">${label}</span>`).join('')
+    const stars = review.rating
+      ? '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating)
       : '';
-    const negativeChips = reportedIssues.length
-      ? reportedIssues.map(key =>
-          `<span class="review-display-chip negative">${negativeLabels[key] ?? key}</span>`).join('')
-      : '';
-
-    // Fallback: if no individual keys, show star score
-    const hasNewFormat = checkedPositive.length > 0 || reportedIssues.length > 0;
-    const legacyHtml = !hasNewFormat && review.score != null
-      ? `<div class="review-display-stars">${renderStars(review.score, isSell ? 3 : 5)}</div>`
-      : '';
-
     bodyHtml = `
-      ${legacyHtml}
-      ${positiveChips ? `
-        <div class="review-display-section">
-          <div class="review-display-label">正評項目</div>
-          <div class="review-display-chips">${positiveChips}</div>
-        </div>` : ''}
-      ${negativeChips ? `
-        <div class="review-display-section">
-          <div class="review-display-label neg">回報問題</div>
-          <div class="review-display-chips">${negativeChips}</div>
-        </div>` : ''}
+      ${stars ? `<div class="review-display-stars" style="color:#f5a623;font-size:1.4rem;margin:8px 0;">${stars}</div>` : ''}
       <div class="review-display-comment">${review.comment || '<span style="color:#aaa">（無文字評論）</span>'}</div>
     `;
   } else {
@@ -2166,6 +2203,7 @@ async function openPartnerReviewModal(orderId, isSell) {
             <i class="ti ti-star-filled" style="color:#f5a623;"></i>
             信譽積分：<strong>${partnerCredit}</strong>
           </div>
+          ${statsHtml}
           ${partnerIntro ? `<div style="font-size:12px;color:#888;margin-top:2px;">${partnerIntro}</div>` : ''}
         </div>
       </div>
@@ -2242,46 +2280,45 @@ function renderProductsPager(pg, currentPage) {
 
 window.goToPage = goToPage;
 
-// Render received reviews into sidebar #reviewsContainer
-function renderReviewsContainer(reviews) {
+async function loadMyReviewStats() {
   const container = document.getElementById('reviewsContainer');
   if (!container) return;
-  if (!reviews || reviews.length === 0) {
+  const uid = localStorage.getItem('uid');
+  if (!uid) return;
+
+  try {
+    const res = await backendService.getUserReviews(uid);
+    const d = res?.data?.data;
+    if (!d) return;
+
+    const { stats } = d;
+
+    if (!stats || stats.reviewCount === 0) {
+      container.innerHTML = `
+        <div class="review-empty">
+          <i class="fa-regular fa-star review-empty-icon"></i>
+          <div class="review-empty-title">目前還沒有評價</div>
+          <div class="review-empty-sub">完成交易後，買賣雙方可互相留下評價</div>
+        </div>`;
+      return;
+    }
+
+    const starsHtml = `<div class="review-stats-stars">${'★'.repeat(Math.round(stats.averageRating))}${'☆'.repeat(5 - Math.round(stats.averageRating))}</div>`;
+
     container.innerHTML = `
-      <div class="review-empty">
-        <i class="fa-regular fa-star review-empty-icon"></i>
-        <div class="review-empty-title">目前還沒有評價</div>
-        <div class="review-empty-sub">完成交易後，買賣雙方可互相留下評價</div>
-      </div>`;
-    return;
-  }
-  const POSITIVE_LABELS = { onTime: '準時赴約', communication: '溝通禮貌', reliability: '交易可靠', accurate: '商品描述準確', fast: '出貨速度快', polite: '溝通禮貌', reliable: '交易可靠', packaging: '包裝完整' };
-  const NEGATIVE_LABELS = { noShow: '無故爽約或失聯', mismatch: '商品與描述嚴重不符', late: '遲到超過 10 分鐘' };
-  container.innerHTML = reviews.map(review => {
-    const name    = review?.reviewerUser?.name ?? review?.reviewerName ?? '評價者';
-    const photo   = review?.reviewerUser?.photoURL ?? '../image/default-avatar.webp';
-    const item    = review?.itemName ?? '';
-    const time    = review?.createdAt ? new Date(review.createdAt).toLocaleDateString('zh-TW') : '';
-    const comment = review?.comment ?? '';
-    const positiveChips = Object.entries(POSITIVE_LABELS)
-      .filter(([key]) => review?.[key] === 1 || review?.[key] === true)
-      .map(([, label]) => `<span class="review-display-chip positive">${label}</span>`)
-      .join('');
-    const negativeChips = (Array.isArray(review?.reportedIssues) ? review.reportedIssues : [])
-      .map(key => `<span class="review-display-chip negative">${NEGATIVE_LABELS[key] ?? key}</span>`)
-      .join('');
-    return `
-      <div class="review-card">
-        <div class="review-card__header">
-          <img src="${photo}" alt="${name}" class="reviewer-avatar">
-          <div class="review-card__meta">
-            <span class="reviewerName">${name}</span>
-            ${item ? `<div class="itemNames">${item}</div>` : ''}
-          </div>
-          ${time ? `<div class="reviewTime">${time}</div>` : ''}
+      <div class="seller-review-stats">
+        <div class="seller-review-stat-item">
+          <span class="seller-stat-value">${stats.averageRating?.toFixed(1)}</span>
+          <span class="seller-stat-label">平均評分</span>
+          ${starsHtml}
         </div>
-        ${positiveChips || negativeChips ? `<div class="review-card__chips">${positiveChips}${negativeChips}</div>` : ''}
-        ${comment ? `<div class="reviewText">${comment}</div>` : ''}
+        <div class="seller-stat-divider"></div>
+        <div class="seller-review-stat-item">
+          <span class="seller-stat-value">${stats.reviewCount}</span>
+          <span class="seller-stat-label">累積評價</span>
+        </div>
       </div>`;
-  }).join('');
+  } catch (e) {
+    container.innerHTML = `<div class="review-empty">載入失敗，請稍後再試</div>`;
+  }
 }

@@ -23,6 +23,7 @@ const SELLER_PER_PAGE = 6;
 
 // ── 目前瀏覽的商品（傳給聊天室用）──
 let _currentProduct = null;
+let _currentSellerId = null;
 
 function _renderSellerPage(page) {
   const container = document.getElementById('otherProducts');
@@ -469,8 +470,19 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         };
 
         renderSellerInfo(data);
-        showSellerCommodities(sellerId); // 顯示賣家其他商品
+        showSellerCommodities(sellerId);
         await checkIsOwnProduct(sellerId);
+        backendService.getUserReviews(sellerId).then(res => {
+          const stats = res?.data?.data?.stats;
+          const countEl = document.getElementById('sellerReviewCount');
+          const avgEl   = document.getElementById('sellerAvgRating');
+          if (countEl && stats?.reviewCount != null) countEl.textContent = stats.reviewCount;
+          if (avgEl) {
+            avgEl.textContent = stats?.reviewCount > 0
+              ? `★ ${Number(stats.averageRating).toFixed(1)}`
+              : '—';
+          }
+        }).catch(() => {});
     } else {
       // 沒有 owner：可隱藏整張卡
       document.getElementById('sellerInfo')?.classList.add('d-none');
@@ -501,6 +513,7 @@ function renderSellerInfo(data) {
   if (scoreEl) scoreEl.textContent = Number.isFinite(+data.score) ? +data.score : 0;
 
   // 綁事件（依你的路由調整）
+  _currentSellerId = data.id ?? null;
   if (chatBtn)   chatBtn.onclick   = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
   if (rateBtn)   rateBtn.onclick   = () => toggleSellerReviews();
   if (reportBtn) reportBtn.onclick = () => reportSeller(data.id);
@@ -562,14 +575,39 @@ async function openChatWithSeller(targetSellerId) {
   }
 }
 
-function toggleSellerReviews() {
+let _loadedReviewSellerId = null;
+
+async function toggleSellerReviews() {
   const reviewContainer = document.getElementById('sellerReviews');
 
   if (reviewContainer.classList.contains('d-none')) {
-    // 渲染評價（TODO: 換成真實 API 資料後傳入 review 物件）
     const listEl = document.getElementById('reviewerInfo');
-    if (listEl && listEl.innerHTML === '') {
-      listEl.innerHTML = `<div class="review-empty">目前尚無評價紀錄</div>`;
+    if (listEl && _currentSellerId && _loadedReviewSellerId !== _currentSellerId) {
+      listEl.innerHTML = `<div class="review-empty">載入中...</div>`;
+      try {
+        const res = await backendService.getUserReviews(_currentSellerId);
+        const d = res?.data?.data;
+        const stats = d?.stats;
+        const creditScore = Number(d?.user?.rate ?? 0);
+
+        if (stats) {
+          const starsHtml = stats.averageRating > 0
+            ? `<div style="color:#f5a623;font-size:0.85rem;margin-top:2px;">${'★'.repeat(Math.round(stats.averageRating))}${'☆'.repeat(5 - Math.round(stats.averageRating))}</div>`
+            : '';
+          listEl.innerHTML = stats.reviewCount > 0
+            ? `<div class="seller-stat-item" style="padding:4px 0;">
+                <span class="seller-stat-value">${stats.averageRating?.toFixed(1)}</span>
+                <span class="seller-stat-label">平均評分</span>
+                ${starsHtml}
+               </div>`
+            : `<div class="review-empty">目前尚無評價紀錄</div>`;
+          _loadedReviewSellerId = _currentSellerId;
+        } else {
+          listEl.innerHTML = `<div class="review-empty">目前尚無評價紀錄</div>`;
+        }
+      } catch (e) {
+        listEl.innerHTML = `<div class="review-empty">載入失敗，請稍後再試</div>`;
+      }
     }
 
     reviewContainer.classList.remove('d-none');
@@ -843,7 +881,7 @@ function renderReviewCard(review) {
   const comment = review?.comment ?? '';
 
   const positiveChips = Object.entries(SELLER_POSITIVE_LABELS)
-    .filter(([key]) => review?.[key] === 1 || review?.[key] === true)
+    .filter(([key]) => review?.positiveItems?.[key] === 1 || review?.positiveItems?.[key] === true)
     .map(([, label]) => `<span class="review-display-chip positive">${label}</span>`)
     .join('');
 

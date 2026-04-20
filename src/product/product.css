@@ -618,6 +618,9 @@
   color: #999;
   white-space: nowrap;
 }
+.seller-stat-avg {
+  color: #f5a623;
+}
 .seller-stat-divider {
   width: 1px;
   height: 36px;
