@@ -27,8 +27,25 @@ function _attach401Handler(instance) {
         res => res,
         err => {
             const url = err?.config?.url || '';
+            const status = err?.response?.status;
+            const msg = err?.response?.data?.message || '';
+
+            if (status === 403 && msg === 'Account is temporarily suspended') {
+                const loader = document.getElementById('loader');
+                const content = document.getElementById('whatcontent');
+                if (loader) { loader.classList.add('d-none'); loader.classList.remove('d-flex'); }
+                if (content) content.classList.remove('d-none');
+                Swal.fire({
+                    icon: 'error',
+                    title: '帳號已被限制',
+                    text: '信譽積分太低，無法使用',
+                    confirmButtonText: '確定',
+                });
+                return Promise.reject(err);
+            }
+
             const skip = _SKIP_401.some(p => url.includes(p));
-            if (err?.response?.status === 401 && !skip && !_handlingExpiry) {
+            if (status === 401 && !skip && !_handlingExpiry) {
                 _handlingExpiry = true;
                 window.isLoggedIn = false;
                 const currentUrl = window.location.pathname + window.location.search;
