@@ -2,6 +2,22 @@
 #editDrawer { z-index: 5000; }
 body.edit-modal-open .modal-backdrop { z-index: 4999; }
 
+@media (min-width: 992px) {
+  #editDrawer .modal-dialog {
+    margin-top: 80px;
+    max-height: calc(100vh - 100px);
+  }
+  #editDrawer .modal-content {
+    max-height: calc(100vh - 100px);
+  }
+}
+
+#editDrawerTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #004b97;
+}
+
 .asideicon {
   font-size: 14px;
 }
@@ -590,6 +606,7 @@ small { font-size: 10px; color: #004b97; }
 }
 #buyProducts tbody {
   font-size: 15px;
+  background: aliceblue;
 }
 .itemlist td{
   border-top: 1px solid #abdad5;
