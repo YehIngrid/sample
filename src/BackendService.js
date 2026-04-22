@@ -493,6 +493,15 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
+    async getPublicUserProfile(userId) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/account/${userId}`);
+            return response;
+        } catch (error) {
+            console.error("取得使用者資料失敗", error);
+            return Promise.reject(error);
+        }
+    }
     async getUserReviews(userId, page = 1, limit = 10) {
         try {
             const response = await axios.get(`${this.baseUrl}/api/review/user/${userId}`, { params: { page, limit } });
@@ -547,6 +556,24 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
+    async reportSeller(userId, payload) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/report/user/${userId}`, payload);
+            return response;
+        } catch (error) {
+            console.error("檢舉失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async reportReview(reviewId, payload) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/report/review/${reviewId}`, payload);
+            return response;
+        } catch (error) {
+            console.error("檢舉評價失敗", error);
             return Promise.reject(error);
         }
     }

@@ -92,6 +92,10 @@ ul{
   font-size: 0.88rem !important;
   line-height: 1.6;
 }
+.swal-left-body,
+.report-form-popup .swal2-html-container {
+  text-align: left !important;
+}
 .swal2-confirm {
   background: #abdad5 !important;
   color: #383838 !important;

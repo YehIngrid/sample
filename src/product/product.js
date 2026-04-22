@@ -510,7 +510,7 @@ function renderSellerInfo(data) {
   _currentSellerId = data.id ?? null;
   if (chatBtn)   chatBtn.onclick   = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
   if (rateBtn)   rateBtn.onclick   = () => toggleSellerReviews();
-  if (reportBtn) reportBtn.onclick = () => reportSeller(data.id);
+  if (reportBtn) reportBtn.onclick = () => reportSeller(data.id, data.name);
 }
 
 // === chatReady handshake ===
@@ -579,17 +579,25 @@ async function toggleSellerReviews() {
     if (listEl && _currentSellerId && _loadedReviewSellerId !== _currentSellerId) {
       listEl.innerHTML = `<div class="review-empty">載入中...</div>`;
       try {
+        if (Object.keys(_tagMeaningCache).length === 0) {
+          try {
+            const tagRes = await backendService.getReviewTags();
+            (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+          } catch (e) { /* silent */ }
+        }
         const res = await backendService.getUserReviews(_currentSellerId);
         const d = res?.data?.data;
         const stats = d?.stats;
-        const reviews = d?.sellerReviews ?? [];
+        const sellerReviews = d?.sellerReviews ?? [];
+        const buyerReviews  = d?.buyerReviews  ?? [];
 
-        if (!stats || stats.reviewCount === 0) {
-          listEl.innerHTML = `<div class="review-empty">目前尚無評價紀錄</div>`;
-        } else {
-          listEl.innerHTML = reviews.map(r => renderReviewCard(r)).join('') ||
-            `<div class="review-empty">目前尚無評價紀錄</div>`;
-        }
+        const allCards = [
+          ...sellerReviews.map(r => renderReviewCard(r, 'seller')),
+          ...buyerReviews.map(r => renderReviewCard(r, 'buyer')),
+        ].join('');
+
+        listEl.innerHTML = allCards || `<div class="review-empty">目前尚無評價紀錄</div>`;
+        bindReviewerClicks(listEl);
         _loadedReviewSellerId = _currentSellerId;
       } catch (e) {
         listEl.innerHTML = `<div class="review-empty">載入失敗，請稍後再試</div>`;
@@ -607,13 +615,14 @@ async function toggleSellerReviews() {
   }
 }
 
-async function reportSeller(sellerId) {
+async function reportSeller(sellerId, sellerName) {
   if (!sellerId) return;
 
   const { isConfirmed, value } = await Swal.fire({
     title: '檢舉賣家',
     customClass: { popup: 'report-form-popup' },
     html: `
+      ${sellerName ? `<p class="report-form-target">檢舉對象：<strong>${sellerName}</strong></p>` : ''}
       <label class="report-form-label" for="report-category">檢舉類型</label>
       <select id="report-category" class="report-form-select">
         <option value="" disabled selected>請選擇檢舉類型</option>
@@ -872,25 +881,155 @@ const TAG_DELTA = {
   slow_shipping: -1, poor_packaging: -1, misleading_description: -1, late_payment: -1, no_show: -5,
 };
 
-function renderReviewCard(review) {
-  const name    = review?.reviewer?.name ?? review?.reviewerName ?? '評價者';
-  const photo   = review?.reviewer?.photoURL ?? review?.reviewerUser?.photoURL ?? '../image/default-avatar.webp';
-  const time    = review?.createdAt ? new Date(review.createdAt).toLocaleDateString('zh-TW') : '';
-  const comment = review?.comment ?? '';
-  const tags    = Array.isArray(review?.tags) ? review.tags : [];
+const _tagMeaningCache = {};
+function getTagLabel(tag) {
+  if (!tag) return '';
+  if (_tagMeaningCache[tag]) return _tagMeaningCache[tag];
+  return TAG_LABELS[tag] ?? TAG_LABELS[tag.toLowerCase()] ?? tag;
+}
+
+function bindReviewerClicks(container) {
+  container.addEventListener('click', e => {
+    if (e.target.closest('[data-report-review-id]')) {
+      const btn = e.target.closest('[data-report-review-id]');
+      openReportReviewSwal(btn.dataset.reportReviewId, btn.dataset.reportReviewerName);
+      return;
+    }
+    const el = e.target.closest('[data-reviewer-id]');
+    if (!el) return;
+    const rid    = el.dataset.reviewerId;
+    const rname  = el.dataset.reviewerName;
+    const rphoto = el.dataset.reviewerPhoto;
+    if (rid) openReviewerModal(rid, rname, rphoto);
+  });
+}
+
+async function openReportReviewSwal(reviewId, reviewerName) {
+  const { isConfirmed, value } = await Swal.fire({
+    title: '檢舉評價',
+    customClass: { popup: 'report-form-popup' },
+    html: `
+      ${reviewerName ? `<p class="report-form-target">檢舉對象：<strong>${reviewerName}</strong></p>` : ''}
+      <label class="report-form-label" for="report-category">檢舉類型</label>
+      <select id="report-category" class="report-form-select">
+        <option value="" disabled selected>請選擇檢舉類型</option>
+        <option value="fake_review">虛假或惡意評價</option>
+        <option value="harassment">人身攻擊或騷擾</option>
+        <option value="spam">廣告或垃圾訊息</option>
+        <option value="other">其他原因</option>
+      </select>
+      <label class="report-form-label" for="report-detail">補充說明（選填）</label>
+      <textarea id="report-detail" class="report-form-textarea" placeholder="請描述詳細情況"></textarea>
+    `,
+    showCancelButton: true,
+    confirmButtonText: '送出檢舉',
+    cancelButtonText: '取消',
+    focusConfirm: false,
+    preConfirm: () => {
+      const category = document.getElementById('report-category').value;
+      const detail   = document.getElementById('report-detail').value.trim();
+      if (!category) { Swal.showValidationMessage('請選擇檢舉類型'); return false; }
+      return { category, detail };
+    }
+  });
+  if (!isConfirmed || !value) return;
+  try {
+    await backendService.reportReview(reviewId, { reason: value.category, detail: value.detail });
+    Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
+  } catch (e) {
+    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+  }
+}
+
+async function openReviewerModal(accountId, name, photo) {
+  let stats = null;
+  let sellerReviews = [];
+  let buyerReviews  = [];
+  let intro = '';
+  try {
+    if (Object.keys(_tagMeaningCache).length === 0) {
+      try {
+        const tagRes = await backendService.getReviewTags();
+        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+      } catch (e) { /* silent */ }
+    }
+    const [reviewRes, profileRes] = await Promise.all([
+      backendService.getUserReviews(accountId),
+      backendService.getPublicUserProfile(accountId).catch(() => null),
+    ]);
+    const d = reviewRes?.data?.data;
+    stats = d?.stats ?? null;
+    sellerReviews = d?.sellerReviews ?? [];
+    buyerReviews  = d?.buyerReviews  ?? [];
+    intro = profileRes?.data?.data?.introduction ?? '';
+  } catch (e) { /* silent */ }
+
+  const reviewCount  = Number(stats?.reviewCount ?? 0);
+  const accountScore = stats?.accountScore ?? '-';
+  const statsHtml = reviewCount > 0
+    ? `<div style="font-size:12px;color:#555;margin-top:2px;">${reviewCount} 則評價 · 信譽積分 ${accountScore}</div>`
+    : `<div style="font-size:12px;color:#aaa;margin-top:2px;">尚無評價紀錄</div>`;
+
+  const allCards = [
+    ...sellerReviews.map(r => renderReviewCard(r, 'seller')),
+    ...buyerReviews.map(r => renderReviewCard(r, 'buyer')),
+  ].join('');
+  const reviewHtml = allCards || `<div class="review-empty" style="margin-top:12px;">目前尚無評價紀錄</div>`;
+
+  Swal.fire({
+    title: `${name} 的評價`,
+    customClass: { htmlContainer: 'swal-left-body' },
+    html: `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <img src="${photo}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="${name}">
+        <div>
+          <div style="font-weight:700;color:#222;">${name}</div>
+          ${statsHtml}
+          ${intro ? `<div style="font-size:12px;color:#888;margin-top:4px;">${intro}</div>` : ''}
+        </div>
+      </div>
+      <div style="max-height:340px;overflow-y:auto;">${reviewHtml}</div>
+    `,
+    confirmButtonText: '關閉',
+    width: 520,
+    didOpen: (popup) => bindReviewerClicks(popup),
+  });
+}
+
+function renderReviewCard(review, role) {
+  const name     = review?.reviewer?.name ?? review?.reviewerName ?? '評價者';
+  const photo    = review?.reviewer?.photoURL ?? review?.reviewerUser?.photoURL ?? '../image/default-avatar.webp';
+  const time     = review?.createdAt ? new Date(review.createdAt).toLocaleDateString('zh-TW') : '';
+  const comment  = review?.comment ?? '';
+  const commodity = review?.commodityName ? review.commodityName : '';
+  const tags     = Array.isArray(review?.tags) ? review.tags : [];
+  const roleBadge = role === 'seller' ? '賣' : role === 'buyer' ? '買' : '';
+  const roleClass = role === 'seller' ? 'reviewer-role-badge--seller' : role === 'buyer' ? 'reviewer-role-badge--buyer' : '';
 
   const tagChips = tags
-    .map(t => `<span class="review-display-chip ${(TAG_DELTA[t] ?? 1) < 0 ? 'negative' : 'positive'}">${TAG_LABELS[t] ?? t}</span>`)
+    .map(t => `<span class="review-display-chip ${(TAG_DELTA[t] ?? TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`)
     .join('');
 
+  const rid      = review?.reviewer?.accountId ?? '';
+  const reviewId = review?.id ?? '';
   return `
     <div class="review-card">
       <div class="review-card__header">
-        <img src="${photo}" alt="${name}" class="reviewer-avatar">
-        <div class="review-card__meta">
-          <span class="reviewerName">${name}</span>
+        <div class="reviewer-avatar-wrap">
+          <img src="${photo}" alt="${name}" class="reviewer-avatar reviewer-avatar--clickable"
+            data-reviewer-id="${rid}" data-reviewer-name="${name.replace(/"/g,'&quot;')}" data-reviewer-photo="${photo.replace(/"/g,'&quot;')}"
+            title="查看 ${name} 的評價" style="cursor:pointer;">
+          ${roleBadge ? `<span class="reviewer-role-badge ${roleClass}">${roleBadge}</span>` : ''}
         </div>
-        ${time ? `<div class="reviewTime">${time}</div>` : ''}
+        <div class="review-card__meta">
+          <span class="reviewerName reviewer-avatar--clickable" style="cursor:pointer;"
+            data-reviewer-id="${rid}" data-reviewer-name="${name.replace(/"/g,'&quot;')}" data-reviewer-photo="${photo.replace(/"/g,'&quot;')}">${name}</span>
+          ${commodity ? `<span class="review-commodity-name">· ${commodity}</span>` : ''}
+        </div>
+        <div class="review-card__actions">
+          ${time ? `<span class="reviewTime">${time}</span>` : ''}
+          ${reviewId ? `<button class="review-report-btn" data-report-review-id="${reviewId}" data-report-reviewer-name="${name.replace(/"/g,'&quot;')}" title="檢舉此評價"><i class="ti ti-flag"></i></button>` : ''}
+        </div>
       </div>
       ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
       ${comment ? `<div class="reviewText">${comment}</div>` : ''}

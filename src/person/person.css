@@ -586,6 +586,7 @@ small { font-size: 10px; color: #004b97; }
 }
 #sellProducts tbody {
   font-size: 15px;
+  background: aliceblue;
 }
 #buyProducts tbody {
   font-size: 15px;
@@ -914,6 +915,48 @@ small { font-size: 10px; color: #004b97; }
   padding: 20px 0;
   font-size: 14px;
 }
+/* ── My review stats banner ── */
+.my-review-stats {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #eaf4ff 0%, #e6f7f3 100%);
+  border: 1px solid #abdad5;
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin-bottom: 16px;
+  gap: 0;
+}
+.my-review-stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.my-review-stat-icon {
+  font-size: 1.3rem;
+  color: #004b97;
+  margin-bottom: 2px;
+}
+.my-review-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #004b97;
+  line-height: 1;
+}
+.my-review-stat-label {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 0.3px;
+}
+.my-review-stat-divider {
+  width: 1px;
+  height: 40px;
+  background: #abdad5;
+  margin: 0 12px;
+  flex-shrink: 0;
+}
+
 /* ── Review cards (sidebar + product page) ── */
 .review-card {
   padding: 12px 0;
@@ -927,14 +970,48 @@ small { font-size: 10px; color: #004b97; }
   margin-bottom: 8px;
 }
 .review-card__meta { flex: 1; min-width: 0; }
+.reviewer-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+}
 .reviewer-avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0;
+}
+.reviewer-role-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -4px;
+  background: #004b97;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #fff;
+  line-height: 1;
+}
+.reviewer-role-badge--seller { background: #004b97; }
+.reviewer-role-badge--buyer  { background: rgb(36,182,133); }
+.reviewer-avatar--clickable {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.reviewer-avatar--clickable:hover {
+  opacity: 0.75;
 }
 .reviewerName { font-size: 13px; font-weight: 600; color: #333; }
+.reviewerName.reviewer-avatar--clickable { cursor: pointer; }
+.reviewerName.reviewer-avatar--clickable:hover { color: #004b97; text-decoration: underline dotted #abdad5; }
+.review-commodity-name { font-size: 11px; color: #888; font-weight: 400; margin-left: 2px; }
 .reviewTime { font-size: 11px; color: #bbb; white-space: nowrap; }
 .itemNames {
   font-size: 11px;
@@ -943,7 +1020,25 @@ small { font-size: 10px; color: #004b97; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.reviewText { font-size: 13px; color: #555; line-height: 1.5; padding-top: 4px; }
+.review-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.review-report-btn {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.review-report-btn:hover { color: #e53935; }
+.reviewText { font-size: 13px; color: #555; line-height: 1.5; padding-top: 4px; padding-left: 8px; }
 .review-card__chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
 .review-empty {
   text-align: center;
@@ -1277,6 +1372,13 @@ small { font-size: 10px; color: #004b97; }
   animation: pageEnter 0.3s ease both;
 }
 
+/* ── Order table aliceblue rows ── */
+#products .table tbody tr,
+#sellProducts .table tbody tr,
+#buyProducts .table tbody tr {
+  --bs-table-bg: aliceblue;
+}
+
 /* ── Settings cards stagger ── */
 #settings .profile-edit-card {
   animation: pageEnter 0.38s ease both;
@@ -1490,6 +1592,16 @@ small { font-size: 10px; color: #004b97; }
 .order-badge-scored    { background: linear-gradient(135deg, #4f6fd4, #7c5cbf); color: #fff; }
 .order-badge-canceled  { background-color: #e0e0e0; color: #666; }
 
+/* ── 評價分區標籤 ── */
+.review-section-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #004b97;
+  margin: 12px 0 6px;
+  padding-left: 4px;
+  border-left: 3px solid #abdad5;
+}
+
 /* ── 評價狀態文字 ── */
 .review-role-label {
   font-size: 0.72rem;
@@ -1581,6 +1693,7 @@ small { font-size: 10px; color: #004b97; }
   border-collapse: collapse;
   font-size: 12px;
   color: #444;
+  background-color: aliceblue;
 }
 .order-guide-table thead th {
   background: #f0f8ff;
@@ -1827,6 +1940,10 @@ small { font-size: 10px; color: #004b97; }
 .btnSell[data-action="delete"]:hover {
   background: #fff5f5;
   font-weight: 600;
+}
+
+.product-manage-table {
+  background-color: aliceblue;
 }
 
 /* ── 商品管理分頁按鈕 ── */

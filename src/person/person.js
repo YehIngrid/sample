@@ -681,14 +681,22 @@ function resetOrderView() {
 }
 
 async function loadSellerOrders(page) {
-  const res = await backendService.getSellerOrders(page);
-  const list = res?.data?.data?.orders ?? [];
-  const pagination = res?.data?.data?.pagination ?? {};
-  goodsOrder = list;
-  renderSellerOrders(list);
-  renderSellerCards(list);
-  renderOrderPagination('sellPagination', pagination, loadSellerOrders);
-  updateFilterTabCounts(list, 'sellFilter', pagination);
+  try {
+    const res = await backendService.getSellerOrders(page);
+    const list = res?.data?.data?.orders ?? [];
+    const pagination = res?.data?.data?.pagination ?? {};
+    goodsOrder = list;
+    renderSellerOrders(list);
+    renderSellerCards(list);
+    renderOrderPagination('sellPagination', pagination, loadSellerOrders);
+    updateFilterTabCounts(list, 'sellFilter', pagination);
+  } catch (err) {
+    console.error('loadSellerOrders failed', err);
+    const tbody = document.querySelector('#sellProducts tbody');
+    if (tbody) tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">載入失敗，請重新整理</td></tr>`;
+    const cards = document.getElementById('sell-product');
+    if (cards) cards.innerHTML = `<div class="col-12 text-center text-muted py-4">載入失敗，請重新整理</div>`;
+  }
 }
 
 async function loadBuyerOrders(page) {
@@ -1358,7 +1366,7 @@ async function getDetail(id) {
       </ul>
       <hr style="border:none;border-top:1px dashed #7bbfb9;margin:12px 0;">
       <span class="orderstyle">訂購商品</span>
-      <table class="align-middle responsive-table mt-3" style="border: none;">
+      <table class="align-middle responsive-table mt-3 mb-3" style="border: none;">
         <thead>
           <tr>
             <th>商品編號</th>
@@ -2011,6 +2019,7 @@ async function openReviewModal(orderId, targetId, targetRole) {
 
   Swal.fire({
     title: `評價${roleName}`,
+    customClass: { htmlContainer: 'swal-left-body' },
     html: `
       <div id="review-list">
 
@@ -2034,11 +2043,12 @@ async function openReviewModal(orderId, targetId, targetRole) {
         <div class="review-section-label" style="margin-top:12px;">文字評價 <span class="review-section-hint">（選填）</span></div>
         <textarea id="review-comment" class="review-comment-input" rows="3" placeholder="留下文字評價..."></textarea>
 
-        <!-- 匿名 -->
+        <!-- 匿名（僅買家評賣家才顯示） -->
+        ${!isRatingBuyer ? `
         <label class="review-anon-row">
           <input type="checkbox" id="review-anonymous">
           <span>匿名評價</span>
-        </label>
+        </label>` : ''}
       </div>
     `,
     showCancelButton: true,
@@ -2048,14 +2058,14 @@ async function openReviewModal(orderId, targetId, targetRole) {
 
     preConfirm: async () => {
       const comment     = document.getElementById('review-comment').value.trim();
-      const isAnonymous = document.getElementById('review-anonymous').checked;
+      const isAnonymous = !isRatingBuyer && (document.getElementById('review-anonymous')?.checked ?? false);
       const tags        = [...document.querySelectorAll('.review-tag-check:checked')]
                            .map(el => el.dataset.key.toUpperCase());
 
       try {
         const res = await backendService.postReview(orderId, { comment, isAnonymous, tags });
         const data = res?.data;
-        if (!data?.success) throw new Error(data?.message || '送出失敗');
+        if (!data?.data) throw new Error(data?.message || '送出失敗');
         return { ok: true, data };
       } catch (err) {
         // 回傳錯誤物件讓 modal 關閉，再用獨立 Swal 顯示
@@ -2132,11 +2142,15 @@ async function openPartnerReviewModal(orderId, isSell) {
 
   Swal.fire({
     title: '對方評論',
+    customClass: { htmlContainer: 'swal-left-body' },
     html: `
       <div class="review-target-row">
-        <img src="${partnerPhoto}" class="review-target-avatar" alt="${partnerName}頭像">
+        <img src="${partnerPhoto}" class="review-target-avatar reviewer-avatar--clickable" style="cursor:pointer;"
+          data-reviewer-id="${partnerId ?? ''}" data-reviewer-name="${esc(partnerName)}" data-reviewer-photo="${esc(partnerPhoto)}"
+          alt="${partnerName}頭像" title="查看 ${esc(partnerName)} 的評價">
         <div>
-          <div class="review-target-name">${partnerName}</div>
+          <div class="review-target-name reviewer-avatar--clickable" style="cursor:pointer;text-decoration:underline dotted #abdad5;"
+            data-reviewer-id="${partnerId ?? ''}" data-reviewer-name="${esc(partnerName)}" data-reviewer-photo="${esc(partnerPhoto)}">${partnerName}</div>
           <div class="review-target-credit">
             <i class="ti ti-star-filled" style="color:#f5a623;"></i>
             信譽積分：<strong>${partnerCredit}</strong>
@@ -2149,6 +2163,7 @@ async function openPartnerReviewModal(orderId, isSell) {
     `,
     confirmButtonText: '關閉',
     width: 500,
+    didOpen: (popup) => bindReviewerClicks(popup),
   });
 }
 // ===== 商品管理分頁 =====
@@ -2244,22 +2259,140 @@ function getTagLabel(tag) {
   return REVIEW_TAG_LABELS[tag] ?? REVIEW_TAG_LABELS[tag.toLowerCase()] ?? tag;
 }
 
-function renderPersonReviewCard(review) {
-  const name  = review?.reviewer?.name ?? '評價者';
-  const photo = review?.reviewer?.photoURL ?? '../image/default-avatar.webp';
-  const time  = review?.createdAt ? fmtDate(review.createdAt) : '';
-  const tags  = Array.isArray(review?.tags) ? review.tags : [];
-  const tagChips = tags.map(t => `<span class="review-display-chip ${(REVIEW_TAG_DELTA[t] ?? REVIEW_TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`).join('');
+function bindReviewerClicks(container) {
+  container.addEventListener('click', e => {
+    if (e.target.closest('[data-report-review-id]')) {
+      const btn = e.target.closest('[data-report-review-id]');
+      openReportReviewSwal(btn.dataset.reportReviewId, btn.dataset.reportReviewerName);
+      return;
+    }
+    const el = e.target.closest('[data-reviewer-id]');
+    if (!el) return;
+    const rid    = el.dataset.reviewerId;
+    const rname  = el.dataset.reviewerName;
+    const rphoto = el.dataset.reviewerPhoto;
+    if (rid) openReviewerProfileModal(rid, rname, rphoto);
+  });
+}
+
+async function openReportReviewSwal(reviewId, reviewerName) {
+  const { isConfirmed, value } = await Swal.fire({
+    title: `檢舉評價`,
+    customClass: { popup: 'report-form-popup' },
+    html: `
+      ${reviewerName ? `<p class="report-form-target">檢舉對象：<strong>${reviewerName}</strong></p>` : ''}
+      <label class="report-form-label" for="report-category">檢舉類型</label>
+      <select id="report-category" class="report-form-select">
+        <option value="" disabled selected>請選擇檢舉類型</option>
+        <option value="fake_review">虛假或惡意評價</option>
+        <option value="harassment">人身攻擊或騷擾</option>
+        <option value="spam">廣告或垃圾訊息</option>
+        <option value="other">其他原因</option>
+      </select>
+      <label class="report-form-label" for="report-detail">補充說明（選填）</label>
+      <textarea id="report-detail" class="report-form-textarea" placeholder="請描述詳細情況"></textarea>
+    `,
+    showCancelButton: true,
+    confirmButtonText: '送出檢舉',
+    cancelButtonText: '取消',
+    focusConfirm: false,
+    preConfirm: () => {
+      const category = document.getElementById('report-category').value;
+      const detail   = document.getElementById('report-detail').value.trim();
+      if (!category) { Swal.showValidationMessage('請選擇檢舉類型'); return false; }
+      return { category, detail };
+    }
+  });
+  if (!isConfirmed || !value) return;
+  try {
+    await backendService.reportReview(reviewId, { reason: value.category, detail: value.detail });
+    Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
+  } catch (e) {
+    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+  }
+}
+
+function renderPersonReviewCard(review, role) {
+  const name      = review?.reviewer?.name ?? '評價者';
+  const photo     = review?.reviewer?.photoURL ?? '../image/default-avatar.webp';
+  const rid       = review?.reviewer?.accountId ?? '';
+  const reviewId  = review?.id ?? '';
+  const time      = review?.createdAt ? fmtDate(review.createdAt) : '';
+  const commodity = review?.commodityName ? esc(review.commodityName) : '';
+  const roleBadge = role === 'seller' ? '賣' : role === 'buyer' ? '買' : '';
+  const roleClass = role === 'seller' ? 'reviewer-role-badge--seller' : role === 'buyer' ? 'reviewer-role-badge--buyer' : '';
+  const tags      = Array.isArray(review?.tags) ? review.tags : [];
+  const tagChips  = tags.map(t => `<span class="review-display-chip ${(REVIEW_TAG_DELTA[t] ?? REVIEW_TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`).join('');
   return `
     <div class="review-card">
       <div class="review-card__header">
-        <img src="${photo}" alt="${name}" class="reviewer-avatar">
-        <div class="review-card__meta"><span class="reviewerName">${name}</span></div>
-        ${time ? `<div class="reviewTime">${time}</div>` : ''}
+        <div class="reviewer-avatar-wrap">
+          <img src="${photo}" alt="${name}" class="reviewer-avatar reviewer-avatar--clickable" data-reviewer-id="${rid}" data-reviewer-name="${esc(name)}" data-reviewer-photo="${esc(photo)}" title="查看 ${esc(name)} 的評價">
+          ${roleBadge ? `<span class="reviewer-role-badge ${roleClass}">${roleBadge}</span>` : ''}
+        </div>
+        <div class="review-card__meta">
+          <span class="reviewerName reviewer-avatar--clickable" data-reviewer-id="${rid}" data-reviewer-name="${esc(name)}" data-reviewer-photo="${esc(photo)}">${name}</span>
+          ${commodity ? `<span class="review-commodity-name">· ${commodity}</span>` : ''}
+        </div>
+        <div class="review-card__actions">
+          ${time ? `<span class="reviewTime">${time}</span>` : ''}
+          ${reviewId ? `<button class="review-report-btn" data-report-review-id="${reviewId}" data-report-reviewer-name="${esc(name)}" title="檢舉此評價"><i class="ti ti-flag"></i></button>` : ''}
+        </div>
       </div>
       ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
       ${review?.comment ? `<div class="reviewText">${esc(review.comment)}</div>` : ''}
     </div>`;
+}
+
+async function openReviewerProfileModal(accountId, name, photo) {
+  let stats = null;
+  let sellerReviews = [];
+  let buyerReviews  = [];
+  let intro = '';
+  try {
+    const [reviewRes, profileRes] = await Promise.all([
+      backendService.getUserReviews(accountId),
+      backendService.getPublicUserProfile(accountId).catch(() => null),
+    ]);
+    const d = reviewRes?.data?.data;
+    stats = d?.stats ?? null;
+    sellerReviews = d?.sellerReviews ?? [];
+    buyerReviews  = d?.buyerReviews  ?? [];
+    intro = profileRes?.data?.data?.introduction ?? '';
+  } catch (e) { /* silent */ }
+
+  const reviewCount = Number(stats?.reviewCount ?? 0);
+  const accountScore = stats?.accountScore ?? '-';
+  const statsHtml = reviewCount > 0
+    ? `<div style="font-size:12px;color:#555;margin-top:2px;">${reviewCount} 則評價 · 信譽積分 ${accountScore}</div>`
+    : `<div style="font-size:12px;color:#aaa;margin-top:2px;">尚無評價紀錄</div>`;
+
+  const allCards = [
+    ...sellerReviews.map(r => renderPersonReviewCard(r, 'seller')),
+    ...buyerReviews.map(r => renderPersonReviewCard(r, 'buyer')),
+  ].join('');
+  const reviewHtml = allCards
+    ? `<div class="review-list">${allCards}</div>`
+    : `<div class="review-empty" style="margin-top:12px;">目前尚無評價紀錄</div>`;
+
+  Swal.fire({
+    title: `${name} 的評價`,
+    customClass: { htmlContainer: 'swal-left-body' },
+    html: `
+      <div class="review-target-row">
+        <img src="${photo}" class="review-target-avatar" alt="${name}頭像">
+        <div>
+          <div class="review-target-name">${name}</div>
+          ${statsHtml}
+          ${intro ? `<div style="font-size:12px;color:#888;margin-top:4px;">${esc(intro)}</div>` : ''}
+        </div>
+      </div>
+      <div style="max-height:340px;overflow-y:auto;margin-top:8px;">${reviewHtml}</div>
+    `,
+    confirmButtonText: '關閉',
+    width: 520,
+    didOpen: (popup) => bindReviewerClicks(popup),
+  });
 }
 
 async function loadMyReviewStats() {
@@ -2269,15 +2402,25 @@ async function loadMyReviewStats() {
   if (!uid) return;
 
   try {
+    if (Object.keys(_tagMeaningCache).length === 0) {
+      try {
+        const tagRes = await backendService.getReviewTags();
+        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+      } catch (e) { /* silent */ }
+    }
+
     const res = await backendService.getUserReviews(uid);
     const d = res?.data?.data;
     if (!d) return;
 
     const reviewCount = Number(d?.stats?.reviewCount ?? 0);
     const accountScore = d?.stats?.accountScore ?? '-';
-    const reviews = d?.sellerReviews ?? [];
+    const sellerReviews = d?.sellerReviews ?? [];
+    const buyerReviews  = d?.buyerReviews  ?? [];
 
-    if (reviewCount === 0) {
+    const totalReviews = sellerReviews.length + buyerReviews.length;
+
+    if (reviewCount === 0 && totalReviews === 0) {
       container.innerHTML = `
         <div class="review-empty">
           <i class="ti ti-message-circle review-empty-icon"></i>
@@ -2287,21 +2430,28 @@ async function loadMyReviewStats() {
       return;
     }
 
-    const reviewCards = reviews.map(r => renderPersonReviewCard(r)).join('');
+    const allCards = [
+      ...sellerReviews.map(r => renderPersonReviewCard(r, 'seller')),
+      ...buyerReviews.map(r => renderPersonReviewCard(r, 'buyer')),
+    ].join('');
 
     container.innerHTML = `
-      <div class="seller-review-stats">
-        <div class="seller-review-stat-item">
-          <span class="seller-stat-value">${reviewCount}</span>
-          <span class="seller-stat-label">累積評價</span>
+      <div class="my-review-stats">
+        <div class="my-review-stat-item">
+          <i class="ti ti-message-check my-review-stat-icon"></i>
+          <span class="my-review-stat-value">${reviewCount}</span>
+          <span class="my-review-stat-label">累積評價</span>
         </div>
-        <div class="seller-stat-divider"></div>
-        <div class="seller-review-stat-item">
-          <span class="seller-stat-value">${accountScore}</span>
-          <span class="seller-stat-label">信譽積分</span>
+        <div class="my-review-stat-divider"></div>
+        <div class="my-review-stat-item">
+          <i class="ti ti-shield-star my-review-stat-icon"></i>
+          <span class="my-review-stat-value">${accountScore}</span>
+          <span class="my-review-stat-label">信譽積分</span>
         </div>
       </div>
-      <div class="review-list">${reviewCards}</div>`;
+      <div class="review-list">${allCards || '<div class="review-empty">目前還沒有評價</div>'}</div>`;
+
+    bindReviewerClicks(container);
   } catch (e) {
     container.innerHTML = `<div class="review-empty">載入失敗，請稍後再試</div>`;
   }
