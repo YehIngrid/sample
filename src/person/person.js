@@ -554,6 +554,9 @@ async function handleRouting() {
   const page = params.get('page') || 'account';
   const orderId = params.get('orderId');
 
+  // 切換頁面時捲回頂部（桌機側欄點擊不會自動回頂）
+  window.scrollTo({ top: 0, behavior: 'instant' });
+
   // 隱藏全部
   document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('d-none'));
 
@@ -1254,6 +1257,30 @@ function onCardAction(e) {
 
   handleAction(action, id, card);
 }
+function renderOrderReviews(reviews, isSell) {
+  if (!Array.isArray(reviews) || reviews.length === 0) {
+    return `<div class="review-empty" style="padding:12px 0;">尚無評論</div>`;
+  }
+  return reviews.map(r => {
+    const isBuyerToSeller = r.role === 'BUYER_TO_SELLER';
+    const roleLabel = isBuyerToSeller ? '買家 → 賣家' : '賣家 → 買家';
+    const tags = Array.isArray(r?.tags) ? r.tags : [];
+    const tagChips = tags.map(t => `<span class="review-display-chip ${(REVIEW_TAG_DELTA[t] ?? REVIEW_TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`).join('');
+    return `
+      <div class="review-card mt-2">
+        <div class="review-card__header">
+          <img src="${r.reviewer?.photoURL ?? '../image/default-avatar.webp'}" alt="${r.reviewer?.name}" class="reviewer-avatar">
+          <div class="review-card__meta">
+            <span class="reviewerName">${r.reviewer?.name ?? '—'}</span>
+            <span class="review-role-label">${roleLabel}</span>
+          </div>
+        </div>
+        ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
+        <div class="reviewText">${r.comment || '<span style="color:#aaa">（無文字評論）</span>'}</div>
+      </div>`;
+  }).join('');
+}
+
 // ===== 共用：按鈕動作（表格/卡片都走這裡） =====
 async function getDetail(id) {
   try {
@@ -1297,6 +1324,14 @@ async function getDetail(id) {
       ? `<span style="font-size:0.8em;color:#e07b39;margin-left:4px;">（截止：${fmtDate(rp.reviewDeadline)}）</span>`
       : '';
 
+    // 確保 tag meaning cache 有資料，供 renderOrderReviews 顯示中文
+    if (Object.keys(_tagMeaningCache).length === 0) {
+      try {
+        const tagRes = await backendService.getReviewTags();
+        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+      } catch (e) { /* 靜默失敗，fallback 到本地 labels */ }
+    }
+
     const reviewBoth = await backendService.getOrderBothReviews(id);
     const reviewBothData = reviewBoth.data?.data;
 
@@ -1321,7 +1356,7 @@ async function getDetail(id) {
           </span> 元
         </li>
       </ul>
-      <hr>
+      <hr style="border:none;border-top:1px dashed #7bbfb9;margin:12px 0;">
       <span class="orderstyle">訂購商品</span>
       <table class="align-middle responsive-table mt-3" style="border: none;">
         <thead>
@@ -1335,10 +1370,8 @@ async function getDetail(id) {
         </thead>
         <tbody class="itemlist"></tbody>
       </table>
-      <hr>
       <span class="orderstyle">此訂單評價</span>
-      <div>${reviewBothData.reviews}</div>
-      <div>TODO</div>
+      ${renderOrderReviews(reviewBothData?.reviews ?? [], isSell)}
     `;
 
     const itemlist = infoBox.querySelector('.itemlist');
@@ -1956,56 +1989,28 @@ async function openReviewModal(orderId, targetId, targetRole) {
     }
   }
 
-  const targetPhoto     = targetUser?.photoURL || '../image/default-avatar.webp';
-  const targetName      = targetUser?.name || roleName;
-  const targetCredit    = targetUser?.rate ?? '-';
-  const resolvedTargetId = targetUser?.id ?? targetUser?.accountId ?? targetId;
+  const targetPhoto      = targetUser?.photoURL || '../image/default-avatar.webp';
+  const targetName       = targetUser?.name || roleName;
+  const targetCredit     = targetUser?.rate ?? '-';
 
-  // ── 正評項目（依角色分開）──────────────────────────────
-  const buyerPositiveItems = [
-    { key: 'onTime',        label: '準時赴約' },
-    { key: 'communication', label: '溝通禮貌' },
-    { key: 'reliability',   label: '交易可靠' },
-  ];
-  const sellerPositiveItems = [
-    { key: 'accurate',  label: '商品描述準確' },
-    { key: 'fast',      label: '出貨速度快' },
-    { key: 'polite',    label: '溝通禮貌' },
-    { key: 'reliable',  label: '交易可靠' },
-    { key: 'packaging', label: '包裝完整' },
-  ];
-  const positiveItems = isRatingBuyer ? buyerPositiveItems : sellerPositiveItems;
-  const maxPositive   = positiveItems.length;
+  // 從 API 取得 tags，並填入全域 cache 供顯示使用
+  let tagItems = [];
+  try {
+    const tagRes = await backendService.getReviewTags();
+    tagItems = tagRes?.data?.data?.tags ?? [];
+    tagItems.forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+  } catch (e) {
+    console.warn('取得評論標籤失敗', e);
+  }
 
-  // ── 負評項目（依角色分開）──────────────────────────────
-  const buyerNegativeItems = [
-    { key: 'noShow',   label: '無故爽約或失聯', credit: -15, desc: '買家確認後不出現，且無事先告知' },
-    { key: 'late',     label: '遲到超過 10 分鐘', credit: -5,  desc: '面交時間超過約定 10 分鐘以上' },
-  ];
-  const sellerNegativeItems = [
-    { key: 'mismatch', label: '商品與描述嚴重不符', credit: -10, desc: '商品狀況與頁面描述有明顯落差' },
-    { key: 'late',     label: '遲到超過 10 分鐘',   credit: -5,  desc: '面交時間超過約定 10 分鐘以上' },
-  ];
-  const negativeItems = isRatingBuyer ? buyerNegativeItems : sellerNegativeItems;
-
-  const positiveHtml = positiveItems.map(item => `
+  const tagChipsHtml = tagItems.map(t => `
     <label class="review-chip">
-      <input type="checkbox" class="score-check" data-key="${item.key}">
-      <span>${item.label}</span>
-    </label>`).join('');
-
-  const negativeHtml = negativeItems.map(item => `
-    <label class="review-neg-card">
-      <div class="review-neg-card__top">
-        <input type="checkbox" class="negative-check" data-key="${item.key}" data-credit="${item.credit}">
-        <span class="review-neg-card__label">${item.label}</span>
-        <span class="credit-badge negative">${item.credit}</span>
-      </div>
-      <small class="negative-desc">${item.desc}</small>
+      <input type="checkbox" class="review-tag-check" data-key="${esc(t.tag)}">
+      <span>${esc(t.meaning)}</span>
     </label>`).join('');
 
   Swal.fire({
-    title: `為${roleName}評分`,
+    title: `評價${roleName}`,
     html: `
       <div id="review-list">
 
@@ -2015,43 +2020,25 @@ async function openReviewModal(orderId, targetId, targetRole) {
           <div>
             <div class="review-target-name">${targetName}</div>
             <div class="review-target-credit">
-              <i class="ti ti-star-filled" style="color:#f5a623;"></i>
+              <i class="ti ti-shield-check" style="color:#004b97;"></i>
               信譽積分：<strong>${targetCredit}</strong>
             </div>
           </div>
         </div>
 
-        <!-- 信用分說明 -->
-        <div class="review-credit-hint">
-          <span>完成交易雙方各得 <span class="credit-badge positive">+5</span></span>
-          <span>評價良好對方額外獲得 <span class="credit-badge positive">+2</span></span>
-        </div>
-
-        <!-- 正評 -->
-        <div class="review-section-label">正評項目 <span class="review-section-hint">（可複選）</span></div>
-        <div class="review-chips-row">${positiveHtml}</div>
-
-        <!-- 負評 -->
-        <div class="review-section-label review-section-label-neg">
-          ⚠️ 回報問題 <span class="review-section-hint">（核實後對方扣分）</span>
-        </div>
-        <div class="review-neg-list">${negativeHtml}</div>
-
-        <!-- 星評 -->
-        <div class="review-section-label">整體評分 <span class="review-section-hint">（必選）</span></div>
-        <div class="review-stars-row" id="review-stars">
-          ${[1,2,3,4,5].map(n => `<span class="review-star" data-value="${n}">★</span>`).join('')}
-        </div>
-        <input type="hidden" id="review-rating" value="0">
+        <!-- 評價標籤 -->
+        <div class="review-section-label">評價標籤 <span class="review-section-hint">（可複選）</span></div>
+        <div class="review-chips-row">${tagChipsHtml || '<span class="review-section-hint">無可用標籤</span>'}</div>
 
         <!-- 文字評價 -->
-        <textarea id="review-comment" class="review-comment-input" rows="3" placeholder="留下文字評價（選填）..."></textarea>
+        <div class="review-section-label" style="margin-top:12px;">文字評價 <span class="review-section-hint">（選填）</span></div>
+        <textarea id="review-comment" class="review-comment-input" rows="3" placeholder="留下文字評價..."></textarea>
 
-        <!-- 分數預覽 -->
-        <div class="review-score-preview">
-          已選正評：<span id="score-preview">0</span> / ${maxPositive}
-          <span id="negative-preview"></span>
-        </div>
+        <!-- 匿名 -->
+        <label class="review-anon-row">
+          <input type="checkbox" id="review-anonymous">
+          <span>匿名評價</span>
+        </label>
       </div>
     `,
     showCancelButton: true,
@@ -2059,87 +2046,41 @@ async function openReviewModal(orderId, targetId, targetRole) {
     cancelButtonText: '取消',
     width: 560,
 
-    didOpen: () => {
-      initScoreCheckbox();
-      const stars = document.querySelectorAll('.review-star');
-      const ratingInput = document.getElementById('review-rating');
-      stars.forEach(star => {
-        star.addEventListener('click', () => {
-          const val = Number(star.dataset.value);
-          ratingInput.value = val;
-          stars.forEach(s => s.classList.toggle('active', Number(s.dataset.value) <= val));
-        });
-        star.addEventListener('mouseenter', () => {
-          const val = Number(star.dataset.value);
-          stars.forEach(s => s.classList.toggle('hover', Number(s.dataset.value) <= val));
-        });
-        star.addEventListener('mouseleave', () => {
-          stars.forEach(s => s.classList.remove('hover'));
-        });
-      });
-    },
-
     preConfirm: async () => {
-      const rating  = Number(document.getElementById('review-rating').value);
-      const comment = document.getElementById('review-comment').value.trim();
-
-      if (!rating) {
-        Swal.showValidationMessage('請選擇星評（1–5 顆星）');
-        return false;
-      }
+      const comment     = document.getElementById('review-comment').value.trim();
+      const isAnonymous = document.getElementById('review-anonymous').checked;
+      const tags        = [...document.querySelectorAll('.review-tag-check:checked')]
+                           .map(el => el.dataset.key.toUpperCase());
 
       try {
-        const res = await backendService.postReview(orderId, { rating, comment });
+        const res = await backendService.postReview(orderId, { comment, isAnonymous, tags });
         const data = res?.data;
         if (!data?.success) throw new Error(data?.message || '送出失敗');
-        return data;
+        return { ok: true, data };
       } catch (err) {
-        Swal.showValidationMessage(err.message);
-        return false;
+        // 回傳錯誤物件讓 modal 關閉，再用獨立 Swal 顯示
+        return { ok: false, message: err.message || '評價送出失敗，請稍後再試' };
       }
     }
   }).then(async result => {
-    if (result.isConfirmed) {
-      Swal.fire({
+    if (!result.isConfirmed) return;
+    if (result.value?.ok) {
+      await Swal.fire({
         icon: 'success',
         title: '評價已送出',
-        text: '完成交易，信用積分 +5 將自動更新。',
-        timer: 2500,
+        timer: 2000,
         showConfirmButton: false,
       });
-      if (isRatingBuyer) {
-        await loadSellerOrders(1);
-      } else {
-        await loadBuyerOrders(1);
-      }
+      window.location.reload();
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '送出失敗',
+        text: result.value?.message || '評價送出失敗，請稍後再試',
+        confirmButtonText: '確定',
+      });
     }
   });
-}
-
-function initScoreCheckbox() {
-  document.querySelectorAll('.score-check').forEach(cb => {
-    cb.addEventListener('change', () => {
-      document.getElementById('score-preview').innerText = calcScore();
-    });
-  });
-  document.querySelectorAll('.negative-check').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const total = [...document.querySelectorAll('.negative-check:checked')]
-        .reduce((sum, el) => sum + Number(el.dataset.credit), 0);
-      const el = document.getElementById('negative-preview');
-      if (total < 0) {
-        el.innerHTML = `申訴扣分：<span style="color:#dc3545;font-weight:700;">${total}</span>`;
-      } else {
-        el.innerHTML = '';
-      }
-    });
-  });
-}
-
-function calcScore() {
-  let score = 0;
-  document.querySelectorAll('.score-check:checked').forEach(() => score++);
-  return score;
 }
 function renderStars(score, max = 5) {
   return '★'.repeat(score) + '☆'.repeat(Math.max(0, max - score));
@@ -2163,29 +2104,26 @@ async function openPartnerReviewModal(orderId, isSell) {
       partnerId ? backendService.getUserReviews(partnerId) : Promise.resolve(null),
     ]);
     const reviews = orderRes?.data?.data?.reviews ?? [];
-    const myUid = localStorage.getItem('uid');
-    review = reviews.find(r => r.reviewer?.accountId !== myUid) ?? null;
+    // 找對方給我的評論：賣家找 BUYER_TO_SELLER，買家找 SELLER_TO_BUYER
+    const targetRole = isSell ? 'BUYER_TO_SELLER' : 'SELLER_TO_BUYER';
+    review = reviews.find(r => r.role === targetRole) ?? null;
     partnerStats = statsRes?.data?.data?.stats ?? null;
   } catch (e) {
     // 尚無評論
   }
 
-  const avgRating = Number(partnerStats?.averageRating ?? 0);
   const reviewCount = Number(partnerStats?.reviewCount ?? 0);
+  const accountScore = partnerStats?.accountScore ?? '-';
   const statsHtml = reviewCount > 0
-    ? `<div style="font-size:12px;color:#555;margin-top:2px;">
-        ${'★'.repeat(Math.round(avgRating))}${'☆'.repeat(5 - Math.round(avgRating))}
-        <span style="margin-left:4px;">${avgRating.toFixed(1)} · ${reviewCount} 則評價</span>
-       </div>`
+    ? `<div style="font-size:12px;color:#555;margin-top:2px;">${reviewCount} 則評價 · 信譽積分 ${accountScore}</div>`
     : `<div style="font-size:12px;color:#aaa;margin-top:2px;">尚無評價紀錄</div>`;
 
   let bodyHtml = '';
   if (review) {
-    const stars = review.rating
-      ? '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating)
-      : '';
+    const tags = Array.isArray(review?.tags) ? review.tags : [];
+    const tagChips = tags.map(t => `<span class="review-display-chip ${(REVIEW_TAG_DELTA[t] ?? REVIEW_TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`).join('');
     bodyHtml = `
-      ${stars ? `<div class="review-display-stars" style="color:#f5a623;font-size:1.4rem;margin:8px 0;">${stars}</div>` : ''}
+      ${tagChips ? `<div class="review-card__chips" style="margin:8px 0;">${tagChips}</div>` : ''}
       <div class="review-display-comment">${review.comment || '<span style="color:#aaa">（無文字評論）</span>'}</div>
     `;
   } else {
@@ -2280,6 +2218,50 @@ function renderProductsPager(pg, currentPage) {
 
 window.goToPage = goToPage;
 
+const REVIEW_TAG_LABELS = {
+  fast_shipping:          '出貨快速',
+  great_packaging:        '包裝完整保護良好',
+  accurate_description:   '描述與實物一致',
+  quick_payment:          '付款迅速',
+  slow_shipping:          '出貨延遲',
+  poor_packaging:         '包裝保護不足',
+  misleading_description: '描述與實際不符',
+  late_payment:           '付款延遲',
+  no_show:                '未到場或無故失聯',
+};
+const REVIEW_TAG_DELTA = {
+  fast_shipping: 1, great_packaging: 1, accurate_description: 1, quick_payment: 1,
+  slow_shipping: -1, poor_packaging: -1, misleading_description: -1, late_payment: -1, no_show: -5,
+};
+const SELLER_TAG_KEYS = new Set(['fast_shipping','great_packaging','accurate_description','slow_shipping','poor_packaging','misleading_description','no_show']);
+const BUYER_TAG_KEYS  = new Set(['quick_payment','late_payment','no_show']);
+
+// 快取從 getReviewTags 拿到的 tag→meaning 對應（含大寫 key）
+const _tagMeaningCache = {};
+function getTagLabel(tag) {
+  if (!tag) return '';
+  if (_tagMeaningCache[tag]) return _tagMeaningCache[tag];
+  return REVIEW_TAG_LABELS[tag] ?? REVIEW_TAG_LABELS[tag.toLowerCase()] ?? tag;
+}
+
+function renderPersonReviewCard(review) {
+  const name  = review?.reviewer?.name ?? '評價者';
+  const photo = review?.reviewer?.photoURL ?? '../image/default-avatar.webp';
+  const time  = review?.createdAt ? fmtDate(review.createdAt) : '';
+  const tags  = Array.isArray(review?.tags) ? review.tags : [];
+  const tagChips = tags.map(t => `<span class="review-display-chip ${(REVIEW_TAG_DELTA[t] ?? REVIEW_TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`).join('');
+  return `
+    <div class="review-card">
+      <div class="review-card__header">
+        <img src="${photo}" alt="${name}" class="reviewer-avatar">
+        <div class="review-card__meta"><span class="reviewerName">${name}</span></div>
+        ${time ? `<div class="reviewTime">${time}</div>` : ''}
+      </div>
+      ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
+      ${review?.comment ? `<div class="reviewText">${esc(review.comment)}</div>` : ''}
+    </div>`;
+}
+
 async function loadMyReviewStats() {
   const container = document.getElementById('reviewsContainer');
   if (!container) return;
@@ -2291,33 +2273,35 @@ async function loadMyReviewStats() {
     const d = res?.data?.data;
     if (!d) return;
 
-    const { stats } = d;
+    const reviewCount = Number(d?.stats?.reviewCount ?? 0);
+    const accountScore = d?.stats?.accountScore ?? '-';
+    const reviews = d?.sellerReviews ?? [];
 
-    if (!stats || stats.reviewCount === 0) {
+    if (reviewCount === 0) {
       container.innerHTML = `
         <div class="review-empty">
-          <i class="fa-regular fa-star review-empty-icon"></i>
+          <i class="ti ti-message-circle review-empty-icon"></i>
           <div class="review-empty-title">目前還沒有評價</div>
           <div class="review-empty-sub">完成交易後，買賣雙方可互相留下評價</div>
         </div>`;
       return;
     }
 
-    const starsHtml = `<div class="review-stats-stars">${'★'.repeat(Math.round(stats.averageRating))}${'☆'.repeat(5 - Math.round(stats.averageRating))}</div>`;
+    const reviewCards = reviews.map(r => renderPersonReviewCard(r)).join('');
 
     container.innerHTML = `
       <div class="seller-review-stats">
         <div class="seller-review-stat-item">
-          <span class="seller-stat-value">${stats.averageRating?.toFixed(1)}</span>
-          <span class="seller-stat-label">平均評分</span>
-          ${starsHtml}
+          <span class="seller-stat-value">${reviewCount}</span>
+          <span class="seller-stat-label">累積評價</span>
         </div>
         <div class="seller-stat-divider"></div>
         <div class="seller-review-stat-item">
-          <span class="seller-stat-value">${stats.reviewCount}</span>
-          <span class="seller-stat-label">累積評價</span>
+          <span class="seller-stat-value">${accountScore}</span>
+          <span class="seller-stat-label">信譽積分</span>
         </div>
-      </div>`;
+      </div>
+      <div class="review-list">${reviewCards}</div>`;
   } catch (e) {
     container.innerHTML = `<div class="review-empty">載入失敗，請稍後再試</div>`;
   }

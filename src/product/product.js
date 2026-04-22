@@ -475,13 +475,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         backendService.getUserReviews(sellerId).then(res => {
           const stats = res?.data?.data?.stats;
           const countEl = document.getElementById('sellerReviewCount');
-          const avgEl   = document.getElementById('sellerAvgRating');
           if (countEl && stats?.reviewCount != null) countEl.textContent = stats.reviewCount;
-          if (avgEl) {
-            avgEl.textContent = stats?.reviewCount > 0
-              ? `★ ${Number(stats.averageRating).toFixed(1)}`
-              : '—';
-          }
         }).catch(() => {});
     } else {
       // 沒有 owner：可隱藏整張卡
@@ -588,23 +582,15 @@ async function toggleSellerReviews() {
         const res = await backendService.getUserReviews(_currentSellerId);
         const d = res?.data?.data;
         const stats = d?.stats;
-        const creditScore = Number(d?.user?.rate ?? 0);
+        const reviews = d?.sellerReviews ?? [];
 
-        if (stats) {
-          const starsHtml = stats.averageRating > 0
-            ? `<div style="color:#f5a623;font-size:0.85rem;margin-top:2px;">${'★'.repeat(Math.round(stats.averageRating))}${'☆'.repeat(5 - Math.round(stats.averageRating))}</div>`
-            : '';
-          listEl.innerHTML = stats.reviewCount > 0
-            ? `<div class="seller-stat-item" style="padding:4px 0;">
-                <span class="seller-stat-value">${stats.averageRating?.toFixed(1)}</span>
-                <span class="seller-stat-label">平均評分</span>
-                ${starsHtml}
-               </div>`
-            : `<div class="review-empty">目前尚無評價紀錄</div>`;
-          _loadedReviewSellerId = _currentSellerId;
-        } else {
+        if (!stats || stats.reviewCount === 0) {
           listEl.innerHTML = `<div class="review-empty">目前尚無評價紀錄</div>`;
+        } else {
+          listEl.innerHTML = reviews.map(r => renderReviewCard(r)).join('') ||
+            `<div class="review-empty">目前尚無評價紀錄</div>`;
         }
+        _loadedReviewSellerId = _currentSellerId;
       } catch (e) {
         listEl.innerHTML = `<div class="review-empty">載入失敗，請稍後再試</div>`;
       }
@@ -869,24 +855,32 @@ async function openCloseChatInterface() {
   }
 }
 
-// 評價 chip 標籤對應表（賣家）
-const SELLER_POSITIVE_LABELS = { accurate: '商品描述準確', fast: '出貨速度快', polite: '溝通禮貌', reliable: '交易可靠', packaging: '包裝完整' };
-const SELLER_NEGATIVE_LABELS = { mismatch: '商品與描述嚴重不符', late: '遲到超過 10 分鐘' };
+// 評價 tag 標籤對應表
+const TAG_LABELS = {
+  fast_shipping:          '出貨快速',
+  great_packaging:        '包裝完整',
+  accurate_description:   '描述準確',
+  quick_payment:          '付款迅速',
+  slow_shipping:          '出貨延遲',
+  poor_packaging:         '包裝不足',
+  misleading_description: '描述不符',
+  late_payment:           '付款延遲',
+  no_show:                '未到場或失聯',
+};
+const TAG_DELTA = {
+  fast_shipping: 1, great_packaging: 1, accurate_description: 1, quick_payment: 1,
+  slow_shipping: -1, poor_packaging: -1, misleading_description: -1, late_payment: -1, no_show: -5,
+};
 
 function renderReviewCard(review) {
-  const name    = review?.reviewerName ?? review?.reviewerUser?.name ?? '評價者';
-  const photo   = review?.reviewerUser?.photoURL ?? '../image/default-avatar.webp';
-  const item    = review?.itemName ?? '';
+  const name    = review?.reviewer?.name ?? review?.reviewerName ?? '評價者';
+  const photo   = review?.reviewer?.photoURL ?? review?.reviewerUser?.photoURL ?? '../image/default-avatar.webp';
   const time    = review?.createdAt ? new Date(review.createdAt).toLocaleDateString('zh-TW') : '';
   const comment = review?.comment ?? '';
+  const tags    = Array.isArray(review?.tags) ? review.tags : [];
 
-  const positiveChips = Object.entries(SELLER_POSITIVE_LABELS)
-    .filter(([key]) => review?.positiveItems?.[key] === 1 || review?.positiveItems?.[key] === true)
-    .map(([, label]) => `<span class="review-display-chip positive">${label}</span>`)
-    .join('');
-
-  const negativeChips = (Array.isArray(review?.reportedIssues) ? review.reportedIssues : [])
-    .map(key => `<span class="review-display-chip negative">${SELLER_NEGATIVE_LABELS[key] ?? key}</span>`)
+  const tagChips = tags
+    .map(t => `<span class="review-display-chip ${(TAG_DELTA[t] ?? 1) < 0 ? 'negative' : 'positive'}">${TAG_LABELS[t] ?? t}</span>`)
     .join('');
 
   return `
@@ -895,14 +889,10 @@ function renderReviewCard(review) {
         <img src="${photo}" alt="${name}" class="reviewer-avatar">
         <div class="review-card__meta">
           <span class="reviewerName">${name}</span>
-          ${item ? `<div class="itemNames">${item}</div>` : ''}
         </div>
         ${time ? `<div class="reviewTime">${time}</div>` : ''}
       </div>
-      ${positiveChips || negativeChips ? `
-        <div class="review-card__chips">
-          ${positiveChips}${negativeChips}
-        </div>` : ''}
+      ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
       ${comment ? `<div class="reviewText">${comment}</div>` : ''}
     </div>
   `;

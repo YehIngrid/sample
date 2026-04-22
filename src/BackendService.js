@@ -502,6 +502,15 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
+    async getReviewTags() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/review/tags`);
+            return response;
+        } catch (error) {
+            console.error("取得評論標籤失敗", error);
+            return Promise.reject(error);
+        }
+    }
     async postReview(orderId, payload) {
         try {
             const response = await axios.post(`${this.baseUrl}/api/review/order/${orderId}`, payload);

@@ -540,7 +540,7 @@ small { font-size: 10px; color: #004b97; }
   /* 每一列轉化為一個卡片 */
   .responsive-table tr {
     margin-bottom: 15px;
-    border: 1px solid #eee;
+    border: 1px solid #abdad5;
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -559,7 +559,7 @@ small { font-size: 10px; color: #004b97; }
     padding: 8px 10px;
     position: relative;
     border: none;
-    border-bottom: 1px dashed #f0f0f0;
+    border-bottom: 1px dashed #abdad5;
     font-size: 12px;
   }
 
@@ -591,8 +591,8 @@ small { font-size: 10px; color: #004b97; }
   font-size: 15px;
 }
 .itemlist td{
-  border-top: 1px solid #383838;
-  border-bottom: 1px solid #383838;
+  border-top: 1px solid #abdad5;
+  border-bottom: 1px solid #abdad5;
   padding: 2px 8px;
   width: 300px;
 }
@@ -645,7 +645,7 @@ small { font-size: 10px; color: #004b97; }
   gap: 12px;
   margin-bottom: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #abdad5;
 }
 .review-target-avatar {
   width: 52px;
@@ -724,6 +724,29 @@ small { font-size: 10px; color: #004b97; }
   background: #004b97;
   border-color: #004b97;
   color: #fff;
+}
+/* Negative variant */
+.review-chip.negative span {
+  border-color: #fca5a5;
+  background: #fef2f2;
+  color: #dc2626;
+}
+.review-chip.negative:hover span {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+.review-chip.negative input:checked + span {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+/* Delta badge inside chip */
+.review-tag-delta {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 5px;
+  opacity: 0.75;
 }
 .review-stars-row {
   display: flex;
@@ -825,15 +848,15 @@ small { font-size: 10px; color: #004b97; }
   border-color: #004b97;
 }
 /* Score preview */
-.review-score-preview {
+.review-anon-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
   font-size: 13px;
-  color: #888;
-  text-align: right;
-  margin-top: 8px;
-}
-#score-preview {
-  font-weight: 700;
-  color: #004b97;
+  color: #555;
+  cursor: pointer;
+  user-select: none;
 }
 /* ── Review display (partner's review of you) ── */
 .review-display-section {
@@ -894,7 +917,7 @@ small { font-size: 10px; color: #004b97; }
 /* ── Review cards (sidebar + product page) ── */
 .review-card {
   padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #abdad5;
 }
 .review-card:last-child { border-bottom: none; }
 .review-card__header {
@@ -1087,7 +1110,7 @@ small { font-size: 10px; color: #004b97; }
   align-items: center;
   gap: 12px;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid #abdad5;
 }
 .info-row:last-child { border-bottom: none; }
 .info-row-right {
@@ -1440,7 +1463,9 @@ small { font-size: 10px; color: #004b97; }
 .table {
   border: none;
   border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --bs-table-border-color: #d9eeec;
+  color: #444;
 }
 .scorediv small {
   font-size: 12px;
@@ -1466,6 +1491,12 @@ small { font-size: 10px; color: #004b97; }
 .order-badge-canceled  { background-color: #e0e0e0; color: #666; }
 
 /* ── 評價狀態文字 ── */
+.review-role-label {
+  font-size: 0.72rem;
+  color: #999;
+  margin-left: 4px;
+}
+
 .review-done-wrap,
 .review-action-wrap {
   display: flex;
@@ -1541,7 +1572,7 @@ small { font-size: 10px; color: #004b97; }
   color: #aaa;
   margin: 4px 0 0;
   padding-top: 8px;
-  border-top: 1px solid #e0f0ee;
+  border-top: 1px solid #abdad5;
 }
 
 /* ── 帳戶頁訂單進度表格 ── */
@@ -1556,12 +1587,12 @@ small { font-size: 10px; color: #004b97; }
   color: #004b97;
   font-weight: 700;
   padding: 8px 12px;
-  border-bottom: 2px solid #daeaf7;
+  border-bottom: 2px solid #abdad5;
   white-space: nowrap;
 }
 .order-guide-table tbody td {
   padding: 9px 12px;
-  border-bottom: 1px solid #eef4f8;
+  border-bottom: 1px solid #abdad5;
   vertical-align: middle;
   line-height: 1.5;
 }
