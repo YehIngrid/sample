@@ -2059,3 +2059,80 @@ small { font-size: 10px; color: #004b97; }
     font-size: 0.65rem !important;
   }
 }
+
+/* ── 訂單狀態 SweetAlert 自訂動畫 ── */
+.swal-order-popup {
+  border-radius: 16px !important;
+  padding: 32px 24px 24px !important;
+}
+.swal-order-icon {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 14px;
+}
+.swal-order-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.swal-order-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #004b97;
+}
+.swal-order-sub {
+  font-size: 0.82rem;
+  color: #888;
+  margin-top: 4px;
+}
+.swal-grayscale img {
+  filter: grayscale(1) opacity(0.55);
+}
+
+/* bounce：同意訂單 */
+@keyframes swal-bounce {
+  0%   { transform: scale(0.3); opacity: 0; }
+  50%  { transform: scale(1.22); }
+  70%  { transform: scale(0.92); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+.swal-anim-bounce { animation: swal-bounce 0.5s cubic-bezier(0.36,0.07,0.19,0.97) both; }
+
+/* slide-up：登記出貨 */
+@keyframes swal-slide-up {
+  0%   { transform: translateY(32px); opacity: 0; }
+  100% { transform: translateY(0);    opacity: 1; }
+}
+.swal-anim-slide-up { animation: swal-slide-up 0.38s ease both; }
+
+/* pop-glow：交易完成 */
+@keyframes swal-pop {
+  0%   { transform: scale(0);    opacity: 0; }
+  60%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes swal-glow {
+  0%, 100% { filter: drop-shadow(0 0 0px  rgba(36,182,133,0)); }
+  50%       { filter: drop-shadow(0 0 14px rgba(36,182,133,0.75)); }
+}
+.swal-anim-pop-glow {
+  animation: swal-pop 0.45s ease both,
+             swal-glow 1.2s ease 0.45s 2;
+}
+
+/* spin-in：評價送出 */
+@keyframes swal-spin-in {
+  0%   { transform: rotate(-180deg) scale(0); opacity: 0; }
+  100% { transform: rotate(0deg)   scale(1); opacity: 1; }
+}
+.swal-anim-spin-in { animation: swal-spin-in 0.48s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+/* shake：取消訂單 */
+@keyframes swal-shake {
+  0%, 100% { transform: translateX(0)   rotate(0); }
+  20%      { transform: translateX(-8px) rotate(-5deg); }
+  40%      { transform: translateX(8px)  rotate(5deg); }
+  60%      { transform: translateX(-5px) rotate(-3deg); }
+  80%      { transform: translateX(5px)  rotate(3deg); }
+}
+.swal-anim-shake { animation: swal-shake 0.5s ease both; }

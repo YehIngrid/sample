@@ -1098,12 +1098,12 @@ class ChatRoomList {
             setTimeout(() => this.startOnboarding(), 400);
         }
 
-        // 若從商品頁進入，預填商品詢問訊息
+        // 若從商品頁／通知進入，預填訊息
         if (_pendingProductCtx) {
-            const { productName, productPrice } = _pendingProductCtx;
+            const { productName, productPrice, _rawMessage } = _pendingProductCtx;
             _pendingProductCtx = null;
             const priceText = productPrice ? `（NT$ ${Number(productPrice).toLocaleString()}）` : '';
-            this.input.value = `你好，我對「${productName}」有興趣${priceText}`;
+            this.input.value = _rawMessage || `你好，我對「${productName}」有興趣${priceText}`;
             this.input.dispatchEvent(new Event('input'));
             this.input.focus();
         }
@@ -1650,7 +1650,9 @@ window.addEventListener('load', () => {
     if (openChatId) {
         const productName = _urlParams.get('productName') || '';
         const productPrice = _urlParams.get('productPrice') || '';
-        if (productName) _pendingProductCtx = { productName, productPrice };
+        const message = _urlParams.get('message') || '';
+        if (message) _pendingProductCtx = { _rawMessage: message };
+        else if (productName) _pendingProductCtx = { productName, productPrice };
         openChatWithTarget(openChatId);
     }
 });

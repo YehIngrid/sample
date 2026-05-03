@@ -255,13 +255,14 @@ export default class BackendService {
     // 統一商品列表 API：GET /api/commodity/list/{listName}
     // listName: all | hot | book | life | special | reuse | storage | other
     // sort: default | new | price-low | price-high
-    async getCommodityList(listName = 'all', { page, limit, sort, maxPrice } = {}) {
+    async getCommodityList(listName = 'all', { page, limit, sort, maxPrice, newOrOld } = {}) {
         try {
             const params = {};
             if (page) params.page = page;
             if (limit) params.limit = limit;
             if (sort && sort !== 'default') params.sort = sort;
             if (maxPrice) params.maxPrice = maxPrice;
+            if (newOrOld) params.new_or_old = newOrOld;
             const response = await axios.get(`${this.baseUrl}/api/commodity/list/${listName}`, { params });
             return response.data;
         } catch (error) {
@@ -586,5 +587,32 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
-    
+    async getNotifications(page = 1, limit = 20) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/notifications`, { params: { page, limit } });
+            return response;
+        } catch (error) {
+            console.error("取得通知失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async markNotificationRead(id) {
+        try {
+            const response = await axios.patch(`${this.baseUrl}/api/notifications/${id}/read`);
+            return response;
+        } catch (error) {
+            console.error("標記通知已讀失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async markAllNotificationsRead() {
+        try {
+            const response = await axios.patch(`${this.baseUrl}/api/notifications/read-all`);
+            return response;
+        } catch (error) {
+            console.error("全部已讀失敗", error);
+            return Promise.reject(error);
+        }
+    }
+
 }

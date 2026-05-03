@@ -70,13 +70,8 @@
                         <li class="nav-item"><a class="nav-link spa-tab" href="#mywishes" data-spa>我的願望</a></li>
                     </ul>
                 </div>
-                <!-- 右側：通知鈴 + 登入 -->
+                <!-- 右側：登入 -->
                 <div class="d-flex align-items-center ms-auto gap-2">
-                    <div class="position-relative">
-                        <i class="fa-solid fa-bell fs-5" id="notificationBtn" style="cursor:pointer;"></i>
-                        <span id="notificationBadge"
-                              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
-                    </div>
                     <div class="login d-flex align-items-center">
                         <a href="../person/person.html" style="margin-right: 10px; cursor: pointer;">
                             <img class="nav-user-avatar"/>
@@ -492,17 +487,6 @@
           </div>
         </div>
         
-        <div id="notifBackdrop" class="notif-backdrop"></div>
-        <div id="notificationPanel" class="notif-panel position-fixed bg-white">
-          <div class="notif-header">
-            <span class="notif-title"><i class="ti ti-bell me-2"></i>通知</span>
-            <button class="notif-close" id="notifCloseBtn" aria-label="關閉通知"><i class="ti ti-x"></i></button>
-          </div>
-          <div class="notif-list" id="notifList"></div>
-          <div class="notif-footer">
-            <button class="notif-view-all">查看全部</button>
-          </div>
-        </div>
     <!-- 許願池手機版底部 SPA 導覽列 -->
     <nav class="wp-spa-nav d-lg-none" id="wpSpaNav">
       <a class="wp-spa-item spa-tab nav-link" href="#about" data-spa>

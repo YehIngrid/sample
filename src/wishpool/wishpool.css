@@ -1375,17 +1375,28 @@ body {
 }
 
 .notif-item {
+    position: relative;
     display: flex;
     align-items: flex-start;
     gap: 14px;
-    padding: 16px 20px;
+    padding: 16px 28px 16px 20px;
     border-bottom: 1px solid #f0f4f8;
     transition: background 0.15s;
     cursor: pointer;
 }
 .notif-item:hover { background: #f7faff; }
-.notif-item.notif-unread { background: #eef5ff; border-left: 3px solid #004b97; }
-.notif-item.notif-unread:hover { background: #e0ecff; }
+.notif-item.notif-unread { background: #f4f8ff; }
+.notif-item.notif-unread:hover { background: #eaf2ff; }
+.notif-item.notif-unread::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    right: 14px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #004b97;
+}
 
 .notif-avatar {
     width: 48px;
@@ -1498,4 +1509,14 @@ body {
     object-fit: cover;
     border: 2px solid #BEE4DA;
     flex-shrink: 0;
+}
+/* ── Wish highlight from notification ── */
+@keyframes wishHighlight {
+  0%   { box-shadow: 0 0 0 3px rgba(0,75,151,0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(0,75,151,0.1); }
+  100% { box-shadow: none; }
+}
+.wish-highlight {
+  animation: wishHighlight 2.5s ease-out forwards;
+  border-radius: 12px;
 }

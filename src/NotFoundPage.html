@@ -1,90 +1,648 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="./image/bigLogo.jpg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - 頁面未找到</title>
-    <meta property="og:title" content="404 - 頁面未找到">
-    <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
-    <meta property="og:image" content="https://yourdomain.com/webP/treasurehub.webp">
-    <link rel="shortcut icon" href="../treasurehubIcon.ico">
-    <link rel="stylesheet" href="default/default-font.css">
-    <style>
-        body {
-            background-color: #abdad5;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            position: relative;
-            width: 400px;
-
-        }
-        .browser-bar {
-            width: 375px;
-            height: 30px;
-            background: #004b97;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            display: flex;
-            align-items: center;
-            padding: 5px;
-            padding-left: 20px;
-        }
-        .buttons {
-            display: flex;
-        }
-        .button {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-        .red { background: #fb4545; }
-        .yellow { background: #ffd956; }
-        .green { background: #26d33c; }
-        .error-code {
-            padding: 10px;
-            padding-bottom: 30px;
-            font-size: 90px;
-            font-weight: bold;
-            color: #004b97;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .message {
-            font-size: 18px;
-            color: #666;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - 拾貨寶庫</title>
+  <link rel="shortcut icon" href="./treasurehubIcon.ico">
+  <link rel="stylesheet" href="./default/default-font.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #f0f8ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 24px 16px;
+      font-family: 'Zen Kaku Gothic New', 'Noto Sans TC', sans-serif;
+    }
+    #game-wrap {
+      width: min(700px, 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,75,151,0.12), 0 0 0 1px rgba(0,75,151,0.08);
+    }
+    #gameCanvas { display: block; width: 100%; height: auto; cursor: pointer; }
+    #hud {
+      background: #EEE8DC;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: monospace;
+      font-size: 0.70rem;
+      color: #998;
+      border-top: 1px solid #DDD5C8;
+    }
+    #hud kbd {
+      background: #E4DDD4;
+      color: #887;
+      border-radius: 3px;
+      padding: 1px 5px;
+      border: 1px solid #CCC5B8;
+    }
+    #hud-score { color: #3A6A28; font-weight: bold; letter-spacing: 1px; }
+    #info { text-align: center; }
+    #info h1 { font-size: 4.5rem; font-weight: 900; color: #004b97; line-height: 1; }
+    #info p { color: #666; margin: 8px 0 16px; }
+    #info a {
+      display: inline-block;
+      background: #004b97;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.1s;
+    }
+    #info a:hover { background: rgb(36,182,133); transform: translateY(-1px); }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="browser-bar">
-            <div class="buttons">
-                <div class="button red"></div>
-                <div class="button yellow"></div>
-                <div class="button green"></div>
-            </div>
-        </div>
-        <img src="image/catNotFound.webp" alt="404 cat" style="width: 150px; margin-top: 30px;">
-        <div class="error-code">
-            404
-        </div>
-        <h2>Oops! 頁面找不到了</h2>
-        <p class="message">抱歉，您請求的頁面不存在。</p>
+  <div id="game-wrap">
+    <canvas id="gameCanvas" width="700" height="320"></canvas>
+    <div id="hud">
+      <span><kbd>←</kbd><kbd>→</kbd> 換道　<kbd>↑</kbd><kbd>Space</kbd> 跳　<kbd>↓</kbd> 蹲　點擊開始</span>
+      <span id="hud-score">SCORE 00000</span>
     </div>
+  </div>
+  <div id="info">
+    <h1>404</h1>
+    <p>水獺也找不到這個頁面...</p>
+    <a href="./newhome/newhome.html">← 回首頁</a>
+  </div>
+
+<script>
+(function () {
+  const CV  = document.getElementById('gameCanvas');
+  const ctx = CV.getContext('2d');
+  const W = 700, H = 320;
+
+  /* ── Perspective ───────────────────────────────
+     VPY is ABOVE the canvas (no visible vanishing point).
+     Path widens naturally from FAR_Y to GND — no "shrinks to a dot" effect.
+     FAR_Z: depth at which the path's far edge (FAR_Y) sits on screen.        */
+  const VPX  = W / 2;   // 350
+  const VPY  = -30;     // vanishing point y — above canvas
+  const GND  = 278;     // player feet y
+  const FAR_Z = 0.20;   // obstacles first appear at this depth
+  const FAR_Y = VPY + (GND - VPY) * FAR_Z;  // ≈ 28 px from top
+
+  function proj(wx, z) {
+    return { sx: VPX + wx * z,  sy: VPY + (GND - VPY) * z };
+  }
+  // Screen x/y of path edges at a given z
+  function pathEdge(z) {
+    return { xl: VPX + (0 - VPX) * z,  xr: VPX + (W - VPX) * z };
+  }
+
+  /* ── 3-lane system ─────────────────────────── */
+  const LANES   = [-150, 0, 150];  // world-x of each lane at z=1
+  const LANE_THRESH = 88;          // x-distance threshold for collision
+
+  /* ── Physics ─────────────────────────────────  */
+  const GRAV   = 0.60;
+  const JUMP_V = -14.2;
+  const BASE_Z = 0.0068;
+  const ACC    = 0.0000012;
+
+  /* ── State ────────────────────────────────────  */
+  let state  = 'idle';
+  let frames = 0, score = 0;
+  let hi     = +localStorage.getItem('nh_hi') || 0;
+  let spd    = BASE_Z, dTimer = 0;
+
+  /* ── Animated depth indices (path lines + trees) ─ */
+  const N_TILES = 10, N_TREE = 9;
+  let tileZ = Array.from({length: N_TILES}, (_, i) => i / N_TILES);
+  let treeZ = Array.from({length: N_TREE},  (_, i) => i * 1.12 / N_TREE);
+
+  function tickAnim() {
+    if (state !== 'run') return;
+    const dz = spd * 0.5;
+    for (let i = 0; i < N_TILES; i++) tileZ[i] = (tileZ[i] + dz) % 1;
+    for (let i = 0; i < N_TREE;  i++) treeZ[i] = (treeZ[i] + dz) % 1.12;
+  }
+
+  let duckHeld = false;
+
+  /* ── Player ───────────────────────────────────  */
+  const STAND_H = 100, DUCK_H = 24;
+
+  const P = {
+    jumpH: 0, vy: 0,
+    jumping: false, ducking: false,
+    laneIdx: 1,       // 0=left  1=center  2=right
+    targetX: 0,       // world x target
+    currentX: 0,      // world x now (lerped)
+    fr: 0, ft: 0,
+
+    get h()       { return this.ducking ? DUCK_H : STAND_H; },
+    get topY()    { return GND - this.jumpH - this.h; },
+    get botY()    { return GND - this.jumpH; },
+    get screenX() { return VPX + this.currentX; },
+
+    reset() {
+      this.jumpH = 0; this.vy = 0;
+      this.jumping = false; this.ducking = false;
+      this.laneIdx = 1; this.targetX = 0; this.currentX = 0;
+      this.fr = 0; this.ft = 0;
+    },
+    tryJump() {
+      if (!this.jumping && state === 'run') {
+        this.vy = JUMP_V; this.jumping = true;
+      }
+    },
+    moveLane(dir) {
+      if (state !== 'run') return;
+      const next = this.laneIdx + dir;
+      if (next < 0 || next > 2) return;
+      this.laneIdx = next;
+      this.targetX = LANES[next];
+    },
+    tick() {
+      if (state !== 'run') return;
+      // Jump physics
+      if (this.jumping || this.jumpH > 0) {
+        this.vy    += GRAV;
+        this.jumpH -= this.vy;
+        if (this.jumpH <= 0) { this.jumpH = 0; this.vy = 0; this.jumping = false; }
+      }
+      // Duck (auto-resumes if key still held after landing)
+      this.ducking = !this.jumping && duckHeld;
+      // Smooth lane slide
+      this.currentX += (this.targetX - this.currentX) * 0.18;
+      // Run animation
+      if (!this.jumping) {
+        this.ft++;
+        if (this.ft >= 7) { this.ft = 0; this.fr = (this.fr + 1) % 4; }
+      }
+    },
+    draw() { drawOtter(this.screenX, GND - this.jumpH, this.ducking, this.fr); }
+  };
+
+  /* ── Otter (back view, geometric blocks) ───── */
+  const LEG = [
+    {l: 22, r: 10, bo:  0},
+    {l: 16, r: 16, bo: -3},
+    {l: 10, r: 22, bo:  0},
+    {l: 16, r: 16, bo: -3},
+  ];
+
+  function drawOtter(cx, fy, duck, fr) {
+    const C = {
+      body: '#7A4F2E', mid: '#6A4228',
+      dk:   '#3D1F0A', blue: '#004b97', inner: '#C07848'
+    };
+
+    // Ground shadow
+    ctx.save(); ctx.globalAlpha = 0.10;
+    ctx.fillStyle = '#6A5030';
+    ctx.beginPath(); ctx.ellipse(cx, fy + 3, 22, 5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    if (duck) {
+      ctx.fillStyle = C.body;  ctx.fillRect(cx - 32, fy - 20, 64, 20);
+      ctx.fillStyle = C.mid;   ctx.fillRect(cx - 10, fy - 18, 20, 14);
+      ctx.fillStyle = C.blue;  ctx.fillRect(cx - 32, fy - 24, 64,  5);
+      return;
+    }
+
+    const {l, r, bo} = LEG[fr % 4];
+
+    // Legs + feet
+    ctx.fillStyle = C.dk;
+    ctx.fillRect(cx - 14, fy - l, 12, l);
+    ctx.fillRect(cx +  2, fy - r, 12, r);
+    ctx.fillRect(cx - 17, fy - 5, 15, 5);
+    ctx.fillRect(cx +  2, fy - 5, 15, 5);
+
+    // Body
+    ctx.fillStyle = C.body; ctx.fillRect(cx - 21, fy - 54 + bo, 42, 37);
+    ctx.fillStyle = C.mid;  ctx.fillRect(cx -  8, fy - 50 + bo, 16, 29);
+
+    // Scarf
+    ctx.fillStyle = C.blue; ctx.fillRect(cx - 21, fy - 58 + bo, 42, 7);
+
+    // Head
+    ctx.fillStyle = C.body; ctx.fillRect(cx - 17, fy - 93 + bo, 34, 37);
+    ctx.fillStyle = C.mid;  ctx.fillRect(cx -  7, fy - 89 + bo, 14, 29);
+
+    // Ears + inner
+    ctx.fillStyle = C.body;
+    ctx.fillRect(cx - 17, fy - 103 + bo, 12, 11);
+    ctx.fillRect(cx +  5, fy - 103 + bo, 12, 11);
+    ctx.fillStyle = C.inner;
+    ctx.fillRect(cx - 15, fy - 101 + bo,  8,  7);
+    ctx.fillRect(cx +  7, fy - 101 + bo,  8,  7);
+  }
+
+  /* ── Background (natural forest path) ──────── */
+  function drawBG() {
+    /* The path is a trapezoid from FAR_Y (narrow) to GND (full width).
+       The "vanishing point" is above the canvas — path never shrinks to a dot. */
+
+    const {xl: lFar, xr: rFar} = pathEdge(FAR_Z);
+
+    // Sky + distant forest canopy (flat strip above FAR_Y)
+    const skyGrd = ctx.createLinearGradient(0, 0, 0, FAR_Y + 30);
+    skyGrd.addColorStop(0,   '#B8D8F4');
+    skyGrd.addColorStop(0.55,'#C8E8A8');
+    skyGrd.addColorStop(1,   '#A0C070');
+    ctx.fillStyle = skyGrd;
+    ctx.fillRect(0, 0, W, FAR_Y + 30);
+
+    // Forest sides (left and right of path, from FAR_Y to GND)
+    const forestGrd = ctx.createLinearGradient(0, FAR_Y, 0, GND);
+    forestGrd.addColorStop(0, '#88AA60');
+    forestGrd.addColorStop(1, '#A4C078');
+    ctx.fillStyle = forestGrd;
+    // Left forest triangle
+    ctx.beginPath();
+    ctx.moveTo(lFar, FAR_Y); ctx.lineTo(0, GND); ctx.lineTo(0, FAR_Y);
+    ctx.closePath(); ctx.fill();
+    // Right forest triangle
+    ctx.beginPath();
+    ctx.moveTo(rFar, FAR_Y); ctx.lineTo(W, GND); ctx.lineTo(W, FAR_Y);
+    ctx.closePath(); ctx.fill();
+
+    /* Animated bushes — anchored to actual path edges, rush past otter. */
+    treeZ.forEach(z => {
+      if (z < FAR_Z || z > 1.10) return;
+      const {xl, xr} = pathEdge(z);
+      const sc = z;
+      const bw = 58 * sc, bh = 32 * sc;
+      const by = VPY + (GND - VPY) * z;
+      const alpha = Math.min(1, sc * 0.90);
+      // Left bush: extends leftward from path edge
+      ctx.fillStyle = `rgba(64,100,36,${alpha})`;
+      ctx.fillRect(xl - bw, by - bh, bw * 1.1, bh);
+      ctx.fillStyle = `rgba(88,136,48,${Math.min(1, sc * 0.98)})`;
+      ctx.fillRect(xl - bw * 0.80, by - bh * 0.85, bw * 0.85, bh * 0.85);
+      ctx.fillStyle = `rgba(112,160,56,${sc * 0.60})`;
+      ctx.fillRect(xl - bw * 0.55, by - bh * 0.85, bw * 0.50, bh * 0.38);
+      // Right bush: extends rightward from path edge
+      ctx.fillStyle = `rgba(64,100,36,${alpha})`;
+      ctx.fillRect(xr - bw * 0.10, by - bh, bw * 1.1, bh);
+      ctx.fillStyle = `rgba(88,136,48,${Math.min(1, sc * 0.98)})`;
+      ctx.fillRect(xr - bw * 0.05, by - bh * 0.85, bw * 0.85, bh * 0.85);
+      ctx.fillStyle = `rgba(112,160,56,${sc * 0.60})`;
+      ctx.fillRect(xr + bw * 0.05, by - bh * 0.85, bw * 0.50, bh * 0.38);
+    });
+
+    // Sunlight glow at horizon (warm, soft)
+    const sunGrd = ctx.createRadialGradient(VPX, FAR_Y, 0, VPX, FAR_Y, 120);
+    sunGrd.addColorStop(0, 'rgba(255,248,195,0.65)');
+    sunGrd.addColorStop(1, 'rgba(255,248,195,0)');
+    ctx.fillStyle = sunGrd;
+    ctx.fillRect(VPX - 120, FAR_Y - 50, 240, 170);
+
+    // Earth path trapezoid
+    ctx.fillStyle = '#D8BC74';
+    ctx.beginPath();
+    ctx.moveTo(lFar, FAR_Y);
+    ctx.lineTo(0, GND); ctx.lineTo(W, GND); ctx.lineTo(rFar, FAR_Y);
+    ctx.closePath(); ctx.fill();
+
+    // Below ground (platform edge)
+    ctx.fillStyle = '#C8AA60';
+    ctx.fillRect(0, GND, W, H - GND);
+
+    // Grass tufts along path edges (zoom animated)
+    tileZ.forEach(z => {
+      if (z < FAR_Z || z > 0.90) return;
+      const {xl, xr} = pathEdge(z);
+      const gw = 20 * z, gh = 6 * z;
+      const gy = VPY + (GND - VPY) * z - gh / 2;
+      ctx.fillStyle = `rgba(98,152,52,${z * 0.60})`;
+      ctx.fillRect(xl - gw, gy, gw, gh);
+      ctx.fillRect(xr,      gy, gw, gh);
+    });
+
+    // Path converging lines (static perspective guides)
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 10; i++) {
+      const bx = i * W / 10;
+      const bxFar = lFar + (rFar - lFar) * (i / 10);
+      ctx.strokeStyle = 'rgba(148,120,52,0.20)';
+      ctx.beginPath();
+      ctx.moveTo(bxFar, FAR_Y); ctx.lineTo(bx, GND);
+      ctx.stroke();
+    }
+
+    // Animated horizontal path lines (the rushing "running forward" effect)
+    tileZ.forEach(z => {
+      if (z < FAR_Z) return;
+      const {xl, xr} = pathEdge(z);
+      const y = VPY + (GND - VPY) * z;
+      ctx.strokeStyle = `rgba(140,110,45,${z * 0.45})`;
+      ctx.lineWidth = Math.max(0.5, z * 1.5);
+      ctx.beginPath(); ctx.moveTo(xl, y); ctx.lineTo(xr, y); ctx.stroke();
+    });
+
+    // Lane divider dashes (subtle, 3 lanes)
+    tileZ.forEach(z => {
+      if (z < FAR_Z + 0.05 || z > 0.88) return;
+      [LANES[0]/2, 0, LANES[2]/2].forEach(lx => {   // midpoints between lanes
+        // Don't draw center dividers (keep it natural — just center)
+      });
+      // Just draw a single center dash
+      const sx = VPX + 0 * z;
+      const y  = VPY + (GND - VPY) * z;
+      const dw = 2 * z;
+      ctx.fillStyle = `rgba(155,125,55,${z * 0.30})`;
+      ctx.fillRect(sx - dw/2, y - dw/2, dw, dw * 3);
+    });
+
+    // Ground line
+    ctx.strokeStyle = '#A89050';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, GND); ctx.lineTo(W, GND); ctx.stroke();
+  }
+
+  /* ── Obstacles ────────────────────────────────
+     Each obstacle has: z (depth), type, lx (lane world-x).
+     'post' and 'bar' are in a lane → dodge by switching.
+     'beam' spans the full path → must duck.                 */
+  const OBS = [];
+  let spawn = 90;
+  const OB_TYPES = ['post', 'post', 'bar', 'bar', 'beam'];
+
+  function spawnObs() {
+    const hasBm = OBS.some(o => o.type === 'beam');
+    const pool  = hasBm ? ['post', 'post', 'bar'] : OB_TYPES;
+    const type  = pool[Math.floor(Math.random() * pool.length)];
+    const lx    = type === 'beam' ? 0 : LANES[Math.floor(Math.random() * LANES.length)];
+    OBS.push({ z: FAR_Z + 0.01, type, lx });
+  }
+
+  function tickObs() {
+    if (state !== 'run') return;
+    spawn--;
+    if (spawn <= 0) {
+      spawnObs();
+      spawn = Math.max(48, 78 + Math.random() * 56 - score * 0.04);
+    }
+    for (let i = OBS.length - 1; i >= 0; i--) {
+      OBS[i].z += spd;
+      if (OBS[i].z > 1.15) OBS.splice(i, 1);
+    }
+  }
+
+  function drawObs() {
+    [...OBS].sort((a, b) => a.z - b.z).forEach(ob => {
+      const {sx, sy} = proj(ob.lx, ob.z);
+      const sc = ob.z;
+
+      if (ob.type === 'post') {
+        // Bamboo/wooden stake — jump over
+        const w = 22 * sc, h = 72 * sc;
+        ctx.fillStyle = '#8A6030';
+        ctx.fillRect(sx - w/2, sy - h, w, h);
+        ctx.fillStyle = '#B08848';
+        ctx.fillRect(sx - w/2 + 3*sc, sy - h, w - 6*sc, h);
+        ctx.fillStyle = '#7A5028';
+        ctx.fillRect(sx - w/2, sy - h*0.73, w, h*0.07); // node rings
+        ctx.fillRect(sx - w/2, sy - h*0.43, w, h*0.07);
+        ctx.fillStyle = '#604018';
+        ctx.fillRect(sx - w/2 - 3*sc, sy - h - 5*sc, w + 6*sc, 5*sc); // cap
+      }
+      else if (ob.type === 'bar') {
+        // Log fence — jump over
+        const bw = 100 * sc, h = 52 * sc, pw = 10 * sc;
+        ctx.fillStyle = '#7A5430';
+        ctx.fillRect(sx - bw/2,      sy - h, pw, h);
+        ctx.fillRect(sx + bw/2 - pw, sy - h, pw, h);
+        ctx.fillStyle = '#A07840';
+        ctx.fillRect(sx - bw/2, sy - h,        bw, h * 0.28);
+        ctx.fillStyle = '#B88C50';
+        ctx.fillRect(sx - bw/2, sy - h * 0.55, bw, h * 0.28);
+        ctx.fillStyle = '#A07840';
+        ctx.fillRect(sx - bw/2, sy - h * 0.27, bw, h * 0.27);
+        ctx.fillStyle = '#7A5A30'; // bark grain
+        ctx.fillRect(sx - bw/2 + bw*0.30, sy - h,        bw*0.04, h*0.28);
+        ctx.fillRect(sx - bw/2 + bw*0.62, sy - h * 0.55, bw*0.04, h*0.28);
+        ctx.fillStyle = '#5A3818';
+        ctx.fillRect(sx - bw/2 - 4*sc,      sy - h - 7*sc, pw + 8*sc, 7*sc);
+        ctx.fillRect(sx + bw/2 - pw - 4*sc, sy - h - 7*sc, pw + 8*sc, 7*sc);
+      }
+      else if (ob.type === 'beam') {
+        // Low-hanging branch spanning the full path — duck under
+        const {xl, xr} = pathEdge(ob.z);
+        const bw  = xr - xl;
+        const beamBotZ1 = GND - 58;  // beam bottom at player plane = 220
+        const beamBotY  = VPY + (beamBotZ1 - VPY) * ob.z;
+        const bh = 18 * sc;
+        const rodW = Math.max(1, 3 * sc);
+
+        // Hanging vines from FAR_Y to beam
+        ctx.fillStyle = 'rgba(72,100,36,0.68)';
+        ctx.fillRect(xl + bw * 0.18 - rodW/2, FAR_Y, rodW, beamBotY - bh - FAR_Y);
+        ctx.fillRect(xl + bw * 0.82 - rodW/2, FAR_Y, rodW, beamBotY - bh - FAR_Y);
+
+        // Branch body
+        ctx.fillStyle = '#587830';
+        ctx.fillRect(xl, beamBotY - bh, bw, bh);
+        ctx.fillStyle = '#6A8C3A';
+        ctx.fillRect(xl, beamBotY - bh, bw, bh * 0.48); // lighter top
+        // Leaf patches
+        const lw = bw / 8;
+        for (let i = 0; i < 8; i++) {
+          ctx.fillStyle = i % 2 === 0 ? '#7AAA44' : '#486028';
+          ctx.fillRect(xl + i*lw, beamBotY - bh * 0.52, lw, bh * 0.52);
+        }
+      }
+    });
+  }
+
+  /* ── Collision ────────────────────────────────
+     post/bar: lane check + vertical check.
+     beam: vertical check only (spans full path, must duck).      */
+  function checkHit() {
+    if (state !== 'run') return;
+    for (const ob of OBS) {
+      if (ob.z < 0.88 || ob.z > 1.07) continue;
+
+      if (ob.type === 'beam') {
+        // Beam spans all lanes → no lane check
+        const beamBotY = VPY + (GND - 58 - VPY) * ob.z;
+        if (P.topY + 8 < beamBotY) { die(); return; }
+      } else {
+        // Lane check: player world-x must be close to obstacle lane
+        if (Math.abs(P.currentX - ob.lx) > LANE_THRESH) continue;
+        const {sy} = proj(ob.lx, ob.z);
+        const sc = ob.z;
+        if (ob.type === 'post' && P.botY > sy - 72 * sc) { die(); return; }
+        if (ob.type === 'bar'  && P.botY > sy - 52 * sc) { die(); return; }
+      }
+    }
+  }
+
+  /* ── Death ──────────────────────────────────── */
+  function die() {
+    state = 'dead'; dTimer = 135;
+    pBoom(P.screenX, GND - P.jumpH - P.h / 2);
+    if (score > hi) { hi = score; localStorage.setItem('nh_hi', hi); }
+  }
+
+  /* ── Particles ──────────────────────────────── */
+  const PA = [];
+  function pBoom(x, y) {
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2, s = 3 + Math.random() * 5;
+      PA.push({ x, y, vx: Math.cos(a)*s, vy: Math.sin(a)*s - 2.5,
+                life: 1, r: 3 + Math.random() * 4,
+                c: `hsl(${30 + Math.floor(Math.random()*40)},68%,50%,` });
+    }
+  }
+  function tickPA() {
+    for (let i = PA.length - 1; i >= 0; i--) {
+      const p = PA[i];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life -= 0.04;
+      if (p.life <= 0) PA.splice(i, 1);
+    }
+  }
+  function drawPA() {
+    PA.forEach(p => {
+      ctx.save(); ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.c + p.life + ')';
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  /* ── Score ──────────────────────────────────── */
+  function tickScore() {
+    if (state !== 'run') return;
+    frames++;
+    score = Math.floor(frames / 5);
+    spd   = BASE_Z + frames * ACC;
+    document.getElementById('hud-score').textContent =
+      'SCORE ' + String(score).padStart(5, '0');
+  }
+
+  /* ── Lane indicator ─────────────────────────── */
+  function drawLaneIndicator() {
+    if (state !== 'run') return;
+    const y = GND + 10, r = 5, gap = 18;
+    for (let i = 0; i < 3; i++) {
+      ctx.fillStyle = i === P.laneIdx ? '#5A8C30' : 'rgba(100,130,60,0.28)';
+      ctx.beginPath();
+      ctx.arc(VPX + (i - 1) * gap, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  /* ── Overlay ─────────────────────────────────── */
+  function drawOverlay() {
+    if (state === 'idle') {
+      ctx.fillStyle = 'rgba(238,248,228,0.74)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#3A6020'; ctx.font = 'bold 26px monospace';
+      ctx.fillText('SUBWAY OTTER', W/2, H/2 - 24);
+      ctx.fillStyle = '#555'; ctx.font = '13px monospace';
+      ctx.fillText('← → 換道    ↑/Space 跳    ↓ 蹲', W/2, H/2 + 4);
+      ctx.fillStyle = '#889'; ctx.font = '11px monospace';
+      ctx.fillText('BEST  ' + String(hi).padStart(5, '0'), W/2, H/2 + 26);
+      ctx.textAlign = 'left';
+    }
+
+    if (state === 'dead') {
+      if (dTimer > 85) {
+        ctx.fillStyle = `rgba(180,80,30,${((dTimer - 85)/50) * 0.30})`;
+        ctx.fillRect(0, 0, W, H);
+      } else {
+        ctx.fillStyle = 'rgba(238,248,228,0.84)';
+        ctx.fillRect(0, 0, W, H);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#A02020'; ctx.font = 'bold 26px monospace';
+        ctx.fillText('GAME OVER', W/2, H/2 - 20);
+        ctx.fillStyle = '#444'; ctx.font = '13px monospace';
+        ctx.fillText(`SCORE ${String(score).padStart(5,'0')}   BEST ${String(hi).padStart(5,'0')}`, W/2, H/2 + 6);
+        ctx.fillStyle = '#889'; ctx.font = '11px monospace';
+        ctx.fillText('R / Space / 點擊 重新開始', W/2, H/2 + 28);
+        ctx.textAlign = 'left';
+      }
+      dTimer--;
+    }
+
+    // Speed pips (earthy green/gold)
+    if (state === 'run') {
+      const pips = Math.min(8, Math.floor((spd - BASE_Z) / (BASE_Z * 0.7)));
+      for (let i = 0; i < 8; i++) {
+        ctx.fillStyle = i < pips ? '#8ABF3A' : 'rgba(0,0,0,0.07)';
+        ctx.fillRect(W - 18 - i*11, 10, 8, 8);
+      }
+    }
+  }
+
+  /* ── Reset ───────────────────────────────────── */
+  function reset() {
+    OBS.length = 0; PA.length = 0;
+    frames = 0; score = 0; spd = BASE_Z; dTimer = 0; spawn = 90;
+    tileZ = Array.from({length: N_TILES}, (_, i) => i / N_TILES);
+    treeZ = Array.from({length: N_TREE},  (_, i) => i * 1.12 / N_TREE);
+    P.reset();
+    state = 'run';
+    document.getElementById('hud-score').textContent = 'SCORE 00000';
+  }
+
+  /* ── Input ───────────────────────────────────── */
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (state === 'idle' || (state === 'dead' && dTimer <= 0)) reset();
+      else P.tryJump();
+    }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); P.moveLane(-1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); P.moveLane(+1); }
+    if (e.key === 'ArrowDown')  { e.preventDefault(); duckHeld = true; }
+    if ((e.key === 'r' || e.key === 'R') && state === 'dead' && dTimer <= 0) reset();
+  });
+  document.addEventListener('keyup', e => {
+    if (e.key === 'ArrowDown') duckHeld = false;
+  });
+
+  // Touch: tap = jump, swipe left/right = lane change
+  let touchX0 = 0;
+  CV.addEventListener('touchstart', e => {
+    e.preventDefault();
+    touchX0 = e.touches[0].clientX;
+    if (state === 'idle' || (state === 'dead' && dTimer <= 0)) reset();
+  }, { passive: false });
+  CV.addEventListener('touchend', e => {
+    e.preventDefault();
+    const dx = e.changedTouches[0].clientX - touchX0;
+    if (Math.abs(dx) > 28) {
+      P.moveLane(dx < 0 ? -1 : 1);
+    } else {
+      P.tryJump();
+    }
+  }, { passive: false });
+  CV.addEventListener('click', () => {
+    if (state === 'idle' || (state === 'dead' && dTimer <= 0)) reset();
+    else P.tryJump();
+  });
+
+  /* ── Loop ────────────────────────────────────── */
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    tickAnim();  drawBG();
+    tickObs();   drawObs();
+    tickPA();    drawPA();
+    P.tick();    P.draw();
+    drawLaneIndicator();
+    checkHit();
+    tickScore();
+    drawOverlay();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
 </body>
 </html>

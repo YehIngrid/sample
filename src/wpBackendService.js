@@ -40,12 +40,15 @@ export default class wpBackendService {
             return Promise.reject(error);
         }
     }
-    // List wishes with pagination and priority filter
-    async listWishes(page) {
+    // List wishes with pagination and filter
+    async listWishes(page, urgency, budget) {
         try {
+            const params = { page, limit: 12 };
+            if (urgency?.length) params.urgency = urgency.length === 1 ? urgency[0] : urgency;
+            if (budget?.length)  params.budget  = budget.length  === 1 ? budget[0]  : budget;
             const response = await withRetry(() => axios.get(
                 `${this.baseUrl}`,
-                { params: { page, limit: 12 } }
+                { params }
             ));
             return response.data;
         } catch (error) {
@@ -88,10 +91,11 @@ export default class wpBackendService {
             return Promise.reject(error);
         }
     }
-    async contactWisher(id) {
+    async contactWisher(id, productId) {
         try {
             const response = await withRetry(() => axios.post(
-                `${this.baseUrl}/${id}/contact`
+                `${this.baseUrl}/${id}/contact`,
+                productId ? { productId } : {}
             ), 2); // 最多重試 2 次（POST 聯絡操作保守一點）
             return response.data;
         } catch (error) {

@@ -203,14 +203,10 @@ async function loadProducts() {
         limit: PAGE_SIZE,
         sort,
         maxPrice,
+        newOrOld,
       });
       items = response?.data?.commodities || [];
       totalCount = response?.data?.pagination?.totalItems ?? items.length;
-    }
-
-    // 新舊程度：前端篩選（API 不支援）
-    if (newOrOld !== null) {
-      items = items.filter(p => p.newOrOld <= newOrOld);
     }
 
     const mobileCountEl = document.getElementById('mobileResultCount');
@@ -466,14 +462,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// 僅保留不支援伺服器端篩選的條件（新舊程度），其餘由 loadProducts 的 API 呼叫處理
 function applyFilters(items) {
-  const newOrOld = newOrOldInput?.value !== 'default' ? parseInt(newOrOldInput?.value) : null;
-  let result = items;
-  if (newOrOld !== null) {
-    result = result.filter(p => p.newOrOld <= newOrOld);
-  }
-  return result;
+  return items;
 }
 
 function clearFilters() {

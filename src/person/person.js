@@ -486,14 +486,7 @@ async function handleAction(action, id, el) {
     if (confirm('確定要取消訂單嗎?')) {
       try {
         await backendService.cancelMyOrder(id);
-        Swal.fire({
-          title: '已取消訂單，系統將自動通知對方', 
-          icon: 'success',
-          confirmButtonText: "ok",
-        }).then(async () => {
-          // 重新載入當前頁面資料
-          handleRouting();
-        }).then(() => window.location.reload());
+        showOrderSwal('cancel').then(() => handleRouting()).then(() => window.location.reload());
       } catch (error) {
         Swal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
       } 
@@ -501,21 +494,21 @@ async function handleAction(action, id, el) {
   } else if(action === '接受訂單') {
     try {
       await backendService.sellerAcceptOrders(id);
-      Swal.fire({ title: '已同意訂單', icon: 'success' }).then(() => handleRouting()).then(()=> window.location.reload());
+      showOrderSwal('accept').then(() => handleRouting()).then(() => window.location.reload());
     } catch (error) {
       Swal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
     }
   } else if (action === '即將出貨') {
     try {
       await backendService.sellerDeliveredOrders(id);
-      Swal.fire({ title: '已登記出貨', icon: 'success' }).then(() => handleRouting()).then(()=> window.location.reload());
+      showOrderSwal('deliver').then(() => handleRouting()).then(() => window.location.reload());
     } catch (error) {
       Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
   } else if (action === '成功取貨') {
     try {
       await backendService.buyerCompletedOrders(id);
-      Swal.fire({ title: "交易完成！", icon: "success", timer: 2000, showConfirmButton: false });
+      await showOrderSwal('completed');
       await loadBuyerOrders(1);
     } catch (error) {
       Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
@@ -670,6 +663,34 @@ document.getElementById('backToBuyTable')?.addEventListener('click', () => {
 // 在 DOMContentLoaded 的最後一行加上 handleRouting();
 
 
+
+// ── 訂單狀態自訂 SweetAlert ──────────────────────────────
+const ORDER_SWAL_CONFIG = {
+  accept:    { svg: '../svg/acceptOrder.svg',  anim: 'swal-anim-bounce',   title: '已同意訂單',          sub: '買家將收到通知' },
+  deliver:   { svg: '../svg/readyDeliver.svg', anim: 'swal-anim-slide-up', title: '已登記出貨',          sub: '請買家留意收貨狀態' },
+  completed: { svg: '../svg/completed.svg',    anim: 'swal-anim-pop-glow', title: '交易完成！',          sub: '感謝您使用拾貨寶庫' },
+  cancel:    { svg: '../svg/cancelOrder.svg',  anim: 'swal-anim-shake',    title: '已取消訂單',          sub: '系統將自動通知對方', gray: true },
+  review:    { svg: '../svg/giveStar.svg',     anim: 'swal-anim-spin-in',  title: '評價已送出',          sub: '感謝您留下評價' },
+};
+
+function showOrderSwal(type) {
+  const cfg = ORDER_SWAL_CONFIG[type];
+  if (!cfg) return Promise.resolve();
+  return Swal.fire({
+    html: `
+      <div class="swal-order-icon ${cfg.anim}${cfg.gray ? ' swal-grayscale' : ''}">
+        <img src="${cfg.svg}" alt="">
+      </div>
+      <div class="swal-order-title">${cfg.title}</div>
+      <div class="swal-order-sub">${cfg.sub}</div>
+    `,
+    showConfirmButton: false,
+    timer: 2200,
+    timerProgressBar: true,
+    customClass: { popup: 'swal-order-popup' },
+  });
+}
+// ─────────────────────────────────────────────────────────
 
 function resetOrderView() {
   document.getElementById('sellOrderDetail')?.classList.add('d-none');
@@ -1417,7 +1438,8 @@ async function getDetail(id) {
 
     updateStatusUI(data, isSell ? sellDetail : buyDetail);
 
-    // 切換畫面
+    // 切換畫面（確認用戶還在詳細頁，避免 async 回來時已返回列表）
+    if (!new URLSearchParams(window.location.search).get('orderId')) return;
     if (isSell) {
       document.getElementById('sellTable').style.display = 'none';
       sellDetail.classList.remove('d-none');
@@ -2075,12 +2097,7 @@ async function openReviewModal(orderId, targetId, targetRole) {
   }).then(async result => {
     if (!result.isConfirmed) return;
     if (result.value?.ok) {
-      await Swal.fire({
-        icon: 'success',
-        title: '評價已送出',
-        timer: 2000,
-        showConfirmButton: false,
-      });
+      await showOrderSwal('review');
       window.location.reload();
     } else {
       Swal.fire({

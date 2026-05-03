@@ -91,6 +91,16 @@ async function showPage(hash) {
   if (hash === '#wishpool') {
     currentPage = 1;
     await listAll(1);
+    // 若 URL 帶有 ?id=，捲動到對應願望卡片
+    const targetWishId = new URLSearchParams(location.search).get('id');
+    if (targetWishId) {
+      const card = document.querySelector(`#wishGrid [data-id="${targetWishId}"]`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.add('wish-highlight');
+        setTimeout(() => card.classList.remove('wish-highlight'), 2500);
+      }
+    }
   }
 
   // ===== 我的願望 =====
@@ -156,13 +166,24 @@ async function checkLogin() {
   }
 }
 
+const _TAG_URGENCY = { necessary: 'high', normal: 'medium', nonecessary: 'low' };
+const _TAG_BUDGET  = { hundred: '0_100', fiveh: '100_500', tothous: '500_1000', thousand: '1000_plus', trithou: '3000_plus' };
+
+function _getActiveFilters() {
+  const active = Array.from(document.querySelectorAll('.tag.active')).map(t => t.dataset.tag);
+  const urgency = active.filter(t => _TAG_URGENCY[t]).map(t => _TAG_URGENCY[t]);
+  const budget  = active.filter(t => _TAG_BUDGET[t]).map(t => _TAG_BUDGET[t]);
+  return { urgency, budget };
+}
+
 async function listAll(page = 1) {
   const total = document.getElementById('total');
   const wishGrid = document.getElementById('wishGrid');
   if (wishGrid) wishGrid.innerHTML = wishSkeletonHTML();
     wpbackendService = new wpBackendService();
+    const { urgency, budget } = _getActiveFilters();
     try {
-      const res = await wpbackendService.listWishes(page);
+      const res = await wpbackendService.listWishes(page, urgency, budget);
       currentPage = page;
       showInfo(res.data);
       if (res.data.pagination.totalPages) {
@@ -345,31 +366,13 @@ function generateTags(data) {
 }
 
 
-  const tags = document.querySelectorAll('.tag');
-  
-  tags.forEach(tag => {
+  document.querySelectorAll('.tag').forEach(tag => {
     tag.addEventListener('click', () => {
-      tag.classList.toggle('active'); // 重點！
-      filterItems();
+      tag.classList.toggle('active');
+      currentPage = 1;
+      listAll(1);
     });
   });
-
-  function filterItems() {
-    const items = document.querySelectorAll('#wishGrid .wish-card-wrapper');
-    const activeTags = Array.from(tags)
-      .filter(tag => tag.classList.contains('active'))
-      .map(tag => tag.dataset.tag);
-
-    items.forEach(item => {
-      const itemTags = (item.dataset.tags || '').split(' ');
-      if (activeTags.length === 0) {
-        item.style.display = '';
-        return;
-      }
-      const match = activeTags.every(tag => itemTags.includes(tag));
-      item.style.display = match ? '' : 'none';
-    });
-  }
   
 
 // TODO wishpool 還沒改成適合wishpool.js的格式
@@ -768,7 +771,6 @@ function createWishCard(wish, isMyWish) {
   const wrapper = document.createElement('div');
   wrapper.className = 'wish-card-wrapper' + (isActive ? '' : ' wish-disabled');
   wrapper.dataset.id = wish.id;
-  wrapper.dataset.tags = generateTags(wish);
 
   const priorityLabel = PRIORITY_LABEL[wish.priority] || '';
   const priorityColor = PRIORITY_COLOR[wish.priority] || '#888';
@@ -1053,8 +1055,25 @@ async function handleContactWisher(wishId, btn, ownerUid = '') {
 
       try {
         wpbackendService = wpbackendService || new wpBackendService();
-        await wpbackendService.contactWisher(wishId, result.value);
-        Swal.fire({ icon: 'success', title: '已聯絡許願者！', text: '請等待對方回覆。', timer: 1500, showConfirmButton: false });
+        const res = await wpbackendService.contactWisher(wishId, result.value);
+        const myUid = localStorage.getItem('uid');
+        const members = res?.data?.chatRoom?.room?.members ?? [];
+        const partner = members.find(m => m.userId !== myUid);
+        const partnerId = partner?.userId ?? null;
+
+        const { isConfirmed: goChat } = await Swal.fire({
+          icon: 'success',
+          title: '已聯絡許願者！',
+          text: '聊天室已建立，是否立即前往？',
+          confirmButtonText: '前往聊天室',
+          showCancelButton: true,
+          cancelButtonText: '稍後再去',
+        });
+
+        if (goChat && partnerId) {
+          sessionStorage.setItem('chatroomReturnUrl', window.location.href);
+          window.location.href = `../chatroom/chatroom.html?openChat=${partnerId}`;
+        }
         return; // 保持按鈕「已聯絡」狀態
       } catch (error) {
         // 失敗：還原按鈕

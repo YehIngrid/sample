@@ -109,6 +109,10 @@ async function renderAuthUI() {
       // 登入後立即更新購物車數量
       refreshCartBadge();
 
+      // 通知系統
+      _initNotifSystem();
+      _loadNotifications();
+
     } catch (err) {
       window.isLoggedIn = false;
       _authResolve(false);
@@ -397,3 +401,360 @@ export async function requireLogin() {
 
   return false;
 }
+
+// ── Notification System ──────────────────────────────────────────────────
+let _notifPage = 1;
+let _notifHasMore = false;
+let _notifLoading = false;
+
+const _NOTIF_TYPE_LABELS = {
+  wishpool_contact: '許願池聯絡',
+  order_placed: '訂單成立',
+  order_completed: '訂單完成',
+  order_cancelled: '訂單取消',
+  review: '收到評價',
+  system: '系統通知',
+};
+
+function _notifRelativeTime(dateStr) {
+  if (!dateStr) return '';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return '剛剛';
+  if (mins < 60) return `${mins} 分鐘前`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours} 小時前`;
+  return `${Math.floor(hours / 24)} 天前`;
+}
+
+function _renderNotifItem(n) {
+  const avatar = n.actor?.photoURL ?? n.actor?.avatar ?? '../image/default-avatar.webp';
+  const title = n.title ?? _NOTIF_TYPE_LABELS[n.type] ?? '';
+  const body = n.body ?? n.content ?? n.message ?? '';
+  const time = _notifRelativeTime(n.createdAt);
+  const unread = !n.isRead;
+  const id = n.id ?? '';
+
+  const wishName = n.meta?.wish?.itemName ?? n.wish?.itemName ?? null;
+  const productName = n.productName ?? n.meta?.product?.name ?? null;
+  const productId = n.productId ?? n.meta?.product?.id ?? null;
+  const wishId = n.wishId ?? n.meta?.wish?.id ?? null;
+  const chatRoomActorId = n.meta?.actor?.accountId ?? null;
+
+  const metaChips = [];
+  if (wishName) metaChips.push(`<span class="notif-chip notif-chip--wish"><i class="ti ti-wand me-1"></i>${wishName}</span>`);
+  if (productName) metaChips.push(`<span class="notif-chip notif-chip--product"><i class="ti ti-package me-1"></i>${productName}</span>`);
+
+  const actionBtns = [];
+  if (chatRoomActorId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--chat" data-chat-actor="${chatRoomActorId}"><i class="ti ti-message me-1"></i>聯絡賣家</button>`);
+  if (productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-product-id="${productId}"><i class="ti ti-eye me-1"></i>看商品</button>`);
+  if (wishId && !productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-wish-id="${wishId}"><i class="ti ti-eye me-1"></i>看願望</button>`);
+
+  return `<div class="notif-item${unread ? ' notif-unread' : ''}" data-notif-id="${id}">
+    <img src="${avatar}" class="notif-avatar" alt="通知" onerror="this.src='../image/default-avatar.webp'">
+    <div class="notif-body">
+      ${title ? `<div class="notif-text"><strong>${title}</strong></div>` : ''}
+      ${body ? `<div class="notif-text notif-content">${body}</div>` : ''}
+      ${metaChips.length ? `<div class="notif-chips">${metaChips.join('')}</div>` : ''}
+      <div class="notif-item-footer">
+        <span class="notif-time">${time}</span>
+        ${actionBtns.length ? `<div class="notif-actions">${actionBtns.join('')}</div>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function _initNotifSystem() {
+  if (document.getElementById('notifBellWrap')) return;
+
+  const loginEl = document.querySelector('nav .login');
+  if (loginEl) {
+    loginEl.insertAdjacentHTML('beforebegin', `
+      <div id="notifBellWrap" class="notif-bell-wrap">
+        <button id="notificationBtn" class="notif-bell-btn" aria-label="通知">
+          <i class="ti ti-bell"></i>
+        </button>
+        <span id="notificationBadge" class="notif-badge d-none">0</span>
+      </div>
+    `);
+  }
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="notifBackdrop" class="notif-backdrop"></div>
+    <div id="notificationPanel" class="notif-panel">
+      <div class="notif-header">
+        <span class="notif-title"><i class="ti ti-bell me-2"></i>通知</span>
+        <div class="notif-header-actions">
+          <button class="notif-read-all-btn" id="notifReadAllBtn">全部已讀</button>
+          <button class="notif-close" id="notifCloseBtn" aria-label="關閉通知"><i class="ti ti-x"></i></button>
+        </div>
+      </div>
+      <div class="notif-list" id="notifList"></div>
+      <div class="notif-footer" id="notifFooter" style="display:none;">
+        <button class="notif-load-more" id="notifLoadMore">載入更多</button>
+      </div>
+    </div>
+  `);
+
+  document.getElementById('notificationBtn').addEventListener('click', _openNotifPanel);
+  document.getElementById('notifCloseBtn').addEventListener('click', _closeNotifPanel);
+  document.getElementById('notifBackdrop').addEventListener('click', _closeNotifPanel);
+  document.getElementById('notifReadAllBtn').addEventListener('click', _markAllNotifRead);
+  document.getElementById('notifLoadMore').addEventListener('click', () => {
+    if (!_notifLoading && _notifHasMore) _loadNotifications(_notifPage + 1, true);
+  });
+  document.getElementById('notifList').addEventListener('click', async (e) => {
+    const item = e.target.closest('.notif-item');
+    if (!item?.dataset.notifId) return;
+
+    // Mark as read
+    if (item.classList.contains('notif-unread')) {
+      try {
+        await backendService.markNotificationRead(item.dataset.notifId);
+        item.classList.remove('notif-unread');
+        const badge = document.getElementById('notificationBadge');
+        if (badge) {
+          const next = Math.max(0, (parseInt(badge.textContent) || 0) - 1);
+          if (next === 0) badge.classList.add('d-none');
+          else badge.textContent = next > 99 ? '99+' : next;
+        }
+      } catch (_) {}
+    }
+
+    // 聯絡賣家 button
+    const chatBtn = e.target.closest('[data-chat-actor]');
+    if (chatBtn) {
+      _closeNotifPanel();
+      sessionStorage.setItem('chatroomReturnUrl', window.location.href);
+      const notifItem = chatBtn.closest('.notif-item');
+      const wishName = notifItem?.querySelector('.notif-chip--wish')?.textContent?.trim() ?? '';
+      const defaultMsg = wishName ? `你好，關於「${wishName}」的許願，` : '';
+      const msgParam = defaultMsg ? `&message=${encodeURIComponent(defaultMsg)}` : '';
+      window.location.href = `../chatroom/chatroom.html?openChat=${chatBtn.dataset.chatActor}${msgParam}`;
+      return;
+    }
+
+    // 看商品 button
+    const productBtn = e.target.closest('[data-product-id]');
+    if (productBtn) {
+      _closeNotifPanel();
+      window.location.href = `../product/product.html?id=${productBtn.dataset.productId}`;
+      return;
+    }
+
+    // 看願望 button
+    const wishBtn = e.target.closest('[data-wish-id]');
+    if (wishBtn) {
+      _closeNotifPanel();
+      window.location.href = `../wishpool/wishpool.html?id=${wishBtn.dataset.wishId}#wishpool`;
+      return;
+    }
+  });
+}
+
+async function _loadNotifications(page = 1, append = false) {
+  if (_notifLoading) return;
+  _notifLoading = true;
+  const list = document.getElementById('notifList');
+  const footer = document.getElementById('notifFooter');
+  if (!list) { _notifLoading = false; return; }
+
+  const panelOpen = document.getElementById('notificationPanel')?.classList.contains('open');
+  if (panelOpen) {
+    if (!append) {
+      list.innerHTML = '<div class="notif-loading"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>';
+    } else {
+      document.getElementById('notifLoadMore')?.setAttribute('disabled', '');
+    }
+  }
+
+  try {
+    const res = await backendService.getNotifications(page, 20);
+    const payload = res?.data?.data ?? {};
+    const items = payload.notifications ?? [];
+    const pagination = payload.pagination ?? {};
+    _notifHasMore = page < (pagination.totalPages ?? 0);
+    _notifPage = page;
+
+    if (panelOpen) {
+      if (!append) list.innerHTML = '';
+      if (items.length === 0 && !append) {
+        list.innerHTML = '<div class="notif-empty">目前沒有通知</div>';
+      } else {
+        items.forEach(n => {
+          const div = document.createElement('div');
+          div.innerHTML = _renderNotifItem(n);
+          list.appendChild(div.firstElementChild);
+        });
+      }
+      if (footer) footer.style.display = _notifHasMore ? '' : 'none';
+    }
+
+    const unreadCount = items.filter(n => !n.isRead).length;
+    _updateNotifBadge(unreadCount);
+  } catch (_) {
+    if (panelOpen && !append) list.innerHTML = '<div class="notif-empty">載入失敗</div>';
+  } finally {
+    _notifLoading = false;
+    document.getElementById('notifLoadMore')?.removeAttribute('disabled');
+  }
+}
+
+function _updateNotifBadge(count) {
+  const badge = document.getElementById('notificationBadge');
+  if (!badge) return;
+  if (count > 0) {
+    badge.textContent = count > 99 ? '99+' : count;
+    badge.classList.remove('d-none');
+  } else {
+    badge.classList.add('d-none');
+  }
+}
+
+function _openNotifPanel() {
+  document.getElementById('notificationPanel')?.classList.add('open');
+  document.getElementById('notifBackdrop')?.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  _loadNotifications(1, false);
+}
+
+function _closeNotifPanel() {
+  document.getElementById('notificationPanel')?.classList.remove('open');
+  document.getElementById('notifBackdrop')?.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function _markAllNotifRead() {
+  try {
+    await backendService.markAllNotificationsRead();
+    document.querySelectorAll('#notifList .notif-item.notif-unread').forEach(el => el.classList.remove('notif-unread'));
+    _updateNotifBadge(0);
+  } catch (_) {}
+}
+
+window.refreshNotifBadge = () => _loadNotifications(1, false);
+// ─────────────────────────────────────────────────────────────────────────
+
+// ── Konami Code Terminal Easter Egg ──────────────────────
+(function () {
+  const KONAMI = [
+    'ArrowUp','ArrowUp','ArrowDown','ArrowDown',
+    'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight',
+    'b','a'
+  ];
+  let idx = 0;
+
+  const LINES = [
+    { prompt: '$ ', cmd: 'whoami',                   delay: 600  },
+    { out:  '> dev-mode activated 🔓',               delay: 400  },
+    { prompt: '$ ', cmd: 'cat README.md',            delay: 700  },
+    { out:  '> 拾貨寶庫 v1.0.0',                    delay: 300  },
+    { out:  '> Built with ❤️  by 中興資工',          delay: 300  },
+    { out:  '>',                                      delay: 200  },
+    { warn: '> 警告：本站含有大量二手寶物',          delay: 300  },
+    { warn: '>       可能導致錢包變薄、宿舍變小',    delay: 400  },
+    { prompt: '$ ', cmd: 'git log --oneline',        delay: 700  },
+    { out:  '> a1b2c3d  修了一個 bug，產生三個新 bug',  delay: 300  },
+    { out:  '> d4e5f6g  深夜 2:47 的 commit',        delay: 300  },
+    { out:  '> 9h8i7j0  final_final_真的是final版',  delay: 400  },
+    { prompt: '$ ', cmd: './start_treasure_hunt.sh', delay: 700  },
+    { success: '> 🎉 You found the easter egg.',     delay: 400  },
+    { success: '>    恭喜你，你是真正的寶物獵人。', delay: 0    },
+  ];
+
+  function buildDOM() {
+    const overlay = document.createElement('div');
+    overlay.id = 'konami-overlay';
+    overlay.innerHTML = `
+      <div id="konami-terminal">
+        <div id="konami-titlebar">
+          <div class="konami-dot red"    id="konami-close"></div>
+          <div class="konami-dot yellow"></div>
+          <div class="konami-dot green"></div>
+          <span>bash — 拾貨寶庫</span>
+        </div>
+        <div id="konami-body"><span id="konami-cursor"></span></div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeTerminal();
+    });
+    document.getElementById('konami-close').addEventListener('click', closeTerminal);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeTerminal();
+    });
+  }
+
+  function closeTerminal() {
+    const overlay = document.getElementById('konami-overlay');
+    if (overlay) overlay.classList.remove('active');
+  }
+
+  async function typeText(el, text, speed = 38) {
+    for (const ch of text) {
+      el.textContent += ch;
+      await new Promise(r => setTimeout(r, speed + Math.random() * 20));
+    }
+  }
+
+  async function runTerminal() {
+    const body   = document.getElementById('konami-body');
+    const cursor = document.getElementById('konami-cursor');
+    body.innerHTML = '';
+    body.appendChild(cursor);
+
+    for (const line of LINES) {
+      await new Promise(r => setTimeout(r, line.delay));
+
+      const span = document.createElement('span');
+      span.className = 'konami-line';
+
+      if (line.prompt !== undefined) {
+        const p = document.createElement('span');
+        p.className = 'prompt';
+        p.textContent = line.prompt;
+        span.appendChild(p);
+        const c = document.createElement('span');
+        c.className = 'cmd';
+        span.appendChild(c);
+        body.insertBefore(span, cursor);
+        await typeText(c, line.cmd);
+        await new Promise(r => setTimeout(r, 180));
+      } else {
+        const cls = line.out !== undefined ? 'out' : line.warn !== undefined ? 'warn' : 'success';
+        const text = line[cls === 'out' ? 'out' : cls === 'warn' ? 'warn' : 'success'];
+        const c = document.createElement('span');
+        c.className = cls;
+        span.appendChild(c);
+        body.insertBefore(span, cursor);
+        await typeText(c, text, 22);
+      }
+    }
+  }
+
+  function openTerminal() {
+    const overlay = document.getElementById('konami-overlay');
+    overlay.classList.add('active');
+    runTerminal();
+  }
+
+  document.addEventListener('DOMContentLoaded', buildDOM);
+
+  document.addEventListener('keydown', e => {
+    const key = e.key.toLowerCase();
+    const expected = KONAMI[idx].toLowerCase();
+    if (key === expected) {
+      idx++;
+      console.log(`[Konami] ${idx}/${KONAMI.length}: ${key} ✓`);
+      if (idx === KONAMI.length) {
+        idx = 0;
+        openTerminal();
+      }
+    } else {
+      idx = key === KONAMI[0].toLowerCase() ? 1 : 0;
+    }
+  });
+})();
+// ─────────────────────────────────────────────────────────
