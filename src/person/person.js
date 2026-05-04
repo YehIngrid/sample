@@ -7,6 +7,20 @@ let chatService;
 let goodsOrder;
 const MY_ITEMS_LIMIT = 10;
 let myItemsPage = 1;
+
+// 訂單篩選狀態（filter tab → API status）
+let currentSellStatus = 'all';
+let currentBuyStatus  = 'all';
+const TAB_TO_API_STATUS = {
+  all:       null,
+  pending:   'pending',
+  preparing: 'preparing',
+  shipping:  'shipping',
+  delivered: 'delivered',
+  review:    'review_pending',
+  completed: 'completed',
+  cancelled: 'canceled',
+};
 const myUid = localStorage.getItem("uid");
 window.currentOrder = null;
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
@@ -622,6 +636,8 @@ async function handleRouting() {
   try {
     if (page === 'sellProducts') {
       window.currentOrder = null;
+      currentSellStatus = 'all';
+      document.querySelectorAll('#sellFilter .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.status === 'all'));
       document.querySelector('#sellProducts tbody').innerHTML =
         `<tr><td colspan="4" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('sell-product').innerHTML =
@@ -629,6 +645,8 @@ async function handleRouting() {
       await loadSellerOrders(1);
     } else if (page === 'buyProducts') {
       window.currentOrder = null;
+      currentBuyStatus = 'all';
+      document.querySelectorAll('#buyFilter .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.status === 'all'));
       document.querySelector('#buyProducts tbody').innerHTML =
         `<tr><td colspan="5" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('buy-product').innerHTML =
@@ -703,14 +721,15 @@ function resetOrderView() {
 
 async function loadSellerOrders(page) {
   try {
-    const res = await backendService.getSellerOrders(page);
+    const apiStatus = TAB_TO_API_STATUS[currentSellStatus] ?? null;
+    const res = await backendService.getSellerOrders(page, apiStatus);
     const list = res?.data?.data?.orders ?? [];
     const pagination = res?.data?.data?.pagination ?? {};
     goodsOrder = list;
     renderSellerOrders(list);
     renderSellerCards(list);
     renderOrderPagination('sellPagination', pagination, loadSellerOrders);
-    updateFilterTabCounts(list, 'sellFilter', pagination);
+    updateFilterTabCounts(list, 'sellFilter', pagination, currentSellStatus);
   } catch (err) {
     console.error('loadSellerOrders failed', err);
     const tbody = document.querySelector('#sellProducts tbody');
@@ -721,52 +740,66 @@ async function loadSellerOrders(page) {
 }
 
 async function loadBuyerOrders(page) {
-  const res = await backendService.getBuyerOrders(page);
-  const list = res?.data?.data?.orders ?? [];
-  const pagination = res?.data?.data?.pagination ?? {};
-  goodsOrder = list;
-  renderBuyerOrders(list);
-  renderBuyerCards(list);
-  renderOrderPagination('buyPagination', pagination, loadBuyerOrders);
-  updateFilterTabCounts(list, 'buyFilter', pagination);
+  try {
+    const apiStatus = TAB_TO_API_STATUS[currentBuyStatus] ?? null;
+    const res = await backendService.getBuyerOrders(page, apiStatus);
+    const list = res?.data?.data?.orders ?? [];
+    const pagination = res?.data?.data?.pagination ?? {};
+    goodsOrder = list;
+    renderBuyerOrders(list);
+    renderBuyerCards(list);
+    renderOrderPagination('buyPagination', pagination, loadBuyerOrders);
+    updateFilterTabCounts(list, 'buyFilter', pagination, currentBuyStatus);
+  } catch (err) {
+    console.error('loadBuyerOrders failed', err);
+    const tbody = document.querySelector('#buyProducts tbody');
+    if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">載入失敗，請重新整理</td></tr>`;
+    const cards = document.getElementById('buy-product');
+    if (cards) cards.innerHTML = `<div class="col-12 text-center text-muted py-4">載入失敗，請重新整理</div>`;
+  }
 }
 
 // API status → filter tab data-status
-const API_TO_TAB = { pending:'pending', preparing:'preparing', delivered:'delivered', review_pending:'review', completed:'completed', canceled:'cancelled' };
+const API_TO_TAB = { pending:'pending', preparing:'preparing', shipping:'delivered', delivered:'delivered', review_pending:'review', completed:'completed', canceled:'cancelled' };
 // Filter tabs that show red dot when count > 0 (active/action-needed statuses)
 const ACTIVE_TAB_STATUSES = new Set(['pending','preparing','delivered','review']);
 
-function updateFilterTabCounts(list, filterId, pagination) {
+function updateFilterTabCounts(list, filterId, pagination, activeStatus = 'all') {
   const container = document.getElementById(filterId);
   if (!container) return;
-  const map = API_TO_TAB;
-
-  // Count by tab-status key
-  const counts = { all: list.length };
-  list.forEach(item => {
-    const tabKey = map[(item.status ?? '').toLowerCase()] ?? 'pending';
-    counts[tabKey] = (counts[tabKey] || 0) + 1;
-  });
-
   const hasMore = (pagination.totalPages ?? 1) > 1;
 
-  container.querySelectorAll('.filter-tab').forEach(btn => {
-    const status = btn.dataset.status;
-    const count = counts[status] || 0;
-    const showCount = count > 0;
-
-    // Count badge inside tab
-    let countSpan = btn.querySelector('.tab-count');
-    if (!countSpan) {
-      countSpan = document.createElement('span');
-      countSpan.className = 'tab-count';
-      btn.appendChild(countSpan);
-    }
-    countSpan.textContent = (hasMore && status === 'all') ? `${count}+` : count;
-
-    // Red dot for active statuses
-    btn.classList.toggle('tab-has-dot', showCount && ACTIVE_TAB_STATUSES.has(status));
-  });
+  if (activeStatus === 'all') {
+    // 「全部」tab：使用 pagination.totalItems（跨頁精確）
+    // 各 status tab：從當頁 list 計算，hasMore 時加 + 表示「至少 X 筆」
+    const total = pagination.totalItems ?? list.length;
+    const counts = {};
+    list.forEach(item => {
+      const tabKey = API_TO_TAB[(item.status ?? '').toLowerCase()] ?? 'pending';
+      counts[tabKey] = (counts[tabKey] || 0) + 1;
+    });
+    container.querySelectorAll('.filter-tab').forEach(btn => {
+      const s = btn.dataset.status;
+      let span = btn.querySelector('.tab-count');
+      if (!span) { span = document.createElement('span'); span.className = 'tab-count'; btn.appendChild(span); }
+      if (s === 'all') {
+        span.textContent = hasMore ? `${total}+` : total;
+      } else {
+        const c = counts[s] || 0;
+        span.textContent = (hasMore && c > 0) ? `${c}+` : c;
+        btn.classList.toggle('tab-has-dot', c > 0 && ACTIVE_TAB_STATUSES.has(s));
+      }
+    });
+  } else {
+    // 特定 status tab：使用 pagination.totalItems（精確），紅點反映真實數量
+    const total = pagination.totalItems ?? list.length;
+    const tab = container.querySelector(`.filter-tab[data-status="${activeStatus}"]`);
+    if (!tab) return;
+    let span = tab.querySelector('.tab-count');
+    if (!span) { span = document.createElement('span'); span.className = 'tab-count'; tab.appendChild(span); }
+    span.textContent = hasMore ? `${total}+` : total;
+    tab.classList.toggle('tab-has-dot', total > 0 && ACTIVE_TAB_STATUSES.has(activeStatus));
+  }
 }
 
 async function loadOrderBadges() {
@@ -787,11 +820,10 @@ async function loadOrderBadges() {
 function updateSidebarBadge(target, list, pagination) {
   const total    = pagination.totalItems ?? list.length;
   const hasMore  = (pagination.totalPages ?? 1) > 1;
-  const label    = hasMore ? `${list.length}+` : `${total}`;
+  const label    = hasMore ? `${total}+` : `${total}`;
   const hasActive = list.some(item => ACTIVE_TAB_STATUSES.has(API_TO_TAB[(item.status ?? '').toLowerCase()]));
 
   document.querySelectorAll(`[data-target="${target}"]`).forEach(el => {
-    // Count badge
     let badge = el.querySelector('.order-sidebar-count');
     if (!badge) {
       badge = document.createElement('span');
@@ -800,7 +832,6 @@ function updateSidebarBadge(target, list, pagination) {
     }
     badge.textContent = total > 0 ? label : '';
 
-    // Red dot
     let dot = el.querySelector('.order-red-dot');
     if (!dot) {
       dot = document.createElement('span');
@@ -869,12 +900,28 @@ document.addEventListener('DOMContentLoaded', () => {
     handleRouting();
   };
 
+  // 訂單篩選 tabs
+  document.getElementById('sellFilter')?.addEventListener('click', e => {
+    const tab = e.target.closest('.filter-tab');
+    if (!tab) return;
+    currentSellStatus = tab.dataset.status;
+    document.querySelectorAll('#sellFilter .filter-tab').forEach(t => t.classList.toggle('active', t === tab));
+    loadSellerOrders(1);
+  });
+  document.getElementById('buyFilter')?.addEventListener('click', e => {
+    const tab = e.target.closest('.filter-tab');
+    if (!tab) return;
+    currentBuyStatus = tab.dataset.status;
+    document.querySelectorAll('#buyFilter .filter-tab').forEach(t => t.classList.toggle('active', t === tab));
+    loadBuyerOrders(1);
+  });
 });
 
 // ===== 工具 =====
 const order_STATUS_MAP = {
   pending:        { text: '待確認', badge: 'order-badge-pending',    action: '接受訂單',         icon: '../svg/acceptOrder.svg'},
   preparing:      { text: '待出貨', badge: 'order-badge-preparing',  action: '即將出貨',         icon: '../svg/readyDeliver.svg'},
+  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '等待買家確認收貨',  icon: '../svg/waitBuyer.svg'},
   delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '等待買家確認收貨',  icon: '../svg/waitBuyer.svg'},
   review_pending: { text: '待評價', badge: 'order-badge-completed',  action: '給對方評價',       icon: '../svg/giveStar.svg'},
   completed:      { text: '已完成', badge: 'order-badge-scored',     action: null,               icon: null},
@@ -883,6 +930,7 @@ const order_STATUS_MAP = {
 const buyer_STATUS_MAP = {
   pending:        { text: '待確認', badge: 'order-badge-pending',    action: '聯絡賣家',   icon: '../svg/canChat.svg'},
   preparing:      { text: '待出貨', badge: 'order-badge-preparing',  action: '聯絡賣家',   icon: '../svg/canChat.svg'},
+  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '成功取貨',   icon: '../svg/acceptOrder.svg'},
   delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '成功取貨',   icon: '../svg/acceptOrder.svg'},
   review_pending: { text: '待評價', badge: 'order-badge-completed',  action: '給對方評價', icon: '../svg/giveStar.svg'},
   completed:      { text: '已完成', badge: 'order-badge-scored',     action: null,         icon: null},

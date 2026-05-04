@@ -854,9 +854,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderItems(productList) {
     container.innerHTML = '';
     const categoryMap = {
-      book: '書籍與學籍用品', life: '宿舍與生活用品',
-      student: '學生專用器材', other: '其他',
-      recycle: '環保生活用品', clean: '儲物與收納用品',
+      education: '課業學習', electronics: '3C 電子',
+      living: '住宿生活', sports: '運動休閒',
+      accessories: '服飾配件', other: '二手好物',
     };
     const newOrOldMap = { 1:'全新',2:'幾乎全新',3:'半新',4:'適中',5:'稍舊',6:'全舊' };
 

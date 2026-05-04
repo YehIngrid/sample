@@ -43,14 +43,14 @@ const sortItems = document.querySelectorAll('.sort_item');
 const paginationEl = document.getElementById('pagination');
 
 
-// 中文分類名稱 → API key 對照表（HTML data-category 與 URL param 均可能為中文）
+// 中文分類名稱 → API key 對照表
 const catMap = {
-  "書籍與學籍用品": "book",
-  "宿舍與生活用品": "life",
-  "學生專用器材": "special",
-  "環保生活用品": "reuse",
-  "儲物與收納用品": "storage",
-  "其他": "other"
+  "課業學習": "education",
+  "3C 電子": "electronics",
+  "住宿生活": "living",
+  "運動休閒": "sports",
+  "服飾配件": "accessories",
+  "二手好物": "other"
 };
 
 // ====== 初始化分類按鈕事件 ======
@@ -113,33 +113,6 @@ function changeCategory(category) {
 //     }
     
     
-
-//     // === 前端分類篩選 ===
-//     const categoryMap = {
-//       book: '書籍與學籍用品',
-//       life: '宿舍與生活用品',
-//       student: '學生專用器材',
-//       recycle: '環保生活用品',
-//       clean: '儲物與收納用品',
-//       other: '其他',
-//     };
-
-//     let filteredItems = items;
-
-//     // 篩選大分類
-//     if (currentCategory !== ('all' || 'hot' || 'new')) {
-//       filteredItems = filteredItems.filter(p => categoryMap[p.category] === currentCategory);
-//     }
-
-//     // 篩選子分類（假設商品物件有 subCategory 欄位）
-//     if (currentSub) {
-//       filteredItems = filteredItems.filter(p => p.subCategory === currentSub);
-//     }
-
-//     filteredItems = applyFilters(filteredItems);
-//     // 重新計算分頁數量
-//     const totalCount = filteredItems.length;
-
 //     // 依 pageIndex 切出這一頁要顯示的商品
 //     const start = pageIndex * PAGE_SIZE;
 //     const pagedItems = filteredItems.slice(start, start + PAGE_SIZE);
@@ -169,7 +142,7 @@ async function loadProducts() {
     const keyword = activeKeyword;
     const maxPrice = maxPriceInput?.value ? parseInt(maxPriceInput.value) : null;
     const newOrOld = newOrOldInput?.value !== 'default' ? parseInt(newOrOldInput?.value) : null;
-    const validCategories = ['book', 'life', 'special', 'reuse', 'storage', 'other'];
+    const validCategories = ['education', 'electronics', 'living', 'sports', 'accessories', 'other'];
 
     let items = [];
     let totalCount = 0;

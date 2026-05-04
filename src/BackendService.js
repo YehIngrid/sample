@@ -455,9 +455,11 @@ export default class BackendService {
         }
     }
 
-    async getBuyerOrders(page = 1) {
+    async getBuyerOrders(page = 1, status = null) {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/order/buyer`, { params: { page }, headers: { "Cache-Control": "no-cache" } });
+            const params = { page };
+            if (status) params.status = status;
+            const response = await axios.get(`${this.baseUrl}/api/order/buyer`, { params, headers: { "Cache-Control": "no-cache" } });
             return response;
         } catch (error) {
             this._forbidden(error);
@@ -465,9 +467,11 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
-    async getSellerOrders(page = 1) {
+    async getSellerOrders(page = 1, status = null) {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/order/seller`, { params: { page }, headers: { "Cache-Control": "no-cache" } });
+            const params = { page };
+            if (status) params.status = status;
+            const response = await axios.get(`${this.baseUrl}/api/order/seller`, { params, headers: { "Cache-Control": "no-cache" } });
             return response;
         } catch (error) {
             this._forbidden(error);

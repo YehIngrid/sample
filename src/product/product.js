@@ -239,12 +239,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // === 分類 / 新舊 ===
     const categoryMap = {
-      book: '書籍與學籍用品',
-      life: '宿舍與生活用品',
-      special: '學生專用器材',
-      reuse: '環保生活用品',
-      storage: '儲物與收納用品',
-      other: '其他',
+      education: '課業學習',
+      electronics: '3C 電子',
+      living: '住宿生活',
+      sports: '運動休閒',
+      accessories: '服飾配件',
+      other: '二手好物',
     };
     const newOrOldMap = {
       1 : '全新', 
