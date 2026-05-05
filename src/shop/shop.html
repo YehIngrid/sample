@@ -947,6 +947,7 @@
                   <span>點擊或拖曳上傳（可多選）</span>
                 </label>
                 <input type="file" id="image" name="images" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp" multiple />
+                <div class="sell-hint" id="multiImagesHint" style="margin-top:4px;">已選 0 / 5</div>
                 <div id="previewArea" class="sell-preview-grid"></div>
               </div>
 
@@ -1370,8 +1371,8 @@ const timer = setInterval(() => {
 <div id="loadingOverlay" class="loading-overlay d-none">
   <div class="d-flex flex-column justify-content-center align-items-center">
     <span class="loader1"></span>
-    <span style="font-size: 1.3rem; padding-top: 5px;">上傳商品中...</span>
-    <span style="font-size: 1.3rem;">請勿跳出視窗或做任何操作</span>
+    <span style="font-size: 1rem; padding-top: 5px;">上傳商品中...</span>
+    <span style="font-size: 1rem;">請勿跳出視窗或做任何操作</span>
   </div>
 </div>
 

@@ -364,12 +364,19 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
 
   // 3.2 主圖切換 + 錯誤 fallback
   let currentIdx = 0;
+  const counterEl = document.getElementById('imgCounter');
   function setMainByIndex(idx){
     if (!mainImg) return;
     currentIdx = idx;
     mainImg.src = list[idx];
     mainImg.alt = product?.name ?? '';
     mainImg.loading = 'lazy';
+
+    // 計數器
+    if (counterEl && list.length > 1) {
+      counterEl.textContent = `${idx + 1} / ${list.length}`;
+      counterEl.classList.remove('d-none');
+    }
 
     // active 標示
     thumbList?.querySelectorAll('.thumb-img').forEach((el, i) => {

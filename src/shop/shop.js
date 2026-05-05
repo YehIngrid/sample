@@ -403,6 +403,13 @@ nextHotBtn.addEventListener("click", () => {
   sellData.set('price', String(price));
   sellData.set('stock', String(stock));
   sellData.set('age', String(age));
+  // 明確同步 radio → select 的值，並移除不應送後端的 radio 欄位
+  sellData.set('size', document.getElementById('size').value);
+  sellData.set('new_or_old', document.getElementById('new_or_old').value);
+  sellData.set('category', document.getElementById('category').value);
+  sellData.delete('sizeRadio');
+  sellData.delete('conditionRadio');
+  sellData.delete('categoryRadio');
 
   const backendService = new BackendService();
 
@@ -451,29 +458,91 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
 }
 
 // ---- 裁切 Modal 共用邏輯 ----
-let shopCropper      = null;
-let shopCropQueue    = [];   // 待裁切的原始 File 物件
-let shopCroppedFiles = [];   // 已裁切+壓縮的結果
-let shopCropTarget   = '';   // 'main' | 'multi'
+let shopCropper        = null;
+let shopCropQueue      = [];   // 待裁切的原始 File 物件（主圖用）
+let shopCroppedFiles   = [];   // 主圖裁切結果
+let shopCropTarget     = '';   // 'main' | 'single'
 let shopCropFromConfirm = false;
+let shopCropSingleIdx  = -1;   // 正在裁切的 multi 圖索引
+
+// 其他照片的檔案陣列（最多 5 張，可個別裁切）
+let shopMultiFiles = [];
 
 const shopCropModalEl = document.getElementById('shopCropModal');
 const shopCropImg     = document.getElementById('shopCropImg');
 const shopCropCounter = document.getElementById('shopCropCounter');
 const shopCropModal   = bootstrap.Modal.getOrCreateInstance(shopCropModalEl);
 
+// 同步 shopMultiFiles 到 input[name="images"]
+function syncMultiToInput() {
+  const input = document.getElementById('image');
+  const dt = new DataTransfer();
+  shopMultiFiles.forEach(f => dt.items.add(f));
+  input.files = dt.files;
+}
+
+// 渲染「其他照片」預覽（每張有裁切 + 移除按鈕）
+function renderMultiPreviews() {
+  const preview = document.getElementById('previewArea');
+  preview.innerHTML = '';
+  const hint = document.getElementById('multiImagesHint');
+  if (hint) hint.textContent = `已選 ${shopMultiFiles.length} / 5`;
+
+  shopMultiFiles.forEach((f, idx) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'sell-preview-item';
+
+    const img = document.createElement('img');
+    const url = URL.createObjectURL(f);
+    img.onload = () => URL.revokeObjectURL(url);
+    img.src = url;
+
+    const cropBtn = document.createElement('button');
+    cropBtn.type = 'button';
+    cropBtn.className = 'preview-crop-btn';
+    cropBtn.title = '裁切';
+    cropBtn.innerHTML = '<i class="ti ti-crop"></i>';
+    cropBtn.addEventListener('click', () => openShopCropSingle(f, idx));
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'preview-remove-btn';
+    removeBtn.title = '移除';
+    removeBtn.innerHTML = '<i class="ti ti-x"></i>';
+    removeBtn.addEventListener('click', () => {
+      shopMultiFiles.splice(idx, 1);
+      syncMultiToInput();
+      renderMultiPreviews();
+    });
+
+    wrap.appendChild(img);
+    wrap.appendChild(cropBtn);
+    wrap.appendChild(removeBtn);
+    preview.appendChild(wrap);
+  });
+}
+
+// 開啟裁切 Modal（主圖 or 單張 multi）
+function openShopCropSingle(file, idx) {
+  shopCropTarget    = 'single';
+  shopCropSingleIdx = idx;
+  shopCropQueue     = [file];
+  shopCroppedFiles  = [];
+  shopCropCounter.textContent = '';
+  if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    shopCropImg.src = e.target.result;
+    shopCropModal.show();
+  };
+  reader.readAsDataURL(file);
+}
+
 function openShopCrop(files, target) {
   shopCropQueue    = Array.from(files);
   shopCroppedFiles = [];
   shopCropTarget   = target;
-  processNextShopCrop();
-}
-
-function processNextShopCrop() {
-  if (shopCropQueue.length === 0) { finishShopCrop(); return; }
-  const total   = shopCroppedFiles.length + shopCropQueue.length;
-  const current = shopCroppedFiles.length + 1;
-  shopCropCounter.textContent = total > 1 ? `(${current} / ${total})` : '';
+  shopCropCounter.textContent = '';
   if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
   const reader = new FileReader();
   reader.onload = (e) => {
@@ -483,7 +552,7 @@ function processNextShopCrop() {
   reader.readAsDataURL(shopCropQueue[0]);
 }
 
-// modal 完全顯示後才初始化 Cropper，並確保圖片已載入
+// modal 完全顯示後才初始化 Cropper
 shopCropModalEl.addEventListener('shown.bs.modal', () => {
   if (shopCropper) shopCropper.destroy();
   const init = () => {
@@ -507,52 +576,33 @@ document.getElementById('shopCropConfirm').addEventListener('click', () => {
   shopCropModal.hide();
   canvas.toBlob(async (blob) => {
     const compressed = await compressImage(blob, 1200, 0.82);
-    shopCroppedFiles.push(compressed);
-    shopCropQueue.shift();
-    processNextShopCrop();
+    if (shopCropTarget === 'main') {
+      // 主圖：直接更新 input + 預覽
+      const input = document.getElementById('mainImage');
+      const dt = new DataTransfer();
+      dt.items.add(compressed);
+      input.files = dt.files;
+      const preview = document.getElementById('mainImagePreview');
+      preview.innerHTML = '';
+      const img = document.createElement('img');
+      const url = URL.createObjectURL(compressed);
+      img.onload = () => URL.revokeObjectURL(url);
+      img.src = url;
+      preview.appendChild(img);
+    } else {
+      // 單張 multi：更新對應索引
+      shopMultiFiles[shopCropSingleIdx] = compressed;
+      syncMultiToInput();
+      renderMultiPreviews();
+    }
   }, 'image/webp', 0.92);
 });
 
 shopCropModalEl.addEventListener('hidden.bs.modal', () => {
   if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
   shopCropImg.src = '';
-  if (!shopCropFromConfirm) {
-    // 使用者取消 → 清空佇列，不更新 input
-    shopCropQueue    = [];
-    shopCroppedFiles = [];
-  }
   shopCropFromConfirm = false;
 });
-
-function finishShopCrop() {
-  if (shopCropTarget === 'main') {
-    const input = document.getElementById('mainImage');
-    const dt = new DataTransfer();
-    dt.items.add(shopCroppedFiles[0]);
-    input.files = dt.files;
-    const preview = document.getElementById('mainImagePreview');
-    preview.innerHTML = '';
-    const img = document.createElement('img');
-    const url = URL.createObjectURL(shopCroppedFiles[0]);
-    img.onload = () => URL.revokeObjectURL(url);
-    img.src = url;
-    preview.appendChild(img);
-  } else {
-    const input = document.getElementById('image');
-    const dt = new DataTransfer();
-    shopCroppedFiles.forEach(f => dt.items.add(f));
-    input.files = dt.files;
-    const preview = document.getElementById('previewArea');
-    preview.innerHTML = '';
-    shopCroppedFiles.forEach(f => {
-      const img = document.createElement('img');
-      const url = URL.createObjectURL(f);
-      img.onload = () => URL.revokeObjectURL(url);
-      img.src = url;
-      preview.appendChild(img);
-    });
-  }
-}
 
 document.getElementById('mainImage').addEventListener('change', function (e) {
   const file = e.target.files[0];
@@ -566,15 +616,27 @@ document.getElementById('mainImage').addEventListener('change', function (e) {
 });
 
 document.getElementById('image').addEventListener('change', function (e) {
-  const files = Array.from(e.target.files);
-  if (!files.length) return;
-  const oversized = files.find(f => f.size > 5000000);
+  const newFiles = Array.from(e.target.files);
+  if (!newFiles.length) return;
+  e.target.value = '';
+
+  const remaining = 5 - shopMultiFiles.length;
+  if (remaining <= 0) {
+    Swal.fire({ icon: 'warning', title: '已達上限', text: '最多只能上傳 5 張其他照片。' });
+    return;
+  }
+  const toAdd = newFiles.slice(0, remaining);
+  if (newFiles.length > remaining) {
+    Swal.fire({ icon: 'info', title: `已自動截取前 ${remaining} 張`, text: `最多 5 張，超出部分已忽略。` });
+  }
+  const oversized = toAdd.find(f => f.size > 5000000);
   if (oversized) {
     Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
     return;
   }
-  e.target.value = '';
-  openShopCrop(files, 'multi');
+  shopMultiFiles.push(...toAdd);
+  syncMultiToInput();
+  renderMultiPreviews();
 });
 
 // TODO member

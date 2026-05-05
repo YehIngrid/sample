@@ -81,9 +81,11 @@ export default class wpBackendService {
     }
     async myWishes(page, status) {
         try {
+            const params = { page, limit: 12 };
+            if (status) params.status = status; // integer: 1=活躍, 2=已過期, 3=已刪除
             const response = await axios.get(
                 `${this.baseUrl}/my`,
-                {params: {page: page, limit: 12, status: String(status)}}
+                { params }
             );
             return response.data;
         } catch (error) {

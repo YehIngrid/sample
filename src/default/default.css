@@ -267,7 +267,7 @@ ul{
   .search-input-wrap {
     position: relative;
     width: 100%;
-    z-index: 99999;
+    z-index: 1;
   }
 
   /* 輸入框內的搜尋 icon */
@@ -405,8 +405,10 @@ ul{
 .login {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 14px;
+  padding-right: 10px;
+  border-right: 1.5px solid #e8eef5;
 }
  * {
     scrollbar-width: auto;
@@ -652,7 +654,7 @@ ul{
     background-color: #fff;
     width: 100%;
     height: 100%;
-    z-index: 9999;
+    z-index: 100000;
   }
 
   /* 載入畫面 */
@@ -1571,19 +1573,20 @@ html.skip-loader #whatcontent { display: block !important; }
   position: relative;
   display: inline-flex;
   align-items: center;
+  margin-left: 10px;
 }
 .notif-bell-btn {
   background: none;
   border: none;
   cursor: pointer;
   padding: 4px 6px;
-  font-size: 1.15rem;
-  color: #383838;
+  font-size: 1.1rem;
+  color: #004b97;
   line-height: 1;
   border-radius: 6px;
   transition: color 0.15s, background 0.15s;
 }
-.notif-bell-btn:hover { color: #004b97; background: rgba(0,75,151,0.07); }
+.notif-bell-btn:hover { color: #abdad5; background: rgba(171,218,213,0.18); }
 .notif-badge {
   position: absolute;
   top: -2px;
@@ -1608,7 +1611,7 @@ html.skip-loader #whatcontent { display: block !important; }
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.35);
-  z-index: 3099;
+  z-index: 10999;
   backdrop-filter: blur(2px);
 }
 .notif-backdrop.open { display: block; }
@@ -1622,7 +1625,7 @@ html.skip-loader #whatcontent { display: block !important; }
   right: 0;
   background: #fff;
   border-radius: 16px 0 0 16px;
-  z-index: 3100;
+  z-index: 11000;
   display: flex;
   flex-direction: column;
   overflow: hidden;

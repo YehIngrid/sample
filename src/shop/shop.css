@@ -775,6 +775,55 @@ ul{
   border: 1.5px solid #abdad5;
 }
 
+/* 其他照片預覽：每張圖的 wrapper（含裁切/移除按鈕） */
+.sell-preview-item {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+}
+.sell-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1.5px solid #abdad5;
+  display: block;
+}
+.sell-preview-item:hover .preview-crop-btn,
+.sell-preview-item:hover .preview-remove-btn {
+  opacity: 1;
+}
+.preview-crop-btn,
+.preview-remove-btn {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.15s;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1;
+}
+.preview-crop-btn {
+  bottom: 4px;
+  left: 4px;
+  background: rgba(0, 75, 151, 0.85);
+  color: #fff;
+}
+.preview-remove-btn {
+  top: 4px;
+  right: 4px;
+  background: rgba(220, 53, 69, 0.85);
+  color: #fff;
+}
+
 /* 導航按鈕列 */
 .sell-nav {
   display: flex;

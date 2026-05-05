@@ -240,8 +240,12 @@ function renderProductsBootstrap(items) {
     noProducts.style.display = 'none';
 
   const categoryMap = {
-    book: '書籍', life: '生活', special: '器材',
-    other: '其他', reuse: '環保', storage: '收納',
+    education:   '課業學習',
+    electronics: '3C 電子',
+    living:      '住宿生活',
+    sports:      '運動休閒',
+    accessories: '服飾配件',
+    other:       '二手好物',
   };
   const newOrOldMap = {
     1:'全新', 2:'幾乎全新', 3:'半新', 4:'適中', 5:'稍舊', 6:'全舊',

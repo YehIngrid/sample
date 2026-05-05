@@ -59,7 +59,6 @@ body {
     background: aliceblue;
     border: 1px solid #abdad5;
     border-radius: 50px;
-    padding: 4px 0px;
     list-style: none;
     margin: 0;
     gap: 2px;
@@ -1222,6 +1221,7 @@ body {
     grid-template-columns: 1fr 1fr;
     align-items: center;
     gap: 32px;
+    padding-top: 100px;
     padding-bottom: 80px;
 }
 .about-text .cardTitle {
@@ -1247,7 +1247,7 @@ body {
 }
 .about-philosophy-bg {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
     display: block;
@@ -1261,6 +1261,9 @@ body {
         padding-bottom: 60px;
     }
     .about-philosophy-bg { font-size: clamp(2rem, 9vw, 3.5rem); }
+    .about-layout {
+        padding-top: 30px;
+    }
 }
 
 /* ── #about A+B animations ── */
@@ -1317,7 +1320,7 @@ body {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.35);
-    z-index: 3099;
+    z-index: 10999;
     backdrop-filter: blur(2px);
 }
 .notif-backdrop.open { display: block; }
@@ -1329,7 +1332,7 @@ body {
     bottom: 0;
     right: 0;
     border-radius: 16px 0 0 16px;
-    z-index: 3100;
+    z-index: 11000;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -1510,6 +1513,54 @@ body {
     border: 2px solid #BEE4DA;
     flex-shrink: 0;
 }
+/* ── My Wishes filter tabs ── */
+.mywish-filter-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 4px 0 14px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.mywish-filter-tabs::-webkit-scrollbar { display: none; }
+.mywish-tab {
+  flex-shrink: 0;
+  padding: 6px 16px;
+  border: 1.5px solid #abdad5;
+  border-radius: 20px;
+  background: #fff;
+  color: #555;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.mywish-tab.active {
+  background: #abdad5;
+  color: #004b97;
+  font-weight: 600;
+  border-color: #abdad5;
+}
+.mywish-tab:hover:not(.active) { background: #edf7f6; }
+
+/* ── My Wishes empty state ── */
+.mywish-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 48px 16px;
+  color: #aab8c8;
+}
+.mywish-empty i {
+  font-size: 2.6rem;
+}
+.mywish-empty p {
+  margin: 0;
+  font-size: 15px;
+  color: #9aaab8;
+}
+
 /* ── Wish highlight from notification ── */
 @keyframes wishHighlight {
   0%   { box-shadow: 0 0 0 3px rgba(0,75,151,0.6); }

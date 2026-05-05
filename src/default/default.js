@@ -469,10 +469,10 @@ function _initNotifSystem() {
 
   const loginEl = document.querySelector('nav .login');
   if (loginEl) {
-    loginEl.insertAdjacentHTML('beforebegin', `
+    loginEl.insertAdjacentHTML('afterend', `
       <div id="notifBellWrap" class="notif-bell-wrap">
         <button id="notificationBtn" class="notif-bell-btn" aria-label="通知">
-          <i class="ti ti-bell"></i>
+          <i class="fa-solid fa-bell"></i>
         </button>
         <span id="notificationBadge" class="notif-badge d-none">0</span>
       </div>

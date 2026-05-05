@@ -2,6 +2,8 @@ import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
 import { requireLogin } from '../default/default.js';
 
+history.scrollRestoration = 'manual';
+
 let backendService;
 let wpbackendService;
 
@@ -32,6 +34,7 @@ let currentPage = 1;
 let totalPages = 1; // 如果後端有回 totalPages
 let mycurrentPage = 1;
 let mytotalPages = 1;
+let currentMyWishStatus = 0; // 0=全部, 1=活躍, 2=已過期, 3=已刪除
 
 document.addEventListener("DOMContentLoaded", () => {
   // ── 手機版篩選條件伸縮 ──
@@ -70,6 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  document.getElementById('myWishFilter')?.addEventListener('click', e => {
+    const tab = e.target.closest('.mywish-tab');
+    if (!tab) return;
+    currentMyWishStatus = Number(tab.dataset.status);
+    document.querySelectorAll('#myWishFilter .mywish-tab').forEach(t => t.classList.toggle('active', t === tab));
+    listMyWishes(1);
+  });
+
   document.getElementById('exploreBtn')?.addEventListener('click', () => {
     document.getElementById('wishGrid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
@@ -79,6 +90,7 @@ const links = document.querySelectorAll('.nav-link');
 
 // SPA 顯示邏輯
 async function showPage(hash) {
+  window.scrollTo({ top: 0, behavior: 'instant' });
   pages.forEach(p => p.classList.remove('active'));
   links.forEach(l => l.classList.remove('active'));
 
@@ -116,6 +128,8 @@ async function showPage(hash) {
       return; // ⛔ 很重要
     } else {
       mycurrentPage = 1;
+      currentMyWishStatus = 0;
+      document.querySelectorAll('#myWishFilter .mywish-tab').forEach(t => t.classList.toggle('active', t.dataset.status === '0'));
       await listMyWishes(1);
     }
   }
@@ -141,18 +155,20 @@ async function showPage(hash) {
 }
 
 
-// 只負責「點擊 → 改 hash」
+// 只負責「點擊 → 改 hash」（用 pushState 避免瀏覽器原生 anchor scroll）
 document.querySelectorAll('a[data-spa]').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
-    location.hash = link.getAttribute('href');
+    const hash = link.getAttribute('href');
+    history.pushState(null, '', hash);
+    showPage(hash);
   });
 });
 
 showPage(location.hash || '#wishpool');
-// hash 改變時切換頁面
-window.addEventListener('hashchange', () => {
-  showPage(location.hash);
+// 瀏覽器上一頁/下一頁
+window.addEventListener('popstate', () => {
+  showPage(location.hash || '#wishpool');
 });
 
 async function checkLogin() {
@@ -206,7 +222,7 @@ async function listMyWishes(mypage) {
   if (myWishGrid) myWishGrid.innerHTML = wishSkeletonHTML();
     wpbackendService = new wpBackendService();
     try {
-      const res = await wpbackendService.myWishes(mypage, null);
+      const res = await wpbackendService.myWishes(mypage, currentMyWishStatus || null);
       mycurrentPage = mypage;
       showMyInfo(res.data);
       if(res.data.pagination.totalPages) {
@@ -266,9 +282,18 @@ function showMyInfo(data) {
   const container = document.getElementById('myWishGrid');
   const emptycontainer = document.getElementById('empty');
   if (!data.wishes || data.pagination.total === 0) {
-    emptycontainer.innerHTML = '<p class="empty">你目前還沒有願望</p>';
+    container.innerHTML = '';
+    const emptyMessages = {
+      0: { icon: 'ti-star-off',    text: '你目前還沒有願望' },
+      1: { icon: 'ti-star-off',    text: '目前沒有活躍中的願望' },
+      2: { icon: 'ti-clock-off',   text: '目前沒有已過期的願望' },
+      3: { icon: 'ti-trash-off',   text: '目前沒有刪除的願望' },
+    };
+    const { icon, text } = emptyMessages[currentMyWishStatus] ?? emptyMessages[0];
+    emptycontainer.innerHTML = `<div class="mywish-empty"><i class="ti ${icon}"></i><p>${text}</p></div>`;
     return;
   }
+  emptycontainer.innerHTML = '';
   container.innerHTML = '';
   data.wishes.forEach(wish => {
     container.appendChild(createWishCard(wish, true));

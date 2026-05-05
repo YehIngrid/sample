@@ -57,7 +57,7 @@
                 <!-- Logo + 返回按鈕 -->
                 <div class="d-flex align-items-center me-4 flex-shrink-0 gap-2">
                     <a href="../newhome/newhome.html">
-                        <img src="../svg/wishpoolicon.svg" alt="許願池 Logo" style="width: 88px;">
+                        <img src="../svg/wishpoolicon.svg" alt="許願池 Logo">
                     </a>
                     <a class="wp-back-btn d-none d-lg-inline-block" href="../shop/shop.html">← 返回購物首頁</a>
                 </div>
@@ -101,6 +101,12 @@
       <section id="mywishes" class="page">
         <h3 class="cardTitle" style="margin-bottom: 4px; color: #004b97;">我的願望</h3>
         <p class="section-subtitle">共 <span id="my-total">0</span> 件</p>
+        <div class="mywish-filter-tabs" id="myWishFilter">
+          <button class="mywish-tab active" data-status="0">全部</button>
+          <button class="mywish-tab" data-status="1">活躍中</button>
+          <button class="mywish-tab" data-status="2">已過期</button>
+          <button class="mywish-tab" data-status="3">已刪除</button>
+        </div>
         <div class="wishpoolcontainer col-12">
           <div class="wishgrid">
             <div id="empty" class="d-flex justify-content-center"></div>
@@ -117,6 +123,23 @@
       </section>
       <section id="about" class="page about-section">
         <div class="pageContainer about-layout">
+          <!-- 底部大字浮水印 -->
+          <svg class="about-philosophy-bg" viewBox="0 0 1000 110" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="philosShimmer" x1="-100%" y1="0" x2="0%" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="rgba(0,75,151,0.06)" />
+                <stop offset="40%"  stop-color="rgba(0,75,151,0.06)" />
+                <stop offset="50%"  stop-color="rgba(255,255,255,0.28)" />
+                <stop offset="60%"  stop-color="rgba(0,75,151,0.06)" />
+                <stop offset="100%" stop-color="rgba(0,75,151,0.06)" />
+                <animateTransform attributeName="gradientTransform" type="translate"
+                  from="-1000 0" to="2000 0" dur="3.5s" repeatCount="indefinite" />
+              </linearGradient>
+            </defs>
+            <text x="500" y="96" text-anchor="middle" textLength="1000" lengthAdjust="spacingAndGlyphs"
+                  font-family="'Noto Sans TC', sans-serif" font-size="108" font-weight="900"
+                  fill="url(#philosShimmer)">OUR PHILOSOPHY</text>
+          </svg>
           <!-- 左欄：文字 -->
           <div class="about-text">
             <h3 class="cardTitle about-anim-title" style="margin-bottom: 16px;">創立理念</h3>
@@ -156,12 +179,6 @@
             </svg>
           </div>
         </div>
-        <!-- 底部大字浮水印 -->
-        <svg class="about-philosophy-bg" viewBox="0 0 1000 110" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <text x="500" y="96" text-anchor="middle" textLength="1000" lengthAdjust="spacingAndGlyphs"
-            font-family="'Noto Sans TC', sans-serif" font-size="108" font-weight="900"
-            fill="rgba(0,75,151,0.06)">OUR PHILOSOPHY</text>
-        </svg>
       </section>
       <section id="wishpool" class="page">
         <!-- Hero -->
