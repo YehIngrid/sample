@@ -1605,6 +1605,7 @@ html.skip-loader #whatcontent { display: block !important; }
   pointer-events: none;
 }
 
+
 /* ── Notification Backdrop ── */
 .notif-backdrop {
   display: none;
@@ -1654,33 +1655,41 @@ html.skip-loader #whatcontent { display: block !important; }
 .notif-header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 .notif-read-all-btn {
   background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255,255,255,0.35);
   color: #fff;
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
   transition: background 0.15s;
   white-space: nowrap;
+  height: 28px;
+  display: flex;
+  align-items: center;
 }
 .notif-read-all-btn:hover { background: rgba(255,255,255,0.28); }
 .notif-close {
-  background: none;
+  background: rgba(255,255,255,0.1);
   border: none;
-  color: rgba(255,255,255,0.8);
-  font-size: 1.25rem;
+  color: rgba(255,255,255,0.85);
+  font-size: 1rem;
   cursor: pointer;
   line-height: 1;
-  padding: 4px;
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
   transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
 }
-.notif-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.notif-close:hover { background: rgba(255,255,255,0.25); color: #fff; }
 
 .notif-list {
   flex: 1;

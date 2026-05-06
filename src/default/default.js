@@ -743,6 +743,9 @@ window.refreshNotifBadge = () => _loadNotifications(1, false);
   document.addEventListener('DOMContentLoaded', buildDOM);
 
   document.addEventListener('keydown', e => {
+    // 避免輸入框或聊天室開啟時意外觸發
+    if (e.target.matches('input,textarea,[contenteditable="true"]')) { idx = 0; return; }
+    if (document.getElementById('talkInterface')?.style.display === 'block') { idx = 0; return; }
     const key = e.key.toLowerCase();
     const expected = KONAMI[idx].toLowerCase();
     if (key === expected) {
