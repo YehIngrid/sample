@@ -760,12 +760,92 @@ class ChatRoomList {
                 hideMsgMenu();
             });
         });
+
+        // 客服機器人選項
+        document.getElementById('csBotMenu')?.addEventListener('click', (e) => {
+            const btn = e.target.closest('.cs-bot-option');
+            if (!btn) return;
+            this.handleBotOption(btn.dataset.botOption, btn.textContent.trim());
+        });
     }
 
     playNotificationSound() {
         if (localStorage.getItem('chatSound') === '0') return;
         const audio = new Audio('../sound/mes.mp3');
         audio.play().catch(() => {});
+    }
+
+    appendBotMessage(text, actionHtml = '') {
+        const container = document.getElementById('messagesContainer');
+        if (!container) return;
+        const time = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+        const div = document.createElement('div');
+        div.className = 'message message-other';
+        div.innerHTML = `
+            <div class="message-avatar"><img src="../webP/treasurehub.webp" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid #004b97;"/></div>
+            <div class="message-content">
+                <div class="d-flex align-items-end">
+                    <div class="message-text cs-bot-text">${text}${actionHtml ? `<div class="cs-bot-actions">${actionHtml}</div>` : ''}</div>
+                    <small class="text-muted ms-2 msg-time" style="font-size:0.75rem;">${time}</small>
+                </div>
+            </div>`;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    appendUserChoice(label) {
+        const container = document.getElementById('messagesContainer');
+        if (!container) return;
+        const time = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit', hour12: false });
+        const div = document.createElement('div');
+        div.className = 'message message-self';
+        div.innerHTML = `
+            <div class="message-content">
+                <div class="d-flex align-items-end">
+                    <div class="d-flex flex-row align-items-center gap-1 me-2">
+                        <small class="text-muted msg-time" style="font-size:0.75rem;">${time}</small>
+                    </div>
+                    <div class="message-text">${this.escapeHtml(label)}</div>
+                </div>
+            </div>`;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    handleBotOption(option, label) {
+        this.appendUserChoice(label);
+        setTimeout(() => {
+            switch (option) {
+                case '1':
+                    this.appendBotMessage(
+                        '您可以在「我的帳戶」中查看所有訂單的詳情與目前狀態。',
+                        `<a class="cs-bot-link-btn" href="../person/person.html" target="_parent"><i class="bi bi-person-lines-fill"></i> 前往我的帳戶</a>`
+                    );
+                    break;
+                case '2':
+                    this.appendBotMessage(
+                        '建議在中興大學校內公開場所進行面交，例如中興湖旁、圖書館正門、惠蓀堂前等。<br>交易前請在聊天室與對方確認好時間與地點，並注意個人安全。若遇到糾紛，歡迎透過「聯繫專人」告知我們。'
+                    );
+                    break;
+                case '3':
+                    this.appendBotMessage(
+                        '您可以前往常見問題頁面，查看關於帳號、商品、訂單等各類說明。',
+                        `<a class="cs-bot-link-btn" href="../questions/questions.html" target="_parent"><i class="bi bi-book"></i> 前往常見問題</a>`
+                    );
+                    break;
+                case '4': {
+                    const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+                    const day = now.getDay();
+                    const hour = now.getHours();
+                    const isServiceHours = day >= 1 && day <= 5 && hour >= 9 && hour < 18;
+                    const msg = isServiceHours
+                        ? '目前為服務時間（平日 09:00–18:00），客服人員將盡快回覆您，感謝耐心等候！'
+                        : '目前非服務時間（平日 09:00–18:00）。<br>您可以留言，我們將於下個工作日盡快回覆，感謝您的耐心！';
+                    this.appendBotMessage(msg);
+                    break;
+                }
+            }
+        }, 600);
     }
 
     startOnboarding() {
@@ -1028,6 +1108,8 @@ class ChatRoomList {
         // 快速回覆 / 面交工具只在私人聊天顯示
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = isOfficialRoom ? 'none' : 'flex';
+        const csBotMenu = document.getElementById('csBotMenu');
+        if (csBotMenu) csBotMenu.style.display = isOfficialRoom ? 'block' : 'none';
         const _pickerDisplay = isOfficialRoom ? 'none' : '';
         document.getElementById('time-picker-btn')?.style.setProperty('display', _pickerDisplay);
         document.getElementById('location-picker-btn')?.style.setProperty('display', _pickerDisplay);
@@ -1092,6 +1174,13 @@ class ChatRoomList {
         }
 
         this.connectSSE(); // SSE 已在 init() 開啟，此處為 idempotent 保護
+
+        // 官方頻道：顯示客服機器人歡迎訊息
+        if (isOfficialRoom) {
+            setTimeout(() => {
+                this.appendBotMessage('您好！我是拾貨寶庫客服助理 🤖<br>請點選下方按鈕，我將為您解答：');
+            }, 200);
+        }
 
         // 第一次進入非官方房間 → 顯示操作引導
         if (!this.officialRoomsSet.has(String(roomId)) && !localStorage.getItem('chatOnboardingDone')) {

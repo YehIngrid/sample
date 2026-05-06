@@ -1480,3 +1480,73 @@ html, body {
     font-size: 16px;
   }
 }
+
+/* ── 客服機器人選單 ── */
+.cs-bot-menu {
+    padding: 8px 0 6px;
+    border-top: 1px solid #e8eef5;
+    margin-top: 2px;
+}
+.cs-bot-hint {
+    font-size: 0.75rem;
+    color: #999;
+    margin: 0 0 6px 2px;
+}
+.cs-bot-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.cs-bot-option {
+    flex: 1 1 calc(50% - 3px);
+    min-width: 110px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 10px;
+    background: aliceblue;
+    border: 1px solid #c8daf5;
+    border-radius: 8px;
+    color: #004b97;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+.cs-bot-option:hover {
+    background: #ddeeff;
+    border-color: #004b97;
+}
+.cs-bot-option i {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+/* ── 客服機器人訊息泡泡 ── */
+.cs-bot-text {
+    background: linear-gradient(135deg, #f0f6ff, #e8f0fb) !important;
+    border: 1px solid #c8daf5 !important;
+}
+.cs-bot-actions {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.cs-bot-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: #004b97;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    width: fit-content;
+    transition: background 0.15s;
+}
+.cs-bot-link-btn:hover {
+    background: rgb(36, 182, 133);
+    color: #fff;
+}
