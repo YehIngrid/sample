@@ -283,6 +283,16 @@ html, body {
     margin-bottom: 4px;
 }
 
+/* 客服頻道：對方（小幫手）訊息泡泡跟隨使用者主題色 */
+[data-support-room="1"] .message-other .message-text {
+    background-color: var(--self-bubble-bg, aliceblue);
+    border: 1px solid var(--self-bubble-border, rgba(0,75,151,0.2));
+}
+[data-support-room="1"] .message-other .combined-bubble {
+    background: var(--self-bubble-bg, aliceblue);
+    border-color: var(--self-bubble-border, rgba(0,75,151,0.2));
+}
+
 .message-text {
     background-color: var(--message-bg);
     padding: 10px 18px;
@@ -407,6 +417,9 @@ html, body {
 
     .mobile-back-btn {
         display: inline-block !important;
+    }
+    .message-text {
+        padding: 7px 12px;
     }
 }
 
@@ -563,7 +576,8 @@ html, body {
     padding: 8px 16px;
 }
 .broadcast-inner {
-    background: var(--chat-bg-tint, aliceblue);
+    background: var(--self-bubble-bg, aliceblue);
+    border: 1px solid var(--self-bubble-border, rgba(0,75,151,0.2));
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     padding: 12px 16px;
@@ -1504,28 +1518,22 @@ html, body {
     align-items: center;
     gap: 5px;
     padding: 7px 10px;
-    background: aliceblue;
-    border: 1px solid #c8daf5;
+    background: var(--self-bubble-bg, aliceblue);
+    border: 1px solid var(--self-bubble-border, rgba(0,75,151,0.2));
     border-radius: 8px;
-    color: #004b97;
+    color: var(--primary-color, #004b97);
     font-size: 0.82rem;
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s;
     white-space: nowrap;
 }
 .cs-bot-option:hover {
-    background: #ddeeff;
-    border-color: #004b97;
+    background: var(--self-bubble-border, rgba(0,75,151,0.38));
+    border-color: var(--primary-color, #004b97);
 }
 .cs-bot-option i {
     font-size: 0.9rem;
     flex-shrink: 0;
-}
-
-/* ── 客服機器人訊息泡泡 ── */
-.cs-bot-text {
-    background: linear-gradient(135deg, #f0f6ff, #e8f0fb) !important;
-    border: 1px solid #c8daf5 !important;
 }
 .cs-bot-actions {
     margin-top: 8px;

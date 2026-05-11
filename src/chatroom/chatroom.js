@@ -30,6 +30,7 @@ class ChatRoomList {
 
         this.officialRoomsSet = new Set(); // 記錄官方頻道房間 ID
         this.officialChannelToRoomMap = new Map(); // channelId → roomId（SSE channelId 轉換用）
+        this.supportRoomsSet = new Set(); // 客服頻道（官方但可雙向傳訊）
 
         this.markReadTimer = null;
         this.readObserver = new IntersectionObserver(entries => {
@@ -969,6 +970,9 @@ class ChatRoomList {
                     // ✅ 建立 channelId → roomId 對應，供 newBroadcast SSE 查找
                     const chId = data.officialChannel?.id ?? data.channelId;
                     if (chId) this.officialChannelToRoomMap.set(String(chId), String(data.id));
+                    // 客服頻道：名稱含「客服」的官方頻道支援雙向傳訊
+                    const chName = data.officialChannel?.name ?? data.name ?? '';
+                    if (chName.includes('客服')) this.supportRoomsSet.add(String(data.id));
                 }
                 const target = isOfficial ? null : data.members?.find(m => m.name !== this.username);
                 // ✅ 官方頻道也要找到自己，才能判斷已讀狀態
@@ -1099,17 +1103,19 @@ class ChatRoomList {
             if (headerSubtitle) headerSubtitle.style.display = 'none';
         }
 
-        // ✅ 官方頻道：停用輸入區域
-        this.input.disabled = isOfficialRoom;
-        this.sendImagebtn.disabled = isOfficialRoom;
-        this.previewArea.disabled = isOfficialRoom;
-        this.input.placeholder = isOfficialRoom ? '官方頻道不支援傳送訊息' : '輸入訊息...';
-        this.input.style.backgroundColor = isOfficialRoom ? '#f5f5f5' : '';
+        // ✅ 官方頻道：停用輸入區域（客服頻道例外，支援雙向傳訊）
+        const isSupportRoom = this.supportRoomsSet.has(String(roomId));
+        const disableInput = isOfficialRoom && !isSupportRoom;
+        this.input.disabled = disableInput;
+        this.sendImagebtn.disabled = disableInput;
+        this.previewArea.disabled = disableInput;
+        this.input.placeholder = disableInput ? '官方頻道不支援傳送訊息' : '輸入訊息...';
+        this.input.style.backgroundColor = disableInput ? '#f5f5f5' : '';
         // 快速回覆 / 面交工具只在私人聊天顯示
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = isOfficialRoom ? 'none' : 'flex';
         const csBotMenu = document.getElementById('csBotMenu');
-        if (csBotMenu) csBotMenu.style.display = isOfficialRoom ? 'block' : 'none';
+        if (csBotMenu) csBotMenu.style.display = isSupportRoom ? 'block' : 'none';
         const _pickerDisplay = isOfficialRoom ? 'none' : '';
         document.getElementById('time-picker-btn')?.style.setProperty('display', _pickerDisplay);
         document.getElementById('location-picker-btn')?.style.setProperty('display', _pickerDisplay);
@@ -1129,6 +1135,7 @@ class ChatRoomList {
         }
 
         const container = document.getElementById('messagesContainer');
+        container.dataset.supportRoom = isSupportRoom ? '1' : '';
         this.isInitialLoading = true;
         container.innerHTML = '';
 
@@ -1175,8 +1182,8 @@ class ChatRoomList {
 
         this.connectSSE(); // SSE 已在 init() 開啟，此處為 idempotent 保護
 
-        // 官方頻道：顯示客服機器人歡迎訊息
-        if (isOfficialRoom) {
+        // 客服頻道：顯示客服機器人歡迎訊息
+        if (isSupportRoom) {
             setTimeout(() => {
                 this.appendBotMessage('您好！我是拾貨寶庫客服助理 🤖<br>請點選下方按鈕，我將為您解答：');
             }, 200);
@@ -1423,8 +1430,8 @@ class ChatRoomList {
 
     renderMessage(data, prepend = false) {
         this.hideEmptyHint();
-        // 官方頻道訊息改用公告卡片風格
-        if (this.officialRoomsSet.has(String(this.currentRoomId))) {
+        // 官方頻道訊息改用公告卡片風格（客服頻道例外，用一般訊息渲染）
+        if (this.officialRoomsSet.has(String(this.currentRoomId)) && !this.supportRoomsSet.has(String(this.currentRoomId))) {
             this.renderBroadcast(data);
             return;
         }
