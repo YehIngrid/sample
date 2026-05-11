@@ -12,8 +12,8 @@ const wpSvc = new wpBackendService();
 // ── 登入驗證（以 cookie 為準，不依賴 localStorage）──────
 (async () => {
   try {
-    const me = await backendSvc.whoami();
-    const username = me?.data?.username || me?.username || '管理員';
+    const me = await backendSvc.getMe();
+    const username = me?.data?.data?.name || localStorage.getItem('username') || '管理員';
     document.getElementById('adminName').textContent = username;
   } catch (e) {
     await Swal.fire({ icon: 'warning', title: '請先登入', text: '即將跳轉至登入頁' });
@@ -355,16 +355,68 @@ const quill = new Quill('#newsEditor', {
   theme: 'snow',
   placeholder: '輸入文章內容...',
   modules: {
-    toolbar: [
-      [{ header: [2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ color: [] }, { background: [] }],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['blockquote', 'link'],
-      ['clean'],
-    ],
+    toolbar: {
+      container: [
+        [{ header: [2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ color: [] }, { background: [] }],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['blockquote', 'link', 'image'],
+        ['clean'],
+      ],
+      handlers: {
+        image: quillImageHandler,
+      },
+    },
   },
 });
+
+function quillImageHandler() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/png,image/jpeg,image/jpg,image/webp';
+  input.onchange = async () => {
+    const file = input.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      Swal.fire({ icon: 'warning', title: '圖片超過 10MB', text: '請選擇較小的圖片' });
+      return;
+    }
+    try {
+      const base64 = await compressToBase64(file, 900, 0.78);
+      const range = quill.getSelection(true);
+      quill.insertEmbed(range.index, 'image', base64);
+      quill.setSelection(range.index + 1);
+    } catch {
+      Swal.fire({ icon: 'error', title: '圖片處理失敗' });
+    }
+  };
+  input.click();
+}
+
+function compressToBase64(file, maxPx, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxPx || height > maxPx) {
+          if (width > height) { height = Math.round(height * maxPx / width); width = maxPx; }
+          else { width = Math.round(width * maxPx / height); height = maxPx; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/webp', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 
 // ── 草稿：自動存取 ──────────────────────────────────────
@@ -404,6 +456,16 @@ function clearDraft() {
 }
 
 // 監聽欄位變動
+function updateSubmitBtnLabel() {
+  const isDraft = document.getElementById('newsStatus').value === 'DRAFT';
+  const btn = document.getElementById('newsSubmitBtn');
+  btn.innerHTML = isDraft
+    ? '<i class="fa fa-floppy-disk me-1"></i> 儲存草稿'
+    : '<i class="fa fa-paper-plane me-1"></i> 發布文章';
+}
+document.getElementById('newsStatus').addEventListener('change', updateSubmitBtnLabel);
+updateSubmitBtnLabel();
+
 ['newsTitle', 'newsStatus'].forEach(id =>
   document.getElementById(id).addEventListener('input', scheduleDraftSave)
 );
@@ -439,6 +501,32 @@ document.getElementById('newsPreviewBtn').addEventListener('click', () => {
   document.getElementById('previewTitle').textContent = title;
   document.getElementById('previewDate').textContent = new Date().toLocaleDateString('zh-TW');
   document.getElementById('previewContent').innerHTML = detail;
+
+  // 附件圖片預覽
+  const attachWrap = document.getElementById('previewAttachments');
+  const attachList = document.getElementById('previewAttachList');
+  const imgStyle = 'max-width:160px;max-height:120px;border-radius:6px;object-fit:cover;border:1px solid #eee;';
+
+  // 釋放舊的 object URL
+  attachList.querySelectorAll('img[data-obj-url]').forEach(img => URL.revokeObjectURL(img.src));
+  attachList.innerHTML = '';
+
+  const imageExts = /\.(jpe?g|png|webp|gif)(\?.*)?$/i;
+  const imgs = [
+    ...keepAttachUrls.filter(u => imageExts.test(u)).map(u => `<img src="${u}" style="${imgStyle}" alt="">`),
+    ...newAttachFiles.filter(f => f.type.startsWith('image/')).map(f => {
+      const url = URL.createObjectURL(f);
+      return `<img src="${url}" data-obj-url="1" style="${imgStyle}" alt="">`;
+    })
+  ];
+
+  if (imgs.length) {
+    attachList.innerHTML = imgs.join('');
+    attachWrap.style.display = 'block';
+  } else {
+    attachWrap.style.display = 'none';
+  }
+
   previewModal.show();
 });
 

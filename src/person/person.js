@@ -661,6 +661,8 @@ async function handleRouting() {
     } else if (page === 'products') {
       myItemsPage = 1;
       await loadMyItems(1);
+    } else if (page === 'settings') {
+      loadSettingsData();
     }
   } catch (err) {
     console.error(err);
@@ -900,6 +902,41 @@ document.getElementById('photo').addEventListener('change', function (e) {
   reader.readAsDataURL(file);
 });
 // 在 DOMContentLoaded 裡面加入
+async function loadSettingsData() {
+  try {
+    const res = await backendService.getMe();
+    const d = res?.data?.data;
+    if (!d) return;
+
+    // 登入信箱
+    const loginEmailEl = document.getElementById('showLoginEmail');
+    if (loginEmailEl) loginEmailEl.textContent = d.account?.email || '—';
+
+    // 驗證徽章
+    const badgeEl = document.getElementById('emailVerifyBadge');
+    if (badgeEl) {
+      const verified = d.account?.emailVerify;
+      if (verified) {
+        badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:rgb(36,182,133);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-circle-check"></i>已驗證</span>`;
+      } else {
+        badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:#e67e22;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-alert-circle"></i>未驗證</span>`;
+      }
+    }
+
+    // 常用帳號（contactEmail）
+    const showEmailEl = document.getElementById('showEmail');
+    if (showEmailEl) showEmailEl.textContent = d.contactEmail || '尚未設定';
+
+    // 個人資料同步更新
+    const nameEl = document.getElementById('showName');
+    const introEl = document.getElementById('showIntro');
+    if (nameEl && d.name) nameEl.textContent = d.name;
+    if (introEl && d.introduction != null) introEl.textContent = d.introduction || '尚未新增使用者介紹';
+  } catch (e) {
+    // silent fail，保持 localStorage 的值
+  }
+}
+
 async function loadRecentNotifications() {
   const container = document.getElementById('recentNotifList');
   if (!container) return;

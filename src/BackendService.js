@@ -138,8 +138,10 @@ export default class BackendService {
             { withCredentials: true, headers: { 'Content-Type': 'application/json' } }
             );
 
-            const uid = response?.data?.data?.uid;
-            if (uid) localStorage.setItem('uid', uid);
+            const d = response?.data?.data;
+            if (d?.uid)          localStorage.setItem('uid', d.uid);
+            if (d?.role)         localStorage.setItem('role', d.role);
+            if (d?.emailVerify != null) localStorage.setItem('emailVerify', String(d.emailVerify));
 
             // 若 whoami / getUserData 是 Promise 版
             if (typeof this.whoami === 'function') {
@@ -178,6 +180,9 @@ export default class BackendService {
             localStorage.removeItem('avatar');
             localStorage.removeItem('rate');
             localStorage.removeItem('userCreatedAt');
+            localStorage.removeItem('role');
+            localStorage.removeItem('emailVerify');
+            localStorage.removeItem('loginEmail');
             return response;
         } catch (error) {
             console.error("登出錯誤：", error);
@@ -239,6 +244,25 @@ export default class BackendService {
         } catch (error) {
             this._forbidden(error);
             console.error("無法取得使用者資訊", error);
+            return Promise.reject(error);
+        }
+    }
+    async getMe() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/account/me`, { withCredentials: true });
+            const d = response.data?.data;
+            if (d) {
+                if (d.name)             localStorage.setItem('username', d.name);
+                if (d.introduction != null) localStorage.setItem('intro', d.introduction);
+                if (d.photoURL)         localStorage.setItem('avatar', d.photoURL);
+                if (d.rate != null)     localStorage.setItem('rate', d.rate);
+                if (d.contactEmail != null) localStorage.setItem('contractEmail', d.contactEmail);
+                if (d.account?.email)   localStorage.setItem('loginEmail', d.account.email);
+                if (d.account?.emailVerify != null) localStorage.setItem('emailVerify', String(d.account.emailVerify));
+            }
+            return response;
+        } catch (error) {
+            console.error("取得帳號資訊失敗", error);
             return Promise.reject(error);
         }
     }

@@ -124,10 +124,6 @@ async function callSignUp() {
 
     showPage('checkEmailPage');
     startResendCountdown(60);
-    checkBackLogin.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.location.href = "account.html";
-    });
   } catch (e) {
     console.log("回傳錯誤：", e.message);
     Swal.fire({
@@ -158,9 +154,21 @@ async function callLogin() {
 
   try {
     const resp = await backendService.login({ email, password });
-    console.log('回傳資料：', resp.data);
-
     loaderLogin.style.display = 'none';
+
+    // 若後端回傳 emailVerify: false，直接導引至驗證流程
+    if (resp.data?.data?.emailVerify === false) {
+      await Swal.fire({
+        icon: 'warning',
+        title: '帳號尚未驗證',
+        text: '請前往信箱點擊認證連結，開通帳號後再登入。',
+        confirmButtonText: '確定'
+      });
+      showPage('checkEmailPage');
+      startResendCountdown(60);
+      return;
+    }
+
     await Swal.fire({
       icon: 'success',
       title: '登入成功',
@@ -251,6 +259,10 @@ document.getElementById('signupLink').addEventListener('click', function(e) {
   showPage('signuppage');
 });
 document.getElementById('backlogin').addEventListener('click', function(e) {
+  e.preventDefault();
+  showPage('loginModal');
+});
+document.getElementById('checkBackLogin')?.addEventListener('click', function(e) {
   e.preventDefault();
   showPage('loginModal');
 });
