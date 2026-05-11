@@ -44,8 +44,23 @@ function _attach401Handler(instance) {
                 return Promise.reject(err);
             }
 
+            if (status === 401 && msg === 'Email not verified') {
+                if (!window.location.pathname.includes('account.html')) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '帳號尚未驗證',
+                        text: '請前往信箱點擊認證連結，開通帳號後再登入。',
+                        confirmButtonText: '確定'
+                    }).then(() => {
+                        location.href = '../account/account.html';
+                    });
+                }
+                return Promise.reject(err);
+            }
+
             const skip = _SKIP_401.some(p => url.includes(p));
-            if (status === 401 && !skip && !_handlingExpiry) {
+            const onAccountPage = window.location.pathname.includes('account.html');
+            if (status === 401 && !skip && !_handlingExpiry && !onAccountPage) {
                 _handlingExpiry = true;
                 window.isLoggedIn = false;
                 const currentUrl = window.location.pathname + window.location.search;
@@ -143,6 +158,7 @@ export default class BackendService {
             const msg    = error?.response?.data?.message;
 
             if (status === 403) throw new Error('存取被禁止 - 帳號已停用或電子郵件未驗證');
+            if (status === 401 && msg === 'Email not verified') throw new Error('EMAIL_NOT_VERIFIED');
             if (status === 401 || /invalid/i.test(msg)) {
             throw new Error('帳號或密碼錯誤');
             }
@@ -179,11 +195,15 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/account/${savedUid}`, {
                 withCredentials: true
             });
-            localStorage.setItem('username', response.data.data.name); 
-            localStorage.setItem('intro', response.data.data.introduction);
-            localStorage.setItem('avatar', response.data.data.photoURL);
-            localStorage.setItem('rate', response.data.data.rate);
-            localStorage.setItem('userCreatedAt', response.data.data.createdAt);
+            const d = response.data.data;
+            localStorage.setItem('username', d.name);
+            localStorage.setItem('intro', d.introduction);
+            localStorage.setItem('avatar', d.photoURL);
+            localStorage.setItem('rate', d.rate);
+            localStorage.setItem('userCreatedAt', d.createdAt);
+            if (d.contactEmail != null) {
+                localStorage.setItem('contractEmail', d.contactEmail);
+            }
             return response;
         } catch (error) {
             console.error("無法取得使用者資料", error);
@@ -213,6 +233,8 @@ export default class BackendService {
     async whoami() {
         try {
             const response = await axios.get(`${this.baseUrl}/api/whoami`, {withCredentials: true });
+            const d = response.data?.data ?? response.data;
+            if (d?.contactEmail != null) localStorage.setItem('contractEmail', d.contactEmail);
             return response.data;   // 通常直接回傳 data
         } catch (error) {
             this._forbidden(error);
@@ -227,6 +249,107 @@ export default class BackendService {
         } catch (error) {
             console.error("停用帳號錯誤：", error);
             throw new Error("系統發生錯誤，請稍後再試");
+        }
+    }
+    async forgotPassword(email) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/account/forgot-password`, { email });
+            return response;
+        } catch (error) {
+            console.error('忘記密碼錯誤：', error);
+            throw new Error('系統發生錯誤，請稍後再試');
+        }
+    }
+    async resetPassword(token, newPassword) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/account/reset-password`, { token, newPassword });
+            return response;
+        } catch (error) {
+            console.error('重設密碼錯誤：', error);
+            const msg = error?.response?.data?.message;
+            if (error?.response?.status === 400) throw new Error(msg || '連結無效或已過期，請重新申請');
+            throw new Error('系統發生錯誤，請稍後再試');
+        }
+    }
+    async verifyEmail(token) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/account/verify-email/${encodeURIComponent(token)}`);
+            return response;
+        } catch (error) {
+            console.error('驗證電子郵件錯誤：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '驗證失敗，連結可能已過期');
+        }
+    }
+    async changePassword(currentPassword, newPassword) {
+        try {
+            const response = await this.http.post('/api/account/change-password', { currentPassword, newPassword });
+            return response;
+        } catch (error) {
+            console.error('修改密碼錯誤：', error);
+            const status = error?.response?.status;
+            const msg = error?.response?.data?.message;
+            if (status === 400 || status === 401) throw new Error(msg || '目前密碼錯誤');
+            throw new Error('系統發生錯誤，請稍後再試');
+        }
+    }
+    // ── News API ──────────────────────────────────────────
+    async getNewsList(page = 1, limit = 10) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/news/list`, { params: { page, limit }, withCredentials: true });
+            return response.data;
+        } catch (error) {
+            console.error('取得新聞列表錯誤：', error);
+            throw new Error('無法載入最新資訊');
+        }
+    }
+    async getNewsItem(id) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/news/item/${id}`, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            console.error('取得新聞詳情錯誤：', error);
+            throw new Error('無法載入文章內容');
+        }
+    }
+    async getNewsAll(page = 1, limit = 20, status = null) {
+        try {
+            const params = { page, limit };
+            if (status) params.status = status;
+            const response = await this.http.get('/api/news/all', { params });
+            return response.data;
+        } catch (error) {
+            console.error('取得全部新聞錯誤：', error);
+            throw new Error('無法載入文章列表');
+        }
+    }
+    async createNews(formData) {
+        try {
+            const response = await this.http.post('/api/news/create', formData);
+            return response.data;
+        } catch (error) {
+            console.error('新增新聞錯誤：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '發布失敗，請稍後再試');
+        }
+    }
+    async updateNews(id, formData) {
+        try {
+            const response = await this.http.put(`/api/news/update/${id}`, formData);
+            return response.data;
+        } catch (error) {
+            console.error('更新新聞錯誤：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '更新失敗，請稍後再試');
+        }
+    }
+    async deleteNews(id) {
+        try {
+            const response = await this.http.delete(`/api/news/delete/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('刪除新聞錯誤：', error);
+            throw new Error('刪除失敗，請稍後再試');
         }
     }
     async create(sellData) {
