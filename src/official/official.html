@@ -50,12 +50,18 @@
         <button class="nav-btn" data-panel="panel-news">
           <i class="fa fa-newspaper-o"></i> 最新資訊
         </button>
+        <button class="nav-btn" data-panel="panel-support">
+          <i class="fa fa-headphones"></i> 客服頻道
+        </button>
         <button class="nav-btn" data-panel="panel-analytics">
           <i class="fa fa-bar-chart"></i> 數據分析
         </button>
       </nav>
       <div class="sidebar-user">
         <span id="adminName">載入中...</span>
+        <a href="../shop/shop.html" class="btn btn-sm btn-outline-secondary mt-2 w-100">
+          <i class="fa fa-arrow-left me-1"></i> 返回購物頁
+        </a>
         <button class="btn btn-sm btn-danger mt-2" id="logoutBtn">登出</button>
       </div>
     </aside>
@@ -154,28 +160,35 @@
             <button type="button" class="btn btn-sm btn-outline-secondary d-none" id="newsCancelEditBtn">取消編輯</button>
           </div>
           <form id="newsForm" class="official-form mt-3">
-            <input type="hidden" id="newsEditIndex">
+            <input type="hidden" id="newsEditId">
             <div class="row g-3 mb-3">
-              <div class="col-sm-4">
-                <label class="form-label">分類</label>
-                <select id="newsCategory" class="form-select form-select-official">
-                  <option value="系統公告">系統公告</option>
-                  <option value="店鋪公告">店鋪公告</option>
-                  <option value="平台規則">平台規則</option>
-                </select>
-              </div>
-              <div class="col-sm-5">
-                <label class="form-label">標題</label>
+              <div class="col-sm-8">
+                <label class="form-label">標題 <span style="color:red;">*</span></label>
                 <input type="text" id="newsTitle" class="form-control" placeholder="文章標題" required>
               </div>
-              <div class="col-sm-3">
-                <label class="form-label">日期</label>
-                <input type="date" id="newsDate" class="form-control" required>
+              <div class="col-sm-4">
+                <label class="form-label">狀態</label>
+                <select id="newsStatus" class="form-select form-select-official">
+                  <option value="DRAFT">草稿（暫存）</option>
+                  <option value="PUBLISHED">立即發布</option>
+                  <option value="ARCHIVED">封存</option>
+                </select>
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">內容</label>
+              <label class="form-label">內容 <span style="color:red;">*</span></label>
               <div id="newsEditor"></div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">附件 <small class="text-muted">（圖片、PDF、Word，最多 10 個，每個 ≤ 5MB）</small></label>
+              <div class="news-attach-zone" id="newsAttachZone">
+                <input type="file" id="newsAttachInput" class="d-none" multiple
+                       accept="image/*,.pdf,.doc,.docx">
+                <i class="fa fa-paperclip me-2 text-muted"></i>
+                <span class="text-muted small">點擊選擇或拖曳附件</span>
+              </div>
+              <div id="newsExistingAttachList" class="attach-list mt-2"></div>
+              <div id="newsNewAttachList" class="attach-list mt-1"></div>
             </div>
             <div class="d-flex gap-2 align-items-center flex-wrap">
               <button type="submit" id="newsSubmitBtn" class="btn official-btn" style="color:white;">
@@ -216,15 +229,51 @@
         <!-- 文章列表 -->
         <div class="news-admin-list-header mt-4 mb-2">
           <span class="fw-bold" style="color:#333;">現有文章</span>
-          <button class="btn btn-sm btn-outline-primary" id="refreshNewsBtn">
-            <i class="fa fa-refresh me-1"></i>重新載入
-          </button>
+          <div class="d-flex gap-2 align-items-center">
+            <select id="newsStatusFilter" class="form-select form-select-sm" style="width:auto;">
+              <option value="">全部</option>
+              <option value="DRAFT">草稿</option>
+              <option value="PUBLISHED">已發布</option>
+              <option value="ARCHIVED">已封存</option>
+            </select>
+            <button class="btn btn-sm btn-outline-primary" id="refreshNewsBtn">
+              <i class="fa fa-refresh me-1"></i>重新載入
+            </button>
+          </div>
         </div>
         <div id="newsAdminList" class="news-admin-list">
           <div class="text-muted text-center py-3 small">
             <span class="spinner-border spinner-border-sm me-1"></span>載入中...
           </div>
         </div>
+      </section>
+
+      <!-- Panel: 客服頻道 -->
+      <section id="panel-support" class="panel">
+        <h2 class="panel-title"><i class="fa fa-headphones me-2"></i>客服小幫手 / 真人客服</h2>
+        <p id="supportChannelStatus" class="text-muted small mb-3">載入中...</p>
+        <form id="supportForm" class="official-form">
+          <div class="mb-3">
+            <label class="form-label fw-bold mb-2">發送訊息</label>
+            <textarea id="supportMessage" class="form-control" rows="5" placeholder="輸入要發送的訊息..."></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">附件圖片 <small class="text-muted">（選填，可拖曳）</small></label>
+            <div class="img-upload-area" id="supportImgArea">
+              <input type="file" id="supportImgInput" accept="image/*" class="d-none">
+              <div id="supportImgPlaceholder" class="img-placeholder">
+                <i class="fa fa-image fa-2x mb-2 d-block text-muted"></i>
+                <span class="text-muted small">點擊或拖曳上傳圖片</span>
+              </div>
+              <img id="supportImgPreview" class="img-preview-thumb d-none" alt="預覽">
+              <button type="button" id="supportClearImgBtn" class="clear-img-btn d-none">×</button>
+            </div>
+          </div>
+          <button type="submit" id="supportSubmitBtn" class="btn official-btn w-100" style="color: white;">
+            <i class="fa fa-paper-plane me-1"></i> 發送
+          </button>
+        </form>
+        <div id="supportResult" class="result-box mt-3 d-none"></div>
       </section>
 
       <!-- Panel: 數據分析 -->

@@ -51,6 +51,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.classList.add('active');
     document.getElementById(btn.dataset.panel)?.classList.add('active');
     if (btn.dataset.panel === 'panel-broadcast') loadChannels();
+    if (btn.dataset.panel === 'panel-support') loadSupportChannel();
     if (btn.dataset.panel === 'panel-news') loadNewsAdmin();
     if (btn.dataset.panel === 'panel-analytics') loadAnalytics();
     closeSidebar();
@@ -294,51 +295,58 @@ document.getElementById('loadHistoryBtn').addEventListener('click', async () => 
 
 // ════════════════════════════════════════════════════
 //  最新資訊管理
-//  TODO：將下方 API_NEWS_URL 換成實際後端 endpoint
 // ════════════════════════════════════════════════════
-const API_NEWS_URL = `${backendSvc.baseUrl}/api/news`; // 待確認
+let newsAdminData  = [];      // 當前列表快取
+let editingNewsId  = null;    // 編輯中的文章 ID，null = 新增
+let newAttachFiles = [];      // 新選取的附件 File 物件
+let keepAttachUrls = [];      // 編輯時保留的既有附件 URL
 
-// news.js 的現有文章資料（前端暫存，串接後端後可移除）
-let newsData = [
-  { from:'平台規則', n_name:'拾貨寶庫買賣流程公告', time:'2026-05-20',
-    detail:'<p>為了讓大家能安心在拾貨寶庫交易...' }
-];
-
-function newsBadgeClass(from) {
-  return from === '系統公告' ? 'system'
-       : from === '店鋪公告' ? 'store'
-       : from === '平台規則' ? 'rules' : 'other';
+function newsStatusLabel(s) {
+  return s === 'DRAFT' ? '草稿' : s === 'PUBLISHED' ? '已發布' : s === 'ARCHIVED' ? '已封存' : s ?? '–';
+}
+function newsStatusClass(s) {
+  return s === 'DRAFT' ? 'status-draft' : s === 'PUBLISHED' ? 'status-published' : 'status-archived';
 }
 
 function renderNewsAdminList() {
   const el = document.getElementById('newsAdminList');
-  if (!newsData.length) {
+  if (!newsAdminData.length) {
     el.innerHTML = '<p class="text-muted text-center py-3 small">尚無文章</p>';
     return;
   }
-  el.innerHTML = newsData.map((item, i) => `
-    <div class="news-admin-item">
-      <span class="news-admin-item-badge ${newsBadgeClass(item.from)}">${item.from}</span>
-      <span class="news-admin-item-title" title="${item.n_name}">${item.n_name}</span>
-      <span class="news-admin-item-date">${item.time}</span>
-      <div class="news-admin-item-actions">
-        <button class="btn btn-sm btn-outline-primary" onclick="startEditNews(${i})">
-          <i class="fa fa-pencil"></i>
-        </button>
-        <button class="btn btn-sm btn-outline-danger" onclick="deleteNews(${i})">
-          <i class="fa fa-trash"></i>
-        </button>
-      </div>
-    </div>
-  `).join('');
+  el.innerHTML = newsAdminData.map(item => {
+    const date = item.createdAt ? new Date(item.createdAt).toLocaleDateString('zh-TW') : '';
+    return `
+      <div class="news-admin-item">
+        <span class="news-status-badge ${newsStatusClass(item.status)}">${newsStatusLabel(item.status)}</span>
+        <span class="news-admin-item-title" title="${esc(item.title)}">${esc(item.title)}</span>
+        <span class="news-admin-item-date">${date}</span>
+        <div class="news-admin-item-actions">
+          <button class="btn btn-sm btn-outline-primary" onclick="startEditNews('${item.id}')">
+            <i class="fa fa-pencil"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" onclick="deleteNews('${item.id}','${esc(item.title)}')">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 async function loadNewsAdmin() {
-  // TODO：串接後端後改為 GET API_NEWS_URL
-  // const res = await axios.get(API_NEWS_URL);
-  // newsData = res.data?.items ?? res.data ?? [];
-  renderNewsAdminList();
-  document.getElementById('stat-news').textContent = newsData.length;
+  const statusFilter = document.getElementById('newsStatusFilter')?.value || '';
+  const el = document.getElementById('newsAdminList');
+  el.innerHTML = `<div class="text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
+  try {
+    const data  = await backendSvc.getNewsAll(1, 50, statusFilter || null);
+    const items = data?.items ?? data?.data?.items ?? data?.data ?? [];
+    const total = data?.total ?? data?.data?.total ?? items.length;
+    newsAdminData = items;
+    renderNewsAdminList();
+    document.getElementById('stat-news').textContent = total;
+  } catch (err) {
+    el.innerHTML = `<div class="text-danger text-center py-3 small">載入失敗：${esc(err?.message)}</div>`;
+  }
   restoreDraft();
 }
 
@@ -358,8 +366,6 @@ const quill = new Quill('#newsEditor', {
   },
 });
 
-// 設定日期預設值為今天
-document.getElementById('newsDate').value = new Date().toISOString().slice(0, 10);
 
 // ── 草稿：自動存取 ──────────────────────────────────────
 const DRAFT_KEY = 'official_news_draft';
@@ -367,10 +373,9 @@ let _draftTimer = null;
 
 function saveDraft() {
   const draft = {
-    from:    document.getElementById('newsCategory').value,
-    n_name:  document.getElementById('newsTitle').value,
-    time:    document.getElementById('newsDate').value,
-    detail:  quill.getSemanticHTML(),
+    title:   document.getElementById('newsTitle').value,
+    status:  document.getElementById('newsStatus').value,
+    content: quill.getSemanticHTML(),
   };
   localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
   document.getElementById('newsDraftBadge').classList.remove('d-none');
@@ -386,10 +391,9 @@ function restoreDraft() {
   if (!raw) return;
   try {
     const draft = JSON.parse(raw);
-    if (draft.n_name) document.getElementById('newsTitle').value = draft.n_name;
-    if (draft.from)   document.getElementById('newsCategory').value = draft.from;
-    if (draft.time)   document.getElementById('newsDate').value = draft.time;
-    if (draft.detail) quill.clipboard.dangerouslyPasteHTML(draft.detail);
+    if (draft.title)   document.getElementById('newsTitle').value = draft.title;
+    if (draft.status)  document.getElementById('newsStatus').value = draft.status;
+    if (draft.content) quill.clipboard.dangerouslyPasteHTML(draft.content);
     document.getElementById('newsDraftBadge').classList.remove('d-none');
   } catch (_) {}
 }
@@ -400,7 +404,7 @@ function clearDraft() {
 }
 
 // 監聽欄位變動
-['newsCategory', 'newsTitle', 'newsDate'].forEach(id =>
+['newsTitle', 'newsStatus'].forEach(id =>
   document.getElementById(id).addEventListener('input', scheduleDraftSave)
 );
 quill.on('text-change', scheduleDraftSave);
@@ -416,8 +420,7 @@ document.getElementById('newsClearDraftBtn').addEventListener('click', async () 
   if (!r.isConfirmed) return;
   clearDraft();
   document.getElementById('newsTitle').value = '';
-  document.getElementById('newsDate').value = new Date().toISOString().slice(0, 10);
-  document.getElementById('newsCategory').value = '系統公告';
+  document.getElementById('newsStatus').value = 'DRAFT';
   quill.setContents([]);
 });
 
@@ -425,71 +428,124 @@ document.getElementById('newsClearDraftBtn').addEventListener('click', async () 
 const previewModal = new bootstrap.Modal(document.getElementById('newsPreviewModal'));
 
 document.getElementById('newsPreviewBtn').addEventListener('click', () => {
-  const from    = document.getElementById('newsCategory').value;
   const title   = document.getElementById('newsTitle').value.trim() || '（未填標題）';
-  const date    = document.getElementById('newsDate').value || '–';
+  const statusEl = document.getElementById('newsStatus');
+  const statusText = statusEl.options[statusEl.selectedIndex]?.text ?? '';
   const detail  = quill.getSemanticHTML();
-  const badgeClass = newsBadgeClass(from);
 
   const badge = document.getElementById('previewBadge');
-  badge.textContent = from;
-  badge.className = `news-badge ${badgeClass}`;
+  badge.textContent = statusText;
+  badge.className = 'news-badge';
   document.getElementById('previewTitle').textContent = title;
-  document.getElementById('previewDate').textContent = date;
+  document.getElementById('previewDate').textContent = new Date().toLocaleDateString('zh-TW');
   document.getElementById('previewContent').innerHTML = detail;
   previewModal.show();
 });
 
+// ── 附件選取 ────────────────────────────────────────────
+const newsAttachZone  = document.getElementById('newsAttachZone');
+const newsAttachInput = document.getElementById('newsAttachInput');
+
+newsAttachZone.addEventListener('click', () => newsAttachInput.click());
+newsAttachZone.addEventListener('dragover', e => { e.preventDefault(); newsAttachZone.classList.add('dragover'); });
+newsAttachZone.addEventListener('dragleave', () => newsAttachZone.classList.remove('dragover'));
+newsAttachZone.addEventListener('drop', e => {
+  e.preventDefault();
+  newsAttachZone.classList.remove('dragover');
+  addAttachFiles(Array.from(e.dataTransfer.files));
+});
+newsAttachInput.addEventListener('change', () => {
+  addAttachFiles(Array.from(newsAttachInput.files));
+  newsAttachInput.value = '';
+});
+
+function addAttachFiles(files) {
+  const MAX = 10;
+  const MAX_MB = 5 * 1024 * 1024;
+  for (const f of files) {
+    if (newAttachFiles.length + keepAttachUrls.length >= MAX) {
+      Swal.fire({ icon: 'warning', title: `最多 ${MAX} 個附件` }); break;
+    }
+    if (f.size > MAX_MB) {
+      Swal.fire({ icon: 'warning', title: `「${f.name}」超過 5MB` }); continue;
+    }
+    newAttachFiles.push(f);
+  }
+  renderAttachLists();
+}
+
+function renderAttachLists() {
+  // 既有附件（編輯模式）
+  const existEl = document.getElementById('newsExistingAttachList');
+  existEl.innerHTML = keepAttachUrls.map((url, i) => {
+    const name = decodeURIComponent(url.split('/').pop() || url).slice(0, 40);
+    return `<span class="attach-chip">
+      ${name}
+      <button type="button" class="attach-chip-remove" onclick="removeExistAttach(${i})">×</button>
+    </span>`;
+  }).join('');
+
+  // 新附件
+  const newEl = document.getElementById('newsNewAttachList');
+  newEl.innerHTML = newAttachFiles.map((f, i) =>
+    `<span class="attach-chip attach-chip-new">
+      ${f.name}
+      <button type="button" class="attach-chip-remove" onclick="removeNewAttach(${i})">×</button>
+    </span>`
+  ).join('');
+}
+
+window.removeExistAttach = function(i) {
+  keepAttachUrls.splice(i, 1);
+  renderAttachLists();
+};
+window.removeNewAttach = function(i) {
+  newAttachFiles.splice(i, 1);
+  renderAttachLists();
+};
+
+// ── 表單送出 ────────────────────────────────────────────
 document.getElementById('newsForm').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const btn = document.getElementById('newsSubmitBtn');
+  const btn       = document.getElementById('newsSubmitBtn');
   const resultBox = document.getElementById('newsFormResult');
-  const editIdx = document.getElementById('newsEditIndex').value;
-  const isEdit = editIdx !== '';
+  const isEdit    = editingNewsId !== null;
 
-  const detail = quill.getSemanticHTML();
-  const article = {
-    from:   document.getElementById('newsCategory').value,
-    n_name: document.getElementById('newsTitle').value.trim(),
-    time:   document.getElementById('newsDate').value,
-    detail,
-  };
+  const title   = document.getElementById('newsTitle').value.trim();
+  const status  = document.getElementById('newsStatus').value;
+  const content = quill.getSemanticHTML();
 
-  if (!article.n_name || !article.detail) {
+  if (!title || !content || content === '<p></p>') {
     Swal.fire({ icon: 'warning', title: '請填寫標題與內容' });
     return;
   }
 
+  const fd = new FormData();
+  fd.append('title', title);
+  fd.append('content', content);
+  fd.append('status', status);
+  newAttachFiles.forEach(f => fd.append('attachments', f));
+  // 編輯時保留既有附件 URL
+  keepAttachUrls.forEach(url => fd.append('attachments', url));
+
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 發布中...';
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 儲存中...';
   resultBox.className = 'result-box mt-3 d-none';
 
   try {
-    // TODO：串接後端
-    // if (isEdit) {
-    //   await axios.put(`${API_NEWS_URL}/${newsData[editIdx].id}`, article);
-    //   newsData[editIdx] = article;
-    // } else {
-    //   const res = await axios.post(API_NEWS_URL, article);
-    //   newsData.unshift(res.data ?? article);
-    // }
     if (isEdit) {
-      newsData[parseInt(editIdx)] = article;
+      await backendSvc.updateNews(editingNewsId, fd);
     } else {
-      newsData.unshift(article);
+      await backendSvc.createNews(fd);
     }
-    renderNewsAdminList();
     cancelEditNews();
     clearDraft();
     resultBox.className = 'result-box mt-3 success';
-    resultBox.innerHTML = `<div class="fw-bold">✅ 文章「${article.n_name}」已${isEdit ? '更新' : '發布'}！</div>`;
-    document.getElementById('newsTitle').value = '';
-    quill.setContents([]);
-    document.getElementById('newsDate').value = new Date().toISOString().slice(0, 10);
-    document.getElementById('stat-news').textContent = newsData.length;
+    resultBox.innerHTML = `<div class="fw-bold">✅ 文章「${esc(title)}」已${isEdit ? '更新' : '發布'}！</div>`;
+    await loadNewsAdmin();
   } catch (err) {
     resultBox.className = 'result-box mt-3 error';
-    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 發布失敗</div><div>${esc(err?.response?.data?.message || err?.message) || '請稍後再試'}</div>`;
+    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ ${isEdit ? '更新' : '發布'}失敗</div><div>${esc(err?.message) || '請稍後再試'}</div>`;
   } finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="fa fa-paper-plane me-1"></i> 發布文章';
@@ -497,23 +553,31 @@ document.getElementById('newsForm').addEventListener('submit', async (e) => {
   }
 });
 
-window.startEditNews = function(i) {
-  const item = newsData[i];
-  document.getElementById('newsEditIndex').value = i;
-  document.getElementById('newsCategory').value = item.from;
-  document.getElementById('newsTitle').value = item.n_name;
-  document.getElementById('newsDate').value = item.time;
-  quill.clipboard.dangerouslyPasteHTML(item.detail ?? '');
+// ── 編輯 ────────────────────────────────────────────────
+window.startEditNews = function(id) {
+  const item = newsAdminData.find(n => n.id === id);
+  if (!item) return;
+
+  editingNewsId  = id;
+  newAttachFiles = [];
+  keepAttachUrls = Array.isArray(item.attachments) ? [...item.attachments] : [];
+
+  document.getElementById('newsEditId').value    = id;
+  document.getElementById('newsTitle').value     = item.title ?? '';
+  document.getElementById('newsStatus').value    = item.status ?? 'DRAFT';
+  quill.clipboard.dangerouslyPasteHTML(item.content ?? '');
+  renderAttachLists();
+
   document.getElementById('newsEditorLabel').textContent = '編輯文章';
   document.getElementById('newsCancelEditBtn').classList.remove('d-none');
   document.getElementById('newsSubmitBtn').innerHTML = '<i class="fa fa-save me-1"></i> 儲存變更';
   document.querySelector('#panel-news').scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-window.deleteNews = async function(i) {
-  const item = newsData[i];
+// ── 刪除 ────────────────────────────────────────────────
+window.deleteNews = async function(id, title) {
   const confirm = await Swal.fire({
-    title: `確定刪除「${item.n_name}」？`,
+    title: `確定刪除「${esc(title)}」？`,
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: '刪除',
@@ -521,21 +585,30 @@ window.deleteNews = async function(i) {
     confirmButtonColor: '#dc3545',
   });
   if (!confirm.isConfirmed) return;
-  // TODO：await axios.delete(`${API_NEWS_URL}/${item.id}`);
-  newsData.splice(i, 1);
-  renderNewsAdminList();
-  document.getElementById('stat-news').textContent = newsData.length;
+  try {
+    await backendSvc.deleteNews(id);
+    await loadNewsAdmin();
+  } catch (err) {
+    Swal.fire({ icon: 'error', title: '刪除失敗', text: err?.message });
+  }
 };
 
 function cancelEditNews() {
-  document.getElementById('newsEditIndex').value = '';
+  editingNewsId  = null;
+  newAttachFiles = [];
+  keepAttachUrls = [];
+  document.getElementById('newsEditId').value = '';
   document.getElementById('newsEditorLabel').textContent = '新增文章';
   document.getElementById('newsCancelEditBtn').classList.add('d-none');
   document.getElementById('newsSubmitBtn').innerHTML = '<i class="fa fa-paper-plane me-1"></i> 發布文章';
+  document.getElementById('newsTitle').value   = '';
+  document.getElementById('newsStatus').value  = 'DRAFT';
   quill.setContents([]);
+  renderAttachLists();
 }
 document.getElementById('newsCancelEditBtn').addEventListener('click', cancelEditNews);
 document.getElementById('refreshNewsBtn').addEventListener('click', loadNewsAdmin);
+document.getElementById('newsStatusFilter')?.addEventListener('change', loadNewsAdmin);
 
 // ════════════════════════════════════════════════════
 //  數據分析
@@ -552,7 +625,7 @@ const CATEGORY_MAP = [
 ];
 
 async function loadAnalytics() {
-  document.getElementById('stat-news').textContent = newsData.length;
+  document.getElementById('stat-news').textContent = newsAdminData.length || '–';
 
   await Promise.allSettled([
     _loadScaleStats(),
@@ -750,3 +823,108 @@ function _updatePitchSummary() {
 }
 
 document.getElementById('refreshAnalyticsBtn')?.addEventListener('click', loadAnalytics);
+
+// ════════════════════════════════════════════════════
+//  客服頻道（動態查找名稱含「客服」的官方頻道）
+// ════════════════════════════════════════════════════
+let supportChannelId = null;
+
+async function loadSupportChannel() {
+  const statusEl = document.getElementById('supportChannelStatus');
+  try {
+    const res = await chatSvc.listOfficialChannels(1, 50);
+    const items = res?.data?.items ?? res?.data ?? (Array.isArray(res) ? res : []);
+    const found = items.find(ch => (ch.name ?? '').includes('客服'));
+    if (found) {
+      supportChannelId = found.id ?? found.channelId ?? null;
+      if (statusEl) statusEl.textContent = `頻道：${found.name}`;
+    } else {
+      supportChannelId = null;
+      if (statusEl) statusEl.textContent = '找不到客服頻道，請先建立名稱含「客服」的官方頻道';
+    }
+  } catch {
+    if (statusEl) statusEl.textContent = '頻道載入失敗';
+  }
+}
+let supportImageFile = null;
+
+const supportImgArea        = document.getElementById('supportImgArea');
+const supportImgInput       = document.getElementById('supportImgInput');
+const supportImgPreview     = document.getElementById('supportImgPreview');
+const supportImgPlaceholder = document.getElementById('supportImgPlaceholder');
+const supportClearImgBtn    = document.getElementById('supportClearImgBtn');
+
+supportImgArea.addEventListener('click', (e) => {
+  if (e.target !== supportClearImgBtn) supportImgInput.click();
+});
+supportImgArea.addEventListener('dragover', e => { e.preventDefault(); supportImgArea.classList.add('dragover'); });
+supportImgArea.addEventListener('dragleave', () => supportImgArea.classList.remove('dragover'));
+supportImgArea.addEventListener('drop', e => {
+  e.preventDefault();
+  supportImgArea.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) setSupportImageFile(file);
+});
+supportImgInput.addEventListener('change', () => {
+  if (supportImgInput.files[0]) setSupportImageFile(supportImgInput.files[0]);
+});
+supportClearImgBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  clearSupportImage();
+});
+
+function setSupportImageFile(file) {
+  supportImageFile = file;
+  const reader = new FileReader();
+  reader.onload = () => {
+    supportImgPreview.src = reader.result;
+    supportImgPreview.classList.remove('d-none');
+    supportImgPlaceholder.classList.add('d-none');
+    supportClearImgBtn.classList.remove('d-none');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearSupportImage() {
+  supportImageFile = null;
+  supportImgInput.value = '';
+  supportImgPreview.src = '';
+  supportImgPreview.classList.add('d-none');
+  supportImgPlaceholder.classList.remove('d-none');
+  supportClearImgBtn.classList.add('d-none');
+}
+
+document.getElementById('supportForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const message   = document.getElementById('supportMessage').value.trim();
+  const resultBox = document.getElementById('supportResult');
+  const submitBtn = document.getElementById('supportSubmitBtn');
+
+  if (!supportChannelId) {
+    Swal.fire({ icon: 'warning', title: '找不到客服頻道', text: '請確認已建立名稱含「客服」的官方頻道' });
+    return;
+  }
+  if (!message && !supportImageFile) {
+    Swal.fire({ icon: 'warning', title: '請輸入訊息或選擇圖片' });
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 發送中...';
+  resultBox.className = 'result-box mt-3 d-none';
+
+  try {
+    await chatSvc.broadCastOfficial(supportChannelId, message || undefined, supportImageFile ? [supportImageFile] : []);
+    resultBox.className = 'result-box mt-3 success';
+    resultBox.innerHTML = '<div class="fw-bold">✅ 訊息發送成功！</div>';
+    document.getElementById('supportMessage').value = '';
+    clearSupportImage();
+  } catch (err) {
+    resultBox.className = 'result-box mt-3 error';
+    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 發送失敗</div><div>${esc(err?.response?.data?.message || err?.message) || '請稍後再試'}</div>`;
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fa fa-paper-plane me-1"></i> 發送';
+    resultBox.classList.remove('d-none');
+  }
+});
