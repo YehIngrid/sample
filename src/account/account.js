@@ -25,15 +25,37 @@ function showPage(nextId) {
   }, { once: true });
 }
 
+// ── 重設密碼 token（從 URL 帶入）────────────────────────────
+let _resetToken = null;
+
 // ── 載入完成後隱藏 loader，顯示內容，並展示登入頁 ──────────
-window.onload = function() {
+window.onload = async function() {
   var loader = document.getElementById('loader');
   var content = document.getElementById('whatcontent');
   if (loader && content) {
     loader.style.setProperty('display', 'none', 'important');
     content.style.setProperty('display', 'block', 'important');
   }
-  showPage('loginModal');
+
+  const params = new URLSearchParams(window.location.search);
+  const resetToken = params.get('reset_token');
+  const verifyToken = params.get('verify_token');
+
+  if (resetToken) {
+    _resetToken = resetToken;
+    showPage('resetpwdpage');
+  } else if (verifyToken) {
+    showPage('loginModal');
+    try {
+      const bs = new BackendService();
+      await bs.verifyEmail(verifyToken);
+      await Swal.fire({ icon: 'success', title: '帳號驗證成功！', text: '您的帳號已成功開通，請登入。', confirmButtonText: '確定' });
+    } catch (e) {
+      await Swal.fire({ icon: 'error', title: '驗證失敗', text: e.message, confirmButtonText: '確定' });
+    }
+  } else {
+    showPage('loginModal');
+  }
 };
 
 // ── Inline 欄位錯誤 helper ────────────────────────────────
@@ -74,9 +96,9 @@ async function callSignUp() {
 
   // 密碼格式：至少 10 碼，需含大寫、小寫、數字、特殊符號
   const pwd = passwordInput1.value.trim();
-  const isValid = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?]).{10,}$/.test(pwd);
+  const isValid = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/.test(pwd);
   if (!isValid) {
-    fieldError('password1', 'err-signup-pwd1', '密碼需至少 10 位，且包含大寫字母、小寫字母、數字及特殊符號（如 !@#$%）');
+    fieldError('password1', 'err-signup-pwd1', '密碼需至少 8 位，且包含大寫字母、小寫字母及數字');
     return;
   }
 
@@ -167,11 +189,22 @@ async function callLogin() {
     }
   } catch (e) {
     console.error('登入錯誤：', e);
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: e?.message || '登入失敗，請稍後再試'
-    });
+    if (e?.message === 'EMAIL_NOT_VERIFIED') {
+      await Swal.fire({
+        icon: 'warning',
+        title: '帳號尚未驗證',
+        text: '請前往信箱點擊認證連結，開通帳號後再登入。',
+        confirmButtonText: '確定'
+      });
+      showPage('checkEmailPage');
+      startResendCountdown(60);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: e?.message || '登入失敗，請稍後再試'
+      });
+    }
   } finally {
     loaderLogin.style.display = 'none';
   }
@@ -299,26 +332,55 @@ const observer = new MutationObserver(() => {
 });
 observer.observe(document.body, { attributes: true, childList: true, subtree: true });
 
-document.getElementById('forgetSendbtn').addEventListener('click', function(e) {
+document.getElementById('forgetSendbtn').addEventListener('click', async function(e) {
   e.preventDefault();
-  if (!document.getElementById('forgetemail').value.trim()) {
+  const email = document.getElementById('forgetemail').value.trim();
+  if (!email) {
     fieldError('forgetemail', 'err-forget-email', '請輸入您的電子信箱');
     return;
   }
-  showPage('getLinkPage');
-  startCountdown();
+  const btn = this;
+  btn.disabled = true;
+  try {
+    const bs = new BackendService();
+    await bs.forgotPassword(email);
+    showPage('getLinkPage');
+  } catch (err) {
+    Swal.fire({ icon: 'error', title: '發送失敗', text: err.message });
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 // ── 重設密碼流程 ──────────────────────────────────────────
-document.getElementById('checkBackLogin1').addEventListener('click', function(e) {
+document.getElementById('resetbtn').addEventListener('click', async function(e) {
   e.preventDefault();
-  showPage('resetpwdpage');
-  clearInterval(countdownTimer);
-});
-
-document.getElementById('resetbtn').addEventListener('click', function(e) {
-  e.preventDefault();
-  showPage('resetsuccesspage');
+  if (!_resetToken) {
+    Swal.fire({ icon: 'error', title: '連結無效', text: '請透過信箱中的重設密碼連結進行操作' });
+    return;
+  }
+  const pwd1 = document.getElementById('newPwd1').value;
+  const pwd2 = document.getElementById('newPwd2').value;
+  const isValid = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/.test(pwd1);
+  if (!isValid) {
+    Swal.fire({ icon: 'warning', title: '密碼格式不符', text: '密碼需至少 8 位，包含大寫、小寫字母及數字' });
+    return;
+  }
+  if (pwd1 !== pwd2) {
+    Swal.fire({ icon: 'warning', title: '密碼不一致', text: '兩次輸入的密碼不相同' });
+    return;
+  }
+  const btn = this;
+  btn.disabled = true;
+  try {
+    const bs = new BackendService();
+    await bs.resetPassword(_resetToken, pwd1);
+    showPage('resetsuccesspage');
+  } catch (err) {
+    Swal.fire({ icon: 'error', title: '重設失敗', text: err.message });
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 document.getElementById('resetSuccessBackLogin').addEventListener('click', function(e) {
