@@ -65,12 +65,13 @@ if (profileAvatar)  profileAvatar.src  = DEFAULT_AVATAR;
 window._authReady.then(loggedIn => {
   if (loggedIn) {
     // ── 已登入：從 localStorage 填入資料 ──
-    const name      = localStorage.getItem('username') || '使用者名稱';
-    const intro     = localStorage.getItem('intro')    || '尚未新增使用者介紹';
-    const avatarUrl = localStorage.getItem('avatar');
-    const rate      = localStorage.getItem('rate')     || '無法顯示';
-    const uidVal    = localStorage.getItem('uid')      || '';
-    const createdAt = localStorage.getItem('userCreatedAt');
+    const name          = localStorage.getItem('username')     || '使用者名稱';
+    const intro         = localStorage.getItem('intro')        || '尚未新增使用者介紹';
+    const avatarUrl     = localStorage.getItem('avatar');
+    const rate          = localStorage.getItem('rate')         || '無法顯示';
+    const uidVal        = localStorage.getItem('uid')          || '';
+    const createdAt     = localStorage.getItem('userCreatedAt');
+    const contractEmail = localStorage.getItem('contractEmail') || '';
 
     if (uid)  uid.textContent  = uidVal;
     if (muid) muid.textContent = uidVal;
@@ -80,6 +81,9 @@ window._authReady.then(loggedIn => {
     if (showName)     showName.textContent      = name;
     if (profileInfo)  profileInfo.textContent  = intro;
     if (showIntro)    showIntro.textContent     = intro;
+
+    const showEmailEl = document.getElementById('showEmail');
+    if (showEmailEl) showEmailEl.textContent = contractEmail || '尚未設定';
     if (userRate)     userRate.textContent      = rate;
     if (userRate1)    userRate1.textContent     = rate;
     if (userRate2)    userRate2.textContent     = rate;
@@ -331,8 +335,9 @@ async function handleGoogleBindCredential(response) {
     const email = payload.email;
 
     const formData = new FormData();
-    formData.append('email', email);
+    formData.append('contactEmail', email);
     await backendService.updateProfile(formData);
+    localStorage.setItem('contractEmail', email);
     document.getElementById('showEmail').textContent = email;
     Swal.fire({ icon: 'success', title: '綁定成功', text: email, timer: 2000, showConfirmButton: false });
   } catch {
@@ -388,8 +393,9 @@ document.getElementById('setEmailBtn')?.addEventListener('click', async () => {
 
   try {
     const formData = new FormData();
-    formData.append('email', email);
+    formData.append('contactEmail', email);
     await backendService.updateProfile(formData);
+    localStorage.setItem('contractEmail', email);
     document.getElementById('showEmail').textContent = email;
     Swal.fire({ icon: 'success', title: '儲存成功', timer: 1500, showConfirmButton: false });
   } catch {
@@ -659,6 +665,14 @@ async function handleRouting() {
   } catch (err) {
     console.error(err);
   }
+
+  // 捲動到指定錨點
+  const scrollTarget = params.get('scroll');
+  if (scrollTarget) {
+    setTimeout(() => {
+      document.getElementById(scrollTarget)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
 }
 
 // 賣家/買家 返回列表按鈕改為：
@@ -886,11 +900,64 @@ document.getElementById('photo').addEventListener('change', function (e) {
   reader.readAsDataURL(file);
 });
 // 在 DOMContentLoaded 裡面加入
+async function loadRecentNotifications() {
+  const container = document.getElementById('recentNotifList');
+  if (!container) return;
+  try {
+    const res = await backendService.getNotifications(1, 20);
+    const items = (res?.data?.data?.notifications ?? []).filter(n => !n.isRead).slice(0, 5);
+    if (!items.length) {
+      container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;">目前沒有通知</div>';
+      return;
+    }
+    const _LABELS = {
+      wishpool_contact: '許願池聯絡',
+      order_placed: '訂單成立',
+      order_completed: '訂單完成',
+      order_cancelled: '訂單取消',
+      review: '收到評價',
+      system: '系統通知',
+      new_message: '新訊息',
+      product_sold: '商品已售出',
+      product_liked: '商品被收藏',
+    };
+    function _relTime(d) {
+      if (!d) return '';
+      const mins = Math.floor((Date.now() - new Date(d)) / 60000);
+      if (mins < 1) return '剛剛';
+      if (mins < 60) return `${mins} 分鐘前`;
+      const h = Math.floor(mins / 60);
+      if (h < 24) return `${h} 小時前`;
+      return `${Math.floor(h / 24)} 天前`;
+    }
+    container.innerHTML = items.map(n => {
+      const avatar = n.actor?.photoURL ?? n.actor?.avatar ?? '../image/default-avatar.webp';
+      const title = n.title ?? _LABELS[n.type] ?? n.type ?? '';
+      const body = n.body ?? n.content ?? n.message ?? '';
+      const time = _relTime(n.createdAt);
+      const unread = !n.isRead;
+      return `<div class="d-flex align-items-start gap-2${unread ? ' fw-semibold' : ''}" style="font-size:13px;border-bottom:1px solid #f0f0f0;padding-bottom:8px;margin-bottom:8px;">
+        <img src="${avatar}" onerror="this.src='../image/default-avatar.webp'" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;margin-top:2px;" alt="">
+        <div style="flex:1;min-width:0;">
+          ${title ? `<div style="color:#004b97;font-size:12px;">${title}</div>` : ''}
+          ${body ? `<div class="text-truncate" style="max-width:100%;">${body}</div>` : ''}
+          <div style="color:#aaa;font-size:11px;margin-top:2px;">${time}</div>
+        </div>
+        ${unread ? '<span style="width:7px;height:7px;border-radius:50%;background:#004b97;flex-shrink:0;margin-top:6px;"></span>' : ''}
+      </div>`;
+    }).join('');
+  } catch (e) {
+    container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;">無法載入通知</div>';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   backendService = new BackendService();
 
   // 初始化：根據當前 URL 決定顯示哪個頁面
   handleRouting();
+
+  loadRecentNotifications();
 
   // 預載入側邊欄 / 手機按鈕的訂單計數紅點
   loadOrderBadges();
@@ -2000,15 +2067,54 @@ const updateStatusUI = (data, container) => {
   }
 
 })();
-function goToPage(pageName) {
+function goToPage(pageName, scrollTarget) {
   const url = new URL(window.location.href);
-
-  // 修改或新增 page 參數
   url.searchParams.set("page", pageName);
-
-  // 導向新網址
+  if (scrollTarget) {
+    url.searchParams.set("scroll", scrollTarget);
+  } else {
+    url.searchParams.delete("scroll");
+  }
   window.location.href = url.toString();
 }
+// 修改密碼
+const changePasswordBtn = document.getElementById('change-password-btn');
+if (changePasswordBtn) {
+  changePasswordBtn.addEventListener('click', async () => {
+    const currentPwd = document.getElementById('current-password').value;
+    const newPwd     = document.getElementById('new-password').value;
+    const confirmPwd = document.getElementById('confirm-password').value;
+
+    if (!currentPwd || !newPwd || !confirmPwd) {
+      Swal.fire({ icon: 'warning', title: '請填寫完整', text: '請輸入目前密碼與新密碼' });
+      return;
+    }
+    const isValid = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/.test(newPwd);
+    if (!isValid) {
+      Swal.fire({ icon: 'warning', title: '密碼格式不符', text: '新密碼需至少 8 位，包含大寫、小寫字母及數字' });
+      return;
+    }
+    if (newPwd !== confirmPwd) {
+      Swal.fire({ icon: 'warning', title: '密碼不一致', text: '兩次輸入的新密碼不相同' });
+      return;
+    }
+
+    changePasswordBtn.disabled = true;
+    try {
+      backendService = new BackendService();
+      await backendService.changePassword(currentPwd, newPwd);
+      document.getElementById('current-password').value = '';
+      document.getElementById('new-password').value = '';
+      document.getElementById('confirm-password').value = '';
+      await Swal.fire({ icon: 'success', title: '密碼已更新', text: '請使用新密碼重新登入', confirmButtonText: '確定' });
+    } catch (e) {
+      Swal.fire({ icon: 'error', title: '修改失敗', text: e.message });
+    } finally {
+      changePasswordBtn.disabled = false;
+    }
+  });
+}
+
 //TODO 停用帳號
 const disableAccountBtn = document.getElementById('disableAccountBtn');
 if (disableAccountBtn) {

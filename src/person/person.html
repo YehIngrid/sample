@@ -466,7 +466,7 @@
           </div>
         </div>
         
-        <div class="profile-edit-card mt-3">
+        <div class="profile-edit-card mt-3" id="profile-edit-section">
           <div class="profile-edit-header">
             <i class="ti ti-user-edit"></i>
             <span>個人資料更改</span>
@@ -512,6 +512,32 @@
         </div>
         <div class="profile-edit-card mt-3">
           <div class="profile-edit-header">
+            <i class="ti ti-lock"></i>
+            <span>修改密碼</span>
+          </div>
+          <div class="profile-edit-body">
+            <div class="sell-field">
+              <label for="current-password" class="sell-label">目前密碼</label>
+              <input type="password" class="form-control" id="current-password" placeholder="請輸入目前密碼" maxlength="128">
+            </div>
+            <div class="sell-field">
+              <label for="new-password" class="sell-label">新密碼</label>
+              <small class="sell-hint">至少 8 位，需含大寫、小寫字母及數字</small>
+              <input type="password" class="form-control" id="new-password" placeholder="請輸入新密碼" maxlength="128">
+            </div>
+            <div class="sell-field">
+              <label for="confirm-password" class="sell-label">確認新密碼</label>
+              <input type="password" class="form-control" id="confirm-password" placeholder="請再次輸入新密碼" maxlength="128">
+            </div>
+            <div class="profile-edit-footer">
+              <button class="profile-submit-btn" id="change-password-btn">
+                <i class="ti ti-lock-check"></i> 確認修改密碼
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header">
             <i class="ti ti-message-star"></i>
             <span>我的評價</span>
           </div>
@@ -550,7 +576,7 @@
           </div>
         </div>
         <!-- Mobile: 導覽格狀按鈕 -->
-        <div class="d-lg-flex gap-4">
+        <div class="row g-3">
           <div class="col-lg-6 col-12">
             <div class="title">快速操作</div>
             <div class="mb-3">
@@ -559,11 +585,11 @@
                   <img src="../svg/seller.svg" alt="出售商品icon">
                   <span>出售商品</span>
                 </button>
-                <div class="fastIcon" onclick="goToPage('settings')">
+                <div class="fastIcon" onclick="goToPage('settings', 'profile-edit-section')">
                   <img src="../svg/editIcon.svg" alt="點擊修改個資、常用帳號">
                   <span>修改個資</span>
                 </div>
-                <div class="fastIcon" onclick="goToPage('settings')">
+                <div class="fastIcon" onclick="goToPage('settings', 'reviewsContainer')">
                   <img src="../svg/reviewsIcon.svg" alt="點擊查看評價">
                   <span>查看評價</span>
                 </div>
@@ -596,20 +622,15 @@
           </div>
         </div>
         
-          <div class="col-lg-4 mb-3 col-12">
+          <div class="col-lg-6 col-12">
             <div class="title">近期通知<img src="../svg/alarm.svg" alt="近期通知icon" style="margin-left: 3px;"/></div>
-            <div class="cardContainer">
-              <div class="card-body">
-                <ul class="list-unstyled mb-0" style="font-size: 14px;">
-                  <li class="mb-2 d-none" id="newMessageComing"> • 有人對你的商品發出訊息。</li>
-                  <li class="mb-2"> • 系統維護公告：8/20 01:00–03:00。</li>
-                </ul>
+            <div class="cardContainer" style="display:block;padding:16px;overflow:hidden;">
+              <div id="recentNotifList" style="max-height:80px;overflow-y:auto;">
+                <div class="text-center text-muted py-3" style="font-size:14px;">載入中...</div>
               </div>
             </div>
           </div>
-        </div>
-        
-        
+
           <div class="col-12">
             <div class="title">商品管理頁 / 相關操作說明</div>
             <div class="cardContainer">
@@ -691,6 +712,7 @@
               </div>
             </div>
           </div>
+        </div>
 
       </main>
       <!-- 主內容：右（你給的 main 放這裡） -->
