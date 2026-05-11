@@ -1162,6 +1162,81 @@ function showWishes(data) {
   container.appendChild(makeTrack('wish-track--front', wishes));
 }
 
+// 許願池放大鏡（Canvas 版，圓形裁切 + 凸透鏡高光）
+(function () {
+  const ZOOM = 3;
+  const SIZE = 140;
+  const R = SIZE / 2;
+
+  const loupe = document.createElement('div');
+  loupe.className = 'wish-loupe';
+  const canvas = document.createElement('canvas');
+  canvas.width = SIZE;
+  canvas.height = SIZE;
+  loupe.appendChild(canvas);
+  document.body.appendChild(loupe);
+  const ctx = canvas.getContext('2d');
+
+  // 凸透鏡高光 gradient（只建一次）
+  const highlight = ctx.createRadialGradient(R * 0.72, R * 0.65, R * 0.06, R, R, R);
+  highlight.addColorStop(0,   'rgba(255,255,255,0.32)');
+  highlight.addColorStop(0.3, 'rgba(255,255,255,0.07)');
+  highlight.addColorStop(1,   'rgba(0,0,0,0.1)');
+
+  function draw(img, cursorX, cursorY) {
+    const rect   = img.getBoundingClientRect();
+    const natW   = img.naturalWidth  || rect.width;
+    const natH   = img.naturalHeight || rect.height;
+    const scaleX = natW / rect.width;
+    const scaleY = natH / rect.height;
+
+    const srcW = (SIZE / ZOOM) * scaleX;
+    const srcH = (SIZE / ZOOM) * scaleY;
+    const srcX = Math.max(0, Math.min(natW - srcW, cursorX * scaleX - srcW / 2));
+    const srcY = Math.max(0, Math.min(natH - srcH, cursorY * scaleY - srcH / 2));
+
+    ctx.clearRect(0, 0, SIZE, SIZE);
+
+    // 放大的圖片內容（不 clip，讓模糊遮罩處理邊緣）
+    ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, SIZE, SIZE);
+
+    // 凸透鏡高光疊加
+    ctx.fillStyle = highlight;
+    ctx.fillRect(0, 0, SIZE, SIZE);
+
+    // 模糊邊界遮罩：用 destination-in + 中心不透明→邊緣透明的 radial gradient
+    const edgeMask = ctx.createRadialGradient(R, R, R * 0.62, R, R, R);
+    edgeMask.addColorStop(0,    'rgba(0,0,0,1)');
+    edgeMask.addColorStop(0.82, 'rgba(0,0,0,1)');
+    edgeMask.addColorStop(1,    'rgba(0,0,0,0)');
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.fillStyle = edgeMask;
+    ctx.fillRect(0, 0, SIZE, SIZE);
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  const wishArea = document.getElementById('wishArea');
+
+  wishArea.addEventListener('mousemove', e => {
+    const img = e.target.closest('.wish-avatar');
+    if (!img) { loupe.style.display = 'none'; return; }
+
+    const rect = img.getBoundingClientRect();
+    draw(img, e.clientX - rect.left, e.clientY - rect.top);
+
+    const vw = window.innerWidth;
+    let lx = e.clientX + 18;
+    let ly = e.clientY - SIZE - 18;
+    if (lx + SIZE > vw) lx = e.clientX - SIZE - 18;
+    if (ly < 0) ly = e.clientY + 18;
+    loupe.style.left = `${lx}px`;
+    loupe.style.top  = `${ly}px`;
+    loupe.style.display = 'block';
+  });
+
+  wishArea.addEventListener('mouseleave', () => { loupe.style.display = 'none'; });
+})();
+
 // 聊天室介面顯示與隱藏
 const chatopen = document.getElementById('chaticon');
 const chatclose = document.getElementById('closechat');
