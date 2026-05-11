@@ -1108,7 +1108,15 @@ async function callWish() {
 function showWishes(data) {
   const container = document.getElementById("wishArea");
   if (!data.wishes || data.pagination.total === 0) {
-    container.innerHTML = '<p class="empty">目前還沒有願望</p>';
+    container.innerHTML = `
+      <div class="wish-wave-layer wish-wave-layer--1"></div>
+      <div class="wish-wave-layer wish-wave-layer--2"></div>
+      <div class="wish-wave-layer wish-wave-layer--3"></div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:10;">
+        <p style="margin:0;color:#555;font-size:15px;">目前還沒有願望</p>
+        <a href="../wishpool/wishpool.html" style="background:#004b97;color:#fff;border-radius:8px;padding:7px 20px;font-size:14px;text-decoration:none;transition:background 0.2s;"
+           onmouseover="this.style.background='rgb(36,182,133)'" onmouseout="this.style.background='#004b97'">去許願</a>
+      </div>`;
     return;
   }
   const wishes = data.wishes.slice(0, 10).map(w => ({
