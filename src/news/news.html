@@ -28,7 +28,6 @@
         <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
-        <script src="news.js"></script>
     </head>
     <body>
       <div class="d-flex flex-column justify-content-center align-items-center"  id="loader">
@@ -115,12 +114,6 @@
           <div class="news-section-header">
             <span class="news-section-bar"></span>公告
           </div>
-          <div class="news-filter">
-            <button class="filter-btn active" data-category="全部公告">全部公告</button>
-            <button class="filter-btn" data-category="系統公告">系統公告</button>
-            <button class="filter-btn" data-category="店鋪公告">店鋪公告</button>
-            <button class="filter-btn" data-category="平台規則">平台規則</button>
-          </div>
           <div class="tab-content">
             <div class="news-list" id="newsList"></div>
           </div>
@@ -128,15 +121,13 @@
           </div>
         </div>
         <div id="newsDetailPage">
-          <button onclick="showNewsList()" class="backbtn"><i class="fa-solid fa-arrow-left "></i></button>
-          <div class="detail-meta">
-            <span id="detailBadge" class="news-badge"></span>
-          </div>
+          <button onclick="showNewsList()" class="backbtn"><i class="fa-solid fa-arrow-left"></i></button>
           <h2 class="detail-title" id="detailTitle"></h2>
           <div class="detail-info">
             <span id="detailTime"></span>
           </div>
           <div class="detailcontent" id="detailContent"></div>
+          <div id="detailAttachments"></div>
           <br>
         </div>
 
@@ -213,6 +204,7 @@
 
         <!-- script部分-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script type="module" src="news.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

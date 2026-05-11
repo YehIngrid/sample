@@ -1,150 +1,127 @@
+import BackendService from '../BackendService.js';
 
-  let data = [
-    {
-        from:"平台規則",
-        n_name:"拾貨寶庫買賣流程公告",
-        time:"2026-05-20",
-        detail:"<p>為了讓大家能安心在拾貨寶庫交易，我們將訂單狀態分為五個階段，並且從<strong>買家</strong>與<strong>賣家</strong>的角度說明各自的操作與注意事項：<br><br> 1. 訂單待確認<br><strong>買家</strong>：您已經送出訂單，系統會先幫您暫存，等待賣家確認是否能出貨。若想取消訂單，建議與賣家聯絡後再點擊取消訂單按鈕。<br><strong>賣家</strong>：您會收到新訂單通知，請盡快檢查庫存與商品狀況，並回覆是否能接單。若可以接單，即可點擊接受訂單按鈕，若沒辦法接單，建議先與買家聯絡說明情況後，點擊取消訂單按鈕。<br><br>2. 賣家準備商品中<br><strong>買家</strong>：代表賣家已接受訂單，正在整理商品。此時您可耐心等候，不需額外操作。<br><strong>賣家</strong>：請開始準備商品，並在約定前確認商品完整、乾淨，符合買家需求。若準備好商品請點擊準備出貨按鈕。<br></br> 3. 現實面交<br><strong>買家</strong>：和賣家約定的面交時間、地點已經確認，請準時到達並攜帶現金或雙方約定的付款方式。若成功取貨，取貨後請點擊成功取貨按鈕。<br><strong>賣家</strong>：請準時到達面交地點，並準備好商品，確保交付順利完成。<br></br> 4. 已交付商品給買家<br><strong>買家</strong>：您已經收到商品，請再次檢查商品是否與描述相符。請為您的賣家評分。<br><strong>賣家</strong>：商品已經交付給買家，等待買家點擊成功取貨按鈕。買家成功取貨後即可為買家評價。<br></br> 5. 雙方評價完成<br><strong>買家</strong>：訂單正式結束，感謝您的支持！<br><strong>賣家</strong>：訂單已完成，您可放心結算此次交易。也歡迎您繼續在拾貨寶庫分享更多好物。<br></br> <strong>提醒</strong>：整個過程中，若有任何問題或無法面交，請務必提前與對方溝通，避免誤會與爭議。拾貨寶庫致力於打造透明、安全又溫暖的交易環境，感謝每一位用心參與的買家與賣家！</p>"},
-];
-let filteredData = data;  // 預設為全部資料
-    let itemsPerPage = 7;
-    let currentPage = 1;
+const backendService = new BackendService();
+const ITEMS_PER_PAGE = 10;
 
-    // 計算總頁數
-    function getTotalPages() {
-      return Math.ceil(filteredData.length / itemsPerPage);
+let newsCache = [];    // items from last fetch
+let currentPage = 1;
+let totalItems  = 0;
+
+// ── 工具 ──────────────────────────────────────────────────
+function stripHtml(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return tmp.textContent || '';
+}
+
+function fmtDate(str) {
+  if (!str) return '';
+  return new Date(str).toLocaleDateString('zh-TW').replace(/\//g, '.');
+}
+
+// ── 列表 ──────────────────────────────────────────────────
+async function loadNewsList(page = 1) {
+  currentPage = page;
+  const listEl = document.getElementById('newsList');
+  listEl.innerHTML = `<div class="text-center py-5"><div class="spinner-border text-secondary" role="status"></div></div>`;
+  document.getElementById('pagination').innerHTML = '';
+
+  try {
+    const data  = await backendService.getNewsList(page, ITEMS_PER_PAGE);
+    const items = data?.items ?? data?.data?.items ?? data?.data ?? [];
+    const total = data?.total ?? data?.data?.total ?? items.length;
+
+    newsCache  = items;
+    totalItems = total;
+
+    if (!items.length) {
+      listEl.innerHTML = '<p class="news-empty">目前沒有公告</p>';
+      return;
     }
 
-    // HTML 標籤去除，用於產生摘要
-    function stripHtml(html) {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = html;
-      return tmp.textContent || '';
+    listEl.innerHTML = items.map((item, i) => `
+      <div class="news-row" onclick="showNewsDetail('${item.id}',${i})">
+        <span class="news-row-date">${fmtDate(item.createdAt)}</span>
+        <span class="news-row-title">${item.title ?? '（未命名）'}</span>
+      </div>
+    `).join('');
+
+    renderPagination(total, page);
+  } catch (err) {
+    listEl.innerHTML = `<p class="news-empty">載入失敗，請稍後再試</p>`;
+  }
+}
+
+function renderPagination(total, page) {
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+  const el = document.getElementById('pagination');
+  if (totalPages <= 1) { el.innerHTML = ''; return; }
+
+  let html = '';
+  html += `<button ${page <= 1 ? 'disabled' : `onclick="renderNews(${page - 1})"`}>上一頁</button>`;
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === page) html += `<span class="active">${i}</span>`;
+    else html += `<a href="#" onclick="event.preventDefault();renderNews(${i})">${i}</a>`;
+  }
+  html += `<button ${page >= totalPages ? 'disabled' : `onclick="renderNews(${page + 1})"`}>下一頁</button>`;
+  el.innerHTML = html;
+}
+
+// ── 詳細頁 ────────────────────────────────────────────────
+async function showNewsDetail(id, cachedIdx) {
+  // 優先用快取，避免二次請求
+  let item = (newsCache[cachedIdx]?.id === id) ? newsCache[cachedIdx] : null;
+
+  if (!item) {
+    try {
+      const data = await backendService.getNewsItem(id);
+      item = data?.data ?? data;
+    } catch {
+      Swal.fire({ icon: 'error', title: '載入失敗', text: '無法讀取文章內容' });
+      return;
     }
+  }
 
-    // 顯示新聞列表
-    function renderNews(page) {
-      currentPage = page;
-      const totalPages = getTotalPages();
-      const start = (page - 1) * itemsPerPage;
-      const end = page * itemsPerPage;
-      const currentItems = filteredData.slice(start, end);
+  document.getElementById('detailTitle').textContent = item.title ?? '';
+  document.getElementById('detailTime').textContent  = fmtDate(item.createdAt);
+  document.getElementById('detailContent').innerHTML = DOMPurify.sanitize(item.content ?? '');
 
-      if (currentItems.length === 0) {
-        document.getElementById("newsList").innerHTML =
-          `<p class="news-empty">此分類目前沒有公告</p>`;
-        renderPagination();
-        return;
-      }
+  // 附件
+  const attachEl = document.getElementById('detailAttachments');
+  const attachments = item.attachments ?? [];
+  if (attachments.length) {
+    attachEl.innerHTML = `
+      <div class="detail-attachments">
+        <div class="attach-section-label"><i class="fa-solid fa-paperclip me-1"></i>附件</div>
+        ${attachments.map(url => {
+          const name = decodeURIComponent(url.split('/').pop() || url).slice(0, 40);
+          return `<a href="${url}" target="_blank" class="attach-chip">${name}</a>`;
+        }).join('')}
+      </div>`;
+  } else {
+    attachEl.innerHTML = '';
+  }
 
-      let html = "";
-      currentItems.forEach((item, index) => {
-        const badgeClass = item.from === '系統公告' ? 'system'
-                         : item.from === '店鋪公告' ? 'store'
-                         : item.from === '平台規則' ? 'rules'
-                         : 'other';
-        const displayDate = item.time.replace(/-/g, '.');
-        html += `
-          <div class="news-row" onclick="showNewsDetail(${start + index})">
-            <span class="news-row-date">${displayDate}</span>
-            <span class="news-badge ${badgeClass}">${item.from}</span>
-            <span class="news-row-title">${item.n_name}</span>
-          </div>
-        `;
-      });
-      document.getElementById("newsList").innerHTML = html;
-      renderPagination();
-    }
+  document.querySelector('.content').style.display = 'none';
+  document.getElementById('newsDetailPage').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
 
-    // 產生分頁導覽
-    function renderPagination() {
-      const totalPages = getTotalPages();
-      let paginationHTML = "";
+function showNewsList() {
+  document.getElementById('newsDetailPage').style.display = 'none';
+  const content = document.querySelector('.content');
+  content.style.display = '';
+  content.style.animation = 'none';
+  void content.offsetWidth;
+  content.style.animation = '';
+}
 
-      // 上一頁按鈕
-      if (currentPage > 1) {
-        paginationHTML += `<button onclick="renderNews(${currentPage - 1})">上一頁</button>`;
-      } else {
-        paginationHTML += `<button disabled>上一頁</button>`;
-      }
+function renderNews(page) { loadNewsList(page); }
 
-      // 頁碼連結
-      for (let i = 1; i <= totalPages; i++) {
-        if (i === currentPage) {
-          paginationHTML += `<span class="active" style="margin:0 5px;">${i}</span>`;
-        } else {
-          paginationHTML += `<a href="#" style="margin:0 5px;" onclick="renderNews(${i})">${i}</a>`;
-        }
-      }
+// ── 全域（HTML onclick 需要） ────────────────────────────
+window.renderNews       = renderNews;
+window.showNewsDetail   = showNewsDetail;
+window.showNewsList     = showNewsList;
 
-      // 下一頁按鈕
-      if (currentPage < totalPages) {
-        paginationHTML += `<button onclick="renderNews(${currentPage + 1})">下一頁</button>`;
-      } else {
-        paginationHTML += `<button disabled>下一頁</button>`;
-      }
-
-      document.getElementById("pagination").innerHTML = paginationHTML;
-    }
-
-    // 過濾新聞（依據分類），並從第一頁開始顯示
-    function filterNews(category) {
-      if (category === "全部公告") {
-        filteredData = data;
-      } else {
-        filteredData = data.filter(item => item.from === category);
-      }
-      renderNews(1);
-    }
-
-    // 顯示新聞詳細內容
-    function showNewsDetail(index) {
-      // 1. 根據 index 從 filteredData 取得對應新聞
-      const item = filteredData[index];
-
-      // 2. 將新聞詳細內容塞到 detail 區域
-      const badgeClass = item.from === '系統公告' ? 'system'
-                     : item.from === '店鋪公告' ? 'store'
-                     : item.from === '平台規則' ? 'rules'
-                     : 'other';
-      const badge = document.getElementById("detailBadge");
-      badge.textContent = item.from;
-      badge.className = `news-badge ${badgeClass}`;
-      document.getElementById("detailTitle").textContent = item.n_name;
-      document.getElementById("detailTime").textContent = item.time;
-      document.getElementById("detailContent").innerHTML = DOMPurify.sanitize(item.detail);
-
-      // 3. 隱藏整個 .content wrapper（含 min-height），顯示 detail
-      document.querySelector(".content").style.display = "none";
-      document.getElementById("newsDetailPage").style.display = "block";
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-
-    // 返回新聞列表
-    function showNewsList() {
-      document.getElementById("newsDetailPage").style.display = "none";
-      const content = document.querySelector(".content");
-      content.style.display = "";
-      content.style.animation = 'none';
-      // 強制 reflow 後重新觸發動畫
-      void content.offsetWidth;
-      content.style.animation = '';
-    }
-
-    const tabs = document.querySelectorAll('.filter-btn');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', function(e) {
-        tabs.forEach(t => t.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-        filterNews(e.currentTarget.dataset.category);
-      });
-    });
-
-    // 預設載入「全部公告」
-    filterNews("全部公告");
-
-window.renderNews = renderNews;
-window.showNewsDetail = showNewsDetail;
-window.filterNews = filterNews;
-window.showNewsList = showNewsList;
-
+// ── 初始載入 ──────────────────────────────────────────────
+loadNewsList(1);
