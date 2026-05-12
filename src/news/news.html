@@ -113,22 +113,35 @@
           <!-- 標題 -->
           <div class="news-section-header">
             <span class="news-section-bar"></span>公告
+            <span class="news-total-badge" id="newsCount"></span>
           </div>
           <div class="tab-content">
             <div class="news-list" id="newsList"></div>
           </div>
-          <div class="pagechange" id="pagination"></div>
+          <div class="pagechange-wrap" id="paginationWrap" style="display:none">
+            <div class="pagechange-info" id="paginationInfo"></div>
+            <div class="pagechange" id="pagination"></div>
+          </div>
           </div>
         </div>
         <div id="newsDetailPage">
-          <button onclick="showNewsList()" class="backbtn"><i class="fa-solid fa-arrow-left"></i></button>
-          <h2 class="detail-title" id="detailTitle"></h2>
-          <div class="detail-info">
-            <span id="detailTime"></span>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:16px;">
+            <button onclick="showNewsList()" class="backbtn"><i class="fa-solid fa-arrow-left"></i> 返回公告</button>
+            <button class="detail-share-btn" onclick="shareNews()" title="複製分享連結">
+              <i class="fa-solid fa-link"></i> 分享
+            </button>
           </div>
+          <div class="detail-eyebrow">
+            <span class="detail-eyebrow-tag">官方公告</span>
+            <div class="detail-eyebrow-times">
+              <span class="detail-eyebrow-date" id="detailPublished"></span>
+              <span class="detail-eyebrow-updated d-none" id="detailUpdated"></span>
+            </div>
+          </div>
+          <h2 class="detail-title" id="detailTitle"></h2>
           <div class="detailcontent" id="detailContent"></div>
           <div id="detailAttachments"></div>
-          <br>
+          <div class="detail-author" id="detailAuthor"></div>
         </div>
 
 <footer class="footer">

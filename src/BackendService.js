@@ -305,6 +305,17 @@ export default class BackendService {
             throw new Error(msg || '驗證失敗，連結可能已過期');
         }
     }
+    async resendVerificationEmail() {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/account/resend-verification`, {}, { withCredentials: true });
+            return response;
+        } catch (error) {
+            const status = error?.response?.status;
+            const msg = error?.response?.data?.message;
+            if (status === 429) throw new Error('RATE_LIMIT');
+            throw new Error(msg || '發送失敗，請稍後再試');
+        }
+    }
     async changePassword(currentPassword, newPassword) {
         try {
             const response = await this.http.post('/api/account/change-password', { currentPassword, newPassword });

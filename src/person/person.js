@@ -180,7 +180,6 @@ document.getElementById('update-profile').addEventListener('click', async () => 
     const loader1 = document.getElementById('loader1');
     const formData = new FormData();
     if(!displayName && !bio && photoInput.files.length === 0){
-      console.log("沒有任何資料");
       Swal.fire({
         icon: "warning",
         title: "請填寫完整資料",
@@ -210,8 +209,6 @@ document.getElementById('update-profile').addEventListener('click', async () => 
             backendService = new BackendService();
             const response = await backendService.updateProfile(formData);
 
-            console.log("更新成功：", response);
-            console.log(response.data.introduction);
 
             await Swal.fire({
               icon: "success",
@@ -306,79 +303,18 @@ logoutMobileButton?.addEventListener('click', function() {
 });
 
 
-// ===== 常用帳號（Gmail）設定 =====
-// ===== Google 帳號綁定 =====
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // 後端給 client ID 後填入
-
-function initGoogleBind() {
-  if (typeof google === 'undefined') return;
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogleBindCredential,
-    auto_select: false,
-    cancel_on_tap_outside: true,
-  });
-}
-window.addEventListener('load', initGoogleBind);
-
-async function handleGoogleBindCredential(response) {
-  Swal.close();
-  Swal.fire({ title: '綁定中...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-  try {
-    // ⚠️ 後端 API 準備好後，取消下方註解並移除 fallback
-    // const res = await axios.post('https://thpr.hlc23.dev/api/auth/google/bind',
-    //   { token: response.credential }, { withCredentials: true });
-    // const email = res.data?.email;
-
-    // Fallback：後端好了之後移除
-    const payload = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-    const email = payload.email;
-
-    const formData = new FormData();
-    formData.append('contactEmail', email);
-    await backendService.updateProfile(formData);
-    localStorage.setItem('contractEmail', email);
-    document.getElementById('showEmail').textContent = email;
-    Swal.fire({ icon: 'success', title: '綁定成功', text: email, timer: 2000, showConfirmButton: false });
-  } catch {
-    Swal.fire({ icon: 'error', title: '綁定失敗', text: '請稍後再試' });
-  }
-}
-
+// ===== 常用帳號設定 =====
 document.getElementById('setEmailBtn')?.addEventListener('click', async () => {
   const current = document.getElementById('showEmail')?.textContent?.trim();
   const currentVal = current === '尚未設定' ? '' : current;
 
   const { isConfirmed } = await Swal.fire({
     title: '設定常用帳號',
-    html: `
-      <input
-        id="swal-email-input"
-        type="email"
-        autocomplete="email"
-        class="swal2-input"
-        placeholder="輸入 Email"
-        value="${currentVal}"
-      >
-      <div style="display:flex;align-items:center;gap:8px;margin:14px 0 4px;">
-        <div style="flex:1;height:1px;background:#e0e0e0;"></div>
-        <span style="font-size:12px;color:#aaa;">或</span>
-        <div style="flex:1;height:1px;background:#e0e0e0;"></div>
-      </div>
-      <div id="google-bind-btn" style="display:flex;justify-content:center;margin-top:10px;"></div>
-    `,
+    html: `<input id="swal-email-input" type="email" autocomplete="email" class="swal2-input" placeholder="輸入 Email" value="${currentVal}">`,
     showCancelButton: true,
     confirmButtonText: '儲存',
     cancelButtonText: '取消',
     focusConfirm: false,
-    didOpen: () => {
-      if (typeof google !== 'undefined') {
-        google.accounts.id.renderButton(
-          document.getElementById('google-bind-btn'),
-          { theme: 'outline', size: 'large', text: 'continue_with', locale: 'zh-TW' }
-        );
-      }
-    },
     preConfirm: () => {
       const val = document.getElementById('swal-email-input').value.trim();
       if (!val) { Swal.showValidationMessage('請輸入 Email'); return false; }
@@ -471,7 +407,6 @@ async function handleAction(action, id, el) {
     
     handleRouting(); // 觸發畫面切換
   } else if (action === '編輯商品') {
-    console.log('編輯商品：', id);
     openEditDrawer(id, el);
   } else if (action === 'check') {
     const url = `../product/product.html?id=${encodeURIComponent(id)}`;
@@ -500,7 +435,6 @@ async function handleAction(action, id, el) {
       return;
     }
 
-    console.log("聊天對象 accountId:", targetId);
     openChatWithTarget(targetId);
   } else if (action === 'cancel') {
     if (confirm('確定要取消訂單嗎?')) {
@@ -1106,7 +1040,6 @@ function fmtOrderLabel(item) {
 function renderBuyerOrders(list) {
   const tbody = document.querySelector('#buyProducts tbody');
   if (!tbody) return;
-  console.log('BuyerList:', list);
   if (!Array.isArray(list) || list.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
     return;
@@ -1152,7 +1085,6 @@ function renderBuyerOrders(list) {
 function renderSellerOrders(list) {
   const tbody = document.querySelector('#sellProducts tbody');
   if (!tbody) return;
-  console.log('List:' , list);
   if (!Array.isArray(list) || list.length === 0) {
     tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
     return;

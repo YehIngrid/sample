@@ -157,10 +157,12 @@
             <div id="getLinkPage" class="auth-step">
               <div id="getLinkModal" class="modalwhat glass-card" >
                 <form id="getLinkForm">
-                  <h3>重設密碼連結已寄出</h3>
-                  <i class="fa-regular fa-envelope" style="display:block; font-size:2.4rem; color:#004b97; margin:10px 0 18px;"></i>
+                  <h2>重設密碼連結已寄出</h2>
+                  <div style="text-align:center; margin: 10px 0 18px;">
+                    <i class="fa-regular fa-envelope" style="font-size:2.4rem; color:#004b97;"></i>
+                  </div>
                   <p class="checkRemind">請前往信箱點擊連結以重設密碼，<strong>連結將在 1 小時後失效</strong>。</p>
-                  <button type="button" id="checkBackLogin1" class="checkBackbtn css-button-gradient--4" onclick="event.preventDefault(); document.getElementById('forgetBacklogin').click()">返回登入</button>
+                  <button type="button" id="checkBackLogin1" class="css-button-gradient--4" style="margin-top:28px;" onclick="event.preventDefault(); document.getElementById('forgetBacklogin').click()">返回登入</button>
                 </form>
               </div>
             </div>
@@ -228,7 +230,9 @@
               <div id="checkModal" class="modalwhat glass-card" >
                 <form id="checkForm">
                   <h2>請確認信箱有無認證信</h2>
-                  <i class="fa-regular fa-envelope" style="display:block; font-size:2.4rem; color:#004b97; margin:10px 0 18px;"></i>
+                  <div style="text-align:center; margin: 10px 0 18px;">
+                    <i class="fa-regular fa-envelope" style="font-size:2.4rem; color:#004b97;"></i>
+                  </div>
                   <p class="checkRemind">系統已將認證連結寄至您的電子信箱，請點擊郵件連結即可成功開通帳號。開通後即可登入。</p>
                   <p class="checkRemind" style="margin-top:8px; color:#555;">沒收到信？請先檢查垃圾郵件資料夾。</p>
                   <button type="button" id="resendVerifyBtn" class="css-button-gradient--4 resend-btn" disabled>

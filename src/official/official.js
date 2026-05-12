@@ -339,8 +339,8 @@ async function loadNewsAdmin() {
   el.innerHTML = `<div class="text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
   try {
     const data  = await backendSvc.getNewsAll(1, 50, statusFilter || null);
-    const items = data?.items ?? data?.data?.items ?? data?.data ?? [];
-    const total = data?.total ?? data?.data?.total ?? items.length;
+    const items = data?.data?.news ?? data?.data?.items ?? data?.items ?? data?.data ?? [];
+    const total = data?.data?.pagination?.totalItems ?? data?.data?.total ?? data?.total ?? items.length;
     newsAdminData = items;
     renderNewsAdminList();
     document.getElementById('stat-news').textContent = total;
@@ -361,62 +361,13 @@ const quill = new Quill('#newsEditor', {
         ['bold', 'italic', 'underline', 'strike'],
         [{ color: [] }, { background: [] }],
         [{ list: 'ordered' }, { list: 'bullet' }],
-        ['blockquote', 'link', 'image'],
+        ['blockquote', 'link'],
         ['clean'],
       ],
-      handlers: {
-        image: quillImageHandler,
-      },
     },
   },
 });
 
-function quillImageHandler() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/png,image/jpeg,image/jpg,image/webp';
-  input.onchange = async () => {
-    const file = input.files?.[0];
-    if (!file) return;
-    if (file.size > 10 * 1024 * 1024) {
-      Swal.fire({ icon: 'warning', title: '圖片超過 10MB', text: '請選擇較小的圖片' });
-      return;
-    }
-    try {
-      const base64 = await compressToBase64(file, 900, 0.78);
-      const range = quill.getSelection(true);
-      quill.insertEmbed(range.index, 'image', base64);
-      quill.setSelection(range.index + 1);
-    } catch {
-      Swal.fire({ icon: 'error', title: '圖片處理失敗' });
-    }
-  };
-  input.click();
-}
-
-function compressToBase64(file, maxPx, quality) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = reject;
-    reader.onload = e => {
-      const img = new Image();
-      img.onerror = reject;
-      img.onload = () => {
-        let { width, height } = img;
-        if (width > maxPx || height > maxPx) {
-          if (width > height) { height = Math.round(height * maxPx / width); width = maxPx; }
-          else { width = Math.round(width * maxPx / height); height = maxPx; }
-        }
-        const canvas = document.createElement('canvas');
-        canvas.width = width; canvas.height = height;
-        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/webp', quality));
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
 
 
 // ── 草稿：自動存取 ──────────────────────────────────────

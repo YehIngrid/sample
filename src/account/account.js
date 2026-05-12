@@ -28,6 +28,9 @@ function showPage(nextId) {
 // ── 重設密碼 token（從 URL 帶入）────────────────────────────
 let _resetToken = null;
 
+// ── 待驗證的 email（checkEmailPage 重送信用）──────────────
+let _pendingEmail = null;
+
 // ── 載入完成後隱藏 loader，顯示內容，並展示登入頁 ──────────
 window.onload = async function() {
   var loader = document.getElementById('loader');
@@ -119,13 +122,11 @@ async function callSignUp() {
   const backendService = new BackendService();
 
   try {
-    const resp = await backendService.signup(payload);
-    console.log("回傳資料：", resp.data);
-
+    await backendService.signup(payload);
+    _pendingEmail = payload.email;
     showPage('checkEmailPage');
-    startResendCountdown(60);
+    startResendCountdown(300);
   } catch (e) {
-    console.log("回傳錯誤：", e.message);
     Swal.fire({
       icon: "error",
       title: "Oops...",
@@ -158,14 +159,22 @@ async function callLogin() {
 
     // 若後端回傳 emailVerify: false，直接導引至驗證流程
     if (resp.data?.data?.emailVerify === false) {
+      _pendingEmail = email;
+      showPage('checkEmailPage');
+      // 登入成功有 session，主動補送一封驗證信
+      try {
+        await backendService.resendVerificationEmail();
+        startResendCountdown(300);
+      } catch {
+        // 若送信失敗（如 rate limit），讓使用者手動重送
+        startResendCountdown(0);
+      }
       await Swal.fire({
         icon: 'warning',
         title: '帳號尚未驗證',
-        text: '請前往信箱點擊認證連結，開通帳號後再登入。',
+        text: `認證信已寄至 ${email}，請前往信箱點擊連結開通帳號。`,
         confirmButtonText: '確定'
       });
-      showPage('checkEmailPage');
-      startResendCountdown(60);
       return;
     }
 
@@ -198,14 +207,16 @@ async function callLogin() {
   } catch (e) {
     console.error('登入錯誤：', e);
     if (e?.message === 'EMAIL_NOT_VERIFIED') {
+      _pendingEmail = email;
+      showPage('checkEmailPage');
+      // 登入被拒沒有 session，無法自動送信；讓按鈕立即可用
+      startResendCountdown(0);
       await Swal.fire({
         icon: 'warning',
         title: '帳號尚未驗證',
-        text: '請前往信箱點擊認證連結，開通帳號後再登入。',
+        text: '請前往信箱點擊認證連結，或點擊「重新發送認證信」補寄。',
         confirmButtonText: '確定'
       });
-      showPage('checkEmailPage');
-      startResendCountdown(60);
     } else {
       Swal.fire({
         icon: 'error',
@@ -408,12 +419,22 @@ function startResendCountdown(seconds = 60) {
   const display = document.getElementById('resendCountdown');
   if (!btn || !display) return;
 
+  clearInterval(_resendTimer);
+  _resendTimer = null;
+  btn.style.display = 'block';
+
+  // seconds = 0 表示不需要倒數，直接開放按鈕
+  if (seconds <= 0) {
+    btn.disabled = false;
+    display.textContent = '';
+    btn.innerHTML = '重新發送認證信';
+    return;
+  }
+
   let remaining = seconds;
   btn.disabled = true;
   display.textContent = remaining;
-  btn.style.display = 'block';
 
-  clearInterval(_resendTimer);
   _resendTimer = setInterval(() => {
     remaining -= 1;
     display.textContent = remaining;
@@ -428,15 +449,21 @@ function startResendCountdown(seconds = 60) {
 }
 
 document.getElementById('resendVerifyBtn').addEventListener('click', async function() {
-  // TODO: 等後端實作 resend verification email API
-  Swal.fire({
-    icon: 'info',
-    title: '功能即將開放',
-    text: '重新發送認證信功能正在準備中，請稍後再試。',
-    confirmButtonText: '好的'
-  });
-  // 點擊後重新開始倒數（避免重複點擊）
-  // startResendCountdown(60);
+  this.disabled = true;
+  try {
+    const bs = new BackendService();
+    await bs.resendVerificationEmail();
+    const hint = _pendingEmail ? `認證信已寄至 ${_pendingEmail}` : '請至信箱查收認證信';
+    Swal.fire({ icon: 'success', title: '已重新發送', text: hint, confirmButtonText: '確定' });
+    startResendCountdown(300); // 5 分鐘後才能再發
+  } catch (e) {
+    if (e?.message === 'RATE_LIMIT') {
+      Swal.fire({ icon: 'warning', title: '發送過於頻繁', text: '每 5 分鐘只能發送一次，每小時上限 3 次，請稍後再試。', confirmButtonText: '確定' });
+    } else {
+      Swal.fire({ icon: 'error', title: '發送失敗', text: e?.message || '請稍後再試' });
+    }
+    this.disabled = false;
+  }
 });
 
 // ── 密碼顯示 300ms 後隱藏 ────────────────────────────────
