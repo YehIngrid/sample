@@ -554,6 +554,29 @@
 .seller-avatar-wrap {
   position: relative;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.seller-badge-suspension,
+.seller-badge-lowscore {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 99px;
+  margin-top: 5px;
+  white-space: nowrap;
+}
+.seller-badge-suspension {
+  background: #fff0f0;
+  color: #c0392b;
+  border: 1px solid #e8b4b4;
+}
+.seller-badge-lowscore {
+  background: #fff8e1;
+  color: #b8860b;
+  border: 1px solid #f0d080;
 }
 .seller-card .seller-avatar {
   width: 76px;

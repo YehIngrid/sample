@@ -15,6 +15,7 @@ const wpSvc = new wpBackendService();
     const me = await backendSvc.getMe();
     const username = me?.data?.data?.name || localStorage.getItem('username') || '管理員';
     document.getElementById('adminName').textContent = username;
+    document.getElementById('dashAdminName').textContent = username;
   } catch (e) {
     await Swal.fire({ icon: 'warning', title: '請先登入', text: '即將跳轉至登入頁' });
     window.location.href = '../account/account.html';
@@ -44,18 +45,22 @@ document.getElementById('sidebarToggle').addEventListener('click', openSidebar);
 overlay.addEventListener('click', closeSidebar);
 
 // ── 側邊選單切換 ─────────────────────────────────────
+function switchPanel(panelId) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.nav-btn[data-panel="${panelId}"]`)?.classList.add('active');
+  document.getElementById(panelId)?.classList.add('active');
+  if (panelId === 'panel-broadcast') loadChannels();
+  if (panelId === 'panel-history') loadHistoryChannels();
+  if (panelId === 'panel-support') loadSupportChannel();
+  if (panelId === 'panel-news') loadNewsAdmin();
+  if (panelId === 'panel-analytics') loadAnalytics();
+  closeSidebar();
+}
+window.switchPanel = switchPanel;
+
 document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.panel)?.classList.add('active');
-    if (btn.dataset.panel === 'panel-broadcast') loadChannels();
-    if (btn.dataset.panel === 'panel-support') loadSupportChannel();
-    if (btn.dataset.panel === 'panel-news') loadNewsAdmin();
-    if (btn.dataset.panel === 'panel-analytics') loadAnalytics();
-    closeSidebar();
-  });
+  btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
 });
 
 // ════════════════════════════════════════════════════
@@ -118,9 +123,90 @@ function selectChannel(id, name, cardEl) {
 }
 
 document.getElementById('refreshChannelsBtn').addEventListener('click', loadChannels);
+document.getElementById('refreshHistoryChannelsBtn').addEventListener('click', loadHistoryChannels);
 
 // Auto-load on page ready
 loadChannels();
+
+// ── 公告紀錄：頻道選取 ───────────────────────────────────
+async function loadHistoryChannels() {
+  const selector = document.getElementById('historyChannelSelector');
+  selector.innerHTML = `<div class="text-muted text-center py-3 small">
+    <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+  </div>`;
+
+  try {
+    const res = await chatSvc.listOfficialChannels(1, 50);
+    const items = res?.data?.items ?? res?.data ?? (Array.isArray(res) ? res : []);
+
+    if (!Array.isArray(items) || items.length === 0) {
+      selector.innerHTML = '<div class="text-muted text-center py-3 small">尚無頻道</div>';
+      return;
+    }
+
+    selector.innerHTML = '';
+    items.forEach(ch => {
+      const id   = ch.id ?? ch.channelId ?? '';
+      const name = ch.name ?? '未命名頻道';
+      const desc = ch.description ?? '';
+
+      const card = document.createElement('div');
+      card.className = 'channel-card';
+      card.dataset.id = id;
+      card.innerHTML = `
+        <div class="ch-icon"><i class="fa fa-bullhorn"></i></div>
+        <div class="ch-info">
+          <div class="ch-name">${name}</div>
+          ${desc ? `<div class="ch-desc">${desc}</div>` : ''}
+          <code class="ch-id">${id}</code>
+        </div>
+        <div class="ch-check"><i class="fa fa-check-circle"></i></div>
+      `;
+      card.addEventListener('click', () => {
+        selector.querySelectorAll('.channel-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        loadHistoryForChannel(id);
+      });
+      selector.appendChild(card);
+    });
+  } catch (err) {
+    selector.innerHTML = `<div class="text-danger text-center py-3 small">載入失敗：${esc(err?.message) || '請稍後再試'}</div>`;
+  }
+}
+
+async function loadHistoryForChannel(channelId) {
+  const listEl = document.getElementById('historyList');
+  listEl.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-secondary"></div></div>`;
+
+  try {
+    const before = new Date().toISOString();
+    const res    = await chatSvc.getBroadcast(channelId, 50, before);
+    const items  = res?.data?.items ?? res?.data ?? res ?? [];
+
+    if (!Array.isArray(items) || items.length === 0) {
+      listEl.innerHTML = '<p class="text-muted text-center py-4">此頻道尚無公告紀錄</p>';
+      return;
+    }
+
+    listEl.innerHTML = items
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .map(item => {
+        const time    = new Date(item.timestamp).toLocaleString('zh-TW');
+        const attachUrls = Array.isArray(item.attachments)
+          ? item.attachments
+          : (item.attachments ? [item.attachments] : []);
+        const imgHtml = attachUrls.map(src => `<img src="${src}" class="hi-img" alt="附件">`).join('');
+        return `
+          <div class="history-item">
+            <div class="hi-time">${time}</div>
+            <div class="hi-msg">${item.message || ''}</div>
+            ${imgHtml}
+          </div>`;
+      }).join('');
+  } catch (err) {
+    listEl.innerHTML = `<p class="text-danger text-center py-4">載入失敗：${esc(err?.message) || '請稍後再試'}</p>`;
+  }
+}
 
 // ════════════════════════════════════════════════════
 //  圖片上傳 & 預覽
@@ -252,46 +338,6 @@ document.getElementById('createChannelForm').addEventListener('submit', async (e
 // ════════════════════════════════════════════════════
 //  查詢公告紀錄
 // ════════════════════════════════════════════════════
-document.getElementById('loadHistoryBtn').addEventListener('click', async () => {
-  const channelId = document.getElementById('historyChannelId').value.trim();
-  const listEl    = document.getElementById('historyList');
-
-  if (!channelId) {
-    Swal.fire({ icon: 'warning', title: '請輸入頻道 ID' });
-    return;
-  }
-
-  listEl.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-secondary"></div></div>`;
-
-  try {
-    const before = new Date().toISOString();
-    const res    = await chatSvc.getBroadcast(channelId, 50, before);
-    const items  = res?.data?.items ?? res?.data ?? res ?? [];
-
-    if (!Array.isArray(items) || items.length === 0) {
-      listEl.innerHTML = '<p class="text-muted text-center py-4">此頻道尚無公告紀錄</p>';
-      return;
-    }
-
-    listEl.innerHTML = items
-      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-      .map(item => {
-        const time    = new Date(item.timestamp).toLocaleString('zh-TW');
-        const attachUrls = Array.isArray(item.attachments)
-          ? item.attachments
-          : (item.attachments ? [item.attachments] : []);
-        const imgHtml = attachUrls.map(src => `<img src="${src}" class="hi-img" alt="附件">`).join('');
-        return `
-          <div class="history-item">
-            <div class="hi-time">${time}</div>
-            <div class="hi-msg">${item.message || ''}</div>
-            ${imgHtml}
-          </div>`;
-      }).join('');
-  } catch (err) {
-    listEl.innerHTML = `<p class="text-danger text-center py-4">載入失敗：${esc(err?.message) || '請稍後再試'}</p>`;
-  }
-});
 
 // ════════════════════════════════════════════════════
 //  最新資訊管理

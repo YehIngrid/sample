@@ -870,12 +870,7 @@
                         <small>&lt; 30cm</small>
                       </label>
                     </div>
-                    <select name="size" id="size" class="d-none">
-                      <option value="">請選擇商品尺寸</option>
-                      <option value="2">大</option>
-                      <option value="1">中</option>
-                      <option value="0">小</option>
-                    </select>
+                    <input type="hidden" name="size" id="size" value="">
                   </div>
 
                   <div class="sell-two-col">
@@ -940,7 +935,7 @@
                   <i class="ti ti-photo-up"></i>
                   <span>點擊或拖曳上傳封面照</span>
                 </label>
-                <input type="file" id="mainImage" name="mainImage" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp" />
+                <input type="file" id="mainImage" name="mainImage" class="d-none" accept="image/jpeg,image/png,image/webp" />
                 <div id="mainImagePreview" class="sell-preview-single"></div>
               </div>
 
@@ -951,14 +946,14 @@
                   <i class="ti ti-photos"></i>
                   <span>點擊或拖曳上傳（可多選）</span>
                 </label>
-                <input type="file" id="image" name="images" class="d-none" accept="image/jpeg,image/png,image/gif,image/webp" multiple />
+                <input type="file" id="image" name="images" class="d-none" accept="image/jpeg,image/png,image/webp" multiple />
                 <div class="sell-hint" id="multiImagesHint" style="margin-top:4px;">已選 0 / 5</div>
                 <div id="previewArea" class="sell-preview-grid"></div>
               </div>
 
               <div class="sell-nav">
                 <button type="button" class="sell-prev-btn" id="step3Prev"><i class="ti ti-arrow-left"></i> 上一步</button>
-                <button id="create" type="submit" class="submitbtn sell-submit-btn">
+                <button id="create" type="button" class="submitbtn sell-submit-btn">
                   <i class="ti ti-check"></i> 上架商品
                 </button>
               </div>
@@ -1378,6 +1373,7 @@ const timer = setInterval(() => {
     <span class="loader1"></span>
     <span style="font-size: 1rem; padding-top: 5px;">上傳商品中...</span>
     <span style="font-size: 1rem;">請勿跳出視窗或做任何操作</span>
+    <span style="font-size: 0.8rem; color: #aaa; margin-top: 8px; text-align: center; max-width: 240px;">若商品照片檔案較大，需花費較多時間傳送，請耐心等候</span>
   </div>
 </div>
 

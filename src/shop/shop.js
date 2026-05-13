@@ -76,7 +76,7 @@ const midcontent = document.getElementById('midcontent');
 // TODO seller
 document.addEventListener("DOMContentLoaded", async () => {
   // 管理後台按鈕（僅 MODERATOR）& 隱藏聊天室
-  if (localStorage.getItem('role') === 'MODERATOR') {
+  if (sessionStorage.getItem('role') === 'MODERATOR') {
     document.getElementById('moderatorBtn').style.display = 'block';
     document.getElementById('chaticon')?.style.setProperty('display', 'none', 'important');
     document.getElementById('talkInterface')?.style.setProperty('display', 'none', 'important');
@@ -343,8 +343,12 @@ nextHotBtn.addEventListener("click", () => {
     return;
   }
 
-  // 4. 尺寸
-  if (!document.getElementById('size').value) {
+  // 4. 尺寸：從 radio 或隱藏 input 讀取
+  const formElRef = document.getElementById('createCommodityForm');
+  const checkedSizeRadio = formElRef.querySelector('input[name="sizeRadio"]:checked');
+  const _rawSize = checkedSizeRadio?.value ?? document.getElementById('size').value;
+  const sizeValue = _rawSize !== '' ? Number(_rawSize) : '';
+  if (sizeValue === '') {
     Swal.fire({ title: "請選擇商品尺寸", icon: "warning" });
     return;
   }
@@ -412,7 +416,7 @@ nextHotBtn.addEventListener("click", () => {
   sellData.set('stock', String(stock));
   sellData.set('age', String(age));
   // 明確同步 radio → select 的值，並移除不應送後端的 radio 欄位
-  sellData.set('size', document.getElementById('size').value);
+  sellData.set('size', String(sizeValue));
   sellData.set('new_or_old', document.getElementById('new_or_old').value);
   sellData.set('category', document.getElementById('category').value);
   sellData.delete('sizeRadio');

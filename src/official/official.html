@@ -38,7 +38,10 @@
         <span>拾貨寶庫<br><small>官方後台</small></span>
       </div>
       <nav class="sidebar-nav">
-        <button class="nav-btn active" data-panel="panel-broadcast">
+        <button class="nav-btn active" data-panel="panel-dashboard">
+          <i class="fa fa-home"></i> 總覽
+        </button>
+        <button class="nav-btn" data-panel="panel-broadcast">
           <i class="fa fa-bullhorn"></i> 發送公告
         </button>
         <button class="nav-btn" data-panel="panel-channel">
@@ -48,7 +51,7 @@
           <i class="fa fa-history"></i> 公告紀錄
         </button>
         <button class="nav-btn" data-panel="panel-news">
-          <i class="fa fa-newspaper-o"></i> 最新資訊
+          <i class="fa fa-newspaper"></i> 最新資訊
         </button>
         <button class="nav-btn" data-panel="panel-support">
           <i class="fa fa-headphones"></i> 客服頻道
@@ -69,8 +72,80 @@
     <!-- 主內容區 -->
     <main class="official-main">
 
+      <!-- Panel: 總覽 -->
+      <section id="panel-dashboard" class="panel active">
+        <div class="dashboard-welcome">
+          <div class="dashboard-welcome-text">
+            <h2>歡迎回來，<span id="dashAdminName">管理員</span> 👋</h2>
+            <p>這裡是拾貨寶庫官方後台，請選擇下方功能開始操作。</p>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="dashboard-card" onclick="switchPanel('panel-broadcast')">
+            <div class="dashboard-card-icon" style="background:#e8f0fe;">
+              <i class="fa fa-bullhorn" style="color:#1a73e8;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">發送公告</div>
+              <div class="dashboard-card-desc">對所有訂閱頻道的會員發送文字或圖片公告，適合活動通知、緊急公告等。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-news')">
+            <div class="dashboard-card-icon" style="background:#fff3e0;">
+              <i class="fa fa-newspaper" style="color:#f57c00;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">最新資訊</div>
+              <div class="dashboard-card-desc">撰寫並發布最新消息文章，支援圖文排版、附件上傳，發布後立即顯示在前台公告頁。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-support')">
+            <div class="dashboard-card-icon" style="background:#e8f5e9;">
+              <i class="fa fa-headphones" style="color:#388e3c;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">客服頻道</div>
+              <div class="dashboard-card-desc">透過客服頻道發送回覆訊息給使用者，處理問題反映及諮詢事項。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-analytics')">
+            <div class="dashboard-card-icon" style="background:#f3e8fd;">
+              <i class="fa fa-bar-chart" style="color:#7b1fa2;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">數據分析</div>
+              <div class="dashboard-card-desc">查看平台商品數量、許願池狀況、熱門搜尋關鍵字等即時統計數據。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-history')">
+            <div class="dashboard-card-icon" style="background:#fce8e6;">
+              <i class="fa fa-history" style="color:#d93025;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">公告紀錄</div>
+              <div class="dashboard-card-desc">查詢特定頻道過去發送的所有公告內容與時間，方便追蹤發送記錄。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-channel')">
+            <div class="dashboard-card-icon" style="background:#e0f7fa;">
+              <i class="fa fa-plus-circle" style="color:#0097a7;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">建立頻道</div>
+              <div class="dashboard-card-desc">初次使用請先在此建立官方廣播頻道，取得頻道 ID 後即可開始發送公告。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+        </div>
+      </section>
+
       <!-- Panel: 發送公告 -->
-      <section id="panel-broadcast" class="panel active">
+      <section id="panel-broadcast" class="panel">
         <h2 class="panel-title"><i class="fa fa-bullhorn me-2"></i>發送官方公告</h2>
 
         <!-- 步驟一：選擇頻道 -->
@@ -140,18 +215,25 @@
       <!-- Panel: 公告紀錄 -->
       <section id="panel-history" class="panel">
         <h2 class="panel-title"><i class="fa fa-history me-2"></i>公告紀錄</h2>
-        <div class="mb-3 d-flex gap-2">
-          <input type="text" id="historyChannelId" class="form-control" placeholder="輸入頻道 ID 查詢">
-          <button id="loadHistoryBtn" class="btn official-btn px-4" style="color: white;">查詢</button>
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <label class="form-label mb-0 fw-bold">選擇頻道</label>
+          <button id="refreshHistoryChannelsBtn" class="btn btn-sm btn-outline-secondary" type="button">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+        <div id="historyChannelSelector" class="channel-selector mb-3">
+          <div class="text-muted text-center py-3 small">
+            <span class="spinner-border spinner-border-sm me-1"></span>載入頻道中...
+          </div>
         </div>
         <div id="historyList" class="history-list">
-          <p class="text-muted text-center py-4">請輸入頻道 ID 後點擊查詢</p>
+          <p class="text-muted text-center py-4">請選擇頻道以查看公告紀錄</p>
         </div>
       </section>
 
       <!-- Panel: 最新資訊管理 -->
       <section id="panel-news" class="panel">
-        <h2 class="panel-title"><i class="fa fa-newspaper-o me-2"></i>最新資訊管理</h2>
+        <h2 class="panel-title"><i class="fa fa-newspaper me-2"></i>最新資訊管理</h2>
 
         <!-- 新增 / 編輯文章 -->
         <div class="news-editor-card">

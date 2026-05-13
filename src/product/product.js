@@ -318,8 +318,12 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   const wrap = document.getElementById('product-category');
   if (!wrap) return;
 
-  const ageText =
-    String(product?.age) === '-1' || product?.age == null ? '未知' : `${product.age} 年`;
+  const ageText = (() => {
+    const a = product?.age;
+    if (a == null || String(a) === '-1') return '未知';
+    if (Number(a) === 0) return '不到 1 年';
+    return `${a} 年`;
+  })();
 
   const fields = [
     ['商品大小',  size ?? '-'],
@@ -462,7 +466,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         // 先取出你原本的欄位（給預設值）
         const photo               = u.photoURL || '../image/default-avatar.webp';
         const sellerName          = u.name || '賣家名稱';
-        const sellerIntroduction  = u.introduction || '賣家簡介';
+        const sellerIntroduction  = u.introduction || '';
         // 這裡確保是數字；u.rate 可能是字串
         const sellerRate          = Number.isFinite(+u.rate) ? +u.rate : 0;
         sellerId            = u.accountId;
@@ -472,8 +476,10 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
           id: sellerId,
           name: sellerName,
           intro: sellerIntroduction,
-          score: sellerRate,   // 注意：數字
-          photoUrl: photo
+          score: sellerRate,
+          photoUrl: photo,
+          suspensionLevel:    u.suspensionLevel    ?? 'NONE',
+          lowScoreStrikeCount: u.lowScoreStrikeCount ?? 0,
         };
 
         renderSellerInfo(data);
@@ -506,11 +512,36 @@ function renderSellerInfo(data) {
 
   // 灌資料（含預設值）
   if (img) {
-    img.src = data.photoUrl || '../webP/default-avatar.webp';  // 和你的專案一致
+    img.src = data.photoUrl || '../webP/default-avatar.webp';
     img.alt = data.name ? `${data.name} 的頭像` : '賣家頭像';
+
+    // 可疑帳號徽章
+    const avatarWrap = img.closest('.seller-avatar-wrap') || img.parentElement;
+    avatarWrap.querySelectorAll('.seller-badge-suspension, .seller-badge-lowscore').forEach(el => el.remove());
+    if (data.suspensionLevel && data.suspensionLevel !== 'NONE') {
+      const badge = document.createElement('span');
+      badge.className = 'seller-badge-suspension';
+      badge.title = '可疑帳號';
+      badge.textContent = '可疑帳號';
+      avatarWrap.appendChild(badge);
+    }
+    if (data.lowScoreStrikeCount) {
+      const badge = document.createElement('span');
+      badge.className = 'seller-badge-lowscore';
+      badge.title = `低分不良紀錄 ${data.lowScoreStrikeCount} 次`;
+      badge.textContent = `低分紀錄 ${data.lowScoreStrikeCount} 次`;
+      avatarWrap.appendChild(badge);
+    }
   }
   if (nameEl)  nameEl.textContent  = data.name  ?? '用戶名';
-  if (introEl) introEl.textContent = data.intro ?? '這裡是我的自我介紹';
+  if (introEl) {
+    if (data.intro) {
+      introEl.textContent = data.intro;
+      introEl.style.display = '';
+    } else {
+      introEl.style.display = 'none';
+    }
+  }
   if (scoreEl) scoreEl.textContent = Number.isFinite(+data.score) ? +data.score : 0;
 
   // 綁事件（依你的路由調整）
@@ -953,6 +984,8 @@ async function openReviewerModal(accountId, name, photo) {
   let sellerReviews = [];
   let buyerReviews  = [];
   let intro = '';
+  let suspensionLevel = 'NONE';
+  let lowScoreStrikeCount = 0;
   try {
     if (Object.keys(_tagMeaningCache).length === 0) {
       try {
@@ -969,6 +1002,8 @@ async function openReviewerModal(accountId, name, photo) {
     sellerReviews = d?.sellerReviews ?? [];
     buyerReviews  = d?.buyerReviews  ?? [];
     intro = profileRes?.data?.data?.introduction ?? '';
+    suspensionLevel    = profileRes?.data?.data?.suspensionLevel    ?? 'NONE';
+    lowScoreStrikeCount = profileRes?.data?.data?.lowScoreStrikeCount ?? 0;
   } catch (e) { /* silent */ }
 
   const reviewCount  = Number(stats?.reviewCount ?? 0);
@@ -976,6 +1011,13 @@ async function openReviewerModal(accountId, name, photo) {
   const statsHtml = reviewCount > 0
     ? `<div style="font-size:12px;color:#555;margin-top:2px;">${reviewCount} 則評價 · 信譽積分 ${accountScore}</div>`
     : `<div style="font-size:12px;color:#aaa;margin-top:2px;">尚無評價紀錄</div>`;
+
+  const suspensionBadge = (suspensionLevel && suspensionLevel !== 'NONE')
+    ? `<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:99px;background:#fff0f0;color:#c0392b;border:1px solid #e8b4b4;margin-left:6px;">可疑帳號</span>`
+    : '';
+  const lowScoreBadge = lowScoreStrikeCount
+    ? `<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:99px;background:#fff8e1;color:#b8860b;border:1px solid #f0d080;margin-left:6px;">低分紀錄 ${lowScoreStrikeCount} 次</span>`
+    : '';
 
   const allCards = [
     ...sellerReviews.map(r => renderReviewCard(r, 'seller')),
@@ -990,7 +1032,7 @@ async function openReviewerModal(accountId, name, photo) {
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
         <img src="${photo}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="${name}">
         <div>
-          <div style="font-weight:700;color:#222;">${name}</div>
+          <div style="font-weight:700;color:#222;">${name}${suspensionBadge}${lowScoreBadge}</div>
           ${statsHtml}
           ${intro ? `<div style="font-size:12px;color:#888;margin-top:4px;">${intro}</div>` : ''}
         </div>

@@ -333,6 +333,7 @@ small { font-size: 10px; color: #004b97; }
 .sell-field { margin-bottom: 20px; }
 .sell-label { font-size: 0.95rem; font-weight: 700; color: #222; display: block; margin-bottom: 6px; }
 .sell-required { color: #e03; font-size: 0.82rem; }
+.sell-optional { color: #aaa; font-size: 0.75rem; font-weight: 400; margin-left: 4px; }
 .sell-hint { display: block; font-size: 0.8rem; color: #004b97; margin-bottom: 8px; }
 
 /* 分類卡片（3 欄，適合 drawer 寬度） */
