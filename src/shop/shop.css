@@ -132,7 +132,7 @@ ul{
   .qa-btn { padding: 7px 8px; gap: 6px; border-radius: 10px; }
   .qa-s { display: none; }
   .qa-arr { display: none; }
-  .qa-ic-wrap { width: 36px; height: 36px; }
+  .qa-ic-wrap { width: 28px; height: 28px; }
   .qa-ic { width: 18px; height: 18px; }
   .qa-t { font-size: 14px; }
 }
@@ -2092,7 +2092,7 @@ tbody > tr:nth-of-type(even) {
   .promo-banner__tags { display: flex; }
   .promo-banner__tags span { font-size: 0.7rem; }
   .promo-banner__tags span:not(:first-child) { display: none; }
-  .promo-banner__illus i { font-size: 2rem; }
+  .promo-banner__illus i { font-size: 1.4rem; }
 }
 @media (max-width: 500px) {
   .smallmysection {
