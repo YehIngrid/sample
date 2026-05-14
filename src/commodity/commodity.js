@@ -140,7 +140,8 @@ async function loadProducts() {
     const backendService = new BackendService();
     const sortselected = sortSelect ? sortSelect.value : 'default';
     const keyword = activeKeyword;
-    const maxPrice = maxPriceInput?.value ? parseInt(maxPriceInput.value) : null;
+    const rawMaxPrice = maxPriceInput?.value ? parseInt(maxPriceInput.value) : null;
+    const maxPrice = (rawMaxPrice !== null && rawMaxPrice >= 0 && rawMaxPrice <= 999999) ? rawMaxPrice : null;
     const newOrOld = newOrOldInput?.value !== 'default' ? parseInt(newOrOldInput?.value) : null;
     const validCategories = ['education', 'electronics', 'living', 'sports', 'accessories', 'other'];
 
@@ -366,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 搜尋表單提交（桌機 Enter / 手機 offcanvas）
   document.getElementById('searchForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
-    activeKeyword = document.getElementById('searchInput')?.value.trim() || '';
+    activeKeyword = (document.getElementById('searchInput')?.value.trim() || '').slice(0, 100);
     pageIndex = 0;
     productRow.innerHTML = '';
     loadProducts();

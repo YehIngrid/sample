@@ -1,3 +1,9 @@
+function esc(str) {
+  return String(str ?? '').replace(/[&<>"']/g, s =>
+    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[s])
+  );
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const id = Number(new URLSearchParams(window.location.search).get('id'));
   const art = MOCK_ARTICLES.find(a => a.id === id);
@@ -26,14 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Meta ──
   document.getElementById('spMeta').innerHTML = `
-    <span class="article-avatar" style="display:inline-flex;align-items:center;justify-content:center;font-size:1rem;width:28px;height:28px;border-radius:50%;border:1.5px solid #d0d7e3;">${art.authorEmoji}</span>
-    <span class="article-author">${art.author}</span>
+    <span class="article-avatar" style="display:inline-flex;align-items:center;justify-content:center;font-size:1rem;width:28px;height:28px;border-radius:50%;border:1.5px solid #d0d7e3;">${esc(art.authorEmoji)}</span>
+    <span class="article-author">${esc(art.author)}</span>
     <span class="article-meta-dot">·</span>
-    <span>${art.date}</span>
+    <span>${esc(art.date)}</span>
     <span class="article-meta-dot">·</span>
-    <span>${art.readTime}閱讀</span>
+    <span>${esc(art.readTime)}閱讀</span>
     <span class="article-meta-dot">·</span>
-    <span class="article-likes"><i class="ti ti-heart" style="font-size:0.9rem;"></i> ${art.likes}</span>`;
+    <span class="article-likes"><i class="ti ti-heart" style="font-size:0.9rem;"></i> ${esc(String(art.likes))}</span>`;
 
   // ── Body ──
   document.getElementById('spBody').innerHTML = DOMPurify.sanitize(art.body || `<p>${art.excerpt}</p>`);
@@ -138,10 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       list.innerHTML = comments.map((c, i) => `
         <div class="sp-comment-item">
-          <div class="sp-comment-avatar" style="background:${c.color}">${c.initials}</div>
+          <div class="sp-comment-avatar" style="background:${esc(c.color)}">${esc(c.initials)}</div>
           <div class="sp-comment-body">
-            <div class="sp-comment-author">${c.author}<span class="sp-comment-time">${c.time}</span></div>
-            <div class="sp-comment-text">${c.text.replace(/\n/g, '<br>')}</div>
+            <div class="sp-comment-author">${esc(c.author)}<span class="sp-comment-time">${esc(c.time)}</span></div>
+            <div class="sp-comment-text">${esc(c.text).replace(/\n/g, '<br>')}</div>
           </div>
         </div>`).join('');
     }

@@ -1144,6 +1144,19 @@ function showWishes(data) {
     _gap: Math.floor(Math.random() * 40) + 5        // 5–44px 不固定間距
   }));
 
+  // 願望數量少時，插入吸睛標語泡泡
+  const SLOGANS = [
+    { _isSlogan: true, id: 's1', _sloganText: '快來許願！', _sloganBg: '#004b97', _sloganColor: '#fff' },
+    { _isSlogan: true, id: 's2', _sloganText: '賣家等你', _sloganBg: '#f3e3b5', _sloganColor: '#004b97' },
+    { _isSlogan: true, id: 's3', _sloganText: '說出你的需求', _sloganBg: '#4a85c4', _sloganColor: '#fff' },
+    { _isSlogan: true, id: 's4', _sloganText: '找到好物', _sloganBg: '#abdad5', _sloganColor: '#004b97' },
+    { _isSlogan: true, id: 's5', _sloganText: '許個願吧', _sloganBg: '#7eb8d8', _sloganColor: '#fff' },
+  ].map(s => ({ ...s, _size: Math.floor(Math.random() * 25) + 65, _marginTop: Math.floor(Math.random() * 160) - 80, _gap: Math.floor(Math.random() * 40) + 5 }));
+
+  const displayWishes = wishes.length <= 3
+    ? SLOGANS.flatMap((s, i) => [s, ...(wishes[i % wishes.length] ? [wishes[i % wishes.length]] : [])])
+    : wishes;
+
   // 建立一條 track：4份複製 → translateX(-25%) 完全無縫
   function makeTrack(layerClass, list) {
     const track = document.createElement('div');
@@ -1155,18 +1168,20 @@ function showWishes(data) {
       b.style.width = `${wish._size + 10}px`;
       b.style.marginTop = `${wish._marginTop}px`;
       b.style.marginRight = `${wish._gap}px`;
-      const photo = wish.photoURL || '../svg/bigwish.svg';
-      b.innerHTML = `
-        <img class="wish-avatar" src="${esc(photo)}" alt="${esc(wish.itemName)}"
-             style="width:${wish._size}px;height:${wish._size}px;"
-             onerror="this.src='../svg/bigwish.svg'">
-        <span class="wish-label">${esc(wish.itemName)}</span>
-      `;
+      if (wish._isSlogan) {
+        b.innerHTML = `<div class="wish-slogan" style="background:${wish._sloganBg};color:${wish._sloganColor};width:${wish._size}px;height:${wish._size}px;">${wish._sloganText}</div>`;
+      } else {
+        const photo = wish.photoURL || '../svg/bigwish.svg';
+        b.innerHTML = `
+          <img class="wish-avatar" src="${esc(photo)}" alt="${esc(wish.itemName)}"
+               style="width:${wish._size}px;height:${wish._size}px;"
+               onerror="this.src='../svg/bigwish.svg'">
+          <span class="wish-label">${esc(wish.itemName)}</span>
+        `;
+      }
       b.addEventListener('click', () => {
-        if (wish.id) {
-          sessionStorage.setItem('focusWishId', String(wish.id));
-          location.href = '../wishpool/wishpool.html#wishpool';
-        }
+        if (!wish._isSlogan && wish.id) sessionStorage.setItem('focusWishId', String(wish.id));
+        location.href = '../wishpool/wishpool.html#wishpool';
       });
       track.appendChild(b);
     });
@@ -1177,7 +1192,7 @@ function showWishes(data) {
   const waveLayers = Array.from(container.querySelectorAll('.wish-wave-layer'));
   container.innerHTML = '';
   waveLayers.forEach(el => container.appendChild(el));
-  container.appendChild(makeTrack('wish-track--front', wishes));
+  container.appendChild(makeTrack('wish-track--front', displayWishes));
 }
 
 // 許願池放大鏡（Canvas 版，圓形裁切 + 凸透鏡高光）

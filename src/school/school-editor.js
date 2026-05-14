@@ -103,7 +103,7 @@ function restoreDraft() {
     if (draft.title) { titleInput.value = draft.title; titleLen.textContent = draft.title.length; }
     if (draft.cat)   document.getElementById('articleCat').value = draft.cat;
     if (draft.tags)  { tags = draft.tags; renderTagChips(); }
-    if (draft.content) quill.root.innerHTML = draft.content;
+    if (draft.content) quill.root.innerHTML = DOMPurify.sanitize(draft.content);
   } catch (e) {}
 }
 

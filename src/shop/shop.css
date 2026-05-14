@@ -129,7 +129,7 @@ ul{
 
 @media (max-width: 500px) {
   .quick-actions { width: 100vw; gap: 8px; padding: 0 4vw; box-sizing: border-box; }
-  .qa-btn { padding: 12px 12px; gap: 8px; border-radius: 10px; }
+  .qa-btn { padding: 7px 8px; gap: 6px; border-radius: 10px; }
   .qa-s { display: none; }
   .qa-arr { display: none; }
   .qa-ic-wrap { width: 36px; height: 36px; }
@@ -1958,84 +1958,42 @@ tbody > tr:nth-of-type(even) {
   box-sizing: border-box;
   position: relative;   /* icon 的絕對定位基準 */
 }
-/* ── 各 slide 漸層配色（使用 #004b97 / #4a85c4 / #7eb8d8 / #abdad5 / aliceblue / #f3e3b5） ── */
+/* ── 各 slide 純色配色 ── */
 
-/* Slide 1：深藍 → 中藍 → 淡青  +  右上金色光暈 */
-.promo-slide--fee {
-  background: linear-gradient(135deg, #004b97 0%, #4a85c4 55%, #abdad5 100%);
-}
-.promo-slide--fee::before {
-  content: "";
-  position: absolute;
-  right: -50px; top: -50px;
-  width: 180px; height: 180px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(243,227,181,0.30) 0%, transparent 70%);
-  pointer-events: none;
-}
+/* Slide 1：天藍底，金色badge，白色標題，淡青icon */
+.promo-slide--fee { background: #7eb8d8; }
+.promo-slide--fee .promo-banner__badge     { color: #f3e3b5; border-color: rgba(243,227,181,0.5); }
+.promo-slide--fee .promo-banner__kv        { color: #ffffff; }
+.promo-slide--fee .promo-banner__illus i   { color: #abdad5; }
+.promo-slide--fee .promo-banner__tags span { color: rgba(255,255,255,0.65); }
 
-/* Slide 2：中藍 → 天藍 → 淡青  +  右下白色圓弧 */
-.promo-slide--seller {
-  background: linear-gradient(135deg, #4a85c4 0%, #7eb8d8 55%, #abdad5 100%);
-}
-.promo-slide--seller::before {
-  content: "";
-  position: absolute;
-  right: 40px; bottom: -50px;
-  width: 140px; height: 140px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.12);
-  pointer-events: none;
-}
+/* Slide 2：中藍底，金色badge，白色標題，淡青icon */
+.promo-slide--seller { background: #4a85c4; }
+.promo-slide--seller .promo-banner__badge     { color: #f3e3b5; border-color: rgba(243,227,181,0.5); }
+.promo-slide--seller .promo-banner__kv        { color: #ffffff; }
+.promo-slide--seller .promo-banner__illus i   { color: #abdad5; }
+.promo-slide--seller .promo-banner__tags span { color: rgba(255,255,255,0.65); }
 
-/* Slide 3：深藍 → 中藍 → 暖金  (許願感：藍天透出金光) */
-.promo-slide--wish {
-  background: linear-gradient(135deg, #004b97 0%, #4a85c4 50%, #f3e3b5 100%);
-}
-.promo-slide--wish::before {
-  content: "";
-  position: absolute;
-  right: -30px; top: 50%;
-  transform: translateY(-50%);
-  width: 160px; height: 160px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(243,227,181,0.28) 0%, transparent 65%);
-  pointer-events: none;
-}
+/* Slide 3：深藍底，金色badge，白色標題，金色icon */
+.promo-slide--wish { background: #004b97; }
+.promo-slide--wish .promo-banner__badge     { color: #f3e3b5; border-color: rgba(243,227,181,0.5); }
+.promo-slide--wish .promo-banner__kv        { color: #ffffff; }
+.promo-slide--wish .promo-banner__illus i   { color: #f3e3b5; }
+.promo-slide--wish .promo-banner__tags span { color: rgba(255,255,255,0.65); }
 
-/* Slide 4：深藍 → 中藍 → 天藍  (正式、可信賴) */
-.promo-slide--safety {
-  background: linear-gradient(135deg, #004b97 0%, #4a85c4 55%, #7eb8d8 100%);
-}
-.promo-slide--safety::before {
-  content: "";
-  position: absolute;
-  left: 50%; top: -40px;
-  transform: translateX(-50%);
-  width: 200px; height: 200px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-  pointer-events: none;
-}
+/* Slide 4：淡青底，深藍badge，深藍標題，中藍icon */
+.promo-slide--safety { background: #abdad5; }
+.promo-slide--safety .promo-banner__badge     { color: #004b97; border-color: rgba(0,75,151,0.35); }
+.promo-slide--safety .promo-banner__kv        { color: #004b97; }
+.promo-slide--safety .promo-banner__illus i   { color: #4a85c4; }
+.promo-slide--safety .promo-banner__tags span { color: #4a627a; }
 
-/* Slide 5：淡青 → 天藍 → aliceblue  (淺色！文字改深藍) */
-.promo-slide--eco {
-  background: linear-gradient(135deg, #abdad5 0%, #7eb8d8 50%, aliceblue 100%);
-}
-.promo-slide--eco::before {
-  content: "";
-  position: absolute;
-  left: -30px; bottom: -30px;
-  width: 150px; height: 150px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,75,151,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-/* eco 淺底 → 深色文字 */
-.promo-slide--eco .promo-banner__kv           { color: #004b97; }
-.promo-slide--eco .promo-banner__badge        { color: #4a627a; border-color: rgba(0,75,151,0.35); }
-.promo-slide--eco .promo-banner__tags span    { color: #4a627a; }
-.promo-slide--eco .promo-banner__illus i      { color: rgba(0,75,151,0.18); }
+/* Slide 5：aliceblue底，深藍badge，深藍標題，中藍icon */
+.promo-slide--eco { background: aliceblue; }
+.promo-slide--eco .promo-banner__badge     { color: #4a627a; border-color: rgba(0,75,151,0.35); }
+.promo-slide--eco .promo-banner__kv        { color: #004b97; }
+.promo-slide--eco .promo-banner__illus i   { color: #7eb8d8; }
+.promo-slide--eco .promo-banner__tags span { color: #4a627a; }
 
 /* 左：badge + 大標題 */
 .promo-banner__body {
@@ -2137,6 +2095,11 @@ tbody > tr:nth-of-type(even) {
   .smallmysection {
     width: 100vw;
   }
+  .promo-banner {
+    width: 92vw;
+    margin-left: 4vw;
+    margin-right: 4vw;
+  }
   .my-section {
     padding-top: 0px;
   }
@@ -2165,7 +2128,7 @@ tbody > tr:nth-of-type(even) {
   padding: 8px 10px 6px;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  background: #fff;
+  background: transparent;
 }
 .cat-pills::-webkit-scrollbar { display: none; }
 
@@ -2174,15 +2137,17 @@ tbody > tr:nth-of-type(even) {
   padding: 5px 14px;
   border-radius: 30px;
   color: #004b97;
-  border: 1px solid #d0d7e3;
+  border: 1.5px solid #abdad5;
+  background: #fff;
   font-size: 0.8rem;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 .cat-pill:hover {
-  background: #4abdff2f;
+  background: #abdad5;
+  border-color: #abdad5;
 }
 
 /* 手機：改為 3 欄 × 自動多排（你現在剛好 6 張就是兩排） */
@@ -2570,7 +2535,6 @@ html{ scroll-behavior:smooth; }
 .wrap-seller{
   max-width:var(--container-max);
   margin:24px auto;
-  padding:0 16px;
   display:grid;
   grid-template-columns:var(--side-w) 1fr;
   gap:20px;
@@ -2775,6 +2739,24 @@ html{ scroll-behavior:smooth; }
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 600;
+}
+
+/* 標語泡泡 */
+.wish-slogan {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.4;
+  padding: 10px;
+  box-sizing: border-box;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  border: 3px solid rgba(255,255,255,0.55);
+  letter-spacing: 0.04em;
+  word-break: keep-all;
 }
 
 /* 許願池放大鏡 */

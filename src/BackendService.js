@@ -1,4 +1,6 @@
 axios.defaults.withCredentials = true;
+axios.defaults.timeout = 30000;
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // ── 重試工具：network 錯誤或 5xx 才重試，4xx 直接拋出 ────────────
 async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
@@ -22,6 +24,20 @@ async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
 let _handlingExpiry = false;
 const _SKIP_401 = ['/api/account/login', '/api/account/signup', '/api/whoami'];
 
+// ── 網路逾時 / 離線 提示 ────────────
+let _networkBannerShown = false;
+function _showNetworkBanner() {
+    if (_networkBannerShown) return;
+    _networkBannerShown = true;
+    const existing = document.getElementById('_netBanner');
+    if (existing) return;
+    const el = document.createElement('div');
+    el.id = '_netBanner';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#004b97;color:#fff;font-size:14px;font-weight:600;text-align:center;padding:10px 16px;letter-spacing:0.02em;box-shadow:0 2px 8px rgba(0,0,0,0.25);';
+    el.innerHTML = '⚠️ 無法連線伺服器，請確認網路狀態，或網站正在維護更新中。<button onclick="location.reload()" style="margin-left:16px;background:#abdad5;color:#004b97;border:none;border-radius:6px;padding:3px 12px;cursor:pointer;font-weight:700;">重新整理</button>';
+    document.body.prepend(el);
+}
+
 function _attach401Handler(instance) {
     instance.interceptors.response.use(
         res => res,
@@ -29,6 +45,12 @@ function _attach401Handler(instance) {
             const url = err?.config?.url || '';
             const status = err?.response?.status;
             const msg = err?.response?.data?.message || '';
+
+            // 逾時或網路中斷
+            if (err.code === 'ECONNABORTED' || err.message === 'Network Error' || !err.response) {
+                _showNetworkBanner();
+                return Promise.reject(err);
+            }
 
             if (status === 403 && msg === 'Account is temporarily suspended') {
                 const loader = document.getElementById('loader');
@@ -101,7 +123,12 @@ _attach401Handler(axios); // 覆蓋絕大多數 API 呼叫
 export default class BackendService {
     constructor() {
         this.baseUrl = 'https://thpr.hlc23.dev';
-        this.http = axios.create({ baseURL: this.baseUrl, withCredentials: true });
+        this.http = axios.create({
+            baseURL: this.baseUrl,
+            withCredentials: true,
+            timeout: 30000,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
         _attach401Handler(this.http); // 覆蓋少數用 this.http 的呼叫
     }
     _forbidden(error) {

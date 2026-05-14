@@ -5,6 +5,8 @@
     <title>拾貨寶庫 | 校園最大二手商店</title>
     <!-- meta部分 -->
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://thpr.hlc23.dev wss://thpr.hlc23.dev; object-src 'none'; base-uri 'self'; form-action 'self' https://thpr.hlc23.dev;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../image/bigLogo.jpg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,18 +27,18 @@
     <link rel="stylesheet" href="../default/default.css">
     <link rel="stylesheet" href="../default/default-font.css">
     <link rel="stylesheet" href="commodity.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet"  >
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
     <!-- script部分 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -80,7 +82,7 @@
             <div class="d-flex align-items-center" style="position:relative;">
                 <div class="search-input-wrap w-100" style="position:relative;">
                     <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-                    <input class="form-control" type="search" placeholder="搜尋商品..." id="searchTriggerMobile" autocomplete="off">
+                    <input class="form-control" type="search" placeholder="搜尋商品..." id="searchTriggerMobile" autocomplete="off" maxlength="100" spellcheck="false">
                     <button class="search-clear-btn" id="searchClearBtnMobile" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
                     <!-- 手機版搜尋下拉面板 -->
                     <div id="searchDropdownMobile" class="search-dropdown" style="display:none!important;">
@@ -93,7 +95,7 @@
                       </div>
                       <div class="search-drop-section">
                         <div class="search-drop-header">
-                          <span><i class="fa-solid fa-fire" style="color:#ff6b35;margin-right:4px;"></i>大家都在搜</span>
+                          <span><i class="fa-solid fa-fire" style="color:#e8952a;margin-right:4px;"></i>大家都在搜</span>
                         </div>
                         <ul id="mobileTrendList" class="search-drop-list search-drop-trend">
                           <li class="search-drop-empty">暫無資料</li>
@@ -142,7 +144,7 @@
                 <form id="searchForm" class="form-search flex-grow-1 mx-4" style="max-width: 500px;">
                     <div class="search-input-wrap" style="width: 100%; position: relative;">
                         <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-                        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
+                        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput" maxlength="100" spellcheck="false">
                         <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
                         <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
                             <div class="search-drop-section" id="desktopHistorySection">
@@ -154,7 +156,7 @@
                             </div>
                             <div class="search-drop-section">
                                 <div class="search-drop-header">
-                                    <span><i class="fa-solid fa-fire" style="color:#ff6b35;margin-right:4px;"></i>大家都在搜</span>
+                                    <span><i class="fa-solid fa-fire" style="color:#e8952a;margin-right:4px;"></i>大家都在搜</span>
                                 </div>
                                 <ul id="desktopTrendList" class="search-drop-list search-drop-trend">
                                     <li class="search-drop-empty">暫無資料</li>
@@ -213,12 +215,12 @@
     <div class="contentOfCommodity d-lg-flex justify-content-around">
             <div class="sortAndProduct">
                 <div class="filter-bar">
-                    <select id="sortSelect" class="form-select form-select-sm filter-select">
+                    <select style="border: 1px solid #c8e4ef;" id="sortSelect" class="form-select form-select-sm filter-select">
                         <option value="default">排序</option>
                         <option value="priceAsc">價格↑</option>
                         <option value="priceDesc">價格↓</option>
                     </select>
-                    <select id="new_or_oldInput" class="form-select form-select-sm filter-select">
+                    <select style="border: 1px solid #c8e4ef;" id="new_or_oldInput" class="form-select form-select-sm filter-select">
                         <option value="default">狀態</option>
                         <option value="1">全新</option>
                         <option value="2">稍新以上</option>
@@ -227,7 +229,7 @@
                         <option value="5">半舊以上</option>
                         <option value="6">全舊以上</option>
                     </select>
-                    <input type="number" id="maxPriceInput" class="form-control form-control-sm filter-price" placeholder="最高預算">
+                    <input type="number" style="border: 1px solid #c8e4ef;" id="maxPriceInput" class="form-control form-control-sm filter-price" placeholder="最高預算" min="0" max="999999" step="1">
                     <button id="cleanFilter" class="btn btn-sm filter-clear-btn" title="清除所有篩選條件">清除</button>
                 </div>
                 <!-- 手機版 layout 切換列 -->
