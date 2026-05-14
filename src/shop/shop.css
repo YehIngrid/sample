@@ -1,12 +1,13 @@
+/* ── Shop 變數（→ tokens.css 為唯一來源） ── */
 :root {
-  --primary-color: #cffafe;
-  --secondary-color: #0891b2;
-  --third-color: #F4A5AE;
-  --special-color: #A8577E;
-  --background-color: #c9fbfc;
-  --text-color: #333333;
-  --light-text-color: rgb(255, 249, 211);
-  --brand-color: #004b97;
+  /* 別名：讓舊規則繼續運作 */
+  --brand-color:   var(--color-primary);
+  --brand:         var(--color-primary);
+  --muted:         var(--color-text-muted);
+  --border:        var(--color-primary-alpha12);
+  /* 版面專用 */
+  --side-w:        220px;
+  --container-max: 1100px;
 }
   /* 基本按鈕樣式（可依需求自行調整） */
   .arrow {
@@ -47,7 +48,7 @@
     display: block;
     background-color: rgba(255, 255, 255);
 }
-/* TODO 功能鈕：許願池等等 */
+/* ── 快速入口 ── */
 ul{
     padding-left: 0rem !important;
 }
@@ -59,8 +60,7 @@ ul{
   display: flex;
   list-style: none;
   justify-content: space-around;
-  grid-template-columns: repeat(3, 1fr); /* 或 3 欄、4 欄 */
-  gap: 24px 0px; /* 控制間距 */
+  gap: 24px 0px;
   align-items: end;
   justify-items: center;
 }
@@ -83,6 +83,12 @@ ul{
 }
 .seriesofbutton img {
   width: 28px;
+}
+.seriesofbutton button{
+    width: 40px;
+    background-color: white;
+    font-size: 26px;
+    border: none;
 }
 @media (max-width:452px) {
     .seriesofbutton li{
@@ -114,15 +120,7 @@ ul{
 #previewArea img {
   box-shadow: 0 0 6px rgba(0,0,0,0.1);
 }
-.seriesofbutton button{
-    /* border: 1px solid #004b9739 ; */
-    /* border-radius: 15px; */
-    width: 40px;
-    background-color: white;
-    font-size: 26px;
-    
-    border: none;
-} 
+/* .seriesofbutton button → 已整合至上方 */
 .what {
     margin: 13px;
 }
@@ -221,7 +219,7 @@ ul{
   color: var(--brand-color);
 }
 .desktop-cat-item span {
-  font-size: 0.82rem;
+  font-size: var(--font-size-xs);
   text-align: center;
 }
 .desktop-cat-item .icon-box {
@@ -363,7 +361,7 @@ ul{
   gap: 5px;
   padding: 5px 10px;
   border-radius: 8px;
-  font-size: 0.82rem;
+  font-size: var(--font-size-sm);
   color: #004b97;
   background: aliceblue;
   border: 1px solid rgba(0,75,151,0.2);
@@ -539,6 +537,7 @@ ul{
   margin-bottom: 6px;
 }
 .sell-required { color: #e03; font-size: 0.85rem; }
+.sell-charcount { float: right; font-size: 0.75rem; font-weight: 400; color: #aaa; }
 .mw-login-hint {
   font-size: 0.85rem;
   color: #666;
@@ -949,28 +948,12 @@ ul{
   padding-left: 3px;
   padding-right: 3px;
 }
-.card-text{
-  color: #252525;
-}
-.card-text span{
-  background-color: #ABDAD5aa;
-  padding: 1px 5px;
-  border-radius: 3px;
-  margin-right: 5px;
-  font-size: 0.75rem;
-  margin-top: 2px;
-}
+/* .card-tags / .card-tag / .card-bottom / .price / .hotItemPrice → default.css */
 .stock {
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
 }
 @media screen and (max-width: 768px) {
-  .stock {
-    font-size: 0.7rem;
-  }
-}
-.price {
-  font-size: 1rem;
-  flex-shrink: 0;
+  .stock { font-size: 0.7rem; }
 }
 .login{
   text-align: right;
@@ -1009,22 +992,7 @@ ul{
   justify-content: space-between;
 } */
 
-.product-card:hover {
-  transform: translateY(-5px) ease-in-out 0.4s;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-.product-card {
-  border: none;
-  cursor: pointer;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  background-color: aliceblue;
-}
-.product-card .card-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+/* .product-card / .product-card:hover / .product-card .card-body → default.css */
 .card-img-top {
   object-fit: cover;
   object-position: center;
@@ -1035,7 +1003,6 @@ ul{
   align-content: flex-start;
 }
 #product-grid .card-body {
-  padding: 10px !important;
   justify-content: space-between;
 }
 
@@ -1051,8 +1018,7 @@ ul{
 } */
 .newsell {
   width: 80vw;
-  margin: 0 auto;
-  margin-top: 10px;
+  margin: var(--space-6) auto 0;
 }
 @media (max-width: 991px) {
   .newsell {
@@ -1075,36 +1041,23 @@ ul{
     padding: 0 6px;
   }
   #product-grid .card {
-    border-radius: 8px;
+    border-radius: var(--radius-md);
   }
   #product-grid .card-img-top {
     height: 140px;
   }
   #product-grid .card-body {
-    padding: 6px 8px !important;
+    padding: var(--space-1) var(--space-2) var(--space-2) !important;
   }
-  #product-grid .card-body .card-title {
-    font-size: 0.8rem;
-    margin-bottom: 4px;
+  #product-grid .card-body .hotItemName {
+    font-size: 0.78rem;
   }
-  #product-grid .card-body .card-text {
-    font-size: 0.75rem;
+  #product-grid .card-body .card-tag {
+    font-size: 0.7rem;
+    padding: 1px 6px;
   }
 }
-.newsell-title {
-  margin: 0;
-  color: #004b97;
-  font-weight: 700;
-  letter-spacing: 3px;
-  font-size: 1.3rem;
-}
-
-.cardTitle {
-  margin: 0; 
-  padding-left: 4px; 
-  font-weight: 600; 
-  letter-spacing: 4px; 
-}
+/* .newsell-title / .cardTitle → 已被 .section-title 取代 */
 .more{
   display: inline-block;
   color: #004b97;
@@ -1922,33 +1875,7 @@ tbody > tr:nth-of-type(even) {
   
 }
 
-/* 正方形縮圖；要 4:3/16:9 就改成 4 / 3、16 / 9 */
-.product-thumb {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background: linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%);
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.5s infinite;
-  border-top-left-radius: 0.3rem;
-  border-top-right-radius: 0.3rem;
-}
-.product-thumb.img-loaded {
-  animation: none;
-  background: #f8f9fa;
-}
-.product-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.product-thumb.img-loaded img {
-  opacity: 1;
-}
+/* .product-thumb → default.css */
 .mgMobile {
   max-width: 1200px;
   margin: 0 auto;
@@ -1999,87 +1926,157 @@ tbody > tr:nth-of-type(even) {
 .hot-slide-in-right { animation: hotSlideFromRight 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
 .hot-slide-in-left  { animation: hotSlideFromLeft  0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
 
-.hot-item .main {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-}
-.pager {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 12px;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.pager button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-#prevHotBtn, #nextHotBtn {
-  border: #004b97 1px solid;
-  border-radius: 50px;
-  color: #004b97;
-  padding: 3px 14px;
-  font-size: 0.88rem;
-  cursor: pointer;
-}
-#prevHotBtn:not(:disabled):hover, #nextHotBtn:not(:disabled):hover {
-  border-color: rgba(255, 255, 255, 0.9);
-  background-color: rgba(255, 255, 255, 0.3);
-}
-#newNext, #newPrev {
-  border: 1px solid #004b97;
-  background: transparent;
-  border-radius: 50px;
-  color: #004b97;
-  padding: 3px 14px;
-  font-size: 0.88rem;
-  cursor: pointer;
-}
-#newNext:not(:disabled):hover, #newPrev:not(:disabled):hover {
-  background-color: rgba(0,75,151,0.08);
-}
-.hotItemPrice {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin: 0;
-  font-weight: bold;
-  color: #004b97;
-  font-size: 0.82rem;
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 8px 0 0 0;
-  padding: 2px 6px;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+/* .hot-item .main 已合併至 .hot-item .img-box img.main */
+/* .pager / .pager button / #prevHotBtn / #newNext 等分頁規則已移至 default.css */
+/* .hotItemPrice 樣式已合併至 .price, .hotItemPrice 規則 */
 .hot-item-footer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px 6px;
-  gap: 4px;
+  flex-direction: column;
+  padding: var(--space-1) var(--space-2) var(--space-2);
+  gap: 2px;
 }
-.hotItemName {
-  font-size: 12px;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+/* .hotItemName → default.css */
 .firstlinesell {
   width: 80vw;
-  margin: 20px auto 0px auto;
+  margin: var(--space-6) auto 0;
 }
 .smallmysection {
-  width: 80vw; 
-  margin: 0 auto;
+  width: 80vw;
+  margin: var(--space-4) auto 0;
+}
+
+/* ── 促銷 Banner 輪播 ── */
+.promo-banner {
+  margin-bottom: 4px;   /* 留給底部 dots 的空間 */
+  overflow: visible;    /* 讓 dots 顯示在 slide 下方 */
+  position: relative;
+}
+.promo-banner .carousel {
+  height: 100px;
+}
+.promo-banner .carousel-inner {
+  height: 100px;
+}
+.promo-banner .carousel-item {
+  height: 100px;
+}
+.promo-banner__link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.promo-banner__inner {
+  display: flex;
+  align-items: center;
+  height: 100px;        /* 純內容高度，不含 dots */
+  padding: 0 32px;      /* 對稱 padding，內容真正置中 */
+  border-radius: 12px;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;   /* icon 的絕對定位基準 */
+}
+/* 各 slide 背景色 */
+.promo-slide--fee    { background: #004b97; }
+.promo-slide--seller { background: #2d6a8f; }
+.promo-slide--wish   { background: #4a72b5; }
+.promo-slide--safety { background: #7a5a28; }
+.promo-slide--eco    { background: #2a7a62; }
+
+/* 左：badge + 大標題 */
+.promo-banner__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 0 0 auto;
+  width: 36%;
+}
+.promo-banner__badge {
+  display: inline-block;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.9);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 99px;
+  padding: 2px 10px;
+  width: fit-content;
+}
+.promo-banner__kv {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* 中：大型插畫 icon（容器佔 flex 空間；icon 本身絕對定位於 banner 水平正中央） */
+.promo-banner__illus {
+  flex: 1;
+  pointer-events: none;
+}
+.promo-banner__illus i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  font-size: 3.8rem;
+  color: rgba(255,255,255,0.22);
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));
+}
+
+/* 右：hashtag */
+.promo-banner__tags {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 30%;
+  align-items: flex-end;
+}
+.promo-banner__tags span {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* 指示點：放在 slide 下方，不重疊內容 */
+.promo-carousel-indicators {
+  bottom: -20px;        /* 在 100px slide 正下方 */
+  margin: 0;            /* 覆蓋 Bootstrap margin-bottom: 1rem */
+  margin-bottom: 0 !important;
+  align-items: center;
+  gap: 5px;
+}
+.promo-carousel-indicators [data-bs-target] {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  border: none;
+  background: #c0ccd8;
+  opacity: 1;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  margin: 0;
+}
+.promo-carousel-indicators .active {
+  background: #004b97;
+  width: 14px;
+  border-radius: 3px;
+}
+
+@media (max-width: 640px) {
+  .promo-banner .carousel,
+  .promo-banner .carousel-inner,
+  .promo-banner .carousel-item { height: 88px; }
+  .promo-banner__inner { height: 88px; padding: 0 18px; }
+  .promo-banner__body { width: 55%; }
+  .promo-banner__kv { font-size: 1.05rem; }
+  .promo-banner__tags { display: none; }
+  .promo-banner__illus i { font-size: 2.8rem; }
 }
 @media (max-width: 500px) {
   .smallmysection {
@@ -2168,18 +2165,19 @@ tbody > tr:nth-of-type(even) {
   cursor: pointer;
 }
 .hot-item .card {
-  background: #fff;
-  border-radius: 10px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
   overflow: hidden;
   width: 148px;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: left;
+  box-shadow: var(--shadow-card);
+  border: 1px solid transparent;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 .hot-item .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-primary-alpha20);
 }
 .hot-item .img-box {
   width: 100%;
@@ -2187,6 +2185,27 @@ tbody > tr:nth-of-type(even) {
   position: relative;
   overflow: hidden;
   margin: 0;
+  background: var(--color-bg-card);
+}
+
+/* 圖片 hover 微縮放 */
+.hot-item .img-box img.main {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+.hot-item .card:hover .img-box img.main {
+  transform: scale(1.06);
+}
+
+/* 圖片底部漸層遮罩，讓 TOP icon 更清晰 */
+.hot-item .img-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.06) 0%, transparent 40%);
+  pointer-events: none;
 }
 /* 超出容器寬度時改靠左，由 JS 動態切換 */
 .hot-items-container.overflows {
@@ -2278,7 +2297,6 @@ tbody > tr:nth-of-type(even) {
   width: 46px;
   height: 46px;
   object-fit: contain;
-  z-index: 2;
   pointer-events: none;
 }
 .hot-items-container .img-box {
@@ -2305,10 +2323,7 @@ tbody > tr:nth-of-type(even) {
     height: 190px;
   }
   .hotItemName {
-    font-size: 14px;
-  }
-  .hotItemPrice {
-    font-size: 0.92rem;
+    font-size: var(--font-size-sm);
   }
   .hot-top-icon {
     width: 56px;
@@ -2495,14 +2510,6 @@ tbody > tr:nth-of-type(even) {
 .img-preview.dragover {
   border-color: #004b97;
   box-shadow: 0 0 0 4px rgba(0,75,151,0.12);
-}
-:root{
-  --brand:#004b97;
-  --border:rgba(0,75,151,0.12);
-  --muted:#6b7280;
-  --side-w:220px;
-  --radius:8px;
-  --container-max:1100px;
 }
 html{ scroll-behavior:smooth; }
 .wrap-seller{
@@ -2733,23 +2740,31 @@ html{ scroll-behavior:smooth; }
   height: 100%;
 }
 
-/* 分頁按鈕 */
+/* 分頁按鈕（seller section — 沿用 .pager-nav-btn 語意） */
 .pagination {
-    margin-top:20px;
+  margin-top: var(--space-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  justify-content: center;
 }
 .pagination button {
-    padding:3px 5px;
-    border:none;
-    background:#004b97;
-    border-radius:10px;
-    font-size:12px;
-    cursor:pointer;
-    color:#fff;
-    transition:transform 0.2s;
+  /* 繼承 .pager-nav-btn 風格 */
+  border: 1px solid var(--color-primary);
+  background: transparent;
+  border-radius: var(--radius-pill);
+  color: var(--color-primary);
+  padding: 3px 12px;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-base), border-color var(--transition-base);
 }
 .pagination button:hover {
-    background-color: #004b97cc;
-    transform:scale(1.05);
+  background-color: var(--color-primary-light);
+}
+.pagination button.active {
+  background-color: var(--color-primary);
+  color: var(--color-white);
 }
 
 /* 原本的 .chaticon 加上 position: relative，讓紅點 absolute 定位有參考點 */
@@ -3007,30 +3022,7 @@ html{ scroll-behavior:smooth; }
   }
 }
 
-/* ── 卡片賣家資訊 ── */
-.card-seller {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 4px;
-  min-width: 0;
-  max-width: 55%;
-}
-.seller-avatar {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-.seller-name {
-  font-size: 0.75rem;
-  color: #888;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 80px;
-}
+/* .card-seller / .seller-avatar / .seller-name → default.css */
 .category {
     margin: 40px auto 60px;
 }

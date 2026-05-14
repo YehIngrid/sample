@@ -1,12 +1,4 @@
 /* ── School Editor ── */
-:root {
-  --se-brand:  #004b97;
-  --se-green:  rgb(36, 182, 133);
-  --se-accent: aliceblue;
-  --se-radius: 8px;
-  --se-shadow: 0 1px 4px rgba(0,0,0,0.1);
-}
-
 body {
   background: #f7f9fc;
   min-height: 100vh;

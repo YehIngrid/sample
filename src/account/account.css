@@ -74,13 +74,13 @@
 }
 .modalwhat h2 {
   margin-bottom: 20px;
-  font-size: 1.6rem;
+  font-size: var(--font-size-xl);
   font-weight: 700;
   color: #1a1a2e;
 }
 .modalwhat h3 {
   margin-bottom: 12px;
-  font-size: 1.1rem;
+  font-size: var(--font-size-md);
   font-weight: 600;
   color: #1a1a2e;
 }
@@ -147,7 +147,7 @@ input::placeholder {
 }
 .backlogin {
   text-align: right;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   display: block;
   cursor: pointer;
   color: #004b97;
@@ -207,12 +207,12 @@ input::placeholder {
   margin-top: 18px;
 }
 .checkalert {
-  font-size: 16px;
+  font-size: var(--font-size-base);
   color: orangered;
   text-align: left;
 }
 .linkalert {
-  font-size: 16px;
+  font-size: var(--font-size-base);
   color: #8d6efc;
   text-align: left;
   margin-bottom: 10px;
@@ -240,7 +240,7 @@ input::placeholder {
 .field-error {
   display: none;
   color: #e03e3e;
-  font-size: 12px;
+  font-size: var(--font-size-xs);
   margin: 4px 0 2px 2px;
 }
 .field-error.show {
@@ -253,7 +253,7 @@ input::placeholder {
 
 .policy{
   color: #b1b1b1;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   text-align: right;
 }
 .policy a{

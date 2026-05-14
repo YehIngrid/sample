@@ -26,12 +26,14 @@
 }
 
 :root {
-    --sidebar-bg: #f8f9fa;
-    --chat-bg: #ffffff;
-    --message-bg: #e9ecef;
-    --primary-color: #84a2d4;
-    --secondary-color: #82d3d3;
-    --border-color: #dee2e6;
+  /* chatroom 主題色（有別於品牌藍，刻意保留） */
+  --primary-color:   #84a2d4;
+  --secondary-color: #82d3d3;
+  --sidebar-bg:      #f8f9fa;
+  --message-bg:      #e9ecef;
+  /* 別名 → tokens.css */
+  --chat-bg:    var(--color-white);
+  --border-color: var(--color-border);
 }
 
 html, body {

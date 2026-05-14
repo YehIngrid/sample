@@ -265,14 +265,14 @@ function renderProductsBootstrap(items) {
             ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(p.name)}" loading="lazy">`
             : `<div class="product-thumb-placeholder">${escapeHtml(p.name.slice(0,6))}</div>`}
         </div>
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title ellipsis-text" style="font-size:13px;">${escapeHtml(p.name)}</h5>
-          <p class="card-text mb-2 ellipsis-text d-flex gap-1" style="font-size:11px;">
-            <span># ${escapeHtml(category)}</span>
-            ${newOrOld ? `<span># ${escapeHtml(newOrOld)}</span>` : ''}
-          </p>
-          <div class="mt-auto d-flex justify-content-between align-items-center">
-            <span class="fw-bold price" style="font-size:13px;">NT$ ${escapeHtml(String(p.price))}</span>
+        <div class="card-body">
+          <div class="hotItemName ellipsis-text">${escapeHtml(p.name)}</div>
+          <div class="card-tags">
+            <span class="card-tag"># ${escapeHtml(category)}</span>
+            ${newOrOld ? `<span class="card-tag"># ${escapeHtml(newOrOld)}</span>` : ''}
+          </div>
+          <div class="card-bottom">
+            <span class="price">NT$ ${escapeHtml(String(p.price))}</span>
             <div class="card-seller">
               <img class="seller-avatar" src="${escapeHtml(p.owner?.photoURL || '../webP/default-avatar.webp')}" alt="${escapeHtml(p.owner?.name || '賣家')}" onerror="this.src='../webP/default-avatar.webp'">
               <span class="seller-name">${escapeHtml(p.owner?.name || '賣家')}</span>

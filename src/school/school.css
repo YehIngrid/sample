@@ -2,16 +2,6 @@
 ::selection { background: #004b97; color: #fff; }
 [data-theme="dark"] ::selection { background: #abdad5; color: #1a1a2e; }
 
-/* ── School 全域變數 ── */
-:root {
-  --school-brand:   #004b97;
-  --school-green:   rgb(36, 182, 133);
-  --school-accent:  aliceblue;
-  --school-card-bg: aliceblue;
-  --school-radius:  8px;
-  --school-shadow:  0 1px 4px rgba(0,0,0,0.1);
-  --school-shadow-hover: 0 8px 20px rgba(0,0,0,0.1);
-}
 
 /* ── Navbar scroll cover effect ── */
 .header_new {

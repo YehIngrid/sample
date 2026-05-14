@@ -37,6 +37,18 @@ let mytotalPages = 1;
 let currentMyWishStatus = 0; // 0=全部, 1=活躍, 2=已過期, 3=已刪除
 
 document.addEventListener("DOMContentLoaded", () => {
+  // ── 字數計算 ──
+  [['wishName', 'wishNameCount', 60], ['wishDesc', 'wishDescCount', 300]].forEach(([inputId, countId, max]) => {
+    const el = document.getElementById(inputId);
+    const counter = document.getElementById(countId);
+    if (!el || !counter) return;
+    el.addEventListener('input', () => {
+      const len = el.value.length;
+      counter.textContent = `${len} / ${max} 字`;
+      counter.style.color = len >= max ? '#e03' : len >= max * 0.85 ? '#e67e22' : '#aaa';
+    });
+  });
+
   // ── 手機版篩選條件伸縮 ──
   const filterToggle = document.getElementById('filterToggle');
   const filterBody   = document.getElementById('filterBody');
@@ -265,7 +277,7 @@ function myupdatePaginationUI() {
 function showInfo(data) {
   const container = document.getElementById('wishGrid');
   if (!data.wishes || data.pagination.total === 0) {
-    container.innerHTML = '<p class="empty">目前還沒有願望</p>';
+    container.innerHTML = '<div class="mywish-empty"><i class="ti ti-star-off"></i><p>目前還沒有願望</p></div>';
     return;
   }
   container.innerHTML = '';

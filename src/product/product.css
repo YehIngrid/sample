@@ -218,7 +218,7 @@
   overflow: visible;
 }
 /* ── 統一邊框／分隔線色（學 meta-spec-row）── */
-:root { --divider: 1px dashed #ABDAD5; }
+:root { --divider: 1px dashed var(--color-soft); } /* → tokens.css */
 
 /* 手風琴邊框清除（全域） */
 .accordion-item {

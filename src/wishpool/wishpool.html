@@ -337,8 +337,9 @@
                 <div class="mb-3">
                   <div class="mw-field-label">
                     <label for="wishName" class="form-label">商品名稱 <span class="mw-required">*</span></label>
+                    <span class="mw-charcount" id="wishNameCount">0 / 60 字</span>
                   </div>
-                  <input type="text" id="wishName" class="form-control" placeholder="例：iPad 10 代 64GB（粉）">
+                  <input type="text" id="wishName" class="form-control" placeholder="例：iPad 10 代 64GB（粉）" maxlength="60">
                   <div class="invalid-feedback">請輸入商品名稱</div>
                 </div>
 
@@ -354,9 +355,10 @@
                 <div class="mb-3">
                   <div class="mw-field-label">
                     <label for="wishDesc" class="form-label">內容說明 <span class="mw-required">*</span></label>
-                    <small class="mw-hint">至少 10 字</small>
+                    <span class="mw-charcount" id="wishDescCount">0 / 300 字</span>
                   </div>
-                  <textarea id="wishDesc" rows="4" class="form-control" placeholder="型號、顏色、尺寸、方便聯絡時間等…"></textarea>
+                  <small class="mw-hint">至少 10 字</small>
+                  <textarea id="wishDesc" rows="4" class="form-control" placeholder="型號、顏色、尺寸、方便聯絡時間等…" maxlength="300"></textarea>
                   <div class="invalid-feedback">請至少輸入 10 字以上的說明</div>
                 </div>
 

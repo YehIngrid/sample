@@ -1,5 +1,5 @@
 :root {
-  --brand-color: #004b97;
+  --brand-color: var(--color-primary); /* → tokens.css */
 }
 
 html {

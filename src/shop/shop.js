@@ -217,14 +217,16 @@ function renderItems(items){
         <div class="card">
           <div class="img-box">
             <img src="../svg/topicon.svg" class="hot-top-icon" alt="熱門商品標誌" width="46" height="46" decoding="async">
-            <img class="main" src="${item.mainImage}" alt="${esc(item.name)}" width="148" height="148" loading="lazy" decoding="async">
-            <p class="hotItemPrice"><span style="font-size: 0.8rem">NT$</span> ${esc(item.price)}</p>
+            <img class="main" src="${item.mainImage}" alt="${esc(item.name)}" loading="lazy" decoding="async">
           </div>
           <div class="hot-item-footer">
             <div class="hotItemName">${esc(item.name)}</div>
-            <div class="card-seller">
-              <img class="seller-avatar" src="${esc(item.owner?.photoURL || '../webP/default-avatar.webp')}" alt="${esc(item.owner?.name || '賣家')}" onerror="this.src='../webP/default-avatar.webp'">
-              <span class="seller-name">${esc(item.owner?.name || '賣家')}</span>
+            <div class="card-bottom">
+              <span class="hotItemPrice">NT$ ${esc(item.price)}</span>
+              <div class="card-seller">
+                <img class="seller-avatar" src="${esc(item.owner?.photoURL || '../webP/default-avatar.webp')}" alt="${esc(item.owner?.name || '賣家')}" onerror="this.src='../webP/default-avatar.webp'">
+                <span class="seller-name">${esc(item.owner?.name || '賣家')}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -952,16 +954,17 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="product-thumb">
           <img src="${imgUrl}" alt="${esc(product.name)}" loading="lazy">
         </div>
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title ellipsis-text">${esc(product.name)}</h5>
-          <p class="card-text mb-2 ellipsis-text d-flex"><span># ${category} </span><span>${newOrOld ? `# ${newOrOld}` : '#未知'}</span></p>
-          <div class="mt-auto">
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="fw-bold price">NT$ ${esc(product.price)}</span>
-              <div class="card-seller">
-                <img class="seller-avatar" src="${esc(product.owner?.photoURL || '../webP/default-avatar.webp')}" alt="${esc(product.owner?.name || '賣家')}" onerror="this.src='../webP/default-avatar.webp'">
-                <span class="seller-name">${esc(product.owner?.name || '賣家')}</span>
-              </div>
+        <div class="card-body">
+          <div class="hotItemName ellipsis-text">${esc(product.name)}</div>
+          <div class="card-tags">
+            <span class="card-tag"># ${category}</span>
+            ${newOrOld ? `<span class="card-tag"># ${newOrOld}</span>` : ''}
+          </div>
+          <div class="card-bottom">
+            <span class="price">NT$ ${esc(product.price)}</span>
+            <div class="card-seller">
+              <img class="seller-avatar" src="${esc(product.owner?.photoURL || '../webP/default-avatar.webp')}" alt="${esc(product.owner?.name || '賣家')}" onerror="this.src='../webP/default-avatar.webp'">
+              <span class="seller-name">${esc(product.owner?.name || '賣家')}</span>
             </div>
           </div>
         </div>

@@ -1,11 +1,11 @@
 :root {
-    --secondary-color: #fff;
-    --background-color: #fff;
-    --text-color: #faf20b;
-    --light-text-color: #004b97;
-    --focus-color: rgb(186, 223, 206);
-    --focus-border-color: rgb(215, 223, 235);
-    --brand-color: #004b97;
+  /* 別名 → tokens.css */
+  --brand-color:      var(--color-primary);
+  --light-text-color: var(--color-primary); /* 用作按鈕背景藍 */
+  --background-color: var(--color-white);   /* 用作按鈕文字/邊框白 */
+  /* wishpool 專用 */
+  --focus-color:        rgb(186, 223, 206);
+  --focus-border-color: rgb(215, 223, 235);
 }
 * {
   box-sizing: border-box;
@@ -340,6 +340,12 @@ body {
 }
 .mw-field-label .form-label {
     margin-bottom: 0;
+}
+.mw-charcount {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #aaa;
+    white-space: nowrap;
 }
 .mw-required {
     color: #e05555;
@@ -852,6 +858,10 @@ body {
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     align-items: start;
+}
+.item-list .mywish-empty,
+.my-item-list .mywish-empty {
+    grid-column: 1 / -1;
 }
 @media (max-width: 991px) {
     .item-list,
@@ -1548,17 +1558,21 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 48px 16px;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: 56px 16px;
   color: #aab8c8;
+  text-align: center;
 }
 .mywish-empty i {
-  font-size: 2.6rem;
+  font-size: var(--font-size-3xl);
+  opacity: 0.6;
 }
 .mywish-empty p {
   margin: 0;
-  font-size: 15px;
+  font-size: var(--font-size-sm);
   color: #9aaab8;
+  letter-spacing: 0.04em;
 }
 
 /* ── Wish highlight from notification ── */

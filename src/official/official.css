@@ -1,7 +1,7 @@
 :root {
-  --brand: #004b97;
-  --brand-light: #e8f0fe;
-  --sidebar-w: 220px;
+  --brand:       var(--color-primary);        /* → tokens.css */
+  --brand-light: var(--color-primary-light);  /* → tokens.css */
+  --sidebar-w:   220px;                       /* 版面專用 */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

@@ -1,6 +1,6 @@
 :root {
-  --brand-color: #004b97;
-  --second-brand-color: #BEE4DA;
+  --brand-color:        var(--color-primary); /* → tokens.css */
+  --second-brand-color: var(--color-soft);    /* → tokens.css */
 }
 #whatcontent {
     display: flex;
@@ -553,33 +553,7 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
   max-width: 70px;
 }
 
-/* ── 分頁上下頁按鈕（與熱賣專區一致） ── */
-.pager-nav-btn {
-  border: 1px solid #004b97;
-  border-radius: 50px;
-  color: #004b97;
-  background: transparent;
-  font-size: 0.88rem;
-  padding: 4px 14px;
-  cursor: pointer;
-  margin: 0 4px;
-  transition: background 0.15s, border-color 0.15s;
-}
-.pager-nav-btn:hover:not(:disabled) {
-  background-color: rgba(0,75,151,0.08);
-}
-.pager-nav-btn:disabled, .pager-nav-btn.disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.pager-nav-btn--active {
-  background-color: #004b97;
-  color: #fff;
-  border-color: #004b97;
-}
-.pager-nav-btn--active:hover {
-  background-color: #004b97;
-}
+/* ── 分頁按鈕 → 已移至 default.css ── */
 
 /* ── 桌機版使用者下拉選單 ── */
 .nav-user-btn {

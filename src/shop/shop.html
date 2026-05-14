@@ -188,97 +188,133 @@
   <div class="my-section">  
   <div class="seriesofbutton">
     <ul>
-      <li class="hover-underline"  onclick="location.href='shop.html?page=seller'">
+      <li class="hover-underline" onclick="location.href='shop.html?page=seller'">
         <button>
           <img src="../svg/seller.svg" alt="賣家專區">
         </button>賣家專區
       </li>
-      <li class="hover-underline"  onclick="window.location.href = '../wishpool/wishpool.html#wishpool'">
+      <li class="hover-underline" onclick="window.location.href = '../wishpool/wishpool.html#wishpool'">
         <button id="wishpoolbtn">
           <img src="../svg/wish.svg" alt="許願池專區">
         </button>許願專區
       </li>
-      <li class="hover-underline"  onclick="window.location.href = '../questions/questions.html'">
+      <li class="hover-underline" onclick="window.location.href = '../questions/questions.html'">
         <button>
           <img src="../svg/fandq.svg" alt="常見問題">
         </button>常見問題
       </li>
     </ul>
 </div>
-<!-- 電腦版：noratead 廣告橫排（最上方） -->
-<div class="d-none d-lg-block smallmysection" style="margin-bottom: 16px;">
-  <img src="../image/noratead.png" alt="期間限定，拾貨寶庫免手續費優惠banner" loading="lazy" style="width:100%;display:block;">
-</div>
-<div class="d-block d-lg-none smallmysection" style="margin-bottom: 3px; margin-top: 10px;">
-  <img src="../image/noratead.png" style="width: 100%;" alt="期間限定，拾貨寶庫免手續費優惠banner" loading="lazy">
-</div>
-<div class="smallmysection">
-  <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
+<!-- 促銷 banner 輪播 -->
+<div class="promo-banner smallmysection">
+  <div id="promoBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-inner">
 
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      <!-- Slide 1：期間限定0手續費 -->
+      <div class="carousel-item active">
+        <div class="promo-banner__inner promo-slide--fee">
+          <div class="promo-banner__body">
+            <span class="promo-banner__badge">期間限定</span>
+            <span class="promo-banner__kv">全館手續費 0 元</span>
+          </div>
+          <div class="promo-banner__illus"><i class="ti ti-tag"></i></div>
+          <div class="promo-banner__tags">
+            <span>#免費上架</span>
+            <span>#輕鬆交易</span>
+            <span>#零手續費</span>
+          </div>
+        </div>
       </div>
 
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <a href="../shop/shop.html?page=seller"><img src="../svg/treasurehubad.svg" class="d-block w-100" alt="讓寶物找到新的歸屬，拾貨寶庫提供二手商品販賣平台banner" fetchpriority="high"></a>
-        </div>
-        <div class="carousel-item">
-          <a href="../wishpool/wishpool.html#wishpool"><img src="../svg/ad.svg" class="d-block w-100" loading="lazy" alt="買家許願，賣家實現，點擊進入許願池專區banner"></a>
-        </div>
-        <div class="carousel-item">
-          <img src="../svg/cheat.svg" class="d-block w-100" loading="lazy" alt="拾貨寶庫關心您，網路交易有風險，小心詐騙banner">
-        </div>
-        <div class="carousel-item">
-          <img src="../svg/earth.svg" class="d-block w-100" loading="lazy" alt="您的一小步是地球的一大步，一次消費等於一次消費等於減少了四公斤一次消費等於減少了四公斤的二氧化碳排放banner">
+      <!-- Slide 2：賣家專區 -->
+      <div class="carousel-item">
+        <a href="../shop/shop.html?page=seller" class="promo-banner__link">
+          <div class="promo-banner__inner promo-slide--seller">
+            <div class="promo-banner__body">
+              <span class="promo-banner__badge">賣家專區</span>
+              <span class="promo-banner__kv">讓寶物找到新的歸屬</span>
+            </div>
+            <div class="promo-banner__illus"><i class="ti ti-building-store"></i></div>
+            <div class="promo-banner__tags">
+              <span>#免費上架</span>
+              <span>#安心交易</span>
+              <span>#立即開賣</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Slide 3：許願池 -->
+      <div class="carousel-item">
+        <a href="../wishpool/wishpool.html#wishpool" class="promo-banner__link">
+          <div class="promo-banner__inner promo-slide--wish">
+            <div class="promo-banner__body">
+              <span class="promo-banner__badge">許願池</span>
+              <span class="promo-banner__kv">買家許願，賣家實現</span>
+            </div>
+            <div class="promo-banner__illus"><i class="ti ti-star"></i></div>
+            <div class="promo-banner__tags">
+              <span>#發起心願</span>
+              <span>#賣家媒合</span>
+              <span>#找到好物</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Slide 4：安全提醒 -->
+      <div class="carousel-item">
+        <div class="promo-banner__inner promo-slide--safety">
+          <div class="promo-banner__body">
+            <span class="promo-banner__badge">安全提醒</span>
+            <span class="promo-banner__kv">謹慎交易，防範詐騙</span>
+          </div>
+          <div class="promo-banner__illus"><i class="ti ti-shield-check"></i></div>
+          <div class="promo-banner__tags">
+            <span>#平台內交易</span>
+            <span>#勿私下匯款</span>
+            <span>#保障雙方</span>
+          </div>
         </div>
       </div>
-  
-      <button class="carousel-control-prev" type="button"
-              data-bs-target="#mainCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-  
-      <button class="carousel-control-next" type="button"
-              data-bs-target="#mainCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </button>
-  
+
+      <!-- Slide 5：環保理念 -->
+      <div class="carousel-item">
+        <div class="promo-banner__inner promo-slide--eco">
+          <div class="promo-banner__body">
+            <span class="promo-banner__badge">永續理念</span>
+            <span class="promo-banner__kv">二手交易，減碳同行</span>
+          </div>
+          <div class="promo-banner__illus"><i class="ti ti-leaf"></i></div>
+          <div class="promo-banner__tags">
+            <span>#減少碳排放</span>
+            <span>#循環經濟</span>
+            <span>#愛護地球</span>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-  <!-- 功能按鈕（賣家、許願、問題）一整排 -->
-  <!-- <div class="seriesofbutton">
-    <ul>
-      <li class="hvr-underline-from-center">
-        <button onclick="location.href='shop.html?page=seller'">
-          <img src="../svg/seller.svg" alt="賣家專區">
-        </button>賣家專區
-      </li>
-      <li class="hvr-underline-from-center">
-        <button id="wishpoolbtn" onclick="window.location.href = '../wishpool/wishpool.html#wishpool'">
-          <img src="../svg/wish.svg" alt="許願池專區">
-        </button>許願專區
-      </li>
-      <li class="hvr-underline-from-center">
-        <button onclick="window.location.href = '../questions/questions.html'">
-          <img src="../svg/fandq.svg" alt="常見問題">
-        </button>常見問題
-      </li>
-    </ul>
-</div><!-- /.smallmysection (carousel + buttons) -->
-
+    <!-- 指示點 -->
+    <div class="carousel-indicators promo-carousel-indicators">
+      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="1"></button>
+      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="2"></button>
+      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="3"></button>
+      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="4"></button>
+    </div>
+  </div>
+</div>
 </div><!-- /.my-section -->
 
   <!-- 1. 熱門商品 -->
   <div class="firstlinesell d-block justify-content-center gap-lg-4">
     <div class="top d-flex flex-column">
-      <div class="d-flex justify-content-between align-items-center" style="color: #383838; margin-bottom: 10px;">
+      <div class="section-header">
         <div>
-          <h3 class="cardTitle" style="color: #004b97;">熱賣專區</h3>
-          <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">校園最受歡迎二手精選</p>
+          <h3 class="section-title">熱賣專區</h3>
+          <p class="section-sub">校園最受歡迎二手精選</p>
         </div>
         <a class="more" href="../commodity/commodity.html?category=hot"><span class="more-btn">查看更多 →</span></a>
       </div>
@@ -294,10 +330,10 @@
 
   <!-- 2. 最新上架 -->
   <div class="newsell">
-    <div class="d-flex justify-content-between align-items-center" style="color: #383838; margin-bottom: 10px;">
+    <div class="section-header">
       <div>
-        <h3 class="cardTitle" style="color: #004b97;">最新上架</h3>
-        <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">每天都有新發現</p>
+        <h3 class="section-title">最新上架</h3>
+        <p class="section-sub">每天都有新發現</p>
       </div>
       <a href="../commodity/commodity.html?category=new" class="more"><span class="more-btn">查看更多 →</span></a>
     </div>
@@ -376,10 +412,10 @@
   <!-- 4. 許願池 -->
   <div class="firstlinesell d-block justify-content-center gap-lg-4">
     <div class="wishpoollook col-12" style="margin-bottom: 10px;">
-      <div class="d-flex justify-content-between align-items-center" style="color: #383838;">
+      <div class="section-header">
         <div>
-          <h3 class="cardTitle" style="color: #004b97;">許願池</h3>
-          <p style="margin: 0; color: #888; font-size: 0.85rem; letter-spacing: 1px;">買家許願，賣家實現</p>
+          <h3 class="section-title">許願池</h3>
+          <p class="section-sub">買家許願，賣家實現</p>
         </div>
         <a class="more" href="../wishpool/wishpool.html#wishpool"><span class="more-btn">查看更多 →</span></a>
       </div>
@@ -773,14 +809,14 @@
             <div class="sell-panel active" id="sellStep1">
               <p class="mw-login-hint" id="sellLoginHint" style="display:none">請先<span class="loginfirst">登入會員</span>才可提交商品表單！</p>
               <div class="sell-field">
-                <label for="name" class="sell-label">商品名稱 <span class="sell-required">*</span></label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="建議使用正式名稱，例如：台大有機化學課本第三版" />
+                <label for="name" class="sell-label">商品名稱 <span class="sell-required">*</span><span class="sell-charcount" id="nameCount">0 / 60 字</span></label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="建議使用正式名稱，例如：台大有機化學課本第三版" maxlength="60" />
               </div>
 
               <div class="sell-field">
-                <label for="description" class="sell-label">商品狀態描述 <span class="sell-required">*</span></label>
+                <label for="description" class="sell-label">商品狀態描述 <span class="sell-required">*</span><span class="sell-charcount" id="descCount">0 / 500 字</span></label>
                 <small class="sell-hint">可列出商品規格、注意事項、BSMI、ISBN；說明販售原因、瑕疵部位等，建議 30 字以上</small>
-                <textarea class="form-control" id="description" name="description" rows="5" placeholder="例如：九成新，只用了一學期，無劃線無書寫..."></textarea>
+                <textarea class="form-control" id="description" name="description" rows="5" placeholder="例如：九成新，只用了一學期，無劃線無書寫..." maxlength="500"></textarea>
               </div>
 
               <div class="sell-field">
@@ -1763,6 +1799,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// ── 字數計算 ──
+(function () {
+  function bindCharCount(inputId, countId, max) {
+    const el = document.getElementById(inputId);
+    const counter = document.getElementById(countId);
+    if (!el || !counter) return;
+    el.addEventListener('input', () => {
+      const len = el.value.length;
+      counter.textContent = `${len} / ${max} 字`;
+      counter.style.color = len >= max ? '#e03' : len >= max * 0.85 ? '#e67e22' : '#aaa';
+    });
+  }
+  bindCharCount('name', 'nameCount', 60);
+  bindCharCount('description', 'descCount', 500);
+})();
 
 // ── 賣家表單多步驟 Wizard ──
 (function () {
