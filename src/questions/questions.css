@@ -311,10 +311,17 @@ section ul {
   height: 56px;
   min-width: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--brand-color), rgb(36,182,133));
+  background: #004b97;
   color: #fff;
   flex-shrink: 0;
 }
+
+/* 循環調色盤（每個 ulstep 內的 li 從 1 開始計） */
+.ulstep li:nth-child(5n+1) .step-badge { background: #004b97; color: #fff; }
+.ulstep li:nth-child(5n+2) .step-badge { background: #4a85c4; color: #fff; }
+.ulstep li:nth-child(5n+3) .step-badge { background: #7eb8d8; color: #1a2840; }
+.ulstep li:nth-child(5n+4) .step-badge { background: #abdad5; color: #1a2840; }
+.ulstep li:nth-child(5n+5) .step-badge { background: #f3e3b5; color: #1a2840; }
 .step-label {
   font-size: 0.6rem;
   font-weight: 600;
@@ -339,10 +346,10 @@ section ul {
 }
 .step-arrow {
   text-align: center;
-  color: var(--brand-color);
+  color: #7eb8d8;
   font-size: 1rem;
   padding: 2px 0;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 /* ── RWD ── */
