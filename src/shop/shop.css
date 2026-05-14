@@ -2092,7 +2092,7 @@ tbody > tr:nth-of-type(even) {
   .promo-banner__tags { display: flex; }
   .promo-banner__tags span { font-size: 0.7rem; }
   .promo-banner__tags span:not(:first-child) { display: none; }
-  .promo-banner__illus i { font-size: 1.4rem; }
+  .promo-banner__illus i { font-size: 1.1rem; }
 }
 @media (max-width: 500px) {
   .smallmysection {
