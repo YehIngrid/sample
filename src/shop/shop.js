@@ -627,7 +627,7 @@ document.getElementById('mainImage').addEventListener('change', function (e) {
   openShopCrop([file], 'main');
 });
 
-document.getElementById('image').addEventListener('change', function (e) {
+document.getElementById('image').addEventListener('change', async function (e) {
   const newFiles = Array.from(e.target.files);
   if (!newFiles.length) return;
   e.target.value = '';
@@ -646,7 +646,10 @@ document.getElementById('image').addEventListener('change', function (e) {
     Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
     return;
   }
-  shopMultiFiles.push(...toAdd);
+
+  // 自動壓縮每張照片（縮至 1200px，轉 WebP）
+  const compressed = await Promise.all(toAdd.map(f => compressImage(f, 1200, 0.82)));
+  shopMultiFiles.push(...compressed);
   syncMultiToInput();
   renderMultiPreviews();
 });
