@@ -290,7 +290,7 @@
 }
 .filter-summary {
   font-size: 0.75rem;
-  color: #888;
+  color: #6f87a0;
 }
 .search-result-bar {
   display: flex;
@@ -323,7 +323,7 @@
   border: 1.5px solid #ccc;
   border-radius: 6px;
   padding: 3px 7px;
-  color: #888;
+  color: #6f87a0;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.15s;
@@ -466,14 +466,14 @@
   margin-bottom: 10px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #666;
+  color: #4a627a;
 }
 .search-drop-header button {
   background: none; border: none;
   font-size: 0.78rem; color: #aaa;
   cursor: pointer; padding: 0;
 }
-.search-drop-header button:hover { color: #555; }
+.search-drop-header button:hover { color: #4a627a; }
 .search-drop-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .search-drop-tag {
   display: inline-flex; align-items: center; gap: 4px;
@@ -487,7 +487,7 @@
   background: none; border: none; padding: 0;
   font-size: 0.85rem; color: #bbb; cursor: pointer; line-height: 1;
 }
-.search-drop-tag .del-tag:hover { color: #888; }
+.search-drop-tag .del-tag:hover { color: #6f87a0; }
 
 /* ===== 搜尋 Offcanvas 動畫 ===== */
 #searchOffcanvas {
@@ -511,7 +511,7 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
 }
 .search-history-tag .del-tag {
   background: none; border: none; padding: 0;
-  font-size: 0.9rem; color: #999; cursor: pointer; line-height: 1;
+  font-size: 0.9rem; color: #6f87a0; cursor: pointer; line-height: 1;
 }
 
 /* ── 手機搜尋下拉（搜尋欄正下方） ── */
@@ -546,7 +546,7 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
 }
 .seller-name {
   font-size: 0.72rem;
-  color: #888;
+  color: #6f87a0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

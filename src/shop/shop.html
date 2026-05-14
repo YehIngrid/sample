@@ -608,7 +608,7 @@
 
     <section id="禁售物品清單" class="sec">
       <h2>禁售物品清單 <span class="badge-seller" style="background:#e63946;color:#fff;">禁止</span></h2>
-      <p style="color:#555;font-size:0.9rem;margin-bottom:16px;">除盜版書籍外，以下物品常被誤上架，請特別留意，違者將下架帳號。</p>
+      <p style="color:#4a627a;font-size:0.9rem;margin-bottom:16px;">除盜版書籍外，以下物品常被誤上架，請特別留意，違者將下架帳號。</p>
       <div class="banned-list">
         <div class="banned-item">
           <div class="banned-body">
@@ -735,7 +735,7 @@
     <section id="平台規範" class="sec">
       <h2>平台規範</h2>
 
-      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">1. 智慧財產權與筆記規範</p>
+      <p style="color:#4a627a;font-size:0.88rem;margin-bottom:12px;font-weight:600;">1. 智慧財產權與筆記規範</p>
       <div class="rule-item" style="margin-bottom:20px;">
         <div class="rule-grid">
           <strong>支持正版教材</strong><span>本平台嚴禁販售非法影印、掃描書籍及未授權之教材電子檔。</span>
@@ -745,7 +745,7 @@
         </div>
       </div>
 
-      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">2. 食品衛生與安全規範</p>
+      <p style="color:#4a627a;font-size:0.88rem;margin-bottom:12px;font-weight:600;">2. 食品衛生與安全規範</p>
       <div class="rule-item" style="margin-bottom:20px;">
         <div class="rule-grid">
           <strong>食安守門員</strong><span>僅限販售標示完整且在有效期內之「原裝包裝食品」，嚴禁販售自製、拆封或過期食品。</span>
@@ -754,7 +754,7 @@
         </div>
       </div>
 
-      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">3. 合規交易與禁售項目</p>
+      <p style="color:#4a627a;font-size:0.88rem;margin-bottom:12px;font-weight:600;">3. 合規交易與禁售項目</p>
       <div class="rule-item" style="margin-bottom:20px;">
         <div class="rule-grid">
           <strong>法律底線</strong><span>嚴禁販售藥品、醫療器材（如：隱形眼鏡、OK 繃）及菸酒類商品，違者將立即下架並封鎖帳號。</span>
@@ -762,7 +762,7 @@
         </div>
       </div>
 
-      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">4. 交易安全與防詐騙</p>
+      <p style="color:#4a627a;font-size:0.88rem;margin-bottom:12px;font-weight:600;">4. 交易安全與防詐騙</p>
       <div class="rule-item" style="margin-bottom:20px;">
         <div class="rule-grid">
           <strong>校內面交優先</strong><span>建議約在校內人潮聚集處（如圖書館、便利商店），現場驗貨後再付款。</span>
@@ -771,7 +771,7 @@
         </div>
       </div>
 
-      <p style="color:#555;font-size:0.88rem;margin-bottom:12px;font-weight:600;">5. 平台營運秩序</p>
+      <p style="color:#4a627a;font-size:0.88rem;margin-bottom:12px;font-weight:600;">5. 平台營運秩序</p>
       <div class="rule-item">
         <div class="rule-grid">
           <strong>公平排序機制</strong><span>我們重視每一筆真實交易，嚴禁利用程式或惡意頻繁登入進行「刷屏置頂」。</span>
@@ -1405,11 +1405,19 @@ const timer = setInterval(() => {
   </div>
   <!-- Loading 遮罩 -->
 <div id="loadingOverlay" class="loading-overlay d-none">
-  <div class="d-flex flex-column justify-content-center align-items-center">
-    <span class="loader1"></span>
-    <span style="font-size: 1rem; padding-top: 5px;">上傳商品中...</span>
-    <span style="font-size: 1rem;">請勿跳出視窗或做任何操作</span>
-    <span style="font-size: 0.8rem; color: #aaa; margin-top: 8px; text-align: center; max-width: 240px;">若商品照片檔案較大，需花費較多時間傳送，請耐心等候</span>
+  <div class="loader-wrap">
+    <div class="shelf">
+      <div class="item it-book"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+      <div class="item it-laptop"><div class="screen"></div><div class="base"></div></div>
+      <div class="item it-lamp"><div class="shade"></div><div class="neck"></div><div class="base"></div></div>
+      <div class="item it-ball"><div class="body"></div><div class="seam"></div></div>
+      <div class="item it-shirt"><div class="sl"></div><div class="sr"></div><div class="body"></div><div class="collar"></div></div>
+      <div class="item it-gift"><div class="box"></div><div class="lid"></div><div class="vrib"></div><div class="bowL"></div><div class="bowR"></div><div class="knot"></div></div>
+    </div>
+    <div class="loader-text">
+      <p class="brand">上傳商品中</p>
+      <p class="tag">請稍候，勿關閉視窗</p>
+    </div>
   </div>
 </div>
 

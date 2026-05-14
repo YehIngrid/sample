@@ -16,12 +16,26 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
     <link rel="stylesheet" href="../default/default-font.css">
+    <link rel="stylesheet" href="../default/tokens.css">
 
 </head>
 <body>
     <!-- 頁面載入遮罩 -->
     <div id="chatLoader" class="chat-loader">
-      <div class="chat-loader__spinner"></div>
+      <div class="loader-wrap">
+        <div class="shelf">
+          <div class="item it-book"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+          <div class="item it-laptop"><div class="screen"></div><div class="base"></div></div>
+          <div class="item it-lamp"><div class="shade"></div><div class="neck"></div><div class="base"></div></div>
+          <div class="item it-ball"><div class="body"></div><div class="seam"></div></div>
+          <div class="item it-shirt"><div class="sl"></div><div class="sr"></div><div class="body"></div><div class="collar"></div></div>
+          <div class="item it-gift"><div class="box"></div><div class="lid"></div><div class="vrib"></div><div class="bowL"></div><div class="bowR"></div><div class="knot"></div></div>
+        </div>
+        <div class="loader-text">
+          <p class="brand">連線聊天室中</p>
+          <p class="tag">正在載入對話</p>
+        </div>
+      </div>
     </div>
 
     <div class="container-fluid h-100">
@@ -68,7 +82,7 @@
                             <small id="chatHeaderSubtitle" class="text-muted" style="font-size:0.72rem;display:none;">無專人服務</small>
                         </div>
                         <div class="d-flex align-items-center gap-1">
-                            <button id="toggleMaximizeBtn" class="btn btn-link p-1" style="display:none;color:#555;font-size:1.1rem;line-height:1;" title="放大視窗">
+                            <button id="toggleMaximizeBtn" class="btn btn-link p-1" style="display:none;color:#4a627a;font-size:1.1rem;line-height:1;" title="放大視窗">
                                 <i class="bi bi-arrows-fullscreen"></i>
                             </button>
                             <!-- <button class=" col-8 btn btn-sm btn-outline-secondary" id="connectionStatus">

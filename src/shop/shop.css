@@ -473,7 +473,7 @@ ul{
   height: 36px;
   border-radius: 50%;
   background: #e0e8f0;
-  color: #666;
+  color: #4a627a;
   font-weight: 700;
   font-size: 0.95rem;
   display: flex;
@@ -492,7 +492,7 @@ ul{
 }
 .sell-step-label {
   font-size: 0.78rem;
-  color: #666;
+  color: #4a627a;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -540,7 +540,7 @@ ul{
 .sell-charcount { float: right; font-size: 0.75rem; font-weight: 400; color: #aaa; }
 .mw-login-hint {
   font-size: 0.85rem;
-  color: #666;
+  color: #4a627a;
   margin-bottom: 18px;
   padding: 8px 12px;
   background: rgba(171,218,213,0.15);
@@ -643,9 +643,9 @@ ul{
   transition: border 0.2s, background 0.2s;
 }
 .sell-size-card input { display: none; }
-.sell-size-icon { font-size: 1.5rem; color: #888; margin-bottom: 2px; }
+.sell-size-icon { font-size: 1.5rem; color: #6f87a0; margin-bottom: 2px; }
 .sell-size-card strong { font-size: 0.9rem; color: #333; }
-.sell-size-card small { font-size: 0.72rem; color: #999; }
+.sell-size-card small { font-size: 0.72rem; color: #6f87a0; }
 .sell-size-card:hover { border-color: rgba(0,75,151,0.2); background: aliceblue; }
 .sell-size-card:has(input:checked) {
   border-color: #004b97;
@@ -702,7 +702,7 @@ ul{
 .sell-cond-desc {
   font-size: 0.78rem;
   font-weight: 400;
-  color: #888;
+  color: #6f87a0;
   margin-left: 2px;
 }
 
@@ -1207,7 +1207,7 @@ ul{
   background: none;
   border: 1px solid #bbb;
   border-radius: 99px;
-  color: #888;
+  color: #6f87a0;
   font-size: 0.78rem;
   padding: 4px 12px;
   cursor: pointer;
@@ -1296,62 +1296,14 @@ ul{
 }
 
 
-.loader1 {
-  width: 64px;
-  height: 64px;
-  position: relative;
-  background: #ffffff;
-  border-radius: 4px;
-  overflow: hidden;
-}
-.loader1:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 40px;
-  height: 40px;
-  transform: rotate(45deg) translate(30%, 40%);
-  background: rgb(36,182,133,0.3);
-  box-shadow: 32px -34px 0 5px rgb(36,138,133,0.5);
-  animation: slide 2s infinite ease-in-out alternate;
-}
-.loader1:after {
-  content: "";
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #ffc801;
-  transform: rotate(0deg);
-  transform-origin: 35px 145px;
-  animation: rotate 2s infinite ease-in-out;
-}
-
-@keyframes slide {
-  0% , 100%{ bottom: -35px}
-  25% , 75%{ bottom: -2px}
-  20% , 80%{ bottom: 2px}
-}
-@keyframes rotate {
-  0% { transform: rotate(-15deg)}
-  25% , 75%{ transform: rotate(0deg)}
-  100% {  transform: rotate(25deg)}
-}
-
 .loading-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(180, 227, 248,0.9);
+  inset: 0;
+  background: rgba(240, 248, 255, 0.96);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 99999;
 }
 
 /* 這是你的 loader（可客製） */
@@ -2590,7 +2542,7 @@ html{ scroll-behavior:smooth; }
 }
 .banned-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1.3; }
 .banned-title { font-size: 0.9rem; font-weight: 700; color: #c0392b; margin-bottom: 2px; }
-.banned-desc { font-size: 0.82rem; color: #555; line-height: 1.6; }
+.banned-desc { font-size: 0.82rem; color: #4a627a; line-height: 1.6; }
 .badge-seller{
   display:inline-block; margin-left:8px; padding:2px 10px; border-radius:999px;
   background:rgba(0,75,151,0.1); color:#004b97; font-weight:700; font-size:12px;
@@ -3013,7 +2965,7 @@ html{ scroll-behavior:smooth; }
 .cat-card p {
   margin: 0px 5px 1px;
   font-size: 0.83rem;
-  color: #555;
+  color: #4a627a;
   line-height: 1.6;
 }
 @media (max-width: 768px) {
@@ -3052,6 +3004,6 @@ html{ scroll-behavior:smooth; }
 }
 .wrong-photo-item span {
   font-size: 0.8rem;
-  color: #555;
+  color: #4a627a;
   line-height: 1.4;
 }

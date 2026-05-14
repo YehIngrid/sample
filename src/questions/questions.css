@@ -40,7 +40,7 @@ html, body {
   transition: transform 0.3s;
 }
 .content nav ul li a {
-  color: #555;
+  color: #4a627a;
   text-decoration: none;
   font-size: 0.9rem;
 }
@@ -334,7 +334,7 @@ section ul {
 }
 .listep-content p {
   font-size: 0.85rem;
-  color: #555;
+  color: #4a627a;
   margin: 0;
 }
 .step-arrow {

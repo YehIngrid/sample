@@ -290,7 +290,7 @@ body {
 }
 .listep-content p {
     font-size: 0.82rem;
-    color: #666;
+    color: #4a627a;
     margin: 0;
     line-height: 1.5;
 }
@@ -309,7 +309,7 @@ body {
     align-items: center;
     gap: 10px;
     font-size: 0.85rem;
-    color: #555;
+    color: #4a627a;
     padding: 8px 12px;
     background: aliceblue;
     border-radius: 8px;
@@ -324,7 +324,7 @@ body {
 /* ── Form ── */
 .mw-login-hint {
     font-size: 0.85rem;
-    color: #666;
+    color: #4a627a;
     margin-bottom: 18px;
     padding: 8px 12px;
     background: rgba(171,218,213,0.15);
@@ -352,7 +352,7 @@ body {
     font-weight: 600;
 }
 .mw-hint {
-    color: #888;
+    color: #6f87a0;
     font-size: 0.78rem;
     white-space: nowrap;
 }
@@ -375,7 +375,7 @@ body {
 }
 .mw-reset-btn {
     font-size: 0.85rem;
-    color: #888;
+    color: #6f87a0;
     padding: 6px 12px;
 }
 .mw-reset-btn:hover {
@@ -661,7 +661,7 @@ body {
 .wc-info { padding: 6px 8px; }
 .wc-name { font-size: 0.8rem; font-weight: 600; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wc-price { font-size: 0.78rem; color: #004b97; font-weight: 700; }
-.wc-stock { font-size: 0.72rem; color: #888; }
+.wc-stock { font-size: 0.72rem; color: #6f87a0; }
 @media (max-width: 600px) {
     .wc-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -703,7 +703,7 @@ body {
 }
 .wp-hero-count {
     font-size: 1rem;
-    color: #555;
+    color: #4a627a;
     margin-bottom: 20px;
 }
 .wp-hero-num {
@@ -803,12 +803,12 @@ body {
     letter-spacing: 2px;
 }
 .wp-filter-count {
-    color: #999;
+    color: #6f87a0;
     font-size: 0.82rem;
 }
 .wp-filter-chevron {
     font-size: 1.1rem;
-    color: #999;
+    color: #6f87a0;
     transition: transform 0.25s ease;
     display: none;
 }
@@ -983,7 +983,7 @@ body {
 }
 .wn-desc {
     font-size: 0.82rem;
-    color: #777;
+    color: #6f87a0;
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -1005,7 +1005,7 @@ body {
 }
 .wn-username {
     font-size: 0.82rem;
-    color: #666;
+    color: #4a627a;
 }
 .wn-footer {
     display: flex;
@@ -1033,7 +1033,7 @@ body {
 }
 .wn-date {
     font-size: 0.78rem;
-    color: #999;
+    color: #6f87a0;
     text-align: right;
 }
 .wn-actions {
@@ -1185,7 +1185,7 @@ body {
     color: #333;
 }
 .wc-price { font-size: 0.72rem; color: #c0392b; font-weight: 700; }
-.wc-stock { font-size: 0.68rem; color: #888; }
+.wc-stock { font-size: 0.68rem; color: #6f87a0; }
 @media (max-width: 600px) {
     .wc-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -1243,7 +1243,7 @@ body {
 }
 .about-text p {
     font-size: 0.97rem;
-    color: #555;
+    color: #4a627a;
     line-height: 2;
     margin-bottom: 10px;
 }
@@ -1432,7 +1432,7 @@ body {
 }
 .notif-time {
     font-size: 0.78rem;
-    color: #999;
+    color: #6f87a0;
     margin-top: 4px;
 }
 
@@ -1539,7 +1539,7 @@ body {
   border: 1.5px solid #abdad5;
   border-radius: 20px;
   background: #fff;
-  color: #555;
+  color: #4a627a;
   font-size: 13px;
   cursor: pointer;
   white-space: nowrap;

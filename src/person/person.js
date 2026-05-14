@@ -2330,9 +2330,8 @@ async function loadMyItems(p = 1) {
       total = raw?.total ?? raw?.count ?? res?.total ?? res?.count ?? null;
     }
 
-    // 若 API 無回傳 total，用「拿到的筆數 < limit」判斷是否最後一頁
-    const isLastPage = list.length < MY_ITEMS_LIMIT;
-    const totalCalc  = total !== null ? total : (p - 1) * MY_ITEMS_LIMIT + list.length + (isLastPage ? 0 : 1);
+    // 若 API 無回傳 total，以本頁實際筆數推算（不加 +1，避免恰好等於 limit 時出現空白第二頁）
+    const totalCalc  = total !== null ? total : (p - 1) * MY_ITEMS_LIMIT + list.length;
     const totalPages = Math.max(1, Math.ceil(totalCalc / MY_ITEMS_LIMIT));
 
     renderTable(list);

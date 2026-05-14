@@ -84,7 +84,7 @@
 }
 .school-hero-sub {
   font-size: 1.25rem;
-  color: #555;
+  color: #4a627a;
   margin: 0 0 18px;
   max-width: 44ch;
 }
@@ -96,7 +96,7 @@
 .school-hero-tag {
   background: #fff;
   border: 1.5px solid #d0d7e3;
-  color: #555;
+  color: #4a627a;
   border-radius: 20px;
   padding: 5px 14px;
   font-size: 0.92rem;
@@ -135,7 +135,7 @@
 .school-cat-tab {
   background: transparent;
   border: 1.5px solid #e0e6ef;
-  color: #666;
+  color: #4a627a;
   border-radius: 20px;
   padding: 3px 12px;
   font-size: 0.98rem;
@@ -156,7 +156,7 @@
 .school-sort-tab {
   background: transparent;
   border: 1.5px solid #d0d7e3;
-  color: #666;
+  color: #4a627a;
   border-radius: 20px;
   padding: 5px 14px;
   font-size: 0.92rem;
@@ -189,7 +189,7 @@
 .badge-career  { background: #fff4e8; color: #c47a1e; }
 .badge-trade   { background: #f0eaff; color: #6c3cbf; }
 .badge-newbie  { background: #ffe8ec; color: #c0392b; }
-.badge-all     { background: #f0f0f0; color: #555; }
+.badge-all     { background: #f0f0f0; color: #4a627a; }
 
 /* ── Featured card ── */
 .school-featured-card {
@@ -273,7 +273,7 @@
 }
 .school-featured-excerpt {
   font-size: 0.96rem;
-  color: #666;
+  color: #4a627a;
   line-height: 1.6;
   margin: 0 0 12px;
   display: -webkit-box;
@@ -287,7 +287,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.98rem;
-  color: #999;
+  color: #6f87a0;
   flex-wrap: wrap;
 }
 .article-avatar {
@@ -297,7 +297,7 @@
   object-fit: cover;
   border: 1.5px solid #d0d7e3;
 }
-.article-author { color: #555; font-weight: 600; }
+.article-author { color: #4a627a; font-weight: 600; }
 .article-meta-dot { color: #d0d0d0; }
 .article-likes {
   display: inline-flex;
@@ -344,7 +344,7 @@
 }
 .article-card-excerpt {
   font-size: 0.93rem;
-  color: #777;
+  color: #6f87a0;
   line-height: 1.55;
   margin: 0 0 10px;
   display: -webkit-box;
@@ -536,7 +536,7 @@
 }
 .school-author-count {
   font-size: 1.25rem;
-  color: #999;
+  color: #6f87a0;
 }
 .school-follow-btn {
   background: transparent;
@@ -560,7 +560,7 @@
 .school-intro-card .school-sidebar-header { border-bottom: none; }
 .school-intro-text {
   font-size: 0.92rem;
-  color: #666;
+  color: #4a627a;
   line-height: 1.6;
   padding: 10px 14px 4px;
   margin: 0;
@@ -568,7 +568,7 @@
 .school-intro-stats { padding: 0; }
 .school-stat { text-align: center; }
 .school-stat-num { font-size: 1.25rem; font-weight: 800; color: var(--school-brand); display: block; }
-.school-stat-label { font-size: 0.92rem; color: #999; }
+.school-stat-label { font-size: 0.92rem; color: #6f87a0; }
 
 /* ── Onboarding Modal ── */
 .school-onboarding-modal {
@@ -675,11 +675,11 @@
   flex-shrink: 0;
 }
 .school-step b { font-size: 1rem; color: #333; }
-.school-step p { font-size: 1rem; color: #777; margin: 2px 0 0; }
+.school-step p { font-size: 1rem; color: #6f87a0; margin: 2px 0 0; }
 .school-ghost-btn {
   background: transparent;
   border: 1.5px solid #d0d7e3;
-  color: #666;
+  color: #4a627a;
   border-radius: 20px;
   padding: 9px 20px;
   font-size: 0.98rem;
@@ -687,7 +687,7 @@
   cursor: pointer;
   transition: all 0.18s;
 }
-.school-ghost-btn:hover { border-color: #999; color: #333; }
+.school-ghost-btn:hover { border-color: #6f87a0; color: #333; }
 
 /* ── Article Read Modal ── */
 .school-read-dialog { max-width: 760px; }
@@ -756,7 +756,7 @@
   gap: 5px;
   background: transparent;
   border: 1.5px solid #d0d7e3;
-  color: #999;
+  color: #6f87a0;
   border-radius: 20px;
   padding: 5px 14px;
   font-size: 1.25rem;
@@ -785,7 +785,7 @@
 .school-theme-toggle {
   background: transparent;
   border: 1.5px solid #d0d7e3;
-  color: #666;
+  color: #4a627a;
   border-radius: 50%;
   width: 34px;
   height: 34px;
@@ -922,7 +922,7 @@ html[data-theme="dark"] body { background: #1e2025; color: #e8edf3; }
   gap: 5px;
   font-size: 0.98rem;
   font-weight: 600;
-  color: #555;
+  color: #4a627a;
   text-decoration: none;
   border-bottom: 2px solid transparent;
   transition: color 0.15s, border-color 0.15s;
@@ -946,7 +946,7 @@ html[data-theme="dark"] body { background: #1e2025; color: #e8edf3; }
 .school-search-icon-btn {
   background: none;
   border: none;
-  color: #555;
+  color: #4a627a;
   padding: 6px 8px;
   cursor: pointer;
   font-size: 1.1rem;

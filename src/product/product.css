@@ -238,7 +238,7 @@
   box-shadow: none !important;
 }
 .accordion-body {
-  color: #555;
+  color: #4a627a;
   font-size: 0.9rem;
   line-height: 1.7;
   padding-top: 0;
@@ -623,7 +623,7 @@
 }
 .seller-intro {
   font-size: 0.85rem;
-  color: #888;
+  color: #6f87a0;
   margin: 0;
   line-height: 1.5;
   display: -webkit-box;
@@ -653,7 +653,7 @@
 }
 .seller-stat-label {
   font-size: 0.75rem;
-  color: #999;
+  color: #6f87a0;
   white-space: nowrap;
 }
 .seller-stat-avg {
@@ -738,7 +738,7 @@
   transition: color 0.15s;
 }
 .review-report-btn:hover { color: #e53935; }
-.reviewText { padding: 8px 0 0 8px; font-size: 0.88rem; color: #555; line-height: 1.6; }
+.reviewText { padding: 8px 0 0 8px; font-size: 0.88rem; color: #4a627a; line-height: 1.6; }
 .review-card { padding: 12px 0; border-bottom: var(--divider); }
 .review-card:last-child { border-bottom: none; }
 .reviewer-avatar-wrap { position: relative; flex-shrink: 0; width: 40px; height: 40px; }
@@ -751,7 +751,7 @@
 }
 .reviewer-role-badge--seller { background: #004b97; }
 .reviewer-role-badge--buyer  { background: rgb(36,182,133); }
-.review-commodity-name { font-size: 11px; color: #888; font-weight: 400; margin-left: 2px; }
+.review-commodity-name { font-size: 11px; color: #6f87a0; font-weight: 400; margin-left: 2px; }
 .review-card__header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .review-card__meta { flex: 1; min-width: 0; }
 .review-card__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
@@ -908,7 +908,7 @@
 }
 .qty-label {
   font-size: 0.9rem;
-  color: #999;
+  color: #6f87a0;
   font-weight: 500;
 }
 .qty-control {
@@ -967,7 +967,7 @@
 }
 .meta-row:last-of-type { border-bottom: none; }
 .meta-row .text-muted {
-  color: #999 !important;
+  color: #6f87a0 !important;
   font-size: 0.9rem;
 }
 .meta-row .col-8,
@@ -1162,7 +1162,7 @@
 }
 .share-label {
   font-size: 0.85rem;
-  color: #888;
+  color: #6f87a0;
   white-space: nowrap;
 }
 .share-icon-btn {
@@ -1457,7 +1457,7 @@
   .meta-spec-row:last-child { border-bottom: none; }
   .meta-spec-label {
     font-size: 0.85rem;
-    color: #999;
+    color: #6f87a0;
   }
   .meta-spec-value {
     font-size: 0.9rem;
@@ -1537,7 +1537,7 @@
   .accordion-body {
     padding: 0 0 12px;
     font-size: 0.88rem;
-    color: #555;
+    color: #4a627a;
     line-height: 1.7;
   }
 

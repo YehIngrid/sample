@@ -190,7 +190,7 @@ body.edit-modal-open .modal-backdrop { z-index: 4999; }
 }
 .sidebar-profile-intro {
   font-size: 12px;
-  color: #666;
+  color: #4a627a;
   line-height: 1.5;
   margin: 2px 0 6px;
 }
@@ -369,9 +369,9 @@ small { font-size: 10px; color: #004b97; }
   transition: border 0.2s, background 0.2s;
 }
 .sell-size-card input { display: none; }
-.sell-size-icon { font-size: var(--font-size-xl); color: #888; margin-bottom: 2px; }
+.sell-size-icon { font-size: var(--font-size-xl); color: #6f87a0; margin-bottom: 2px; }
 .sell-size-card strong { font-size: var(--font-size-sm); color: #333; }
-.sell-size-card small { font-size: 0.7rem; color: #999; }
+.sell-size-card small { font-size: 0.7rem; color: #6f87a0; }
 .sell-size-card:hover { border-color: rgba(0,75,151,0.2); background: aliceblue; }
 .sell-size-card:has(input:checked) { border-color: #004b97; background: #e8f0fb; }
 .sell-size-card:has(input:checked) .sell-size-icon,
@@ -392,7 +392,7 @@ small { font-size: 10px; color: #004b97; }
 .cond-1 { background: #004b97; } .cond-2 { background: #3a7bd5; }
 .cond-3 { background: #abdad5; } .cond-4 { background: rgb(36,182,133); }
 .cond-5 { background: #f0b429; } .cond-6 { background: #bbb; }
-.sell-cond-desc { font-size: var(--font-size-xs); font-weight: 400; color: #888; margin-left: 2px; }
+.sell-cond-desc { font-size: var(--font-size-xs); font-weight: 400; color: #6f87a0; margin-left: 2px; }
 
 /* 售價 */
 .sell-price-wrap { display: flex; align-items: center; border: 1px solid #ced4da; border-radius: 6px; overflow: hidden; }
@@ -590,7 +590,7 @@ small { font-size: 10px; color: #004b97; }
     position: absolute;
     left: 10px;
     font-weight: bold;
-    color: #666;
+    color: #4a627a;
   }
   
   /* 針對圖片的特殊調整 (讓它置中或靠右) */
@@ -679,7 +679,7 @@ small { font-size: 10px; color: #004b97; }
 }
 .review-target-credit {
   font-size: 13px;
-  color: #555;
+  color: #4a627a;
   margin-top: 2px;
 }
 .review-credit-hint {
@@ -705,7 +705,7 @@ small { font-size: 10px; color: #004b97; }
 .review-section-hint {
   font-size: 12px;
   font-weight: 400;
-  color: #888;
+  color: #6f87a0;
 }
 .review-section-label-neg {
   color: #b91c1c;
@@ -730,7 +730,7 @@ small { font-size: 10px; color: #004b97; }
   border-radius: 999px;
   border: 1.5px solid #c5d8f0;
   background: #f5f9ff;
-  color: #555;
+  color: #4a627a;
   font-size: 13px;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
   user-select: none;
@@ -826,7 +826,7 @@ small { font-size: 10px; color: #004b97; }
 }
 .negative-desc {
   font-size: 12px;
-  color: #888;
+  color: #6f87a0;
   margin-top: 5px;
   padding-left: 23px;
   display: block;
@@ -873,7 +873,7 @@ small { font-size: 10px; color: #004b97; }
   gap: 6px;
   margin-top: 10px;
   font-size: 13px;
-  color: #555;
+  color: #4a627a;
   cursor: pointer;
   user-select: none;
 }
@@ -885,7 +885,7 @@ small { font-size: 10px; color: #004b97; }
 .review-display-label {
   font-size: 12px;
   font-weight: 700;
-  color: #555;
+  color: #4a627a;
   margin-bottom: 6px;
 }
 .review-display-label.neg {
@@ -964,7 +964,7 @@ small { font-size: 10px; color: #004b97; }
 }
 .my-review-stat-label {
   font-size: 11px;
-  color: #888;
+  color: #6f87a0;
   letter-spacing: 0.3px;
 }
 .my-review-stat-divider {
@@ -1029,11 +1029,11 @@ small { font-size: 10px; color: #004b97; }
 .reviewerName { font-size: 13px; font-weight: 600; color: #333; }
 .reviewerName.reviewer-avatar--clickable { cursor: pointer; }
 .reviewerName.reviewer-avatar--clickable:hover { color: #004b97; text-decoration: underline dotted #abdad5; }
-.review-commodity-name { font-size: 11px; color: #888; font-weight: 400; margin-left: 2px; }
+.review-commodity-name { font-size: 11px; color: #6f87a0; font-weight: 400; margin-left: 2px; }
 .reviewTime { font-size: 11px; color: #bbb; white-space: nowrap; }
 .itemNames {
   font-size: 11px;
-  color: #888;
+  color: #6f87a0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1056,7 +1056,7 @@ small { font-size: 10px; color: #004b97; }
   transition: color 0.15s;
 }
 .review-report-btn:hover { color: #e53935; }
-.reviewText { font-size: 13px; color: #555; line-height: 1.5; padding-top: 4px; padding-left: 8px; }
+.reviewText { font-size: 13px; color: #4a627a; line-height: 1.5; padding-top: 4px; padding-left: 8px; }
 .review-card__chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
 .review-empty {
   text-align: center;
@@ -1072,7 +1072,7 @@ small { font-size: 10px; color: #004b97; }
 .review-empty-title {
   font-size: 15px;
   font-weight: 600;
-  color: #555;
+  color: #4a627a;
   margin-bottom: 4px;
 }
 .review-empty-sub {
@@ -1239,7 +1239,7 @@ small { font-size: 10px; color: #004b97; }
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #888;
+  color: #6f87a0;
   font-size: var(--font-size-xs);
   white-space: nowrap;
   min-width: 80px;
@@ -1306,7 +1306,7 @@ small { font-size: 10px; color: #004b97; }
   background: #fff;
   cursor: pointer;
   font-size: var(--font-size-sm);
-  color: #888;
+  color: #6f87a0;
   transition: border-color 0.2s, background 0.2s;
   margin-bottom: 12px;
 }
@@ -1609,7 +1609,7 @@ small { font-size: 10px; color: #004b97; }
 .order-badge-delivered { background-color: #004b97; color: #fff; }
 .order-badge-completed { background-color: #24b685; color: #fff; }
 .order-badge-scored    { background: linear-gradient(135deg, #4f6fd4, #7c5cbf); color: #fff; }
-.order-badge-canceled  { background-color: #e0e0e0; color: #666; }
+.order-badge-canceled  { background-color: #e0e0e0; color: #4a627a; }
 
 /* ── 評價分區標籤 ── */
 .review-section-label {
@@ -1624,7 +1624,7 @@ small { font-size: 10px; color: #004b97; }
 /* ── 評價狀態文字 ── */
 .review-role-label {
   font-size: var(--font-size-xs);
-  color: #999;
+  color: #6f87a0;
   margin-left: 4px;
 }
 
@@ -1642,7 +1642,7 @@ small { font-size: 10px; color: #004b97; }
 }
 .review-deadline-hint {
   font-size: var(--font-size-xs);
-  color: #888;
+  color: #6f87a0;
   white-space: nowrap;
 }
 
@@ -1757,7 +1757,7 @@ small { font-size: 10px; color: #004b97; }
   border: 1.5px solid #abdad5;
   border-radius: 20px;
   background: #fff;
-  color: #555;
+  color: #4a627a;
   font-size: 13px;
   cursor: pointer;
   white-space: nowrap;
@@ -2059,7 +2059,7 @@ small { font-size: 10px; color: #004b97; }
 }
 .swal-order-sub {
   font-size: var(--font-size-xs);
-  color: #888;
+  color: #6f87a0;
   margin-top: 4px;
 }
 .swal-grayscale img {

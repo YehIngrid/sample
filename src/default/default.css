@@ -32,6 +32,13 @@ body {
     position: relative;
     z-index: 10000 !important;
 }
+.navbar .nav-link {
+    color: #4a627a !important;
+}
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: #004b97 !important;
+}
 .container-fluid{
   width: 91vw !important;
   margin: 0 auto !important;
@@ -90,7 +97,7 @@ ul{
   letter-spacing: 0.02em;
 }
 .swal2-html-container {
-  color: #666 !important;
+  color: #4a627a !important;
   font-size: var(--font-size-sm) !important;
   line-height: 1.6;
 }
@@ -115,7 +122,7 @@ ul{
 }
 .swal2-cancel {
   background-color: #f0f0f0 !important;
-  color: #555 !important;
+  color: #4a627a !important;
   border-radius: 8px !important;
   font-size: var(--font-size-sm) !important;
   font-weight: 600 !important;
@@ -485,7 +492,7 @@ ul{
 
 .text-info p {
   margin: 3px 0 0;
-  color: #666;
+  color: #4a627a;
   font-size: var(--font-size-sm);
 }
 
@@ -577,7 +584,7 @@ ul{
 }
 .timestamp {
   font-size: var(--font-size-xs);
-  color: #999;
+  color: #6f87a0;
   margin-top: 2px;
   margin-bottom: 12px;
   padding-left: 8px;
@@ -857,7 +864,7 @@ ul{
   justify-content: center;
   gap: 2px;
   text-decoration: none;
-  color: #888;
+  color: #6f87a0;
   font-size: var(--font-size-xs);
   font-weight: 500;
   transition: color 0.15s;
@@ -1031,7 +1038,7 @@ ul{
 }
 .safety-ticker--inline .safety-ticker__text {
   font-size: var(--font-size-xs);
-  color: #555;
+  color: #4a627a;
 }
 
 /* 桌機版返回鍵 + 跑馬燈列 (product.html) */
@@ -1230,7 +1237,7 @@ html.skip-loader #whatcontent { display: block !important; }
   margin-bottom: 8px;
   font-size: var(--font-size-xs);
   font-weight: 600;
-  color: #666;
+  color: #4a627a;
 }
 .search-drop-header button {
   background: none;
@@ -1240,7 +1247,7 @@ html.skip-loader #whatcontent { display: block !important; }
   cursor: pointer;
   padding: 0;
 }
-.search-drop-header button:hover { color: #555; }
+.search-drop-header button:hover { color: #4a627a; }
 
 /* ── 搜尋紀錄 / 排行榜 list ── */
 .search-drop-list { list-style: none; padding: 0; margin: 0; }
@@ -1267,7 +1274,7 @@ html.skip-loader #whatcontent { display: block !important; }
   font-size: var(--font-size-xs); color: #ccc; cursor: pointer;
   flex-shrink: 0; line-height: 1; transition: color 0.15s;
 }
-.search-drop-item .del-tag:hover { color: #888; }
+.search-drop-item .del-tag:hover { color: #6f87a0; }
 .search-drop-empty { font-size: var(--font-size-xs); color: #bbb; padding: 4px 6px; }
 
 /* ── 排行榜排名數字 ── */
@@ -1313,7 +1320,7 @@ html.skip-loader #whatcontent { display: block !important; }
   line-height: 1;
   transition: color 0.15s;
 }
-.search-clear-btn:hover { color: #555; }
+.search-clear-btn:hover { color: #4a627a; }
 .search-clear-btn.visible { display: block; }
 
 /* drawer stagger keyframe — global so it works outside media queries */
@@ -1379,7 +1386,7 @@ html.skip-loader #whatcontent { display: block !important; }
   background: none;
   border: none;
   font-size: var(--font-size-lg);
-  color: #888;
+  color: #6f87a0;
   cursor: pointer;
   padding: 4px 6px;
   line-height: 1;
@@ -1513,7 +1520,7 @@ html.skip-loader #whatcontent { display: block !important; }
 }
 .report-form-target {
   font-size: var(--font-size-xs);
-  color: #888;
+  color: #6f87a0;
   margin: 0 0 14px;
   text-align: left;
 }
@@ -1592,7 +1599,7 @@ html.skip-loader #whatcontent { display: block !important; }
   flex: 1;
   text-align: center;
   font-size: 0.75rem;
-  color: #888;
+  color: #6f87a0;
   margin-right: 31px; /* compensate 3 dots width */
 }
 #konami-body {
@@ -1758,7 +1765,7 @@ html.skip-loader #whatcontent { display: block !important; }
 .notif-empty {
   text-align: center;
   padding: 40px 20px;
-  color: #999;
+  color: #6f87a0;
   font-size: var(--font-size-sm);
 }
 
@@ -1801,7 +1808,7 @@ html.skip-loader #whatcontent { display: block !important; }
   line-height: 1.5;
   word-break: break-word;
 }
-.notif-content { color: #555; margin-top: 2px; }
+.notif-content { color: #4a627a; margin-top: 2px; }
 .notif-time {
   font-size: var(--font-size-xs);
   color: #aaa;
