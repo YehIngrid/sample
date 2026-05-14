@@ -132,8 +132,8 @@ ul{
   .qa-btn { padding: 7px 8px; gap: 6px; border-radius: 10px; }
   .qa-s { display: none; }
   .qa-arr { display: none; }
-  .qa-ic-wrap { width: 28px; height: 28px; }
-  .qa-ic { width: 18px; height: 18px; }
+  .qa-ic-wrap { width: 22px; height: 22px; }
+  .qa-ic { width: 14px; height: 14px; }
   .qa-t { font-size: 14px; }
 }
 @media (max-width: 991.98px) {
