@@ -45,7 +45,7 @@
           </div>
           <div class="loader-text">
             <p class="brand">拾貨寶庫</p>
-            <p class="tag">連線聊天室中</p>
+            <p class="tag">載入中</p>
           </div>
         </div>
       </div>
@@ -112,34 +112,67 @@
         </nav>
       </div>
     </div>
-        <!-- TODO content -->
       <section class="contentofcommunication">
-        <div class="comm-form-outer">
+        <div class="comm-outer">
           <div class="comm-page-header">
             <h1>客服諮詢</h1>
-            <p>對我們有什麼疑問嗎？歡迎留下您的問題，我們將盡快回覆。</p>
+            <p>有任何問題都可以透過以下方式聯絡我們，我們會盡快為您服務。</p>
           </div>
-          <div class="comm-card">
-            <div class="comm-field">
-              <label class="comm-label">姓名</label>
-              <input type="text" class="form-control" placeholder="王小明">
+
+          <div class="comm-cards">
+
+            <!-- 即時聊天 -->
+            <div class="comm-contact-card" id="open-chat-card">
+              <div class="comm-contact-icon" style="background: rgba(0,75,151,0.08); color: #004b97;">
+                <i class="fa fa-comments"></i>
+              </div>
+              <div class="comm-contact-body">
+                <h3>即時聊天</h3>
+                <p>點擊右下角聊天圖示，與我們的助理即時對話。</p>
+              </div>
+              <button class="comm-contact-btn" id="btn-open-chat">開啟聊天室</button>
             </div>
-            <div class="comm-field">
-              <label class="comm-label">電話</label>
-              <input type="text" class="form-control" placeholder="0912345678">
-            </div>
-            <div class="comm-field">
-              <label class="comm-label">信箱</label>
-              <input type="email" class="form-control" placeholder="treasure@mail.com">
-            </div>
-            <div class="comm-field">
-              <label class="comm-label">問題描述</label>
-              <textarea class="form-control" rows="6" placeholder="請輸入您的問題..."></textarea>
-            </div>
-            <button type="submit" class="comm-submit">送出</button>
+
+            <!-- 電子郵件 -->
+            <a class="comm-contact-card" href="mailto:help@treasurehub.tw">
+              <div class="comm-contact-icon" style="background: rgba(36,182,133,0.10); color: rgb(36,182,133);">
+                <i class="fa fa-envelope"></i>
+              </div>
+              <div class="comm-contact-body">
+                <h3>電子郵件</h3>
+                <p>來信請寄至 <strong>help@treasurehub.tw</strong>，我們會在 1-2 個工作天內回覆。</p>
+              </div>
+              <span class="comm-contact-btn">寄送郵件</span>
+            </a>
+
+            <!-- 常見問題 -->
+            <a class="comm-contact-card" href="../questions/questions.html">
+              <div class="comm-contact-icon" style="background: rgba(171,218,213,0.3); color: #4a85c4;">
+                <i class="fa fa-circle-question"></i>
+              </div>
+              <div class="comm-contact-body">
+                <h3>常見問題</h3>
+                <p>查閱常見問題頁面，或許您的疑問已經有答案了。</p>
+              </div>
+              <span class="comm-contact-btn">查看 FAQ</span>
+            </a>
+
           </div>
         </div>
       </section>
+
+      <button class="chaticon" id="chaticon" title="開啟聊天室">
+        <img src="../svg/chaticon.svg" alt="聊天室icon點擊開啟聊天室">
+        <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
+      </button>
+      <iframe style="display:none;" id="talkInterface"></iframe>
+      <script>
+        window.addEventListener('chatUnread', () => { document.getElementById('chatUnreadDot').style.display = 'block'; });
+        window.addEventListener('chatRead',   () => { document.getElementById('chatUnreadDot').style.display = 'none'; });
+        document.getElementById('btn-open-chat').addEventListener('click', () => {
+          document.getElementById('chaticon').click();
+        });
+      </script>
 <footer class="footer" style="margin-top:0">
   <div class="footer-inner">
     <div class="footer-col footer-brand">
@@ -162,15 +195,15 @@
       <ul class="footer-links">
         <li><a href="../questions/questions.html">常見問題</a></li>
         <li><a href="../communication/communication.html">客服諮詢</a></li>
-        <li><a href="../policy/policy.html">隱私政策</a></li>
-        <li><a href="#">使用條款</a></li>
+        <li><a href="../policy/policy.html#privacy">隱私權政策</a></li>
+        <li><a href="../policy/policy.html#terms">服務條款</a></li>
       </ul>
     </div>
 
     </div>
     <div class="footer-col">
       <h4 class="footer-heading">聯絡我們</h4>
-      <p class="footer-email"><a href="mailto:treasurehub@gmail.com">treasurehub@gmail.com</a></p>
+      <p class="footer-email"><a href="mailto:help@treasurehub.tw">help@treasurehub.tw</a></p>
       <div class="footer-social">
         <a href="https://www.instagram.com" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
         <a href="#" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
@@ -183,7 +216,7 @@
 </footer>
         <!-- script部分-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
-        <script type="module" src="communication.js"></script>
+        <script type="module" src="../chatroom/chat.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     </body>
     </html>

@@ -26,7 +26,18 @@ const _SKIP_401 = ['/api/account/login', '/api/account/signup', '/api/whoami'];
 
 // ── 網路逾時 / 離線 提示 ────────────
 let _networkBannerShown = false;
+const _BANNER_PAGES = [
+    '/account/account.html',
+    '/shop/shop.html',
+    '/person/person.html',
+    '/wishpool/wishpool.html',
+    '/news/news.html',
+    '/chatroom/chatroom.html',
+    '/commodity/commodity.html',
+];
 function _showNetworkBanner() {
+    const path = window.location.pathname;
+    if (!_BANNER_PAGES.some(p => path.endsWith(p))) return;
     if (_networkBannerShown) return;
     _networkBannerShown = true;
     const existing = document.getElementById('_netBanner');

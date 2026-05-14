@@ -1,10 +1,204 @@
+/* ── 隱私權政策與服務條款頁面 ── */
 
-.content{
-    margin:10vw;
-    margin-top: 5vh;
+.policy-page {
+  background: aliceblue;
+  min-height: 100vh;
+  padding: 40px 0 64px;
 }
-.contentin{
-    margin: 1vw;
-    margin-top: 5vh;
-    font-size: 1.5rem;
+
+.policy-container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 頁首 */
+.policy-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.policy-logo {
+  width: 110px;
+  margin-bottom: 16px;
+}
+.policy-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #004b97;
+  margin-bottom: 6px;
+}
+.policy-header p {
+  font-size: 0.85rem;
+  color: #6b7a8d;
+}
+
+/* 目錄導覽 */
+.policy-toc {
+  background: #fff;
+  border: 1px solid #abdad5;
+  border-radius: 10px;
+  padding: 18px 24px;
+  margin-bottom: 32px;
+}
+.policy-toc h2 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #004b97;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+.policy-toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.policy-toc a {
+  display: inline-block;
+  padding: 5px 14px;
+  background: aliceblue;
+  border: 1px solid #abdad5;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  color: #004b97;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.policy-toc a:hover {
+  background: #004b97;
+  color: #fff;
+  border-color: #004b97;
+}
+
+/* 文件卡片 */
+.policy-doc {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  padding: 36px 40px;
+  margin-bottom: 24px;
+}
+
+.policy-doc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid aliceblue;
+}
+.policy-doc-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(0,75,151,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #004b97;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.policy-doc-header h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #004b97;
+  margin: 0;
+}
+.policy-doc-header .policy-updated {
+  font-size: 0.78rem;
+  color: #6b7a8d;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* 文件內文 */
+.policy-body {
+  font-size: 0.93rem;
+  color: #383838;
+  line-height: 1.85;
+}
+.policy-body h3 {
+  font-size: 0.97rem;
+  font-weight: 700;
+  color: #004b97;
+  margin: 24px 0 8px;
+}
+.policy-body h3:first-child {
+  margin-top: 0;
+}
+.policy-body p {
+  margin-bottom: 10px;
+}
+.policy-body ul {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+.policy-body ul li {
+  margin-bottom: 4px;
+}
+.policy-body .placeholder-notice {
+  background: rgba(0,75,151,0.05);
+  border-left: 3px solid #abdad5;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  color: #4a627a;
+  font-style: italic;
+  font-size: 0.88rem;
+}
+
+/* 回頂部 + 返回 */
+.policy-footer-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.policy-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  background: #004b97;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.policy-back-btn:hover {
+  background: rgb(36,182,133);
+  color: #fff;
+}
+.policy-top-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  background: aliceblue;
+  border: 1px solid #abdad5;
+  color: #4a627a;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.policy-top-btn:hover {
+  background: #abdad5;
+  color: #004b97;
+}
+
+/* 手機 */
+@media (max-width: 600px) {
+  .policy-doc {
+    padding: 24px 18px;
+  }
+  .policy-doc-header .policy-updated {
+    display: none;
+  }
 }

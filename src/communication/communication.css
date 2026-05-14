@@ -1,26 +1,24 @@
-.mobileNav {
-  background-color: #fbfbfb;
-  margin: 0 auto !important;
-  padding: 5px 3vw !important;
-}
+/* ── 客服諮詢頁面 ── */
 
 .contentofcommunication {
-  padding: 48px 16px 72px;
+  padding: 48px 16px 80px;
+  background: aliceblue;
+  min-height: calc(100vh - 60px);
 }
 
-.comm-form-outer {
-  max-width: 640px;
+.comm-outer {
+  max-width: 720px;
   margin: 0 auto;
 }
 
 .comm-page-header {
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 }
 .comm-page-header h1 {
-  font-size: 26px;
+  font-size: 1.6rem;
   font-weight: 800;
   color: #004b97;
-  margin: 0 0 6px;
+  margin: 0 0 8px;
 }
 .comm-page-header p {
   color: #4a627a;
@@ -28,61 +26,93 @@
   margin: 0;
 }
 
-.comm-card {
-  background: aliceblue;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  padding: 32px 36px 36px;
+/* 卡片列 */
+.comm-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.comm-field {
-  margin-bottom: 20px;
-}
-.comm-label {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #222;
-  display: block;
-  margin-bottom: 6px;
-}
-
-.comm-card .form-control {
-  border: 1px solid #dce3ed;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  padding: 10px 14px;
+.comm-contact-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
   background: #fff;
-  transition: border 0.2s, box-shadow 0.2s;
+  border: 1px solid rgba(0,75,151,0.08);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  padding: 22px 24px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: box-shadow 0.18s, transform 0.15s, border-color 0.18s;
 }
-.comm-card .form-control:focus {
-  border-color: rgba(0,75,151,0.3);
-  box-shadow: 0 0 0 3px rgba(0,75,151,0.08);
-  outline: none;
+.comm-contact-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+  transform: translateY(-2px);
+  border-color: rgba(0,75,151,0.18);
+  color: inherit;
+  text-decoration: none;
 }
 
-.comm-submit {
-  display: block;
-  margin-left: auto;
-  margin-top: 8px;
-  padding: 10px 36px;
+.comm-contact-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.comm-contact-body {
+  flex: 1;
+}
+.comm-contact-body h3 {
   font-size: 1rem;
   font-weight: 700;
-  color: #fff;
+  color: #383838;
+  margin: 0 0 4px;
+}
+.comm-contact-body p {
+  font-size: 0.87rem;
+  color: #6b7a8d;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.comm-contact-btn {
+  flex-shrink: 0;
+  padding: 8px 20px;
   background: #004b97;
+  color: #fff;
   border: none;
   border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  text-decoration: none;
+  transition: background 0.18s;
+  white-space: nowrap;
 }
-.comm-submit:hover {
+.comm-contact-btn:hover {
   background: rgb(36, 182, 133);
+  color: #fff;
 }
 
+/* 手機 */
 @media (max-width: 600px) {
   .contentofcommunication {
-    padding: 24px 12px 48px;
+    padding: 28px 14px 60px;
   }
-  .comm-card {
-    padding: 20px 18px 24px;
+  .comm-contact-card {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 18px 16px;
+  }
+  .comm-contact-btn {
+    width: 100%;
+    text-align: center;
   }
 }
