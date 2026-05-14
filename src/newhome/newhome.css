@@ -1033,7 +1033,7 @@ right: 0;
     left: 0;
     height: 3px;
     width: 0%;
-    background: linear-gradient(90deg, #004b97, #87ddfe, #1bffc2);
+    background: linear-gradient(90deg, #004b97, #4a85c4, #7eb8d8, #abdad5, aliceblue, #f3e3b5);
     z-index: 9999;
     transition: width 0.08s linear;
 }
@@ -1113,10 +1113,21 @@ right: 0;
   height: 64px;
   min-width: 64px;
   border-radius: 50%;
-  background-color: #24b685;
+  background-color: #004b97;
   color: #fff;
   flex-shrink: 0;
 }
+/* 步驟徽章循環色系：#004b97 → #4a85c4 → #7eb8d8 → #abdad5 → #f3e3b5 → 循環 */
+.ulstep .listep:nth-child(1)  .step-badge { background-color: #004b97; }
+.ulstep .listep:nth-child(3)  .step-badge { background-color: #4a85c4; }
+.ulstep .listep:nth-child(5)  .step-badge { background-color: #7eb8d8; color: #1a2840; }
+.ulstep .listep:nth-child(7)  .step-badge { background-color: #abdad5; color: #1a2840; }
+.ulstep .listep:nth-child(9)  .step-badge { background-color: #f3e3b5; color: #1a2840; }
+.ulstep .listep:nth-child(11) .step-badge { background-color: #004b97; }
+.ulstep .listep:nth-child(13) .step-badge { background-color: #4a85c4; }
+.ulstep .listep:nth-child(15) .step-badge { background-color: #7eb8d8; color: #1a2840; }
+.ulstep .listep:nth-child(17) .step-badge { background-color: #abdad5; color: #1a2840; }
+.ulstep .listep:nth-child(19) .step-badge { background-color: #f3e3b5; color: #1a2840; }
 .step-label {
   font-size: 0.65rem;
   font-weight: 600;
@@ -1131,7 +1142,7 @@ right: 0;
 .listep-content h3 {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #24b685;
+  color: #004b97;
   margin: 0 0 4px;
 }
 .listep-content p {
@@ -1141,7 +1152,7 @@ right: 0;
 }
 .step-arrow {
   text-align: center;
-  color: #24b685;
+  color: #7eb8d8;
   font-size: 1.1rem;
   padding: 4px 0;
 }

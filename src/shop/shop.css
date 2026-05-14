@@ -52,59 +52,90 @@
 ul{
     padding-left: 0rem !important;
 }
-.seriesofbutton {
-  max-width: 80vw;
-  margin: 0 auto;
-}
-.seriesofbutton ul{
+/* ── 三個入口快捷按鈕 ── */
+.quick-actions {
   display: flex;
-  list-style: none;
-  justify-content: space-around;
-  gap: 24px 0px;
-  align-items: end;
-  justify-items: center;
+  gap: 16px;
+  width: 80vw;
+  margin: var(--space-4) auto;
 }
-.seriesofbutton li{
-    display: flex;
-    font-size: 1.4rem;
-    justify-content: center;
-    align-items: end;
-    text-align: center;
-    padding-left: 3%;
-    padding-right: 3%;
-    width: stretch;
-    transition: color 0.3s ease-in-out, font-weight 0.3s ease-in-out;
+.qa-btn {
+  flex: 1;
+  padding: 22px 24px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.22s ease;
+  border: 2px solid transparent;
 }
-.seriesofbutton li:hover {
-    color: #004b97;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
+.qa-btn:hover { transform: translateY(-2px); text-decoration: none; }
+
+/* 主 CTA — 賣家專區 */
+.qa-btn.primary { background: #004b97; color: #ffffff; }
+.qa-btn.primary:hover { background: #003a78; }
+.qa-btn.primary .qa-ic-wrap { background: rgba(255,255,255,0.14); }
+.qa-btn.primary .qa-s { color: #abdad5; }
+
+/* 中段 — 許願專區 */
+.qa-btn.aqua { background: #abdad5; color: #004b97; border-color: #abdad5; }
+.qa-btn.aqua:hover { background: #9ccfc8; border-color: #9ccfc8; }
+.qa-btn.aqua .qa-ic-wrap { background: rgba(255,255,255,0.5); }
+.qa-btn.aqua .qa-s { color: #2d5e8f; }
+
+/* 輔助 — 常見問題 */
+.qa-btn.secondary { background: aliceblue; color: #004b97; border-color: transparent; }
+.qa-btn.secondary:hover { background: #d9e9f6; }
+.qa-btn.secondary .qa-ic-wrap { background: #ffffff; border: 1.5px solid #004b97; }
+.qa-btn.secondary .qa-s { color: #4a627a; }
+
+.qa-ic-wrap {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
 }
-.seriesofbutton img {
-  width: 28px;
+.qa-copy { flex: 1; min-width: 0; }
+.qa-t { font-size: 16px; font-weight: 700; letter-spacing: 0.06em; }
+.qa-s { font-size: 12px; margin-top: 2px; letter-spacing: 0.04em; opacity: 0.92; }
+.qa-arr { font-size: 18px; opacity: 0.55; transition: all 0.22s ease; }
+.qa-btn:hover .qa-arr { opacity: 1; transform: translateX(3px); }
+
+/* shop icon (CSS 畫法) */
+.qa-ic { width: 24px; height: 24px; display: block; flex-shrink: 0; }
+.qa-ic-shop { width: 22px; height: 22px; position: relative; }
+.qa-ic-shop::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 4px; height: 5px;
+  background: linear-gradient(to right, #004b97 0 33%, #4a85c4 33% 66%, #abdad5 66% 100%);
+  border-radius: 1.5px 1.5px 0 0;
 }
-.seriesofbutton button{
-    width: 40px;
-    background-color: white;
-    font-size: 26px;
-    border: none;
+.qa-ic-shop::after {
+  content: ""; position: absolute; left: 1px; right: 1px; top: 9px; bottom: 0;
+  background: transparent; border: 1.5px solid #004b97;
+  border-radius: 0 0 2px 2px;
 }
-@media (max-width:452px) {
-    .seriesofbutton li{
-        padding-left: 1%;
-        padding-right: 1%;
-        font-size: 1rem;
-    }
+.qa-btn.primary .qa-ic-shop::before {
+  background: linear-gradient(to right, #ffffff 0 33%, #7eb8d8 33% 66%, #abdad5 66% 100%);
+}
+.qa-btn.primary .qa-ic-shop::after { border-color: #ffffff; }
+.qa-btn.primary .qa-ic-shop .qa-door { background: #abdad5; }
+.qa-door {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: 7px; height: 9px; background: #4a85c4;
+  border-radius: 3px 3px 0 0; z-index: 1;
+}
+
+@media (max-width: 500px) {
+  .quick-actions { width: 100vw; gap: 8px; padding: 0 4vw; box-sizing: border-box; }
+  .qa-btn { padding: 12px 12px; gap: 8px; border-radius: 10px; }
+  .qa-s { display: none; }
+  .qa-arr { display: none; }
+  .qa-ic-wrap { width: 36px; height: 36px; }
+  .qa-t { font-size: 14px; }
 }
 @media (max-width: 991.98px) {
-  .seriesofbutton {
-    max-width: 100vw;
-    width: 100vw;
-  }
-  .seriesofbutton li {
-    font-size: 1rem;
-  }
   .navtb {
     --bs-navbar-padding-y: 0;
     padding-top: 0 !important;
@@ -1927,12 +1958,84 @@ tbody > tr:nth-of-type(even) {
   box-sizing: border-box;
   position: relative;   /* icon 的絕對定位基準 */
 }
-/* 各 slide 背景色 */
-.promo-slide--fee    { background: #004b97; }
-.promo-slide--seller { background: #2d6a8f; }
-.promo-slide--wish   { background: #4a72b5; }
-.promo-slide--safety { background: #7a5a28; }
-.promo-slide--eco    { background: #2a7a62; }
+/* ── 各 slide 漸層配色（使用 #004b97 / #4a85c4 / #7eb8d8 / #abdad5 / aliceblue / #f3e3b5） ── */
+
+/* Slide 1：深藍 → 中藍 → 淡青  +  右上金色光暈 */
+.promo-slide--fee {
+  background: linear-gradient(135deg, #004b97 0%, #4a85c4 55%, #abdad5 100%);
+}
+.promo-slide--fee::before {
+  content: "";
+  position: absolute;
+  right: -50px; top: -50px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(243,227,181,0.30) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Slide 2：中藍 → 天藍 → 淡青  +  右下白色圓弧 */
+.promo-slide--seller {
+  background: linear-gradient(135deg, #4a85c4 0%, #7eb8d8 55%, #abdad5 100%);
+}
+.promo-slide--seller::before {
+  content: "";
+  position: absolute;
+  right: 40px; bottom: -50px;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  pointer-events: none;
+}
+
+/* Slide 3：深藍 → 中藍 → 暖金  (許願感：藍天透出金光) */
+.promo-slide--wish {
+  background: linear-gradient(135deg, #004b97 0%, #4a85c4 50%, #f3e3b5 100%);
+}
+.promo-slide--wish::before {
+  content: "";
+  position: absolute;
+  right: -30px; top: 50%;
+  transform: translateY(-50%);
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(243,227,181,0.28) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Slide 4：深藍 → 中藍 → 天藍  (正式、可信賴) */
+.promo-slide--safety {
+  background: linear-gradient(135deg, #004b97 0%, #4a85c4 55%, #7eb8d8 100%);
+}
+.promo-slide--safety::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: -40px;
+  transform: translateX(-50%);
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+
+/* Slide 5：淡青 → 天藍 → aliceblue  (淺色！文字改深藍) */
+.promo-slide--eco {
+  background: linear-gradient(135deg, #abdad5 0%, #7eb8d8 50%, aliceblue 100%);
+}
+.promo-slide--eco::before {
+  content: "";
+  position: absolute;
+  left: -30px; bottom: -30px;
+  width: 150px; height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,75,151,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+/* eco 淺底 → 深色文字 */
+.promo-slide--eco .promo-banner__kv           { color: #004b97; }
+.promo-slide--eco .promo-banner__badge        { color: #4a627a; border-color: rgba(0,75,151,0.35); }
+.promo-slide--eco .promo-banner__tags span    { color: #4a627a; }
+.promo-slide--eco .promo-banner__illus i      { color: rgba(0,75,151,0.18); }
 
 /* 左：badge + 大標題 */
 .promo-banner__body {
