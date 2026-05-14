@@ -379,15 +379,6 @@ if (checkoutBtn) {
       return;
     }
 
-    const checkOrderRules = document.getElementById('checkOrderRules');
-    if (checkOrderRules && !checkOrderRules.checked) {
-      Swal.fire({
-        icon: 'warning',
-        title: '請同意訂購規則後再結帳'
-      });
-      return;
-    }
-
     const confirm = await Swal.fire({
       icon: 'question',
       title: '確認送出訂單？',

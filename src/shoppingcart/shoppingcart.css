@@ -554,21 +554,6 @@
   color: #6f87a0;
 }
 
-/* 確認 checkbox */
-.summary-agree {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin: 14px 0 4px;
-  font-size: 0.82rem;
-  color: #4a627a;
-  cursor: pointer;
-  line-height: 1.45;
-}
-.summary-agree .form-check-input {
-  margin-top: 3px;
-  flex-shrink: 0;
-}
 
 /* 結帳按鈕 */
 .summary-checkout-btn {
