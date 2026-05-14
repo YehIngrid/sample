@@ -326,12 +326,12 @@ section ul {
   font-size: 0.6rem;
   font-weight: 600;
   line-height: 1;
-  margin-bottom: 2px;
 }
 .step-num {
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1;
+  margin-bottom: 2px;
 }
 .listep-content h3 {
   font-size: 0.95rem;

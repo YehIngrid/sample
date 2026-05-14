@@ -1195,13 +1195,16 @@ right: 0;
   font-size: 0.65rem;
   font-weight: 600;
   line-height: 1;
-  margin-bottom: 2px;
 }
 .step-num {
   font-size: 1.4rem;
   font-weight: 700;
   line-height: 1;
+  margin-bottom: 2px;
 }
+/* 英文版：step 在上，數字在下 */
+:lang(en) .step-badge .step-num { order: 2; margin-bottom: 0; }
+:lang(en) .step-badge .step-label { order: 1; margin-bottom: 2px; }
 .listep-content h3 {
   font-size: 1.05rem;
   font-weight: 700;
