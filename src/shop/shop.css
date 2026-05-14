@@ -129,7 +129,7 @@ ul{
 
 @media (max-width: 500px) {
   .quick-actions { width: 100vw; gap: 8px; padding: 0 4vw; box-sizing: border-box; }
-  .qa-btn { padding: 7px 8px; gap: 6px; border-radius: 10px; }
+  .qa-btn { padding: 5px 6px; gap: 4px; border-radius: 10px; }
   .qa-s { display: none; }
   .qa-arr { display: none; }
   .qa-ic-wrap { width: 22px; height: 22px; }
