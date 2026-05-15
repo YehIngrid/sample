@@ -350,9 +350,9 @@ html, body {
     text-align: left;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    -webkit-touch-callout: none; /* iOS 長按不彈出系統選單 */
-    -webkit-user-select: none;
-    user-select: none;
+    -webkit-touch-callout: default;
+    -webkit-user-select: text;
+    user-select: text;
 }
 .roomName {
     font-size: 14px;

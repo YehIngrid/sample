@@ -1116,9 +1116,10 @@ ul{
   transform: translateX(4px);
 }
 .explainStep {
-  background: #ABDAD5;
+  background: aliceblue;
   border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  border: 1px solid #d6edf0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
   width: 80vw;
   margin: 0 auto;
   margin-top: 10px;
@@ -1132,13 +1133,13 @@ ul{
 
 .rule-container {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   overflow-x: auto;
   scroll-behavior: smooth;
-  padding: 10px 0px;
+  padding: 10px 4px;
   margin: 0px 10px;
   scroll-snap-type: x mandatory;
-  scrollbar-width: none; /* 隐藏滚动条 */
+  scrollbar-width: none;
 }
 
 .rule-container::-webkit-scrollbar {
@@ -1146,25 +1147,27 @@ ul{
 }
 
 .rule-card {
-  width: 200px;
+  width: 190px;
   flex-shrink: 0;
   background: #fff;
-  border-radius: 20px 10px 10px 10px;
-  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,75,151,0.1);
+  padding: 14px 12px 40px;
   scroll-snap-align: start;
-  transition: 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
   position: relative;
   text-decoration: none;
   color: inherit;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 .rule-card::before {
   content: "";
   position: absolute;
   width: 50px;
   height: 50px;
-  background-color: #ABDAD5;
+  background-color: aliceblue;
   mask-image: url("../svg/article_corner.svg");
   mask-repeat: no-repeat;
   mask-size: 100%;
@@ -1173,37 +1176,43 @@ ul{
   border-radius: 50% 0 0 0;
 }
 .rule-card h5 {
-  margin-top: 0px;
-  margin-bottom: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #004b97;
+  line-height: 1.4;
 }
 .rule-card p {
-  margin-bottom: 0px;
-  font-size: 12px;
+  margin-bottom: 0;
+  font-size: 0.78rem;
+  color: #6b7a8d;
+  line-height: 1.5;
 }
 .rule-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0,75,151,0.1);
+  border-color: rgba(0,75,151,0.2);
   color: inherit;
 }
 
 .rule-btn {
   position: absolute;
-  right: 0px;
-  bottom: 0px;
-  width: 32px;
-  height: 32px;
+  right: 0;
+  bottom: 0;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #004b97;
-  color: white;
+  color: #fff;
   border-radius: 50%;
-  font-size: 20px;
+  font-size: 18px;
   pointer-events: none;
 }
 .rule-card:hover .rule-btn {
-  background: #004181;
+  background: rgb(36,182,133);
 }
 
 /* ── 操作說明左右滾動按鈕 ── */
@@ -1212,17 +1221,24 @@ ul{
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  background: transparent;
-  border: 1px solid #004b97;
-  border-radius: 50px;
+  background: #fff;
+  border: none;
+  border-radius: 50%;
   color: #004b97;
-  font-size: 0.88rem;
-  padding: 4px 12px;
+  font-size: 1.1rem;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: box-shadow 0.15s, color 0.15s;
 }
 .arrow:hover:not(:disabled) {
-  background-color: rgba(0,75,151,0.08);
+  box-shadow: 0 4px 12px rgba(0,75,151,0.2);
+  color: rgb(36,182,133);
 }
 .arrow:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -1231,7 +1247,7 @@ ul{
 
 @media (max-width: 768px) {
   .arrow { display: none; }
-  .rule-card { width: 70%; }
+  .rule-card { width: 68%; }
 }
 
 /* ── 操作說明 永久不顯示按鈕 ── */

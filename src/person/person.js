@@ -418,10 +418,9 @@ async function handleAction(action, id, el) {
     // ✅ 1️⃣ 詳細頁優先
     if (window.currentOrder) {
       const order = window.currentOrder;
-
-      targetId = order.buyerUser.accountId == myUid
-        ? order.sellerUser.accountId
-        : order.buyerUser.accountId;
+      const buyerId  = order.buyerUser?.id  ?? order.buyerUser?.accountId;
+      const sellerId = order.sellerUser?.id ?? order.sellerUser?.accountId;
+      targetId = String(buyerId) == myUid ? sellerId : buyerId;
     }
 
     // ✅ 2️⃣ fallback 列表

@@ -4,8 +4,8 @@
   --light-text-color: var(--color-primary); /* 用作按鈕背景藍 */
   --background-color: var(--color-white);   /* 用作按鈕文字/邊框白 */
   /* wishpool 專用 */
-  --focus-color:        rgb(186, 223, 206);
-  --focus-border-color: rgb(215, 223, 235);
+  --focus-color:        #abdad5;
+  --focus-border-color: #abdad5;
 }
 * {
   box-sizing: border-box;
@@ -16,7 +16,7 @@ html {
 
 body {
     background-color: #fff !important;
-    color: #042f37 !important;
+    color: #383838 !important;
     overflow-x: hidden;
 }
 
@@ -49,39 +49,42 @@ body {
     position: relative;
 }
 
-/* ── 置中藥丸頁籤（絕對定位到 navbar 中央）── */
+/* ── 置中頁籤（絕對定位到 navbar 中央）── */
 .wp-nav-tabs-wrap {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
 }
 .wp-nav-pill {
-    background: aliceblue;
-    border: 1px solid #abdad5;
-    border-radius: 50px;
     list-style: none;
     margin: 0;
-    gap: 2px;
+    gap: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
 }
 .wp-navbar .spa-tab {
-    color: #004b97 !important;
+    color: #383838 !important;
     font-size: 0.88rem;
     font-weight: 500;
-    padding: 6px 16px !important;
-    border-radius: 50px;
-    transition: background 0.2s, color 0.2s;
+    padding: 8px 16px !important;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
 }
 .wp-navbar .spa-tab::after {
     display: none !important;
 }
 .wp-navbar .spa-tab:hover {
     color: #004b97 !important;
-    background: rgba(0, 75, 151, 0.08);
+    background: none;
+    border-bottom-color: #abdad5;
 }
 .wp-navbar .spa-tab.active {
     color: #004b97 !important;
     font-weight: 700;
-    background: rgba(0, 75, 151, 0.10);
+    background: none;
+    border-bottom-color: #004b97;
 }
 
 /* ── 返回購物首頁 button ── */
@@ -550,10 +553,10 @@ body {
 }
 .tag {
     padding: 7px 16px;
-    border: 1px solid var(--background-color);
-    background: var(--light-text-color);
+    border: 1px solid #abdad5;
+    background: aliceblue;
+    color: #004b97;
     border-radius: 50px;
-    color: var(--background-color);
     cursor: pointer;
     transition: transform 0.15s, background 0.2s;
     font-size: 14px;
@@ -568,9 +571,9 @@ body {
     transform: scale(1.05);
 }
 .tag.active {
-    background: linear-gradient(to right bottom, var(--focus-color), var(--focus-border-color));
-    color: #383838;
-    border-color: var(--focus-border-color);
+    background: #004b97;
+    color: #fff;
+    border-color: #004b97;
 }
 
 /* ── Navbar two-row layout (desktop) ── */
@@ -694,7 +697,7 @@ body {
     font-size: 2.6rem;
     font-weight: 900;
     line-height: 1.25;
-    color: #1a3a6e;
+    color: #004b97;
     margin: 0 0 16px;
     letter-spacing: 2px;
 }
@@ -709,7 +712,7 @@ body {
 .wp-hero-num {
     font-size: 1.9rem;
     font-weight: 800;
-    color: #7abcca;
+    color: #abdad5;
 }
 .wp-hero-btns {
     display: flex;
@@ -893,7 +896,7 @@ body {
 }
 .wn-card:hover {
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    border: 1px solid #004b975e;
+    border: 1px solid rgba(0,75,151,0.2);
     transform: translateY(-1px);
 }
 .wn-media {
