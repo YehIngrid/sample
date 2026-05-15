@@ -597,7 +597,6 @@ async function handleRouting() {
       await loadMyItems(1);
     } else if (page === 'settings') {
       loadSettingsData();
-    } else if (page === 'myReports') {
       loadMyReports(1);
     }
   } catch (err) {
@@ -2422,9 +2421,7 @@ async function openReportReviewSwal(reviewId, reviewerName, reviewerUserId) {
     const res = await backendService.getReportCategories();
     categories = res?.data?.categories ?? [];
   } catch (_) {}
-  const catOptions = categories.length
-    ? categories.map(c => `<option value="${c.category}">${c.meaning}</option>`).join('')
-    : `<option value="fraud">詐騙或不實交易</option><option value="other">其他原因</option>`;
+  const catOptions = categories.map(c => `<option value="${c.category}">${c.meaning}</option>`).join('');
 
   const { isConfirmed, value } = await Swal.fire({
     title: '檢舉評價',

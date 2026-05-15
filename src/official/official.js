@@ -47,8 +47,17 @@ overlay.addEventListener('click', closeSidebar);
 // ── 側邊選單切換 ─────────────────────────────────────
 function switchPanel(panelId) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('has-active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelector(`.nav-btn[data-panel="${panelId}"]`)?.classList.add('active');
+
+  const activeBtn = document.querySelector(`.nav-btn[data-panel="${panelId}"]`);
+  activeBtn?.classList.add('active');
+  // 若該按鈕在群組內，展開群組並標示
+  const parentGroup = activeBtn?.closest('.nav-group');
+  if (parentGroup) {
+    parentGroup.classList.add('open', 'has-active');
+  }
+
   document.getElementById(panelId)?.classList.add('active');
   if (panelId === 'panel-broadcast') loadChannels();
   if (panelId === 'panel-history') loadHistoryChannels();
@@ -63,6 +72,13 @@ window.switchPanel = switchPanel;
 
 document.querySelectorAll('.nav-btn').forEach(btn => {
   btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
+});
+
+// ── 群組折疊 toggle ──────────────────────────────────
+document.querySelectorAll('.nav-group-toggle').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    toggle.closest('.nav-group').classList.toggle('open');
+  });
 });
 
 // ════════════════════════════════════════════════════

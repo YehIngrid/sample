@@ -43,29 +43,53 @@
         <button class="nav-btn active" data-panel="panel-dashboard">
           <i class="fa fa-home"></i> 總覽
         </button>
-        <button class="nav-btn" data-panel="panel-broadcast">
-          <i class="fa fa-bullhorn"></i> 發送公告
-        </button>
-        <button class="nav-btn" data-panel="panel-channel">
-          <i class="fa fa-plus-circle"></i> 建立頻道
-        </button>
-        <button class="nav-btn" data-panel="panel-history">
-          <i class="fa fa-history"></i> 公告紀錄
-        </button>
+
+        <!-- 公告 群組 -->
+        <div class="nav-group" id="navgroup-broadcast">
+          <button class="nav-group-toggle">
+            <i class="fa fa-bullhorn"></i>
+            <span>公告</span>
+            <i class="fa fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-items">
+            <button class="nav-btn nav-sub" data-panel="panel-broadcast">
+              <i class="fa fa-paper-plane"></i> 發送公告
+            </button>
+            <button class="nav-btn nav-sub" data-panel="panel-channel">
+              <i class="fa fa-plus-circle"></i> 建立頻道
+            </button>
+            <button class="nav-btn nav-sub" data-panel="panel-history">
+              <i class="fa fa-history"></i> 公告紀錄
+            </button>
+          </div>
+        </div>
+
         <button class="nav-btn" data-panel="panel-news">
           <i class="fa fa-newspaper"></i> 最新資訊
         </button>
         <button class="nav-btn" data-panel="panel-support">
           <i class="fa fa-headphones"></i> 客服頻道
         </button>
+
+        <!-- 管理 群組 -->
+        <div class="nav-group" id="navgroup-manage">
+          <button class="nav-group-toggle">
+            <i class="fa fa-shield-alt"></i>
+            <span>管理</span>
+            <i class="fa fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-items">
+            <button class="nav-btn nav-sub" data-panel="panel-reports">
+              <i class="fa fa-flag"></i> 檢舉管理
+            </button>
+            <button class="nav-btn nav-sub" data-panel="panel-review-tags">
+              <i class="fa fa-tags"></i> 評論標籤
+            </button>
+          </div>
+        </div>
+
         <button class="nav-btn" data-panel="panel-analytics">
           <i class="fa fa-bar-chart"></i> 數據分析
-        </button>
-        <button class="nav-btn" data-panel="panel-reports">
-          <i class="fa fa-flag"></i> 檢舉管理
-        </button>
-        <button class="nav-btn" data-panel="panel-review-tags">
-          <i class="fa fa-tags"></i> 評論標籤
         </button>
       </nav>
       <div class="sidebar-user">

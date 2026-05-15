@@ -80,6 +80,53 @@ body {
   color: #fff;
 }
 
+/* ── 群組折疊 ── */
+.nav-group-toggle {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.75);
+  text-align: left;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-group-toggle:hover,
+.nav-group.open > .nav-group-toggle {
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+}
+.nav-group.has-active > .nav-group-toggle {
+  color: #fff;
+}
+.nav-group-arrow {
+  margin-left: auto;
+  font-size: 0.72rem;
+  transition: transform 0.2s;
+}
+.nav-group.open .nav-group-arrow {
+  transform: rotate(180deg);
+}
+.nav-group-items {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 10px;
+  margin-top: 2px;
+}
+.nav-group.open .nav-group-items {
+  display: flex;
+}
+.nav-sub {
+  font-size: 0.85rem !important;
+  padding: 8px 12px !important;
+}
+
 .sidebar-user {
   border-top: 1px solid rgba(255,255,255,0.2);
   padding-top: 16px;

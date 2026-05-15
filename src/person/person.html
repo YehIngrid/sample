@@ -142,8 +142,7 @@
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target="products"><img src="../svg/my.svg" alt="我的商品icon"> 商品管理</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target="sellProducts"><img src="../svg/mysellOrder.svg" alt="我的銷售訂單icon"> 銷售訂單</a>
               <a class="list-group-item list-group-item-action asideicon" href="#" data-target="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 消費訂單</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 帳戶設定</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="myReports"><i class="ti ti-flag" style="font-size:1.1rem;color:#004b97;margin-right:4px;"></i> 我的檢舉</a>
+              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 個人中心</a>
               <a class="list-group-item list-group-item-action asideicon" id="logout" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
             </div>
           </div>
@@ -567,6 +566,22 @@
             </div>
           </div>
         </div>
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header">
+            <i class="ti ti-flag"></i>
+            <span>我的檢舉</span>
+          </div>
+          <div class="profile-edit-body">
+            <p class="text-muted small mb-3" style="font-size:0.82rem;">
+              <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
+              檢舉送出後將由管理員審核，審核結果會反映在此頁面。
+            </p>
+            <div id="myReportsList">
+              <div class="text-center text-muted py-4" style="font-size:14px;">載入中...</div>
+            </div>
+            <div id="myReportsPager" class="d-flex justify-content-center align-items-center flex-wrap gap-1 mt-3"></div>
+          </div>
+        </div>
       </section>
       <!-- Main Content -->
       <main class="col-lg-9 content-section" id="account">
@@ -737,19 +752,6 @@
   </div>
 
 
-<!-- section myReports -->
-<section class="col-lg-9 d-none content-section" id="myReports">
-  <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
-  <h5>我的檢舉紀錄</h5>
-  <p class="text-muted small mb-3" style="font-size:0.82rem;">
-    <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
-    檢舉送出後將由管理員審核，審核結果會反映在此頁面。
-  </p>
-  <div id="myReportsList">
-    <div class="text-center text-muted py-4" style="font-size:14px;">載入中...</div>
-  </div>
-  <div id="myReportsPager" class="d-flex justify-content-center align-items-center flex-wrap gap-1 mt-3"></div>
-</section>
 
 <!-- 編輯商品 Modal -->
 <div class="modal fade" id="editDrawer" tabindex="-1" aria-labelledby="editDrawerTitle" aria-modal="true">
