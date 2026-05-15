@@ -620,7 +620,7 @@ async function toggleSellerReviews() {
         if (Object.keys(_tagMeaningCache).length === 0) {
           try {
             const tagRes = await backendService.getReviewTags();
-            (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+            (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
           } catch (e) { /* silent */ }
         }
         const res = await backendService.getUserReviews(_currentSellerId);
@@ -931,16 +931,17 @@ const TAG_LABELS = {
   late_payment:           '付款延遲',
   no_show:                '未到場或失聯',
 };
-const TAG_DELTA = {
-  fast_shipping: 1, great_packaging: 1, accurate_description: 1, quick_payment: 1,
-  slow_shipping: -1, poor_packaging: -1, misleading_description: -1, late_payment: -1, no_show: -5,
-};
-
-const _tagMeaningCache = {};
+const _tagMeaningCache  = {};
+const _tagPositiveCache = {};
 function getTagLabel(tag) {
   if (!tag) return '';
   if (_tagMeaningCache[tag]) return _tagMeaningCache[tag];
   return TAG_LABELS[tag] ?? TAG_LABELS[tag.toLowerCase()] ?? tag;
+}
+function isTagPositive(tag) {
+  if (!tag) return true;
+  const v = _tagPositiveCache[tag] ?? _tagPositiveCache[tag.toLowerCase()];
+  return v !== undefined ? v : true;
 }
 
 function bindReviewerClicks(container) {
@@ -1024,7 +1025,7 @@ async function openReviewerModal(accountId, name, photo) {
     if (Object.keys(_tagMeaningCache).length === 0) {
       try {
         const tagRes = await backendService.getReviewTags();
-        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
       } catch (e) { /* silent */ }
     }
     const [reviewRes, profileRes] = await Promise.all([
@@ -1090,7 +1091,7 @@ function renderReviewCard(review, role) {
   const roleClass = role === 'seller' ? 'reviewer-role-badge--seller' : role === 'buyer' ? 'reviewer-role-badge--buyer' : '';
 
   const tagChips = tags
-    .map(t => `<span class="review-display-chip ${(TAG_DELTA[t] ?? TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`)
+    .map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`)
     .join('');
 
   const rid      = review?.reviewer?.accountId ?? '';

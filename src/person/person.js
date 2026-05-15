@@ -1378,7 +1378,7 @@ function renderOrderReviews(reviews, isSell) {
     const isBuyerToSeller = r.role === 'BUYER_TO_SELLER';
     const roleLabel = isBuyerToSeller ? '買家 → 賣家' : '賣家 → 買家';
     const tags = Array.isArray(r?.tags) ? r.tags : [];
-    const tagChips = tags.map(t => `<span class="review-display-chip ${(REVIEW_TAG_DELTA[t] ?? REVIEW_TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`).join('');
+    const tagChips = tags.map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`).join('');
     return `
       <div class="review-card mt-2">
         <div class="review-card__header">
@@ -1441,7 +1441,7 @@ async function getDetail(id) {
     if (Object.keys(_tagMeaningCache).length === 0) {
       try {
         const tagRes = await backendService.getReviewTags();
-        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
       } catch (e) { /* 靜默失敗，fallback 到本地 labels */ }
     }
 
@@ -2151,7 +2151,7 @@ async function openReviewModal(orderId, targetId, targetRole) {
   try {
     const tagRes = await backendService.getReviewTags();
     tagItems = tagRes?.data?.data?.tags ?? [];
-    tagItems.forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+    tagItems.forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
   } catch (e) {
     console.warn('取得評論標籤失敗', e);
   }
@@ -2271,7 +2271,7 @@ async function openPartnerReviewModal(orderId, isSell) {
   let bodyHtml = '';
   if (review) {
     const tags = Array.isArray(review?.tags) ? review.tags : [];
-    const tagChips = tags.map(t => `<span class="review-display-chip ${(REVIEW_TAG_DELTA[t] ?? REVIEW_TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`).join('');
+    const tagChips = tags.map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`).join('');
     bodyHtml = `
       ${tagChips ? `<div class="review-card__chips" style="margin:8px 0;">${tagChips}</div>` : ''}
       <div class="review-display-comment">${review.comment || '<span style="color:#aaa">（無文字評論）</span>'}</div>
@@ -2383,19 +2383,21 @@ const REVIEW_TAG_LABELS = {
   late_payment:           '付款延遲',
   no_show:                '未到場或無故失聯',
 };
-const REVIEW_TAG_DELTA = {
-  fast_shipping: 1, great_packaging: 1, accurate_description: 1, quick_payment: 1,
-  slow_shipping: -1, poor_packaging: -1, misleading_description: -1, late_payment: -1, no_show: -5,
-};
 const SELLER_TAG_KEYS = new Set(['fast_shipping','great_packaging','accurate_description','slow_shipping','poor_packaging','misleading_description','no_show']);
 const BUYER_TAG_KEYS  = new Set(['quick_payment','late_payment','no_show']);
 
-// 快取從 getReviewTags 拿到的 tag→meaning 對應（含大寫 key）
-const _tagMeaningCache = {};
+// 快取從 getReviewTags 拿到的 tag→meaning / tag→positive
+const _tagMeaningCache  = {};
+const _tagPositiveCache = {};
 function getTagLabel(tag) {
   if (!tag) return '';
   if (_tagMeaningCache[tag]) return _tagMeaningCache[tag];
   return REVIEW_TAG_LABELS[tag] ?? REVIEW_TAG_LABELS[tag.toLowerCase()] ?? tag;
+}
+function isTagPositive(tag) {
+  if (!tag) return true;
+  const v = _tagPositiveCache[tag] ?? _tagPositiveCache[tag.toLowerCase()];
+  return v !== undefined ? v : true;
 }
 
 function bindReviewerClicks(container) {
@@ -2478,7 +2480,7 @@ function renderPersonReviewCard(review, role) {
   const roleBadge = role === 'seller' ? '賣' : role === 'buyer' ? '買' : '';
   const roleClass = role === 'seller' ? 'reviewer-role-badge--seller' : role === 'buyer' ? 'reviewer-role-badge--buyer' : '';
   const tags      = Array.isArray(review?.tags) ? review.tags : [];
-  const tagChips  = tags.map(t => `<span class="review-display-chip ${(REVIEW_TAG_DELTA[t] ?? REVIEW_TAG_DELTA[t?.toLowerCase()] ?? 1) < 0 ? 'negative' : 'positive'}">${getTagLabel(t)}</span>`).join('');
+  const tagChips  = tags.map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`).join('');
   return `
     <div class="review-card">
       <div class="review-card__header">
@@ -2561,7 +2563,7 @@ async function loadMyReviewStats() {
     if (Object.keys(_tagMeaningCache).length === 0) {
       try {
         const tagRes = await backendService.getReviewTags();
-        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; });
+        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
       } catch (e) { /* silent */ }
     }
 

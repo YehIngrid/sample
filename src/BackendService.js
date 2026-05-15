@@ -713,7 +713,7 @@ export default class BackendService {
     }
     async getReviewTags() {
         try {
-            const response = await axios.get(`${this.baseUrl}/api/review/tags`);
+            const response = await this.http.get('/api/review/tags');
             return response;
         } catch (error) {
             console.error("取得評論標籤失敗", error);

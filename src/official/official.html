@@ -223,7 +223,7 @@
         <form id="broadcastForm" class="official-form">
           <label class="form-label fw-bold mb-2">② 撰寫公告</label>
           <div class="mb-3">
-            <textarea id="broadcastMessage" class="form-control" rows="5" placeholder="輸入公告內容..."></textarea>
+            <textarea id="broadcastMessage" class="form-control" rows="5" placeholder="輸入公告內容..." maxlength="2000"></textarea>
           </div>
           <div class="mb-3">
             <label class="form-label">附件圖片 <small class="text-muted">（選填，可拖曳）</small></label>
@@ -251,11 +251,11 @@
         <form id="createChannelForm" class="official-form">
           <div class="mb-3">
             <label class="form-label">頻道名稱</label>
-            <input type="text" id="channelName" class="form-control" placeholder="例：拾貨寶庫官方帳號" required>
+            <input type="text" id="channelName" class="form-control" placeholder="例：拾貨寶庫官方帳號" maxlength="50" required>
           </div>
           <div class="mb-3">
             <label class="form-label">頻道描述 <small class="text-muted">（選填）</small></label>
-            <input type="text" id="channelDescription" class="form-control" placeholder="例：僅作收公告用，無專人服務">
+            <input type="text" id="channelDescription" class="form-control" placeholder="例：僅作收公告用，無專人服務" maxlength="200">
           </div>
           <button type="submit" id="createChannelBtn" class="btn official-btn px-5" style="color: white;">
             <i class="fa fa-plus me-1"></i> 建立官方頻道
@@ -298,7 +298,7 @@
             <div class="row g-3 mb-3">
               <div class="col-sm-8">
                 <label class="form-label">標題 <span style="color:red;">*</span></label>
-                <input type="text" id="newsTitle" class="form-control" placeholder="文章標題" required>
+                <input type="text" id="newsTitle" class="form-control" placeholder="文章標題" maxlength="120" required>
               </div>
               <div class="col-sm-4">
                 <label class="form-label">狀態</label>
@@ -393,7 +393,7 @@
         <form id="supportForm" class="official-form">
           <div class="mb-3">
             <label class="form-label fw-bold mb-2">發送訊息</label>
-            <textarea id="supportMessage" class="form-control" rows="5" placeholder="輸入要發送的訊息..."></textarea>
+            <textarea id="supportMessage" class="form-control" rows="5" placeholder="輸入要發送的訊息..." maxlength="2000"></textarea>
           </div>
           <div class="mb-3">
             <label class="form-label">附件圖片 <small class="text-muted">（選填，可拖曳）</small></label>
@@ -633,18 +633,15 @@
             <div class="row g-3 mb-3">
               <div class="col-sm-4">
                 <label class="form-label">標籤名稱 (英文) <span style="color:red">*</span></label>
-                <input type="text" id="newTagName" class="form-control" placeholder="例：FAST_SHIPPING" required>
+                <input type="text" id="newTagName" class="form-control" placeholder="例：FAST_SHIPPING" maxlength="50" required>
               </div>
               <div class="col-sm-5">
                 <label class="form-label">說明 <span style="color:red">*</span></label>
-                <input type="text" id="newTagMeaning" class="form-control" placeholder="例：出貨速度快" required>
+                <input type="text" id="newTagMeaning" class="form-control" placeholder="例：出貨速度快" maxlength="100" required>
               </div>
               <div class="col-sm-3">
-                <label class="form-label">正面評價</label>
-                <select id="newTagPositive" class="form-select form-select-official">
-                  <option value="true">是</option>
-                  <option value="false">否</option>
-                </select>
+                <label class="form-label">分數增減 (delta) <span style="color:red">*</span></label>
+                <input type="number" id="newTagDelta" class="form-control" placeholder="例：1 或 -5" min="-100" max="100" required>
               </div>
             </div>
             <button type="submit" class="btn official-btn" style="color:white;">

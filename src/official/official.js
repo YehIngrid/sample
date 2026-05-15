@@ -1146,22 +1146,21 @@ async function loadReviewTags() {
   list.innerHTML = '<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>';
   try {
     const res = await backendSvc.getReviewTags();
-    const tags = res?.data?.tags ?? [];
+    const tags = res?.data?.data?.tags ?? [];
     if (!tags.length) {
       list.innerHTML = '<div class="text-muted text-center py-3">目前沒有標籤</div>';
       return;
     }
     list.innerHTML = `<table class="table table-sm align-middle">
-      <thead><tr><th>標籤</th><th>說明</th><th>正面</th><th>啟用</th><th>操作</th></tr></thead>
+      <thead><tr><th>標籤</th><th>說明</th><th>正面</th><th>操作</th></tr></thead>
       <tbody>
         ${tags.map(t => `
           <tr>
             <td><code>${esc(t.tag)}</code></td>
-            <td>${esc(t.meaning)}</td>
+            <td>${esc(t.description ?? t.meaning ?? '')}</td>
             <td>${t.positive ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</td>
-            <td>${t.enabled ? '<span class="badge bg-primary">啟用</span>' : '<span class="badge bg-light text-muted">停用</span>'}</td>
             <td>
-              <button class="btn btn-sm btn-outline-secondary" onclick="openEditTagModal('${esc(t.tag)}','${esc(t.meaning)}',${t.positive},${t.enabled})">
+              <button class="btn btn-sm btn-outline-secondary" onclick="openEditTagModal('${esc(t.tag)}','${esc(t.description ?? t.meaning ?? '')}',${t.positive})">
                 <i class="fa fa-pencil"></i>
               </button>
             </td>
@@ -1179,15 +1178,16 @@ document.getElementById('createTagForm')?.addEventListener('submit', async (e) =
   e.preventDefault();
   const tag      = document.getElementById('newTagName').value.trim();
   const meaning  = document.getElementById('newTagMeaning').value.trim();
-  const positive = document.getElementById('newTagPositive').value === 'true';
+  const delta    = parseInt(document.getElementById('newTagDelta').value, 10);
   const resultBox = document.getElementById('createTagResult');
-  if (!tag || !meaning) return;
+  if (!tag || !meaning || isNaN(delta)) return;
   try {
-    await backendSvc.createReviewTag({ tag, meaning, positive });
+    await backendSvc.createReviewTag({ tag, description: meaning, delta });
     resultBox.className = 'result-box mt-3 success';
     resultBox.innerHTML = `<div class="fw-bold">✅ 標籤「${esc(tag.toUpperCase())}」建立成功</div>`;
     document.getElementById('newTagName').value = '';
     document.getElementById('newTagMeaning').value = '';
+    document.getElementById('newTagDelta').value = '';
     loadReviewTags();
   } catch (err) {
     const msg = err?.response?.data?.message || err?.message || '請稍後再試';
@@ -1198,33 +1198,34 @@ document.getElementById('createTagForm')?.addEventListener('submit', async (e) =
   }
 });
 
-function openEditTagModal(tag, meaning, positive, enabled) {
+function openEditTagModal(tag, meaning, positive) {
   Swal.fire({
     title: `編輯標籤 ${tag}`,
     html: `
       <div class="text-start">
         <label class="form-label fw-bold">說明</label>
-        <input id="editTagMeaning" class="form-control mb-3" value="${esc(meaning)}">
-        <label class="form-label fw-bold">正面評價</label>
-        <select id="editTagPositive" class="form-select mb-3">
-          <option value="true" ${positive ? 'selected' : ''}>是</option>
-          <option value="false" ${!positive ? 'selected' : ''}>否</option>
-        </select>
+        <input id="editTagMeaning" class="form-control mb-3" value="${esc(meaning)}" maxlength="100">
+        <label class="form-label fw-bold">分數增減 (delta)</label>
+        <input type="number" id="editTagDelta" class="form-control mb-3" placeholder="例：1 或 -5" min="-100" max="100">
         <label class="form-label fw-bold">啟用狀態</label>
         <select id="editTagEnabled" class="form-select">
-          <option value="true" ${enabled ? 'selected' : ''}>啟用</option>
-          <option value="false" ${!enabled ? 'selected' : ''}>停用</option>
+          <option value="true" ${positive ? 'selected' : ''}>啟用</option>
+          <option value="false" ${!positive ? 'selected' : ''}>停用</option>
         </select>
       </div>`,
     showCancelButton: true,
     confirmButtonText: '儲存',
     cancelButtonText: '取消',
     focusConfirm: false,
-    preConfirm: () => ({
-      meaning:  document.getElementById('editTagMeaning').value.trim(),
-      positive: document.getElementById('editTagPositive').value === 'true',
-      enabled:  document.getElementById('editTagEnabled').value === 'true',
-    })
+    preConfirm: () => {
+      const delta = parseInt(document.getElementById('editTagDelta').value, 10);
+      if (isNaN(delta)) { Swal.showValidationMessage('請輸入分數增減'); return false; }
+      return {
+        description: document.getElementById('editTagMeaning').value.trim(),
+        delta,
+        enabled: document.getElementById('editTagEnabled').value === 'true',
+      };
+    }
   }).then(async ({ isConfirmed, value }) => {
     if (!isConfirmed || !value) return;
     try {
