@@ -16,6 +16,7 @@ const input = {
 }
 
 export default defineConfig({
+  base: '/sample/',
   build: {
     outDir: 'dist',
     rollupOptions: { input },
