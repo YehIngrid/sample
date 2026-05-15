@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     withCredentials: true,
                     timeout: 30000,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 }
             );
             showState('state-success');
