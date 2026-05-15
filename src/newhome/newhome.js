@@ -142,7 +142,7 @@ const i18n = {
     'footer.about':'關於我們',
     'footer.about.desc':'一個專為大學生打造的二手商場、校園商機、資訊交易整合平台',
     'footer.social':'社交媒體',
-    'footer.copyright':'Copyright© 2025拾貨寶庫｜All Rights Reserved.',
+    'footer.copyright':'Copyright© 2026拾貨寶庫｜All Rights Reserved.',
     'footer.faq':'常見問題','footer.contact.link':'客服諮詢',
     'footer.policy':'隱私政策','footer.terms':'使用條款','footer.refund':'退換貨政策',
   },
@@ -225,7 +225,7 @@ const i18n = {
     'footer.about':'About Us',
     'footer.about.desc':'An integrated platform for secondhand shopping, campus business, and information trading for university students.',
     'footer.social':'Social Media',
-    'footer.copyright':'Copyright© 2025 Treasure Hub｜All Rights Reserved.',
+    'footer.copyright':'Copyright© 2026 Treasure Hub｜All Rights Reserved.',
     'footer.faq':'FAQ','footer.contact.link':'Customer Service',
     'footer.policy':'Privacy Policy','footer.terms':'Terms of Use','footer.refund':'Return Policy',
   }

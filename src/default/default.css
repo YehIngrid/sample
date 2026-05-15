@@ -1521,6 +1521,11 @@ html.skip-loader #whatcontent { display: block !important; }
 .report-form-popup .swal2-confirm:focus {
   background: #c62828 !important;
 }
+.report-form-optional {
+  font-size: var(--font-size-xs);
+  color: #6f87a0;
+  font-weight: 400;
+}
 .report-form-target {
   font-size: var(--font-size-xs);
   color: #6f87a0;

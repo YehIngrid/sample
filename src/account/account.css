@@ -97,7 +97,7 @@
   box-shadow: 0 8px 32px rgba(0,75,151,0.12);
   border: 1px solid rgba(255,255,255,0.7);
 }
-.modalwhat button{
+.modalwhat button:not(.terms-open-btn):not(.pwd-toggle){
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -110,11 +110,17 @@
   font-weight: 600;
   transition: background-color 0.2s ease;
 }
-.modalwhat button:hover{
+.modalwhat button:not(.terms-open-btn):not(.pwd-toggle):hover{
   background-color: rgb(36,182,133);
 }
 input::placeholder {
   opacity: 0.5;
+}
+.modalwhat .form-floating label {
+  font-size: 0.82rem;
+}
+.modalwhat .form-floating .form-control {
+  font-size: 0.88rem;
 }
 
 
@@ -184,27 +190,212 @@ input::placeholder {
   border-radius: 6px;
   margin-bottom: 10px;
 }
+/* ── 密碼眼睛按鈕 ── */
+.pwd-wrap {
+  position: relative;
+}
+.pwd-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  color: #6b7a8d;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 10;
+  line-height: 1;
+  width: auto !important;
+  margin: 0 !important;
+}
+.pwd-toggle:hover { color: #004b97; }
+.pwd-wrap .form-control {
+  padding-right: 40px;
+}
+
+/* ── 條款同意列 ── */
+.terms-agree-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+}
+.terms-agree-row input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  accent-color: #004b97;
+  cursor: pointer;
+}
+.terms-agree-row input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.terms-agree-text {
+  font-size: 0.82rem;
+  color: #4a627a;
+  display: inline;
+  line-height: 1.4;
+}
+.terms-open-btn {
+  all: unset;
+  color: rgb(36,182,133);
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: inherit;
+  display: inline;
+}
+.terms-open-btn:hover { color: #004b97; }
+
+/* ── 條款 Modal ── */
+.terms-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.terms-modal-overlay.active {
+  display: flex;
+}
+.terms-modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+.terms-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e8f0f7;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #004b97;
+  flex-shrink: 0;
+}
+.terms-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #6b7a8d;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.terms-modal-close:hover { color: #333; }
+.terms-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  font-size: 0.82rem;
+  color: #383838;
+  line-height: 1.75;
+}
+.terms-modal-body p { margin-bottom: 8px; }
+.terms-modal-body ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 8px;
+}
+.terms-modal-body ul li {
+  padding-left: 18px;
+  position: relative;
+  margin-bottom: 3px;
+}
+.terms-modal-body ul li::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: #004b97;
+}
+.terms-section-title {
+  font-weight: 700;
+  color: #004b97;
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+.terms-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid #e8f0f7;
+  flex-shrink: 0;
+  gap: 12px;
+}
+.terms-scroll-hint {
+  font-size: 0.78rem;
+  color: #6b7a8d;
+  transition: opacity 0.3s;
+}
+.terms-agree-btn {
+  background: #004b97;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.terms-agree-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.terms-agree-btn:not(:disabled):hover { background: rgb(36,182,133); }
+
 /* ── 按鈕間距 ── */
 .signbtn {
-  margin-top: 28px !important;
+  margin-top: 16px !important;
   margin-bottom: 8px !important;
+}
+.signbtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 .forgetbtn {
   margin-top: 16px !important;
   margin-bottom: 8px !important;
 }
 .remind {
-  color: #004b97;
+  color: #6b7a8d;
+  font-size: 0.8rem;
   text-align: left;
   margin-left: 8px;
   margin-right: 8px;
+  line-height: 1.6;
+}
+.remind strong {
+  color: #004b97;
+  font-weight: 600;
 }
 .remindForget {
-  color: #004b97;
+  color: #6b7a8d;
+  font-size: 0.8rem;
   text-align: left;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 8px;
+  margin-right: 8px;
   margin-top: 18px;
+  line-height: 1.6;
+}
+.remindForget strong {
+  color: #004b97;
+  font-weight: 600;
 }
 .checkalert {
   font-size: var(--font-size-base);
@@ -218,10 +409,16 @@ input::placeholder {
   margin-bottom: 10px;
 }
 .checkRemind {
-  color: black;
+  color: #6b7a8d;
+  font-size: 0.8rem;
   text-align: left;
-  margin-left: 16px;
-  margin-right: 13px;
+  margin-left: 8px;
+  margin-right: 8px;
+  line-height: 1.6;
+}
+.checkRemind strong {
+  color: #004b97;
+  font-weight: 600;
 }
 .checkBackbtn {
   margin-top: 1vh !important;
@@ -272,7 +469,12 @@ input::placeholder {
   z-index: 99999;
 }
 #signupLink {
-  text-decoration: underline rgb(255, 200, 0);
+  color: rgb(36,182,133);
+  font-weight: 600;
+  text-decoration: underline;
+}
+#signupLink:hover {
+  color: #004b97;
 }
 #send:focus{
   outline: none;

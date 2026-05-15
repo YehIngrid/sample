@@ -130,7 +130,7 @@
                     <label for="floatingInput">請輸入您的電子信箱</label>
                   </div>
                   <p class="field-error" id="err-login-email"></p>
-                  <div class="form-floating">
+                  <div class="form-floating pwd-wrap">
                     <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password" maxlength="128">
                     <label for="floatingPassword">請輸入密碼</label>
                   </div>
@@ -155,7 +155,7 @@
                   <label for="floatingInput">請輸入您的帳號電子郵件</label>
                   </div>
                   <p class="field-error" id="err-forget-email"></p>
-                  <p class="remindForget">請輸入您的 Email，我們會寄送重設密碼的連結，如果該 Email 已註冊，我們會寄送信件。</p>
+                  <p class="remindForget">請輸入您的 Email，若此信箱已完成註冊，系統將寄送<strong>重設密碼連結</strong>至信箱。</p>
                   <button type="submit" id="forgetSendbtn" class="forgetbtn css-button-gradient--4">送出</button>
                 </form>
               </div>
@@ -168,7 +168,7 @@
                   <div style="text-align:center; margin: 10px 0 18px;">
                     <i class="fa-regular fa-envelope" style="font-size:2.4rem; color:#004b97;"></i>
                   </div>
-                  <p class="checkRemind">請前往信箱點擊連結以重設密碼，<strong>連結將在 1 小時後失效</strong>。</p>
+                  <p class="checkRemind">請前往信箱<strong>點擊連結</strong>以重設密碼，連結將在 <strong>1 小時後失效</strong>。</p>
                   <button type="button" id="checkBackLogin1" class="css-button-gradient--4" style="margin-top:28px;" onclick="event.preventDefault(); document.getElementById('forgetBacklogin').click()">返回登入</button>
                 </form>
               </div>
@@ -178,11 +178,11 @@
               <div id="resetpwdModal" class="modalwhat glass-card" >
                 <form id="resetpwdForm">
                   <h2>設定您的新密碼</h2>
-                  <div class="form-floating form-resettpass">
+                  <div class="form-floating form-resettpass pwd-wrap">
                   <input class="pwd form-control" type="password" id="newPwd1" placeholder="至少 10 位，含大小寫、數字、特殊符號" maxlength="128">
                   <label for="floatingPassword" class="p">至少 8 位，需含大寫、小寫字母及數字</label>
                   </div>
-                  <div class="form-floating form-resetbpass">
+                  <div class="form-floating form-resetbpass pwd-wrap">
                   <input class="form-control pwd" type="password" id="newPwd2" placeholder="請再次輸入密碼" maxlength="128">
                   <label for="floatingPassword" class="p">請再次輸入密碼</label>
                   </div>
@@ -196,7 +196,7 @@
                 <form id="resetsuccessForm">
                   <h2>密碼重設成功！<br></h2>
                   <i class="fa-regular fa-circle-check" style="color: #28a745; font-size: 4rem; margin-top: 10px;margin-bottom: 15px;"></i>
-                  <p class="resetSuccessRemind">您的密碼已成功重設，請使用新密碼登入。</p>
+                  <p class="remind">您的密碼已<strong>成功重設</strong>，請使用<strong>新密碼</strong>登入。</p>
                   <button type="submit" id="resetSuccessBackLogin" class="checkBackbtn css-button-gradient--4">返回登入頁</button>
                 </form>
               </div>
@@ -212,12 +212,12 @@
                   <label for="floatingInput">請使用學校的電子郵件註冊</label>
                   </div>
                   <p class="field-error" id="err-signup-email"></p>
-                  <div class="form-floating form-signpass">
+                  <div class="form-floating form-signpass pwd-wrap">
                   <input class="form-control pwd" type="password" id="password1" placeholder="至少 10 位，含大小寫、數字、特殊符號" maxlength="128">
                   <label for="floatingPassword" class="p">至少 8 位，需含大寫、小寫字母及數字</label>
                   </div>
                   <p class="field-error" id="err-signup-pwd1"></p>
-                  <div class="form-floating form-signpass">
+                  <div class="form-floating form-signpass pwd-wrap">
                   <input class="form-control pwd" type="password" id="password2" placeholder="請再次輸入密碼" maxlength="128">
                   <label for="floatingPassword" class="p">請再次輸入密碼</label>
                   </div>
@@ -227,9 +227,12 @@
                   <label for="floatingInput" >請輸入您的暱稱</label>
                   </div>
                   <p class="field-error" id="err-signup-name"></p>
-                  <button type="submit" id="sign" class="signbtn css-button-gradient--4">註冊</button>
-                  <p class="remind">註冊帳號後系統將會傳送認證連結至註冊帳號，請點擊郵件連結即可成功開通帳號，開通帳號後即可登入。</p>
-                  <p class="policy">註冊即表示您同意<a href="../policy/policy.html#terms" target="_blank">服務條款</a>與<a href="../policy/policy.html#privacy" target="_blank">隱私權政策</a></p>
+                  <div class="terms-agree-row">
+                    <input type="checkbox" id="agreeTerms" disabled>
+                    <span class="terms-agree-text">我已閱讀並同意<button type="button" class="terms-open-btn" id="openTermsModal">服務條款與隱私權政策</button></span>
+                  </div>
+                  <button type="submit" id="sign" class="signbtn css-button-gradient--4" disabled>註冊</button>
+                  <p class="remind">註冊後系統將寄送<strong>認證連結</strong>至您的信箱，請<strong>點擊郵件連結</strong>開通帳號後即可登入。</p>
                 </form>
               </div>
             </div>
@@ -240,8 +243,8 @@
                   <div style="text-align:center; margin: 10px 0 18px;">
                     <i class="fa-regular fa-envelope" style="font-size:2.4rem; color:#004b97;"></i>
                   </div>
-                  <p class="checkRemind">系統已將認證連結寄至您的電子信箱，請點擊郵件連結即可成功開通帳號。開通後即可登入。</p>
-                  <p class="checkRemind" style="margin-top:8px; color:#4a627a;">沒收到信？請先檢查垃圾郵件資料夾。</p>
+                  <p class="checkRemind">系統已將<strong>認證連結</strong>寄至您的電子信箱，請<strong>點擊郵件連結</strong>開通帳號後即可登入。</p>
+                  <p class="checkRemind" style="margin-top:8px;">沒收到信？請先檢查<strong>垃圾郵件資料夾</strong>。</p>
                   <button type="button" id="resendVerifyBtn" class="css-button-gradient--4 resend-btn" disabled>
                     重新發送認證信&ensp;<span id="resendCountdown">60</span>s
                   </button>
@@ -290,7 +293,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <span>Copyright &copy; 2025 拾貨寶庫｜All Rights Reserved.</span>
+    <span>Copyright &copy; 2026 拾貨寶庫｜All Rights Reserved.</span>
   </div>
 </footer>
       </div>
@@ -324,6 +327,65 @@
     <div class="loader-text">
       <p class="brand">拾貨寶庫</p>
       <p class="tag">登入帳號中</p>
+    </div>
+  </div>
+</div>
+
+<!-- 條款 Modal -->
+<div class="terms-modal-overlay" id="termsModalOverlay">
+  <div class="terms-modal">
+    <div class="terms-modal-header">
+      <span>服務條款與隱私權政策</span>
+      <button type="button" class="terms-modal-close" id="termsModalClose" aria-label="關閉">×</button>
+    </div>
+    <div class="terms-modal-body" id="termsModalBody">
+      <p class="terms-section-title">壹、服務條款</p>
+      <p>歡迎使用「拾貨寶庫」。本平台係由中興大學創業團隊開發，專供校園內部二手物資交換與資訊服務使用。當您完成註冊程序時，即表示您已閱讀、瞭解並同意接受本條款之所有內容。</p>
+      <p><strong>1. 用戶資格與身分驗證</strong></p>
+      <ul>
+        <li>本平台僅限國立中興大學之在學學生、校友使用。</li>
+        <li>用戶必須使用 mail.nchu.edu.tw 校園信箱完成認證始得開啟買賣權限。</li>
+        <li>用戶應保證所提供之資料真實無誤，不得冒用他人身分。</li>
+      </ul>
+      <p><strong>2. 平台定位與交易模式</strong></p>
+      <p>本平台僅提供資訊媒合之技術空間，並非交易契約之主體。用戶間之交易行為（包含但不限於商品確認、價金交付、售後維護）屬買賣雙方之民事契約行為。</p>
+      <p><strong>3. 交易爭議免責條款</strong></p>
+      <ul>
+        <li><strong>現場驗貨義務：</strong>本平台強烈建議雙方採取「面交」。買家應於交付價金前仔細檢查商品，一旦完成交付，即視為買家認可商品現況。</li>
+        <li><strong>免責範圍：</strong>經營團隊不對商品之品質、真偽、合法性、安全性及賣家之履約能力負擔任何擔保責任。</li>
+        <li><strong>糾紛處理：</strong>用戶間之交易糾紛應由雙方自行協商。平台僅在接獲檢舉並查證屬實後，依內部規則對違規者執行「信用積分扣除」或「停權」處分，不負賠償責任。</li>
+      </ul>
+      <p><strong>4. 禁止行為與商品規範</strong></p>
+      <ul>
+        <li><strong>法律禁售品：</strong>菸酒、藥品（處方藥、醫療器材如隱形眼鏡）、槍砲彈藥。</li>
+        <li><strong>侵權商品：</strong>非法影印之教科書／講義、盜版軟體、未經授權之數位課程。</li>
+        <li><strong>詐騙行為：</strong>引導至釣魚網站、要求私下先行匯款。</li>
+        <li><strong>干擾營運：</strong>惡意洗版、人身攻擊、發布虛假評論。</li>
+      </ul>
+      <p class="terms-section-title">貳、隱私權政策</p>
+      <p><strong>1. 資料收集範圍</strong></p>
+      <ul>
+        <li><strong>帳號資訊：</strong>學號、校園信箱、系級、性別。</li>
+        <li><strong>平台紀錄：</strong>商品上架內容、搜尋關鍵字、交易紀錄、信用評分。</li>
+        <li><strong>設備資訊：</strong>IP 位址、瀏覽器類型（僅用於防止惡意攻擊）。</li>
+      </ul>
+      <p><strong>2. 資料使用目的</strong></p>
+      <ul>
+        <li><strong>身分確認：</strong>確保平台用戶均為校內成員。</li>
+        <li><strong>商業分析：</strong>對數據進行去識別化處理，用於統計熱門商品類別、流量時段及客群洞察。</li>
+        <li><strong>行政通知：</strong>寄送交易確認、信用警告及平台重要公告。</li>
+      </ul>
+      <p><strong>3. 資料分享與第三方揭露</strong></p>
+      <ul>
+        <li>除司法機關依法令要求調閱外，未經用戶同意，本平台絕不將足以識別個人身分之資料提供給任何第三方。</li>
+        <li>統計分析數據（去識別化後）可能提供予潛在廣告合作夥伴。</li>
+      </ul>
+      <p class="terms-section-title">參、管轄法院</p>
+      <p>本協議之解釋與適用，均依照中華民國法律予以處理。如有訴訟必要，雙方同意以台灣台中地方法院為第一審管轄法院。</p>
+    </div>
+    <div class="terms-modal-footer">
+      <span id="termsScrollHint" class="terms-scroll-hint">↓ 請繼續捲動閱讀</span>
+      <button type="button" class="terms-agree-btn" id="termsAgreeBtn" disabled>我已閱讀完畢，同意條款</button>
     </div>
   </div>
 </div>

@@ -656,57 +656,77 @@ async function toggleSellerReviews() {
 async function reportSeller(sellerId, sellerName) {
   if (!sellerId) return;
 
+  let categories = [];
+  try {
+    const res = await backendService.getReportCategories();
+    categories = res?.data?.categories ?? [];
+  } catch (_) {}
+  const catOptions = categories.length
+    ? categories.map(c => `<option value="${c.category}">${c.meaning}</option>`).join('')
+    : `<option value="fraud">詐騙或不實交易</option>
+       <option value="other">其他原因</option>`;
+
   const { isConfirmed, value } = await Swal.fire({
-    title: '檢舉賣家',
+    title: '檢舉使用者',
     customClass: { popup: 'report-form-popup' },
     html: `
       ${sellerName ? `<p class="report-form-target">檢舉對象：<strong>${sellerName}</strong></p>` : ''}
-      <label class="report-form-label" for="report-category">檢舉類型</label>
+      <label class="report-form-label" for="report-category">檢舉類型 <span style="color:red">*</span></label>
       <select id="report-category" class="report-form-select">
         <option value="" disabled selected>請選擇檢舉類型</option>
-        <option value="illegal_goods">違法或禁售商品（菸、酒、藥品、醫療器材）</option>
-        <option value="ip_infringement">智財權侵權（非法講義、電子書、盜錄課程）</option>
-        <option value="fraud">疑似詐騙行為（私下匯款、釣魚網站）</option>
-        <option value="false_description">商品描述不實（照片不符、隱瞞瑕疵、分類錯誤）</option>
-        <option value="spam_harassment">惡意刷屏／騷擾（重複上架、人身攻擊）</option>
-        <option value="other">其他原因</option>
+        ${catOptions}
       </select>
-      <label class="report-form-label" for="report-subject">標題</label>
-      <input id="report-subject" class="report-form-input" placeholder="請輸入標題" maxlength="50">
-      <label class="report-form-label" for="report-detail">內文補充說明（選填）</label>
-      <textarea id="report-detail" class="report-form-textarea" placeholder="請描述詳細情況"></textarea>
+      <label class="report-form-label" for="report-subject">主旨 <span style="color:red">*</span></label>
+      <input id="report-subject" class="report-form-input" placeholder="請輸入主旨（最多 120 字）" maxlength="120">
+      <label class="report-form-label" for="report-detail">補充說明 <span class="report-form-optional">（選填，最多 1000 字）</span></label>
+      <textarea id="report-detail" class="report-form-textarea" placeholder="請描述詳細情況" maxlength="1000"></textarea>
+      <label class="report-form-label" for="report-attachments">附件 <span class="report-form-optional">（選填，最多 5 個，每個 ≤ 5MB，JPEG/PNG/WEBP/PDF）</span></label>
+      <input type="file" id="report-attachments" class="report-form-input" multiple
+             accept="image/jpeg,image/png,image/webp,application/pdf" style="padding:6px;">
+      <div id="report-attach-hint" style="font-size:12px;color:#6f87a0;margin-top:-8px;margin-bottom:8px;">已選 0 / 5</div>
     `,
     showCancelButton: true,
     confirmButtonText: '送出檢舉',
     cancelButtonText: '取消',
     focusConfirm: false,
+    didOpen: () => {
+      document.getElementById('report-attachments').addEventListener('change', function() {
+        document.getElementById('report-attach-hint').textContent = `已選 ${this.files.length} / 5`;
+      });
+    },
     preConfirm: () => {
       const category = document.getElementById('report-category').value;
       const subject  = document.getElementById('report-subject').value.trim();
       const detail   = document.getElementById('report-detail').value.trim();
-      if (!category) {
-        Swal.showValidationMessage('請選擇檢舉類型');
-        return false;
+      const files    = document.getElementById('report-attachments').files;
+      if (!category) { Swal.showValidationMessage('請選擇檢舉類型'); return false; }
+      if (!subject)  { Swal.showValidationMessage('請填寫主旨'); return false; }
+      if (files.length > 5) { Swal.showValidationMessage('附件最多 5 個'); return false; }
+      for (const f of files) {
+        if (f.size > 5 * 1024 * 1024) { Swal.showValidationMessage(`附件「${f.name}」超過 5MB`); return false; }
       }
-      if (!subject) {
-        Swal.showValidationMessage('請填寫標題');
-        return false;
-      }
-      return { category, subject, detail };
+      return { category, subject, detail, files };
     }
   });
 
   if (!isConfirmed || !value) return;
 
   try {
-    await backendService.reportSeller(sellerId, {
-      reason: value.category,
-      subject: value.subject,
-      detail: value.detail
-    });
+    const fd = new FormData();
+    fd.append('reportedUserId', sellerId);
+    fd.append('category', value.category);
+    fd.append('subject', value.subject);
+    if (value.detail) fd.append('detail', value.detail);
+    for (const f of value.files) fd.append('attachments', f);
+    await backendService.submitReport(fd);
     Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
   } catch (e) {
-    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+    const msg = e?.response?.data?.message || '';
+    if (msg === 'Cannot report yourself') {
+      Swal.fire({ icon: 'warning', title: '無法自我檢舉' });
+    } else {
+      Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+    }
   }
 }
 
@@ -930,7 +950,7 @@ function bindReviewerClicks(container) {
   container.addEventListener('click', e => {
     if (e.target.closest('[data-report-review-id]')) {
       const btn = e.target.closest('[data-report-review-id]');
-      openReportReviewSwal(btn.dataset.reportReviewId, btn.dataset.reportReviewerName);
+      openReportReviewSwal(btn.dataset.reportReviewId, btn.dataset.reportReviewerName, btn.dataset.reportReviewerId);
       return;
     }
     const el = e.target.closest('[data-reviewer-id]');
@@ -942,22 +962,30 @@ function bindReviewerClicks(container) {
   });
 }
 
-async function openReportReviewSwal(reviewId, reviewerName) {
+async function openReportReviewSwal(reviewId, reviewerName, reviewerUserId) {
+  let categories = [];
+  try {
+    const res = await backendService.getReportCategories();
+    categories = res?.data?.categories ?? [];
+  } catch (_) {}
+  const catOptions = categories.length
+    ? categories.map(c => `<option value="${c.category}">${c.meaning}</option>`).join('')
+    : `<option value="fraud">詐騙或不實交易</option><option value="other">其他原因</option>`;
+
   const { isConfirmed, value } = await Swal.fire({
     title: '檢舉評價',
     customClass: { popup: 'report-form-popup' },
     html: `
       ${reviewerName ? `<p class="report-form-target">檢舉對象：<strong>${reviewerName}</strong></p>` : ''}
-      <label class="report-form-label" for="report-category">檢舉類型</label>
+      <label class="report-form-label" for="report-category">檢舉類型 <span style="color:red">*</span></label>
       <select id="report-category" class="report-form-select">
         <option value="" disabled selected>請選擇檢舉類型</option>
-        <option value="fake_review">虛假或惡意評價</option>
-        <option value="harassment">人身攻擊或騷擾</option>
-        <option value="spam">廣告或垃圾訊息</option>
-        <option value="other">其他原因</option>
+        ${catOptions}
       </select>
-      <label class="report-form-label" for="report-detail">補充說明（選填）</label>
-      <textarea id="report-detail" class="report-form-textarea" placeholder="請描述詳細情況"></textarea>
+      <label class="report-form-label" for="report-subject">主旨 <span style="color:red">*</span></label>
+      <input id="report-subject" class="report-form-input" placeholder="請輸入主旨（最多 120 字）" maxlength="120">
+      <label class="report-form-label" for="report-detail">補充說明 <span class="report-form-optional">（選填，最多 1000 字）</span></label>
+      <textarea id="report-detail" class="report-form-textarea" placeholder="請描述詳細情況" maxlength="1000"></textarea>
     `,
     showCancelButton: true,
     confirmButtonText: '送出檢舉',
@@ -965,14 +993,25 @@ async function openReportReviewSwal(reviewId, reviewerName) {
     focusConfirm: false,
     preConfirm: () => {
       const category = document.getElementById('report-category').value;
+      const subject  = document.getElementById('report-subject').value.trim();
       const detail   = document.getElementById('report-detail').value.trim();
       if (!category) { Swal.showValidationMessage('請選擇檢舉類型'); return false; }
-      return { category, detail };
+      if (!subject)  { Swal.showValidationMessage('請填寫主旨'); return false; }
+      return { category, subject, detail };
     }
   });
   if (!isConfirmed || !value) return;
   try {
-    await backendService.reportReview(reviewId, { reason: value.category, detail: value.detail });
+    if (reviewerUserId) {
+      const fd = new FormData();
+      fd.append('reportedUserId', reviewerUserId);
+      fd.append('category', value.category);
+      fd.append('subject', value.subject);
+      if (value.detail) fd.append('detail', value.detail);
+      await backendService.submitReport(fd);
+    } else {
+      await backendService.reportReview(reviewId, { reason: value.category, subject: value.subject, detail: value.detail });
+    }
     Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
   } catch (e) {
     Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
@@ -1077,7 +1116,7 @@ function renderReviewCard(review, role) {
         </div>
         <div class="review-card__actions">
           ${time ? `<span class="reviewTime">${time}</span>` : ''}
-          ${reviewId ? `<button class="review-report-btn" data-report-review-id="${reviewId}" data-report-reviewer-name="${name.replace(/"/g,'&quot;')}" title="檢舉此評價"><i class="ti ti-flag"></i></button>` : ''}
+          ${reviewId ? `<button class="review-report-btn" data-report-review-id="${reviewId}" data-report-reviewer-id="${rid}" data-report-reviewer-name="${name.replace(/"/g,'&quot;')}" title="檢舉此評價"><i class="ti ti-flag"></i></button>` : ''}
         </div>
       </div>
       ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}

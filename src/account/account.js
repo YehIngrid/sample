@@ -229,10 +229,75 @@ async function callLogin() {
   }
 }
 
+// ── 密碼顯示／隱藏眼睛 ────────────────────────────────────
+document.querySelectorAll('.pwd-wrap').forEach(wrap => {
+  const input = wrap.querySelector('input[type="password"], input.pwd');
+  if (!input) return;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'pwd-toggle';
+  btn.setAttribute('aria-label', '切換密碼顯示');
+  btn.innerHTML = '<i class="fa-regular fa-eye"></i>';
+  wrap.appendChild(btn);
+  btn.addEventListener('click', () => {
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.innerHTML = show ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
+  });
+});
+
+// ── 條款 Modal ────────────────────────────────────────────
+(function() {
+  const overlay   = document.getElementById('termsModalOverlay');
+  const body      = document.getElementById('termsModalBody');
+  const agreeBtn  = document.getElementById('termsAgreeBtn');
+  const hint      = document.getElementById('termsScrollHint');
+  const closeBtn  = document.getElementById('termsModalClose');
+  const openBtn   = document.getElementById('openTermsModal');
+  const checkbox  = document.getElementById('agreeTerms');
+  const signbtn   = document.getElementById('sign');
+
+  function openModal() {
+    overlay.classList.add('active');
+    body.scrollTop = 0;
+    agreeBtn.disabled = true;
+    hint.style.opacity = '1';
+  }
+  function closeModal() {
+    overlay.classList.remove('active');
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  body.addEventListener('scroll', function() {
+    const reachedBottom = body.scrollTop + body.clientHeight >= body.scrollHeight - 6;
+    if (reachedBottom) {
+      agreeBtn.disabled = false;
+      hint.style.opacity = '0';
+    }
+  });
+
+  agreeBtn.addEventListener('click', function() {
+    checkbox.disabled = false;
+    checkbox.checked  = true;
+    signbtn.disabled  = false;
+    closeModal();
+  });
+
+  checkbox.addEventListener('change', function() {
+    signbtn.disabled = !this.checked;
+  });
+})();
+
 // ── 按鈕事件 ──────────────────────────────────────────────
 const signbtn = document.getElementById('sign');
 signbtn.addEventListener('click', function(e) {
   e.preventDefault();
+  if (!document.getElementById('agreeTerms').checked) return;
   let hasError = false;
   if (!document.getElementById('email').value.trim()) {
     fieldError('email', 'err-signup-email', '請輸入電子信箱'); hasError = true;

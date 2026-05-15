@@ -55,6 +55,8 @@ function switchPanel(panelId) {
   if (panelId === 'panel-support') loadSupportChannel();
   if (panelId === 'panel-news') loadNewsAdmin();
   if (panelId === 'panel-analytics') loadAnalytics();
+  if (panelId === 'panel-reports') loadAllReports(1);
+  if (panelId === 'panel-review-tags') loadReviewTags();
   closeSidebar();
 }
 window.switchPanel = switchPanel;
@@ -1013,3 +1015,209 @@ document.getElementById('supportForm').addEventListener('submit', async (e) => {
     resultBox.classList.remove('d-none');
   }
 });
+
+// ════════════════════════════════════════════════════
+//  檢舉管理
+// ════════════════════════════════════════════════════
+const REPORT_STATUS_LABEL = { pending: '審核中', approved: '已通過', rejected: '已駁回' };
+const REPORT_STATUS_BADGE = { pending: 'badge bg-warning text-dark', approved: 'badge bg-success', rejected: 'badge bg-secondary' };
+
+let _currentReportId = null;
+
+async function loadAllReports(page = 1) {
+  const list  = document.getElementById('reportsAdminList');
+  const pager = document.getElementById('reportsAdminPager');
+  if (!list) return;
+  const status = document.getElementById('reportsStatusFilter')?.value || '';
+  list.innerHTML = '<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>';
+  pager.innerHTML = '';
+  try {
+    const res = await backendSvc.getAllReports({ status: status || undefined, page, limit: 20 });
+    const reports    = res?.data?.reports ?? [];
+    const pagination = res?.data?.pagination ?? {};
+    if (!reports.length) {
+      list.innerHTML = '<div class="text-muted text-center py-4">目前沒有符合條件的檢舉紀錄</div>';
+      return;
+    }
+    list.innerHTML = reports.map(r => {
+      const st = REPORT_STATUS_LABEL[r.status] ?? r.status;
+      const bc = REPORT_STATUS_BADGE[r.status] ?? 'badge bg-secondary';
+      const date = r.createdAt ? new Date(r.createdAt).toLocaleString('zh-TW') : '';
+      const canReview = r.status === 'pending';
+      return `
+        <div class="news-admin-item mb-2" style="cursor:default;">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+              <span class="${bc}" style="font-size:0.75rem;">${st}</span>
+              <strong class="ms-2">${esc(r.subject ?? '')}</strong>
+            </div>
+            <small class="text-muted">${date}</small>
+          </div>
+          <div class="text-muted small mt-1">類型：${esc(r.category ?? '')}　檢舉人 ID：${esc(r.reporterUserId ?? '')}　被檢舉人 ID：${esc(r.reportedUserId ?? '')}</div>
+          ${r.detail ? `<div class="text-muted small mt-1" style="white-space:pre-wrap;">${esc(r.detail)}</div>` : ''}
+          ${canReview ? `<button class="btn btn-sm btn-outline-danger mt-2" onclick="openReviewModal('${esc(r.id)}','${esc(r.subject ?? '')}')"><i class="fa fa-gavel me-1"></i>審核</button>` : ''}
+        </div>`;
+    }).join('');
+
+    const total = pagination.totalPages ?? 1;
+    if (total > 1) {
+      let html = '';
+      for (let i = 1; i <= total; i++) {
+        html += `<button class="btn btn-sm ${i === page ? 'btn-primary' : 'btn-outline-secondary'} mx-1" onclick="loadAllReports(${i})">${i}</button>`;
+      }
+      pager.innerHTML = html;
+    }
+  } catch (e) {
+    list.innerHTML = `<div class="text-muted text-center py-4">載入失敗：${esc(e?.message || '請稍後再試')}</div>`;
+  }
+}
+window.loadAllReports = loadAllReports;
+
+document.getElementById('refreshReportsBtn')?.addEventListener('click', () => loadAllReports(1));
+document.getElementById('reportsStatusFilter')?.addEventListener('change', () => loadAllReports(1));
+
+let _reviewModal = null;
+function openReviewModal(reportId, subject) {
+  _currentReportId = reportId;
+  document.getElementById('reviewReportBody').innerHTML = `
+    <p class="mb-3">主旨：<strong>${esc(subject)}</strong></p>
+    <div class="mb-3">
+      <label class="form-label fw-bold">審核決定 <span class="text-danger">*</span></label>
+      <p class="text-muted small">點擊下方「通過」或「駁回」按鈕送出審核結果。</p>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">信譽積分調整（通過時套用，負值扣分）</label>
+      <input type="number" id="reviewScoreDelta" class="form-control" value="-10" step="1" placeholder="例：-10">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">審核備註 <span class="text-muted">（選填）</span></label>
+      <textarea id="reviewNote" class="form-control" rows="3" placeholder="給當事人看到的備註說明"></textarea>
+    </div>
+  `;
+  if (!_reviewModal) {
+    _reviewModal = new bootstrap.Modal(document.getElementById('reviewReportModal'));
+  }
+  _reviewModal.show();
+}
+window.openReviewModal = openReviewModal;
+
+async function submitReview(status) {
+  if (!_currentReportId) return;
+  const scoreDelta  = parseInt(document.getElementById('reviewScoreDelta')?.value ?? '0', 10) || 0;
+  const reviewNote  = document.getElementById('reviewNote')?.value.trim() ?? '';
+  const payload     = { status, scoreDelta, reviewNote };
+  try {
+    await backendSvc.reviewReport(_currentReportId, payload);
+    _reviewModal?.hide();
+    _currentReportId = null;
+    Swal.fire({ icon: 'success', title: '審核完成', timer: 1500, showConfirmButton: false });
+    loadAllReports(1);
+  } catch (e) {
+    const msg = e?.response?.data?.message || e?.message || '請稍後再試';
+    Swal.fire({ icon: 'error', title: '審核失敗', text: msg });
+  }
+}
+
+document.getElementById('reviewApproveBtn')?.addEventListener('click', () => submitReview('approved'));
+document.getElementById('reviewRejectBtn')?.addEventListener('click',  () => submitReview('rejected'));
+
+// ════════════════════════════════════════════════════
+//  評論標籤管理
+// ════════════════════════════════════════════════════
+async function loadReviewTags() {
+  const list = document.getElementById('reviewTagsList');
+  if (!list) return;
+  list.innerHTML = '<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>';
+  try {
+    const res = await backendSvc.getReviewTags();
+    const tags = res?.data?.tags ?? [];
+    if (!tags.length) {
+      list.innerHTML = '<div class="text-muted text-center py-3">目前沒有標籤</div>';
+      return;
+    }
+    list.innerHTML = `<table class="table table-sm align-middle">
+      <thead><tr><th>標籤</th><th>說明</th><th>正面</th><th>啟用</th><th>操作</th></tr></thead>
+      <tbody>
+        ${tags.map(t => `
+          <tr>
+            <td><code>${esc(t.tag)}</code></td>
+            <td>${esc(t.meaning)}</td>
+            <td>${t.positive ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</td>
+            <td>${t.enabled ? '<span class="badge bg-primary">啟用</span>' : '<span class="badge bg-light text-muted">停用</span>'}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-secondary" onclick="openEditTagModal('${esc(t.tag)}','${esc(t.meaning)}',${t.positive},${t.enabled})">
+                <i class="fa fa-pencil"></i>
+              </button>
+            </td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+  } catch (e) {
+    list.innerHTML = `<div class="text-muted text-center py-3">載入失敗：${esc(e?.message || '請稍後再試')}</div>`;
+  }
+}
+
+document.getElementById('refreshTagsBtn')?.addEventListener('click', loadReviewTags);
+
+document.getElementById('createTagForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const tag      = document.getElementById('newTagName').value.trim();
+  const meaning  = document.getElementById('newTagMeaning').value.trim();
+  const positive = document.getElementById('newTagPositive').value === 'true';
+  const resultBox = document.getElementById('createTagResult');
+  if (!tag || !meaning) return;
+  try {
+    await backendSvc.createReviewTag({ tag, meaning, positive });
+    resultBox.className = 'result-box mt-3 success';
+    resultBox.innerHTML = `<div class="fw-bold">✅ 標籤「${esc(tag.toUpperCase())}」建立成功</div>`;
+    document.getElementById('newTagName').value = '';
+    document.getElementById('newTagMeaning').value = '';
+    loadReviewTags();
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || '請稍後再試';
+    resultBox.className = 'result-box mt-3 error';
+    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 建立失敗</div><div>${esc(msg)}</div>`;
+  } finally {
+    resultBox.classList.remove('d-none');
+  }
+});
+
+function openEditTagModal(tag, meaning, positive, enabled) {
+  Swal.fire({
+    title: `編輯標籤 ${tag}`,
+    html: `
+      <div class="text-start">
+        <label class="form-label fw-bold">說明</label>
+        <input id="editTagMeaning" class="form-control mb-3" value="${esc(meaning)}">
+        <label class="form-label fw-bold">正面評價</label>
+        <select id="editTagPositive" class="form-select mb-3">
+          <option value="true" ${positive ? 'selected' : ''}>是</option>
+          <option value="false" ${!positive ? 'selected' : ''}>否</option>
+        </select>
+        <label class="form-label fw-bold">啟用狀態</label>
+        <select id="editTagEnabled" class="form-select">
+          <option value="true" ${enabled ? 'selected' : ''}>啟用</option>
+          <option value="false" ${!enabled ? 'selected' : ''}>停用</option>
+        </select>
+      </div>`,
+    showCancelButton: true,
+    confirmButtonText: '儲存',
+    cancelButtonText: '取消',
+    focusConfirm: false,
+    preConfirm: () => ({
+      meaning:  document.getElementById('editTagMeaning').value.trim(),
+      positive: document.getElementById('editTagPositive').value === 'true',
+      enabled:  document.getElementById('editTagEnabled').value === 'true',
+    })
+  }).then(async ({ isConfirmed, value }) => {
+    if (!isConfirmed || !value) return;
+    try {
+      await backendSvc.updateReviewTag(tag, value);
+      Swal.fire({ icon: 'success', title: '更新成功', timer: 1500, showConfirmButton: false });
+      loadReviewTags();
+    } catch (err) {
+      Swal.fire({ icon: 'error', title: '更新失敗', text: err?.response?.data?.message || '請稍後再試' });
+    }
+  });
+}
+window.openEditTagModal = openEditTagModal;

@@ -61,6 +61,12 @@
         <button class="nav-btn" data-panel="panel-analytics">
           <i class="fa fa-bar-chart"></i> 數據分析
         </button>
+        <button class="nav-btn" data-panel="panel-reports">
+          <i class="fa fa-flag"></i> 檢舉管理
+        </button>
+        <button class="nav-btn" data-panel="panel-review-tags">
+          <i class="fa fa-tags"></i> 評論標籤
+        </button>
       </nav>
       <div class="sidebar-user">
         <span id="adminName">載入中...</span>
@@ -120,6 +126,26 @@
             <div class="dashboard-card-body">
               <div class="dashboard-card-title">數據分析</div>
               <div class="dashboard-card-desc">查看平台商品數量、許願池狀況、熱門搜尋關鍵字等即時統計數據。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-reports')">
+            <div class="dashboard-card-icon" style="background:#fce8e6;">
+              <i class="fa fa-flag" style="color:#d93025;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">檢舉管理</div>
+              <div class="dashboard-card-desc">審核使用者提交的檢舉案件，通過審核可調整被檢舉人信譽積分。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-review-tags')">
+            <div class="dashboard-card-icon" style="background:#e8f5e9;">
+              <i class="fa fa-tags" style="color:#388e3c;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">評論標籤</div>
+              <div class="dashboard-card-desc">建立與管理評論標籤規則，設定標籤說明與正負面屬性。</div>
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
@@ -557,6 +583,95 @@
           <div id="analyticsNewItems" class="analytics-item-list">
             <div class="text-muted text-center py-3 small">
               <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: 評論標籤管理 -->
+      <section id="panel-review-tags" class="panel">
+        <h2 class="panel-title"><i class="fa fa-tags me-2"></i>評論標籤管理</h2>
+        <p class="text-muted small mb-3">建立或修改評論標籤規則（tag 自動轉大寫）。</p>
+
+        <!-- 現有標籤列表 -->
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="fw-bold" style="color:#333;">現有標籤</span>
+          <button class="btn btn-sm btn-outline-primary" id="refreshTagsBtn"><i class="fa fa-refresh me-1"></i>重新載入</button>
+        </div>
+        <div id="reviewTagsList" class="mb-4">
+          <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+        </div>
+
+        <!-- 新增標籤 -->
+        <div class="news-editor-card">
+          <div class="news-editor-header"><span>新增標籤</span></div>
+          <form id="createTagForm" class="official-form mt-3">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-4">
+                <label class="form-label">標籤名稱 (英文) <span style="color:red">*</span></label>
+                <input type="text" id="newTagName" class="form-control" placeholder="例：FAST_SHIPPING" required>
+              </div>
+              <div class="col-sm-5">
+                <label class="form-label">說明 <span style="color:red">*</span></label>
+                <input type="text" id="newTagMeaning" class="form-control" placeholder="例：出貨速度快" required>
+              </div>
+              <div class="col-sm-3">
+                <label class="form-label">正面評價</label>
+                <select id="newTagPositive" class="form-select form-select-official">
+                  <option value="true">是</option>
+                  <option value="false">否</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn official-btn" style="color:white;">
+              <i class="fa fa-plus me-1"></i> 建立標籤
+            </button>
+          </form>
+          <div id="createTagResult" class="result-box mt-3 d-none"></div>
+        </div>
+      </section>
+
+      <!-- Panel: 檢舉管理 -->
+      <section id="panel-reports" class="panel">
+        <h2 class="panel-title"><i class="fa fa-flag me-2"></i>檢舉管理</h2>
+
+        <!-- 篩選 -->
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+          <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+          <select id="reportsStatusFilter" class="form-select form-select-sm" style="width:auto;">
+            <option value="">全部</option>
+            <option value="pending">審核中</option>
+            <option value="approved">已通過</option>
+            <option value="rejected">已駁回</option>
+          </select>
+          <button class="btn btn-sm btn-outline-primary" id="refreshReportsBtn">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+
+        <!-- 列表 -->
+        <div id="reportsAdminList">
+          <div class="text-muted text-center py-3 small">
+            <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+          </div>
+        </div>
+        <div id="reportsAdminPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+
+        <!-- 審核 Modal -->
+        <div class="modal fade" id="reviewReportModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">審核檢舉</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body" id="reviewReportBody">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="reviewRejectBtn">駁回</button>
+                <button type="button" class="btn btn-success" id="reviewApproveBtn">通過</button>
+              </div>
             </div>
           </div>
         </div>

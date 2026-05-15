@@ -1,6 +1,5 @@
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 30000;
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 // ── 重試工具：network 錯誤或 5xx 才重試，4xx 直接拋出 ────────────
 async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
@@ -34,6 +33,7 @@ const _BANNER_PAGES = [
     '/news/news.html',
     '/chatroom/chatroom.html',
     '/commodity/commodity.html',
+    '/product/product.html',
 ];
 function _showNetworkBanner() {
     const path = window.location.pathname;
@@ -138,7 +138,6 @@ export default class BackendService {
             baseURL: this.baseUrl,
             withCredentials: true,
             timeout: 30000,
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         });
         _attach401Handler(this.http); // 覆蓋少數用 this.http 的呼叫
     }
@@ -811,6 +810,84 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("全部已讀失敗", error);
+            return Promise.reject(error);
+        }
+    }
+
+    // ── Review Tags Admin API ─────────────────────────────
+    async createReviewTag(payload) {
+        try {
+            const response = await this.http.post('/api/review/tags', payload);
+            return response.data;
+        } catch (error) {
+            console.error("建立評論標籤失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async updateReviewTag(tag, payload) {
+        try {
+            const response = await this.http.patch(`/api/review/tags/${encodeURIComponent(tag)}`, payload);
+            return response.data;
+        } catch (error) {
+            console.error("更新評論標籤失敗", error);
+            return Promise.reject(error);
+        }
+    }
+
+    // ── Reports API ───────────────────────────────────────
+    async getReportCategories() {
+        try {
+            const response = await this.http.get('/api/reports/categories');
+            return response.data;
+        } catch (error) {
+            console.error("取得檢舉類型失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async submitReport(formData) {
+        try {
+            const response = await this.http.post('/api/reports', formData);
+            return response.data;
+        } catch (error) {
+            console.error("送出檢舉失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async getMyReports({ page = 1, limit = 10 } = {}) {
+        try {
+            const response = await this.http.get('/api/reports/mine', { params: { page, limit } });
+            return response.data;
+        } catch (error) {
+            console.error("取得我的檢舉失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async getAllReports({ status, page = 1, limit = 20 } = {}) {
+        try {
+            const params = { page, limit };
+            if (status) params.status = status;
+            const response = await this.http.get('/api/reports', { params });
+            return response.data;
+        } catch (error) {
+            console.error("取得所有檢舉失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async getReportDetail(id) {
+        try {
+            const response = await this.http.get(`/api/reports/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("取得檢舉詳情失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async reviewReport(id, payload) {
+        try {
+            const response = await this.http.patch(`/api/reports/${id}/review`, payload);
+            return response.data;
+        } catch (error) {
+            console.error("審核檢舉失敗", error);
             return Promise.reject(error);
         }
     }
