@@ -1,6 +1,6 @@
 export default class ChatBackendService {
     constructor() {
-        this.baseUrl = 'https://thpr.hlc23.dev';
+        this.baseUrl = import.meta.env.VITE_API_BASE_URL;
         this.http = axios.create({ baseURL: this.baseUrl });
     }
     _forbidden(error) {

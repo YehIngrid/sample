@@ -13,7 +13,10 @@
       "Bash(python3 -c \"from PIL import Image; img=Image.open\\('src/image/bigLogo.png'\\); print\\(img.size\\)\")",
       "Bash(sips -g pixelWidth -g pixelHeight src/image/bigLogo.png)",
       "Bash(find:*)",
-      "Bash(del \"C:\\\\Users\\\\ingridyeh\\\\WebstormProjects\\\\sample\\\\src\\\\newhome\\\\newhome_append.css\")"
+      "Bash(del \"C:\\\\Users\\\\ingridyeh\\\\WebstormProjects\\\\sample\\\\src\\\\newhome\\\\newhome_append.css\")",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(awk:*)"
     ]
   }
 }

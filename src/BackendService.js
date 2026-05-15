@@ -120,7 +120,7 @@ function _attach401Handler(instance) {
                         location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
                     } else {
                         sessionStorage.setItem('_loginExpiredDeclined', '1');
-                        try { await axios.post('https://thpr.hlc23.dev/api/account/logout', {}, { withCredentials: true }); } catch (_) {}
+                        try { await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/account/logout`, {}, { withCredentials: true }); } catch (_) {}
                         if (typeof window._showLoggedOutUI === 'function') window._showLoggedOutUI();
                     }
                 });
@@ -133,7 +133,7 @@ _attach401Handler(axios); // 覆蓋絕大多數 API 呼叫
 
 export default class BackendService {
     constructor() {
-        this.baseUrl = 'https://thpr.hlc23.dev';
+        this.baseUrl = import.meta.env.VITE_API_BASE_URL;
         this.http = axios.create({
             baseURL: this.baseUrl,
             withCredentials: true,

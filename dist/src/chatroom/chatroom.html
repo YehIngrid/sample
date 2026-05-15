@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://thpr.hlc23.dev wss://thpr.hlc23.dev; object-src 'none'; base-uri 'self'; form-action 'self' https://thpr.hlc23.dev;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="manifest" href="/assets/manifest-DZD_8LQw.json">
+    <link rel="apple-touch-icon" href="/assets/bigLogo-BTISbBqw.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天室</title>
+    <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
+    <meta property="og:title" content="聊天室">
+    <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+    <meta property="og:image" content="https://yourdomain.com/webP/treasurehub.webp">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" integrity="sha384-l4UPAMHGzl7zwogLW4nOwaU2XTk6oiM1jhCRQstZEndoIiA2I5bg6fST3wzBSRBD" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" integrity="sha384-6LFfkTKLRlzFtgx8xsWyBdKGpcMMQTkv+dB7rAbugeJAu1Ym2q1Aji1cjHBG12Xh" crossorigin="anonymous">
+
+  <script type="module" crossorigin src="/assets/src-chatroom-chatroom-BZtHGEgH.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/BackendService-C1LLRlJ3.js">
+  <link rel="modulepreload" crossorigin href="/assets/default-NKbtksvv.js">
+  <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-BDVlVzW8.js">
+  <link rel="stylesheet" crossorigin href="/assets/src-chatroom-chatroom-DSfDt7Ki.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-font-CKrxaKSe.css">
+</head>
+<body>
+    <!-- 頁面載入遮罩 -->
+    <div id="chatLoader" class="chat-loader">
+      <div class="loader-wrap">
+        <div class="shelf">
+          <div class="item it-book"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+          <div class="item it-laptop"><div class="screen"></div><div class="base"></div></div>
+          <div class="item it-lamp"><div class="shade"></div><div class="neck"></div><div class="base"></div></div>
+          <div class="item it-ball"><div class="body"></div><div class="seam"></div></div>
+          <div class="item it-shirt"><div class="sl"></div><div class="sr"></div><div class="body"></div><div class="collar"></div></div>
+          <div class="item it-gift"><div class="box"></div><div class="lid"></div><div class="vrib"></div><div class="bowL"></div><div class="bowR"></div><div class="knot"></div></div>
+        </div>
+        <div class="loader-text">
+          <p class="brand">連線聊天室中</p>
+          <p class="tag">正在載入對話</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <!-- 聊天室列表（永遠全屏，滑入滑出） -->
+            <div class="col-12 col-md-4 col-lg-3 sidebar p-0" id="sidebar">
+                <div class="sidebar-header p-3 d-flex align-items-center">
+                    <button id="closeChatFullscreen" class="btn btn-link p-0 me-2" style="color:#fff;font-size:1.2rem;display:none;">
+                        <i class="bi bi-arrow-left"></i>
+                    </button>
+                    <h5 class="mb-0">聊天室</h5>
+                </div>
+                
+                <!-- 聊天室列表 -->
+                <div class="chat-list" id="chatList">
+                    <div class="chat-item" data-room="general">
+                        <div class="d-flex align-items-center">
+                            <div class="chat-avatar">
+                                <img src="data:image/webp;base64,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" alt="拾貨寶庫官方帳號頭像">
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-0">拾貨寶庫提醒您</h6>
+                                    <small class="text-muted"></small>
+                                </div>
+                                <small class="text-muted">相關注意事項</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主聊天區域（永遠全屏，滑入滑出） -->
+            <div class="col-12 col-md-8 col-lg-9 chat-main p-0" id="chatMain">
+                <!-- 聊天室標題 -->
+                <div class="chat-header p-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- 手機版返回按鈕 -->
+                        <button class="btn btn-link mobile-back-btn me-2" id="backButton">
+                            <i class="bi bi-arrow-left fs-4"></i>
+                        </button>
+                        <div class="col-9">
+                            <h6 class="mb-0">拾貨寶庫提醒您</h6>
+                            <small id="chatHeaderSubtitle" class="text-muted" style="font-size:0.72rem;display:none;">無專人服務</small>
+                        </div>
+                        <div class="d-flex align-items-center gap-1">
+                            <button id="toggleMaximizeBtn" class="btn btn-link p-1" style="display:none;color:#4a627a;font-size:1.1rem;line-height:1;" title="放大視窗">
+                                <i class="bi bi-arrows-fullscreen"></i>
+                            </button>
+                            <!-- <button class=" col-8 btn btn-sm btn-outline-secondary" id="connectionStatus">
+                                <i class="bi bi-circle-fill text-success"></i> 已連接
+                            </button> -->
+                            <div class="dropdown">
+                                <button class="chat-more-btn" id="chatMoreBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end chat-dropdown">
+                                    <li>
+                                        <a class="chat-dropdown-item" href="#" id="openThemePanel">
+                                            <span class="chat-dropdown-icon"><i class="bi bi-palette2"></i></span>
+                                            訊息主題
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="chat-dropdown-item" href="#" id="toggleSoundBtn">
+                                            <span class="chat-dropdown-icon"><i class="bi bi-volume-up-fill" id="soundToggleIcon"></i></span>
+                                            <span id="soundToggleLabel">訊息音效</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="chat-dropdown-item" href="#" id="enableNotifBtn">
+                                            <span class="chat-dropdown-icon"><i class="bi bi-bell" id="notifBellIcon"></i></span>
+                                            <span id="notifBtnLabel">桌面通知</span>
+                                        </a>
+                                    </li>
+                                    <li><hr class="chat-dropdown-divider"></li>
+                                    <li>
+                                        <a class="chat-dropdown-item chat-dropdown-danger" href="#">
+                                            <span class="chat-dropdown-icon"><i class="bi bi-flag"></i></span>
+                                            檢舉
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SSE 斷線提示 -->
+                <div id="sseDisconnectBanner" class="sse-disconnect-banner" style="display:none;">
+                    <i class="bi bi-wifi-off me-2"></i>連線中斷，嘗試重新連線中…
+                </div>
+
+                <!-- 訊息顯示區 -->
+                <div class="messages-container" id="messagesContainer"></div>
+
+                <!-- 捲動到底部按鈕 -->
+                <button id="scrollToBottomBtn" class="scroll-to-bottom-btn" style="display:none;" title="捲動到最新訊息">
+                    <i class="bi bi-chevron-double-down"></i>
+                </button>
+
+                <div id="typingIndicator" class="typing-indicator mt-2" style="display: none;">
+                </div>
+                <!-- 輸入區域 -->
+                <div class="message-input-container p-3 border-top">
+                    <!-- 快速回覆 -->
+                    <div id="quickReplyBar" class="quick-reply-bar" style="display:none;">
+                        <button class="quick-reply-chip" data-text="請問還有嗎？">請問還有嗎？</button>
+                        <button class="quick-reply-chip" data-text="請問有瑕疵嗎？">請問有瑕疵嗎？</button>
+                        <button class="quick-reply-chip" data-text="可以拍更多照片嗎？">可以拍更多照片嗎？</button>
+                        <button class="quick-reply-chip" data-text="好的，沒問題！">好的，沒問題！</button>
+                        <button class="quick-reply-chip" data-text="抱歉，我再考慮一下">抱歉，我再考慮一下</button>
+                    </div>
+
+                    <!-- 時間選擇面板 -->
+                    <div id="timePicker" class="chat-picker-panel" style="display:none;">
+                        <div class="picker-label">日期</div>
+                        <div class="picker-row" id="timePickerDays">
+                            <button class="picker-chip" data-val="今天">今天</button>
+                            <button class="picker-chip" data-val="明天">明天</button>
+                            <button class="picker-chip" data-val="後天">後天</button>
+                        </div>
+                        <div class="picker-label">時段 <span class="picker-label-hint">（與確切時間擇一）</span></div>
+                        <div class="picker-row" id="timePickerSlots">
+                            <button class="picker-chip" data-val="早上">早上</button>
+                            <button class="picker-chip" data-val="中午">中午</button>
+                            <button class="picker-chip" data-val="下午">下午</button>
+                            <button class="picker-chip" data-val="晚上">晚上</button>
+                        </div>
+                        <div class="picker-label">確切時間 <span class="picker-label-hint">（填入後優先使用）</span></div>
+                        <div class="picker-time-row">
+                            <input type="time" id="timePickerExact" class="picker-time-input">
+                            <button type="button" id="timePickerExactClear" class="picker-time-clear" title="清除時間">×</button>
+                        </div>
+                        <button id="timePickerConfirm" class="picker-confirm-btn">插入時間</button>
+                    </div>
+
+                    <!-- 地點選擇面板 -->
+                    <div id="locationPicker" class="chat-picker-panel" style="display:none;">
+                        <div class="picker-label">中興大學常見面交地點</div>
+                        <div class="picker-row" id="locationPickerChips">
+                            <button class="picker-chip" data-val="中興湖旁">中興湖旁</button>
+                            <button class="picker-chip" data-val="圖書館正門">圖書館正門</button>
+                            <button class="picker-chip" data-val="綜合大樓1F">綜合大樓1F</button>
+                            <button class="picker-chip" data-val="惠蓀堂前">惠蓀堂前</button>
+                            <button class="picker-chip" data-val="小木屋廣場">小木屋廣場</button>
+                            <button class="picker-chip" data-val="理工學院廊道">理工學院廊道</button>
+                            <button class="picker-chip" data-val="人文大樓前">人文大樓前</button>
+                            <button class="picker-chip" data-val="農業陳列館前">農業陳列館前</button>
+                        </div>
+                        <button id="locationPickerConfirm" class="picker-confirm-btn">插入地點</button>
+                    </div>
+
+                    <!-- 客服機器人選單 -->
+                    <div id="csBotMenu" class="cs-bot-menu" style="display:none;">
+                        <p class="cs-bot-hint">請選擇想詢問的項目：</p>
+                        <div class="cs-bot-options">
+                            <button class="cs-bot-option" data-bot-option="1"><i class="bi bi-box-seam"></i>訂單查詢</button>
+                            <button class="cs-bot-option" data-bot-option="2"><i class="bi bi-people"></i>面交說明</button>
+                            <button class="cs-bot-option" data-bot-option="3"><i class="bi bi-question-circle"></i>常見問題</button>
+                            <button class="cs-bot-option" data-bot-option="4"><i class="bi bi-headset"></i>聯繫專人</button>
+                        </div>
+                    </div>
+
+                    <div id="img-input-container"></div>
+                    <form id="messageForm" class="d-flex gap-2">
+                        <input type="file" id="image-upload" accept="image/*" hidden>
+                        <button type="button" class="sendothericon" id="send-image-btn">
+                            <i class="bi bi-image" style="font-size:1.05rem;"></i>
+                        </button>
+                        <button type="button" class="sendothericon" id="time-picker-btn" title="面交時間">
+                            <i class="bi bi-clock" style="font-size:1.05rem;"></i>
+                        </button>
+                        <button type="button" class="sendothericon" id="location-picker-btn" title="面交地點">
+                            <i class="bi bi-geo-alt" style="font-size:1.05rem;"></i>
+                        </button>
+                        <textarea
+                            class="form-control"
+                            id="messageInput"
+                            placeholder="輸入訊息..."
+                            autocomplete="off"
+                            maxlength="500"
+                            rows="1"
+                        ></textarea>
+                        <button type="submit" class="sendicon">
+                            <img src="data:image/svg+xml,%3csvg%20width='35'%20height='30'%20viewBox='0%200%2035%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M3.07084%209.41576L24.8727%2016.0073L28.7627%2029.7731L3.07084%209.41576Z'%20fill='%2388AECE'/%3e%3cpath%20d='M3.44322%209.26733L25.6469%2013.9188L34.5614%203.42448L3.44322%209.26733Z'%20fill='%23ABDAD5'/%3e%3c/svg%3e" alt="送出訊息按鈕" style="width: 100%;">
+                        </button>
+                    </form>
+                    <div id="msgCharCount" class="msg-char-count" style="display:none;">0 / 500</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 訊息主題面板 -->
+    <div id="themePanel" class="theme-panel" style="display:none;" aria-label="訊息主題">
+      <div class="theme-panel-inner">
+        <div class="theme-panel-header">
+          <span class="theme-panel-title"><i class="bi bi-palette2"></i> 訊息主題</span>
+          <button id="closeThemePanel" class="btn-close btn-sm" aria-label="關閉"></button>
+        </div>
+        <p class="theme-hint">選擇自己訊息泡泡的顏色主題</p>
+        <div class="theme-swatches" id="themeSwatches">
+          <button class="theme-swatch" data-id="default" data-from="#84a2d4" data-to="#82d3d3" title="藍綠（預設）">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #84a2d4, #82d3d3)"></span>
+            <small>預設</small>
+          </button>
+          <button class="theme-swatch" data-id="rose" data-from="#3d4e81" data-to="#6e7ff3" title="星空">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #3d4e81, #6e7ff3)"></span>
+            <small>星空</small>
+          </button>
+          <button class="theme-swatch" data-id="mono" data-from="#607d8b" data-to="#90a4ae" title="霧灰藍">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #607d8b, #90a4ae)"></span>
+            <small>霧灰藍</small>
+          </button>
+          <button class="theme-swatch" data-id="berry" data-from="#6b4fa0" data-to="#a07cc9" title="莓紫">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #6b4fa0, #a07cc9)"></span>
+            <small>莓紫</small>
+          </button>
+          <button class="theme-swatch" data-id="forest" data-from="#f0ada0" data-to="#ac9ef0" title="糖果">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #f0ada0, #ac9ef0)"></span>
+            <small>糖果</small>
+          </button>
+          <button class="theme-swatch" data-id="sky" data-from="#ff9a9e" data-to="#fad0c4" title="蜜桃">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #ff9a9e, #fad0c4)"></span>
+            <small>蜜桃</small>
+          </button>
+          <button class="theme-swatch" data-id="sunset" data-from="#e65100" data-to="#ffd54f" title="夕陽橙">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #e65100, #ffd54f)"></span>
+            <small>夕陽橙</small>
+          </button>
+          <button class="theme-swatch" data-id="warmbrown" data-from="#c17c5a" data-to="#e8b89a" title="暖橘棕">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #c17c5a, #e8b89a)"></span>
+            <small>暖橘棕</small>
+          </button>
+          <button class="theme-swatch" data-id="purple" data-from="#f7de98" data-to="#dd97f7" title="夢幻">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #f7de98, #dd97f7)"></span>
+            <small>夢幻</small>
+          </button>
+          <button class="theme-swatch" data-id="matcha" data-from="#6b8f71" data-to="#a8c5a0" title="抹茶">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #6b8f71, #a8c5a0)"></span>
+            <small>抹茶</small>
+          </button>
+          <button class="theme-swatch" data-id="dark" data-from="#5b8dd9" data-to="#5bbdbd" data-dark="1" title="暗黑">
+            <span class="swatch-preview" style="background: linear-gradient(to right, #1e1e2e, #5b8dd9)"></span>
+            <small>暗黑</small>
+          </button>
+          <button class="theme-swatch theme-swatch-custom" data-id="custom" title="自訂顏色">
+            <span class="swatch-preview swatch-custom-icon"><i class="bi bi-eyedropper"></i></span>
+            <small>自訂</small>
+          </button>
+        </div>
+        <!-- 自訂顏色列 (初始隱藏) -->
+        <div id="customColorRow" class="custom-color-row" style="display:none;">
+          <div class="d-flex align-items-center gap-2">
+            <label class="custom-color-label">顏色 1</label>
+            <input type="color" id="customColor1" value="#004b97" class="color-picker">
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <label class="custom-color-label">顏色 2</label>
+            <input type="color" id="customColor2" value="#24b685" class="color-picker">
+          </div>
+          <button id="applyCustomColor" class="btn btn-sm apply-color-btn">套用</button>
+        </div>
+      </div>
+    </div>
+    <div id="themePanelOverlay" class="theme-panel-overlay" style="display:none;"></div>
+
+    <!-- 操作引導 -->
+    <div id="chatOnboarding" class="chat-onboarding" style="display:none;">
+        <div class="onboarding-backdrop"></div>
+        <div class="onboarding-tooltip arrow-down" id="onboardingTooltip">
+            <div class="onboarding-step-label" id="onboardingStep">1 / 3</div>
+            <div class="onboarding-icon" id="onboardingIcon"></div>
+            <div class="onboarding-title" id="onboardingTitle"></div>
+            <div class="onboarding-desc" id="onboardingDesc"></div>
+            <div class="onboarding-actions">
+                <button class="onboarding-skip" id="onboardingSkip">跳過引導</button>
+                <button class="onboarding-next" id="onboardingNext">下一步</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 訊息右鍵選單 -->
+    <div id="msgContextMenu" class="msg-context-menu" style="display:none;">
+        <button id="msgMenuCopy"><i class="bi bi-copy me-2"></i>複製文字</button>
+    </div>
+
+    <!-- Crop Modal -->
+    <div class="modal fade" id="chatCropModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header py-2">
+            <h5 class="modal-title">裁切圖片</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-0" style="background:#111;">
+            <div style="height:60vh;overflow:hidden;">
+              <img id="chatCropImg" style="display:block;max-width:100%;" alt="裁切照片範圍">
+            </div>
+          </div>
+          <div class="modal-footer py-2">
+            <small class="text-muted me-auto">拖曳調整裁切範圍，滾輪縮放</small>
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary btn-sm" id="chatCropConfirm">確認裁切</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" integrity="sha384-jrOgQzBlDeUNdmQn3rUt/PZD+pdcRBdWd/HWRqRo+n2OR2QtGyjSaJC0GiCeH+ir" crossorigin="anonymous"></script>
+    <script>
+      // 更新底部導覽列「我的帳戶」icon 為使用者頭像（已登入時）
+      document.addEventListener('DOMContentLoaded', () => {
+        const userAvatar = localStorage.getItem('avatar');
+        if (userAvatar && userAvatar !== 'null' && userAvatar !== '') {
+          document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatar"]').forEach(img => {
+            img.src = userAvatar;
+            img.style.borderRadius = '50%';
+            img.style.border = '1px solid #004b97';
+            img.style.objectFit = 'cover';
+          });
+          document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatarnotactive"]').forEach(img => {
+            img.src = userAvatar;
+            img.style.borderRadius = '50%';
+            img.style.border = '1px solid #ABDAD5';
+            img.style.objectFit = 'cover';
+          });
+        }
+      });
+    </script>
+
+    <!-- 底部導航 (手機版，iframe 內不顯示) -->
+    <script>if(window !== window.parent) document.write('<style>#bottomNav{display:none!important}</style>');</script>
+    <nav class="bottom-nav" id="bottomNav">
+      <a href="../shop/shop.html" class="bottom-nav-item nav-tab-home">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23004B97'/%3e%3crect%20x='8'%20y='12'%20width='22'%20height='18'%20rx='0.5'%20fill='%23004B97'/%3e%3crect%20x='15'%20y='19'%20width='8'%20height='11'%20fill='white'/%3e%3c/svg%3e" alt="正在購物首頁">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23B4B4B4'/%3e%3crect%20x='8'%20y='12'%20width='22'%20height='18'%20rx='0.5'%20fill='%23B4B4B4'/%3e%3crect%20x='15'%20y='19'%20width='8'%20height='11'%20fill='white'/%3e%3c/svg%3e" alt="點擊前往購物首頁">
+        <span>購物首頁</span>
+      </a>
+      <a href="../commodity/commodity.html" class="bottom-nav-item nav-tab-market">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='35'%20height='35'%20viewBox='0%200%2035%2035'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M17.8756%2022.5725C17.6765%2022.7991%2017.3235%2022.7991%2017.1244%2022.5725L3.07378%206.58001C2.78994%206.25694%203.01935%205.75%203.44941%205.75H31.5506C31.9807%205.75%2032.2101%206.25694%2031.9262%206.58001L17.8756%2022.5725Z'%20fill='%23004B97'/%3e%3cpath%20d='M14.5%2018.5C14.5%2018.2239%2014.7239%2018%2015%2018H20C20.2761%2018%2020.5%2018.2239%2020.5%2018.5V34C20.5%2034.412%2020.0296%2034.6472%2019.7%2034.4L14.7%2030.65C14.5741%2030.5556%2014.5%2030.4074%2014.5%2030.25V18.5Z'%20fill='%23004B97'/%3e%3c/svg%3e" alt="正在購物商場">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='35'%20height='35'%20viewBox='0%200%2035%2035'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M17.8756%2022.5725C17.6765%2022.7991%2017.3235%2022.7991%2017.1244%2022.5725L3.07378%206.58001C2.78994%206.25694%203.01935%205.75%203.44941%205.75H31.5506C31.9807%205.75%2032.2101%206.25694%2031.9262%206.58001L17.8756%2022.5725Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M14.5%2018.5C14.5%2018.2239%2014.7239%2018%2015%2018H20C20.2761%2018%2020.5%2018.2239%2020.5%2018.5V34C20.5%2034.412%2020.0296%2034.6472%2019.7%2034.4L14.7%2030.65C14.5741%2030.5556%2014.5%2030.4074%2014.5%2030.25V18.5Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="點擊前往購物商場">
+        <span>購物商場</span>
+      </a>
+      <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-tab-chat active">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='23'%20height='23'%20viewBox='0%200%2023%2023'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M12.458%203.83301C15.1499%203.83301%2016.496%203.83348%2017.4629%204.47949C17.8815%204.75917%2018.2408%205.11855%2018.5205%205.53711C19.1665%206.50396%2019.167%207.85014%2019.167%2010.542C19.167%2013.2334%2019.1663%2014.5791%2018.5205%2015.5459C18.2409%2015.9644%2017.8814%2016.3239%2017.4629%2016.6035C16.6183%2017.1678%2015.4846%2017.239%2013.417%2017.248V17.25L12.3945%2019.2949C12.0259%2020.0316%2010.9741%2020.0316%2010.6055%2019.2949L9.58301%2017.25V17.248C7.51542%2017.239%206.38169%2017.1678%205.53711%2016.6035C5.1186%2016.3239%204.75914%2015.9644%204.47949%2015.5459C3.83366%2014.5791%203.83301%2013.2334%203.83301%2010.542C3.83301%207.85014%203.83348%206.50396%204.47949%205.53711C4.75917%205.11855%205.11855%204.75917%205.53711%204.47949C6.50396%203.83348%207.85014%203.83301%2010.542%203.83301H12.458Z'%20fill='url(%23paint0_linear_879_1119)'/%3e%3cellipse%20cx='15.3333'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='11.5'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='7.66666'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_879_1119'%20x1='11.5'%20y1='3.83301'%20x2='11.5'%20y2='19.8474'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="正在聊天室">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='23'%20height='23'%20viewBox='0%200%2023%2023'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M12.458%203.83301C15.1499%203.83301%2016.496%203.83348%2017.4629%204.47949C17.8815%204.75917%2018.2408%205.11855%2018.5205%205.53711C19.1665%206.50396%2019.167%207.85014%2019.167%2010.542C19.167%2013.2334%2019.1663%2014.5791%2018.5205%2015.5459C18.2409%2015.9644%2017.8814%2016.3239%2017.4629%2016.6035C16.6183%2017.1678%2015.4846%2017.239%2013.417%2017.248V17.25L12.3945%2019.2949C12.0259%2020.0316%2010.9741%2020.0316%2010.6055%2019.2949L9.58301%2017.25V17.248C7.51542%2017.239%206.38169%2017.1678%205.53711%2016.6035C5.1186%2016.3239%204.75914%2015.9644%204.47949%2015.5459C3.83366%2014.5791%203.83301%2013.2334%203.83301%2010.542C3.83301%207.85014%203.83348%206.50396%204.47949%205.53711C4.75917%205.11855%205.11855%204.75917%205.53711%204.47949C6.50396%203.83348%207.85014%203.83301%2010.542%203.83301H12.458Z'%20fill='%23B4B4B4'/%3e%3cellipse%20cx='15.3333'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='11.5'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='7.66666'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3c/svg%3e" alt="前往聊天室">
+        <span>聊天室</span>
+      </a>
+      <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item nav-tab-cart">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='41'%20height='31'%20viewBox='0%200%2041%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cellipse%20cx='12.6357'%20cy='27.7'%20rx='2.63571'%20ry='2.7'%20fill='%23004B97'/%3e%3ccircle%20cx='26.6357'%20cy='27.6357'%20r='2.63571'%20fill='%23004B97'/%3e%3cpath%20d='M8%206L33%206L30.5%2020L10.5%2020L8%206Z'%20fill='%23004B97'/%3e%3crect%20x='8.70001'%20y='22'%20width='21.4762'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3crect%20width='2.5696'%20height='23.3413'%20rx='1'%20transform='matrix(0.988954%20-0.148225%200.143341%200.989673%205.41626%201.46036)'%20fill='%23004B97'/%3e%3crect%20x='0.976196'%20width='6.83333'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3cpath%20d='M9.59576%2012.7941H31.8404'%20stroke='white'/%3e%3cline%20x1='15.4996'%20y1='2.97972'%20x2='16.2017'%20y2='20.2738'%20stroke='white'/%3e%3crect%20width='1'%20height='17'%20transform='translate(23.617%203.29413)'%20fill='white'/%3e%3c/svg%3e" alt="正在購物車頁">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='41'%20height='31'%20viewBox='0%200%2041%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cellipse%20cx='12.6357'%20cy='27.7'%20rx='2.63571'%20ry='2.7'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='26.6357'%20cy='27.6357'%20r='2.63571'%20fill='%23B4B4B4'/%3e%3cpath%20d='M8%206L33%206L30.5%2020L10.5%2020L8%206Z'%20fill='%23B4B4B4'/%3e%3crect%20x='8.70001'%20y='22'%20width='21.4762'%20height='3'%20rx='1'%20fill='%23B4B4B4'/%3e%3crect%20width='2.5696'%20height='23.3413'%20rx='1'%20transform='matrix(0.988954%20-0.148225%200.143341%200.989673%205.41626%201.46036)'%20fill='%23B4B4B4'/%3e%3crect%20x='0.976196'%20width='6.83333'%20height='3'%20rx='1'%20fill='%23B4B4B4'/%3e%3cpath%20d='M9.59576%2012.7941H31.8404'%20stroke='white'/%3e%3cline%20x1='15.4996'%20y1='2.97972'%20x2='16.2017'%20y2='20.2738'%20stroke='white'/%3e%3crect%20width='1'%20height='17'%20transform='translate(23.617%203.29413)'%20fill='white'/%3e%3c/svg%3e" alt="點擊前往購物車頁">
+        <span>購物車</span>
+      </a>
+      <a href="../person/person.html" class="bottom-nav-item nav-tab-account">
+        <img class="nav-icon nav-icon-active" src="/assets/default-avatar-B4oh15VT.webp" alt="正在我的帳戶">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='150'%20height='150'%20viewBox='0%200%20150%20150'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_879_1133)'%3e%3crect%20width='150'%20height='150'%20rx='50'%20fill='white'/%3e%3ccircle%20cx='75'%20cy='75'%20r='75'%20fill='%23B4B4B4'/%3e%3cellipse%20cx='75'%20cy='126'%20rx='60'%20ry='40'%20fill='white'/%3e%3ccircle%20cx='75'%20cy='49'%20r='30'%20fill='white'/%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_879_1133'%3e%3crect%20width='150'%20height='150'%20rx='50'%20fill='white'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="點擊前往我的帳戶">
+        <span>我的帳戶</span>
+      </a>
+    </nav>
+</body>
+</html>

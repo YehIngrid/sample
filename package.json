@@ -6,6 +6,8 @@
   "scripts": {
     "dev-server": "node server.js",
     "dev": "node server.js & npx browser-sync start --proxy 'localhost:5500' --files 'src/**/*' --port 3000 --no-open",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "test:smoke": "playwright test tests/smoke.spec.js",
@@ -17,6 +19,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "browser-sync": "^3.0.4"
+    "browser-sync": "^3.0.4",
+    "glob": "^13.0.6",
+    "vite": "^6.4.2"
   }
 }

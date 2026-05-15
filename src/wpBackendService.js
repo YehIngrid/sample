@@ -18,7 +18,7 @@ async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
 
 export default class wpBackendService {
     constructor() {
-        this.baseUrl = 'https://thpr.hlc23.dev/api/wishpool';
+        this.baseUrl = `${import.meta.env.VITE_API_BASE_URL}/api/wishpool`;
         this.http = axios.create({ baseURL: this.baseUrl });
     }
     async createWish(itemName, description, priority, maxPrice, photo) {

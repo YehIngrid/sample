@@ -9,6 +9,7 @@ npm-debug.log*
 # Environment variables
 .env
 .env.local
+.env.production
 
 # OS files
 .DS_Store
@@ -19,7 +20,6 @@ Thumbs.db
 .idea/
 
 # Build output
-dist/
 build/
 /preview-review.html
 /src/REVIEW_API_SPEC.md

@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <title>首頁 | 拾貨寶庫</title>
+    <!-- meta部分 -->
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://thpr.hlc23.dev wss://thpr.hlc23.dev; object-src 'none'; base-uri 'self'; form-action 'self' https://thpr.hlc23.dev;">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="manifest" href="/assets/manifest-DZD_8LQw.json">
+    <link rel="apple-touch-icon" href="/assets/bigLogo-BTISbBqw.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
+    <meta property="og:title" content="首頁 | 拾貨寶庫">
+    <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+    <meta property="og:image" content="https://yourdomain.com/webP/treasurehub.webp">
+    <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <!-- link部分 -->
+    <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet"  >
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" integrity="sha384-/rJKQnzOkEo+daG0jMjU1IwwY9unxt1NBw3Ef2fmOJ3PW/TfAg2KXVoWwMZQZtw9" crossorigin="anonymous">
+  <script type="module" crossorigin src="/assets/src-newhome-newhome-CaK9HINh.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/BackendService-C1LLRlJ3.js">
+  <link rel="modulepreload" crossorigin href="/assets/default-NKbtksvv.js">
+  <link rel="stylesheet" crossorigin href="/assets/src-newhome-newhome-Co4EOj8I.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-DuE87-eU.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-font-CKrxaKSe.css">
+</head>
+<body>
+    <div id="scroll-progress"></div>
+    <div id="loader">
+      <div class="loader-wrap">
+        <div class="shelf">
+          <div class="item it-book"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+          <div class="item it-laptop"><div class="screen"></div><div class="base"></div></div>
+          <div class="item it-lamp"><div class="shade"></div><div class="neck"></div><div class="base"></div></div>
+          <div class="item it-ball"><div class="body"></div><div class="seam"></div></div>
+          <div class="item it-shirt"><div class="sl"></div><div class="sr"></div><div class="body"></div><div class="collar"></div></div>
+          <div class="item it-gift"><div class="box"></div><div class="lid"></div><div class="vrib"></div><div class="bowL"></div><div class="bowR"></div><div class="knot"></div></div>
+        </div>
+        <div class="loader-text">
+          <p class="brand">拾貨寶庫</p>
+          <p class="tag" data-i18n="loading">正在探索拾貨寶庫</p>
+        </div>
+      </div>
+    </div>
+    <div id="contentofnewhome" style="display: none;">
+        <div class="header finisher-header" id="hero" style="width: 100%; height: 90vh;">
+
+        <!-- 封面 -->
+        <section class="titlepage">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <img src="data:image/webp;base64,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" alt="拾貨寶庫Logo" class="picture">
+                    <a class="navbar-brand" href="newhome.html">
+                        <img src="/assets/TREASUREHUBwhite-s2VgFBQ6.svg" alt="拾貨寶庫TREASURE HUB" class="logoo" style="width: 100px; height: 50px; margin-right: 10px;">
+                    </a>
+                    <button class="navbar-toggler d-lg-none" type="button" aria-expanded="false" aria-label="Toggle navigation">
+                        <img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="選單" style="width:20px;">
+                    </button>
+                    <!-- 桌機版導覽選單 -->
+                    <div class="d-none d-lg-flex align-items-center ms-3">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="newhome.html" data-i18n="nav.home">首頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../shop/shop.html" data-i18n="nav.shop">購物首頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../commodity/commodity.html" class="nav-link" data-i18n="nav.market">購物商場</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../wishpool/wishpool.html#wishpool" data-i18n="nav.wishpool">許願專區</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../news/news.html" data-i18n="nav.news">最新資訊</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../questions/questions.html" data-i18n="nav.faq.link">常見問題</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../communication/communication.html" data-i18n="nav.contact">客服諮詢</a>
+                            </li>
+                        </ul>
+                        <button id="langToggle" class="lang-toggle-btn" onclick="toggleLang()">EN</button>
+                    </div>
+                    <!-- 側邊抽屜連結來源（隱藏，供 default.js _initMobileDrawer 使用） -->
+                    <ul class="navbar-nav mobileNav d-none">
+                        <li class="nav-item"><a class="nav-link" href="newhome.html" data-i18n="nav.home">首頁</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../shop/shop.html" data-i18n="nav.shop">購物首頁</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../commodity/commodity.html" data-i18n="nav.market">購物商場</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../wishpool/wishpool.html#wishpool" data-i18n="nav.wishpool">許願專區</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../news/news.html" data-i18n="nav.news">最新資訊</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../questions/questions.html" data-i18n="nav.faq.link">常見問題</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../communication/communication.html" data-i18n="nav.contact">客服諮詢</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="titlecenter">
+                <div class="hero-left">
+                    <p class="hero-tag" data-i18n="hero.tag">專為大學生設計</p>
+                    <h1 data-i18n="hero.title">拾貨寶庫</h1>
+                    <h4 style="color: #abdad5" data-i18n="hero.subtitle">一個專為學生設計的校園共享經濟平台</h4>
+                    <div class="buttontwo d-flex">
+                        <button class="hvr-sweep-to-right shopbtn" onclick="window.location.href='../shop/shop.html'" data-i18n="hero.btn.shop">立即開始購物</button>
+                        <button class="hvr-sweep-to-right lookbtn" onclick="window.location.href='../account/account.html'" data-i18n="hero.btn.browse">立即註冊／登入</button>
+                    </div>
+                </div>
+                <div class="hero-right">
+                    <div class="hero-phone-wrap">
+                        <!-- Phone Mockup -->
+                        <div class="nh-phone">
+                          <div class="nh-phone-notch"></div>
+                          <div class="nh-phone-screen">
+                            <div class="nh-phone-search">搜尋商品...</div>
+                            <div class="nh-phone-banner">
+                              <div class="nh-banner-title" data-i18n="hero.banner.title">讓寶物，找到新的歸屬</div>
+                              <div class="nh-banner-sub" data-i18n="hero.banner.sub">透過面交，把物品交到下一位</div>
+                            </div>
+                            <div class="nh-phone-grid">
+                              <div class="nh-phone-cat"><div class="nh-ic c1"><svg viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="16" rx="1"/><path d="M9 8h6M9 12h6"/></svg></div>書籍</div>
+                              <div class="nh-phone-cat"><div class="nh-ic c2"><svg viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="6" width="14" height="10" rx="1"/><path d="M3 18h18"/></svg></div>3C</div>
+                              <div class="nh-phone-cat"><div class="nh-ic c3"><svg viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l2 6H7z"/><path d="M12 10v9M8 19h8"/></svg></div>住宿</div>
+                              <div class="nh-phone-cat"><div class="nh-ic c4"><svg viewBox="0 0 24 24" stroke="#004b97" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4v16"/></svg></div>運動</div>
+                              <div class="nh-phone-cat"><div class="nh-ic c5"><svg viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4L4 7l2 4 2-1v10h8V10l2 1 2-4-4-3"/></svg></div>服飾</div>
+                              <div class="nh-phone-cat"><div class="nh-ic c6"><svg viewBox="0 0 24 24" stroke="#fff" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="3"/><path d="M4 11v9h16v-9"/></svg></div>好物</div>
+                            </div>
+                            <div class="nh-phone-list">
+                              <div class="nh-phone-item"><div class="nh-item-img"></div><div class="nh-item-info"><div class="nh-item-title">微積分課本</div><div class="nh-item-price">NT$ 250</div></div></div>
+                              <div class="nh-phone-item"><div class="nh-item-img b"></div><div class="nh-item-info"><div class="nh-item-title">電競鍵盤</div><div class="nh-item-price">NT$ 880</div></div></div>
+                            </div>
+                            <div class="nh-phone-tabs">
+                              <span class="on">首頁</span><span>商場</span><span>購物車</span><span>我的</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="hero-bubble b1"><span data-i18n="hero.bubble1">免費刊登二手商品</span></div>
+                        <div class="hero-bubble b2" style="background: #abdad5"><span data-i18n="hero.bubble2">校園安全交易</span></div>
+                        <div class="hero-bubble b3"><span data-i18n="hero.bubble3">環保循環利用</span></div>
+                    </div>
+                </div>
+                <div class="scroll-down" onclick="scrollToNext()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 16.5l-8-8 1.4-1.4L12 13.7l6.6-6.6L20 8.5z"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+        <!-- 波浪過渡 -->
+        <div class="hero-wave" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 90" preserveAspectRatio="none">
+            <path d="M0,45 C240,90 480,0 720,45 C960,90 1200,10 1440,45 L1440,90 L0,90 Z" fill="#ffffff"/>
+          </svg>
+        </div>
+        </div>
+    </div>
+        <section id="next-section" class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center halfsection">
+            <div class="friend mx-auto col-md-5 d-flex flex-column justify-content-center" data-aos="fade-right">
+                <span class="nh-eyebrow-sec">SECONDHAND TRADING</span>
+                <h2 class="text-xs-center" data-i18n="p1.title">二手交易<span style="color: #004b97">｜</span>資源循環，從你我開始</h2>
+                <p class="text-xs-center" style="color: #004b97; font-weight: 600; font-size: large;" data-i18n="p1.hook">
+                    不想花大錢買新書？搬宿舍家具沒地方放？
+                </p>
+                <em style="color: var(--color-text-muted)" class="text-xs-center" data-i18n="p1.intro">
+                    在這裡，你可以：
+                </em>
+                <ul class="text-xs-center" style="list-style: ; margin: 15px 0;">
+                    <li style="border-bottom: 1px solid #abdad5; margin-top: 5px;" data-i18n="p1.li1">快速上架二手書、生活用品、家具、電器</li>
+                    <li style="border-bottom: 1px solid #abdad5; margin-top: 5px;" data-i18n="p1.li2">限校交易，面交更方便、安全又放心</li>
+                    <li style="border-bottom: 1px solid #abdad5; margin-top: 5px; margin-bottom: 10px;" data-i18n="p1.li3">免抽成，免費上架，資源再利用、生活更省錢</li>
+                </ul>
+                <em style="color: var(--color-text-muted)" class="text-xs-center" data-i18n="p1.close">
+                    從同學手中接力一份實用，也讓自己的東西找到下一個需要的人！
+                </em>
+            </div>
+            <div class="book col-md-5 d-none d-md-block">
+                <img src="/assets/bookad-ClT0Obol.gif" alt="二手書本圖片" class="bookad" loading="lazy"/>
+            </div>
+        </section>
+        <section class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center halfsection">
+            <div class="newfunc d-flex flex-row justify-content-between">
+                <div class="col-md-5 d-none d-md-block">
+                    <img src="/assets/discover-lJhiEAA6.gif" alt="校園商機宣傳圖" class="schooladgif" loading="lazy"/>
+                </div>
+                <div class="d-flex flex-column justify-content-center" data-aos="fade-left">
+                    <span class="nh-eyebrow-sec">CAMPUS MARKET</span>
+                    <h2 class="text-xs-center" data-i18n="p2.title">校園商機<span style="color: #004b97">｜</span>學生商機無限，讓品牌走進校園生活</h2>
+                    <p class="text-xs-center" style="color: #004b97; font-weight: 600; font-size: large;" data-i18n="p2.hook">
+                        想拓展學生市場？不知道怎麼接觸在校生？
+                    </p>
+                    <em style="color: var(--color-text-muted)" class="text-xs-center" data-i18n="p2.intro">
+                        在這裡，你可以：
+                    </em>
+                    <ul class="text-xs-center" style="list-style:; margin: 15px 0;">
+                        <li style="border-bottom: 1px solid #abdad5; margin-top: 5px;" data-i18n="p2.li1">直接上架產品與優惠，觸及對口學生族群</li>
+                        <li style="border-bottom: 1px solid #abdad5; margin-top: 5px; margin-bottom: 10px;" data-i18n="p2.li2">限校曝光，精準行銷，創造在地熟悉感與信任感</li>
+                    </ul>
+                    <em style="color: var(--color-text-muted)" class="text-xs-center" data-i18n-html="p2.close">
+                        讓學生在滑平台時看到你的品牌，<br>也讓你的產品成為他們生活的一部分！
+                    </em>
+                </div>
+            </div>
+        </section>
+        <section class="reason">
+            <span class="nh-eyebrow-sec text-center d-block" data-aos="fade-up">WHY CHOOSE US</span>
+            <h2 class="text-xs-center my-4 section-title" data-aos="fade-up" data-i18n="reason.title">為什麼選擇拾貨寶庫？</h2>
+            <div class="row gy-3 gy-lg-0 justify-content-lg-center">
+                <div class="col-md-6 col-lg-3 text-center" data-aos="fade-up" data-aos-delay="0">
+                    <div class="reason-card">
+                        <img src="data:image/svg+xml,%3csvg%20width='142'%20height='146'%20viewBox='0%200%20142%20146'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M20.0425%2052.6509C19.9726%2051.6114%2020.7312%2050.6736%2021.7618%2050.5208C47.0634%2046.7695%2058.4824%2039.9696%2067.8946%2019.4532C68.6524%2017.8013%2071.1007%2017.8312%2071.8238%2019.4986C80.6066%2039.7493%2092.4564%2047.5069%20118.515%2049.6268C119.602%2049.7152%20120.44%2050.6624%20120.373%2051.7516C118.097%2088.4119%20106.134%20106.372%2072.3179%20139.797C71.5319%20140.574%2070.243%20140.569%2069.4642%20139.785C43.424%20113.567%2023.3038%20101.12%2020.0425%2052.6509Z'%20fill='white'%20stroke='%23004B97'%20stroke-width='10'/%3e%3cpath%20d='M54.0149%2079.8787L66.2469%2097.6858C67.0532%2098.8596%2068.7932%2098.8386%2069.5709%2097.6456L94.0149%2060.149'%20stroke='%23004B97'%20stroke-width='10'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="安全交易icon" class="icon" loading="lazy">
+                        <h5 style="color: #004b97;" data-i18n="reason.safe.title">安全交易</h5>
+                        <p data-i18n="reason.safe.desc">校內身份認證，保障買賣雙方權益。</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="reason-card">
+                        <img src="data:image/svg+xml,%3csvg%20width='50'%20height='54'%20viewBox='0%200%2050%2054'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M20.1359%2049.6174C20.1911%2049.6174%2020.2359%2049.5726%2020.2359%2049.5174V38.884C20.2359%2038.8288%2020.1911%2038.784%2020.1359%2038.784H8.39219C8.31921%2038.784%208.27081%2038.7084%208.3014%2038.6421L12.1912%2030.2142C12.2154%2030.1618%2012.2789%2030.1407%2012.3296%2030.1682L15.8677%2032.0846C15.9602%2032.1347%2016.0574%2032.0263%2015.9975%2031.9398L10.2657%2023.6605C10.247%2023.6335%2010.2163%2023.6174%2010.1835%2023.6174H0.630475C0.526718%2023.6174%200.491614%2023.7559%200.582847%2023.8053L4.15343%2025.7394C4.19981%2025.7645%204.2187%2025.8213%204.1966%2025.8692L0.259212%2034.4002C0.244717%2034.4316%200.247482%2034.4683%200.266522%2034.4972L10.2063%2049.5724C10.2248%2049.6005%2010.2561%2049.6174%2010.2897%2049.6174H20.1359Z'%20fill='%23004B97'%20stroke='%23004B97'%20stroke-width='0.5'/%3e%3cpath%20d='M8.13263%2018.3947C8.10611%2018.4432%208.12128%2018.5081%208.16651%2018.5398L16.3608%2024.2826C16.406%2024.3143%2016.4642%2024.3007%2016.4907%2024.2522L22.4329%2013.3945C22.4688%2013.3288%2022.5569%2013.3319%2022.595%2013.4002L27.1256%2021.5441C27.1531%2021.5935%2027.141%2021.6563%2027.0982%2021.6856L23.8168%2023.9282C23.7334%2023.9851%2023.7822%2024.1313%2023.8817%2024.1225L33.1552%2023.3034C33.1844%2023.3008%2033.2101%2023.2834%2033.225%2023.2562L38.0497%2014.4404C38.1007%2014.3472%2037.9988%2014.2358%2037.915%2014.2931L34.6452%2016.5277C34.6009%2016.558%2034.5408%2016.5408%2034.5122%2016.4895L29.9324%208.25721C29.9131%208.2225%2029.8781%208.20194%2029.8422%208.20417L13.1898%209.23826C13.1598%209.24012%2013.1331%209.25767%2013.1179%209.28553L8.13263%2018.3947Z'%20fill='%23004B97'%20stroke='%23004B97'%20stroke-width='0.5'/%3e%3cpath%20d='M39.459%2021.9813C39.4331%2021.9325%2039.3746%2021.9175%2039.3284%2021.9478L31.126%2027.3256C31.0798%2027.3559%2031.0633%2027.42%2031.0892%2027.4688L36.9998%2038.597C37.0353%2038.6637%2036.9905%2038.7506%2036.918%2038.7556L28.4611%2039.3402C28.4102%2039.3437%2028.3675%2039.3036%2028.3637%2039.2488L28.0631%2034.9045C28.0556%2034.7952%2027.9165%2034.7785%2027.8785%2034.8824L24.3717%2044.4859C24.3609%2044.5157%2024.3628%2044.5485%2024.377%2044.5753L29.173%2053.6049C29.2232%2053.6994%2029.3599%2053.6482%2029.3522%2053.5377L29.054%2049.2265C29.0499%2049.1673%2029.0927%2049.1143%2029.1477%2049.1105L37.6924%2048.5198C37.73%2048.5172%2037.7637%2048.491%2037.7786%2048.4529L44.4232%2031.4111C44.435%2031.3808%2044.4334%2031.3469%2044.4188%2031.3194L39.459%2021.9813Z'%20fill='%23004B97'%20stroke='%23004B97'%20stroke-width='0.5'/%3e%3c/svg%3e" alt="環保永續icon" class="icon" loading="lazy">
+                        <h5 style="color: #004b97;" data-i18n="reason.eco.title">環保永續</h5>
+                        <p data-i18n="reason.eco.desc">推動資源循環，為地球盡一份力。</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="reason-card">
+                        <img src="data:image/svg+xml,%3csvg%20width='40'%20height='43'%20viewBox='0%200%2040%2043'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M20%202L26%2011.6077L37.3205%2012L32%2022L37.3205%2032L26%2032.3923L20%2042L14%2032.3923L2.67949%2032L8%2022L2.67949%2012L14%2011.6077L20%202Z'%20fill='%23004B97'/%3e%3ccircle%20cx='2'%20cy='32'%20r='2'%20fill='%23ABDAD5'/%3e%3ccircle%20cx='20'%20cy='41'%20r='2'%20fill='%23ABDAD5'/%3e%3ccircle%20cx='38'%20cy='32'%20r='2'%20fill='%23ABDAD5'/%3e%3ccircle%20cx='38'%20cy='12'%20r='2'%20fill='%23ABDAD5'/%3e%3ccircle%20cx='20'%20cy='2'%20r='2'%20fill='%23ABDAD5'/%3e%3ccircle%20cx='2'%20cy='12'%20r='2'%20fill='%23ABDAD5'/%3e%3c/svg%3e" alt="校園專屬icon" class="icon" loading="lazy">
+                        <h5 style="color: #004b97;" data-i18n="reason.campus.title">校園專屬</h5>
+                        <p data-i18n="reason.campus.desc">精準社群定位，讓交易與資訊更即時貼近。</p>
+                    </div>
+                </div>
+                <!-- 校園攻略站上線前暫時隱藏
+                <div class="col-md-6 col-lg-3 text-center" data-aos="fade-up" data-aos-delay="300">
+                    <div class="reason-card">
+                        <img src="../webP/experience.webp" alt="經驗變現icon" loading="lazy" class="icon" style="width: 240px; height: auto; margin-top: 20px;">
+                        <h3 data-i18n="reason.exp.title">經驗變現</h3>
+                        <p data-i18n="reason.exp.desc">經驗有價，一篇懶人包也能幫你賺零用錢。</p>
+                    </div>
+                </div>
+                -->
+            </div>
+        </section>
+        <section class="trade">
+            <div class="padding-global">
+            <div class="earth jitter-container">
+                <span class="nh-eyebrow-sec text-center d-flex justify-content-center" data-aos="fade-down">EVERY TRANSACTION</span>
+                <h2 class="section-title d-flex justify-content-center" data-aos="fade-down" data-i18n="trade.title">您的每一項二手交易</h2>
+            </div>
+            <div class="row">
+                <div class="col-md-4 d-flex flex-column align-items-center text-center phonemargin" data-aos="zoom-in" data-aos-delay="0">
+                    <div class="nback">
+                        <div class="headingstyleh1_5" style="display: flex; justify-content: center; text-align: center;">
+                            <div class="heading-style-h1">
+                                <span class="n" id="trees">0</span>
+                            </div>
+                            <div class="heading-style-h5" style="text-align: center;" data-i18n="trade.trees.unit">棵</div>
+                        </div>
+                        <p style="color: #fff;" data-i18n="trade.trees.desc">相當於種了四棵樹。</p>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex flex-column align-items-center text-center phonemargin" data-aos="zoom-in" data-aos-delay="150">
+                    <div class="nback">
+                        <div class="headingstyleh1_5" style="display: flex; justify-content: center; text-align: center;">
+                            <div class="heading-style-h1">
+                            <span class="n" id="bags">0</span>
+                            </div>
+                            <div class="heading-style-h5" data-i18n="trade.bags.unit">個</div>
+                        </div>
+                        <p style="color: #fff;" data-i18n="trade.bags.desc">相當於減了100個塑膠袋。</p>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex flex-column align-items-center text-center phonemargin" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="nback">
+                        <div class="headingstyleh1_5" style="display: flex; justify-content: center; text-align: center;">
+                            <div class="heading-style-h1">
+                            <span class="n" id="co2">0</span>
+                            </div>
+                            <div class="heading-style-h5" data-i18n="trade.co2.unit">公斤</div>
+                        </div>
+                        <p style="color: #fff;" data-i18n="trade.co2.desc">相當於吸收了4公斤的二氧化碳。</p>
+                    </div>
+                </div>
+            </div>
+            </div><!-- /.padding-global -->
+        </section>
+        <!-- ══ 我們的服務 ══ -->
+        <section class="nh-sec-services" id="services">
+          <div class="nh-section-inner">
+            <div class="nh-sec-head">
+              <span class="nh-eyebrow-sec">OUR SERVICES</span>
+              <h2 class="nh-sec-h2" data-i18n="service.title">我們的服務</h2>
+              <p class="nh-lede">三項核心服務，串起校園的買賣、媒合與學習。從一筆交易、一個願望、一段問答，讓你的校園生活更便利。</p>
+            </div>
+            <div class="nh-svc-grid">
+              <div class="nh-svc-card" data-aos="fade-up" data-aos-delay="0">
+                <div class="nh-svc-num">01 / C2C</div>
+                <div class="nh-svc-ic">
+                  <svg viewBox="0 0 24 24" stroke="#004b97" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7L19 7L18 19L6 19Z"/><path d="M9 7V5a3 3 0 016 0V7"/><path d="M9 12L11 14L15 10"/></svg>
+                </div>
+                <h3 data-i18n="service.c2c.title">二手交易</h3>
+                <p data-i18n="service.c2c.desc">拾貨寶庫提供專為學生設計的 C2C（個人對個人）二手交易平台，透過學生身份認證，確保買賣雙方的安全與便利，並支援校內面交，讓交易更順暢。</p>
+                <a class="nh-svc-more" href="../shop/shop.html?page=seller">了解上架流程</a>
+              </div>
+              <div class="nh-svc-card" data-aos="fade-up" data-aos-delay="80">
+                <div class="nh-svc-num">02 / WISH</div>
+                <div class="nh-svc-ic">
+                  <svg viewBox="0 0 24 24" stroke="#004b97" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L14 9L20 9L15 13L17 19L12 15L7 19L9 13L4 9L10 9Z"/></svg>
+                </div>
+                <h3 data-i18n="service.wish.title">許願池</h3>
+                <p data-i18n="service.wish.desc">買家可在許願池提交自己想要的商品或需要的資訊，當有賣家上架相符商品時，系統會自動通知，提高購買成功率，也讓賣家能夠更精準地提供市場需求商品。</p>
+                <a class="nh-svc-more" href="../wishpool/wishpool.html#wishpool">前往許願池</a>
+              </div>
+              <div class="nh-svc-card" data-aos="fade-up" data-aos-delay="160">
+                <div class="nh-svc-num">03 / FAQ</div>
+                <div class="nh-svc-ic">
+                  <svg viewBox="0 0 24 24" stroke="#004b97" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4H17a2 2 0 012 2V14a2 2 0 01-2 2H11L7 20V16H5a2 2 0 01-2-2V6a2 2 0 012-2Z"/><path d="M9 9a2 2 0 113 2v1"/><path d="M11 14h.01"/></svg>
+                </div>
+                <h3 data-i18n="faq.title">常見問題</h3>
+                <p>從上架、購買到許願，每個步驟都有圖文教學。新手也能快速上手，遇到問題不再無助。</p>
+                <a class="nh-svc-more" href="../questions/questions.html">查看 FAQ</a>
+              </div>
+            </div>
+
+            <!-- FAQ teaser -->
+            <div class="nh-faq-teaser">
+              <div class="nh-faq-copy">
+                <span class="nh-faq-label">QUICK START · 三個熱門問答</span>
+                <h3>不知道從哪裡開始？</h3>
+                <p>把使用流程拆成清楚的圖文步驟，無論是賣家、買家、或想許願的同學，都能 3 分鐘上手。</p>
+                <button class="nh-btn-ghost-white" id="nhExpandAll">看全部問答 →</button>
+              </div>
+              <div class="nh-faq-topics">
+
+                <!-- Q1 -->
+                <div class="nh-faq-topic" data-nh-faq="0">
+                  <span class="nh-qmark">Q</span>
+                  <span class="nh-ftxt" data-i18n="faq.q1.q">如何販賣商品？（7 步驟）</span>
+                  <span class="nh-farr">→</span>
+                </div>
+                <div class="nh-faq-panel" id="nhFaq0">
+                  <div class="ulstepdiv"><ul class="ulstep">
+                    <li class="listep"><div class="step-badge"><span class="step-num">01</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q1.step01.title">進入賣家專區</h3><p data-i18n="faq.q1.step01.desc">前往購物首頁，點選主廣告幅下方的賣家專區。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">02</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q1.step02.title">閱讀販賣規則</h3><p data-i18n="faq.q1.step02.desc">請先閱讀商品販賣規則，再點擊「我要賣商品！」進入販賣商品環節。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">03</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q1.step03.title">填寫商品資訊</h3><p data-i18n="faq.q1.step03.desc">進入「我要賣商品！」頁面後，即可填寫商品相關資訊。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">04</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q1.step04.title">點選一鍵販賣</h3><p data-i18n="faq.q1.step04.desc">填寫完整後點擊「一鍵販賣」。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">05</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q1.step05.title">確認資訊無誤後送出</h3><p data-i18n="faq.q1.step05.desc">系統提醒所有商品資訊皆須符合拾貨寶庫規定，若確定符合，點擊「是，我就要賣！」送出商品。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">06</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q1.step06.title">系統上架商品勿中斷</h3><p data-i18n="faq.q1.step06.desc">系統上架商品中會跳出等待動畫，請稍等，勿跳出視窗或做任何操作。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">07</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q1.step07.title">上架成功可查看商品</h3><p data-i18n="faq.q1.step07.desc">看到商品上架成功之訊息即可前往首頁確認或點擊「我的帳戶」查看與編輯。</p></div></li>
+                  </ul></div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="nh-faq-topic" data-nh-faq="1">
+                  <span class="nh-qmark">Q</span>
+                  <span class="nh-ftxt" data-i18n="faq.q2.q">如何購買商品？（6 步驟）</span>
+                  <span class="nh-farr">→</span>
+                </div>
+                <div class="nh-faq-panel" id="nhFaq1">
+                  <div class="ulstepdiv"><ul class="ulstep">
+                    <li class="listep"><div class="step-badge"><span class="step-num">01</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q2.step01.title">選擇感興趣的商品</h3><p data-i18n="faq.q2.step01.desc">在拾貨寶庫的購物首頁或購物商場選擇您有興趣的商品，點擊商品。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">02</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q2.step02.title">點擊下單或加入購物車</h3><p data-i18n="faq.q2.step02.desc">進入商品詳細資訊頁後，點擊馬上下單或加入購物車。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">03</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q2.step03.title">在購物車送出訂單</h3><p data-i18n="faq.q2.step03.desc">點擊購物車跳轉到購物車頁面，勾選要下單的商品，勾選同意注意事項，點擊送出訂單。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">04</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q2.step04.title">收到訂單建立通知</h3><p data-i18n="faq.q2.step04.desc">收到訂單建立成功之通知後，若要查看訂單可以點擊自己的帳戶名進入帳戶管理中心。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">05</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q2.step05.title">點擊消費訂單</h3><p data-i18n="faq.q2.step05.desc">進入帳戶管理中心後點擊「消費訂單」。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">06</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q2.step06.title">查看訂單記錄</h3><p data-i18n="faq.q2.step06.desc">可以看見剛下單的訂單記錄，若想得到更多資訊可以點擊訂單詳情。</p></div></li>
+                  </ul></div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="nh-faq-topic" data-nh-faq="2">
+                  <span class="nh-qmark">Q</span>
+                  <span class="nh-ftxt" data-i18n="faq.q3.q">許願步驟？（3 步驟）</span>
+                  <span class="nh-farr">→</span>
+                </div>
+                <div class="nh-faq-panel" id="nhFaq2">
+                  <div class="ulstepdiv"><ul class="ulstep">
+                    <li class="listep"><div class="step-badge"><span class="step-num">01</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q3.step01.title">前往許願專區</h3><p data-i18n="faq.q3.step01.desc">前往購物首頁，點選主廣告幅下方的許願專區，或者其他頁面的導覽列中選擇許願專區。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">02</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q3.step02.title">點擊「我要許願」</h3><p data-i18n="faq.q3.step02.desc">進入許願池以後，點擊導覽列中的「我要許願」。</p></div></li>
+                    <li class="step-arrow">▼</li>
+                    <li class="listep"><div class="step-badge"><span class="step-num">03</span><small class="step-label" data-i18n="faq.step.label">步</small></div><div class="listep-content"><h3 data-i18n="faq.q3.step03.title">填寫並送出許願表單</h3><p data-i18n="faq.q3.step03.desc">填寫許願表單並送出。即可在導覽列中「我的願望」頁查看。請注意：填寫表單或檢視自己的願望都必須先登入帳號。</p></div></li>
+                  </ul></div>
+                </div>
+
+              </div><!-- /.nh-faq-topics -->
+            </div><!-- /.nh-faq-teaser -->
+          </div><!-- /.nh-section-inner -->
+        </section>
+        <section class="questions" style="display:none">
+            <h3 class="text-center section-title" data-aos="fade-up" data-i18n="faq.title">常見問題</h3>
+            <div class="faq-box">
+
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="0">
+                    <div class="faq-question">
+                        <span class="q" data-i18n="faq.q">問</span>
+                        <span class="text" data-i18n="faq.q1.q">如何販賣商品？</span>
+                        <button class="toggle">▼</button>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="ulstepdiv" style="margin-bottom: 20px;">
+                            <ul class="ulstep">
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">01</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q1.step01.title">進入賣家專區</h3>
+                                        <p data-i18n="faq.q1.step01.desc">前往購物首頁，點選主廣告幅下方的賣家專區。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">02</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q1.step02.title">閱讀販賣規則</h3>
+                                        <p data-i18n="faq.q1.step02.desc">請先閱讀商品販賣規則，再點擊「我要賣商品！」進入販賣商品環節。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">03</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q1.step03.title">填寫商品資訊</h3>
+                                        <p data-i18n="faq.q1.step03.desc">進入「我要賣商品！」頁面後，即可填寫商品相關資訊。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">04</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q1.step04.title">點選一鍵販賣</h3>
+                                        <p data-i18n="faq.q1.step04.desc">填寫完整後點擊「一鍵販賣」。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">05</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q1.step05.title">確認資訊無誤後送出</h3>
+                                        <p data-i18n="faq.q1.step05.desc">系統提醒所有商品資訊皆須符合拾貨寶庫規定，若確定符合，點擊「是，我就要賣！」送出商品。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">06</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q1.step06.title">系統上架商品勿中斷</h3>
+                                        <p data-i18n="faq.q1.step06.desc">系統上架商品中會跳出等待動畫，請稍等，勿跳出視窗或做任何操作。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">07</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q1.step07.title">上架成功可查看商品</h3>
+                                        <p data-i18n="faq.q1.step07.desc">看到商品上架成功之訊息即可前往首頁確認或點擊「我的帳戶」或頭像（電腦版）前往「帳戶管理中心」點擊「商品管理」查看與編輯。</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
+                    <div class="faq-question">
+                        <span class="q" data-i18n="faq.q">問</span>
+                        <span class="text" data-i18n="faq.q2.q">如何購買商品？</span>
+                        <button class="toggle">▼</button>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="ulstepdiv" style="margin-bottom: 20px;">
+                            <ul class="ulstep">
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">01</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q2.step01.title">選擇感興趣的商品</h3>
+                                        <p data-i18n="faq.q2.step01.desc">在拾貨寶庫的購物首頁或購物商場選擇您有興趣的商品，點擊商品。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">02</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q2.step02.title">點擊下單或加入購物車</h3>
+                                        <p data-i18n="faq.q2.step02.desc">進入商品詳細資訊頁後，點擊馬上下單或加入購物車。如果對商品有疑問，可以往下滑點擊與賣家聊聊。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">03</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q2.step03.title">在購物車送出訂單</h3>
+                                        <p data-i18n="faq.q2.step03.desc">點擊購物車跳轉到購物車頁面，勾選要下單的商品，勾選同意注意事項，點擊送出訂單（目前僅支援面交付款，敬請期待其他付費方式）。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">04</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q2.step04.title">收到訂單建立通知</h3>
+                                        <p data-i18n="faq.q2.step04.desc">收到訂單建立成功之通知後，若要查看訂單可以點擊自己的帳戶名進入帳戶管理中心。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">05</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q2.step05.title">點擊消費訂單</h3>
+                                        <p data-i18n="faq.q2.step05.desc">進入帳戶管理中心後點擊「消費訂單」。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">06</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q2.step06.title">查看訂單記錄</h3>
+                                        <p data-i18n="faq.q2.step06.desc">可以看見剛下單的訂單記錄，若想得到更多資訊可以點擊訂單詳情。</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
+                    <div class="faq-question">
+                        <span class="q" data-i18n="faq.q">問</span>
+                        <span class="text" data-i18n="faq.q3.q">許願步驟？</span>
+                        <button class="toggle">▼</button>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="ulstepdiv" style="margin-bottom: 20px;">
+                            <ul class="ulstep">
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">01</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q3.step01.title">前往許願專區</h3>
+                                        <p data-i18n="faq.q3.step01.desc">前往購物首頁，點選主廣告幅下方的許願專區（主廣告幅也有許願專區連結），或者其他頁面的導覽列中選擇許願專區。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">02</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q3.step02.title">點擊「我要許願」</h3>
+                                        <p data-i18n="faq.q3.step02.desc">進入許願池以後，點擊導覽列中的「我要許願」。</p>
+                                    </div>
+                                </li>
+                                <li class="step-arrow">▼</li>
+                                <li class="listep">
+                                    <div class="step-badge">
+                                                                                <span class="step-num">03</span>
+                                        <small class="step-label" data-i18n="faq.step.label">步</small>
+                                    </div>
+                                    <div class="listep-content">
+                                        <h3 data-i18n="faq.q3.step03.title">填寫並送出許願表單</h3>
+                                        <p data-i18n="faq.q3.step03.desc">填寫許願表單並送出。即可在導覽列中「我的願望」頁查看。請注意：填寫表單或檢視自己的願望都必須先登入帳號。</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="more-btn" onclick="window.location.href='../questions/questions.html'" data-i18n="faq.more">
+                看其他問題 →
+            </button>
+        </section>
+        <!-- ══ 關於我們 ══ -->
+        <section class="nh-sec-about" id="about">
+          <div class="nh-section-inner">
+
+            <!-- intro -->
+            <div class="nh-about-intro">
+              <div class="nh-about-left" data-aos="fade-right">
+                <span class="nh-eyebrow-sec">ABOUT US</span>
+                <h2 class="nh-sec-h2" data-i18n="about.goal">一手資源、一手經驗<br>全在拾貨寶庫</h2>
+              </div>
+              <div class="nh-about-right" data-aos="fade-left">
+                <p data-i18n="about.desc1">拾貨寶庫是一個專為大學生打造的校園二手與資訊交易平台，結合二手商品、學習經驗、環保理念與學生社群。</p>
+                <p data-i18n="about.desc3">讓物品有去處，知識有價值，交流更有趣。</p>
+              </div>
+            </div>
+
+            <!-- team head -->
+            <div class="nh-team-head">
+              <h3 data-i18n="about.members.title">團隊成員</h3>
+              <p data-i18n="about.members.desc">一支跨領域的年輕創業團隊，來自資訊工程、創新產業經營、護理管理。我們相信跨領域才能解決真正的問題。</p>
+            </div>
+
+            <!-- team grid -->
+            <div class="nh-team-grid">
+              <div class="nh-member nh-m1" data-aos="zoom-in" data-aos-delay="0">
+                <span class="nh-member-num">01</span>
+                <div class="nh-member-avatar">范</div>
+                <span class="nh-member-role" data-i18n="about.role1">企劃策略</span>
+                <div class="nh-member-name">范琹芷</div>
+                <div class="nh-member-school">國立中興大學<span class="nh-dept" data-i18n="about.school1">創新產業經營學系</span></div>
+              </div>
+              <div class="nh-member nh-m2" data-aos="zoom-in" data-aos-delay="80">
+                <span class="nh-member-num">02</span>
+                <div class="nh-member-avatar">張</div>
+                <span class="nh-member-role" data-i18n="about.role2">營運部門</span>
+                <div class="nh-member-name">張雅茹</div>
+                <div class="nh-member-school">崇仁醫護管理專科學校<span class="nh-dept" data-i18n="about.school2">護理系</span></div>
+              </div>
+              <div class="nh-member nh-m3" data-aos="zoom-in" data-aos-delay="160">
+                <span class="nh-member-num">03</span>
+                <div class="nh-member-avatar">李</div>
+                <span class="nh-member-role" data-i18n="about.role4">後端 · 技術部門</span>
+                <div class="nh-member-name">李元亨</div>
+                <div class="nh-member-school">國立中興大學<span class="nh-dept" data-i18n="about.school4">資訊工程學系</span></div>
+              </div>
+              <div class="nh-member nh-m4" data-aos="zoom-in" data-aos-delay="240">
+                <span class="nh-member-num">04</span>
+                <div class="nh-member-avatar">葉</div>
+                <span class="nh-member-role" data-i18n="about.role5">前端 · 技術部門</span>
+                <div class="nh-member-name">葉潔頤</div>
+                <div class="nh-member-school">國立中興大學<span class="nh-dept" data-i18n="about.school5">資訊工程學系</span></div>
+              </div>
+            </div>
+
+            <!-- achievements -->
+            <div class="nh-achievements" data-aos="fade-up">
+              <div class="nh-ach-left">
+                <span class="nh-ach-label">TEAM EXPERIENCE</span>
+                <h3 data-i18n="about.history.title">用比賽磨出來的<br>實戰經驗</h3>
+                <p data-i18n="about.history.desc1">團隊成員在多項創新創業比賽中累積豐富經驗，把校園專案做出商業思維。</p>
+                <p data-i18n="about.history.desc2">我們相信，結合資訊科技、產業經營、行銷管理與行政專業的跨領域優勢，能為社會帶來更具影響力的創新解決方案。</p>
+                <button class="nh-btn-ghost-white" id="nhHistoryBtn">查看完整經歷 →</button>
+              </div>
+              <div class="nh-award-list">
+                <div class="nh-award nh-gold">
+                  <div class="nh-medal">G</div>
+                  <div class="nh-award-info"><div class="nh-award-title">創新創業競賽 — 金獎</div><div class="nh-award-meta">校園二手平台組</div></div>
+                  <span class="nh-award-year">2025</span>
+                </div>
+                <div class="nh-award nh-silver">
+                  <div class="nh-medal">S</div>
+                  <div class="nh-award-info"><div class="nh-award-title">永續循環經濟挑戰賽</div><div class="nh-award-meta">入選決賽 · TOP 8</div></div>
+                  <span class="nh-award-year">2024</span>
+                </div>
+                <div class="nh-award nh-bronze">
+                  <div class="nh-medal">B</div>
+                  <div class="nh-award-info"><div class="nh-award-title">大專校院創意實作競賽</div><div class="nh-award-meta">優選</div></div>
+                  <span class="nh-award-year">2024</span>
+                </div>
+              </div>
+              <div class="nh-closing-strip">
+                推動<strong>綠色消費</strong>、<strong>循環經濟</strong>與<strong>校園資訊交流</strong>，是我們從校園出發、想留給社會的事。
+              </div>
+            </div>
+
+          </div><!-- /.nh-section-inner -->
+        </section>
+
+        <!-- History Modal -->
+        <div class="nh-history-modal" id="nhHistoryModal" aria-hidden="true">
+          <div class="nh-history-modal-inner">
+            <button class="nh-history-close" id="nhHistoryClose" aria-label="關閉">×</button>
+            <img src="/assets/history-CbMJcxa4.svg" loading="lazy" alt="團隊比賽經歷" class="d-none d-lg-block" style="width:100%;border-radius:8px;">
+            <img src="/assets/historyphone-Dwj1Gl7x.svg" loading="lazy" alt="團隊比賽經歷" class="d-block d-lg-none" style="width:100%;border-radius:8px;">
+          </div>
+        </div>
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col footer-brand">
+      <a href="../newhome/newhome.html"><img src="/assets/TREASUREHUBwhite-s2VgFBQ6.svg" alt="拾貨寶庫" loading="lazy"></a>
+      <p class="footer-tagline" data-i18n="footer.tagline">專為大學生打造的校園二手拍賣市集</p>
+    </div>
+    <div class="footer-links-row">
+    <div class="footer-col">
+      <h4 class="footer-heading" data-i18n="footer.quicklinks">快速連結</h4>
+      <ul class="footer-links">
+        <li><a href="../shop/shop.html" data-i18n="nav.shop">購物首頁</a></li>
+        <li><a href="../commodity/commodity.html" data-i18n="nav.market">購物商場</a></li>
+        <li><a href="../shop/shop.html?page=seller">賣家專區</a></li>
+        <li><a href="../wishpool/wishpool.html#wishpool" data-i18n="nav.wish">許願專區</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading" data-i18n="footer.help">幫助中心</h4>
+      <ul class="footer-links">
+        <li><a href="../questions/questions.html" data-i18n="footer.faq">常見問題</a></li>
+        <li><a href="../communication/communication.html" data-i18n="footer.contact.link">客服諮詢</a></li>
+        <li><a href="../policy/policy.html#privacy" data-i18n="footer.policy">隱私權政策</a></li>
+        <li><a href="../policy/policy.html#terms" data-i18n="footer.terms">服務條款</a></li>
+      </ul>
+    </div>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading" data-i18n="footer.contact">聯絡我們</h4>
+      <p class="footer-email"><a href="mailto:help@treasurehub.tw">help@treasurehub.tw</a></p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="footer.copyright">Copyright &copy; 2026 拾貨寶庫｜All Rights Reserved.</span>
+  </div>
+</footer>
+    <!-- 放在 body 結尾或 head 中 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha384-d+vyQ0dYcymoP8ndq2hW7FGC50nqGdXUEgoOUGxbbkAJwZqL7h+jKN0GGgn9hFDS" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"  ></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" integrity="sha384-wziAfh6b/qT+3LrqebF9WeK4+J5sehS6FA10J1t3a866kJ/fvU5UwofWnQyzLtwu" crossorigin="anonymous"></script>
+</body>
+</html>
