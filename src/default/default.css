@@ -64,6 +64,9 @@ body {
 .header {
     display: block;
     background-color: rgba(255, 255, 255);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 /* TODO 功能鈕：許願池等等 */
 ul{
