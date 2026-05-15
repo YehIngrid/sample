@@ -54,12 +54,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterBody   = document.getElementById('filterBody');
   const filterCard   = filterToggle?.closest('.wp-filter-card');
   if (filterToggle && filterBody) {
-    filterToggle.addEventListener('click', () => {
+    filterToggle.addEventListener('click', (e) => {
+      if (e.target.closest('#filterReset')) return;
       if (window.innerWidth > 991) return;
       const isOpen = filterBody.classList.toggle('open');
       filterCard.classList.toggle('open', isOpen);
     });
   }
+
+  // ── 清除篩選 ──
+  document.getElementById('filterReset')?.addEventListener('click', () => {
+    document.querySelectorAll('.tag.active').forEach(t => t.classList.remove('active'));
+    listAll(1);
+  });
 
   document.getElementById('prevPage')?.addEventListener('click', () => {
     if (currentPage > 1) {

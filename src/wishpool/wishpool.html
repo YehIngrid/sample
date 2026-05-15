@@ -58,8 +58,8 @@
                 </button>
                 <!-- Logo + 返回按鈕 -->
                 <div class="d-flex align-items-center me-4 flex-shrink-0 gap-2">
-                    <a href="../newhome/newhome.html">
-                        <img src="../svg/wishpoolicon.svg" alt="許願池 Logo">
+                    <a class="navbar-brand picture" href="../newhome/newhome.html">
+                        <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
                     </a>
                     <a class="wp-back-btn d-none d-lg-inline-block" href="../shop/shop.html">← 返回購物首頁</a>
                 </div>
@@ -186,90 +186,28 @@
         <!-- Hero -->
         <div class="wp-hero">
           <div class="wp-hero-text">
+            <span class="wp-hero-eyebrow">WISH POOL · 心願媒合</span>
             <h1 class="wp-hero-title">將心願投進<br><span class="wp-hero-accent">拾貨寶庫許願池</span></h1>
             <p class="wp-hero-count">目前已累積實現 <span class="wp-hero-num" id="wishNum">0</span> 組願望</p>
             <div class="wp-hero-btns">
-              <a href="#makewish" data-spa class="wp-btn-primary">
-                <i class="ti ti-wave-saw-tool"></i> 前往許願
-              </a>
+              <a href="#makewish" data-spa class="wp-btn-primary">↗ 前往許願</a>
               <button class="wp-btn-secondary" id="exploreBtn">探索心願</button>
             </div>
           </div>
           <div class="wp-hero-img">
-            <svg class="wp-hero-illus" width="428" height="465" viewBox="0 0 428 465" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="許願池">
-              <style>
-                /* ── 水柱動畫：整條彩色段落從底部沿路徑往上跑 ── */
-                /* 長水柱(path0/1)：路徑約200px；段落160px，空隙280px */
-                .ws-flow-long {
-                  stroke-dasharray: 160 280;
-                  stroke-dashoffset: 0;
-                  animation: flowUp 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-                }
-                /* 短水柱(path2/3)：路徑約110px；段落95px，空隙200px */
-                .ws-flow-short {
-                  stroke-dasharray: 95 200;
-                  stroke-dashoffset: 0;
-                  animation: flowUpShort 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-                }
-                .wsd2 { animation-delay: -1.3s; }
-                .wsd3 { animation-delay: -0.7s; }
-                .wsd4 { animation-delay: -2.0s; }
-                @keyframes flowUp      { to { stroke-dashoffset: -440; } }
-                @keyframes flowUpShort { to { stroke-dashoffset: -295; } }
-
-                /* ── 硬幣漂浮 ── */
-                .coin { animation: coinFloat 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-                .coin2 { animation-delay: -0.9s; animation-duration: 2.2s; }
-                .coin3 { animation-delay: -1.6s; animation-duration: 3s; }
-                @keyframes coinFloat {
-                  0%, 100% { transform: translateY(0); }
-                  50%       { transform: translateY(-6px); }
-                }
-              </style>
-
-              <!-- 噴嘴頂部（靜態） -->
-              <path d="M212.5 158.569L275.287 83.5685H149.713L212.5 158.569Z" fill="#E2C9C9"/>
-              <path d="M220 57.5685C220 50.9905 218.378 44.514 215.277 38.7127C212.176 32.9114 207.692 27.9643 202.223 24.3098C196.753 20.6552 190.467 18.4059 183.921 17.7612C177.374 17.1164 170.77 18.0961 164.693 20.6134C158.615 23.1307 153.253 27.1079 149.08 32.1928C144.907 37.2777 142.052 43.3133 140.769 49.7649C139.485 56.2166 139.813 62.8851 141.722 69.1799C143.632 75.4747 147.064 81.2014 151.716 85.8528L180 57.5685H220Z" fill="#E2C9C9"/>
-              <path d="M274.284 84.8528C278.936 80.2014 282.368 74.4747 284.278 68.1799C286.187 61.8851 286.515 55.2166 285.231 48.7649C283.948 42.3133 281.093 36.2777 276.92 31.1928C272.747 26.1079 267.385 22.1307 261.307 19.6134C255.23 17.0961 248.626 16.1164 242.079 16.7612C235.533 17.4059 229.247 19.6552 223.777 23.3098C218.308 26.9643 213.824 31.9114 210.723 37.7127C207.622 43.514 206 49.9905 206 56.5685L246 56.5685L274.284 84.8528Z" fill="#E2C9C9"/>
-              <rect x="153" y="50.5685" width="120" height="35" fill="#E2C9C9"/>
-
-              <!-- 水柱動畫層（整條彩色段落從底往上跑） -->
-              <path class="ws-flow-long"       d="M172.5 275C176.557 225.822 155.5 129 113 99"       stroke="url(#paint0_linear_965_1767)" stroke-width="15" stroke-linecap="round" fill="none"/>
-              <path class="ws-flow-long wsd2"  d="M246.494 275.5C242.436 226.322 263.494 129.5 305.994 99.5" stroke="url(#paint1_linear_965_1767)" stroke-width="15" stroke-linecap="round" fill="none"/>
-              <path class="ws-flow-short wsd3" d="M123.5 275C126.372 226.291 121.684 207.772 96 180"  stroke="url(#paint2_linear_965_1767)" stroke-width="15" stroke-linecap="round" fill="none"/>
-              <path class="ws-flow-short wsd4" d="M303.744 275.5C300.872 226.791 305.559 208.272 331.244 180.5" stroke="url(#paint3_linear_965_1767)" stroke-width="15" stroke-linecap="round" fill="none"/>
-
-              <!-- 水池 -->
-              <path d="M0 302C72.5 508 329.5 528.5 428 302H0Z" fill="url(#paint4_linear_965_1767)"/>
-
-              <!-- 硬幣（動畫） -->
-              <circle class="coin"  cx="141" cy="363" r="17" fill="white"/>
-              <circle class="coin coin2" cx="287" cy="363" r="17" fill="white"/>
-              <circle class="coin coin3" cx="214" cy="363" r="17" fill="white"/>
-
-              <defs>
-                <linearGradient id="paint0_linear_965_1767" x1="142.75" y1="99" x2="142.75" y2="275" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#24B685" stop-opacity="0.6"/>
-                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
-                </linearGradient>
-                <linearGradient id="paint1_linear_965_1767" x1="276.244" y1="99.5" x2="276.244" y2="275.5" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#24B685" stop-opacity="0.6"/>
-                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
-                </linearGradient>
-                <linearGradient id="paint2_linear_965_1767" x1="110.006" y1="180" x2="110.006" y2="275" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#24B685" stop-opacity="0.6"/>
-                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
-                </linearGradient>
-                <linearGradient id="paint3_linear_965_1767" x1="317.238" y1="180.5" x2="317.238" y2="275.5" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#24B685" stop-opacity="0.6"/>
-                  <stop offset="1" stop-color="#004B97" stop-opacity="0.7"/>
-                </linearGradient>
-                <linearGradient id="paint4_linear_965_1767" x1="214" y1="302" x2="214" y2="457.593" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#8395BB"/>
-                  <stop offset="1" stop-color="#A1C9B8"/>
-                </linearGradient>
-              </defs>
-            </svg>
+            <span class="wp-spark k1"></span>
+            <span class="wp-spark k2"></span>
+            <span class="wp-spark k3"></span>
+            <span class="wp-spark k4"></span>
+            <div class="wp-pc-stack">
+              <div class="wp-pc pc-1"><div class="wp-lines"><span></span><span></span><span></span><span></span></div></div>
+              <div class="wp-pc pc-2"><div class="wp-lines"><span></span><span></span><span></span><span></span></div></div>
+              <div class="wp-pc pc-3">
+                <div class="wp-lines"><span></span><span></span><span></span><span></span></div>
+                <div class="wp-stamp-mark">許願池<br>WISHED</div>
+                <div class="wp-stamp">許願池<br>POSTMARK</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -280,20 +218,23 @@
               <span class="wp-filter-title">篩選條件</span>
               <small class="wp-filter-count">共 <span id="total">0</span> 件（未篩選）</small>
             </div>
+            <span class="wp-filter-reset" id="filterReset">清除篩選</span>
             <i class="ti ti-chevron-down wp-filter-chevron"></i>
           </div>
           <div class="wp-filter-body" id="filterBody">
             <div class="tag-list">
-              <button class="tag" data-tag="necessary">急迫度高</button>
-              <button class="tag" data-tag="normal">一般急迫度</button>
-              <button class="tag" data-tag="nonecessary">急迫度低</button>
+              <span class="wp-filter-label">急 迫 度</span>
+              <button class="tag tag-u-h" data-tag="necessary"><span class="tag-dot"></span>急迫度高</button>
+              <button class="tag tag-u-m" data-tag="normal"><span class="tag-dot"></span>一般急迫度</button>
+              <button class="tag tag-u-l" data-tag="nonecessary"><span class="tag-dot"></span>急迫度低</button>
             </div>
-            <div class="tag-list" style="margin-top: 8px;">
-              <button class="tag" data-tag="hundred">0~100 元收購</button>
-              <button class="tag" data-tag="fiveh">100~500 元收購</button>
-              <button class="tag" data-tag="tothous">500~1000 元收購</button>
-              <button class="tag" data-tag="thousand">1000 元以上收購</button>
-              <button class="tag" data-tag="trithou">3000 元以上收購</button>
+            <div class="tag-list" style="margin-top: 10px;">
+              <span class="wp-filter-label">收 購 價</span>
+              <button class="tag" data-tag="hundred">0 ~ 100 元</button>
+              <button class="tag" data-tag="fiveh">100 ~ 500 元</button>
+              <button class="tag" data-tag="tothous">500 ~ 1000 元</button>
+              <button class="tag" data-tag="thousand">1000 元以上</button>
+              <button class="tag" data-tag="trithou">3000 元以上</button>
             </div>
           </div>
         </div>

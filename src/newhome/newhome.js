@@ -301,3 +301,30 @@ questions.forEach(q => {
 window.toggleLang = toggleLang;
 window.scrollToNext = scrollToNext;
 window.scrollCards = scrollCards;
+
+/* ── FAQ teaser accordion ── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.nh-faq-topic').forEach((topic) => {
+    topic.addEventListener('click', () => {
+      const idx = topic.dataset.nhFaq;
+      const panel = document.getElementById('nhFaq' + idx);
+      const isOpen = panel.classList.contains('open');
+      document.querySelectorAll('.nh-faq-panel').forEach(p => p.classList.remove('open'));
+      document.querySelectorAll('.nh-faq-topic').forEach(t => t.classList.remove('open'));
+      if (!isOpen) { panel.classList.add('open'); topic.classList.add('open'); }
+    });
+  });
+
+  document.getElementById('nhExpandAll')?.addEventListener('click', () => {
+    document.querySelectorAll('.nh-faq-panel').forEach(p => p.classList.add('open'));
+    document.querySelectorAll('.nh-faq-topic').forEach(t => t.classList.add('open'));
+  });
+
+  const historyModal = document.getElementById('nhHistoryModal');
+  const closeModal = () => { historyModal?.classList.remove('open'); document.body.style.overflow = ''; };
+  document.getElementById('nhHistoryBtn')?.addEventListener('click', () => {
+    historyModal?.classList.add('open'); document.body.style.overflow = 'hidden';
+  });
+  document.getElementById('nhHistoryClose')?.addEventListener('click', closeModal);
+  historyModal?.addEventListener('click', (e) => { if (e.target === historyModal) closeModal(); });
+});
