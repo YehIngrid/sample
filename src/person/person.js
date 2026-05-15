@@ -928,6 +928,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // 初始化：根據當前 URL 決定顯示哪個頁面
   handleRouting();
 
+  // 評價／檢舉區塊展開縮合
+  document.querySelectorAll('.profile-edit-header.collapsible').forEach(header => {
+    header.addEventListener('click', () => {
+      const targetId = header.dataset.collapseTarget;
+      const body = document.getElementById(targetId);
+      if (!body) return;
+      const collapsed = body.classList.toggle('collapsed');
+      header.classList.toggle('collapsed', collapsed);
+    });
+  });
+
   loadRecentNotifications();
 
   // 預載入側邊欄 / 手機按鈕的訂單計數紅點

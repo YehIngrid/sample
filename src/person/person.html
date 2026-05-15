@@ -551,11 +551,12 @@
           </div>
         </div>
         <div class="profile-edit-card mt-3">
-          <div class="profile-edit-header">
+          <div class="profile-edit-header collapsible" data-collapse-target="reviewsBody">
             <i class="ti ti-message-star"></i>
             <span>我的評價</span>
+            <i class="ti ti-chevron-down profile-edit-toggle"></i>
           </div>
-          <div class="profile-edit-body">
+          <div class="profile-edit-body collapsible-body" id="reviewsBody">
             <!-- 評價卡片由 JS 動態渲染至此 -->
             <div id="reviewsContainer">
               <div class="review-empty">
@@ -567,11 +568,12 @@
           </div>
         </div>
         <div class="profile-edit-card mt-3">
-          <div class="profile-edit-header">
+          <div class="profile-edit-header collapsible" data-collapse-target="reportsBody">
             <i class="ti ti-flag"></i>
             <span>我的檢舉</span>
+            <i class="ti ti-chevron-down profile-edit-toggle"></i>
           </div>
-          <div class="profile-edit-body">
+          <div class="profile-edit-body collapsible-body" id="reportsBody">
             <p class="text-muted small mb-3" style="font-size:0.82rem;">
               <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
               檢舉送出後將由管理員審核，審核結果會反映在此頁面。

@@ -732,19 +732,43 @@ class ChatRoomList {
             showMsgMenu(e.clientX, e.clientY, msgText);
         });
 
-        // 長按（手機）
+        // 長按 / 短按（手機）→ 顯示操作選單
         let _longPressTimer;
+        let _touchStartTime = 0;
+        let _touchTarget = null;
+        let _touchX = 0;
+        let _touchY = 0;
+
         container.addEventListener('touchstart', (e) => {
             const msgText = e.target.closest('.message-text');
             if (!msgText) return;
-            e.preventDefault(); // 必須同步呼叫，阻止系統長按選單
+            // 連結直接放行，不攔截
+            if (e.target.closest('a.chat-link')) return;
+            e.preventDefault(); // 阻止系統長按選單
+            _touchStartTime = Date.now();
+            _touchTarget = msgText;
             const touch = e.touches[0];
+            _touchX = touch.clientX;
+            _touchY = touch.clientY;
             _longPressTimer = setTimeout(() => {
-                showMsgMenu(touch.clientX, touch.clientY, msgText);
-            }, 600);
-        }, { passive: false }); // 必須 non-passive 才能 preventDefault
-        container.addEventListener('touchend',  () => clearTimeout(_longPressTimer));
-        container.addEventListener('touchmove', () => clearTimeout(_longPressTimer));
+                _touchTarget = null; // 長按已觸發，touchend 不需重複
+                showMsgMenu(_touchX, _touchY, msgText);
+            }, 500);
+        }, { passive: false });
+
+        container.addEventListener('touchend', () => {
+            clearTimeout(_longPressTimer);
+            // 短按（< 300ms）也觸發選單
+            if (_touchTarget && Date.now() - _touchStartTime < 300) {
+                showMsgMenu(_touchX, _touchY, _touchTarget);
+            }
+            _touchTarget = null;
+        });
+
+        container.addEventListener('touchmove', () => {
+            clearTimeout(_longPressTimer);
+            _touchTarget = null;
+        });
 
         // 點擊選單外關閉
         document.addEventListener('click', (e) => {
@@ -1063,6 +1087,16 @@ class ChatRoomList {
                 if (!item) return;
                 this.switchRoom(item.dataset.roomId, item.querySelector('.roomName').textContent);
             });
+
+            // ?openSupport=1：自動切換到客服頻道
+            if (new URLSearchParams(window.location.search).get('openSupport') === '1') {
+                const supportRoomId = [...this.supportRoomsSet][0];
+                if (supportRoomId) {
+                    const supportItem = document.querySelector(`[data-room-id="${supportRoomId}"]`);
+                    const supportName = supportItem?.querySelector('.roomName')?.textContent || '客服小幫手';
+                    await this.switchRoom(supportRoomId, supportName);
+                }
+            }
 
             // 初始未讀檢查：通知外層 chaticon 顯示紅點
             const hasUnread = rooms.data.items.some(data => {
@@ -1479,7 +1513,7 @@ class ChatRoomList {
                         <i class="bi bi-check2-all read-receipt d-none" style="font-size: 0.8rem; color: #4CAF50;"></i>
                         <small class="text-muted msg-time" style="font-size: 0.75rem;">${timestamp}</small>
                     </div>` : ''}
-                    <div class="message-text">${this.escapeHtml(data.message).replace(/\n/g, '<br>')}</div>
+                    <div class="message-text">${this.linkify(this.escapeHtml(data.message).replace(/\n/g, '<br>'))}</div>
                     ${isSelf ? '' : `<small class="text-muted ms-2 msg-time" style="font-size: 0.75rem;">${timestamp}</small>`}
                 </div>
             </div>`;
@@ -1678,7 +1712,7 @@ class ChatRoomList {
                 </div>
                 ${broadcastImg ? `
                 <img src="${broadcastImg}" class="broadcast-img chat-image" alt="公告圖片" loading="lazy" style="cursor:pointer;">` : ''}
-                ${data.message ? `<div class="broadcast-text">${this.escapeHtml(data.message)}</div>` : ''}
+                ${data.message ? `<div class="broadcast-text">${this.linkify(this.escapeHtml(data.message).replace(/\n/g, '<br>'))}</div>` : ''}
                 ${time ? `<div class="broadcast-time">${time}</div>` : ''}
             </div>`;
         container.appendChild(el);
@@ -1690,6 +1724,18 @@ class ChatRoomList {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    // 將純文字中的 URL 轉成可點擊的 <a> 連結（在 escapeHtml 之後呼叫）
+    linkify(escapedHtml) {
+        const urlPattern = /https?:\/\/[^\s<>"']+/g;
+        return escapedHtml.replace(urlPattern, url => {
+            // 移除末尾標點（句點、逗號、右括號等）
+            const trailingPunct = url.match(/[.,;!?)]+$/);
+            const cleanUrl = trailingPunct ? url.slice(0, -trailingPunct[0].length) : url;
+            const suffix = trailingPunct ? trailingPunct[0] : '';
+            return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer" class="chat-link">${cleanUrl}</a>${suffix}`;
+        });
     }
 }
 

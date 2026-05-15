@@ -2122,3 +2122,42 @@ html.skip-loader #whatcontent { display: block !important; }
 .pager-nav-btn--active:hover {
   background-color: var(--color-primary);
 }
+
+/* ── 全站共用：聊天圖示 + 浮動 iframe ── */
+.chaticon {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  bottom: 74px;
+  right: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
+}
+.chaticon img {
+  width: 90%;
+  height: 90%;
+}
+#talkInterface {
+  position: fixed;
+  bottom: 90px;
+  right: 30px;
+  width: 330px;
+  height: 550px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  background-color: #fff;
+  display: none;
+  overflow: hidden;
+  z-index: 10000;
+  border: none;
+  transition: top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease,
+              width 0.25s ease, height 0.25s ease, border-radius 0.25s ease;
+}

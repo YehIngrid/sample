@@ -1275,8 +1275,34 @@ small { font-size: 10px; color: #004b97; }
   letter-spacing: 0.03em;
 }
 .profile-edit-header i { font-size: var(--font-size-lg); }
+.profile-edit-header.collapsible {
+  cursor: pointer;
+  user-select: none;
+}
+.profile-edit-header.collapsible:hover {
+  background: #9ecfc9;
+}
+.profile-edit-toggle {
+  margin-left: auto;
+  font-size: 14px;
+  opacity: 0.6;
+  transition: transform 0.25s ease;
+}
+.profile-edit-header.collapsible.collapsed .profile-edit-toggle {
+  transform: rotate(-90deg);
+}
 .profile-edit-body {
   padding: 24px 20px;
+}
+.profile-edit-body.collapsible-body {
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  max-height: 2000px;
+}
+.profile-edit-body.collapsible-body.collapsed {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .sell-field {
   margin-bottom: 22px;

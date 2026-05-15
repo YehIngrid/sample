@@ -1602,3 +1602,14 @@ html, body {
     background: rgb(36, 182, 133);
     color: #fff;
 }
+
+/* ── 訊息内連結 ── */
+.chat-link {
+  color: #004b97;
+  text-decoration: underline;
+  word-break: break-all;
+  -webkit-tap-highlight-color: rgba(0,75,151,0.12);
+}
+.chat-link:hover {
+  color: rgb(36,182,133);
+}

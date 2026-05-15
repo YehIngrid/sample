@@ -53,7 +53,7 @@
         <!-- TODO header -->
         <div class="header ">
           <!-- 響應式選單 -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-color header_new navtb">
           <div class="container-fluid d-flex align-items-center">
 
             <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
@@ -111,7 +111,6 @@
           </ul>
         </nav>
       </div>
-    </div>
       <section class="contentofcommunication">
         <div class="comm-outer">
           <div class="comm-page-header">
@@ -169,9 +168,24 @@
       <script>
         window.addEventListener('chatUnread', () => { document.getElementById('chatUnreadDot').style.display = 'block'; });
         window.addEventListener('chatRead',   () => { document.getElementById('chatUnreadDot').style.display = 'none'; });
-        document.getElementById('btn-open-chat').addEventListener('click', () => {
-          document.getElementById('chaticon').click();
-        });
+
+        function openSupportChat(e) {
+          e?.stopPropagation(); // 阻止事件冒泡到 window，避免 chat.js 的外部點擊偵測立即關閉 iframe
+          const iframe = document.getElementById('talkInterface');
+          if (iframe.style.display === 'none' || iframe.style.display === '') {
+            // 尚未開啟：設定 src 帶入 openSupport 參數，再顯示
+            if (!iframe.src || iframe.src === 'about:blank' || iframe.src === location.href) {
+              iframe.src = '../chatroom/chatroom.html?openSupport=1';
+            }
+            iframe.style.display = 'block';
+          } else {
+            // 已開啟：關閉
+            iframe.style.display = 'none';
+          }
+        }
+
+        document.getElementById('chaticon').addEventListener('click', openSupportChat);
+        document.getElementById('btn-open-chat').addEventListener('click', openSupportChat);
       </script>
 <footer class="footer" style="margin-top:0">
   <div class="footer-inner">
@@ -214,6 +228,7 @@
     <span>Copyright &copy; 2026 拾貨寶庫｜All Rights Reserved.</span>
   </div>
 </footer>
+      </div><!-- /#whatcontent -->
         <!-- script部分-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
         <script type="module" src="../chatroom/chat.js"></script>
