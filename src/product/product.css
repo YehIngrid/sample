@@ -176,6 +176,7 @@
     display: flex;
     flex-direction: column;
     gap: 0;
+    background: #fff;
   }
   .mix > * + * {
     border-top: var(--divider);
@@ -863,10 +864,9 @@
       color: #004b97;
     }
 
-    /* ── 左右欄等高 + 間距 ── */
+    /* ── 左右欄等高 ── */
     .row.g-4.justify-content-center {
       align-items: stretch;
-      gap: 2rem;
     }
     .col-lg-5.order-1 {
       display: flex;
@@ -1368,7 +1368,10 @@
 
   /* ── 商品資訊區 ── */
   .col-lg-6.order-2 {
-    padding: 16px 16px 0;
+    padding-top: 16px;
+    padding-bottom: 0;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
     background: #fff;
   }
 

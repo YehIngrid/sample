@@ -277,7 +277,11 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/whoami`, {withCredentials: true });
             const d = response.data?.data ?? response.data;
             if (d?.contactEmail != null) localStorage.setItem('contractEmail', d.contactEmail);
-            return response.data;   // 通常直接回傳 data
+            // 已登入但 localStorage 缺少使用者資料（如清除快取後）→ 自動補充
+            if (!localStorage.getItem('username') || !localStorage.getItem('uid')) {
+                try { await this.getMe(); } catch (_) {}
+            }
+            return response.data;
         } catch (error) {
             this._forbidden(error);
             console.error("無法取得使用者資訊", error);
