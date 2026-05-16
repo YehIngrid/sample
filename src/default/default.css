@@ -640,6 +640,11 @@ ul{
 .cart-count.bump {
   transform: scale(1.4);
 }
+/* 購物車連結本身不需要 specialpadding 的右邊距，否則 badge 會偏移 */
+a.specialpadding[href*="shoppingcart"] {
+  padding-right: 0 !important;
+}
+
 /* icon 右上角 badge */
 .cart-badge {
   position: absolute;

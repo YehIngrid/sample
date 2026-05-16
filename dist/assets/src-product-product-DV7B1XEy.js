@@ -1,4 +1,4 @@
-import{B as ne}from"./BackendService-C1LLRlJ3.js";/* empty css                *//* empty css                     *//* empty css             */import"./chat-CWBkyaYx.js";import{r as F,f as V}from"./default-NKbtksvv.js";import"./ChatBackendService-BDVlVzW8.js";function oe(t=6){return Array.from({length:t},()=>`
+import{B as ne}from"./BackendService-iS7mEpP4.js";/* empty css                *//* empty css                     *//* empty css             */import"./chat-D0rVihCe.js";import{r as F,f as V}from"./default-CbfdwExZ.js";import"./ChatBackendService-BYkGcC7l.js";function oe(t=6){return Array.from({length:t},()=>`
     <div class="col">
       <div class="product-card seller-product-card h-100">
         <div class="product-thumb skeleton" style="width:100%;aspect-ratio:1/1;"></div>
