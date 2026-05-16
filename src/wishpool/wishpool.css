@@ -611,11 +611,15 @@ body {
     border-top: 1px solid #e5e5e5;
     box-shadow: 0 -2px 8px rgba(0,0,0,0.07);
     z-index: 4000;
-    display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap;
     align-items: stretch;
     padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (max-width: 991px) {
+    .wp-spa-nav {
+        display: flex !important;
+    }
 }
 .wp-spa-item {
     flex: 1;
