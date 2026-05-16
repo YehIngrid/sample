@@ -1,7 +1,7 @@
 /* 編輯商品 modal：z-index 需高於 navbar(3000) 和 bottom-nav(4000) */
 #editDrawer { z-index: 5000; }
 body.edit-modal-open .modal-backdrop { z-index: 4999; }
-body { background: aliceblue; }
+body { background: #fff; }
 
 @media (min-width: 992px) {
   #editDrawer .modal-dialog {
