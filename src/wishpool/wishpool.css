@@ -735,19 +735,19 @@ body {
     letter-spacing: 0.08em;
 }
 .wp-hero-accent { color: #abdad5; }
-.wp-hero-count {
-    font-size: 1rem;
-    color: #abdad5;
+.wp-hero-feats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-bottom: 32px;
-    letter-spacing: 0.04em;
 }
-.wp-hero-num {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 4px;
-    display: inline-block;
-    transform: translateY(2px);
+.wp-hero-feat {
+    font-size: 0.82rem;
+    color: #abdad5;
+    letter-spacing: 0.06em;
+    border: 1px solid rgba(171,218,213,0.4);
+    border-radius: 20px;
+    padding: 4px 12px;
 }
 .wp-hero-btns {
     display: flex;
@@ -945,7 +945,7 @@ body {
     }
     .wp-hero-img { display: none; }
     .wp-hero-title { font-size: 1.7rem; }
-    .wp-hero-num { font-size: 1.45rem; }
+    .wp-hero-feat { font-size: 0.76rem; padding: 3px 10px; }
 }
 @media (max-width: 575px) {
     .wp-hero { padding: 28px 20px; border-radius: 12px; }

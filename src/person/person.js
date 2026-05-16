@@ -919,55 +919,92 @@ async function loadStatCards() {
   } catch { /* silent */ }
 }
 
+const _NOTIF_LABELS = {
+  wishpool_contact: '許願池聯絡',
+  order_placed:     '訂單成立',
+  order_completed:  '訂單完成',
+  order_cancelled:  '訂單取消',
+  review:           '收到評價',
+  system:           '系統通知',
+  new_message:      '新訊息',
+  product_sold:     '商品已售出',
+  product_liked:    '商品被收藏',
+};
+function _relTime(d) {
+  if (!d) return '';
+  const mins = Math.floor((Date.now() - new Date(d)) / 60000);
+  if (mins < 1) return '剛剛';
+  if (mins < 60) return `${mins} 分鐘前`;
+  const h = Math.floor(mins / 60);
+  if (h < 24) return `${h} 小時前`;
+  return `${Math.floor(h / 24)} 天前`;
+}
+function _notifItemHtml(text, meta, time, unread = true) {
+  return `<div class="notif-item">
+    <span class="notif-dot${unread ? '' : ' read'}"></span>
+    <div class="notif-body">
+      <div class="notif-ttl">${htmlEncode(text)}</div>
+      <div class="notif-meta">
+        ${meta ? `<span>${htmlEncode(meta)}</span><span class="notif-sep"></span>` : ''}
+        <span>${time}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// localStorage key 存「上次看到的檢舉狀態」
+const _RPT_CACHE_KEY = '_rptStatusCache';
+
+function _detectReportChanges(reports) {
+  const cache = JSON.parse(localStorage.getItem(_RPT_CACHE_KEY) || '{}');
+  const synth = [];
+  const next = {};
+  reports.forEach(r => {
+    const id = r.id;
+    next[id] = { status: r.status, subject: r.subject ?? '', reviewedAt: r.reviewedAt ?? null };
+    const prev = cache[id];
+    // 只在 pending → approved/rejected 時才算有變化
+    if (prev && prev.status === 'pending' && r.status !== 'pending') {
+      const label = r.status === 'approved' ? '檢舉已通過' : '檢舉已駁回';
+      synth.push({
+        text: `${label}：${r.subject ?? ''}`,
+        meta: '檢舉結果',
+        time: _relTime(r.reviewedAt || r.updatedAt),
+        unread: true,
+      });
+    }
+  });
+  // 更新快取（保留舊紀錄以免 pagination 導致遺漏）
+  localStorage.setItem(_RPT_CACHE_KEY, JSON.stringify({ ...cache, ...next }));
+  return synth;
+}
+
 async function loadRecentNotifications() {
   const container = document.getElementById('recentNotifList');
   if (!container) return;
   try {
-    const res = await backendService.getNotifications(1, 20);
-    const items = (res?.data?.data?.notifications ?? []).filter(n => !n.isRead).slice(0, 5);
-    if (!items.length) {
-      container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;">目前沒有通知</div>';
-      return;
-    }
-    const _LABELS = {
-      wishpool_contact: '許願池聯絡',
-      order_placed: '訂單成立',
-      order_completed: '訂單完成',
-      order_cancelled: '訂單取消',
-      review: '收到評價',
-      system: '系統通知',
-      new_message: '新訊息',
-      product_sold: '商品已售出',
-      product_liked: '商品被收藏',
-    };
-    function _relTime(d) {
-      if (!d) return '';
-      const mins = Math.floor((Date.now() - new Date(d)) / 60000);
-      if (mins < 1) return '剛剛';
-      if (mins < 60) return `${mins} 分鐘前`;
-      const h = Math.floor(mins / 60);
-      if (h < 24) return `${h} 小時前`;
-      return `${Math.floor(h / 24)} 天前`;
-    }
-    container.innerHTML = items.map(n => {
-      const typeLabel = _LABELS[n.type] ?? n.type ?? '';
-      const title = n.title ?? typeLabel;
-      const body = n.body ?? n.content ?? n.message ?? '';
-      const time = _relTime(n.createdAt);
-      const unread = !n.isRead;
-      const displayText = title || body;
-      const metaType = typeLabel || title;
-      return `<div class="notif-item">
-        <span class="notif-dot${unread ? '' : ' read'}"></span>
-        <div class="notif-body">
-          <div class="notif-ttl">${htmlEncode(displayText)}</div>
-          <div class="notif-meta">
-            ${metaType ? `<span>${htmlEncode(metaType)}</span><span class="notif-sep"></span>` : ''}
-            <span>${time}</span>
-          </div>
-        </div>
-      </div>`;
+    const [notifRes, rptRes] = await Promise.all([
+      backendService.getNotifications(1, 20),
+      backendService.getMyReports({ page: 1, limit: 20 }).catch(() => null),
+    ]);
+
+    const apiItems = (notifRes?.data?.data?.notifications ?? []).filter(n => !n.isRead);
+    const reports  = rptRes?.data?.reports ?? [];
+    const synthNotifs = _detectReportChanges(reports);
+
+    const apiHtml = apiItems.slice(0, 5).map(n => {
+      const typeLabel   = _NOTIF_LABELS[n.type] ?? n.type ?? '';
+      const displayText = n.title ?? typeLabel;
+      const metaType    = typeLabel || n.title;
+      return _notifItemHtml(displayText, metaType, _relTime(n.createdAt), !n.isRead);
     }).join('');
+
+    const synthHtml = synthNotifs.map(s =>
+      _notifItemHtml(s.text, s.meta, s.time, s.unread)
+    ).join('');
+
+    const combined = synthHtml + apiHtml;
+    container.innerHTML = combined || '<div class="text-center text-muted py-3" style="font-size:14px;">目前沒有通知</div>';
   } catch (e) {
     container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;">無法載入通知</div>';
   }
@@ -2639,10 +2676,22 @@ async function loadMyReviewStats() {
 
 // ── 我的檢舉 ──────────────────────────────────────────
 const REPORT_STATUS_MAP = {
-  pending:  { text: '審核中',   cls: 'badge bg-warning text-dark' },
-  approved: { text: '已通過',   cls: 'badge bg-success' },
-  rejected: { text: '已駁回',   cls: 'badge bg-secondary' },
+  pending:  { text: '審核中', cls: 'rpt-badge rpt-pending' },
+  approved: { text: '已通過', cls: 'rpt-badge rpt-approved' },
+  rejected: { text: '已駁回', cls: 'rpt-badge rpt-rejected' },
 };
+
+let _reportCatCache = null;
+async function _getReportCatMap() {
+  if (_reportCatCache) return _reportCatCache;
+  try {
+    const res = await backendService.getReportCategories();
+    const arr = res?.data ?? res ?? [];
+    const list = Array.isArray(arr) ? arr : (arr?.categories ?? arr?.data ?? []);
+    _reportCatCache = Object.fromEntries(list.map(c => [c.category ?? c.key, c.meaning ?? c.description ?? c.category]));
+  } catch (_) { _reportCatCache = {}; }
+  return _reportCatCache;
+}
 
 async function loadMyReports(page = 1) {
   const list  = document.getElementById('myReportsList');
@@ -2651,7 +2700,10 @@ async function loadMyReports(page = 1) {
   list.innerHTML = '<div class="text-center text-muted py-4" style="font-size:14px;">載入中...</div>';
   pager.innerHTML = '';
   try {
-    const res = await backendService.getMyReports({ page, limit: 10 });
+    const [res, catMap] = await Promise.all([
+      backendService.getMyReports({ page, limit: 10 }),
+      _getReportCatMap(),
+    ]);
     const reports    = res?.data?.reports ?? [];
     const pagination = res?.data?.pagination ?? {};
     if (!reports.length) {
@@ -2664,31 +2716,36 @@ async function loadMyReports(page = 1) {
       return;
     }
     list.innerHTML = reports.map(r => {
-      const st = REPORT_STATUS_MAP[r.status] ?? { text: r.status, cls: 'badge bg-secondary' };
+      const st = REPORT_STATUS_MAP[r.status] ?? { text: r.status, cls: 'rpt-badge rpt-rejected' };
       const date = r.createdAt ? fmtDate(r.createdAt) : '';
-      const reviewNote = r.reviewNote ? `<div class="text-muted small mt-1">審核備註：${htmlEncode(r.reviewNote)}</div>` : '';
+      const meaning = catMap[r.category] ?? r.category ?? '';
+      const noteHtml = r.reviewNote
+        ? `<div class="rpt-note"><i class="ti ti-message-2"></i>${htmlEncode(r.reviewNote)}</div>` : '';
+      const detailHtml = r.detail
+        ? `<div class="rpt-detail">${htmlEncode(r.detail)}</div>` : '';
       return `
-        <div class="profile-info-card mb-2" style="padding:14px 16px;">
-          <div class="d-flex justify-content-between align-items-start flex-wrap gap-1">
-            <div>
-              <span class="${st.cls}" style="font-size:0.75rem;">${st.text}</span>
-              <span class="ms-2 fw-bold" style="font-size:0.95rem;">${htmlEncode(r.subject ?? '')}</span>
-            </div>
-            <small class="text-muted">${date}</small>
+        <div class="rpt-card">
+          <div class="rpt-card-top">
+            <span class="rpt-subject">${htmlEncode(r.subject ?? '')}</span>
+            <span class="${st.cls}">${st.text}</span>
           </div>
-          <div class="text-muted small mt-1">類型：${htmlEncode(r.category ?? '')}</div>
-          ${r.detail ? `<div class="text-muted small mt-1" style="white-space:pre-wrap;">${htmlEncode(r.detail)}</div>` : ''}
-          ${reviewNote}
+          <div class="rpt-card-meta">
+            <span>${htmlEncode(meaning)}</span>
+            <span class="rpt-dot"></span>
+            <span>${date}</span>
+          </div>
+          ${detailHtml}
+          ${noteHtml}
         </div>`;
     }).join('');
 
-    // 分頁
     const total = pagination.totalPages ?? 1;
     if (total > 1) {
-      let html = '';
+      let html = '<div class="order-pagination">';
       for (let i = 1; i <= total; i++) {
-        html += `<button class="btn btn-sm ${i === page ? 'btn-primary' : 'btn-outline-secondary'} mx-1" onclick="loadMyReports(${i})">${i}</button>`;
+        html += `<button class="order-page-num${i === page ? ' active' : ''}" onclick="loadMyReports(${i})">${i}</button>`;
       }
+      html += '</div>';
       pager.innerHTML = html;
     }
   } catch (e) {

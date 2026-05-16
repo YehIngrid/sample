@@ -130,14 +130,19 @@ ul{
   border-radius: 3px 3px 0 0; z-index: 1;
 }
 
+@media (max-width: 700px) {
+  .quick-actions { gap: 10px; width: 92vw; }
+  .qa-btn { padding: 12px 14px; gap: 8px; }
+  .qa-s { display: none; }
+  .qa-arr { display: none; }
+  .qa-ic-wrap { width: 36px; height: 36px; }
+  .qa-t { font-size: 14px; }
+}
 @media (max-width: 500px) {
   .quick-actions { width: 100vw; gap: 8px; padding: 0 4vw; box-sizing: border-box; }
   .qa-btn { padding: 5px 6px; gap: 4px; border-radius: 10px; }
-  .qa-s { display: none; }
-  .qa-arr { display: none; }
   .qa-ic-wrap { width: 22px; height: 22px; }
   .qa-ic { width: 14px; height: 14px; }
-  .qa-t { font-size: 14px; }
 }
 @media (max-width: 991.98px) {
   .navtb {

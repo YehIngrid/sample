@@ -2056,6 +2056,77 @@ small { font-size: 10px; color: #004b97; }
 .order-page-num:hover { background: rgba(0,75,151,0.08); }
 .order-page-num.active { background: #004b97; color: #fff; }
 
+/* ── 我的檢舉卡片 ── */
+.rpt-card {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--p-line);
+}
+.rpt-card:last-child { border-bottom: none; }
+
+.rpt-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.rpt-subject {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--p-ink);
+  line-height: 1.4;
+}
+.rpt-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--p-muted);
+  margin-bottom: 4px;
+}
+.rpt-dot {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--p-muted);
+  flex-shrink: 0;
+}
+.rpt-detail {
+  font-size: 12px;
+  color: #4a627a;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  margin-top: 4px;
+}
+.rpt-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: #004b97;
+  background: aliceblue;
+  border-radius: 7px;
+  padding: 7px 11px;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.rpt-note i { flex-shrink: 0; margin-top: 2px; }
+
+/* 我的檢舉狀態 badge */
+.rpt-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+.rpt-badge.rpt-pending  { background: #fff3cd; color: #856404; }
+.rpt-badge.rpt-approved { background: #d4f5ea; color: #0f7a54; }
+.rpt-badge.rpt-rejected { background: #f0f2f4; color: #6b7a8d; }
+
 /* ── 小螢幕：訂單操作按鈕縮小 ── */
 @media (max-width: 400px) {
   .action-btn {

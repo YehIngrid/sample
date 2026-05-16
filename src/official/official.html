@@ -67,10 +67,6 @@
         <button class="nav-btn" data-panel="panel-news">
           <i class="fa fa-newspaper"></i> 最新資訊
         </button>
-        <button class="nav-btn" data-panel="panel-support">
-          <i class="fa fa-headphones"></i> 客服頻道
-        </button>
-
         <!-- 管理 群組 -->
         <div class="nav-group" id="navgroup-manage">
           <button class="nav-group-toggle">
@@ -81,6 +77,9 @@
           <div class="nav-group-items">
             <button class="nav-btn nav-sub" data-panel="panel-reports">
               <i class="fa fa-flag"></i> 檢舉管理
+            </button>
+            <button class="nav-btn nav-sub" data-panel="panel-report-categories">
+              <i class="fa fa-list-alt"></i> 檢舉類別
             </button>
             <button class="nav-btn nav-sub" data-panel="panel-review-tags">
               <i class="fa fa-tags"></i> 評論標籤
@@ -133,16 +132,6 @@
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
-          <div class="dashboard-card" onclick="switchPanel('panel-support')">
-            <div class="dashboard-card-icon" style="background:#e8f5e9;">
-              <i class="fa fa-headphones" style="color:#388e3c;"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">客服頻道</div>
-              <div class="dashboard-card-desc">透過客服頻道發送回覆訊息給使用者，處理問題反映及諮詢事項。</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
           <div class="dashboard-card" onclick="switchPanel('panel-analytics')">
             <div class="dashboard-card-icon" style="background:#f3e8fd;">
               <i class="fa fa-bar-chart" style="color:#7b1fa2;"></i>
@@ -170,6 +159,16 @@
             <div class="dashboard-card-body">
               <div class="dashboard-card-title">評論標籤</div>
               <div class="dashboard-card-desc">建立與管理評論標籤規則，設定標籤說明與正負面屬性。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-report-categories')">
+            <div class="dashboard-card-icon" style="background:#fce8e6;">
+              <i class="fa fa-list-alt" style="color:#d93025;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">檢舉類別</div>
+              <div class="dashboard-card-desc">新增檢舉類別供使用者選擇，讓檢舉系統分類更清晰。</div>
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
@@ -386,33 +385,6 @@
         </div>
       </section>
 
-      <!-- Panel: 客服頻道 -->
-      <section id="panel-support" class="panel">
-        <h2 class="panel-title"><i class="fa fa-headphones me-2"></i>客服小幫手 / 真人客服</h2>
-        <p id="supportChannelStatus" class="text-muted small mb-3">載入中...</p>
-        <form id="supportForm" class="official-form">
-          <div class="mb-3">
-            <label class="form-label fw-bold mb-2">發送訊息</label>
-            <textarea id="supportMessage" class="form-control" rows="5" placeholder="輸入要發送的訊息..." maxlength="2000"></textarea>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">附件圖片 <small class="text-muted">（選填，可拖曳）</small></label>
-            <div class="img-upload-area" id="supportImgArea">
-              <input type="file" id="supportImgInput" accept="image/*" class="d-none">
-              <div id="supportImgPlaceholder" class="img-placeholder">
-                <i class="fa fa-image fa-2x mb-2 d-block text-muted"></i>
-                <span class="text-muted small">點擊或拖曳上傳圖片</span>
-              </div>
-              <img id="supportImgPreview" class="img-preview-thumb d-none" alt="預覽">
-              <button type="button" id="supportClearImgBtn" class="clear-img-btn d-none">×</button>
-            </div>
-          </div>
-          <button type="submit" id="supportSubmitBtn" class="btn official-btn w-100" style="color: white;">
-            <i class="fa fa-paper-plane me-1"></i> 發送
-          </button>
-        </form>
-        <div id="supportResult" class="result-box mt-3 d-none"></div>
-      </section>
 
       <!-- Panel: 數據分析 -->
       <section id="panel-analytics" class="panel">
@@ -609,6 +581,43 @@
               <span class="spinner-border spinner-border-sm me-1"></span>載入中...
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- Panel: 檢舉類別管理 -->
+      <section id="panel-report-categories" class="panel">
+        <h2 class="panel-title"><i class="fa fa-list-alt me-2"></i>檢舉類別管理</h2>
+        <p class="text-muted small mb-3">建立後，使用者送出檢舉時可從這些類別中選擇。</p>
+
+        <!-- 現有類別列表 -->
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="fw-bold" style="color:#333;">現有類別</span>
+          <button class="btn btn-sm btn-outline-primary" id="refreshReportCatsBtn"><i class="fa fa-refresh me-1"></i>重新載入</button>
+        </div>
+        <div id="reportCatsList" class="mb-4">
+          <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+        </div>
+
+        <!-- 新增類別 -->
+        <div class="news-editor-card">
+          <div class="news-editor-header"><span>新增檢舉類別</span></div>
+          <form id="createReportCatForm" class="official-form mt-3">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-5">
+                <label class="form-label">類別代碼 (英文) <span style="color:red">*</span></label>
+                <input type="text" id="newCatKey" class="form-control" placeholder="例：illegal_goods" maxlength="50" required>
+                <div class="form-text">只能使用英文字母、數字與底線</div>
+              </div>
+              <div class="col-sm-7">
+                <label class="form-label">類別說明 <span style="color:red">*</span></label>
+                <input type="text" id="newCatDesc" class="form-control" placeholder="例：違法或違禁商品" maxlength="100" required>
+              </div>
+            </div>
+            <button type="submit" class="btn official-btn" style="color:white;">
+              <i class="fa fa-plus me-1"></i> 建立類別
+            </button>
+          </form>
+          <div id="createReportCatResult" class="result-box mt-3 d-none"></div>
         </div>
       </section>
 

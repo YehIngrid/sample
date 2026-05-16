@@ -894,5 +894,14 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
+    async createReportCategory(payload) {
+        try {
+            const response = await this.http.post('/api/reports/categories', payload);
+            return response.data;
+        } catch (error) {
+            console.error("建立檢舉類別失敗", error);
+            return Promise.reject(error);
+        }
+    }
 
 }

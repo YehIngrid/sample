@@ -134,7 +134,8 @@
           <form id="searchForm" class="mh-search-form flex-grow-1">
             <div class="search-input-wrap mh-search-wrap" style="position:relative;">
               <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-              <input class="form-control" type="search" placeholder="搜尋商品、賣家..." aria-label="Search" id="searchInput" maxlength="100" spellcheck="false">
+              <input class="form-control" type="search" placeholder="搜尋商品、關鍵字..." aria-label="Search" id="searchInput" maxlength="100" spellcheck="false">
+              <div id="mhHotTags" class="mh-hot-tags d-none d-lg-flex"></div>
               <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
               <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
                 <div class="search-drop-section" id="desktopHistorySection">
@@ -294,7 +295,7 @@
 
                 </main>
 
-            </div>
+            </div><!-- /.sortAndProduct -->
         </div>
 <footer class="footer">
   <div class="footer-inner">
@@ -539,6 +540,16 @@
     if (desk) desk.innerHTML = makeHtml('_pickHistory');
     const mob = document.getElementById('mobileTrendList');
     if (mob) mob.innerHTML = makeHtml('_pickMobileDD');
+    const mhHot = document.getElementById('mhHotTags');
+    if (mhHot) {
+      const mainInput = document.getElementById('searchInput');
+      mhHot.innerHTML = '<span class="mh-hot-sep">熱門：</span>' +
+        terms.slice(0, 3).map(t => {
+          const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');
+          return `<a class="mh-hot-tag" onclick="window._pickHistory('${safe}')">${t.replace(/</g, '&lt;')}</a>`;
+        }).join('');
+      if (mainInput && mainInput.value.trim()) mhHot.classList.add('mh-hot-hidden');
+    }
   }
 
   // ── 電腦 dropdown 顯示/隱藏 ──
@@ -620,12 +631,30 @@
       });
     }
 
+    function _setHotTagsVisible(visible) {
+      const el = document.getElementById('mhHotTags');
+      if (!el) return;
+      if (visible) el.classList.remove('mh-hot-hidden');
+      else el.classList.add('mh-hot-hidden');
+    }
+
     // ── 電腦搜尋欄 ──
     if (mainInput) {
-      mainInput.addEventListener('focus', openDropdown);
+      mainInput.addEventListener('focus', function () {
+        _setHotTagsVisible(false);
+        openDropdown();
+      });
       mainInput.addEventListener('input', function () {
         updateClearBtn(mainInput, document.getElementById('searchClearBtn'));
-        if (!mainInput.value.trim()) openDropdown();
+        if (!mainInput.value.trim()) {
+          _setHotTagsVisible(true);
+          openDropdown();
+        } else {
+          _setHotTagsVisible(false);
+        }
+      });
+      mainInput.addEventListener('blur', function () {
+        if (!mainInput.value.trim()) _setHotTagsVisible(true);
       });
       mainInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
@@ -644,6 +673,7 @@
         mainInput.value = '';
         mainInput.focus();
         updateClearBtn(mainInput, this);
+        _setHotTagsVisible(true);
         openDropdown();
         document.getElementById('searchForm').dispatchEvent(new Event('submit'));
       });
@@ -651,6 +681,7 @@
         saveHistory([]); renderDesktopHistory();
       });
     }
+    renderTrending();
   });
 })();
 </script>

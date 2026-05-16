@@ -743,7 +743,7 @@ class ChatRoomList {
             const msgText = e.target.closest('.message-text');
             if (!msgText) return;
             // 連結直接放行，不攔截
-            if (e.target.closest('a.chat-link')) return;
+            if (e.target.closest('a.chat-link') || e.target.closest('a.cs-bot-link-btn')) return;
             e.preventDefault(); // 阻止系統長按選單
             _touchStartTime = Date.now();
             _touchTarget = msgText;

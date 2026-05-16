@@ -61,10 +61,10 @@ function switchPanel(panelId) {
   document.getElementById(panelId)?.classList.add('active');
   if (panelId === 'panel-broadcast') loadChannels();
   if (panelId === 'panel-history') loadHistoryChannels();
-  if (panelId === 'panel-support') loadSupportChannel();
   if (panelId === 'panel-news') loadNewsAdmin();
   if (panelId === 'panel-analytics') loadAnalytics();
   if (panelId === 'panel-reports') loadAllReports(1);
+  if (panelId === 'panel-report-categories') loadReportCategories();
   if (panelId === 'panel-review-tags') loadReviewTags();
   closeSidebar();
 }
@@ -928,111 +928,6 @@ function _updatePitchSummary() {
 document.getElementById('refreshAnalyticsBtn')?.addEventListener('click', loadAnalytics);
 
 // ════════════════════════════════════════════════════
-//  客服頻道（動態查找名稱含「客服」的官方頻道）
-// ════════════════════════════════════════════════════
-let supportChannelId = null;
-
-async function loadSupportChannel() {
-  const statusEl = document.getElementById('supportChannelStatus');
-  try {
-    const res = await chatSvc.listOfficialChannels(1, 50);
-    const items = res?.data?.items ?? res?.data ?? (Array.isArray(res) ? res : []);
-    const found = items.find(ch => (ch.name ?? '').includes('客服'));
-    if (found) {
-      supportChannelId = found.id ?? found.channelId ?? null;
-      if (statusEl) statusEl.textContent = `頻道：${found.name}`;
-    } else {
-      supportChannelId = null;
-      if (statusEl) statusEl.textContent = '找不到客服頻道，請先建立名稱含「客服」的官方頻道';
-    }
-  } catch {
-    if (statusEl) statusEl.textContent = '頻道載入失敗';
-  }
-}
-let supportImageFile = null;
-
-const supportImgArea        = document.getElementById('supportImgArea');
-const supportImgInput       = document.getElementById('supportImgInput');
-const supportImgPreview     = document.getElementById('supportImgPreview');
-const supportImgPlaceholder = document.getElementById('supportImgPlaceholder');
-const supportClearImgBtn    = document.getElementById('supportClearImgBtn');
-
-supportImgArea.addEventListener('click', (e) => {
-  if (e.target !== supportClearImgBtn) supportImgInput.click();
-});
-supportImgArea.addEventListener('dragover', e => { e.preventDefault(); supportImgArea.classList.add('dragover'); });
-supportImgArea.addEventListener('dragleave', () => supportImgArea.classList.remove('dragover'));
-supportImgArea.addEventListener('drop', e => {
-  e.preventDefault();
-  supportImgArea.classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) setSupportImageFile(file);
-});
-supportImgInput.addEventListener('change', () => {
-  if (supportImgInput.files[0]) setSupportImageFile(supportImgInput.files[0]);
-});
-supportClearImgBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  clearSupportImage();
-});
-
-function setSupportImageFile(file) {
-  supportImageFile = file;
-  const reader = new FileReader();
-  reader.onload = () => {
-    supportImgPreview.src = reader.result;
-    supportImgPreview.classList.remove('d-none');
-    supportImgPlaceholder.classList.add('d-none');
-    supportClearImgBtn.classList.remove('d-none');
-  };
-  reader.readAsDataURL(file);
-}
-
-function clearSupportImage() {
-  supportImageFile = null;
-  supportImgInput.value = '';
-  supportImgPreview.src = '';
-  supportImgPreview.classList.add('d-none');
-  supportImgPlaceholder.classList.remove('d-none');
-  supportClearImgBtn.classList.add('d-none');
-}
-
-document.getElementById('supportForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const message   = document.getElementById('supportMessage').value.trim();
-  const resultBox = document.getElementById('supportResult');
-  const submitBtn = document.getElementById('supportSubmitBtn');
-
-  if (!supportChannelId) {
-    Swal.fire({ icon: 'warning', title: '找不到客服頻道', text: '請確認已建立名稱含「客服」的官方頻道' });
-    return;
-  }
-  if (!message && !supportImageFile) {
-    Swal.fire({ icon: 'warning', title: '請輸入訊息或選擇圖片' });
-    return;
-  }
-
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> 發送中...';
-  resultBox.className = 'result-box mt-3 d-none';
-
-  try {
-    await chatSvc.broadCastOfficial(supportChannelId, message || undefined, supportImageFile ? [supportImageFile] : []);
-    resultBox.className = 'result-box mt-3 success';
-    resultBox.innerHTML = '<div class="fw-bold">✅ 訊息發送成功！</div>';
-    document.getElementById('supportMessage').value = '';
-    clearSupportImage();
-  } catch (err) {
-    resultBox.className = 'result-box mt-3 error';
-    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 發送失敗</div><div>${esc(err?.response?.data?.message || err?.message) || '請稍後再試'}</div>`;
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="fa fa-paper-plane me-1"></i> 發送';
-    resultBox.classList.remove('d-none');
-  }
-});
-
-// ════════════════════════════════════════════════════
 //  檢舉管理
 // ════════════════════════════════════════════════════
 const REPORT_STATUS_LABEL = { pending: '審核中', approved: '已通過', rejected: '已駁回' };
@@ -1060,6 +955,22 @@ async function loadAllReports(page = 1) {
       const bc = REPORT_STATUS_BADGE[r.status] ?? 'badge bg-secondary';
       const date = r.createdAt ? new Date(r.createdAt).toLocaleString('zh-TW') : '';
       const canReview = r.status === 'pending';
+      const atts = Array.isArray(r.attachments) ? r.attachments : [];
+      const attHtml = atts.length ? `
+        <div class="report-att-list mt-2">
+          ${atts.map(a => {
+            const url = esc(a.url ?? '');
+            const mime = a.mimeType ?? '';
+            if (mime.startsWith('image/')) {
+              return `<a href="${url}" target="_blank" class="report-att-img-wrap" title="點擊查看原圖">
+                <img src="${url}" class="report-att-img" alt="附件圖片" onerror="this.closest('a').style.display='none'">
+              </a>`;
+            }
+            const icon = mime === 'application/pdf' ? 'fa-file-pdf-o' : 'fa-file-o';
+            const label = mime === 'application/pdf' ? 'PDF' : (a.mimeType ?? '檔案');
+            return `<a href="${url}" target="_blank" class="report-att-file"><i class="fa ${icon} me-1"></i>${label}</a>`;
+          }).join('')}
+        </div>` : '';
       return `
         <div class="news-admin-item mb-2" style="cursor:default;">
           <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -1069,8 +980,13 @@ async function loadAllReports(page = 1) {
             </div>
             <small class="text-muted">${date}</small>
           </div>
-          <div class="text-muted small mt-1">類型：${esc(r.category ?? '')}　檢舉人 ID：${esc(r.reporterUserId ?? '')}　被檢舉人 ID：${esc(r.reportedUserId ?? '')}</div>
+          <div class="text-muted small mt-1 d-flex flex-wrap gap-2 align-items-center">
+            <span>類型：${esc(r.category ?? '')}</span>
+            <span>檢舉人：<button class="report-user-btn" data-uid="${esc(r.reporterId ?? r.reporterUserId ?? '')}" data-name="${esc(r.reporter?.name ?? '')}">${esc(r.reporter?.name ?? r.reporterId ?? '—')}</button></span>
+            <span>被檢舉人：<button class="report-user-btn" data-uid="${esc(r.reportedUserId ?? '')}" data-name="${esc(r.reportedUser?.name ?? '')}">${esc(r.reportedUser?.name ?? r.reportedUserId ?? '—')}</button></span>
+          </div>
           ${r.detail ? `<div class="text-muted small mt-1" style="white-space:pre-wrap;">${esc(r.detail)}</div>` : ''}
+          ${attHtml}
           ${canReview ? `<button class="btn btn-sm btn-outline-danger mt-2" onclick="openReviewModal('${esc(r.id)}','${esc(r.subject ?? '')}')"><i class="fa fa-gavel me-1"></i>審核</button>` : ''}
         </div>`;
     }).join('');
@@ -1091,6 +1007,56 @@ window.loadAllReports = loadAllReports;
 
 document.getElementById('refreshReportsBtn')?.addEventListener('click', () => loadAllReports(1));
 document.getElementById('reportsStatusFilter')?.addEventListener('change', () => loadAllReports(1));
+
+document.getElementById('reportsAdminList')?.addEventListener('click', e => {
+  const btn = e.target.closest('.report-user-btn');
+  if (!btn || !btn.dataset.uid) return;
+  viewUserProfile(btn.dataset.uid, btn.dataset.name);
+});
+
+async function viewUserProfile(uid, fallbackName = '') {
+  const DEFAULT_AVATAR = '../webP/default-avatar.webp';
+  let html = `<div class="text-center py-3"><span class="spinner-border spinner-border-sm"></span></div>`;
+  const { value: popup } = await Swal.fire({
+    title: '用戶資料',
+    html,
+    showConfirmButton: false,
+    showCloseButton: true,
+    width: 420,
+    didOpen: async (pop) => {
+      try {
+        const res = await backendSvc.getPublicUserProfile(uid);
+        const d = res?.data?.data ?? res?.data ?? {};
+        const name    = d.name ?? fallbackName ?? '—';
+        const photo   = d.photoURL ?? d.avatar ?? DEFAULT_AVATAR;
+        const rate    = d.rate ?? d.creditScore ?? '—';
+        const intro   = d.intro ?? d.description ?? '';
+        const email   = d.email ?? '';
+        const dept    = d.department ?? '';
+        const isSuspended = d.suspended ?? d.isSuspended ?? false;
+        pop.querySelector('.swal2-html-container').innerHTML = `
+          <div style="display:flex;align-items:center;gap:14px;text-align:left;margin-bottom:16px;">
+            <img src="${esc(photo)}" onerror="this.src='${DEFAULT_AVATAR}'"
+              style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #e0e6ef;flex-shrink:0;">
+            <div>
+              <div style="font-size:16px;font-weight:700;color:#1a2b45;">${esc(name)}</div>
+              <code style="font-size:11px;color:#888;">${esc(uid)}</code>
+              ${isSuspended ? `<div style="margin-top:4px;"><span class="badge bg-danger" style="font-size:11px;">已停權</span></div>` : ''}
+            </div>
+          </div>
+          <table style="width:100%;font-size:13px;border-collapse:collapse;">
+            ${email ? `<tr><td style="padding:5px 0;color:#888;width:80px;">信箱</td><td>${esc(email)}</td></tr>` : ''}
+            ${dept  ? `<tr><td style="padding:5px 0;color:#888;">系所</td><td>${esc(dept)}</td></tr>` : ''}
+            <tr><td style="padding:5px 0;color:#888;">信譽積分</td><td><strong style="color:#004b97;">${esc(String(rate))}</strong></td></tr>
+            ${intro ? `<tr><td style="padding:5px 0;color:#888;vertical-align:top;">自我介紹</td><td style="color:#4a627a;">${esc(intro)}</td></tr>` : ''}
+          </table>`;
+      } catch (err) {
+        pop.querySelector('.swal2-html-container').innerHTML =
+          `<div class="text-danger text-center py-3">載入失敗：${esc(err?.response?.data?.message || err?.message || '請稍後再試')}</div>`;
+      }
+    },
+  });
+}
 
 let _reviewModal = null;
 function openReviewModal(reportId, subject) {
@@ -1238,3 +1204,68 @@ function openEditTagModal(tag, meaning, positive) {
   });
 }
 window.openEditTagModal = openEditTagModal;
+
+// ════════════════════════════════════════════════════
+//  檢舉類別管理
+// ════════════════════════════════════════════════════
+async function loadReportCategories() {
+  const list = document.getElementById('reportCatsList');
+  if (!list) return;
+  list.innerHTML = '<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>';
+  try {
+    const res = await backendSvc.getReportCategories();
+    const cats = res?.data ?? res ?? [];
+    const arr = Array.isArray(cats) ? cats : (cats?.categories ?? cats?.data ?? []);
+    if (!arr.length) {
+      list.innerHTML = '<div class="text-muted text-center py-3">目前沒有檢舉類別</div>';
+      return;
+    }
+    list.innerHTML = `<table class="table table-sm align-middle">
+      <thead><tr><th>類別代碼</th><th>說明</th><th>狀態</th></tr></thead>
+      <tbody>
+        ${arr.map(c => `
+          <tr>
+            <td><code>${esc(c.category ?? c.key ?? '')}</code></td>
+            <td>${esc(c.meaning ?? c.description ?? '')}</td>
+            <td>${c.enabled !== false
+              ? '<span class="badge bg-success">啟用</span>'
+              : '<span class="badge bg-secondary">停用</span>'}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || '請稍後再試';
+    list.innerHTML = `<div class="text-danger text-center py-3 small">載入失敗：${esc(msg)}</div>`;
+  }
+}
+
+document.getElementById('refreshReportCatsBtn')?.addEventListener('click', loadReportCategories);
+
+document.getElementById('createReportCatForm')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const resultBox = document.getElementById('createReportCatResult');
+  const category = document.getElementById('newCatKey').value.trim();
+  const description = document.getElementById('newCatDesc').value.trim();
+  if (!category || !description) return;
+  if (!/^[a-zA-Z0-9_]+$/.test(category)) {
+    resultBox.className = 'result-box mt-3 error';
+    resultBox.innerHTML = '<div class="fw-bold">❌ 類別代碼只能包含英文字母、數字與底線</div>';
+    resultBox.classList.remove('d-none');
+    return;
+  }
+  try {
+    resultBox.className = 'result-box mt-3 d-none';
+    await backendSvc.createReportCategory({ category, description });
+    resultBox.className = 'result-box mt-3 success';
+    resultBox.innerHTML = `<div class="fw-bold">✅ 類別「${esc(category)}」建立成功</div>`;
+    document.getElementById('newCatKey').value = '';
+    document.getElementById('newCatDesc').value = '';
+    loadReportCategories();
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || '請稍後再試';
+    resultBox.className = 'result-box mt-3 error';
+    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 建立失敗</div><div>${esc(msg)}</div>`;
+  } finally {
+    resultBox.classList.remove('d-none');
+  }
+});

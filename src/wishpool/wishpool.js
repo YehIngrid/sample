@@ -164,7 +164,6 @@ async function showPage(hash) {
     }
   }
   if(hash === '#about') {
-    animateCountUp("wishNum", 128);
     const aboutEl = document.getElementById('about');
     if (aboutEl) {
       aboutEl.classList.remove('about-animate');
@@ -226,8 +225,6 @@ async function listAll(page = 1) {
       }
       if(res.data.pagination.total) {
         total.innerText = res.data.pagination.total;
-        const wishNumEl = document.getElementById('wishNum');
-        if (wishNumEl) animateCountUp('wishNum', res.data.pagination.total);
       }
       updatePaginationUI();
     } catch (error) {
