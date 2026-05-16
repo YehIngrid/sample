@@ -1,6 +1,20 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import { glob } from 'glob'
+import { cpSync, existsSync } from 'fs'
+
+function copyStaticFolders() {
+  return {
+    name: 'copy-static-folders',
+    closeBundle() {
+      for (const folder of ['image', 'webP', 'svg', 'sound']) {
+        const src = resolve(__dirname, `src/${folder}`)
+        const dest = resolve(__dirname, `dist/src/${folder}`)
+        if (existsSync(src)) cpSync(src, dest, { recursive: true })
+      }
+    }
+  }
+}
 
 const htmlFiles = glob.sync('src/**/*.html', {
   ignore: ['src/school/**'] // school 頁面使用非 module script，暫時排除
@@ -21,4 +35,5 @@ export default defineConfig({
     outDir: 'dist',
     rollupOptions: { input },
   },
+  plugins: [copyStaticFolders()],
 })
