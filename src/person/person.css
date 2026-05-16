@@ -567,9 +567,6 @@ small { font-size: 10px; color: #004b97; }
     border: none !important;
     box-shadow: none;
   }
-  .table {
-    border: none !important;
-  }
   /* 讓儲存格像卡片內的行一樣排列 */
   .responsive-table td {
     text-align: right;
@@ -1608,7 +1605,6 @@ small { font-size: 10px; color: #004b97; }
   margin-left: 2px;
 }
 .table {
-  border: none;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   --bs-table-border-color: #d9eeec;

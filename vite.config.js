@@ -29,11 +29,14 @@ const input = {
   )
 }
 
-export default defineConfig({
-  base: '/sample/',
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/sample/' : '/',
+  server: {
+    port: 3000,
+  },
   build: {
     outDir: 'dist',
     rollupOptions: { input },
   },
   plugins: [copyStaticFolders()],
-})
+}))
