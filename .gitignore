@@ -9,6 +9,7 @@ npm-debug.log*
 # Environment variables
 .env
 .env.local
+.env.site
 
 # OS files
 .DS_Store
