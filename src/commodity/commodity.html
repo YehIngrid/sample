@@ -43,7 +43,7 @@
 
 <body>
     <div id="whatcontent">
-        <div class="header d-block " style="padding-bottom: 10px;">
+        <div class="header d-block ">
             <!-- 跑馬燈：手機版顯示在 navbar 上方 -->
             <div class="safety-ticker d-flex d-lg-none">
               <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
@@ -115,87 +115,64 @@
             </div>
             </div>
         
-        <div class="header_secondary d-lg-flex justify-content-between d-none">
-            <div class="leftdiv">
-                <div>
-                    <div class="d-flex">
-                        <div><a href="../newhome/newhome.html">首頁</a></div>
-                        <div><a href="../shop/shop.html">購物首頁</a></div>
-                        <div><a href="../news/news.html">最新消息</a></div>
-                    </div>
-                </div>
-            </div>
-            <div class="rightdiv">
-                <div>
-                    <div class="d-flex">
-                        <div><a href="../questions/questions.html">常見問題</a></div>
-                        <div><a href="../wishpool/wishpool.html#wishpool">許願專區</a></div>
-                        <div><a href="../communication/communication.html">客服諮詢</a></div>
-                    </div>
-                </div>
-            </div>
+        <div class="utility-bar d-none d-lg-flex">
+          <div class="utility-left">
+            <a href="../newhome/newhome.html">首頁</a>
+            <a href="../news/news.html">最新消息</a>
+            <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+          </div>
+          <div class="utility-right">
+            <a href="../questions/questions.html">常見問題</a>
+            <a href="../communication/communication.html">客服諮詢</a>
+            <a href="../shop/shop.html?page=seller" class="utility-accent">↗ 開賣賺零用</a>
+          </div>
         </div>
-        <div class="header_primary d-lg-block d-none">
-            <div class="d-flex justify-content-between align-items-center" style="width: 70vw; margin: 0 auto; padding: 24px 0;">
-                <div class="d-flex align-items-center">
-                    <a href="../newhome/newhome.html"><img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫Logo" style="width: 150px; border-radius: 0%;"></a>
+        <div class="main-header d-none d-lg-flex justify-content-between">
+          <a class="mh-brand" href="../newhome/newhome.html">
+            <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" class="mh-logo">
+          </a>
+          <form id="searchForm" class="mh-search-form flex-grow-1">
+            <div class="search-input-wrap mh-search-wrap" style="position:relative;">
+              <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
+              <input class="form-control" type="search" placeholder="搜尋商品、賣家..." aria-label="Search" id="searchInput" maxlength="100" spellcheck="false">
+              <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
+              <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
+                <div class="search-drop-section" id="desktopHistorySection">
+                  <div class="search-drop-header">
+                    <span>搜尋紀錄</span>
+                    <button type="button" id="desktopClearHistory">清除全部</button>
+                  </div>
+                  <ul id="desktopHistoryList" class="search-drop-list"></ul>
                 </div>
-                <!-- 搜尋欄（桌機版，navbar 中間） -->
-                <form id="searchForm" class="form-search flex-grow-1 mx-4" style="max-width: 500px;">
-                    <div class="search-input-wrap" style="width: 100%; position: relative;">
-                        <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
-                        <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput" maxlength="100" spellcheck="false">
-                        <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
-                        <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
-                            <div class="search-drop-section" id="desktopHistorySection">
-                                <div class="search-drop-header">
-                                    <span>搜尋紀錄</span>
-                                    <button type="button" id="desktopClearHistory">清除全部</button>
-                                </div>
-                                <ul id="desktopHistoryList" class="search-drop-list"></ul>
-                            </div>
-                            <div class="search-drop-section">
-                                <div class="search-drop-header">
-                                    <span><i class="fa-solid fa-fire" style="color:#e8952a;margin-right:4px;"></i>大家都在搜</span>
-                                </div>
-                                <ul id="desktopTrendList" class="search-drop-list search-drop-trend">
-                                    <li class="search-drop-empty">暫無資料</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <div class="d-flex align-items-center">
-                    
-                    <div class="me-3">
-                        <a href="../shoppingcart/shoppingcart.html">
-                            <img src="../svg/shoppingcart.svg" alt="點擊進入購物車">
-                        </a>
-                    </div>
-                    <div class="me-3">
-                        <div class="dropdown">
-                            <button class="btn btn-link dropdown-toggle nav-user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="nav-guest-label">登入</span>
-                                <div class="nav-loggedin-area d-none d-flex align-items-center gap-1">
-                                    <img class="nav-user-avatar" src="../image/default-avatar.webp" alt="頭像">
-                                    <i class="ti ti-chevron-down nav-user-chevron"></i>
-                                </div>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end nav-user-menu">
-                                <li class="nav-user-menu-header d-none">
-                                    <div class="nav-menu-profile">
-                                        <img class="nav-user-avatar-sm" src="../image/default-avatar.webp" alt="頭像">
-                                        <span class="nav-menu-name"></span>
-                                    </div>
-                                    <hr class="dropdown-divider my-1">
-                                </li>
-                                <li><a class="dropdown-item nav-menu-item" href="../person/person.html"><i class="ti ti-user me-2"></i>個人資訊</a></li>
-                                <li><a class="dropdown-item nav-menu-item loginornot" href="../account/account.html"></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <ul id="desktopTrendList" class="search-drop-list" style="display:none!important;"></ul>
+              </div>
             </div>
+          </form>
+          <div class="mh-actions">
+            <a class="mh-ic-btn" href="../shoppingcart/shoppingcart.html" title="購物車">
+              <img src="../svg/shoppingcart.svg" alt="購物車">
+            </a>
+            <div class="dropdown">
+              <button class="btn btn-link dropdown-toggle nav-user-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="nav-guest-label">登入</span>
+                <div class="nav-loggedin-area d-none d-flex align-items-center gap-1">
+                  <img class="nav-user-avatar" src="../image/default-avatar.webp" alt="頭像">
+                  <i class="ti ti-chevron-down nav-user-chevron"></i>
+                </div>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end nav-user-menu">
+                <li class="nav-user-menu-header d-none">
+                  <div class="nav-menu-profile">
+                    <img class="nav-user-avatar-sm" src="../image/default-avatar.webp" alt="頭像">
+                    <span class="nav-menu-name"></span>
+                  </div>
+                  <hr class="dropdown-divider my-1">
+                </li>
+                <li><a class="dropdown-item nav-menu-item" href="../person/person.html"><i class="ti ti-user me-2"></i>個人資訊</a></li>
+                <li><a class="dropdown-item nav-menu-item loginornot" href="../account/account.html"></a></li>
+              </ul>
+            </div>
+          </div>
         </div>
         <div class="sort_list d-block">
             <div class="d-flex justify-content-lg-center align-items-center overflow-x-scroll">
@@ -216,12 +193,16 @@
     <div class="contentOfCommodity d-lg-flex justify-content-around">
             <div class="sortAndProduct">
                 <div class="filter-bar">
-                    <select style="border: 1px solid #c8e4ef;" id="sortSelect" class="form-select form-select-sm filter-select">
+                  <div class="filter-inner">
+                    <div class="select-wrap">
+                      <select id="sortSelect" class="form-select form-select-sm filter-select">
                         <option value="default">排序</option>
                         <option value="priceAsc">價格↑</option>
                         <option value="priceDesc">價格↓</option>
-                    </select>
-                    <select style="border: 1px solid #c8e4ef;" id="new_or_oldInput" class="form-select form-select-sm filter-select">
+                      </select>
+                    </div>
+                    <div class="select-wrap">
+                      <select id="new_or_oldInput" class="form-select form-select-sm filter-select">
                         <option value="default">狀態</option>
                         <option value="1">全新</option>
                         <option value="2">稍新以上</option>
@@ -229,9 +210,15 @@
                         <option value="4">稍舊以上</option>
                         <option value="5">半舊以上</option>
                         <option value="6">全舊以上</option>
-                    </select>
-                    <input type="number" style="border: 1px solid #c8e4ef;" id="maxPriceInput" class="form-control form-control-sm filter-price" placeholder="最高預算" min="0" max="999999" step="1">
+                      </select>
+                    </div>
+                    <div class="filter-price-wrap">
+                      <span class="filter-price-label">最高預算</span>
+                      <input type="number" id="maxPriceInput" class="form-control filter-price" placeholder="不限" min="0" max="999999" step="1">
+                      <span class="filter-price-unit">NT$</span>
+                    </div>
                     <button id="cleanFilter" class="btn btn-sm filter-clear-btn" title="清除所有篩選條件">清除</button>
+                  </div>
                 </div>
                 <!-- 手機版 layout 切換列 -->
                 <div class="layout-toggle-bar d-flex justify-content-between align-items-center d-lg-none">

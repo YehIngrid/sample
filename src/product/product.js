@@ -1,6 +1,7 @@
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
 import { formatTaipeiTime, requireLogin } from '../default/default.js';
+import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewerModal.js';
 
 // ── Skeleton helper ──
 function sellerProductSkeletonHTML(n = 6) {
@@ -944,141 +945,9 @@ function isTagPositive(tag) {
   return v !== undefined ? v : true;
 }
 
-function bindReviewerClicks(container) {
-  container.addEventListener('click', e => {
-    if (e.target.closest('[data-report-review-id]')) {
-      const btn = e.target.closest('[data-report-review-id]');
-      openReportReviewSwal(btn.dataset.reportReviewId, btn.dataset.reportReviewerName, btn.dataset.reportReviewerId);
-      return;
-    }
-    const el = e.target.closest('[data-reviewer-id]');
-    if (!el) return;
-    const rid    = el.dataset.reviewerId;
-    const rname  = el.dataset.reviewerName;
-    const rphoto = el.dataset.reviewerPhoto;
-    if (rid) openReviewerModal(rid, rname, rphoto);
-  });
-}
+// bindReviewerClicks 已由 ../shared/reviewerModal.js 提供
 
-async function openReportReviewSwal(reviewId, reviewerName, reviewerUserId) {
-  let categories = [];
-  try {
-    const res = await backendService.getReportCategories();
-    categories = res?.data?.categories ?? [];
-  } catch (_) {}
-  const catOptions = categories.map(c => `<option value="${c.category}">${c.meaning}</option>`).join('');
-
-  const { isConfirmed, value } = await Swal.fire({
-    title: '檢舉評價',
-    customClass: { popup: 'report-form-popup' },
-    html: `
-      ${reviewerName ? `<p class="report-form-target">檢舉對象：<strong>${reviewerName}</strong></p>` : ''}
-      <label class="report-form-label" for="report-category">檢舉類型 <span style="color:red">*</span></label>
-      <select id="report-category" class="report-form-select">
-        <option value="" disabled selected>請選擇檢舉類型</option>
-        ${catOptions}
-      </select>
-      <label class="report-form-label" for="report-subject">主旨 <span style="color:red">*</span></label>
-      <input id="report-subject" class="report-form-input" placeholder="請輸入主旨（最多 120 字）" maxlength="120">
-      <label class="report-form-label" for="report-detail">補充說明 <span class="report-form-optional">（選填，最多 1000 字）</span></label>
-      <textarea id="report-detail" class="report-form-textarea" placeholder="請描述詳細情況" maxlength="1000"></textarea>
-    `,
-    showCancelButton: true,
-    confirmButtonText: '送出檢舉',
-    cancelButtonText: '取消',
-    focusConfirm: false,
-    preConfirm: () => {
-      const category = document.getElementById('report-category').value;
-      const subject  = document.getElementById('report-subject').value.trim();
-      const detail   = document.getElementById('report-detail').value.trim();
-      if (!category) { Swal.showValidationMessage('請選擇檢舉類型'); return false; }
-      if (!subject)  { Swal.showValidationMessage('請填寫主旨'); return false; }
-      return { category, subject, detail };
-    }
-  });
-  if (!isConfirmed || !value) return;
-  try {
-    if (reviewerUserId) {
-      const fd = new FormData();
-      fd.append('reportedUserId', reviewerUserId);
-      fd.append('category', value.category);
-      fd.append('subject', value.subject);
-      if (value.detail) fd.append('detail', value.detail);
-      await backendService.submitReport(fd);
-    } else {
-      await backendService.reportReview(reviewId, { reason: value.category, subject: value.subject, detail: value.detail });
-    }
-    Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
-  } catch (e) {
-    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
-  }
-}
-
-async function openReviewerModal(accountId, name, photo) {
-  let stats = null;
-  let sellerReviews = [];
-  let buyerReviews  = [];
-  let intro = '';
-  let suspensionLevel = 'NONE';
-  let lowScoreStrikeCount = 0;
-  try {
-    if (Object.keys(_tagMeaningCache).length === 0) {
-      try {
-        const tagRes = await backendService.getReviewTags();
-        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
-      } catch (e) { /* silent */ }
-    }
-    const [reviewRes, profileRes] = await Promise.all([
-      backendService.getUserReviews(accountId),
-      backendService.getPublicUserProfile(accountId).catch(() => null),
-    ]);
-    const d = reviewRes?.data?.data;
-    stats = d?.stats ?? null;
-    sellerReviews = d?.sellerReviews ?? [];
-    buyerReviews  = d?.buyerReviews  ?? [];
-    intro = profileRes?.data?.data?.introduction ?? '';
-    suspensionLevel    = profileRes?.data?.data?.suspensionLevel    ?? 'NONE';
-    lowScoreStrikeCount = profileRes?.data?.data?.lowScoreStrikeCount ?? 0;
-  } catch (e) { /* silent */ }
-
-  const reviewCount  = Number(stats?.reviewCount ?? 0);
-  const accountScore = stats?.accountScore ?? '-';
-  const statsHtml = reviewCount > 0
-    ? `<div style="font-size:12px;color:#555;margin-top:2px;">${reviewCount} 則評價 · 信譽積分 ${accountScore}</div>`
-    : `<div style="font-size:12px;color:#aaa;margin-top:2px;">尚無評價紀錄</div>`;
-
-  const suspensionBadge = (suspensionLevel && suspensionLevel !== 'NONE')
-    ? `<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:99px;background:#fff0f0;color:#c0392b;border:1px solid #e8b4b4;margin-left:6px;">可疑帳號</span>`
-    : '';
-  const lowScoreBadge = lowScoreStrikeCount
-    ? `<span style="display:inline-block;font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:99px;background:#fff8e1;color:#b8860b;border:1px solid #f0d080;margin-left:6px;">低分紀錄 ${lowScoreStrikeCount} 次</span>`
-    : '';
-
-  const allCards = [
-    ...sellerReviews.map(r => renderReviewCard(r, 'seller')),
-    ...buyerReviews.map(r => renderReviewCard(r, 'buyer')),
-  ].join('');
-  const reviewHtml = allCards || `<div class="review-empty" style="margin-top:12px;">目前尚無評價紀錄</div>`;
-
-  Swal.fire({
-    title: `${name} 的評價`,
-    customClass: { htmlContainer: 'swal-left-body' },
-    html: `
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <img src="${photo}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="${name}">
-        <div>
-          <div style="font-weight:700;color:#222;">${name}${suspensionBadge}${lowScoreBadge}</div>
-          ${statsHtml}
-          ${intro ? `<div style="font-size:12px;color:#888;margin-top:4px;">${intro}</div>` : ''}
-        </div>
-      </div>
-      <div style="max-height:340px;overflow-y:auto;">${reviewHtml}</div>
-    `,
-    confirmButtonText: '關閉',
-    width: 520,
-    didOpen: (popup) => bindReviewerClicks(popup),
-  });
-}
+// openReportReviewSwal 與 openReviewerModal 已由 ../shared/reviewerModal.js 提供
 
 function renderReviewCard(review, role) {
   const name     = review?.reviewer?.name ?? review?.reviewerName ?? '評價者';

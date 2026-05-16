@@ -216,7 +216,6 @@ export default class BackendService {
             localStorage.removeItem('intro');
             localStorage.removeItem('avatar');
             localStorage.removeItem('rate');
-            localStorage.removeItem('userCreatedAt');
             sessionStorage.removeItem('role');
             localStorage.removeItem('emailVerify');
             localStorage.removeItem('loginEmail');
@@ -242,7 +241,6 @@ export default class BackendService {
             localStorage.setItem('intro', d.introduction);
             localStorage.setItem('avatar', d.photoURL);
             localStorage.setItem('rate', d.rate);
-            localStorage.setItem('userCreatedAt', d.createdAt);
             if (d.contactEmail != null) {
                 localStorage.setItem('contractEmail', d.contactEmail);
             }
@@ -293,6 +291,7 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/account/me`, { withCredentials: true });
             const d = response.data?.data;
             if (d) {
+                if(d.uid) localStorage.setItem('uid', d.uid);
                 if (d.name)             localStorage.setItem('username', d.name);
                 if (d.introduction != null) localStorage.setItem('intro', d.introduction);
                 if (d.photoURL)         localStorage.setItem('avatar', d.photoURL);

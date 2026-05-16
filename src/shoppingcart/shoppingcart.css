@@ -1,4 +1,13 @@
-
+:root {
+  --p-navy: #004b97;
+  --p-navy-d: #003a78;
+  --p-mid: #4a85c4;
+  --p-aqua: #abdad5;
+  --p-alice: aliceblue;
+  --p-ink: #0f2745;
+  --p-muted: #6f87a0;
+  --p-line: #d6e2ec;
+}
 /* 3. 主要容器：包含側邊欄 + 主內容 */
 .containerhello {
   display: flex;
@@ -213,13 +222,12 @@
   display: flex;
   align-items: flex-start;
   background: aliceblue;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  padding: 16px;
+  border-radius: 18px;
+  padding: 16px 22px;
   animation: pageEnter 0.35s ease both;
   gap: 12px;
   transition: transform 0.4s ease, box-shadow 0.3s, border 0.4s ease;
-  border: 1px solid transparent;
+  border: 1px solid #d6e2ec;
 }
 .cart-card:hover {
   transform: translateY(-1px);
@@ -455,9 +463,8 @@
 
 /* ====== 結帳摘要卡片 ====== */
 .summary-card {
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  border: 1px solid #d6e2ec;
+  border-radius: 18px;
   position: sticky;
   top: 24px;
   overflow: hidden;
@@ -465,7 +472,7 @@
 }
 
 .summary-section {
-  padding: 20px 24px;
+  padding: 16px 22px;
 }
 
 .summary-heading {
@@ -474,6 +481,52 @@
   color: #333;
   margin-bottom: 14px;
   letter-spacing: 0.02em;
+}
+/* ── page-head：各頁面標題欄 ── */
+.page-head {
+  background: #fff;
+  border: 1px solid var(--p-line);
+  border-radius: 18px;
+  padding: 20px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.ph-left { flex: 1; min-width: 0; }
+.ph-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--p-ink);
+  margin: 0 0 4px;
+  letter-spacing: 0.04em;
+}
+.ph-sub {
+  font-size: 0.8rem;
+  color: var(--p-muted);
+  margin: 0;
+}
+.ph-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.ph-greeting {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--p-navy);
+}
+.ph-date {
+  font-size: 0.76rem;
+  color: var(--p-muted);
+}
+@media (max-width: 575px) {
+  .page-head { gap: 8px; padding: 16px 18px; }
+  .ph-right { align-items: flex-start; }
+  .ph-title { font-size: 1.1rem; }
 }
 
 .summary-card .table {
@@ -712,12 +765,11 @@ text-overflow: ellipsis;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 16px;
+  padding: 16px 22px;
   margin-bottom: 14px;
   background: aliceblue;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  border: none;
+  border-radius: 18px;
+  border: 1px solid #d6e2ec;
   flex-wrap: wrap;
 }
 .cart-select-all {

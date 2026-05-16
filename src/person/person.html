@@ -119,33 +119,52 @@
     <div class="row g-3">
       <!-- Desktop Sidebar -->
       <aside class="col-lg-3 d-none d-lg-block">
-        <div class="sidebar sticky-lg-top">
+        <div class="sidebar">
 
-          <!-- Profile Card -->
-          <div class="sidebar-profile-card mb-3">
-            <img alt="頭像" id="profileAvatar" class="sidebar-avatar">
-            <div class="sidebar-profile-name" id="profileName"></div>
-            <div class="sidebar-profile-uid">uid：<span id="uid"></span></div>
-            <div class="sidebar-profile-intro asideicon" id="profileInfo"></div>
-            <div class="sidebar-score-badge my-tooltip" data-text="信用積分制度：起始 100 分，上限 150 分。完成一筆交易雙方各 +5、獲得良好評價 +2。爽約失聯 -15、商品嚴重不符 -10、遲到超過 10 分鐘 -5。積分低於 80 分限制上架 5 件，低於 50 分暫停交易 7 天，歸零則永久停權。">
-              <i class="ti ti-star-filled"></i>
-              <span>信譽積分</span>
-              <strong id="rate"></strong>
+          <!-- New Profile Card -->
+          <div class="new-profile-card mb-3">
+            <div class="new-av-wrap">
+              <img alt="頭像" id="profileAvatar" class="new-av-img">
+            </div>
+            <div class="new-role-tag">校園認證會員</div>
+            <div class="new-profile-name" id="profileName"></div>
+            <div class="new-profile-uid">UID · <span id="uid"></span></div>
+            <p class="new-profile-bio" id="profileInfo"></p>
+            <div class="new-score-row my-tooltip" data-text="信用積分制度：起始 100 分，上限 150 分。完成一筆交易雙方各 +5、獲得良好評價 +2。爽約失聯 -15、商品嚴重不符 -10、遲到超過 10 分鐘 -5。積分低於 80 分限制上架 5 件，低於 50 分暫停交易 7 天，歸零則永久停權。">
+              <span class="new-score-lbl">信譽積分</span>
+              <strong class="new-score-val" id="rate"></strong>
             </div>
           </div>
 
-          <!-- Account Menu -->
-          <div class="menuContainer menu">
-            <div class="menutitle-inside">商品訂單管理</div>
-            <div class="list-group list-group-flush">
-              <a class="list-group-item active asideicon menu-home" href="#" data-target="account">帳戶管理中心 <span class="menu-home-badge">首頁</span></a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="products"><img src="../svg/my.svg" alt="我的商品icon"> 商品管理</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="sellProducts"><img src="../svg/mysellOrder.svg" alt="我的銷售訂單icon"> 銷售訂單</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="buyProducts"><img src="../svg/buyicon.svg" alt="我的購買訂單icon"> 消費訂單</a>
-              <a class="list-group-item list-group-item-action asideicon" href="#" data-target="settings"><img src="../svg/settingicon.svg" alt="帳號設定icon"> 個人中心</a>
-              <a class="list-group-item list-group-item-action asideicon" id="logout" href="#"><img src="../svg/logouticon.svg" alt="登出按鍵"> 登出</a>
-            </div>
-          </div>
+          <!-- New Side Nav -->
+          <nav class="new-side-nav">
+            <div class="new-group-label">商品 / 訂單管理</div>
+            <a class="new-nav-link active" href="#" data-target="account">
+              <img src="../webP/default-avatar.webp" alt="帳戶管理icon" class="new-nav-icon">
+              <span>帳戶管理中心</span>
+            </a>
+            <a class="new-nav-link" href="#" data-target="products">
+              <img src="../svg/my.svg" alt="我的商品icon" class="new-nav-icon">
+              <span>商品管理</span>
+            </a>
+            <a class="new-nav-link" href="#" data-target="sellProducts">
+              <img src="../svg/mysellOrder.svg" alt="我的銷售訂單icon" class="new-nav-icon">
+              <span>銷售訂單</span>
+            </a>
+            <a class="new-nav-link" href="#" data-target="buyProducts">
+              <img src="../svg/buyicon.svg" alt="我的購買訂單icon" class="new-nav-icon">
+              <span>消費訂單</span>
+            </a>
+            <hr class="new-nav-hr" />
+            <a class="new-nav-link" href="#" data-target="settings">
+              <img src="../svg/settingicon.svg" alt="帳號設定icon" class="new-nav-icon">
+              <span>個人中心</span>
+            </a>
+            <a class="new-nav-link new-nav-danger" href="#" id="logout">
+              <img src="../svg/logouticon.svg" alt="登出按鍵" class="new-nav-icon">
+              <span>登出</span>
+            </a>
+          </nav>
 
         </div>
       </aside>
@@ -158,25 +177,27 @@
       <!-- section products -->
       <section class="col-lg-9 d-none content-section"  id="products">
         <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
-        <h5>上架商品管理</h5>
-        <p class="text-muted small mb-2" style="font-size:0.82rem;">
-          <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
-          庫存為 0 的商品將由後端自動封存，僅賣家本人可檢視，其他使用者無法看到。
-        </p>
+        <div class="page-head">
+          <div class="ph-left">
+            <h2 class="ph-title">上架商品管理</h2>
+            <p class="ph-sub">查看、編輯或下架您的商品</p>
+            <p class="text-muted small mt-2" style="font-size:1rem;">
+              <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
+              庫存為 0 的商品將由後端自動封存，僅賣家本人可檢視，其他使用者無法看到。
+            </p>
+          </div>
+        </div>
         <div class="col-12">
           <div>
             <div class="card-body">
               <div class="table-responsive" style="overflow-x: hidden;">
-                <table class="table align-middle d-none d-lg-table product-manage-table">
-                  <thead>
-                    <tr>
-                      <th>商品</th><th>庫存</th><th>價格</th><th>建立時間</th><th>最後更新</th><th>相關操作</th>
-                    </tr>
-                  </thead>
+                <!-- 商品管理桌機表格（隱藏，供 JS 渲染資料用） -->
+                <table class="table align-middle d-none product-manage-table">
+                  <thead><tr><th>商品</th><th>庫存</th><th>價格</th><th>建立時間</th><th>最後更新</th><th>相關操作</th></tr></thead>
                   <tbody></tbody>
                 </table>
-                <!-- 手機版卡片：小於 lg 才顯示 -->
-                <div id="product-cards" class="row g-3 d-block d-lg-none"></div>
+                <!-- 商品卡片列表（所有螢幕尺寸） -->
+                <div id="product-cards" class="order-list-new"></div>
 
                 <!-- 分頁 -->
                 <div id="products-pager" class="d-flex justify-content-center align-items-center flex-wrap gap-1 mt-3"></div>
@@ -188,98 +209,113 @@
       <!-- section sellProducts -->
        <section class="col-lg-9 d-none content-section" id="sellProducts">
   <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
+  <div class="page-head">
+    <div class="ph-left">
+      <h2 class="ph-title">銷售訂單</h2>
+      <p class="ph-sub">管理買家送出的訂單、確認出貨狀態</p>
+    </div>
+  </div>
 
   <!-- 🔹 訂單詳情（獨立一塊） -->
-  <div id="sellOrderDetail" class="mt-3 d-none">
-    <div class="text-start">
-      <button class="back" id="backToSellTable" title="返回訂單列表">
-        <img src="../svg/page.svg" alt="返回訂單列表">
+  <div id="sellOrderDetail" class="d-none od-wrapper">
+
+    <!-- ── 標頭 ── -->
+    <div class="od-head">
+      <button class="od-back-link" id="backToSellTable" title="返回訂單列表">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18L9 12L15 6"/></svg>
+        回銷售訂單
       </button>
-    </div>
-
-    <h5>訂單詳細資訊</h5>
-
-    <!-- 流程圖 -->
-    <div class="stateContainer">
-      <div class="d-flex align-items-center justify-content-between">
-        <div class="status-item" data-status="pending">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/pendingyet.svg" alt="訂單已成立，賣家尚未接受圖片示意">
-            <div class="stateText">訂單已建立<br>等待賣家接受</div>
-          </div>
-          <div class="timestamp"></div>
-        </div>
-        <div class="status-item" data-status="preparing">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/preparingyet.svg" alt="賣家已接受訂單，準備商品中圖片示意">
-            <div class="stateText">賣家已接受訂單<br>正在準備商品</div>
-          </div>
-          <div class="timestamp"></div>
-        </div>
-        <div class="status-item" data-status="delivered">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/deliveredyet.svg" alt="賣家已出貨，等待賣家確認收貨圖片示意">
-            <div class="stateText">賣家已出貨<br>等待買家確認收貨</div>
-          </div>
-          <div class="timestamp"></div>
-        </div>
-        <div class="status-item" data-status="review_pending">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/completedyet.svg" alt="買家已確認收貨，等待雙方評價圖片示意">
-            <div class="stateText">買家已確認收貨<br>等待雙方評價</div>
-          </div>
-          <div class="timestamp"></div>
-        </div>
-        <div class="status-item" data-status="completed">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/scoredyet.svg" alt="訂單完成圖片示意">
-            <div class="stateText" style="margin-bottom: 15px;">訂單已完成</div>
-          </div>
-          <div class="timestamp"></div>
+      <div class="od-breadcrumb">帳戶管理中心 <span class="od-sep">›</span> 銷售訂單 <span class="od-sep">›</span> 訂單詳情</div>
+      <div class="od-head-row">
+        <div class="od-title">
+          <h2>訂單詳細資訊</h2>
+          <div class="od-oid">訂單編號 <span id="sellOrderIdSpan" class="od-oid-val">—</span></div>
         </div>
       </div>
     </div>
 
-    <!-- 基本資訊 -->
-    <div id="sellOrderInfo" class="mb-3"></div>
+    <!-- ── 狀態橫幅 ── -->
+    <div class="od-status-banner" id="sellStatusBanner" style="background: linear-gradient(135deg, #6f87a0 0%, #4a6278 100%);">
+      <div class="od-sb-ic" id="sellSbIc">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      </div>
+      <div class="od-sb-info">
+        <div class="od-sb-title" id="sellSbTitle">載入中…</div>
+        <div class="od-sb-desc" id="sellSbDesc"></div>
+      </div>
+    </div>
+
+    <!-- ── 訂單進度 ── -->
+    <div class="od-timeline-panel">
+      <div class="od-tl-head">
+        <h3 class="od-tl-title">訂單進度</h3>
+        <span class="od-tl-hint" id="sellTlHint"></span>
+      </div>
+      <div class="od-timeline">
+        <div class="od-step status-item" data-status="pending">
+          <div class="od-dot"><img src="../svg/pendingyet.svg" alt="訂單已建立"></div>
+          <div class="od-lbl stateText">訂單已建立</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="preparing">
+          <div class="od-dot"><img src="../svg/preparingyet.svg" alt="準備商品"></div>
+          <div class="od-lbl stateText">準備商品</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="delivered">
+          <div class="od-dot"><img src="../svg/deliveredyet.svg" alt="已出貨"></div>
+          <div class="od-lbl stateText">已出貨</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="review_pending">
+          <div class="od-dot"><img src="../svg/completedyet.svg" alt="待評價"></div>
+          <div class="od-lbl stateText">待評價</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="completed">
+          <div class="od-dot"><img src="../svg/scoredyet.svg" alt="已完成"></div>
+          <div class="od-lbl stateText">已完成</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Body Grid ── -->
+    <div class="od-body-grid">
+      <div class="od-panel od-product-block">
+        <div class="od-panel-head">
+          <h3>訂購商品</h3>
+          <span class="od-badge" id="sellItemCount"></span>
+        </div>
+        <div class="od-panel-body" id="sellOrderProducts">
+          <div class="d-flex justify-content-center py-4"><div class="spinner-border text-secondary" role="status"></div></div>
+        </div>
+      </div>
+      <div class="od-panel">
+        <div class="od-panel-head"><h3>訂單資訊</h3></div>
+        <div class="od-panel-body" id="sellOrderInfo"></div>
+      </div>
+    </div>
+
+    <!-- ── Bottom Grid ── -->
+    <div class="od-bottom-grid">
+      <div class="od-panel od-review-panel">
+        <div class="od-panel-head">
+          <h3>訂單評論</h3>
+          <span class="od-badge" id="sellReviewCount">0 則</span>
+        </div>
+        <div class="od-panel-body" id="sellOrderReviews"></div>
+      </div>
+      <div class="od-panel od-actions-panel">
+        <div class="od-panel-head"><h3>更多操作</h3></div>
+        <div class="od-panel-body" id="sellOrderActions"></div>
+      </div>
+    </div>
+
   </div>
 
   <!-- 🔹 訂單列表（單獨包） -->
   <div class="order-list-container">
-    <h5 id="sellTableTitle">我的銷售訂單</h5>
-
-    <!-- 訂單進度說明 -->
-    <div class="order-guide-wrap">
-      <button class="order-guide-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#sellOrderGuide" aria-expanded="false">
-        <i class="fa-solid fa-circle-info"></i> 訂單進度說明
-        <i class="fa-solid fa-chevron-down order-guide-chevron"></i>
-      </button>
-      <div class="collapse" id="sellOrderGuide">
-        <div class="order-guide-body">
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-pending">待確認</span>
-            <div><strong>買家</strong>已送出訂單，請盡快確認庫存。可接單請點「接受訂單」，無法接單請先聯絡買家再取消。</div>
-          </div>
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-preparing">待出貨</span>
-            <div>您已接受訂單，請準備商品。確認商品完整無誤後點「準備出貨」，並與買家約定面交時間地點。</div>
-          </div>
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-delivered">待收貨</span>
-            <div>請準時赴約並攜帶商品，順利交付後等待買家點擊「成功取貨」確認收貨。</div>
-          </div>
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-completed">待評價</span>
-            <div>買家已確認收貨，訂單完成。請為買家留下評價，讓平台更有公信力。</div>
-          </div>
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-scored">已完成</span>
-            <div>訂單完成，本筆交易正式結束。感謝您在拾貨寶庫分享好物！</div>
-          </div>
-          <p class="order-guide-note">若交易過程有任何問題，請務必提前與對方溝通，避免爭議。</p>
-        </div>
-      </div>
-    </div>
 
     <!-- 篩選 tabs -->
     <div class="order-filter-tabs" id="sellFilter">
@@ -292,8 +328,8 @@
       <button class="filter-tab" data-status="cancelled">已取消</button>
     </div>
 
-    <div id="sellTable">
-      <table class="table align-middle d-none d-lg-table">
+    <div id="sellTable" style="display:none;">
+      <table class="table align-middle d-none">
         <thead>
           <tr>
             <th>商品</th>
@@ -306,7 +342,7 @@
       </table>
     </div>
 
-    <div id="sell-product" class="row g-3 d-block d-lg-none"></div>
+    <div id="sell-product" class="order-list-new"></div>
     <div id="sellPagination" class="order-pagination"></div>
   </div>
 
@@ -314,97 +350,113 @@
       <!-- section buyProducts -->
 <section class="col-lg-9 d-none content-section" id="buyProducts">
   <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
+  <div class="page-head">
+    <div class="ph-left">
+      <h2 class="ph-title">消費訂單</h2>
+      <p class="ph-sub">查看您的購買紀錄與訂單進度</p>
+    </div>
+  </div>
 
   <!-- 訂單詳情 -->
-  <div id="buyerOrderDetail" class="mt-3 d-none">
-    <div class="text-start">
-      <button class="back" id="backToBuyTable" title="返回訂單列表">
-        <img src="../svg/page.svg" alt="返回訂單列表">
+  <div id="buyerOrderDetail" class="d-none od-wrapper">
+
+    <!-- ── 標頭 ── -->
+    <div class="od-head">
+      <button class="od-back-link" id="backToBuyTable" title="返回訂單列表">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18L9 12L15 6"/></svg>
+        回消費訂單
       </button>
-    </div>
-    <h5 class="">訂單詳細資訊</h5>
-    <!-- 流程圖 -->
-    <div class="stateContainer">
-      <div class="d-flex align-items-center justify-content-between">
-        <div class="status-item" data-status="pending">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/pendingyet.svg" alt="訂單已成立，賣家尚未接受圖片示意">
-            <div class="stateText">訂單已建立<br>等待賣家接受</div>
-          </div>
-          <div class="timestamp"></div>
-        </div>
-        <div class="status-item" data-status="preparing">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/preparingyet.svg" alt="賣家已接受訂單，準備商品中圖片示意">
-            <div class="stateText">賣家已接受訂單<br>正在準備商品</div>
-          </div>
-          <div class="timestamp"></div>
-        </div>
-        <div class="status-item" data-status="delivered">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/deliveredyet.svg" alt="賣家已出貨，等待賣家確認收貨圖片示意">
-            <div class="stateText">賣家已出貨<br>等待買家確認收貨</div>
-          </div>
-          <div class="timestamp"></div>
-        </div>
-        <div class="status-item" data-status="review_pending">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/completedyet.svg" alt="買家已確認收貨，等待雙方評價圖片示意">
-            <div class="stateText">買家已確認收貨<br>等待雙方評價</div>
-          </div>
-          <div class="timestamp"></div>
-        </div>
-        <div class="status-item" data-status="completed">
-          <div class="d-flex align-items-center gap-2">
-            <img src="../svg/scoredyet.svg" alt="訂單完成圖片示意">
-            <div class="stateText" style="margin-bottom: 15px;">訂單已完成</div>
-          </div>
-          <div class="timestamp"></div>
+      <div class="od-breadcrumb">帳戶管理中心 <span class="od-sep">›</span> 消費訂單 <span class="od-sep">›</span> 訂單詳情</div>
+      <div class="od-head-row">
+        <div class="od-title">
+          <h2>訂單詳細資訊</h2>
+          <div class="od-oid">訂單編號 <span id="buyOrderIdSpan" class="od-oid-val">—</span></div>
         </div>
       </div>
     </div>
-     <!-- 基本資訊 -->
-    <div id="buyerOrderInfo" class="mb-3"></div>
-    <!-- 雙方評論 -->
-    <div id="buyerOrderReviews" class="mb-3"></div>
+
+    <!-- ── 狀態橫幅 ── -->
+    <div class="od-status-banner" id="buyStatusBanner" style="background: linear-gradient(135deg, #6f87a0 0%, #4a6278 100%);">
+      <div class="od-sb-ic" id="buySbIc">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      </div>
+      <div class="od-sb-info">
+        <div class="od-sb-title" id="buySbTitle">載入中…</div>
+        <div class="od-sb-desc" id="buySbDesc"></div>
+      </div>
+    </div>
+
+    <!-- ── 訂單進度 ── -->
+    <div class="od-timeline-panel">
+      <div class="od-tl-head">
+        <h3 class="od-tl-title">訂單進度</h3>
+        <span class="od-tl-hint" id="buyTlHint"></span>
+      </div>
+      <div class="od-timeline">
+        <div class="od-step status-item" data-status="pending">
+          <div class="od-dot"><img src="../svg/pendingyet.svg" alt="訂單已建立"></div>
+          <div class="od-lbl stateText">訂單已建立</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="preparing">
+          <div class="od-dot"><img src="../svg/preparingyet.svg" alt="準備商品"></div>
+          <div class="od-lbl stateText">準備商品</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="delivered">
+          <div class="od-dot"><img src="../svg/deliveredyet.svg" alt="已出貨"></div>
+          <div class="od-lbl stateText">已出貨</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="review_pending">
+          <div class="od-dot"><img src="../svg/completedyet.svg" alt="待評價"></div>
+          <div class="od-lbl stateText">待評價</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="completed">
+          <div class="od-dot"><img src="../svg/scoredyet.svg" alt="已完成"></div>
+          <div class="od-lbl stateText">已完成</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Body Grid ── -->
+    <div class="od-body-grid">
+      <div class="od-panel od-product-block">
+        <div class="od-panel-head">
+          <h3>訂購商品</h3>
+          <span class="od-badge" id="buyItemCount"></span>
+        </div>
+        <div class="od-panel-body" id="buyOrderProducts">
+          <div class="d-flex justify-content-center py-4"><div class="spinner-border text-secondary" role="status"></div></div>
+        </div>
+      </div>
+      <div class="od-panel">
+        <div class="od-panel-head"><h3>訂單資訊</h3></div>
+        <div class="od-panel-body" id="buyerOrderInfo"></div>
+      </div>
+    </div>
+
+    <!-- ── Bottom Grid ── -->
+    <div class="od-bottom-grid">
+      <div class="od-panel od-review-panel">
+        <div class="od-panel-head">
+          <h3>訂單評論</h3>
+          <span class="od-badge" id="buyReviewCount">0 則</span>
+        </div>
+        <div class="od-panel-body" id="buyOrderReviews"></div>
+      </div>
+      <div class="od-panel od-actions-panel">
+        <div class="od-panel-head"><h3>更多操作</h3></div>
+        <div class="od-panel-body" id="buyOrderActions"></div>
+      </div>
+    </div>
+
   </div>
 
   <!-- 訂單列表 -->
   <div class="order-list-container">
-    <h5 id="buyTableTitle">我的購買訂單</h5>
-
-    <!-- 訂單進度說明 -->
-    <div class="order-guide-wrap">
-      <button class="order-guide-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#buyOrderGuide" aria-expanded="false">
-        <i class="fa-solid fa-circle-info"></i> 訂單進度說明
-        <i class="fa-solid fa-chevron-down order-guide-chevron"></i>
-      </button>
-      <div class="collapse" id="buyOrderGuide">
-        <div class="order-guide-body">
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-pending">待確認</span>
-            <div>您已送出訂單，等待賣家確認是否能出貨。若需取消，請先聯絡賣家再點取消訂單。</div>
-          </div>
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-preparing">待出貨</span>
-            <div>賣家已接受訂單，正在準備商品。請耐心等候，並與賣家確認面交時間地點。</div>
-          </div>
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-delivered">待收貨</span>
-            <div>請準時赴約並攜帶付款方式。確認商品與描述相符後，點擊「成功取貨」完成交貨確認。</div>
-          </div>
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-completed">待評價</span>
-            <div>您已確認收貨，請為賣家留下評價，幫助其他買家做出更好的選擇。</div>
-          </div>
-          <div class="order-guide-step">
-            <span class="order-guide-badge badge-scored">已完成</span>
-            <div>訂單完成，本筆交易正式結束。感謝您在拾貨寶庫購物！</div>
-          </div>
-          <p class="order-guide-note">若交易過程有任何問題，請務必提前與對方溝通，避免爭議。</p>
-        </div>
-      </div>
-    </div>
 
     <!-- 篩選 tabs -->
     <div class="order-filter-tabs" id="buyFilter">
@@ -417,8 +469,8 @@
       <button class="filter-tab" data-status="cancelled">已取消</button>
     </div>
 
-    <div id="buyTable">
-      <table class="table align-middle d-none d-lg-table">
+    <div id="buyTable" style="display:none;">
+      <table class="table align-middle d-none">
         <thead>
           <tr>
             <th>商品</th><th>狀態</th><th>下單時間</th><th>總計</th><th>相關操作</th>
@@ -427,7 +479,7 @@
         <tbody></tbody>
       </table>
     </div>
-    <div id="buy-product" class="row g-3 d-block d-lg-none"></div>
+    <div id="buy-product" class="order-list-new"></div>
     <div id="buyPagination" class="order-pagination"></div>
   </div>
 
@@ -436,6 +488,12 @@
       <!-- section settings -->
       <section class="col-lg-9 d-none content-section" id="settings">
         <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
+        <div class="page-head">
+          <div class="ph-left">
+            <h2 class="ph-title">個人中心</h2>
+            <p class="ph-sub">修改個人資料、密碼與帳號設定</p>
+          </div>
+        </div>
         <div class="profile-info-card col-12">
           <div class="profile-info-header">
             <i class="ti ti-id-badge-2"></i>
@@ -455,10 +513,6 @@
             <div class="info-row">
               <span class="info-label"><i class="ti ti-file-description"></i>關於我</span>
               <span class="info-value" id="showIntro"></span>
-            </div>
-            <div class="info-row">
-              <span class="info-label"><i class="ti ti-calendar"></i>加入日期</span>
-              <span class="info-value" id="showTime"></span>
             </div>
             <div class="info-row">
               <span class="info-label"><i class="ti ti-at"></i>登入信箱</span>
@@ -587,160 +641,263 @@
       </section>
       <!-- Main Content -->
       <main class="col-lg-9 content-section" id="account">
-        <!-- Mobile: 個人資料卡 -->
-        <div class="d-lg-none mb-2 mt-1 d-flex align-items-start justify-content-center">
-          <div class="photoAndScore d-flex flex-column justify-content-between align-items-center gap-2 col-3">
-            <img id="mProfileAvatar" class="mobile-avatar" alt="頭像">
-            <div class="scorediv d-flex flex-column my-tooltip" data-text="信用積分制度：起始 100 分，上限 150 分。完成一筆交易雙方各 +5、獲得良好評價 +2。爽約失聯 -15、商品嚴重不符 -10、遲到超過 10 分鐘 -5。積分低於 80 分限制上架 5 件，低於 50 分暫停交易 7 天，歸零則永久停權。">
-              <small>信譽積分</small>
-              <span id="rate2"></span>
-            </div>
+
+        <!-- page-head：頁面標題欄 -->
+        <div class="page-head">
+          <div class="ph-left">
+            <h2 class="ph-title">帳戶管理中心</h2>
+            <p class="ph-sub">管理您的帳號、商品與訂單</p>
           </div>
-          <div class="d-flex align-items-start col-9 mt-1">
-            <div class="col-10">
-              <div class="uid">uid : <span id="muid"></span></div>
-              <div class="fw-bold" id="mProfileName"></div>
-              <div class="text-muted" id="mProfileInfo"></div>
+          <div class="ph-right">
+            <div class="ph-greeting">歡迎回來，<span id="phUsername">—</span></div>
+            <div class="ph-date" id="phDate"></div>
+          </div>
+        </div>
+
+        <!-- Mobile: 個人資料卡 (redesigned) -->
+        <div class="d-lg-none mb-3">
+          <div class="mobile-profile-card">
+            <div class="mobile-profile-top">
+              <div class="mobile-av-outer">
+                <img id="mProfileAvatar" class="mobile-av" alt="頭像">
+              </div>
+              <div class="mobile-profile-detail">
+                <div class="fw-bold" id="mProfileName"></div>
+                <div class="uid">UID · <span id="muid"></span></div>
+                <div class="text-muted" id="mProfileInfo"></div>
+              </div>
+              <button class="mobile-settings-btn" data-target="settings">
+                <img src="../svg/settingicon.svg" alt="設定">
+              </button>
             </div>
-            <div class="setting col-2">
-              <button data-target="settings"><img src="../svg/settingicon.svg" alt="設定"></button>
+            <div class="mobile-score-strip my-tooltip" data-text="信用積分制度：起始 100 分，上限 150 分。完成一筆交易雙方各 +5、獲得良好評價 +2。爽約失聯 -15、商品嚴重不符 -10、遲到超過 10 分鐘 -5。積分低於 80 分限制上架 5 件，低於 50 分暫停交易 7 天，歸零則永久停權。">
+              <span class="mobile-score-lbl">信譽積分</span>
+              <strong class="mobile-score-val" id="rate2"></strong>
             </div>
           </div>
         </div>
-        <!-- Mobile: 導覽格狀按鈕 -->
+
+        <!-- Desktop only: Stat cards -->
+        <div class="d-none d-lg-flex stat-cards-row mb-3">
+          <div class="stat-card-new">
+            <div class="stat-ic-new"><img src="../svg/my.svg" alt="" class="stat-icon-img"></div>
+            <div>
+              <div class="stat-num-new" id="statProducts">—</div>
+              <div class="stat-lbl-new">上架商品</div>
+            </div>
+          </div>
+          <div class="stat-card-new stat-aqua">
+            <div class="stat-ic-new"><img src="../svg/mysellOrder.svg" alt="" class="stat-icon-img"></div>
+            <div>
+              <div class="stat-num-new" id="statOrders">—</div>
+              <div class="stat-lbl-new">進行中訂單</div>
+            </div>
+          </div>
+          <div class="stat-card-new">
+            <div class="stat-ic-new"><img src="../svg/reviewsIcon.svg" alt="" class="stat-icon-img"></div>
+            <div>
+              <div class="stat-num-new" id="statScore">—</div>
+              <div class="stat-lbl-new">信譽積分</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main content row -->
         <div class="row g-3">
-          <div class="col-lg-6 col-12">
-            <div class="title">快速操作</div>
-            <div class="mb-3">
-              <div class="fastContainer cardContainer">
-                <button class="fastIcon" onclick="window.location.href='../shop/shop.html?page=seller'">
-                  <img src="../svg/seller.svg" alt="出售商品icon">
-                  <span>出售商品</span>
+
+          <!-- Quick actions (desktop: 7/12, mobile: full) -->
+          <div class="d-lg-block d-none col-lg-7">
+            <div class="account-panel">
+              <div class="account-panel-head">快速操作</div>
+              <div class="account-panel-body">
+                <button class="fastIcon qa-card-new qa-primary-new" style="margin-bottom: 8px;" onclick="window.location.href='../shop/shop.html?page=seller'">
+                  <div class="qa-ic-new"><img src="../svg/seller.svg" alt="出售商品icon"></div>
+                  <div class="qa-copy-new">
+                    <div class="qa-title-new">出售商品</div>
+                    <div class="qa-sub-new">把不再用的物品交給下一位同學</div>
+                  </div>
+                  <span class="qa-arr-new">→</span>
                 </button>
-                <div class="fastIcon" onclick="goToPage('settings', 'profile-edit-section')">
-                  <img src="../svg/editIcon.svg" alt="點擊修改個資、常用帳號">
-                  <span>修改個資</span>
-                </div>
-                <div class="fastIcon" onclick="goToPage('settings', 'reviewsContainer')">
-                  <img src="../svg/reviewsIcon.svg" alt="點擊查看評價">
-                  <span>查看評價</span>
-                </div>
-                <div class="fastIcon" onclick="window.location.href='../wishpool/wishpool.html#makewish'">
-                  <img src="../svg/wish.svg" alt="點擊前往許願">
-                  <span>前往許願</span>
-                </div>
-                <div class="fastIcon" id="logoutMobile">
-                  <img src="../svg/logouticon.svg" alt="登出按鍵">
-                  <span>登出</span>
+                <div class="qa-grid-new fastContainer">
+                  <div class="fastIcon qa-card-new" onclick="goToPage('settings', 'profile-edit-section')">
+                    <div class="qa-ic-new"><img src="../svg/editIcon.svg" alt="修改個資icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new">修改個資</div>
+                      <div class="qa-sub-new">頭像、聯絡方式</div>
+                    </div>
+                    <span class="qa-arr-new">→</span>
+                  </div>
+                  <div class="fastIcon qa-card-new" onclick="goToPage('settings', 'reviewsContainer')">
+                    <div class="qa-ic-new"><img src="../svg/reviewsIcon.svg" alt="查看評價icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new">查看評價</div>
+                      <div class="qa-sub-new">買家、賣家給你的評論</div>
+                    </div>
+                    <span class="qa-arr-new">→</span>
+                  </div>
+                  <div class="fastIcon qa-card-new" onclick="window.location.href='../wishpool/wishpool.html#makewish'">
+                    <div class="qa-ic-new"><img src="../svg/wish.svg" alt="前往許願icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new">前往許願</div>
+                      <div class="qa-sub-new">說出你想要的物品</div>
+                    </div>
+                    <span class="qa-arr-new">→</span>
+                  </div>
+                  <div class="fastIcon qa-card-new" id="logoutMobile">
+                    <div class="qa-ic-new"><img src="../svg/logouticon.svg" alt="登出icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new">登出</div>
+                      <div class="qa-sub-new">安全退出帳戶</div>
+                    </div>
+                    <span class="qa-arr-new">→</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-12 d-lg-none mb-3">
-          <div class="title">商品訂單管理</div>
-          <div class="itemContainer cardContainer">
-            <button data-target="products">
-              <img src="../svg/my.svg" alt="查看我的商品進行管理與編輯、上架操作">
-              <span>商品管理</span>
-            </button>
-            <button data-target="sellProducts">
-              <img src="../svg/mysellOrder.svg" alt="查看與管理我的銷售訂單">
-              <span>銷售訂單</span>
-            </button>
-            <button data-target="buyProducts">
-              <img src="../svg/buyicon.svg" alt="查看與管理我的消費訂單與紀錄">
-              <span>消費訂單</span>
-            </button>
+          <!-- Mobile fast -->
+          <div class="d-lg-none d-block col-12">
+            <div class="account-panel">
+              <div class="account-panel-head">快速操作</div>
+              <div class="">
+                <div class="itemContainer">
+                  <button class="mb-btn" onclick="window.location.href='../shop/shop.html?page=seller'">
+                    <div class="qa-ic-new"><img src="../svg/seller.svg" alt="出售商品icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">出售商品</div>
+                    </div>
+                  </button>
+                  <div class="mb-btn" onclick="goToPage('settings', 'profile-edit-section')">
+                    <div class="qa-ic-new"><img src="../svg/editIcon.svg" alt="修改個資icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">修改個資</div>
+                    </div>
+                  </div>
+                  <div class="mb-btn" onclick="goToPage('settings', 'reviewsContainer')">
+                    <div class="qa-ic-new"><img src="../svg/reviewsIcon.svg" alt="查看評價icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">查看評價</div>
+                    </div>
+                  </div>
+                  <div class="mb-btn" onclick="window.location.href='../wishpool/wishpool.html#makewish'">
+                    <div class="qa-ic-new"><img src="../svg/wish.svg" alt="前往許願icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">前往許願</div>
+                    </div>
+                  </div>
+                  <div class="mb-btn" id="logoutMobileBtn">
+                    <div class="qa-ic-new"><img src="../svg/logouticon.svg" alt="登出icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">登出</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        
-          <div class="col-lg-6 col-12">
-            <div class="title">近期通知<img src="../svg/alarm.svg" alt="近期通知icon" style="margin-left: 3px;"/></div>
-            <div class="cardContainer" style="display:block;padding:16px;overflow:hidden;">
-              <div id="recentNotifList" style="max-height:80px;overflow-y:auto;">
+          <!-- Mobile nav grid -->
+          <div class="col-12 d-lg-none mb-3">
+            <div class="cardContainer">
+              <div class="title">商品訂單管理</div>
+                <div class="itemContainer">
+                  <button data-target="products">
+                    <img src="../svg/my.svg" alt="查看我的商品進行管理與編輯、上架操作">
+                    <span>商品管理</span>
+                  </button>
+                  <button data-target="sellProducts">
+                    <img src="../svg/mysellOrder.svg" alt="查看與管理我的銷售訂單">
+                    <span>銷售訂單</span>
+                  </button>
+                  <button data-target="buyProducts">
+                    <img src="../svg/buyicon.svg" alt="查看與管理我的消費訂單與紀錄">
+                    <span>消費訂單</span>
+                  </button>
+                </div>
+            </div>
+          </div>
+
+          <!-- Notifications (desktop: 5/12, mobile: full) -->
+          <div class="col-lg-5 col-12">
+            <div class="account-panel">
+              <div class="account-panel-head">
+                近期通知 <img src="../svg/alarm.svg" alt="通知icon" style="width:15px;margin-left:4px;vertical-align:middle;opacity:0.7;">
+              </div>
+              <div class="notif-panel-body" id="recentNotifList">
                 <div class="text-center text-muted py-3" style="font-size:14px;">載入中...</div>
               </div>
             </div>
           </div>
+        </div><!-- /row -->
 
-          <div class="col-12">
-            <div class="title">商品管理頁 / 相關操作說明</div>
-            <div class="cardContainer">
-              <div class="card-body">
-                <div class="d-flex flex-column flex-wrap gap-1">
-                  <div class="myItem">
-                      <button class="btnSell d-flex justify-content-center align-items-center gap-1">
-                        <img src="../svg/checkSell.svg" alt="查看商品按鈕示意"/>
-                        <div>查看商品</div>
-                      </button>
-                      <p>點擊按鈕後，將會跳轉至商品頁面。</p>
-                  </div>
-                  <div class="myItem">
-                      <button class="btnSell d-flex justify-content-center align-items-center gap-1">
-                        <img src="../svg/editSell.svg" alt="編輯商品按鈕示意"/>
-                        <div>編輯商品</div>
-                      </button>
-                      <p>
-                          點擊此按鈕後，下方將會出現該商品的所有資訊，即可進行修改 (可以只更新部分欄位)，最後點擊更新按鈕進行商品編輯。<br>
-                          若更改商品中的「多張照片」區域，將會<strong>一次替換之前的所有照片</strong>。<br>
-                          若商品無法更新，出現錯誤，請先檢查商品資訊是否符合本商城之規定。</p>
-                  </div>
-                  <div class="myItem">
-                      <button class="btnSell d-flex justify-content-center align-items-center gap-1">
-                        <img src="../svg/deleteSell.svg" alt="永久下架按鈕示意"/>
-                        <div>永久下架</div>
-                      </button>
-                      <p>
-                        點擊此按鈕後，將會刪除指定的商品，並且<strong>永久不會</strong>出現在「我的商品」清單中與架上。<br>
-                        只有在沒有相關的進行中訂單時才能刪除商品。</p>
-                  </div>
-                </div>
+        <!-- 桌機版：訂單進度說明 -->
+        <div class="d-block mt-3">
+          <div class="desk-guide-panel">
+            <div class="desk-guide-head">
+              <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>訂單進度說明
+            </div>
+            <div class="desk-guide-body p-0">
+              <div class="table-responsive">
+                <table class="order-guide-table">
+                  <thead>
+                    <tr><th>狀態</th><th>買家</th><th>賣家</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="badge order-badge-pending">待確認</span></td>
+                      <td>已送出訂單，等待賣家確認。若需取消請先聯絡賣家。</td>
+                      <td>請盡快確認庫存，可接單點「接受訂單」，不能接單請先聯絡買家再取消。</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge order-badge-preparing">待出貨</span></td>
+                      <td>賣家已接受訂單，正在準備商品，請耐心等候並確認面交時間地點。</td>
+                      <td>請準備商品，確認完整無誤後點「準備出貨」。</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge order-badge-delivered">待收貨</span></td>
+                      <td>請準時赴約，確認商品無誤後點「成功取貨」。</td>
+                      <td>請準時攜帶商品赴約，等待買家確認收貨。</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge order-badge-completed">待評價</span></td>
+                      <td>已確認收貨，請為賣家留下評價。</td>
+                      <td>買家已確認收貨，請為買家留下評價。</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge order-badge-scored">已完成</span></td>
+                      <td colspan="2">訂單已完成，本筆交易正式結束。</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
+              <p class="order-guide-note px-3 pb-2" style="border-top:1px solid #e0f0ee;padding-top:8px;margin-top:0; background: aliceblue;">若交易過程有任何問題，請務必提前與對方溝通，避免爭議。</p>
             </div>
           </div>
+        </div>
 
-          <div class="col-12 mt-3">
-            <div class="title">訂單進度說明</div>
-            <div class="cardContainer">
-              <div class="card-body p-0">
-                <div class="table-responsive">
-                  <table class="order-guide-table">
-                    <thead>
-                      <tr>
-                        <th>狀態</th>
-                        <th>買家</th>
-                        <th>賣家</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><span class="order-guide-badge badge-pending">待確認</span></td>
-                        <td>已送出訂單，等待賣家確認。若需取消請先聯絡賣家。</td>
-                        <td>請盡快確認庫存，可接單點「接受訂單」，不能接單請先聯絡買家再取消。</td>
-                      </tr>
-                      <tr>
-                        <td><span class="order-guide-badge badge-preparing">待出貨</span></td>
-                        <td>賣家已接受訂單，正在準備商品，請耐心等候並確認面交時間地點。</td>
-                        <td>請準備商品，確認完整無誤後點「準備出貨」。</td>
-                      </tr>
-                      <tr>
-                        <td><span class="order-guide-badge badge-delivered">待收貨</span></td>
-                        <td>請準時赴約，確認商品無誤後點「成功取貨」。</td>
-                        <td>請準時攜帶商品赴約，等待買家確認收貨。</td>
-                      </tr>
-                      <tr>
-                        <td><span class="order-guide-badge badge-completed">待評價</span></td>
-                        <td>已確認收貨，請為賣家留下評價。</td>
-                        <td>買家已確認收貨，請為買家留下評價。</td>
-                      </tr>
-                      <tr>
-                        <td><span class="order-guide-badge badge-scored">已完成</span></td>
-                        <td colspan="2">訂單已完成，本筆交易正式結束。</td>
-                      </tr>
-                    </tbody>
-                  </table>
+        <!-- 桌機版：商品管理常見操作 -->
+        <div class="d-block mt-3 mb-2">
+          <div class="desk-guide-panel">
+            <div class="desk-guide-head">
+              <i class="ti ti-info-circle" style="color:#004b97;"></i>商品管理 / 常見操作說明
+            </div>
+            <div class="desk-guide-body">
+              <div class="desk-help-row">
+                <div class="desk-help-btn">
+                  <img src="../svg/checkSell.svg" alt="查看商品">查看商品
                 </div>
-                <p class="order-guide-note px-3 pb-2" style="border-top:1px solid #e0f0ee;padding-top:8px;margin-top:0;">若交易過程有任何問題，請務必提前與對方溝通，避免爭議。</p>
+                <p class="desk-help-desc mb-0">點擊後將跳轉至商品頁面，可查看商品詳細資訊與目前狀態。</p>
+              </div>
+              <div class="desk-help-row">
+                <div class="desk-help-btn">
+                  <img src="../svg/editSell.svg" alt="編輯商品">編輯商品
+                </div>
+                <p class="desk-help-desc mb-0">點擊後下方將顯示該商品的所有資訊，可進行修改（可僅更新部分欄位），最後點擊更新按鈕完成編輯。若更改「多張照片」，將一次<strong>替換所有照片</strong>。</p>
+              </div>
+              <div class="desk-help-row">
+                <div class="desk-help-btn">
+                  <img src="../svg/deleteSell.svg" alt="永久下架">永久下架
+                </div>
+                <p class="desk-help-desc mb-0">點擊後將<strong>永久刪除</strong>該商品，且不會再出現在商品清單與架上。僅在無相關進行中訂單時才能執行。</p>
               </div>
             </div>
           </div>

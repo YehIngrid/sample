@@ -1,6 +1,7 @@
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
 import wpBackendService from '../wpBackendService.js';
+import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewerModal.js';
 
 let backendService;
 let chatService;
@@ -70,7 +71,6 @@ window._authReady.then(loggedIn => {
     const avatarUrl     = localStorage.getItem('avatar');
     const rate          = localStorage.getItem('rate')         || '無法顯示';
     const uidVal        = localStorage.getItem('uid')          || '';
-    const createdAt     = localStorage.getItem('userCreatedAt');
     const contractEmail = localStorage.getItem('contractEmail') || '';
 
     if (uid)  uid.textContent  = uidVal;
@@ -81,6 +81,10 @@ window._authReady.then(loggedIn => {
     if (showName)     showName.textContent      = name;
     if (profileInfo)  profileInfo.textContent  = intro;
     if (showIntro)    showIntro.textContent     = intro;
+    const phUsername = document.getElementById('phUsername');
+    const phDate     = document.getElementById('phDate');
+    if (phUsername) phUsername.textContent = name;
+    if (phDate) phDate.textContent = new Date().toLocaleDateString('zh-TW', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
 
     const showEmailEl = document.getElementById('showEmail');
     if (showEmailEl) showEmailEl.textContent = contractEmail || '尚未設定';
@@ -138,9 +142,11 @@ window._authReady.then(loggedIn => {
     const showTimeEl = document.getElementById('showTime');
     if (showTimeEl) showTimeEl.textContent = '';
 
-    // 隱藏手機版登出按鈕
-    const logoutMobileEl = document.getElementById('logoutMobile');
-    if (logoutMobileEl) logoutMobileEl.style.display = 'none';
+    // 隱藏登出按鈕（桌機卡片 + 手機按鈕）
+    ['logoutMobile', 'logoutMobileBtn'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
 
     // 停用快速操作
     document.querySelectorAll('.fastContainer .fastIcon, .fastContainer button').forEach(el => {
@@ -155,7 +161,7 @@ window._authReady.then(loggedIn => {
       el.style.cursor = 'default';
     });
     // 停用桌機側欄選單（除帳戶管理中心本身）
-    document.querySelectorAll('.list-group-item[data-target]').forEach(el => {
+    document.querySelectorAll('.new-nav-link[data-target]').forEach(el => {
       if (el.dataset.target !== 'account') {
         el.style.opacity = '0.35';
         el.style.pointerEvents = 'none';
@@ -271,8 +277,7 @@ logoutButton?.addEventListener('click', function() {
     }
   });
 });
-const logoutMobileButton = document.getElementById('logoutMobile');
-logoutMobileButton?.addEventListener('click', function() {
+function doLogoutSwal() {
   Swal.fire({
     title: '確定要登出嗎？',
     icon: 'warning',
@@ -281,25 +286,19 @@ logoutMobileButton?.addEventListener('click', function() {
     cancelButtonText: '取消'
   }).then(async(result) => {
     if (result.isConfirmed) {
-    try {
-      if (!backendService) backendService = new BackendService();
-
-      await backendService.logout();
-      Swal.fire({
-        icon: 'success',
-        title: '登出成功',
-        text: '您已成功登出'
-      }).then(() => {
-        window.location.href = '../account/account.html'; // 登出後跳轉到首頁
-      });
-    } catch (error) {
-      Swal.fire({
-        icon: 'error', 
-        title: '登出失敗請稍後重試'
-      })
-    }
+      try {
+        if (!backendService) backendService = new BackendService();
+        await backendService.logout();
+        Swal.fire({ icon: 'success', title: '登出成功', text: '您已成功登出' })
+          .then(() => { window.location.href = '../account/account.html'; });
+      } catch (error) {
+        Swal.fire({ icon: 'error', title: '登出失敗請稍後重試' });
+      }
     }
   });
+}
+['logoutMobile', 'logoutMobileBtn'].forEach(id => {
+  document.getElementById(id)?.addEventListener('click', doLogoutSwal);
 });
 
 
@@ -470,7 +469,11 @@ async function handleAction(action, id, el) {
     openReviewModal(id, findTargetIdByOrderId(goodsOrder, id), sectionId === 'sellProducts' ? 'buyer' : 'seller');
   } else if (action === 'watchComment') {
     const isSell = el.closest('.content-section')?.id === 'sellProducts';
-    openPartnerReviewModal(id, isSell);
+    const _od = window.currentOrder;
+    const _partner = isSell ? _od?.buyerUser : _od?.sellerUser;
+    const _pid = _partner?.id ?? _partner?.accountId;
+    const _pname = _partner?.name || '對方';
+    openReviewerProfileModal(String(_pid), _pname, null);
   } else if (action === 'delete') {
     Swal.fire({
       title: "確定要下架並刪除此商品嗎？",
@@ -536,11 +539,15 @@ async function handleRouting() {
     const sellCards = document.getElementById('sell-product');
     if (sellCards) sellCards.classList.add('d-none');
     sellTable.style.display = 'none';
-    sellTableTitle.style.display = 'none';
+    if (sellTableTitle) sellTableTitle.style.display = 'none';
     document.getElementById('sellFilter')?.classList.add('d-none');
     document.getElementById('sellPagination')?.classList.add('d-none');
     document.querySelector('#sellProducts .mobile-back-btn')?.classList.add('d-none');
     document.querySelector('#sellProducts .order-guide-wrap')?.classList.add('d-none');
+    document.querySelector('#sellProducts .page-head')?.classList.add('d-none');
+    document.querySelectorAll('.new-nav-link[data-target]').forEach(link => {
+      link.classList.toggle('active', link.dataset.target === 'sellProducts');
+    });
     getDetail(orderId);
     return;
   }
@@ -551,11 +558,15 @@ async function handleRouting() {
     const buyCards = document.getElementById('buy-product');
     if (buyCards) buyCards.classList.add('d-none');
     buyTable.style.display = 'none';
-    buyTableTitle.style.display = 'none';
+    if (buyTableTitle) buyTableTitle.style.display = 'none';
     document.getElementById('buyFilter')?.classList.add('d-none');
     document.getElementById('buyPagination')?.classList.add('d-none');
     document.querySelector('#buyProducts .mobile-back-btn')?.classList.add('d-none');
     document.querySelector('#buyProducts .order-guide-wrap')?.classList.add('d-none');
+    document.querySelector('#buyProducts .page-head')?.classList.add('d-none');
+    document.querySelectorAll('.new-nav-link[data-target]').forEach(link => {
+      link.classList.toggle('active', link.dataset.target === 'buyProducts');
+    });
     getDetail(orderId);
     return;
   }
@@ -566,7 +577,7 @@ async function handleRouting() {
   resetOrderView();
 
   // Active menu
-  document.querySelectorAll('.list-group-item[data-target]').forEach(link => {
+  document.querySelectorAll('.new-nav-link[data-target]').forEach(link => {
     link.classList.toggle('active', link.dataset.target === page);
   });
 
@@ -580,7 +591,7 @@ async function handleRouting() {
       document.querySelector('#sellProducts tbody').innerHTML =
         `<tr><td colspan="4" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('sell-product').innerHTML =
-        `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
+        `<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
       await loadSellerOrders(1);
     } else if (page === 'buyProducts') {
       window.currentOrder = null;
@@ -589,7 +600,7 @@ async function handleRouting() {
       document.querySelector('#buyProducts tbody').innerHTML =
         `<tr><td colspan="5" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('buy-product').innerHTML =
-        `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
+        `<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
       await loadBuyerOrders(1);
     } else if (page === 'products') {
       myItemsPage = 1;
@@ -667,6 +678,8 @@ function resetOrderView() {
   document.querySelector('#buyProducts .mobile-back-btn')?.classList.remove('d-none');
   document.querySelector('#sellProducts .order-guide-wrap')?.classList.remove('d-none');
   document.querySelector('#buyProducts .order-guide-wrap')?.classList.remove('d-none');
+  document.querySelector('#sellProducts .page-head')?.classList.remove('d-none');
+  document.querySelector('#buyProducts .page-head')?.classList.remove('d-none');
 }
 
 async function loadSellerOrders(page) {
@@ -685,7 +698,7 @@ async function loadSellerOrders(page) {
     const tbody = document.querySelector('#sellProducts tbody');
     if (tbody) tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">載入失敗，請重新整理</td></tr>`;
     const cards = document.getElementById('sell-product');
-    if (cards) cards.innerHTML = `<div class="col-12 text-center text-muted py-4">載入失敗，請重新整理</div>`;
+    if (cards) cards.innerHTML = `<div class="text-center text-muted py-4">載入失敗，請重新整理</div>`;
   }
 }
 
@@ -705,7 +718,7 @@ async function loadBuyerOrders(page) {
     const tbody = document.querySelector('#buyProducts tbody');
     if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">載入失敗，請重新整理</td></tr>`;
     const cards = document.getElementById('buy-product');
-    if (cards) cards.innerHTML = `<div class="col-12 text-center text-muted py-4">載入失敗，請重新整理</div>`;
+    if (cards) cards.innerHTML = `<div class="text-center text-muted py-4">載入失敗，請重新整理</div>`;
   }
 }
 
@@ -871,6 +884,41 @@ async function loadSettingsData() {
   }
 }
 
+async function loadStatCards() {
+  const elProducts = document.getElementById('statProducts');
+  const elOrders   = document.getElementById('statOrders');
+  const elScore    = document.getElementById('statScore');
+  if (!elProducts && !elOrders && !elScore) return;
+
+  // 信譽積分直接從 localStorage 填入
+  if (elScore) elScore.textContent = localStorage.getItem('rate') || '—';
+
+  try {
+    const [itemRes, sellRes, buyRes] = await Promise.all([
+      backendService.getMyItems({ page: 1, limit: 1 }),
+      backendService.getSellerOrders(1),
+      backendService.getBuyerOrders(1),
+    ]);
+
+    if (elProducts) {
+      const raw = itemRes?.data;
+      const total = raw?.total ?? raw?.count ?? (Array.isArray(raw) ? raw.length : (raw?.commodities ?? raw?.data ?? []).length);
+      elProducts.textContent = total ?? '—';
+    }
+    if (elOrders) {
+      const ACTIVE = new Set(['pending','preparing','delivered','review_pending']);
+      const sellList = sellRes?.data?.data?.orders ?? [];
+      const buyList  = buyRes?.data?.data?.orders  ?? [];
+      const count = [...sellList, ...buyList].filter(o => ACTIVE.has((o.status ?? '').toLowerCase())).length;
+      const sellPag = sellRes?.data?.data?.pagination ?? {};
+      const buyPag  = buyRes?.data?.data?.pagination  ?? {};
+      const sellTotal = sellPag.totalItems ?? sellList.length;
+      const buyTotal  = buyPag.totalItems  ?? buyList.length;
+      elOrders.textContent = count > 0 ? count : (sellTotal + buyTotal > 0 ? '0' : '0');
+    }
+  } catch { /* silent */ }
+}
+
 async function loadRecentNotifications() {
   const container = document.getElementById('recentNotifList');
   if (!container) return;
@@ -902,19 +950,22 @@ async function loadRecentNotifications() {
       return `${Math.floor(h / 24)} 天前`;
     }
     container.innerHTML = items.map(n => {
-      const avatar = n.actor?.photoURL ?? n.actor?.avatar ?? '../image/default-avatar.webp';
-      const title = n.title ?? _LABELS[n.type] ?? n.type ?? '';
+      const typeLabel = _LABELS[n.type] ?? n.type ?? '';
+      const title = n.title ?? typeLabel;
       const body = n.body ?? n.content ?? n.message ?? '';
       const time = _relTime(n.createdAt);
       const unread = !n.isRead;
-      return `<div class="d-flex align-items-start gap-2${unread ? ' fw-semibold' : ''}" style="font-size:13px;border-bottom:1px solid #f0f0f0;padding-bottom:8px;margin-bottom:8px;">
-        <img src="${avatar}" onerror="this.src='../image/default-avatar.webp'" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;margin-top:2px;" alt="">
-        <div style="flex:1;min-width:0;">
-          ${title ? `<div style="color:#004b97;font-size:12px;">${title}</div>` : ''}
-          ${body ? `<div class="text-truncate" style="max-width:100%;">${body}</div>` : ''}
-          <div style="color:#aaa;font-size:11px;margin-top:2px;">${time}</div>
+      const displayText = title || body;
+      const metaType = typeLabel || title;
+      return `<div class="notif-item">
+        <span class="notif-dot${unread ? '' : ' read'}"></span>
+        <div class="notif-body">
+          <div class="notif-ttl">${htmlEncode(displayText)}</div>
+          <div class="notif-meta">
+            ${metaType ? `<span>${htmlEncode(metaType)}</span><span class="notif-sep"></span>` : ''}
+            <span>${time}</span>
+          </div>
         </div>
-        ${unread ? '<span style="width:7px;height:7px;border-radius:50%;background:#004b97;flex-shrink:0;margin-top:6px;"></span>' : ''}
       </div>`;
     }).join('');
   } catch (e) {
@@ -940,6 +991,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   loadRecentNotifications();
+  loadStatCards();
 
   // 預載入側邊欄 / 手機按鈕的訂單計數紅點
   loadOrderBadges();
@@ -1198,57 +1250,66 @@ function onRowAction(e) {
   handleAction(action, id, tr);
 }
 
-// ===== 渲染：手機卡片 =====
+// ===== 輔助：狀態 → pill CSS 類別 =====
+function statusPillClass(status) {
+  const map = {
+    pending: 's-pend', preparing: 's-pack',
+    delivered: 's-ship', review_pending: 's-eval',
+    completed: 's-done', scored: 's-done',
+    canceled: 's-canc', cancelled: 's-canc',
+  };
+  return map[(status ?? '').toLowerCase()] ?? 's-canc';
+}
+
+// ===== 渲染：商品管理卡片 =====
 function renderCards(list = []) {
   const wrap = document.getElementById('product-cards');
   if (!wrap) return;
 
   if (!Array.isArray(list) || list.length === 0) {
-    wrap.innerHTML = `<div class="col-12 text-center text-muted py-5">目前沒有商品</div>`;
+    wrap.innerHTML = `<div class="text-center text-muted py-5">目前沒有商品</div>`;
     return;
   }
 
   const html = list.map((item, i) => {
-    const id       = item.id;
-    const name     = esc(item.name);
-    const price    = fmtPrice(item.price);
-    const updated  = fmtDate(item.updatedAt);
-    const created  = fmtDate(item.createdAt);
-    const img      = esc(item.mainImage || item.imageUrl || '../image/placeholder.webp');
-    const quantity = item.stock;
-    const stockStyle = quantity === 0 ? 'color: #dc3545; font-weight: bold;' : '';
+    const id      = item.id;
+    const name    = esc(item.name);
+    const price   = fmtPrice(item.price);
+    const updated = fmtDate(item.updatedAt);
+    const created = fmtDate(item.createdAt);
+    const img     = esc(item.mainImage || item.imageUrl || '../image/placeholder.webp');
+    const stock   = item.stock ?? 0;
+    const stockCls = stock === 0 ? ' pcard-stock-out' : '';
 
     return `
-      <div class="col" data-id="${esc(id)}">
-        <div class="cardContainer h-100" style="animation-delay:${i * 0.07}s">
-          <div class="card-body d-flex flex-column">
-            <div class="d-flex flex-row justify-content-between align-items-end">
-              <div class="d-flex">
-                <div class="bg-light">
-                  <img src="${img}" alt="${name}" class="object-cover">
-                </div>
-                <div>
-                  <h6 class="mb-0 text-truncate" title="${name}">${name}</h6>
-                  <div class="small text-muted mb-2" style="font-size: 12px;">建立：${created}<br>更新：${updated}</div>
-                  <div style="font-size: 12px; color: #004b97;">庫存：<span style="font-weight: bold; ${stockStyle}">${quantity}</span></div>
-                </div>
-              </div>
-              <div class="fw-bold mb-2 text-end">${price}</div>
+      <div class="ocard" data-id="${esc(id)}" style="animation:pageEnter 0.32s ease ${i * 0.06}s both;">
+        <div class="ocard-head">
+          <div class="ocard-meta">
+            <span class="ocard-oid">${name}</span>
+          </div>
+          <span class="ocard-price-val">${price}</span>
+        </div>
+        <div class="ocard-body">
+          <div class="ocard-product" style="flex:1;">
+            <div class="ocard-thumb">
+              <img src="${img}" alt="${name}">
             </div>
-            <div class="mt-auto d-flex justify-content-around gap-2">
-              <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="check" data-id="${id}">
-                <img src="../svg/checkSell.svg" alt="查看商品按鈕"/>
-                <div>查看商品</div>
-              </button>
-              <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="編輯商品" data-id="${id}">
-                <img src="../svg/editSell.svg" alt="編輯此商品按鈕"/>
-                <div>編輯商品</div>
-              </button>
-              <button class="btnSell d-flex justify-content-center align-items-center gap-1 action-btn btn-row-action" data-action="delete" data-id="${id}">
-                <img src="../svg/deleteSell.svg" alt="永久下架此商品按鈕"/>
-                <div>永久下架</div>
-              </button>
+            <div class="ocard-info">
+              <div class="ocard-sub">庫存：<span class="pcard-stock${stockCls}">${stock}</span></div>
+              <div class="ocard-sub mt-1">建立：${created}</div>
+              <div class="ocard-sub">更新：${updated}</div>
             </div>
+          </div>
+          <div class="ocard-actions flex-wrap">
+            <button class="checkInfoBtn action-btn btn-row-action" data-action="check" data-id="${id}">
+              <img src="../svg/checkSell.svg" alt="查看商品"><div>查看</div>
+            </button>
+            <button class="checkInfoBtn action-btn btn-row-action" data-action="編輯商品" data-id="${id}">
+              <img src="../svg/editSell.svg" alt="編輯商品"><div>編輯</div>
+            </button>
+            <button class="btnSell action-btn btn-row-action ocard-del-btn" data-action="delete" data-id="${id}">
+              <img src="../svg/deleteSell.svg" alt="永久下架"><div>下架</div>
+            </button>
           </div>
         </div>
       </div>
@@ -1257,55 +1318,68 @@ function renderCards(list = []) {
 
   wrap.innerHTML = html;
 }
+
 function renderSellerCards(list = []) {
   const wrap = document.getElementById('sell-product');
   if (!wrap) return;
 
   if (!Array.isArray(list) || list.length === 0) {
-    wrap.innerHTML = `<div class="col-12 text-center text-muted py-5">目前沒有商品</div>`;
+    wrap.innerHTML = `<div class="text-center text-muted py-5">目前沒有訂單</div>`;
     return;
   }
 
   const html = list.map((item, i) => {
-    const id       = item.id;
-    const name     = esc(item.name);
-    const label    = fmtOrderLabel(item);
-    const price    = fmtPrice(item.totalAmount);
-    const updated  = fmtDate(item.updatedAt);
-    const created  = fmtDate(item.createdAt);
-    const key = (item.status ?? 'listed').toLowerCase();
-    const st  = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
-    const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
+    const id      = item.id;
+    const label   = fmtOrderLabel(item);
+    const price   = fmtPrice(item.totalAmount);
+    const created = fmtDate(item.createdAt);
+    const key     = (item.status ?? 'listed').toLowerCase();
+    const st      = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
+    const pillCls = statusPillClass(item.status);
+    const isDisabled = st.action === '等待買家確認收貨' ? 'disabled' : '';
+    const imgUrl  = item.orderItems?.[0]?.item?.mainImage || item.orderItems?.[0]?.item?.imageUrl || null;
+    const thumb   = imgUrl
+      ? `<img src="${esc(imgUrl)}" alt="${label}">`
+      : '';
+
+    const actionBtn = renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `
+      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
+        <img src="${st.icon}" alt="${st.action}"><div>${st.action}</div>
+      </button>` : '');
+    const cancelBtn = (item.status === 'pending' || item.status === 'preparing') ? `
+      <button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}">
+        <img src="../svg/cancelOrder.svg" alt="取消訂單"><div>取消</div>
+      </button>` : '';
+    const chatBtn = item.status !== 'canceled' ? `
+      <button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方">
+        <img src="../svg/canChat.svg" alt="聯絡對方">
+      </button>` : '';
 
     return `
-      <div class="col" data-id="${esc(id)}">
-        <div class="cardContainer h-100" style="animation-delay:${i * 0.07}s">
-          <div class="card-body d-flex flex-column">
-            <div class="d-flex flex-row justify-content-between align-items-start">
-              <div style="flex:1;min-width:0;">
-                <h6 class="mb-0 text-truncate" title="${name}" style="font-size:0.88rem;">${label}</h6>
-                <div class="small text-muted mt-1 mb-2" style="font-size:12px;">建立日期：${created}</div>
-              </div>
-              <div class="d-flex flex-column align-items-end ms-2 flex-shrink-0">
-                <span class="badge ${st.badge} mb-1">${st.text}</span>
-                <div class="fw-bold">${price}</div>
-              </div>
+      <div class="ocard" data-id="${esc(id)}" style="animation:pageEnter 0.32s ease ${i * 0.06}s both;">
+        <div class="ocard-head">
+          <div class="ocard-meta">
+            <span class="ocard-oid">#${id}</span>
+            <span class="ocard-sep"></span>
+            <span>${created}</span>
+          </div>
+          <span class="ocard-pill ${pillCls}">${st.text}</span>
+        </div>
+        <div class="ocard-body">
+          <div class="ocard-product">
+            <div class="ocard-thumb ocard-thumb${imgUrl ? '' : '-grad'}">${thumb}</div>
+            <div class="ocard-info">
+              <div class="ocard-name">${label}</div>
+              <div class="ocard-sub">NT$ ${price}</div>
             </div>
-            <div class="mt-auto d-flex gap-2 flex-wrap align-items-center">
-              ${renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
-                <img src="${st.icon}" alt="${st.action}icon"/>
-                <div>${st.action}</div>
-              </button>` : '')}
-              <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
-                <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
-                <div>訂單詳情</div>
-              </button>
-              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div class="text-muted" style="font-size:11px;">訂單編號 ${id}</div>
-              ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
-            </div>
+          </div>
+          <div class="ocard-actions">
+            ${actionBtn}
+            <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
+              <img src="../svg/orderInfo.svg" alt="訂單詳情"><div>詳情</div>
+            </button>
+            ${cancelBtn}
+            ${chatBtn}
           </div>
         </div>
       </div>
@@ -1314,53 +1388,67 @@ function renderSellerCards(list = []) {
 
   wrap.innerHTML = html;
 }
+
 function renderBuyerCards(list = []) {
   const wrap = document.getElementById('buy-product');
   if (!wrap) return;
 
   if (!Array.isArray(list) || list.length === 0) {
-    wrap.innerHTML = `<div class="col-12 text-center text-muted py-5">目前沒有商品</div>`;
+    wrap.innerHTML = `<div class="text-center text-muted py-5">目前沒有訂單</div>`;
     return;
   }
 
   const html = list.map((item, i) => {
-    const id       = item.id;
-    const name     = esc(item.name);
-    const label    = fmtOrderLabel(item);
-    const price    = fmtPrice(item.totalAmount);
-    const created  = fmtDate(item.createdAt);
-    const key      = (item.status ?? 'listed').toLowerCase();
-    const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
+    const id      = item.id;
+    const label   = fmtOrderLabel(item);
+    const price   = fmtPrice(item.totalAmount);
+    const created = fmtDate(item.createdAt);
+    const key     = (item.status ?? 'listed').toLowerCase();
+    const st      = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
+    const pillCls = statusPillClass(item.status);
+    const imgUrl  = item.orderItems?.[0]?.item?.mainImage || item.orderItems?.[0]?.item?.imageUrl || null;
+    const thumb   = imgUrl
+      ? `<img src="${esc(imgUrl)}" alt="${label}">`
+      : '';
+
+    const actionBtn = renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `
+      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
+        <img src="${st.icon}" alt="${st.action}"><div>${st.action}</div>
+      </button>` : '');
+    const cancelBtn = (item.status === 'pending' || item.status === 'preparing') ? `
+      <button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}">
+        <img src="../svg/cancelOrder.svg" alt="取消訂單"><div>取消</div>
+      </button>` : '';
+    const chatBtn = item.status !== 'canceled' ? `
+      <button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方">
+        <img src="../svg/canChat.svg" alt="聯絡對方">
+      </button>` : '';
 
     return `
-      <div class="col" data-id="${esc(id)}">
-        <div class="cardContainer h-100" style="animation-delay:${i * 0.07}s">
-          <div class="card-body d-flex flex-column">
-            <div class="d-flex flex-row justify-content-between align-items-start">
-              <div style="flex:1;min-width:0;">
-                <h6 class="mb-0 text-truncate" title="${name}" style="font-size:0.88rem;">${label}</h6>
-                <div class="small text-muted mt-1 mb-2" style="font-size:12px;">建立日期：${created}</div>
-              </div>
-              <div class="d-flex flex-column align-items-end ms-2 flex-shrink-0">
-                <span class="badge ${st.badge} mb-1">${st.text}</span>
-                <div class="fw-bold">${price}</div>
-              </div>
+      <div class="ocard" data-id="${esc(id)}" style="animation:pageEnter 0.32s ease ${i * 0.06}s both;">
+        <div class="ocard-head">
+          <div class="ocard-meta">
+            <span class="ocard-oid">#${id}</span>
+            <span class="ocard-sep"></span>
+            <span>${created}</span>
+          </div>
+          <span class="ocard-pill ${pillCls}">${st.text}</span>
+        </div>
+        <div class="ocard-body">
+          <div class="ocard-product">
+            <div class="ocard-thumb ocard-thumb${imgUrl ? '' : '-grad'}">${thumb}</div>
+            <div class="ocard-info">
+              <div class="ocard-name">${label}</div>
+              <div class="ocard-sub">NT$ ${price}</div>
             </div>
-            <div class="mt-auto d-flex gap-2 flex-wrap align-items-center">
-              ${renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
-                <img src="${st.icon}" alt="${st.action}icon"/>
-                <div>${st.action}</div>
-              </button>` : '')}
-              <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
-                <img src="../svg/orderInfo.svg" alt="訂單詳情icon"/>
-                <div>訂單詳情</div>
-              </button>
-              ${item.status == 'pending' || item.status == 'preparing' ? `<button class="cancelOrderBtn action-btn btn-row-action" data-action="cancel" data-id="${id}"><img src="../svg/cancelOrder.svg" alt="取消訂單icon"/><div>取消訂單</div></button>` : ''}
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <div class="text-muted" style="font-size:11px;">訂單編號 ${id}</div>
-              ${item.status !== 'canceled' ? `<button class="order-chat-btn action-btn" data-action="contact" data-id="${id}" title="聯絡對方"><img src="../svg/canChat.svg" alt="聯絡對方"/></button>` : ''}
-            </div>
+          </div>
+          <div class="ocard-actions">
+            ${actionBtn}
+            <button class="checkInfoBtn action-btn btn-row-action" data-action="checkInfo" data-id="${id}">
+              <img src="../svg/orderInfo.svg" alt="訂單詳情"><div>詳情</div>
+            </button>
+            ${cancelBtn}
+            ${chatBtn}
           </div>
         </div>
       </div>
@@ -1408,132 +1496,264 @@ function renderOrderReviews(reviews, isSell) {
 // ===== 共用：按鈕動作（表格/卡片都走這裡） =====
 async function getDetail(id) {
   try {
-    const sellSection = document.getElementById('sellProducts');
-    const buySection  = document.getElementById('buyProducts');
-
+    const isSell = new URLSearchParams(window.location.search).get('page') === 'sellOrderDetail';
     const sellDetail = document.getElementById('sellOrderDetail');
     const buyDetail  = document.getElementById('buyerOrderDetail');
+    const detailEl   = isSell ? sellDetail : buyDetail;
 
-    const isSell = !sellSection.classList.contains('d-none');
+    const productBox    = document.getElementById(isSell ? 'sellOrderProducts' : 'buyOrderProducts');
+    const infoBox       = document.getElementById(isSell ? 'sellOrderInfo'     : 'buyerOrderInfo');
+    const reviewBox     = document.getElementById(isSell ? 'sellOrderReviews'  : 'buyOrderReviews');
+    const actionsBox    = document.getElementById(isSell ? 'sellOrderActions'  : 'buyOrderActions');
+    const orderIdEl     = document.getElementById(isSell ? 'sellOrderIdSpan'   : 'buyOrderIdSpan');
+    const itemCountEl   = document.getElementById(isSell ? 'sellItemCount'     : 'buyItemCount');
+    const reviewCountEl = document.getElementById(isSell ? 'sellReviewCount'   : 'buyReviewCount');
+    const tlHintEl      = document.getElementById(isSell ? 'sellTlHint'        : 'buyTlHint');
+    const bannerEl      = document.getElementById(isSell ? 'sellStatusBanner'  : 'buyStatusBanner');
+    const sbIcEl        = document.getElementById(isSell ? 'sellSbIc'          : 'buySbIc');
+    const sbTitleEl     = document.getElementById(isSell ? 'sellSbTitle'       : 'buySbTitle');
+    const sbDescEl      = document.getElementById(isSell ? 'sellSbDesc'        : 'buySbDesc');
 
-    // 先顯示 loader
-    const earlyInfoBox = isSell
-      ? document.getElementById('sellOrderInfo')
-      : document.getElementById('buyerOrderInfo');
-    if (earlyInfoBox) earlyInfoBox.innerHTML =
-      `<div class="d-flex justify-content-center py-5"><div class="spinner-border text-secondary" role="status"></div></div>`;
+    if (productBox) productBox.innerHTML = `<div class="d-flex justify-content-center py-4"><div class="spinner-border text-secondary" role="status"></div></div>`;
+    if (infoBox) infoBox.innerHTML = '';
 
     const res = await backendService.getOrderDetails(id);
     const data = res.data.data;
     window.currentOrder = data;
-    const orderStatusMap = {
-      pending:        "訂單已建立，等待賣家接受",
-      preparing:      "賣家已接受訂單，正在準備商品",
-      delivered:      "賣家已出貨，等待買家確認收貨",
-      review_pending: "買家已確認收貨，等待雙方評價",
-      completed:      "訂單已完成",
-      canceled:       "訂單已取消"
+
+    const orderTypeMap = { c2c: '面交取貨' };
+
+    // ── 狀態橫幅設定 ──
+    const BANNER_CFG = {
+      pending:        { bg: 'linear-gradient(135deg, #d4962e 0%, #b07820 100%)', icon: 'clock' },
+      preparing:      { bg: 'linear-gradient(135deg, #3d7ed0 0%, #295fa8 100%)', icon: 'box'   },
+      delivered:      { bg: 'linear-gradient(135deg, #30a884 0%, #1f8064 100%)', icon: 'truck' },
+      review_pending: { bg: 'linear-gradient(135deg, #24b685 0%, #189665 100%)', icon: 'star'  },
+      completed:      { bg: 'linear-gradient(135deg, #004b97 0%, #003a78 100%)', icon: 'check' },
+      canceled:       { bg: 'linear-gradient(135deg, #c97f5a 0%, #a8624a 100%)', icon: 'x'     },
+    };
+    const BANNER_ICONS = {
+      clock: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>`,
+      box:   `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><path d="M20 7L12 3L4 7V17L12 21L20 17V7Z"/><polyline points="12 3 12 12"/><polyline points="20 7 12 12 4 7"/></svg>`,
+      truck: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+      star:  `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+      check: `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><path d="M20 6L9 17L4 12"/></svg>`,
+      x:     `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9"/><path d="M15 9L9 15M9 9L15 15"/></svg>`,
+    };
+    const STATUS_TITLE = {
+      pending: '等待賣家接受', preparing: '備貨準備中', delivered: '等待確認收貨',
+      review_pending: '等待評價', completed: '訂單已完成', canceled: '訂單已取消',
+    };
+    const SELL_DESC = {
+      pending: '有新訂單等待您接受，請盡快確認', preparing: '您已接受訂單，請備妥商品',
+      delivered: '商品已出貨，等待買家確認收貨', review_pending: '買家已確認收貨，請對買家留下評價',
+      completed: '訂單已完成，感謝您的交易',
+    };
+    const BUY_DESC = {
+      pending: '訂單已建立，等待賣家確認接受', preparing: '賣家正在為您備貨中',
+      delivered: '賣家已出貨，請確認收貨', review_pending: '您已確認收貨，記得留下評價',
+      completed: '感謝您使用拾貨寶庫',
     };
 
-    const orderTypeMap = {
-      c2c: "面交取貨"
-    };
+    const cancelLog = data.logs?.find(l => l.status === 'canceled');
+    const statusKey = data.status || 'pending';
+    const cfg = BANNER_CFG[statusKey] || BANNER_CFG.pending;
 
-    const infoBox = isSell
-      ? document.getElementById('sellOrderInfo')
-      : document.getElementById('buyerOrderInfo');
+    if (bannerEl) bannerEl.style.background = cfg.bg;
+    if (sbIcEl)    sbIcEl.innerHTML = BANNER_ICONS[cfg.icon] || '';
+    if (sbTitleEl) sbTitleEl.textContent = STATUS_TITLE[statusKey] || statusKey;
+    if (sbDescEl) {
+      sbDescEl.innerHTML = statusKey === 'canceled' && cancelLog
+        ? `本訂單已於 <strong>${formatter.format(new Date(cancelLog.timestamp))}</strong> 取消`
+        : (isSell ? SELL_DESC[statusKey] : BUY_DESC[statusKey]) || '';
+    }
+    if (orderIdEl) orderIdEl.textContent = id;
+    if (tlHintEl) {
+      tlHintEl.textContent = cancelLog
+        ? `取消時間：${formatter.format(new Date(cancelLog.timestamp))}` : '';
+    }
 
-    const rp = data.reviewProgress ?? {};
-    const deadlineSuffix = (data.status === 'review_pending' && rp.reviewDeadline)
-      ? `<span style="font-size:0.8em;color:#e07b39;margin-left:4px;">（截止：${fmtDate(rp.reviewDeadline)}）</span>`
-      : '';
-
-    // 確保 tag meaning cache 有資料，供 renderOrderReviews 顯示中文
+    // ── tag cache ──
     if (Object.keys(_tagMeaningCache).length === 0) {
       try {
         const tagRes = await backendService.getReviewTags();
         (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
-      } catch (e) { /* 靜默失敗，fallback 到本地 labels */ }
+      } catch (e) {}
     }
 
     const reviewBoth = await backendService.getOrderBothReviews(id);
-    const reviewBothData = reviewBoth.data?.data;
+    const reviews = reviewBoth.data?.data?.reviews ?? [];
 
-    infoBox.innerHTML = `
-      <ul style="font-size: 1rem;">
-        <li><span class="orderstyle">訂單編號</span>${id}</li>
-        <li><span class="orderstyle">建立日期</span>${new Date(data.createdAt).toLocaleDateString()}</li>
-        <li><span class="orderstyle">商品狀態</span>${orderStatusMap[data.status] ?? data.status}${deadlineSuffix}</li>
-        <li><span class="orderstyle">交貨方式</span>${orderTypeMap[data.type]}</li>
-        <li>
-          <span class="orderstyle">${isSell ? '買家姓名' : '賣家姓名'}</span>
-          ${isSell ? data.buyerUser.name : data.sellerUser.name}
-        </li>
-        <div class="d-flex gap-2">
-          <button class="checkInfoBtn action-btn" data-action="contact" data-id="${id}" style="font-size: 1rem;">與對方聯絡<img src="../svg/canChat.svg" alt="與對方聯絡，開啟聊天室icon"/></button>
-          <button class="checkInfoBtn action-btn" data-action="watchComment" data-id="${id}" style="font-size: 1rem;">查看對方評論<img src="../svg/reviewsIcon.svg" alt="查看對方評論icon" style="border-radius: 50%; width: 20px;"/></button>
-        </div>
-        <li style="text-align:end;">
-          <span class="orderstyle">總計</span>
-          <span style="font-weight:600;color:#004b97">
-            ${data.totalAmount}
-          </span> 元
-        </li>
-      </ul>
-      <hr style="border:none;border-top:1px dashed #7bbfb9;margin:12px 0;">
-      <span class="orderstyle">訂購商品</span>
-      <table class="align-middle responsive-table mt-3 mb-3" style="border: none;">
-        <thead>
-          <tr>
-            <th>商品編號</th>
-            <th>商品照片</th>
-            <th>名稱</th>
-            <th>購買數量</th>
-            <th>單價(元)</th>
-          </tr>
-        </thead>
-        <tbody class="itemlist"></tbody>
-      </table>
-      <span class="orderstyle">此訂單評價</span>
-      ${renderOrderReviews(reviewBothData?.reviews ?? [], isSell)}
-    `;
+    // ── 商品清單 ──
+    const items = data.orderItems || [];
+    if (itemCountEl) itemCountEl.textContent = `共 ${items.length} 件`;
 
-    const itemlist = infoBox.querySelector('.itemlist');
-    const items = data.orderItems;
-
-    if (!Array.isArray(items) || items.length === 0) {
-      itemlist.innerHTML = '<tr><td colspan="5">沒有商品資料</td></tr>';
-    } else {
-      itemlist.innerHTML = items.map(item => `
-        <tr>
-          <td data-label="商品編號">${item.itemId}</td>
-          <td data-label="商品照片">
-            <img src="${item.item.mainImage || '../image/placeholder.webp'}"
-                 style="width:80px;height:80px;object-fit:cover;cursor:pointer;border-radius:6px;transition:opacity 0.2s;"
-                 onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
-          </td>
-          <td data-label="名稱">${htmlEncode(item?.item.name)}</td>
-          <td data-label="購買數量">${item.quantity}</td>
-          <td data-label="單價(元)">${item.price}</td>
-        </tr>
-      `).join('');
-      itemlist.querySelectorAll('td[data-label="商品照片"] img').forEach(img => {
-        img.addEventListener('click', () => {
-          Swal.fire({
-            imageUrl: img.src,
-            imageAlt: '商品照片',
-            showConfirmButton: false,
-            showCloseButton: true,
-            background: '#fff',
-            width: 'auto',
+    if (productBox) {
+      if (!items.length) {
+        productBox.innerHTML = '<div class="text-center py-4 text-muted">沒有商品資料</div>';
+      } else {
+        productBox.innerHTML = items.map(item => `
+          <div class="od-product">
+            <img class="od-product-img" src="${item.item.mainImage || '../image/placeholder.webp'}" alt="商品照片">
+            <div class="od-product-info">
+              <div class="od-pid">#${item.itemId}</div>
+              <div class="od-pname">${htmlEncode(item?.item?.name ?? '—')}</div>
+              <div class="od-pmeta"><span class="od-qty">數量 ×${item.quantity}</span></div>
+            </div>
+            <div class="od-product-price">
+              <div class="od-price-lbl">UNIT</div>
+              <div class="od-price-val">NT$${item.price}<span class="od-price-unit">元</span></div>
+            </div>
+          </div>
+        `).join('') + `
+          <div class="od-summary">
+            <div class="od-summary-row"><span>商品小計</span><span>NT$${data.totalAmount} 元</span></div>
+            <div class="od-summary-row"><span>運費</span><span>${orderTypeMap[data.type] || data.type}（免運）</span></div>
+            <div class="od-summary-row od-total">
+              <span>實付金額</span>
+              <span class="od-total-val">NT$${data.totalAmount}<span class="od-total-unit">元</span></span>
+            </div>
+          </div>`;
+        productBox.querySelectorAll('.od-product-img').forEach(img => {
+          img.addEventListener('click', () => {
+            Swal.fire({ imageUrl: img.src, imageAlt: '商品照片', showConfirmButton: false, showCloseButton: true, width: 'auto' });
           });
         });
-      });
+      }
     }
 
-    updateStatusUI(data, isSell ? sellDetail : buyDetail);
+    // ── 訂單資訊 + 對方資訊卡 ──
+    if (infoBox) {
+      const STATUS_PILL = {
+        pending:        { cls: 'sp-pend', text: '等待賣家接受' },
+        preparing:      { cls: 'sp-pack', text: '備貨準備中' },
+        delivered:      { cls: 'sp-ship', text: '等待確認收貨' },
+        review_pending: { cls: 'sp-eval', text: '等待評價' },
+        completed:      { cls: 'sp-done', text: '已完成' },
+        canceled:       { cls: 'sp-canc', text: '已取消' },
+      };
+      const pillInfo = STATUS_PILL[data.status] || { cls: 'sp-pend', text: data.status };
+      const rp = data.reviewProgress ?? {};
+      const deadlineSuffix = (data.status === 'review_pending' && rp.reviewDeadline)
+        ? ` <span style="font-size:0.78em;color:#e07b39;">（截止：${fmtDate(rp.reviewDeadline)}）</span>` : '';
+      const createdDate = new Date(data.createdAt).toLocaleDateString('zh-TW', { year:'numeric', month:'long', day:'numeric' });
+      const partnerUser = isSell ? data.buyerUser : data.sellerUser;
+      const partnerRole = isSell ? 'BUYER · 買家' : 'SELLER · 賣家';
+      let partnerAvatar = partnerUser?.photoURL || partnerUser?.avatar || null;
 
-    // 切換畫面（確認用戶還在詳細頁，避免 async 回來時已返回列表）
+      if (!partnerAvatar && partnerUser) {
+        const partnerId = partnerUser?.id ?? partnerUser?.accountId;
+        if (partnerId) {
+          try {
+            const profileRes = await backendService.getPublicUserProfile(partnerId);
+            const pd = profileRes?.data?.data;
+            partnerAvatar = pd?.photoURL || pd?.avatar || null;
+          } catch (_) {}
+        }
+      }
+
+      infoBox.innerHTML = `
+        <div class="od-info-list">
+          <div class="od-info-row">
+            <span class="od-info-lbl">建立日期</span>
+            <span class="od-info-val">${createdDate}</span>
+          </div>
+          <div class="od-info-row">
+            <span class="od-info-lbl">訂單狀態</span>
+            <span class="od-info-val"><span class="od-spill ${pillInfo.cls}">${pillInfo.text}</span>${deadlineSuffix}</span>
+          </div>
+          <div class="od-info-row">
+            <span class="od-info-lbl">交貨方式</span>
+            <span class="od-info-val">${orderTypeMap[data.type] || data.type}</span>
+          </div>
+          <div class="od-info-row">
+            <span class="od-info-lbl">訂單編號</span>
+            <span class="od-info-val od-mono">${id}</span>
+          </div>
+        </div>
+        <div class="od-person-section">
+          <div class="od-person-card">
+            <img class="od-person-av" src="${partnerAvatar || DEFAULT_AVATAR}" alt="對方大頭貼">
+            <div class="od-person-info">
+              <div class="od-person-role">${partnerRole}</div>
+              <div class="od-person-name">${htmlEncode(partnerUser?.name ?? '—')}</div>
+            </div>
+          </div>
+          <div class="od-person-actions">
+            <button class="od-btn-person action-btn" data-action="contact" data-id="${id}">
+              <img src="../svg/canChat.svg" alt="聯絡">與對方聯絡
+            </button>
+            <button class="od-btn-person action-btn" data-action="watchComment" data-id="${id}">
+              <img src="../svg/reviewsIcon.svg" alt="評論" style="border-radius:50%;">查看對方評論
+            </button>
+          </div>
+        </div>`;
+    }
+
+    // ── 評論 ──
+    if (reviewBox) {
+      if (reviewCountEl) reviewCountEl.textContent = `${reviews.length} 則`;
+      if (!reviews.length) {
+        const emptyMsg = data.status === 'canceled' ? '本訂單已取消，無法進行評論' : '完成訂單後可留下評價';
+        reviewBox.innerHTML = `
+          <div class="od-review-empty">
+            <div class="od-review-empty-ic">
+              <svg viewBox="0 0 24 24"><path d="M4 5 H20 V17 H13 L9 21 V17 H4 Z"/></svg>
+            </div>
+            <div class="od-review-empty-t">尚無評論</div>
+            <div class="od-review-empty-s">${emptyMsg}</div>
+          </div>`;
+      } else {
+        reviewBox.innerHTML = renderOrderReviews(reviews, isSell);
+      }
+    }
+
+    // ── 更多操作 ──
+    if (actionsBox) {
+      const rp = data.reviewProgress ?? {};
+      const actionRows = [];
+      if (isSell) {
+        if (data.status === 'pending') {
+          actionRows.push({ action: '接受訂單', icon: '../svg/acceptOrder.svg',  title: '接受訂單', desc: '確認接受並開始備貨', danger: false });
+          actionRows.push({ action: 'cancel',   icon: '../svg/cancelOrder.svg',  title: '取消訂單', desc: '拒絕並取消此筆訂單', danger: true  });
+        } else if (data.status === 'preparing') {
+          actionRows.push({ action: '即將出貨', icon: '../svg/readyDeliver.svg', title: '登記出貨', desc: '通知買家已備妥，準備交貨', danger: false });
+          actionRows.push({ action: 'cancel',   icon: '../svg/cancelOrder.svg',  title: '取消訂單', desc: '取消此筆訂單', danger: true });
+        } else if (data.status === 'review_pending' && !rp.sellerReviewed) {
+          actionRows.push({ action: '給對方評價', icon: '../svg/giveStar.svg', title: '留下評價', desc: '對買家的交易留下評論', danger: false });
+        }
+      } else {
+        if (data.status === 'pending' || data.status === 'preparing') {
+          actionRows.push({ action: 'cancel', icon: '../svg/cancelOrder.svg', title: '取消訂單', desc: '取消此筆訂單', danger: true });
+        } else if (data.status === 'delivered') {
+          actionRows.push({ action: '成功取貨', icon: '../svg/acceptOrder.svg', title: '確認收貨', desc: '確認已取得商品', danger: false });
+          actionRows.push({ action: 'cancel',   icon: '../svg/cancelOrder.svg', title: '取消訂單', desc: '取消此筆訂單', danger: true });
+        } else if (data.status === 'review_pending' && !rp.buyerReviewed) {
+          actionRows.push({ action: '給對方評價', icon: '../svg/giveStar.svg', title: '留下評價', desc: '對賣家的交易留下評論', danger: false });
+        }
+      }
+      actionsBox.innerHTML = actionRows.length
+        ? actionRows.map(a => `
+          <button class="od-action-row action-btn ${a.danger ? 'od-danger' : ''}" data-action="${a.action}" data-id="${id}">
+            <div class="od-ar-ic"><img src="${a.icon}" alt="${a.title}"></div>
+            <div class="od-ar-copy">
+              <div class="od-ar-title">${a.title}</div>
+              <div class="od-ar-desc">${a.desc}</div>
+            </div>
+            <span class="od-ar-arr">›</span>
+          </button>`).join('')
+        : `<div class="text-center py-4 text-muted" style="font-size:13px;">目前沒有可執行的操作</div>`;
+    }
+
+    // ── 更新 Timeline ──
+    updateStatusUI(data, detailEl);
+
+    // 標記最新步驟（ping 動畫）
+    const activeSteps = detailEl.querySelectorAll('.od-step.active');
+    detailEl.querySelectorAll('.od-step').forEach(s => s.classList.remove('od-current'));
+    if (activeSteps.length) activeSteps[activeSteps.length - 1].classList.add('od-current');
+
+    // ── 切換畫面 ──
     if (!new URLSearchParams(window.location.search).get('orderId')) return;
     if (isSell) {
       document.getElementById('sellTable').style.display = 'none';
@@ -1544,11 +1764,7 @@ async function getDetail(id) {
     }
 
   } catch (error) {
-    Swal.fire({
-      title: 'Oops',
-      icon: 'error',
-      text: error.message || error
-    });
+    Swal.fire({ title: 'Oops', icon: 'error', text: error.message || error });
   }
 }
 function openOrderDetail(id) {
@@ -1646,13 +1862,12 @@ const updateStatusUI = (data, container) => {
   const scoreLog  = logs.find(log => log.status === 'completed');
 
   const defaultTextMap = {
-    pending:        "訂單已建立<br>等待賣家接受",
-    preparing:      "賣家已接受訂單<br>正在準備商品",
-    delivered:      "賣家已出貨<br>等待買家確認收貨",
-    review_pending: "買家已確認收貨<br>等待雙方評價",
-    completed:      "訂單已完成",
+    pending:        '訂單已建立',
+    preparing:      '準備商品',
+    delivered:      '已出貨',
+    review_pending: '待評價',
+    completed:      '已完成',
   };
-  // statusName → SVG 檔名前綴（review_pending → completed.svg、completed → scored.svg）
   const svgNameMap = {
     review_pending: 'completed',
     completed:      'scored',
@@ -1660,57 +1875,40 @@ const updateStatusUI = (data, container) => {
 
   // 1️⃣ reset
   statusItems.forEach(item => {
-    const img = item.querySelector('img');
-    const timeBox = item.querySelector('.timestamp');
-    const text = item.querySelector('.stateText');
+    const img      = item.querySelector('img');
+    const timeBox  = item.querySelector('.timestamp');
+    const text     = item.querySelector('.stateText');
     const statusName = item.dataset.status;
 
-    // reset icon
     const svgPrefix = svgNameMap[statusName] ?? statusName;
     img.src = `../svg/${svgPrefix}yet.svg`;
     timeBox.innerText = '';
-    item.classList.remove('active');
+    item.classList.remove('active', 'od-cancelled');
     item.style.display = '';
 
-    if (text) text.innerHTML = defaultTextMap[statusName];
+    if (text) text.innerHTML = defaultTextMap[statusName] ?? statusName;
   });
 
   // 2️⃣ fill logs
-  let cancelShown = false;
   statusItems.forEach(item => {
     const statusName = item.dataset.status;
-    const logEntry = logs.find(l => l.status === statusName);
-    const img = item.querySelector('img');
-    const timeBox = item.querySelector('.timestamp');
-    const text = item.querySelector('.stateText');
+    const logEntry   = logs.find(l => l.status === statusName);
+    const img        = item.querySelector('img');
+    const timeBox    = item.querySelector('.timestamp');
+    const text       = item.querySelector('.stateText');
 
-    // 🔥 有取消紀錄（且尚未評分完成）
     if (cancelLog && !scoreLog) {
-
       if (logEntry) {
-        // cancel 前完成的流程 → 彩色
         img.src = img.src.replace('yet.svg', '.svg');
         timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
         item.classList.add('active');
-      } else if (window.innerWidth <= 991) {
-        // 手機版：只顯示第一個 cancel icon，其餘隱藏
-        if (!cancelShown) {
-          img.src = '../svg/cancel.svg';
-          timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
-          if (text) text.innerHTML = '訂單已取消';
-          cancelShown = true;
-        } else {
-          item.style.display = 'none';
-        }
       } else {
-        // 桌機版：所有未完成的步驟都補上 cancel icon + 時間
         img.src = '../svg/cancel.svg';
         timeBox.innerText = formatter.format(new Date(cancelLog.timestamp));
-        if (text) text.innerHTML = '訂單已取消';
+        item.classList.add('od-cancelled');
+        if (text) text.innerHTML = '已取消';
       }
-    }
-    // 🟢 正常流程
-    else if (logEntry) {
+    } else if (logEntry) {
       img.src = img.src.replace('yet.svg', '.svg');
       timeBox.innerText = formatter.format(new Date(logEntry.timestamp));
       item.classList.add('active');
@@ -2247,76 +2445,6 @@ function renderStars(score, max = 5) {
   return '★'.repeat(score) + '☆'.repeat(Math.max(0, max - score));
 }
 
-async function openPartnerReviewModal(orderId, isSell) {
-  const data = window.currentOrder;
-  const partnerUser = isSell ? data?.buyerUser : data?.sellerUser;
-  const partnerName = partnerUser?.name || '對方';
-  const partnerPhoto = partnerUser?.photoURL || '../image/default-avatar.webp';
-  const partnerCredit = partnerUser?.rate ?? '-';
-  const partnerIntro = partnerUser?.intro ?? partnerUser?.description ?? '';
-  const partnerId = partnerUser?.id ?? partnerUser?.accountId;
-
-  let review = null;
-  let partnerStats = null;
-
-  try {
-    const [orderRes, statsRes] = await Promise.all([
-      backendService.getOrderBothReviews(orderId),
-      partnerId ? backendService.getUserReviews(partnerId) : Promise.resolve(null),
-    ]);
-    const reviews = orderRes?.data?.data?.reviews ?? [];
-    // 找對方給我的評論：賣家找 BUYER_TO_SELLER，買家找 SELLER_TO_BUYER
-    const targetRole = isSell ? 'BUYER_TO_SELLER' : 'SELLER_TO_BUYER';
-    review = reviews.find(r => r.role === targetRole) ?? null;
-    partnerStats = statsRes?.data?.data?.stats ?? null;
-  } catch (e) {
-    // 尚無評論
-  }
-
-  const reviewCount = Number(partnerStats?.reviewCount ?? 0);
-  const accountScore = partnerStats?.accountScore ?? '-';
-  const statsHtml = reviewCount > 0
-    ? `<div style="font-size:12px;color:#555;margin-top:2px;">${reviewCount} 則評價 · 信譽積分 ${accountScore}</div>`
-    : `<div style="font-size:12px;color:#aaa;margin-top:2px;">尚無評價紀錄</div>`;
-
-  let bodyHtml = '';
-  if (review) {
-    const tags = Array.isArray(review?.tags) ? review.tags : [];
-    const tagChips = tags.map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`).join('');
-    bodyHtml = `
-      ${tagChips ? `<div class="review-card__chips" style="margin:8px 0;">${tagChips}</div>` : ''}
-      <div class="review-display-comment">${review.comment || '<span style="color:#aaa">（無文字評論）</span>'}</div>
-    `;
-  } else {
-    bodyHtml = '<div class="review-display-empty">對方尚未留下評論</div>';
-  }
-
-  Swal.fire({
-    title: '對方評論',
-    customClass: { htmlContainer: 'swal-left-body' },
-    html: `
-      <div class="review-target-row">
-        <img src="${partnerPhoto}" class="review-target-avatar reviewer-avatar--clickable" style="cursor:pointer;"
-          data-reviewer-id="${partnerId ?? ''}" data-reviewer-name="${esc(partnerName)}" data-reviewer-photo="${esc(partnerPhoto)}"
-          alt="${partnerName}頭像" title="查看 ${esc(partnerName)} 的評價">
-        <div>
-          <div class="review-target-name reviewer-avatar--clickable" style="cursor:pointer;text-decoration:underline dotted #abdad5;"
-            data-reviewer-id="${partnerId ?? ''}" data-reviewer-name="${esc(partnerName)}" data-reviewer-photo="${esc(partnerPhoto)}">${partnerName}</div>
-          <div class="review-target-credit">
-            <i class="ti ti-star-filled" style="color:#f5a623;"></i>
-            信譽積分：<strong>${partnerCredit}</strong>
-          </div>
-          ${statsHtml}
-          ${partnerIntro ? `<div style="font-size:12px;color:#888;margin-top:2px;">${partnerIntro}</div>` : ''}
-        </div>
-      </div>
-      ${bodyHtml}
-    `,
-    confirmButtonText: '關閉',
-    width: 500,
-    didOpen: (popup) => bindReviewerClicks(popup),
-  });
-}
 // ===== 商品管理分頁 =====
 async function loadMyItems(p = 1) {
   myItemsPage = p;
@@ -2324,7 +2452,7 @@ async function loadMyItems(p = 1) {
   document.querySelector('#products tbody').innerHTML =
     `<tr><td colspan="6" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
   document.getElementById('product-cards').innerHTML =
-    `<div class="col-12 text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
+    `<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
   try {
     const res = await backendService.getMyItems({ page: p, limit: MY_ITEMS_LIMIT });
     const raw = res?.data;
@@ -2411,75 +2539,7 @@ function isTagPositive(tag) {
   return v !== undefined ? v : true;
 }
 
-function bindReviewerClicks(container) {
-  container.addEventListener('click', e => {
-    if (e.target.closest('[data-report-review-id]')) {
-      const btn = e.target.closest('[data-report-review-id]');
-      openReportReviewSwal(btn.dataset.reportReviewId, btn.dataset.reportReviewerName, btn.dataset.reportReviewerId);
-      return;
-    }
-    const el = e.target.closest('[data-reviewer-id]');
-    if (!el) return;
-    const rid    = el.dataset.reviewerId;
-    const rname  = el.dataset.reviewerName;
-    const rphoto = el.dataset.reviewerPhoto;
-    if (rid) openReviewerProfileModal(rid, rname, rphoto);
-  });
-}
-
-async function openReportReviewSwal(reviewId, reviewerName, reviewerUserId) {
-  let categories = [];
-  try {
-    const res = await backendService.getReportCategories();
-    categories = res?.data?.categories ?? [];
-  } catch (_) {}
-  const catOptions = categories.map(c => `<option value="${c.category}">${c.meaning}</option>`).join('');
-
-  const { isConfirmed, value } = await Swal.fire({
-    title: '檢舉評價',
-    customClass: { popup: 'report-form-popup' },
-    html: `
-      ${reviewerName ? `<p class="report-form-target">檢舉對象：<strong>${reviewerName}</strong></p>` : ''}
-      <label class="report-form-label" for="report-category">檢舉類型 <span style="color:red">*</span></label>
-      <select id="report-category" class="report-form-select">
-        <option value="" disabled selected>請選擇檢舉類型</option>
-        ${catOptions}
-      </select>
-      <label class="report-form-label" for="report-subject">主旨 <span style="color:red">*</span></label>
-      <input id="report-subject" class="report-form-input" placeholder="請輸入主旨（最多 120 字）" maxlength="120">
-      <label class="report-form-label" for="report-detail">補充說明 <span class="report-form-optional">（選填，最多 1000 字）</span></label>
-      <textarea id="report-detail" class="report-form-textarea" placeholder="請描述詳細情況" maxlength="1000"></textarea>
-    `,
-    showCancelButton: true,
-    confirmButtonText: '送出檢舉',
-    cancelButtonText: '取消',
-    focusConfirm: false,
-    preConfirm: () => {
-      const category = document.getElementById('report-category').value;
-      const subject  = document.getElementById('report-subject').value.trim();
-      const detail   = document.getElementById('report-detail').value.trim();
-      if (!category) { Swal.showValidationMessage('請選擇檢舉類型'); return false; }
-      if (!subject)  { Swal.showValidationMessage('請填寫主旨'); return false; }
-      return { category, subject, detail };
-    }
-  });
-  if (!isConfirmed || !value) return;
-  try {
-    if (reviewerUserId) {
-      const fd = new FormData();
-      fd.append('reportedUserId', reviewerUserId);
-      fd.append('category', value.category);
-      fd.append('subject', value.subject);
-      if (value.detail) fd.append('detail', value.detail);
-      await backendService.submitReport(fd);
-    } else {
-      await backendService.reportReview(reviewId, { reason: value.category, subject: value.subject, detail: value.detail });
-    }
-    Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
-  } catch (e) {
-    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
-  }
-}
+// bindReviewerClicks 與 openReviewerProfileModal 已由 ../shared/reviewerModal.js 提供
 
 function renderPersonReviewCard(review, role) {
   const name      = review?.reviewer?.name ?? '評價者';
@@ -2513,56 +2573,7 @@ function renderPersonReviewCard(review, role) {
     </div>`;
 }
 
-async function openReviewerProfileModal(accountId, name, photo) {
-  let stats = null;
-  let sellerReviews = [];
-  let buyerReviews  = [];
-  let intro = '';
-  try {
-    const [reviewRes, profileRes] = await Promise.all([
-      backendService.getUserReviews(accountId),
-      backendService.getPublicUserProfile(accountId).catch(() => null),
-    ]);
-    const d = reviewRes?.data?.data;
-    stats = d?.stats ?? null;
-    sellerReviews = d?.sellerReviews ?? [];
-    buyerReviews  = d?.buyerReviews  ?? [];
-    intro = profileRes?.data?.data?.introduction ?? '';
-  } catch (e) { /* silent */ }
-
-  const reviewCount = Number(stats?.reviewCount ?? 0);
-  const accountScore = stats?.accountScore ?? '-';
-  const statsHtml = reviewCount > 0
-    ? `<div style="font-size:12px;color:#555;margin-top:2px;">${reviewCount} 則評價 · 信譽積分 ${accountScore}</div>`
-    : `<div style="font-size:12px;color:#aaa;margin-top:2px;">尚無評價紀錄</div>`;
-
-  const allCards = [
-    ...sellerReviews.map(r => renderPersonReviewCard(r, 'seller')),
-    ...buyerReviews.map(r => renderPersonReviewCard(r, 'buyer')),
-  ].join('');
-  const reviewHtml = allCards
-    ? `<div class="review-list">${allCards}</div>`
-    : `<div class="review-empty" style="margin-top:12px;">目前尚無評價紀錄</div>`;
-
-  Swal.fire({
-    title: `${name} 的評價`,
-    customClass: { htmlContainer: 'swal-left-body' },
-    html: `
-      <div class="review-target-row">
-        <img src="${photo}" class="review-target-avatar" alt="${name}頭像">
-        <div>
-          <div class="review-target-name">${name}</div>
-          ${statsHtml}
-          ${intro ? `<div style="font-size:12px;color:#888;margin-top:4px;">${esc(intro)}</div>` : ''}
-        </div>
-      </div>
-      <div style="max-height:340px;overflow-y:auto;margin-top:8px;">${reviewHtml}</div>
-    `,
-    confirmButtonText: '關閉',
-    width: 520,
-    didOpen: (popup) => bindReviewerClicks(popup),
-  });
-}
+// openReviewerProfileModal 已由 ../shared/reviewerModal.js 提供
 
 async function loadMyReviewStats() {
   const container = document.getElementById('reviewsContainer');

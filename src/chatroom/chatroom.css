@@ -1358,9 +1358,6 @@ html, body {
   text-align: center;
   transition: transform 0.3s ease;
 }
-.cart-count.bump {
-  transform: scale(1.4);
-}
 .cart-badge {
   position: absolute;
   top: -6px;
