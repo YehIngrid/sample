@@ -29,8 +29,8 @@ const input = {
   )
 }
 
-export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/sample/' : '/',
+export default defineConfig(() => ({
+  base: '/',
   server: {
     port: 3000,
   },
