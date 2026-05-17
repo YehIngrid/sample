@@ -806,30 +806,6 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
 .mh-search-form {
   max-width: 580px;
 }
-.mh-search-wrap {
-  width: 100%;
-  background: aliceblue;
-  border: 1.5px solid transparent;
-  border-radius: 999px !important;
-  transition: all 0.22s;
-  display: flex;
-  align-items: center;
-}
-.mh-search-wrap:focus-within {
-  background: #fff;
-  border-color: #004b97;
-  box-shadow: 0 0 0 4px rgba(0,75,151,0.08);
-}
-.mh-search-wrap .form-control {
-  flex: 1;
-  min-width: 0;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 999px !important;
-  font-size: 14px;
-  letter-spacing: 0.04em;
-}
 .mh-actions {
   display: flex;
   align-items: center;
@@ -942,43 +918,6 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
     transition: color 0.2s, border-color 0.2s;
     white-space: nowrap;
   }
-}
-
-/* ── 桌機版搜尋欄內熱門標籤 ── */
-.mh-hot-tags {
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-  padding-right: 38px;
-  font-size: 11px;
-  white-space: nowrap;
-  max-width: 220px;
-  overflow: hidden;
-  transition: opacity 0.18s;
-}
-.mh-hot-tags.mh-hot-hidden {
-  display: none !important;
-}
-.mh-hot-sep {
-  color: #6f87a0;
-  flex-shrink: 0;
-  letter-spacing: 0.04em;
-}
-.mh-hot-tag {
-  color: #004b97;
-  cursor: pointer;
-  font-size: 11px;
-  text-decoration: none;
-  transition: color 0.15s;
-  flex-shrink: 0;
-}
-.mh-hot-tag:hover {
-  color: rgb(36, 182, 133);
-}
-.mh-hot-tag + .mh-hot-tag::before {
-  content: '·';
-  color: #abdad5;
-  margin-right: 5px;
 }
 
 /* ── 手機版篩選：強制單排 + 置中 + 等高 ── */

@@ -121,9 +121,10 @@
         <div class="container-fluid1">
           <div class="d-flex align-items-center">
             <form id="searchForm" class="form-search w-100 d-flex justify-content-center align-items-center">
-              <div class="search-input-wrap" style="max-width: 730px; width: 100%; position: relative;">
+              <div class="search-input-wrap mh-search-wrap shop-search-wrap" style="position:relative;">
                 <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
                 <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
+                <div id="mhHotTags" class="mh-hot-tags d-none d-lg-flex"></div>
                 <button class="search-clear-btn" id="searchClearBtn" type="button" aria-label="清除搜尋"><i class="fa-solid fa-xmark"></i></button>
 
                 <!-- 搜尋下拉面板（手機 + 電腦） -->
@@ -149,15 +150,7 @@
                     <ul id="desktopHistoryList" class="search-drop-list"></ul>
                   </div>
 
-                  <!-- 大家都在搜 -->
-                  <div class="search-drop-section">
-                    <div class="search-drop-header">
-                      <span><i class="fa-solid fa-fire" style="color:#e8952a;margin-right:4px;"></i>大家都在搜</span>
-                    </div>
-                    <ul id="desktopTrendList" class="search-drop-list search-drop-trend">
-                      <li class="search-drop-empty">暫無資料</li>
-                    </ul>
-                  </div>
+                  <ul id="desktopTrendList" class="search-drop-list" style="display:none!important;"></ul>
                 </div>
               </div>
             </form>
@@ -1648,6 +1641,7 @@ const timer = setInterval(() => {
     if (input) {
       input.value = term;
       updateClearBtn(input, document.getElementById('searchClearBtn'));
+      _setHotTagsVisible(false);
       closeDropdown();
       addSearchHistory(term);
       document.getElementById('searchForm').dispatchEvent(new Event('submit'));
@@ -1672,14 +1666,24 @@ const timer = setInterval(() => {
     if (btn) btn.classList.toggle('visible', input.value.length > 0);
   }
 
-  // ── 熱門搜尋（API 還沒好時顯示 fallback） ──
+  function _setHotTagsVisible(visible) {
+    const el = document.getElementById('mhHotTags');
+    if (!el) return;
+    if (visible) el.classList.remove('mh-hot-hidden');
+    else el.classList.add('mh-hot-hidden');
+  }
+
+  // ── 熱門搜尋 ──
   const FALLBACK_TRENDS = ['課本', '腳踏車', '桌椅', '電風扇', '書包', '鍋碗瓢盆', '床單被套', '耳機'];
   let _trendsLoaded = false;
   async function renderTrending() {
     if (_trendsLoaded) return;
     let terms = [];
     try {
-      // TODO: const res = await axios.get('https://thpr.hlc23.dev/api/search/trending'); terms = res.data;
+      const res = await axios.get('https://thpr.hlc23.dev/api/commodity/search/trending', { params: { days: 7, limit: 8 } });
+      if (Array.isArray(res.data?.data) && res.data.data.length) {
+        terms = res.data.data.map(item => item.keyword).filter(Boolean);
+      }
     } catch (e) {}
     if (!terms.length) terms = FALLBACK_TRENDS;
     _trendsLoaded = true;
@@ -1692,6 +1696,16 @@ const timer = setInterval(() => {
     }).join('');
     const el = document.getElementById('desktopTrendList');
     if (el) el.innerHTML = html;
+    const mhHot = document.getElementById('mhHotTags');
+    if (mhHot) {
+      const mainInput = document.getElementById('searchInput');
+      mhHot.innerHTML = '<span class="mh-hot-sep">熱門：</span>' +
+        terms.slice(0, 3).map(t => {
+          const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');
+          return `<a class="mh-hot-tag" onclick="window._pickHistory('${safe}')">${t.replace(/</g, '&lt;')}</a>`;
+        }).join('');
+      if (mainInput && mainInput.value.trim()) mhHot.classList.add('mh-hot-hidden');
+    }
   }
 
   // ── 電腦 dropdown 顯示/隱藏 ──
@@ -1715,10 +1729,21 @@ const timer = setInterval(() => {
     if (!mainInput) return;
 
     // ── 搜尋欄（手機 + 電腦共用 dropdown） ──
-    mainInput.addEventListener('focus', openDropdown);
+    mainInput.addEventListener('focus', function () {
+      if (mainInput.value.trim()) _setHotTagsVisible(false);
+      openDropdown();
+    });
     mainInput.addEventListener('input', function () {
       updateClearBtn(mainInput, document.getElementById('searchClearBtn'));
-      if (!mainInput.value.trim()) openDropdown();
+      if (!mainInput.value.trim()) {
+        _setHotTagsVisible(true);
+        openDropdown();
+      } else {
+        _setHotTagsVisible(false);
+      }
+    });
+    mainInput.addEventListener('blur', function () {
+      if (!mainInput.value.trim()) _setHotTagsVisible(true);
     });
     mainInput.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
@@ -1743,10 +1768,13 @@ const timer = setInterval(() => {
     // ── 清除按鈕 ──
     document.getElementById('searchClearBtn')?.addEventListener('click', function () {
       mainInput.value = '';
-      mainInput.focus();
       updateClearBtn(mainInput, this);
+      _setHotTagsVisible(true);
+      mainInput.focus();
       openDropdown();
     });
+
+    renderTrending();
 
     // 清除紀錄
     document.getElementById('desktopClearHistory')?.addEventListener('click', function () {

@@ -477,6 +477,7 @@
     if (input) {
       input.value = term;
       updateClearBtn(input, document.getElementById('searchClearBtn'));
+      _setHotTagsVisible(false);
       closeDropdown();
       addSearchHistory(term);
       document.getElementById('searchForm').dispatchEvent(new Event('submit'));
@@ -518,14 +519,24 @@
     if (btn) btn.classList.toggle('visible', input.value.length > 0);
   }
 
-  // ── 熱門搜尋（API 還沒好時顯示 fallback） ──
+  function _setHotTagsVisible(visible) {
+    const el = document.getElementById('mhHotTags');
+    if (!el) return;
+    if (visible) el.classList.remove('mh-hot-hidden');
+    else el.classList.add('mh-hot-hidden');
+  }
+
+  // ── 熱門搜尋 ──
   const FALLBACK_TRENDS = ['課本', '腳踏車', '桌椅', '電風扇', '書包', '鍋碗瓢盆', '床單被套', '耳機'];
   let _trendsLoaded = false;
   async function renderTrending() {
     if (_trendsLoaded) return;
     let terms = [];
     try {
-      // TODO: const res = await axios.get('https://thpr.hlc23.dev/api/search/trending'); terms = res.data;
+      const res = await axios.get('https://thpr.hlc23.dev/api/commodity/search/trending', { params: { days: 7, limit: 8 } });
+      if (Array.isArray(res.data?.data) && res.data.data.length) {
+        terms = res.data.data.map(item => item.keyword).filter(Boolean);
+      }
     } catch (e) {}
     if (!terms.length) terms = FALLBACK_TRENDS;
     _trendsLoaded = true;
@@ -631,17 +642,10 @@
       });
     }
 
-    function _setHotTagsVisible(visible) {
-      const el = document.getElementById('mhHotTags');
-      if (!el) return;
-      if (visible) el.classList.remove('mh-hot-hidden');
-      else el.classList.add('mh-hot-hidden');
-    }
-
     // ── 電腦搜尋欄 ──
     if (mainInput) {
       mainInput.addEventListener('focus', function () {
-        _setHotTagsVisible(false);
+        if (mainInput.value.trim()) _setHotTagsVisible(false);
         openDropdown();
       });
       mainInput.addEventListener('input', function () {
@@ -671,9 +675,9 @@
       });
       document.getElementById('searchClearBtn')?.addEventListener('click', function () {
         mainInput.value = '';
-        mainInput.focus();
         updateClearBtn(mainInput, this);
         _setHotTagsVisible(true);
+        mainInput.focus();
         openDropdown();
         document.getElementById('searchForm').dispatchEvent(new Event('submit'));
       });

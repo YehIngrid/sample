@@ -608,6 +608,7 @@ async function handleRouting() {
     } else if (page === 'settings') {
       loadSettingsData();
       loadMyReports(1);
+      loadReportHistory(1);
     }
   } catch (err) {
     console.error(err);
@@ -696,9 +697,9 @@ async function loadSellerOrders(page) {
   } catch (err) {
     console.error('loadSellerOrders failed', err);
     const tbody = document.querySelector('#sellProducts tbody');
-    if (tbody) tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4">載入失敗，請重新整理</td></tr>`;
+    if (tbody) tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4"><i class="ti ti-alert-circle" style="font-size:1.8rem;color:#abdad5;display:block;margin-bottom:6px;"></i><span class="text-muted" style="font-size:13px;">載入失敗，請重新整理</span></td></tr>`;
     const cards = document.getElementById('sell-product');
-    if (cards) cards.innerHTML = `<div class="text-center text-muted py-4">載入失敗，請重新整理</div>`;
+    if (cards) cards.innerHTML = `<div class="review-empty"><i class="ti ti-alert-circle review-empty-icon"></i><div class="review-empty-title">載入失敗</div><div class="review-empty-sub">請重新整理頁面</div></div>`;
   }
 }
 
@@ -716,9 +717,9 @@ async function loadBuyerOrders(page) {
   } catch (err) {
     console.error('loadBuyerOrders failed', err);
     const tbody = document.querySelector('#buyProducts tbody');
-    if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">載入失敗，請重新整理</td></tr>`;
+    if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4"><i class="ti ti-alert-circle" style="font-size:1.8rem;color:#abdad5;display:block;margin-bottom:6px;"></i><span class="text-muted" style="font-size:13px;">載入失敗，請重新整理</span></td></tr>`;
     const cards = document.getElementById('buy-product');
-    if (cards) cards.innerHTML = `<div class="text-center text-muted py-4">載入失敗，請重新整理</div>`;
+    if (cards) cards.innerHTML = `<div class="review-empty"><i class="ti ti-alert-circle review-empty-icon"></i><div class="review-empty-title">載入失敗</div><div class="review-empty-sub">請重新整理頁面</div></div>`;
   }
 }
 
@@ -939,8 +940,10 @@ function _relTime(d) {
   if (h < 24) return `${h} 小時前`;
   return `${Math.floor(h / 24)} 天前`;
 }
-function _notifItemHtml(text, meta, time, unread = true) {
-  return `<div class="notif-item">
+function _notifItemHtml(text, meta, time, unread = true, href = '') {
+  const tag = href ? 'a' : 'div';
+  const attr = href ? ` href="${href}"` : '';
+  return `<${tag} class="notif-item"${attr}>
     <span class="notif-dot${unread ? '' : ' read'}"></span>
     <div class="notif-body">
       <div class="notif-ttl">${htmlEncode(text)}</div>
@@ -949,7 +952,7 @@ function _notifItemHtml(text, meta, time, unread = true) {
         <span>${time}</span>
       </div>
     </div>
-  </div>`;
+  </${tag}>`;
 }
 
 // localStorage key 存「上次看到的檢舉狀態」
@@ -963,7 +966,6 @@ function _detectReportChanges(reports) {
     const id = r.id;
     next[id] = { status: r.status, subject: r.subject ?? '', reviewedAt: r.reviewedAt ?? null };
     const prev = cache[id];
-    // 只在 pending → approved/rejected 時才算有變化
     if (prev && prev.status === 'pending' && r.status !== 'pending') {
       const label = r.status === 'approved' ? '檢舉已通過' : '檢舉已駁回';
       synth.push({
@@ -974,8 +976,35 @@ function _detectReportChanges(reports) {
       });
     }
   });
-  // 更新快取（保留舊紀錄以免 pagination 導致遺漏）
   localStorage.setItem(_RPT_CACHE_KEY, JSON.stringify({ ...cache, ...next }));
+  return synth;
+}
+
+// localStorage key 存「上次看到的被檢舉紀錄 id 集合」
+const _RPT_HIST_KEY = '_rptHistCache';
+
+function _detectReportHistoryChanges(records) {
+  const cached = new Set(JSON.parse(localStorage.getItem(_RPT_HIST_KEY) || '[]'));
+  const synth = [];
+  const next = [];
+  records.forEach(r => {
+    const key = r.id ?? `${r.subject}|${r.updatedAt}`;
+    next.push(key);
+    if (!cached.has(key)) {
+      const delta = Number(r.scoreDelta ?? 0);
+      const deltaSign = delta >= 0 ? '+' : '';
+      synth.push({
+        text: `收到檢舉：${r.subject ?? ''}（${deltaSign}${delta} 分）`,
+        meta: '被檢舉通知',
+        time: _relTime(r.updatedAt),
+        unread: true,
+      });
+    }
+  });
+  // 只有確實拿到資料才更新快取（避免 API 失敗時清掉舊快取）
+  if (records.length > 0 || cached.size === 0) {
+    localStorage.setItem(_RPT_HIST_KEY, JSON.stringify(next));
+  }
   return synth;
 }
 
@@ -983,28 +1012,123 @@ async function loadRecentNotifications() {
   const container = document.getElementById('recentNotifList');
   if (!container) return;
   try {
-    const [notifRes, rptRes] = await Promise.all([
+    const isAdmin = (sessionStorage.getItem('role') ?? '').toLowerCase() === 'admin';
+    const [notifRes, rptRes, rptHistRaw, sellPendingRes, buyDeliveredRes, sellReviewRes, buyReviewRes, adminRptRes] = await Promise.all([
       backendService.getNotifications(1, 20),
       backendService.getMyReports({ page: 1, limit: 20 }).catch(() => null),
+      backendService.getReportHistory({ page: 1, limit: 10 }).catch(() => null),
+      backendService.getSellerOrders(1, 'pending').catch(() => null),
+      backendService.getBuyerOrders(1, 'delivered').catch(() => null),
+      backendService.getSellerOrders(1, 'review_pending').catch(() => null),
+      backendService.getBuyerOrders(1, 'review_pending').catch(() => null),
+      isAdmin ? backendService.getAllReports({ status: 'pending', page: 1, limit: 1 }).catch(() => null) : Promise.resolve(null),
     ]);
 
-    const apiItems = (notifRes?.data?.data?.notifications ?? []).filter(n => !n.isRead);
+    // API 通知：取最近 8 筆，不限已讀／未讀
+    const apiItems = (notifRes?.data?.data?.notifications ?? []).slice(0, 8);
     const reports  = rptRes?.data?.reports ?? [];
-    const synthNotifs = _detectReportChanges(reports);
+    const rptHistRecords = Array.isArray(rptHistRaw) ? rptHistRaw : (rptHistRaw?.data ?? []);
 
-    const apiHtml = apiItems.slice(0, 5).map(n => {
+    // ── 訂單合成通知 ───────────────────────────────────────
+    const orderSynth = [];
+
+    // 待確認訂單（賣家）
+    const pendingOrders = sellPendingRes?.data?.data?.orders ?? [];
+    const pendingTotal  = sellPendingRes?.data?.data?.pagination?.totalItems ?? pendingOrders.length;
+    if (pendingTotal > 0) {
+      orderSynth.push({
+        text: `您有 ${pendingTotal} 筆待確認訂單，請盡快處理`,
+        meta: '銷售訂單',
+        time: '',
+        unread: true,
+        href: '?page=sellProducts',
+      });
+    }
+
+    // 待收貨（買家確認收貨）
+    const deliveredOrders = buyDeliveredRes?.data?.data?.orders ?? [];
+    const deliveredTotal  = buyDeliveredRes?.data?.data?.pagination?.totalItems ?? deliveredOrders.length;
+    if (deliveredTotal > 0) {
+      orderSynth.push({
+        text: `您有 ${deliveredTotal} 筆待收貨訂單，請確認收貨`,
+        meta: '消費訂單',
+        time: '',
+        unread: true,
+        href: '?page=buyProducts',
+      });
+    }
+
+    // 待評價（賣家）
+    const sellReviewOrders = sellReviewRes?.data?.data?.orders ?? [];
+    const sellNeedReview   = sellReviewOrders.filter(o => !o.reviewProgress?.sellerReviewed);
+    const sellReviewTotal  = sellReviewRes?.data?.data?.pagination?.totalItems ?? sellNeedReview.length;
+    if (sellReviewTotal > 0) {
+      orderSynth.push({
+        text: `您有 ${sellReviewTotal} 筆待評價訂單（賣家），完成後雙方各 +5 分`,
+        meta: '評價提醒',
+        time: '',
+        unread: true,
+        href: '?page=sellProducts',
+      });
+    }
+
+    // 待評價（買家）
+    const buyReviewOrders = buyReviewRes?.data?.data?.orders ?? [];
+    const buyNeedReview   = buyReviewOrders.filter(o => !o.reviewProgress?.buyerReviewed);
+    const buyReviewTotal  = buyReviewRes?.data?.data?.pagination?.totalItems ?? buyNeedReview.length;
+    if (buyReviewTotal > 0) {
+      orderSynth.push({
+        text: `您有 ${buyReviewTotal} 筆待評價訂單（買家），完成後雙方各 +5 分`,
+        meta: '評價提醒',
+        time: '',
+        unread: true,
+        href: '?page=buyProducts',
+      });
+    }
+
+    // ── Admin：待審核檢舉 ──────────────────────────────────
+    if (isAdmin) {
+      const adminPendingTotal = adminRptRes?.data?.pagination?.totalItems
+        ?? adminRptRes?.pagination?.totalItems
+        ?? (Array.isArray(adminRptRes?.data) ? adminRptRes.data.length : (adminRptRes?.reports?.length ?? 0));
+      if (adminPendingTotal > 0) {
+        orderSynth.push({
+          text: `有 ${adminPendingTotal} 件檢舉待審核`,
+          meta: '管理員待處理',
+          time: '',
+          unread: true,
+          href: '',
+        });
+      }
+    }
+
+    const synthNotifs = [
+      ..._detectReportChanges(reports),
+      ..._detectReportHistoryChanges(rptHistRecords),
+    ];
+
+    const apiHtml = apiItems.map(n => {
       const typeLabel   = _NOTIF_LABELS[n.type] ?? n.type ?? '';
-      const displayText = n.title ?? typeLabel;
-      const metaType    = typeLabel || n.title;
+      const displayText = n.title || typeLabel;
+      const metaType    = typeLabel || n.title || '';
       return _notifItemHtml(displayText, metaType, _relTime(n.createdAt), !n.isRead);
     }).join('');
+
+    const orderHtml = orderSynth.map(s =>
+      _notifItemHtml(s.text, s.meta, s.time, s.unread, s.href)
+    ).join('');
 
     const synthHtml = synthNotifs.map(s =>
       _notifItemHtml(s.text, s.meta, s.time, s.unread)
     ).join('');
 
-    const combined = synthHtml + apiHtml;
-    container.innerHTML = combined || '<div class="text-center text-muted py-3" style="font-size:14px;">目前沒有通知</div>';
+    const combined = orderHtml + synthHtml + apiHtml;
+    container.innerHTML = combined || '<div class="review-empty"><i class="ti ti-bell-off review-empty-icon"></i><div class="review-empty-title">目前沒有通知</div><div class="review-empty-sub">訂單更新、評價回覆等通知會顯示在這裡</div></div>';
+
+    // 有需要處理的事項時亮紅點
+    const hasPending = orderSynth.length > 0 || synthNotifs.length > 0;
+    const dotEl = document.getElementById('notifPanelDot');
+    if (dotEl) dotEl.style.display = hasPending ? 'inline-block' : 'none';
   } catch (e) {
     container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;">無法載入通知</div>';
   }
@@ -1141,7 +1265,7 @@ function renderBuyerOrders(list) {
   const tbody = document.querySelector('#buyProducts tbody');
   if (!tbody) return;
   if (!Array.isArray(list) || list.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5"><i class="ti ti-shopping-cart-off" style="font-size:2rem;color:#abdad5;display:block;margin-bottom:8px;"></i><span class="text-muted" style="font-size:13px;">目前沒有訂單</span></td></tr>`;
     return;
   }
   const rows = list.map((item, i) => {
@@ -1186,7 +1310,7 @@ function renderSellerOrders(list) {
   const tbody = document.querySelector('#sellProducts tbody');
   if (!tbody) return;
   if (!Array.isArray(list) || list.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-5">目前沒有訂單</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" class="text-center py-5"><i class="ti ti-receipt-off" style="font-size:2rem;color:#abdad5;display:block;margin-bottom:8px;"></i><span class="text-muted" style="font-size:13px;">目前沒有訂單</span></td></tr>`;
     return;
   }
   const rows = list.map((item, i) => {
@@ -1231,7 +1355,7 @@ function renderTable(list = []) {
   if (!tbody) return;
 
   if (!Array.isArray(list) || list.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5">目前沒有商品</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5"><i class="ti ti-package-off" style="font-size:2rem;color:#abdad5;display:block;margin-bottom:8px;"></i><span class="text-muted" style="font-size:13px;">目前沒有商品</span></td></tr>`;
     return;
   }
 
@@ -1304,7 +1428,7 @@ function renderCards(list = []) {
   if (!wrap) return;
 
   if (!Array.isArray(list) || list.length === 0) {
-    wrap.innerHTML = `<div class="text-center text-muted py-5">目前沒有商品</div>`;
+    wrap.innerHTML = `<div class="review-empty"><i class="ti ti-package-off review-empty-icon"></i><div class="review-empty-title">目前沒有商品</div><div class="review-empty-sub">上架第一件商品，開始交易吧</div></div>`;
     return;
   }
 
@@ -1361,7 +1485,7 @@ function renderSellerCards(list = []) {
   if (!wrap) return;
 
   if (!Array.isArray(list) || list.length === 0) {
-    wrap.innerHTML = `<div class="text-center text-muted py-5">目前沒有訂單</div>`;
+    wrap.innerHTML = `<div class="review-empty"><i class="ti ti-receipt-off review-empty-icon"></i><div class="review-empty-title">目前沒有訂單</div><div class="review-empty-sub">等待買家下單後訂單將顯示在這裡</div></div>`;
     return;
   }
 
@@ -1431,7 +1555,7 @@ function renderBuyerCards(list = []) {
   if (!wrap) return;
 
   if (!Array.isArray(list) || list.length === 0) {
-    wrap.innerHTML = `<div class="text-center text-muted py-5">目前沒有訂單</div>`;
+    wrap.innerHTML = `<div class="review-empty"><i class="ti ti-shopping-cart-off review-empty-icon"></i><div class="review-empty-title">目前沒有訂單</div><div class="review-empty-sub">購買商品後訂單將顯示在這裡</div></div>`;
     return;
   }
 
@@ -1508,7 +1632,7 @@ function onCardAction(e) {
 }
 function renderOrderReviews(reviews, isSell) {
   if (!Array.isArray(reviews) || reviews.length === 0) {
-    return `<div class="review-empty" style="padding:12px 0;">尚無評論</div>`;
+    return `<div class="review-empty" style="padding:12px 0;"><i class="ti ti-message-circle" style="font-size:1.6rem;color:#abdad5;display:block;margin-bottom:6px;"></i><span>尚無評論</span></div>`;
   }
   return reviews.map(r => {
     const isBuyerToSeller = r.role === 'BUYER_TO_SELLER';
@@ -1627,7 +1751,7 @@ async function getDetail(id) {
 
     if (productBox) {
       if (!items.length) {
-        productBox.innerHTML = '<div class="text-center py-4 text-muted">沒有商品資料</div>';
+        productBox.innerHTML = '<div class="review-empty" style="padding:16px 0;"><i class="ti ti-package-off review-empty-icon"></i><div class="review-empty-title">沒有商品資料</div></div>';
       } else {
         productBox.innerHTML = items.map(item => `
           <div class="od-product">
@@ -1779,7 +1903,7 @@ async function getDetail(id) {
             </div>
             <span class="od-ar-arr">›</span>
           </button>`).join('')
-        : `<div class="text-center py-4 text-muted" style="font-size:13px;">目前沒有可執行的操作</div>`;
+        : `<div class="review-empty" style="padding:16px 0;"><i class="ti ti-tool review-empty-icon"></i><div class="review-empty-title">目前沒有可執行的操作</div></div>`;
     }
 
     // ── 更新 Timeline ──
@@ -2666,11 +2790,11 @@ async function loadMyReviewStats() {
           <span class="my-review-stat-label">信譽積分</span>
         </div>
       </div>
-      <div class="review-list">${allCards || '<div class="review-empty">目前還沒有評價</div>'}</div>`;
+      <div class="review-list">${allCards || '<div class="review-empty"><i class="ti ti-message-circle review-empty-icon"></i><div class="review-empty-title">目前還沒有評價</div></div>'}</div>`;
 
     bindReviewerClicks(container);
   } catch (e) {
-    container.innerHTML = `<div class="review-empty">載入失敗，請稍後再試</div>`;
+    container.innerHTML = `<div class="review-empty"><i class="ti ti-alert-circle review-empty-icon"></i><div class="review-empty-title">載入失敗</div><div class="review-empty-sub">請稍後再試</div></div>`;
   }
 }
 
@@ -2749,7 +2873,61 @@ async function loadMyReports(page = 1) {
       pager.innerHTML = html;
     }
   } catch (e) {
-    list.innerHTML = '<div class="review-empty">載入失敗，請稍後再試</div>';
+    list.innerHTML = '<div class="review-empty"><i class="ti ti-alert-circle review-empty-icon"></i><div class="review-empty-title">載入失敗</div><div class="review-empty-sub">請稍後再試</div></div>';
   }
 }
 window.loadMyReports = loadMyReports;
+
+// ── 被其他用戶檢舉紀錄 ─────────────────────────────────
+async function loadReportHistory(page = 1) {
+  const LIMIT = 10;
+  const list  = document.getElementById('receivedReportsList');
+  const pager = document.getElementById('receivedReportsPager');
+  if (!list) return;
+  list.innerHTML = '<div class="text-center text-muted py-4" style="font-size:14px;">載入中...</div>';
+  pager.innerHTML = '';
+  try {
+    const data = await backendService.getReportHistory({ page, limit: LIMIT });
+    const records = Array.isArray(data) ? data : (data?.data ?? []);
+    if (!records.length) {
+      list.innerHTML = `
+        <div class="review-empty">
+          <i class="ti ti-shield-check review-empty-icon"></i>
+          <div class="review-empty-title">目前沒有被檢舉紀錄</div>
+          <div class="review-empty-sub">維持良好交易行為即可保持清白紀錄</div>
+        </div>`;
+      return;
+    }
+    list.innerHTML = records.map(r => {
+      const delta = Number(r.scoreDelta ?? 0);
+      const deltaSign = delta >= 0 ? '+' : '';
+      const deltaCls  = delta < 0 ? 'rh-delta rh-delta-neg' : 'rh-delta rh-delta-pos';
+      const date = r.updatedAt ? fmtDate(r.updatedAt) : '';
+      return `
+        <div class="rpt-card">
+          <div class="rpt-card-top">
+            <span class="rpt-subject">${htmlEncode(r.subject ?? '')}</span>
+            <span class="${deltaCls}">${deltaSign}${delta} 分</span>
+          </div>
+          <div class="rpt-card-meta">
+            <span>${date}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    if (records.length === LIMIT || page > 1) {
+      let html = '<div class="order-pagination">';
+      if (page > 1) {
+        html += `<button class="order-page-num" onclick="loadReportHistory(${page - 1})">‹ 上一頁</button>`;
+      }
+      if (records.length === LIMIT) {
+        html += `<button class="order-page-num" onclick="loadReportHistory(${page + 1})">下一頁 ›</button>`;
+      }
+      html += '</div>';
+      pager.innerHTML = html;
+    }
+  } catch (e) {
+    list.innerHTML = '<div class="review-empty"><i class="ti ti-alert-circle review-empty-icon"></i><div class="review-empty-title">載入失敗</div><div class="review-empty-sub">請稍後再試</div></div>';
+  }
+}
+window.loadReportHistory = loadReportHistory;

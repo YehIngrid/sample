@@ -600,21 +600,29 @@ body {
     padding-bottom: 5px;
     width: 100%;
 }
-/* ── 許願池手機版底部 SPA 導覽列 ── */
+/* ── 許願池手機版底部 SPA 導覽列（與全站 bottom-nav 造型一致）── */
 .wp-spa-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;
-    background: #fff;
-    border-top: 1px solid #e5e5e5;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.07);
+    height: 58px;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(214, 226, 236, 0.65);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.10),
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    margin: 0 10px 12px;
+    border-radius: 50px;
     z-index: 4000;
     flex-direction: row !important;
     flex-wrap: nowrap;
     align-items: stretch;
     padding-bottom: env(safe-area-inset-bottom, 0px);
+    overflow: visible;
 }
 @media (max-width: 991px) {
     .wp-spa-nav {
@@ -629,13 +637,15 @@ body {
     justify-content: center;
     gap: 2px;
     text-decoration: none !important;
-    color: #b4b4b4;
+    color: #6f87a0;
     font-size: 0.62rem;
     font-weight: 500;
     transition: color 0.15s;
+    position: relative;
     padding: 0 2px;
     -webkit-tap-highlight-color: transparent;
 }
+.wp-spa-item:hover { color: #004b97; }
 .wp-spa-item span {
     font-size: 0.62rem !important;
 }
@@ -653,7 +663,20 @@ body {
     display: block;
 }
 .wp-spa-item.active {
-    color: var(--brand-color);
+    color: #004b97;
+    font-weight: 600;
+}
+.wp-spa-item.active::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 3px;
+    background: #004b97;
+    border-radius: 0 0 3px 3px;
+    animation: indicatorIn 0.25s ease forwards;
 }
 /* ── 選商品 modal (wc-grid) ── */
 .wc-grid {

@@ -205,6 +205,11 @@ ul{
       font-size: 1rem;
     }
   }
+
+/* ── shop 搜尋欄寬度限制（pill 樣式繼承自 default.css .mh-search-wrap）── */
+.shop-search-wrap {
+  max-width: 730px;
+}
   .my-section {
 
     background-size: cover;      /* 調整背景圖片尺寸 */

@@ -39,8 +39,11 @@ window.onload = function() {
       });
     }
 
-    // 手機版底部導覽列：點擊時設定 sessionStorage 旗標，讓目標頁跳過載入動畫
+    // 手機版底部導覽列：插入 active 指示線 span + 點擊跳過載入動畫
     document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
+      const ind = document.createElement('span');
+      ind.className = 'bottom-nav-indicator';
+      item.insertBefore(ind, item.firstChild);
       item.addEventListener('click', function() {
         if (window.innerWidth <= 991) {
           sessionStorage.setItem('skipLoader', '1');

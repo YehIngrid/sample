@@ -220,6 +220,8 @@ class ChatRoomList {
         if (headerSubtitlePub) headerSubtitlePub.style.display = '';
         this.input.disabled = true;
         this.sendImagebtn.disabled = true;
+        if (this.submitBtn) this.submitBtn.disabled = true;
+        if (this.submitBtn) this.submitBtn.style.opacity = '0.35';
         this.input.placeholder = '官方頻道不支援傳送訊息';
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = 'none';
@@ -849,7 +851,7 @@ class ChatRoomList {
                     break;
                 case '2':
                     this.appendBotMessage(
-                        '建議在中興大學校內公開場所進行面交，例如中興湖旁、圖書館正門、惠蓀堂前等。<br>交易前請在聊天室與對方確認好時間與地點，並注意個人安全。若遇到糾紛，歡迎透過「聯繫專人」告知我們。'
+                        '建議在中興大學校內公開場所進行面交，例如中興湖旁、圖書館正門、惠蓀堂前等。<br>交易前請在聊天室與對方確認好時間與地點，並注意個人安全。'
                     );
                     break;
                 case '3':
@@ -858,17 +860,6 @@ class ChatRoomList {
                         `<a class="cs-bot-link-btn" href="../questions/questions.html" target="_parent"><i class="bi bi-book"></i> 前往常見問題</a>`
                     );
                     break;
-                case '4': {
-                    const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
-                    const day = now.getDay();
-                    const hour = now.getHours();
-                    const isServiceHours = day >= 1 && day <= 5 && hour >= 9 && hour < 18;
-                    const msg = isServiceHours
-                        ? '目前為服務時間（平日 09:00–18:00），客服人員將盡快回覆您，感謝耐心等候！'
-                        : '目前非服務時間（平日 09:00–18:00）。<br>您可以留言，我們將於下個工作日盡快回覆，感謝您的耐心！';
-                    this.appendBotMessage(msg);
-                    break;
-                }
             }
         }, 600);
     }
@@ -1137,14 +1128,16 @@ class ChatRoomList {
             if (headerSubtitle) headerSubtitle.style.display = 'none';
         }
 
-        // ✅ 官方頻道：停用輸入區域（客服頻道例外，支援雙向傳訊）
+        // 官方頻道（含客服）一律停用自由輸入；客服房間改用 bot 選單操作
         const isSupportRoom = this.supportRoomsSet.has(String(roomId));
-        const disableInput = isOfficialRoom && !isSupportRoom;
+        const disableInput = isOfficialRoom;
         this.input.disabled = disableInput;
         this.sendImagebtn.disabled = disableInput;
         this.previewArea.disabled = disableInput;
-        this.input.placeholder = disableInput ? '官方頻道不支援傳送訊息' : '輸入訊息...';
+        if (this.submitBtn) this.submitBtn.disabled = disableInput;
+        this.input.placeholder = isSupportRoom ? '請使用上方選單選擇服務項目' : (disableInput ? '官方頻道不支援傳送訊息' : '輸入訊息...');
         this.input.style.backgroundColor = disableInput ? '#f5f5f5' : '';
+        if (this.submitBtn) this.submitBtn.style.opacity = disableInput ? '0.35' : '';
         // 快速回覆 / 面交工具只在私人聊天顯示
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = isOfficialRoom ? 'none' : 'flex';
@@ -1408,6 +1401,7 @@ class ChatRoomList {
 
     async sendMessage() {
         if (this.isSending) return;
+        if (this.input.disabled) return;
         const input = document.getElementById('messageInput');
         const text = input.value.trim();
         const hasImage = !!this.pendingImage;

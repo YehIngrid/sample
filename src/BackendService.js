@@ -904,4 +904,29 @@ export default class BackendService {
         }
     }
 
+    async getReportHistory({ page = 1, limit = 10 } = {}) {
+        try {
+            const response = await this.http.get('/api/report/history', {
+                params: { page, limit }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("取得被檢舉紀錄失敗", error);
+            return Promise.reject(error);
+        }
+    }
+
+    // ── Search API ────────────────────────────────────────
+    async getTrendingKeywords({ days = 7, limit = 10 } = {}) {
+        try {
+            const response = await this.http.get('/api/commodity/search/trending', {
+                params: { days, limit }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("取得熱門關鍵字失敗", error);
+            return Promise.reject(error);
+        }
+    }
+
 }

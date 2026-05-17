@@ -311,6 +311,75 @@ ul{
     display: none !important;
   }
 
+/* ── 桌機版 pill 搜尋欄（commodity / shop 共用）── */
+.mh-search-wrap {
+  width: 100%;
+  background: aliceblue;
+  border: 1.5px solid transparent;
+  border-radius: 999px !important;
+  transition: all 0.22s;
+  display: flex;
+  align-items: center;
+}
+.mh-search-wrap:focus-within {
+  background: #fff;
+  border-color: #004b97;
+  box-shadow: 0 0 0 4px rgba(0,75,151,0.08);
+}
+.mh-search-wrap .form-control {
+  flex: 1;
+  min-width: 0;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 999px !important;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+/* ID selector 優先級較高，需用複合 selector 覆蓋（含 :focus state） */
+.mh-search-wrap #searchInput,
+.mh-search-wrap #searchInputOC,
+.mh-search-wrap #searchInput:focus,
+.mh-search-wrap #searchInputOC:focus {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* ── 搜尋欄內熱門標籤 ── */
+.mh-hot-tags {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding-right: 38px;
+  font-size: 11px;
+  white-space: nowrap;
+  max-width: 220px;
+  overflow: hidden;
+}
+.mh-hot-tags.mh-hot-hidden { display: none !important; }
+.mh-hot-sep {
+  color: #6f87a0;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+}
+.mh-hot-tag {
+  color: #004b97;
+  cursor: pointer;
+  font-size: 11px;
+  text-decoration: none;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+.mh-hot-tag:hover { color: rgb(36, 182, 133); }
+.mh-hot-tag + .mh-hot-tag::before {
+  content: '·';
+  color: #abdad5;
+  margin-right: 5px;
+}
+
   /* ── 手機版 Navbar 重設計 (max-width: 991px) ── */
   @media (max-width: 991px) {
     /* 導覽列：三欄 grid — [漢堡] [Logo 置中] [登入] */
@@ -847,13 +916,18 @@ a.specialpadding[href*="shoppingcart"] {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 50px;
-  background: #fff;
-    margin: 10px 10px;
+  height: 58px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  margin: 0 10px 12px;
   z-index: 4000;
-    opacity: 0.95;
-    border-radius: 50px;
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  border-radius: 50px;
+  border: 1px solid rgba(214, 226, 236, 0.65);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.10),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
   padding-bottom: env(safe-area-inset-bottom, 0px);
   overflow: visible;
 }
@@ -906,7 +980,8 @@ a.specialpadding[href*="shoppingcart"] {
 .bottom-nav-item.active .nav-icon-inactive { display: none; }
 
 .bottom-nav-item.active {
-  color: #383838;
+  color: #004b97;
+  font-weight: 600;
 }
 
 /* ── 各 tab active dot 裝飾 ── */
@@ -915,7 +990,7 @@ a.specialpadding[href*="shoppingcart"] {
   content: '';
   position: absolute;
   border-radius: 50%;
-  background: #abdad5;
+  background: #004b97;
   pointer-events: none;
   opacity: 0;
   animation: navDotIn 0.4s ease forwards;
@@ -950,8 +1025,25 @@ a.specialpadding[href*="shoppingcart"] {
   100% { transform: translateY(0) scale(1); opacity: 0.85; }
 }
 
+/* ── active tab 頂部指示線 ── */
+.bottom-nav-item.active .bottom-nav-indicator {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 3px;
+  background: #004b97;
+  border-radius: 0 0 3px 3px;
+  animation: indicatorIn 0.25s ease forwards;
+}
+@keyframes indicatorIn {
+  from { width: 0; opacity: 0; }
+  to   { width: 22px; opacity: 1; }
+}
+
 .bottom-nav-item:hover {
-  color: #383838;
+  color: #004b97;
 }
 
 /* ── 中間 FAB 圓形突出 ── */

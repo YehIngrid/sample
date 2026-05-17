@@ -638,6 +638,23 @@
             <div id="myReportsPager" class="d-flex justify-content-center align-items-center flex-wrap gap-1 mt-3"></div>
           </div>
         </div>
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header collapsible" data-collapse-target="receivedReportsBody">
+            <i class="ti ti-alert-triangle"></i>
+            <span>被檢舉紀錄</span>
+            <i class="ti ti-chevron-down profile-edit-toggle"></i>
+          </div>
+          <div class="profile-edit-body collapsible-body" id="receivedReportsBody">
+            <p class="text-muted small mb-3" style="font-size:0.82rem;">
+              <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
+              以下為其他使用者對您提出且審核通過的檢舉結果及信譽積分異動紀錄。
+            </p>
+            <div id="receivedReportsList">
+              <div class="text-center text-muted py-4" style="font-size:14px;">載入中...</div>
+            </div>
+            <div id="receivedReportsPager" class="d-flex justify-content-center align-items-center flex-wrap gap-1 mt-3"></div>
+          </div>
+        </div>
       </section>
       <!-- Main Content -->
       <main class="col-lg-9 content-section" id="account">
@@ -821,6 +838,7 @@
             <div class="account-panel">
               <div class="account-panel-head">
                 近期通知 <img src="../svg/alarm.svg" alt="通知icon" style="width:15px;margin-left:4px;vertical-align:middle;opacity:0.7;">
+                <span id="notifPanelDot" style="display:none;width:8px;height:8px;background:#e74c3c;border-radius:50%;margin-left:6px;flex-shrink:0;"></span>
               </div>
               <div class="notif-panel-body" id="recentNotifList">
                 <div class="text-center text-muted py-3" style="font-size:14px;">載入中...</div>
