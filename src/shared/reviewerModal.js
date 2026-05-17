@@ -200,7 +200,7 @@ export async function openReviewerProfileModal(accountId, name, photo) {
   ].join('');
   const reviewHtml = allCards
     ? `<div class="review-list">${allCards}</div>`
-    : `<div class="review-empty rp-empty">目前尚無評價紀錄</div>`;
+    : `<div class="review-empty rp-empty"><i class="ti ti-message-circle" style="font-size:1.8rem;display:block;margin-bottom:6px;opacity:0.4;"></i>目前尚無評價紀錄</div>`;
 
   const myUid = localStorage.getItem('uid');
   const reportBtn = (accountId && String(accountId) !== String(myUid))

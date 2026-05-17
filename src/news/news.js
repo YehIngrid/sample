@@ -53,7 +53,7 @@ async function loadNewsList(page = 1) {
     if (countEl) countEl.textContent = `共 ${total} 篇`;
 
     if (!items.length) {
-      listEl.innerHTML = '<p class="news-empty">目前沒有公告</p>';
+      listEl.innerHTML = '<p class="news-empty"><i class="ti ti-news-off" style="font-size:2rem;display:block;margin-bottom:8px;opacity:0.4;"></i>目前沒有公告</p>';
       return;
     }
 
@@ -74,7 +74,7 @@ async function loadNewsList(page = 1) {
 
     renderPagination(total, page);
   } catch (err) {
-    listEl.innerHTML = `<p class="news-empty">載入失敗，請稍後再試</p>`;
+    listEl.innerHTML = `<p class="news-empty"><i class="ti ti-alert-circle" style="font-size:2rem;display:block;margin-bottom:8px;opacity:0.4;"></i>載入失敗，請稍後再試</p>`;
   }
 }
 

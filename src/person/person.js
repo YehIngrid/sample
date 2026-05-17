@@ -1012,7 +1012,7 @@ async function loadRecentNotifications() {
   const container = document.getElementById('recentNotifList');
   if (!container) return;
   try {
-    const isAdmin = (sessionStorage.getItem('role') ?? '').toLowerCase() === 'admin';
+    const isAdmin = ['admin', 'moderator'].includes((sessionStorage.getItem('role') ?? '').toLowerCase());
     const [notifRes, rptRes, rptHistRaw, sellPendingRes, buyDeliveredRes, sellReviewRes, buyReviewRes, adminRptRes] = await Promise.all([
       backendService.getNotifications(1, 20),
       backendService.getMyReports({ page: 1, limit: 20 }).catch(() => null),
@@ -1130,7 +1130,7 @@ async function loadRecentNotifications() {
     const dotEl = document.getElementById('notifPanelDot');
     if (dotEl) dotEl.style.display = hasPending ? 'inline-block' : 'none';
   } catch (e) {
-    container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;">無法載入通知</div>';
+    container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;"><i class="ti ti-alert-circle" style="font-size:1.4rem;display:block;margin-bottom:4px;opacity:0.4;"></i>無法載入通知</div>';
   }
 }
 

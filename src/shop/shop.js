@@ -75,8 +75,8 @@ const midcontent = document.getElementById('midcontent');
 
 // TODO seller
 document.addEventListener("DOMContentLoaded", async () => {
-  // 管理後台按鈕（僅 MODERATOR）& 隱藏聊天室
-  if (sessionStorage.getItem('role') === 'MODERATOR') {
+  // 管理後台按鈕（MODERATOR / ADMIN）& 隱藏聊天室
+  if (['MODERATOR', 'ADMIN'].includes(sessionStorage.getItem('role'))) {
     document.getElementById('moderatorBtn').style.display = 'block';
     document.getElementById('chaticon')?.style.setProperty('display', 'none', 'important');
     document.getElementById('talkInterface')?.style.setProperty('display', 'none', 'important');

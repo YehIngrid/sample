@@ -582,7 +582,7 @@ async function _loadNotifications(page = 1, append = false) {
     if (panelOpen) {
       if (!append) list.innerHTML = '';
       if (items.length === 0 && !append) {
-        list.innerHTML = '<div class="notif-empty">目前沒有通知</div>';
+        list.innerHTML = '<div class="notif-empty"><i class="ti ti-bell-off" style="font-size:1.6rem;display:block;margin-bottom:6px;opacity:0.4;"></i>目前沒有通知</div>';
       } else {
         items.forEach(n => {
           const div = document.createElement('div');
@@ -596,7 +596,7 @@ async function _loadNotifications(page = 1, append = false) {
     const unreadCount = items.filter(n => !n.isRead).length;
     _updateNotifBadge(unreadCount);
   } catch (_) {
-    if (panelOpen && !append) list.innerHTML = '<div class="notif-empty">載入失敗</div>';
+    if (panelOpen && !append) list.innerHTML = '<div class="notif-empty"><i class="ti ti-alert-circle" style="font-size:1.6rem;display:block;margin-bottom:6px;opacity:0.4;"></i>載入失敗</div>';
   } finally {
     _notifLoading = false;
     document.getElementById('notifLoadMore')?.removeAttribute('disabled');

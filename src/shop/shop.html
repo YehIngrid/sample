@@ -1500,7 +1500,7 @@ const timer = setInterval(() => {
         <small class="fw-bold">搜尋排行榜</small>
       </div>
       <ul id="searchRankList" class="search-drop-list search-drop-trend">
-        <li class="search-drop-empty">暫無資料</li>
+        <li class="search-drop-empty"><i class="ti ti-ban" style="margin-right:3px;opacity:0.5;font-size:0.85em;"></i>暫無資料</li>
       </ul>
     </div>
   </div>
@@ -1606,7 +1606,7 @@ const timer = setInterval(() => {
             <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','mobile')"><i class="fa-solid fa-xmark"></i></button>
           </li>`;
         }).join('')
-      : '<li class="search-drop-empty">尚無搜尋紀錄</li>';
+      : '<li class="search-drop-empty"><i class="ti ti-history" style="margin-right:3px;opacity:0.5;font-size:0.85em;"></i>尚無搜尋紀錄</li>';
   }
 
   // ── 電腦 dropdown 搜尋紀錄 ──
@@ -1615,7 +1615,7 @@ const timer = setInterval(() => {
     if (!list) return;
     const h = getHistory().slice(0, 5);
     if (!h.length) {
-      list.innerHTML = '<li class="search-drop-empty">尚無搜尋紀錄</li>';
+      list.innerHTML = '<li class="search-drop-empty"><i class="ti ti-history" style="margin-right:3px;opacity:0.5;font-size:0.85em;"></i>尚無搜尋紀錄</li>';
     } else {
       list.innerHTML = h.map(t => {
         const safe = t.replace(/'/g, "\\'").replace(/</g, '&lt;');

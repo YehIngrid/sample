@@ -163,7 +163,7 @@ class ChatRoomList {
                 const empty = document.createElement('p');
                 empty.className = 'text-center text-muted mt-2 mb-1';
                 empty.style.fontSize = '0.85rem';
-                empty.textContent = '目前沒有官方公告';
+                empty.innerHTML = '<i class="ti ti-speakerphone" style="margin-right:4px;opacity:0.5;"></i>目前沒有官方公告';
                 chatList.appendChild(empty);
             } else {
                 channels.forEach(ch => {
@@ -191,7 +191,7 @@ class ChatRoomList {
             const errEl = document.createElement('p');
             errEl.className = 'text-center text-muted mt-2 mb-1';
             errEl.style.fontSize = '0.85rem';
-            errEl.textContent = '載入官方公告失敗';
+            errEl.innerHTML = '<i class="ti ti-alert-circle" style="margin-right:4px;opacity:0.5;"></i>載入官方公告失敗';
             chatList.appendChild(errEl);
         }
 
@@ -240,13 +240,13 @@ class ChatRoomList {
             const items = (history.data?.items ?? history.data ?? [])
                 .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
             if (!items.length) {
-                container.innerHTML = '<p class="text-center text-muted mt-3">沒有公告訊息</p>';
+                container.innerHTML = '<p class="text-center text-muted mt-3"><i class="ti ti-speakerphone" style="margin-right:4px;opacity:0.5;"></i>沒有公告訊息</p>';
             } else {
                 items.forEach(msg => this.renderBroadcast(msg));
                 container.scrollTop = container.scrollHeight;
             }
         } catch (err) {
-            container.innerHTML = '<p class="text-center text-muted mt-3">載入公告失敗</p>';
+            container.innerHTML = '<p class="text-center text-muted mt-3"><i class="ti ti-alert-circle" style="margin-right:4px;opacity:0.5;"></i>載入公告失敗</p>';
         } finally {
             this.isInitialLoading = false;
         }
@@ -963,7 +963,7 @@ class ChatRoomList {
             // ✅ GET /api/chat/rooms 回應: { data: { items: [...] } }
             const rooms = await this.backend.listRooms();
             if (!rooms.data.items?.length) {
-                chatList.innerHTML = '<p class="text-center text-muted mt-3">無可用聊天室</p>';
+                chatList.innerHTML = '<p class="text-center text-muted mt-3"><i class="ti ti-messages-off" style="margin-right:4px;opacity:0.5;"></i>無可用聊天室</p>';
                 return;
             }
 
@@ -1675,7 +1675,7 @@ class ChatRoomList {
         if (container.querySelector('.nohistory')) return;
         const el = document.createElement('div');
         el.className = 'text-center text-muted nohistory';
-        el.textContent = '沒有更多對話紀錄了';
+        el.innerHTML = '<i class="ti ti-line-dashed" style="margin-right:4px;opacity:0.4;font-size:0.8em;"></i>沒有更多對話紀錄了';
         container.prepend(el);
     }
 
