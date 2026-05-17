@@ -202,6 +202,13 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 function renderItems(items){
   listEl.innerHTML = '';
+  const hotPagerEl = prevHotBtn?.closest('.pager');
+  if (!items.length) {
+    listEl.innerHTML = '<div style="width:100%;text-align:center;padding:48px 0;color:#aab4be;"><i class="ti ti-package-off" style="font-size:2.5rem;display:block;margin-bottom:8px;"></i>目前沒有熱賣商品</div>';
+    if (hotPagerEl) hotPagerEl.style.display = 'none';
+    return;
+  }
+  if (hotPagerEl) hotPagerEl.style.display = '';
   // 套用滑入動畫
   const slideClass = hotDirection > 0 ? 'hot-slide-in-right' : 'hot-slide-in-left';
   listEl.classList.remove('hot-slide-in-right', 'hot-slide-in-left');
@@ -819,9 +826,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const pg = response?.data?.pagination ?? { currentPage: p, totalPages: 1, hasPrevPage: p > 1, hasNextPage: false };
     desktopPage = pg.currentPage ?? p;
     renderItems(productList);
-    prevBtn.disabled = !pg.hasPrevPage;
-    nextBtn.disabled = !pg.hasNextPage;
-    pageInfo.textContent = `第 ${pg.currentPage} / ${pg.totalPages} 頁`;
+    const newPagerEl = document.getElementById('newPager');
+    if (!productList.length) {
+      if (newPagerEl) newPagerEl.style.display = 'none';
+    } else {
+      if (newPagerEl) newPagerEl.style.display = '';
+      prevBtn.disabled = !pg.hasPrevPage;
+      nextBtn.disabled = !pg.hasNextPage;
+      pageInfo.textContent = `第 ${pg.currentPage} / ${pg.totalPages} 頁`;
+    }
   }
 
   // ────────── 手機版 ──────────
@@ -932,6 +945,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── 共用 renderItems ──
   function renderItems(productList) {
     container.innerHTML = '';
+    if (!productList.length) {
+      container.innerHTML = '<div style="width:100%;text-align:center;padding:48px 0;color:#aab4be;"><i class="ti ti-package-off" style="font-size:2.5rem;display:block;margin-bottom:8px;"></i>目前沒有上架商品</div>';
+      return;
+    }
     const categoryMap = {
       education: '課業學習', electronics: '3C 電子',
       living: '住宿生活', sports: '運動休閒',
