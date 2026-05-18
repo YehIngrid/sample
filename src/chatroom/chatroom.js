@@ -77,7 +77,26 @@ class ChatRoomList {
             if (!img) return;
             Swal.fire({ imageUrl: img.src, imageAlt: '圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
         });
-        if (this.userId) {
+        if (this.userId && localStorage.getItem('emailVerify') === 'false') {
+            // 已登入但信箱未驗證
+            const loader = document.getElementById('chatLoader');
+            if (loader) loader.style.display = 'none';
+            const chatList = document.getElementById('chatList');
+            if (chatList) {
+                const redirect = encodeURIComponent(location.pathname + location.search);
+                chatList.innerHTML = `
+                    <div style="padding:32px 16px;text-align:center;color:#888;">
+                        <i class="ti ti-mail-exclamation" style="font-size:2.2rem;display:block;margin-bottom:12px;color:#004b97;"></i>
+                        <p style="margin-bottom:4px;font-size:0.9rem;font-weight:600;color:#333;">信箱尚未驗證</p>
+                        <p style="margin-bottom:16px;font-size:0.85rem;line-height:1.6;color:#888;">完成電子信箱驗證後<br>即可使用聊天室</p>
+                        <button onclick="location.replace('../account/account.html?redirect=${redirect}')"
+                           style="display:inline-block;padding:8px 24px;background:#004b97;color:#fff;border-radius:8px;border:none;font-size:0.85rem;cursor:pointer;">
+                            前往驗證
+                        </button>
+                    </div>`;
+            }
+            return;
+        } else if (this.userId) {
             await this.loadRooms();
             this.connectSSE(); // 帳號層級 SSE，開啟一次即可
             if (this.currentRoomId) {
