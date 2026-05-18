@@ -4,7 +4,7 @@
     <script>(function(){if(window.innerWidth<=991&&sessionStorage.getItem('skipLoader')==='1'){sessionStorage.removeItem('skipLoader');document.documentElement.classList.add('skip-loader');}})();</script>
     <title>購物車 | 拾貨寶庫</title>
         
-    <!-- meta部分 -->
+    
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -17,8 +17,8 @@
     <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
     <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-    <!-- link部分 -->
-    <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
+    
+    
     <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,14 +56,14 @@
     </div>
   </div>
   <div id="whatcontent" class="d-none">
-    <!-- TODO header -->
+    
     <div class="header ">
-        <!--TODO 響應式選單-->
-        <!-- 響應式選單 -->
+        
+        
         <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
           <div class="container-fluid d-flex align-items-center">
 
-            <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
+            
             <button class="navbar-toggler d-lg-none me-2 order-0"
                     type="button"
                     data-bs-toggle="collapse"
@@ -74,14 +74,14 @@
               <img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="選單" style="width:20px;">
             </button>
 
-            <!-- (ALL) Logo -->
+            
             <a class="navbar-brand picture order-1 me-4"
               href="../newhome/newhome.html">
               <img src="/assets/TREASUREHUBCHEN-DooKZtdE.svg" alt="拾貨寶庫登入頁面"
                    style="width: 100px; margin-right: 10px; border-radius: 0%;">
             </a>
 
-            <!-- (DESKTOP) 導覽選單：桌機顯示 -->
+            
             <div class="d-none d-lg-flex order-2">
               <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
@@ -94,7 +94,7 @@
               </ul>
             </div>
 
-            <!-- (RIGHT) 右側：登入 + 購物車（所有尺寸都有；用 ms-auto 推到最右） -->
+            
             <div class="d-flex align-items-center ms-auto order-3">
               <div class="login me-2">
                 <a class="username" href="../person/person.html"></a>
@@ -106,7 +106,7 @@
             </div>
           </div>
 
-          <!-- 側邊抽屜連結來源（隱藏，供 default.js _initMobileDrawer 使用） -->
+          
           <ul class="navbar-nav mobileNav d-none">
             <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
             <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
@@ -134,7 +134,7 @@
   </symbol>
 </svg>
   <div class="row g-4">
-    <!-- 商品清單 -->
+    
     <div class="col-lg-8">
       <div class="cart-toolbar">
         <label class="cart-select-all">
@@ -150,15 +150,15 @@
         </div>
       </div>
       <div id="cart-items" class="cart-list">
-        <!-- 動態插入購物車商品項目 -->
+        
       </div>
     </div>
 
-    <!-- 結帳摘要 -->
+    
     <div class="col-lg-4">
       <div class="summary-card">
 
-        <!-- 運送方式提示 -->
+        
         <div class="summary-section" style="padding-bottom: 0;">
           <div class="summary-shipping-badge" style="margin-top: 0;">
             <span class="badge-cod">面交取貨</span>
@@ -166,7 +166,7 @@
           </div>
         </div>
 
-        <!-- 訂單商品明細 -->
+        
         <div class="summary-section">
           <h6 class="summary-heading">訂單明細</h6>
           <table class="table table-sm align-middle mb-0" id="checkout-table">
@@ -177,11 +177,11 @@
                 <th class="text-end">金額</th>
               </tr>
             </thead>
-            <tbody><!-- 動態插入 --></tbody>
+            <tbody></tbody>
           </table>
         </div>
 
-        <!-- 下半：金額摘要 + 結帳 -->
+        
         <div class="summary-section summary-bottom">
           <div class="summary-row">
             <span>小計</span>
@@ -212,7 +212,7 @@
   </div>
 </div>
 
-<!-- 手機版固定底部結帳列 -->
+
 <div class="mobile-checkout-bar d-lg-none">
   <div class="mobile-checkout-inner">
     <div class="mobile-checkout-left">
@@ -225,7 +225,7 @@
 
 <button class="chaticon" id="chaticon" title="開啟聊天室">
     <img src="data:image/svg+xml,%3csvg%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M13%204C15.8089%204%2017.2138%203.99971%2018.2227%204.67383C18.6593%204.96562%2019.0344%205.34068%2019.3262%205.77734C20.0003%206.78624%2020%208.19108%2020%2011C20%2013.8089%2020.0003%2015.2138%2019.3262%2016.2227C19.0344%2016.6593%2018.6593%2017.0344%2018.2227%2017.3262C17.3413%2017.9151%2016.1577%2017.9886%2014%2017.998V18L12.8945%2020.2109C12.526%2020.948%2011.474%2020.948%2011.1055%2020.2109L10%2018V17.998C7.8423%2017.9886%206.65869%2017.9151%205.77734%2017.3262C5.34068%2017.0344%204.96562%2016.6593%204.67383%2016.2227C3.99971%2015.2138%204%2013.8089%204%2011C4%208.19108%203.99971%206.78624%204.67383%205.77734C4.96562%205.34068%205.34068%204.96562%205.77734%204.67383C6.78624%203.99971%208.19108%204%2011%204H13Z'%20fill='url(%23paint0_linear_636_917)'/%3e%3ccircle%20cx='16'%20cy='11'%20r='1'%20fill='white'/%3e%3ccircle%20cx='12'%20cy='11'%20r='1'%20fill='white'/%3e%3ccircle%20cx='8'%20cy='11'%20r='1'%20fill='white'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_636_917'%20x1='12'%20y1='4'%20x2='12'%20y2='20.7639'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="聊天室icon點擊開啟聊天室">
-    <!-- 紅點，預設隱藏，fixed 定位對齊 chaticon 右上角 -->
+    
     <span id="chatUnreadDot" style="
         display: none;
         position: absolute;

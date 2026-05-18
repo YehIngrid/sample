@@ -4,7 +4,7 @@
   <script>(function(){if(window.innerWidth<=991&&sessionStorage.getItem('skipLoader')==='1'){sessionStorage.removeItem('skipLoader');document.documentElement.classList.add('skip-loader');}})();</script>
   <title>商品詳細資訊 | 拾貨寶庫</title>
 
-  <!-- meta -->
+  
   <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -18,7 +18,7 @@
   <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
   <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-  <!-- CSS & Fonts -->
+  
   <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha384-/o6I2CkkWC//PSjvWC/eYN7l3xM3tJm8ZzVkCOfp//W05QcE3mlGskpoHB6XqI+B" crossorigin="anonymous">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,7 +42,7 @@
 </head>
 
 <body>
-  <!-- Loading -->
+  
   <div id="loader">
     <div class="loader-wrap">
       <div class="shelf">
@@ -62,7 +62,7 @@
 
   <div id="whatcontent" class="d-none">
 
-    <!-- ===== 手機版導覽列（含跑馬燈） ===== -->
+    
     <div class="d-lg-none sticky-top" style="z-index:3000;">
       <div class="safety-ticker">
         <img src="data:image/svg+xml,%3csvg%20width='18'%20height='11'%20viewBox='0%200%2018%2011'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1%203.65C1%203.56111%201.05867%203.48289%201.144%203.458L12.744%200.0746667C12.872%200.0373333%2013%200.133333%2013%200.266667V9.73333C13%209.86667%2012.872%209.96267%2012.744%209.92533L1.144%206.542C1.05867%206.51711%201%206.43889%201%206.35V3.65Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3crect%20x='11'%20width='2'%20height='10'%20rx='0.2'%20fill='url(%23paint0_linear_814_1076)'/%3e%3cpath%20d='M4.05811%207.39355L4.02197%207.89225L6.94186%209.10643L7.01413%208.10904'%20stroke='%23004B97'%20stroke-width='0.2'%20stroke-linecap='round'/%3e%3cline%20x1='14.6588'%20y1='8.74316'%20x2='16.4901'%20y2='9.54712'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3cline%20x1='0.5'%20y1='-0.5'%20x2='2.5'%20y2='-0.5'%20transform='matrix(0.91565%20-0.401976%20-0.401976%20-0.91565%2014%201.20593)'%20stroke='%23004B97'%20stroke-linecap='round'/%3e%3cline%20x1='15.5'%20y1='5'%20x2='17.5'%20y2='5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3crect%20y='3'%20width='2'%20height='4'%20rx='0.2'%20fill='url(%23paint1_linear_814_1076)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_814_1076'%20x1='13'%20y1='5'%20x2='11'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%2386B8D5'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_814_1076'%20x1='2'%20y1='5'%20x2='0'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%238DBAEA'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" class="safety-ticker__icon" alt="">
@@ -81,7 +81,7 @@
       </nav>
     </div>
 
-    <!-- ===== 桌機版導覽列 ===== -->
+    
     <div class="header d-none d-lg-block">
       <nav class="navbar navbar-expand-lg navbar-color bg-color header_new" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
         <div class="container-fluid d-flex align-items-center sticky-top">
@@ -110,7 +110,7 @@
       </nav>
     </div>
 
-    <!-- 桌機版返回鍵 + 跑馬燈 -->
+    
     <div class="product-back-ticker d-none d-lg-flex">
       <i class="fa-solid fa-circle-arrow-left icon-button" id="back-btn"></i>
       <div class="safety-ticker safety-ticker--inline">
@@ -121,11 +121,11 @@
       </div>
     </div>
 
-    <!-- ===== 商品主體 ===== -->
+    
     <div class="container my-1">
       <div class="row g-4 justify-content-center">
 
-        <!-- 左側：主圖＋縮圖 -->
+        
         <div class="col-lg-5 order-1">
           <div class="left-pane">
             <div class="main-photo-col">
@@ -137,9 +137,9 @@
                   <span class="img-counter d-none" id="imgCounter"></span>
                 </div>
               </div>
-              <!-- 縮圖容器（主圖下方、分享上方） -->
+              
               <div class="thumbnail-list mt-3" aria-label="商品縮圖列表"></div>
-              <!-- 電腦版分享列 -->
+              
               <div class="d-none d-lg-flex align-items-center gap-2 mt-3 desktop-share-bar">
                 <span class="share-label">分享：</span>
                 <a id="shareFb" href="#" target="_blank" rel="noopener" class="share-icon-btn share-fb" title="分享到 Facebook"><i class="fa-brands fa-facebook-f"></i></a>
@@ -151,10 +151,10 @@
           </div>
         </div>
 
-        <!-- 右側：商品資訊 -->
+        
         <div class="col-lg-6 order-2 product-info-col">
 
-          <!-- 手機版：名稱＋價格同行，左右平衡 -->
+          
           <div class="mobile-name-price d-lg-none">
             <h1 id="product-name-mobile" class="product-title h2 mb-0"></h1>
             <div class="mobile-price-row">
@@ -162,7 +162,7 @@
               <span id="price-mobile" class="mobile-price-number"></span>
             </div>
           </div>
-          <!-- 桌機版：名稱＋價格並排 -->
+          
           <div class="desktop-name-price d-none d-lg-flex">
             <h1 id="product-name" class="product-title h2 mb-0"></h1>
             <div class="d-flex align-items-baseline gap-2 flex-shrink-0">
@@ -173,12 +173,12 @@
 
           <hr style="margin: 0 auto;">
 
-          <!-- 分類屬性 -->
+          
           <div class="meta mobilesetting">
             <dl class="row" id="product-category"></dl>
           </div>
 
-          <!-- 庫存 + 數量 -->
+          
           <div class="qty-section my-3 mobilesetting">
             <span class="qty-label">數量</span>
             <div class="qty-control">
@@ -193,7 +193,7 @@
             <span class="qty-stock">庫存 <span id="stock"></span> 件</span>
           </div>
 
-          <!-- 手機版分享（放在數量下面，低調小圖示） -->
+          
           <div class="mobile-share-row d-lg-none">
             <span class="mobile-share-label">分享</span>
             <div class="d-flex align-items-center gap-1">
@@ -204,7 +204,7 @@
             </div>
           </div>
 
-          <!-- 桌機版 CTA -->
+          
           <div class="cta-wrap d-none d-lg-flex gap-3 mt-auto pt-4">
             <button class="btn flex-fill buybtn order" type="button">馬上下單</button>
             <button class="btn flex-fill shopcart" type="button">加入購物車</button>
@@ -214,21 +214,21 @@
       </div>
     </div>
 
-    <!-- ===== 商品描述 & 其他資訊 ===== -->
+    
     <div class="mix">
 
-      <!-- 商品描述 -->
+      
       <div class="describe typeofcommodity" style="margin-top: 20px;">
         <h5 class="topic">商品描述</h5>
         <p id="product-description" class="description-text"></p>
       </div>
 
-      <!-- 賣家資訊（方案 C：雙欄資訊風格） -->
+      
       <div class="typeofcommodity">
         <h5 class="topic">賣家資訊</h5>
         <div id="sellerInfo" class="seller-card">
           <div class="seller-card-top">
-            <!-- 左：頭像 + 名稱 + 簡介 + 按鈕 -->
+            
             <div class="seller-left">
               <div class="seller-avatar-wrap">
                 <img src="/assets/default-avatar-B4oh15VT.webp" alt="賣家頭像" class="seller-avatar" id="sellerPhoto">
@@ -239,7 +239,7 @@
                 <p class="seller-intro" id="sellerIntro"></p>
               </div>
             </div>
-            <!-- 右：數據格 -->
+            
             <div class="seller-stats">
               <div class="seller-stat-item">
                 <span class="seller-stat-value" id="sellerReviewCount">—</span>
@@ -257,7 +257,7 @@
               </div>
             </div>
           </div>
-          <!-- 按鈕列 -->
+          
           <div class="seller-card-actions">
             <button class="seller-action-btn seller-action-primary" id="sellerChat">
               <i class="fa-regular fa-comment-dots"></i> 與賣家聊聊
@@ -269,16 +269,16 @@
               <i class="fa-regular fa-flag"></i> 檢舉
             </button>
           </div>
-          <!-- 評價展開區 -->
+          
           <div class="d-none fade-down" id="sellerReviews">
             <div class="seller-card-divider"></div>
-            <!-- 評價卡片列表（JS 動態渲染至此） -->
+            
             <div id="reviewerInfo"></div>
           </div>
         </div>
       </div>
 
-      <!-- 其他注意事項 -->
+      
       <div class="typeofcommodity">
         <h5 class="topic">其他注意事項</h5>
         <div class="accordion" id="accordionExample">
@@ -332,7 +332,7 @@
         </div>
       </div>
 
-      <!-- 賣家其他商品 -->
+      
       <div class="sellerCommodities">
         <h5 class="sellertopic topic">賣家其他商品</h5>
         <div id="otherProducts" class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 mt-0"></div>
@@ -346,7 +346,7 @@
 
     </div>
 
-    <!-- 手機版固定底部下單列 -->
+    
     <div class="phonebuy d-flex d-lg-none fixed-bottom">
       <button class="buy order">馬上下單</button>
       <button class="shopcart">加入購物車</button>
@@ -354,7 +354,7 @@
 
   </div>
 
-  <!-- 聊天室 -->
+  
   <button class="chaticon" id="chaticon" title="開啟聊天室">
     <img src="data:image/svg+xml,%3csvg%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M13%204C15.8089%204%2017.2138%203.99971%2018.2227%204.67383C18.6593%204.96562%2019.0344%205.34068%2019.3262%205.77734C20.0003%206.78624%2020%208.19108%2020%2011C20%2013.8089%2020.0003%2015.2138%2019.3262%2016.2227C19.0344%2016.6593%2018.6593%2017.0344%2018.2227%2017.3262C17.3413%2017.9151%2016.1577%2017.9886%2014%2017.998V18L12.8945%2020.2109C12.526%2020.948%2011.474%2020.948%2011.1055%2020.2109L10%2018V17.998C7.8423%2017.9886%206.65869%2017.9151%205.77734%2017.3262C5.34068%2017.0344%204.96562%2016.6593%204.67383%2016.2227C3.99971%2015.2138%204%2013.8089%204%2011C4%208.19108%203.99971%206.78624%204.67383%205.77734C4.96562%205.34068%205.34068%204.96562%205.77734%204.67383C6.78624%203.99971%208.19108%204%2011%204H13Z'%20fill='url(%23paint0_linear_636_917)'/%3e%3ccircle%20cx='16'%20cy='11'%20r='1'%20fill='white'/%3e%3ccircle%20cx='12'%20cy='11'%20r='1'%20fill='white'/%3e%3ccircle%20cx='8'%20cy='11'%20r='1'%20fill='white'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_636_917'%20x1='12'%20y1='4'%20x2='12'%20y2='20.7639'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="聊天室logo，點擊進入聊天室">
     <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
@@ -372,7 +372,7 @@
     document.getElementById('chaticon').addEventListener('click', () => {});
   </script>
 
-  <!-- Scripts -->
+  
   <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>

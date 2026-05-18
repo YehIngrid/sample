@@ -3,7 +3,7 @@
 <head>
     <script>(function(){if(window.innerWidth<=991&&sessionStorage.getItem('skipLoader')==='1'){sessionStorage.removeItem('skipLoader');document.documentElement.classList.add('skip-loader');}})();</script>
     <title>拾貨寶庫 | 許願池</title>
-    <!-- meta部分 -->
+    
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -21,8 +21,8 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
-    <!-- link部分 -->
-    <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
+    
+    
     <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" integrity="sha384-6LFfkTKLRlzFtgx8xsWyBdKGpcMMQTkv+dB7rAbugeJAu1Ym2q1Aji1cjHBG12Xh" crossorigin="anonymous">
-    <!-- script部分 -->
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"  ></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
@@ -50,24 +50,24 @@
 
 <body>
   <div id="whatcontent">
-    <!-- TODO header -->
+    
     <div class="header">
-        <!-- 主要導覽列 -->
+        
         <nav class="navbar navbar-expand-lg navtb wp-navbar sticky-top">
             <div class="container d-flex align-items-center wp-navbar-inner">
-                <!-- 手機漢堡 -->
+                
                 <button class="navbar-toggler d-lg-none mobile-hamburger" type="button"
                         data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span><img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="手機版選單" style="width: 20px;"></span>
                 </button>
-                <!-- Logo + 返回按鈕 -->
+                
                 <div class="d-flex align-items-center me-4 flex-shrink-0 gap-2">
                     <a class="navbar-brand picture" href="../newhome/newhome.html">
                         <img src="/assets/TREASUREHUBCHEN-DooKZtdE.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
                     </a>
                     <a class="wp-back-btn d-none d-lg-inline-block" href="../shop/shop.html">← 返回購物首頁</a>
                 </div>
-                <!-- 桌機 SPA 頁籤：絕對置中 -->
+                
                 <div class="d-none d-lg-flex wp-nav-tabs-wrap">
                     <ul class="navbar-nav flex-row wp-nav-pill">
                         <li class="nav-item"><a class="nav-link spa-tab" href="#about" data-spa>創立理念</a></li>
@@ -76,7 +76,7 @@
                         <li class="nav-item"><a class="nav-link spa-tab" href="#mywishes" data-spa>我的願望</a></li>
                     </ul>
                 </div>
-                <!-- 右側：登入 -->
+                
                 <div class="d-flex align-items-center ms-auto gap-2">
                     <div class="login d-flex align-items-center">
                         <a href="../person/person.html" style="margin-right: 10px; cursor: pointer;">
@@ -87,7 +87,7 @@
                 </div>
             </div>
         </nav>
-        <!-- 手機搜尋 + 折疊選單 -->
+        
         <div class="container-fluid1 d-lg-none">
             <div class="collapse navbar-collapse mt-2" id="navbarNav">
                 <ul class="navbar-nav mobileNav">
@@ -102,7 +102,7 @@
         </div>
     </div>
 
-    <!-- TODO 主要內容 -->
+    
     <main class="container">
       <section id="mywishes" class="page">
         <h3 class="cardTitle" style="margin-bottom: 4px; color: #004b97;">我的願望</h3>
@@ -117,7 +117,7 @@
           <div class="wishgrid">
             <div id="empty" class="d-flex justify-content-center"></div>
             <div class="my-item-list" id="myWishGrid">
-              <!-- 我的許願卡片會在這裡動態生成 -->
+              
             </div>
             <div class="pagination-controls text-center my-3">
               <button id="myprevPage" class="wishpage">上一頁</button>
@@ -129,7 +129,7 @@
       </section>
       <section id="about" class="page about-section">
         <div class="pageContainer about-layout">
-          <!-- 底部大字浮水印 -->
+          
           <svg class="about-philosophy-bg" viewBox="0 0 1000 110" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="philosShimmer" x1="-100%" y1="0" x2="0%" y2="0" gradientUnits="userSpaceOnUse">
@@ -146,7 +146,7 @@
                   font-family="'Noto Sans TC', sans-serif" font-size="108" font-weight="900"
                   fill="url(#philosShimmer)">OUR PHILOSOPHY</text>
           </svg>
-          <!-- 左欄：文字 -->
+          
           <div class="about-text">
             <h3 class="cardTitle about-anim-title" style="margin-bottom: 16px;">創立理念</h3>
             <p class="about-anim-p" style="--i:0">在資源有限的校園生活中，有些需求不應只是運氣，更該被主動滿足。</p>
@@ -154,7 +154,7 @@
             <p class="about-anim-p" style="--i:2">透過公開許願，讓閒置資源能精準流向最需要的人手中，打破「找不到、買不到」的困境，打造一個更具數位溫度與信任感的校園經濟生態。</p>
             <p class="about-anim-p" style="--i:3">傳統平台讓你大海撈針，「許願池」則讓資源主動找上你。</p>
           </div>
-          <!-- 右欄：雙圓示意圖 -->
+          
           <div class="about-circles-section about-anim-circles">
             <svg class="about-circles-svg" viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -169,25 +169,25 @@
                   <stop offset="100%" stop-color="#7aaed6"/>
                 </linearGradient>
               </defs>
-              <!-- 左圓 -->
+              
               <circle class="about-circle-breath about-circle-L" cx="196" cy="140" r="118" fill="white" fill-opacity="0.75" stroke="url(#circleGradL)" stroke-width="13"/>
-              <!-- 右圓（呼吸延遲） -->
+              
               <circle class="about-circle-breath about-circle-R" cx="364" cy="140" r="118" fill="white" fill-opacity="0.75" stroke="url(#circleGradR)" stroke-width="13"/>
-              <!-- 中間連結箭頭 -->
+              
               <g class="about-arrow-group">
                 <line x1="268" y1="140" x2="292" y2="140" stroke="#abdad5" stroke-width="2.5" stroke-linecap="round"/>
                 <polyline points="286,134 294,140 286,146" fill="none" stroke="#abdad5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
               </g>
-              <!-- 左圓文字 -->
+              
               <text x="162" y="147" text-anchor="middle" font-family="'Noto Sans TC', sans-serif" font-size="21" font-weight="700" fill="#004b97" letter-spacing="3">買家許願</text>
-              <!-- 右圓文字 -->
+              
               <text x="398" y="147" text-anchor="middle" font-family="'Noto Sans TC', sans-serif" font-size="21" font-weight="700" fill="#004b97" letter-spacing="3">賣家實現</text>
             </svg>
           </div>
         </div>
       </section>
       <section id="wishpool" class="page">
-        <!-- Hero -->
+        
         <div class="wp-hero">
           <div class="wp-hero-text">
             <span class="wp-hero-eyebrow">WISH POOL · 心願媒合</span>
@@ -219,7 +219,7 @@
           </div>
         </div>
 
-        <!-- 篩選條件 -->
+        
         <div class="wp-filter-card">
           <div class="wp-filter-header" id="filterToggle">
             <div class="wp-filter-header-left">
@@ -247,11 +247,11 @@
           </div>
         </div>
 
-        <!-- 卡片列表 -->
+        
         <div class="wishpoolcontainer" style="margin-bottom: 36vh;">
           <div class="wishgrid">
             <div class="item-list" id="wishGrid">
-              <!-- 許願卡片會在這裡動態生成 -->
+              
             </div>
           </div>
           <div class="pagination-controls text-center my-3">
@@ -264,7 +264,7 @@
       <section id="makewish" class="page">
         <div class="mw-layout">
 
-          <!-- ① 許願表單（桌機左、手機最後） -->
+          
           <div class="mw-card mw-form">
             <h6 class="cardTitle mw-card-title">許願表單</h6>
             <p class="mw-login-hint" id="mwLoginHint" style="display:none">請先<span class="loginfirst">登入會員</span>才可提交許願表單！</p>
@@ -355,10 +355,10 @@
             </div>
           </div>
 
-          <!-- 右欄：步驟 + 注意事項 -->
+          
           <div class="mw-right">
 
-          <!-- ② 許願步驟（手機第1、桌機右上） -->
+          
           <div class="mw-card mw-steps">
             <h6 class="cardTitle mw-card-title">許願步驟</h6>
             <ul class="ulstep">
@@ -393,7 +393,7 @@
             </ul>
           </div>
 
-          <!-- ③ 注意事項（手機第2、桌機右下） -->
+          
           <div class="mw-card mw-notice">
             <h6 class="cardTitle mw-card-title">注意事項</h6>
             <ul class="mw-notice-list">
@@ -403,12 +403,12 @@
             </ul>
           </div>
 
-          </div><!-- /.mw-right -->
+          </div>
 
         </div>
       </section>
     </main>
-    <!-- TODO footer -->
+    
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-col footer-brand">
@@ -468,7 +468,7 @@
           </div>
         </div>
         
-    <!-- 許願池手機版底部 SPA 導覽列 -->
+    
     <nav class="wp-spa-nav d-lg-none" id="wpSpaNav">
       <a class="wp-spa-item spa-tab nav-link" href="#about" data-spa>
         <img class="wp-tab-icon wp-tab-inactive" src="data:image/svg+xml,%3csvg%20width='30'%20height='31'%20viewBox='0%200%2030%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='15'%20cy='15'%20r='10'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='15'%20cy='27'%20r='4'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='1.5'%20cy='13.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='15'%20cy='1.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='28.5'%20cy='13.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='24.5'%20cy='5.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='5.5'%20cy='5.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="創立理念">
@@ -491,11 +491,11 @@
         <span>我的願望</span>
       </a>
     </nav>
-    <!-- 底部導航 (手機版) -->
+    
     <nav class="bottom-nav">
       <a href="../shop/shop.html" class="bottom-nav-item">
-        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23004B97'/%3e%3crect%20x='15'%20y='19'%20width='8'%20height='11'%20fill='white'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23004B97'%20stroke='%23004B97'/%3e%3c/svg%3e" alt="正在購物首頁">
-        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23B4B4B4'/%3e%3crect%20x='15'%20y='19'%20width='8'%20height='11'%20fill='white'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23B4B4B4'%20stroke='%23B4B4B4'/%3e%3c/svg%3e" alt="點擊前往購物首頁">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23004B97'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23004B97'%20stroke='%23004B97'/%3e%3c/svg%3e" alt="正在購物首頁">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23B4B4B4'%20stroke='%23B4B4B4'/%3e%3c/svg%3e" alt="點擊前往購物首頁">
         <span>購物首頁</span>
       </a>
       <a href="../commodity/commodity.html" class="bottom-nav-item">
@@ -521,9 +521,9 @@
         <span>我的帳戶</span>
       </a>
     </nav>
-  </div><!-- /#whatcontent -->
+  </div>
 
-    <!-- Crop Modal -->
+    
     <div class="modal fade" id="wishCropModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">

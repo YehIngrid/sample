@@ -3,6 +3,15 @@ import { resolve } from 'path'
 import { glob } from 'glob'
 import { cpSync, existsSync } from 'fs'
 
+function stripHtmlComments() {
+  return {
+    name: 'strip-html-comments',
+    transformIndexHtml(html) {
+      return html.replace(/<!--[\s\S]*?-->/g, '')
+    }
+  }
+}
+
 function copyStaticFolders() {
   return {
     name: 'copy-static-folders',
@@ -38,5 +47,5 @@ export default defineConfig(() => ({
     outDir: 'dist',
     rollupOptions: { input },
   },
-  plugins: [copyStaticFolders()],
+  plugins: [stripHtmlComments(), copyStaticFolders()],
 }))

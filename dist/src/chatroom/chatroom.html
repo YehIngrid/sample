@@ -26,7 +26,7 @@
   <link rel="stylesheet" crossorigin href="/assets/default-font-CKrxaKSe.css">
 </head>
 <body>
-    <!-- 頁面載入遮罩 -->
+    
     <div id="chatLoader" class="chat-loader">
       <div class="loader-wrap">
         <div class="shelf">
@@ -46,7 +46,7 @@
 
     <div class="container-fluid h-100">
         <div class="row h-100">
-            <!-- 聊天室列表（永遠全屏，滑入滑出） -->
+            
             <div class="col-12 col-md-4 col-lg-3 sidebar p-0" id="sidebar">
                 <div class="sidebar-header p-3 d-flex align-items-center">
                     <button id="closeChatFullscreen" class="btn btn-link p-0 me-2" style="color:#fff;font-size:1.2rem;display:none;">
@@ -55,7 +55,7 @@
                     <h5 class="mb-0">聊天室</h5>
                 </div>
                 
-                <!-- 聊天室列表 -->
+                
                 <div class="chat-list" id="chatList">
                     <div class="chat-item" data-room="general">
                         <div class="d-flex align-items-center">
@@ -74,12 +74,12 @@
                 </div>
             </div>
 
-            <!-- 主聊天區域（永遠全屏，滑入滑出） -->
+            
             <div class="col-12 col-md-8 col-lg-9 chat-main p-0" id="chatMain">
-                <!-- 聊天室標題 -->
+                
                 <div class="chat-header p-3 border-bottom">
                     <div class="d-flex justify-content-between align-items-center">
-                        <!-- 手機版返回按鈕 -->
+                        
                         <button class="btn btn-link mobile-back-btn me-2" id="backButton">
                             <i class="bi bi-arrow-left fs-4"></i>
                         </button>
@@ -91,9 +91,7 @@
                             <button id="toggleMaximizeBtn" class="btn btn-link p-1" style="display:none;color:#4a627a;font-size:1.1rem;line-height:1;" title="放大視窗">
                                 <i class="bi bi-arrows-fullscreen"></i>
                             </button>
-                            <!-- <button class=" col-8 btn btn-sm btn-outline-secondary" id="connectionStatus">
-                                <i class="bi bi-circle-fill text-success"></i> 已連接
-                            </button> -->
+                            
                             <div class="dropdown">
                                 <button class="chat-more-btn" id="chatMoreBtn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-three-dots-vertical"></i>
@@ -131,24 +129,24 @@
                     </div>
                 </div>
 
-                <!-- SSE 斷線提示 -->
+                
                 <div id="sseDisconnectBanner" class="sse-disconnect-banner" style="display:none;">
                     <i class="bi bi-wifi-off me-2"></i>連線中斷，嘗試重新連線中…
                 </div>
 
-                <!-- 訊息顯示區 -->
+                
                 <div class="messages-container" id="messagesContainer"></div>
 
-                <!-- 捲動到底部按鈕 -->
+                
                 <button id="scrollToBottomBtn" class="scroll-to-bottom-btn" style="display:none;" title="捲動到最新訊息">
                     <i class="bi bi-chevron-double-down"></i>
                 </button>
 
                 <div id="typingIndicator" class="typing-indicator mt-2" style="display: none;">
                 </div>
-                <!-- 輸入區域 -->
+                
                 <div class="message-input-container p-3 border-top">
-                    <!-- 快速回覆 -->
+                    
                     <div id="quickReplyBar" class="quick-reply-bar" style="display:none;">
                         <button class="quick-reply-chip" data-text="請問還有嗎？">請問還有嗎？</button>
                         <button class="quick-reply-chip" data-text="請問有瑕疵嗎？">請問有瑕疵嗎？</button>
@@ -157,7 +155,7 @@
                         <button class="quick-reply-chip" data-text="抱歉，我再考慮一下">抱歉，我再考慮一下</button>
                     </div>
 
-                    <!-- 時間選擇面板 -->
+                    
                     <div id="timePicker" class="chat-picker-panel" style="display:none;">
                         <div class="picker-label">日期</div>
                         <div class="picker-row" id="timePickerDays">
@@ -180,7 +178,7 @@
                         <button id="timePickerConfirm" class="picker-confirm-btn">插入時間</button>
                     </div>
 
-                    <!-- 地點選擇面板 -->
+                    
                     <div id="locationPicker" class="chat-picker-panel" style="display:none;">
                         <div class="picker-label">中興大學常見面交地點</div>
                         <div class="picker-row" id="locationPickerChips">
@@ -196,7 +194,7 @@
                         <button id="locationPickerConfirm" class="picker-confirm-btn">插入地點</button>
                     </div>
 
-                    <!-- 客服機器人選單 -->
+                    
                     <div id="csBotMenu" class="cs-bot-menu" style="display:none;">
                         <p class="cs-bot-hint">請選擇想詢問的項目：</p>
                         <div class="cs-bot-options">
@@ -235,7 +233,7 @@
             </div>
         </div>
     </div>
-    <!-- 訊息主題面板 -->
+    
     <div id="themePanel" class="theme-panel" style="display:none;" aria-label="訊息主題">
       <div class="theme-panel-inner">
         <div class="theme-panel-header">
@@ -293,7 +291,7 @@
             <small>自訂</small>
           </button>
         </div>
-        <!-- 自訂顏色列 (初始隱藏) -->
+        
         <div id="customColorRow" class="custom-color-row" style="display:none;">
           <div class="d-flex align-items-center gap-2">
             <label class="custom-color-label">顏色 1</label>
@@ -309,7 +307,7 @@
     </div>
     <div id="themePanelOverlay" class="theme-panel-overlay" style="display:none;"></div>
 
-    <!-- 操作引導 -->
+    
     <div id="chatOnboarding" class="chat-onboarding" style="display:none;">
         <div class="onboarding-backdrop"></div>
         <div class="onboarding-tooltip arrow-down" id="onboardingTooltip">
@@ -324,12 +322,12 @@
         </div>
     </div>
 
-    <!-- 訊息右鍵選單 -->
+    
     <div id="msgContextMenu" class="msg-context-menu" style="display:none;">
         <button id="msgMenuCopy"><i class="bi bi-copy me-2"></i>複製文字</button>
     </div>
 
-    <!-- Crop Modal -->
+    
     <div class="modal fade" id="chatCropModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -377,12 +375,12 @@
       });
     </script>
 
-    <!-- 底部導航 (手機版，iframe 內不顯示) -->
+    
     <script>if(window !== window.parent) document.write('<style>#bottomNav{display:none!important}</style>');</script>
     <nav class="bottom-nav" id="bottomNav">
       <a href="../shop/shop.html" class="bottom-nav-item nav-tab-home">
-        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23004B97'/%3e%3crect%20x='15'%20y='19'%20width='8'%20height='11'%20fill='white'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23004B97'%20stroke='%23004B97'/%3e%3c/svg%3e" alt="正在購物首頁">
-        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23B4B4B4'/%3e%3crect%20x='15'%20y='19'%20width='8'%20height='11'%20fill='white'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23B4B4B4'%20stroke='%23B4B4B4'/%3e%3c/svg%3e" alt="點擊前往購物首頁">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23004B97'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23004B97'%20stroke='%23004B97'/%3e%3c/svg%3e" alt="正在購物首頁">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23B4B4B4'%20stroke='%23B4B4B4'/%3e%3c/svg%3e" alt="點擊前往購物首頁">
         <span>購物首頁</span>
       </a>
       <a href="../commodity/commodity.html" class="bottom-nav-item nav-tab-market">

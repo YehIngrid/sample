@@ -3,7 +3,7 @@
     <head>
         <title>登入與註冊</title>
             
-        <!-- meta部分 -->
+        
         <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -16,8 +16,8 @@
         <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
         <meta name="keywords" content="拾獲寶庫、拾貨寶庫、拾貨寶庫登入、中興二手"/>
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-        <!-- link部分 -->
-        <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
+        
+        
         <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,14 +52,14 @@
       </div>
 
       <div id="whatcontent" class="d-none">
-  <!-- Header -->
+  
   <div class="header">
     
-    <!-- 響應式選單 -->
+    
         <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
           <div class="container-fluid d-flex align-items-center">
 
-            <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
+            
             <button class="navbar-toggler d-lg-none me-2 order-0"
                     type="button"
                     data-bs-toggle="collapse"
@@ -70,14 +70,14 @@
               <img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="選單" style="width:20px;">
             </button>
 
-            <!-- (ALL) Logo -->
+            
             <a class="navbar-brand picture order-1 me-4"
               href="../newhome/newhome.html">
               <img src="/assets/TREASUREHUBCHEN-DooKZtdE.svg" alt="拾貨寶庫登入頁面"
                    style="width: 100px; margin-right: 10px; border-radius: 0%;">
             </a>
 
-            <!-- (DESKTOP) 導覽選單：桌機顯示 -->
+            
             <div class="d-none d-lg-flex order-2">
               <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
@@ -90,7 +90,7 @@
               </ul>
             </div>
 
-            <!-- (RIGHT) 右側：登入 + 購物車（所有尺寸都有；用 ms-auto 推到最右） -->
+            
             <div class="d-flex align-items-center ms-auto order-3">
               <div class="login me-2">
                 <a id="username" class="username" href="../person/person.html"></a>
@@ -102,7 +102,7 @@
             </div>
           </div>
 
-          <!-- 側邊抽屜連結來源（隱藏，供 default.js _initMobileDrawer 使用） -->
+          
           <ul class="navbar-nav mobileNav d-none">
             <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
             <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
@@ -116,7 +116,7 @@
 
   </div>
 </div>
-        <!-- TODO content -->
+        
         <div class="auth-bg">
           <div class="auth-blob auth-blob-1"></div>
           <div class="auth-blob auth-blob-2"></div>
@@ -147,7 +147,7 @@
                 </p>
               </div>
             </div>
-            <!-- TODO forgetpwdpage1 -->
+            
             <div id="forgetpwdpage" class="auth-step">
               <div id="forgetpwdModal" class="modalwhat glass-card" >
                 <form id="forgetpwdForm">
@@ -163,7 +163,7 @@
                 </form>
               </div>
             </div>
-            <!-- TODO get the 驗證碼 page2 -->
+            
             <div id="getLinkPage" class="auth-step">
               <div id="getLinkModal" class="modalwhat glass-card" >
                 <form id="getLinkForm">
@@ -176,7 +176,7 @@
                 </form>
               </div>
             </div>
-            <!-- TODO reset password page3 -->
+            
             <div id="resetpwdpage" class="auth-step">
               <div id="resetpwdModal" class="modalwhat glass-card" >
                 <form id="resetpwdForm">
@@ -193,7 +193,7 @@
                 </form>
               </div>
             </div>
-            <!-- TODO reset success page4 -->
+            
             <div id="resetsuccesspage" class="auth-step">
               <div id="resetsuccessModal" class="modalwhat glass-card" >
                 <form id="resetsuccessForm">
@@ -204,7 +204,7 @@
                 </form>
               </div>
             </div>
-            <!-- TODO signup page -->
+            
             <div id="signuppage" class="auth-step">
               <div id="signupModal" class="modalwhat glass-card" >
                 <form id="signupForm">
@@ -300,7 +300,7 @@
   </div>
 </footer>
       </div>
-      <!-- 放在頁面中，最好是在 body 最後面或卡住畫面的地方 -->
+      
 <div id="loader-wrapper">
   <div class="loader-wrap">
     <div class="shelf">
@@ -334,7 +334,7 @@
   </div>
 </div>
 
-<!-- 條款 Modal -->
+
 <div class="terms-modal-overlay" id="termsModalOverlay">
   <div class="terms-modal">
     <div class="terms-modal-header">
@@ -393,7 +393,7 @@
   </div>
 </div>
 
-        <!-- script部分-->
+        
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
