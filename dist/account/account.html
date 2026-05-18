@@ -25,7 +25,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-      <script type="module" crossorigin src="/assets/account-account-DkjATRvx.js"></script>
+      <script type="module" crossorigin src="/assets/account-account-CzN2iopy.js"></script>
       <link rel="modulepreload" crossorigin href="/assets/BackendService-CDHQNBfA.js">
       <link rel="modulepreload" crossorigin href="/assets/default-zpn_sSzc.js">
       <link rel="stylesheet" crossorigin href="/assets/account-account-Bx6JMePT.css">
@@ -248,8 +248,9 @@
                   </div>
                   <p class="checkRemind">系統已將<strong>認證連結</strong>寄至您的電子信箱，請<strong>點擊郵件連結</strong>開通帳號後即可登入。</p>
                   <p class="checkRemind" style="margin-top:8px;">沒收到信？請先檢查<strong>垃圾郵件資料夾</strong>。</p>
-                  <button type="button" id="resendVerifyBtn" class="css-button-gradient--4 resend-btn" disabled>
-                    重新發送認證信&ensp;<span id="resendCountdown">60</span>s
+                  <p class="checkRemind" style="margin-top:8px; color:#666;">認證連結將於 <strong>24 小時</strong>後失效。若連結已過期，請重新登入，系統會自動補寄認證信。</p>
+                  <button type="button" id="resendVerifyBtn" class="css-button-gradient--4 resend-btn" disabled style="display:none">
+                    重新發送認證信&ensp;<span id="resendCountdown"></span>
                   </button>
                   <button type="button" id="checkBackLogin" class="checkBackbtn css-button-gradient--4">我瞭解了，返回登入頁</button>
                 </form>
