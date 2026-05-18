@@ -33,7 +33,8 @@ body {
     position: relative;
     z-index: 10000 !important;
 }
-body.modal-open .navbar {
+body.modal-open .navbar,
+body.modal-open .bottom-nav {
     z-index: 1040 !important;
 }
 .navbar .nav-link {
@@ -283,7 +284,7 @@ ul{
   .search-input-wrap {
     position: relative;
     width: 100%;
-    z-index: 1;
+    z-index: 200;
   }
 
   /* 輸入框內的搜尋 icon */
