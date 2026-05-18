@@ -37,6 +37,13 @@ body.modal-open .navbar,
 body.modal-open .bottom-nav {
     z-index: 1040 !important;
 }
+body.modal-open #whatcontent {
+    transform: none !important;
+}
+.modal-content {
+    position: relative;
+    z-index: 1056;
+}
 .navbar .nav-link {
     color: #4a627a !important;
 }
