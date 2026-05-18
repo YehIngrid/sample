@@ -33,6 +33,9 @@ body {
     position: relative;
     z-index: 10000 !important;
 }
+body.modal-open .navbar {
+    z-index: 1040 !important;
+}
 .navbar .nav-link {
     color: #4a627a !important;
 }

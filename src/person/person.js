@@ -617,9 +617,14 @@ async function handleRouting() {
   // 捲動到指定錨點
   const scrollTarget = params.get('scroll');
   if (scrollTarget) {
+    const delay = page === 'settings' ? 400 : 100;
     setTimeout(() => {
-      document.getElementById(scrollTarget)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+      const el = document.getElementById(scrollTarget);
+      if (!el) return;
+      const navbarH = document.querySelector('.navbar')?.offsetHeight || 0;
+      const top = el.getBoundingClientRect().top + window.scrollY - navbarH - 12;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }, delay);
   }
 }
 
@@ -827,27 +832,66 @@ function renderOrderPagination(containerId, pagination, loadFn) {
 }
 
 // TODO 更改大頭照預覽
-document.getElementById('photo').addEventListener('change', function (e) {
-  const preview = document.getElementById('myAvatarPreview');
-  preview.innerHTML = ''; // 清除舊圖
+let _avatarCropper = null;
 
+document.getElementById('photo').addEventListener('change', function (e) {
   const file = e.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
   reader.onload = function (event) {
-    const img = document.createElement('img');
-    img.src = event.target.result;
-    img.style.width = '150px';
-    img.style.height = '150px';
-    img.style.margin = '10px';
-    img.style.objectFit = 'cover';
-    img.style.borderRadius = '50%';
-    img.style.border = '2px solid #ccc';
-    img.style.boxShadow = '0 0 6px rgba(0,0,0,0.1)';
-    preview.appendChild(img);
+    const cropImg = document.getElementById('avatarCropImg');
+    cropImg.src = event.target.result;
+
+    const modalEl = document.getElementById('avatarCropModal');
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+    modalEl.addEventListener('shown.bs.modal', function handler() {
+      modalEl.removeEventListener('shown.bs.modal', handler);
+      if (_avatarCropper) { _avatarCropper.destroy(); _avatarCropper = null; }
+      const init = () => {
+        _avatarCropper = new Cropper(cropImg, {
+          aspectRatio: 1,
+          viewMode: 1,
+          dragMode: 'move',
+          autoCropArea: 0.8,
+          restore: false,
+          guides: false,
+          center: true,
+          highlight: false,
+          cropBoxMovable: false,
+          cropBoxResizable: false,
+          toggleDragModeOnDblclick: false,
+        });
+      };
+      if (cropImg.complete && cropImg.naturalWidth > 0) init();
+      else cropImg.addEventListener('load', init, { once: true });
+    });
+
+    modal.show();
   };
   reader.readAsDataURL(file);
+});
+
+document.getElementById('avatarCropConfirm').addEventListener('click', function () {
+  if (!_avatarCropper) return;
+  _avatarCropper.getCroppedCanvas({ width: 400, height: 400 }).toBlob(blob => {
+    // 回寫到 file input
+    const dt = new DataTransfer();
+    dt.items.add(new File([blob], 'avatar.webp', { type: 'image/webp' }));
+    document.getElementById('photo').files = dt.files;
+
+    // 更新預覽
+    const preview = document.getElementById('myAvatarPreview');
+    preview.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(blob);
+    img.style.cssText = 'width:150px;height:150px;margin:10px;object-fit:cover;border-radius:50%;border:2px solid #ccc;box-shadow:0 0 6px rgba(0,0,0,0.1);';
+    preview.appendChild(img);
+
+    bootstrap.Modal.getInstance(document.getElementById('avatarCropModal')).hide();
+    if (_avatarCropper) { _avatarCropper.destroy(); _avatarCropper = null; }
+  }, 'image/webp', 0.85);
 });
 // 在 DOMContentLoaded 裡面加入
 async function loadSettingsData() {

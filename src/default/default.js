@@ -52,57 +52,63 @@ window.onload = function() {
     });
 
   });
+const _AUTH_CACHE_TTL = 5 * 60 * 1000; // 5 分鐘
+
+function _applyLoggedInUI() {
+  const userAvatar = localStorage.getItem('avatar');
+  const avatarSrc = (userAvatar && userAvatar !== 'null' && userAvatar !== '') ? userAvatar : '../image/default-avatar.webp';
+  const userName = localStorage.getItem('username') || '';
+
+  document.querySelectorAll('.loginornot').forEach((el) => {
+    if (el.classList.contains('nav-menu-item')) {
+      el.innerHTML = '<i class="ti ti-logout me-2"></i>登出';
+    } else {
+      el.textContent = '登出';
+    }
+    el.href = '#';
+    el.onclick = (e) => { e.preventDefault(); doLogout(); };
+  });
+
+  if (userAvatar && userAvatar !== 'null' && userAvatar !== '') {
+    document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatar"]').forEach(img => {
+      img.src = userAvatar; img.style.borderRadius = '50%';
+      img.style.border = '1px solid #004b97'; img.style.objectFit = 'cover';
+    });
+    document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatarnotactive"]').forEach(img => {
+      img.src = userAvatar; img.style.borderRadius = '50%';
+      img.style.border = '1px solid #ABDAD5'; img.style.objectFit = 'cover';
+    });
+  }
+
+  document.querySelectorAll('.username').forEach((el) => {
+    el.innerHTML = `<img class="nav-username-avatar" src="${avatarSrc}" alt="頭像">`;
+    el.style.display = '';
+  });
+  document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = avatarSrc; });
+  document.querySelectorAll('.nav-guest-label').forEach(el => el.classList.add('d-none'));
+  document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.remove('d-none'));
+  document.querySelectorAll('.nav-user-menu-header').forEach(el => el.classList.remove('d-none'));
+  document.querySelectorAll('.nav-menu-name').forEach(el => { el.textContent = userName; });
+}
+
 async function renderAuthUI() {
+  // 快取夠新且有 uid → 先樂觀渲染，再背景驗證
+  const cacheTs = parseInt(localStorage.getItem('_authCacheTs') || '0', 10);
+  const hasCache = localStorage.getItem('uid') && (Date.now() - cacheTs < _AUTH_CACHE_TTL);
+  if (hasCache) {
+    window.isLoggedIn = true;
+    _authResolve(true);
+    _applyLoggedInUI();
+  }
+
   try {
       backendService = new BackendService();
-      const user = await backendService.whoami(); // 成功代表已登入
+      const user = await backendService.whoami(); // 背景驗證
+      localStorage.setItem('_authCacheTs', String(Date.now()));
       window.isLoggedIn = true;
       sessionStorage.removeItem('_loginExpiredDeclined');
-      _authResolve(true);
-      document.querySelectorAll('.loginornot').forEach((el) => {
-        if (el.classList.contains('nav-menu-item')) {
-          el.innerHTML = '<i class="ti ti-logout me-2"></i>登出';
-        } else {
-          el.textContent = '登出';
-        }
-        el.href = '#';
-        el.onclick = (e) => {
-          e.preventDefault();
-          doLogout();
-        };
-      });
-
-      // 更新底部導覽列「我的帳戶」icon 為使用者頭像（已登入時）
-      const userAvatar = localStorage.getItem('avatar');
-      if (userAvatar && userAvatar !== 'null' && userAvatar !== '') {
-        document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatar"]').forEach(img => {
-          img.src = userAvatar;
-          img.style.borderRadius = '50%';
-          img.style.border = '1px solid #004b97';
-          img.style.objectFit = 'cover';
-        });
-        document.querySelectorAll('.bottom-nav-item .nav-icon[src*="default-avatarnotactive"]').forEach(img => {
-          img.src = userAvatar;
-          img.style.borderRadius = '50%';
-          img.style.border = '1px solid #ABDAD5';
-          img.style.objectFit = 'cover';
-        });
-      }
-
-      // 桌機版 navbar 下拉選單：已登入狀態
-      const avatarSrc = (userAvatar && userAvatar !== 'null' && userAvatar !== '') ? userAvatar : '../image/default-avatar.webp';
-      document.querySelectorAll('.username').forEach((el) => {
-        el.innerHTML = `<img class="nav-username-avatar" src="${avatarSrc}" alt="頭像">`;
-        el.style.display = '';
-      });
-      document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = avatarSrc; });
-      document.querySelectorAll('.nav-guest-label').forEach(el => el.classList.add('d-none'));
-      document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.remove('d-none'));
-      document.querySelectorAll('.nav-user-menu-header').forEach(el => el.classList.remove('d-none'));
-
-      // 下拉選單 header 顯示姓名
-      const userName = localStorage.getItem('username') || '';
-      document.querySelectorAll('.nav-menu-name').forEach(el => { el.textContent = userName; });
+      if (!hasCache) _authResolve(true);
+      _applyLoggedInUI();
 
       // Session keep-alive：每 5 分鐘 ping 一次，避免 cookie session 過期
       setInterval(async () => {
