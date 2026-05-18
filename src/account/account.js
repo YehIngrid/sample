@@ -52,7 +52,24 @@ window.onload = async function() {
     try {
       const bs = new BackendService();
       await bs.verifyEmail(verifyToken);
-      await Swal.fire({ icon: 'success', title: '帳號驗證成功！', text: '您的帳號已成功開通，請登入。', confirmButtonText: '確定' });
+      // 驗證後試探是否已有 session（後端若有自動登入則直接跳轉）
+      try {
+        await bs.whoami();
+        // 有 session → 直接跳轉
+        const redirectUrl = params.get('redirect');
+        let target = '../shop/shop.html';
+        if (redirectUrl) {
+          try {
+            const t = new URL(redirectUrl, window.location.origin);
+            if (t.origin === window.location.origin) target = t.href;
+          } catch (_) {}
+        }
+        await Swal.fire({ icon: 'success', title: '帳號驗證成功！', showConfirmButton: false, timer: 1500 });
+        window.location.replace(target);
+      } catch (_) {
+        // 無 session → 顯示登入框
+        await Swal.fire({ icon: 'success', title: '帳號驗證成功！', text: '請登入以繼續。', confirmButtonText: '確定' });
+      }
     } catch (e) {
       await Swal.fire({ icon: 'error', title: '驗證失敗', text: e.message, confirmButtonText: '確定' });
     }
@@ -125,7 +142,6 @@ async function callSignUp() {
     await backendService.signup(payload);
     _pendingEmail = payload.email;
     showPage('checkEmailPage');
-    startResendCountdown(300);
   } catch (e) {
     Swal.fire({
       icon: "error",

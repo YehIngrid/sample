@@ -1,13 +1,26 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import { glob } from 'glob'
-import { cpSync, existsSync } from 'fs'
+import { cpSync, existsSync, rmSync } from 'fs'
 
 function stripHtmlComments() {
   return {
     name: 'strip-html-comments',
     transformIndexHtml(html) {
       return html.replace(/<!--[\s\S]*?-->/g, '')
+    }
+  }
+}
+
+function flattenSrcDir() {
+  return {
+    name: 'flatten-src-dir',
+    closeBundle() {
+      const srcDir = resolve(__dirname, 'dist/src')
+      if (existsSync(srcDir)) {
+        cpSync(srcDir, resolve(__dirname, 'dist'), { recursive: true })
+        rmSync(srcDir, { recursive: true })
+      }
     }
   }
 }
@@ -47,5 +60,5 @@ export default defineConfig(() => ({
     outDir: 'dist',
     rollupOptions: { input },
   },
-  plugins: [stripHtmlComments(), copyStaticFolders()],
+  plugins: [stripHtmlComments(), copyStaticFolders(), flattenSrcDir()],
 }))
