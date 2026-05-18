@@ -178,17 +178,22 @@ async function callLogin() {
       _pendingEmail = email;
       showPage('checkEmailPage');
       // 登入成功有 session，主動補送一封驗證信
+      let resendMsg = `認證信已寄至 ${email}，請前往信箱點擊連結開通帳號。`;
       try {
         await backendService.resendVerificationEmail();
         startResendCountdown(300);
-      } catch {
-        // 若送信失敗（如 rate limit），讓使用者手動重送
-        startResendCountdown(0);
+      } catch (err) {
+        if (err?.message === 'RATE_LIMIT') {
+          resendMsg = `認證信已於近期寄出，請檢查 ${email} 的收件匣（含垃圾郵件）。5 分鐘後可重新發送。`;
+          startResendCountdown(300);
+        } else {
+          startResendCountdown(0);
+        }
       }
       await Swal.fire({
         icon: 'warning',
         title: '帳號尚未驗證',
-        text: `認證信已寄至 ${email}，請前往信箱點擊連結開通帳號。`,
+        text: resendMsg,
         confirmButtonText: '確定'
       });
       return;
