@@ -380,6 +380,23 @@ export const formatTaipeiTime = (dateStr) => {
     minute: "2-digit"
   });
 };
+export async function requireEmailVerified() {
+  if (localStorage.getItem('emailVerify') !== 'false') return true;
+  const result = await Swal.fire({
+    icon: 'warning',
+    title: '信箱尚未驗證',
+    text: '買賣商品前需完成電子信箱驗證，是否前往驗證？',
+    confirmButtonText: '前往驗證',
+    cancelButtonText: '取消',
+    showCancelButton: true,
+  });
+  if (result.isConfirmed) {
+    const currentUrl = window.location.pathname + window.location.search;
+    window.location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+  }
+  return false;
+}
+
 export async function requireLogin() {
   // 等 whoami 完成後查快取，不重複發請求
   await window._authReady;

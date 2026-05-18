@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
-import '../default/default.js';
+import { requireEmailVerified } from '../default/default.js';
 
 let backendService;
 let wpbackendService;
@@ -327,6 +327,7 @@ nextHotBtn.addEventListener("click", () => {
 
  
   async function createCommodity() {
+  if (!await requireEmailVerified()) return;
   // 1. 商品名稱
   const nameEl = document.getElementById('name');
   if (!nameEl.value.trim()) {

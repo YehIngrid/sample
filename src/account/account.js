@@ -173,30 +173,35 @@ async function callLogin() {
     const resp = await backendService.login({ email, password });
     loaderLogin.style.display = 'none';
 
-    // 若後端回傳 emailVerify: false，直接導引至驗證流程
+    // 若後端回傳 emailVerify: false，詢問現在或之後驗證
     if (resp.data?.data?.emailVerify === false) {
       _pendingEmail = email;
-      showPage('checkEmailPage');
-      // 登入成功有 session，主動補送一封驗證信
-      let resendMsg = `認證信已寄至 ${email}，請前往信箱點擊連結開通帳號。`;
-      try {
-        await backendService.resendVerificationEmail();
-        startResendCountdown(300);
-      } catch (err) {
-        if (err?.message === 'RATE_LIMIT') {
-          resendMsg = `認證信已於近期寄出，請檢查 ${email} 的收件匣（含垃圾郵件）。5 分鐘後可重新發送。`;
-          startResendCountdown(300);
-        } else {
-          startResendCountdown(0);
-        }
-      }
-      await Swal.fire({
+      const choice = await Swal.fire({
         icon: 'warning',
         title: '帳號尚未驗證',
-        text: resendMsg,
-        confirmButtonText: '確定'
+        html: `您的帳號尚未完成電子信箱驗證。<br><small style="color:#888;">未驗證前無法買賣商品。</small>`,
+        confirmButtonText: '現在認證',
+        cancelButtonText: '之後再說',
+        showCancelButton: true,
       });
-      return;
+      if (choice.isConfirmed) {
+        showPage('checkEmailPage');
+        let resendMsg = `認證信已寄至 ${email}，請前往信箱點擊連結開通帳號。`;
+        try {
+          await backendService.resendVerificationEmail();
+          startResendCountdown(300);
+        } catch (err) {
+          if (err?.message === 'RATE_LIMIT') {
+            resendMsg = `認證信已於近期寄出，請檢查 ${email} 的收件匣（含垃圾郵件）。5 分鐘後可重新發送。`;
+            startResendCountdown(300);
+          } else {
+            startResendCountdown(0);
+          }
+        }
+        await Swal.fire({ icon: 'info', title: '請查收信箱', text: resendMsg, confirmButtonText: '確定' });
+        return;
+      }
+      // 之後再說 → 繼續登入流程，但 emailVerify=false 已存入 localStorage
     }
 
     await Swal.fire({
