@@ -34,6 +34,10 @@ function copyStaticFolders() {
         const dest = resolve(__dirname, `dist/src/${folder}`)
         if (existsSync(src)) cpSync(src, dest, { recursive: true })
       }
+      for (const file of ['robots.txt', 'sitemap.xml']) {
+        const src = resolve(__dirname, file)
+        if (existsSync(src)) cpSync(src, resolve(__dirname, `dist/${file}`))
+      }
     }
   }
 }
