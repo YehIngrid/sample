@@ -764,3 +764,9 @@ window.refreshNotifBadge = () => _loadNotifications(1, false);
   });
 })();
 // ─────────────────────────────────────────────────────────
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' });
+  });
+}

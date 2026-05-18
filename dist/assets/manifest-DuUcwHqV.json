@@ -2,7 +2,7 @@
   "name": "拾貨寶庫",
   "short_name": "拾貨寶庫",
   "description": "中興大學最方便的二手拍賣市集",
-  "start_url": "./newhome/newhome.html",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#004b97",
   "background_color": "#ffffff",
