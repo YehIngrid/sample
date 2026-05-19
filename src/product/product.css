@@ -1533,7 +1533,7 @@
 
   /* ── 手風琴（手機微調） ── */
   .accordion-button {
-    padding: 14px 0;
+    padding: 14px 20px 14px 0;
     font-weight: 500;
   }
   .accordion-button::after { width: 14px; height: 14px; }
