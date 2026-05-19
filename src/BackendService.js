@@ -896,7 +896,7 @@ export default class BackendService {
 
     async getReportHistory({ page = 1, limit = 10 } = {}) {
         try {
-            const response = await this.http.get('/api/report/history', {
+            const response = await this.http.get('/api/reports/history', {
                 params: { page, limit }
             });
             return response.data;

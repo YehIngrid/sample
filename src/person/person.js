@@ -2931,8 +2931,9 @@ async function loadReportHistory(page = 1) {
   list.innerHTML = '<div class="text-center text-muted py-4" style="font-size:14px;">載入中...</div>';
   pager.innerHTML = '';
   try {
-    const data = await backendService.getReportHistory({ page, limit: LIMIT });
-    const records = Array.isArray(data) ? data : (data?.data ?? []);
+    const res = await backendService.getReportHistory({ page, limit: LIMIT });
+    const records    = res?.data?.reports ?? [];
+    const pagination = res?.data?.pagination ?? {};
     if (!records.length) {
       list.innerHTML = `
         <div class="review-empty">
@@ -2959,13 +2960,11 @@ async function loadReportHistory(page = 1) {
         </div>`;
     }).join('');
 
-    if (records.length === LIMIT || page > 1) {
+    const total = pagination.totalPages ?? 1;
+    if (total > 1) {
       let html = '<div class="order-pagination">';
-      if (page > 1) {
-        html += `<button class="order-page-num" onclick="loadReportHistory(${page - 1})">‹ 上一頁</button>`;
-      }
-      if (records.length === LIMIT) {
-        html += `<button class="order-page-num" onclick="loadReportHistory(${page + 1})">下一頁 ›</button>`;
+      for (let i = 1; i <= total; i++) {
+        html += `<button class="order-page-num${i === page ? ' active' : ''}" onclick="loadReportHistory(${i})">${i}</button>`;
       }
       html += '</div>';
       pager.innerHTML = html;
