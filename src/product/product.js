@@ -762,7 +762,7 @@ async function onAddToCart(e) {
     btn.classList.add('cart-added');
     btn.disabled = false;
     window.refreshCartBadge?.();
-    Swal.fire({ title: '已加入購物車！', icon: 'success', showConfirmButton: false, timer: 1200 });
+    Swal.fire({ title: '已加入購物車！', text: '可以繼續往下瀏覽賣家的其他商品', icon: 'success', showConfirmButton: false, timer: 1800 });
   } catch (err) {
     // 失敗：還原原始狀態
     btn.innerHTML = origHtml;
