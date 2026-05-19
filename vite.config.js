@@ -68,6 +68,9 @@ function copyStaticFolders() {
         const src = resolve(__dirname, file)
         if (existsSync(src)) cpSync(src, resolve(__dirname, `dist/${file}`))
       }
+      // favicon（在 src/ 底下）
+      const faviconSrc = resolve(__dirname, 'src/treasurehubIcon.ico')
+      if (existsSync(faviconSrc)) cpSync(faviconSrc, resolve(__dirname, 'dist/treasurehubIcon.ico'))
       // PWA manifest
       const manifestSrc = resolve(__dirname, 'src/manifest.json')
       if (existsSync(manifestSrc)) cpSync(manifestSrc, resolve(__dirname, 'dist/manifest.json'))
