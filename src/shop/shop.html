@@ -852,6 +852,7 @@
                 <label for="description" class="sell-label">商品狀態描述 <span class="sell-required">*</span><span class="sell-charcount" id="descCount">0 / 500 字</span></label>
                 <small class="sell-hint">可列出商品規格、注意事項、BSMI、ISBN；說明販售原因、瑕疵部位等，建議 30 字以上</small>
                 <textarea class="form-control" id="description" name="description" rows="5" placeholder="例如：九成新，只用了一學期，無劃線無書寫..." maxlength="500"></textarea>
+                <div id="descError" style="display:none;color:#e03;font-size:0.82rem;margin-top:4px;">商品描述至少需要 10 字</div>
               </div>
 
               <div class="sell-field">
@@ -1895,6 +1896,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   bindCharCount('name', 'nameCount', 60);
   bindCharCount('description', 'descCount', 500);
+
+  // 描述欄：離開或輸入時即時顯示「至少 10 字」提示
+  const descEl = document.getElementById('description');
+  const descError = document.getElementById('descError');
+  function checkDescMin() {
+    if (descEl && descError) {
+      const tooShort = descEl.value.trim().length > 0 && descEl.value.trim().length < 10;
+      descError.style.display = tooShort ? '' : 'none';
+      descEl.style.borderColor = tooShort ? '#e03' : '';
+    }
+  }
+  descEl?.addEventListener('input', checkDescMin);
+  descEl?.addEventListener('blur', checkDescMin);
 })();
 
 // ── 賣家表單多步驟 Wizard ──
@@ -1954,6 +1968,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!name) { await Swal.fire({ icon: 'warning', title: '請填寫商品名稱' }); return; }
     if (!category || category === 'notselyet') { await Swal.fire({ icon: 'warning', title: '請選擇商品分類' }); return; }
     if (!desc) { await Swal.fire({ icon: 'warning', title: '請填寫商品狀態描述' }); return; }
+    if (desc.length < 10) { document.getElementById('description').focus(); await Swal.fire({ icon: 'warning', title: '商品描述至少需要 10 字' }); return; }
     setStep(2, false);
   });
 
