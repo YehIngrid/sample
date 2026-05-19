@@ -2785,6 +2785,7 @@ async function loadMyReviewStats() {
   if (!container) return;
   const uid = localStorage.getItem('uid');
   if (!uid) return;
+  if (!backendService) backendService = new BackendService();
 
   try {
     if (Object.keys(_tagMeaningCache).length === 0) {
