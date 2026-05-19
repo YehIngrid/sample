@@ -3135,3 +3135,10 @@ html{ scroll-behavior:smooth; }
   color: #4a627a;
   line-height: 1.4;
 }
+
+/* 裁切 Modal backdrop 一律保持透明（等同 .fade 狀態），
+   防止 Safari/手機版 transitionend 未觸發導致遮罩卡住擋操作 */
+.modal-backdrop {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
