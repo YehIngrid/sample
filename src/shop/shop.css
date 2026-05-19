@@ -2160,8 +2160,19 @@ tbody > tr:nth-of-type(even) {
   padding: 8px 10px 6px;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  background: transparent;
+  background: #fff;
 }
+
+.icon-box {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+.icon-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .cat-pills::-webkit-scrollbar { display: none; }
 
 .cat-pill {

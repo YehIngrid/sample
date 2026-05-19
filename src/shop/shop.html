@@ -18,7 +18,7 @@
         
     <!-- meta部分 -->
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" href="../image/bigLogo.jpg">
@@ -129,8 +129,8 @@
 
                 <!-- 搜尋下拉面板（手機 + 電腦） -->
                 <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
-                  <!-- 商品分類 -->
-                  <div class="search-drop-section">
+                  <!-- 商品分類（桌機才顯示） -->
+                  <div class="search-drop-section d-none d-lg-block">
                     <div class="search-drop-header"><span>商品分類</span></div>
                     <div class="cat-pills" style="padding:6px 0 4px;background:transparent;flex-wrap:wrap;overflow-x:visible;gap:6px;">
                       <a href="../commodity/commodity.html?category=education" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/book.svg" alt="課業學習"></div>課業學習</a>
@@ -149,8 +149,13 @@
                     </div>
                     <ul id="desktopHistoryList" class="search-drop-list"></ul>
                   </div>
-
-                  <ul id="desktopTrendList" class="search-drop-list" style="display:none!important;"></ul>
+                  <!-- 大家都在搜 -->
+                  <div class="search-drop-section">
+                    <div class="search-drop-header"><span><i class="fa-solid fa-fire" style="color:#e8952a;margin-right:4px;"></i>大家都在搜</span></div>
+                    <ul id="desktopTrendList" class="search-drop-list search-drop-trend">
+                      <li class="search-drop-empty"><i class="ti ti-ban" style="margin-right:3px;opacity:0.5;font-size:0.85em;"></i>暫無資料</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </form>
@@ -1731,13 +1736,8 @@ const timer = setInterval(() => {
     const dropdown  = document.getElementById('searchDropdown');
     if (!mainInput) return;
 
-    // ── 搜尋欄：手機版開 offcanvas，桌機版開 dropdown ──
+    // ── 搜尋欄：手機 / 桌機統一使用 dropdown ──
     mainInput.addEventListener('focus', function () {
-      if (window.innerWidth < 992) {
-        mainInput.blur();
-        bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('searchOffcanvas')).show();
-        return;
-      }
       if (mainInput.value.trim()) _setHotTagsVisible(false);
       openDropdown();
     });
