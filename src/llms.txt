@@ -1,0 +1,33 @@
+# 拾貨寶庫 TreasureHub
+
+> 中興大學校園二手拍賣市集 — 讓寶物找到新的歸屬
+
+拾貨寶庫（TreasureHub）是專為國立中興大學學生打造的校園二手交易平台，提供安全、便利的二手商品買賣環境。
+
+## 核心功能
+
+- **商品買賣**：上架、瀏覽、搜尋二手商品（教科書、3C、生活用品、宿舍用品等）
+- **購物車 / 訂單**：加入購物車、下單、追蹤訂單狀態
+- **許願池**：發布想要的商品，讓賣家主動聯繫
+- **即時聊天室**：買賣雙方站內訊息溝通
+- **評價系統**：交易完成後互相評分，維護信譽機制
+- **PWA 支援**：可安裝至手機主畫面，離線瀏覽
+
+## 商品分類
+
+課業學習、3C 電子、住宿生活、運動休閒、服飾配件、二手好物
+
+## 網站資訊
+
+- 網址：https://treasurehub.tw
+- 語言：繁體中文
+- 服務對象：國立中興大學學生
+- 聯絡信箱：treasurehub.tw@gmail.com
+
+## 頁面索引
+
+- [首頁](https://treasurehub.tw/newhome/newhome.html)
+- [購物商場](https://treasurehub.tw/commodity/commodity.html)
+- [許願池](https://treasurehub.tw/wishpool/wishpool.html)
+- [賣家專區](https://treasurehub.tw/shop/shop.html?page=seller)
+- [常見問題](https://treasurehub.tw/questions/questions.html)

@@ -68,6 +68,9 @@ function copyStaticFolders() {
         const src = resolve(__dirname, file)
         if (existsSync(src)) cpSync(src, resolve(__dirname, `dist/${file}`))
       }
+      // llms.txt（在 src/ 底下）
+      const llmsSrc = resolve(__dirname, 'src/llms.txt')
+      if (existsSync(llmsSrc)) cpSync(llmsSrc, resolve(__dirname, 'dist/llms.txt'))
       // favicon（在 src/ 底下）
       const faviconSrc = resolve(__dirname, 'src/treasurehubIcon.ico')
       if (existsSync(faviconSrc)) cpSync(faviconSrc, resolve(__dirname, 'dist/treasurehubIcon.ico'))
