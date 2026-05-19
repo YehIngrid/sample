@@ -20,7 +20,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <link rel="manifest" href="/assets/manifest-DuUcwHqV.json">
+    <link rel="manifest" href="/assets/manifest-BKd0kgUD.json">
     <link rel="apple-touch-icon" href="/assets/bigLogo-BTISbBqw.jpg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
@@ -50,7 +50,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
-  <script type="module" crossorigin src="/assets/shop-shop-Da-GnILy.js"></script>
+  <script type="module" crossorigin src="/assets/shop-shop-OKgO0_Xu.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/BackendService-BDPKRJHu.js">
   <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-BnZ3tb9F.js">
   <link rel="modulepreload" crossorigin href="/assets/chat-BRdq8jEG.js">
@@ -1367,6 +1367,7 @@
     renderMobileHistory();
     renderDesktopHistory();
   }
+  window.addSearchHistory = addSearchHistory;
 
   // ── 手機 offcanvas 搜尋紀錄 ──
   function renderMobileHistory() {
@@ -1473,6 +1474,8 @@
     }).join('');
     const el = document.getElementById('desktopTrendList');
     if (el) el.innerHTML = html;
+    const mobileRank = document.getElementById('searchRankList');
+    if (mobileRank) mobileRank.innerHTML = html;
     const mhHot = document.getElementById('mhHotTags');
     if (mhHot) {
       const mainInput = document.getElementById('searchInput');
@@ -1505,8 +1508,13 @@
     const dropdown  = document.getElementById('searchDropdown');
     if (!mainInput) return;
 
-    // ── 搜尋欄（手機 + 電腦共用 dropdown） ──
+    // ── 搜尋欄：手機版開 offcanvas，桌機版開 dropdown ──
     mainInput.addEventListener('focus', function () {
+      if (window.innerWidth < 992) {
+        mainInput.blur();
+        bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('searchOffcanvas')).show();
+        return;
+      }
       if (mainInput.value.trim()) _setHotTagsVisible(false);
       openDropdown();
     });
@@ -1552,6 +1560,30 @@
     });
 
     renderTrending();
+
+    // ── 手機版 Offcanvas 事件 ──
+    const offcanvasEl = document.getElementById('searchOffcanvas');
+    if (offcanvasEl) {
+      offcanvasEl.addEventListener('show.bs.offcanvas', function () {
+        renderMobileHistory();
+        renderTrending();
+      });
+      offcanvasEl.addEventListener('shown.bs.offcanvas', function () {
+        document.getElementById('searchInputOC')?.focus();
+      });
+    }
+
+    // 手機版清除搜尋紀錄
+    document.getElementById('clearHistoryBtn')?.addEventListener('click', function () {
+      saveHistory([]);
+      renderMobileHistory();
+    });
+
+    // 手機版 offcanvas 清除按鈕
+    document.getElementById('searchClearBtnOC')?.addEventListener('click', function () {
+      const ocInput = document.getElementById('searchInputOC');
+      if (ocInput) { ocInput.value = ''; updateClearBtn(ocInput, this); ocInput.focus(); }
+    });
 
     // 清除紀錄
     document.getElementById('desktopClearHistory')?.addEventListener('click', function () {

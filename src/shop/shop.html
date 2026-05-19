@@ -1590,6 +1590,7 @@ const timer = setInterval(() => {
     renderMobileHistory();
     renderDesktopHistory();
   }
+  window.addSearchHistory = addSearchHistory;
 
   // ── 手機 offcanvas 搜尋紀錄 ──
   function renderMobileHistory() {
@@ -1696,6 +1697,8 @@ const timer = setInterval(() => {
     }).join('');
     const el = document.getElementById('desktopTrendList');
     if (el) el.innerHTML = html;
+    const mobileRank = document.getElementById('searchRankList');
+    if (mobileRank) mobileRank.innerHTML = html;
     const mhHot = document.getElementById('mhHotTags');
     if (mhHot) {
       const mainInput = document.getElementById('searchInput');
@@ -1728,8 +1731,13 @@ const timer = setInterval(() => {
     const dropdown  = document.getElementById('searchDropdown');
     if (!mainInput) return;
 
-    // ── 搜尋欄（手機 + 電腦共用 dropdown） ──
+    // ── 搜尋欄：手機版開 offcanvas，桌機版開 dropdown ──
     mainInput.addEventListener('focus', function () {
+      if (window.innerWidth < 992) {
+        mainInput.blur();
+        bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('searchOffcanvas')).show();
+        return;
+      }
       if (mainInput.value.trim()) _setHotTagsVisible(false);
       openDropdown();
     });
@@ -1775,6 +1783,30 @@ const timer = setInterval(() => {
     });
 
     renderTrending();
+
+    // ── 手機版 Offcanvas 事件 ──
+    const offcanvasEl = document.getElementById('searchOffcanvas');
+    if (offcanvasEl) {
+      offcanvasEl.addEventListener('show.bs.offcanvas', function () {
+        renderMobileHistory();
+        renderTrending();
+      });
+      offcanvasEl.addEventListener('shown.bs.offcanvas', function () {
+        document.getElementById('searchInputOC')?.focus();
+      });
+    }
+
+    // 手機版清除搜尋紀錄
+    document.getElementById('clearHistoryBtn')?.addEventListener('click', function () {
+      saveHistory([]);
+      renderMobileHistory();
+    });
+
+    // 手機版 offcanvas 清除按鈕
+    document.getElementById('searchClearBtnOC')?.addEventListener('click', function () {
+      const ocInput = document.getElementById('searchInputOC');
+      if (ocInput) { ocInput.value = ''; updateClearBtn(ocInput, this); ocInput.focus(); }
+    });
 
     // 清除紀錄
     document.getElementById('desktopClearHistory')?.addEventListener('click', function () {

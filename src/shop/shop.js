@@ -123,8 +123,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById('searchInputOC')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      doSearch(e.target.value);
+      const val = e.target.value.trim();
+      if (val && window.addSearchHistory) window.addSearchHistory(val);
+      doSearch(val);
     }
+  });
+  document.getElementById('searchInputOC')?.addEventListener('input', (e) => {
+    const btn = document.getElementById('searchClearBtnOC');
+    if (btn) btn.classList.toggle('visible', e.target.value.length > 0);
   });
   const iframe = document.getElementById('talkInterface');
   iframe.src = '../chatroom/chatroom.html';

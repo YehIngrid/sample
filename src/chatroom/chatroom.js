@@ -71,6 +71,12 @@ class ChatRoomList {
     async init() {
         if (this.alreadyInit) return;
         this.alreadyInit = true;
+        // 刷新當前登入者資料，避免 localStorage 有舊帳號殘留導致 isSelf 比對錯誤
+        try {
+            await this.auth.getMe();
+            this.userId = localStorage.getItem('uid');
+            this.username = localStorage.getItem('username') || '';
+        } catch (_) {}
         this.setupMobileView();
         document.getElementById('messagesContainer')?.addEventListener('click', e => {
             const img = e.target.closest('.chat-image');
@@ -375,7 +381,7 @@ class ChatRoomList {
     appendCombinedMessage(data, prepend = false) {
         const container = document.getElementById('messagesContainer');
         const wrapper = document.createElement('div');
-        const isSelf = data.isSelf === true || data.username === this.username;
+        const isSelf = data.isSelf === true || (data.userId && this.userId ? data.userId === this.userId : data.username === this.username);
         wrapper.className = `imgAndMessage ${isSelf ? 'message-self' : 'message-other'}`;
         wrapper.dataset.timestamp = data.timestamp;
         wrapper.dataset.messageId = data.id ?? '';
@@ -428,7 +434,7 @@ class ChatRoomList {
         this.hideEmptyHint();
         const container = document.getElementById('messagesContainer');
         const imgWrapper = document.createElement('div');
-        const isSelf = data.isSelf === true || data.username === this.username;
+        const isSelf = data.isSelf === true || (data.userId && this.userId ? data.userId === this.userId : data.username === this.username);
         imgWrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
         imgWrapper.dataset.timestamp = data.timestamp;
         imgWrapper.dataset.messageId = data.id ?? '';
@@ -1504,7 +1510,9 @@ class ChatRoomList {
 
         const container = document.getElementById('messagesContainer');
         this.username = localStorage.getItem('username');
-        const isSelf = this.username === data.username;
+        this.userId = this.userId || localStorage.getItem('uid');
+        console.log('[isSelf debug]', { dataUserId: data.userId, myUserId: this.userId, dataUsername: data.username, myUsername: this.username });
+        const isSelf = (data.userId && this.userId) ? data.userId === this.userId : this.username === data.username;
         const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
         });

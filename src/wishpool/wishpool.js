@@ -316,6 +316,12 @@ function showMyInfo(data) {
   });
 }
 async function resendWish(wish) {
+  await Swal.fire({
+    icon: 'info',
+    title: '請重新上傳圖片',
+    text: '重新發送願望時，圖片無法自動帶入，請重新選擇並上傳照片。',
+    confirmButtonText: '我知道了'
+  });
   // 切換到許願表單頁
   location.hash = '#makewish';
   await new Promise(r => setTimeout(r, 80));

@@ -8,10 +8,16 @@
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": "image/bigLogo.jpg",
-      "sizes": "192x192 512x512 937x929",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "src": "image/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "image/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

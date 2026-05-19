@@ -1239,7 +1239,6 @@ small { font-size: 10px; color: #004b97; }
 .info-row {
   display: flex;
   align-items: center;
-  gap: 12px;
   padding: 12px 0;
   border-bottom: 1px solid #abdad5;
 }
