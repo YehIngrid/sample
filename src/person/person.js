@@ -929,13 +929,13 @@ async function loadSettingsData() {
   }
 }
 
-async function loadStatCards() {
+// 合併 loadStatCards + loadOrderBadges，共用同一批 API response，省去重複請求
+async function loadDashboardData() {
   const elProducts = document.getElementById('statProducts');
   const elOrders   = document.getElementById('statOrders');
   const elScore    = document.getElementById('statScore');
-  if (!elProducts && !elOrders && !elScore) return;
 
-  // 信譽積分直接從 localStorage 填入
+  // 信譽積分直接從 localStorage 填入（不需要 API）
   if (elScore) elScore.textContent = localStorage.getItem('rate') || '—';
 
   try {
@@ -945,6 +945,12 @@ async function loadStatCards() {
       backendService.getBuyerOrders(1),
     ]);
 
+    const sellList = sellRes?.data?.data?.orders ?? [];
+    const buyList  = buyRes?.data?.data?.orders  ?? [];
+    const sellPag  = sellRes?.data?.data?.pagination ?? {};
+    const buyPag   = buyRes?.data?.data?.pagination  ?? {};
+
+    // stat cards
     if (elProducts) {
       const raw = itemRes?.data;
       const total = raw?.total ?? raw?.count ?? (Array.isArray(raw) ? raw.length : (raw?.commodities ?? raw?.data ?? []).length);
@@ -952,15 +958,15 @@ async function loadStatCards() {
     }
     if (elOrders) {
       const ACTIVE = new Set(['pending','preparing','delivered','review_pending']);
-      const sellList = sellRes?.data?.data?.orders ?? [];
-      const buyList  = buyRes?.data?.data?.orders  ?? [];
       const count = [...sellList, ...buyList].filter(o => ACTIVE.has((o.status ?? '').toLowerCase())).length;
-      const sellPag = sellRes?.data?.data?.pagination ?? {};
-      const buyPag  = buyRes?.data?.data?.pagination  ?? {};
       const sellTotal = sellPag.totalItems ?? sellList.length;
       const buyTotal  = buyPag.totalItems  ?? buyList.length;
       elOrders.textContent = count > 0 ? count : (sellTotal + buyTotal > 0 ? '0' : '0');
     }
+
+    // sidebar badges（原 loadOrderBadges 的工作）
+    updateSidebarBadge('sellProducts', sellList, sellPag);
+    updateSidebarBadge('buyProducts',  buyList,  buyPag);
   } catch { /* silent */ }
 }
 
@@ -1195,11 +1201,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  loadRecentNotifications();
-  loadStatCards();
+  // stat cards + sidebar badges 合併為一次 API（原本 loadStatCards + loadOrderBadges 各打一遍）
+  loadDashboardData();
 
-  // 預載入側邊欄 / 手機按鈕的訂單計數紅點
-  loadOrderBadges();
+  // 通知面板非首屏必要，等瀏覽器閒置再載入，不卡主畫面
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadRecentNotifications, { timeout: 2000 });
+  } else {
+    setTimeout(loadRecentNotifications, 300);
+  }
 
   // 監聽瀏覽器上一頁/下一頁
   window.onpopstate = function() {
