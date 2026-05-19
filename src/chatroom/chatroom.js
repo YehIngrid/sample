@@ -22,6 +22,7 @@ class ChatRoomList {
         this.submitBtn = document.querySelector('#messageForm button[type="submit"]');
         this.isSending = false;
         this.alreadyInit = false;
+        this.optimisticQueue = [];
 
         // 每個房間各自記錄 lastReadMessageId 和 lastReadTimestamp
         this.lastReadMap = new Map(); // roomId -> { id, timestamp }（自己的已讀進度）
@@ -483,6 +484,50 @@ class ChatRoomList {
         }
 
         this.detectRead(imgWrapper);
+    }
+
+    _renderOptimisticImage(localUrl, caption = null) {
+        const container = document.getElementById('messagesContainer');
+        const wasNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+        const wrapper = document.createElement('div');
+
+        if (caption) {
+            wrapper.className = 'imgAndMessage message-self optimistic-msg';
+            wrapper.innerHTML = `
+                <div class="message-content">
+                    <div class="d-flex align-items-end">
+                        <div class="d-flex flex-row align-items-center gap-1 me-2">
+                            <small class="text-muted msg-time" style="font-size:0.75rem;">--:--</small>
+                        </div>
+                        <div class="combined-bubble">
+                            <div style="position:relative;">
+                                <img src="${localUrl}" alt="Image" class="chat-image" style="opacity:0.8;">
+                                <div class="img-upload-spinner"></div>
+                            </div>
+                            <div class="combined-caption">${this.escapeHtml(caption).replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                </div>`;
+        } else {
+            wrapper.className = 'imgmessage message-self optimistic-msg';
+            wrapper.innerHTML = `
+                <div class="message-content">
+                    <div class="d-flex align-items-end">
+                        <div class="d-flex flex-row align-items-center gap-1 me-2">
+                            <small class="text-muted msg-time" style="font-size:0.75rem;">--:--</small>
+                        </div>
+                        <div class="message-image-wrapper" style="margin-top:8px;position:relative;">
+                            <img src="${localUrl}" alt="Image" class="chat-image"
+                                 style="width:200px;background:#f0f0f0;border-radius:8px;opacity:0.8;">
+                            <div class="img-upload-spinner"></div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        container.appendChild(wrapper);
+        requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
+        return wrapper;
     }
 
     setupMobileView() {
@@ -1452,6 +1497,13 @@ class ChatRoomList {
             if (charCount) charCount.style.display = 'none';
         }
 
+        // Optimistic UI: 傳送照片前先渲染本地預覽
+        if (hasImage) {
+            const localUrl = URL.createObjectURL(imageFile);
+            const optimisticEl = this._renderOptimisticImage(localUrl, hasText ? text : null);
+            this.optimisticQueue.push({ el: optimisticEl, localUrl });
+        }
+
         try {
             if (hasImage && hasText) {
                 // 圖片 + 文字：一次送出（caption 帶入文字）
@@ -1493,6 +1545,13 @@ class ChatRoomList {
         const hasAttachments = (Array.isArray(data.attachments) && data.attachments.length > 0)
             || (typeof data.attachments === 'string' && data.attachments.trim() !== '');
         if (hasAttachments) {
+            // 移除 optimistic 預覽泡泡（僅自己送出的訊息）
+            const isSelfMsg = (data.userId && this.userId) ? data.userId === this.userId : data.username === this.username;
+            if (isSelfMsg && !prepend && this.optimisticQueue.length > 0) {
+                const { el, localUrl } = this.optimisticQueue.shift();
+                el.remove();
+                URL.revokeObjectURL(localUrl);
+            }
             if (data.message && data.message.trim()) {
                 // 圖片 + 文字 caption：合併顯示
                 this.appendCombinedMessage(data, prepend);

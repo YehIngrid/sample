@@ -630,6 +630,11 @@ shopCropModalEl.addEventListener('hidden.bs.modal', () => {
   if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
   shopCropImg.src = '';
   shopCropFromConfirm = false;
+  // 強制清除遺留的 Bootstrap modal backdrop（Safari/手機版有時不自動移除）
+  document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+  document.body.classList.remove('modal-open');
+  document.body.style.overflow = '';
+  document.body.style.paddingRight = '';
 });
 
 document.getElementById('mainImage').addEventListener('change', function (e) {

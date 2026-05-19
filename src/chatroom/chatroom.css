@@ -536,6 +536,23 @@ html, body {
     background: var(--self-bubble-bg, #ddf1ff);
     border-color: var(--self-bubble-border, #b3d9f5);
 }
+/* ── Optimistic image upload spinner ── */
+.img-upload-spinner {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: imgSpinnerRot 0.75s linear infinite;
+    pointer-events: none;
+}
+@keyframes imgSpinnerRot {
+    to { transform: rotate(360deg); }
+}
+
 .sendicon:disabled {
     opacity: 0.4;
     cursor: not-allowed;
