@@ -664,7 +664,6 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
   border: none;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.13);
   border-radius: 14px;
-  padding: 6px;
   min-width: 170px;
   margin-top: 6px !important;
 }
