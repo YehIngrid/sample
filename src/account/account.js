@@ -104,6 +104,17 @@ function fieldClear(inputId, errorId) {
   document.getElementById(inputId)?.addEventListener('input', () => fieldClear(inputId, errorId));
 });
 
+// 註冊 email：離開欄位時驗證 s學號@mail.nchu.edu.tw / treasurehub.tw
+function isValidSignupEmail(email) {
+  return /^s\d+@mail\.nchu\.edu\.tw$|^.+@treasurehub\.tw$/i.test(email);
+}
+document.getElementById('email')?.addEventListener('blur', function() {
+  const val = this.value.trim();
+  if (val && !isValidSignupEmail(val)) {
+    fieldError('email', 'err-signup-email', '請使用 s＋學號@mail.nchu.edu.tw 的帳號註冊');
+  }
+});
+
 // ── 註冊 ──────────────────────────────────────────────────
 const signuppage = document.getElementById('signuppage');
 
@@ -262,7 +273,6 @@ document.querySelectorAll('.pwd-wrap').forEach(wrap => {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'pwd-toggle';
-  btn.setAttribute('aria-label', '切換密碼顯示');
   btn.innerHTML = '<i class="fa-regular fa-eye"></i>';
   wrap.appendChild(btn);
   btn.addEventListener('click', () => {
@@ -325,8 +335,11 @@ signbtn.addEventListener('click', function(e) {
   e.preventDefault();
   if (!document.getElementById('agreeTerms').checked) return;
   let hasError = false;
-  if (!document.getElementById('email').value.trim()) {
+  const signupEmailVal = document.getElementById('email').value.trim();
+  if (!signupEmailVal) {
     fieldError('email', 'err-signup-email', '請輸入電子信箱'); hasError = true;
+  } else if (!isValidSignupEmail(signupEmailVal)) {
+    fieldError('email', 'err-signup-email', '請使用 s＋學號@mail.nchu.edu.tw 的帳號註冊'); hasError = true;
   }
   if (!document.getElementById('password1').value) {
     fieldError('password1', 'err-signup-pwd1', '請輸入密碼'); hasError = true;
