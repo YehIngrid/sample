@@ -64,8 +64,15 @@ window.onload = async function() {
             if (t.origin === window.location.origin) target = t.href;
           } catch (_) {}
         }
-        await Swal.fire({ icon: 'success', title: '帳號驗證成功！', showConfirmButton: false, timer: 1500 });
-        window.location.replace(target);
+        const verifyResult = await Swal.fire({
+          icon: 'success',
+          title: '帳號驗證成功！',
+          html: '歡迎加入拾貨寶庫！<br><small style="color:#888;margin-top:4px;display:block;">建議前往「個人中心」設定常用聯絡信箱，方便買賣雙方聯繫。</small>',
+          confirmButtonText: '前往個人中心',
+          cancelButtonText: '先去逛逛',
+          showCancelButton: true,
+        });
+        window.location.replace(verifyResult.isConfirmed ? '../person/person.html' : target);
       } catch (_) {
         // 無 session → 顯示登入框
         await Swal.fire({ icon: 'success', title: '帳號驗證成功！', text: '請登入以繼續。', confirmButtonText: '確定' });
