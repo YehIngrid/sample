@@ -911,7 +911,27 @@ async function loadSettingsData() {
       if (verified) {
         badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:rgb(36,182,133);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-circle-check"></i>已驗證</span>`;
       } else {
-        badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:#e67e22;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-alert-circle"></i>未驗證</span>`;
+        badgeEl.innerHTML = `<span id="unverifiedBadge" style="display:inline-flex;align-items:center;gap:4px;background:#e67e22;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;cursor:pointer;"><i class="ti ti-alert-circle"></i>未驗證</span>`;
+        document.getElementById('unverifiedBadge')?.addEventListener('click', async () => {
+          const result = await Swal.fire({
+            icon: 'warning',
+            title: '信箱尚未驗證',
+            text: '是否立即發送驗證信至您的登入信箱？',
+            confirmButtonText: '發送驗證信',
+            cancelButtonText: '取消',
+            showCancelButton: true,
+          });
+          if (!result.isConfirmed) return;
+          try {
+            await backendService.resendVerificationEmail();
+            Swal.fire({ icon: 'success', title: '驗證信已寄出', text: '請前往信箱點擊連結完成驗證', confirmButtonText: '確定' });
+          } catch (e) {
+            const msg = e?.message === 'RATE_LIMIT'
+              ? '發送過於頻繁，請 5 分鐘後再試'
+              : (e?.message || '發送失敗，請稍後再試');
+            Swal.fire({ icon: 'error', title: '發送失敗', text: msg, confirmButtonText: '確定' });
+          }
+        });
       }
     }
 
