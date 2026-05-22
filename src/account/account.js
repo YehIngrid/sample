@@ -162,7 +162,7 @@ async function callSignUp() {
     await Swal.fire({
       icon: 'success',
       title: '註冊成功！',
-      html: `驗證信已寄至 <strong>${payload.email}</strong>，請點擊信中連結開通帳號。<br><small style="color:#888;margin-top:6px;display:block;">使用學校信箱者，因資安掃描機制，信件可能延遲 <strong>1 小時以上</strong>才會送達，請耐心等候。</small>`,
+      html: `驗證信已寄至 <strong>${payload.email}</strong>，請點擊信中連結開通帳號。<br><small style="color:#888;margin-top:6px;display:block;">若在收件匣找不到驗證信，新信可能被「重要郵件」覆蓋在下方，可使用信箱搜尋功能找到。</small>`,
       confirmButtonText: '我知道了',
     });
     showPage('checkEmailPage');
