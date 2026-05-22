@@ -158,6 +158,7 @@ async function callSignUp() {
 
   try {
     await backendService.signup(payload);
+    loader.style.display = 'none';
     _pendingEmail = payload.email;
     await Swal.fire({
       icon: 'success',
