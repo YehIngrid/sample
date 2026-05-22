@@ -1057,7 +1057,7 @@ class ChatRoomList {
                     if (chId) this.officialChannelToRoomMap.set(String(chId), String(data.id));
                     // 客服頻道：名稱含「客服」的官方頻道支援雙向傳訊
                     const chName = data.officialChannel?.name ?? data.name ?? '';
-                    if (chName.includes('客服')) this.supportRoomsSet.add(String(data.id));
+                    if (chName.includes('客服') || chName.includes('小助手')) this.supportRoomsSet.add(String(data.id));
                 }
                 const target = isOfficial ? null : data.members?.find(m => m.name !== this.username);
                 // ✅ 官方頻道也要找到自己，才能判斷已讀狀態
@@ -1154,7 +1154,7 @@ class ChatRoomList {
                 const supportRoomId = [...this.supportRoomsSet][0];
                 if (supportRoomId) {
                     const supportItem = document.querySelector(`[data-room-id="${supportRoomId}"]`);
-                    const supportName = supportItem?.querySelector('.roomName')?.textContent || '客服小幫手';
+                    const supportName = supportItem?.querySelector('.roomName')?.textContent || '客服小助手';
                     await this.switchRoom(supportRoomId, supportName);
                 }
             }

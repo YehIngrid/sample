@@ -329,7 +329,7 @@ html, body {
     margin-bottom: 4px;
 }
 
-/* 客服頻道：對方（小幫手）訊息泡泡跟隨使用者主題色 */
+/* 客服頻道：對方（小助手）訊息泡泡跟隨使用者主題色 */
 [data-support-room="1"] .message-other .message-text {
     background-color: var(--self-bubble-bg, aliceblue);
     border: 1px solid var(--self-bubble-border, rgba(0,75,151,0.2));
