@@ -335,6 +335,8 @@ document.querySelectorAll('.pwd-wrap').forEach(wrap => {
     checkbox.disabled = false;
     checkbox.checked  = true;
     signbtn.disabled  = false;
+    const hint = document.getElementById('sign-hint');
+    if (hint) hint.remove();
     closeModal();
   });
 

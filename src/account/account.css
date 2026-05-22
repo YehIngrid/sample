@@ -468,6 +468,11 @@ input::placeholder {
   justify-content: center;
   z-index: 99999;
 }
+.sign-hint {
+  font-size: 0.78rem;
+  color: #888;
+  margin-left: 6px;
+}
 #signupLink {
   color: rgb(36,182,133);
   font-weight: 600;
