@@ -457,6 +457,9 @@ html, body {
         z-index: 1040;
         transition: transform 0.3s ease-in-out;
     }
+    #chatMain:not(.mobile-hidden) {
+        height: 100vh;
+    }
     #chatMain.mobile-hidden {
         transform: translateX(100%);
     }
@@ -693,6 +696,7 @@ html, body {
     max-width: 100%;
     border-radius: 6px;
     display: block;
+    margin-top: 8px;
 }
 .broadcast-time {
     margin-top: 8px;

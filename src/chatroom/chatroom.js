@@ -1067,9 +1067,11 @@ class ChatRoomList {
                 const roomAvatar = isOfficial ? '../webP/treasurehub.webp' : (target?.photoURL || '../image/default-avatar.webp');
 
                 const isMyMessage  = data.lastMessage?.username === myself?.name;
+                // ✅ 官方頻道：lastMessageId 可能在 officialChannel 上
+                const lastMsgId = data.lastMessageId ?? (isOfficial ? data.officialChannel?.lastMessageId : null);
                 // ✅ 官方頻道：有 lastMessageId 且未讀就顯示紅點；一般頻道：對方訊息未讀才顯示
-                const isNewMessage = data.lastMessageId != null
-                    && myself?.lastReadMessageId !== data.lastMessageId
+                const isNewMessage = lastMsgId != null
+                    && myself?.lastReadMessageId !== lastMsgId
                     && (isOfficial || !isMyMessage);
 
                 // ✅ 用 Map 記錄每個房間的已讀資訊（id + timestamp）
@@ -1103,10 +1105,7 @@ class ChatRoomList {
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}</h6>
                             <small class="text-muted lastMessage">${this.escapeHtml(isOfficial
-                                ? this.getLastMessageText(
-                                    data.lastMessage ?? data.officialChannel?.lastMessage ?? data.lastBroadcast,
-                                    data.officialChannel?.description || '官方公告頻道'
-                                  )
+                                ? (data.officialChannel?.description || '官方公告頻道')
                                 : this.getLastMessageText(data.lastMessage)
                             )}</small>
                         </div>
