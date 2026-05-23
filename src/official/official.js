@@ -229,52 +229,60 @@ async function loadHistoryForChannel(channelId) {
 // ════════════════════════════════════════════════════
 //  圖片上傳 & 預覽
 // ════════════════════════════════════════════════════
-let broadcastImageFile = null;
+let broadcastFiles = [];
+const BROADCAST_MAX     = 10;
+const BROADCAST_MAX_MB  = 5 * 1024 * 1024;
 
-const imgArea        = document.getElementById('broadcastImgArea');
-const imgInput       = document.getElementById('broadcastImgInput');
-const imgPreview     = document.getElementById('broadcastImgPreview');
-const imgPlaceholder = document.getElementById('broadcastImgPlaceholder');
-const clearImgBtn    = document.getElementById('clearImgBtn');
+const imgArea  = document.getElementById('broadcastImgArea');
+const imgInput = document.getElementById('broadcastImgInput');
+const imgList  = document.getElementById('broadcastImgList');
 
-imgArea.addEventListener('click', (e) => {
-  if (e.target !== clearImgBtn) imgInput.click();
-});
+imgArea.addEventListener('click', () => imgInput.click());
 imgArea.addEventListener('dragover', e => { e.preventDefault(); imgArea.classList.add('dragover'); });
 imgArea.addEventListener('dragleave', () => imgArea.classList.remove('dragover'));
 imgArea.addEventListener('drop', e => {
   e.preventDefault();
   imgArea.classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) setImageFile(file);
+  addBroadcastFiles(Array.from(e.dataTransfer.files));
 });
 imgInput.addEventListener('change', () => {
-  if (imgInput.files[0]) setImageFile(imgInput.files[0]);
-});
-clearImgBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  clearImage();
+  addBroadcastFiles(Array.from(imgInput.files));
+  imgInput.value = '';
 });
 
-function setImageFile(file) {
-  broadcastImageFile = file;
-  const reader = new FileReader();
-  reader.onload = () => {
-    imgPreview.src = reader.result;
-    imgPreview.classList.remove('d-none');
-    imgPlaceholder.classList.add('d-none');
-    clearImgBtn.classList.remove('d-none');
-  };
-  reader.readAsDataURL(file);
+function addBroadcastFiles(files) {
+  for (const f of files) {
+    if (broadcastFiles.length >= BROADCAST_MAX) {
+      Swal.fire({ icon: 'warning', title: `最多 ${BROADCAST_MAX} 張圖片` });
+      break;
+    }
+    if (!f.type.startsWith('image/')) continue;
+    if (f.size > BROADCAST_MAX_MB) {
+      Swal.fire({ icon: 'warning', title: `「${f.name}」超過 5MB 限制` });
+      continue;
+    }
+    broadcastFiles.push(f);
+  }
+  renderBroadcastImgList();
 }
 
-function clearImage() {
-  broadcastImageFile = null;
-  imgInput.value = '';
-  imgPreview.src = '';
-  imgPreview.classList.add('d-none');
-  imgPlaceholder.classList.remove('d-none');
-  clearImgBtn.classList.add('d-none');
+function removeBroadcastFile(i) {
+  broadcastFiles.splice(i, 1);
+  renderBroadcastImgList();
+}
+
+function renderBroadcastImgList() {
+  imgList.innerHTML = broadcastFiles.map((f, i) =>
+    `<span class="attach-chip attach-chip-new">
+       <i class="fa fa-image me-1"></i>${esc(f.name)}
+       <button type="button" class="attach-chip-remove" onclick="removeBroadcastFile(${i})">×</button>
+     </span>`
+  ).join('');
+}
+
+function clearBroadcastFiles() {
+  broadcastFiles = [];
+  renderBroadcastImgList();
 }
 
 // ════════════════════════════════════════════════════
@@ -292,7 +300,7 @@ document.getElementById('broadcastForm').addEventListener('submit', async (e) =>
     Swal.fire({ icon: 'warning', title: '請先選擇頻道' });
     return;
   }
-  if (!message && !broadcastImageFile) {
+  if (!message && broadcastFiles.length === 0) {
     Swal.fire({ icon: 'warning', title: '請輸入公告內容或選擇圖片' });
     return;
   }
@@ -302,11 +310,11 @@ document.getElementById('broadcastForm').addEventListener('submit', async (e) =>
   resultBox.className = 'result-box mt-3 d-none';
 
   try {
-    await chatSvc.broadCastOfficial(channelId, message || undefined, broadcastImageFile ? [broadcastImageFile] : []);
+    await chatSvc.broadCastOfficial(channelId, message || undefined, broadcastFiles);
     resultBox.className = 'result-box mt-3 success';
     resultBox.innerHTML = '<div class="fw-bold">✅ 公告發送成功！</div>';
     document.getElementById('broadcastMessage').value = '';
-    clearImage();
+    clearBroadcastFiles();
   } catch (err) {
     resultBox.className = 'result-box mt-3 error';
     resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 發送失敗</div><div>${esc(err?.response?.data?.message || err?.message) || '請稍後再試'}</div>`;
@@ -597,6 +605,8 @@ function renderAttachLists() {
     </span>`
   ).join('');
 }
+
+window.removeBroadcastFile = removeBroadcastFile;
 
 window.removeExistAttach = function(i) {
   keepAttachUrls.splice(i, 1);

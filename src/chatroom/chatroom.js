@@ -408,8 +408,8 @@ class ChatRoomList {
                         <small class="text-muted msg-time" style="font-size:0.75rem;">${time}</small>
                     </div>` : ''}
                     <div class="combined-bubble">
-                        <img src="${imageUrl}" alt="Image" loading="lazy" class="chat-image" style="cursor:pointer;">
                         <div class="combined-caption">${this.escapeHtml(data.message || '').replace(/\n/g, '<br>')}</div>
+                        <img src="${imageUrl}" alt="Image" loading="lazy" class="chat-image" style="cursor:pointer;display:block;margin-top:6px;">
                     </div>
                     ${isSelf ? '' : `<small class="text-muted ms-2 msg-time" style="font-size:0.75rem;">${time}</small>`}
                 </div>
@@ -1774,10 +1774,10 @@ class ChatRoomList {
             ? new Date(data.timestamp).toLocaleString('zh-TW', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })
             : '';
 
-        // ✅ attachments 可能是陣列或字串，統一取第一個有效值
-        const broadcastImg = Array.isArray(data.attachments)
-            ? (data.attachments[0] || null)
-            : (data.attachments || data.attachment || data.imageUrl || null);
+        // ✅ attachments 統一轉成陣列
+        const broadcastImgs = Array.isArray(data.attachments)
+            ? data.attachments.filter(Boolean)
+            : (data.attachments || data.attachment || data.imageUrl ? [data.attachments || data.attachment || data.imageUrl] : []);
 
         const channelName = data.channelName || data.channel?.name || '拾貨寶庫提醒您';
 
@@ -1790,9 +1790,8 @@ class ChatRoomList {
                     <span class="broadcast-label">${this.escapeHtml(channelName)}</span>
                     <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>
                 </div>
-                ${broadcastImg ? `
-                <img src="${broadcastImg}" class="broadcast-img chat-image" alt="公告圖片" loading="lazy" style="cursor:pointer;">` : ''}
                 ${data.message ? `<div class="broadcast-text">${this.linkify(this.escapeHtml(data.message).replace(/\n/g, '<br>'))}</div>` : ''}
+                ${broadcastImgs.map(src => `<img src="${src}" class="broadcast-img chat-image" alt="公告圖片" loading="lazy" style="cursor:pointer;">`).join('')}
                 ${time ? `<div class="broadcast-time">${time}</div>` : ''}
             </div>`;
         container.appendChild(el);

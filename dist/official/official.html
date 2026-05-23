@@ -14,7 +14,7 @@
   <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
-  <script type="module" crossorigin src="/assets/official-official-VNTG45Ek.js"></script>
+  <script type="module" crossorigin src="/assets/official-official-Bd9xLbbl.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/BackendService-CpdaZ9cF.js">
   <link rel="modulepreload" crossorigin href="/assets/default-BTqs_C0e.js">
   <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-BnZ3tb9F.js">
@@ -231,16 +231,13 @@
             <textarea id="broadcastMessage" class="form-control" rows="5" placeholder="輸入公告內容..." maxlength="2000"></textarea>
           </div>
           <div class="mb-3">
-            <label class="form-label">附件圖片 <small class="text-muted">（選填，可拖曳）</small></label>
-            <div class="img-upload-area" id="broadcastImgArea">
-              <input type="file" id="broadcastImgInput" accept="image/*" class="d-none">
-              <div id="broadcastImgPlaceholder" class="img-placeholder">
-                <i class="fa fa-image fa-2x mb-2 d-block text-muted"></i>
-                <span class="text-muted small">點擊或拖曳上傳圖片</span>
-              </div>
-              <img id="broadcastImgPreview" class="img-preview-thumb d-none" alt="預覽">
-              <button type="button" id="clearImgBtn" class="clear-img-btn d-none">×</button>
+            <label class="form-label">附件圖片 <small class="text-muted">（選填，最多 10 張，每張 ≤ 5MB，可拖曳）</small></label>
+            <div class="news-attach-zone" id="broadcastImgArea">
+              <input type="file" id="broadcastImgInput" accept="image/*" class="d-none" multiple>
+              <i class="fa fa-image me-2 text-muted"></i>
+              <span class="text-muted small">點擊選擇或拖曳圖片（可多張）</span>
             </div>
+            <div id="broadcastImgList" class="attach-list mt-2"></div>
           </div>
           <button type="submit" id="broadcastSubmitBtn" class="btn official-btn w-100" style="color: white;">
             <i class="fa fa-paper-plane me-1"></i> 發送公告
