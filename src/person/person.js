@@ -1084,7 +1084,7 @@ async function loadRecentNotifications() {
   try {
     const isAdmin = ['admin', 'moderator'].includes((sessionStorage.getItem('role') ?? '').toLowerCase());
     const [notifRes, rptRes, rptHistRaw, sellPendingRes, buyDeliveredRes, sellReviewRes, buyReviewRes, adminRptRes] = await Promise.all([
-      backendService.getNotifications(1, 20),
+      backendService.getNotifications(1, 20).catch(() => null),
       backendService.getMyReports({ page: 1, limit: 20 }).catch(() => null),
       backendService.getReportHistory({ page: 1, limit: 10 }).catch(() => null),
       backendService.getSellerOrders(1, 'pending').catch(() => null),
