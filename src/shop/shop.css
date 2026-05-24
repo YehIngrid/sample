@@ -71,7 +71,7 @@ ul{
   gap: 14px;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.22s ease;
+  transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
   border: 2px solid transparent;
 }
 .qa-btn:hover { transform: translateY(-2px); text-decoration: none; }
@@ -103,7 +103,7 @@ ul{
 .qa-copy { flex: 1; min-width: 0; }
 .qa-t { font-size: 16px; font-weight: 700; letter-spacing: 0.06em; }
 .qa-s { font-size: 12px; margin-top: 2px; letter-spacing: 0.04em; opacity: 0.92; }
-.qa-arr { font-size: 18px; opacity: 0.55; transition: all 0.22s ease; }
+.qa-arr { font-size: 18px; opacity: 0.55; transition: opacity 0.22s ease, transform 0.22s ease; }
 .qa-btn:hover .qa-arr { opacity: 1; transform: translateX(3px); }
 
 /* shop icon (CSS 畫法) */
@@ -301,7 +301,7 @@ ul{
     padding: 6px 8px;
     margin-bottom: 4px;
     border-radius: 8px;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
     display: block;
 }
 
@@ -974,7 +974,7 @@ ul{
 .more-link {
   opacity: 0;
   transform: translateY(1px);
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
   display: block;
   background-color: rgb(36,182,133);
   color: #fff;
@@ -1502,7 +1502,7 @@ tbody > tr:nth-of-type(even) {
   transform: rotate(0deg);
 }
 #spinwheelnew path {
-  transition: all 0.3s ease;
+  transition: fill 0.3s ease, stroke 0.3s ease;
 }
 #spinwheelnew {
   transform-origin: 50% 50%;
@@ -1798,7 +1798,7 @@ tbody > tr:nth-of-type(even) {
   position: absolute;
   opacity: 0;
   transform: translateY(100%);
-  transition: all 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .news-list li.active {
@@ -2101,7 +2101,7 @@ tbody > tr:nth-of-type(even) {
   border: none;
   background: #c0ccd8;
   opacity: 1;
-  transition: all 0.3s;
+  transition: background-color 0.3s, width 0.3s;
   flex-shrink: 0;
   margin: 0;
 }
