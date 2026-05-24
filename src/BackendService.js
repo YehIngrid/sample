@@ -434,9 +434,11 @@ export default class BackendService {
             return response.data;
         } catch (err) {
             console.error(err);
-            // 從後端取更精確的錯誤訊息
+            const status = err?.response?.status;
             const msg = err?.response?.data?.message || '上架商品失敗';
-            return Promise.reject(new Error(msg));
+            const error = new Error(msg);
+            error.status = status;
+            return Promise.reject(error);
         }
     }
 
