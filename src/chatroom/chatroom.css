@@ -1631,3 +1631,10 @@ html, body {
 .chat-link:hover {
   color: rgb(36,182,133);
 }
+
+/* ── iOS Safari：底部輸入框避開網址列 ── */
+@supports (-webkit-touch-callout: none) {
+  .message-input-container {
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+}

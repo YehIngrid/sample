@@ -1907,6 +1907,14 @@ small { font-size: 10px; color: #004b97; }
 .showInfo {
   font-size: 1rem;
 }
+.disable-account-zone {
+  margin-top: 48px;
+  padding: 24px 0 8px;
+  border-top: 1px solid #f0d0d0;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .disableAccount {
   border: none;
   border-radius: 5px;

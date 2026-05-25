@@ -2528,35 +2528,59 @@ if (changePasswordBtn) {
   });
 }
 
-//TODO 停用帳號
+// 停用帳號（兩步驟確認）
 const disableAccountBtn = document.getElementById('disableAccountBtn');
 if (disableAccountBtn) {
   disableAccountBtn.addEventListener('click', async () => {
-    const result = await Swal.fire({
+    // 步驟一：第一次確認
+    const step1 = await Swal.fire({
       title: '確定要停用帳號嗎？',
-      text: '停用後將無法登入，且資料將被刪除',
+      text: '停用後將無法登入，且所有資料將被刪除，此操作無法復原。',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: '是的，停用帳號',
-      cancelButtonText: '取消'
+      confirmButtonText: '繼續',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#e03',
     });
-    if (result.isConfirmed) {
-      try {
-        await backendService.disableAccount();
-        Swal.fire({
-          title: '帳號已停用',
-          text: '您的帳號已成功停用，將被登出',
-          icon: 'success'
-        }).then(() => {
-          // 停用後登出並導向首頁
-          backendService.logout().finally(() => {
-            window.location.href = '/';
-          });
-        });
-      } catch (error) {
-        console.error('停用帳號失敗:', error);
-        Swal.fire({ title: '錯誤', text: '停用帳號失敗，請稍後再試', icon: 'error' });
-      }
+    if (!step1.isConfirmed) return;
+
+    // 步驟二：輸入 TreasureHub 確認
+    const step2 = await Swal.fire({
+      title: '請輸入確認文字',
+      html: `<p style="font-size:0.9rem;color:#555;margin-bottom:8px;">請輸入 <strong>TreasureHub</strong> 以確認停用帳號</p>
+             <input id="swal-confirm-input" class="swal2-input" placeholder="TreasureHub">`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '確定停用',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#e03',
+      focusConfirm: false,
+      preConfirm: () => {
+        const val = document.getElementById('swal-confirm-input').value.trim();
+        if (val !== 'TreasureHub') {
+          Swal.showValidationMessage('請輸入正確的確認文字：TreasureHub');
+          return false;
+        }
+        return true;
+      },
+    });
+    if (!step2.isConfirmed) return;
+
+    // 送出停用 API
+    try {
+      await backendService.disableAccount();
+      await Swal.fire({
+        title: '帳號已停用',
+        text: '您的帳號已成功停用，將被登出。',
+        icon: 'success',
+        confirmButtonColor: '#004b97',
+      });
+      backendService.logout().finally(() => {
+        window.location.href = '/';
+      });
+    } catch (error) {
+      console.error('停用帳號失敗:', error);
+      Swal.fire({ title: '錯誤', text: '停用帳號失敗，請稍後再試', icon: 'error' });
     }
   });
 }
