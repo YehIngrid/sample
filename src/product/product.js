@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       1: '中',
       2: '大'
     };
-    const size = sizeMap?.[product.size] ?? '未標示';
+    const size = sizeMap?.[product.size] ?? '小';
     const updatedTime = formatTaipeiTime(product.updatedAt);
     const createdTime = formatTaipeiTime(product.createdAt);
 
