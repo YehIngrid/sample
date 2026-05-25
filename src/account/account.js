@@ -340,6 +340,14 @@ document.querySelectorAll('.pwd-wrap').forEach(wrap => {
     closeModal();
   });
 
+  const checkboxRow = checkbox.closest('.terms-agree-row') || checkbox.parentElement;
+  checkboxRow.addEventListener('click', function(e) {
+    if (checkbox.disabled && e.target !== openBtn) {
+      e.preventDefault();
+      openModal();
+    }
+  });
+
   checkbox.addEventListener('change', function() {
     signbtn.disabled = !this.checked;
   });
