@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-TreasureHub (拾貨寶庫) — a Traditional Chinese secondhand auction marketplace for National Chung Hsing University. Pure vanilla HTML/CSS/JS frontend with no build tooling. All pages are served as static files; the backend API is hosted at `https://thpr.hlc23.dev`.
+TreasureHub (拾貨寶庫) — a Traditional Chinese secondhand auction marketplace for National Chung Hsing University. Pure vanilla HTML/CSS/JS frontend with no build tooling. All pages are served as static files; frontend and backend are integrated at `https://treasurehub.tw`.
 
 ## No Build / Lint / Test Commands
 

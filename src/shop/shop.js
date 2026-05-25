@@ -499,9 +499,10 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
 let shopCropper        = null;
 let shopCropQueue      = [];   // 待裁切的原始 File 物件（主圖用）
 let shopCroppedFiles   = [];   // 主圖裁切結果
-let shopCropTarget     = '';   // 'main' | 'single'
+let shopCropTarget     = '';   // 'main' | 'single' | 'new-multi'
 let shopCropFromConfirm = false;
 let shopCropSingleIdx  = -1;   // 正在裁切的 multi 圖索引
+let shopCropNewQueue   = [];   // 超大新圖待裁切佇列
 
 // 其他照片的檔案陣列（最多 5 張，可個別裁切）
 let shopMultiFiles = [];
@@ -558,6 +559,21 @@ function renderMultiPreviews() {
     wrap.appendChild(removeBtn);
     preview.appendChild(wrap);
   });
+}
+
+// 開啟裁切 Modal（新上傳的超大圖，裁完後 push 進 shopMultiFiles）
+function openShopCropNew(file) {
+  shopCropTarget    = 'new-multi';
+  shopCropQueue     = [file];
+  shopCroppedFiles  = [];
+  shopCropCounter.textContent = '';
+  if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    shopCropImg.src = e.target.result;
+    shopCropModal.show();
+  };
+  reader.readAsDataURL(file);
 }
 
 // 開啟裁切 Modal（主圖 or 單張 multi）
@@ -627,6 +643,14 @@ document.getElementById('shopCropConfirm').addEventListener('click', () => {
       img.onload = () => URL.revokeObjectURL(url);
       img.src = url;
       preview.appendChild(img);
+    } else if (shopCropTarget === 'new-multi') {
+      // 新上傳的超大圖：裁完後 push
+      shopMultiFiles.push(compressed);
+      syncMultiToInput();
+      renderMultiPreviews();
+      if (shopCropNewQueue.length > 0) {
+        setTimeout(() => openShopCropNew(shopCropNewQueue.shift()), 350);
+      }
     } else {
       // 單張 multi：更新對應索引
       shopMultiFiles[shopCropSingleIdx] = compressed;
@@ -636,10 +660,25 @@ document.getElementById('shopCropConfirm').addEventListener('click', () => {
   }, 'image/webp', 0.92);
 });
 
-shopCropModalEl.addEventListener('hidden.bs.modal', () => {
+shopCropModalEl.addEventListener('hidden.bs.modal', async () => {
+  const wasConfirmed = shopCropFromConfirm;
+  const wasTarget    = shopCropTarget;
+  const originalFile = shopCropQueue[0] || null;
+
   if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
   shopCropImg.src = '';
   shopCropFromConfirm = false;
+
+  // 使用者關閉 modal 但沒按確認（new-multi 模式）→ 自動壓縮並加入
+  if (!wasConfirmed && wasTarget === 'new-multi' && originalFile) {
+    const compressed = await compressImage(originalFile, 1200, 0.82);
+    shopMultiFiles.push(compressed);
+    syncMultiToInput();
+    renderMultiPreviews();
+    if (shopCropNewQueue.length > 0) {
+      setTimeout(() => openShopCropNew(shopCropNewQueue.shift()), 350);
+    }
+  }
 });
 
 document.getElementById('mainImage').addEventListener('change', function (e) {
@@ -667,13 +706,43 @@ document.getElementById('image').addEventListener('change', async function (e) {
   if (newFiles.length > remaining) {
     Swal.fire({ icon: 'info', title: `已自動截取前 ${remaining} 張`, text: `最多 5 張，超出部分已忽略。` });
   }
-  const oversized = toAdd.find(f => f.size > 5000000);
-  if (oversized) {
-    Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
+  const oversizedList = toAdd.filter(f => f.size > 5000000);
+  const normalList    = toAdd.filter(f => f.size <= 5000000);
+
+  if (oversizedList.length > 0) {
+    const { isConfirmed } = await Swal.fire({
+      icon: 'info',
+      title: '部分照片較大',
+      text: `有 ${oversizedList.length} 張超過 5MB，建議裁剪以縮小檔案大小，或直接自動壓縮上傳。`,
+      confirmButtonText: '前往裁剪',
+      cancelButtonText: '自動壓縮上傳',
+      showCancelButton: true,
+      reverseButtons: true,
+    });
+
+    // 不論選哪個，正常大小的照片先壓縮加入
+    if (normalList.length) {
+      const compressedNormal = await Promise.all(normalList.map(f => compressImage(f, 1200, 0.82)));
+      shopMultiFiles.push(...compressedNormal);
+      syncMultiToInput();
+      renderMultiPreviews();
+    }
+
+    if (isConfirmed) {
+      // 前往裁剪：逐張開啟 crop modal
+      shopCropNewQueue = oversizedList.slice(1);
+      openShopCropNew(oversizedList[0]);
+    } else {
+      // 自動壓縮上傳
+      const compressedOver = await Promise.all(oversizedList.map(f => compressImage(f, 1200, 0.82)));
+      shopMultiFiles.push(...compressedOver);
+      syncMultiToInput();
+      renderMultiPreviews();
+    }
     return;
   }
 
-  // 自動壓縮每張照片（縮至 1200px，轉 WebP）
+  // 全部正常大小：自動壓縮
   const compressed = await Promise.all(toAdd.map(f => compressImage(f, 1200, 0.82)));
   shopMultiFiles.push(...compressed);
   syncMultiToInput();
