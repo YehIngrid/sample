@@ -1632,8 +1632,20 @@ html, body {
   color: rgb(36,182,133);
 }
 
-/* ── iOS Safari：底部輸入框避開網址列 ── */
+/* ── iOS Safari：用 dvh 取代 vh，避免底部網址列遮住內容 ── */
 @supports (-webkit-touch-callout: none) {
+  .container-fluid {
+    height: 100dvh;
+  }
+  .sidebar {
+    height: 100dvh;
+  }
+  .chat-main {
+    height: 100dvh;
+  }
+  #chatMain:not(.mobile-hidden) {
+    height: 100dvh;
+  }
   .message-input-container {
     padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
   }

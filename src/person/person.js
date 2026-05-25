@@ -1200,6 +1200,7 @@ async function loadRecentNotifications() {
     const dotEl = document.getElementById('notifPanelDot');
     if (dotEl) dotEl.style.display = hasPending ? 'inline-block' : 'none';
   } catch (e) {
+    console.error('[loadRecentNotifications 失敗]', e);
     container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;"><i class="ti ti-alert-circle" style="font-size:1.4rem;display:block;margin-bottom:4px;opacity:0.4;"></i>無法載入通知</div>';
   }
 }
