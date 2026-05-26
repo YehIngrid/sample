@@ -578,6 +578,12 @@ class ChatRoomList {
         document.addEventListener('click', async (e) => {
             if (!e.target.closest('#backButton')) return;
             this.backToSidebar();
+            // 清除 openSupport 參數，避免返回後再次自動開啟客服頻道
+            const url = new URL(window.location.href);
+            if (url.searchParams.has('openSupport')) {
+                url.searchParams.delete('openSupport');
+                history.replaceState(null, '', url.toString());
+            }
             if (this.userId) {
                 await this.loadRooms();
             } else {

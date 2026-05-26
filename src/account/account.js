@@ -44,6 +44,19 @@ window.onload = async function() {
   const resetToken = params.get('reset_token');
   const verifyToken = params.get('verify_token');
 
+  // 已登入 → 直接跳轉（reset/verify 流程不跳）
+  if (!resetToken && !verifyToken && localStorage.getItem('uid')) {
+    try {
+      const bs = new BackendService();
+      await bs.whoami();
+      location.replace('../shop/shop.html');
+      return;
+    } catch (_) {
+      // session 已失效，清掉 uid，繼續顯示登入頁
+      localStorage.removeItem('uid');
+    }
+  }
+
   if (resetToken) {
     _resetToken = resetToken;
     showPage('resetpwdpage');

@@ -130,6 +130,66 @@ html, body {
     overflow-y: auto;
 }
 
+/* ── Sidebar 底部 LINE 官方帳號 ── */
+.sidebar-footer {
+    flex-shrink: 0;
+    padding: 10px 12px;
+    border-top: 1px solid #e8eef5;
+    background: #f7fafd;
+}
+.sidebar-line-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #d6eadc;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+.sidebar-line-btn:hover {
+    background: #edfaf2;
+    box-shadow: 0 2px 8px rgba(6,199,85,0.12);
+    color: inherit;
+}
+.sidebar-line-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 8px;
+}
+.sidebar-line-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+}
+.sidebar-line-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #1a2840;
+    white-space: nowrap;
+}
+.sidebar-line-sub {
+    font-size: 0.7rem;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sidebar-line-arrow {
+    font-size: 0.75rem;
+    color: #aaa;
+    flex-shrink: 0;
+}
+[data-theme-dark] .sidebar-footer { background: #181825; border-top-color: #2a2a3a; }
+[data-theme-dark] .sidebar-line-btn { background: #1e1e2e; border-color: #2a3a2e; color: #cdd6f4; }
+[data-theme-dark] .sidebar-line-btn:hover { background: #1e2e1e; }
+[data-theme-dark] .sidebar-line-title { color: #cdd6f4; }
+
 .chat-item {
     padding: 12px 16px;
     cursor: pointer;
