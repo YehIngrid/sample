@@ -1097,7 +1097,7 @@ async function loadRecentNotifications() {
     // API 通知：取最近 8 筆，不限已讀／未讀
     const apiItems = (notifRes?.data?.data?.notifications ?? []).slice(0, 8);
     const reports  = rptRes?.data?.reports ?? [];
-    const rptHistRecords = Array.isArray(rptHistRaw) ? rptHistRaw : (rptHistRaw?.data ?? []);
+    const rptHistRecords = rptHistRaw?.data?.reports ?? rptHistRaw?.reports ?? [];
 
     // ── 訂單合成通知 ───────────────────────────────────────
     const orderSynth = [];

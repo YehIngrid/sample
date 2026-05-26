@@ -44,10 +44,37 @@ function _showNetworkBanner() {
     if (existing) return;
     const el = document.createElement('div');
     el.id = '_netBanner';
-    el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#004b97;color:#fff;font-size:14px;font-weight:600;text-align:center;padding:10px 16px;letter-spacing:0.02em;box-shadow:0 2px 8px rgba(0,0,0,0.25);';
-    el.innerHTML = '⚠️ 無法連線伺服器，請確認網路狀態，或網站正在維護更新中。<button onclick="location.reload()" style="margin-left:16px;background:#abdad5;color:#004b97;border:none;border-radius:6px;padding:3px 12px;cursor:pointer;font-weight:700;">重新整理</button>';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#004b97;color:#fff;font-size:14px;font-weight:600;text-align:center;padding:10px 16px;letter-spacing:0.02em;box-shadow:0 2px 8px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;gap:10px;';
+    el.innerHTML = `
+      <span>⚠️ 無法連線伺服器，請確認網路狀態，或網站正在維護更新中。</span>
+      <span id="_netBannerDots" style="display:inline-flex;gap:3px;align-items:center;">
+        <span class="_nd" style="width:5px;height:5px;border-radius:50%;background:#abdad5;display:inline-block;animation:_ndPulse 1.2s ease-in-out infinite;"></span>
+        <span class="_nd" style="width:5px;height:5px;border-radius:50%;background:#abdad5;display:inline-block;animation:_ndPulse 1.2s ease-in-out 0.2s infinite;"></span>
+        <span class="_nd" style="width:5px;height:5px;border-radius:50%;background:#abdad5;display:inline-block;animation:_ndPulse 1.2s ease-in-out 0.4s infinite;"></span>
+      </span>
+      <span style="font-size:12px;opacity:0.85;font-weight:400;" id="_netBannerStatus">正在嘗試重連</span>
+      <button onclick="location.reload()" style="background:#abdad5;color:#004b97;border:none;border-radius:6px;padding:3px 12px;cursor:pointer;font-weight:700;flex-shrink:0;">重新整理</button>
+    `;
+    if (!document.getElementById('_ndStyle')) {
+      const style = document.createElement('style');
+      style.id = '_ndStyle';
+      style.textContent = '@keyframes _ndPulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}';
+      document.head.appendChild(style);
+    }
     document.body.prepend(el);
 }
+
+// ── 全域攔截：任何 axios call 碰到網路層錯誤就顯示 banner ────────────
+axios.interceptors.response.use(
+    res => res,
+    err => {
+        const isNetworkError = err.code === 'ECONNABORTED'
+            || err.message === 'Network Error'
+            || !err.response;
+        if (isNetworkError) _showNetworkBanner();
+        return Promise.reject(err);
+    }
+);
 
 function _attach401Handler(instance) {
     instance.interceptors.response.use(
@@ -57,9 +84,8 @@ function _attach401Handler(instance) {
             const status = err?.response?.status;
             const msg = err?.response?.data?.message || '';
 
-            // 逾時或網路中斷
+            // 逾時或網路中斷（banner 由全域 interceptor 處理，這裡直接跳過）
             if (err.code === 'ECONNABORTED' || err.message === 'Network Error' || !err.response) {
-                _showNetworkBanner();
                 return Promise.reject(err);
             }
 

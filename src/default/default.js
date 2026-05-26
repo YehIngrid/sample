@@ -110,10 +110,6 @@ async function renderAuthUI() {
       if (!hasCache) _authResolve(true);
       _applyLoggedInUI();
 
-      // Session keep-alive：每 5 分鐘 ping 一次，避免 cookie session 過期
-      setInterval(async () => {
-        try { await backendService.whoami(); } catch (_) {}
-      }, 5 * 60 * 1000);
 
       // 登入後立即更新購物車數量
       refreshCartBadge();

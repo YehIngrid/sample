@@ -1,4 +1,4 @@
-import{B as te}from"./BackendService-C7vz0E7W.js";/* empty css             *//* empty css                *//* empty css                     */import"./chat-BRdq8jEG.js";import{w as he}from"./wpBackendService-8jEBVtgQ.js";import{r as pe}from"./default-CwX9Q2FZ.js";import"./ChatBackendService-BnZ3tb9F.js";let Q,ce,fe,ye;function ve(e=6){return Array.from({length:e},()=>`
+import{B as te}from"./BackendService-Ctl4JDog.js";/* empty css             *//* empty css                *//* empty css                     */import"./chat-BRdq8jEG.js";import{w as he}from"./wpBackendService-8jEBVtgQ.js";import{r as pe}from"./default-DVcC5fqU.js";import"./ChatBackendService-BnZ3tb9F.js";let Q,ce,fe,ye;function ve(e=6){return Array.from({length:e},()=>`
     <div class="hot-item">
       <div class="card">
         <div class="img-box skeleton" style="border-radius:10px 10px 0 0;"></div>
