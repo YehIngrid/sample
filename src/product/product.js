@@ -258,11 +258,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const newOrOld = newOrOldMap[product.newOrOld] ?? '未標示';
     const category = categoryMap?.[product.category] ?? '未分類(其他)';
     const sizeMap = {
-      0: '小',
-      1: '中',
-      2: '大'
+      1: '小',
+      2: '中',
+      3: '大'
     };
-    const size = sizeMap?.[product.size] ?? '小';
+    const size = sizeMap?.[product.size] ?? '未標示';
     const updatedTime = formatTaipeiTime(product.updatedAt);
     const createdTime = formatTaipeiTime(product.createdAt);
 
