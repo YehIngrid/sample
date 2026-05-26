@@ -1,6 +1,3 @@
-axios.defaults.withCredentials = true;
-axios.defaults.timeout = 30000;
-
 // ── 重試工具：network 錯誤或 5xx 才重試，4xx 直接拋出 ────────────
 async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
     let lastErr;
@@ -65,16 +62,24 @@ function _showNetworkBanner() {
 }
 
 // ── 全域攔截：任何 axios call 碰到網路層錯誤就顯示 banner ────────────
-axios.interceptors.response.use(
-    res => res,
-    err => {
-        const isNetworkError = err.code === 'ECONNABORTED'
-            || err.message === 'Network Error'
-            || !err.response;
-        if (isNetworkError) _showNetworkBanner();
-        return Promise.reject(err);
-    }
-);
+let _axiosInited = false;
+function _initAxios() {
+    if (_axiosInited) return;
+    _axiosInited = true;
+    axios.defaults.withCredentials = true;
+    axios.defaults.timeout = 30000;
+    axios.interceptors.response.use(
+        res => res,
+        err => {
+            const isNetworkError = err.code === 'ECONNABORTED'
+                || err.message === 'Network Error'
+                || !err.response;
+            if (isNetworkError) _showNetworkBanner();
+            return Promise.reject(err);
+        }
+    );
+    _attach401Handler(axios);
+}
 
 function _attach401Handler(instance) {
     instance.interceptors.response.use(
@@ -145,10 +150,9 @@ function _attach401Handler(instance) {
         }
     );
 }
-_attach401Handler(axios); // 覆蓋絕大多數 API 呼叫
-
 export default class BackendService {
     constructor() {
+        _initAxios(); // 確保 axios.defaults 和 global interceptors 設定好（只執行一次）
         this.baseUrl = import.meta.env.VITE_API_BASE_URL;
         this.http = axios.create({
             baseURL: this.baseUrl,
