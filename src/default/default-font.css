@@ -1,8 +1,8 @@
 /* ===== 字體設定：移自 default.css ===== */
-@import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700&display=swap');
+/* Google Fonts 由各頁面 <head> 的 <link> 載入，不用 @import（@import 會造成額外 waterfall） */
 
 * {
-  font-family: "Zen Kaku Gothic New", sans-serif;
+  font-family: "Zen Kaku Gothic New", "PingFang TC", "Noto Sans TC", sans-serif;
 }
 
 .swal2-popup {
