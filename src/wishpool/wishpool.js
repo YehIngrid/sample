@@ -870,6 +870,15 @@ function createWishCard(wish, isMyWish) {
     </div>
   `;
 
+  const wnPhoto = wrapper.querySelector('.wn-photo');
+  if (wnPhoto) {
+    wnPhoto.style.cursor = 'zoom-in';
+    wnPhoto.addEventListener('click', (e) => {
+      e.stopPropagation();
+      Swal.fire({ imageUrl: wnPhoto.src, imageAlt: wnPhoto.alt || '許願圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
+    });
+  }
+
   if (isActive) {
     const btn = wrapper.querySelector('.wn-action-js');
     if (btn) {

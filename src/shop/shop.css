@@ -389,7 +389,6 @@ ul{
 .seller-header-row {
   display: flex;
   align-items: center;
-  gap: 8px;
   margin: 10px 0;
 }
 .seller-header-row .nav-tabs {
