@@ -786,7 +786,7 @@ export default class BackendService {
     }
     async reportSeller(userId, payload) {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/report/user/${userId}`, payload);
+            const response = await axios.post(`${this.baseUrl}/api/reports`, { reportedUserId: userId, ...payload });
             return response;
         } catch (error) {
             console.error("檢舉失敗", error);
@@ -795,7 +795,10 @@ export default class BackendService {
     }
     async reportReview(reviewId, payload) {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/report/review/${reviewId}`, payload);
+            const fd = new FormData();
+            fd.append('reviewId', reviewId);
+            if (payload) Object.entries(payload).forEach(([k, v]) => { if (v != null) fd.append(k, v); });
+            const response = await axios.post(`${this.baseUrl}/api/reports`, fd);
             return response;
         } catch (error) {
             console.error("檢舉評價失敗", error);
