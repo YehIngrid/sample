@@ -134,7 +134,7 @@ html, body {
 .sidebar-footer {
     flex-shrink: 0;
     padding: 10px 12px;
-    border-top: 1px solid #e8eef5;
+    border-bottom: 1px solid #e8eef5;
     background: #f7fafd;
 }
 .sidebar-line-btn {
@@ -1716,9 +1716,6 @@ html, body {
     .chat-main {
       height: calc(100dvh - 60px);
     }
-  }
-  .sidebar-footer {
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
   .message-input-container {
     padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
