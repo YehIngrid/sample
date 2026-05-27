@@ -2111,7 +2111,7 @@ async function openChatWithTarget(targetUserId) {
         if (!isConfirmed || !value) return;
 
         try {
-            await backendService.reportSeller(partnerId, {
+            await chatRoomList.auth.reportSeller(partnerId, {
                 reason: value.category,
                 subject: value.subject,
                 detail: value.detail,
