@@ -155,6 +155,7 @@ window._showLoggedOutUI = function() {
   localStorage.removeItem('uid');
   localStorage.removeItem('username');
   localStorage.removeItem('avatar');
+  sessionStorage.removeItem('role');
   document.querySelectorAll('.username').forEach((el) => {
     el.innerHTML = `<img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像">`;
     el.style.display = '';
@@ -179,6 +180,7 @@ window._showLoggedOutUI = function() {
 
 async function doLogout() {
   await backendService.logout(); // 清除 token
+  sessionStorage.removeItem('role');
   // 自動登出提示
   let timerInterval;
   Swal.fire({

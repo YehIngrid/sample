@@ -1706,6 +1706,20 @@ html, body {
   #chatMain:not(.mobile-hidden) {
     height: 100dvh;
   }
+  @media (max-width: 991px) {
+    .container-fluid {
+      height: calc(100dvh - 60px);
+    }
+    .sidebar {
+      height: calc(100dvh - 60px);
+    }
+    .chat-main {
+      height: calc(100dvh - 60px);
+    }
+  }
+  .sidebar-footer {
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
   .message-input-container {
     padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
   }
