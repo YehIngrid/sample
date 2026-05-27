@@ -2112,7 +2112,7 @@ async function openChatWithTarget(targetUserId) {
 
         try {
             await chatRoomList.auth.reportSeller(partnerId, {
-                reason: value.category,
+                category: value.category,
                 subject: value.subject,
                 detail: value.detail,
                 roomId: chatRoomList.currentRoomId
