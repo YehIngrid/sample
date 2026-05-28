@@ -495,6 +495,34 @@ ul{
   border: 2px solid #004b97;
   display: block;
 }
+.nav-avatar-wrap {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+.nav-role-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-role-badge svg {
+  width: 8px;
+  height: 8px;
+  display: block;
+}
+.nav-role-badge--admin {
+  background: #F59E0B;
+}
+.nav-role-badge--mod {
+  background: #0ea5e9;
+}
 
 .login {
   display: flex;

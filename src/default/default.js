@@ -80,8 +80,22 @@ function _applyLoggedInUI() {
     });
   }
 
+  const _role = sessionStorage.getItem('role');
+  const _roleBadge = _role === 'ADMIN'
+    ? `<span class="nav-role-badge nav-role-badge--admin" title="管理員">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 17h18l-2-8-4 4-3-7-3 7-4-4-2 8z"/>
+        </svg>
+       </span>`
+    : _role === 'MODERATOR'
+    ? `<span class="nav-role-badge nav-role-badge--mod" title="版主">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L4 5v6c0 5 3.5 9.3 8 10.4C16.5 20.3 20 16 20 11V5l-8-3z"/>
+        </svg>
+       </span>`
+    : '';
   document.querySelectorAll('.username').forEach((el) => {
-    el.innerHTML = `<img class="nav-username-avatar" src="${avatarSrc}" alt="頭像">`;
+    el.innerHTML = `<span class="nav-avatar-wrap"><img class="nav-username-avatar" src="${avatarSrc}" alt="頭像">${_roleBadge}</span>`;
     el.style.display = '';
   });
   document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = avatarSrc; });
