@@ -311,7 +311,8 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/account/me`, { withCredentials: true });
             const d = response.data?.data;
             if (d) {
-                if(d.uid) localStorage.setItem('uid', d.uid);
+                if (d.uid)              localStorage.setItem('uid', d.uid);
+                if (d.role)             sessionStorage.setItem('role', d.role);
                 if (d.name)             localStorage.setItem('username', d.name);
                 if (d.introduction != null) localStorage.setItem('intro', d.introduction);
                 if (d.photoURL)         localStorage.setItem('avatar', d.photoURL);
