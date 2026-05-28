@@ -197,7 +197,7 @@ export default class BackendService {
 
             const d = response?.data?.data;
             if (d?.uid)          localStorage.setItem('uid', d.uid);
-            if (d?.role)         sessionStorage.setItem('role', d.role);   // 分頁獨立，避免跨分頁污染
+            if (d?.role)         localStorage.setItem('role', d.role);
             if (d?.emailVerify != null) localStorage.setItem('emailVerify', String(d.emailVerify));
 
             // 若 whoami / getUserData 是 Promise 版
@@ -236,7 +236,7 @@ export default class BackendService {
             localStorage.removeItem('intro');
             localStorage.removeItem('avatar');
             localStorage.removeItem('rate');
-            sessionStorage.removeItem('role');
+            localStorage.removeItem('role');
             localStorage.removeItem('emailVerify');
             localStorage.removeItem('loginEmail');
             return response;
@@ -312,7 +312,7 @@ export default class BackendService {
             const d = response.data?.data;
             if (d) {
                 if (d.uid)              localStorage.setItem('uid', d.uid);
-                if (d.role)             sessionStorage.setItem('role', d.role);
+                if (d.role)             localStorage.setItem('role', d.role);
                 if (d.name)             localStorage.setItem('username', d.name);
                 if (d.introduction != null) localStorage.setItem('intro', d.introduction);
                 if (d.photoURL)         localStorage.setItem('avatar', d.photoURL);

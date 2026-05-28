@@ -76,7 +76,7 @@ const midcontent = document.getElementById('midcontent');
 // TODO seller
 document.addEventListener("DOMContentLoaded", async () => {
   // 管理後台按鈕（MODERATOR / ADMIN）& 隱藏聊天室
-  if (['MODERATOR', 'ADMIN'].includes(sessionStorage.getItem('role'))) {
+  if (['MODERATOR', 'ADMIN'].includes(localStorage.getItem('role'))) {
     document.getElementById('moderatorBtn').style.display = 'block';
     document.getElementById('chaticon')?.style.setProperty('display', 'none', 'important');
     document.getElementById('talkInterface')?.style.setProperty('display', 'none', 'important');
@@ -396,8 +396,8 @@ nextHotBtn.addEventListener("click", () => {
   // 9. 庫存（數字檢查）
   const stockStr = document.getElementById('stock').value.trim();
   const stock = Number(stockStr);
-  if (stockStr === '' || Number.isNaN(stock) || stock < 0) {
-    Swal.fire({ title: "請填入庫存數量", icon: "warning" });
+  if (stockStr === '' || Number.isNaN(stock) || stock < 1) {
+    Swal.fire({ title: "請填入庫存數量", text: "庫存數量至少需要 1 件", icon: "warning" });
     return;
   }
 
@@ -487,7 +487,10 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
       canvas.toBlob(
-        b => resolve(new File([b], 'image.webp', { type: 'image/webp' })),
+        b => {
+          if (!b) { resolve(null); return; }
+          resolve(new File([b], 'image.webp', { type: 'image/webp' }));
+        },
         'image/webp', quality
       );
     };
@@ -630,6 +633,7 @@ document.getElementById('shopCropConfirm').addEventListener('click', () => {
   shopCropModal.hide();
   canvas.toBlob(async (blob) => {
     const compressed = await compressImage(blob, 1200, 0.82);
+    if (!compressed) { Swal.fire({ icon: 'error', title: '圖片處理失敗', text: '無法壓縮圖片，請重新嘗試或換一張圖片。' }); return; }
     if (shopCropTarget === 'main') {
       // 主圖：直接更新 input + 預覽
       const input = document.getElementById('mainImage');
@@ -672,6 +676,7 @@ shopCropModalEl.addEventListener('hidden.bs.modal', async () => {
   // 使用者關閉 modal 但沒按確認（new-multi 模式）→ 自動壓縮並加入
   if (!wasConfirmed && wasTarget === 'new-multi' && originalFile) {
     const compressed = await compressImage(originalFile, 1200, 0.82);
+    if (!compressed) { Swal.fire({ icon: 'error', title: '圖片處理失敗', text: '無法壓縮圖片，請重新嘗試或換一張圖片。' }); return; }
     shopMultiFiles.push(compressed);
     syncMultiToInput();
     renderMultiPreviews();
@@ -722,7 +727,7 @@ document.getElementById('image').addEventListener('change', async function (e) {
 
     // 不論選哪個，正常大小的照片先壓縮加入
     if (normalList.length) {
-      const compressedNormal = await Promise.all(normalList.map(f => compressImage(f, 1200, 0.82)));
+      const compressedNormal = (await Promise.all(normalList.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
       shopMultiFiles.push(...compressedNormal);
       syncMultiToInput();
       renderMultiPreviews();
@@ -734,7 +739,7 @@ document.getElementById('image').addEventListener('change', async function (e) {
       openShopCropNew(oversizedList[0]);
     } else {
       // 自動壓縮上傳
-      const compressedOver = await Promise.all(oversizedList.map(f => compressImage(f, 1200, 0.82)));
+      const compressedOver = (await Promise.all(oversizedList.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
       shopMultiFiles.push(...compressedOver);
       syncMultiToInput();
       renderMultiPreviews();
@@ -743,7 +748,7 @@ document.getElementById('image').addEventListener('change', async function (e) {
   }
 
   // 全部正常大小：自動壓縮
-  const compressed = await Promise.all(toAdd.map(f => compressImage(f, 1200, 0.82)));
+  const compressed = (await Promise.all(toAdd.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
   shopMultiFiles.push(...compressed);
   syncMultiToInput();
   renderMultiPreviews();

@@ -80,7 +80,7 @@ function _applyLoggedInUI() {
     });
   }
 
-  const _role = sessionStorage.getItem('role');
+  const _role = localStorage.getItem('role');
   const _roleBadge = _role === 'ADMIN'
     ? `<span class="nav-role-badge nav-role-badge--admin" title="管理員">
         <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -169,7 +169,7 @@ window._showLoggedOutUI = function() {
   localStorage.removeItem('uid');
   localStorage.removeItem('username');
   localStorage.removeItem('avatar');
-  sessionStorage.removeItem('role');
+  localStorage.removeItem('role');
   document.querySelectorAll('.username').forEach((el) => {
     el.innerHTML = `<img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像">`;
     el.style.display = '';
@@ -194,7 +194,7 @@ window._showLoggedOutUI = function() {
 
 async function doLogout() {
   await backendService.logout(); // 清除 token
-  sessionStorage.removeItem('role');
+  localStorage.removeItem('role');
   // 自動登出提示
   let timerInterval;
   Swal.fire({

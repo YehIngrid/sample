@@ -1082,7 +1082,7 @@ async function loadRecentNotifications() {
   const container = document.getElementById('recentNotifList');
   if (!container) return;
   try {
-    const isAdmin = ['admin', 'moderator'].includes((sessionStorage.getItem('role') ?? '').toLowerCase());
+    const isAdmin = ['admin', 'moderator'].includes((localStorage.getItem('role') ?? '').toLowerCase());
     const [notifRes, rptRes, rptHistRaw, sellPendingRes, buyDeliveredRes, sellReviewRes, buyReviewRes, adminRptRes] = await Promise.all([
       backendService.getNotifications(1, 20).catch(() => null),
       backendService.getMyReports({ page: 1, limit: 20 }).catch(() => null),
