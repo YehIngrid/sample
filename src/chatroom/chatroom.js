@@ -1301,7 +1301,7 @@ class ChatRoomList {
             const { productName, productPrice, _rawMessage } = _pendingProductCtx;
             _pendingProductCtx = null;
             const priceText = productPrice ? `（NT$ ${Number(productPrice).toLocaleString()}）` : '';
-            this.input.value = _rawMessage || `你好，我對「${productName}」有興趣${priceText}`;
+            this.input.value = _rawMessage || `你好，我對「${productName}」有興趣${priceText}。`;
             this.input.dispatchEvent(new Event('input'));
             this.input.focus();
         }

@@ -2626,7 +2626,7 @@ async function openReviewModal(orderId, targetId, targetRole) {
   }
 
   const tagChipsHtml = tagItems.map(t => `
-    <label class="review-chip">
+    <label class="review-chip${t.positive === false ? ' negative' : ''}">
       <input type="checkbox" class="review-tag-check" data-key="${esc(t.tag)}">
       <span>${esc(t.meaning)}</span>
     </label>`).join('');

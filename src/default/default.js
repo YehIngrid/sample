@@ -552,7 +552,7 @@ function _initNotifSystem() {
       sessionStorage.setItem('chatroomReturnUrl', window.location.href);
       const notifItem = chatBtn.closest('.notif-item');
       const wishName = notifItem?.querySelector('.notif-chip--wish')?.textContent?.trim() ?? '';
-      const defaultMsg = wishName ? `你好，關於「${wishName}」的許願，` : '';
+      const defaultMsg = wishName ? `你好，關於「${wishName}」的許願，我想詢問：` : '';
       const msgParam = defaultMsg ? `&message=${encodeURIComponent(defaultMsg)}` : '';
       window.location.href = `../chatroom/chatroom.html?openChat=${chatBtn.dataset.chatActor}${msgParam}`;
       return;
