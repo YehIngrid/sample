@@ -1725,9 +1725,9 @@ html.skip-loader #whatcontent { display: block !important; }
 .review-commodity-name { font-size: 11px; color: #6f87a0; font-weight: 400; margin-left: 2px; }
 .review-report-btn {
   background: none; border: none; cursor: pointer;
-  color: #bbb; font-size: 13px; padding: 2px 4px; border-radius: 4px; transition: color 0.15s;
+  color: #e74c3c; font-size: 13px; padding: 2px 4px; border-radius: 4px; transition: color 0.15s;
 }
-.review-report-btn:hover { color: #e53935; }
+.review-report-btn:hover { color: #c0392b; }
 .review-display-chip {
   display: inline-block; padding: 3px 10px; border-radius: 999px;
   font-size: 12px; font-weight: 600;

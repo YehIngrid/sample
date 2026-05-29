@@ -899,13 +899,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dotsEl)    dotsEl.style.display    = 'none';
   }
   function showMobileUI() {
-    if (swipeHint) swipeHint.style.display = '';
-    if (dotsEl)    dotsEl.style.display    = '';
+    if (swipeHint) swipeHint.style.display = 'none';
+    if (dotsEl)    dotsEl.style.display    = 'none';
+    const newPagerEl = document.getElementById('newPager');
+    if (newPagerEl) newPagerEl.style.display = '';
   }
 
-  // ────────── 電腦版 ──────────
-  prevBtn.addEventListener('click', () => { if (!prevBtn.disabled) fetchDesktopPage(desktopPage - 1); });
-  nextBtn.addEventListener('click', () => { if (!nextBtn.disabled) fetchDesktopPage(desktopPage + 1); });
+  // ────────── 電腦版 / 手機版 共用按鈕 ──────────
+  prevBtn.addEventListener('click', () => {
+    if (isDesktop()) { if (!prevBtn.disabled) fetchDesktopPage(desktopPage - 1); }
+    else swipeToPrev();
+  });
+  nextBtn.addEventListener('click', () => {
+    if (isDesktop()) { if (!nextBtn.disabled) fetchDesktopPage(desktopPage + 1); }
+    else swipeToNext();
+  });
 
   async function fetchDesktopPage(p) {
     prevBtn.disabled = true;
@@ -965,36 +973,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateDots() {
-    if (!dotsEl) return;
     const totalChunks = Math.max(1, Math.ceil(mobileBuffer.length / MOBILE_CHUNK));
-    let html = '';
-    for (let i = 0; i < totalChunks; i++) {
-      html += `<span class="swipe-dot${i === mobileChunk ? ' active' : ''}"></span>`;
+    if (!isDesktop()) {
+      prevBtn.disabled = mobileChunk <= 0;
+      nextBtn.disabled = mobileChunk >= totalChunks - 1 && !backendHasMore;
+      pageInfo.textContent = `第 ${mobileChunk + 1} / ${totalChunks}${backendHasMore ? '+' : ''} 頁`;
     }
-    if (backendHasMore) html += `<span class="swipe-dot swipe-dot-more"></span>`;
-    dotsEl.innerHTML = html;
-
-    // 更新左右箭頭透明度
-    const leftArrow  = swipeHint?.querySelector('.swipe-arrow-left');
-    const rightArrow = swipeHint?.querySelector('.swipe-arrow-right');
-    if (leftArrow)  leftArrow.style.opacity  = mobileChunk > 0 ? '1' : '0.25';
-    if (rightArrow) rightArrow.style.opacity = (mobileChunk < totalChunks - 1 || backendHasMore) ? '1' : '0.25';
   }
-
-  // ── 觸控滑動偵測 ──
-  let touchX = 0, touchY = 0;
-  container.addEventListener('touchstart', e => {
-    touchX = e.touches[0].clientX;
-    touchY = e.touches[0].clientY;
-  }, { passive: true });
-  container.addEventListener('touchend', e => {
-    if (isDesktop()) return;
-    const dx = e.changedTouches[0].clientX - touchX;
-    const dy = e.changedTouches[0].clientY - touchY;
-    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return; // 不夠水平
-    if (dx < 0) swipeToNext();
-    else         swipeToPrev();
-  }, { passive: true });
 
   function swipeToNext() {
     const totalChunks = Math.ceil(mobileBuffer.length / MOBILE_CHUNK);

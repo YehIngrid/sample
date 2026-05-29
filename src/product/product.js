@@ -82,16 +82,6 @@ function _renderSellerPage(page) {
   if (prevBtn) prevBtn.disabled = page <= 1;
   if (nextBtn) nextBtn.disabled = page >= totalPages;
 
-  // Mobile dots
-  if (dotsEl) {
-    dotsEl.innerHTML = '';
-    for (let i = 1; i <= totalPages; i++) {
-      const dot = document.createElement('span');
-      dot.style.cssText = `width:7px;height:7px;border-radius:50%;display:inline-block;background:${i === page ? '#004b97' : '#ccc'};transition:background 0.2s;`;
-      dotsEl.appendChild(dot);
-    }
-  }
-
   // Hide pager entirely if only 1 page
   const pagerEl = document.getElementById('sellerPager');
   if (pagerEl) pagerEl.style.display = totalPages <= 1 ? 'none' : '';
@@ -812,16 +802,6 @@ async function showSellerCommodities(id) {
       const total = Math.ceil(_sellerAllProducts.length / SELLER_PER_PAGE);
       if (_sellerCurrentPage < total) { _sellerCurrentPage++; _renderSellerPage(_sellerCurrentPage); }
     });
-
-    // Touch swipe (mobile)
-    let touchStartX = 0;
-    container.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    container.addEventListener('touchend', e => {
-      const diff = touchStartX - e.changedTouches[0].clientX;
-      const total = Math.ceil(_sellerAllProducts.length / SELLER_PER_PAGE);
-      if (diff > 40 && _sellerCurrentPage < total) { _sellerCurrentPage++; _renderSellerPage(_sellerCurrentPage); }
-      else if (diff < -40 && _sellerCurrentPage > 1) { _sellerCurrentPage--; _renderSellerPage(_sellerCurrentPage); }
-    }, { passive: true });
 
   } catch (err) {
     console.error('取得賣家商品失敗：', err);
