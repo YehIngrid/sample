@@ -151,9 +151,9 @@ async function renderAuthUI() {
         }
 
         const currentUrl = window.location.pathname + window.location.search;
-        el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
-
-        el.onclick = null;
+        const loginHref = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+        el.href = loginHref;
+        el.onclick = _loginClick(loginHref);
       });
 
       // 桌機版 navbar 下拉選單：未登入狀態
@@ -161,6 +161,21 @@ async function renderAuthUI() {
       document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.add('d-none'));
       document.querySelectorAll('.nav-user-menu-header').forEach(el => el.classList.add('d-none'));
     }
+}
+
+function _loginClick(href) {
+  return function(e) {
+    e.preventDefault();
+    Swal.fire({
+      title: '前往登入頁面？',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '前往登入',
+      cancelButtonText: '取消',
+    }).then(result => {
+      if (result.isConfirmed) window.location.href = href;
+    });
+  };
 }
 
 // 供 BackendService 401 攔截器呼叫：更新 navbar 為未登入狀態（不跳頁）
@@ -184,8 +199,9 @@ window._showLoggedOutUI = function() {
       el.textContent = '登入';
     }
     const currentUrl = window.location.pathname + window.location.search;
-    el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
-    el.onclick = null;
+    const loginHref = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+    el.href = loginHref;
+    el.onclick = _loginClick(loginHref);
   });
   document.querySelectorAll('.nav-guest-label').forEach(el => el.classList.remove('d-none'));
   document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.add('d-none'));

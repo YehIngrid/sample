@@ -72,7 +72,9 @@ class ChatRoomList {
     async init() {
         if (this.alreadyInit) return;
         this.alreadyInit = true;
-        // 刷新當前登入者資料，避免 localStorage 有舊帳號殘留導致 isSelf 比對錯誤
+        // 預設未登入，getMe 成功才視為已登入（避免 localStorage 殘留舊帳號被當成有效 session）
+        this.userId = null;
+        this.username = '';
         try {
             await this.auth.getMe();
             this.userId = localStorage.getItem('uid');
@@ -1332,6 +1334,7 @@ class ChatRoomList {
 
     // ✅ 帳號層級 SSE：只連線一次，接收所有聊天室的事件
     connectSSE() {
+        if (!this.userId) return; // 未登入不建立 SSE 連線
         if (this.eventSource) return; // 已連線，不重複開啟
 
         this.eventSource = new EventSource(
