@@ -2996,36 +2996,6 @@ html{ scroll-behavior:smooth; }
   background-color: #f0f0f0;
 }
 
-/* ── 最新上架：手機版滑動提示列（已停用，保留備用） ── */
-.new-swipe-hint {
-  padding: 0 2px;
-  margin-bottom: 6px;
-}
-.swipe-hint-text {
-  font-size: 0.72rem;
-  color: #aaa;
-  letter-spacing: 0.5px;
-}
-.swipe-arrow {
-  color: #004b97;
-  font-size: 1rem;
-  opacity: 0.5;
-  transition: opacity 0.3s;
-}
-.swipe-arrow-right {
-  animation: swipe-nudge-right 2s ease-in-out infinite;
-}
-.swipe-arrow-left {
-  animation: swipe-nudge-left 2s ease-in-out infinite;
-}
-@keyframes swipe-nudge-right {
-  0%, 100% { opacity: 0.3; transform: translateX(0); }
-  50%       { opacity: 0.9; transform: translateX(4px); }
-}
-@keyframes swipe-nudge-left {
-  0%, 100% { opacity: 0.3; transform: translateX(0); }
-  50%       { opacity: 0.9; transform: translateX(-4px); }
-}
 
 /* ── 最新上架：手機版頁碼小點 ── */
 .swipe-dot {

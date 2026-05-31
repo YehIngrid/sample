@@ -3229,6 +3229,16 @@ small { font-size: 10px; color: #004b97; }
 .od-btn-person:hover { background: var(--p-navy); color: #fff; }
 .od-btn-person img { width: 15px; height: 15px; }
 
+/* ── PIN 碼按鈕 ── */
+.od-pin-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px; border-radius: 6px; border: 1px solid #004b97;
+  background: #fff; color: #004b97; font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+}
+.od-pin-btn:hover { background: #004b97; color: #fff; }
+.od-pin-btn svg { flex-shrink: 0; }
+
 /* ── 評論空白狀態 ── */
 .od-review-empty {
   text-align: center; padding: 28px 16px;

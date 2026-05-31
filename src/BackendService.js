@@ -785,6 +785,17 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
+    async sellerCompletedOrders(id, pin) {
+        try {
+            const response = await axios.post(
+                `${this.baseUrl}/api/order/${id}/completed?pin=${encodeURIComponent(pin)}`
+            );
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
     async reportSeller(userId, payload) {
         try {
             const response = await axios.post(`${this.baseUrl}/api/reports`, { reportedUserId: userId, ...payload });

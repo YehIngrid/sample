@@ -457,13 +457,39 @@ async function handleAction(action, id, el) {
     } catch (error) {
       Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
-  } else if (action === '成功取貨') {
+  } else if (action === '查看 PIN 碼') {
+    const pincode = el.dataset?.pincode || window.currentOrder?.pincode || goodsOrder?.find(o => o.id == id)?.pincode;
+    if (!pincode) {
+      Swal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: '請重新整理後再試' });
+      return;
+    }
+    Swal.fire({
+      title: '交易 PIN 碼',
+      html: `<div style="font-size:2.4rem;font-weight:700;letter-spacing:0.25em;color:#004b97;margin:12px 0;">${esc(String(pincode))}</div><div style="font-size:0.82rem;color:#888;">面交時將此 PIN 碼告知賣家，<br>由賣家輸入確認完成交貨</div>`,
+      confirmButtonText: '我知道了',
+      showCloseButton: true,
+    });
+  } else if (action === '確認交貨') {
+    const { value: pin, isConfirmed } = await Swal.fire({
+      title: '確認交貨',
+      html: '<div style="font-size:0.85rem;color:#666;margin-bottom:8px;">請輸入買家提供的 6 位 PIN 碼</div>',
+      input: 'text',
+      inputPlaceholder: '例：123456',
+      inputAttributes: { maxlength: 6, autocomplete: 'off', inputmode: 'numeric' },
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      inputValidator: (v) => {
+        if (!v) return '請輸入 PIN 碼';
+        if (!/^\d{6}$/.test(v)) return 'PIN 碼須為 6 位數字';
+      },
+    });
+    if (!isConfirmed) return;
     try {
-      await backendService.buyerCompletedOrders(id);
-      await showOrderSwal('completed');
-      await loadBuyerOrders(1);
+      await backendService.sellerCompletedOrders(id, pin);
+      showOrderSwal('completed').then(() => handleRouting()).then(() => window.location.reload());
     } catch (error) {
-      Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
+      Swal.fire({ title: '確認交貨失敗', icon: 'error', text: error?.response?.data?.message || String(error) });
     }
   } else if (action === '給對方評價') {
     openReviewModal(id, findTargetIdByOrderId(goodsOrder, id), sectionId === 'sellProducts' ? 'buyer' : 'seller');
@@ -1258,8 +1284,8 @@ document.addEventListener('DOMContentLoaded', () => {
 const order_STATUS_MAP = {
   pending:        { text: '待確認', badge: 'order-badge-pending',    action: '接受訂單',         icon: '../svg/acceptOrder.svg'},
   preparing:      { text: '待出貨', badge: 'order-badge-preparing',  action: '即將出貨',         icon: '../svg/readyDeliver.svg'},
-  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '等待買家確認收貨',  icon: '../svg/waitBuyer.svg'},
-  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '等待買家確認收貨',  icon: '../svg/waitBuyer.svg'},
+  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '確認交貨',  icon: '../svg/waitBuyer.svg'},
+  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '確認交貨',  icon: '../svg/waitBuyer.svg'},
   review_pending: { text: '待評價', badge: 'order-badge-completed',  action: '給對方評價',       icon: '../svg/giveStar.svg'},
   completed:      { text: '已完成', badge: 'order-badge-scored',     action: null,               icon: null},
   canceled:       { text: '已取消', badge: 'order-badge-canceled',   action: null,               icon: null}
@@ -1267,8 +1293,8 @@ const order_STATUS_MAP = {
 const buyer_STATUS_MAP = {
   pending:        { text: '待確認', badge: 'order-badge-pending',    action: '聯絡賣家',   icon: '../svg/canChat.svg'},
   preparing:      { text: '待出貨', badge: 'order-badge-preparing',  action: '聯絡賣家',   icon: '../svg/canChat.svg'},
-  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '成功取貨',   icon: '../svg/acceptOrder.svg'},
-  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '成功取貨',   icon: '../svg/acceptOrder.svg'},
+  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '查看 PIN 碼',   icon: '../svg/acceptOrder.svg'},
+  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '查看 PIN 碼',   icon: '../svg/acceptOrder.svg'},
   review_pending: { text: '待評價', badge: 'order-badge-completed',  action: '給對方評價', icon: '../svg/giveStar.svg'},
   completed:      { text: '已完成', badge: 'order-badge-scored',     action: null,         icon: null},
   canceled:       { text: '已取消', badge: 'order-badge-canceled',   action: null,         icon: null}
@@ -1354,6 +1380,7 @@ function renderBuyerOrders(list) {
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
     const log = esc(item.log || '無詳細資訊');
+    const pinAttr  = (key === 'delivered' || key === 'shipping') && item.pincode ? ` data-pincode="${esc(String(item.pincode))}"` : '';
 
   return `
       <tr data-id="${esc(id)}" style="animation-delay:${i * 0.05}s">
@@ -1363,7 +1390,7 @@ function renderBuyerOrders(list) {
         <td>${price} 元</td>
         <td>
           <div class="d-flex gap-2 flex-wrap align-items-center">
-            ${renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}">
+            ${renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}"${pinAttr}>
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
             </button>` : '')}
@@ -1398,7 +1425,6 @@ function renderSellerOrders(list) {
     const created  = fmtDate(item.createdAt);
     const key = (item.status ?? 'listed').toLowerCase();
     const st  = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
-    const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
     return `
       <tr data-id="${esc(id)}" style="animation-delay:${i * 0.05}s">
         <td>${label}</td>
@@ -1406,7 +1432,7 @@ function renderSellerOrders(list) {
         <td>${created}</td>
         <td>
           <div class="d-flex gap-2 flex-wrap align-items-center">
-            ${renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>
+            ${renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}">
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
             </button>` : '')}
@@ -1572,14 +1598,13 @@ function renderSellerCards(list = []) {
     const key     = (item.status ?? 'listed').toLowerCase();
     const st      = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
     const pillCls = statusPillClass(item.status);
-    const isDisabled = st.action === '等待買家確認收貨' ? 'disabled' : '';
     const imgUrl  = item.orderItems?.[0]?.item?.mainImage || item.orderItems?.[0]?.item?.imageUrl || null;
     const thumb   = imgUrl
       ? `<img src="${esc(imgUrl)}" alt="${label}">`
       : '';
 
     const actionBtn = renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `
-      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
+      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
         <img src="${st.icon}" alt="${st.action}"><div>${st.action}</div>
       </button>` : '');
     const cancelBtn = (item.status === 'pending' || item.status === 'preparing') ? `
@@ -1642,13 +1667,14 @@ function renderBuyerCards(list = []) {
     const key     = (item.status ?? 'listed').toLowerCase();
     const st      = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
     const pillCls = statusPillClass(item.status);
+    const pinAttr = (key === 'delivered' || key === 'shipping') && item.pincode ? ` data-pincode="${esc(String(item.pincode))}"` : '';
     const imgUrl  = item.orderItems?.[0]?.item?.mainImage || item.orderItems?.[0]?.item?.imageUrl || null;
     const thumb   = imgUrl
       ? `<img src="${esc(imgUrl)}" alt="${label}">`
       : '';
 
     const actionBtn = renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `
-      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
+      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}"${pinAttr}>
         <img src="${st.icon}" alt="${st.action}"><div>${st.action}</div>
       </button>` : '');
     const cancelBtn = (item.status === 'pending' || item.status === 'preparing') ? `
@@ -1782,12 +1808,12 @@ async function getDetail(id) {
     };
     const SELL_DESC = {
       pending: '有新訂單等待您接受，請盡快確認', preparing: '您已接受訂單，請備妥商品',
-      delivered: '商品已出貨，等待買家確認收貨', review_pending: '買家已確認收貨，請對買家留下評價',
+      delivered: '商品已出貨，請向買家索取 PIN 碼並輸入確認交貨', review_pending: '買家已確認收貨，請對買家留下評價',
       completed: '訂單已完成，感謝您的交易',
     };
     const BUY_DESC = {
       pending: '訂單已建立，等待賣家確認接受', preparing: '賣家正在為您備貨中',
-      delivered: '賣家已出貨，請確認收貨', review_pending: '您已確認收貨，記得留下評價',
+      delivered: '賣家已出貨，請查看 PIN 碼並於面交時告知賣家', review_pending: '您已確認收貨，記得留下評價',
       completed: '感謝您使用拾貨寶庫',
     };
 
@@ -1906,6 +1932,16 @@ async function getDetail(id) {
             <span class="od-info-lbl">訂單編號</span>
             <span class="od-info-val od-mono">${id}</span>
           </div>
+          ${!isSell && (data.status === 'delivered' || data.status === 'shipping') && data.pincode ? `
+          <div class="od-info-row">
+            <span class="od-info-lbl">交易 PIN 碼</span>
+            <span class="od-info-val">
+              <button class="od-pin-btn action-btn" data-action="查看 PIN 碼" data-id="${id}" data-pincode="${esc(String(data.pincode))}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                查看 PIN 碼
+              </button>
+            </span>
+          </div>` : ''}
         </div>
         <div class="od-person-section">
           <div class="od-person-card">
@@ -1955,6 +1991,8 @@ async function getDetail(id) {
         } else if (data.status === 'preparing') {
           actionRows.push({ action: '即將出貨', icon: '../svg/readyDeliver.svg', title: '登記出貨', desc: '通知買家已備妥，準備交貨', danger: false });
           actionRows.push({ action: 'cancel',   icon: '../svg/cancelOrder.svg',  title: '取消訂單', desc: '取消此筆訂單', danger: true });
+        } else if (data.status === 'delivered') {
+          actionRows.push({ action: '確認交貨', icon: '../svg/waitBuyer.svg', title: '確認交貨', desc: '輸入買家的 PIN 碼完成交貨', danger: false });
         } else if (data.status === 'review_pending' && !rp.sellerReviewed) {
           actionRows.push({ action: '給對方評價', icon: '../svg/giveStar.svg', title: '留下評價', desc: '對買家的交易留下評論', danger: false });
         }
@@ -1962,8 +2000,8 @@ async function getDetail(id) {
         if (data.status === 'pending' || data.status === 'preparing') {
           actionRows.push({ action: 'cancel', icon: '../svg/cancelOrder.svg', title: '取消訂單', desc: '取消此筆訂單', danger: true });
         } else if (data.status === 'delivered') {
-          actionRows.push({ action: '成功取貨', icon: '../svg/acceptOrder.svg', title: '確認收貨', desc: '確認已取得商品', danger: false });
-          actionRows.push({ action: 'cancel',   icon: '../svg/cancelOrder.svg', title: '取消訂單', desc: '取消此筆訂單', danger: true });
+          actionRows.push({ action: '查看 PIN 碼', icon: '../svg/acceptOrder.svg', title: '查看 PIN 碼', desc: '將 PIN 碼告知賣家以完成交貨', danger: false });
+          actionRows.push({ action: 'cancel',      icon: '../svg/cancelOrder.svg', title: '取消訂單',    desc: '取消此筆訂單', danger: true });
         } else if (data.status === 'review_pending' && !rp.buyerReviewed) {
           actionRows.push({ action: '給對方評價', icon: '../svg/giveStar.svg', title: '留下評價', desc: '對賣家的交易留下評論', danger: false });
         }
