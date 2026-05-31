@@ -458,7 +458,7 @@ async function handleAction(action, id, el) {
       Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
   } else if (action === '查看 PIN 碼') {
-    const pincode = el.dataset?.pincode || window.currentOrder?.pincode || goodsOrder?.find(o => o.id == id)?.pincode;
+    const pincode = el.dataset?.pincode || window.currentOrder?.pinCode || goodsOrder?.find(o => o.id == id)?.pinCode;
     if (!pincode) {
       Swal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: '請重新整理後再試' });
       return;
@@ -1380,7 +1380,7 @@ function renderBuyerOrders(list) {
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
     const log = esc(item.log || '無詳細資訊');
-    const pinAttr  = (key === 'delivered' || key === 'shipping') && item.pincode ? ` data-pincode="${esc(String(item.pincode))}"` : '';
+    const pinAttr  = (key === 'delivered' || key === 'shipping') && item.pinCode ? ` data-pincode="${esc(String(item.pinCode))}"` : '';
 
   return `
       <tr data-id="${esc(id)}" style="animation-delay:${i * 0.05}s">
@@ -1667,7 +1667,7 @@ function renderBuyerCards(list = []) {
     const key     = (item.status ?? 'listed').toLowerCase();
     const st      = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
     const pillCls = statusPillClass(item.status);
-    const pinAttr = (key === 'delivered' || key === 'shipping') && item.pincode ? ` data-pincode="${esc(String(item.pincode))}"` : '';
+    const pinAttr = (key === 'delivered' || key === 'shipping') && item.pinCode ? ` data-pincode="${esc(String(item.pinCode))}"` : '';
     const imgUrl  = item.orderItems?.[0]?.item?.mainImage || item.orderItems?.[0]?.item?.imageUrl || null;
     const thumb   = imgUrl
       ? `<img src="${esc(imgUrl)}" alt="${label}">`
@@ -1932,11 +1932,11 @@ async function getDetail(id) {
             <span class="od-info-lbl">訂單編號</span>
             <span class="od-info-val od-mono">${id}</span>
           </div>
-          ${!isSell && (data.status === 'delivered' || data.status === 'shipping') && data.pincode ? `
+          ${!isSell && (data.status === 'delivered' || data.status === 'shipping') && data.pinCode ? `
           <div class="od-info-row">
             <span class="od-info-lbl">交易 PIN 碼</span>
             <span class="od-info-val">
-              <button class="od-pin-btn action-btn" data-action="查看 PIN 碼" data-id="${id}" data-pincode="${esc(String(data.pincode))}">
+              <button class="od-pin-btn action-btn" data-action="查看 PIN 碼" data-id="${id}" data-pincode="${esc(String(data.pinCode))}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 查看 PIN 碼
               </button>
