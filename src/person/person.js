@@ -10,8 +10,8 @@ const MY_ITEMS_LIMIT = 10;
 let myItemsPage = 1;
 
 // 訂單篩選狀態（filter tab → API status）
-let currentSellStatus = 'pending';
-let currentBuyStatus  = 'pending';
+let currentSellStatus = 'all';
+let currentBuyStatus  = 'all';
 const TAB_TO_API_STATUS = {
   all:       null,
   pending:   'pending',
@@ -624,8 +624,10 @@ async function handleRouting() {
   try {
     if (page === 'sellProducts') {
       window.currentOrder = null;
-      currentSellStatus = 'pending';
-      document.querySelectorAll('#sellFilter .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.status === 'pending'));
+      currentSellStatus = 'all';
+      const sellTabs = document.querySelectorAll('#sellFilter .filter-tab');
+      sellTabs.forEach(t => t.classList.remove('active'));
+      sellTabs[0]?.classList.add('active');
       document.querySelector('#sellProducts tbody').innerHTML =
         `<tr><td colspan="4" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('sell-product').innerHTML =
@@ -633,8 +635,10 @@ async function handleRouting() {
       await loadSellerOrders(1);
     } else if (page === 'buyProducts') {
       window.currentOrder = null;
-      currentBuyStatus = 'pending';
-      document.querySelectorAll('#buyFilter .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.status === 'pending'));
+      currentBuyStatus = 'all';
+      const buyTabs = document.querySelectorAll('#buyFilter .filter-tab');
+      buyTabs.forEach(t => t.classList.remove('active'));
+      buyTabs[0]?.classList.add('active');
       document.querySelector('#buyProducts tbody').innerHTML =
         `<tr><td colspan="5" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('buy-product').innerHTML =
