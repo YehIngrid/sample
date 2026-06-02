@@ -2013,7 +2013,6 @@ async function getDetail(id) {
           actionRows.push({ action: 'cancel', icon: '../svg/cancelOrder.svg', title: '取消訂單', desc: '取消此筆訂單', danger: true });
         } else if (data.status === 'delivered') {
           actionRows.push({ action: '查看 PIN 碼', icon: '../svg/acceptOrder.svg', title: '查看 PIN 碼', desc: '將 PIN 碼告知賣家以完成交貨', danger: false });
-          actionRows.push({ action: 'cancel',      icon: '../svg/cancelOrder.svg', title: '取消訂單',    desc: '取消此筆訂單', danger: true });
         } else if (data.status === 'review_pending' && !rp.buyerReviewed) {
           actionRows.push({ action: '給對方評價', icon: '../svg/giveStar.svg', title: '留下評價', desc: '對賣家的交易留下評論', danger: false });
         }
