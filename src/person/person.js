@@ -458,9 +458,21 @@ async function handleAction(action, id, el) {
       Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
   } else if (action === '查看 PIN 碼') {
-    const pincode = el.dataset?.pincode || window.currentOrder?.pinCode || goodsOrder?.find(o => o.id == id)?.pinCode;
+    let pincode = (window.currentOrder?.id == id ? window.currentOrder?.pinCode : null)
+               || goodsOrder?.find(o => o.id == id)?.pinCode;
     if (!pincode) {
-      Swal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: '請重新整理後再試' });
+      try {
+        const res = await backendService.getOrderDetails(id);
+        const detail = res.data?.data;
+        window.currentOrder = detail;
+        pincode = detail?.pinCode;
+      } catch (e) {
+        Swal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: e?.message || '請重新整理後再試' });
+        return;
+      }
+    }
+    if (!pincode) {
+      Swal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: '此訂單尚未產生 PIN 碼' });
       return;
     }
     Swal.fire({
@@ -1146,7 +1158,7 @@ async function loadRecentNotifications() {
     const deliveredTotal  = buyDeliveredRes?.data?.data?.pagination?.totalItems ?? deliveredOrders.length;
     if (deliveredTotal > 0) {
       orderSynth.push({
-        text: `您有 ${deliveredTotal} 筆待收貨訂單，請確認收貨`,
+        text: `您有 ${deliveredTotal} 筆待收貨訂單，請查看 PIN 碼並告知賣家`,
         meta: '消費訂單',
         time: '',
         unread: true,
@@ -1803,17 +1815,17 @@ async function getDetail(id) {
       x:     `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9"/><path d="M15 9L9 15M9 9L15 15"/></svg>`,
     };
     const STATUS_TITLE = {
-      pending: '等待賣家接受', preparing: '備貨準備中', delivered: '等待確認收貨',
+      pending: '等待賣家接受', preparing: '備貨準備中', delivered: '面交確認中',
       review_pending: '等待評價', completed: '訂單已完成', canceled: '訂單已取消',
     };
     const SELL_DESC = {
       pending: '有新訂單等待您接受，請盡快確認', preparing: '您已接受訂單，請備妥商品',
-      delivered: '商品已出貨，請向買家索取 PIN 碼並輸入確認交貨', review_pending: '買家已確認收貨，請對買家留下評價',
+      delivered: '商品已出貨，請向買家索取 PIN 碼並輸入確認交貨', review_pending: '交貨已完成，請對買家留下評價',
       completed: '訂單已完成，感謝您的交易',
     };
     const BUY_DESC = {
       pending: '訂單已建立，等待賣家確認接受', preparing: '賣家正在為您備貨中',
-      delivered: '賣家已出貨，請查看 PIN 碼並於面交時告知賣家', review_pending: '您已確認收貨，記得留下評價',
+      delivered: '賣家已出貨，請查看 PIN 碼並於面交時告知賣家', review_pending: '賣家已確認交貨，記得留下評價',
       completed: '感謝您使用拾貨寶庫',
     };
 
@@ -1889,7 +1901,7 @@ async function getDetail(id) {
       const STATUS_PILL = {
         pending:        { cls: 'sp-pend', text: '等待賣家接受' },
         preparing:      { cls: 'sp-pack', text: '備貨準備中' },
-        delivered:      { cls: 'sp-ship', text: '等待確認收貨' },
+        delivered:      { cls: 'sp-ship', text: '面交確認中' },
         review_pending: { cls: 'sp-eval', text: '等待評價' },
         completed:      { cls: 'sp-done', text: '已完成' },
         canceled:       { cls: 'sp-canc', text: '已取消' },
@@ -2138,7 +2150,7 @@ const updateStatusUI = (data, container) => {
   const defaultTextMap = {
     pending:        '訂單已建立',
     preparing:      '準備商品',
-    delivered:      '已出貨',
+    delivered:      '面交備妥',
     review_pending: '待評價',
     completed:      '已完成',
   };
