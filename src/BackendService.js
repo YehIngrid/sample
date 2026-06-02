@@ -788,7 +788,7 @@ export default class BackendService {
     async sellerCompletedOrders(id, pin) {
         try {
             const response = await axios.post(
-                `${this.baseUrl}/api/order/${id}/completed?pin=${encodeURIComponent(pin)}`
+                `${this.baseUrl}/api/order/${id}/completed?pinCode=${encodeURIComponent(pin)}`
             );
             return response;
         } catch (error) {
