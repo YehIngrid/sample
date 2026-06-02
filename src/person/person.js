@@ -624,7 +624,7 @@ async function handleRouting() {
   try {
     if (page === 'sellProducts') {
       window.currentOrder = null;
-      currentSellStatus = 'all';
+      currentSellStatus = 'pending';
       const sellTabs = document.querySelectorAll('#sellFilter .filter-tab');
       sellTabs.forEach(t => t.classList.remove('active'));
       sellTabs[0]?.classList.add('active');
@@ -632,10 +632,24 @@ async function handleRouting() {
         `<tr><td colspan="4" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('sell-product').innerHTML =
         `<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
-      await loadSellerOrders(1);
+      // 同時發 pending（顯示用）和 all（建立快取 + 各 tab 數量）
+      const [sellPendingRes, sellAllRes] = await Promise.all([
+        backendService.getSellerOrders(1, 'pending').catch(() => null),
+        backendService.getSellerOrders(1, null).catch(() => null),
+      ]);
+      const sellPendingList = sellPendingRes?.data?.data?.orders ?? [];
+      const sellPendingPage = sellPendingRes?.data?.data?.pagination ?? {};
+      const sellAllList = sellAllRes?.data?.data?.orders ?? [];
+      const sellAllPage = sellAllRes?.data?.data?.pagination ?? {};
+      goodsOrder = sellAllList;
+      renderSellerOrders(sellPendingList);
+      renderSellerCards(sellPendingList);
+      renderOrderPagination('sellPagination', sellPendingPage, loadSellerOrders);
+      updateFilterTabCounts(sellAllList, 'sellFilter', sellAllPage, 'all');
+      updateFilterTabCounts(sellPendingList, 'sellFilter', sellPendingPage, 'pending');
     } else if (page === 'buyProducts') {
       window.currentOrder = null;
-      currentBuyStatus = 'all';
+      currentBuyStatus = 'pending';
       const buyTabs = document.querySelectorAll('#buyFilter .filter-tab');
       buyTabs.forEach(t => t.classList.remove('active'));
       buyTabs[0]?.classList.add('active');
@@ -643,7 +657,21 @@ async function handleRouting() {
         `<tr><td colspan="5" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('buy-product').innerHTML =
         `<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
-      await loadBuyerOrders(1);
+      // 同時發 pending（顯示用）和 all（建立快取 + 各 tab 數量）
+      const [buyPendingRes, buyAllRes] = await Promise.all([
+        backendService.getBuyerOrders(1, 'pending').catch(() => null),
+        backendService.getBuyerOrders(1, null).catch(() => null),
+      ]);
+      const buyPendingList = buyPendingRes?.data?.data?.orders ?? [];
+      const buyPendingPage = buyPendingRes?.data?.data?.pagination ?? {};
+      const buyAllList = buyAllRes?.data?.data?.orders ?? [];
+      const buyAllPage = buyAllRes?.data?.data?.pagination ?? {};
+      goodsOrder = buyAllList;
+      renderBuyerOrders(buyPendingList);
+      renderBuyerCards(buyPendingList);
+      renderOrderPagination('buyPagination', buyPendingPage, loadBuyerOrders);
+      updateFilterTabCounts(buyAllList, 'buyFilter', buyAllPage, 'all');
+      updateFilterTabCounts(buyPendingList, 'buyFilter', buyPendingPage, 'pending');
     } else if (page === 'products') {
       myItemsPage = 1;
       await loadMyItems(1);
