@@ -730,6 +730,15 @@ small { font-size: 10px; color: #004b97; }
   transition: background 0.15s, border-color 0.15s, color 0.15s;
   user-select: none;
 }
+@media (max-width: 480px) {
+  .review-chip span {
+    padding: 4px 9px;
+    font-size: 12px;
+  }
+  .review-chips-row {
+    gap: 5px;
+  }
+}
 .review-chip:hover span {
   border-color: #004b97;
   color: #004b97;
