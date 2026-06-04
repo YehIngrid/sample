@@ -1783,7 +1783,7 @@ function renderOrderReviews(reviews, isSell) {
     const isBuyerToSeller = r.role === 'BUYER_TO_SELLER';
     const roleLabel = isBuyerToSeller ? '買家 → 賣家' : '賣家 → 買家';
     const tags = Array.isArray(r?.tags) ? r.tags : [];
-    const tagChips = tags.map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`).join('');
+    const tagHtml = renderTagsByGroup(tags);
     return `
       <div class="review-card mt-2">
         <div class="review-card__header">
@@ -1793,7 +1793,7 @@ function renderOrderReviews(reviews, isSell) {
             <span class="review-role-label">${roleLabel}</span>
           </div>
         </div>
-        ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
+        ${tagHtml ? `<div class="review-card__chips">${tagHtml}</div>` : ''}
         <div class="reviewText">${r.comment || '<span style="color:#aaa">（無文字評論）</span>'}</div>
       </div>`;
   }).join('');
@@ -1884,7 +1884,7 @@ async function getDetail(id) {
       try {
         const tagRes = await backendService.getReviewTags();
         (tagRes?.data?.data?.groups ?? []).forEach(g => {
-          (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+          (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; _tagGroupNameCache[t.tag] = g.name; });
         });
       } catch (e) {}
     }
@@ -2883,18 +2883,41 @@ const REVIEW_TAG_LABELS = {
 const SELLER_TAG_KEYS = new Set(['fast_shipping','great_packaging','accurate_description','slow_shipping','poor_packaging','misleading_description','no_show']);
 const BUYER_TAG_KEYS  = new Set(['quick_payment','late_payment','no_show']);
 
-// 快取從 getReviewTags 拿到的 tag→meaning / tag→positive
-const _tagMeaningCache  = {};
-const _tagPositiveCache = {};
+// 快取從 getReviewTags 拿到的 tag→meaning / tag→positive / tag→groupName
+const _tagMeaningCache   = {};
+const _tagPositiveCache  = {};
+const _tagGroupNameCache = {};
 function getTagLabel(tag) {
   if (!tag) return '';
-  if (_tagMeaningCache[tag]) return _tagMeaningCache[tag];
-  return REVIEW_TAG_LABELS[tag] ?? REVIEW_TAG_LABELS[tag.toLowerCase()] ?? tag;
+  const key = tag.toLowerCase();
+  return _tagMeaningCache[key] ?? _tagMeaningCache[tag] ?? REVIEW_TAG_LABELS[key] ?? REVIEW_TAG_LABELS[tag] ?? tag;
 }
 function isTagPositive(tag) {
   if (!tag) return true;
   const v = _tagPositiveCache[tag] ?? _tagPositiveCache[tag.toLowerCase()];
   return v !== undefined ? v : true;
+}
+function renderTagsByGroup(tags) {
+  if (!tags.length) return '';
+  const grouped = new Map();
+  const ungrouped = [];
+  tags.forEach(tk => {
+    const key = tk.toLowerCase();
+    const groupName = _tagGroupNameCache[key] ?? _tagGroupNameCache[tk];
+    if (groupName) {
+      if (!grouped.has(groupName)) grouped.set(groupName, []);
+      grouped.get(groupName).push(tk);
+    } else {
+      ungrouped.push(tk);
+    }
+  });
+  const chip = tk => `<span class="review-display-chip ${isTagPositive(tk) ? 'positive' : 'negative'}">${getTagLabel(tk)}</span>`;
+  let html = '';
+  grouped.forEach((gtags, groupName) => {
+    html += `<div class="review-tag-row"><span class="review-tag-row__label">${groupName}：</span>${gtags.map(chip).join('')}</div>`;
+  });
+  if (ungrouped.length) html += `<div class="review-tag-row">${ungrouped.map(chip).join('')}</div>`;
+  return html;
 }
 
 // bindReviewerClicks 與 openReviewerProfileModal 已由 ../shared/reviewerModal.js 提供
@@ -2909,7 +2932,7 @@ function renderPersonReviewCard(review, role) {
   const roleBadge = role === 'seller' ? '賣' : role === 'buyer' ? '買' : '';
   const roleClass = role === 'seller' ? 'reviewer-role-badge--seller' : role === 'buyer' ? 'reviewer-role-badge--buyer' : '';
   const tags      = Array.isArray(review?.tags) ? review.tags : [];
-  const tagChips  = tags.map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`).join('');
+  const tagHtml   = renderTagsByGroup(tags);
   return `
     <div class="review-card">
       <div class="review-card__header">
@@ -2926,7 +2949,7 @@ function renderPersonReviewCard(review, role) {
           ${reviewId ? `<button class="review-report-btn" data-report-review-id="${reviewId}" data-report-reviewer-id="${rid}" data-report-reviewer-name="${esc(name)}" title="檢舉此評價"><i class="ti ti-flag"></i></button>` : ''}
         </div>
       </div>
-      ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
+      ${tagHtml ? `<div class="review-card__chips">${tagHtml}</div>` : ''}
       ${review?.comment ? `<div class="reviewText">${esc(review.comment)}</div>` : ''}
     </div>`;
 }
@@ -2945,7 +2968,7 @@ async function loadMyReviewStats() {
       try {
         const tagRes = await backendService.getReviewTags();
         (tagRes?.data?.data?.groups ?? []).forEach(g => {
-          (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+          (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; _tagGroupNameCache[t.tag] = g.name; });
         });
       } catch (e) { /* silent */ }
     }

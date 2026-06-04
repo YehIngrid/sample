@@ -612,7 +612,12 @@ async function toggleSellerReviews() {
           try {
             const tagRes = await backendService.getReviewTags();
             (tagRes?.data?.data?.groups ?? []).forEach(g => {
-              (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+              (g.tags ?? []).forEach(t => {
+                _tagMeaningCache[t.tag]   = t.meaning;
+                _tagPositiveCache[t.tag]  = t.positive;
+                _tagDeltaCache[t.tag]     = t.delta;
+                _tagGroupNameCache[t.tag] = g.name;
+              });
             });
           } catch (e) { /* silent */ }
         }
@@ -914,17 +919,41 @@ const TAG_LABELS = {
   late_payment:           '付款延遲',
   no_show:                '未到場或失聯',
 };
-const _tagMeaningCache  = {};
-const _tagPositiveCache = {};
+const _tagMeaningCache   = {};
+const _tagPositiveCache  = {};
+const _tagDeltaCache     = {};
+const _tagGroupNameCache = {};
 function getTagLabel(tag) {
   if (!tag) return '';
-  if (_tagMeaningCache[tag]) return _tagMeaningCache[tag];
-  return TAG_LABELS[tag] ?? TAG_LABELS[tag.toLowerCase()] ?? tag;
+  const key = tag.toLowerCase();
+  return _tagMeaningCache[key] ?? _tagMeaningCache[tag] ?? TAG_LABELS[key] ?? TAG_LABELS[tag] ?? tag;
 }
 function isTagPositive(tag) {
   if (!tag) return true;
   const v = _tagPositiveCache[tag] ?? _tagPositiveCache[tag.toLowerCase()];
   return v !== undefined ? v : true;
+}
+function renderTagsByGroup(tags) {
+  if (!tags.length) return '';
+  const grouped = new Map();
+  const ungrouped = [];
+  tags.forEach(tk => {
+    const key = tk.toLowerCase();
+    const groupName = _tagGroupNameCache[key] ?? _tagGroupNameCache[tk];
+    if (groupName) {
+      if (!grouped.has(groupName)) grouped.set(groupName, []);
+      grouped.get(groupName).push(tk);
+    } else {
+      ungrouped.push(tk);
+    }
+  });
+  const chip = tk => `<span class="review-display-chip ${isTagPositive(tk) ? 'positive' : 'negative'}">${getTagLabel(tk)}</span>`;
+  let html = '';
+  grouped.forEach((gtags, groupName) => {
+    html += `<div class="review-tag-row"><span class="review-tag-row__label">${groupName}：</span>${gtags.map(chip).join('')}</div>`;
+  });
+  if (ungrouped.length) html += `<div class="review-tag-row">${ungrouped.map(chip).join('')}</div>`;
+  return html;
 }
 
 // bindReviewerClicks 已由 ../shared/reviewerModal.js 提供
@@ -941,9 +970,7 @@ function renderReviewCard(review, role) {
   const roleBadge = role === 'seller' ? '賣' : role === 'buyer' ? '買' : '';
   const roleClass = role === 'seller' ? 'reviewer-role-badge--seller' : role === 'buyer' ? 'reviewer-role-badge--buyer' : '';
 
-  const tagChips = tags
-    .map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`)
-    .join('');
+  const tagHtml = renderTagsByGroup(tags);
 
   const rid      = review?.reviewer?.accountId ?? '';
   const reviewId = review?.id ?? '';
@@ -966,7 +993,7 @@ function renderReviewCard(review, role) {
           ${reviewId ? `<button class="review-report-btn" data-report-review-id="${reviewId}" data-report-reviewer-id="${rid}" data-report-reviewer-name="${name.replace(/"/g,'&quot;')}" title="檢舉此評價"><i class="ti ti-flag"></i></button>` : ''}
         </div>
       </div>
-      ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
+      ${tagHtml ? `<div class="review-card__chips">${tagHtml}</div>` : ''}
       ${comment ? `<div class="reviewText">${comment}</div>` : ''}
     </div>
   `;
