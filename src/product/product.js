@@ -611,7 +611,9 @@ async function toggleSellerReviews() {
         if (Object.keys(_tagMeaningCache).length === 0) {
           try {
             const tagRes = await backendService.getReviewTags();
-            (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+            (tagRes?.data?.data?.groups ?? []).forEach(g => {
+              (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+            });
           } catch (e) { /* silent */ }
         }
         const res = await backendService.getUserReviews(_currentSellerId);

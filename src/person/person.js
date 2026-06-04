@@ -1883,7 +1883,9 @@ async function getDetail(id) {
     if (Object.keys(_tagMeaningCache).length === 0) {
       try {
         const tagRes = await backendService.getReviewTags();
-        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+        (tagRes?.data?.data?.groups ?? []).forEach(g => {
+          (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+        });
       } catch (e) {}
     }
 
@@ -2696,21 +2698,37 @@ async function openReviewModal(orderId, targetId, targetRole) {
   const targetName       = targetUser?.name || roleName;
   const targetCredit     = targetUser?.rate ?? '-';
 
-  // 從 API 取得 tags，並填入全域 cache 供顯示使用
-  let tagItems = [];
+  // 從 API 取得 tag groups，依 targetRole 篩選後填入全域 cache
+  let tagGroups = [];
   try {
     const tagRes = await backendService.getReviewTags();
-    tagItems = tagRes?.data?.data?.tags ?? [];
-    tagItems.forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+    const allGroups = tagRes?.data?.data?.groups ?? [];
+    allGroups.forEach(g => {
+      (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+    });
+    // 買家評賣家 → BUYER_TO_SELLER；賣家評買家 → SELLER_TO_BUYER
+    const relevantRole = isRatingBuyer ? 'SELLER_TO_BUYER' : 'BUYER_TO_SELLER';
+    tagGroups = allGroups.filter(g => g.targetRole === relevantRole);
   } catch (e) {
     console.warn('取得評論標籤失敗', e);
   }
 
-  const tagChipsHtml = tagItems.map(t => `
-    <label class="review-chip${t.positive === false ? ' negative' : ''}">
-      <input type="checkbox" class="review-tag-check" data-key="${esc(t.tag)}">
-      <span>${esc(t.meaning)}</span>
-    </label>`).join('');
+  const tagGroupsHtml = tagGroups.length
+    ? tagGroups.map(g => {
+        const hint = g.exclusive ? '單選' : '可複選';
+        const tagsHtml = (g.tags ?? []).map(t => `
+          <label class="review-chip${t.positive === false ? ' negative' : ''}">
+            <input type="${g.exclusive ? 'radio' : 'checkbox'}"
+              ${g.exclusive ? `name="review-group-${esc(g.id)}"` : ''}
+              class="review-tag-check" data-key="${esc(t.tag)}">
+            <span>${esc(t.meaning)}</span>
+          </label>`).join('');
+        return `<div class="review-group-block">
+          <div class="review-section-label">${esc(g.name)} <span class="review-section-hint">（${hint}）</span></div>
+          <div class="review-chips-row">${tagsHtml}</div>
+        </div>`;
+      }).join('')
+    : '<span class="review-section-hint">無可用標籤</span>';
 
   Swal.fire({
     title: `評價${roleName}`,
@@ -2730,9 +2748,8 @@ async function openReviewModal(orderId, targetId, targetRole) {
           </div>
         </div>
 
-        <!-- 評價標籤 -->
-        <div class="review-section-label">評價標籤 <span class="review-section-hint">（可複選）</span></div>
-        <div class="review-chips-row">${tagChipsHtml || '<span class="review-section-hint">無可用標籤</span>'}</div>
+        <!-- 評價標籤（按群組分類） -->
+        ${tagGroupsHtml}
 
         <!-- 文字評價 -->
         <div class="review-section-label" style="margin-top:12px;">文字評價 <span class="review-section-hint">（選填）</span></div>
@@ -2755,7 +2772,7 @@ async function openReviewModal(orderId, targetId, targetRole) {
       const comment     = document.getElementById('review-comment').value.trim();
       const isAnonymous = !isRatingBuyer && (document.getElementById('review-anonymous')?.checked ?? false);
       const tags        = [...document.querySelectorAll('.review-tag-check:checked')]
-                           .map(el => el.dataset.key.toUpperCase());
+                           .map(el => el.dataset.key);
 
       try {
         const res = await backendService.postReview(orderId, { comment, isAnonymous, tags });
@@ -2927,7 +2944,9 @@ async function loadMyReviewStats() {
     if (Object.keys(_tagMeaningCache).length === 0) {
       try {
         const tagRes = await backendService.getReviewTags();
-        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+        (tagRes?.data?.data?.groups ?? []).forEach(g => {
+          (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+        });
       } catch (e) { /* silent */ }
     }
 

@@ -76,11 +76,15 @@ const midcontent = document.getElementById('midcontent');
 // TODO seller
 document.addEventListener("DOMContentLoaded", async () => {
   // 管理後台按鈕（MODERATOR / ADMIN）& 隱藏聊天室
-  if (['MODERATOR', 'ADMIN'].includes(localStorage.getItem('role'))) {
+  const _role = localStorage.getItem('role');
+  if (['MODERATOR', 'ADMIN'].includes(_role)) {
     document.getElementById('moderatorBtn').style.display = 'block';
     document.getElementById('chaticon')?.style.setProperty('display', 'none', 'important');
     document.getElementById('talkInterface')?.style.setProperty('display', 'none', 'important');
     document.querySelector('.nav-tab-chat')?.style.setProperty('display', 'none', 'important');
+  }
+  if (_role === 'ADMIN') {
+    document.getElementById('apiDocsBtn').style.display = 'block';
   }
 
   const params = new URLSearchParams(window.location.search);

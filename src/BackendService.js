@@ -114,6 +114,12 @@ function _attach401Handler(instance) {
 
             const skip = _SKIP_401.some(p => url.includes(p));
             const onAccountPage = window.location.pathname.includes('account.html');
+            // 從未登入的訪客遇到 401 → 靜默更新 UI，不跳「登入已過期」
+            const hadSession = !!localStorage.getItem('uid');
+            if (status === 401 && !skip && !hadSession && !onAccountPage) {
+                if (typeof window._showLoggedOutUI === 'function') window._showLoggedOutUI();
+                return Promise.reject(err);
+            }
             if (status === 401 && !skip && !_handlingExpiry && !onAccountPage) {
                 _handlingExpiry = true;
                 window.isLoggedIn = false;
@@ -850,6 +856,44 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("全部已讀失敗", error);
+            return Promise.reject(error);
+        }
+    }
+
+    // ── Review Tag Groups Admin API ───────────────────────
+    async getReviewTagGroups() {
+        try {
+            const response = await this.http.get('/api/review/tag-groups');
+            return response.data;
+        } catch (error) {
+            console.error("取得評論標籤群組失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async createReviewTagGroup(payload) {
+        try {
+            const response = await this.http.post('/api/review/tag-groups', payload);
+            return response.data;
+        } catch (error) {
+            console.error("建立評論標籤群組失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async updateReviewTagGroup(id, payload) {
+        try {
+            const response = await this.http.patch(`/api/review/tag-groups/${encodeURIComponent(id)}`, payload);
+            return response.data;
+        } catch (error) {
+            console.error("更新評論標籤群組失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async deleteReviewTagGroup(id) {
+        try {
+            const response = await this.http.delete(`/api/review/tag-groups/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (error) {
+            console.error("刪除評論標籤群組失敗", error);
             return Promise.reject(error);
         }
     }

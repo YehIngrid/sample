@@ -20,9 +20,9 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js" integrity="sha384-e6cc9LaIG7xZ3XD5B+jtr1NhTWPQGQdRCh6xiZ+ZFUtWCpg4ycv3Sh+SkZoopvUY" crossorigin="anonymous"></script>
-  <script type="module" crossorigin src="/assets/official-official-CltgfSeG.js"></script>
+  <script type="module" crossorigin src="/assets/official-official-9ODb8gkU.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="modulepreload" crossorigin href="/assets/default-mApmdTHn.js">
+  <link rel="modulepreload" crossorigin href="/assets/default-B45RjTmC.js">
   <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-BnZ3tb9F.js">
   <link rel="modulepreload" crossorigin href="/assets/wpBackendService-8jEBVtgQ.js">
   <link rel="stylesheet" crossorigin href="/assets/official-official-D3hWts5h.css">
@@ -634,13 +634,56 @@
       
       <section id="panel-review-tags" class="panel">
         <h2 class="panel-title"><i class="fa fa-tags me-2"></i>評論標籤管理</h2>
-        <p class="text-muted small mb-3">建立或修改評論標籤規則（tag 自動轉大寫）。</p>
 
         
         <div class="d-flex align-items-center justify-content-between mb-2">
-          <span class="fw-bold" style="color:#333;">現有標籤</span>
+          <span class="fw-bold" style="color:#333;">標籤群組</span>
+          <button class="btn btn-sm btn-outline-primary" id="refreshTagGroupsBtn"><i class="fa fa-refresh me-1"></i>重新載入</button>
+        </div>
+        <p class="text-muted small mb-2">每個群組對應一個評價維度（例：商品品質、面交狀況）。互斥群組只能選一個標籤。</p>
+        <div id="reviewTagGroupsList" class="mb-4">
+          <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+        </div>
+
+        
+        <div class="news-editor-card mb-4">
+          <div class="news-editor-header"><span>新增標籤群組</span></div>
+          <form id="createTagGroupForm" class="official-form mt-3">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-5">
+                <label class="form-label">群組名稱 <span style="color:red">*</span></label>
+                <input type="text" id="newGroupName" class="form-control" placeholder="例：商品品質" maxlength="50" required>
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">適用對象 <span style="color:red">*</span></label>
+                <select id="newGroupTargetRole" class="form-select form-select-official">
+                  <option value="BUYER_TO_SELLER">買家評賣家</option>
+                  <option value="SELLER_TO_BUYER">賣家評買家</option>
+                </select>
+              </div>
+              <div class="col-sm-3">
+                <label class="form-label">選取模式 <span style="color:red">*</span></label>
+                <select id="newGroupExclusive" class="form-select form-select-official">
+                  <option value="true">互斥（單選）</option>
+                  <option value="false">可複選</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn official-btn" style="color:white;">
+              <i class="fa fa-plus me-1"></i> 建立群組
+            </button>
+          </form>
+          <div id="createTagGroupResult" class="result-box mt-3 d-none"></div>
+        </div>
+
+        <hr class="my-4">
+
+        
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="fw-bold" style="color:#333;">標籤列表</span>
           <button class="btn btn-sm btn-outline-primary" id="refreshTagsBtn"><i class="fa fa-refresh me-1"></i>重新載入</button>
         </div>
+        <p class="text-muted small mb-2">建立或修改評論標籤規則（tag 自動轉大寫）。</p>
         <div id="reviewTagsList" class="mb-4">
           <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
         </div>
@@ -650,17 +693,23 @@
           <div class="news-editor-header"><span>新增標籤</span></div>
           <form id="createTagForm" class="official-form mt-3">
             <div class="row g-3 mb-3">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="form-label">標籤名稱 (英文) <span style="color:red">*</span></label>
-                <input type="text" id="newTagName" class="form-control" placeholder="例：FAST_SHIPPING" maxlength="50" required>
+                <input type="text" id="newTagName" class="form-control" placeholder="例：fast_shipping" maxlength="50" required>
               </div>
-              <div class="col-sm-5">
+              <div class="col-sm-4">
                 <label class="form-label">說明 <span style="color:red">*</span></label>
                 <input type="text" id="newTagMeaning" class="form-control" placeholder="例：出貨速度快" maxlength="100" required>
               </div>
+              <div class="col-sm-2">
+                <label class="form-label">分數增減 <span style="color:red">*</span></label>
+                <input type="number" id="newTagDelta" class="form-control" placeholder="1 或 -5" min="-100" max="100" required>
+              </div>
               <div class="col-sm-3">
-                <label class="form-label">分數增減 (delta) <span style="color:red">*</span></label>
-                <input type="number" id="newTagDelta" class="form-control" placeholder="例：1 或 -5" min="-100" max="100" required>
+                <label class="form-label">所屬群組</label>
+                <select id="newTagGroupId" class="form-select form-select-official">
+                  <option value="">（不指定群組）</option>
+                </select>
               </div>
             </div>
             <button type="submit" class="btn official-btn" style="color:white;">

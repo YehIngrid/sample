@@ -65,7 +65,7 @@ function switchPanel(panelId) {
   if (panelId === 'panel-analytics') loadAnalytics();
   if (panelId === 'panel-reports') loadAllReports(1);
   if (panelId === 'panel-report-categories') loadReportCategories();
-  if (panelId === 'panel-review-tags') loadReviewTags();
+  if (panelId === 'panel-review-tags') { loadReviewTagGroups(); loadReviewTags(); }
   closeSidebar();
 }
 window.switchPanel = switchPanel;
@@ -1114,30 +1114,38 @@ document.getElementById('reviewApproveBtn')?.addEventListener('click', () => sub
 document.getElementById('reviewRejectBtn')?.addEventListener('click',  () => submitReview('rejected'));
 
 // ════════════════════════════════════════════════════
-//  評論標籤管理
+//  評論標籤群組管理
 // ════════════════════════════════════════════════════
-async function loadReviewTags() {
-  const list = document.getElementById('reviewTagsList');
+const TARGET_ROLE_LABEL = { BUYER_TO_SELLER: '買家→賣家', SELLER_TO_BUYER: '賣家→買家' };
+
+async function loadReviewTagGroups() {
+  const list = document.getElementById('reviewTagGroupsList');
   if (!list) return;
   list.innerHTML = '<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>';
   try {
-    const res = await backendSvc.getReviewTags();
-    const tags = res?.data?.data?.tags ?? [];
-    if (!tags.length) {
-      list.innerHTML = '<div class="text-muted text-center py-3">目前沒有標籤</div>';
+    const res = await backendSvc.getReviewTagGroups();
+    const groups = res?.data?.groups ?? [];
+    if (!groups.length) {
+      list.innerHTML = '<div class="text-muted text-center py-3">目前沒有標籤群組</div>';
       return;
     }
     list.innerHTML = `<table class="table table-sm align-middle">
-      <thead><tr><th>標籤</th><th>說明</th><th>正面</th><th>操作</th></tr></thead>
+      <thead><tr><th>群組名稱</th><th>適用對象</th><th>選取模式</th><th>標籤數</th><th>操作</th></tr></thead>
       <tbody>
-        ${tags.map(t => `
+        ${groups.map(g => `
           <tr>
-            <td><code>${esc(t.tag)}</code></td>
-            <td>${esc(t.description ?? t.meaning ?? '')}</td>
-            <td>${t.positive ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</td>
-            <td>
-              <button class="btn btn-sm btn-outline-secondary" onclick="openEditTagModal('${esc(t.tag)}','${esc(t.description ?? t.meaning ?? '')}',${t.positive})">
+            <td>${esc(g.name)}</td>
+            <td><span class="badge bg-secondary">${esc(TARGET_ROLE_LABEL[g.targetRole] ?? g.targetRole)}</span></td>
+            <td>${g.exclusive
+              ? '<span class="badge bg-info text-dark">互斥（單選）</span>'
+              : '<span class="badge bg-light text-dark border">可複選</span>'}</td>
+            <td>${g.tagCount ?? 0}</td>
+            <td class="d-flex gap-1">
+              <button class="btn btn-sm btn-outline-secondary" onclick="openEditTagGroupModal('${esc(g.id)}','${esc(g.name)}','${esc(g.targetRole)}',${g.exclusive})">
                 <i class="fa fa-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" onclick="deleteTagGroup('${esc(g.id)}','${esc(g.name)}',${g.tagCount ?? 0})">
+                <i class="fa fa-trash"></i>
               </button>
             </td>
           </tr>`).join('')}
@@ -1148,6 +1156,145 @@ async function loadReviewTags() {
   }
 }
 
+document.getElementById('refreshTagGroupsBtn')?.addEventListener('click', loadReviewTagGroups);
+
+document.getElementById('createTagGroupForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name      = document.getElementById('newGroupName').value.trim();
+  const targetRole = document.getElementById('newGroupTargetRole').value;
+  const exclusive  = document.getElementById('newGroupExclusive').value === 'true';
+  const resultBox  = document.getElementById('createTagGroupResult');
+  if (!name) return;
+  try {
+    resultBox.className = 'result-box mt-3 d-none';
+    await backendSvc.createReviewTagGroup({ name, targetRole, exclusive });
+    resultBox.className = 'result-box mt-3 success';
+    resultBox.innerHTML = `<div class="fw-bold">✅ 群組「${esc(name)}」建立成功</div>`;
+    document.getElementById('newGroupName').value = '';
+    loadReviewTagGroups();
+  } catch (err) {
+    const msg = err?.response?.data?.message || err?.message || '請稍後再試';
+    resultBox.className = 'result-box mt-3 error';
+    resultBox.innerHTML = `<div class="fw-bold mb-1">❌ 建立失敗</div><div>${esc(msg)}</div>`;
+  } finally {
+    resultBox.classList.remove('d-none');
+  }
+});
+
+function openEditTagGroupModal(id, name, targetRole, exclusive) {
+  Swal.fire({
+    title: `編輯群組`,
+    html: `
+      <div class="text-start">
+        <label class="form-label fw-bold">群組名稱</label>
+        <input id="editGroupName" class="form-control mb-3" value="${esc(name)}" maxlength="50">
+        <label class="form-label fw-bold">適用對象</label>
+        <select id="editGroupTargetRole" class="form-select mb-3">
+          <option value="BUYER_TO_SELLER" ${targetRole === 'BUYER_TO_SELLER' ? 'selected' : ''}>買家評賣家</option>
+          <option value="SELLER_TO_BUYER" ${targetRole === 'SELLER_TO_BUYER' ? 'selected' : ''}>賣家評買家</option>
+        </select>
+        <label class="form-label fw-bold">選取模式</label>
+        <select id="editGroupExclusive" class="form-select">
+          <option value="true" ${exclusive ? 'selected' : ''}>互斥（單選）</option>
+          <option value="false" ${!exclusive ? 'selected' : ''}>可複選</option>
+        </select>
+      </div>`,
+    showCancelButton: true,
+    confirmButtonText: '儲存',
+    cancelButtonText: '取消',
+    focusConfirm: false,
+    preConfirm: () => {
+      const updatedName = document.getElementById('editGroupName').value.trim();
+      if (!updatedName) { Swal.showValidationMessage('請輸入群組名稱'); return false; }
+      return {
+        name: updatedName,
+        targetRole: document.getElementById('editGroupTargetRole').value,
+        exclusive: document.getElementById('editGroupExclusive').value === 'true',
+      };
+    }
+  }).then(async ({ isConfirmed, value }) => {
+    if (!isConfirmed || !value) return;
+    try {
+      await backendSvc.updateReviewTagGroup(id, value);
+      Swal.fire({ icon: 'success', title: '更新成功', timer: 1500, showConfirmButton: false });
+      loadReviewTagGroups();
+    } catch (err) {
+      Swal.fire({ icon: 'error', title: '更新失敗', text: err?.response?.data?.message || '請稍後再試' });
+    }
+  });
+}
+window.openEditTagGroupModal = openEditTagGroupModal;
+
+window.deleteTagGroup = async function(id, name, tagCount) {
+  if (tagCount > 0) {
+    Swal.fire({ icon: 'warning', title: '無法刪除', text: `群組「${name}」還有 ${tagCount} 個標籤，請先移除所有標籤後再刪除。` });
+    return;
+  }
+  const confirm = await Swal.fire({
+    title: `確定刪除群組「${esc(name)}」？`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '刪除',
+    cancelButtonText: '取消',
+    confirmButtonColor: '#dc3545',
+  });
+  if (!confirm.isConfirmed) return;
+  try {
+    await backendSvc.deleteReviewTagGroup(id);
+    Swal.fire({ icon: 'success', title: '刪除成功', timer: 1500, showConfirmButton: false });
+    loadReviewTagGroups();
+  } catch (err) {
+    Swal.fire({ icon: 'error', title: '刪除失敗', text: err?.response?.data?.message || '請稍後再試' });
+  }
+};
+
+// ════════════════════════════════════════════════════
+//  評論標籤管理
+// ════════════════════════════════════════════════════
+async function loadReviewTags() {
+  const list = document.getElementById('reviewTagsList');
+  if (!list) return;
+  list.innerHTML = '<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>';
+  try {
+    const res = await backendSvc.getReviewTags();
+    const groups = res?.data?.data?.groups ?? [];
+    // Flatten all tags across groups for display
+    const allTags = groups.flatMap(g => (g.tags ?? []).map(t => ({ ...t, groupName: g.name, groupId: g.id })));
+    if (!allTags.length) {
+      list.innerHTML = '<div class="text-muted text-center py-3">目前沒有標籤</div>';
+      return;
+    }
+    list.innerHTML = `<table class="table table-sm align-middle">
+      <thead><tr><th>標籤</th><th>說明</th><th>所屬群組</th><th>正面</th><th>操作</th></tr></thead>
+      <tbody>
+        ${allTags.map(t => `
+          <tr>
+            <td><code>${esc(t.tag)}</code></td>
+            <td>${esc(t.meaning ?? '')}</td>
+            <td><span class="badge bg-light text-dark border">${esc(t.groupName ?? '')}</span></td>
+            <td>${t.positive ? '<span class="badge bg-success">是</span>' : '<span class="badge bg-secondary">否</span>'}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-secondary" onclick="openEditTagModal('${esc(t.tag)}','${esc(t.meaning ?? '')}',${t.positive},'${esc(t.groupId ?? '')}')">
+                <i class="fa fa-pencil"></i>
+              </button>
+            </td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+    // Populate group select in create form
+    _populateTagGroupSelect(groups);
+  } catch (e) {
+    list.innerHTML = `<div class="text-muted text-center py-3">載入失敗：${esc(e?.message || '請稍後再試')}</div>`;
+  }
+}
+
+function _populateTagGroupSelect(groups) {
+  const sel = document.getElementById('newTagGroupId');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">（不指定群組）</option>' +
+    groups.map(g => `<option value="${esc(g.id)}">${esc(g.name)}</option>`).join('');
+}
+
 document.getElementById('refreshTagsBtn')?.addEventListener('click', loadReviewTags);
 
 document.getElementById('createTagForm')?.addEventListener('submit', async (e) => {
@@ -1155,15 +1302,17 @@ document.getElementById('createTagForm')?.addEventListener('submit', async (e) =
   const tag      = document.getElementById('newTagName').value.trim();
   const meaning  = document.getElementById('newTagMeaning').value.trim();
   const delta    = parseInt(document.getElementById('newTagDelta').value, 10);
+  const groupId  = document.getElementById('newTagGroupId').value || undefined;
   const resultBox = document.getElementById('createTagResult');
   if (!tag || !meaning || isNaN(delta)) return;
   try {
-    await backendSvc.createReviewTag({ tag, description: meaning, delta });
+    await backendSvc.createReviewTag({ tag, description: meaning, delta, groupId });
     resultBox.className = 'result-box mt-3 success';
     resultBox.innerHTML = `<div class="fw-bold">✅ 標籤「${esc(tag.toUpperCase())}」建立成功</div>`;
     document.getElementById('newTagName').value = '';
     document.getElementById('newTagMeaning').value = '';
     document.getElementById('newTagDelta').value = '';
+    document.getElementById('newTagGroupId').value = '';
     loadReviewTags();
   } catch (err) {
     const msg = err?.response?.data?.message || err?.message || '請稍後再試';
@@ -1174,7 +1323,7 @@ document.getElementById('createTagForm')?.addEventListener('submit', async (e) =
   }
 });
 
-function openEditTagModal(tag, meaning, positive) {
+function openEditTagModal(tag, meaning, positive, groupId = '') {
   Swal.fire({
     title: `編輯標籤 ${tag}`,
     html: `
@@ -1184,10 +1333,12 @@ function openEditTagModal(tag, meaning, positive) {
         <label class="form-label fw-bold">分數增減 (delta)</label>
         <input type="number" id="editTagDelta" class="form-control mb-3" placeholder="例：1 或 -5" min="-100" max="100">
         <label class="form-label fw-bold">啟用狀態</label>
-        <select id="editTagEnabled" class="form-select">
+        <select id="editTagEnabled" class="form-select mb-3">
           <option value="true" ${positive ? 'selected' : ''}>啟用</option>
           <option value="false" ${!positive ? 'selected' : ''}>停用</option>
         </select>
+        <label class="form-label fw-bold">所屬群組 ID <small class="text-muted fw-normal">（選填）</small></label>
+        <input id="editTagGroupId" class="form-control" value="${esc(groupId)}" placeholder="group-1" maxlength="50">
       </div>`,
     showCancelButton: true,
     confirmButtonText: '儲存',
@@ -1196,10 +1347,12 @@ function openEditTagModal(tag, meaning, positive) {
     preConfirm: () => {
       const delta = parseInt(document.getElementById('editTagDelta').value, 10);
       if (isNaN(delta)) { Swal.showValidationMessage('請輸入分數增減'); return false; }
+      const groupIdVal = document.getElementById('editTagGroupId').value.trim();
       return {
         description: document.getElementById('editTagMeaning').value.trim(),
         delta,
         enabled: document.getElementById('editTagEnabled').value === 'true',
+        ...(groupIdVal ? { groupId: groupIdVal } : {}),
       };
     }
   }).then(async ({ isConfirmed, value }) => {
