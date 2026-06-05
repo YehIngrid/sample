@@ -1157,11 +1157,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const sendBtn = document.getElementById("sendBtn");
   const messageInput = document.getElementById("messageInput");
   const chatBox = document.getElementById("chatBox");
- if (!chatList || !chatConversation || !chatTargetName || !backToList || !sendBtn || !messageInput || !chatBox) {
-    console.warn("缺少必要的聊天介面元素");
+  if (!chatList || !chatConversation || !chatTargetName || !backToList || !sendBtn || !messageInput || !chatBox) {
     return;
-  } else {
-    console.log("聊天介面元素載入完成");
   }
   // 點擊聊天清單 → 進入對話
   document.querySelectorAll(".person").forEach(person => {
