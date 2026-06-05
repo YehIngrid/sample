@@ -1239,7 +1239,6 @@ html, body {
 [data-theme-dark] .chat-header .mobile-back-btn { color: #cdd6f4; }
 .message-input-container { position: relative; }
 [data-theme-dark] .message-input-container { background: #181825; border-color: #45475a !important; }
-[data-theme-dark] .quick-reply-bar { background: #181825; border-top-color: #45475a; }
 [data-theme-dark] #messageInput {
     background: #313244;
     color: #cdd6f4;
@@ -1333,19 +1332,28 @@ html, body {
 
 /* ── 快速回覆 ── */
 .quick-reply-bar {
-    position: absolute;
-    bottom: 100%;
-    left: 0;
-    right: 0;
     display: flex;
     gap: 6px;
     overflow-x: auto;
-    padding: 8px 16px;
-    background: var(--chat-bg, #fff);
-    border-top: 1px solid var(--border-color, #e8edf2);
+    padding-bottom: 8px;
     scrollbar-width: none;
 }
 .quick-reply-bar::-webkit-scrollbar { display: none; }
+@media (max-width: 767px) {
+    .quick-reply-bar {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        right: 0;
+        padding: 8px 16px;
+        background: var(--chat-bg, #fff);
+        border-top: 1px solid var(--border-color, #e8edf2);
+    }
+    [data-theme-dark] .quick-reply-bar {
+        background: #181825;
+        border-top-color: #45475a;
+    }
+}
 .quick-reply-chip {
     flex-shrink: 0;
     background: none;
