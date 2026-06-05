@@ -671,14 +671,11 @@ class ChatRoomList {
             });
         }
 
-        // 隨內容自動撐高
+        // 隨內容自動撐高 + 偵測輸入中
+        let typingTimer;
         this.input.addEventListener('input', () => {
             this.input.style.height = 'auto';
             this.input.style.height = Math.min(this.input.scrollHeight, 120) + 'px';
-        });
-
-        let typingTimer;
-        this.input.addEventListener('input', () => {
             clearTimeout(typingTimer);
             typingTimer = setTimeout(() => {
                 this.backend.typing(this.currentRoomId);
@@ -1215,7 +1212,8 @@ class ChatRoomList {
                     && myself?.lastReadMessageId !== data.lastMessageId
                     && (isOfficial || !isMyMessage);
             });
-            if (hasUnread) window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
+            // 雙向同步：讓 parent 紅點狀態與實際 unread 一致
+            window.parent?.dispatchEvent(new CustomEvent(hasUnread ? 'chatUnread' : 'chatRead'));
 
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
@@ -1224,6 +1222,16 @@ class ChatRoomList {
 
     async switchRoom(roomId, targetName) {
         if (this.readObserver) this.readObserver.disconnect();
+        // 清除 typing timers，避免舊房間的「正在輸入」殘留
+        clearTimeout(this.typingTimer);
+        clearTimeout(this.typingListTimer);
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) typingIndicator.style.display = 'none';
+        // 還原側邊欄被 typing 覆蓋的 lastMessage 文字
+        document.querySelectorAll('[data-original-text]').forEach(el => {
+            el.textContent = el.dataset.originalText;
+            delete el.dataset.originalText;
+        });
         if (this.isMobile) { this.hideSidebar(); this.showChatMain(); }
         document.getElementById('roomInfoPanel')?.classList.remove('open');
         document.getElementById('roomInfoOverlay')?.classList.remove('open');
@@ -1495,7 +1503,7 @@ class ChatRoomList {
                 if (chatItem) {
                     const lastMsgEl = chatItem.querySelector('.lastMessage');
                     if (lastMsgEl) {
-                        const msgText = data.message || (data.attachments?.length ? '傳送了一張圖片' : '官方公告');
+                        const msgText = this.getLastMessageText(data, '官方公告');
                         lastMsgEl.innerHTML = '<img src="../svg/alarm.svg" style="width:12px;height:12px;margin-right:3px;vertical-align:middle;">';
                         lastMsgEl.appendChild(document.createTextNode(msgText));
                     }
@@ -1513,15 +1521,18 @@ class ChatRoomList {
         this.eventSource.addEventListener('ping', () => {});
         this.eventSource.addEventListener('ready', () => {
             document.getElementById('sseDisconnectBanner').style.display = 'none';
+            _syncQuickReplyPad(document.getElementById('quickReplyBar')?.style.display !== 'none');
         });
         this.eventSource.onopen = () => {
             document.getElementById('sseDisconnectBanner').style.display = 'none';
+            _syncQuickReplyPad(document.getElementById('quickReplyBar')?.style.display !== 'none');
         };
 
         this.eventSource.onerror = () => {
             this.eventSource?.close();
             this.eventSource = null;
             document.getElementById('sseDisconnectBanner').style.display = 'flex';
+            _syncQuickReplyPad(document.getElementById('quickReplyBar')?.style.display !== 'none');
             clearTimeout(this._reconnectTimer);
             this._reconnectTimer = setTimeout(() => this.connectSSE(), 4000);
         };
@@ -1915,6 +1926,11 @@ function _syncQuickReplyPad(visible) {
     } else {
         mc.style.removeProperty('padding-bottom');
     }
+    // padding 改變後若已在底部附近，重新捲到底確保最後一則訊息可見
+    requestAnimationFrame(() => {
+        const nearBottom = mc.scrollHeight - mc.scrollTop - mc.clientHeight < 120;
+        if (nearBottom) mc.scrollTop = mc.scrollHeight;
+    });
 }
 
 let chatRoomList = null;
