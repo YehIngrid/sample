@@ -152,6 +152,18 @@
                     </div>
                 </div>
 
+                <!-- 聊天室資訊 Side Panel -->
+                <div id="roomInfoPanel" class="room-info-panel">
+                    <div class="room-info-panel-header">
+                        <span><i class="bi bi-info-circle me-1"></i>聊天室資訊 · <span id="roomInfoPanelTitle"></span></span>
+                        <button id="closeRoomInfoPanel" class="room-info-close-btn" aria-label="關閉">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <div class="room-info-panel-body" id="roomInfoBody"></div>
+                </div>
+                <div id="roomInfoOverlay" class="room-info-overlay"></div>
+
                 <!-- SSE 斷線提示 -->
                 <div id="sseDisconnectBanner" class="sse-disconnect-banner" style="display:none;">
                     <i class="bi bi-wifi-off me-2"></i>連線中斷，嘗試重新連線中…
@@ -348,22 +360,6 @@
     <!-- 訊息右鍵選單 -->
     <div id="msgContextMenu" class="msg-context-menu" style="display:none;">
         <button id="msgMenuCopy"><i class="bi bi-copy me-2"></i>複製文字</button>
-    </div>
-
-    <!-- Room Info Modal -->
-    <div class="modal fade" id="roomInfoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content" style="border-radius:14px;overflow:hidden;">
-                <div class="modal-header py-2 px-3" style="background:var(--primary-color,#004b97);border:none;">
-                    <h6 class="modal-title text-white mb-0" style="font-size:0.92rem;">
-                        <i class="bi bi-info-circle me-1"></i>聊天室資訊
-                    </h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-3" id="roomInfoBody">
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Crop Modal -->

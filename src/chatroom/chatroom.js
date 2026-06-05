@@ -412,6 +412,7 @@ class ChatRoomList {
         wrapper.innerHTML = `
             ${_msgAvatar1}
             <div class="message-content">
+                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(data.username)}</small>` : ''}
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
                     <div class="d-flex flex-row align-items-center gap-1 me-2">
@@ -475,6 +476,7 @@ class ChatRoomList {
         imgWrapper.innerHTML = `
             ${_msgAvatar2}
             <div class="message-content">
+                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(data.username)}</small>` : ''}
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
                     <div class="d-flex flex-row align-items-center gap-1 me-2">
@@ -1132,17 +1134,22 @@ class ChatRoomList {
                 const _roleBadge = !isOfficial && (_targetRole === 'ADMIN' || _targetRole === 'MODERATOR')
                     ? `<span class="role-badge"><i class="ti ti-shield-check"></i></span>`
                     : '';
+                const _partnerTag = !isOfficial && _targetRole === 'USER'
+                    ? `<span class="chat-partner-tag">聊天對象</span>`
+                    : '';
+                const _hasAdmin = !isOfficial && data.members?.some(m => m.role === 'ADMIN' || m.role === 'MODERATOR');
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
                             ${_avatarInner}${_roleBadge}
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}</h6>
+                            <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}${_partnerTag}</h6>
                             <small class="text-muted lastMessage">${this.escapeHtml(isOfficial
                                 ? (data.officialChannel?.description || '官方公告頻道')
                                 : this.getLastMessageText(data.lastMessage)
                             )}</small>
+                            ${_hasAdmin ? `<small class="admin-in-chat-note"><i class="ti ti-shield-half"></i> 管理員已加入此對話</small>` : ''}
                         </div>
                         <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
                             width: 10px; height: 10px;
@@ -1212,12 +1219,18 @@ class ChatRoomList {
     async switchRoom(roomId, targetName) {
         if (this.readObserver) this.readObserver.disconnect();
         if (this.isMobile) { this.hideSidebar(); this.showChatMain(); }
+        document.getElementById('roomInfoPanel')?.classList.remove('open');
+        document.getElementById('roomInfoOverlay')?.classList.remove('open');
+        const _infoBody = document.getElementById('roomInfoBody');
+        if (_infoBody) _infoBody.innerHTML = '';
 
         this.currentRoomId = roomId;
         const info = this.partnerInfoMap.get(String(roomId));
         const resolvedName = targetName || info?.name || '未知用戶';
         this.currentRoomName = resolvedName;
         this.hasMore = true;
+        const _infoPanelTitle = document.getElementById('roomInfoPanelTitle');
+        if (_infoPanelTitle) _infoPanelTitle.textContent = resolvedName;
 
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
@@ -1630,6 +1643,7 @@ class ChatRoomList {
         div.innerHTML = `
             ${_msgAvatar3}
             <div class="message-content">
+                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(data.username)}</small>` : ''}
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
                     <div class="d-flex flex-row align-items-center gap-1 me-2">
@@ -2100,6 +2114,13 @@ async function openChatWithTarget(targetUserId) {
     });
 
     // ── 聊天室資訊 ──
+    const _roomInfoPanel = document.getElementById('roomInfoPanel');
+    const _roomInfoOverlay = document.getElementById('roomInfoOverlay');
+    const _openRoomInfoPanel = () => { _roomInfoPanel?.classList.add('open'); _roomInfoOverlay?.classList.add('open'); };
+    const _closeRoomInfoPanel = () => { _roomInfoPanel?.classList.remove('open'); _roomInfoOverlay?.classList.remove('open'); };
+    document.getElementById('closeRoomInfoPanel')?.addEventListener('click', _closeRoomInfoPanel);
+    _roomInfoOverlay?.addEventListener('click', _closeRoomInfoPanel);
+
     document.getElementById('openRoomInfoBtn')?.addEventListener('click', (e) => {
         e.preventDefault();
         const roomId = chatRoomList.currentRoomId;
@@ -2112,7 +2133,6 @@ async function openChatWithTarget(targetUserId) {
             ? new Date(room.createdAt).toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })
             : '—';
 
-        // 成員列表（DIRECT 房間：USER 排前，ADMIN/MODERATOR 排後）
         const members = (room.members ?? []).slice().sort((a, b) => {
             const order = { USER: 0, MODERATOR: 1, ADMIN: 2 };
             return (order[a.role] ?? 9) - (order[b.role] ?? 9);
@@ -2121,32 +2141,34 @@ async function openChatWithTarget(targetUserId) {
         const roleLabel = { USER: '', MODERATOR: '管理員', ADMIN: '系統管理員' };
         const memberHtml = members.map(m => {
             const avatar = m.photoURL
-                ? `<img src="${m.photoURL}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">`
-                : `<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(to right bottom,var(--primary-color,#004b97),var(--secondary-color,#abdad5));display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:#fff;"><i class="ti ti-user"></i></div>`;
+                ? `<img src="${m.photoURL}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
+                : `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(to right bottom,var(--primary-color,#004b97),var(--secondary-color,#abdad5));display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#fff;"><i class="ti ti-user"></i></div>`;
             const badge = roleLabel[m.role]
-                ? `<span style="font-size:0.65rem;background:#e8f0fb;color:#004b97;border-radius:4px;padding:1px 5px;margin-left:4px;">${roleLabel[m.role]}</span>`
+                ? `<span style="font-size:0.62rem;background:#e8f0fb;color:#004b97;border-radius:4px;padding:1px 5px;margin-left:4px;">${roleLabel[m.role]}</span>`
                 : '';
-            return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f0f0f0;">
+            return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f0f0f0;">
                         ${avatar}
                         <span style="font-size:0.85rem;">${m.name ?? '未知'}${badge}</span>
                     </div>`;
         }).join('');
 
         const infoHtml = `
-            <div style="font-size:0.82rem;color:#666;margin-bottom:10px;">
-                <i class="bi bi-calendar3 me-1"></i>建立時間：<span style="color:#333;">${createdAt}</span>
+            <div style="font-size:0.8rem;color:#888;margin-bottom:14px;">
+                <i class="bi bi-calendar3 me-1"></i>建立時間
+                <div style="color:#333;font-size:0.85rem;margin-top:3px;font-weight:500;">${createdAt}</div>
             </div>
             ${isOfficial && room.officialChannel?.description ? `
-            <div style="font-size:0.82rem;color:#666;margin-bottom:10px;">
-                <i class="bi bi-megaphone me-1"></i>頻道說明：<span style="color:#333;">${room.officialChannel.description}</span>
+            <div style="font-size:0.8rem;color:#888;margin-bottom:14px;">
+                <i class="bi bi-megaphone me-1"></i>頻道說明
+                <div style="color:#333;font-size:0.85rem;margin-top:3px;">${room.officialChannel.description}</div>
             </div>` : ''}
-            <div style="font-size:0.82rem;color:#666;margin-bottom:6px;">
+            <div style="font-size:0.8rem;color:#888;margin-bottom:8px;">
                 <i class="bi bi-people me-1"></i>成員（${members.length} 人）
             </div>
-            <div style="max-height:220px;overflow-y:auto;">${memberHtml}</div>`;
+            <div>${memberHtml}</div>`;
 
         document.getElementById('roomInfoBody').innerHTML = infoHtml;
-        new bootstrap.Modal(document.getElementById('roomInfoModal')).show();
+        _openRoomInfoPanel();
     });
 
     // ── 檢舉 ──
