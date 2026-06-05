@@ -515,7 +515,7 @@ function _renderNotifItem(n) {
   else if (wishId) _href = `../wishpool/wishpool.html?id=${wishId}#wishpool`;
   else if (orderId) {
     const isSell = n.meta?.role === 'SELLER' || n.type === 'product_sold';
-    _href = `../person/person.html?page=${isSell ? 'sellOrderDetail' : 'buyOrderDetail'}&id=${orderId}`;
+    _href = `../person/person.html?page=${isSell ? 'sellOrderDetail' : 'buyerOrderDetail'}&id=${orderId}&orderId=${orderId}`;
   } else if (n.type === 'new_message' && chatRoomActorId) {
     _href = `../chatroom/chatroom.html?openChat=${chatRoomActorId}`;
   }

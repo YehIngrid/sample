@@ -1157,7 +1157,7 @@ function _notifNavHref(n) {
   if (orderId) {
     // order_update: 根據 meta.role 判斷買賣頁，沒有就預設買家
     const isSell = n.meta?.role === 'SELLER' || n.type === 'product_sold';
-    return `?page=${isSell ? 'sellOrderDetail' : 'buyOrderDetail'}&id=${orderId}`;
+    return `?page=${isSell ? 'sellOrderDetail' : 'buyerOrderDetail'}&id=${orderId}&orderId=${orderId}`;
   }
   if (['review', 'report_result'].includes(n.type)) return `?page=profile`;
   if (n.type === 'new_message' && (n.actorId ?? n.meta?.actor?.accountId)) {
