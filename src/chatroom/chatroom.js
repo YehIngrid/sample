@@ -1265,14 +1265,14 @@ class ChatRoomList {
             document.getElementById('locationPicker').style.display = 'none';
         }
 
-        // ✅ 開啟官方頻道：立即清除列表上的未讀紅點，並通知後端已讀
+        // ✅ 開啟房間：立即清除列表上的未讀紅點
+        document.querySelector(`[data-room-id="${roomId}"]`)
+            ?.querySelector('.unread-dot')?.classList.add('d-none');
+        window.parent?.dispatchEvent(new CustomEvent('chatRead'));
         if (isOfficialRoom) {
-            document.querySelector(`[data-room-id="${roomId}"]`)
-                ?.querySelector('.unread-dot')?.classList.add('d-none');
+            // 官方頻道 read SSE 不一定回傳，主動送一次
             const readAt = new Date().toISOString();
             this.backend.markAsRead(roomId, readAt).catch(() => {});
-            // 官方頻道的 read SSE 事件不一定會回傳，直接通知外層清除紅點
-            window.parent?.dispatchEvent(new CustomEvent('chatRead'));
         }
 
         const container = document.getElementById('messagesContainer');
@@ -1439,9 +1439,12 @@ class ChatRoomList {
         this.eventSource.addEventListener('read', (event) => {
             const data = JSON.parse(event.data);
             const partnerInfo = this.partnerInfoMap.get(String(data.room));
-            const isPartnerRead = partnerInfo?.id != null
+            const isMeRead = this.userId
+                ? String(data.userId) === String(this.userId)
+                : data.username === this.username;
+            const isPartnerRead = !isMeRead && (partnerInfo?.id != null
                 ? String(data.userId) === String(partnerInfo.id)
-                : data.username !== this.username; // fallback: ID 欄位不明時改用 username
+                : data.username !== this.username);
 
             if (isPartnerRead) {
                 // ✅ 對方已讀：更新目前聊天室訊息的「已讀」標記
