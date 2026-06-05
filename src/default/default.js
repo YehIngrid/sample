@@ -509,7 +509,17 @@ function _renderNotifItem(n) {
   if (productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-product-id="${productId}"><i class="ti ti-eye me-1"></i>看商品</button>`);
   if (wishId && !productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-wish-id="${wishId}"><i class="ti ti-eye me-1"></i>看願望</button>`);
 
-  return `<div class="notif-item${unread ? ' notif-unread' : ''}" data-notif-id="${id}">
+  const orderId = n.meta?.orderId ?? null;
+  let _href = '';
+  if (productId) _href = `../product/product.html?id=${productId}`;
+  else if (wishId) _href = `../wishpool/wishpool.html?id=${wishId}#wishpool`;
+  else if (orderId) {
+    const isSell = n.meta?.role === 'SELLER' || n.type === 'product_sold';
+    _href = `../person/person.html?page=${isSell ? 'sellOrderDetail' : 'buyOrderDetail'}&id=${orderId}`;
+  } else if (n.type === 'new_message' && chatRoomActorId) {
+    _href = `../chatroom/chatroom.html?openChat=${chatRoomActorId}`;
+  }
+  return `<div class="notif-item${unread ? ' notif-unread' : ''}" data-notif-id="${id}" data-notif-href="${_href}">
     <img src="${avatar}" class="notif-avatar" alt="通知" onerror="this.src='../image/default-avatar.webp'">
     <div class="notif-body">
       ${title ? `<div class="notif-text"><strong>${title}</strong></div>` : ''}
@@ -607,6 +617,13 @@ function _initNotifSystem() {
       _closeNotifPanel();
       window.location.href = `../wishpool/wishpool.html?id=${wishBtn.dataset.wishId}#wishpool`;
       return;
+    }
+
+    // 點擊 item 本體導頁
+    const href = item.dataset.notifHref;
+    if (href) {
+      _closeNotifPanel();
+      window.location.href = href;
     }
   });
 }

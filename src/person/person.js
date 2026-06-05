@@ -1186,7 +1186,6 @@ function _renderRecentNotifItem(n) {
       ${chips ? `<div class="notif-chips">${chips}</div>` : ''}
       <div class="notif-meta">
         <span>${time}</span>
-        ${href ? `<span class="notif-inline-link">查看 →</span>` : ''}
       </div>
     </div>
   </div>`;
