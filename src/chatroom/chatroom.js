@@ -32,6 +32,7 @@ class ChatRoomList {
         this.officialRoomsSet = new Set(); // 記錄官方頻道房間 ID
         this.officialChannelToRoomMap = new Map(); // channelId → roomId（SSE channelId 轉換用）
         this.supportRoomsSet = new Set(); // 客服頻道（官方但可雙向傳訊）
+        this.roomDataMap = new Map(); // roomId -> 原始 room data（供 info panel 使用）
 
         this.markReadTimer = null;
         this.readObserver = new IntersectionObserver(entries => {
@@ -399,9 +400,17 @@ class ChatRoomList {
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
             : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
+        const _msgAvatar1 = (() => {
+            if (isSelf) return '';
+            const _isDefault = partnerPhoto === '../image/default-avatar.webp';
+            const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
+            const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
+            const _img = _isDefault ? `<div class="avatar-default-msg"><i class="ti ti-user"></i></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
+        })();
 
         wrapper.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;"/></div>` : ''}
+            ${_msgAvatar1}
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
@@ -455,8 +464,16 @@ class ChatRoomList {
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
             : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
+        const _msgAvatar2 = (() => {
+            if (isSelf) return '';
+            const _isDefault = partnerPhoto === '../image/default-avatar.webp';
+            const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
+            const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
+            const _img = _isDefault ? `<div class="avatar-default-msg"><i class="ti ti-user"></i></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
+        })();
         imgWrapper.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
+            ${_msgAvatar2}
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
@@ -1057,6 +1074,7 @@ class ChatRoomList {
             });
 
             const renderRoomItem = (data) => {
+                this.roomDataMap.set(String(data.id), data);
                 const isOfficial = data.type === 'OFFICIAL';
                 if (isOfficial) {
                     this.officialRoomsSet.add(String(data.id));
@@ -1067,9 +1085,11 @@ class ChatRoomList {
                     const chName = data.officialChannel?.name ?? data.name ?? '';
                     if (chName.includes('客服') || chName.includes('小助手')) this.supportRoomsSet.add(String(data.id));
                 }
-                const target = isOfficial ? null : data.members?.find(m => m.name !== this.username);
+                const target = isOfficial ? null :
+                    (data.members?.find(m => m.role === 'USER' && m.userId !== this.userId)
+                    ?? data.members?.find(m => m.userId !== this.userId));
                 // ✅ 官方頻道也要找到自己，才能判斷已讀狀態
-                const myself = data.members?.find(m => m.name === this.username);
+                const myself = data.members?.find(m => m.userId === this.userId);
 
                 const roomName   = isOfficial ? (data.officialChannel?.name ?? '官方帳號') : (target?.name ?? '未知');
                 const roomAvatar = isOfficial ? '../webP/treasurehub.webp' : (target?.photoURL || '../image/default-avatar.webp');
@@ -1096,19 +1116,26 @@ class ChatRoomList {
                     this.partnerInfoMap.set(String(data.id), {
                         name: target.name ?? '未知用戶',
                         photoURL: target.photoURL || '../image/default-avatar.webp',
-                        id: target.id ?? target.accountId ?? target.userId ?? null
+                        id: target.id ?? target.accountId ?? target.userId ?? null,
+                        role: target.role ?? null
                     });
                 }
 
                 const item = document.createElement('div');
                 item.className = 'chat-item';
                 item.dataset.roomId = data.id;
+                const _isDefaultAvatar = roomAvatar === '../image/default-avatar.webp';
+                const _targetRole = target?.role;
+                const _avatarInner = _isDefaultAvatar
+                    ? `<i class="ti ti-user" style="font-size:1.2rem;"></i>`
+                    : `<img src="${roomAvatar}" alt="${this.escapeHtml(roomName)}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;object-position:center;${isOfficial ? 'border:2px solid var(--primary-color,#004b97);' : ''}">`;
+                const _roleBadge = !isOfficial && (_targetRole === 'ADMIN' || _targetRole === 'MODERATOR')
+                    ? `<span class="role-badge"><i class="ti ti-shield-check"></i></span>`
+                    : '';
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
-                            <img src="${roomAvatar}"
-                                 alt="${this.escapeHtml(roomName)}"
-                                 style="width: 45px; height: 45px; border-radius: 50px; object-fit: cover; object-position: center;${isOfficial ? ' border: 2px solid var(--primary-color,#004b97);' : ''}">
+                            ${_avatarInner}${_roleBadge}
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}</h6>
@@ -1169,7 +1196,7 @@ class ChatRoomList {
             // 初始未讀檢查：通知外層 chaticon 顯示紅點
             const hasUnread = rooms.data.items.some(data => {
                 const isOfficial = data.type === 'OFFICIAL';
-                const myself = data.members?.find(m => m.name === this.username);
+                const myself = data.members?.find(m => m.userId === this.userId);
                 const isMyMessage = data.lastMessage?.username === myself?.name;
                 return data.lastMessageId != null
                     && myself?.lastReadMessageId !== data.lastMessageId
@@ -1592,8 +1619,16 @@ class ChatRoomList {
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
             : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
+        const _msgAvatar3 = (() => {
+            if (isSelf) return '';
+            const _isDefault = partnerPhoto === '../image/default-avatar.webp';
+            const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
+            const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
+            const _img = _isDefault ? `<div class="avatar-default-msg"><i class="ti ti-user"></i></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
+        })();
         div.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
+            ${_msgAvatar3}
             <div class="message-content">
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
@@ -2062,6 +2097,56 @@ async function openChatWithTarget(targetUserId) {
         if (Notification.permission === 'granted') return;
         await Notification.requestPermission();
         _updateNotifUI();
+    });
+
+    // ── 聊天室資訊 ──
+    document.getElementById('openRoomInfoBtn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const roomId = chatRoomList.currentRoomId;
+        if (!roomId) return;
+        const room = chatRoomList.roomDataMap.get(String(roomId));
+        if (!room) return;
+
+        const isOfficial = room.type === 'OFFICIAL';
+        const createdAt = room.createdAt
+            ? new Date(room.createdAt).toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })
+            : '—';
+
+        // 成員列表（DIRECT 房間：USER 排前，ADMIN/MODERATOR 排後）
+        const members = (room.members ?? []).slice().sort((a, b) => {
+            const order = { USER: 0, MODERATOR: 1, ADMIN: 2 };
+            return (order[a.role] ?? 9) - (order[b.role] ?? 9);
+        });
+
+        const roleLabel = { USER: '', MODERATOR: '管理員', ADMIN: '系統管理員' };
+        const memberHtml = members.map(m => {
+            const avatar = m.photoURL
+                ? `<img src="${m.photoURL}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">`
+                : `<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(to right bottom,var(--primary-color,#004b97),var(--secondary-color,#abdad5));display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:#fff;"><i class="ti ti-user"></i></div>`;
+            const badge = roleLabel[m.role]
+                ? `<span style="font-size:0.65rem;background:#e8f0fb;color:#004b97;border-radius:4px;padding:1px 5px;margin-left:4px;">${roleLabel[m.role]}</span>`
+                : '';
+            return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f0f0f0;">
+                        ${avatar}
+                        <span style="font-size:0.85rem;">${m.name ?? '未知'}${badge}</span>
+                    </div>`;
+        }).join('');
+
+        const infoHtml = `
+            <div style="font-size:0.82rem;color:#666;margin-bottom:10px;">
+                <i class="bi bi-calendar3 me-1"></i>建立時間：<span style="color:#333;">${createdAt}</span>
+            </div>
+            ${isOfficial && room.officialChannel?.description ? `
+            <div style="font-size:0.82rem;color:#666;margin-bottom:10px;">
+                <i class="bi bi-megaphone me-1"></i>頻道說明：<span style="color:#333;">${room.officialChannel.description}</span>
+            </div>` : ''}
+            <div style="font-size:0.82rem;color:#666;margin-bottom:6px;">
+                <i class="bi bi-people me-1"></i>成員（${members.length} 人）
+            </div>
+            <div style="max-height:220px;overflow-y:auto;">${memberHtml}</div>`;
+
+        document.getElementById('roomInfoBody').innerHTML = infoHtml;
+        new bootstrap.Modal(document.getElementById('roomInfoModal')).show();
     });
 
     // ── 檢舉 ──

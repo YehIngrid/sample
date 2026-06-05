@@ -21,11 +21,11 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" integrity="sha384-6LFfkTKLRlzFtgx8xsWyBdKGpcMMQTkv+dB7rAbugeJAu1Ym2q1Aji1cjHBG12Xh" crossorigin="anonymous">
 
-  <script type="module" crossorigin src="/assets/chatroom-chatroom-DMWjiuGP.js"></script>
+  <script type="module" crossorigin src="/assets/chatroom-chatroom-BxnEWP2f.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="modulepreload" crossorigin href="/assets/default-DaK_H1Vc.js">
   <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-BnZ3tb9F.js">
-  <link rel="stylesheet" crossorigin href="/assets/chatroom-chatroom-DP58ZleL.css">
+  <link rel="stylesheet" crossorigin href="/assets/chatroom-chatroom-BRW8-IAl.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
 </head>
 <body>
@@ -131,6 +131,12 @@
                                         <a class="chat-dropdown-item" href="#" id="enableNotifBtn">
                                             <span class="chat-dropdown-icon"><i class="bi bi-bell" id="notifBellIcon"></i></span>
                                             <span id="notifBtnLabel">桌面通知</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="chat-dropdown-item" href="#" id="openRoomInfoBtn">
+                                            <span class="chat-dropdown-icon"><i class="bi bi-info-circle"></i></span>
+                                            聊天室資訊
                                         </a>
                                     </li>
                                     <li><hr class="chat-dropdown-divider"></li>
@@ -343,6 +349,22 @@
     
     <div id="msgContextMenu" class="msg-context-menu" style="display:none;">
         <button id="msgMenuCopy"><i class="bi bi-copy me-2"></i>複製文字</button>
+    </div>
+
+    
+    <div class="modal fade" id="roomInfoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content" style="border-radius:14px;overflow:hidden;">
+                <div class="modal-header py-2 px-3" style="background:var(--primary-color,#004b97);border:none;">
+                    <h6 class="modal-title text-white mb-0" style="font-size:0.92rem;">
+                        <i class="bi bi-info-circle me-1"></i>聊天室資訊
+                    </h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-3" id="roomInfoBody">
+                </div>
+            </div>
+        </div>
     </div>
 
     

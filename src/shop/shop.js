@@ -79,9 +79,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const _role = localStorage.getItem('role');
   if (['MODERATOR', 'ADMIN'].includes(_role)) {
     document.getElementById('moderatorBtn').style.display = 'block';
-    document.getElementById('chaticon')?.style.setProperty('display', 'none', 'important');
-    document.getElementById('talkInterface')?.style.setProperty('display', 'none', 'important');
-    document.querySelector('.nav-tab-chat')?.style.setProperty('display', 'none', 'important');
   }
   if (_role === 'ADMIN') {
     document.getElementById('apiDocsBtn').style.display = 'block';
