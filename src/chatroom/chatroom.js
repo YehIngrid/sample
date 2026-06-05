@@ -254,6 +254,7 @@ class ChatRoomList {
         this.input.placeholder = '官方頻道不支援傳送訊息';
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = 'none';
+        _syncQuickReplyPad(false);
         document.getElementById('time-picker-btn')?.style.setProperty('display', 'none');
         document.getElementById('location-picker-btn')?.style.setProperty('display', 'none');
         document.getElementById('timePicker').style.display = 'none';
@@ -575,7 +576,15 @@ class ChatRoomList {
                 // 切到電腦：移除所有 mobile-hidden，讓 Bootstrap 並排
                 this.showSidebar();
                 this.showChatMain();
+                // 切回電腦：清除 mobile 的 padding-bottom
+                const mc = document.querySelector('.messages-container');
+                if (mc) mc.style.removeProperty('padding-bottom');
             }
+        }
+        // 手機鍵盤開關會觸發 resize（viewport 縮小），重新同步 padding
+        if (this.isMobile) {
+            const bar = document.getElementById('quickReplyBar');
+            _syncQuickReplyPad(bar && bar.style.display !== 'none');
         }
     }
 
@@ -1255,6 +1264,7 @@ class ChatRoomList {
         // 快速回覆 / 面交工具只在私人聊天顯示
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = isOfficialRoom ? 'none' : 'flex';
+        _syncQuickReplyPad(!isOfficialRoom);
         const csBotMenu = document.getElementById('csBotMenu');
         if (csBotMenu) csBotMenu.style.display = isSupportRoom ? 'block' : 'none';
         const _pickerDisplay = isOfficialRoom ? 'none' : '';
@@ -1894,6 +1904,17 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
         };
         img.src = url;
     });
+}
+
+function _syncQuickReplyPad(visible) {
+    if (window.innerWidth >= 768) return; // desktop 不需要
+    const mc = document.querySelector('.messages-container');
+    if (!mc) return;
+    if (visible) {
+        mc.style.setProperty('padding-bottom', '56px', 'important');
+    } else {
+        mc.style.removeProperty('padding-bottom');
+    }
 }
 
 let chatRoomList = null;

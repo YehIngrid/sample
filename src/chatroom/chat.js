@@ -449,7 +449,9 @@ window.addEventListener('load', async () => {
             }
         });
 
-        if (hasUnread) window.dispatchEvent(new CustomEvent('chatUnread'));
+        const _iframe = document.getElementById('talkInterface');
+        const _iframeOpen = _iframe && _iframe.style.display !== 'none';
+        if (hasUnread && !_iframeOpen) window.dispatchEvent(new CustomEvent('chatUnread'));
     } catch (e) { /* 未登入或錯誤，略過 */ }
 
     const _notifSse = new EventSource(
@@ -503,6 +505,7 @@ function _updateNavBadge(show) {
 }
 
 window.addEventListener('chatUnread', () => _updateNavBadge(true));
+window.addEventListener('chatRead', () => _updateNavBadge(false));
 
 window.toggleChatInterface = toggleChatInterface;
 window.canEnterChat = canEnterChat;
