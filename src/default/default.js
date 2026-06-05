@@ -462,12 +462,17 @@ let _notifHasMore = false;
 let _notifLoading = false;
 
 const _NOTIF_TYPE_LABELS = {
-  wishpool_contact: '許願池聯絡',
-  order_placed: '訂單成立',
-  order_completed: '訂單完成',
-  order_cancelled: '訂單取消',
-  review: '收到評價',
-  system: '系統通知',
+  wishpool_contact:  '許願池聯絡',
+  order_placed:      '訂單成立',
+  order_update:      '訂單更新',
+  order_completed:   '訂單完成',
+  order_cancelled:   '訂單取消',
+  review:            '收到評價',
+  report_result:     '檢舉結果',
+  new_message:       '新訊息',
+  product_sold:      '商品已售出',
+  product_liked:     '商品被收藏',
+  system:            '系統通知',
 };
 
 function _notifRelativeTime(dateStr) {
@@ -483,7 +488,7 @@ function _notifRelativeTime(dateStr) {
 
 function _renderNotifItem(n) {
   const avatar = n.actor?.photoURL ?? n.actor?.avatar ?? '../image/default-avatar.webp';
-  const title = n.title ?? _NOTIF_TYPE_LABELS[n.type] ?? '';
+  const title = n.title || _NOTIF_TYPE_LABELS[n.type] || '';
   const body = n.body ?? n.content ?? n.message ?? '';
   const time = _notifRelativeTime(n.createdAt);
   const unread = !n.isRead;
@@ -493,7 +498,7 @@ function _renderNotifItem(n) {
   const productName = n.productName ?? n.meta?.product?.name ?? null;
   const productId = n.productId ?? n.meta?.product?.id ?? null;
   const wishId = n.wishId ?? n.meta?.wish?.id ?? null;
-  const chatRoomActorId = n.meta?.actor?.accountId ?? null;
+  const chatRoomActorId = n.actorId ?? n.meta?.actor?.accountId ?? null;
 
   const metaChips = [];
   if (wishName) metaChips.push(`<span class="notif-chip notif-chip--wish"><i class="ti ti-wand me-1"></i>${wishName}</span>`);

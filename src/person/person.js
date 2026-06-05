@@ -1061,15 +1061,17 @@ async function loadDashboardData() {
 }
 
 const _NOTIF_LABELS = {
-  wishpool_contact: '許願池聯絡',
-  order_placed:     '訂單成立',
-  order_completed:  '訂單完成',
-  order_cancelled:  '訂單取消',
-  review:           '收到評價',
-  system:           '系統通知',
-  new_message:      '新訊息',
-  product_sold:     '商品已售出',
-  product_liked:    '商品被收藏',
+  wishpool_contact:  '許願池聯絡',
+  order_placed:      '訂單成立',
+  order_update:      '訂單更新',
+  order_completed:   '訂單完成',
+  order_cancelled:   '訂單取消',
+  review:            '收到評價',
+  report_result:     '檢舉結果',
+  new_message:       '新訊息',
+  product_sold:      '商品已售出',
+  product_liked:     '商品被收藏',
+  system:            '系統通知',
 };
 function _relTime(d) {
   if (!d) return '';
@@ -1148,127 +1150,87 @@ function _detectReportHistoryChanges(records) {
   return synth;
 }
 
+function _notifNavHref(n) {
+  if (n.productId)  return `../product/product.html?id=${n.productId}`;
+  if (n.wishId)     return `../wishpool/wishpool.html?id=${n.wishId}#wishpool`;
+  const orderId = n.meta?.orderId;
+  if (orderId) {
+    // order_update: 根據 meta.role 判斷買賣頁，沒有就預設買家
+    const isSell = n.meta?.role === 'SELLER' || n.type === 'product_sold';
+    return `?page=${isSell ? 'sellOrderDetail' : 'buyOrderDetail'}&id=${orderId}`;
+  }
+  if (['review', 'report_result'].includes(n.type)) return `?page=profile`;
+  if (n.type === 'new_message' && (n.actorId ?? n.meta?.actor?.accountId)) {
+    return `../chatroom/chatroom.html?openChat=${n.actorId ?? n.meta.actor.accountId}`;
+  }
+  return '';
+}
+
+function _renderRecentNotifItem(n) {
+  const title = n.title || _NOTIF_LABELS[n.type] || '';
+  const body  = n.body ?? '';
+  const time  = _relTime(n.createdAt);
+  const unread = !n.isRead;
+  const href  = _notifNavHref(n);
+
+  let chips = '';
+  if (n.productName) chips += `<span class="notif-chip notif-chip--product"><i class="ti ti-package me-1"></i>${htmlEncode(n.productName)}</span>`;
+  if (n.wishId && !n.productId) chips += `<span class="notif-chip notif-chip--wish"><i class="ti ti-wand me-1"></i>許願</span>`;
+
+  return `<div class="notif-item${unread ? ' notif-unread' : ''}${href ? ' notif-item--link' : ''}"
+    data-notif-id="${n.id ?? ''}" data-notif-href="${href}">
+    <span class="notif-dot${unread ? '' : ' read'}"></span>
+    <div class="notif-body">
+      ${title ? `<div class="notif-ttl">${htmlEncode(title)}</div>` : ''}
+      ${body  ? `<div class="notif-sub">${htmlEncode(body)}</div>` : ''}
+      ${chips ? `<div class="notif-chips">${chips}</div>` : ''}
+      <div class="notif-meta">
+        <span>${time}</span>
+        ${href ? `<span class="notif-inline-link">查看 →</span>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
 async function loadRecentNotifications() {
   const container = document.getElementById('recentNotifList');
   if (!container) return;
   try {
-    const isAdmin = ['admin', 'moderator'].includes((localStorage.getItem('role') ?? '').toLowerCase());
-    const [notifRes, rptRes, rptHistRaw, sellPendingRes, buyDeliveredRes, sellReviewRes, buyReviewRes, adminRptRes] = await Promise.all([
-      backendService.getNotifications(1, 20).catch(() => null),
-      backendService.getMyReports({ page: 1, limit: 20 }).catch(() => null),
-      backendService.getReportHistory({ page: 1, limit: 10 }).catch(() => null),
-      backendService.getSellerOrders(1, 'pending').catch(() => null),
-      backendService.getBuyerOrders(1, 'delivered').catch(() => null),
-      backendService.getSellerOrders(1, 'review_pending').catch(() => null),
-      backendService.getBuyerOrders(1, 'review_pending').catch(() => null),
-      isAdmin ? backendService.getAllReports({ status: 'pending', page: 1, limit: 1 }).catch(() => null) : Promise.resolve(null),
-    ]);
+    const res = await backendService.getNotifications(1, 10);
+    const payload = res?.data?.data ?? {};
+    const items   = payload.notifications ?? [];
+    const unreadCount = payload.unreadCount ?? items.filter(n => !n.isRead).length;
 
-    // API 通知：取最近 8 筆，不限已讀／未讀
-    const apiItems = (notifRes?.data?.data?.notifications ?? []).slice(0, 8);
-    const reports  = rptRes?.data?.reports ?? [];
-    const rptHistRecords = rptHistRaw?.data?.reports ?? rptHistRaw?.reports ?? [];
-
-    // ── 訂單合成通知 ───────────────────────────────────────
-    const orderSynth = [];
-
-    // 待確認訂單（賣家）
-    const pendingOrders = sellPendingRes?.data?.data?.orders ?? [];
-    const pendingTotal  = sellPendingRes?.data?.data?.pagination?.totalItems ?? pendingOrders.length;
-    if (pendingTotal > 0) {
-      orderSynth.push({
-        text: `您有 ${pendingTotal} 筆待確認訂單，請盡快處理`,
-        meta: '銷售訂單',
-        time: '',
-        unread: true,
-        href: '?page=sellProducts',
-      });
-    }
-
-    // 待收貨（買家確認收貨）
-    const deliveredOrders = buyDeliveredRes?.data?.data?.orders ?? [];
-    const deliveredTotal  = buyDeliveredRes?.data?.data?.pagination?.totalItems ?? deliveredOrders.length;
-    if (deliveredTotal > 0) {
-      orderSynth.push({
-        text: `您有 ${deliveredTotal} 筆待收貨訂單，請查看 PIN 碼並告知賣家`,
-        meta: '消費訂單',
-        time: '',
-        unread: true,
-        href: '?page=buyProducts',
-      });
-    }
-
-    // 待評價（賣家）
-    const sellReviewOrders = sellReviewRes?.data?.data?.orders ?? [];
-    const sellNeedReview   = sellReviewOrders.filter(o => !o.reviewProgress?.sellerReviewed);
-    const sellReviewTotal  = sellReviewRes?.data?.data?.pagination?.totalItems ?? sellNeedReview.length;
-    if (sellReviewTotal > 0) {
-      orderSynth.push({
-        text: `您有 ${sellReviewTotal} 筆待評價訂單（賣家），完成後雙方各 +5 分`,
-        meta: '評價提醒',
-        time: '',
-        unread: true,
-        href: '?page=sellProducts',
-      });
-    }
-
-    // 待評價（買家）
-    const buyReviewOrders = buyReviewRes?.data?.data?.orders ?? [];
-    const buyNeedReview   = buyReviewOrders.filter(o => !o.reviewProgress?.buyerReviewed);
-    const buyReviewTotal  = buyReviewRes?.data?.data?.pagination?.totalItems ?? buyNeedReview.length;
-    if (buyReviewTotal > 0) {
-      orderSynth.push({
-        text: `您有 ${buyReviewTotal} 筆待評價訂單（買家），完成後雙方各 +5 分`,
-        meta: '評價提醒',
-        time: '',
-        unread: true,
-        href: '?page=buyProducts',
-      });
-    }
-
-    // ── Admin：待審核檢舉 ──────────────────────────────────
-    if (isAdmin) {
-      const adminPendingTotal = adminRptRes?.data?.pagination?.totalItems
-        ?? adminRptRes?.pagination?.totalItems
-        ?? (Array.isArray(adminRptRes?.data) ? adminRptRes.data.length : (adminRptRes?.reports?.length ?? 0));
-      if (adminPendingTotal > 0) {
-        orderSynth.push({
-          text: `有 ${adminPendingTotal} 件檢舉待審核`,
-          meta: '管理員待處理',
-          time: '',
-          unread: true,
-          href: '',
-        });
-      }
-    }
-
-    const synthNotifs = [
-      ..._detectReportChanges(reports),
-      ..._detectReportHistoryChanges(rptHistRecords),
-    ];
-
-    const apiHtml = apiItems.map(n => {
-      const typeLabel   = _NOTIF_LABELS[n.type] ?? n.type ?? '';
-      const displayText = n.title || typeLabel;
-      const metaType    = typeLabel || n.title || '';
-      return _notifItemHtml(displayText, metaType, _relTime(n.createdAt), !n.isRead);
-    }).join('');
-
-    const orderHtml = orderSynth.map(s =>
-      _notifItemHtml(s.text, s.meta, s.time, s.unread, s.href)
-    ).join('');
-
-    const synthHtml = synthNotifs.map(s =>
-      _notifItemHtml(s.text, s.meta, s.time, s.unread)
-    ).join('');
-
-    const combined = orderHtml + synthHtml + apiHtml;
-    container.innerHTML = combined || '<div class="review-empty"><i class="ti ti-bell-off review-empty-icon"></i><div class="review-empty-title">目前沒有通知</div><div class="review-empty-sub">訂單更新、評價回覆等通知會顯示在這裡</div></div>';
-
-    // 有需要處理的事項時亮紅點
-    const hasPending = orderSynth.length > 0 || synthNotifs.length > 0;
     const dotEl = document.getElementById('notifPanelDot');
-    if (dotEl) dotEl.style.display = hasPending ? 'inline-block' : 'none';
+    if (dotEl) dotEl.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+
+    if (!items.length) {
+      container.innerHTML = '<div class="review-empty"><i class="ti ti-bell-off review-empty-icon"></i><div class="review-empty-title">目前沒有通知</div><div class="review-empty-sub">訂單更新、評價回覆等通知會顯示在這裡</div></div>';
+      return;
+    }
+
+    container.innerHTML = items.map(_renderRecentNotifItem).join('');
+
+    // 點擊：標記已讀 + 導頁
+    container.addEventListener('click', async e => {
+      if (e.target.closest('a')) return; // 讓原生 <a> 自己處理
+      const item = e.target.closest('.notif-item[data-notif-id]');
+      if (!item) return;
+
+      if (item.classList.contains('notif-unread')) {
+        try {
+          await backendService.markNotificationRead(item.dataset.notifId);
+          item.classList.remove('notif-unread');
+          item.querySelector('.notif-dot')?.classList.add('read');
+          const remaining = container.querySelectorAll('.notif-unread').length;
+          if (dotEl) dotEl.style.display = remaining > 0 ? 'inline-block' : 'none';
+        } catch (_) {}
+      }
+
+      const href = item.dataset.notifHref;
+      if (href) window.location.href = href;
+    });
+
   } catch (e) {
     console.error('[loadRecentNotifications 失敗]', e);
     container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;"><i class="ti ti-alert-circle" style="font-size:1.4rem;display:block;margin-bottom:4px;opacity:0.4;"></i>無法載入通知</div>';
