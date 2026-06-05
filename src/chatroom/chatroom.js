@@ -1134,9 +1134,6 @@ class ChatRoomList {
                 const _roleBadge = !isOfficial && (_targetRole === 'ADMIN' || _targetRole === 'MODERATOR')
                     ? `<span class="role-badge"><i class="ti ti-shield-check"></i></span>`
                     : '';
-                const _partnerTag = !isOfficial && _targetRole === 'USER'
-                    ? `<span class="chat-partner-tag">聊天對象</span>`
-                    : '';
                 const _hasAdmin = !isOfficial && data.members?.some(m => m.role === 'ADMIN' || m.role === 'MODERATOR');
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
@@ -1144,7 +1141,7 @@ class ChatRoomList {
                             ${_avatarInner}${_roleBadge}
                         </div>
                         <div class="flex-grow-1">
-                            <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}${_partnerTag}</h6>
+                            <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}</h6>
                             <small class="text-muted lastMessage">${this.escapeHtml(isOfficial
                                 ? (data.officialChannel?.description || '官方公告頻道')
                                 : this.getLastMessageText(data.lastMessage)
@@ -2138,7 +2135,7 @@ async function openChatWithTarget(targetUserId) {
             return (order[a.role] ?? 9) - (order[b.role] ?? 9);
         });
 
-        const roleLabel = { USER: '', MODERATOR: '管理員', ADMIN: '系統管理員' };
+        const roleLabel = { USER: '聊天對象', MODERATOR: '管理員', ADMIN: '系統管理員' };
         const memberHtml = members.map(m => {
             const avatar = m.photoURL
                 ? `<img src="${m.photoURL}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
