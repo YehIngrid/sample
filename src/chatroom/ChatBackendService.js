@@ -124,6 +124,34 @@ export default class ChatBackendService {
             return Promise.reject(error);
         }
     }
+    async requestSupport(roomId, subject, description) {
+        try {
+            const response = await axios.post(
+                `${this.baseUrl}/api/chat/rooms/${roomId}/request-support`,
+                { subject, description },
+                { withCredentials: true }
+            );
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error requesting support:', error);
+            return Promise.reject(error);
+        }
+    }
+    async leaveSupport(roomId) {
+        try {
+            const response = await axios.post(
+                `${this.baseUrl}/api/chat/rooms/${roomId}/leave-support`,
+                {},
+                { withCredentials: true }
+            );
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error leaving support room:', error);
+            return Promise.reject(error);
+        }
+    }
     async listOfficialChannels(page, limit) {
         try {
             const response = await axios.get(`${this.baseUrl}/api/chat/official-channels`, {params: {page: page, limit: limit}});

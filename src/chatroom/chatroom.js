@@ -406,7 +406,7 @@ class ChatRoomList {
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
             const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
-            const _img = _isDefault ? `<div class="avatar-default-msg"><i class="ti ti-user"></i></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:18px;height:18px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
         })();
 
@@ -471,7 +471,7 @@ class ChatRoomList {
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
             const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
-            const _img = _isDefault ? `<div class="avatar-default-msg"><i class="ti ti-user"></i></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:18px;height:18px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
         })();
         imgWrapper.innerHTML = `
@@ -720,6 +720,43 @@ class ChatRoomList {
             this.input.dispatchEvent(new Event('input'));
         });
 
+        // 聯絡客服
+        document.getElementById('requestSupportBtn')?.addEventListener('click', async () => {
+            const { isConfirmed: confirmed } = await Swal.fire({
+                title: '需要客服協助嗎？',
+                text: '送出後將由客服人員介入此聊天室協助處理。',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '繼續',
+                cancelButtonText: '取消',
+            });
+            if (!confirmed) return;
+
+            const { isConfirmed, value } = await Swal.fire({
+                title: '聯絡客服',
+                html: `
+                    <input id="swal-subject" class="swal2-input" placeholder="主旨（例：交易糾紛）">
+                    <textarea id="swal-description" class="swal2-textarea" placeholder="請描述問題..."></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '送出',
+                cancelButtonText: '取消',
+                preConfirm: () => {
+                    const subject = document.getElementById('swal-subject').value.trim();
+                    const description = document.getElementById('swal-description').value.trim();
+                    if (!subject) { Swal.showValidationMessage('請輸入主旨'); return false; }
+                    return { subject, description };
+                }
+            });
+            if (!isConfirmed) return;
+            try {
+                await backend.requestSupport(this.currentRoomId, value.subject, value.description);
+                Swal.fire({ icon: 'success', title: '已送出客服請求', text: '客服人員將盡快與您聯繫', timer: 2000, showConfirmButton: false });
+            } catch {
+                Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+            }
+        });
+
         // ── 時間 / 地點選擇器 ──
         const timePicker = document.getElementById('timePicker');
         const locPicker  = document.getElementById('locationPicker');
@@ -903,6 +940,16 @@ class ChatRoomList {
         if (localStorage.getItem('chatSound') === '0') return;
         const audio = new Audio('../sound/mes.mp3');
         audio.play().catch(() => {});
+    }
+
+    appendSystemMessage(text) {
+        const container = document.getElementById('messagesContainer');
+        if (!container) return;
+        const div = document.createElement('div');
+        div.className = 'system-message';
+        div.textContent = text;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
     }
 
     appendBotMessage(text, actionHtml = '') {
@@ -1135,7 +1182,7 @@ class ChatRoomList {
                 const _isDefaultAvatar = roomAvatar === '../image/default-avatar.webp';
                 const _targetRole = target?.role;
                 const _avatarInner = _isDefaultAvatar
-                    ? `<i class="ti ti-user" style="font-size:1.2rem;"></i>`
+                    ? `<img src="../svg/default-avatar.svg" style="width:28px;height:28px;">`
                     : `<img src="${roomAvatar}" alt="${this.escapeHtml(roomName)}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;object-position:center;${isOfficial ? 'border:2px solid var(--primary-color,#004b97);' : ''}">`;
                 const _roleBadge = !isOfficial && (_targetRole === 'ADMIN' || _targetRole === 'MODERATOR')
                     ? `<span class="role-badge"><i class="ti ti-shield-check"></i></span>`
@@ -1518,6 +1565,18 @@ class ChatRoomList {
             window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
         });
 
+        this.eventSource.addEventListener('memberJoin', (event) => {
+            const data = JSON.parse(event.data);
+            if (String(data.room) !== String(this.currentRoomId)) return;
+            this.appendSystemMessage('管理員已加入聊天室');
+        });
+
+        this.eventSource.addEventListener('memberLeft', (event) => {
+            const data = JSON.parse(event.data);
+            if (String(data.room) !== String(this.currentRoomId)) return;
+            this.appendSystemMessage('管理員已離開聊天室');
+        });
+
         this.eventSource.addEventListener('ping', () => {});
         this.eventSource.addEventListener('ready', () => {
             document.getElementById('sseDisconnectBanner').style.display = 'none';
@@ -1658,7 +1717,7 @@ class ChatRoomList {
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
             const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
-            const _img = _isDefault ? `<div class="avatar-default-msg"><i class="ti ti-user"></i></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:18px;height:18px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
         })();
         div.innerHTML = `
@@ -2179,7 +2238,7 @@ async function openChatWithTarget(targetUserId) {
         const memberHtml = members.map(m => {
             const avatar = m.photoURL
                 ? `<img src="${m.photoURL}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
-                : `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(to right bottom,var(--primary-color,#004b97),var(--secondary-color,#abdad5));display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#fff;"><i class="ti ti-user"></i></div>`;
+                : `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(to right bottom,var(--primary-color,#004b97),var(--secondary-color,#abdad5));display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:20px;height:20px;"></div>`;
             const badge = roleLabel[m.role]
                 ? `<span style="font-size:0.62rem;background:#e8f0fb;color:#004b97;border-radius:4px;padding:1px 5px;margin-left:4px;">${roleLabel[m.role]}</span>`
                 : '';
