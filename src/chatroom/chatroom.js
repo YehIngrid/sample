@@ -32,6 +32,7 @@ class ChatRoomList {
         this.officialRoomsSet = new Set(); // 記錄官方頻道房間 ID
         this.officialChannelToRoomMap = new Map(); // channelId → roomId（SSE channelId 轉換用）
         this.supportRoomsSet = new Set(); // 客服頻道（官方但可雙向傳訊）
+        this.mySupportRoomsSet = new Set(); // 自己是 SUPPORT 角色的房間
         this.roomDataMap = new Map(); // roomId -> 原始 room data（供 info panel 使用）
 
         this.markReadTimer = null;
@@ -1145,6 +1146,7 @@ class ChatRoomList {
                     ?? data.members?.find(m => m.userId !== this.userId));
                 // ✅ 官方頻道也要找到自己，才能判斷已讀狀態
                 const myself = data.members?.find(m => m.userId === this.userId);
+                if (myself?.role === 'SUPPORT') this.mySupportRoomsSet.add(String(data.id));
 
                 const roomName   = isOfficial ? (data.officialChannel?.name ?? '官方帳號') : (target?.name ?? '未知');
                 const roomAvatar = isOfficial ? '../webP/treasurehub.webp' : (target?.photoURL || '../image/default-avatar.webp');
@@ -1323,6 +1325,8 @@ class ChatRoomList {
         _syncQuickReplyPad(!isOfficialRoom);
         const csBotMenu = document.getElementById('csBotMenu');
         if (csBotMenu) csBotMenu.style.display = isSupportRoom ? 'block' : 'none';
+        const leaveSupportItem = document.getElementById('leaveSupportItem');
+        if (leaveSupportItem) leaveSupportItem.style.display = this.mySupportRoomsSet.has(String(roomId)) ? 'block' : 'none';
         const _pickerDisplay = isOfficialRoom ? 'none' : '';
         document.getElementById('time-picker-btn')?.style.setProperty('display', _pickerDisplay);
         document.getElementById('location-picker-btn')?.style.setProperty('display', _pickerDisplay);
@@ -2236,6 +2240,28 @@ async function openChatWithTarget(targetUserId) {
     const _closeRoomInfoPanel = () => { _roomInfoPanel?.classList.remove('open'); _roomInfoOverlay?.classList.remove('open'); };
     document.getElementById('closeRoomInfoPanel')?.addEventListener('click', _closeRoomInfoPanel);
     _roomInfoOverlay?.addEventListener('click', _closeRoomInfoPanel);
+
+    document.getElementById('leaveSupportBtn')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const roomId = chatRoomList.currentRoomId;
+        if (!roomId) return;
+        const { isConfirmed } = await Swal.fire({
+            title: '結束支援',
+            text: '確定要離開此支援聊天室嗎？',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '確定離開',
+            cancelButtonText: '取消',
+        });
+        if (!isConfirmed) return;
+        try {
+            await chatRoomList.backend.leaveSupport(roomId);
+            chatRoomList.mySupportRoomsSet.delete(String(roomId));
+            document.getElementById('leaveSupportItem').style.display = 'none';
+        } catch {
+            Swal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
+        }
+    });
 
     document.getElementById('openRoomInfoBtn')?.addEventListener('click', (e) => {
         e.preventDefault();
