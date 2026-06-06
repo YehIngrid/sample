@@ -387,7 +387,7 @@ class ChatRoomList {
     appendCombinedMessage(data, prepend = false) {
         const container = document.getElementById('messagesContainer');
         const wrapper = document.createElement('div');
-        const isSelf = data.isSelf === true || (data.userId && this.userId ? data.userId === this.userId : data.username === this.username);
+        const isSelf = data.isSelf === true || (this.userId ? String(data.userId) === String(this.userId) : data.username === this.username);
         wrapper.className = `imgAndMessage ${isSelf ? 'message-self' : 'message-other'}`;
         wrapper.dataset.timestamp = data.timestamp;
         wrapper.dataset.messageId = data.id ?? '';
@@ -449,7 +449,7 @@ class ChatRoomList {
         this.hideEmptyHint();
         const container = document.getElementById('messagesContainer');
         const imgWrapper = document.createElement('div');
-        const isSelf = data.isSelf === true || (data.userId && this.userId ? data.userId === this.userId : data.username === this.username);
+        const isSelf = data.isSelf === true || (this.userId ? String(data.userId) === String(this.userId) : data.username === this.username);
         imgWrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
         imgWrapper.dataset.timestamp = data.timestamp;
         imgWrapper.dataset.messageId = data.id ?? '';
@@ -672,15 +672,16 @@ class ChatRoomList {
             });
         }
 
-        // 隨內容自動撐高 + 偵測輸入中
-        let typingTimer;
+        // 隨內容自動撐高 + 偵測輸入中（throttle 3s，避免 429）
+        let typingLastSent = 0;
         this.input.addEventListener('input', () => {
             this.input.style.height = 'auto';
             this.input.style.height = Math.min(this.input.scrollHeight, 120) + 'px';
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(() => {
-                this.backend.typing(this.currentRoomId);
-            }, 400);
+            const now = Date.now();
+            if (now - typingLastSent > 3000) {
+                typingLastSent = now;
+                this.backend.typing(this.currentRoomId).catch(() => {});
+            }
         });
 
         const container = document.getElementById('messagesContainer');
@@ -755,6 +756,33 @@ class ChatRoomList {
                 Swal.fire({ icon: 'success', title: '已送出客服請求', text: '客服人員將盡快與您聯繫', timer: 2000, showConfirmButton: false });
             } catch {
                 Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+            }
+        });
+
+        // 結束支援
+        document.getElementById('leaveSupportBtn')?.addEventListener('click', async () => {
+            const { isConfirmed } = await Swal.fire({
+                title: '結束支援',
+                text: '確定要離開此支援聊天室嗎？',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '確定離開',
+                cancelButtonText: '取消',
+            });
+            if (!isConfirmed) return;
+            try {
+                await this.backend.leaveSupport(this.currentRoomId);
+                this.mySupportRoomsSet.delete(String(this.currentRoomId));
+                document.getElementById('leaveSupportBtn').style.display = 'none';
+                document.getElementById('requestSupportBtn').style.display = '';
+                const officialRoomId = [...this.officialRoomsSet][0];
+                if (officialRoomId) {
+                    const officialItem = document.querySelector(`[data-room-id="${officialRoomId}"]`);
+                    const officialName = officialItem?.querySelector('.roomName')?.textContent || '官方頻道';
+                    await this.switchRoom(officialRoomId, officialName);
+                }
+            } catch {
+                Swal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
             }
         });
 
@@ -1142,10 +1170,10 @@ class ChatRoomList {
                     if (chName.includes('客服') || chName.includes('小助手')) this.supportRoomsSet.add(String(data.id));
                 }
                 const target = isOfficial ? null :
-                    (data.members?.find(m => m.role === 'USER' && m.userId !== this.userId)
-                    ?? data.members?.find(m => m.userId !== this.userId));
+                    (data.members?.find(m => m.role === 'USER' && String(m.userId) !== String(this.userId))
+                    ?? data.members?.find(m => String(m.userId) !== String(this.userId)));
                 // ✅ 官方頻道也要找到自己，才能判斷已讀狀態
-                const myself = data.members?.find(m => m.userId === this.userId);
+                const myself = data.members?.find(m => String(m.userId) === String(this.userId));
                 if (myself?.role === 'SUPPORT') this.mySupportRoomsSet.add(String(data.id));
 
                 const roomName   = isOfficial ? (data.officialChannel?.name ?? '官方帳號') : (target?.name ?? '未知');
@@ -1255,7 +1283,7 @@ class ChatRoomList {
             // 初始未讀檢查：通知外層 chaticon 顯示紅點
             const hasUnread = rooms.data.items.some(data => {
                 const isOfficial = data.type === 'OFFICIAL';
-                const myself = data.members?.find(m => m.userId === this.userId);
+                const myself = data.members?.find(m => String(m.userId) === String(this.userId));
                 const isMyMessage = data.lastMessage?.username === myself?.name;
                 return data.lastMessageId != null
                     && myself?.lastReadMessageId !== data.lastMessageId
@@ -1325,6 +1353,11 @@ class ChatRoomList {
         _syncQuickReplyPad(!isOfficialRoom);
         const csBotMenu = document.getElementById('csBotMenu');
         if (csBotMenu) csBotMenu.style.display = isSupportRoom ? 'block' : 'none';
+        const isMySupport = this.mySupportRoomsSet.has(String(roomId));
+        const requestSupportBtn = document.getElementById('requestSupportBtn');
+        const leaveSupportBtn = document.getElementById('leaveSupportBtn');
+        if (requestSupportBtn) requestSupportBtn.style.display = isMySupport ? 'none' : '';
+        if (leaveSupportBtn) leaveSupportBtn.style.display = isMySupport ? '' : 'none';
         const _pickerDisplay = isOfficialRoom ? 'none' : '';
         document.getElementById('time-picker-btn')?.style.setProperty('display', _pickerDisplay);
         document.getElementById('location-picker-btn')?.style.setProperty('display', _pickerDisplay);
@@ -1697,7 +1730,7 @@ class ChatRoomList {
             || (typeof data.attachments === 'string' && data.attachments.trim() !== '');
         if (hasAttachments) {
             // 移除 optimistic 預覽泡泡（僅自己送出的訊息）
-            const isSelfMsg = (data.userId && this.userId) ? data.userId === this.userId : data.username === this.username;
+            const isSelfMsg = this.userId ? String(data.userId) === String(this.userId) : data.username === this.username;
             if (isSelfMsg && !prepend && this.optimisticQueue.length > 0) {
                 const { el, localUrl } = this.optimisticQueue.shift();
                 el.remove();
@@ -1721,7 +1754,7 @@ class ChatRoomList {
         const container = document.getElementById('messagesContainer');
         this.username = localStorage.getItem('username');
         this.userId = this.userId || localStorage.getItem('uid');
-const isSelf = (data.userId && this.userId) ? data.userId === this.userId : this.username === data.username;
+const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.username === data.username;
         const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
         });
@@ -2239,27 +2272,6 @@ async function openChatWithTarget(targetUserId) {
     document.getElementById('closeRoomInfoPanel')?.addEventListener('click', _closeRoomInfoPanel);
     _roomInfoOverlay?.addEventListener('click', _closeRoomInfoPanel);
 
-    document.getElementById('roomInfoBody')?.addEventListener('click', async (e) => {
-        if (!e.target.closest('#leaveSupportBtn')) return;
-        const roomId = chatRoomList.currentRoomId;
-        if (!roomId) return;
-        const { isConfirmed } = await Swal.fire({
-            title: '結束支援',
-            text: '確定要離開此支援聊天室嗎？',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: '確定離開',
-            cancelButtonText: '取消',
-        });
-        if (!isConfirmed) return;
-        try {
-            await chatRoomList.backend.leaveSupport(roomId);
-            chatRoomList.mySupportRoomsSet.delete(String(roomId));
-            document.getElementById('leaveSupportBtn')?.closest('div')?.remove();
-        } catch {
-            Swal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
-        }
-    });
 
     document.getElementById('openRoomInfoBtn')?.addEventListener('click', (e) => {
         e.preventDefault();
@@ -2278,13 +2290,19 @@ async function openChatWithTarget(targetUserId) {
             return (order[a.role] ?? 9) - (order[b.role] ?? 9);
         });
 
-        const roleLabel = { USER: '聊天對象', MODERATOR: '管理員', ADMIN: '系統管理員' };
+        const roleLabel = { USER: '聊天對象', MODERATOR: '管理員', ADMIN: '系統管理員', SUPPORT: '客服人員' };
+        const roleBadgeStyle = {
+            USER:      'background:#e8f0fb;color:#004b97;',
+            MODERATOR: 'background:#e8f0fb;color:#004b97;',
+            ADMIN:     'background:#e8f0fb;color:#004b97;',
+            SUPPORT:   'background:#fff3e0;color:#e67e22;',
+        };
         const memberHtml = members.map(m => {
             const avatar = m.photoURL
                 ? `<img src="${m.photoURL}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
                 : `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(to right bottom,var(--primary-color,#004b97),var(--secondary-color,#abdad5));display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>`;
             const badge = roleLabel[m.role]
-                ? `<span style="font-size:0.62rem;background:#e8f0fb;color:#004b97;border-radius:4px;padding:1px 5px;margin-left:4px;">${roleLabel[m.role]}</span>`
+                ? `<span style="font-size:0.62rem;${roleBadgeStyle[m.role] ?? ''}border-radius:4px;padding:1px 5px;margin-left:4px;">${roleLabel[m.role]}</span>`
                 : '';
             return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f0f0f0;">
                         ${avatar}
@@ -2292,7 +2310,6 @@ async function openChatWithTarget(targetUserId) {
                     </div>`;
         }).join('');
 
-        const isMySupport = chatRoomList.mySupportRoomsSet.has(String(roomId));
         const infoHtml = `
             <div style="font-size:0.8rem;color:#888;margin-bottom:14px;">
                 <i class="bi bi-calendar3 me-1"></i>建立時間
@@ -2306,13 +2323,7 @@ async function openChatWithTarget(targetUserId) {
             <div style="font-size:0.8rem;color:#888;margin-bottom:8px;">
                 <i class="bi bi-people me-1"></i>成員（${members.length} 人）
             </div>
-            <div>${memberHtml}</div>
-            ${isMySupport ? `
-            <div style="margin-top:20px;border-top:1px solid #f0f0f0;padding-top:16px;">
-                <button id="leaveSupportBtn" style="width:100%;padding:8px;border:1px solid #e74c3c;background:none;color:#e74c3c;border-radius:8px;font-size:0.85rem;cursor:pointer;">
-                    <i class="bi bi-door-open me-1"></i>結束支援
-                </button>
-            </div>` : ''}`;
+            <div>${memberHtml}</div>`;
 
         document.getElementById('roomInfoBody').innerHTML = infoHtml;
         _openRoomInfoPanel();
