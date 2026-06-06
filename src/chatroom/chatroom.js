@@ -750,7 +750,7 @@ class ChatRoomList {
             });
             if (!isConfirmed) return;
             try {
-                await backend.requestSupport(this.currentRoomId, value.subject, value.description);
+                await this.backend.requestSupport(this.currentRoomId, value.subject, value.description);
                 Swal.fire({ icon: 'success', title: '已送出客服請求', text: '客服人員將盡快與您聯繫', timer: 2000, showConfirmButton: false });
             } catch {
                 Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
@@ -1698,8 +1698,7 @@ class ChatRoomList {
         const container = document.getElementById('messagesContainer');
         this.username = localStorage.getItem('username');
         this.userId = this.userId || localStorage.getItem('uid');
-        console.log('[isSelf debug]', { dataUserId: data.userId, myUserId: this.userId, dataUsername: data.username, myUsername: this.username });
-        const isSelf = (data.userId && this.userId) ? data.userId === this.userId : this.username === data.username;
+const isSelf = (data.userId && this.userId) ? data.userId === this.userId : this.username === data.username;
         const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
         });
