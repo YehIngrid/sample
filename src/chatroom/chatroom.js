@@ -1182,7 +1182,7 @@ class ChatRoomList {
                 const _isDefaultAvatar = roomAvatar === '../image/default-avatar.webp';
                 const _targetRole = target?.role;
                 const _avatarInner = _isDefaultAvatar
-                    ? `<img src="../svg/default-avatar.svg" style="width:30px;height:30px;">`
+                    ? `<img src="../svg/default-avatar.svg" style="width:45px;height:45px;">`
                     : `<img src="${roomAvatar}" alt="${this.escapeHtml(roomName)}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;object-position:center;${isOfficial ? 'border:2px solid var(--primary-color,#004b97);' : ''}">`;
                 const _roleBadge = !isOfficial && (_targetRole === 'ADMIN' || _targetRole === 'MODERATOR')
                     ? `<span class="role-badge"><i class="ti ti-shield-check"></i></span>`
