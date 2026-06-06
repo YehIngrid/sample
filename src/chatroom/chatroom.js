@@ -1325,8 +1325,6 @@ class ChatRoomList {
         _syncQuickReplyPad(!isOfficialRoom);
         const csBotMenu = document.getElementById('csBotMenu');
         if (csBotMenu) csBotMenu.style.display = isSupportRoom ? 'block' : 'none';
-        const leaveSupportItem = document.getElementById('leaveSupportItem');
-        if (leaveSupportItem) leaveSupportItem.style.display = this.mySupportRoomsSet.has(String(roomId)) ? 'block' : 'none';
         const _pickerDisplay = isOfficialRoom ? 'none' : '';
         document.getElementById('time-picker-btn')?.style.setProperty('display', _pickerDisplay);
         document.getElementById('location-picker-btn')?.style.setProperty('display', _pickerDisplay);
@@ -2241,8 +2239,8 @@ async function openChatWithTarget(targetUserId) {
     document.getElementById('closeRoomInfoPanel')?.addEventListener('click', _closeRoomInfoPanel);
     _roomInfoOverlay?.addEventListener('click', _closeRoomInfoPanel);
 
-    document.getElementById('leaveSupportBtn')?.addEventListener('click', async (e) => {
-        e.preventDefault();
+    document.getElementById('roomInfoBody')?.addEventListener('click', async (e) => {
+        if (!e.target.closest('#leaveSupportBtn')) return;
         const roomId = chatRoomList.currentRoomId;
         if (!roomId) return;
         const { isConfirmed } = await Swal.fire({
@@ -2257,7 +2255,7 @@ async function openChatWithTarget(targetUserId) {
         try {
             await chatRoomList.backend.leaveSupport(roomId);
             chatRoomList.mySupportRoomsSet.delete(String(roomId));
-            document.getElementById('leaveSupportItem').style.display = 'none';
+            document.getElementById('leaveSupportBtn')?.closest('div')?.remove();
         } catch {
             Swal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
         }
@@ -2294,6 +2292,7 @@ async function openChatWithTarget(targetUserId) {
                     </div>`;
         }).join('');
 
+        const isMySupport = chatRoomList.mySupportRoomsSet.has(String(roomId));
         const infoHtml = `
             <div style="font-size:0.8rem;color:#888;margin-bottom:14px;">
                 <i class="bi bi-calendar3 me-1"></i>建立時間
@@ -2307,14 +2306,20 @@ async function openChatWithTarget(targetUserId) {
             <div style="font-size:0.8rem;color:#888;margin-bottom:8px;">
                 <i class="bi bi-people me-1"></i>成員（${members.length} 人）
             </div>
-            <div>${memberHtml}</div>`;
+            <div>${memberHtml}</div>
+            ${isMySupport ? `
+            <div style="margin-top:20px;border-top:1px solid #f0f0f0;padding-top:16px;">
+                <button id="leaveSupportBtn" style="width:100%;padding:8px;border:1px solid #e74c3c;background:none;color:#e74c3c;border-radius:8px;font-size:0.85rem;cursor:pointer;">
+                    <i class="bi bi-door-open me-1"></i>結束支援
+                </button>
+            </div>` : ''}`;
 
         document.getElementById('roomInfoBody').innerHTML = infoHtml;
         _openRoomInfoPanel();
     });
 
     // ── 檢舉 ──
-    document.querySelector('.chat-dropdown-danger')?.addEventListener('click', async (e) => {
+    document.getElementById('reportBtn')?.addEventListener('click', async (e) => {
         e.preventDefault();
         const partnerInfo = chatRoomList.partnerInfoMap.get(String(chatRoomList.currentRoomId));
         const partnerName = partnerInfo?.name ?? '對方用戶';
