@@ -406,7 +406,7 @@ class ChatRoomList {
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
             const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
-            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:18px;height:18px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
         })();
 
@@ -471,7 +471,7 @@ class ChatRoomList {
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
             const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
-            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:18px;height:18px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
         })();
         imgWrapper.innerHTML = `
@@ -1182,7 +1182,7 @@ class ChatRoomList {
                 const _isDefaultAvatar = roomAvatar === '../image/default-avatar.webp';
                 const _targetRole = target?.role;
                 const _avatarInner = _isDefaultAvatar
-                    ? `<img src="../svg/default-avatar.svg" style="width:28px;height:28px;">`
+                    ? `<img src="../svg/default-avatar.svg" style="width:30px;height:30px;">`
                     : `<img src="${roomAvatar}" alt="${this.escapeHtml(roomName)}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;object-position:center;${isOfficial ? 'border:2px solid var(--primary-color,#004b97);' : ''}">`;
                 const _roleBadge = !isOfficial && (_targetRole === 'ADMIN' || _targetRole === 'MODERATOR')
                     ? `<span class="role-badge"><i class="ti ti-shield-check"></i></span>`
@@ -1269,7 +1269,8 @@ class ChatRoomList {
 
     async switchRoom(roomId, targetName) {
         if (this.readObserver) this.readObserver.disconnect();
-        // 清除 typing timers，避免舊房間的「正在輸入」殘留
+        // 清除 typing / read timers，避免舊房間的殘留操作
+        clearTimeout(this.markReadTimer);
         clearTimeout(this.typingTimer);
         clearTimeout(this.typingListTimer);
         const typingIndicator = document.getElementById('typingIndicator');
@@ -1501,6 +1502,26 @@ class ChatRoomList {
             }
         });
 
+        this.eventSource.addEventListener('stopTyping', (event) => {
+            const data = JSON.parse(event.data);
+            if (data.username === this.username) return;
+            if (String(data.room) === String(this.currentRoomId)) {
+                clearTimeout(this.typingTimer);
+                const indicator = document.getElementById('typingIndicator');
+                if (indicator) indicator.style.display = 'none';
+                if (this._typingAudio) { this._typingAudio.pause(); this._typingAudio.currentTime = 0; }
+            }
+            const chatItem = document.querySelector(`[data-room-id="${data.room}"]`);
+            if (chatItem) {
+                const lastMsgEl = chatItem.querySelector('.lastMessage');
+                if (lastMsgEl && lastMsgEl.dataset.originalText !== undefined) {
+                    clearTimeout(this.typingListTimer);
+                    lastMsgEl.textContent = lastMsgEl.dataset.originalText;
+                    delete lastMsgEl.dataset.originalText;
+                }
+            }
+        });
+
         this.eventSource.addEventListener('read', (event) => {
             const data = JSON.parse(event.data);
             const partnerInfo = this.partnerInfoMap.get(String(data.room));
@@ -1716,7 +1737,7 @@ const isSelf = (data.userId && this.userId) ? data.userId === this.userId : this
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
             const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
-            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:18px;height:18px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
         })();
         div.innerHTML = `
@@ -2237,7 +2258,7 @@ async function openChatWithTarget(targetUserId) {
         const memberHtml = members.map(m => {
             const avatar = m.photoURL
                 ? `<img src="${m.photoURL}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
-                : `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(to right bottom,var(--primary-color,#004b97),var(--secondary-color,#abdad5));display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:20px;height:20px;"></div>`;
+                : `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(to right bottom,var(--primary-color,#004b97),var(--secondary-color,#abdad5));display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>`;
             const badge = roleLabel[m.role]
                 ? `<span style="font-size:0.62rem;background:#e8f0fb;color:#004b97;border-radius:4px;padding:1px 5px;margin-left:4px;">${roleLabel[m.role]}</span>`
                 : '';
