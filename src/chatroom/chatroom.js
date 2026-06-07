@@ -28,6 +28,7 @@ class ChatRoomList {
         this.lastReadMap = new Map(); // roomId -> { id, timestamp }（自己的已讀進度）
         this.partnerReadMap = new Map(); // roomId -> { id }（對方的已讀進度）
         this.partnerInfoMap = new Map(); // roomId -> { name, photoURL }（對方的個人資訊）
+        this.userInfoMap = new Map(); // userId -> { photoURL, role }（所有房間成員，供訊息頭像查詢）
 
         this.officialRoomsSet = new Set(); // 記錄官方頻道房間 ID
         this.officialChannelToRoomMap = new Map(); // channelId → roomId（SSE channelId 轉換用）
@@ -401,11 +402,14 @@ class ChatRoomList {
             : (data.attachments || '');
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
+            : (this.userInfoMap.get(String(data.userId))?.photoURL
+                || this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL
+                || data.photoURL
+                || '../image/default-avatar.webp');
         const _msgAvatar1 = (() => {
             if (isSelf) return '';
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
-            const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
+            const _role = this.userInfoMap.get(String(data.userId))?.role ?? this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
             const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
@@ -466,11 +470,14 @@ class ChatRoomList {
 
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
+            : (this.userInfoMap.get(String(data.userId))?.photoURL
+                || this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL
+                || data.photoURL
+                || '../image/default-avatar.webp');
         const _msgAvatar2 = (() => {
             if (isSelf) return '';
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
-            const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
+            const _role = this.userInfoMap.get(String(data.userId))?.role ?? this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
             const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
@@ -1205,6 +1212,15 @@ class ChatRoomList {
                         role: target.role ?? null
                     });
                 }
+                // 將所有成員的頭像存入 userInfoMap，供訊息渲染時按 userId 查詢
+                data.members?.forEach(m => {
+                    if (m.userId && !this.userInfoMap.has(String(m.userId))) {
+                        this.userInfoMap.set(String(m.userId), {
+                            photoURL: m.photoURL || null,
+                            role: m.role ?? null
+                        });
+                    }
+                });
 
                 const item = document.createElement('div');
                 item.className = 'chat-item';
@@ -1766,11 +1782,14 @@ const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.
         div.dataset.username = data.username;
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
+            : (this.userInfoMap.get(String(data.userId))?.photoURL
+                || this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL
+                || data.photoURL
+                || '../image/default-avatar.webp');
         const _msgAvatar3 = (() => {
             if (isSelf) return '';
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
-            const _role = this.partnerInfoMap.get(String(this.currentRoomId))?.role;
+            const _role = this.userInfoMap.get(String(data.userId))?.role ?? this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
             const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
