@@ -1399,7 +1399,22 @@ class ChatRoomList {
 
         // ✅ GET /api/chat/history?room=&limit=&before=
         const before = new Date().toISOString();
-        const history = await this.backend.getHistory(roomId, 50, before);
+        // 並列取得 history 與最新 rooms members，確保後來加入的客服人員也在 userInfoMap 中
+        const [history] = await Promise.all([
+            this.backend.getHistory(roomId, 50, before),
+            this.backend.listRooms().then(res => {
+                res.data?.items?.forEach(room => {
+                    room.members?.forEach(m => {
+                        if (m.userId) {
+                            this.userInfoMap.set(String(m.userId), {
+                                photoURL: m.photoURL || null,
+                                role: m.role ?? null
+                            });
+                        }
+                    });
+                });
+            }).catch(() => {})
+        ]);
 
         if (history.data?.length > 0) {
             const roomRead = this.lastReadMap.get(String(roomId));
