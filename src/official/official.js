@@ -415,7 +415,6 @@ async function loadNewsAdmin() {
     const total = data?.data?.pagination?.totalItems ?? data?.data?.total ?? data?.total ?? items.length;
     newsAdminData = items;
     renderNewsAdminList();
-    document.getElementById('stat-news').textContent = total;
   } catch (err) {
     el.innerHTML = `<div class="text-danger text-center py-3 small">載入失敗：${esc(err?.message)}</div>`;
   }
@@ -724,218 +723,336 @@ document.getElementById('refreshNewsBtn').addEventListener('click', loadNewsAdmi
 document.getElementById('newsStatusFilter')?.addEventListener('change', loadNewsAdmin);
 
 // ════════════════════════════════════════════════════
-//  數據分析
+//  數據分析（Admin Stats API）
 // ════════════════════════════════════════════════════
-let _categoryChart = null;
 
-const CATEGORY_MAP = [
-  { key: 'book',    label: '課本講義', color: '#1a73e8' },
-  { key: 'life',    label: '生活用品', color: '#28a745' },
-  { key: 'special', label: '限定商品', color: '#f57c00' },
-  { key: 'reuse',   label: '二手回收', color: '#7b1fa2' },
-  { key: 'storage', label: '宿舍收納', color: '#d93025' },
-  { key: 'other',   label: '其他',     color: '#888888' },
-];
+// ── 日期工具 ──
+function _todayStr() { return new Date().toISOString().slice(0, 10); }
+function _daysAgoStr(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+
+function _initDateRange() {
+  const s = document.getElementById('statsStartDate');
+  const e = document.getElementById('statsEndDate');
+  if (s && !s.value) s.value = _daysAgoStr(30);
+  if (e && !e.value) e.value = _todayStr();
+}
+
+function _getDateParams() {
+  return {
+    startDate: document.getElementById('statsStartDate')?.value || _daysAgoStr(30),
+    endDate:   document.getElementById('statsEndDate')?.value   || _todayStr(),
+  };
+}
+
+// ── Chart 管理 ──
+const _statsCharts = {};
+
+function _makeChart(id, config) {
+  if (_statsCharts[id]) { _statsCharts[id].destroy(); delete _statsCharts[id]; }
+  const canvas = document.getElementById(id);
+  if (!canvas) return null;
+  _statsCharts[id] = new Chart(canvas, config);
+  return _statsCharts[id];
+}
+
+// ── Chart config helpers ──
+const _PALETTE = ['#1a73e8','#28a745','#f57c00','#7b1fa2','#d93025','#0097a7','#fbc02d','#6c757d','#e91e63','#009688'];
+
+function _trendCfg(labels, data, label, color = '#1a73e8') {
+  return {
+    type: 'line',
+    data: { labels, datasets: [{ label, data, borderColor: color, backgroundColor: color + '22', fill: true, tension: 0.4, pointRadius: 3 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f0f4fa' } },
+        x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0 } },
+      },
+    },
+  };
+}
+
+function _doughnutCfg(labels, data) {
+  return {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: _PALETTE, borderWidth: 2, borderColor: '#fff' }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } },
+    },
+  };
+}
+
+function _barCfg(labels, data, label) {
+  return {
+    type: 'bar',
+    data: { labels, datasets: [{ label, data, backgroundColor: _PALETTE.map(c => c + 'bb'), borderColor: _PALETTE, borderWidth: 1.5, borderRadius: 5 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f0f4fa' } },
+        x: { grid: { display: false } },
+      },
+    },
+  };
+}
+
+// ── Data parsers ──
+function _parseTrend(arr) {
+  if (!Array.isArray(arr) || !arr.length) return { labels: [], values: [] };
+  return {
+    labels: arr.map(d => d.date ?? d.day ?? d.period ?? d.label ?? ''),
+    values: arr.map(d => d.count ?? d.value ?? d.total ?? 0),
+  };
+}
+
+function _parseDist(dist) {
+  if (Array.isArray(dist))
+    return { labels: dist.map(d => d.label ?? d.name ?? d.key ?? ''), values: dist.map(d => d.count ?? d.value ?? 0) };
+  if (dist && typeof dist === 'object')
+    return { labels: Object.keys(dist), values: Object.values(dist).map(Number) };
+  return { labels: [], values: [] };
+}
+
+function _statBlock(items) {
+  return `<div class="row g-2">` +
+    items.map(({ label, value, color }) =>
+      `<div class="col-6"><div class="p-3 rounded" style="background:#f8fafc;border:1.5px solid #e0e6ef;">
+        <div class="text-muted small mb-1">${label}</div>
+        <div style="font-size:1.2rem;font-weight:700;color:${color || '#004b97'};">${value ?? '–'}</div>
+      </div></div>`
+    ).join('') +
+    `</div>`;
+}
+
+function _listRows(items, labelFn) {
+  if (!items?.length) return '<p class="text-muted small p-3 mb-0">無資料</p>';
+  return items.slice(0, 5).map((item, i) =>
+    `<div class="analytics-item-row">
+      <span class="me-2 fw-bold text-muted" style="min-width:1.4rem;">${i + 1}</span>
+      <span class="analytics-item-name">${esc(labelFn(item))}</span>
+      <span class="analytics-item-price">${item.count ?? item.total ?? item.orderCount ?? ''}</span>
+    </div>`
+  ).join('');
+}
+
+function _errHtml(msg = '載入失敗') {
+  return `<p class="text-danger text-center small py-3">${msg}</p>`;
+}
+
+// ── API fetch ──
+async function _fetchStats(path, params) {
+  const res = await backendSvc.http.get(path, { params });
+  return res.data?.data ?? res.data;
+}
+
+// ── Per-tab loaders ──
+async function _loadDashboard(params) {
+  const ids = ['stat-total-users','stat-total-products','stat-total-orders','stat-total-reports','stat-total-wishpool'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = '<span class="spinner-border spinner-border-sm"></span>'; });
+  try {
+    const d = await _fetchStats('/api/admin/stats/dashboard', params);
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val ?? '–'; };
+    set('stat-total-users',    d?.totalUsers    ?? d?.users);
+    set('stat-total-products', d?.totalCommodities ?? d?.totalProducts ?? d?.products);
+    set('stat-total-orders',   d?.totalOrders   ?? d?.orders);
+    set('stat-total-reports',  d?.totalReports  ?? d?.reports);
+    set('stat-total-wishpool', d?.totalWishpool ?? d?.wishpool);
+    document.getElementById('stat-total-error')?.classList.add('d-none');
+  } catch {
+    ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '–'; });
+    document.getElementById('stat-total-error')?.classList.remove('d-none');
+  }
+}
+
+async function _loadUserStats(params) {
+  try {
+    const d = await _fetchStats('/api/admin/stats/users', params);
+    const { labels: rL, values: rV } = _parseTrend(d?.registrationTrend ?? d?.trend ?? []);
+    _makeChart('chart-user-reg-trend', _trendCfg(rL, rV, '新增用戶', '#1a73e8'));
+    const { labels: roleL, values: roleV } = _parseDist(d?.roleDistribution ?? d?.roles ?? {});
+    _makeChart('chart-user-role', _doughnutCfg(roleL, roleV));
+    const { labels: ratL, values: ratV } = _parseDist(d?.ratingDistribution ?? d?.ratings ?? {});
+    _makeChart('chart-user-rating', _barCfg(ratL, ratV, '人數'));
+    const act = d?.activityStats ?? d?.activity ?? {};
+    const ban = d?.banStats ?? d?.bans ?? {};
+    const statsEl = document.getElementById('user-extra-stats');
+    if (statsEl) statsEl.innerHTML = _statBlock([
+      { label: '活躍用戶數',    value: act.activeUsers ?? act.active ?? d?.activeUsers },
+      { label: '平均登入次數',  value: act.avgSessions ?? act.avgLogin },
+      { label: '停權用戶數',    value: ban.banned ?? ban.total ?? d?.bannedUsers, color: '#d93025' },
+      { label: '本期新增用戶',  value: d?.newUsers ?? d?.newRegistrations },
+    ]);
+  } catch { /* silent */ }
+}
+
+async function _loadCommodityStats(params) {
+  try {
+    const d = await _fetchStats('/api/admin/stats/commodities', params);
+    const { labels: tL, values: tV } = _parseTrend(d?.listingTrend ?? d?.trend ?? []);
+    _makeChart('chart-commodity-trend', _trendCfg(tL, tV, '新增商品', '#1a73e8'));
+    const { labels: cL, values: cV } = _parseDist(d?.categoryDistribution ?? d?.categories ?? {});
+    _makeChart('chart-commodity-category', _doughnutCfg(cL, cV));
+    const price = d?.priceStats ?? d?.price ?? {};
+    const priceEl = document.getElementById('commodity-price-stats');
+    if (priceEl) priceEl.innerHTML = _statBlock([
+      { label: '平均售價', value: price.avg  != null ? `NT$ ${Number(price.avg).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
+      { label: '最高售價', value: price.max  != null ? `NT$ ${Number(price.max).toLocaleString()}` : null },
+      { label: '最低售價', value: price.min  != null ? `NT$ ${Number(price.min).toLocaleString()}` : null },
+      { label: '中位數',   value: price.median != null ? `NT$ ${Number(price.median).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
+    ]);
+    const topSellers = d?.topSellers ?? d?.hotSellers ?? [];
+    document.getElementById('commodity-top-sellers').innerHTML = _listRows(topSellers, i => i.name ?? i.username ?? i.seller ?? '–');
+  } catch {
+    document.getElementById('commodity-top-sellers').innerHTML = _errHtml();
+  }
+}
+
+async function _loadOrderStats(params) {
+  try {
+    const d = await _fetchStats('/api/admin/stats/orders', params);
+    const { labels: tL, values: tV } = _parseTrend(d?.orderTrend ?? d?.trend ?? []);
+    _makeChart('chart-order-trend', _trendCfg(tL, tV, '訂單數', '#f57c00'));
+    const { labels: sL, values: sV } = _parseDist(d?.statusDistribution ?? d?.status ?? {});
+    _makeChart('chart-order-status', _doughnutCfg(sL, sV));
+    const rev = d?.revenue ?? d?.revenueStats ?? {};
+    const cancelRate = d?.cancellationRate ?? d?.cancelRate;
+    const pct = v => v != null ? `${(Number(v) * (Number(v) > 1 ? 1 : 100)).toFixed(1)}%` : null;
+    const revEl = document.getElementById('order-revenue-stats');
+    if (revEl) revEl.innerHTML = _statBlock([
+      { label: '總營收',    value: rev.total != null ? `NT$ ${Number(rev.total).toLocaleString()}` : null, color: '#28a745' },
+      { label: '平均客單價', value: rev.avg   != null ? `NT$ ${Number(rev.avg).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
+      { label: '取消率',    value: pct(cancelRate), color: '#d93025' },
+      { label: '完成訂單',  value: d?.completedOrders ?? d?.completed },
+    ]);
+    const topBuyers  = d?.topBuyers  ?? d?.hotBuyers  ?? [];
+    const topSellers = d?.topSellers ?? d?.hotSellers ?? [];
+    document.getElementById('order-top-buyers').innerHTML  = _listRows(topBuyers,  i => i.name ?? i.username ?? i.buyer  ?? '–');
+    document.getElementById('order-top-sellers').innerHTML = _listRows(topSellers, i => i.name ?? i.username ?? i.seller ?? '–');
+  } catch {
+    document.getElementById('order-revenue-stats').innerHTML = _errHtml();
+  }
+}
+
+async function _loadReportStats(params) {
+  try {
+    const d = await _fetchStats('/api/admin/stats/reports', params);
+    const { labels: tL, values: tV } = _parseTrend(d?.reportTrend ?? d?.trend ?? []);
+    _makeChart('chart-report-trend', _trendCfg(tL, tV, '檢舉數', '#d93025'));
+    const { labels: cL, values: cV } = _parseDist(d?.categoryDistribution ?? d?.categories ?? {});
+    _makeChart('chart-report-category', _barCfg(cL, cV, '件'));
+    const pct = v => v != null ? `${(Number(v) * (Number(v) > 1 ? 1 : 100)).toFixed(1)}%` : null;
+    const avgTime = d?.avgReviewTime ?? d?.avgReviewHours ?? d?.avgTime;
+    const revEl = document.getElementById('report-review-stats');
+    if (revEl) revEl.innerHTML = _statBlock([
+      { label: '審核通過率',    value: pct(d?.approvalRate ?? d?.approveRate), color: '#28a745' },
+      { label: '平均審核時間',  value: avgTime != null ? `${Number(avgTime).toFixed(1)} 小時` : null },
+      { label: '待審核件數',    value: d?.pendingCount ?? d?.pending },
+      { label: '本期檢舉總數',  value: d?.totalReports ?? d?.total },
+    ]);
+  } catch {
+    document.getElementById('report-review-stats').innerHTML = _errHtml();
+  }
+}
+
+async function _loadWishpoolStats(params) {
+  try {
+    const d = await _fetchStats('/api/admin/stats/wishpool', params);
+    const { labels: tL, values: tV } = _parseTrend(d?.wishpoolTrend ?? d?.trend ?? []);
+    _makeChart('chart-wishpool-trend', _trendCfg(tL, tV, '新增心願', '#7b1fa2'));
+    const { labels: sL, values: sV } = _parseDist(d?.statusDistribution ?? d?.status ?? {});
+    _makeChart('chart-wishpool-status', _doughnutCfg(sL, sV));
+    const { labels: pL, values: pV } = _parseDist(d?.priorityDistribution ?? d?.priority ?? {});
+    _makeChart('chart-wishpool-priority', _barCfg(pL, pV, '數量'));
+    const { labels: bL, values: bV } = _parseDist(d?.budgetDistribution ?? d?.budget ?? {});
+    _makeChart('chart-wishpool-budget', _barCfg(bL, bV, '數量'));
+  } catch { /* silent */ }
+}
+
+async function _loadSearchStats(params) {
+  try {
+    const d = await _fetchStats('/api/admin/stats/search', params);
+    const { labels: tL, values: tV } = _parseTrend(d?.searchTrend ?? d?.trend ?? []);
+    _makeChart('chart-search-trend', _trendCfg(tL, tV, '搜尋次數', '#0097a7'));
+    const kws = d?.popularKeywords ?? d?.topKeywords ?? d?.keywords ?? [];
+    const kwEl = document.getElementById('search-keywords-cloud');
+    if (kwEl) {
+      if (!kws.length) {
+        kwEl.innerHTML = '<p class="text-muted small p-3 mb-0">無資料</p>';
+      } else {
+        const maxCnt = Math.max(...kws.map(k => k.count ?? k.value ?? 1), 1);
+        kwEl.innerHTML = '<div class="keyword-tags p-3">' +
+          kws.slice(0, 20).map(k => {
+            const word = k.keyword ?? k.word ?? k.label ?? String(k);
+            const cnt  = k.count ?? k.value ?? 0;
+            const size = (0.78 + (cnt / maxCnt) * 0.44).toFixed(2);
+            return `<span class="kw-tag" style="font-size:${size}rem">${esc(word)}<sup class="kw-cnt">${cnt}</sup></span>`;
+          }).join('') + '</div>';
+      }
+    }
+    const { labels: aL, values: aV } = _parseDist(d?.loginVsGuest ?? d?.authDistribution ?? d?.userTypeDistribution ?? {});
+    _makeChart('chart-search-auth', _doughnutCfg(aL, aV));
+  } catch { /* silent */ }
+}
+
+// ── Tab 切換 ──
+let _activeStatsTab = 'tab-dashboard';
+const _loadedStatsTabs = new Set();
+
+function _switchStatsTab(tabId) {
+  document.querySelectorAll('.stats-tab').forEach(t => t.classList.add('d-none'));
+  document.querySelectorAll('[data-stats-tab]').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId)?.classList.remove('d-none');
+  document.querySelector(`[data-stats-tab="${tabId}"]`)?.classList.add('active');
+  _activeStatsTab = tabId;
+  if (!_loadedStatsTabs.has(tabId)) {
+    _loadedStatsTabs.add(tabId);
+    _loadStatsTab(tabId);
+  }
+}
+
+async function _loadStatsTab(tabId) {
+  const p = _getDateParams();
+  switch (tabId) {
+    case 'tab-dashboard':    await _loadDashboard(p);     break;
+    case 'tab-users':        await _loadUserStats(p);     break;
+    case 'tab-commodities':  await _loadCommodityStats(p); break;
+    case 'tab-orders':       await _loadOrderStats(p);    break;
+    case 'tab-stat-reports': await _loadReportStats(p);   break;
+    case 'tab-wishpool':     await _loadWishpoolStats(p); break;
+    case 'tab-search':       await _loadSearchStats(p);   break;
+  }
+}
 
 async function loadAnalytics() {
-  document.getElementById('stat-news').textContent = newsAdminData.length || '–';
-
-  await Promise.allSettled([
-    _loadScaleStats(),
-    _loadWishpoolInsights(),
-    _loadCategoryChart(),
-    _loadNewItems(),
-  ]);
-
-  _renderSearchKeywords();
-  _updatePitchSummary();
+  _loadedStatsTabs.clear();
+  _loadedStatsTabs.add(_activeStatsTab);
+  await _loadStatsTab(_activeStatsTab);
 }
 
-async function _loadScaleStats() {
-  try {
-    const res = await backendSvc.getCommodityList('all', { page: 1, limit: 1 });
-    const total = res?.total ?? res?.data?.total ?? res?.pagination?.total ?? '–';
-    document.getElementById('stat-products').textContent = total;
-  } catch {
-    document.getElementById('stat-products').textContent = '–';
-  }
+// ── Wire-up ──
+document.getElementById('refreshAnalyticsBtn')?.addEventListener('click', () => {
+  _loadedStatsTabs.clear();
+  loadAnalytics();
+});
 
-  try {
-    const res = await backendSvc.getCommodityList('hot', { page: 1, limit: 1 });
-    const total = res?.total ?? res?.data?.total ?? res?.pagination?.total ?? '–';
-    document.getElementById('stat-hot').textContent = total;
-  } catch {
-    document.getElementById('stat-hot').textContent = '–';
-  }
-}
+document.querySelectorAll('[data-stats-tab]').forEach(btn => {
+  btn.addEventListener('click', () => _switchStatsTab(btn.dataset.statsTab));
+});
 
-async function _loadCategoryChart() {
-  const loader = document.getElementById('categoryChartLoader');
-  const canvas = document.getElementById('categoryChart');
-  if (!canvas) return;
+document.querySelectorAll('.stats-quick-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const days = Number(btn.dataset.days);
+    document.getElementById('statsStartDate').value = _daysAgoStr(days);
+    document.getElementById('statsEndDate').value   = _todayStr();
+    _loadedStatsTabs.clear();
+    loadAnalytics();
+  });
+});
 
-  try {
-    const counts = await Promise.all(
-      CATEGORY_MAP.map(c =>
-        backendSvc.getCommodityList(c.key, { page: 1, limit: 1 })
-          .then(res => res?.total ?? res?.data?.total ?? res?.pagination?.total ?? 0)
-          .catch(() => 0)
-      )
-    );
-
-    if (loader) loader.style.display = 'none';
-    canvas.style.display = 'block';
-
-    if (_categoryChart) _categoryChart.destroy();
-
-    _categoryChart = new Chart(canvas, {
-      type: 'bar',
-      data: {
-        labels: CATEGORY_MAP.map(c => c.label),
-        datasets: [{
-          label: '商品數量',
-          data: counts,
-          backgroundColor: CATEGORY_MAP.map(c => c.color + 'bb'),
-          borderColor: CATEGORY_MAP.map(c => c.color),
-          borderWidth: 1.5,
-          borderRadius: 6,
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} 件` } },
-        },
-        scales: {
-          y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f0f4fa' } },
-          x: { grid: { display: false } },
-        },
-      },
-    });
-  } catch {
-    if (loader) loader.textContent = '圖表載入失敗';
-  }
-}
-
-async function _loadWishpoolInsights() {
-  const el = document.getElementById('wishpoolInsights');
-  const statEl = document.getElementById('stat-wishes');
-  if (!el) return;
-  try {
-    const res = await wpSvc.listWishes(1);
-    const items = res?.items ?? res?.data?.items ?? [];
-    const total = res?.total ?? res?.data?.total;
-
-    if (statEl) statEl.textContent = total != null ? total : items.length;
-
-    if (!items.length) {
-      el.innerHTML = '<p class="text-muted text-center py-3 small">尚無心願資料</p>';
-      return;
-    }
-
-    el.innerHTML = items.slice(0, 8).map(wish => {
-      const name  = wish.itemName ?? wish.name ?? '未命名';
-      const desc  = wish.description ?? '';
-      const price = wish.maxPrice ? `最高 NT$\u00a0${Number(wish.maxPrice).toLocaleString()}` : '';
-      const stars = Number(wish.priority) > 0
-        ? `<span class="wish-stars">${'★'.repeat(Math.min(5, Number(wish.priority)))}</span>` : '';
-      return `
-        <div class="analytics-item-row">
-          ${stars}
-          <span class="analytics-item-name" title="${desc || name}">${name}</span>
-          ${price ? `<span class="analytics-item-price">${price}</span>` : ''}
-        </div>`;
-    }).join('');
-  } catch {
-    el.innerHTML = '<p class="text-muted text-center py-3 small">無法載入許願池資料</p>';
-    if (statEl) statEl.textContent = '–';
-  }
-}
-
-function _renderSearchKeywords() {
-  const wrap = document.getElementById('searchKeywordsWrap');
-  if (!wrap) return;
-  const raw = localStorage.getItem('th_search_log');
-  if (!raw) {
-    wrap.innerHTML = '<p class="text-muted small">尚無搜尋紀錄。在搜尋頁加入追蹤後將自動累積。</p>';
-    return;
-  }
-  try {
-    const log = JSON.parse(raw);
-    const sorted = Object.entries(log).sort((a, b) => b[1] - a[1]).slice(0, 20);
-    if (!sorted.length) {
-      wrap.innerHTML = '<p class="text-muted small">尚無搜尋紀錄。</p>';
-      return;
-    }
-    const maxCnt = sorted[0][1] || 1;
-    wrap.innerHTML = '<div class="keyword-tags">' +
-      sorted.map(([kw, cnt]) => {
-        const size = (0.78 + (cnt / maxCnt) * 0.42).toFixed(2);
-        return `<span class="kw-tag" style="font-size:${size}rem">${kw}<sup class="kw-cnt">${cnt}</sup></span>`;
-      }).join('') +
-      '</div>';
-  } catch {
-    wrap.innerHTML = '<p class="text-muted small">無法讀取搜尋紀錄。</p>';
-  }
-}
-
-async function _loadNewItems() {
-  const el = document.getElementById('analyticsNewItems');
-  if (!el) return;
-  try {
-    const res = await backendSvc.getCommodityList('all', { page: 1, limit: 8, sort: 'new' });
-    const items = res?.data?.items ?? res?.data ?? res?.items ?? [];
-    if (!items.length) { el.innerHTML = '<p class="text-muted text-center py-3 small">無資料</p>'; return; }
-    el.innerHTML = items.map(item => {
-      const img   = Array.isArray(item.images) ? item.images[0] : (item.image || '');
-      const price = item.price != null ? `NT$\u00a0${Number(item.price).toLocaleString()}` : '–';
-      return `
-        <div class="analytics-item-row">
-          ${img ? `<img class="analytics-item-img" src="${img}" alt="" onerror="this.style.display='none'">` : '<div class="analytics-item-img"></div>'}
-          <span class="analytics-item-name">${item.name ?? '未知商品'}</span>
-          <span class="analytics-item-price">${price}</span>
-        </div>`;
-    }).join('');
-  } catch {
-    el.innerHTML = '<p class="text-muted text-center py-3 small">無法載入商品資料</p>';
-  }
-}
-
-function _updatePitchSummary() {
-  const el = document.getElementById('pitchSummary');
-  if (!el) return;
-  const products = document.getElementById('stat-products')?.textContent || '–';
-  const hot      = document.getElementById('stat-hot')?.textContent || '–';
-  const wishes   = document.getElementById('stat-wishes')?.textContent || '–';
-
-  el.innerHTML = `
-    <div class="pitch-grid">
-      <div class="pitch-item">
-        <div class="pitch-num">${products}</div>
-        <div class="pitch-label">件商品在平台流通</div>
-      </div>
-      <div class="pitch-item">
-        <div class="pitch-num">${hot}</div>
-        <div class="pitch-label">件熱門競標商品</div>
-      </div>
-      <div class="pitch-item">
-        <div class="pitch-num">${wishes}</div>
-        <div class="pitch-label">則未被滿足的學生需求</div>
-      </div>
-      <div class="pitch-item">
-        <div class="pitch-num">中興大學</div>
-        <div class="pitch-label">精準學生受眾群</div>
-      </div>
-    </div>
-    <p class="pitch-note mt-3 mb-0">
-      <i class="fa fa-info-circle me-1"></i>
-      以上為可立即對外提供的平台數據。DAU/MAU、用戶畫像、全體搜尋熱詞等進階指標需後端依上方規格補充 API 後啟用。
-    </p>`;
-}
-
-document.getElementById('refreshAnalyticsBtn')?.addEventListener('click', loadAnalytics);
+_initDateRange();
 
 // ════════════════════════════════════════════════════
 //  檢舉管理
