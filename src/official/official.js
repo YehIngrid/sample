@@ -827,13 +827,14 @@ function _statBlock(items) {
     `</div>`;
 }
 
-function _listRows(items, labelFn) {
+function _listRows(items, labelFn, countFn) {
   if (!items?.length) return '<p class="text-muted small p-3 mb-0">無資料</p>';
+  const getCnt = countFn ?? (item => item.count ?? item.total ?? item.orderCount ?? '');
   return items.slice(0, 5).map((item, i) =>
     `<div class="analytics-item-row">
       <span class="me-2 fw-bold text-muted" style="min-width:1.4rem;">${i + 1}</span>
       <span class="analytics-item-name">${esc(labelFn(item))}</span>
-      <span class="analytics-item-price">${item.count ?? item.total ?? item.orderCount ?? ''}</span>
+      <span class="analytics-item-price">${getCnt(item)}</span>
     </div>`
   ).join('');
 }
@@ -854,13 +855,18 @@ async function _loadDashboard(params) {
   ids.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = '<span class="spinner-border spinner-border-sm"></span>'; });
   try {
     const d = await _fetchStats('/api/admin/stats/dashboard', params);
+    const ov = d?.overview ?? d;
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val ?? '–'; };
-    set('stat-total-users',    d?.totalUsers    ?? d?.users);
-    set('stat-total-products', d?.totalCommodities ?? d?.totalProducts ?? d?.products);
-    set('stat-total-orders',   d?.totalOrders   ?? d?.orders);
-    set('stat-total-reports',  d?.totalReports  ?? d?.reports);
-    set('stat-total-wishpool', d?.totalWishpool ?? d?.wishpool);
+    set('stat-total-users',    ov?.totalUsers);
+    set('stat-total-products', ov?.totalCommodities ?? ov?.activeCommodities);
+    set('stat-total-orders',   ov?.totalOrders);
+    set('stat-total-reports',  ov?.pendingReports);
+    set('stat-total-wishpool', ov?.totalWishes);
     document.getElementById('stat-total-error')?.classList.add('d-none');
+
+    // 趨勢折線圖
+    const { labels: tL, values: tV } = _parseTrend(d?.trends ?? []);
+    _makeChart('chart-dashboard-trend', _trendCfg(tL, tV, '活躍人數', '#1a73e8'));
   } catch {
     ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '–'; });
     document.getElementById('stat-total-error')?.classList.remove('d-none');
@@ -870,20 +876,36 @@ async function _loadDashboard(params) {
 async function _loadUserStats(params) {
   try {
     const d = await _fetchStats('/api/admin/stats/users', params);
-    const { labels: rL, values: rV } = _parseTrend(d?.registrationTrend ?? d?.trend ?? []);
+
+    // 註冊趨勢
+    const { labels: rL, values: rV } = _parseTrend(d?.registrationTrend ?? []);
     _makeChart('chart-user-reg-trend', _trendCfg(rL, rV, '新增用戶', '#1a73e8'));
-    const { labels: roleL, values: roleV } = _parseDist(d?.roleDistribution ?? d?.roles ?? {});
-    _makeChart('chart-user-role', _doughnutCfg(roleL, roleV));
-    const { labels: ratL, values: ratV } = _parseDist(d?.ratingDistribution ?? d?.ratings ?? {});
-    _makeChart('chart-user-rating', _barCfg(ratL, ratV, '人數'));
-    const act = d?.activityStats ?? d?.activity ?? {};
-    const ban = d?.banStats ?? d?.bans ?? {};
+
+    // 角色分布 [{ role, count }]
+    const roleArr = d?.roleDistribution ?? [];
+    _makeChart('chart-user-role', _doughnutCfg(
+      roleArr.map(r => r.role ?? r.label ?? ''),
+      roleArr.map(r => r.count ?? 0)
+    ));
+
+    // 評分分布 [{ range, count }]
+    const scoreArr = d?.scoreDistribution ?? [];
+    _makeChart('chart-user-rating', _barCfg(
+      scoreArr.map(s => s.range ?? s.label ?? ''),
+      scoreArr.map(s => s.count ?? 0),
+      '人數'
+    ));
+
+    // 統計數字
+    const act = d?.activeUsers ?? {};
+    const susp = (d?.suspensionStats ?? []).filter(s => s.level !== 'NONE').reduce((n, s) => n + (s.count ?? 0), 0);
+    const verified = (d?.emailVerificationStats ?? []).find(e => e.verified === true)?.count;
     const statsEl = document.getElementById('user-extra-stats');
     if (statsEl) statsEl.innerHTML = _statBlock([
-      { label: '活躍用戶數',    value: act.activeUsers ?? act.active ?? d?.activeUsers },
-      { label: '平均登入次數',  value: act.avgSessions ?? act.avgLogin },
-      { label: '停權用戶數',    value: ban.banned ?? ban.total ?? d?.bannedUsers, color: '#d93025' },
-      { label: '本期新增用戶',  value: d?.newUsers ?? d?.newRegistrations },
+      { label: '7 天活躍用戶',  value: act.last7Days },
+      { label: '30 天活躍用戶', value: act.last30Days },
+      { label: '停權用戶數',    value: susp || 0, color: susp > 0 ? '#d93025' : undefined },
+      { label: '信箱已驗證',    value: verified },
     ]);
   } catch { /* silent */ }
 }
@@ -891,20 +913,35 @@ async function _loadUserStats(params) {
 async function _loadCommodityStats(params) {
   try {
     const d = await _fetchStats('/api/admin/stats/commodities', params);
-    const { labels: tL, values: tV } = _parseTrend(d?.listingTrend ?? d?.trend ?? []);
+
+    // 上架趨勢
+    const { labels: tL, values: tV } = _parseTrend(d?.listingTrend ?? []);
     _makeChart('chart-commodity-trend', _trendCfg(tL, tV, '新增商品', '#1a73e8'));
-    const { labels: cL, values: cV } = _parseDist(d?.categoryDistribution ?? d?.categories ?? {});
-    _makeChart('chart-commodity-category', _doughnutCfg(cL, cV));
-    const price = d?.priceStats ?? d?.price ?? {};
+
+    // 分類分布 [{ category, count }]
+    const catArr = d?.categoryDistribution ?? [];
+    _makeChart('chart-commodity-category', _doughnutCfg(
+      catArr.map(c => c.category ?? c.label ?? ''),
+      catArr.map(c => c.count ?? 0)
+    ));
+
+    // 價格統計（API 用 average 不是 avg）
+    const price = d?.priceStats ?? {};
     const priceEl = document.getElementById('commodity-price-stats');
     if (priceEl) priceEl.innerHTML = _statBlock([
-      { label: '平均售價', value: price.avg  != null ? `NT$ ${Number(price.avg).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
-      { label: '最高售價', value: price.max  != null ? `NT$ ${Number(price.max).toLocaleString()}` : null },
-      { label: '最低售價', value: price.min  != null ? `NT$ ${Number(price.min).toLocaleString()}` : null },
-      { label: '中位數',   value: price.median != null ? `NT$ ${Number(price.median).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
+      { label: '平均售價', value: price.average != null ? `NT$ ${Number(price.average).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
+      { label: '最高售價', value: price.max     != null ? `NT$ ${Number(price.max).toLocaleString()}` : null },
+      { label: '最低售價', value: price.min     != null ? `NT$ ${Number(price.min).toLocaleString()}` : null },
+      { label: '熱門商品', value: d?.hotCount,  color: '#f57c00' },
     ]);
-    const topSellers = d?.topSellers ?? d?.hotSellers ?? [];
-    document.getElementById('commodity-top-sellers').innerHTML = _listRows(topSellers, i => i.name ?? i.username ?? i.seller ?? '–');
+
+    // 熱門賣家（count 欄位是 commodityCount）
+    const topSellers = d?.topSellers ?? [];
+    document.getElementById('commodity-top-sellers').innerHTML = _listRows(
+      topSellers,
+      i => i.name ?? i.username ?? '–',
+      i => i.commodityCount ?? i.count ?? ''
+    );
   } catch {
     document.getElementById('commodity-top-sellers').innerHTML = _errHtml();
   }
@@ -913,24 +950,29 @@ async function _loadCommodityStats(params) {
 async function _loadOrderStats(params) {
   try {
     const d = await _fetchStats('/api/admin/stats/orders', params);
-    const { labels: tL, values: tV } = _parseTrend(d?.orderTrend ?? d?.trend ?? []);
+
+    const { labels: tL, values: tV } = _parseTrend(d?.orderTrend ?? []);
     _makeChart('chart-order-trend', _trendCfg(tL, tV, '訂單數', '#f57c00'));
-    const { labels: sL, values: sV } = _parseDist(d?.statusDistribution ?? d?.status ?? {});
-    _makeChart('chart-order-status', _doughnutCfg(sL, sV));
-    const rev = d?.revenue ?? d?.revenueStats ?? {};
-    const cancelRate = d?.cancellationRate ?? d?.cancelRate;
-    const pct = v => v != null ? `${(Number(v) * (Number(v) > 1 ? 1 : 100)).toFixed(1)}%` : null;
+
+    // statusDistribution [{ status, count }]
+    const statArr = d?.statusDistribution ?? [];
+    _makeChart('chart-order-status', _doughnutCfg(
+      statArr.map(s => s.status ?? s.label ?? ''),
+      statArr.map(s => s.count ?? 0)
+    ));
+
+    const cancelRate = d?.cancelRate ?? d?.cancellationRate;
+    const pct = v => (v != null && v !== '') ? `${(Number(v) * (Number(v) > 1 ? 1 : 100)).toFixed(1)}%` : null;
     const revEl = document.getElementById('order-revenue-stats');
     if (revEl) revEl.innerHTML = _statBlock([
-      { label: '總營收',    value: rev.total != null ? `NT$ ${Number(rev.total).toLocaleString()}` : null, color: '#28a745' },
-      { label: '平均客單價', value: rev.avg   != null ? `NT$ ${Number(rev.avg).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
+      { label: '總營收',    value: d?.totalRevenue != null ? `NT$ ${Number(d.totalRevenue).toLocaleString()}` : null, color: '#28a745' },
+      { label: '平均客單價', value: d?.averageOrderAmount != null ? `NT$ ${Number(d.averageOrderAmount).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
       { label: '取消率',    value: pct(cancelRate), color: '#d93025' },
       { label: '完成訂單',  value: d?.completedOrders ?? d?.completed },
     ]);
-    const topBuyers  = d?.topBuyers  ?? d?.hotBuyers  ?? [];
-    const topSellers = d?.topSellers ?? d?.hotSellers ?? [];
-    document.getElementById('order-top-buyers').innerHTML  = _listRows(topBuyers,  i => i.name ?? i.username ?? i.buyer  ?? '–');
-    document.getElementById('order-top-sellers').innerHTML = _listRows(topSellers, i => i.name ?? i.username ?? i.seller ?? '–');
+
+    document.getElementById('order-top-buyers').innerHTML  = _listRows(d?.topBuyers  ?? [], i => i.name ?? i.username ?? '–');
+    document.getElementById('order-top-sellers').innerHTML = _listRows(d?.topSellers ?? [], i => i.name ?? i.username ?? '–');
   } catch {
     document.getElementById('order-revenue-stats').innerHTML = _errHtml();
   }
@@ -939,18 +981,26 @@ async function _loadOrderStats(params) {
 async function _loadReportStats(params) {
   try {
     const d = await _fetchStats('/api/admin/stats/reports', params);
-    const { labels: tL, values: tV } = _parseTrend(d?.reportTrend ?? d?.trend ?? []);
+
+    const { labels: tL, values: tV } = _parseTrend(d?.reportTrend ?? []);
     _makeChart('chart-report-trend', _trendCfg(tL, tV, '檢舉數', '#d93025'));
-    const { labels: cL, values: cV } = _parseDist(d?.categoryDistribution ?? d?.categories ?? {});
-    _makeChart('chart-report-category', _barCfg(cL, cV, '件'));
-    const pct = v => v != null ? `${(Number(v) * (Number(v) > 1 ? 1 : 100)).toFixed(1)}%` : null;
-    const avgTime = d?.avgReviewTime ?? d?.avgReviewHours ?? d?.avgTime;
+
+    // categoryDistribution [{ category, count }]
+    const catArr = d?.categoryDistribution ?? [];
+    _makeChart('chart-report-category', _barCfg(
+      catArr.map(c => c.category ?? c.label ?? ''),
+      catArr.map(c => c.count ?? 0),
+      '件'
+    ));
+
+    const pct = v => (v != null && v !== '') ? `${(Number(v) * (Number(v) > 1 ? 1 : 100)).toFixed(1)}%` : null;
+    const avgTime = d?.avgReviewTimeHours ?? d?.avgReviewTime ?? d?.avgTime;
     const revEl = document.getElementById('report-review-stats');
     if (revEl) revEl.innerHTML = _statBlock([
-      { label: '審核通過率',    value: pct(d?.approvalRate ?? d?.approveRate), color: '#28a745' },
-      { label: '平均審核時間',  value: avgTime != null ? `${Number(avgTime).toFixed(1)} 小時` : null },
-      { label: '待審核件數',    value: d?.pendingCount ?? d?.pending },
-      { label: '本期檢舉總數',  value: d?.totalReports ?? d?.total },
+      { label: '審核通過率',   value: pct(d?.approvalRate), color: '#28a745' },
+      { label: '平均審核時間', value: avgTime != null && avgTime !== '' ? `${Number(avgTime).toFixed(1)} 小時` : null },
+      { label: '待審核件數',   value: (d?.statusDistribution ?? []).find(s => s.status === 'pending')?.count ?? d?.pendingCount },
+      { label: '本期檢舉總數', value: (d?.statusDistribution ?? []).reduce((n, s) => n + (s.count ?? 0), 0) || null },
     ]);
   } catch {
     document.getElementById('report-review-stats').innerHTML = _errHtml();
@@ -960,14 +1010,33 @@ async function _loadReportStats(params) {
 async function _loadWishpoolStats(params) {
   try {
     const d = await _fetchStats('/api/admin/stats/wishpool', params);
-    const { labels: tL, values: tV } = _parseTrend(d?.wishpoolTrend ?? d?.trend ?? []);
+
+    // wishTrend（API 用 wishTrend 不是 wishpoolTrend）
+    const { labels: tL, values: tV } = _parseTrend(d?.wishTrend ?? d?.wishpoolTrend ?? []);
     _makeChart('chart-wishpool-trend', _trendCfg(tL, tV, '新增心願', '#7b1fa2'));
-    const { labels: sL, values: sV } = _parseDist(d?.statusDistribution ?? d?.status ?? {});
-    _makeChart('chart-wishpool-status', _doughnutCfg(sL, sV));
-    const { labels: pL, values: pV } = _parseDist(d?.priorityDistribution ?? d?.priority ?? {});
-    _makeChart('chart-wishpool-priority', _barCfg(pL, pV, '數量'));
-    const { labels: bL, values: bV } = _parseDist(d?.budgetDistribution ?? d?.budget ?? {});
-    _makeChart('chart-wishpool-budget', _barCfg(bL, bV, '數量'));
+
+    // statusDistribution [{ status, count }]
+    const statArr = d?.statusDistribution ?? [];
+    _makeChart('chart-wishpool-status', _doughnutCfg(
+      statArr.map(s => s.status ?? s.label ?? ''),
+      statArr.map(s => s.count ?? 0)
+    ));
+
+    // priorityDistribution [{ priority/level, count }]
+    const prioArr = d?.priorityDistribution ?? [];
+    _makeChart('chart-wishpool-priority', _barCfg(
+      prioArr.map(p => String(p.priority ?? p.level ?? p.label ?? '')),
+      prioArr.map(p => p.count ?? 0),
+      '數量'
+    ));
+
+    // budgetDistribution [{ range, count }]
+    const budArr = d?.budgetDistribution ?? [];
+    _makeChart('chart-wishpool-budget', _barCfg(
+      budArr.map(b => b.range ?? b.label ?? ''),
+      budArr.map(b => b.count ?? 0),
+      '數量'
+    ));
   } catch { /* silent */ }
 }
 
@@ -992,8 +1061,12 @@ async function _loadSearchStats(params) {
           }).join('') + '</div>';
       }
     }
-    const { labels: aL, values: aV } = _parseDist(d?.loginVsGuest ?? d?.authDistribution ?? d?.userTypeDistribution ?? {});
-    _makeChart('chart-search-auth', _doughnutCfg(aL, aV));
+    // searchTypeDistribution: { loggedIn, guest }
+    const authDist = d?.searchTypeDistribution ?? d?.loginVsGuest ?? {};
+    _makeChart('chart-search-auth', _doughnutCfg(
+      ['登入用戶', '訪客'],
+      [authDist.loggedIn ?? 0, authDist.guest ?? 0]
+    ));
   } catch { /* silent */ }
 }
 
