@@ -435,13 +435,21 @@ async function handleAction(action, id, el) {
 
     openChatWithTarget(targetId);
   } else if (action === 'cancel') {
-    if (confirm('確定要取消訂單嗎?')) {
+    const { isConfirmed } = await Swal.fire({
+      title: '確定要取消訂單嗎？',
+      text: '取消後無法復原，請確認後再操作',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '確定取消',
+      cancelButtonText: '返回',
+    });
+    if (isConfirmed) {
       try {
         await backendService.cancelMyOrder(id);
         showOrderSwal('cancel').then(() => handleRouting()).then(() => window.location.reload());
       } catch (error) {
         Swal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
-      } 
+      }
     }
   } else if(action === '接受訂單') {
     try {
