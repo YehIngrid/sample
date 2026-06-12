@@ -391,6 +391,20 @@ if (checkoutBtn) {
     });
     if (!confirm.isConfirmed) return;
 
+    // 面交提醒（可關閉）
+    if (!localStorage.getItem('th_no_meeting_reminder')) {
+      const remind = await Swal.fire({
+        icon: 'info',
+        title: '面交提醒',
+        text: '請與賣家討論面交地點與時間等相關事宜',
+        confirmButtonText: '我知道了',
+        input: 'checkbox',
+        inputValue: 0,
+        inputPlaceholder: '以後不要再提醒',
+      });
+      if (remind.value === 1) localStorage.setItem('th_no_meeting_reminder', '1');
+    }
+
     try {
       isCheckingOut = true;
       checkoutBtn.disabled = true;

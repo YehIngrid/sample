@@ -451,6 +451,19 @@ async function handleAction(action, id, el) {
       Swal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
     }
   } else if (action === '即將出貨') {
+    // PIN 碼提醒（可關閉）
+    if (!localStorage.getItem('th_no_pin_reminder')) {
+      const remind = await Swal.fire({
+        icon: 'info',
+        title: 'PIN 碼提醒',
+        text: '請務必在收取貨款或進行商品確認後，立即填寫 PIN 碼以確保雙方權益',
+        confirmButtonText: '我知道了',
+        input: 'checkbox',
+        inputValue: 0,
+        inputPlaceholder: '以後不要再提醒',
+      });
+      if (remind.value === 1) localStorage.setItem('th_no_pin_reminder', '1');
+    }
     try {
       await backendService.sellerDeliveredOrders(id);
       showOrderSwal('deliver').then(() => handleRouting()).then(() => window.location.reload());
