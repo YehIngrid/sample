@@ -163,6 +163,7 @@ class ChatRoomList {
             return;
         }
         window.addEventListener('resize', () => this.handleResize());
+        this._initVisualViewport();
         this.bindEvents();
         this.putImage();
         this.closePreview();
@@ -565,6 +566,23 @@ class ChatRoomList {
             this.showSidebar();
             this.hideChatMain();
         }
+    }
+
+    _initVisualViewport() {
+        if (!window.visualViewport) return;
+        const chatMain = document.getElementById('chatMain');
+        if (!chatMain) return;
+        const update = () => {
+            if (window.innerWidth < 768) {
+                chatMain.style.height = window.visualViewport.height + 'px';
+                chatMain.style.top = window.visualViewport.offsetTop + 'px';
+            } else {
+                chatMain.style.height = '';
+                chatMain.style.top = '';
+            }
+        };
+        window.visualViewport.addEventListener('resize', update);
+        window.visualViewport.addEventListener('scroll', update);
     }
 
     handleResize() {
