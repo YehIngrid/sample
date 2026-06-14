@@ -1416,30 +1416,34 @@ class ChatRoomList {
         container.innerHTML = '';
 
         // ✅ GET /api/chat/history?room=&limit=&before=
+        // DIRECT 房間回傳 { roomId, members, history }；OFFICIAL 房間回傳扁平訊息陣列
         const before = new Date().toISOString();
-        // 並列取得 history 與最新 rooms members，確保後來加入的客服人員也在 userInfoMap 中
-        const [history] = await Promise.all([
-            this.backend.getHistory(roomId, 50, before),
-            this.backend.listRooms().then(res => {
-                res.data?.items?.forEach(room => {
-                    room.members?.forEach(m => {
-                        if (m.userId) {
-                            this.userInfoMap.set(String(m.userId), {
-                                photoURL: m.photoURL || null,
-                                role: m.role ?? null
-                            });
-                        }
-                    });
-                });
-            }).catch(() => {})
-        ]);
+        const history = await this.backend.getHistory(roomId, 50, before);
 
-        if (history.data?.length > 0) {
+        const isDirectRoom = !this.officialRoomsSet.has(String(roomId));
+        // 從 history 取出訊息陣列（DIRECT: data.history；OFFICIAL: data 本身）
+        const rawMessages = isDirectRoom
+            ? (history.data?.history ?? [])
+            : (Array.isArray(history.data) ? history.data : []);
+
+        // DIRECT 房間：從 history 的 members 更新 userInfoMap（含後來加入的客服人員）
+        if (isDirectRoom && history.data?.members) {
+            history.data.members.forEach(m => {
+                if (m.userId) {
+                    this.userInfoMap.set(String(m.userId), {
+                        photoURL: m.user?.photoURL || null,
+                        role: m.role ?? null
+                    });
+                }
+            });
+        }
+
+        if (rawMessages.length > 0) {
             const roomRead = this.lastReadMap.get(String(roomId));
             const lastReadTimestamp = roomRead?.timestamp ?? null;
 
             // ✅ id 是 string，用 timestamp 排序
-            const messages = history.data.sort((a, b) =>
+            const messages = rawMessages.sort((a, b) =>
                 new Date(a.timestamp) - new Date(b.timestamp)
             );
             const firstUnread = lastReadTimestamp
@@ -1976,9 +1980,15 @@ const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.
             this.isLoading = true;
             const history = await this.backend.getHistory(this.currentRoomId, 50, before);
 
-            if (history.data?.length > 0) {
+            // DIRECT 房間回傳 { roomId, members, history }；OFFICIAL 回傳扁平陣列
+            const _isDirectRoom = !this.officialRoomsSet.has(String(this.currentRoomId));
+            const msgs = _isDirectRoom
+                ? (history.data?.history ?? [])
+                : (Array.isArray(history.data) ? history.data : []);
+
+            if (msgs.length > 0) {
                 // 由新到舊排序後反向 prepend，確保畫面順序正確
-                const sorted = history.data.sort((a, b) =>
+                const sorted = msgs.sort((a, b) =>
                     new Date(b.timestamp) - new Date(a.timestamp)
                 );
                 for (const msg of sorted) {
@@ -1986,7 +1996,7 @@ const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.
                 }
                 this.regroupAll();
                 container.scrollTop = container.scrollHeight - oldScrollHeight;
-                if (history.data.length < 50) {
+                if (msgs.length < 50) {
                     this.hasMore = false;
                     this.renderNoMoreHint(container);
                 }
