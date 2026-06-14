@@ -393,7 +393,8 @@ class ChatRoomList {
         wrapper.className = `imgAndMessage ${isSelf ? 'message-self' : 'message-other'}`;
         wrapper.dataset.timestamp = data.timestamp;
         wrapper.dataset.messageId = data.id ?? '';
-        wrapper.dataset.username = data.username ?? '';
+        const _senderName1 = data.username || this.userInfoMap.get(String(data.userId))?.name || '';
+        wrapper.dataset.username = _senderName1;
 
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
@@ -419,7 +420,7 @@ class ChatRoomList {
         wrapper.innerHTML = `
             ${_msgAvatar1}
             <div class="message-content">
-                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(data.username)}</small>` : ''}
+                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(_senderName1)}</small>` : ''}
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
                     <div class="d-flex flex-row align-items-center gap-1 me-2">
@@ -458,7 +459,8 @@ class ChatRoomList {
         imgWrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
         imgWrapper.dataset.timestamp = data.timestamp;
         imgWrapper.dataset.messageId = data.id ?? '';
-        imgWrapper.dataset.username = data.username ?? '';
+        const _senderName2 = data.username || this.userInfoMap.get(String(data.userId))?.name || '';
+        imgWrapper.dataset.username = _senderName2;
 
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
@@ -486,7 +488,7 @@ class ChatRoomList {
         imgWrapper.innerHTML = `
             ${_msgAvatar2}
             <div class="message-content">
-                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(data.username)}</small>` : ''}
+                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(_senderName2)}</small>` : ''}
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
                     <div class="d-flex flex-row align-items-center gap-1 me-2">
@@ -1432,6 +1434,7 @@ class ChatRoomList {
                 if (m.userId) {
                     this.userInfoMap.set(String(m.userId), {
                         photoURL: m.user?.photoURL || null,
+                        name: m.user?.name || null,
                         role: m.role ?? null
                     });
                 }
@@ -1816,7 +1819,9 @@ const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
         div.dataset.timestamp = data.timestamp;  // ISO 字串，用於 markAsRead
         div.dataset.messageId = data.id;          // string
-        div.dataset.username = data.username;
+        // username 可能不在訊息本體內（新版 history API），從 userInfoMap 補齊
+        const _senderName = data.username || this.userInfoMap.get(String(data.userId))?.name || '';
+        div.dataset.username = _senderName;
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
             : (this.userInfoMap.get(String(data.userId))?.photoURL
@@ -1834,7 +1839,7 @@ const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.
         div.innerHTML = `
             ${_msgAvatar3}
             <div class="message-content">
-                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(data.username)}</small>` : ''}
+                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(_senderName)}</small>` : ''}
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
                     <div class="d-flex flex-row align-items-center gap-1 me-2">
