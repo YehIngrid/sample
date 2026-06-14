@@ -413,7 +413,8 @@ class ChatRoomList {
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
             const _role = this.userInfoMap.get(String(data.userId))?.role ?? this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
-            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            const _themeBg = (() => { try { return JSON.parse(localStorage.getItem('chatBubbleTheme'))?.from || '#abdad5'; } catch(e) { return '#abdad5'; } })();
+            const _img = _isDefault ? `<div class="avatar-default-msg" style="width:30px;height:30px;border-radius:50%;background:${_themeBg};display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:20px;height:20px;opacity:0.85;filter:brightness(10);"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
         })();
 
@@ -482,7 +483,8 @@ class ChatRoomList {
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
             const _role = this.userInfoMap.get(String(data.userId))?.role ?? this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
-            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            const _themeBg = (() => { try { return JSON.parse(localStorage.getItem('chatBubbleTheme'))?.from || '#abdad5'; } catch(e) { return '#abdad5'; } })();
+            const _img = _isDefault ? `<div class="avatar-default-msg" style="width:30px;height:30px;border-radius:50%;background:${_themeBg};display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:20px;height:20px;opacity:0.85;filter:brightness(10);"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
         })();
         imgWrapper.innerHTML = `
@@ -1833,7 +1835,8 @@ const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
             const _role = this.userInfoMap.get(String(data.userId))?.role ?? this.partnerInfoMap.get(String(this.currentRoomId))?.role;
             const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
-            const _img = _isDefault ? `<div class="avatar-default-msg"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            const _themeBg = (() => { try { return JSON.parse(localStorage.getItem('chatBubbleTheme'))?.from || '#abdad5'; } catch(e) { return '#abdad5'; } })();
+            const _img = _isDefault ? `<div class="avatar-default-msg" style="width:30px;height:30px;border-radius:50%;background:${_themeBg};display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:20px;height:20px;opacity:0.85;filter:brightness(10);"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
             return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
         })();
         div.innerHTML = `
