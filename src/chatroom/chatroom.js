@@ -402,12 +402,12 @@ class ChatRoomList {
         const imageUrl = Array.isArray(data.attachments)
             ? (data.attachments[0] || '')
             : (data.attachments || '');
+        const _uInfo = this.userInfoMap.get(String(data.userId));
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.userInfoMap.get(String(data.userId))?.photoURL
-                || this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL
-                || data.photoURL
-                || '../image/default-avatar.webp');
+            : (_uInfo !== undefined
+                ? (_uInfo.photoURL || '../image/default-avatar.webp')
+                : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp'));
         const _msgAvatar1 = (() => {
             if (isSelf) return '';
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
@@ -472,12 +472,12 @@ class ChatRoomList {
             ? data.attachments[0]
             : (data.attachments || '');
 
+        const _uInfo = this.userInfoMap.get(String(data.userId));
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.userInfoMap.get(String(data.userId))?.photoURL
-                || this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL
-                || data.photoURL
-                || '../image/default-avatar.webp');
+            : (_uInfo !== undefined
+                ? (_uInfo.photoURL || '../image/default-avatar.webp')
+                : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp'));
         const _msgAvatar2 = (() => {
             if (isSelf) return '';
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
@@ -1824,12 +1824,12 @@ const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.
         // username 可能不在訊息本體內（新版 history API），從 userInfoMap 補齊
         const _senderName = data.username || this.userInfoMap.get(String(data.userId))?.name || '';
         div.dataset.username = _senderName;
+        const _uInfo = this.userInfoMap.get(String(data.userId));
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.userInfoMap.get(String(data.userId))?.photoURL
-                || this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL
-                || data.photoURL
-                || '../image/default-avatar.webp');
+            : (_uInfo !== undefined
+                ? (_uInfo.photoURL || '../image/default-avatar.webp')
+                : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp'));
         const _msgAvatar3 = (() => {
             if (isSelf) return '';
             const _isDefault = partnerPhoto === '../image/default-avatar.webp';
