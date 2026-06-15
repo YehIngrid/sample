@@ -43,36 +43,25 @@ body {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
     }
-    /* 手機版：三欄 grid — [返回+漢堡] [Logo 置中] [登入] */
+    /* 手機版：flex，logo 絕對置中 */
     .wp-navbar-inner {
-        display: grid !important;
-        grid-template-columns: auto 1fr auto;
+        display: flex !important;
         align-items: center;
+        position: relative;
         padding: 6px 12px !important;
         width: 100%;
     }
-    /* 左欄：返回 + 漢堡 */
-    .wp-navbar-inner > .btn-link,
-    .wp-navbar-inner > .mobile-hamburger {
-        grid-column: 1;
-        grid-row: 1;
-    }
-    /* Logo div → 第 2 欄置中 */
+    /* Logo div → 絕對置中，不佔 flex 空間 */
     .wp-navbar-inner > .d-flex.flex-shrink-0 {
-        grid-column: 2;
-        grid-row: 1;
-        justify-self: center;
-        margin-right: 0 !important;   /* 取消 me-4 */
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-right: 0 !important;
+        pointer-events: auto;
     }
-    /* 右側登入 → 第 3 欄 */
+    /* 右側登入維持 ms-auto 推到最右 */
     .wp-navbar-inner > .ms-auto {
-        grid-column: 3;
-        grid-row: 1;
-        margin-left: 0 !important;
-    }
-    /* 桌機 tabs 在手機已 d-none，不占 grid 位 */
-    .wp-navbar-inner > .wp-nav-tabs-wrap {
-        display: none !important;
+        margin-left: auto;
     }
 }
 

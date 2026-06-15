@@ -80,9 +80,6 @@
 .sort_item:hover .sort-cat-icon {
     filter: opacity(1);
 }
-.sort_item.active .sort-cat-icon {
-    filter: opacity(1) brightness(0) invert(1);
-}
 .sort-cat-icon {
   width: 16px;
   height: 16px;
