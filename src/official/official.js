@@ -727,8 +727,12 @@ document.getElementById('newsStatusFilter')?.addEventListener('change', loadNews
 // ════════════════════════════════════════════════════
 
 // ── 日期工具 ──
-function _todayStr() { return new Date().toISOString().slice(0, 10); }
-function _daysAgoStr(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+function _todayStr() {
+  const d = new Date();
+  const ymd = d.toISOString().slice(0, 10);
+  return `${ymd}T23:59:59`;
+}
+function _daysAgoStr(n) { const d = new Date(); d.setDate(d.getDate() - n); return `${d.toISOString().slice(0, 10)}T00:00:00`; }
 
 function _initDateRange() {
   const s = document.getElementById('statsStartDate');
@@ -738,9 +742,11 @@ function _initDateRange() {
 }
 
 function _getDateParams() {
+  const start = document.getElementById('statsStartDate')?.value;
+  const end   = document.getElementById('statsEndDate')?.value;
   return {
-    startDate: document.getElementById('statsStartDate')?.value || _daysAgoStr(30),
-    endDate:   document.getElementById('statsEndDate')?.value   || _todayStr(),
+    startDate: start ? `${start}T00:00:00` : _daysAgoStr(30),
+    endDate:   end   ? `${end}T23:59:59`   : _todayStr(),
   };
 }
 
