@@ -448,6 +448,14 @@
               <div class="stat-icon" style="background:#f3e8fd;"><i class="fa fa-star" style="color:#7b1fa2;"></i></div>
               <div class="stat-body"><div class="stat-label">願望池心願數</div><div class="stat-value" id="stat-total-wishpool"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e6f4ea;"><i class="fa fa-user-plus" style="color:#28a745;"></i></div>
+              <div class="stat-body"><div class="stat-label">今日新用戶</div><div class="stat-value" id="stat-new-users-today"><span class="spinner-border spinner-border-sm"></span></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-bar-chart" style="color:#1a73e8;"></i></div>
+              <div class="stat-body"><div class="stat-label">7 日活躍用戶</div><div class="stat-value" id="stat-active-users-7d"><span class="spinner-border spinner-border-sm"></span></div></div>
+            </div>
           </div>
           <p id="stat-total-error" class="text-danger small d-none mt-2">載入失敗，請稍後重試。</p>
           <div class="analytics-block mt-3">
@@ -476,7 +484,15 @@
               </div>
             </div>
           </div>
-          <div id="user-extra-stats" class="stats-grid"></div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-envelope me-1"></i> 信箱驗證狀態</div>
+                <div style="position:relative;height:180px;"><canvas id="chart-user-email-verify"></canvas></div>
+              </div>
+            </div>
+          </div>
+          <div id="user-extra-stats" class=""></div>
         </div>
 
         <!-- Tab: 商品 -->

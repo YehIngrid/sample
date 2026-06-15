@@ -851,17 +851,19 @@ async function _fetchStats(path, params) {
 
 // ── Per-tab loaders ──
 async function _loadDashboard(params) {
-  const ids = ['stat-total-users','stat-total-products','stat-total-orders','stat-total-reports','stat-total-wishpool'];
+  const ids = ['stat-total-users','stat-total-products','stat-total-orders','stat-total-reports','stat-total-wishpool','stat-new-users-today','stat-active-users-7d'];
   ids.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = '<span class="spinner-border spinner-border-sm"></span>'; });
   try {
     const d = await _fetchStats('/api/admin/stats/dashboard', params);
     const ov = d?.overview ?? d;
     const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val ?? '–'; };
-    set('stat-total-users',    ov?.totalUsers);
-    set('stat-total-products', ov?.totalCommodities ?? ov?.activeCommodities);
-    set('stat-total-orders',   ov?.totalOrders);
-    set('stat-total-reports',  ov?.pendingReports);
-    set('stat-total-wishpool', ov?.totalWishes);
+    set('stat-total-users',       ov?.totalUsers);
+    set('stat-total-products',    ov?.totalCommodities ?? ov?.activeCommodities);
+    set('stat-total-orders',      ov?.totalOrders);
+    set('stat-total-reports',     ov?.pendingReports);
+    set('stat-total-wishpool',    ov?.totalWishes);
+    set('stat-new-users-today',   ov?.newUsersToday);
+    set('stat-active-users-7d',   ov?.activeUsers7d);
     document.getElementById('stat-total-error')?.classList.add('d-none');
 
     // 趨勢折線圖
@@ -899,14 +901,26 @@ async function _loadUserStats(params) {
     // 統計數字
     const act = d?.activeUsers ?? {};
     const susp = (d?.suspensionStats ?? []).filter(s => s.level !== 'NONE').reduce((n, s) => n + (s.count ?? 0), 0);
-    const verified = (d?.emailVerificationStats ?? []).find(e => e.verified === true)?.count;
+    const emailStats = d?.emailVerificationStats ?? [];
+    const verified   = emailStats.find(e => e.verified === true)?.count ?? 0;
+    const unverified = emailStats.find(e => e.verified === false)?.count ?? 0;
     const statsEl = document.getElementById('user-extra-stats');
     if (statsEl) statsEl.innerHTML = _statBlock([
       { label: '7 天活躍用戶',  value: act.last7Days },
+      { label: '14 天活躍用戶', value: act.last14Days },
       { label: '30 天活躍用戶', value: act.last30Days },
       { label: '停權用戶數',    value: susp || 0, color: susp > 0 ? '#d93025' : undefined },
       { label: '信箱已驗證',    value: verified },
+      { label: '信箱未驗證',    value: unverified, color: unverified > 0 ? '#f57c00' : undefined },
     ]);
+
+    // 信箱驗證狀態圓餅圖
+    if (emailStats.length) {
+      _makeChart('chart-user-email-verify', _doughnutCfg(
+        ['已驗證', '未驗證'],
+        [verified, unverified]
+      ));
+    }
   } catch { /* silent */ }
 }
 

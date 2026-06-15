@@ -752,6 +752,8 @@ right: 0;
     .hero-left {
         align-items: center;
         order: 1;
+        position: relative;
+        z-index: 5;   /* 確保按鈕在手機圖上方 */
     }
     .buttontwo {
         justify-content: center;
@@ -762,7 +764,7 @@ right: 0;
         bottom: -60px;
         left: 50%;
         transform: translateX(-50%);
-        z-index: 20;
+        z-index: 1;   /* 降低，不蓋按鈕 */
         width: 200px;
     }
     #hero {
