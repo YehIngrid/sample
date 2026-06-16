@@ -206,12 +206,8 @@ export default class BackendService {
             if (d?.role)         localStorage.setItem('role', d.role);
             if (d?.emailVerify != null) localStorage.setItem('emailVerify', String(d.emailVerify));
 
-            // 若 whoami / getUserData 是 Promise 版
             if (typeof this.whoami === 'function') {
             try { await this.whoami(); } catch (_) {}
-            }
-            if (typeof this.getUserData === 'function') {
-            try { await this.getUserData(); } catch (_) {}
             }
 
             return response;
@@ -293,7 +289,7 @@ export default class BackendService {
             return Promise.reject(error);
         }
         // 更新成功後，儲存新的使用者資料到 localStorage
-        await _this.getUserData();
+        await _this.getMe();
         return response;
     }
     async whoami() {
