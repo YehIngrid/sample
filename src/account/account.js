@@ -250,8 +250,6 @@ async function callLogin() {
       timer: 2100
     });
 
-    await backendService.getUserData?.();
-
     const params = new URLSearchParams(window.location.search);
     const redirectUrl = params.get("redirect");
     if (redirectUrl) {
