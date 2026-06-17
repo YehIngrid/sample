@@ -847,9 +847,6 @@ nameInput.addEventListener('input', () => {
 });
 
 // ── 裁切 modal 轉向按鈕 ──────────────────────────────────
-document.getElementById('shopCropRotateL').addEventListener('click', () => {
-  if (shopCropper) shopCropper.rotate(-90);
-});
 document.getElementById('shopCropRotateR').addEventListener('click', () => {
   if (shopCropper) shopCropper.rotate(90);
 });

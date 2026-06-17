@@ -787,7 +787,7 @@ ul{
   background: aliceblue;
   cursor: pointer;
   color: #004b97;
-  font-size: 0.9rem;
+  font-size: 0.9rem !important;
   font-weight: 600;
   transition: border-color 0.2s, background 0.2s;
   margin-bottom: 12px;
@@ -821,11 +821,11 @@ ul{
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
-  margin-bottom: 12px;
   padding: 8px 0;
 }
 .sell-camera-btn i { font-size: 1.5rem; }
 .sell-camera-btn:hover { background: #004b97; color: #fff; }
+@media (min-width: 768px) { .sell-camera-btn { display: none; } }
 
 /* 商品名稱關鍵字警告 */
 .sell-keyword-warning {
@@ -930,7 +930,7 @@ ul{
   color: #004b97;
   font-weight: 600;
   font-size: 0.9rem;
-  padding: 9px 20px;
+  padding: 9px 10px;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -945,7 +945,7 @@ ul{
   color: #fff;
   font-weight: 700;
   font-size: 0.95rem;
-  padding: 10px 24px;
+  padding: 10px 15px;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -1525,7 +1525,7 @@ tbody > tr:nth-of-type(even) {
   font-size: 1.2rem;
   display: inline-block;
   font-weight: 700;
-  padding: 8px 16px;
+  padding: 8px 10px;
   transition: background-color 0.3s, color 0.3s;
 }
 
