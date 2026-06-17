@@ -867,11 +867,12 @@
               <div class="sell-field">
                 <label for="name" class="sell-label">商品名稱 <span class="sell-required">*</span><span class="sell-charcount" id="nameCount">0 / 60 字</span></label>
                 <input type="text" id="name" name="name" class="form-control" placeholder="建議使用正式名稱，例如：台大有機化學課本第三版" maxlength="60" />
+                <div id="nameKeywordWarning" class="sell-keyword-warning" style="display:none;"></div>
               </div>
 
               <div class="sell-field">
                 <label for="description" class="sell-label">商品狀態描述 <span class="sell-required">*</span><span class="sell-charcount" id="descCount">0 / 500 字</span></label>
-                <small class="sell-hint">可列出商品規格、注意事項、BSMI、ISBN；說明販售原因、瑕疵部位等，建議 30 字以上</small>
+                <small class="sell-hint">可列出商品規格、注意事項、面交地點時間、BSMI、ISBN；說明販售原因、瑕疵部位等，建議 30 字以上</small>
                 <textarea class="form-control" id="description" name="description" rows="5" placeholder="例如：九成新，只用了一學期，無劃線無書寫..." maxlength="500"></textarea>
                 <div id="descError" style="display:none;color:#e03;font-size:0.82rem;margin-top:4px;">商品描述至少需要 10 字</div>
               </div>
@@ -880,7 +881,7 @@
                 <label for="category" class="sell-label">所屬分類 <span class="sell-required">*</span>
                   <button type="button" class="sell-info-btn" id="catInfoBtn"
                     data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" data-bs-trigger="click"
-                    data-bs-content="<ul class='sell-cat-popover-list'><li><b>書籍與學籍用品</b>：教科書、參考書、文具、計算機等</li><li><b>宿舍與生活用品</b>：床墊、衣架、燈具、電鍋等</li><li><b>學生專用器材</b>：實驗器材、護目鏡、測量工具等</li><li><b>環保生活用品</b>：環保餐具、購物袋、水瓶等</li><li><b>儲物與收納用品</b>：收納盒、文件夾、掛鉤等</li><li><b>其他</b>：不確定分類請選此項</li></ul>"
+                    data-bs-content="<ul class='sell-cat-popover-list'><li><b>課業學習</b>：教科書、二手參考書、考試用書、計算機、實驗器材、個人手寫筆記、文具</li><li><b>3C 電子</b>：筆電、平板、手機、耳機、行動電源、相機、螢幕、各種周邊配件</li><li><b>住宿生活</b>：小家電、收納用品、寢具、清潔工具、延長線、燈具、置物架、小型家具</li><li><b>運動休閒</b>：球拍、瑜珈墊、啞鈴、腳踏車、運動服飾、戶外用品</li><li><b>服飾配件</b>：二手衣物、球鞋、包包、配件、保養品</li><li><b>二手好物</b>：樂器、模型公仔、演唱會周邊、桌遊、其他雜項</li></ul>"
                     aria-label="分類說明">
                     <i class="ti ti-info-circle"></i>
                   </button>
@@ -1024,22 +1025,34 @@
               <div class="sell-field">
                 <label class="sell-label">主要照片（封面）<span class="sell-required">*</span></label>
                 <small class="sell-hint">≤ 5MB，格式：JPEG / PNG / WebP；建議清晰明亮，能展示商品外觀</small>
-                <label class="sell-upload-zone" id="mainUploadZone" for="mainImage">
-                  <i class="ti ti-photo-up"></i>
-                  <span>點擊或拖曳上傳封面照</span>
-                </label>
+                <div class="sell-upload-row">
+                  <label class="sell-upload-zone" id="mainUploadZone" for="mainImage">
+                    <i class="ti ti-photo-up"></i>
+                    <span>點擊或拖曳上傳封面照</span>
+                  </label>
+                  <label class="sell-camera-btn" for="mainImageCamera" title="開啟相機拍照">
+                    <i class="ti ti-camera"></i><span>拍照</span>
+                  </label>
+                </div>
                 <input type="file" id="mainImage" name="mainImage" class="d-none" accept="image/jpeg,image/png,image/webp" />
+                <input type="file" id="mainImageCamera" class="d-none" accept="image/*" capture="environment" />
                 <div id="mainImagePreview" class="sell-preview-single"></div>
               </div>
 
               <div class="sell-field">
                 <label class="sell-label">其他照片（最多 5 張）<span class="sell-required">*</span></label>
                 <small class="sell-hint">展示商品其他角度或細節；選擇新檔案會覆蓋全部次要照片；每張 ≤ 5MB</small>
-                <label class="sell-upload-zone" id="subUploadZone" for="image">
-                  <i class="ti ti-photos"></i>
-                  <span>點擊或拖曳上傳（可多選）</span>
-                </label>
+                <div class="sell-upload-row">
+                  <label class="sell-upload-zone" id="subUploadZone" for="image">
+                    <i class="ti ti-photos"></i>
+                    <span>點擊或拖曳上傳（可多選）</span>
+                  </label>
+                  <label class="sell-camera-btn" for="subImageCamera" title="開啟相機拍照">
+                    <i class="ti ti-camera"></i><span>拍照</span>
+                  </label>
+                </div>
                 <input type="file" id="image" name="images" class="d-none" accept="image/jpeg,image/png,image/webp" multiple />
+                <input type="file" id="subImageCamera" class="d-none" accept="image/*" capture="environment" />
                 <div class="sell-hint" id="multiImagesHint" style="margin-top:4px;">已選 0 / 5</div>
                 <div id="previewArea" class="sell-preview-grid"></div>
               </div>
@@ -1865,6 +1878,8 @@ const timer = setInterval(() => {
           </div>
           <div class="modal-footer py-2">
             <small class="text-muted me-auto">拖曳調整裁切範圍，滾輪縮放</small>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="shopCropRotateL" title="向左旋轉"><i class="ti ti-rotate-counterclockwise"></i></button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="shopCropRotateR" title="向右旋轉"><i class="ti ti-rotate-clockwise"></i></button>
             <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
             <button type="button" class="btn btn-primary btn-sm" id="shopCropConfirm">確認裁切</button>
           </div>

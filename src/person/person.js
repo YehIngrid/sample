@@ -1066,6 +1066,16 @@ async function loadDashboardData() {
       const raw = itemRes?.data;
       const total = raw?.total ?? raw?.count ?? (Array.isArray(raw) ? raw.length : (raw?.commodities ?? raw?.data ?? []).length);
       elProducts.textContent = total ?? '—';
+
+      // 首次上架引導 banner
+      const banner = document.getElementById('firstListingBanner');
+      if (banner && total === 0 && !localStorage.getItem('firstListingBannerDismissed')) {
+        banner.classList.remove('d-none');
+        document.getElementById('firstListingBannerClose')?.addEventListener('click', () => {
+          banner.classList.add('d-none');
+          localStorage.setItem('firstListingBannerDismissed', '1');
+        });
+      }
     }
     if (elOrders) {
       const ACTIVE = new Set(['pending','preparing','delivered','review_pending']);

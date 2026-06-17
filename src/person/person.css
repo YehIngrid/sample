@@ -3389,3 +3389,47 @@ small { font-size: 10px; color: #004b97; }
   .od-status-banner { flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px; }
   .od-person-actions { flex-direction: column; }
 }
+
+/* ── 首次上架引導 banner ─────────────────────────────────── */
+.first-listing-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #e8f0fb 0%, #dceeff 100%);
+  border: 1px solid rgba(0,75,151,0.18);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.flb-icon { flex-shrink: 0; width: 40px; height: 40px; background: #004b97; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.flb-icon img { width: 22px; height: 22px; filter: brightness(0) invert(1); }
+.flb-body { flex: 1; min-width: 0; }
+.flb-title { font-size: 0.95rem; font-weight: 700; color: #004b97; margin-bottom: 2px; }
+.flb-sub { font-size: 0.82rem; color: #555; }
+.flb-btn {
+  flex-shrink: 0;
+  background: #004b97;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.flb-btn:hover { background: rgb(36,182,133); color: #fff; }
+.flb-close {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: none; border: none;
+  font-size: 1.1rem; color: #999;
+  cursor: pointer; line-height: 1;
+  padding: 0;
+}
+.flb-close:hover { color: #333; }
+@media (max-width: 575px) {
+  .first-listing-banner { flex-wrap: wrap; }
+  .flb-btn { width: 100%; text-align: center; margin-top: 4px; }
+}

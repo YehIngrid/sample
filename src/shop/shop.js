@@ -755,6 +755,105 @@ document.getElementById('image').addEventListener('change', async function (e) {
   renderMultiPreviews();
 });
 
+// ── 相機 input 接線 ───────────────────────────────────────
+document.getElementById('mainImageCamera').addEventListener('change', function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+  if (file.size > 5000000) {
+    Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
+    return;
+  }
+  openShopCrop([file], 'main');
+});
+
+document.getElementById('subImageCamera').addEventListener('change', async function (e) {
+  const newFiles = Array.from(e.target.files);
+  if (!newFiles.length) return;
+  e.target.value = '';
+
+  const remaining = 5 - shopMultiFiles.length;
+  if (remaining <= 0) {
+    Swal.fire({ icon: 'warning', title: '已達上限', text: '最多只能上傳 5 張其他照片。' });
+    return;
+  }
+  const toAdd = newFiles.slice(0, remaining);
+  const oversizedList = toAdd.filter(f => f.size > 5000000);
+  const normalList    = toAdd.filter(f => f.size <= 5000000);
+
+  if (oversizedList.length > 0) {
+    const { isConfirmed } = await Swal.fire({
+      icon: 'info',
+      title: '部分照片較大',
+      text: `有 ${oversizedList.length} 張超過 5MB，建議裁剪以縮小檔案大小，或直接自動壓縮上傳。`,
+      confirmButtonText: '前往裁剪',
+      cancelButtonText: '自動壓縮上傳',
+      showCancelButton: true,
+      reverseButtons: true,
+    });
+
+    if (normalList.length) {
+      const compressedNormal = (await Promise.all(normalList.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
+      shopMultiFiles.push(...compressedNormal);
+      syncMultiToInput();
+      renderMultiPreviews();
+    }
+
+    if (isConfirmed) {
+      shopCropNewQueue = oversizedList.slice(1);
+      openShopCropNew(oversizedList[0]);
+    } else {
+      const compressedOver = (await Promise.all(oversizedList.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
+      shopMultiFiles.push(...compressedOver);
+      syncMultiToInput();
+      renderMultiPreviews();
+    }
+    return;
+  }
+
+  const compressed = (await Promise.all(toAdd.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
+  shopMultiFiles.push(...compressed);
+  syncMultiToInput();
+  renderMultiPreviews();
+});
+
+// ── 商品名稱關鍵字偵測 ───────────────────────────────────
+const KEYWORD_RULES = [
+  { keywords: ['槍', '子彈', '彈藥', '爆炸物', '炸藥'], msg: '疑似違禁品（武器/爆炸物），禁止販售' },
+  { keywords: ['毒品', '大麻', '安非他命', '海洛因', 'K他命', '搖頭丸', 'MDMA'], msg: '疑似違禁藥物，禁止販售' },
+  { keywords: ['抗痘', '消炎', '殺菌', '美白', '去疤', '療效', '醫療'], msg: '商品名稱含療效宣稱字眼，請移除或改用描述性文字（如「控油保濕乳液」而非「抗痘消炎乳液」）' },
+  { keywords: ['高仿', 'A貨', '仿名牌', '仿冒', '山寨'], msg: '疑似仿冒品，禁止販售' },
+  { keywords: ['統一發票', '發票', '增值稅'], msg: '發票類商品可能違反稅務規定，請確認是否合規' },
+  { keywords: ['個資', '個人資料', '帳號', '密碼', '信用卡'], msg: '禁止販售個人資料或帳號密碼' },
+];
+
+const nameInput = document.getElementById('name');
+const nameWarning = document.getElementById('nameKeywordWarning');
+
+nameInput.addEventListener('input', () => {
+  const val = nameInput.value;
+  const hits = [];
+  for (const rule of KEYWORD_RULES) {
+    const matched = rule.keywords.filter(k => val.includes(k));
+    if (matched.length) hits.push({ matched, msg: rule.msg });
+  }
+  if (hits.length === 0) {
+    nameWarning.style.display = 'none';
+    return;
+  }
+  nameWarning.innerHTML = `<div class="kww-title">⚠️ 請注意以下問題：</div>` +
+    hits.map(h => `<div>「${h.matched.join('、')}」— ${h.msg}</div>`).join('');
+  nameWarning.style.display = 'block';
+});
+
+// ── 裁切 modal 轉向按鈕 ──────────────────────────────────
+document.getElementById('shopCropRotateL').addEventListener('click', () => {
+  if (shopCropper) shopCropper.rotate(-90);
+});
+document.getElementById('shopCropRotateR').addEventListener('click', () => {
+  if (shopCropper) shopCropper.rotate(90);
+});
+
 // TODO member
 // const member = document.getElementById('member');
 // const memberbtn = document.getElementById('memberbtn');

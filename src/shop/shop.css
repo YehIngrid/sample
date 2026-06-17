@@ -600,14 +600,14 @@ ul{
   background: none;
   border: none;
   padding: 0 0 0 4px;
-  color: #abdad5;
+  color: #004b97;
   font-size: 1rem;
   cursor: pointer;
   vertical-align: middle;
   line-height: 1;
   transition: color 0.15s;
 }
-.sell-info-btn:hover { color: #004b97; }
+.sell-info-btn:hover { color: rgb(36,182,133); }
 .sell-cat-popover-list {
   margin: 0;
   padding-left: 16px;
@@ -794,6 +794,54 @@ ul{
 }
 .sell-upload-zone i { font-size: 2rem; opacity: 0.7; }
 .sell-upload-zone:hover { border-color: #004b97; background: #ddeeff; }
+
+/* 上傳區 + 相機按鈕並排 */
+.sell-upload-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 0;
+}
+.sell-upload-row .sell-upload-zone {
+  flex: 1;
+  margin-bottom: 0;
+}
+.sell-camera-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 72px;
+  border: 2px solid #004b97;
+  border-radius: 12px;
+  background: #fff;
+  color: #004b97;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  margin-bottom: 12px;
+  padding: 8px 0;
+}
+.sell-camera-btn i { font-size: 1.5rem; }
+.sell-camera-btn:hover { background: #004b97; color: #fff; }
+
+/* 商品名稱關鍵字警告 */
+.sell-keyword-warning {
+  margin-top: 6px;
+  padding: 8px 12px;
+  background: #fff8e1;
+  border: 1px solid #f5c842;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: #7a5800;
+  line-height: 1.6;
+}
+.sell-keyword-warning .kww-title {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
 
 /* 照片預覽 */
 .sell-preview-single img {
