@@ -398,6 +398,7 @@ ul{
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: 9px !important;
 }
 .seller-quick-btn {
   display: inline-flex;
@@ -433,6 +434,7 @@ ul{
   border-radius: 10px;
   padding: 3.6rem;
   padding-bottom: 7rem;
+  overflow-x: hidden;
 }
 @media (max-width: 400px) {
   .form-store {
@@ -501,6 +503,8 @@ ul{
   align-items: center;
   justify-content: center;
   gap: 0;
+  margin: 0.8rem 1.2rem 0;   /* 與 .form-store 水平 margin 對齊 */
+  overflow: hidden;           /* 防止小螢幕標籤溢出 */
 }
 .sell-step {
   display: flex;
@@ -539,6 +543,9 @@ ul{
   color: #4a627a;
   font-weight: 600;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 72px;
 }
 .sell-step.active .sell-step-label { color: #004b97; }
 .sell-step.done .sell-step-label { color: rgb(36,182,133); }
@@ -664,6 +671,16 @@ ul{
 @media (max-width: 640px) {
   .sell-two-col { grid-template-columns: 1fr; }
   .sell-cat-grid { grid-template-columns: repeat(3, 1fr); }
+  .sell-steps { margin: 0.8rem 0 0; }
+}
+@media (max-width: 400px) {
+  .sell-cat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .sell-cat-card { padding: 10px 6px; }
+  .sell-size-group { flex-wrap: wrap; }
+  .sell-size-card { flex: 1 1 calc(50% - 5px); }
+  .sell-step-label { display: none; }
+  .sell-step-line { max-width: 28px; margin: 0 4px; }
+  .sell-steps { margin: 0.8rem 1rem 0; }
 }
 
 /* 尺寸選卡 */
@@ -730,6 +747,7 @@ ul{
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   transition: border 0.2s, background 0.2s;
+  min-width: 0;
 }
 .sell-condition-card input { display: none; }
 .sell-condition-card:hover { background: aliceblue; }
@@ -748,6 +766,10 @@ ul{
   font-weight: 400;
   color: #6f87a0;
   margin-left: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 /* 售價 */
@@ -817,7 +839,7 @@ ul{
   border-radius: 12px;
   background: #fff;
   color: #004b97;
-  font-size: 0.8rem;
+  font-size: 0.9rem !important;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
@@ -1774,6 +1796,7 @@ tbody > tr:nth-of-type(even) {
 #seller .nav-link {
   color: #000 !important;
   font-weight: 500;
+  padding: 7px;
 }
 #seller .nav-tabs .nav-link.active {
   color: #004b97 !important;

@@ -1872,15 +1872,18 @@ const timer = setInterval(() => {
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body p-0" style="background:#111;">
-            <div style="height:60vh;overflow:hidden;">
+            <div id="shopCropImgWrap" style="height:60vh;overflow:hidden;position:relative;">
               <img id="shopCropImg" style="display:block;max-width:100%;" alt="裁切照片範圍">
+              <canvas id="shopMosaicCanvas" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair;touch-action:none;"></canvas>
             </div>
           </div>
           <div class="modal-footer py-2">
-            <small class="text-muted me-auto">拖曳調整裁切範圍，滾輪縮放</small>
-            <button type="button" class="btn btn-outline-secondary btn-sm" id="shopCropRotateR" title="旋轉"><i class="ti ti-rotate-clockwise"></i> 旋轉</button>
-            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary btn-sm" id="shopCropConfirm">確認裁切</button>
+            <small class="text-muted me-auto" id="shopCropHint">拖曳調整裁切範圍，滾輪縮放</small>
+            <button type="button" class="btn btn-outline-secondary btn-sm shop-crop-ctrl" id="shopCropRotateR" title="旋轉"><i class="ti ti-rotate-clockwise"></i> 旋轉</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm shop-crop-ctrl" id="shopMosaicBtn"><i class="ti ti-brush"></i> 馬賽克</button>
+            <button type="button" class="btn btn-secondary btn-sm shop-crop-ctrl" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary btn-sm shop-crop-ctrl" id="shopCropConfirm">確認裁切</button>
+            <button type="button" class="btn btn-primary btn-sm d-none" id="shopMosaicDoneBtn">完成</button>
           </div>
         </div>
       </div>

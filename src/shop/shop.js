@@ -670,6 +670,7 @@ shopCropModalEl.addEventListener('hidden.bs.modal', async () => {
   const wasTarget    = shopCropTarget;
   const originalFile = shopCropQueue[0] || null;
 
+  resetMosaicState();
   if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
   shopCropImg.src = '';
   shopCropFromConfirm = false;
@@ -850,6 +851,134 @@ nameInput.addEventListener('input', () => {
 document.getElementById('shopCropRotateR').addEventListener('click', () => {
   if (shopCropper) shopCropper.rotate(90);
 });
+
+// ── 馬賽克筆 ─────────────────────────────────────────────
+const MOSAIC_BLOCK = 16; // 每格 mosaic 的顯示像素大小
+let shopMosaicMode    = false;
+let shopMosaicDrawing = false;
+let shopMosaicOffscreen = null; // 全解析度備份 canvas
+
+const shopMosaicCanvas = document.getElementById('shopMosaicCanvas');
+const shopMosaicCtx    = shopMosaicCanvas.getContext('2d');
+
+function shopMosaicGetPos(e) {
+  const rect   = shopMosaicCanvas.getBoundingClientRect();
+  const src    = e.touches ? e.touches[0] : e;
+  return {
+    x: (src.clientX - rect.left) * (shopMosaicCanvas.width  / rect.width),
+    y: (src.clientY - rect.top)  * (shopMosaicCanvas.height / rect.height),
+  };
+}
+
+function shopMosaicApplyBlock(x, y) {
+  const bx = Math.floor(x / MOSAIC_BLOCK) * MOSAIC_BLOCK;
+  const by = Math.floor(y / MOSAIC_BLOCK) * MOSAIC_BLOCK;
+  const scaleX = shopMosaicOffscreen.width  / shopMosaicCanvas.width;
+  const scaleY = shopMosaicOffscreen.height / shopMosaicCanvas.height;
+  const offX = Math.round(bx * scaleX);
+  const offY = Math.round(by * scaleY);
+  const offW = Math.max(1, Math.round(MOSAIC_BLOCK * scaleX));
+  const offH = Math.max(1, Math.round(MOSAIC_BLOCK * scaleY));
+
+  const offCtx = shopMosaicOffscreen.getContext('2d');
+  const data   = offCtx.getImageData(offX, offY, offW, offH).data;
+  let r = 0, g = 0, b = 0;
+  const pixels = data.length / 4;
+  for (let i = 0; i < data.length; i += 4) { r += data[i]; g += data[i+1]; b += data[i+2]; }
+  r = Math.round(r / pixels); g = Math.round(g / pixels); b = Math.round(b / pixels);
+
+  const fill = `rgb(${r},${g},${b})`;
+  shopMosaicCtx.fillStyle = fill;
+  shopMosaicCtx.fillRect(bx, by, MOSAIC_BLOCK, MOSAIC_BLOCK);
+  offCtx.fillStyle = fill;
+  offCtx.fillRect(offX, offY, offW, offH);
+}
+
+function enterMosaicMode() {
+  if (!shopCropImg.complete || !shopCropImg.naturalWidth) return;
+  shopMosaicMode = true;
+  const wrap = document.getElementById('shopCropImgWrap');
+  shopMosaicCanvas.width  = wrap.offsetWidth;
+  shopMosaicCanvas.height = wrap.offsetHeight;
+  shopMosaicCtx.drawImage(shopCropImg, 0, 0, shopMosaicCanvas.width, shopMosaicCanvas.height);
+
+  shopMosaicOffscreen = document.createElement('canvas');
+  shopMosaicOffscreen.width  = shopCropImg.naturalWidth;
+  shopMosaicOffscreen.height = shopCropImg.naturalHeight;
+  shopMosaicOffscreen.getContext('2d').drawImage(shopCropImg, 0, 0);
+
+  if (shopCropper) shopCropper.disable();
+  shopMosaicCanvas.style.display = 'block';
+  document.querySelectorAll('.shop-crop-ctrl').forEach(el => el.classList.add('d-none'));
+  document.getElementById('shopMosaicDoneBtn').classList.remove('d-none');
+  document.getElementById('shopCropHint').textContent = '塗抹要遮蓋的區域';
+}
+
+function exitMosaicMode() {
+  shopMosaicMode    = false;
+  shopMosaicDrawing = false;
+  shopMosaicCanvas.style.display = 'none';
+
+  const dataUrl = shopMosaicOffscreen.toDataURL('image/png');
+  shopMosaicOffscreen = null;
+
+  if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
+  shopCropImg.src = dataUrl;
+
+  const reinit = () => {
+    shopCropper = new Cropper(shopCropImg, { viewMode: 1, autoCropArea: 0.9, responsive: true });
+  };
+  if (shopCropImg.complete && shopCropImg.naturalWidth > 0) reinit();
+  else shopCropImg.addEventListener('load', reinit, { once: true });
+
+  document.querySelectorAll('.shop-crop-ctrl').forEach(el => el.classList.remove('d-none'));
+  document.getElementById('shopMosaicDoneBtn').classList.add('d-none');
+  document.getElementById('shopCropHint').textContent = '拖曳調整裁切範圍，滾輪縮放';
+}
+
+function resetMosaicState() {
+  if (shopMosaicMode) {
+    shopMosaicMode    = false;
+    shopMosaicDrawing = false;
+    shopMosaicOffscreen = null;
+    shopMosaicCanvas.style.display = 'none';
+    document.querySelectorAll('.shop-crop-ctrl').forEach(el => el.classList.remove('d-none'));
+    document.getElementById('shopMosaicDoneBtn').classList.add('d-none');
+    document.getElementById('shopCropHint').textContent = '拖曳調整裁切範圍，滾輪縮放';
+  }
+}
+
+document.getElementById('shopMosaicBtn').addEventListener('click', enterMosaicMode);
+document.getElementById('shopMosaicDoneBtn').addEventListener('click', exitMosaicMode);
+
+shopMosaicCanvas.addEventListener('mousedown', (e) => {
+  if (!shopMosaicMode) return;
+  shopMosaicDrawing = true;
+  const { x, y } = shopMosaicGetPos(e);
+  shopMosaicApplyBlock(x, y);
+});
+shopMosaicCanvas.addEventListener('mousemove', (e) => {
+  if (!shopMosaicMode || !shopMosaicDrawing) return;
+  const { x, y } = shopMosaicGetPos(e);
+  shopMosaicApplyBlock(x, y);
+});
+shopMosaicCanvas.addEventListener('mouseup',    () => { shopMosaicDrawing = false; });
+shopMosaicCanvas.addEventListener('mouseleave', () => { shopMosaicDrawing = false; });
+
+shopMosaicCanvas.addEventListener('touchstart', (e) => {
+  if (!shopMosaicMode) return;
+  e.preventDefault();
+  shopMosaicDrawing = true;
+  const { x, y } = shopMosaicGetPos(e);
+  shopMosaicApplyBlock(x, y);
+}, { passive: false });
+shopMosaicCanvas.addEventListener('touchmove', (e) => {
+  if (!shopMosaicMode || !shopMosaicDrawing) return;
+  e.preventDefault();
+  const { x, y } = shopMosaicGetPos(e);
+  shopMosaicApplyBlock(x, y);
+}, { passive: false });
+shopMosaicCanvas.addEventListener('touchend', () => { shopMosaicDrawing = false; });
 
 // TODO member
 // const member = document.getElementById('member');
