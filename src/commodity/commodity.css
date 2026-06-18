@@ -941,3 +941,11 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
     border: 1.5px solid transparent !important;
   }
 }
+.you-might-like-title {
+  font-weight: 700;
+  color: #004b97;
+  margin-bottom: 1rem;
+  padding-left: 2px;
+  border-left: 4px solid #abdad5;
+  padding-left: 10px;
+}

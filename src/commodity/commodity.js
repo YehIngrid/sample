@@ -202,6 +202,12 @@ async function loadProducts() {
     renderProductsBootstrap(items);
     renderPagination(totalCount);
 
+    if (items.length === 0 && keyword) {
+      showYouMightLike();
+    } else {
+      document.getElementById('you-might-like')?.classList.add('d-none');
+    }
+
 
   } catch (err) {
     console.error('API 載入失敗', err);
@@ -234,11 +240,14 @@ function renderProductsBootstrap(items) {
     if (!items || items.length === 0) {
         // 沒商品 → 顯示提示
         noProducts.style.display = 'block';
+        const noText = document.getElementById('no-products-text');
+        if (noText) noText.textContent = activeKeyword ? `找不到「${activeKeyword}」相關商品` : '目前沒有商品';
         return;
     }
 
-    // 有商品 → 隱藏無商品提示
+    // 有商品 → 隱藏無商品提示＆你可能也喜歡
     noProducts.style.display = 'none';
+    document.getElementById('you-might-like')?.classList.add('d-none');
 
   const categoryMap = {
     education:   '課業學習',
@@ -495,4 +504,51 @@ if (layoutGridBtn && layoutListBtn) {
     layoutListBtn.classList.add('active');
     layoutGridBtn.classList.remove('active');
   });
+}
+
+// ── 搜尋無結果：你可能也喜歡 ──
+async function showYouMightLike() {
+  const section = document.getElementById('you-might-like');
+  const grid = document.getElementById('youMightLikeGrid');
+  if (!section || !grid) return;
+  try {
+    const bs = new BackendService();
+    const res = await bs.getHotItems({ page: 1, limit: 6 });
+    const items = res?.data?.commodities || [];
+    if (!items.length) return;
+    grid.innerHTML = '';
+    items.forEach(p => {
+      const col = document.createElement('div');
+      col.className = 'col';
+      const imgUrl = p.mainImage || '';
+      col.innerHTML = `
+        <div class="product-card position-relative h-100" data-id="${escapeHtml(p.id)}">
+          <div class="product-thumb">
+            ${imgUrl
+              ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(p.name)}" loading="lazy">`
+              : `<div class="product-thumb-placeholder">${escapeHtml(p.name.slice(0,6))}</div>`}
+          </div>
+          <div class="card-body">
+            <div class="hotItemName ellipsis-text">${escapeHtml(p.name)}</div>
+            <div class="card-bottom">
+              <span class="price">NT$ ${escapeHtml(String(p.price))}</span>
+              <div class="card-seller">
+                <img class="seller-avatar" src="${escapeHtml(p.owner?.photoURL || '../webP/default-avatar.webp')}" alt="${escapeHtml(p.owner?.name || '賣家')}" onerror="this.src='../webP/default-avatar.webp'">
+                <span class="seller-name">${escapeHtml(p.owner?.name || '賣家')}</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      col.querySelector('.product-card').addEventListener('click', () => {
+        location.href = `../product/product.html?id=${encodeURIComponent(p.id)}`;
+      });
+      const img = col.querySelector('.product-thumb img');
+      if (img) {
+        if (img.complete && img.naturalWidth > 0) img.closest('.product-thumb').classList.add('img-loaded');
+        else img.addEventListener('load', () => img.closest('.product-thumb')?.classList.add('img-loaded'), { once: true });
+      }
+      grid.appendChild(col);
+    });
+    section.classList.remove('d-none');
+  } catch {}
 }

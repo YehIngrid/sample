@@ -310,10 +310,11 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   if (!wrap) return;
 
   const ageText = (() => {
-    const a = product?.age;
-    if (a == null || String(a) === '-1') return '未知';
-    if (Number(a) === 0) return '不到 1 年';
-    return `${a} 年`;
+    const a = Number(product?.age);
+    if (product?.age == null || String(product?.age) === '-1' || isNaN(a)) return '不清楚';
+    if (a === 0) return '未滿 1 年';
+    if (a <= 3) return '1–3 年';
+    return '3 年以上';
   })();
 
   const fields = [
@@ -486,7 +487,51 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
       document.getElementById('sellerInfo')?.classList.add('d-none');
       console.log('略過賣家資訊渲染');
     }
+    // 無論有無 owner，都嘗試載入相似商品
+    loadSimilarProducts(product.category, product.id ?? product._id);
   };
+
+// === 相似商品 ===
+async function loadSimilarProducts(category, currentId) {
+  const container = document.getElementById('similarProducts');
+  const section = container?.closest('.similarCommodities');
+  if (!container || !category) { section && (section.style.display = 'none'); return; }
+  try {
+    const res = await new BackendService().getCommodityList(category, { page: 1, limit: 7 });
+    const items = (res?.data?.commodities || [])
+      .filter(p => String(p.id ?? p._id) !== String(currentId))
+      .slice(0, 6);
+    if (!items.length) { section && (section.style.display = 'none'); return; }
+    items.forEach(product => {
+      const col = document.createElement('div');
+      col.className = 'col';
+      const pid = product.id ?? product._id ?? '';
+      col.innerHTML = `
+        <div class="product-card seller-product-card h-100" data-id="${pid}">
+          <div class="product-thumb">
+            <img src="${product.mainImage || ''}" alt="${product.name || ''}" loading="lazy"
+                 onerror="this.src='../image/placeholder.webp'">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title ellipsis-text">${product.name || '未命名'}</h5>
+            <div class="mt-auto">
+              <span class="fw-bold" style="color:#004b97;">NT$ ${Number(product.price ?? 0).toLocaleString('zh-TW')}</span>
+            </div>
+          </div>
+        </div>`;
+      col.addEventListener('click', () => { if (pid) location.href = `product.html?id=${pid}`; });
+      const img = col.querySelector('.product-thumb img');
+      if (img) {
+        if (img.complete && img.naturalWidth > 0) img.closest('.product-thumb').classList.add('img-loaded');
+        else img.addEventListener('load', () => img.closest('.product-thumb')?.classList.add('img-loaded'), { once: true });
+      }
+      container.appendChild(col);
+    });
+    section && (section.style.display = '');
+  } catch {
+    section && (section.style.display = 'none');
+  }
+}
 
 // === 把資料渲染到 #sellerInfo ===
 function renderSellerInfo(data) {
