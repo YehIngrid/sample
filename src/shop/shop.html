@@ -858,6 +858,16 @@
           </div>
         </div>
 
+        <!-- 草稿恢復提示 -->
+        <div id="sellDraftBanner" class="sell-draft-banner d-none">
+          <i class="ti ti-file-text"></i>
+          <span>您有一份未完成的草稿</span>
+          <div class="sell-draft-actions">
+            <button type="button" id="sellDraftRestore" class="sell-draft-btn-restore">繼續填寫</button>
+            <button type="button" id="sellDraftDiscard" class="sell-draft-btn-discard">捨棄</button>
+          </div>
+        </div>
+
         <div class="form-store">
           <form id="createCommodityForm" enctype="multipart/form-data">
 
@@ -977,7 +987,7 @@
                     </div>
                     <div class="sell-field">
                       <label for="stock" class="sell-label">庫存數量 <span class="sell-required">*</span></label>
-                      <input type="number" id="stock" name="stock" class="form-control" placeholder="可販賣數量" min="1" />
+                      <input type="number" id="stock" name="stock" class="form-control" placeholder="可販賣數量" min="1" value="1" />
                     </div>
                   </div>
 
@@ -2032,6 +2042,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Step 3 → 2
   document.getElementById('step3Prev')?.addEventListener('click', () => setStep(2, true));
+
+  // ── 草稿儲存 ──
+  const DRAFT_KEY = 'sellDraft';
+
+  function saveDraft() {
+    const draft = {
+      name: document.getElementById('name')?.value || '',
+      description: document.getElementById('description')?.value || '',
+      price: document.getElementById('price')?.value || '',
+      stock: document.getElementById('stock')?.value || '',
+      age: document.getElementById('age')?.value || '',
+      category: document.getElementById('category')?.value || '',
+      size: document.getElementById('size')?.value || '',
+      new_or_old: document.getElementById('new_or_old')?.value || '',
+    };
+    if (draft.name || draft.description || draft.price) {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    }
+  }
+
+  function restoreDraft(draft) {
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    set('name', draft.name);
+    set('description', draft.description);
+    set('price', draft.price);
+    set('stock', draft.stock);
+    set('age', draft.age);
+    if (draft.category && draft.category !== 'notselyet') {
+      set('category', draft.category);
+      document.querySelector(`input[name="categoryRadio"][value="${draft.category}"]`)?.click();
+    }
+    if (draft.size) {
+      set('size', draft.size);
+      document.querySelector(`input[name="sizeRadio"][value="${draft.size}"]`)?.click();
+    }
+    if (draft.new_or_old) {
+      set('new_or_old', draft.new_or_old);
+      document.querySelector(`input[name="conditionRadio"][value="${draft.new_or_old}"]`)?.click();
+    }
+    // 同步字數計數器
+    ['name', 'description'].forEach(id => {
+      document.getElementById(id)?.dispatchEvent(new Event('input'));
+    });
+  }
+
+  // 頁面載入時檢查草稿
+  const draftBanner = document.getElementById('sellDraftBanner');
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (raw && draftBanner) {
+      const draft = JSON.parse(raw);
+      if (draft.name || draft.description || draft.price) {
+        draftBanner.classList.remove('d-none');
+        document.getElementById('sellDraftRestore')?.addEventListener('click', () => {
+          restoreDraft(draft);
+          draftBanner.classList.add('d-none');
+          setStep(1, false);
+        });
+        document.getElementById('sellDraftDiscard')?.addEventListener('click', () => {
+          localStorage.removeItem(DRAFT_KEY);
+          draftBanner.classList.add('d-none');
+        });
+      }
+    }
+  } catch {}
+
+  // 自動儲存草稿
+  document.getElementById('createCommodityForm')?.addEventListener('input', saveDraft);
+
+  // 暴露給 shop.js (module scope) 使用
+  window.sellSetStep = setStep;
+  window.sellClearDraft = () => localStorage.removeItem(DRAFT_KEY);
+  window.sellResetForRelisting = () => {
+    const form = document.getElementById('createCommodityForm');
+    form?.reset();
+    const mainPrev = document.getElementById('mainImagePreview');
+    if (mainPrev) mainPrev.innerHTML = '';
+    const subPrev = document.getElementById('previewArea');
+    if (subPrev) subPrev.innerHTML = '';
+    const hint = document.getElementById('multiImagesHint');
+    if (hint) hint.textContent = '已選 0 / 5';
+    localStorage.removeItem(DRAFT_KEY);
+    setStep(1, false);
+    document.getElementById('createCommodityForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   // 上傳區 label 拖曳支援
   ['mainUploadZone', 'subUploadZone'].forEach(id => {

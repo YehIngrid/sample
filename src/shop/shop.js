@@ -446,13 +446,21 @@ nextHotBtn.addEventListener("click", () => {
     await backendService.create(sellData);
     loaderOverlay.classList.remove('d-flex');
     loaderOverlay.classList.add('d-none');
-    await Swal.fire({
-      title: "商品上架成功!",
-      text: "請至首頁確認是否顯示您的商品",
-      icon: "success"
+    const successResult = await Swal.fire({
+      title: "商品上架成功！",
+      text: "商品已送出，通過審核後將顯示在首頁",
+      icon: "success",
+      showCancelButton: true,
+      confirmButtonText: "查看商品",
+      cancelButtonText: "再上架一件",
+      reverseButtons: true,
     });
-    formEl.reset();
-    window.location.href = "shop.html";
+    if (successResult.isConfirmed) {
+      window.sellClearDraft?.();
+      window.location.href = "shop.html";
+    } else {
+      window.sellResetForRelisting?.();
+    }
   } catch (e) {
     const status = e?.response?.status ?? e?.status;
     const msg = e?.response?.data?.message ?? e?.message ?? '';

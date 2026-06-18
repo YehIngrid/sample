@@ -497,6 +497,44 @@ ul{
    賣家表單：多步驟 Wizard
 ══════════════════════════════════════ */
 
+/* 草稿恢復 banner */
+.sell-draft-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f0f7ff;
+  border: 1px solid rgba(0,75,151,0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 10px 1.2rem 0;
+  font-size: 0.88rem;
+  color: #004b97;
+}
+.sell-draft-banner i { font-size: 1.1rem; flex-shrink: 0; }
+.sell-draft-banner > span { flex: 1; }
+.sell-draft-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.sell-draft-btn-restore {
+  background: #004b97;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sell-draft-btn-restore:hover { background: rgb(36,182,133); }
+.sell-draft-btn-discard {
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.sell-draft-btn-discard:hover { background: #e0e0e0; }
+
 /* 步驟指示器 */
 .sell-steps {
   display: flex;
