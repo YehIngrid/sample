@@ -63,13 +63,13 @@
     <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
     <script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
     <script defer src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
-  <script type="module" crossorigin src="/assets/shop-shop-CHrfX8_x.js"></script>
+  <script type="module" crossorigin src="/assets/shop-shop-t89e9h2R.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-tedidLWH.js">
   <link rel="modulepreload" crossorigin href="/assets/chat-ig-AsZVI.js">
   <link rel="modulepreload" crossorigin href="/assets/default-DxlzImvO.js">
   <link rel="modulepreload" crossorigin href="/assets/wpBackendService-8jEBVtgQ.js">
-  <link rel="stylesheet" crossorigin href="/assets/default-CkAgKHf7.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-BXOkCxUv.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
   <link rel="stylesheet" crossorigin href="/assets/shop-DoVenrgK.css">
 </head>
@@ -1440,7 +1440,7 @@
             <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillMobile('${safe}')">↗</button>
             <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','mobile')"><i class="fa-solid fa-xmark"></i></button>
           </li>`;
-        }).join('')
+        }).join('') + `<li class="search-drop-clear"><button onclick="window._clearAllHistory()">清空全部</button></li>`
       : '<li class="search-drop-empty"><i class="ti ti-history" style="margin-right:3px;opacity:0.5;font-size:0.85em;"></i>尚無搜尋紀錄</li>';
   }
 
@@ -1460,12 +1460,18 @@
           <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillDesktop('${safe}')">↗</button>
           <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','desktop')"><i class="fa-solid fa-xmark"></i></button>
         </li>`;
-      }).join('');
+      }).join('') + `<li class="search-drop-clear"><button onclick="window._clearAllHistory()">清空全部</button></li>`;
     }
   }
 
   window._removeHistory = function (term, src) {
     saveHistory(getHistory().filter(t => t !== term));
+    renderMobileHistory();
+    renderDesktopHistory();
+  };
+
+  window._clearAllHistory = function () {
+    saveHistory([]);
     renderMobileHistory();
     renderDesktopHistory();
   };

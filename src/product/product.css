@@ -638,8 +638,9 @@
 .seller-stats {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 .seller-stat-item {
   display: flex;
@@ -652,6 +653,10 @@
   font-weight: 800;
   color: #004b97;
   line-height: 1.2;
+}
+#sellerJoinDate {
+  font-size: 1rem;
+  line-height: 1.8;
 }
 .seller-stat-label {
   font-size: 0.75rem;
@@ -886,8 +891,8 @@
     }
 
     /* 兩顆主要按鈕做滿版並列 */
-    .cta-wrap > .btn { min-height: 48px; font-size: 1.1rem; font-weight: 600; border: none; border-radius: 8px; transition: opacity 0.2s; }
-    .cta-wrap > .btn:hover { opacity: 0.85; }
+    .cta-wrap .btn { min-height: 48px; font-size: 1.1rem; font-weight: 600; border: none; border-radius: 8px; transition: opacity 0.2s; }
+    .cta-wrap .btn:hover { opacity: 0.85; }
     .cta-wrap .buybtn.order {
       background-color: #004b97;
       color: #fff;
@@ -897,6 +902,14 @@
       color: #004b97;
       border: 1.5px solid #004b97 !important;
     }
+    #quickChatBtnDesktop {
+      border: 1.5px solid #004b97 !important;
+      color: #004b97;
+      font-size: 0.95rem;
+      min-height: 40px;
+      background-color: #fff;
+    }
+    #quickChatBtnDesktop:hover { background-color: #004b97 !important; color: #fff !important; opacity: 1; }
 .accordion-button:focus {
   box-shadow: none !important;
   border-color: transparent !important;
@@ -1600,7 +1613,7 @@
     background: #fff;
   }
   .phonebuy .buy {
-    width: 50%;
+    flex: 1;
     padding: 14px 0;
     font-size: 1rem;
     font-weight: 600;
@@ -1612,7 +1625,7 @@
   }
   .phonebuy .buy:active { opacity: 0.75; }
   .phonebuy .shopcart {
-    width: 50%;
+    flex: 1;
     padding: 14px 0;
     font-size: 1rem;
     font-weight: 600;
@@ -1624,6 +1637,18 @@
     transition: background-color 0.2s;
   }
   .phonebuy .shopcart:active { background-color: #f0f4f8; }
+  .phonebuy .chat-quick {
+    width: 52px;
+    flex-shrink: 0;
+    padding: 14px 0;
+    font-size: 1.2rem;
+    border: none;
+    background-color: #abdad5;
+    color: #004b97;
+    border-left: 1px solid rgba(0,0,0,0.08);
+    transition: background-color 0.2s;
+  }
+  .phonebuy .chat-quick:active { background-color: #7bcdd6; }
 
   /* ── chaticon 往上避開底部列 ── */
   .chaticon { bottom: 70px !important; }

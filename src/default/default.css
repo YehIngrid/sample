@@ -1418,6 +1418,9 @@ html.skip-loader #whatcontent { display: block !important; }
 }
 .search-drop-item .del-tag:hover { color: #6f87a0; }
 .search-drop-empty { font-size: var(--font-size-xs); color: #7eb8d8; padding: 4px 6px; }
+.search-drop-clear { border-top: 1px solid rgba(0,0,0,0.06); padding: 4px 6px; text-align: right; }
+.search-drop-clear button { background: none; border: none; font-size: var(--font-size-xs); color: #abdad5; cursor: pointer; padding: 2px 4px; }
+.search-drop-clear button:hover { color: #004b97; }
 
 /* ── 排行榜排名數字 ── */
 .search-drop-rank { min-width: 18px; font-size: var(--font-size-sm); font-weight: 700; text-align: center; flex-shrink: 0; }

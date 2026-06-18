@@ -1663,7 +1663,7 @@ const timer = setInterval(() => {
             <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillMobile('${safe}')">↗</button>
             <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','mobile')"><i class="fa-solid fa-xmark"></i></button>
           </li>`;
-        }).join('')
+        }).join('') + `<li class="search-drop-clear"><button onclick="window._clearAllHistory()">清空全部</button></li>`
       : '<li class="search-drop-empty"><i class="ti ti-history" style="margin-right:3px;opacity:0.5;font-size:0.85em;"></i>尚無搜尋紀錄</li>';
   }
 
@@ -1683,12 +1683,18 @@ const timer = setInterval(() => {
           <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillDesktop('${safe}')">↗</button>
           <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','desktop')"><i class="fa-solid fa-xmark"></i></button>
         </li>`;
-      }).join('');
+      }).join('') + `<li class="search-drop-clear"><button onclick="window._clearAllHistory()">清空全部</button></li>`;
     }
   }
 
   window._removeHistory = function (term, src) {
     saveHistory(getHistory().filter(t => t !== term));
+    renderMobileHistory();
+    renderDesktopHistory();
+  };
+
+  window._clearAllHistory = function () {
+    saveHistory([]);
     renderMobileHistory();
     renderDesktopHistory();
   };

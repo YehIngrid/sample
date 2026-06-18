@@ -441,11 +441,18 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     }, { passive: true });
   }
 
-  // 3.6 點擊主圖放大
+  // 3.6 點擊主圖放大（PhotoSwipe）
   if (mainImg) {
-    mainImg.style.cursor = 'pointer';
-    mainImg.addEventListener('click', () => {
-      Swal.fire({ imageUrl: mainImg.src, imageAlt: '商品圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
+    mainImg.style.cursor = 'zoom-in';
+    mainImg.addEventListener('click', async () => {
+      const { default: PhotoSwipeLightbox } = await import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js');
+      const lb = new PhotoSwipeLightbox({
+        dataSource: list.map(src => ({ src, width: 1200, height: 1200 })),
+        pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.js'),
+        bgOpacity: 0.9,
+      });
+      lb.init();
+      lb.loadAndOpen(currentIdx);
     });
   }
 })();
@@ -589,6 +596,18 @@ function renderSellerInfo(data) {
   if (chatBtn)   chatBtn.onclick   = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
   if (rateBtn)   rateBtn.onclick   = () => toggleSellerReviews();
   if (reportBtn) reportBtn.onclick = () => reportSeller(data.id, data.name);
+
+  // 快速聊聊按鈕（價格旁桌機版 + 手機底部列）
+  const quickChatDesktop = document.getElementById('quickChatBtnDesktop');
+  const quickChatMobile  = document.getElementById('quickChatBtnMobile');
+  if (quickChatDesktop) {
+    quickChatDesktop.classList.remove('d-none');
+    quickChatDesktop.onclick = () => openChatWithSeller(data.id);
+  }
+  if (quickChatMobile) {
+    quickChatMobile.classList.remove('d-none');
+    quickChatMobile.onclick = () => openChatWithSeller(data.id);
+  }
 }
 
 // === chatReady handshake ===
@@ -808,7 +827,8 @@ async function onAddToCart(e) {
     btn.classList.add('cart-added');
     btn.disabled = false;
     window.refreshCartBadge?.();
-    Swal.fire({ title: '已加入購物車！', text: '可以繼續往下瀏覽賣家的其他商品', icon: 'success', showConfirmButton: false, timer: 1800 });
+    const cartRes = await Swal.fire({ title: '已加入購物車！', text: '要前往結帳嗎？', icon: 'success', showCancelButton: true, confirmButtonText: '去結帳 →', cancelButtonText: '繼續瀏覽', timer: 4000, timerProgressBar: true, reverseButtons: true });
+    if (cartRes.isConfirmed) window.location.href = '../shoppingcart/shoppingcart.html';
   } catch (err) {
     // 失敗：還原原始狀態
     btn.innerHTML = origHtml;
@@ -847,6 +867,14 @@ async function showSellerCommodities(id) {
     // 更新賣家上架商品數
     const itemCountEl = document.getElementById('sellerItemCount');
     if (itemCountEl) itemCountEl.textContent = products.length;
+
+    // 從最早的商品 createdAt 推算賣家加入時間
+    const earliest = products.reduce((acc, p) => {
+      const d = p.createdAt ? new Date(p.createdAt) : null;
+      return d && (!acc || d < acc) ? d : acc;
+    }, null);
+    const joinEl = document.getElementById('sellerJoinDate');
+    if (joinEl && earliest) joinEl.textContent = `${earliest.getFullYear()}年${earliest.getMonth() + 1}月`;
 
     // Wire pagination buttons
     const prevBtn = document.getElementById('prevSellerBtn');
