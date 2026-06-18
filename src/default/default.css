@@ -1135,14 +1135,42 @@ a.specialpadding[href*="shoppingcart"] {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: aliceblue;
-  border-bottom: 1px solid rgba(0,75,151,0.12);
-  padding: 6px 16px;
+  background: #e4f0fb;
+  border-bottom: 1px solid rgba(0,75,151,0.15);
+  border-left: 3px solid #004b97;
+  padding: 6px 14px 6px 12px;
   font-size: var(--font-size-xs);
-  color: #444;
+  color: #1a3a5c;
   min-height: 30px;
+  max-height: 60px;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease, border-width 0.3s ease;
+}
+.safety-ticker.ticker-closing {
+  opacity: 0;
+  max-height: 60px;
+}
+.safety-ticker.ticker-closed {
+  max-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom-width: 0;
+  opacity: 0;
 }
 .safety-ticker__icon { flex-shrink: 0; width: 16px; height: 16px; }
+.safety-ticker__close {
+  flex-shrink: 0;
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 15px;
+  line-height: 1;
+  color: #4a627a;
+  cursor: pointer;
+  padding: 0 2px;
+  opacity: 0.7;
+}
+.safety-ticker__close:hover { opacity: 1; color: #004b97; }
 .safety-ticker__track {
   flex: 1;
   min-width: 0;
@@ -1173,13 +1201,23 @@ a.specialpadding[href*="shoppingcart"] {
 .safety-ticker--inline {
   background: transparent;
   border-bottom: none;
+  border-left: none;
   padding: 0 8px;
   flex: 1;
   min-width: 0;
+  max-height: none;
+  transition: none;
 }
 .safety-ticker--inline .safety-ticker__text {
   font-size: var(--font-size-xs);
   color: #4a627a;
+}
+/* navbar 內嵌跑馬燈（桌機版，客服諮詢右側） */
+.navbar-ticker {
+  max-width: 240px;
+  border-left: 1px solid rgba(0,75,151,0.15);
+  padding-left: 10px;
+  flex: 0 1 240px;
 }
 
 /* 桌機版返回鍵 + 跑馬燈列 (product.html) */
@@ -1418,9 +1456,6 @@ html.skip-loader #whatcontent { display: block !important; }
 }
 .search-drop-item .del-tag:hover { color: #6f87a0; }
 .search-drop-empty { font-size: var(--font-size-xs); color: #7eb8d8; padding: 4px 6px; }
-.search-drop-clear { border-top: 1px solid rgba(0,0,0,0.06); padding: 4px 6px; text-align: right; }
-.search-drop-clear button { background: none; border: none; font-size: var(--font-size-xs); color: #abdad5; cursor: pointer; padding: 2px 4px; }
-.search-drop-clear button:hover { color: #004b97; }
 
 /* ── 排行榜排名數字 ── */
 .search-drop-rank { min-width: 18px; font-size: var(--font-size-sm); font-weight: 700; text-align: center; flex-shrink: 0; }

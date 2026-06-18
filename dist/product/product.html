@@ -30,14 +30,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css">
 
 
-  <script type="module" crossorigin src="/assets/product-product-Cn092q-r.js"></script>
+  <script type="module" crossorigin src="/assets/product-product-pk2COdxx.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-tedidLWH.js">
   <link rel="modulepreload" crossorigin href="/assets/chat-ig-AsZVI.js">
   <link rel="modulepreload" crossorigin href="/assets/default-DxlzImvO.js">
   <link rel="modulepreload" crossorigin href="/assets/reviewerModal-GrUxzItM.js">
   <link rel="stylesheet" crossorigin href="/assets/product-product-CmQ8Jfx4.css">
-  <link rel="stylesheet" crossorigin href="/assets/default-BXOkCxUv.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-BKN60nGp.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
   <link rel="stylesheet" crossorigin href="/assets/shop-DoVenrgK.css">
 </head>
@@ -65,11 +65,12 @@
 
     
     <div class="d-lg-none sticky-top" style="z-index:3000;">
-      <div class="safety-ticker">
+      <div class="safety-ticker" id="mobileAnnounceTicker">
         <img src="data:image/svg+xml,%3csvg%20width='18'%20height='11'%20viewBox='0%200%2018%2011'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1%203.65C1%203.56111%201.05867%203.48289%201.144%203.458L12.744%200.0746667C12.872%200.0373333%2013%200.133333%2013%200.266667V9.73333C13%209.86667%2012.872%209.96267%2012.744%209.92533L1.144%206.542C1.05867%206.51711%201%206.43889%201%206.35V3.65Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3crect%20x='11'%20width='2'%20height='10'%20rx='0.2'%20fill='url(%23paint0_linear_814_1076)'/%3e%3cpath%20d='M4.05811%207.39355L4.02197%207.89225L6.94186%209.10643L7.01413%208.10904'%20stroke='%23004B97'%20stroke-width='0.2'%20stroke-linecap='round'/%3e%3cline%20x1='14.6588'%20y1='8.74316'%20x2='16.4901'%20y2='9.54712'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3cline%20x1='0.5'%20y1='-0.5'%20x2='2.5'%20y2='-0.5'%20transform='matrix(0.91565%20-0.401976%20-0.401976%20-0.91565%2014%201.20593)'%20stroke='%23004B97'%20stroke-linecap='round'/%3e%3cline%20x1='15.5'%20y1='5'%20x2='17.5'%20y2='5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3crect%20y='3'%20width='2'%20height='4'%20rx='0.2'%20fill='url(%23paint1_linear_814_1076)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_814_1076'%20x1='13'%20y1='5'%20x2='11'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%2386B8D5'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_814_1076'%20x1='2'%20y1='5'%20x2='0'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%238DBAEA'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" class="safety-ticker__icon" alt="">
         <div class="safety-ticker__track">
           <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
         </div>
+        <button class="safety-ticker__close" aria-label="關閉公告">×</button>
       </div>
       <nav class="mobile-product-nav">
         <button class="mobile-nav-back" id="mobileBackBtn" aria-label="返回上一頁">
@@ -89,7 +90,7 @@
           <a class="navbar-brand picture me-4" href="../newhome/newhome.html">
             <img src="/assets/TREASUREHUBCHEN-DooKZtdE.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
           </a>
-          <div class="d-none d-lg-flex">
+          <div class="d-none d-lg-flex align-items-center">
             <ul class="navbar-nav">
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
@@ -97,6 +98,12 @@
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
               <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
+            <div class="safety-ticker safety-ticker--inline navbar-ticker">
+              <img src="data:image/svg+xml,%3csvg%20width='18'%20height='11'%20viewBox='0%200%2018%2011'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1%203.65C1%203.56111%201.05867%203.48289%201.144%203.458L12.744%200.0746667C12.872%200.0373333%2013%200.133333%2013%200.266667V9.73333C13%209.86667%2012.872%209.96267%2012.744%209.92533L1.144%206.542C1.05867%206.51711%201%206.43889%201%206.35V3.65Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3crect%20x='11'%20width='2'%20height='10'%20rx='0.2'%20fill='url(%23paint0_linear_814_1076)'/%3e%3cpath%20d='M4.05811%207.39355L4.02197%207.89225L6.94186%209.10643L7.01413%208.10904'%20stroke='%23004B97'%20stroke-width='0.2'%20stroke-linecap='round'/%3e%3cline%20x1='14.6588'%20y1='8.74316'%20x2='16.4901'%20y2='9.54712'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3cline%20x1='0.5'%20y1='-0.5'%20x2='2.5'%20y2='-0.5'%20transform='matrix(0.91565%20-0.401976%20-0.401976%20-0.91565%2014%201.20593)'%20stroke='%23004B97'%20stroke-linecap='round'/%3e%3cline%20x1='15.5'%20y1='5'%20x2='17.5'%20y2='5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3crect%20y='3'%20width='2'%20height='4'%20rx='0.2'%20fill='url(%23paint1_linear_814_1076)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_814_1076'%20x1='13'%20y1='5'%20x2='11'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%2386B8D5'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_814_1076'%20x1='2'%20y1='5'%20x2='0'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%238DBAEA'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" class="safety-ticker__icon" alt="">
+              <div class="safety-ticker__track">
+                <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+              </div>
+            </div>
           </div>
           <div class="d-flex align-items-center ms-auto">
             <div class="login">
@@ -114,12 +121,6 @@
     
     <div class="product-back-ticker d-none d-lg-flex">
       <i class="fa-solid fa-circle-arrow-left icon-button" id="back-btn"></i>
-      <div class="safety-ticker safety-ticker--inline">
-        <img src="data:image/svg+xml,%3csvg%20width='18'%20height='11'%20viewBox='0%200%2018%2011'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1%203.65C1%203.56111%201.05867%203.48289%201.144%203.458L12.744%200.0746667C12.872%200.0373333%2013%200.133333%2013%200.266667V9.73333C13%209.86667%2012.872%209.96267%2012.744%209.92533L1.144%206.542C1.05867%206.51711%201%206.43889%201%206.35V3.65Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3crect%20x='11'%20width='2'%20height='10'%20rx='0.2'%20fill='url(%23paint0_linear_814_1076)'/%3e%3cpath%20d='M4.05811%207.39355L4.02197%207.89225L6.94186%209.10643L7.01413%208.10904'%20stroke='%23004B97'%20stroke-width='0.2'%20stroke-linecap='round'/%3e%3cline%20x1='14.6588'%20y1='8.74316'%20x2='16.4901'%20y2='9.54712'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3cline%20x1='0.5'%20y1='-0.5'%20x2='2.5'%20y2='-0.5'%20transform='matrix(0.91565%20-0.401976%20-0.401976%20-0.91565%2014%201.20593)'%20stroke='%23004B97'%20stroke-linecap='round'/%3e%3cline%20x1='15.5'%20y1='5'%20x2='17.5'%20y2='5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3crect%20y='3'%20width='2'%20height='4'%20rx='0.2'%20fill='url(%23paint1_linear_814_1076)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_814_1076'%20x1='13'%20y1='5'%20x2='11'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%2386B8D5'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_814_1076'%20x1='2'%20y1='5'%20x2='0'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%238DBAEA'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" class="safety-ticker__icon" alt="">
-        <div class="safety-ticker__track">
-          <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
-        </div>
-      </div>
     </div>
 
     
@@ -416,6 +417,20 @@
       const strip = slogans.join('　　　　　') + '　　　　　';
       els.forEach(el => { el.textContent = strip + strip; });
     }
+  })();
+
+  // 手機版跑馬燈關閉
+  (function(){
+    const ticker = document.getElementById('mobileAnnounceTicker');
+    if (!ticker) return;
+    if (sessionStorage.getItem('mobileTickerClosed') === '1') {
+      ticker.classList.add('ticker-closed');
+    }
+    ticker.querySelector('.safety-ticker__close')?.addEventListener('click', () => {
+      ticker.classList.add('ticker-closing');
+      setTimeout(() => ticker.classList.add('ticker-closed'), 300);
+      sessionStorage.setItem('mobileTickerClosed', '1');
+    });
   })();
   </script>
 </body>

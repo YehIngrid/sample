@@ -63,13 +63,13 @@
     <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
     <script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
     <script defer src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
-  <script type="module" crossorigin src="/assets/shop-shop-BsfWY2Tx.js"></script>
+  <script type="module" crossorigin src="/assets/shop-shop-B7aia0th.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-tedidLWH.js">
   <link rel="modulepreload" crossorigin href="/assets/chat-ig-AsZVI.js">
   <link rel="modulepreload" crossorigin href="/assets/default-DxlzImvO.js">
   <link rel="modulepreload" crossorigin href="/assets/wpBackendService-8jEBVtgQ.js">
-  <link rel="stylesheet" crossorigin href="/assets/default-BXOkCxUv.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-BKN60nGp.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
   <link rel="stylesheet" crossorigin href="/assets/shop-DoVenrgK.css">
 </head>
@@ -94,6 +94,7 @@
           <div class="safety-ticker__track">
             <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
           </div>
+          <button class="safety-ticker__close" aria-label="關閉公告">×</button>
         </div>
         <script>
           if(new URLSearchParams(location.search).get('page')==='seller')
@@ -600,6 +601,20 @@
       const strip = slogans.join('　　　　　') + '　　　　　';
       els.forEach(el => { el.textContent = strip + strip; });
     }
+  })();
+
+  // 手機版跑馬燈關閉
+  (function(){
+    const ticker = document.getElementById('mobileSellerTicker');
+    if (!ticker) return;
+    if (sessionStorage.getItem('mobileTickerClosed') === '1') {
+      ticker.classList.add('ticker-closed');
+    }
+    ticker.querySelector('.safety-ticker__close')?.addEventListener('click', () => {
+      ticker.classList.add('ticker-closing');
+      setTimeout(() => ticker.classList.add('ticker-closed'), 300);
+      sessionStorage.setItem('mobileTickerClosed', '1');
+    });
   })();
   </script>
     <div class="tab-content" id="myTabContent">
@@ -1435,7 +1450,7 @@
             <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillMobile('${safe}')">↗</button>
             <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','mobile')"><i class="fa-solid fa-xmark"></i></button>
           </li>`;
-        }).join('') + `<li class="search-drop-clear"><button onclick="window._clearAllHistory()">清空全部</button></li>`
+        }).join('')
       : '<li class="search-drop-empty"><i class="ti ti-history" style="margin-right:3px;opacity:0.5;font-size:0.85em;"></i>尚無搜尋紀錄</li>';
   }
 
@@ -1455,18 +1470,12 @@
           <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillDesktop('${safe}')">↗</button>
           <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','desktop')"><i class="fa-solid fa-xmark"></i></button>
         </li>`;
-      }).join('') + `<li class="search-drop-clear"><button onclick="window._clearAllHistory()">清空全部</button></li>`;
+      }).join('');
     }
   }
 
   window._removeHistory = function (term, src) {
     saveHistory(getHistory().filter(t => t !== term));
-    renderMobileHistory();
-    renderDesktopHistory();
-  };
-
-  window._clearAllHistory = function () {
-    saveHistory([]);
     renderMobileHistory();
     renderDesktopHistory();
   };

@@ -59,11 +59,12 @@
 
     <!-- ===== 手機版導覽列（含跑馬燈） ===== -->
     <div class="d-lg-none sticky-top" style="z-index:3000;">
-      <div class="safety-ticker">
+      <div class="safety-ticker" id="mobileAnnounceTicker">
         <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
         <div class="safety-ticker__track">
           <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
         </div>
+        <button class="safety-ticker__close" aria-label="關閉公告">×</button>
       </div>
       <nav class="mobile-product-nav">
         <button class="mobile-nav-back" id="mobileBackBtn" aria-label="返回上一頁">
@@ -83,7 +84,7 @@
           <a class="navbar-brand picture me-4" href="../newhome/newhome.html">
             <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
           </a>
-          <div class="d-none d-lg-flex">
+          <div class="d-none d-lg-flex align-items-center">
             <ul class="navbar-nav">
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
@@ -91,6 +92,12 @@
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
               <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
+            <div class="safety-ticker safety-ticker--inline navbar-ticker">
+              <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
+              <div class="safety-ticker__track">
+                <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+              </div>
+            </div>
           </div>
           <div class="d-flex align-items-center ms-auto">
             <div class="login">
@@ -105,15 +112,9 @@
       </nav>
     </div>
 
-    <!-- 桌機版返回鍵 + 跑馬燈 -->
+    <!-- 桌機版返回鍵 -->
     <div class="product-back-ticker d-none d-lg-flex">
       <i class="fa-solid fa-circle-arrow-left icon-button" id="back-btn"></i>
-      <div class="safety-ticker safety-ticker--inline">
-        <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
-        <div class="safety-ticker__track">
-          <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
-        </div>
-      </div>
     </div>
 
     <!-- ===== 商品主體 ===== -->
@@ -412,6 +413,20 @@
       const strip = slogans.join('　　　　　') + '　　　　　';
       els.forEach(el => { el.textContent = strip + strip; });
     }
+  })();
+
+  // 手機版跑馬燈關閉
+  (function(){
+    const ticker = document.getElementById('mobileAnnounceTicker');
+    if (!ticker) return;
+    if (sessionStorage.getItem('mobileTickerClosed') === '1') {
+      ticker.classList.add('ticker-closed');
+    }
+    ticker.querySelector('.safety-ticker__close')?.addEventListener('click', () => {
+      ticker.classList.add('ticker-closing');
+      setTimeout(() => ticker.classList.add('ticker-closed'), 300);
+      sessionStorage.setItem('mobileTickerClosed', '1');
+    });
   })();
   </script>
 </body>

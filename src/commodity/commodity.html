@@ -39,11 +39,12 @@
     <div id="whatcontent">
         <div class="header d-block ">
             <!-- 跑馬燈：手機版顯示在 navbar 上方 -->
-            <div class="safety-ticker d-flex d-lg-none">
+            <div class="safety-ticker d-flex d-lg-none" id="mobileCommodityTicker">
               <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
               <div class="safety-ticker__track">
                 <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
               </div>
+              <button class="safety-ticker__close" aria-label="關閉公告">×</button>
             </div>
             <nav class="navbar navbar-expand-lg navbar-color bg-color header_new d-block d-lg-none" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
             <div class="container-fluid d-flex align-items-center sticky-top">
@@ -263,6 +264,20 @@
                     els.forEach(el => { el.textContent = strip + strip; });
                   }
                 })();
+
+                // 手機版跑馬燈關閉
+                (function(){
+                  const ticker = document.getElementById('mobileCommodityTicker');
+                  if (!ticker) return;
+                  if (sessionStorage.getItem('mobileTickerClosed') === '1') {
+                    ticker.classList.add('ticker-closed');
+                  }
+                  ticker.querySelector('.safety-ticker__close')?.addEventListener('click', () => {
+                    ticker.classList.add('ticker-closing');
+                    setTimeout(() => ticker.classList.add('ticker-closed'), 300);
+                    sessionStorage.setItem('mobileTickerClosed', '1');
+                  });
+                })();
                 </script>
                 <!-- 主要區塊：用 bootstrap row/col 來排版 -->
                 <main class="flex-grow-1">
@@ -442,7 +457,7 @@
             <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillMobileDD('${safe}')">↗</button>
             <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','mobile')"><i class="fa-solid fa-xmark"></i></button>
           </li>`;
-        }).join('') + `<li class="search-drop-clear"><button onclick="window._clearAllHistory()">清空全部</button></li>`
+        }).join('')
       : '<li class="search-drop-empty"><i class="ti ti-history" style="margin-right:3px;opacity:0.5;font-size:0.85em;"></i>尚無搜尋紀錄</li>';
   }
 
@@ -462,18 +477,12 @@
           <button class="search-drop-fill" title="填入搜尋欄" onclick="event.stopPropagation();window._fillDesktop('${safe}')">↗</button>
           <button class="del-tag" onclick="event.stopPropagation();window._removeHistory('${safe}','desktop')"><i class="fa-solid fa-xmark"></i></button>
         </li>`;
-      }).join('') + `<li class="search-drop-clear"><button onclick="window._clearAllHistory()">清空全部</button></li>`;
+      }).join('');
     }
   }
 
   window._removeHistory = function (term, src) {
     saveHistory(getHistory().filter(t => t !== term));
-    renderMobileDropdownHistory();
-    renderDesktopHistory();
-  };
-
-  window._clearAllHistory = function () {
-    saveHistory([]);
     renderMobileDropdownHistory();
     renderDesktopHistory();
   };
