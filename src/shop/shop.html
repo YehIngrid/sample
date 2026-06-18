@@ -584,17 +584,8 @@
       '一鍵檢舉：發現違規商品請利用檢舉功能，共同維護純淨校園環境。'
     ];
     const els = [...document.querySelectorAll('.safety-ticker__text')];
-    if (window.matchMedia('(min-width:992px)').matches) {
-      let i = 0;
-      els.forEach(el => { el.textContent = slogans[0]; });
-      setInterval(() => {
-        els.forEach(el => el.classList.add('ticker-fade'));
-        setTimeout(() => { i=(i+1)%slogans.length; els.forEach(el => { el.textContent=slogans[i]; el.classList.remove('ticker-fade'); }); }, 400);
-      }, 5000);
-    } else {
-      const strip = slogans.join('　　　　　') + '　　　　　';
-      els.forEach(el => { el.textContent = strip + strip; });
-    }
+    const strip = slogans.join('　　　　　') + '　　　　　';
+    els.forEach(el => { el.textContent = strip + strip; });
   })();
 
   // 手機版跑馬燈關閉
