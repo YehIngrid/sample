@@ -497,9 +497,13 @@ async function loadSimilarProducts(category, currentId) {
   const section = container?.closest('.similarCommodities');
   if (!container || !category) { section && (section.style.display = 'none'); return; }
   try {
-    const res = await new BackendService().getCommodityList(category, { page: 1, limit: 7 });
+    const res = await new BackendService().getCommodityList(category, { page: 1, limit: 18 });
     const items = (res?.data?.commodities || [])
-      .filter(p => String(p.id ?? p._id) !== String(currentId))
+      .filter(p => {
+        if (String(p.id ?? p._id) === String(currentId)) return false;
+        if (sellerId && String(p.owner?.accountId ?? p.owner?.id) === String(sellerId)) return false;
+        return true;
+      })
       .slice(0, 6);
     if (!items.length) { section && (section.style.display = 'none'); return; }
     items.forEach(product => {

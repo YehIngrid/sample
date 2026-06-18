@@ -326,6 +326,7 @@ function escapeHtml(str) {
 function renderPagination(totalCount) {
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
   paginationEl.innerHTML = '';
+  if (totalCount === 0) return;
 
   // 上一頁
   const prevBtn = document.createElement('button');
