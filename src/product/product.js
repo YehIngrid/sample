@@ -317,14 +317,22 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     return '3 年以上';
   })();
 
+  // 分類 chip（名稱下方）
+  const chipWrap = document.getElementById('product-cat-chip-wrap');
+  if (chipWrap && category && category !== '未分類(其他)') {
+    chipWrap.innerHTML = `<span class="product-cat-chip">${category}</span>`;
+  }
+
+  const EMPTY = new Set(['-', '未知', '未標示', '未分類(其他)']);
   const fields = [
-    ['商品大小',  size ?? '-'],
+    ['商品大小',  size],
     ['商品年齡',  ageText],
-    ['新舊程度',  newOrOld ?? '未知'],
-    ['分類',      category ?? '未分類'],
-    ['上架時間',  createdTime ?? '-'],
-    ['更新時間',  updatedTime ?? '-'],
-  ];
+    ['新舊程度',  newOrOld],
+    ['上架時間',  createdTime],
+    ['更新時間',  updatedTime],
+  ].filter(([, v]) => v && !EMPTY.has(v));
+
+  if (!fields.length) { wrap.innerHTML = ''; return; }
 
   // 桌機版：原本的兩欄表格
   const desktopHTML = fields.map(([k, v]) => `

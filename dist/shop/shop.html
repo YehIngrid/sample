@@ -63,7 +63,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
     <script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
     <script defer src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
-  <script type="module" crossorigin src="/assets/shop-shop-t89e9h2R.js"></script>
+  <script type="module" crossorigin src="/assets/shop-shop-BsfWY2Tx.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
   <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-tedidLWH.js">
   <link rel="modulepreload" crossorigin href="/assets/chat-ig-AsZVI.js">
@@ -855,12 +855,12 @@
           <div class="sell-step-line"></div>
           <div class="sell-step" data-step="2">
             <div class="sell-step-badge">2</div>
-            <span class="sell-step-label">規格與定價</span>
+            <span class="sell-step-label">商品照片</span>
           </div>
           <div class="sell-step-line"></div>
           <div class="sell-step" data-step="3">
             <div class="sell-step-badge">3</div>
-            <span class="sell-step-label">照片上傳</span>
+            <span class="sell-step-label">補充資訊</span>
           </div>
         </div>
 
@@ -894,7 +894,50 @@
               </div>
 
               <div class="sell-field">
-                <label for="category" class="sell-label">所屬分類 <span class="sell-required">*</span>
+                <label for="price" class="sell-label">售價（元）<span class="sell-required">*</span></label>
+                <div class="sell-price-wrap">
+                  <span class="sell-price-prefix">NT$</span>
+                  <input type="number" id="price" name="price" class="form-control" placeholder="0" min="0" />
+                </div>
+              </div>
+
+              <div class="sell-nav">
+                <span></span>
+                <button type="button" class="sell-next-btn" id="step1Next">下一步：上傳主圖 <i class="ti ti-arrow-right"></i></button>
+              </div>
+            </div>
+
+            
+            <div class="sell-panel" id="sellStep2">
+              <div class="sell-field">
+                <label class="sell-label">主要照片（封面）<span class="sell-required">*</span></label>
+                <small class="sell-hint">≤ 5MB，格式：JPEG / PNG / WebP；建議清晰明亮，能展示商品外觀</small>
+                <div class="sell-upload-row">
+                  <label class="sell-upload-zone" id="mainUploadZone" for="mainImage">
+                    <i class="ti ti-photo-up"></i>
+                    <span>點擊或拖曳上傳封面照</span>
+                  </label>
+                  <label class="sell-camera-btn" for="mainImageCamera" title="開啟相機拍照">
+                    <i class="ti ti-camera"></i><span>拍照</span>
+                  </label>
+                </div>
+                <input type="file" id="mainImage" name="mainImage" class="d-none" accept="image/jpeg,image/png,image/webp" />
+                <input type="file" id="mainImageCamera" class="d-none" accept="image/*" capture="environment" />
+                <div id="mainImagePreview" class="sell-preview-single"></div>
+              </div>
+
+              <div class="sell-nav">
+                <button type="button" class="sell-prev-btn" id="step2Prev"><i class="ti ti-arrow-left"></i> 上一步</button>
+                <button type="button" class="sell-next-btn" id="step2Next">下一步：補充資訊 <i class="ti ti-arrow-right"></i></button>
+              </div>
+            </div>
+
+            
+            <div class="sell-panel" id="sellStep3">
+              <p class="sell-hint" style="margin-bottom:16px;">以下欄位皆為選填，填寫越完整越容易賣出！</p>
+
+              <div class="sell-field">
+                <label class="sell-label">所屬分類
                   <button type="button" class="sell-info-btn" id="catInfoBtn"
                     data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" data-bs-trigger="click"
                     data-bs-content="<ul class='sell-cat-popover-list'><li><b>課業學習</b>：教科書、二手參考書、考試用書、計算機、實驗器材、個人手寫筆記、文具</li><li><b>3C 電子</b>：筆電、平板、手機、耳機、行動電源、相機、螢幕、各種周邊配件</li><li><b>住宿生活</b>：小家電、收納用品、寢具、清潔工具、延長線、燈具、置物架、小型家具</li><li><b>運動休閒</b>：球拍、瑜珈墊、啞鈴、腳踏車、運動服飾、戶外用品</li><li><b>服飾配件</b>：二手衣物、球鞋、包包、配件、保養品</li><li><b>二手好物</b>：樂器、模型公仔、演唱會周邊、桌遊、其他雜項</li></ul>"
@@ -934,7 +977,6 @@
                     <span>二手好物</span>
                   </label>
                 </div>
-                
                 <select name="category" id="category" class="d-none">
                   <option value="notselyet">請選擇商品分類</option>
                   <option value="education">課業學習</option>
@@ -946,20 +988,10 @@
                 </select>
               </div>
 
-              <div class="sell-nav">
-                <span></span>
-                <button type="button" class="sell-next-btn" id="step1Next">下一步：規格與定價 <i class="ti ti-arrow-right"></i></button>
-              </div>
-            </div>
-
-            
-            <div class="sell-panel" id="sellStep2">
               <div class="sell-step2-grid">
-
-                
                 <div class="sell-step2-left">
                   <div class="sell-field">
-                    <label for="size" class="sell-label">商品尺寸 <span class="sell-required">*</span></label>
+                    <label for="size" class="sell-label">商品尺寸</label>
                     <div class="sell-size-group">
                       <label class="sell-size-card">
                         <input type="radio" name="sizeRadio" value="3">
@@ -982,37 +1014,26 @@
                     </div>
                     <input type="hidden" name="size" id="size" value="">
                   </div>
-
                   <div class="sell-two-col">
                     <div class="sell-field">
-                      <label for="price" class="sell-label">售價（元）<span class="sell-required">*</span></label>
-                      <div class="sell-price-wrap">
-                        <span class="sell-price-prefix">NT$</span>
-                        <input type="number" id="price" name="price" class="form-control" placeholder="0" min="0" />
-                      </div>
+                      <label for="age" class="sell-label">物品年齡</label>
+                      <select id="age" name="age" class="form-control">
+                        <option value="" disabled selected>請選擇</option>
+                        <option value="0">未滿 1 年</option>
+                        <option value="2">1–3 年</option>
+                        <option value="5">3 年以上</option>
+                        <option value="-1">不清楚</option>
+                      </select>
                     </div>
                     <div class="sell-field">
-                      <label for="stock" class="sell-label">庫存數量 <span class="sell-required">*</span></label>
+                      <label for="stock" class="sell-label">庫存數量</label>
                       <input type="number" id="stock" name="stock" class="form-control" placeholder="可販賣數量" min="1" value="1" />
                     </div>
                   </div>
-
-                  <div class="sell-field">
-                    <label for="age" class="sell-label">物品年齡 <span class="sell-required">*</span></label>
-                    <select id="age" name="age" class="form-control">
-                      <option value="" disabled selected>請選擇</option>
-                      <option value="0">未滿 1 年</option>
-                      <option value="2">1–3 年</option>
-                      <option value="5">3 年以上</option>
-                      <option value="-1">不清楚</option>
-                    </select>
-                  </div>
                 </div>
-
-                
                 <div class="sell-step2-right">
                   <div class="sell-field">
-                    <label for="new_or_old" class="sell-label">新舊程度 <span class="sell-required">*</span></label>
+                    <label for="new_or_old" class="sell-label">新舊程度</label>
                     <div class="sell-condition-group">
                       <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="1"><span class="sell-cond-dot cond-1"></span>全新<span class="sell-cond-desc">（未使用過）</span></label>
                       <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="2"><span class="sell-cond-dot cond-2"></span>幾乎全新<span class="sell-cond-desc">（使用次數極少）</span></label>
@@ -1032,36 +1053,10 @@
                     </select>
                   </div>
                 </div>
-
-              </div>
-
-              <div class="sell-nav">
-                <button type="button" class="sell-prev-btn" id="step2Prev"><i class="ti ti-arrow-left"></i> 上一步</button>
-                <button type="button" class="sell-next-btn" id="step2Next">下一步：照片上傳 <i class="ti ti-arrow-right"></i></button>
-              </div>
-            </div>
-
-            
-            <div class="sell-panel" id="sellStep3">
-              <div class="sell-field">
-                <label class="sell-label">主要照片（封面）<span class="sell-required">*</span></label>
-                <small class="sell-hint">≤ 5MB，格式：JPEG / PNG / WebP；建議清晰明亮，能展示商品外觀</small>
-                <div class="sell-upload-row">
-                  <label class="sell-upload-zone" id="mainUploadZone" for="mainImage">
-                    <i class="ti ti-photo-up"></i>
-                    <span>點擊或拖曳上傳封面照</span>
-                  </label>
-                  <label class="sell-camera-btn" for="mainImageCamera" title="開啟相機拍照">
-                    <i class="ti ti-camera"></i><span>拍照</span>
-                  </label>
-                </div>
-                <input type="file" id="mainImage" name="mainImage" class="d-none" accept="image/jpeg,image/png,image/webp" />
-                <input type="file" id="mainImageCamera" class="d-none" accept="image/*" capture="environment" />
-                <div id="mainImagePreview" class="sell-preview-single"></div>
               </div>
 
               <div class="sell-field">
-                <label class="sell-label">其他照片（最多 5 張）<span class="sell-required">*</span></label>
+                <label class="sell-label">其他照片（最多 5 張）</label>
                 <small class="sell-hint">展示商品其他角度或細節；選擇新檔案會覆蓋全部次要照片；每張 ≤ 5MB</small>
                 <div class="sell-upload-row">
                   <label class="sell-upload-zone" id="subUploadZone" for="image">
@@ -1799,30 +1794,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // Step 1 → 2 驗證
   document.getElementById('step1Next')?.addEventListener('click', async () => {
     const name = document.getElementById('name').value.trim();
-    const category = document.getElementById('category').value;
     const desc = document.getElementById('description').value.trim();
+    const priceStr = document.getElementById('price').value.trim();
     if (!name) { await Swal.fire({ icon: 'warning', title: '請填寫商品名稱' }); return; }
-    if (!category || category === 'notselyet') { await Swal.fire({ icon: 'warning', title: '請選擇商品分類' }); return; }
     if (!desc) { await Swal.fire({ icon: 'warning', title: '請填寫商品狀態描述' }); return; }
     if (desc.length < 10) { document.getElementById('description').focus(); await Swal.fire({ icon: 'warning', title: '商品描述至少需要 10 字' }); return; }
+    if (priceStr === '' || Number(priceStr) < 0) { await Swal.fire({ icon: 'warning', title: '請輸入正確售價' }); return; }
     setStep(2, false);
   });
 
   // Step 2 → 1
   document.getElementById('step2Prev')?.addEventListener('click', () => setStep(1, true));
 
-  // Step 2 → 3 驗證
+  // Step 2 → 3 驗證（只檢查主圖）
   document.getElementById('step2Next')?.addEventListener('click', async () => {
-    const size = document.getElementById('size').value;
-    const cond = document.getElementById('new_or_old').value;
-    const priceStr = document.getElementById('price').value.trim();
-    const stockStr = document.getElementById('stock').value.trim();
-    const ageStr = document.getElementById('age').value.trim();
-    if (!size) { await Swal.fire({ icon: 'warning', title: '請選擇商品尺寸' }); return; }
-    if (!cond) { await Swal.fire({ icon: 'warning', title: '請選擇新舊程度' }); return; }
-    if (priceStr === '' || Number(priceStr) < 0) { await Swal.fire({ icon: 'warning', title: '請輸入正確售價' }); return; }
-    if (stockStr === '' || Number(stockStr) < 1) { await Swal.fire({ icon: 'warning', title: '請輸入庫存數量' }); return; }
-    if (ageStr === '') { await Swal.fire({ icon: 'warning', title: '請選擇物品年齡' }); return; }
+    if (document.getElementById('mainImage').files.length === 0) {
+      await Swal.fire({ icon: 'warning', title: '請上傳主要照片' }); return;
+    }
     setStep(3, false);
   });
 

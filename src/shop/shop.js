@@ -360,55 +360,21 @@ nextHotBtn.addEventListener("click", () => {
     return;
   }
 
-  // 4. 尺寸：從 radio 或隱藏 input 讀取
-  const formElRef = document.getElementById('createCommodityForm');
-  const checkedSizeRadio = formElRef.querySelector('input[name="sizeRadio"]:checked');
-  const _rawSize = checkedSizeRadio?.value ?? document.getElementById('size').value;
-  const sizeValue = _rawSize !== '' ? Number(_rawSize) : '';
-  if (sizeValue === '') {
-    Swal.fire({ title: "請選擇商品尺寸", icon: "warning" });
-    return;
-  }
-
-  // 5. 新舊程度
-  if (!document.getElementById('new_or_old').value) {
-    Swal.fire({ title: "請選擇商品的新舊程度", icon: "warning" });
-    return;
-  }
-
-  // 6. 分類
-  const category = document.getElementById('category').value;
-  if (!category || category === 'notselyet') {
-    Swal.fire({ title: "請選擇商品分類", icon: "warning" });
-    return;
-  }
-
-  // 7. 主要照片
+  // 4. 主要照片（必填）
   if (document.getElementById('mainImage').files.length === 0) {
     Swal.fire({ title: "請上傳主要照片", icon: "warning" });
     return;
   }
-  // 8. 其他照片
-  if (document.getElementById('image').files.length === 0) {
-    Swal.fire({ title: "請至少上傳一張其他照片", icon: "warning" });
-    return;
-  }
 
-  // 9. 庫存（數字檢查）
+  // 5. 選填欄位：取值但不強制
+  const formElRef = document.getElementById('createCommodityForm');
+  const checkedSizeRadio = formElRef.querySelector('input[name="sizeRadio"]:checked');
+  const _rawSize = checkedSizeRadio?.value ?? document.getElementById('size').value;
+  const sizeValue = _rawSize !== '' ? Number(_rawSize) : null;
   const stockStr = document.getElementById('stock').value.trim();
-  const stock = Number(stockStr);
-  if (stockStr === '' || Number.isNaN(stock) || stock < 1) {
-    Swal.fire({ title: "請填入庫存數量", text: "庫存數量至少需要 1 件", icon: "warning" });
-    return;
-  }
-
-  // 10. 年齡（允許 -1 表示不詳）
+  const stock = stockStr !== '' ? Number(stockStr) : 1;
   const ageStr = document.getElementById('age').value.trim();
-  const age = Number(ageStr);
-  if (ageStr === '' || Number.isNaN(age) || age < -1) {
-    Swal.fire({ title: "請選擇商品年齡", icon: "warning" });
-    return;
-  }
+  const age = ageStr !== '' ? Number(ageStr) : null;
 
   // 二次確認
   const confirmRes = await Swal.fire({
@@ -431,11 +397,13 @@ nextHotBtn.addEventListener("click", () => {
   // 保險起見，把數字欄位用 set 覆蓋成數字字串
   sellData.set('price', String(price));
   sellData.set('stock', String(stock));
-  sellData.set('age', String(age));
-  // 明確同步 radio → select 的值，並移除不應送後端的 radio 欄位
-  sellData.set('size', String(sizeValue));
-  sellData.set('new_or_old', document.getElementById('new_or_old').value);
-  sellData.set('category', document.getElementById('category').value);
+  // 選填欄位：有值才送，否則從 FormData 移除
+  if (age !== null) sellData.set('age', String(age)); else sellData.delete('age');
+  if (sizeValue !== null) sellData.set('size', String(sizeValue)); else sellData.delete('size');
+  const condVal = document.getElementById('new_or_old').value;
+  if (condVal) sellData.set('new_or_old', condVal); else sellData.delete('new_or_old');
+  const catVal = document.getElementById('category').value;
+  if (catVal && catVal !== 'notselyet') sellData.set('category', catVal); else sellData.delete('category');
   sellData.delete('sizeRadio');
   sellData.delete('conditionRadio');
   sellData.delete('categoryRadio');
