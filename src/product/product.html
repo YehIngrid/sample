@@ -200,13 +200,11 @@
           </div>
 
           <!-- 桌機版 CTA -->
-          <div class="cta-wrap d-none d-lg-flex flex-column gap-2 mt-auto pt-4">
-            <div class="d-flex gap-3">
-              <button class="btn flex-fill buybtn order" type="button">馬上下單</button>
-              <button class="btn flex-fill shopcart" type="button">加入購物車</button>
-            </div>
-            <button class="btn btn-outline-primary w-100 d-none" id="quickChatBtnDesktop" type="button">
-              <i class="fa-regular fa-comment-dots me-1"></i>聊聊賣家
+          <div class="cta-wrap d-none d-lg-flex gap-3 mt-auto pt-4">
+            <button class="btn flex-fill buybtn order" type="button">馬上下單</button>
+            <button class="btn flex-fill shopcart" type="button">加入購物車</button>
+            <button class="btn d-none" id="quickChatBtnDesktop" type="button">
+              <i class="fa-regular fa-comment-dots me-1"></i>聊聊
             </button>
           </div>
         </div>
@@ -236,6 +234,7 @@
               </div>
               <div class="seller-profile">
                 <h3 class="seller-name" id="sellerName"></h3>
+                <p class="seller-join-date" id="sellerJoinDate"></p>
                 <p class="seller-intro" id="sellerIntro"></p>
               </div>
             </div>
@@ -254,11 +253,6 @@
               <div class="seller-stat-item">
                 <span class="seller-stat-value" id="sellerItemCount">—</span>
                 <span class="seller-stat-label">上架商品</span>
-              </div>
-              <div class="seller-stat-divider"></div>
-              <div class="seller-stat-item">
-                <span class="seller-stat-value" id="sellerJoinDate">—</span>
-                <span class="seller-stat-label">加入時間</span>
               </div>
             </div>
           </div>

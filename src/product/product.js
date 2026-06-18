@@ -484,6 +484,14 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         renderSellerInfo(data);
         showSellerCommodities(sellerId);
         await checkIsOwnProduct(sellerId);
+        backendService.getPublicUserProfile(sellerId).then(res => {
+          const createdAt = res?.data?.data?.createdAt;
+          const joinEl = document.getElementById('sellerJoinDate');
+          if (joinEl && createdAt) {
+            const d = new Date(createdAt);
+            joinEl.textContent = `${d.getFullYear()}年${d.getMonth() + 1}月加入`;
+          }
+        }).catch(() => {});
         backendService.getUserReviews(sellerId).then(res => {
           const stats = res?.data?.data?.stats;
           const countEl = document.getElementById('sellerReviewCount');
@@ -868,13 +876,6 @@ async function showSellerCommodities(id) {
     const itemCountEl = document.getElementById('sellerItemCount');
     if (itemCountEl) itemCountEl.textContent = products.length;
 
-    // 從最早的商品 createdAt 推算賣家加入時間
-    const earliest = products.reduce((acc, p) => {
-      const d = p.createdAt ? new Date(p.createdAt) : null;
-      return d && (!acc || d < acc) ? d : acc;
-    }, null);
-    const joinEl = document.getElementById('sellerJoinDate');
-    if (joinEl && earliest) joinEl.textContent = `${earliest.getFullYear()}年${earliest.getMonth() + 1}月`;
 
     // Wire pagination buttons
     const prevBtn = document.getElementById('prevSellerBtn');

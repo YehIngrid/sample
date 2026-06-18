@@ -654,9 +654,10 @@
   color: #004b97;
   line-height: 1.2;
 }
-#sellerJoinDate {
-  font-size: 1rem;
-  line-height: 1.8;
+.seller-join-date {
+  font-size: 0.75rem;
+  color: #aab8c6;
+  margin: 2px 0 0;
 }
 .seller-stat-label {
   font-size: 0.75rem;
@@ -903,13 +904,16 @@
       border: 1.5px solid #004b97 !important;
     }
     #quickChatBtnDesktop {
-      border: 1.5px solid #004b97 !important;
+      background-color: #abdad5;
       color: #004b97;
-      font-size: 0.95rem;
-      min-height: 40px;
-      background-color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none !important;
+      border-radius: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
-    #quickChatBtnDesktop:hover { background-color: #004b97 !important; color: #fff !important; opacity: 1; }
+    #quickChatBtnDesktop:hover { background-color: #7bcdd6 !important; opacity: 1; }
 .accordion-button:focus {
   box-shadow: none !important;
   border-color: transparent !important;
