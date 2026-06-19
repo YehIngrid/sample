@@ -1,4 +1,4 @@
-import"./modulepreload-polyfill-B5Qt9EMX.js";/* empty css                *//* empty css                     */import"./chat-TSp8Irfk.js";import{B as A}from"./default-DxlzImvO.js";import"./ChatBackendService-DKJWj2iD.js";document.addEventListener("load",e=>{const c=e.target;if(c.tagName!=="IMG")return;const n=c.closest(".product-card .product-thumb");n&&n.classList.add("img-loaded")},!0);function _(e=12){return Array.from({length:e},()=>`
+import"./modulepreload-polyfill-B5Qt9EMX.js";/* empty css                *//* empty css                     */import"./chat-Sh8v4_pk.js";import{B as A}from"./default-DxlzImvO.js";import"./ChatBackendService-sdQaFUXt.js";document.addEventListener("load",e=>{const c=e.target;if(c.tagName!=="IMG")return;const n=c.closest(".product-card .product-thumb");n&&n.classList.add("img-loaded")},!0);function _(e=12){return Array.from({length:e},()=>`
     <div class="col">
       <div class="product-card h-100">
         <div class="product-thumb skeleton" style="border-radius:8px 8px 0 0;"></div>

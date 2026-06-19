@@ -1284,6 +1284,67 @@ html, body {
     letter-spacing: 0.01em;
 }
 
+/* ── 客服單狀態橫幅 ── */
+.ticket-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 14px;
+    background: #fff8f0;
+    border-bottom: 1px solid #f5cba7;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    flex-wrap: wrap;
+}
+.ticket-banner-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #7d4e00;
+    flex: 1;
+    min-width: 0;
+}
+.ticket-banner-info i { font-size: 0.95rem; flex-shrink: 0; }
+.ticket-banner-reason {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ticket-banner-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.ticket-status-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 2px 9px;
+    white-space: nowrap;
+}
+.ticket-action-btn {
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid #004b97;
+    color: #004b97;
+    background: #fff;
+    border-radius: 6px;
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+.ticket-action-btn:hover { background: #004b97; color: #fff; }
+.ticket-action-resolve { border-color: #27ae60; color: #27ae60; }
+.ticket-action-resolve:hover { background: #27ae60; color: #fff; }
+.ticket-action-adjudicate { border-color: #8e44ad; color: #8e44ad; }
+.ticket-action-adjudicate:hover { background: #8e44ad; color: #fff; }
+[data-theme-dark] .ticket-banner { background: #2a1f0d; border-color: #6b4c1e; }
+[data-theme-dark] .ticket-banner-info { color: #f5c07a; }
+[data-theme-dark] .ticket-action-btn { background: transparent; }
+
 /* ── 空白聊天室引導 ── */
 .empty-chat-hint {
     flex: 1;

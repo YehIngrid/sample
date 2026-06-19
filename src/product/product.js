@@ -454,8 +454,14 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     mainImg.style.cursor = 'zoom-in';
     mainImg.addEventListener('click', async () => {
       const { default: PhotoSwipeLightbox } = await import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js');
+      const dataSource = await Promise.all(list.map(src => new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve({ src, width: img.naturalWidth, height: img.naturalHeight });
+        img.onerror = () => resolve({ src, width: 1200, height: 1200 });
+        img.src = src;
+      })));
       const lb = new PhotoSwipeLightbox({
-        dataSource: list.map(src => ({ src, width: 1200, height: 1200 })),
+        dataSource,
         pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.js'),
         bgOpacity: 0.9,
       });

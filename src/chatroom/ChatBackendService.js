@@ -124,11 +124,11 @@ export default class ChatBackendService {
             return Promise.reject(error);
         }
     }
-    async requestSupport(roomId, subject, description) {
+    async requestSupport(roomId, orderId, reason) {
         try {
             const response = await axios.post(
                 `${this.baseUrl}/api/chat/rooms/${roomId}/request-support`,
-                { subject, description },
+                { orderId, reason },
                 { withCredentials: true }
             );
             return response.data;
@@ -167,6 +167,87 @@ export default class ChatBackendService {
             return response.data;
         } catch (error) {
             console.error('Error getting room orders:', error);
+            return Promise.reject(error);
+        }
+    }
+    // ── Ticket API ──
+    async createTicket(data) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/ticket/create`, data, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error creating ticket:', error);
+            return Promise.reject(error);
+        }
+    }
+    async claimTicket(ticketId) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/ticket/claim/${ticketId}`, {}, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error claiming ticket:', error);
+            return Promise.reject(error);
+        }
+    }
+    async resolveTicket(ticketId) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/ticket/resolve/${ticketId}`, {}, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error resolving ticket:', error);
+            return Promise.reject(error);
+        }
+    }
+    async adjudicateTicket(ticketId, data) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/ticket/adjudicate/${ticketId}`, data, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error adjudicating ticket:', error);
+            return Promise.reject(error);
+        }
+    }
+    async getMyTickets() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/ticket/mine`, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error getting my tickets:', error);
+            return Promise.reject(error);
+        }
+    }
+    async getTicketsByRoom(roomId) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/ticket/rooms/${roomId}`, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error getting tickets by room:', error);
+            return Promise.reject(error);
+        }
+    }
+    async getTicketHistory(ticketId) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/ticket/history/${ticketId}`, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error getting ticket history:', error);
+            return Promise.reject(error);
+        }
+    }
+    async getTicketOrder(ticketId) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/ticket/order/${ticketId}`, { withCredentials: true });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error getting ticket order:', error);
             return Promise.reject(error);
         }
     }
