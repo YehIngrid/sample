@@ -751,70 +751,6 @@ class ChatRoomList {
             this.input.dispatchEvent(new Event('input'));
         });
 
-        // 聯絡客服
-        document.getElementById('requestSupportBtn')?.addEventListener('click', async () => {
-            const { isConfirmed: confirmed } = await Swal.fire({
-                title: '需要客服協助嗎？',
-                text: '送出後將由客服人員介入此聊天室協助處理。',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: '繼續',
-                cancelButtonText: '取消',
-            });
-            if (!confirmed) return;
-
-            const { isConfirmed, value } = await Swal.fire({
-                title: '聯絡客服',
-                html: `
-                    <input id="swal-subject" class="swal2-input" placeholder="主旨（例：交易糾紛）">
-                    <textarea id="swal-description" class="swal2-textarea" placeholder="請描述問題..."></textarea>
-                `,
-                showCancelButton: true,
-                confirmButtonText: '送出',
-                cancelButtonText: '取消',
-                preConfirm: () => {
-                    const subject = document.getElementById('swal-subject').value.trim();
-                    const description = document.getElementById('swal-description').value.trim();
-                    if (!subject) { Swal.showValidationMessage('請輸入主旨'); return false; }
-                    return { subject, description };
-                }
-            });
-            if (!isConfirmed) return;
-            try {
-                await this.backend.requestSupport(this.currentRoomId, value.subject, value.description);
-                Swal.fire({ icon: 'success', title: '已送出客服請求', text: '客服人員將盡快與您聯繫', timer: 2000, showConfirmButton: false });
-            } catch {
-                Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
-            }
-        });
-
-        // 結束支援
-        document.getElementById('leaveSupportBtn')?.addEventListener('click', async () => {
-            const { isConfirmed } = await Swal.fire({
-                title: '結束支援',
-                text: '確定要離開此支援聊天室嗎？',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: '確定離開',
-                cancelButtonText: '取消',
-            });
-            if (!isConfirmed) return;
-            try {
-                await this.backend.leaveSupport(this.currentRoomId);
-                this.mySupportRoomsSet.delete(String(this.currentRoomId));
-                document.getElementById('leaveSupportBtn').style.display = 'none';
-                document.getElementById('requestSupportBtn').style.display = '';
-                const officialRoomId = [...this.officialRoomsSet][0];
-                if (officialRoomId) {
-                    const officialItem = document.querySelector(`[data-room-id="${officialRoomId}"]`);
-                    const officialName = officialItem?.querySelector('.roomName')?.textContent || '官方頻道';
-                    await this.switchRoom(officialRoomId, officialName);
-                }
-            } catch {
-                Swal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
-            }
-        });
-
         // ── 時間 / 地點選擇器 ──
         const timePicker = document.getElementById('timePicker');
         const locPicker  = document.getElementById('locationPicker');
@@ -2393,10 +2329,68 @@ async function openChatWithTarget(targetUserId) {
             <div style="font-size:0.8rem;color:#888;margin-bottom:8px;">
                 <i class="bi bi-people me-1"></i>成員（${members.length} 人）
             </div>
-            <div>${memberHtml}</div>`;
+            <div style="margin-bottom:14px;">${memberHtml}</div>
+            ${!isOfficial ? `
+            <div style="font-size:0.8rem;color:#888;margin-bottom:8px;margin-top:4px;">
+                <i class="bi bi-receipt me-1"></i>交易紀錄
+            </div>
+            <div id="roomOrdersList"><div style="text-align:center;padding:12px 0;color:#aaa;font-size:0.8rem;"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div></div>
+            ` : ''}`;
 
         document.getElementById('roomInfoBody').innerHTML = infoHtml;
         _openRoomInfoPanel();
+
+        if (!isOfficial) {
+            const _renderRoomOrders = (orders) => {
+                const el = document.getElementById('roomOrdersList');
+                if (!el) return;
+                const STATUS_LABEL = {
+                    pending: '待確認', preparing: '待出貨', shipping: '配送中',
+                    delivered: '待收貨', review_pending: '待評價',
+                    completed: '已完成', canceled: '已取消'
+                };
+                const STATUS_COLOR = {
+                    pending: '#e67e22', preparing: '#004b97', shipping: '#004b97',
+                    delivered: '#004b97', review_pending: '#27ae60',
+                    completed: '#888', canceled: '#ccc'
+                };
+                if (!Array.isArray(orders) || orders.length === 0) {
+                    el.innerHTML = `<div style="text-align:center;padding:16px 0;color:#aaa;font-size:0.8rem;"><i class="bi bi-receipt" style="font-size:1.4rem;display:block;margin-bottom:6px;"></i>尚無交易紀錄</div>`;
+                    return;
+                }
+                const myUid = String(localStorage.getItem('uid') ?? '');
+                el.innerHTML = orders.map(order => {
+                    const orderItems = order.orderItems ?? [];
+                    const first = orderItems[0];
+                    const productName = first?.item?.name ?? first?.name ?? order.name ?? '商品';
+                    const qty = first?.quantity ?? 1;
+                    const extra = orderItems.length > 1 ? ` …等 ${orderItems.length} 件` : '';
+                    const label = `${productName} × ${qty}${extra}`;
+                    const statusKey = (order.status ?? '').toLowerCase();
+                    const statusText = STATUS_LABEL[statusKey] ?? order.status ?? '—';
+                    const statusColor = STATUS_COLOR[statusKey] ?? '#888';
+                    const price = order.totalAmount != null ? `NT$ ${Number(order.totalAmount).toLocaleString('zh-TW')}` : '—';
+                    const date = order.createdAt ? new Date(order.createdAt).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '—';
+                    const isBuyer = String(order.buyerUser?.id ?? '') === myUid;
+                    const role = isBuyer ? '買家' : '賣家';
+                    const roleColor = isBuyer ? '#004b97' : '#27ae60';
+                    return `<div style="padding:9px 0;border-bottom:1px solid #f0f0f0;">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:3px;">
+                            <span style="font-size:0.82rem;color:#333;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${productName}">${label}</span>
+                            <span style="font-size:0.7rem;font-weight:600;color:${statusColor};white-space:nowrap;">${statusText}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:0.75rem;color:#888;">${date} · <span style="color:${roleColor};">${role}</span></span>
+                            <span style="font-size:0.78rem;color:#004b97;font-weight:600;">${price}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            };
+            chatRoomList.backend.getRoomOrders(roomId).then(_renderRoomOrders).catch(() => {
+                const el = document.getElementById('roomOrdersList');
+                if (el) el.innerHTML = `<div style="text-align:center;padding:12px 0;color:#ccc;font-size:0.78rem;">無法載入交易紀錄</div>`;
+            });
+        }
     });
 
     // ── 檢舉 ──

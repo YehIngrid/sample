@@ -161,6 +161,15 @@ export default class ChatBackendService {
             return Promise.reject(error);
         }
     }
+    async getRoomOrders(roomId) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/chat/rooms/${roomId}/orders`);
+            return response.data;
+        } catch (error) {
+            console.error('Error getting room orders:', error);
+            return Promise.reject(error);
+        }
+    }
     openSse() {
         const url = `${this.baseUrl}/api/chat/stream`;
         const eventSource = new EventSource(url, { withCredentials: true });
