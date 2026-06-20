@@ -2813,7 +2813,7 @@ async function openChatWithTarget(targetUserId) {
         if (e.target.closest('#ticketResolveBtn')) {
             const { isConfirmed } = await Swal.fire({
                 title: '標記為已解決',
-                text: '確定要將此客服單標記為已解決嗎？',
+                text: '確定要將此客服單標記為已解決並離開聊天室嗎？',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: '確定',
@@ -2821,9 +2821,19 @@ async function openChatWithTarget(targetUserId) {
             });
             if (!isConfirmed) return;
             try {
+                const roomId = chatRoomList.currentRoomId;
                 await chatRoomList.backend.resolveTicket(ticket.id);
-                await chatRoomList._loadSupportTicket(chatRoomList.currentRoomId);
-                Swal.fire({ icon: 'success', title: '客服單已解決', timer: 1500, showConfirmButton: false });
+                await chatRoomList.backend.leaveSupport(roomId);
+                await Swal.fire({ icon: 'success', title: '客服單已解決', timer: 1500, showConfirmButton: false });
+                chatRoomList.mySupportRoomsSet.delete(String(roomId));
+                chatRoomList.supportTypeRoomsSet.delete(String(roomId));
+                await chatRoomList.loadRooms();
+                const officialRoomId = [...chatRoomList.officialRoomsSet][0];
+                if (officialRoomId) {
+                    const officialItem = document.querySelector(`[data-room-id="${officialRoomId}"]`);
+                    const officialName = officialItem?.querySelector('.roomName')?.textContent || '官方頻道';
+                    chatRoomList.switchRoom(officialRoomId, officialName);
+                }
             } catch {
                 Swal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
             }
@@ -2832,34 +2842,36 @@ async function openChatWithTarget(targetUserId) {
         // 裁定
         if (e.target.closest('#ticketAdjudicateBtn')) {
             const { isConfirmed, value } = await Swal.fire({
-                title: '裁定客服單',
+                title: '<i class="bi bi-scale" style="color:#8e44ad;margin-right:6px;"></i>裁定客服單',
                 html: `
-                    <label style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">裁定結果</label>
-                    <select id="swal-verdict" class="swal2-input" style="margin:0 0 12px 0;height:auto;padding:8px;">
-                        <option value="buyer_wins">買家勝訴</option>
-                        <option value="seller_wins">賣家勝訴</option>
-                        <option value="settlement">雙方和解</option>
-                        <option value="other">其他</option>
-                    </select>
-                    <label style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">裁定說明（將回覆給雙方）</label>
-                    <textarea id="swal-adjudicate-msg" class="swal2-textarea" placeholder="請說明裁定依據與結果..." style="margin:0;"></textarea>
+                    <div style="text-align:left;padding:0 4px;">
+                        <div style="background:#f9f0ff;border:1px solid #d7b8f5;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:0.8rem;color:#5b2c6f;">
+                            <i class="bi bi-info-circle me-1"></i>裁定結論將以通知形式傳送給聊天室所有成員，裁定後請手動標記為已解決。
+                        </div>
+                        <label style="display:block;font-size:0.85rem;font-weight:600;color:#444;margin-bottom:6px;">裁定結論</label>
+                        <textarea id="swal-adjudication" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:0.85rem;color:#333;resize:vertical;min-height:70px;box-sizing:border-box;outline:none;margin-bottom:14px;" placeholder="例：買家提供的商品與描述不符，建議退款處理"></textarea>
+                        <label style="display:block;font-size:0.85rem;font-weight:600;color:#444;margin-bottom:6px;">回覆訊息（發送給雙方）</label>
+                        <textarea id="swal-reply-message" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:0.85rem;color:#333;resize:vertical;min-height:70px;box-sizing:border-box;outline:none;" placeholder="例：您好，我們已審查您的訂單，結論如下..."></textarea>
+                    </div>
                 `,
                 showCancelButton: true,
                 confirmButtonText: '送出裁定',
                 cancelButtonText: '取消',
                 focusConfirm: false,
+                customClass: { popup: 'support-swal-popup' },
                 preConfirm: () => {
-                    const verdict = document.getElementById('swal-verdict').value;
-                    const message = document.getElementById('swal-adjudicate-msg').value.trim();
-                    if (!message) { Swal.showValidationMessage('請填寫裁定說明'); return false; }
-                    return { verdict, message };
+                    const adjudication = document.getElementById('swal-adjudication').value.trim();
+                    const replyMessage = document.getElementById('swal-reply-message').value.trim();
+                    if (!adjudication) { Swal.showValidationMessage('請填寫裁定結論'); return false; }
+                    if (!replyMessage) { Swal.showValidationMessage('請填寫回覆訊息'); return false; }
+                    return { adjudication, replyMessage };
                 }
             });
             if (!isConfirmed) return;
             try {
-                await chatRoomList.backend.adjudicateTicket(ticket.id, value);
+                await chatRoomList.backend.adjudicateTicket(ticket.id, { adjudication: value.adjudication, replyMessage: value.replyMessage });
                 await chatRoomList._loadSupportTicket(chatRoomList.currentRoomId);
-                Swal.fire({ icon: 'success', title: '裁定完成', timer: 1500, showConfirmButton: false });
+                Swal.fire({ icon: 'success', title: '裁定完成', text: '請記得點擊「解決」按鈕將客服單標記為已解決。', confirmButtonText: '我知道了' });
             } catch {
                 Swal.fire({ icon: 'error', title: '裁定失敗', text: '請稍後再試' });
             }
