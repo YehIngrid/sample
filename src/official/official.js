@@ -1677,7 +1677,7 @@ async function loadAdminTickets(page = 1) {
       const roomId = t.roomId ?? t.room?.id ?? '';
       return `<div class="analytics-block mb-2" style="padding:12px 16px;display:flex;align-items:center;gap:12px;">
         <div style="flex:1;min-width:0;">
-          <div style="font-size:0.88rem;font-weight:600;color:#333;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(t.reason ?? '（未填寫原因）')}</div>
+          <div style="font-size:0.88rem;font-weight:600;color:#333;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(t.reason ?? '找客服問問題')}</div>
           <div style="font-size:0.75rem;color:#888;">提單用戶：${esc(userName)} · ${createdTime}</div>
           <div style="font-size:0.75rem;color:#888;">負責客服：${esc(agentName)}${t.orderId ? ` · 訂單 ${esc(t.orderId)}` : ''}</div>
         </div>
