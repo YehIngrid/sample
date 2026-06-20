@@ -1454,8 +1454,8 @@ class ChatRoomList {
             this.isInitialLoading = false;
         }
 
-        // 客服處理房間：載入客服單橫幅；其他房間隱藏（先做，讓 info panel 開啟時 ticket 已就緒）
-        if (isSupportTypeRoom) {
+        // 非官方頻道的房間都嘗試載入客服單橫幅（有 ticket 才顯示，沒有就隱藏）
+        if (!isOfficialRoom) {
             await this._loadSupportTicket(roomId);
         } else {
             this.currentTicket = null;
@@ -1591,6 +1591,10 @@ class ChatRoomList {
             }
         }
 
+        const orderLine = ticket.orderId
+            ? `<div style="font-size:0.68rem;color:#888;margin-top:1px;">訂單：${this.escapeHtml(ticket.orderId)}</div>`
+            : '';
+
         banner.className = `ticket-banner ${statusCls}`;
         banner.innerHTML = `
             <div class="ticket-banner-icon"><i class="bi ${statusIcon}"></i></div>
@@ -1599,6 +1603,7 @@ class ChatRoomList {
                 <div class="ticket-banner-reason" title="${this.escapeHtml(ticket.reason ?? '')}">
                     ${this.escapeHtml(ticket.reason ?? '找客服問問題')}
                 </div>
+                ${orderLine}
             </div>
             <div class="ticket-banner-right">
                 <span class="ticket-status-badge" style="background:${statusColor}18;color:${statusColor};border:1px solid ${statusColor}40;">${statusLabel}</span>
@@ -2461,7 +2466,7 @@ async function openChatWithTarget(targetUserId) {
         }).join('');
 
         const isSupportTypeRoom = chatRoomList.supportTypeRoomsSet.has(String(roomId));
-        const ticket = isSupportTypeRoom ? chatRoomList.currentTicket : null;
+        const ticket = chatRoomList.currentTicket;
         const TICKET_STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決' };
         const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60' };
         const ticketStatusColor = ticket ? (TICKET_STATUS_COLOR[ticket.status] ?? '#888') : '#888';

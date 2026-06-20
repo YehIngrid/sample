@@ -1694,12 +1694,12 @@ async function loadAdminTickets(page = 1) {
           ${canClaim
             ? `<button class="btn-claim-ticket btn btn-sm btn-warning" data-ticket-id="${esc(t.id)}" data-room-id="${esc(roomId)}" data-has-order="${hasOrder}" style="font-size:0.72rem;padding:2px 10px;">認領</button>`
             : isClaimed && hasOrder
-              ? `<button class="btn-adjudicate-ticket btn btn-sm btn-outline-primary" data-ticket-id="${esc(t.id)}" data-order-id="${esc(t.orderId)}" style="font-size:0.72rem;padding:2px 10px;"><i class="bi bi-scale me-1"></i>查看記錄 & 仲裁</button>`
+              ? `<button class="btn-adjudicate-ticket btn btn-sm btn-outline-primary" data-ticket-id="${esc(t.id)}" data-order-id="${esc(t.orderId)}" data-user-id="${esc(t.userId ?? t.user?.id ?? '')}" style="font-size:0.72rem;padding:2px 10px;"><i class="bi bi-scale me-1"></i>查看記錄 & 仲裁</button>`
               : isClaimed && roomId
                 ? `<a href="../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}" target="_blank" style="font-size:0.72rem;color:#004b97;text-decoration:none;">前往聊天室 →</a>`
                 : ''
           }
-          ${isClosed ? `<button class="btn-view-history btn btn-sm btn-outline-secondary" data-ticket-id="${esc(t.id)}" data-order-id="${esc(t.orderId ?? '')}" style="font-size:0.72rem;padding:2px 10px;">查看記錄</button>` : ''}
+          ${isClosed ? `<button class="btn-view-history btn btn-sm btn-outline-secondary" data-ticket-id="${esc(t.id)}" data-order-id="${esc(t.orderId ?? '')}" data-user-id="${esc(t.userId ?? t.user?.id ?? '')}" style="font-size:0.72rem;padding:2px 10px;">查看記錄</button>` : ''}
         </div>
       </div>`;
     }).join('');
@@ -1747,6 +1747,7 @@ async function loadAdminTickets(page = 1) {
       btn.addEventListener('click', async () => {
         const ticketId = btn.dataset.ticketId;
         const orderId = btn.dataset.orderId;
+        const complainantId = btn.dataset.userId;
         const bodyEl = document.getElementById('ticketHistoryModalBody');
         bodyEl.innerHTML = `<div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
         document.getElementById('ticketAdjudicateFooter').style.display = 'none';
@@ -1781,21 +1782,26 @@ async function loadAdminTickets(page = 1) {
 
           // 聊天記錄
           const histData = histRes.status === 'fulfilled' ? histRes.value?.data : null;
-          const msgs = Array.isArray(histData?.history) ? histData.history : [];
-          const memberIds = Array.isArray(histData?.members) ? histData.members : [];
-          const memberLabel = (uid) => { const i = memberIds.indexOf(String(uid)); return i >= 0 ? `用戶${i + 1}` : '用戶'; };
+          const msgs = Array.isArray(histData?.history) ? [...histData.history].reverse() : [];
           html += `<div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-comments me-1"></i>聊天記錄</div>`;
           if (!msgs.length) {
             html += `<div class="text-muted text-center py-3 small">無聊天記錄</div>`;
           } else {
-            html += `<div style="display:flex;flex-direction:column;gap:8px;">` +
+            html += `<div style="display:flex;flex-direction:column;gap:6px;">` +
               msgs.map(m => {
+                const isComplainant = String(m.userId) === String(complainantId);
                 const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
-                const senderName = m.senderName ?? m.username ?? memberLabel(m.userId);
-                return `<div style="padding:8px 12px;background:#f8f9fa;border-radius:8px;font-size:0.82rem;">
-                  <span style="font-weight:600;color:#004b97;">${esc(senderName)}</span>
-                  <span style="color:#aaa;font-size:0.72rem;margin-left:6px;">${time}</span>
-                  <div style="color:#333;margin-top:4px;">${esc(m.content ?? m.message ?? '')}</div>
+                const senderName = m.senderName ?? m.username ?? (isComplainant ? '投訴者' : '對方');
+                const align = isComplainant ? 'flex-end' : 'flex-start';
+                const bg = isComplainant ? '#e8f0fe' : '#f8f9fa';
+                const nameColor = isComplainant ? '#004b97' : '#555';
+                const nameAlign = isComplainant ? 'right' : 'left';
+                return `<div style="display:flex;flex-direction:column;align-items:${align};gap:2px;">
+                  <span style="font-size:0.68rem;color:${nameColor};font-weight:600;padding:0 4px;text-align:${nameAlign};">${esc(senderName)}</span>
+                  <div style="max-width:80%;padding:7px 11px;background:${bg};border-radius:10px;font-size:0.82rem;color:#333;border:1px solid ${isComplainant ? '#c5d5f5' : '#eee'};">
+                    ${esc(m.content ?? m.message ?? '')}
+                    <div style="font-size:0.65rem;color:#aaa;margin-top:3px;text-align:right;">${time}</div>
+                  </div>
                 </div>`;
               }).join('') + `</div>`;
           }
@@ -1816,6 +1822,7 @@ async function loadAdminTickets(page = 1) {
       btn.addEventListener('click', async () => {
         const ticketId = btn.dataset.ticketId;
         const orderId = btn.dataset.orderId;
+        const complainantId2 = btn.dataset.userId;
         const bodyEl = document.getElementById('ticketHistoryModalBody');
         const footerEl = document.getElementById('ticketAdjudicateFooter');
         bodyEl.innerHTML = `<div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
@@ -1851,21 +1858,26 @@ async function loadAdminTickets(page = 1) {
             }
           }
           const histData2 = histRes.status === 'fulfilled' ? histRes.value?.data : null;
-          const msgs2 = Array.isArray(histData2?.history) ? histData2.history : [];
-          const memberIds2 = Array.isArray(histData2?.members) ? histData2.members : [];
-          const memberLabel2 = (uid) => { const i = memberIds2.indexOf(String(uid)); return i >= 0 ? `用戶${i + 1}` : '用戶'; };
+          const msgs2 = Array.isArray(histData2?.history) ? [...histData2.history].reverse() : [];
           html += `<div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-comments me-1"></i>聊天記錄</div>`;
           if (!msgs2.length) {
             html += `<div class="text-muted text-center py-3 small">無聊天記錄</div>`;
           } else {
-            html += `<div style="display:flex;flex-direction:column;gap:8px;">` +
+            html += `<div style="display:flex;flex-direction:column;gap:6px;">` +
               msgs2.map(m => {
+                const isComplainant = String(m.userId) === String(complainantId2);
                 const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
-                const senderName = m.senderName ?? m.username ?? memberLabel2(m.userId);
-                return `<div style="padding:8px 12px;background:#f8f9fa;border-radius:8px;font-size:0.82rem;">
-                  <span style="font-weight:600;color:#004b97;">${esc(senderName)}</span>
-                  <span style="color:#aaa;font-size:0.72rem;margin-left:6px;">${time}</span>
-                  <div style="color:#333;margin-top:4px;">${esc(m.content ?? m.message ?? '')}</div>
+                const senderName = m.senderName ?? m.username ?? (isComplainant ? '投訴者' : '對方');
+                const align = isComplainant ? 'flex-end' : 'flex-start';
+                const bg = isComplainant ? '#e8f0fe' : '#f8f9fa';
+                const nameColor = isComplainant ? '#004b97' : '#555';
+                const nameAlign = isComplainant ? 'right' : 'left';
+                return `<div style="display:flex;flex-direction:column;align-items:${align};gap:2px;">
+                  <span style="font-size:0.68rem;color:${nameColor};font-weight:600;padding:0 4px;text-align:${nameAlign};">${esc(senderName)}</span>
+                  <div style="max-width:80%;padding:7px 11px;background:${bg};border-radius:10px;font-size:0.82rem;color:#333;border:1px solid ${isComplainant ? '#c5d5f5' : '#eee'};">
+                    ${esc(m.content ?? m.message ?? '')}
+                    <div style="font-size:0.65rem;color:#aaa;margin-top:3px;text-align:right;">${time}</div>
+                  </div>
                 </div>`;
               }).join('') + `</div>`;
           }
