@@ -1140,6 +1140,7 @@ class ChatRoomList {
                     const chName = data.officialChannel?.name ?? data.name ?? '';
                     if (chName.includes('客服') || chName.includes('小助手')) this.supportRoomsSet.add(String(data.id));
                 }
+                const isSupport = data.type === 'SUPPORT';
                 const target = isOfficial ? null :
                     (data.members?.find(m => m.role === 'USER' && String(m.userId) !== String(this.userId))
                     ?? data.members?.find(m => String(m.userId) !== String(this.userId)));
@@ -1147,8 +1148,26 @@ class ChatRoomList {
                 const myself = data.members?.find(m => String(m.userId) === String(this.userId));
                 if (myself?.role === 'SUPPORT') this.mySupportRoomsSet.add(String(data.id));
 
-                const roomName   = isOfficial ? (data.officialChannel?.name ?? '官方帳號') : (target?.name ?? '未知');
-                const roomAvatar = isOfficial ? '../webP/treasurehub.webp' : (target?.photoURL || '../image/default-avatar.webp');
+                // SUPPORT 房間：對方是客服人員（SUPPORT role），若還沒加入則顯示「等待客服人員加入」
+                let roomName, roomAvatar;
+                if (isOfficial) {
+                    roomName   = data.officialChannel?.name ?? '官方帳號';
+                    roomAvatar = '../webP/treasurehub.webp';
+                } else if (isSupport) {
+                    const agent = data.members?.find(m => m.role === 'SUPPORT' && String(m.userId) !== String(this.userId));
+                    const userMember = data.members?.find(m => m.role === 'USER' && String(m.userId) !== String(this.userId));
+                    // 若我是 USER，顯示客服人員名稱（或等待中）；若我是 SUPPORT，顯示提單用戶名稱
+                    if (myself?.role === 'SUPPORT') {
+                        roomName   = userMember?.name ?? target?.name ?? '用戶';
+                        roomAvatar = userMember?.photoURL || target?.photoURL || '../image/default-avatar.webp';
+                    } else {
+                        roomName   = agent?.name ?? '等待客服人員加入';
+                        roomAvatar = agent?.photoURL || '../image/default-avatar.webp';
+                    }
+                } else {
+                    roomName   = target?.name ?? '未知';
+                    roomAvatar = target?.photoURL || '../image/default-avatar.webp';
+                }
 
                 const isMyMessage  = data.lastMessage?.username === myself?.name;
                 // ✅ 官方頻道：lastMessageId 可能在 officialChannel 上
@@ -1231,16 +1250,6 @@ class ChatRoomList {
                 officialRooms.forEach(renderRoomItem);
             }
 
-            // 私人訊息 section
-            if (privateRooms.length > 0) {
-                const pvtHeader = document.createElement('div');
-                pvtHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom';
-                pvtHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
-                pvtHeader.textContent = '私人訊息';
-                chatList.appendChild(pvtHeader);
-                privateRooms.forEach(renderRoomItem);
-            }
-
             // 客服處理 section
             if (supportTypeRooms.length > 0) {
                 const supHeader = document.createElement('div');
@@ -1249,6 +1258,16 @@ class ChatRoomList {
                 supHeader.innerHTML = '<i class="bi bi-headset" style="margin-right:4px;"></i>客服處理';
                 chatList.appendChild(supHeader);
                 supportTypeRooms.forEach(renderRoomItem);
+            }
+
+            // 私人訊息 section
+            if (privateRooms.length > 0) {
+                const pvtHeader = document.createElement('div');
+                pvtHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom';
+                pvtHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
+                pvtHeader.textContent = '私人訊息';
+                chatList.appendChild(pvtHeader);
+                privateRooms.forEach(renderRoomItem);
             }
 
             // ✅ 用 cloneNode 斷開舊的 click listener，避免重複綁定
@@ -1501,7 +1520,12 @@ class ChatRoomList {
         const STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97' };
         try {
             const res = await this.backend.getMyTickets();
-            const tickets = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : []);
+            // API 可能回傳單筆 { data: {...} } 或陣列 { data: [...] }
+            let tickets;
+            if (Array.isArray(res)) tickets = res;
+            else if (Array.isArray(res?.data)) tickets = res.data;
+            else if (res?.data && typeof res.data === 'object') tickets = [res.data];
+            else tickets = [];
             tickets.forEach(ticket => {
                 const rId = ticket.roomId ?? ticket.room?.id ?? ticket.supportRoomId;
                 if (!rId) return;
@@ -2616,19 +2640,25 @@ async function openChatWithTarget(targetUserId) {
             }).join('');
 
             const { isConfirmed, value } = await Swal.fire({
-                title: '聯絡客服',
+                title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
                 html: `
-                    <label class="swal2-input-label" style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">關聯訂單</label>
-                    <select id="swal-order" class="swal2-input" style="margin:0 0 12px 0;height:auto;padding:8px;">
-                        ${orderOptions}
-                    </select>
-                    <label class="swal2-input-label" style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">問題描述</label>
-                    <textarea id="swal-reason" class="swal2-textarea" placeholder="請描述需要客服協助的原因..." style="margin:0;"></textarea>
+                    <div style="text-align:left;padding:0 4px;">
+                        <div style="background:#fff8f0;border:1px solid #f5cba7;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:0.8rem;color:#7d4e00;">
+                            <i class="bi bi-info-circle me-1"></i>送出後將由客服人員認領，請詳細描述問題以加快處理速度。
+                        </div>
+                        <label style="display:block;font-size:0.82rem;font-weight:600;color:#444;margin-bottom:6px;">關聯訂單</label>
+                        <select id="swal-order" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:8px 10px;font-size:0.85rem;color:#333;background:#fff;margin-bottom:14px;outline:none;">
+                            ${orderOptions}
+                        </select>
+                        <label style="display:block;font-size:0.82rem;font-weight:600;color:#444;margin-bottom:6px;">問題描述</label>
+                        <textarea id="swal-reason" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:0.85rem;color:#333;resize:vertical;min-height:90px;box-sizing:border-box;outline:none;" placeholder="請描述需要客服協助的原因..."></textarea>
+                    </div>
                 `,
                 showCancelButton: true,
                 confirmButtonText: '送出',
                 cancelButtonText: '取消',
                 focusConfirm: false,
+                customClass: { popup: 'support-swal-popup' },
                 preConfirm: () => {
                     const orderId = document.getElementById('swal-order').value;
                     const reason = document.getElementById('swal-reason').value.trim();
@@ -2654,15 +2684,21 @@ async function openChatWithTarget(targetUserId) {
         } else {
             // ── 無訂單 → createTicket（純建 ticket）──
             const { isConfirmed, value } = await Swal.fire({
-                title: '聯絡客服',
+                title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
                 html: `
-                    <label class="swal2-input-label" style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">問題描述</label>
-                    <textarea id="swal-reason-only" class="swal2-textarea" placeholder="請描述需要客服協助的原因..." style="margin:0;"></textarea>
+                    <div style="text-align:left;padding:0 4px;">
+                        <div style="background:#fff8f0;border:1px solid #f5cba7;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:0.8rem;color:#7d4e00;">
+                            <i class="bi bi-info-circle me-1"></i>送出後將由客服人員認領，請耐心等候。
+                        </div>
+                        <label style="display:block;margin-bottom:6px;font-size:0.85rem;font-weight:600;color:#444;">問題描述</label>
+                        <textarea id="swal-reason-only" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:0.85rem;color:#333;resize:vertical;min-height:90px;box-sizing:border-box;outline:none;" placeholder="請描述需要客服協助的原因..."></textarea>
+                    </div>
                 `,
                 showCancelButton: true,
                 confirmButtonText: '送出',
                 cancelButtonText: '取消',
                 focusConfirm: false,
+                customClass: { popup: 'support-swal-popup' },
                 preConfirm: () => {
                     const reason = document.getElementById('swal-reason-only').value.trim();
                     if (!reason) { Swal.showValidationMessage('請描述問題原因'); return false; }
