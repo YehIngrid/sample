@@ -1368,11 +1368,8 @@ class ChatRoomList {
         const isSupportTypeRoom = this.supportTypeRoomsSet.has(String(roomId));
         const isMySupport = this.mySupportRoomsSet.has(String(roomId));
         const requestSupportBtn = document.getElementById('requestSupportBtn');
-        const leaveSupportBtn = document.getElementById('leaveSupportBtn');
         // 聯絡客服：只在一般 DIRECT 聊天室顯示（非官方、非客服處理房間）
         if (requestSupportBtn) requestSupportBtn.style.display = (!isOfficialRoom && !isSupportTypeRoom) ? '' : 'none';
-        // 結束支援：只在客服處理房間、且自己是 SUPPORT 角色時顯示
-        if (leaveSupportBtn) leaveSupportBtn.style.display = (isSupportTypeRoom && isMySupport) ? '' : 'none';
         const _pickerDisplay = isOfficialRoom ? 'none' : '';
         document.getElementById('time-picker-btn')?.style.setProperty('display', _pickerDisplay);
         document.getElementById('location-picker-btn')?.style.setProperty('display', _pickerDisplay);
@@ -2779,36 +2776,6 @@ async function openChatWithTarget(targetUserId) {
         }
     });
 
-    // ── 結束支援 ──
-    document.getElementById('leaveSupportBtn')?.addEventListener('click', async () => {
-        const roomId = chatRoomList.currentRoomId;
-        if (!roomId) return;
-        const ticket = chatRoomList.currentTicket;
-
-        const { isConfirmed } = await Swal.fire({
-            title: '確認結束支援',
-            text: '將標記客服單為已解決並離開聊天室。',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: '確定',
-            cancelButtonText: '取消',
-        });
-        if (!isConfirmed) return;
-        try {
-            if (ticket) await chatRoomList.backend.resolveTicket(ticket.id);
-            chatRoomList.mySupportRoomsSet.delete(String(roomId));
-            chatRoomList.supportTypeRoomsSet.delete(String(roomId));
-            await chatRoomList.loadRooms();
-            const officialRoomId = [...chatRoomList.officialRoomsSet][0];
-            if (officialRoomId) {
-                const officialItem = document.querySelector(`[data-room-id="${officialRoomId}"]`);
-                const officialName = officialItem?.querySelector('.roomName')?.textContent || '官方頻道';
-                await chatRoomList.switchRoom(officialRoomId, officialName);
-            }
-        } catch {
-            Swal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
-        }
-    });
 
     // ── 客服單操作（認領 / 解決 / 裁定）──
     document.getElementById('ticketBanner')?.addEventListener('click', async (e) => {

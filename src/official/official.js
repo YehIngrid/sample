@@ -1780,26 +1780,24 @@ async function loadAdminTickets(page = 1) {
           }
 
           // 聊天記錄
+          const histData = histRes.status === 'fulfilled' ? histRes.value?.data : null;
+          const msgs = Array.isArray(histData?.history) ? histData.history : [];
+          const memberIds = Array.isArray(histData?.members) ? histData.members : [];
+          const memberLabel = (uid) => { const i = memberIds.indexOf(String(uid)); return i >= 0 ? `用戶${i + 1}` : '用戶'; };
           html += `<div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-comments me-1"></i>聊天記錄</div>`;
-          if (histRes.status === 'fulfilled') {
-            const msgs = Array.isArray(histRes.value) ? histRes.value
-              : Array.isArray(histRes.value?.data?.items) ? histRes.value.data.items
-              : Array.isArray(histRes.value?.data) ? histRes.value.data : [];
-            if (!msgs.length) {
-              html += `<div class="text-muted text-center py-3 small">無聊天記錄</div>`;
-            } else {
-              html += `<div style="display:flex;flex-direction:column;gap:8px;">` +
-                msgs.map(m => {
-                  const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
-                  return `<div style="padding:8px 12px;background:#f8f9fa;border-radius:8px;font-size:0.82rem;">
-                    <span style="font-weight:600;color:#004b97;">${esc(m.senderName ?? m.username ?? '用戶')}</span>
-                    <span style="color:#aaa;font-size:0.72rem;margin-left:6px;">${time}</span>
-                    <div style="color:#333;margin-top:4px;">${esc(m.content ?? m.message ?? '')}</div>
-                  </div>`;
-                }).join('') + `</div>`;
-            }
+          if (!msgs.length) {
+            html += `<div class="text-muted text-center py-3 small">無聊天記錄</div>`;
           } else {
-            html += `<div class="text-muted text-center py-3 small">無法載入聊天記錄</div>`;
+            html += `<div style="display:flex;flex-direction:column;gap:8px;">` +
+              msgs.map(m => {
+                const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+                const senderName = m.senderName ?? m.username ?? memberLabel(m.userId);
+                return `<div style="padding:8px 12px;background:#f8f9fa;border-radius:8px;font-size:0.82rem;">
+                  <span style="font-weight:600;color:#004b97;">${esc(senderName)}</span>
+                  <span style="color:#aaa;font-size:0.72rem;margin-left:6px;">${time}</span>
+                  <div style="color:#333;margin-top:4px;">${esc(m.content ?? m.message ?? '')}</div>
+                </div>`;
+              }).join('') + `</div>`;
           }
 
           bodyEl.innerHTML = html;
@@ -1852,26 +1850,24 @@ async function loadAdminTickets(page = 1) {
                 </div>`;
             }
           }
+          const histData2 = histRes.status === 'fulfilled' ? histRes.value?.data : null;
+          const msgs2 = Array.isArray(histData2?.history) ? histData2.history : [];
+          const memberIds2 = Array.isArray(histData2?.members) ? histData2.members : [];
+          const memberLabel2 = (uid) => { const i = memberIds2.indexOf(String(uid)); return i >= 0 ? `用戶${i + 1}` : '用戶'; };
           html += `<div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-comments me-1"></i>聊天記錄</div>`;
-          if (histRes.status === 'fulfilled') {
-            const msgs = Array.isArray(histRes.value) ? histRes.value
-              : Array.isArray(histRes.value?.data?.items) ? histRes.value.data.items
-              : Array.isArray(histRes.value?.data) ? histRes.value.data : [];
-            if (!msgs.length) {
-              html += `<div class="text-muted text-center py-3 small">無聊天記錄</div>`;
-            } else {
-              html += `<div style="display:flex;flex-direction:column;gap:8px;">` +
-                msgs.map(m => {
-                  const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
-                  return `<div style="padding:8px 12px;background:#f8f9fa;border-radius:8px;font-size:0.82rem;">
-                    <span style="font-weight:600;color:#004b97;">${esc(m.senderName ?? m.username ?? '用戶')}</span>
-                    <span style="color:#aaa;font-size:0.72rem;margin-left:6px;">${time}</span>
-                    <div style="color:#333;margin-top:4px;">${esc(m.content ?? m.message ?? '')}</div>
-                  </div>`;
-                }).join('') + `</div>`;
-            }
+          if (!msgs2.length) {
+            html += `<div class="text-muted text-center py-3 small">無聊天記錄</div>`;
           } else {
-            html += `<div class="text-muted text-center py-3 small">無法載入聊天記錄</div>`;
+            html += `<div style="display:flex;flex-direction:column;gap:8px;">` +
+              msgs2.map(m => {
+                const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+                const senderName = m.senderName ?? m.username ?? memberLabel2(m.userId);
+                return `<div style="padding:8px 12px;background:#f8f9fa;border-radius:8px;font-size:0.82rem;">
+                  <span style="font-weight:600;color:#004b97;">${esc(senderName)}</span>
+                  <span style="color:#aaa;font-size:0.72rem;margin-left:6px;">${time}</span>
+                  <div style="color:#333;margin-top:4px;">${esc(m.content ?? m.message ?? '')}</div>
+                </div>`;
+              }).join('') + `</div>`;
           }
           bodyEl.innerHTML = html;
         } catch {
