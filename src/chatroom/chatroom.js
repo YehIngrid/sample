@@ -2630,6 +2630,22 @@ async function openChatWithTarget(targetUserId) {
         const roomId = chatRoomList.currentRoomId;
         if (!roomId) return;
 
+        // 偵測是否已有進行中的客服單（SUPPORT 房間只能同時存在一間）
+        try {
+            const myTicketRes = await chatRoomList.backend.getMyTickets();
+            const myTicket = myTicketRes?.data ?? myTicketRes;
+            if (myTicket && myTicket.status && myTicket.status !== 'RESOLVED') {
+                const statusLabel = { UNRESOLVED: '等待認領', CLAIMED: '處理中' }[myTicket.status] ?? myTicket.status;
+                await Swal.fire({
+                    icon: 'info',
+                    title: '已有進行中的客服單',
+                    html: `<p style="font-size:0.88rem;color:#555;margin:0;">您目前有一筆狀態為「<strong>${statusLabel}</strong>」的客服單尚未結束，<br>請等客服人員將問題標記為已解決後再重新聯絡。</p>`,
+                    confirmButtonText: '我知道了',
+                });
+                return;
+            }
+        } catch { /* 靜默失敗，允許繼續 */ }
+
         // 載入該聊天室的訂單
         let orders = [];
         try {
@@ -2803,7 +2819,6 @@ async function openChatWithTarget(targetUserId) {
         if (!typeConfirmed) return;
 
         const _doLeave = async () => {
-            await chatRoomList.backend.leaveSupport(roomId);
             chatRoomList.mySupportRoomsSet.delete(String(roomId));
             chatRoomList.supportTypeRoomsSet.delete(String(roomId));
             await chatRoomList.loadRooms();
@@ -2911,7 +2926,6 @@ async function openChatWithTarget(targetUserId) {
             try {
                 const roomId = chatRoomList.currentRoomId;
                 await chatRoomList.backend.resolveTicket(ticket.id);
-                await chatRoomList.backend.leaveSupport(roomId);
                 await Swal.fire({ icon: 'success', title: '客服單已解決', timer: 1500, showConfirmButton: false });
                 chatRoomList.mySupportRoomsSet.delete(String(roomId));
                 chatRoomList.supportTypeRoomsSet.delete(String(roomId));
