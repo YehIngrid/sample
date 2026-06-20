@@ -66,6 +66,7 @@ function switchPanel(panelId) {
   if (panelId === 'panel-reports') loadAllReports(1);
   if (panelId === 'panel-report-categories') loadReportCategories();
   if (panelId === 'panel-review-tags') { loadReviewTagGroups(); loadReviewTags(); }
+  if (panelId === 'panel-tickets') loadAdminTickets(1);
   closeSidebar();
 }
 window.switchPanel = switchPanel;
@@ -1638,3 +1639,67 @@ document.getElementById('createReportCatForm')?.addEventListener('submit', async
     resultBox.classList.remove('d-none');
   }
 });
+
+// ════════════════════════════════════════════════════
+//  客服單管理
+// ════════════════════════════════════════════════════
+const TICKET_STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決', ADJUDICATED: '已裁定' };
+const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60', ADJUDICATED: '#8e44ad' };
+
+async function loadAdminTickets(page = 1) {
+  const status = document.getElementById('ticketsStatusFilter')?.value ?? '';
+  const listEl = document.getElementById('ticketsAdminList');
+  const pagerEl = document.getElementById('ticketsAdminPager');
+  if (!listEl) return;
+  listEl.innerHTML = `<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
+  if (pagerEl) pagerEl.innerHTML = '';
+  try {
+    const res = await chatSvc.listAdminTickets(status || undefined, page, 20);
+    const items = Array.isArray(res?.data?.items) ? res.data.items
+      : Array.isArray(res?.data) ? res.data
+      : Array.isArray(res) ? res : [];
+    const total = res?.data?.total ?? items.length;
+    const totalPages = Math.max(1, Math.ceil(total / 20));
+
+    if (!items.length) {
+      listEl.innerHTML = `<div class="text-muted text-center py-4">目前沒有客服單</div>`;
+      return;
+    }
+
+    listEl.innerHTML = items.map(t => {
+      const color = TICKET_STATUS_COLOR[t.status] ?? '#888';
+      const label = TICKET_STATUS_LABEL[t.status] ?? t.status;
+      const createdTime = t.createdAt
+        ? new Date(t.createdAt).toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })
+        : '—';
+      const userName = t.user?.name ?? t.user?.username ?? '用戶';
+      const agentName = t.claimedBy ? (t.agent?.name ?? t.agent?.username ?? '客服') : '未認領';
+      const roomId = t.roomId ?? t.room?.id ?? '';
+      return `<div class="analytics-block mb-2" style="padding:12px 16px;display:flex;align-items:center;gap:12px;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.88rem;font-weight:600;color:#333;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(t.reason ?? '（未填寫原因）')}</div>
+          <div style="font-size:0.75rem;color:#888;">提單用戶：${esc(userName)} · ${createdTime}</div>
+          <div style="font-size:0.75rem;color:#888;">負責客服：${esc(agentName)}${t.orderId ? ` · 訂單 ${esc(t.orderId)}` : ''}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+          <span style="font-size:0.68rem;font-weight:700;border-radius:20px;padding:2px 10px;background:${color}15;color:${color};border:1px solid ${color}40;white-space:nowrap;">${label}</span>
+          ${roomId ? `<a href="../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}" target="_blank" style="font-size:0.72rem;color:#004b97;text-decoration:none;">前往聊天室 →</a>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+    if (pagerEl && totalPages > 1) {
+      pagerEl.innerHTML = Array.from({ length: totalPages }, (_, i) => i + 1).map(p =>
+        `<button class="btn btn-sm ${p === page ? 'btn-primary' : 'btn-outline-secondary'}" data-page="${p}">${p}</button>`
+      ).join('');
+      pagerEl.querySelectorAll('[data-page]').forEach(btn => {
+        btn.addEventListener('click', () => loadAdminTickets(Number(btn.dataset.page)));
+      });
+    }
+  } catch (err) {
+    listEl.innerHTML = `<div class="text-danger text-center py-3 small">載入失敗：${esc(err?.response?.data?.message ?? err?.message ?? '請稍後再試')}</div>`;
+  }
+}
+
+document.getElementById('ticketsStatusFilter')?.addEventListener('change', () => loadAdminTickets(1));
+document.getElementById('refreshTicketsBtn')?.addEventListener('click', () => loadAdminTickets(1));

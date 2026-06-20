@@ -96,6 +96,9 @@
           </div>
         </div>
 
+        <button class="nav-btn" data-panel="panel-tickets">
+          <i class="fa fa-headphones"></i> 客服單管理
+        </button>
         <button class="nav-btn" data-panel="panel-analytics">
           <i class="fa fa-bar-chart"></i> 數據分析
         </button>
@@ -198,6 +201,16 @@
             <div class="dashboard-card-body">
               <div class="dashboard-card-title">建立頻道</div>
               <div class="dashboard-card-desc">初次使用請先在此建立官方廣播頻道，取得頻道 ID 後即可開始發送公告。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-tickets')">
+            <div class="dashboard-card-icon" style="background:#fff3e0;">
+              <i class="fa fa-headphones" style="color:#e67e22;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">客服單管理</div>
+              <div class="dashboard-card-desc">查看所有客服單狀態，認領待處理的客服請求，或查看已解決的案件紀錄。</div>
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
@@ -804,6 +817,35 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- Panel: 客服單管理 -->
+      <section id="panel-tickets" class="panel">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <h2 class="panel-title mb-0"><i class="fa fa-headphones me-2"></i>客服單管理</h2>
+          <button class="btn btn-sm btn-outline-primary" id="refreshTicketsBtn">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+
+        <!-- 狀態篩選 -->
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+          <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+          <select id="ticketsStatusFilter" class="form-select form-select-sm" style="width:auto;">
+            <option value="">全部</option>
+            <option value="UNRESOLVED">等待認領</option>
+            <option value="CLAIMED">處理中</option>
+            <option value="RESOLVED">已解決</option>
+          </select>
+        </div>
+
+        <!-- 列表 -->
+        <div id="ticketsAdminList">
+          <div class="text-muted text-center py-3 small">
+            <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+          </div>
+        </div>
+        <div id="ticketsAdminPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
       </section>
 
     </main>
