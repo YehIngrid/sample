@@ -2461,8 +2461,7 @@ async function openChatWithTarget(targetUserId) {
         const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60', ADJUDICATED: '#8e44ad' };
         const ticketStatusColor = ticket ? (TICKET_STATUS_COLOR[ticket.status] ?? '#888') : '#888';
         const isClaimedByMe = ticket?.agentId != null && String(ticket.agentId) === String(chatRoomList.userId);
-        const myGlobalRole = localStorage.getItem('role');
-        const canManageTickets = isOfficial && (myGlobalRole === 'ADMIN' || myGlobalRole === 'MODERATOR' || myGlobalRole === 'SUPPORT');
+        const canManageTickets = isOfficial;
 
         const infoHtml = `
             <div style="font-size:0.8rem;color:#888;margin-bottom:14px;">
@@ -2679,9 +2678,17 @@ async function openChatWithTarget(targetUserId) {
                 chatRoomList.backend.listAdminTickets(status || undefined).then(res => {
                     const list = Array.isArray(res) ? res : (Array.isArray(res?.data?.items) ? res.data.items : (Array.isArray(res?.data) ? res.data : []));
                     _renderAdminTickets(list);
-                }).catch(() => {
+                }).catch((err) => {
                     const el = document.getElementById('adminTicketList');
-                    if (el) el.innerHTML = `<div style="text-align:center;padding:12px 0;color:#ccc;font-size:0.78rem;">無法載入客服單列表</div>`;
+                    if (!el) return;
+                    if (err?.response?.status === 403) {
+                        // 無管理權限，隱藏整個客服單管理區塊
+                        el.closest('div[style*="margin-bottom:8px"]')?.remove();
+                        el.previousElementSibling?.remove();
+                        el.remove();
+                    } else {
+                        el.innerHTML = `<div style="text-align:center;padding:12px 0;color:#ccc;font-size:0.78rem;">無法載入客服單列表</div>`;
+                    }
                 });
             };
 
