@@ -1520,9 +1520,10 @@ class ChatRoomList {
         const STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97' };
         try {
             const res = await this.backend.getMyTickets();
-            // API 可能回傳單筆 { data: {...} } 或陣列 { data: [...] }
+            // API 可能回傳單筆 { data: {...} }、{ data: { items: [...] } } 或陣列
             let tickets;
             if (Array.isArray(res)) tickets = res;
+            else if (Array.isArray(res?.data?.items)) tickets = res.data.items;
             else if (Array.isArray(res?.data)) tickets = res.data;
             else if (res?.data && typeof res.data === 'object') tickets = [res.data];
             else tickets = [];
@@ -1555,8 +1556,10 @@ class ChatRoomList {
         if (!banner) return;
         try {
             const res = await this.backend.getTicketsByRoom(roomId);
-            // API 回傳可能是陣列或 { data: [...] }，取第一筆
-            const list = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : []);
+            const list = Array.isArray(res) ? res
+                : Array.isArray(res?.data?.items) ? res.data.items
+                : Array.isArray(res?.data) ? res.data
+                : res?.data ? [res.data] : [];
             this.currentTicket = list[0] ?? null;
         } catch { /* 靜默失敗 */ }
         this._renderTicketBanner(this.currentTicket);
