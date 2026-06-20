@@ -1290,62 +1290,110 @@ html, body {
 .ticket-banner {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 8px 14px;
-    background: #fff8f0;
-    border-bottom: 1px solid #f5cba7;
+    gap: 12px;
+    padding: 10px 16px;
+    background: aliceblue;
+    border-bottom: 1px solid #cde4f8;
+    border-left: 4px solid #004b97;
     flex-shrink: 0;
-    font-size: 0.8rem;
-    flex-wrap: wrap;
+    font-size: 0.82rem;
+    transition: border-left-color 0.2s;
 }
-.ticket-banner-info {
+.ticket-banner.status-unresolved { border-left-color: #e67e22; }
+.ticket-banner.status-claimed    { border-left-color: #004b97; }
+.ticket-banner.status-resolved   { border-left-color: rgb(36,182,133); }
+.ticket-banner-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: 6px;
-    color: #7d4e00;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: #fff;
+    background: #004b97;
+    transition: background 0.2s;
+}
+.ticket-banner.status-unresolved .ticket-banner-icon { background: #e67e22; }
+.ticket-banner.status-resolved   .ticket-banner-icon { background: rgb(36,182,133); }
+.ticket-banner-body {
     flex: 1;
     min-width: 0;
 }
-.ticket-banner-info i { font-size: 0.95rem; flex-shrink: 0; }
+.ticket-banner-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #004b97;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+.ticket-banner.status-unresolved .ticket-banner-label { color: #e67e22; }
+.ticket-banner.status-resolved   .ticket-banner-label { color: rgb(36,182,133); }
 .ticket-banner-reason {
+    color: #333;
+    font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 0.82rem;
 }
 .ticket-banner-right {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     flex-shrink: 0;
 }
 .ticket-status-badge {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 600;
     border-radius: 20px;
-    padding: 2px 9px;
+    padding: 3px 10px;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.ticket-status-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+    flex-shrink: 0;
 }
 .ticket-action-btn {
     font-size: 0.75rem;
     font-weight: 600;
-    border: 1px solid #004b97;
-    color: #004b97;
-    background: #fff;
+    border: none;
     border-radius: 6px;
-    padding: 3px 10px;
+    padding: 5px 13px;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
     white-space: nowrap;
+    background: #004b97;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0,75,151,0.2);
 }
-.ticket-action-btn:hover { background: #004b97; color: #fff; }
-.ticket-action-resolve { border-color: #27ae60; color: #27ae60; }
-.ticket-action-resolve:hover { background: #27ae60; color: #fff; }
-.ticket-action-adjudicate { border-color: #8e44ad; color: #8e44ad; }
-.ticket-action-adjudicate:hover { background: #8e44ad; color: #fff; }
-[data-theme-dark] .ticket-banner { background: #2a1f0d; border-color: #6b4c1e; }
-[data-theme-dark] .ticket-banner-info { color: #f5c07a; }
-[data-theme-dark] .ticket-action-btn { background: transparent; }
+.ticket-action-btn:hover {
+    background: rgb(36,182,133);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(36,182,133,0.25);
+}
+.ticket-action-resolve {
+    background: rgb(36,182,133);
+    box-shadow: 0 1px 3px rgba(36,182,133,0.25);
+}
+.ticket-action-resolve:hover {
+    background: #1ea876;
+    box-shadow: 0 3px 8px rgba(36,182,133,0.3);
+}
+[data-theme-dark] .ticket-banner { background: #0e1f33; border-bottom-color: #1a3a5c; }
+[data-theme-dark] .ticket-banner-reason { color: #cdd6f4; }
+[data-theme-dark] .ticket-banner-label { opacity: 0.9; }
+[data-theme-dark] .ticket-action-btn { box-shadow: none; }
 
 /* ── 空白聊天室引導 ── */
 .empty-chat-hint {

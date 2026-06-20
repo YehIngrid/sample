@@ -862,6 +862,15 @@
         <div class="modal-body" id="ticketHistoryModalBody">
           <div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
         </div>
+        <div class="modal-footer flex-column align-items-stretch gap-2" id="ticketAdjudicateFooter" style="display:none!important;border-top:1px solid #eee;padding:16px 20px;">
+          <div class="fw-bold mb-1" style="font-size:0.85rem;color:#555;"><i class="bi bi-scale me-1"></i>填寫仲裁單</div>
+          <textarea id="adjudicationText" class="form-control form-control-sm" rows="3" placeholder="裁定結論，例：買家提供的商品與描述不符，建議退款處理"></textarea>
+          <textarea id="adjudicationReply" class="form-control form-control-sm" rows="2" placeholder="回覆訊息（傳送給雙方）"></textarea>
+          <div class="d-flex gap-2 justify-content-end">
+            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-sm" id="adjudicateSubmitBtn" style="background:#8e44ad;color:#fff;">送出仲裁並解決</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
