@@ -2599,7 +2599,7 @@ async function openChatWithTarget(targetUserId) {
                     const statusColor = STATUS_COLOR[statusKey] ?? '#888';
                     const price = order.totalAmount != null ? `NT$ ${Number(order.totalAmount).toLocaleString('zh-TW')}` : '—';
                     const date = order.createdAt ? new Date(order.createdAt).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '—';
-                    const isBuyer = String(order.buyerUser?.id ?? '') === myUid;
+                    const isBuyer = String(order.buyerUser?.accountId ?? order.buyerUser?.id ?? order.buyer ?? '') === myUid;
                     const role = isBuyer ? '買家' : '賣家';
                     const roleColor = isBuyer ? '#004b97' : '#27ae60';
                     return `<div style="padding:9px 0;border-bottom:1px solid #f0f0f0;">
@@ -2614,7 +2614,10 @@ async function openChatWithTarget(targetUserId) {
                     </div>`;
                 }).join('');
             };
-            chatRoomList.backend.getRoomOrders(roomId).then(_renderRoomOrders).catch(() => {
+            chatRoomList.backend.getRoomOrders(roomId).then(res => {
+                const list = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
+                _renderRoomOrders(list);
+            }).catch(() => {
                 const el = document.getElementById('roomOrdersList');
                 if (el) el.innerHTML = `<div style="text-align:center;padding:12px 0;color:#ccc;font-size:0.78rem;">無法載入交易紀錄</div>`;
             });
@@ -2630,7 +2633,8 @@ async function openChatWithTarget(targetUserId) {
         // 載入該聊天室的訂單
         let orders = [];
         try {
-            orders = await chatRoomList.backend.getRoomOrders(roomId);
+            const ordersRes = await chatRoomList.backend.getRoomOrders(roomId);
+            orders = Array.isArray(ordersRes) ? ordersRes : Array.isArray(ordersRes?.data) ? ordersRes.data : [];
         } catch { /* 靜默失敗 */ }
         const hasOrders = Array.isArray(orders) && orders.length > 0;
 
