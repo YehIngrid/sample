@@ -1694,12 +1694,12 @@ async function loadAdminTickets(page = 1) {
           ${canClaim
             ? `<button class="btn-claim-ticket btn btn-sm btn-warning" data-ticket-id="${esc(t.id)}" data-room-id="${esc(roomId)}" data-has-order="${hasOrder}" style="font-size:0.72rem;padding:2px 10px;">認領</button>`
             : isClaimed && hasOrder
-              ? `<button class="btn-adjudicate-ticket btn btn-sm btn-outline-primary" data-ticket-id="${esc(t.id)}" data-order-id="${esc(t.orderId)}" data-user-id="${esc(t.userId ?? t.user?.id ?? '')}" style="font-size:0.72rem;padding:2px 10px;"><i class="bi bi-scale me-1"></i>查看記錄 & 仲裁</button>`
+              ? `<button class="btn-adjudicate-ticket btn btn-sm btn-outline-primary" data-ticket-id="${esc(t.id)}" data-order-id="${esc(t.orderId)}" data-user-id="${esc(t.userId ?? t.user?.id ?? '')}" data-claimed-by="${esc(t.claimedBy ?? '')}" style="font-size:0.72rem;padding:2px 10px;"><i class="bi bi-scale me-1"></i>查看記錄 & 仲裁</button>`
               : isClaimed && roomId
                 ? `<a href="../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}" target="_blank" style="font-size:0.72rem;color:#004b97;text-decoration:none;">前往聊天室 →</a>`
                 : ''
           }
-          ${isClosed ? `<button class="btn-view-history btn btn-sm btn-outline-secondary" data-ticket-id="${esc(t.id)}" data-order-id="${esc(t.orderId ?? '')}" data-user-id="${esc(t.userId ?? t.user?.id ?? '')}" style="font-size:0.72rem;padding:2px 10px;">查看記錄</button>` : ''}
+          ${isClosed ? `<button class="btn-view-history btn btn-sm btn-outline-secondary" data-ticket-id="${esc(t.id)}" data-order-id="${esc(t.orderId ?? '')}" data-user-id="${esc(t.userId ?? t.user?.id ?? '')}" data-claimed-by="${esc(t.claimedBy ?? '')}" style="font-size:0.72rem;padding:2px 10px;">查看記錄</button>` : ''}
         </div>
       </div>`;
     }).join('');
@@ -1748,6 +1748,7 @@ async function loadAdminTickets(page = 1) {
         const ticketId = btn.dataset.ticketId;
         const orderId = btn.dataset.orderId;
         const complainantId = btn.dataset.userId;
+        const claimedById = btn.dataset.claimedBy;
         const bodyEl = document.getElementById('ticketHistoryModalBody');
         bodyEl.innerHTML = `<div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
         document.getElementById('ticketAdjudicateFooter').style.display = 'none';
@@ -1790,8 +1791,9 @@ async function loadAdminTickets(page = 1) {
             html += `<div style="display:flex;flex-direction:column;gap:6px;">` +
               msgs.map(m => {
                 const isComplainant = String(m.userId) === String(complainantId);
+                const isSupport = claimedById && String(m.userId) === String(claimedById);
                 const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
-                const senderName = m.senderName ?? m.username ?? (isComplainant ? '投訴者' : '對方');
+                const senderName = m.senderName ?? m.username ?? (isComplainant ? '投訴者' : isSupport ? '客服人員' : '對方');
                 const align = isComplainant ? 'flex-end' : 'flex-start';
                 const bg = isComplainant ? '#e8f0fe' : '#f8f9fa';
                 const nameColor = isComplainant ? '#004b97' : '#555';
@@ -1823,6 +1825,7 @@ async function loadAdminTickets(page = 1) {
         const ticketId = btn.dataset.ticketId;
         const orderId = btn.dataset.orderId;
         const complainantId2 = btn.dataset.userId;
+        const claimedById2 = btn.dataset.claimedBy;
         const bodyEl = document.getElementById('ticketHistoryModalBody');
         const footerEl = document.getElementById('ticketAdjudicateFooter');
         bodyEl.innerHTML = `<div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
@@ -1866,8 +1869,9 @@ async function loadAdminTickets(page = 1) {
             html += `<div style="display:flex;flex-direction:column;gap:6px;">` +
               msgs2.map(m => {
                 const isComplainant = String(m.userId) === String(complainantId2);
+                const isSupport2 = claimedById2 && String(m.userId) === String(claimedById2);
                 const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
-                const senderName = m.senderName ?? m.username ?? (isComplainant ? '投訴者' : '對方');
+                const senderName = m.senderName ?? m.username ?? (isComplainant ? '投訴者' : isSupport2 ? '客服人員' : '對方');
                 const align = isComplainant ? 'flex-end' : 'flex-start';
                 const bg = isComplainant ? '#e8f0fe' : '#f8f9fa';
                 const nameColor = isComplainant ? '#004b97' : '#555';

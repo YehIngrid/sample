@@ -1595,6 +1595,10 @@ class ChatRoomList {
             ? `<div style="font-size:0.68rem;color:#888;margin-top:1px;">訂單：${this.escapeHtml(ticket.orderId)}</div>`
             : '';
 
+        const closeBtn = isClosed
+            ? `<button id="ticketBannerClose" style="background:none;border:none;cursor:pointer;padding:2px 4px;color:#aaa;font-size:1rem;line-height:1;flex-shrink:0;" title="關閉">×</button>`
+            : '';
+
         banner.className = `ticket-banner ${statusCls}`;
         banner.innerHTML = `
             <div class="ticket-banner-icon"><i class="bi ${statusIcon}"></i></div>
@@ -1608,9 +1612,13 @@ class ChatRoomList {
             <div class="ticket-banner-right">
                 <span class="ticket-status-badge" style="background:${statusColor}18;color:${statusColor};border:1px solid ${statusColor}40;">${statusLabel}</span>
                 ${actionsHtml}
+                ${closeBtn}
             </div>
         `;
         banner.style.display = 'flex';
+        document.getElementById('ticketBannerClose')?.addEventListener('click', () => {
+            banner.style.display = 'none';
+        });
     }
 
     // ✅ 帳號層級 SSE：只連線一次，接收所有聊天室的事件
