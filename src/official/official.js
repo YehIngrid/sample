@@ -1675,6 +1675,7 @@ async function loadAdminTickets(page = 1) {
       const userName = t.user?.name ?? t.user?.username ?? '用戶';
       const agentName = t.claimedBy ? (t.agent?.name ?? t.agent?.username ?? '客服') : '未認領';
       const roomId = t.roomId ?? t.room?.id ?? '';
+      const canClaim = t.status === 'UNRESOLVED';
       return `<div class="analytics-block mb-2" style="padding:12px 16px;display:flex;align-items:center;gap:12px;">
         <div style="flex:1;min-width:0;">
           <div style="font-size:0.88rem;font-weight:600;color:#333;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(t.reason ?? '找客服問問題')}</div>
@@ -1683,10 +1684,42 @@ async function loadAdminTickets(page = 1) {
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
           <span style="font-size:0.68rem;font-weight:700;border-radius:20px;padding:2px 10px;background:${color}15;color:${color};border:1px solid ${color}40;white-space:nowrap;">${label}</span>
-          ${roomId ? `<a href="../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}" target="_blank" style="font-size:0.72rem;color:#004b97;text-decoration:none;">前往聊天室 →</a>` : ''}
+          ${canClaim
+            ? `<button class="btn-claim-ticket btn btn-sm btn-warning" data-ticket-id="${esc(t.id)}" data-room-id="${esc(roomId)}" style="font-size:0.72rem;padding:2px 10px;">認領</button>`
+            : roomId ? `<a href="../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}" target="_blank" style="font-size:0.72rem;color:#004b97;text-decoration:none;">前往聊天室 →</a>` : ''
+          }
         </div>
       </div>`;
     }).join('');
+
+    // 認領按鈕
+    listEl.querySelectorAll('.btn-claim-ticket').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const ticketId = btn.dataset.ticketId;
+        const roomId = btn.dataset.roomId;
+        const { isConfirmed } = await Swal.fire({
+          title: '確定認領此客服單？',
+          text: '認領後您將成為負責客服人員並加入聊天室。',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: '認領',
+          cancelButtonText: '取消'
+        });
+        if (!isConfirmed) return;
+        try {
+          btn.disabled = true;
+          btn.textContent = '認領中...';
+          await chatSvc.claimTicket(ticketId);
+          await Swal.fire({ icon: 'success', title: '認領成功', text: '即將跳轉至聊天室。', timer: 1500, showConfirmButton: false });
+          if (roomId) window.open(`../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}`, '_blank');
+          loadAdminTickets(page);
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = '認領';
+          Swal.fire({ icon: 'error', title: '認領失敗', text: err?.response?.data?.message ?? '請稍後再試' });
+        }
+      });
+    });
 
     if (pagerEl && totalPages > 1) {
       pagerEl.innerHTML = Array.from({ length: totalPages }, (_, i) => i + 1).map(p =>
