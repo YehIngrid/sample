@@ -2603,53 +2603,80 @@ async function openChatWithTarget(targetUserId) {
         try {
             orders = await chatRoomList.backend.getRoomOrders(roomId);
         } catch { /* 靜默失敗 */ }
-        if (!Array.isArray(orders) || orders.length === 0) {
-            Swal.fire({ icon: 'info', title: '此聊天室尚無訂單', text: '聯絡客服需關聯一筆訂單，請先完成下單後再試。', confirmButtonText: '確認' });
-            return;
-        }
-        const orderOptions = orders.map(o => {
-            const first = o.orderItems?.[0];
-            const name = first?.item?.name ?? first?.name ?? '商品';
-            const qty = first?.quantity ?? 1;
-            const extra = (o.orderItems?.length ?? 0) > 1 ? ` …等${o.orderItems.length}件` : '';
-            return `<option value="${o.id}">${name} × ${qty}${extra}</option>`;
-        }).join('');
+        const hasOrders = Array.isArray(orders) && orders.length > 0;
 
-        const { isConfirmed, value } = await Swal.fire({
-            title: '聯絡客服',
-            html: `
-                <label class="swal2-input-label" style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">關聯訂單</label>
-                <select id="swal-order" class="swal2-input" style="margin:0 0 12px 0;height:auto;padding:8px;">
-                    ${orderOptions}
-                </select>
-                <label class="swal2-input-label" style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">問題描述</label>
-                <textarea id="swal-reason" class="swal2-textarea" placeholder="請描述需要客服協助的原因..." style="margin:0;"></textarea>
-            `,
-            showCancelButton: true,
-            confirmButtonText: '送出',
-            cancelButtonText: '取消',
-            focusConfirm: false,
-            preConfirm: () => {
-                const orderId = document.getElementById('swal-order').value;
-                const reason = document.getElementById('swal-reason').value.trim();
-                if (!orderId) { Swal.showValidationMessage('請選擇關聯訂單'); return false; }
-                if (!reason) { Swal.showValidationMessage('請描述問題原因'); return false; }
-                return { orderId, reason };
+        if (hasOrders) {
+            // ── 有訂單 → request-support（建 SUPPORT 聊天室 + ticket）──
+            const orderOptions = orders.map(o => {
+                const first = o.orderItems?.[0];
+                const name = first?.item?.name ?? first?.name ?? '商品';
+                const qty = first?.quantity ?? 1;
+                const extra = (o.orderItems?.length ?? 0) > 1 ? ` …等${o.orderItems.length}件` : '';
+                return `<option value="${o.id}">${name} × ${qty}${extra}</option>`;
+            }).join('');
+
+            const { isConfirmed, value } = await Swal.fire({
+                title: '聯絡客服',
+                html: `
+                    <label class="swal2-input-label" style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">關聯訂單</label>
+                    <select id="swal-order" class="swal2-input" style="margin:0 0 12px 0;height:auto;padding:8px;">
+                        ${orderOptions}
+                    </select>
+                    <label class="swal2-input-label" style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">問題描述</label>
+                    <textarea id="swal-reason" class="swal2-textarea" placeholder="請描述需要客服協助的原因..." style="margin:0;"></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '送出',
+                cancelButtonText: '取消',
+                focusConfirm: false,
+                preConfirm: () => {
+                    const orderId = document.getElementById('swal-order').value;
+                    const reason = document.getElementById('swal-reason').value.trim();
+                    if (!orderId) { Swal.showValidationMessage('請選擇關聯訂單'); return false; }
+                    if (!reason) { Swal.showValidationMessage('請描述問題原因'); return false; }
+                    return { orderId, reason };
+                }
+            });
+            if (!isConfirmed) return;
+            try {
+                const res = await chatRoomList.backend.requestSupport(roomId, value.orderId, value.reason);
+                const newRoomId = res?.data?.room?.id;
+                await Swal.fire({ icon: 'success', title: '客服請求已送出', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
+                if (newRoomId) {
+                    await chatRoomList.loadRooms();
+                    const newItem = document.querySelector(`[data-room-id="${newRoomId}"]`);
+                    const newName = newItem?.querySelector('.roomName')?.textContent || '客服處理';
+                    await chatRoomList.switchRoom(newRoomId, newName);
+                }
+            } catch {
+                Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
             }
-        });
-        if (!isConfirmed) return;
-        try {
-            const res = await chatRoomList.backend.requestSupport(roomId, value.orderId, value.reason);
-            const newRoomId = res?.data?.room?.id;
-            await Swal.fire({ icon: 'success', title: '客服請求已送出', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
-            if (newRoomId) {
+        } else {
+            // ── 無訂單 → createTicket（純建 ticket）──
+            const { isConfirmed, value } = await Swal.fire({
+                title: '聯絡客服',
+                html: `
+                    <label class="swal2-input-label" style="text-align:left;display:block;margin-bottom:4px;font-size:0.85rem;color:#555;">問題描述</label>
+                    <textarea id="swal-reason-only" class="swal2-textarea" placeholder="請描述需要客服協助的原因..." style="margin:0;"></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '送出',
+                cancelButtonText: '取消',
+                focusConfirm: false,
+                preConfirm: () => {
+                    const reason = document.getElementById('swal-reason-only').value.trim();
+                    if (!reason) { Swal.showValidationMessage('請描述問題原因'); return false; }
+                    return { reason };
+                }
+            });
+            if (!isConfirmed) return;
+            try {
+                await chatRoomList.backend.createTicket({ roomId, reason: value.reason });
+                await Swal.fire({ icon: 'success', title: '客服單已建立', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
                 await chatRoomList.loadRooms();
-                const newItem = document.querySelector(`[data-room-id="${newRoomId}"]`);
-                const newName = newItem?.querySelector('.roomName')?.textContent || '客服處理';
-                await chatRoomList.switchRoom(newRoomId, newName);
+            } catch {
+                Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
             }
-        } catch {
-            Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
         }
     });
 
