@@ -211,6 +211,18 @@ export default class ChatBackendService {
             return Promise.reject(error);
         }
     }
+    async listAdminTickets(status, page = 1, limit = 20) {
+        try {
+            const params = { page, limit };
+            if (status) params.status = status;
+            const response = await axios.get(`${this.baseUrl}/api/admin/tickets`, { params, withCredentials: true });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('Error listing admin tickets:', error);
+            return Promise.reject(error);
+        }
+    }
     async getMyTickets() {
         try {
             const response = await axios.get(`${this.baseUrl}/api/ticket/mine`, { withCredentials: true });

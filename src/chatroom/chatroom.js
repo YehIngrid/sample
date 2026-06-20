@@ -2461,6 +2461,8 @@ async function openChatWithTarget(targetUserId) {
         const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60', ADJUDICATED: '#8e44ad' };
         const ticketStatusColor = ticket ? (TICKET_STATUS_COLOR[ticket.status] ?? '#888') : '#888';
         const isClaimedByMe = ticket?.agentId != null && String(ticket.agentId) === String(chatRoomList.userId);
+        const myGlobalRole = localStorage.getItem('role');
+        const canManageTickets = isOfficial && (myGlobalRole === 'ADMIN' || myGlobalRole === 'MODERATOR' || myGlobalRole === 'SUPPORT');
 
         const infoHtml = `
             <div style="font-size:0.8rem;color:#888;margin-bottom:14px;">
@@ -2472,6 +2474,18 @@ async function openChatWithTarget(targetUserId) {
                 <i class="bi bi-megaphone me-1"></i>頻道說明
                 <div style="color:#333;font-size:0.85rem;margin-top:3px;">${room.officialChannel.description}</div>
             </div>` : ''}
+            ${canManageTickets ? `
+            <div style="font-size:0.8rem;color:#888;margin-bottom:8px;margin-top:4px;">
+                <i class="bi bi-headset me-1"></i>客服單管理
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+                <button class="admin-ticket-filter-btn active-filter" data-status="" style="font-size:0.72rem;padding:3px 10px;border-radius:20px;border:1px solid #004b97;background:#004b97;color:#fff;cursor:pointer;">全部</button>
+                <button class="admin-ticket-filter-btn" data-status="UNRESOLVED" style="font-size:0.72rem;padding:3px 10px;border-radius:20px;border:1px solid #e67e22;background:#fff;color:#e67e22;cursor:pointer;">等待認領</button>
+                <button class="admin-ticket-filter-btn" data-status="CLAIMED" style="font-size:0.72rem;padding:3px 10px;border-radius:20px;border:1px solid #004b97;background:#fff;color:#004b97;cursor:pointer;">處理中</button>
+                <button class="admin-ticket-filter-btn" data-status="RESOLVED" style="font-size:0.72rem;padding:3px 10px;border-radius:20px;border:1px solid #27ae60;background:#fff;color:#27ae60;cursor:pointer;">已解決</button>
+            </div>
+            <div id="adminTicketList"><div style="text-align:center;padding:14px 0;color:#aaa;font-size:0.8rem;"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div></div>
+            ` : ''}
             ${ticket ? `
             <div style="font-size:0.8rem;color:#888;margin-bottom:8px;margin-top:4px;">
                 <i class="bi bi-ticket-detailed me-1"></i>客服單資訊
@@ -2613,6 +2627,82 @@ async function openChatWithTarget(targetUserId) {
             chatRoomList.backend.getRoomOrders(roomId).then(_renderRoomOrders).catch(() => {
                 const el = document.getElementById('roomOrdersList');
                 if (el) el.innerHTML = `<div style="text-align:center;padding:12px 0;color:#ccc;font-size:0.78rem;">無法載入交易紀錄</div>`;
+            });
+        }
+
+        // ── 客服單管理（官方頻道 + 有管理權限）──
+        if (canManageTickets) {
+            const ADMIN_TICKET_STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決', ADJUDICATED: '已裁定' };
+            const ADMIN_TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60', ADJUDICATED: '#8e44ad' };
+
+            const _renderAdminTickets = (tickets) => {
+                const el = document.getElementById('adminTicketList');
+                if (!el) return;
+                if (!tickets.length) {
+                    el.innerHTML = `<div style="text-align:center;padding:14px 0;color:#aaa;font-size:0.78rem;">目前沒有客服單</div>`;
+                    return;
+                }
+                el.innerHTML = tickets.map(t => {
+                    const color = ADMIN_TICKET_STATUS_COLOR[t.status] ?? '#888';
+                    const label = ADMIN_TICKET_STATUS_LABEL[t.status] ?? t.status;
+                    const createdTime = t.createdAt
+                        ? new Date(t.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })
+                        : '';
+                    const userName = t.user?.name ?? t.user?.username ?? '用戶';
+                    const agentName = t.claimedBy ? (t.agent?.name ?? t.agent?.username ?? `客服`) : '未認領';
+                    return `<div class="admin-ticket-item" data-room-id="${t.roomId ?? t.room?.id ?? ''}" style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;">
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-size:0.82rem;font-weight:600;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${chatRoomList.escapeHtml(t.reason ?? '未填寫原因')}</div>
+                            <div style="font-size:0.72rem;color:#888;margin-top:2px;">${chatRoomList.escapeHtml(userName)} · ${createdTime}</div>
+                            <div style="font-size:0.72rem;color:#888;">客服：${chatRoomList.escapeHtml(agentName)}</div>
+                        </div>
+                        <span style="font-size:0.65rem;font-weight:700;border-radius:20px;padding:2px 8px;background:${color}15;color:${color};border:1px solid ${color}40;white-space:nowrap;">${label}</span>
+                    </div>`;
+                }).join('');
+
+                // 點擊 → 跳到對應 SUPPORT 聊天室
+                el.querySelectorAll('.admin-ticket-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const tRoomId = item.dataset.roomId;
+                        if (!tRoomId) return;
+                        const tRoomEl = document.querySelector(`[data-room-id="${tRoomId}"]`);
+                        const tName = tRoomEl?.querySelector('.roomName')?.textContent || '客服處理';
+                        _closeRoomInfoPanel();
+                        chatRoomList.switchRoom(tRoomId, tName);
+                    });
+                });
+            };
+
+            const _fetchAdminTickets = (status = '') => {
+                const el = document.getElementById('adminTicketList');
+                if (el) el.innerHTML = `<div style="text-align:center;padding:14px 0;color:#aaa;font-size:0.8rem;"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
+                chatRoomList.backend.listAdminTickets(status || undefined).then(res => {
+                    const list = Array.isArray(res) ? res : (Array.isArray(res?.data?.items) ? res.data.items : (Array.isArray(res?.data) ? res.data : []));
+                    _renderAdminTickets(list);
+                }).catch(() => {
+                    const el = document.getElementById('adminTicketList');
+                    if (el) el.innerHTML = `<div style="text-align:center;padding:12px 0;color:#ccc;font-size:0.78rem;">無法載入客服單列表</div>`;
+                });
+            };
+
+            // 初始載入
+            _fetchAdminTickets();
+
+            // 篩選按鈕
+            document.getElementById('roomInfoBody')?.addEventListener('click', (e) => {
+                const btn = e.target.closest('.admin-ticket-filter-btn');
+                if (!btn) return;
+                document.querySelectorAll('.admin-ticket-filter-btn').forEach(b => {
+                    b.style.background = '#fff';
+                    b.style.color = b.dataset.status === 'UNRESOLVED' ? '#e67e22'
+                        : b.dataset.status === 'CLAIMED' ? '#004b97'
+                        : b.dataset.status === 'RESOLVED' ? '#27ae60' : '#004b97';
+                });
+                btn.style.background = btn.dataset.status === 'UNRESOLVED' ? '#e67e22'
+                    : btn.dataset.status === 'CLAIMED' ? '#004b97'
+                    : btn.dataset.status === 'RESOLVED' ? '#27ae60' : '#004b97';
+                btn.style.color = '#fff';
+                _fetchAdminTickets(btn.dataset.status);
             });
         }
     });
