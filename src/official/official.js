@@ -1693,7 +1693,7 @@ async function loadAdminTickets(page = 1) {
             ? `<button class="btn-claim-ticket btn btn-sm btn-warning" data-ticket-id="${esc(t.id)}" data-room-id="${esc(roomId)}" style="font-size:0.72rem;padding:2px 10px;">認領</button>`
             : !isClosed && roomId ? `<a href="../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}" target="_blank" style="font-size:0.72rem;color:#004b97;text-decoration:none;">前往聊天室 →</a>` : ''
           }
-          ${isClosed ? `<button class="btn-view-history btn btn-sm btn-outline-secondary" data-ticket-id="${esc(t.id)}" style="font-size:0.72rem;padding:2px 10px;">查看記錄</button>` : ''}
+          ${isClosed ? `<button class="btn-view-history btn btn-sm btn-outline-secondary" data-ticket-id="${esc(t.id)}" data-order-id="${esc(t.orderId ?? '')}" style="font-size:0.72rem;padding:2px 10px;">查看記錄</button>` : ''}
         </div>
       </div>`;
     }).join('');
@@ -1735,19 +1735,19 @@ async function loadAdminTickets(page = 1) {
     listEl.querySelectorAll('.btn-view-history').forEach(btn => {
       btn.addEventListener('click', async () => {
         const ticketId = btn.dataset.ticketId;
+        const orderId = btn.dataset.orderId;
         const bodyEl = document.getElementById('ticketHistoryModalBody');
         bodyEl.innerHTML = `<div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
         historyModal.show();
         try {
-          const [histRes, orderRes] = await Promise.allSettled([
-            chatSvc.getTicketHistory(ticketId),
-            chatSvc.getTicketOrder(ticketId),
-          ]);
+          const promises = [chatSvc.getTicketHistory(ticketId)];
+          if (orderId) promises.push(chatSvc.getTicketOrder(ticketId));
+          const [histRes, orderRes] = await Promise.allSettled(promises);
 
           let html = '';
 
           // 關聯訂單
-          if (orderRes.status === 'fulfilled') {
+          if (orderId && orderRes && orderRes.status === 'fulfilled') {
             const o = orderRes.value?.data ?? orderRes.value;
             if (o) {
               const orderItems = o.orderItems ?? [];

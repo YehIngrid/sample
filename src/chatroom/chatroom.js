@@ -2509,8 +2509,12 @@ async function openChatWithTarget(targetUserId) {
         document.getElementById('roomInfoBody').innerHTML = infoHtml;
         _openRoomInfoPanel();
 
-        // 載入關聯訂單（客服已認領 + 是認領者）
+        // 載入關聯訂單（客服已認領 + 是認領者 + 有 orderId）
         if (ticket && isClaimedByMe) {
+            if (!ticket.orderId) {
+                const el = document.getElementById('ticketOrderInfo');
+                if (el) el.innerHTML = `<div style="text-align:center;padding:10px 0;color:#aaa;font-size:0.78rem;">此客服單無關聯訂單</div>`;
+            } else
             chatRoomList.backend.getTicketOrder(ticket.id).then(orderRes => {
                 const el = document.getElementById('ticketOrderInfo');
                 if (!el) return;
