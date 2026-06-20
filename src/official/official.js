@@ -1711,7 +1711,7 @@ async function loadAdminTickets(page = 1) {
           btn.textContent = '認領中...';
           await chatSvc.claimTicket(ticketId);
           await Swal.fire({ icon: 'success', title: '認領成功', text: '即將跳轉至聊天室。', timer: 1500, showConfirmButton: false });
-          if (roomId) window.open(`../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}`, '_blank');
+          if (roomId) window.location.href = `../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}`;
           loadAdminTickets(page);
         } catch (err) {
           btn.disabled = false;
