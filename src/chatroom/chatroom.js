@@ -1570,12 +1570,12 @@ class ChatRoomList {
         if (!banner) return;
         if (!ticket) { banner.style.display = 'none'; return; }
 
-        const STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決', ADJUDICATED: '已裁定' };
-        const STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60', ADJUDICATED: '#8e44ad' };
+        const STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決' };
+        const STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60' };
         const status = ticket.status ?? 'UNRESOLVED';
         const statusLabel = STATUS_LABEL[status] ?? status;
         const statusColor = STATUS_COLOR[status] ?? '#888';
-        const isClosed = status === 'RESOLVED' || status === 'ADJUDICATED';
+        const isClosed = status === 'RESOLVED';
         const isMySupport = this.mySupportRoomsSet.has(String(this.currentRoomId));
         const isClaimedByMe = ticket.claimedBy != null && String(ticket.claimedBy) === String(this.userId);
 
@@ -1584,10 +1584,7 @@ class ChatRoomList {
             if (status === 'UNRESOLVED') {
                 actionsHtml = `<button class="ticket-action-btn" id="ticketClaimBtn"><i class="bi bi-hand-index-thumb"></i> 認領</button>`;
             } else if (status === 'CLAIMED' && isClaimedByMe) {
-                actionsHtml = `
-                    <button class="ticket-action-btn ticket-action-resolve" id="ticketResolveBtn"><i class="bi bi-check-circle"></i> 解決</button>
-                    <button class="ticket-action-btn ticket-action-adjudicate" id="ticketAdjudicateBtn"><i class="bi bi-scale"></i> 裁定</button>
-                `;
+                actionsHtml = `<button class="ticket-action-btn ticket-action-resolve" id="ticketResolveBtn"><i class="bi bi-check-circle"></i> 解決</button>`;
             } else if (status === 'CLAIMED' && !isClaimedByMe) {
                 actionsHtml = `<span style="font-size:0.72rem;color:#888;">已由其他客服認領</span>`;
             }
@@ -2460,8 +2457,8 @@ async function openChatWithTarget(targetUserId) {
 
         const isSupportTypeRoom = chatRoomList.supportTypeRoomsSet.has(String(roomId));
         const ticket = isSupportTypeRoom ? chatRoomList.currentTicket : null;
-        const TICKET_STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決', ADJUDICATED: '已裁定' };
-        const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60', ADJUDICATED: '#8e44ad' };
+        const TICKET_STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決' };
+        const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60' };
         const ticketStatusColor = ticket ? (TICKET_STATUS_COLOR[ticket.status] ?? '#888') : '#888';
         const isClaimedByMe = ticket?.claimedBy != null && String(ticket.claimedBy) === String(chatRoomList.userId);
 
@@ -2922,43 +2919,6 @@ async function openChatWithTarget(targetUserId) {
             }
         }
 
-        // 裁定
-        if (e.target.closest('#ticketAdjudicateBtn')) {
-            const { isConfirmed, value } = await Swal.fire({
-                title: '<i class="bi bi-scale" style="color:#8e44ad;margin-right:6px;"></i>裁定客服單',
-                html: `
-                    <div style="text-align:left;padding:0 4px;">
-                        <div style="background:#f9f0ff;border:1px solid #d7b8f5;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:0.8rem;color:#5b2c6f;">
-                            <i class="bi bi-info-circle me-1"></i>裁定結論將以通知形式傳送給聊天室所有成員，裁定後請手動標記為已解決。
-                        </div>
-                        <label style="display:block;font-size:0.85rem;font-weight:600;color:#444;margin-bottom:6px;">裁定結論</label>
-                        <textarea id="swal-adjudication" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:0.85rem;color:#333;resize:vertical;min-height:70px;box-sizing:border-box;outline:none;margin-bottom:14px;" placeholder="例：買家提供的商品與描述不符，建議退款處理"></textarea>
-                        <label style="display:block;font-size:0.85rem;font-weight:600;color:#444;margin-bottom:6px;">回覆訊息（發送給雙方）</label>
-                        <textarea id="swal-reply-message" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:0.85rem;color:#333;resize:vertical;min-height:70px;box-sizing:border-box;outline:none;" placeholder="例：您好，我們已審查您的訂單，結論如下..."></textarea>
-                    </div>
-                `,
-                showCancelButton: true,
-                confirmButtonText: '送出裁定',
-                cancelButtonText: '取消',
-                focusConfirm: false,
-                customClass: { popup: 'support-swal-popup' },
-                preConfirm: () => {
-                    const adjudication = document.getElementById('swal-adjudication').value.trim();
-                    const replyMessage = document.getElementById('swal-reply-message').value.trim();
-                    if (!adjudication) { Swal.showValidationMessage('請填寫裁定結論'); return false; }
-                    if (!replyMessage) { Swal.showValidationMessage('請填寫回覆訊息'); return false; }
-                    return { adjudication, replyMessage };
-                }
-            });
-            if (!isConfirmed) return;
-            try {
-                await chatRoomList.backend.adjudicateTicket(ticket.id, { adjudication: value.adjudication, replyMessage: value.replyMessage });
-                await chatRoomList._loadSupportTicket(chatRoomList.currentRoomId);
-                Swal.fire({ icon: 'success', title: '裁定完成', text: '請記得點擊「解決」按鈕將客服單標記為已解決。', confirmButtonText: '我知道了' });
-            } catch {
-                Swal.fire({ icon: 'error', title: '裁定失敗', text: '請稍後再試' });
-            }
-        }
     });
 
     // ── 檢舉 ──

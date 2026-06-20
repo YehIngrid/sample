@@ -1643,10 +1643,14 @@ document.getElementById('createReportCatForm')?.addEventListener('submit', async
 // ════════════════════════════════════════════════════
 //  客服單管理
 // ════════════════════════════════════════════════════
-const TICKET_STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決', ADJUDICATED: '已裁定' };
-const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60', ADJUDICATED: '#8e44ad' };
+const TICKET_STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決' };
+const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60' };
+
+let _ticketCurrentPage = 1;
+let _ticketHistoryModal = null;
 
 async function loadAdminTickets(page = 1) {
+  _ticketCurrentPage = page;
   const status = document.getElementById('ticketsStatusFilter')?.value ?? '';
   const listEl = document.getElementById('ticketsAdminList');
   const pagerEl = document.getElementById('ticketsAdminPager');
@@ -1676,6 +1680,7 @@ async function loadAdminTickets(page = 1) {
       const agentName = t.claimedBy ? (t.agent?.name ?? t.agent?.username ?? '客服') : '未認領';
       const roomId = t.roomId ?? t.room?.id ?? '';
       const canClaim = t.status === 'UNRESOLVED';
+      const isClosed = t.status === 'RESOLVED';
       return `<div class="analytics-block mb-2" style="padding:12px 16px;display:flex;align-items:center;gap:12px;">
         <div style="flex:1;min-width:0;">
           <div style="font-size:0.88rem;font-weight:600;color:#333;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(t.reason ?? '找客服問問題')}</div>
@@ -1686,8 +1691,9 @@ async function loadAdminTickets(page = 1) {
           <span style="font-size:0.68rem;font-weight:700;border-radius:20px;padding:2px 10px;background:${color}15;color:${color};border:1px solid ${color}40;white-space:nowrap;">${label}</span>
           ${canClaim
             ? `<button class="btn-claim-ticket btn btn-sm btn-warning" data-ticket-id="${esc(t.id)}" data-room-id="${esc(roomId)}" style="font-size:0.72rem;padding:2px 10px;">認領</button>`
-            : roomId ? `<a href="../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}" target="_blank" style="font-size:0.72rem;color:#004b97;text-decoration:none;">前往聊天室 →</a>` : ''
+            : !isClosed && roomId ? `<a href="../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}" target="_blank" style="font-size:0.72rem;color:#004b97;text-decoration:none;">前往聊天室 →</a>` : ''
           }
+          ${isClosed ? `<button class="btn-view-history btn btn-sm btn-outline-secondary" data-ticket-id="${esc(t.id)}" style="font-size:0.72rem;padding:2px 10px;">查看記錄</button>` : ''}
         </div>
       </div>`;
     }).join('');
@@ -1712,11 +1718,81 @@ async function loadAdminTickets(page = 1) {
           await chatSvc.claimTicket(ticketId);
           await Swal.fire({ icon: 'success', title: '認領成功', text: '即將跳轉至聊天室。', timer: 1500, showConfirmButton: false });
           if (roomId) window.location.href = `../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}`;
-          loadAdminTickets(page);
+          loadAdminTickets(_ticketCurrentPage);
         } catch (err) {
           btn.disabled = false;
           btn.textContent = '認領';
           Swal.fire({ icon: 'error', title: '認領失敗', text: err?.response?.data?.message ?? '請稍後再試' });
+        }
+      });
+    });
+
+    // 查看記錄按鈕（modal 只初始化一次）
+    if (!_ticketHistoryModal) {
+      _ticketHistoryModal = new bootstrap.Modal(document.getElementById('ticketHistoryModal'));
+    }
+    const historyModal = _ticketHistoryModal;
+    listEl.querySelectorAll('.btn-view-history').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const ticketId = btn.dataset.ticketId;
+        const bodyEl = document.getElementById('ticketHistoryModalBody');
+        bodyEl.innerHTML = `<div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
+        historyModal.show();
+        try {
+          const [histRes, orderRes] = await Promise.allSettled([
+            chatSvc.getTicketHistory(ticketId),
+            chatSvc.getTicketOrder(ticketId),
+          ]);
+
+          let html = '';
+
+          // 關聯訂單
+          if (orderRes.status === 'fulfilled') {
+            const o = orderRes.value?.data ?? orderRes.value;
+            if (o) {
+              const orderItems = o.orderItems ?? [];
+              const first = orderItems[0];
+              const productName = first?.item?.name ?? first?.name ?? '商品';
+              const price = o.totalAmount != null ? `NT$ ${Number(o.totalAmount).toLocaleString('zh-TW')}` : '—';
+              const buyerName = o.buyerUser?.name ?? o.buyerUser?.username ?? '—';
+              const sellerName = o.sellerUser?.name ?? o.sellerUser?.username ?? '—';
+              html += `
+                <div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-shopping-bag me-1"></i>關聯訂單</div>
+                <div style="background:#f0f4ff;border:1px solid #c5d5f5;border-radius:8px;padding:10px 14px;font-size:0.82rem;margin-bottom:20px;">
+                  <div style="font-weight:600;color:#333;margin-bottom:6px;">${esc(productName)}${orderItems.length > 1 ? ` …等${orderItems.length}件` : ''}</div>
+                  <div style="display:flex;justify-content:space-between;color:#555;margin-bottom:3px;"><span>買家</span><span style="color:#004b97;font-weight:600;">${esc(buyerName)}</span></div>
+                  <div style="display:flex;justify-content:space-between;color:#555;margin-bottom:3px;"><span>賣家</span><span style="color:#27ae60;font-weight:600;">${esc(sellerName)}</span></div>
+                  <div style="display:flex;justify-content:space-between;color:#555;"><span>金額</span><span style="color:#004b97;font-weight:600;">${price}</span></div>
+                </div>`;
+            }
+          }
+
+          // 聊天記錄
+          html += `<div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-comments me-1"></i>聊天記錄</div>`;
+          if (histRes.status === 'fulfilled') {
+            const msgs = Array.isArray(histRes.value) ? histRes.value
+              : Array.isArray(histRes.value?.data?.items) ? histRes.value.data.items
+              : Array.isArray(histRes.value?.data) ? histRes.value.data : [];
+            if (!msgs.length) {
+              html += `<div class="text-muted text-center py-3 small">無聊天記錄</div>`;
+            } else {
+              html += `<div style="display:flex;flex-direction:column;gap:8px;">` +
+                msgs.map(m => {
+                  const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+                  return `<div style="padding:8px 12px;background:#f8f9fa;border-radius:8px;font-size:0.82rem;">
+                    <span style="font-weight:600;color:#004b97;">${esc(m.senderName ?? m.username ?? '用戶')}</span>
+                    <span style="color:#aaa;font-size:0.72rem;margin-left:6px;">${time}</span>
+                    <div style="color:#333;margin-top:4px;">${esc(m.content ?? m.message ?? '')}</div>
+                  </div>`;
+                }).join('') + `</div>`;
+            }
+          } else {
+            html += `<div class="text-muted text-center py-3 small">無法載入聊天記錄</div>`;
+          }
+
+          bodyEl.innerHTML = html;
+        } catch {
+          bodyEl.innerHTML = `<div class="text-danger text-center py-3">載入失敗，請稍後再試</div>`;
         }
       });
     });
