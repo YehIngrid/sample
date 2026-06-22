@@ -1138,4 +1138,16 @@ function disableActionButtons() {
             btn.onclick = ownProductAlert;
         });
     });
+
+    // 顯示「去編輯」按鈕
+    const pid = new URLSearchParams(location.search).get('id');
+    const editUrl = `../person/person.html?page=products&editId=${encodeURIComponent(pid)}`;
+    ['#editProductBtn', '#editProductBtnMobile'].forEach(id => {
+        const el = document.querySelector(id);
+        if (!el) return;
+        el.href = editUrl;
+        el.classList.remove('d-none');
+        el.onmouseover = () => { el.style.background = 'rgb(36,182,133)'; };
+        el.onmouseout  = () => { el.style.background = '#004b97'; };
+    });
 }

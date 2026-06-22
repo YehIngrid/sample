@@ -2764,8 +2764,12 @@ async function openChatWithTarget(targetUserId) {
                 try {
                     await chatRoomList.backend.requestSupport(roomId, value.orderId, value.reason);
                     await Swal.fire({ icon: 'success', title: '客服請求已送出', text: '客服人員將透過系統查看您的訂單紀錄，認領後會盡快處理。', timer: 2500, showConfirmButton: false });
-                } catch {
-                    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+                } catch (err) {
+                    if (err?.response?.status === 400) {
+                        Swal.fire({ icon: 'warning', title: '無法重複開單', text: '此訂單已有進行中的客服單，請等待處理完畢後再提交。' });
+                    } else {
+                        Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+                    }
                 }
             }
         } else {

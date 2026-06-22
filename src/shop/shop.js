@@ -432,7 +432,7 @@ nextHotBtn.addEventListener("click", () => {
   } catch (e) {
     const status = e?.response?.status ?? e?.status;
     const msg = e?.response?.data?.message ?? e?.message ?? '';
-    if (status === 403 || msg.toLowerCase().includes('limit') || msg.toLowerCase().includes('quota') || msg.includes('上限') || msg.includes('額度')) {
+    if (status === 403 || msg.toLowerCase().includes('limit') || msg.toLowerCase().includes('quota') || msg.includes('limits') || msg.includes('額度')) {
       Swal.fire({
         title: "本月上架額度已達上限",
         text: "您本月的商品上架數量已達上限，請下個月再繼續上架。",

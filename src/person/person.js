@@ -2555,6 +2555,9 @@ const updateStatusUI = (data, container) => {
     el.imagesInput.files = dt.files;
   }
 
+  // 暴露給 IIFE 外部使用（product.html「去編輯」按鈕跳轉用）
+  window.openEditDrawer = openEditDrawer;
+
 })();
 function goToPage(pageName, scrollTarget) {
   const url = new URL(window.location.href);
@@ -2827,6 +2830,23 @@ async function loadMyItems(p = 1) {
     renderCards(list);
     renderProductsPager({ totalPages, total: totalCalc, hasPrevPage: p > 1, hasNextPage: p < totalPages }, p);
     goodsOrder = list;
+
+    // 從 product.html 點「去編輯」跳來時，自動開啟 edit drawer
+    const editId = new URLSearchParams(window.location.search).get('editId');
+    if (editId && p === 1) {
+      const targetItem = list.find(item => String(item.id) === String(editId));
+      if (targetItem) {
+        // 稍微延遲確保 DOM 已渲染
+        setTimeout(() => {
+          const triggerEl = document.querySelector(`[data-action="編輯商品"][data-id="${editId}"]`);
+          openEditDrawer(editId, triggerEl);
+          // 清掉 URL 參數避免重整再次觸發
+          const url = new URL(window.location.href);
+          url.searchParams.delete('editId');
+          window.history.replaceState({}, '', url);
+        }, 300);
+      }
+    }
   } catch (err) {
     console.error(err);
   }
