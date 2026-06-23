@@ -2430,7 +2430,7 @@ html.skip-loader #whatcontent { display: block !important; }
 }
 .fls-group-sub {
   font-size: 0.82rem;
-  color: #777;
+  color: #6f87a0;
   margin-top: 2px;
 }
 .fls-cards {
@@ -2492,38 +2492,23 @@ html.skip-loader #whatcontent { display: block !important; }
 }
 .fls-card-desc {
   font-size: 0.82rem;
-  color: #555;
+  color: #6f87a0;
   line-height: 1.55;
 }
 
 @media (max-width: 640px) {
   .fls-cards {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .fls-card {
-    padding: 16px 14px 18px;
+    display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    gap: 10px;
+    padding-bottom: 6px;
   }
-  .fls-step-label {
-    width: 100%;
-  }
-  .fls-card-icon {
-    width: 36px;
-    height: 36px;
-    font-size: 0.95rem;
-    flex-shrink: 0;
-  }
-  .fls-card-title {
-    font-size: 0.9rem;
-    align-self: center;
-  }
-  .fls-card-desc {
-    width: 100%;
-    font-size: 0.78rem;
-    padding-left: 44px;
+  .fls-cards::-webkit-scrollbar { display: none; }
+  .fls-card {
+    flex: 0 0 78vw;
+    scroll-snap-align: start;
   }
 }

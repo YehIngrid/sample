@@ -82,6 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   if (_role === 'ADMIN') {
     document.getElementById('apiDocsBtn').style.display = 'block';
+    document.getElementById('designSystemBtn').style.display = 'block';
   }
 
   const params = new URLSearchParams(window.location.search);

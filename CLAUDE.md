@@ -71,24 +71,71 @@ JS: `wish.js` — `loadNotifications()` renders into `#notifList`; `relativeTime
 
 ## UI / Design System
 
-All new UI components and style adjustments must follow the design language established in `src/shoppingcart/shoppingcart.css`. Key tokens:
+The canonical design reference is `src/shop/Design System.html` (admin-only). All new UI must follow the language below.
+
+### Color Tokens
+
+| Role | Token | Value |
+|---|---|---|
+| Primary CTA / heading / active | `--navy` | `#004b97` |
+| Primary dark (hover) | `--navy-d` | `#003a78` |
+| Mid blue | `--mid` | `#4a85c4` |
+| Sky blue | `--sky` | `#7eb8d8` |
+| Soft accent / secondary btn | `--aqua` | `#abdad5` |
+| Warm accent (燈光/認證/精選 only) | `--cream` | `#f3e3b5` |
+| Warning / cancel | `--terracotta` | `#c97f5a` |
+| Heading text | `--ink` | `#0f2745` |
+| Body text | `--body` | `#1a2840` |
+| Muted / secondary text | `--muted` | `#6f87a0` |
+| Border / divider | `--line` | `#d6e2ec` |
+| Light block background | `--alice` | `aliceblue` |
+| Admin/back-office page bg | `--page` | `#eef4f8` |
+| Hover / success green | — | `rgb(36, 182, 133)` |
+
+**Rules:** All colors stay in the blue-green spectrum. `--cream` is the only warm color and must be used sparingly. Do not use old teal `#7bcdd6` — use `#abdad5` instead.
+
+### Typography
+
+| Level | Size / Weight / Tracking |
+|---|---|
+| H1 | `40px / 700 / letter-spacing 0.06em` |
+| H2 | `30px / 700 / 0.04em` |
+| H3 | `20px / 700 / 0.04em` |
+| Body | `15px / 400 / line-height 1.7` |
+| Eyebrow | `11px / uppercase / letter-spacing 0.28em / color --muted` |
+
+Font stack: `"Helvetica Neue", Helvetica, "PingFang TC", "Noto Sans TC", Arial, sans-serif`
+
+### Shape & Motion Tokens
 
 | Token | Value |
 |---|---|
-| Primary blue | `#004b97` |
-| Hover / success green | `rgb(36, 182, 133)` |
-| Soft accent | `#abdad5` |
-| Card background | `aliceblue` |
-| Border radius (cards/buttons) | `8px` |
-| Card shadow | `0 1px 4px rgba(0,0,0,0.1)` |
-| Card hover | `translateY(-1px)` + `0 8px 20px rgba(0,0,0,0.1)` + `border: 1px solid rgba(0,75,151,0.2)` |
-| Card selected/active border | `1px solid #004b97` |
+| Card radius | `18px` |
+| Button / pill radius | `999px` |
+| Icon-box radius | `12–14px` |
+| Border | `1px solid #d6e2ec` |
+| Transition | `all 0.22s ease` |
+| Card hover | `translateY(-3px)` + `box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3)` + `border-color: --navy` |
+| Card shadow (rest) | `0 1px 4px rgba(0,0,0,0.06)` |
+| Icon style | line-art SVG, `stroke-width: 1.8`, `stroke: --navy`, no fill |
+
+### Status Pills
+
+| State | Background | Text |
+|---|---|---|
+| 待確認 | `rgba(243,227,181,0.55)` | `#a08540` |
+| 待出貨 | `rgba(171,218,213,0.45)` | `#007568` |
+| 待收貨 | `rgba(126,184,216,0.45)` | `#1a5b85` |
+| 已完成 | `#004b97` | `#fff` |
+| 已取消 | `#f0f2f4` | `#6f87a0` |
+
+### Other Tokens
+| Token | Value |
+|---|---|
 | Price color | `#004b97` (not red) |
 | Price format | `NT$ X,XXX` |
-| SweetAlert2 confirm btn | `#004b97` → hover `rgb(36,182,133)` (set globally in `default.css`) |
-| SweetAlert2 cancel btn | `#f0f0f0` with `#555` text |
-
-**Do not** use the old teal `#7bcdd6` as a primary accent — use `#abdad5` instead.
+| SweetAlert2 confirm btn | `#004b97` → hover `rgb(36,182,133)` |
+| SweetAlert2 cancel btn | `#f0f0f0` / `#555` text |
 
 ## Common Gotchas
 
