@@ -486,7 +486,19 @@
 
   <!-- 4.5 交易流程 -->
   <div class="firstlinesell d-block justify-content-center gap-lg-4" id="flowSection">
-    <h3 class="section-title" style="margin-bottom: 24px; margin-top: 40px;">交易流程</h3>
+    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 24px; margin-top: 40px;">
+      <h3 class="section-title">交易流程</h3>
+      <button id="dismissFlow" class="dismiss-guide-btn" title="永久不再顯示此區塊">
+        <i class="fa-solid fa-xmark"></i> 不再顯示
+      </button>
+    </div>
+
+    <!-- 開張 Banner -->
+    <div class="fls-banner">
+      <div class="fls-banner-tag">GET STARTED · 3 步驟開張</div>
+      <div class="fls-banner-title">拾貨寶庫｜3 步驟輕鬆開張！</div>
+      <div class="fls-banner-sub">歡迎來到拾貨寶庫！在這裡，人人都能把身邊的寶物變成現金。簡單三步驟，馬上開始你的微型創業。</div>
+    </div>
 
     <!-- 賣家輕鬆上架 -->
     <div class="fls-group">
@@ -545,7 +557,7 @@
           <div class="fls-step-label">STEP 03</div>
           <div class="fls-card-icon"><i class="fa-solid fa-shield"></i></div>
           <div class="fls-card-title">安全交貨</div>
-          <div class="fls-card-desc">建議約在人多、有監視器的<strong>公共場所</strong>面交，當場驗貨最安心！</div>
+          <div class="fls-card-desc">面交時以<strong> PIN 碼</strong>驗證訂單，建議約在人多、有監視器的<strong>公共場所</strong>，當場驗貨最安心！</div>
         </div>
       </div>
     </div>
@@ -1638,6 +1650,61 @@ const timer = setInterval(() => {
     </div>
   </div>
 </div>
+
+<script>
+// ── 交易流程區塊 永久不顯示 ──
+(function () {
+  const FLOW_KEY = 'hideFlowSection';
+  const section = document.getElementById('flowSection');
+  if (!section) return;
+
+  if (localStorage.getItem(FLOW_KEY) === '1') {
+    section.classList.remove('d-block');
+    section.classList.add('d-none');
+    return;
+  }
+
+  document.getElementById('dismissFlow')?.addEventListener('click', function () {
+    section.style.transition = 'opacity 0.35s ease, max-height 0.45s ease, margin 0.45s ease, padding 0.45s ease';
+    section.style.overflow = 'hidden';
+    section.style.maxHeight = section.offsetHeight + 'px';
+    section.getBoundingClientRect();
+    section.style.opacity = '0';
+    section.style.maxHeight = '0';
+    section.style.marginTop = '0';
+    section.style.marginBottom = '0';
+
+    section.addEventListener('transitionend', function handler(e) {
+      if (e.propertyName !== 'max-height') return;
+      section.classList.remove('d-block');
+      section.classList.add('d-none');
+      section.removeEventListener('transitionend', handler);
+    });
+
+    let saveTimer = setTimeout(() => localStorage.setItem(FLOW_KEY, '1'), 4000);
+
+    const toast = document.createElement('div');
+    toast.className = 'guide-undo-toast';
+    toast.innerHTML = '交易流程已隱藏 <button id="undoFlow">復原</button>';
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    let removeTimer = setTimeout(() => toast.remove(), 4500);
+
+    toast.querySelector('#undoFlow').addEventListener('click', function () {
+      clearTimeout(saveTimer);
+      clearTimeout(removeTimer);
+      toast.remove();
+      section.classList.remove('d-none');
+      section.classList.add('d-block');
+      section.style.transition = 'opacity 0.35s ease, max-height 0.45s ease';
+      section.style.maxHeight = '2000px';
+      section.style.opacity = '1';
+      section.style.marginTop = '';
+      section.style.marginBottom = '';
+    });
+  });
+})();
+</script>
 
 <script>
 // ── 操作說明區塊 永久不顯示 ──
