@@ -2396,3 +2396,134 @@ html.skip-loader #whatcontent { display: block !important; }
   transition: top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease,
               width 0.25s ease, height 0.25s ease, border-radius 0.25s ease;
 }
+
+/* ── 交易流程共用元件 (fls = flow-listing-section) ── */
+.fls-group {
+  margin-bottom: 28px;
+}
+.fls-group-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.fls-group-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #004b97;
+  color: #fff;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.fls-group--trade .fls-group-icon {
+  background: rgb(36, 182, 133);
+}
+.fls-group-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.2;
+}
+.fls-group-sub {
+  font-size: 0.82rem;
+  color: #777;
+  margin-top: 2px;
+}
+.fls-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.fls-card {
+  background: #fff;
+  border: 1px solid #e8eef5;
+  border-radius: 14px;
+  padding: 20px 18px 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fls-step-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  color: #004b97;
+  text-transform: uppercase;
+}
+.fls-group--trade .fls-step-label {
+  color: rgb(36, 182, 133);
+}
+.fls-step-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e4ebf2;
+}
+.fls-group--trade .fls-step-label::after {
+  background: #c6e0cc;
+}
+.fls-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(0,75,151,0.08);
+  color: #004b97;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fls-group--trade .fls-card-icon {
+  background: rgba(36,182,133,0.1);
+  color: rgb(36, 182, 133);
+}
+.fls-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+.fls-card-desc {
+  font-size: 0.82rem;
+  color: #555;
+  line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+  .fls-cards {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .fls-card {
+    padding: 16px 14px 18px;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .fls-step-label {
+    width: 100%;
+  }
+  .fls-card-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+  .fls-card-title {
+    font-size: 0.9rem;
+    align-self: center;
+  }
+  .fls-card-desc {
+    width: 100%;
+    font-size: 0.78rem;
+    padding-left: 44px;
+  }
+}
