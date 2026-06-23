@@ -2429,9 +2429,9 @@ html.skip-loader #whatcontent { display: block !important; }
 }
 .fls-banner-sub {
   font-size: 0.92rem;
-  color: rgba(255,255,255,0.80);
+  color: #abdad5;
   line-height: 1.75;
-  max-width: 520px;
+  max-width: 720px;
 }
 
 @media (max-width: 640px) {
