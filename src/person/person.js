@@ -1063,8 +1063,8 @@ async function loadDashboardData() {
 
     // stat cards
     if (elProducts) {
-      const raw = itemRes?.data;
-      const total = raw?.total ?? raw?.count ?? (Array.isArray(raw) ? raw.length : (raw?.commodities ?? raw?.data ?? []).length);
+      const raw = itemRes?.data?.data;
+      const total = raw?.pagination?.totalItems ?? (raw?.commodities ?? []).length;
       elProducts.textContent = total ?? '—';
 
       // 首次上架引導 banner
