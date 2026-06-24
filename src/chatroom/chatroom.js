@@ -1161,7 +1161,7 @@ class ChatRoomList {
                         roomName   = userMember?.name ?? target?.name ?? '用戶';
                         roomAvatar = userMember?.photoURL || target?.photoURL || '../image/default-avatar.webp';
                     } else {
-                        roomName   = agent?.name ?? '等待客服人員加入';
+                        roomName   = agent?.name ?? '客服尚未加入';
                         roomAvatar = agent?.photoURL || '../image/default-avatar.webp';
                     }
                 } else {
@@ -2766,7 +2766,7 @@ async function openChatWithTarget(targetUserId) {
                     await Swal.fire({ icon: 'success', title: '客服請求已送出', text: '客服人員將透過系統查看您的訂單紀錄，認領後會盡快處理。', timer: 2500, showConfirmButton: false });
                 } catch (err) {
                     if (err?.response?.status === 400) {
-                        Swal.fire({ icon: 'warning', title: '無法重複開單', text: '此訂單已有進行中的客服單，請等待處理完畢後再提交。' });
+                        Swal.fire({ icon: 'warning', title: '無法重複開單', text: '此訂單曾經進行過客服，無法重複開單。' });
                     } else {
                         Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
                     }
