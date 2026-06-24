@@ -1063,7 +1063,7 @@ async function loadDashboardData() {
 
     // stat cards
     if (elProducts) {
-      const raw = itemRes?.data?.data;
+      const raw = itemRes?.data;
       const total = raw?.pagination?.totalItems ?? (raw?.commodities ?? []).length;
       elProducts.textContent = total ?? '—';
 
