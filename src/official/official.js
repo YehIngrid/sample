@@ -734,7 +734,7 @@ function _daysAgoStr(n) { const d = new Date(); d.setDate(d.getDate() - n); retu
 function _initDateRange() {
   const s = document.getElementById('statsStartDate');
   const e = document.getElementById('statsEndDate');
-  if (s && !s.value) s.value = _daysAgoStr(30);
+  if (s && !s.value) s.value = '2026-01-01';
   if (e && !e.value) e.value = _todayStr();
 }
 
