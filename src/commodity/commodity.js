@@ -1,6 +1,14 @@
 import BackendService from '../BackendService.js';
 import '../default/default.js';
 
+// ── Image variant helpers ──
+function toBigImg(url) {
+  if (!url) return url;
+  const m = url.match(/^(https?:\/\/.+\/)([^/?#]+)(\.(?:webp|jpe?g|png|gif))(\?.*)?$/i);
+  if (!m) return url;
+  return `${m[1]}${m[2]}${m[3]}/${m[2]}_big${m[3]}${m[4] || ''}`;
+}
+
 // ── Image skeleton: fade-in when photo loads ──
 document.addEventListener('load', e => {
   const img = e.target;
@@ -267,7 +275,7 @@ function renderProductsBootstrap(items) {
     col.style.animationDelay = `${Math.min(i, 11) * 0.04}s`;
     const category = categoryMap[p.category] ?? '其他';
     const newOrOld = newOrOldMap[p.newOrOld] ?? '';
-    const imgUrl   = p.mainImage || '';
+    const imgUrl   = toBigImg(p.mainImage) || '';
     col.innerHTML = `
       <div class="product-card position-relative h-100" data-id="${escapeHtml(p.id)}">
         <div class="product-thumb">

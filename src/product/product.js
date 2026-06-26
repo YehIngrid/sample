@@ -6,7 +6,9 @@ import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewer
 // ── Image variant helpers ──
 function toSmallImg(url) {
   if (!url) return url;
-  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_small$1$2');
+  const m = url.match(/^(https?:\/\/.+\/)([^/?#]+)(\.(?:webp|jpe?g|png|gif))(\?.*)?$/i);
+  if (!m) return url;
+  return `${m[1]}${m[2]}${m[3]}/${m[2]}_small${m[3]}${m[4] || ''}`;
 }
 
 // ── Skeleton helper ──

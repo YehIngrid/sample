@@ -11,7 +11,9 @@ let chatRoomList;
 // ── Image variant helpers ──
 function toBigImg(url) {
   if (!url) return url;
-  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_big$1$2');
+  const m = url.match(/^(https?:\/\/.+\/)([^/?#]+)(\.(?:webp|jpe?g|png|gif))(\?.*)?$/i);
+  if (!m) return url;
+  return `${m[1]}${m[2]}${m[3]}/${m[2]}_big${m[3]}${m[4] || ''}`;
 }
 
 // ── Skeleton helpers ──
