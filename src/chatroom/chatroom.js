@@ -2761,6 +2761,16 @@ async function openChatWithTarget(targetUserId) {
                     }
                 });
                 if (!isConfirmed) return;
+                const { isConfirmed: warned } = await Swal.fire({
+                    icon: 'info',
+                    title: '送出前請確認',
+                    html: `<p style="font-size:0.88rem;color:#444;line-height:1.6;margin:0;">同一筆訂單僅能提出一次處理請求，客服處理完畢後若尚有問題，請點選「單純問問題」提問。</p>`,
+                    showCancelButton: true,
+                    confirmButtonText: '確認送出',
+                    cancelButtonText: '取消',
+                    customClass: { popup: 'support-swal-popup' },
+                });
+                if (!warned) return;
                 try {
                     await chatRoomList.backend.requestSupport(roomId, value.orderId, value.reason);
                     await Swal.fire({ icon: 'success', title: '客服請求已送出', text: '客服人員將透過系統查看您的訂單紀錄，認領後會盡快處理。', timer: 2500, showConfirmButton: false });
