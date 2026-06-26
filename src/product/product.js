@@ -3,6 +3,12 @@ import ChatBackendService from '../chatroom/ChatBackendService.js';
 import { formatTaipeiTime, requireLogin } from '../default/default.js';
 import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewerModal.js';
 
+// ── Image variant helpers ──
+function toSmallImg(url) {
+  if (!url) return url;
+  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_small$1$2');
+}
+
 // ── Skeleton helper ──
 function sellerProductSkeletonHTML(n = 6) {
   return Array.from({length: n}, () => `
@@ -401,7 +407,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     thumbList.innerHTML = '';
     list.forEach((src, idx) => {
       const imgEl = document.createElement('img');
-      imgEl.src = src;
+      imgEl.src = toSmallImg(src);
       imgEl.alt = `縮圖 ${idx + 1}`;
       imgEl.loading = 'lazy';
       imgEl.className = 'thumb-img' + (idx === 0 ? ' active' : '');

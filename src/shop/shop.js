@@ -8,6 +8,12 @@ let chatInnerWin;
 let chatInnerDoc;
 let chatRoomList;
 
+// ── Image variant helpers ──
+function toBigImg(url) {
+  if (!url) return url;
+  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_big$1$2');
+}
+
 // ── Skeleton helpers ──
 function hotSkeletonHTML(n = 6) {
   return Array.from({length: n}, () => `
@@ -232,7 +238,7 @@ function renderItems(items){
         <div class="card">
           <div class="img-box">
             <img src="../svg/topicon.svg" class="hot-top-icon" alt="熱門商品標誌" width="46" height="46" decoding="async">
-            <img class="main" src="${item.mainImage}" alt="${esc(item.name)}" loading="lazy" decoding="async">
+            <img class="main" src="${toBigImg(item.mainImage)}" alt="${esc(item.name)}" loading="lazy" decoding="async">
           </div>
           <div class="hot-item-footer">
             <div class="hotItemName">${esc(item.name)}</div>
@@ -1244,7 +1250,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.dataset.id = product.id;
       card.style.width = '100%';
       card.style.borderRadius = '0.3rem';
-      const imgUrl   = product.mainImage || '/img/placeholder.webp';
+      const imgUrl   = toBigImg(product.mainImage) || '/img/placeholder.webp';
       const category = categoryMap[product.category] ?? '其他';
       const newOrOld = newOrOldMap[product.newOrOld] ?? '';
       card.innerHTML = `
