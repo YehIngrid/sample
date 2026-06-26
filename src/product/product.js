@@ -6,9 +6,11 @@ import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewer
 // ── Image variant helpers ──
 function toSmallImg(url) {
   if (!url) return url;
-  const m = url.match(/^(https?:\/\/.+\/)([^/?#]+)(\.(?:webp|jpe?g|png|gif))(\?.*)?$/i);
-  if (!m) return url;
-  return `${m[1]}${m[2]}${m[3]}/${m[2]}_small${m[3]}${m[4] || ''}`;
+  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_small$1$2');
+}
+function toBigImg(url) {
+  if (!url) return url;
+  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_big$1$2');
 }
 
 // ── Skeleton helper ──
@@ -51,7 +53,7 @@ function _renderSellerPage(page) {
     const col = document.createElement('div');
     col.className = 'col';
     const pid = product.id ?? product._id ?? product.commodityId ?? '';
-    const imgSrc = product.mainImage || '';
+    const imgSrc = toBigImg(product.mainImage) || '';
     const name   = product.name || '未命名';
     const price  = Number(product.price ?? 0).toLocaleString('zh-TW');
     col.innerHTML = `
@@ -550,7 +552,7 @@ async function loadSimilarProducts(category, currentId) {
       col.innerHTML = `
         <div class="product-card seller-product-card h-100" data-id="${pid}">
           <div class="product-thumb">
-            <img src="${product.mainImage || ''}" alt="${product.name || ''}" loading="lazy"
+            <img src="${toBigImg(product.mainImage) || ''}" alt="${product.name || ''}" loading="lazy"
                  onerror="this.src='../image/placeholder.webp'">
           </div>
           <div class="card-body d-flex flex-column">

@@ -527,7 +527,7 @@ async function showYouMightLike() {
     items.forEach(p => {
       const col = document.createElement('div');
       col.className = 'col';
-      const imgUrl = p.mainImage || '';
+      const imgUrl = toBigImg(p.mainImage) || '';
       col.innerHTML = `
         <div class="product-card position-relative h-100" data-id="${escapeHtml(p.id)}">
           <div class="product-thumb">
