@@ -1006,8 +1006,43 @@ class ChatRoomList {
                         `<a class="cs-bot-link-btn" href="../questions/questions.html" target="_parent"><i class="bi bi-book"></i> 前往常見問題</a>`
                     );
                     break;
+                case '4':
+                    this.contactHumanAgent();
+                    break;
             }
         }, 600);
+    }
+
+    async contactHumanAgent() {
+        const roomId = this.currentRoomId;
+        if (!roomId) return;
+
+        try {
+            const myTicketRes = await this.backend.getMyTickets();
+            const myTicket = myTicketRes?.data ?? null;
+            if (myTicket) {
+                this.appendBotMessage('您目前有一筆尚未結束的客服單，請等客服人員將問題標記為已解決後再重新聯絡。');
+                return;
+            }
+        } catch { }
+
+        const infoBox = `<div style="background:#fff8f0;border:1px solid #f5cba7;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:0.8rem;color:#7d4e00;"><i class="bi bi-info-circle me-1"></i>送出後將由客服人員認領，請耐心等候。</div>`;
+        const { isConfirmed } = await Swal.fire({
+            title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
+            html: `<div style="text-align:left;padding:0 4px;">${infoBox}<p style="font-size:0.85rem;color:#555;margin:0;">確認後將建立客服單，客服人員認領後會加入本聊天室協助您。</p></div>`,
+            showCancelButton: true,
+            confirmButtonText: '確認送出',
+            cancelButtonText: '取消',
+            customClass: { popup: 'support-swal-popup' },
+        });
+        if (!isConfirmed) return;
+        try {
+            await this.backend.createTicket({});
+            this.appendBotMessage('感謝您的耐心，客服單已建立。客服人員將盡快認領並協助您。');
+            await this.loadRooms();
+        } catch {
+            this.appendBotMessage('抱歉，建立客服單失敗，請稍後重試。');
+        }
     }
 
     startOnboarding() {
@@ -2719,7 +2754,7 @@ async function openChatWithTarget(targetUserId) {
                 });
                 if (!isConfirmed) return;
                 try {
-                    await chatRoomList.backend.createTicket({ roomId });
+                    await chatRoomList.backend.createTicket({});
                     await Swal.fire({ icon: 'success', title: '客服單已建立', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
                     await chatRoomList.loadRooms();
                 } catch {
@@ -2794,7 +2829,7 @@ async function openChatWithTarget(targetUserId) {
             });
             if (!isConfirmed) return;
             try {
-                await chatRoomList.backend.createTicket({ roomId });
+                await chatRoomList.backend.createTicket({});
                 await Swal.fire({ icon: 'success', title: '客服單已建立', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
                 await chatRoomList.loadRooms();
             } catch {
