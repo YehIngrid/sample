@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 
-const BASE_URL = 'https://thpr.hlc23.dev';
+const BASE_URL = 'https://treasurehub.tw';
 
 function showState(id) {
     ['state-form', 'state-invalid', 'state-success'].forEach(s => {
