@@ -77,6 +77,17 @@ function copyStaticFolders() {
       // PWA manifest
       const manifestSrc = resolve(__dirname, 'src/manifest.json')
       if (existsSync(manifestSrc)) cpSync(manifestSrc, resolve(__dirname, 'dist/manifest.json'))
+      // 複製 school 目錄中的 JS 和 CSS 文件
+      const schoolSrcDir = resolve(__dirname, 'src/school')
+      const schoolDestDir = resolve(__dirname, 'dist/school')
+      if (existsSync(schoolSrcDir)) {
+        const jsFiles = glob.sync('src/school/*.js')
+        const cssFiles = glob.sync('src/school/*.css')
+        ;[...jsFiles, ...cssFiles].forEach(file => {
+          const fileName = file.split('/').pop()
+          cpSync(file, resolve(schoolDestDir, fileName))
+        })
+      }
     }
   }
 }
