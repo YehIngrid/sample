@@ -51,6 +51,20 @@ function flattenSrcDir() {
         cpSync(srcDir, resolve(__dirname, 'dist'), { recursive: true })
         rmSync(srcDir, { recursive: true })
       }
+
+      // 特別處理 school 目錄：把 dist/src/school 的 JS/CSS 複製到 dist/school 根目錄
+      const schoolSrcPath = resolve(__dirname, 'dist/school/src/school')
+      const schoolDestPath = resolve(__dirname, 'dist/school')
+      if (existsSync(schoolSrcPath)) {
+        const files = glob.sync('dist/school/src/school/*')
+        files.forEach(file => {
+          const fileName = file.split(/[\\/]/).pop()
+          if (fileName && (fileName.endsWith('.js') || fileName.endsWith('.css'))) {
+            cpSync(file, resolve(schoolDestPath, fileName))
+          }
+        })
+        rmSync(resolve(__dirname, 'dist/school/src'), { recursive: true })
+      }
     }
   }
 }
