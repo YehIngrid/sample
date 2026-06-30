@@ -82,7 +82,7 @@ function copyStaticFolders() {
 }
 
 const htmlFiles = glob.sync('src/**/*.html', {
-  ignore: ['src/school/**'] // school 頁面使用非 module script，暫時排除
+  ignore: []
 })
 const input = {
   index: resolve(__dirname, 'index.html'),
