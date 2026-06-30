@@ -108,7 +108,7 @@ function attachSaveButtons() {
 
   const html = `
     <span class="badge">本週精選</span>
-    <div class="cover"></div>
+    <div class="cover" style="display:none;"></div>
     <div class="copy">
       <div class="meta-top">
         <span class="cat-pill">${featured.category}</span>
@@ -127,7 +127,7 @@ function attachSaveButtons() {
           </div>
         </div>
         <div class="read-meta">
-          <span>📖 ${featured.reads}</span>
+          <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${featured.reads}</span>
         </div>
       </div>
       <div class="price-box">
@@ -234,9 +234,9 @@ function attachSaveButtons() {
                 <div class="price">${art.price}</div>
               </div>
               <div class="read-stats">
-                <span>👁 ${art.views}</span>
-                <span>❤ ${art.likes}</span>
-                <span>💬 ${art.comments}</span>
+                <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${art.views}</span>
+                <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> ${art.likes}</span>
+                <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> ${art.comments}</span>
               </div>
             </div>
           </article>
@@ -265,9 +265,9 @@ function attachSaveButtons() {
               <div class="price ${art.price === '免費閱讀' ? 'free' : ''}">${art.price}</div>
             </div>
             <div class="read-stats">
-              <span>👁 ${art.views}</span>
-              <span>❤ ${art.likes}</span>
-              <span>💬 ${art.comments}</span>
+              <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${art.views}</span>
+              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> ${art.likes}</span>
+              <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> ${art.comments}</span>
             </div>
           </div>
         </article>
@@ -279,4 +279,268 @@ function attachSaveButtons() {
   }
 
   document.addEventListener('DOMContentLoaded', renderArticles);
+})();
+
+// ── Glass card scroll animation ──
+(function () {
+  const glassCards = document.querySelectorAll('.glass-card');
+  if (glassCards.length === 0) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  glassCards.forEach(card => observer.observe(card));
+})();
+
+// ── Navbar login with avatar dropdown ──
+(function () {
+  const loginBtn = document.getElementById('loginBtn');
+  const userChip = document.getElementById('userChip');
+
+  if (!loginBtn || !userChip) return;
+
+  const AUTH_KEY = 'th_cg_auth';
+  const AVATAR_KEY = 'th_cg_avatar';
+  const USERNAME_KEY = 'th_cg_username';
+
+  // 創建下拉選單
+  const dropdown = document.createElement('div');
+  dropdown.className = 'user-dropdown';
+  dropdown.innerHTML = `
+    <a href="#" class="user-dropdown-item">我的資訊</a>
+    <a href="#" class="user-dropdown-item" id="logoutLink">登出</a>
+  `;
+  dropdown.style.cssText = `
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #d6e2ec;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    min-width: 140px;
+    display: none;
+    z-index: 100;
+    margin-top: 8px;
+  `;
+
+  userChip.style.position = 'relative';
+  userChip.appendChild(dropdown);
+
+  // 設定樣式
+  const style = document.createElement('style');
+  style.textContent = `
+    .user-dropdown-item {
+      display: block;
+      padding: 10px 16px;
+      color: #0f2745;
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+    .user-dropdown-item:hover {
+      background: #f0f5f9;
+    }
+    .user-dropdown-item:first-child {
+      border-bottom: 1px solid #d6e2ec;
+    }
+  `;
+  document.head.appendChild(style);
+
+  function applyAuth(loggedIn) {
+    loginBtn.style.display = loggedIn ? 'none' : '';
+    userChip.style.display = loggedIn ? 'block' : 'none';
+    dropdown.style.display = 'none';
+  }
+
+  const isAuthed = localStorage.getItem(AUTH_KEY) === '1';
+  const avatar = localStorage.getItem(AVATAR_KEY) || '👤';
+  const username = localStorage.getItem(USERNAME_KEY) || '王同學';
+
+  applyAuth(isAuthed);
+
+  if (isAuthed) {
+    const avatarSpan = userChip.querySelector('.avatar');
+    if (avatarSpan) avatarSpan.textContent = avatar;
+  }
+
+  loginBtn.addEventListener('click', function () {
+    // 模擬登入，設置頭像和用戶名
+    localStorage.setItem(AUTH_KEY, '1');
+    localStorage.setItem(AVATAR_KEY, '👤');
+    localStorage.setItem(USERNAME_KEY, '王同學');
+    applyAuth(true);
+    location.reload();
+  });
+
+  userChip.addEventListener('click', function (e) {
+    e.stopPropagation();
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+  });
+
+  document.getElementById('logoutLink').addEventListener('click', function (e) {
+    e.preventDefault();
+    localStorage.setItem(AUTH_KEY, '0');
+    localStorage.removeItem(AVATAR_KEY);
+    localStorage.removeItem(USERNAME_KEY);
+    applyAuth(false);
+    dropdown.style.display = 'none';
+    location.reload();
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!userChip.contains(e.target)) {
+      dropdown.style.display = 'none';
+    }
+  });
+})();
+
+// ── Wishpool with real data (commented out) ──
+// (function () {
+//   function initWishpool() {
+//     const container = document.querySelector('.wp-stage-school');
+//     if (!container) return;
+//
+//     let wishes = [];
+//     if (window.backendService && typeof window.backendService.getWishlist === 'function') {
+//       window.backendService.getWishlist().then(response => {
+//         wishes = (response.data || []).slice(0, 20);
+//         renderWishpool(wishes);
+//       }).catch(e => {
+//         console.warn('Failed to load wishpool:', e);
+//         renderWishpool([]);
+//       });
+//     } else {
+//       renderWishpool([]);
+//     }
+//
+//     function renderWishpool(wishes) {
+//       const SLOGANS = [
+//         { _isSlogan: true, id: 's1', _sloganText: '快來許願！', _sloganBg: '#004b97', _sloganColor: '#fff' },
+//         { _isSlogan: true, id: 's2', _sloganText: '賣家等你', _sloganBg: '#f3e3b5', _sloganColor: '#004b97' },
+//         { _isSlogan: true, id: 's3', _sloganText: '說出你的需求', _sloganBg: '#4a85c4', _sloganColor: '#fff' },
+//         { _isSlogan: true, id: 's4', _sloganText: '找到好物', _sloganBg: '#abdad5', _sloganColor: '#004b97' },
+//         { _isSlogan: true, id: 's5', _sloganText: '許個願吧', _sloganBg: '#7eb8d8', _sloganColor: '#fff' },
+//       ].map(s => ({ ...s, _size: Math.floor(Math.random() * 25) + 65, _marginTop: Math.floor(Math.random() * 160) - 80 }));
+//
+//       const displayWishes = wishes.length <= 3
+//         ? SLOGANS.flatMap((s, i) => [s, ...(wishes[i % wishes.length] ? [wishes[i % wishes.length]] : [])])
+//         : wishes;
+//
+//       const track = container.querySelector('.track-school');
+//       if (!track) return;
+//
+//       track.innerHTML = '';
+//       [...displayWishes, ...displayWishes, ...displayWishes, ...displayWishes].forEach((wish) => {
+//         const b = document.createElement('div');
+//         b.className = 'bub-school';
+//         b.style.setProperty('--y', wish._marginTop + 'px');
+//         b.style.animationDelay = (Math.random() * -5).toFixed(2) + 's';
+//         b.style.animationDuration = (4.4 + Math.random() * 1.6).toFixed(2) + 's';
+//
+//         if (wish._isSlogan) {
+//           const disc = document.createElement('div');
+//           disc.className = 'disc-school msg';
+//           disc.style.setProperty('--d', wish._size + 'px');
+//           disc.style.background = wish._sloganBg;
+//           disc.style.color = wish._sloganColor;
+//           disc.style.fontSize = (wish._size >= 92 ? 15 : 13) + 'px';
+//           disc.textContent = wish._sloganText;
+//           b.appendChild(disc);
+//         } else {
+//           const disc = document.createElement('div');
+//           disc.className = 'disc-school icon';
+//           disc.style.setProperty('--d', wish._size + 'px');
+//           const img = document.createElement('img');
+//           img.src = wish.photoURL || '../svg/bigwish.svg';
+//           img.alt = wish.itemName || '許願';
+//           img.style.width = wish._size + 'px';
+//           img.style.height = wish._size + 'px';
+//           img.onerror = function() { this.src = '../svg/bigwish.svg'; };
+//           disc.appendChild(img);
+//           b.appendChild(disc);
+//
+//           const cap = document.createElement('span');
+//           cap.className = 'cap-school';
+//           cap.textContent = wish.itemName || '新許願';
+//           b.appendChild(cap);
+//         }
+//
+//         b.addEventListener('click', () => {
+//           if (!wish._isSlogan && wish.id) {
+//             sessionStorage.setItem('focusWishId', String(wish.id));
+//           }
+//           location.href = '../wishpool/wishpool.html#wishpool';
+//         });
+//
+//         track.appendChild(b);
+//       });
+//     }
+//   }
+//
+//   if (document.readyState === 'loading') {
+//     document.addEventListener('DOMContentLoaded', initWishpool);
+//   } else {
+//     initWishpool();
+//   }
+// })();
+
+// ── Advertisement Carousel ──
+(function () {
+  const carousel = document.querySelector('.ad-carousel');
+  if (!carousel) return;
+
+  const items = carousel.querySelectorAll('.carousel-item');
+  const indicators = carousel.querySelectorAll('.carousel-indicators .indicator');
+  let currentSlide = 0;
+  let autoplayTimer = null;
+
+  function goToSlide(n) {
+    if (n >= items.length) currentSlide = 0;
+    if (n < 0) currentSlide = items.length - 1;
+
+    items.forEach(item => item.classList.remove('active'));
+    indicators.forEach(ind => ind.classList.remove('active'));
+
+    items[currentSlide].classList.add('active');
+    indicators[currentSlide].classList.add('active');
+  }
+
+  function nextSlide() {
+    currentSlide++;
+    goToSlide(currentSlide);
+  }
+
+  function prevSlide() {
+    currentSlide--;
+    goToSlide(currentSlide);
+  }
+
+  function startAutoplay() {
+    autoplayTimer = setInterval(nextSlide, 5000);
+  }
+
+  function stopAutoplay() {
+    clearInterval(autoplayTimer);
+  }
+
+  indicators.forEach(indicator => {
+    indicator.addEventListener('click', function () {
+      currentSlide = parseInt(this.dataset.slide);
+      goToSlide(currentSlide);
+      stopAutoplay();
+      startAutoplay();
+    });
+  });
+
+  carousel.addEventListener('mouseenter', stopAutoplay);
+  carousel.addEventListener('mouseleave', startAutoplay);
+
+  startAutoplay();
 })();

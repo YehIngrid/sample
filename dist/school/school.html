@@ -37,13 +37,15 @@
   <script type="module" crossorigin src="/assets/default-DxlzImvO.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/default-CfpSA5Hz.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
-  <link rel="stylesheet" crossorigin href="/assets/school-B4bzntNG.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-BieeEwgN.css">
 </head>
 <body>
 
 
 <nav class="nav">
-  <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">拾貨寶庫<small>TREASURE HUB</small></a>
+  <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+    <img src="/assets/TREASUREHUBCHEN-XT8sW0do.svg" alt="">
+  </a>
   <div class="tabs">
     <a href="../newhome/newhome.html">購物首頁</a>
     <a href="../commodity/commodity.html">購物商場</a>
@@ -56,16 +58,11 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
       撰寫攻略
     </a>
-    <a id="schoolAdminBtn" href="#" style="display:none;position:fixed;top:70px;right:18px;z-index:9999;background:#e63946;color:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 3px 12px rgba(230,57,70,0.45);transition:background 0.2s;" onmouseover="this.style.background='#c1121f'" onmouseout="this.style.background='#e63946'">
-      <i class="ti ti-book-2 me-1"></i>校園攻略站
-    </a>
     <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3 H19 A2 2 0 0 1 21 5 V19 A2 2 0 0 1 19 21 H15"/><path d="M10 17 L15 12 L10 7"/><path d="M15 12 H3"/></svg>
       登入
     </button>
-    <div class="user-chip" id="userChip" style="display:none;" title="點此模擬登出">
+    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
       <span class="avatar"></span>
-      <span class="uname">王同學</span>
     </div>
   </div>
 </nav>
@@ -99,19 +96,36 @@
       <input type="text" placeholder="搜尋課程、教授、科系、關鍵字..." id="schoolSearchInput" />
       <span class="scope">全部</span>
     </div>
-    <div class="select-wrap">
-      <select id="sortSelect">
-        <option>排序：最新發佈</option>
-        <option>排序：最多閱讀</option>
-        <option>排序：價格由低到高</option>
-        <option>排序：本學年適用優先</option>
-        <option>排序：作者認證等級</option>
-      </select>
+    <div class="d-flex" style="gap: 12px;">
+      <div class="select-wrap">
+        <select id="sortSelect">
+          <option>排序：最新發佈</option>
+          <option>排序：最多閱讀</option>
+          <option>排序：價格由低到高</option>
+          <option>排序：本學年適用優先</option>
+          <option>排序：作者認證等級</option>
+        </select>
+      </div>
+      <a class="btn-toolbar" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 H20"/><path d="M7 12 H17"/><path d="M10 18 H14"/></svg>
+        進階篩選
+      </a>
     </div>
-    <a class="btn-toolbar" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 H20"/><path d="M7 12 H17"/><path d="M10 18 H14"/></svg>
-      進階篩選
-    </a>
+  </div>
+
+  
+  <div class="mobile-cat-bar">
+    <a href="#" class="on">全部文章 <span class="count">316</span></a>
+    <a href="#">研究所推甄 <span class="count">42</span></a>
+    <a href="#">學分攻略 <span class="count">88</span></a>
+    <a href="#">證照檢定 <span class="count">37</span></a>
+    <a href="#">實習與面試 <span class="count">29</span></a>
+    <a href="#">美食地圖 <span class="count">24</span></a>
+    <a href="#">校園資源 <span class="count">31</span></a>
+    <a href="#">轉學 / 轉系 <span class="count">18</span></a>
+    <a href="#">交換學生 <span class="count">21</span></a>
+    <a href="#">專題研究 <span class="count">16</span></a>
+    <a href="#">生活指南 <span class="count">10</span></a>
   </div>
 
   
@@ -121,7 +135,7 @@
     <aside class="sidebar">
 
       <div class="side-panel">
-        <div class="head">文章分類（主題只能選一個）</div>
+        <div class="head">文章分類</div>
         <div class="cat-list">
           <a href="#" class="on">全部文章 <span class="count">316</span></a>
           <a href="#">研究所推甄 <span class="count">42</span></a>
@@ -138,7 +152,7 @@
       </div>
 
       <div class="side-panel">
-        <div class="head">熱門標籤（可複選）</div>
+        <div class="head">熱門標籤</div>
         <div class="tag-list">
           <a href="#">#頂大推甄</a>
           <a href="#">#備審資料</a>
@@ -189,18 +203,31 @@
       <article class="featured" id="featuredWrap"></article>
 
       
-      <div class="general-strip">
-        <div class="gs-left">
-          <span class="gs-tag">跨校通用學科專區</span>
-          <h3>不分學校都能用的基礎學門攻略</h3>
-          <p>微積分、線性代數、全民英檢、多益⋯⋯獨立出跨校通用學門，受眾更廣、更新更勤。</p>
+      <div class="ad-carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="/assets/newschoolad-TmJtQK9q.svg" alt="校園攻略站廣告" class="ad-image">
+          </div>
+          <div class="carousel-item ad-slide-html">
+            <div class="ad-content-wrapper general-strip">
+              <div class="ad-left gs-left">
+                <div class="gs-tag">跨校適用學科專區</div>
+                <h3>不分學校都能用的基礎學門攻略</h3>
+                <p>微積分、線性代數、全民英檢、多益......獨立出跨校適用學門，受惠更多、更新更動。</p>
+              </div>
+              <div class="gs-chips">
+                <span class="tag-pill">微積分</span>
+                <span class="tag-pill">線性代數</span>
+                <span class="tag-pill">多益 TOEIC</span>
+                <span class="tag-pill">全民英檢</span>
+                <span class="tag-pill">經濟學</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="gs-chips">
-          <a href="#">微積分</a>
-          <a href="#">線性代數</a>
-          <a href="#">多益 TOEIC</a>
-          <a href="#">全民英檢</a>
-          <a href="#">經濟學</a>
+        <div class="carousel-indicators">
+          <button class="indicator active" data-slide="0"></button>
+          <button class="indicator" data-slide="1"></button>
         </div>
       </div>
 
@@ -226,90 +253,108 @@
 </div>
 
 
-<footer style="background: rgb(15, 39, 69); color: rgba(255,255,255,0.82); padding: 48px 40px 40px">
+<section class="wishpool-school">
+  <div class="wp-head-school">
+    <div>
+      <h2 class="wp-title-school">許願池</h2>
+      <p class="wp-sub-school">買家許願，賣家實現</p>
+    </div>
+    <a class="wp-more-school" href="../wishpool/wishpool.html#wishpool">查看更多 <span class="arr">→</span></a>
+  </div>
+
+  <div class="wp-stage-school">
+    <div class="wave wave-back"></div>
+    <div class="wave wave-mid"></div>
+    <div class="wave wave-front"></div>
+
+    <div class="ambient-school" id="ambient-school"></div>
+
+    <div class="marquee-school">
+      <div class="track-school" id="track-school">
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer style="background: linear-gradient(to right bottom, #7eb8d8, #4a85c4); color: rgba(255,255,255,0.82); padding: 48px 40px 50px; margin-top:100px;">
   <div style="width:80vw; max-width:80vw; margin:0 auto;">
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
       <span style="font-size:10px; letter-spacing:0.24em; color:#abdad5; font-weight:700;">LEGAL</span>
     </div>
     <h3 style="font-size:18px; font-weight:700; color:#fff; letter-spacing:0.04em; margin-bottom:8px;">免責聲明 · 5 大核心區塊</h3>
-    <p style="font-size:12.5px; color:rgba(255,255,255,0.6); line-height:1.7; margin-bottom:24px; max-width:760px;">本平台為涉及數位內容付費瀏覽、知識產權與學術誠信之交易媒介。上架即代表你已閱讀並同意下列條款，以避免學生與教授（校方）之間的法律與行政糾紛。</p>
+    <p style="font-size:12.5px; color:rgba(255,255,255,1); line-height:1.7; margin-bottom:24px; max-width:760px;">本平台為涉及數位內容付費瀏覽、知識產權與學術誠信之交易媒介。上架即代表你已閱讀並同意下列條款，以避免學生與教授（校方）之間的法律與行政糾紛。</p>
     <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:16px;">
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px;">
+      <div class="glass-card">
         <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">01</div>
         <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">智慧財產權與侵權</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.62); line-height:1.65;">平台僅提供刊登與交易媒介，不做實質內容審查。內容須為原創或已取得授權，嚴禁複製教授講義 / PPT / 考題、掃描教科書、盜錄課程。查證屬實即下架停權，法律責任由上傳者承擔。</p>
+        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">平台僅提供刊登與交易媒介，不做實質內容審查。內容須為原創或已取得授權，嚴禁複製教授講義 / PPT / 考題、掃描教科書、盜錄課程。查證屬實即下架停權，法律責任由上傳者承擔。</p>
       </div>
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px;">
+      <div class="glass-card">
         <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">02</div>
         <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">學術誠信與校規</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.62); line-height:1.65;">所有內容僅供學術交流與個人學習參考。不得用於集體舞弊、抄襲計分作業或任何違反校規之行為。因不當使用導致校方懲戒，平台不負連帶責任。</p>
+        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">所有內容僅供學術交流與個人學習參考。不得用於集體舞弊、抄襲計分作業或任何違反校規之行為。因不當使用導致校方懲戒，平台不負連帶責任。</p>
       </div>
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px;">
+      <div class="glass-card">
         <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">03</div>
         <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">數位商品與退費</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.62); line-height:1.65;">屬「非以有形媒介提供之數位內容」，依消保法不適用 7 天鑑賞期，付費完成原則上不退費。品質由賣家負責，購買前請參考評價與預覽頁。</p>
+        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">屬「非以有形媒介提供之數位內容」，依消保法不適用 7 天鑑賞期，付費完成原則上不退費。品質由賣家負責，購買前請參考評價與預覽頁。</p>
       </div>
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px;">
+      <div class="glass-card">
         <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">04</div>
         <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">內容時效與準確性</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.62); line-height:1.65;">課堂資訊具時效性（教授異動、評分變更、教材改版）。不保證 100% 適用當前學期，因課程變更導致之失利，平台與作者不負補償責任。</p>
+        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">課堂資訊具時效性（教授異動、評分變更、教材改版）。不保證 100% 適用當前學期，因課程變更導致之失利，平台與作者不負補償責任。</p>
       </div>
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:18px;">
+      <div class="glass-card">
         <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">05</div>
         <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">個人隱私與資料調閱</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.62); line-height:1.65;">為交易安全暫存互動與交易紀錄，絕不無故調閱。惟重大違規、檢舉侵權或配合司法調查時依需求調閱。註冊綁定之學校信箱作為身分驗證與責任追溯依據。</p>
+        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">為交易安全暫存互動與交易紀錄，絕不無故調閱。惟重大違規、檢舉侵權或配合司法調查時依需求調閱。註冊綁定之學校信箱作為身分驗證與責任追溯依據。</p>
       </div>
     </div>
   </div>
 </footer>
 
 
-<footer style="background:#004b97; color:#fff; padding:56px 0 28px;">
-  <div style="width:80vw; max-width:80vw; margin:0 auto;">
-    <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; padding-bottom:40px;">
-      <div>
-        <div style="font-size:30px; font-weight:900; letter-spacing:0.06em; line-height:1; color:#fff;">拾貨寶庫</div>
-        <div style="font-size:11px; font-weight:500; letter-spacing:0.34em; color:rgba(255,255,255,0.65); margin-top:8px;">TREASURE HUB</div>
-        <p style="font-size:13px; color:rgba(255,255,255,0.78); line-height:1.7; margin-top:28px; max-width:280px;">專為大學生打造的校園二手拍賣市集</p>
-      </div>
-      <div>
-        <h5 style="font-size:14px; font-weight:700; letter-spacing:0.08em; color:#fff; margin-bottom:18px;">快速連結</h5>
-        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px;">
-          <li><a href="../newhome/newhome.html" style="font-size:13.5px; color:rgba(255,255,255,0.82); text-decoration:none; letter-spacing:0.04em;">購物首頁</a></li>
-          <li><a href="../commodity/commodity.html" style="font-size:13.5px; color:rgba(255,255,255,0.82); text-decoration:none; letter-spacing:0.04em;">購物商場</a></li>
-          <li><a href="../shop/shop.html?page=seller" style="font-size:13.5px; color:rgba(255,255,255,0.82); text-decoration:none; letter-spacing:0.04em;">賣家專區</a></li>
-          <li><a href="../wishpool/wishpool.html#wishpool" style="font-size:13.5px; color:rgba(255,255,255,0.82); text-decoration:none; letter-spacing:0.04em;">許願專區</a></li>
+<footer style="background-color: #004b97; color: rgba(255,255,255,0.85);">
+  <div style="display:grid; grid-template-columns:1.4fr 2fr 1fr; gap:24px; width:80vw; margin:0 auto; padding:48px 0 36px;">
+    <div>
+      <img src="/assets/TREASUREHUBwhite-s2VgFBQ6.svg" alt="拾貨寶庫 TreasureHub" style="max-width:120px; margin-bottom:12px; display:block;">
+      <p style="font-size:13px; color:rgba(255,255,255,0.55); line-height:1.6; margin:0; max-width:280px;">專為大學生打造的校園二手拍賣市集</p>
+    </div>
+    <div style="display:flex; gap:24px;">
+      <div style="flex:1;">
+        <h5 style="font-size:14px; font-weight:700; color:#abdad5; letter-spacing:0.5px; margin-bottom:10px; margin-top:0;">快速連結</h5>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0;">
+          <li><a href="../newhome/newhome.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">購物首頁</a></li>
+          <li><a href="../commodity/commodity.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">購物商場</a></li>
+          <li><a href="../shop/shop.html?page=seller" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">賣家專區</a></li>
+          <li><a href="../wishpool/wishpool.html#wishpool" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">許願專區</a></li>
         </ul>
       </div>
-      <div>
-        <h5 style="font-size:14px; font-weight:700; letter-spacing:0.08em; color:#fff; margin-bottom:18px;">幫助中心</h5>
-        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px;">
-          <li><a href="../questions/questions.html" style="font-size:13.5px; color:rgba(255,255,255,0.82); text-decoration:none; letter-spacing:0.04em;">常見問題</a></li>
-          <li><a href="../communication/communication.html" style="font-size:13.5px; color:rgba(255,255,255,0.82); text-decoration:none; letter-spacing:0.04em;">客服諮詢</a></li>
-          <li><a href="../policy/policy.html#privacy" style="font-size:13.5px; color:rgba(255,255,255,0.82); text-decoration:none; letter-spacing:0.04em;">隱私權政策</a></li>
-          <li><a href="#" style="font-size:13.5px; color:rgba(255,255,255,0.82); text-decoration:none; letter-spacing:0.04em;">服務條款</a></li>
+      <div style="flex:1;">
+        <h5 style="font-size:14px; font-weight:700; color:#abdad5; letter-spacing:0.5px; margin-bottom:10px; margin-top:0;">幫助中心</h5>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0;">
+          <li><a href="../questions/questions.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">常見問題</a></li>
+          <li><a href="../communication/communication.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">客服諮詢</a></li>
+          <li><a href="../policy/policy.html#privacy" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">隱私權政策</a></li>
+          <li><a href="#" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">服務條款</a></li>
         </ul>
       </div>
-      <div>
-        <h5 style="font-size:14px; font-weight:700; letter-spacing:0.08em; color:#fff; margin-bottom:18px;">聯絡我們</h5>
-        <a href="mailto:hello@treasurehub.tw" style="font-size:13.5px; color:rgba(255,255,255,0.82); text-decoration:none; letter-spacing:0.02em;">hello@treasurehub.tw</a>
-        <div style="display:flex; gap:12px; margin-top:22px;">
-          <a href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" aria-label="Instagram" target="_blank" style="width:36px; height:36px; border:1.5px solid rgba(255,255,255,0.45); border-radius:9px; display:flex; align-items:center; justify-content:center; color:#fff;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-          </a>
-          <a href="https://lin.ee/U7uZmHV" aria-label="LINE" target="_blank" style="width:36px; height:36px; border:1.5px solid rgba(255,255,255,0.45); border-radius:9px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:700; letter-spacing:0.02em;">LINE</a>
-          <a href="https://www.threads.com/@treasurehub.tw?igshid=NTc4MTIwNjQ2YQ==" aria-label="Threads" target="_blank" style="width:36px; height:36px; border:1.5px solid rgba(255,255,255,0.45); border-radius:9px; display:flex; align-items:center; justify-content:center; color:#fff;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8.5c-1-2-2.5-3-4.2-3C9 5.5 7 7.8 7 12s2 6.5 4.8 6.5c2.4 0 4.2-1.6 4.2-4 0-2.2-1.7-3.6-4-3.6-1.4 0-2.5.7-2.5 1.9 0 1 .8 1.7 1.9 1.7 1.5 0 2.4-1.2 2.4-3.1"/></svg>
-          </a>
-          <a href="https://www.dcard.tw/@treasurehub?cid=266cb62d-37e6-4d89-ae26-5b4ac1ee5d96" aria-label="Email" target="_blank" style="width:36px; height:36px; border:1.5px solid rgba(255,255,255,0.45); border-radius:9px; display:flex; align-items:center; justify-content:center; color:#fff;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-          </a>
-        </div>
+    </div>
+    <div>
+      <h5 style="font-size:14px; font-weight:700; color:#abdad5; letter-spacing:0.5px; margin-bottom:10px; margin-top:0;">聯絡我們</h5>
+      <p style="margin:0 0 4px;"><a href="mailto:help@treasurehub.tw" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">help@treasurehub.tw</a></p>
+      <div style="display:flex; gap:14px; margin-top:14px;">
+        <a href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" aria-label="Instagram" target="_blank" style="color:rgba(255,255,255,0.72); font-size:18px; transition:color 0.2s; text-decoration:none;" onmouseover="this.style.color='#abdad5';" onmouseout="this.style.color='rgba(255,255,255,0.72)';"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://lin.ee/U7uZmHV" aria-label="LINE" target="_blank" style="color:rgba(255,255,255,0.72); font-size:18px; transition:color 0.2s; text-decoration:none;" onmouseover="this.style.color='#abdad5';" onmouseout="this.style.color='rgba(255,255,255,0.72)';"><i class="fa-brands fa-line"></i></a>
+        <a href="https://www.threads.com/@treasurehub.tw?igshid=NTc4MTIwNjQ2YQ==" aria-label="Threads" target="_blank" style="color:rgba(255,255,255,0.72); font-size:18px; transition:color 0.2s; text-decoration:none;" onmouseover="this.style.color='#abdad5';" onmouseout="this.style.color='rgba(255,255,255,0.72)';"><img src="/assets/threadslogo-C8Yb0Zn-.avif" alt="Threads" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;border-radius:50%;"></a>
+        <a href="https://www.dcard.tw/@treasurehub?cid=266cb62d-37e6-4d89-ae26-5b4ac1ee5d96" aria-label="Dcard" target="_blank" style="color:rgba(255,255,255,0.72); font-size:18px; transition:color 0.2s; text-decoration:none;" onmouseover="this.style.color='#abdad5';" onmouseout="this.style.color='rgba(255,255,255,0.72)';"><img src="/assets/dcardlogo-Cegl6VLH.png" alt="Dcard" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;"></a>
       </div>
     </div>
-    <div style="padding-top:24px; border-top:1px solid rgba(255,255,255,0.18); text-align:center;">
-      <span style="font-size:12.5px; color:rgba(255,255,255,0.6); letter-spacing:0.06em;">Copyright © 2026 拾貨寶庫｜All Rights Reserved.</span>
-    </div>
+  </div>
+  <div style="border-top: 1px solid rgba(255,255,255,0.12); text-align: center; padding: 14px 0; font-size: 13px; color: rgba(255,255,255,0.45); width:80vw; margin:0 auto;">
+    <span>Copyright © 2026 拾貨寶庫｜All Rights Reserved.</span>
   </div>
 </footer>
 
