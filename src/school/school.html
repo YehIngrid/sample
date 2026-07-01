@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>校園攻略站｜文章列表</title>
+  <title>校園攻略站</title>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="manifest" href="../manifest.json">
@@ -42,6 +42,11 @@
 
 <!-- NAV -->
 <nav class="nav">
+  <!-- 手機版漢堡選單按鈕 -->
+  <button class="mobile-hamburger d-lg-none" type="button">
+    <img src="../svg/navbar.svg" alt="" style="width: 20px;">
+  </button>
+
   <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
     <img src="../svg/TREASUREHUBCHEN.svg" alt="">
   </a>
@@ -66,25 +71,53 @@
   </div>
 </nav>
 
+<!-- 手機版側面菜單 -->
+<div class="mobile-menu-backdrop"></div>
+<div class="mobile-menu-wrapper" id="navbarMenu">
+  <div class="mobile-menu">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <a href="school.html" class="on">校園攻略站</a>
+    <a href="../news/news.html">最新資訊</a>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+</div>
+
 <div class="container">
 
-  <!-- Page header -->
-  <div class="page-head">
-    <div class="left">
-      <div class="breadcrumb">
-        <a href="../newhome/newhome.html">拾貨寶庫</a>
-        <span class="sep">/</span>
-        <a href="#">攻略站首頁</a>
-        <span class="sep">/</span>
-        <span class="cur">全部文章</span>
+  <!-- Page header + Ad Carousel wrapper -->
+  <div class="header-ad-wrapper">
+    <!-- Page header -->
+    <div class="page-head">
+      <div class="left">
+        <div class="breadcrumb">
+          <a href="../newhome/newhome.html">拾貨寶庫</a>
+          <span class="sep">/</span>
+          <span class="cur">攻略站首頁</span>
+        </div>
+        <h1>校園攻略站 · 把經驗變成現金</h1>
+        <p>全台首創結合校園二手市集的「經驗變現平台」——把學長姐的真實經驗變成你的捷徑。半實名制 + 人工認證，告別 AI 內容與業配雜訊。</p>
       </div>
-      <h1>校園攻略站 · 把經驗變成現金</h1>
-      <p>全台首創結合校園二手市集的「經驗變現平台」——把學長姐的真實經驗（筆記、攻略、考古題）變成你的捷徑。半實名制 + 人工認證，告別 AI 內容與業配雜訊。</p>
+      <div class="stats">
+        <div class="stat"><div class="num">316</div><div class="lbl">文章</div></div>
+        <div class="stat"><div class="num">74</div><div class="lbl">已認證作者</div></div>
+        <div class="stat"><div class="num">5,180</div><div class="lbl">本月閱讀</div></div>
+      </div>
     </div>
-    <div class="stats">
-      <div class="stat"><div class="num">316</div><div class="lbl">文章</div></div>
-      <div class="stat"><div class="num">74</div><div class="lbl">已認證作者</div></div>
-      <div class="stat"><div class="num">5,180</div><div class="lbl">本月閱讀</div></div>
+
+    <!-- Advertisement Carousel -->
+    <div class="ad-carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="../svg/newschoolad.svg" alt="校園攻略站廣告" class="ad-image">
+        </div>
+
+      </div>
+      <div class="carousel-indicators">
+        <button class="indicator active" data-slide="0"></button>
+        <button class="indicator" data-slide="1"></button>
+      </div>
     </div>
   </div>
 
@@ -174,7 +207,7 @@
         <p>找不到想看的主題？到許願池許願，越多人按「我也想要」、熱度越高，我們就優先開站。</p>
         <div class="vote-demo">
           <span class="wish-txt">我想要『推甄頂大』的攻略</span>
-          <span class="fire">🔥 24</span>
+          <span class="fire"><img src="../svg/wantToo.svg" alt="想要" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 4px;"> 24</span>
         </div>
         <a class="more" href="../wishpool/wishpool.html#wishpool">我也想要 →</a>
       </div>
@@ -201,27 +234,11 @@
       <!-- Featured -->
       <article class="featured" id="featuredWrap"></article>
 
-      <!-- Advertisement Carousel -->
-      <div class="ad-carousel">
+      <!-- Advertisement Carousel (moved here for mobile) -->
+      <div class="ad-carousel-mobile">
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img src="../svg/newschoolad.svg" alt="校園攻略站廣告" class="ad-image">
-          </div>
-          <div class="carousel-item ad-slide-html">
-            <div class="ad-content-wrapper general-strip">
-              <div class="ad-left gs-left">
-                <div class="gs-tag">跨校適用學科專區</div>
-                <h3>不分學校都能用的基礎學門攻略</h3>
-                <p>微積分、線性代數、全民英檢、多益......獨立出跨校適用學門，受惠更多、更新更動。</p>
-              </div>
-              <div class="gs-chips">
-                <span class="tag-pill">微積分</span>
-                <span class="tag-pill">線性代數</span>
-                <span class="tag-pill">多益 TOEIC</span>
-                <span class="tag-pill">全民英檢</span>
-                <span class="tag-pill">經濟學</span>
-              </div>
-            </div>
           </div>
         </div>
         <div class="carousel-indicators">
@@ -237,12 +254,12 @@
 
       <!-- Pagination -->
       <div class="pagination" id="paginationWrap">
-        <button class="pg-btn">← 上一頁</button>
+        <button class="pg-btn">←</button>
         <button class="pg-num on">1</button>
         <button class="pg-num">2</button>
         <button class="pg-num">3</button>
         <button class="pg-num">4</button>
-        <button class="pg-btn">下一頁 →</button>
+        <button class="pg-btn">→</button>
       </div>
 
     </main>
@@ -360,35 +377,53 @@
 <!-- ── Bottom nav (mobile) ── -->
 <script>if(window !== window.parent) document.write('<style>.bottom-nav{display:none!important}</style>');</script>
 <nav class="bottom-nav" id="schoolBottomNav">
-    <a href="../shop/shop.html" class="bottom-nav-item nav-tab-home">
-        <img class="nav-icon nav-icon-active" src="../svg/Homekey.svg" alt="購物首頁">
-        <img class="nav-icon nav-icon-inactive" src="../svg/Homekeynotactive.svg" alt="購物首頁">
-        <span>購物首頁</span>
+    <a href="school.html" class="bottom-nav-item nav-tab-home active">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>攻略首頁</span>
     </a>
-    <a href="../commodity/commodity.html" class="bottom-nav-item nav-tab-market">
-        <img class="nav-icon nav-icon-active" src="../svg/commoditypage.svg" alt="購物商場">
-        <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="購物商場">
-        <span>購物商場</span>
+    <a href="school-article.html" class="bottom-nav-item nav-tab-articles">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M4 7h16M4 12h16M4 17h16"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <span>全部文章</span>
     </a>
-    <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-tab-chat">
-        <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="聊天室">
-        <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="聊天室">
-        <span class="bottom-nav-badge" id="chatNavBadge"></span>
-        <span>聊天室</span>
-    </a>
-    <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item nav-tab-cart">
-        <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="購物車">
-        <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="購物車">
-        <span>購物車</span>
+    <a href="school-composer.html" class="bottom-nav-item nav-tab-write">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span>撰寫攻略</span>
     </a>
     <a href="../person/person.html" class="bottom-nav-item nav-tab-account">
-        <img style="border-radius: 50%;" class="nav-icon nav-icon-active" src="../webP/default-avatar.webp" alt="我的帳戶">
-        <img style="border-radius: 50%;" class="nav-icon nav-icon-inactive" src="../svg/default-avatarnotactive.svg" alt="我的帳戶">
-        <span>我的帳戶</span>
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>我的檔案</span>
     </a>
 </nav>
 
 <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 <script defer src="school-new.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburger = document.querySelector('.mobile-hamburger');
+  const menuWrapper = document.getElementById('navbarMenu');
+  const backdrop = document.querySelector('.mobile-menu-backdrop');
+  const menuLinks = document.querySelectorAll('.mobile-menu a');
+
+  function toggleMenu() {
+    menuWrapper.classList.toggle('show');
+    backdrop.classList.toggle('active');
+    hamburger.classList.toggle('active');
+  }
+
+  function closeMenu() {
+    menuWrapper.classList.remove('show');
+    backdrop.classList.remove('active');
+    hamburger.classList.remove('active');
+  }
+
+  hamburger.addEventListener('click', toggleMenu);
+  backdrop.addEventListener('click', closeMenu);
+  menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+});
+</script>
 </body>
 </html>
