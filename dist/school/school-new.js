@@ -544,3 +544,89 @@ function attachSaveButtons() {
 
   startAutoplay();
 })();
+
+// ── 通知面板（校園攻略站）──
+// 比照 default.js 的做法「動態注入」到統一 navbar，三頁共用本檔即可，
+// 無需在每頁 HTML 重複貼 markup。外觀沿用 default.css 的 .notif-* 樣式。
+(function () {
+  function initSchoolNotif() {
+    const right = document.querySelector('.nav .right');
+    if (!right || document.getElementById('schoolNotifWrap')) return;
+
+    // demo 通知資料（校園攻略站情境）
+    const NOTIFS = [
+      { unread: true,  title: '王同學 回覆了你的攻略', body: '「備審改版前後對比太實用了，謝謝學姊！」', time: '3 分鐘前' },
+      { unread: true,  title: '范同學 回覆了你的留言', body: '交大版本整理中，下個月上架，追蹤就會收到通知！', time: '1 小時前' },
+      { unread: true,  title: '你關注的作者發佈了新攻略', body: '《推甄面試最常被問的 12 題與我的回答框架》', time: '3 小時前' },
+      { unread: false, title: '本週攻略成效', body: '你的攻略這週被閱讀 214 次、獲得 18 個喜歡。', time: '1 天前' },
+      { unread: false, title: '系統通知', body: '你解鎖的攻略已可永久閱讀，隨時回來複習。', time: '2 天前' },
+    ];
+
+    const avatar = '../image/default-avatar.webp';
+    const itemsHtml = NOTIFS.map(n => `
+      <div class="notif-item${n.unread ? ' notif-unread' : ''}">
+        <img src="${avatar}" class="notif-avatar" alt="通知" onerror="this.onerror=null;this.src='../webP/default-avatar.webp'">
+        <div class="notif-body">
+          <div class="notif-text"><strong>${n.title}</strong></div>
+          <div class="notif-text notif-content">${n.body}</div>
+          <div class="notif-time">${n.time}</div>
+        </div>
+      </div>`).join('');
+
+    // 鈴鐺：插在登入鈕之前
+    const bell = document.createElement('div');
+    bell.className = 'notif-bell-wrap';
+    bell.id = 'schoolNotifWrap';
+    bell.innerHTML = `
+      <button class="notif-bell-btn" id="schoolNotifBtn" type="button" aria-label="通知">
+        <i class="fa-solid fa-bell"></i>
+      </button>
+      <span class="notif-badge" id="schoolNotifBadge">0</span>`;
+    right.insertBefore(bell, right.firstChild);
+
+    // 面板 + 遮罩
+    document.body.insertAdjacentHTML('beforeend', `
+      <div class="notif-backdrop" id="schoolNotifBackdrop"></div>
+      <div class="notif-panel" id="schoolNotifPanel">
+        <div class="notif-header">
+          <span class="notif-title"><i class="ti ti-bell me-2"></i>通知</span>
+          <div class="notif-header-actions">
+            <button class="notif-read-all-btn" id="schoolNotifReadAll">全部已讀</button>
+            <button class="notif-close" id="schoolNotifClose" aria-label="關閉通知"><i class="ti ti-x"></i></button>
+          </div>
+        </div>
+        <div class="notif-list" id="schoolNotifList">${itemsHtml}</div>
+      </div>`);
+
+    const panel = document.getElementById('schoolNotifPanel');
+    const backdrop = document.getElementById('schoolNotifBackdrop');
+    const badge = document.getElementById('schoolNotifBadge');
+    const list = document.getElementById('schoolNotifList');
+
+    function updateBadge() {
+      const n = list.querySelectorAll('.notif-item.notif-unread').length;
+      if (n > 0) { badge.textContent = n; badge.classList.remove('d-none'); }
+      else { badge.classList.add('d-none'); }
+    }
+    function openPanel() { panel.classList.add('open'); backdrop.classList.add('open'); }
+    function closePanel() { panel.classList.remove('open'); backdrop.classList.remove('open'); }
+
+    document.getElementById('schoolNotifBtn').addEventListener('click', openPanel);
+    document.getElementById('schoolNotifClose').addEventListener('click', closePanel);
+    backdrop.addEventListener('click', closePanel);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel(); });
+    document.getElementById('schoolNotifReadAll').addEventListener('click', () => {
+      list.querySelectorAll('.notif-item.notif-unread').forEach(el => el.classList.remove('notif-unread'));
+      updateBadge();
+    });
+    list.addEventListener('click', (e) => {
+      const item = e.target.closest('.notif-item');
+      if (item && item.classList.contains('notif-unread')) { item.classList.remove('notif-unread'); updateBadge(); }
+    });
+
+    updateBadge();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initSchoolNotif);
+  else initSchoolNotif();
+})();

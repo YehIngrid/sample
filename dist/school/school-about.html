@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>攻略站介紹 · 校園攻略站</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="manifest" href="/assets/manifest-DMriwSiS.json">
+  <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="description" content="校園攻略站介紹 — 把學長姐的真實經驗變成你的捷徑。半實名制人工認證，告別 AI 內容與業配雜訊。"/>
+  <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
+  <style>
+    .about-wrap { width: 80vw; max-width: 80vw; margin: 0 auto; padding: 32px 40px 90px; }
+
+    /* hero */
+    .about-hero {
+      background: linear-gradient(135deg, var(--navy), var(--mid) 60%, var(--aqua));
+      border-radius: 22px; padding: 54px 44px; color: #fff; position: relative; overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .about-hero::before { content:""; position:absolute; right:-60px; bottom:-60px; width:260px; height:260px; border-radius:50%; background:rgba(255,255,255,0.08); }
+    .about-hero .eyebrow { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--cream); font-weight: 700; margin-bottom: 14px; }
+    .about-hero h1 { font-size: 40px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.3; margin-bottom: 16px; text-wrap: pretty; }
+    .about-hero p { font-size: 15.5px; line-height: 1.8; color: rgba(255,255,255,0.9); max-width: 620px; }
+    .about-hero .hero-stats { display: flex; gap: 40px; margin-top: 30px; }
+    .about-hero .hero-stats .n { font-size: 30px; font-weight: 800; }
+    .about-hero .hero-stats .l { font-size: 12px; color: rgba(255,255,255,0.8); letter-spacing: 0.06em; margin-top: 2px; }
+
+    /* section */
+    .about-sec { margin-bottom: 44px; }
+    .about-sec .sec-eyebrow { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 10px; }
+    .about-sec h2 { font-size: 28px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; margin-bottom: 14px; }
+    .about-sec .lead { font-size: 15.5px; line-height: 1.85; color: var(--body); max-width: 760px; }
+
+    /* feature cards */
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
+    .feat-card {
+      background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.22s;
+    }
+    .feat-card:hover { transform: translateY(-3px); border-color: var(--navy); box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3); }
+    .feat-card .ic { width: 48px; height: 48px; border-radius: 13px; background: var(--alice); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .feat-card .ic svg { width: 24px; height: 24px; fill: none; stroke: var(--navy); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .feat-card h3 { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-bottom: 8px; }
+    .feat-card p { font-size: 13.5px; line-height: 1.75; color: var(--muted); }
+
+    /* steps */
+    .step-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 24px; }
+    .step-card { background: var(--alice); border-radius: 16px; padding: 22px 20px; position: relative; }
+    .step-card .num { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--navy); letter-spacing: 0.1em; margin-bottom: 10px; }
+    .step-card h4 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+    .step-card p { font-size: 12.5px; line-height: 1.7; color: var(--muted); }
+
+    /* CTA */
+    .about-cta {
+      background: var(--alice); border: 1px solid var(--line); border-radius: 20px;
+      padding: 40px; text-align: center; margin-top: 12px;
+    }
+    .about-cta h2 { font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; margin-bottom: 8px; }
+    .about-cta p { font-size: 14.5px; color: var(--muted); margin-bottom: 22px; }
+    .about-cta .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .about-cta .btn-primary-cta {
+      display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 999px;
+      background: var(--navy); color: #fff; font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em;
+      text-decoration: none; transition: all 0.22s; border: 1.5px solid var(--navy);
+    }
+    .about-cta .btn-primary-cta:hover { background: var(--navy-d); }
+    .about-cta .btn-ghost-cta {
+      display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 999px;
+      background: #fff; color: var(--navy); font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em;
+      text-decoration: none; transition: all 0.22s; border: 1.5px solid var(--navy);
+    }
+    .about-cta .btn-ghost-cta:hover { background: var(--navy); color: #fff; }
+
+    @media (max-width: 991px) {
+      .about-wrap { width: 100%; max-width: 100%; padding: 20px 16px 96px; }
+      .about-hero { padding: 36px 24px; border-radius: 18px; }
+      .about-hero h1 { font-size: 27px; }
+      .about-hero .hero-stats { gap: 26px; }
+      .about-sec h2 { font-size: 22px; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .step-grid { grid-template-columns: 1fr 1fr; }
+      .about-cta { padding: 30px 20px; }
+    }
+    @media (max-width: 480px) {
+      .step-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
+  <script type="module" crossorigin src="/assets/default-DxlzImvO.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/default-CfpSA5Hz.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-DBJmnR9y.css">
+</head>
+<body>
+
+
+<nav class="nav">
+  <button class="mobile-hamburger d-lg-none" type="button">
+    <img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="" style="width: 20px;">
+  </button>
+
+  <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+    <img src="/assets/TREASUREHUBCHEN-XT8sW0do.svg" alt="">
+  </a>
+  <div class="tabs">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <a href="school.html" class="on">校園攻略站</a>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+  <div class="right">
+    <a class="btn-sm navy d-none d-lg-inline-flex" href="school-composer.html" id="openOnboarding">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
+      撰寫攻略
+    </a>
+    <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">
+      登入
+    </button>
+    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
+      <span class="avatar"></span>
+    </div>
+  </div>
+</nav>
+
+
+<div class="mobile-menu-backdrop"></div>
+<div class="mobile-menu-wrapper" id="navbarMenu">
+  <div class="mobile-menu">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <a href="school.html" class="on">校園攻略站</a>
+    <a href="../news/news.html">最新資訊</a>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+</div>
+
+<div class="about-wrap">
+
+  
+  <section class="about-hero">
+    <div class="eyebrow">About · 校園攻略站</div>
+    <h1>把學長姐的真實經驗，<br>變成你的校園捷徑</h1>
+    <p>校園攻略站是拾貨寶庫為中興大學打造的「經驗變現平台」。選課策略、推甄備審、實習面試、宿舍與美食——這些真正有用卻散落各處的經驗，在這裡被整理、認證，並讓分享者獲得應得的回報。</p>
+    <div class="hero-stats">
+      <div><div class="n">316</div><div class="l">篇攻略</div></div>
+      <div><div class="n">74</div><div class="l">位已認證作者</div></div>
+      <div><div class="n">5,180</div><div class="l">本月閱讀</div></div>
+    </div>
+  </section>
+
+  
+  <section class="about-sec">
+    <div class="sec-eyebrow">What</div>
+    <h2>不只是文章平台，是經驗的傳承</h2>
+    <p class="lead">網路上的心得文，不是被業配淹沒，就是被 AI 生成的空話稀釋。校園攻略站相信：真正值錢的是「親身走過一遍」的經驗。我們用半實名認證確保每篇攻略背後都是真實的人與真實的經歷，並讓讀者以合理的價格解鎖——分享者得到回報，讀者少走冤枉路。</p>
+  </section>
+
+  
+  <section class="about-sec">
+    <div class="sec-eyebrow">Why us</div>
+    <h2>我們和其他平台不一樣</h2>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h3>經驗變現</h3>
+        <p>把你的備審模板、面試逐字稿、選課心得上架，讀者付費解鎖，你就能把辛苦累積的經驗變成實際收入。</p>
+      </div>
+      <div class="feat-card">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>半實名認證</h3>
+        <p>後台以校園信箱完全實名審查身分、獎項與升學證明；前台保留半匿名顯示，防肉搜也防詐騙。</p>
+      </div>
+      <div class="feat-card">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/><path d="M8 11h6"/></svg></div>
+        <h3>拒絕 AI 與業配</h3>
+        <p>平台禁止販賣廣告文，內容須為原創或已取得授權。查證屬實的抄襲、AI 灌水或業配一律下架停權。</p>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="about-sec">
+    <div class="sec-eyebrow">How it works</div>
+    <h2>四步就開始</h2>
+    <div class="step-grid">
+      <div class="step-card">
+        <div class="num">01</div>
+        <h4>瀏覽攻略</h4>
+        <p>依分類、標籤或搜尋找到你要的主題，每篇都有前 20% 免費預覽。</p>
+      </div>
+      <div class="step-card">
+        <div class="num">02</div>
+        <h4>解鎖閱讀</h4>
+        <p>付費解鎖後永久閱讀，內容含讀者浮水印，防止外流。</p>
+      </div>
+      <div class="step-card">
+        <div class="num">03</div>
+        <h4>評分回饋</h4>
+        <p>閱讀後留下評分與留言，幫助其他同學判斷，也回饋給作者。</p>
+      </div>
+      <div class="step-card">
+        <div class="num">04</div>
+        <h4>換你分享</h4>
+        <p>把你的經驗寫成攻略上架，通過認證後就能開始變現。</p>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="about-sec">
+    <div class="sec-eyebrow">Wishpool</div>
+    <h2>找不到想看的主題？許願吧</h2>
+    <p class="lead">到許願池提出你想看的攻略主題，越多人按「我也想要」、熱度越高，我們就優先邀稿開站。買家許願、賣家實現——需求與供給在這裡對上。</p>
+  </section>
+
+  
+  <section class="about-cta">
+    <h2>準備好把經驗變成現金了嗎？</h2>
+    <p>現在就開始閱讀，或分享你的第一篇攻略。</p>
+    <div class="btns">
+      <a class="btn-primary-cta" href="school-article.html">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+        瀏覽全部攻略
+      </a>
+      <a class="btn-ghost-cta" href="school-composer.html">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
+        撰寫我的攻略
+      </a>
+    </div>
+  </section>
+
+</div>
+
+
+<script>if(window !== window.parent) document.write('<style>.bottom-nav{display:none!important}</style>');</script>
+<nav class="bottom-nav" id="schoolBottomNav">
+    <a href="school.html" class="bottom-nav-item nav-tab-home">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>攻略首頁</span>
+    </a>
+    <a href="school-article.html" class="bottom-nav-item nav-tab-articles">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M4 7h16M4 12h16M4 17h16"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <span>全部文章</span>
+    </a>
+    <a href="school-about.html" class="bottom-nav-item nav-tab-about active">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+        <span>攻略介紹</span>
+    </a>
+    <a href="school-composer.html" class="bottom-nav-item nav-tab-write">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span>撰寫攻略</span>
+    </a>
+    <a href="../person/person.html" class="bottom-nav-item nav-tab-account">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>我的檔案</span>
+    </a>
+</nav>
+
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script defer src="school-new.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburger = document.querySelector('.mobile-hamburger');
+  const menuWrapper = document.getElementById('navbarMenu');
+  const backdrop = document.querySelector('.mobile-menu-backdrop');
+  const menuLinks = document.querySelectorAll('.mobile-menu a');
+
+  function toggleMenu() {
+    menuWrapper.classList.toggle('show');
+    backdrop.classList.toggle('active');
+    hamburger.classList.toggle('active');
+  }
+  function closeMenu() {
+    menuWrapper.classList.remove('show');
+    backdrop.classList.remove('active');
+    hamburger.classList.remove('active');
+  }
+  if (hamburger) hamburger.addEventListener('click', toggleMenu);
+  if (backdrop) backdrop.addEventListener('click', closeMenu);
+  menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+});
+</script>
+</body>
+</html>
