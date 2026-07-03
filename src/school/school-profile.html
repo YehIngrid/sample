@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>個人檔案 · 校園攻略站</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="description" content="校園攻略站個人檔案 — 管理你的攻略、已購買與收藏、數據分析、認證頭銜與帳號設定。"/>
+  <link rel="shortcut icon" href="../treasurehubIcon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
+  <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/default-font.css">
+  <link rel="stylesheet" href="school.css">
+  <script type="module" src="../default/default.js"></script>
+  <style>
+    /* ===== profile scope ===== */
+    html { overflow-x: hidden; }
+    body { background: #f6f9fc; }
+    .pf-container, .pf-side, .pf-main { max-width: 100%; }
+    .pf-container { width: 80vw; margin: 0 auto; padding: 26px 40px 96px; display: flex; gap: 24px; align-items: flex-start; justify-content: space-between; }
+
+    /* ===== SIDEBAR ===== */
+    .pf-side { width: 291px; flex-shrink: 0; position: sticky; top: 70px; display: flex; flex-direction: column; gap: 16px; }
+    .id-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+    .id-banner { height: 64px; background: linear-gradient(120deg, var(--navy), var(--mid) 70%, var(--aqua)); position: relative; }
+    .id-banner::after { content: ""; position: absolute; right: -30px; top: -30px; width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+    .id-main { padding: 0 22px 20px; margin-top: -34px; position: relative; }
+    .id-av { width: 68px; height: 68px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 6px 20px -8px rgba(0,75,151,0.4); background: linear-gradient(135deg, var(--mid), var(--aqua)); }
+    .id-name { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-top: 12px; }
+    .id-titles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .id-titles .t { font-size: 10.5px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em; }
+    .id-sub { font-size: 11.5px; color: var(--muted); margin-top: 9px; letter-spacing: 0.02em; }
+    .id-edit { margin-top: 14px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 0; border-radius: 999px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; border: 1.5px solid var(--line); color: var(--ink); background: #fff; transition: all 0.2s; }
+    .id-edit:hover { border-color: var(--navy); color: var(--navy); }
+    .id-edit svg { width: 13px; height: 13px; }
+
+    .promo-card { background: linear-gradient(135deg, var(--navy), var(--navy-d)); border-radius: 20px; padding: 18px 20px; color: #fff; }
+    .promo-top { display: flex; align-items: center; gap: 9px; }
+    .promo-rank { font-size: 13px; font-weight: 800; background: rgba(255,255,255,0.18); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.02em; }
+    .promo-t { font-size: 13.5px; font-weight: 700; letter-spacing: 0.02em; }
+    .promo-d { font-size: 11.5px; color: rgba(255,255,255,0.75); margin-top: 10px; line-height: 1.6; }
+    .promo-link { display: inline-block; font-size: 12px; font-weight: 700; color: #fff; margin-top: 12px; letter-spacing: 0.03em; }
+    .promo-link:hover { text-decoration: underline; }
+
+    .side-nav { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 8px; }
+    .side-nav button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; color: var(--muted); letter-spacing: 0.03em; transition: all 0.16s; }
+    .side-nav button:hover { background: var(--alice); color: var(--navy); }
+    .side-nav button.on { background: var(--navy); color: #fff; }
+    .side-nav button svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .side-nav .sep { height: 1px; background: var(--line); margin: 6px 8px; }
+
+    /* ===== MAIN ===== */
+    .pf-main { flex: 1; min-width: 0; }
+    .pane { display: none; }
+    .pane.on { display: block; }
+    .pane-head { font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-bottom: 18px; }
+
+    .filters { display: flex; gap: 8px; margin-bottom: 16px; }
+    .filters .f { font-size: 12.5px; font-weight: 700; color: var(--muted); background: #fff; border: 1px solid var(--line); padding: 7px 15px; border-radius: 999px; letter-spacing: 0.03em; cursor: pointer; }
+    .filters .f.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+    /* article rows */
+    .art-row { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; display: flex; align-items: center; gap: 16px; margin-bottom: 12px; transition: all 0.2s; }
+    .art-row:hover { border-color: var(--navy); }
+    .art-row .thumb { width: 84px; height: 60px; border-radius: 10px; flex-shrink: 0; }
+    .art-row .thumb.a { background: linear-gradient(135deg, var(--navy), var(--mid)); }
+    .art-row .thumb.b { background: linear-gradient(135deg, var(--sky), var(--aqua)); }
+    .art-row .thumb.c { background: linear-gradient(135deg, var(--navy-d), var(--sky)); }
+    .art-row .thumb.d { background: linear-gradient(135deg, var(--mid), var(--aqua)); }
+    .art-row .a-mid { flex: 1; min-width: 0; }
+    .art-row .a-cat { font-size: 11px; color: var(--navy); font-weight: 700; letter-spacing: 0.06em; }
+    .art-row h4 { font-size: 15px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin: 4px 0 6px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .art-row .a-meta { font-size: 11.5px; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap; letter-spacing: 0.02em; }
+    .art-row .a-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+    .pf-badge { font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.06em; }
+    .pf-badge.pub { background: #e7f4ee; color: var(--green, #2f9e6f); }
+    .pf-badge.draft { background: #f0f4f8; color: var(--muted); }
+    .pf-badge.stale { background: #faf0e6; color: var(--warn); }
+    .art-row .a-price { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .art-row .a-price.free { color: var(--muted); font-weight: 600; font-size: 13px; }
+    .row-act { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+    .row-act:hover { color: var(--navy); }
+
+    /* certifications */
+    .cert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .cert { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start; }
+    .cert .cic { width: 42px; height: 42px; border-radius: 11px; background: var(--alice); color: var(--navy); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cert .cic svg { width: 20px; height: 20px; }
+    .cert .cbody { flex: 1; min-width: 0; }
+    .cert .cname { font-size: 14.5px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+    .cert .cdesc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+    .cert .cstatus { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; margin-top: 10px; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.04em; }
+    .cert .cstatus.ok { background: #e7f4ee; color: var(--green, #2f9e6f); }
+    .cert .cstatus.pending { background: #fff6e8; color: var(--warn); }
+    .cert .cstatus svg { width: 12px; height: 12px; }
+    .cert-add { background: var(--alice); border: 1.5px dashed var(--sky); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 24px; cursor: pointer; transition: all 0.2s; }
+    .cert-add:hover { border-color: var(--navy); }
+    .cert-add .pic { width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--navy); display: flex; align-items: center; justify-content: center; }
+    .cert-add .pic svg { width: 18px; height: 18px; }
+    .cert-add .ct { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .cert-add .cs { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    /* settings */
+    .set-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 4px 22px; }
+    .set-row { display: flex; align-items: center; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .set-row:last-child { border-bottom: none; }
+    .set-row .sic { width: 38px; height: 38px; border-radius: 10px; background: var(--alice); color: var(--navy); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .set-row .sic svg { width: 18px; height: 18px; }
+    .set-row .sbody { flex: 1; min-width: 0; }
+    .set-row .stitle { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+    .set-row .sdesc { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
+    .pill-ok { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: var(--green, #2f9e6f); background: #e7f4ee; padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; }
+    .pill-ok svg { width: 12px; height: 12px; }
+    .pill-link { font-size: 12.5px; font-weight: 600; color: var(--navy); letter-spacing: 0.04em; flex-shrink: 0; }
+    .pill-link:hover { color: var(--navy-d); }
+    .pay-tags { display: flex; gap: 6px; }
+    .pay-tags .pt { font-size: 11px; font-weight: 700; color: var(--ink); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
+    .switch { width: 42px; height: 24px; border-radius: 999px; background: var(--navy); position: relative; transition: all 0.2s; flex-shrink: 0; cursor: pointer; }
+    .switch::after { content: ""; position: absolute; top: 2px; left: 20px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .switch.off { background: var(--line); }
+    .switch.off::after { left: 2px; }
+
+    /* ===== ANALYTICS ===== */
+    .an-range { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+    .an-rd { font-size: 12.5px; color: var(--muted); letter-spacing: 0.02em; }
+    .an-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .an-m { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+    .an-m .an-lbl { font-size: 11.5px; color: var(--muted); letter-spacing: 0.08em; display: flex; align-items: center; gap: 6px; }
+    .an-m .an-lbl svg { width: 13px; height: 13px; color: var(--navy); }
+    .an-m .an-val { font-size: 24px; font-weight: 700; color: var(--ink); margin-top: 10px; letter-spacing: 0.01em; }
+    .an-m .an-val .u { font-size: 13px; color: var(--muted); font-weight: 500; margin-left: 2px; }
+    .an-m .an-trend { font-size: 11px; font-weight: 700; margin-top: 6px; }
+    .an-m .an-trend.up { color: var(--green, #2f9e6f); }
+    .an-m .an-trend.flat { color: var(--muted); }
+
+    .an-grid2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .an-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 16px; }
+    .an-ch-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 20px; }
+    .an-ch-tot { color: var(--navy); font-weight: 700; font-size: 15px; }
+    .an-bars { display: flex; align-items: flex-end; gap: 14px; height: 140px; }
+    .an-bar { flex: 1; background: var(--alice); border-radius: 6px 6px 0 0; position: relative; }
+    .an-bar.on { background: var(--navy); }
+    .an-bar span { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
+
+    .an-mix-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; }
+    .an-mix-head { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 18px; }
+    .an-mix-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .an-mix-row:last-child { margin-bottom: 0; }
+    .an-mix-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .an-mix-lbl { font-size: 12.5px; color: var(--ink); flex: 1; }
+    .an-mix-pct { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+
+    .an-table-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+    .an-table-head { font-size: 13.5px; font-weight: 700; color: var(--ink); padding: 20px 24px 4px; }
+    .an-thead, .an-trow { display: grid; grid-template-columns: 2.4fr 0.8fr 0.8fr 0.8fr 0.8fr; gap: 12px; padding: 13px 24px; align-items: center; }
+    .an-thead { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; border-bottom: 1px solid var(--line); }
+    .an-trow { border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink); }
+    .an-trow:last-child { border-bottom: none; }
+    .an-trow .tt { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .an-trow .tn { color: var(--muted); font-size: 12.5px; }
+    .an-trow .rev { font-weight: 700; color: var(--navy); }
+
+    .empty-hint { text-align: center; padding: 50px 20px; color: var(--muted); font-size: 13px; }
+
+    @media (max-width: 980px) {
+      .pf-container { padding: 0 0 96px; flex-direction: column; gap: 0; width: 100vw; }
+      .pf-side { width: 100%; position: static; gap: 0; }
+      .id-card { border-radius: 0; border-left: none; border-right: none; border-top: none; }
+      .promo-card { display: none; }
+
+      /* 側邊選單 → 手機水平分頁列 */
+      .side-nav {
+        display: flex; flex-direction: row; gap: 0; overflow-x: auto;
+        padding: 0 8px; border-radius: 0; border: none; border-bottom: 1px solid var(--line);
+        background: #f6f9fc; position: sticky; top: 52px; z-index: 20;
+        scroll-margin-top: 60px; -webkit-overflow-scrolling: touch;
+      }
+      .side-nav::-webkit-scrollbar { display: none; }
+      .side-nav .sep { display: none; }
+      .side-nav button {
+        flex-shrink: 0; width: auto; white-space: nowrap; gap: 0;
+        padding: 13px 12px; border-radius: 0; color: var(--muted);
+        border-bottom: 2px solid transparent; margin-bottom: -1px;
+      }
+      .side-nav button svg { display: none; }
+      .side-nav button:hover { background: transparent; color: var(--navy); }
+      .side-nav button.on { background: transparent; color: var(--navy); border-bottom-color: var(--navy); }
+
+      .pf-main { padding: 14px 16px 4px; }
+
+      .cert-grid { grid-template-columns: 1fr; }
+      .an-metrics { grid-template-columns: repeat(2, 1fr); }
+      .an-grid2 { grid-template-columns: 1fr; }
+      .an-thead { display: none; }
+      .an-trow { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="mobile-hamburger d-lg-none" type="button">
+    <img src="../svg/navbar.svg" alt="" style="width: 20px;">
+  </button>
+
+  <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+    <img src="../svg/TREASUREHUBCHEN.svg" alt="">
+  </a>
+  <div class="tabs">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <div class="tab-drop">
+      <a href="school.html" class="on">校園攻略站
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="drop-menu">
+        <a href="school.html">攻略首頁</a>
+        <a href="school-about.html">攻略介紹</a>
+        <a href="school-article.html">全部文章</a>
+        <a href="school-composer.html">撰寫攻略</a>
+      </div>
+    </div>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+  <div class="right">
+    <a class="btn-sm navy d-none d-lg-inline-flex" href="school-composer.html" id="openOnboarding">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
+      撰寫攻略
+    </a>
+    <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">
+      登入
+    </button>
+    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
+      <span class="avatar"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- 手機版側面菜單 -->
+<div class="mobile-menu-backdrop"></div>
+<div class="mobile-menu-wrapper" id="navbarMenu">
+  <div class="mobile-menu">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <a href="school.html" class="on">校園攻略站</a>
+    <a href="../news/news.html">最新資訊</a>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+</div>
+
+<div class="pf-container">
+
+  <!-- ===== SIDEBAR ===== -->
+  <div class="pf-side">
+    <div class="id-card">
+      <div class="id-banner"></div>
+      <div class="id-main">
+        <div class="id-av"></div>
+        <div class="id-name">創產系 大二 范同學</div>
+        <div class="id-titles">
+          <span class="t">＊台大碩士＊</span>
+          <span class="t">＊書卷獎＊</span>
+        </div>
+        <div class="id-sub">加入於 2025 / 09 · 半匿名顯示</div>
+        <button class="id-edit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4 H4 a2 2 0 0 0-2 2 v14 a2 2 0 0 0 2 2 h14 a2 2 0 0 0 2-2 v-7"/><path d="M18.5 2.5 a2.1 2.1 0 0 1 3 3 L12 15 l-4 1 1-4Z"/></svg>
+          編輯個人檔案
+        </button>
+      </div>
+    </div>
+
+    <div class="promo-card">
+      <div class="promo-top">
+        <span class="promo-rank">#14</span>
+        <span class="promo-t">種子創作者計劃</span>
+      </div>
+      <div class="promo-d">首屆攻略徵稿 · 目前累計人氣排名第 14 名</div>
+      <a class="promo-link" href="#">查看排名 →</a>
+    </div>
+
+    <div class="side-nav" id="sideNav">
+      <button class="on" data-pane="mine">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3 H6 a2 2 0 0 0-2 2 v14 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2-2 V9 Z"/><path d="M14 3 v6 h6"/></svg>
+        我的攻略
+      </button>
+      <button data-pane="bought">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6 v14 a2 2 0 0 0 2 2 h14 a2 2 0 0 0 2-2 V6 l-3-4Z"/><path d="M3 6 h18"/><path d="M16 10 a4 4 0 0 1-8 0"/></svg>
+        已購買
+      </button>
+      <button data-pane="saved">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 8.6 c0-3-2.4-5.4-5.4-5.4 -1.7 0-3.2 0.8-4.2 2 -1-1.2-2.5-2-4.2-2 -3 0-5.4 2.4-5.4 5.4 0 6.4 9.6 11.4 9.6 11.4 s9.6-5 9.6-11.4Z"/></svg>
+        收藏
+      </button>
+      <div class="sep"></div>
+      <button data-pane="analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 V10"/><path d="M12 20 V4"/><path d="M20 20 V14"/></svg>
+        數據分析
+      </button>
+      <div class="sep"></div>
+      <button data-pane="cert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg>
+        認證與頭銜
+      </button>
+      <button data-pane="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15 a1.65 1.65 0 0 0 .33 1.82 l.06.06 a2 2 0 1 1-2.83 2.83 l-.06-.06 a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51 V21 a2 2 0 0 1-4 0 v-.09 A1.65 1.65 0 0 0 9 19.4 a1.65 1.65 0 0 0-1.82.33 l-.06.06 a2 2 0 1 1-2.83-2.83 l.06-.06 a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1 H3 a2 2 0 0 1 0-4 h.09 A1.65 1.65 0 0 0 4.6 9 a1.65 1.65 0 0 0-.33-1.82 l-.06-.06 a2 2 0 1 1 2.83-2.83 l.06.06 a1.65 1.65 0 0 0 1.82.33 H9 a1.65 1.65 0 0 0 1-1.51 V3 a2 2 0 0 1 4 0 v.09 a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33 l.06-.06 a2 2 0 1 1 2.83 2.83 l-.06.06 a1.65 1.65 0 0 0-.33 1.82 V9 a1.65 1.65 0 0 0 1.51 1 H21 a2 2 0 0 1 0 4 h-.09 a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        帳號設定
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MAIN ===== -->
+  <div class="pf-main">
+
+    <!-- PANE: 我的攻略 -->
+    <div class="pane on" data-pane="mine">
+      <div class="pane-head">我的攻略</div>
+      <div class="filters">
+        <span class="f on">全部</span>
+        <span class="f">已發佈</span>
+        <span class="f">草稿</span>
+      </div>
+      <div class="art-row">
+        <div class="thumb a"></div>
+        <div class="a-mid">
+          <div class="a-cat">研究所推甄</div>
+          <h4>中興推台清交：備審修改前後對比＋面試真題還原</h4>
+          <div class="a-meta"><span>👁 2,184</span><span>❤ 96</span><span>💬 31</span><span>適用 115 學年</span></div>
+        </div>
+        <div class="a-right">
+          <span class="pf-badge pub">已發佈</span>
+          <span class="a-price">NT$ 129</span>
+          <a class="row-act" href="school-post.html?id=1">查看 →</a>
+        </div>
+      </div>
+      <div class="art-row">
+        <div class="thumb b"></div>
+        <div class="a-mid">
+          <div class="a-cat">研究計畫申請</div>
+          <h4>成功獲補助的研究計畫書撰寫架構＋如何找指導教授</h4>
+          <div class="a-meta"><span>👁 1,402</span><span>❤ 78</span><span>💬 19</span><span>適用 115 學年</span></div>
+        </div>
+        <div class="a-right">
+          <span class="pf-badge pub">已發佈</span>
+          <span class="a-price">NT$ 99</span>
+          <a class="row-act" href="school-composer.html">編輯</a>
+        </div>
+      </div>
+      <div class="art-row">
+        <div class="thumb c"></div>
+        <div class="a-mid">
+          <div class="a-cat">通識指南</div>
+          <h4>某通識「如何拿到 A+」報告範本＋分組避雷名單</h4>
+          <div class="a-meta"><span>👁 1,456</span><span>❤ 112</span><span>💬 38</span><span>免費</span></div>
+        </div>
+        <div class="a-right">
+          <span class="pf-badge stale">114 學年 · 已降價</span>
+          <span class="a-price free">免費</span>
+          <a class="row-act" href="school-composer.html">更新</a>
+        </div>
+      </div>
+      <div class="art-row">
+        <div class="thumb d"></div>
+        <div class="a-mid">
+          <div class="a-cat">研究所推甄</div>
+          <h4>（草稿）推甄面試最常被問的 12 題與回答框架</h4>
+          <div class="a-meta"><span>最後編輯 2 天前</span></div>
+        </div>
+        <div class="a-right">
+          <span class="pf-badge draft">草稿</span>
+          <a class="row-act" href="school-composer.html">繼續撰寫 →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE: 已購買 -->
+    <div class="pane" data-pane="bought">
+      <div class="pane-head">已購買</div>
+      <div class="art-row">
+        <div class="thumb b"></div>
+        <div class="a-mid">
+          <div class="a-cat">語言檢定</div>
+          <h4>多益一個月 500 → 850：刷題進度表與破題技巧</h4>
+          <div class="a-meta"><span>作者 黃同學 ✓</span><span>已解鎖 · 永久閱讀</span><span>你的評分 ★★★★★</span></div>
+        </div>
+        <div class="a-right">
+          <span class="pf-badge pub">已解鎖</span>
+          <a class="row-act" href="school-post.html?id=4">閱讀 →</a>
+        </div>
+      </div>
+      <div class="art-row">
+        <div class="thumb a"></div>
+        <div class="a-mid">
+          <div class="a-cat">實習與面試</div>
+          <h4>拿到台積電實習的英文履歷＋三輪面試心法</h4>
+          <div class="a-meta"><span>作者 王同學 ✓</span><span>已解鎖 · 永久閱讀</span><span>尚未評分</span></div>
+        </div>
+        <div class="a-right">
+          <span class="pf-badge pub">已解鎖</span>
+          <a class="row-act" href="school-post.html?id=3">閱讀 →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE: 收藏 -->
+    <div class="pane" data-pane="saved">
+      <div class="pane-head">收藏</div>
+      <div class="art-row">
+        <div class="thumb c"></div>
+        <div class="a-mid">
+          <div class="a-cat">競賽攻略</div>
+          <h4>ATCC / 梅竹黑客松 得獎企劃書範本＋跨領域組隊框架</h4>
+          <div class="a-meta"><span>作者 陳同學 ✓</span><span>收藏於 1 週前</span></div>
+        </div>
+        <div class="a-right">
+          <span class="a-price">NT$ 119</span>
+          <a class="row-act" href="school-post.html?id=7">前往購買 →</a>
+        </div>
+      </div>
+      <div class="art-row">
+        <div class="thumb d"></div>
+        <div class="a-mid">
+          <div class="a-cat">交換生申請</div>
+          <h4>交換生讀書計畫與自傳＋姊妹校性價比分析</h4>
+          <div class="a-meta"><span>作者 林同學 ✓</span><span>收藏於 2 週前</span></div>
+        </div>
+        <div class="a-right">
+          <span class="a-price">NT$ 149</span>
+          <a class="row-act" href="school-post.html?id=5">前往購買 →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE: 數據分析 -->
+    <div class="pane" data-pane="analytics">
+      <div class="an-range">
+        <div class="pane-head" style="margin-bottom:0">數據分析</div>
+        <span class="an-rd">2026/06/01 – 2026/06/30</span>
+      </div>
+
+      <div class="an-metrics">
+        <div class="an-m">
+          <div class="an-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8Z"/><circle cx="12" cy="12" r="3"/></svg>總閱讀數</div>
+          <div class="an-val">18,420</div>
+          <div class="an-trend up">↑ 7.5% 較上月</div>
+        </div>
+        <div class="an-m">
+          <div class="an-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 v20"/><path d="M17 6 a5 3.2 0 0 0-5-2 c-3 0-5 1.4-5 3.2 s2 3.2 5 3.2 5 1.4 5 3.2-2 3.2-5 3.2 a5 3.2 0 0 1-5-2"/></svg>累計收益</div>
+          <div class="an-val">NT$ 8,640</div>
+          <div class="an-trend up">↑ 17.6% 較上月</div>
+        </div>
+        <div class="an-m">
+          <div class="an-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg>平均評分</div>
+          <div class="an-val">4.8<span class="u">/5</span></div>
+          <div class="an-trend flat">共 96 則評價</div>
+        </div>
+        <div class="an-m">
+          <div class="an-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9 h18"/></svg>已發佈攻略</div>
+          <div class="an-val">12</div>
+          <div class="an-trend flat">1 篇草稿中</div>
+        </div>
+      </div>
+
+      <div class="an-grid2">
+        <div class="an-chart-card">
+          <div class="an-ch-head"><span>近 6 個月收益趨勢</span><span class="an-ch-tot">NT$ 8,640</span></div>
+          <div class="an-bars">
+            <div class="an-bar" style="height:38%"><span>1月</span></div>
+            <div class="an-bar" style="height:52%"><span>2月</span></div>
+            <div class="an-bar" style="height:44%"><span>3月</span></div>
+            <div class="an-bar" style="height:68%"><span>4月</span></div>
+            <div class="an-bar" style="height:80%"><span>5月</span></div>
+            <div class="an-bar on" style="height:100%"><span>6月</span></div>
+          </div>
+        </div>
+        <div class="an-mix-card">
+          <div class="an-mix-head">讀者來源分佈</div>
+          <div class="an-mix-row"><span class="an-mix-dot" style="background:var(--navy)"></span><span class="an-mix-lbl">攻略站首頁推薦</span><span class="an-mix-pct">46%</span></div>
+          <div class="an-mix-row"><span class="an-mix-dot" style="background:var(--mid)"></span><span class="an-mix-lbl">搜尋 / 分類瀏覽</span><span class="an-mix-pct">31%</span></div>
+          <div class="an-mix-row"><span class="an-mix-dot" style="background:var(--sky)"></span><span class="an-mix-lbl">站外分享連結</span><span class="an-mix-pct">15%</span></div>
+          <div class="an-mix-row"><span class="an-mix-dot" style="background:var(--aqua)"></span><span class="an-mix-lbl">作者主頁</span><span class="an-mix-pct">8%</span></div>
+        </div>
+      </div>
+
+      <div class="an-table-card">
+        <div class="an-table-head">熱門攻略排行</div>
+        <div class="an-thead"><span>文章</span><span>閱讀</span><span>收藏</span><span>評分</span><span>收益</span></div>
+        <div class="an-trow">
+          <span class="tt">中興推台清交：備審修改前後對比＋面試真題還原</span><span class="tn">2,184</span><span class="tn">96</span><span class="tn">4.9</span><span class="rev">NT$ 2,451</span>
+        </div>
+        <div class="an-trow">
+          <span class="tt">某通識「如何拿到 A+」報告範本＋分組避雷名單</span><span class="tn">1,456</span><span class="tn">112</span><span class="tn">4.7</span><span class="rev">免費</span>
+        </div>
+        <div class="an-trow">
+          <span class="tt">成功獲補助的研究計畫書撰寫架構＋如何找指導教授</span><span class="tn">1,402</span><span class="tn">78</span><span class="tn">4.8</span><span class="rev">NT$ 1,782</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE: 認證與頭銜 -->
+    <div class="pane" data-pane="cert">
+      <div class="pane-head">認證與頭銜</div>
+      <div class="cert-grid">
+        <div class="cert">
+          <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg></div>
+          <div class="cbody">
+            <div class="cname">＊台大碩士＊ 升學認證</div>
+            <div class="cdesc">已上傳台大研究所正取通知，經人工審查通過，顯示於文章作者頭銜。</div>
+            <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
+          </div>
+        </div>
+        <div class="cert">
+          <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg></div>
+          <div class="cbody">
+            <div class="cname">＊書卷獎＊ 獎項認證</div>
+            <div class="cdesc">已上傳系上書卷獎證明，經人工審查通過，提升文章觸及率。</div>
+            <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
+          </div>
+        </div>
+        <div class="cert">
+          <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg></div>
+          <div class="cbody">
+            <div class="cname">＊多益 935＊ 證照認證</div>
+            <div class="cdesc">成績單審查中，通常 1–3 個工作天完成。通過後將自動加上頭銜。</div>
+            <span class="cstatus pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審查中</span>
+          </div>
+        </div>
+        <div class="cert cert-add">
+          <div class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg></div>
+          <div class="ct">申請新頭銜</div>
+          <div class="cs">上傳證照、獎項或升學證明，人工審查後給予特殊頭銜。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE: 帳號設定 -->
+    <div class="pane" data-pane="settings">
+      <div class="pane-head">帳號設定</div>
+      <div class="set-card">
+        <div class="set-row">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 h16 a2 2 0 0 1 2 2 v12 a2 2 0 0 1-2 2 H4 a2 2 0 0 1-2-2 V6 a2 2 0 0 1 2-2Z"/><path d="m22 7-10 5 L2 7"/></svg></div>
+          <div class="sbody">
+            <div class="stitle">校園信箱實名認證</div>
+            <div class="sdesc">後台真實身分：范同學（fan****@nchu.edu.tw）· 僅你本人可見</div>
+          </div>
+          <span class="pill-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已驗證</span>
+        </div>
+        <div class="set-row">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10 h20"/></svg></div>
+          <div class="sbody">
+            <div class="stitle">金流與收款設定</div>
+            <div class="sdesc">已綁定收款方式，售出文章款項將撥入指定帳戶。</div>
+          </div>
+          <div class="pay-tags"><span class="pt">信用卡</span><span class="pt">LINE Pay</span></div>
+        </div>
+        <div class="set-row">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5 v6 c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10 V5Z"/></svg></div>
+          <div class="sbody">
+            <div class="stitle">隱私與安全</div>
+            <div class="sdesc">敏感字詞過濾、檢舉處置紀錄、付費內容浮水印偏好設定。</div>
+          </div>
+          <a class="pill-link" href="#">管理 →</a>
+        </div>
+        <div class="set-row">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10 h20"/></svg></div>
+          <div class="sbody">
+            <div class="stitle">通知偏好</div>
+            <div class="sdesc">留言、回覆、收藏、售出——選擇哪些要推播與 Email 提醒。</div>
+          </div>
+          <a class="pill-link" href="#">管理 →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Bottom nav (mobile) ── -->
+<script>if(window !== window.parent) document.write('<style>.bottom-nav{display:none!important}</style>');</script>
+
+<nav class="bottom-nav" id="schoolBottomNav">
+  <a href="school.html" class="bottom-nav-item nav-tab-home">
+    <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>攻略首頁</span>
+  </a>
+  <a href="school-article.html" class="bottom-nav-item nav-tab-articles">
+    <img class="nav-icon nav-icon-active" src="../svg/all-article.svg" alt="全部文章" height="24" width="24">
+    <img class="nav-icon nav-icon-inactive" src="../svg/all-article-inactive.svg" alt="點擊閱覽全部文章" height="24" width="24">
+    <span>全部文章</span>
+  </a>
+  <a href="school-about.html" class="bottom-nav-item nav-tab-about">
+    <img class="nav-icon nav-icon-active" src="../svg/campus-guide.svg" alt="攻略介紹" height="24" width="24">
+    <img class="nav-icon nav-icon-inactive" src="../svg/campus-guide-noactive.svg" alt="點擊進入攻略介紹" height="24" width="24">
+    <span>攻略介紹</span>
+  </a>
+  <a href="school-composer.html" class="bottom-nav-item nav-tab-write">
+    <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <span>撰寫攻略</span>
+  </a>
+  <a href="school-profile.html" class="bottom-nav-item nav-tab-account active">
+    <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>我的檔案</span>
+  </a>
+</nav>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script defer src="school-new.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburger = document.querySelector('.mobile-hamburger');
+  const menuWrapper = document.getElementById('navbarMenu');
+  const backdrop = document.querySelector('.mobile-menu-backdrop');
+  const menuLinks = document.querySelectorAll('.mobile-menu a');
+
+  function toggleMenu() {
+    menuWrapper.classList.toggle('show');
+    backdrop.classList.toggle('active');
+    hamburger.classList.toggle('active');
+  }
+  function closeMenu() {
+    menuWrapper.classList.remove('show');
+    backdrop.classList.remove('active');
+    hamburger.classList.remove('active');
+  }
+  if (hamburger) hamburger.addEventListener('click', toggleMenu);
+  if (backdrop) backdrop.addEventListener('click', closeMenu);
+  menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+});
+</script>
+
+<script>
+  // 側邊分頁切換
+  var panes = document.querySelectorAll('.pane');
+  document.getElementById('sideNav').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    this.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+    panes.forEach(function (p) { p.classList.toggle('on', p.dataset.pane === b.dataset.pane); });
+    // 手機：切換分頁後把分頁列捲到頂端顯示新內容
+    if (window.innerWidth <= 980) {
+      this.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  // 我的攻略篩選
+  document.querySelector('.filters').addEventListener('click', function (e) {
+    var f = e.target.closest('.f'); if (!f) return;
+    this.querySelectorAll('.f').forEach(function (x) { x.classList.remove('on'); });
+    f.classList.add('on');
+  });
+</script>
+</body>
+</html>

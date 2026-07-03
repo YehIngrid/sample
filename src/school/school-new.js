@@ -300,7 +300,7 @@ function attachSaveButtons() {
   const dropdown = document.createElement('div');
   dropdown.className = 'user-dropdown';
   dropdown.innerHTML = `
-    <a href="#" class="user-dropdown-item">我的資訊</a>
+    <a href="school-profile.html" class="user-dropdown-item">我的資訊</a>
     <a href="#" class="user-dropdown-item" id="logoutLink">登出</a>
   `;
   dropdown.style.cssText = `

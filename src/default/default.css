@@ -1895,15 +1895,15 @@ html.skip-loader #whatcontent { display: block !important; }
 .notif-bell-btn:hover { color: #abdad5; background: rgba(171,218,213,0.18); }
 .notif-badge {
   position: absolute;
-  top: -2px;
+  top: -4px;
   right: -4px;
   min-width: 18px;
   height: 18px;
   padding: 0 4px;
   border-radius: 9px;
-  background: #e53935;
-  color: #fff;
-  font-size: var(--font-size-xs);
+  background: #f3e3b5;
+  color: #8A6D2A;
+  font-size: 0.6rem;
   font-weight: 700;
   line-height: 18px;
   text-align: center;
