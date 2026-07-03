@@ -14,7 +14,7 @@
 body { background: var(--alice); }
 
 /* ============ LAYOUT ============ */
-.sp-container { max-width: 1180px; margin: 0 auto; padding: 26px 40px 80px; }
+.sp-container { width: 80vw; margin: 0 auto; padding: 26px 40px 80px; }
 .sp-breadcrumb {
   font-size: 12px; color: var(--muted);
   letter-spacing: 0.08em; margin-bottom: 20px;
@@ -411,7 +411,7 @@ body.unlocked .unlocked-only { display: block; }
 
 /* ============ RESPONSIVE：切換成手機版 ============ */
 @media (max-width: 991px) {
-  .sp-container { padding: 16px 16px 30px; }
+  .sp-container { padding: 16px 16px 30px; width: 100%; }
   .sp-layout { grid-template-columns: 1fr; }
   .side { display: none; }              /* 手機版隱藏側欄，改用底部 sticky 購買列 */
   .article-body { padding: 22px 18px 26px; }

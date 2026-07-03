@@ -31,7 +31,7 @@ input, select { font-family: inherit; }
   background: #ffffff;
   border-bottom: 1px solid var(--line);
   padding: 9px calc(10vw + 40px);
-  display: flex; align-items: center; gap: 24px;
+  display: flex; align-items: center; gap: 24px; justify-content: space-between;
   position: sticky; top: 0; z-index: 50;
 }
 .nav .logo { font-size: 18px; font-weight: 700; letter-spacing: 0.06em; color: var(--navy); line-height: 1; }
@@ -352,7 +352,7 @@ input, select { font-family: inherit; }
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 6px;
-  background: linear-gradient(90deg, #004b97 0%, #4a85c4 40%, #7eb8d8 70%, #f3e3b5 100%);
+  background: linear-gradient(90deg, #004b97 0%, #4a85c4 40%, #7eb8d8 70%);
   border-radius: 18px 18px 0 0;
   z-index: 1;
 }

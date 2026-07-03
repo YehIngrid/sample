@@ -51,7 +51,7 @@
     .swatch:hover { transform: scale(1.14); }
 
     /* ===== layout ===== */
-    .ce-wrap { max-width: 1280px; margin: 0 auto; padding: 26px 28px 96px; display: grid; grid-template-columns: 1fr 300px; gap: 26px; align-items: start; }
+    .ce-wrap { width: 80vw; margin: 0 auto; padding: 26px 28px 96px; display: grid; grid-template-columns: 1fr 300px; gap: 26px; align-items: start; }
 
     /* editor sheet */
     .ce-sheet { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 40px 52px 60px; min-height: 70vh; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
@@ -193,7 +193,7 @@
     .lock-note svg { width: 12px; height: 12px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
     @media (max-width: 1080px) {
-      .ce-wrap { grid-template-columns: 1fr; }
+      .ce-wrap { grid-template-columns: 1fr; width: 100vw;}
       .ce-side { position: static; }
       .ce-sheet { padding: 28px 24px 40px; }
     }
@@ -206,13 +206,15 @@
 
 <!-- NAV -->
 <nav class="nav">
-  <button class="mobile-hamburger d-lg-none" type="button">
-    <img src="../svg/navbar.svg" alt="" style="width: 20px;">
-  </button>
+  <div class="d-flex gap-2">
+    <button class="mobile-hamburger d-lg-none" type="button">
+      <img src="../svg/navbar.svg" alt="" style="width: 20px;">
+    </button>
 
-  <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
-    <img src="../svg/TREASUREHUBCHEN.svg" alt="">
-  </a>
+    <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+      <img src="../svg/TREASUREHUBCHEN.svg" alt="">
+    </a>
+  </div>
   <div class="tabs">
     <a href="../newhome/newhome.html">購物首頁</a>
     <a href="../commodity/commodity.html">購物商場</a>
