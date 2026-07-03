@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('emptyCreateBtn')?.addEventListener('click', openOnboarding);
   document.getElementById('goWriteBtn')?.addEventListener('click', () => {
     bsModal?.hide();
-    window.location.href = 'school-editor.html';
+    window.location.href = 'school-composer.html';
   });
 
   // Search toggle

@@ -46,6 +46,30 @@ input, select { font-family: inherit; }
 }
 .nav .tabs a:hover { color: var(--navy); }
 .nav .tabs a.on { color: var(--navy); font-weight: 700; border-bottom-color: var(--navy); }
+
+/* 校園攻略站 · 桌機下拉選單 */
+.nav .tabs .tab-drop { position: relative; display: flex; align-items: center; }
+.nav .tabs .tab-drop > a { display: inline-flex; align-items: center; gap: 5px; }
+.nav .tabs .tab-drop .caret { width: 13px; height: 13px; stroke: currentColor; transition: transform 0.2s; }
+.nav .tabs .tab-drop:hover .caret { transform: rotate(180deg); }
+.nav .tabs .tab-drop::after { content: ""; position: absolute; top: 100%; left: 0; right: 0; height: 12px; }
+.nav .tabs .drop-menu {
+  position: absolute; top: calc(100% + 10px); left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  min-width: 170px; background: #fff; border: 1px solid var(--line);
+  border-radius: 14px; box-shadow: 0 16px 36px -18px rgba(0,40,80,0.28);
+  padding: 8px; display: flex; flex-direction: column; gap: 2px;
+  opacity: 0; visibility: hidden; transition: all 0.2s ease; z-index: 60;
+}
+.nav .tabs .tab-drop:hover .drop-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+.nav .tabs .drop-menu a {
+  display: block; padding: 9px 14px; border-radius: 9px; border-bottom: none;
+  font-size: 13.5px; font-weight: 500; color: var(--ink);
+  letter-spacing: 0.03em; white-space: nowrap; transition: all 0.15s;
+}
+.nav .tabs .drop-menu a:hover { background: var(--alice); color: var(--navy); }
+.nav .tabs .drop-menu a.on { background: var(--alice); color: var(--navy); font-weight: 700; }
+
 .nav .right { display: flex; align-items: center; gap: 12px; }
 .btn-sm {
   display: inline-flex; align-items: center; gap: 6px;
@@ -114,6 +138,9 @@ input, select { font-family: inherit; }
 
 /* ============ Mobile Category Bar (hidden on desktop) ============ */
 .mobile-cat-bar { display: none; }
+
+/* 手機版置頂廣告（桌機隱藏，手機於 900px 區塊顯示） */
+.ad-carousel-mobile { display: none; }
 
 /* ============ Toolbar (search + sort) ============ */
 .toolbar {
@@ -1504,25 +1531,12 @@ input, select { font-family: inherit; }
     flex-direction: column;
   }
 
-  /* ── HEADER + AD WRAPPER (隱藏幻燈片) ── */
-  .header-ad-wrapper {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
-    width: 100%;
-    min-width: 0;
-  }
-  .header-ad-wrapper > * {
-    min-width: 0;
-    width: 100%;
-  }
-  .header-ad-wrapper .ad-carousel {
-    display: none;
-  }
+  /* ── HEADER + AD WRAPPER（手機版整塊隱藏：標題與桌機幻燈片皆不顯示） ── */
+  .header-ad-wrapper { display: none; }
 
-  /* ── 手機版幻燈片（放在本周精選下方） ── */
+  /* ── 手機版幻燈片（置頂） ── */
   .ad-carousel-mobile {
+    display: block;
     position: relative;
     margin-bottom: 16px;
     border-radius: 18px;
@@ -1593,20 +1607,8 @@ input, select { font-family: inherit; }
     background: rgba(255, 255, 255, 0.7);
   }
 
-  /* ── PAGE HEAD ── */
-  .page-head {
-    display: flex;
-    flex-direction: column;
-    padding: 18px;
-    border-radius: 14px;
-    align-items: flex-start;
-    gap: 0px;
-  }
-  .page-head .left { width: 100%; align-self: auto; }
-  .page-head .stats { width: 100%; align-self: auto; gap: 20px; border-left: none; padding-left: 0; }
-  .page-head h1 { font-size: 20px; line-height: 1.35; }
-  .page-head p { font-size: 12.5px; }
-  .page-head .stat .num { font-size: 19px; }
+  /* ── PAGE HEAD（手機版隱藏標題區） ── */
+  .page-head { display: none; }
 
   /* ── TOOLBAR ── */
   .toolbar {
@@ -1650,7 +1652,6 @@ input, select { font-family: inherit; }
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     padding: 12px 0;
-    margin-bottom: 16px;
     scrollbar-width: none;
   }
   .mobile-cat-bar::-webkit-scrollbar { display: none; }
@@ -1779,7 +1780,7 @@ input, select { font-family: inherit; }
 /* ────────────────────────────────────────────────────────────────── */
 
 @media (max-width: 480px) {
-  .container { padding: 12px 10px 50px; }
+  .container { padding: 12px 10px 0px; }
   .page-head { padding: 14px; }
   .page-head h1 { font-size: 18px; }
   .page-head .stats { display: flex; justify-content: space-around; }

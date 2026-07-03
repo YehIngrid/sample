@@ -37,7 +37,7 @@
   <script type="module" crossorigin src="/assets/default-DxlzImvO.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/default-CfpSA5Hz.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
-  <link rel="stylesheet" crossorigin href="/assets/school-DBJmnR9y.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-BNh0BboQ.css">
 </head>
 <body>
 
@@ -55,7 +55,17 @@
     <a href="../newhome/newhome.html">購物首頁</a>
     <a href="../commodity/commodity.html">購物商場</a>
     <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
-    <a href="school.html" class="on">校園攻略站</a>
+    <div class="tab-drop">
+      <a href="school.html" class="on">校園攻略站
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="drop-menu">
+        <a href="school.html" class="on">攻略首頁</a>
+        <a href="school-about.html">攻略介紹</a>
+        <a href="school-article.html">全部文章</a>
+        <a href="school-composer.html">撰寫攻略</a>
+      </div>
+    </div>
     <a href="../questions/questions.html">常見問題</a>
   </div>
   <div class="right">
@@ -86,6 +96,19 @@
 </div>
 
 <div class="container">
+
+  
+  <div class="ad-carousel-mobile">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="/assets/newschoolad-Bdu-SkTR.svg" alt="校園攻略站廣告" class="ad-image">
+      </div>
+    </div>
+    <div class="carousel-indicators">
+      <button class="indicator active" data-slide="0"></button>
+      <button class="indicator" data-slide="1"></button>
+    </div>
+  </div>
 
   
   <div class="header-ad-wrapper">
@@ -121,30 +144,6 @@
         <button class="indicator active" data-slide="0"></button>
         <button class="indicator" data-slide="1"></button>
       </div>
-    </div>
-  </div>
-
-  
-  <div class="toolbar">
-    <div class="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16 16"/></svg>
-      <input type="text" placeholder="搜尋課程、教授、科系、關鍵字..." id="schoolSearchInput" />
-      <span class="scope">全部</span>
-    </div>
-    <div class="d-flex" style="gap: 12px;">
-      <div class="select-wrap">
-        <select id="sortSelect">
-          <option>排序：最新發佈</option>
-          <option>排序：最多閱讀</option>
-          <option>排序：價格由低到高</option>
-          <option>排序：本學年適用優先</option>
-          <option>排序：作者認證等級</option>
-        </select>
-      </div>
-      <a class="btn-toolbar" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 H20"/><path d="M7 12 H17"/><path d="M10 18 H14"/></svg>
-        進階篩選
-      </a>
     </div>
   </div>
 
@@ -237,19 +236,6 @@
       
       <article class="featured" id="featuredWrap"></article>
 
-      
-      <div class="ad-carousel-mobile">
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="/assets/newschoolad-Bdu-SkTR.svg" alt="校園攻略站廣告" class="ad-image">
-          </div>
-        </div>
-        <div class="carousel-indicators">
-          <button class="indicator active" data-slide="0"></button>
-          <button class="indicator" data-slide="1"></button>
-        </div>
-      </div>
-
       <div class="sec-label">最新攻略 <span class="pill">316 篇 · 依發佈時間</span></div>
 
       
@@ -295,44 +281,6 @@
     </div>
   </div>
 </section>
-
-
-<footer style="background: linear-gradient(to right bottom, #7eb8d8, #4a85c4); color: rgba(255,255,255,0.82); padding: 48px 40px 50px; margin-top:100px;">
-  <div style="width:80vw; max-width:80vw; margin:0 auto;">
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
-      <span style="font-size:10px; letter-spacing:0.24em; color:#abdad5; font-weight:700;">LEGAL</span>
-    </div>
-    <h3 style="font-size:18px; font-weight:700; color:#fff; letter-spacing:0.04em; margin-bottom:8px;">免責聲明 · 5 大核心區塊</h3>
-    <p style="font-size:12.5px; color:rgba(255,255,255,1); line-height:1.7; margin-bottom:24px; max-width:760px;">本平台為涉及數位內容付費瀏覽、知識產權與學術誠信之交易媒介。上架即代表你已閱讀並同意下列條款，以避免學生與教授（校方）之間的法律與行政糾紛。</p>
-    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:16px;">
-      <div class="glass-card">
-        <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">01</div>
-        <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">智慧財產權與侵權</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">平台僅提供刊登與交易媒介，不做實質內容審查。內容須為原創或已取得授權，嚴禁複製教授講義 / PPT / 考題、掃描教科書、盜錄課程。查證屬實即下架停權，法律責任由上傳者承擔。</p>
-      </div>
-      <div class="glass-card">
-        <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">02</div>
-        <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">學術誠信與校規</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">所有內容僅供學術交流與個人學習參考。不得用於集體舞弊、抄襲計分作業或任何違反校規之行為。因不當使用導致校方懲戒，平台不負連帶責任。</p>
-      </div>
-      <div class="glass-card">
-        <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">03</div>
-        <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">數位商品與退費</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">屬「非以有形媒介提供之數位內容」，依消保法不適用 7 天鑑賞期，付費完成原則上不退費。品質由賣家負責，購買前請參考評價與預覽頁。</p>
-      </div>
-      <div class="glass-card">
-        <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">04</div>
-        <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">內容時效與準確性</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">課堂資訊具時效性（教授異動、評分變更、教材改版）。不保證 100% 適用當前學期，因課程變更導致之失利，平台與作者不負補償責任。</p>
-      </div>
-      <div class="glass-card">
-        <div style="font-family:monospace; font-size:11px; color:#abdad5; letter-spacing:0.1em; margin-bottom:10px;">05</div>
-        <h4 style="font-size:13.5px; font-weight:700; color:#fff; margin-bottom:8px; letter-spacing:0.03em;">個人隱私與資料調閱</h4>
-        <p style="font-size:12px; color:rgba(255,255,255,0.8); line-height:1.65;">為交易安全暫存互動與交易紀錄，絕不無故調閱。惟重大違規、檢舉侵權或配合司法調查時依需求調閱。註冊綁定之學校信箱作為身分驗證與責任追溯依據。</p>
-      </div>
-    </div>
-  </div>
-</footer>
 
 
 <footer style="background-color: #004b97; color: rgba(255,255,255,0.85);">

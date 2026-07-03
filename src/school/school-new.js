@@ -10,6 +10,17 @@ window.isTokenValid = true;
   }
 })();
 
+// ── 預覽用：預設為「已模擬登入」狀態（僅在尚未設定過時種入；登出後不覆蓋）──
+(function () {
+  try {
+    if (localStorage.getItem('th_cg_auth') === null) {
+      localStorage.setItem('th_cg_auth', '1');
+      localStorage.setItem('th_cg_avatar', '👤');
+      localStorage.setItem('th_cg_username', '王同學');
+    }
+  } catch (e) {}
+})();
+
 // ── Save / bookmark button on every article card ──
 var bmOutline = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H18 A1 1 0 0 1 19 4 V21 L12 16 L5 21 V4 A1 1 0 0 1 6 3 Z"/></svg>';
 var bmFilled = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H18 A1 1 0 0 1 19 4 V21 L12 16 L5 21 V4 A1 1 0 0 1 6 3 Z"/></svg>';
@@ -48,30 +59,6 @@ function attachSaveButtons() {
     stats.appendChild(btn);
   });
 }
-
-// ── Navbar login / logout toggle ──
-(function () {
-  var loginBtn = document.getElementById('loginBtn');
-  var userChip = document.getElementById('userChip');
-  if (loginBtn && userChip) {
-    var AUTH_KEY = 'th_cg_auth';
-    function applyAuth(loggedIn) {
-      loginBtn.style.display = loggedIn ? 'none' : '';
-      userChip.style.display = loggedIn ? '' : 'none';
-    }
-    var isAuthed = false;
-    try { isAuthed = localStorage.getItem(AUTH_KEY) === '1'; } catch (e) {}
-    applyAuth(isAuthed);
-    loginBtn.addEventListener('click', function () {
-      applyAuth(true);
-      try { localStorage.setItem(AUTH_KEY, '1'); } catch (e) {}
-    });
-    userChip.addEventListener('click', function () {
-      applyAuth(false);
-      try { localStorage.setItem(AUTH_KEY, '0'); } catch (e) {}
-    });
-  }
-})();
 
 // ── Admin button for 校園攻略站 ──
 (function () {
