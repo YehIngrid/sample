@@ -153,6 +153,18 @@ async function showPage(hash) {
     }
   }
   if(hash === '#makewish') {
+    // 由商品頁「搜尋無結果 → 去許願」帶入的關鍵字，預填商品名稱
+    const prefillWish = new URLSearchParams(location.search).get('wish');
+    if (prefillWish) {
+      const nameEl = document.getElementById('wishName');
+      if (nameEl && !nameEl.value) {
+        const v = prefillWish.slice(0, 60);
+        nameEl.value = v;
+        nameEl.dispatchEvent(new Event('input')); // 觸發驗證等既有監聽
+        const cnt = document.getElementById('wishNameCount');
+        if (cnt) cnt.textContent = `${v.length} / 60 字`; // 計數器綁在 DOMContentLoaded，初次載入時手動同步
+      }
+    }
     isLoggedIn = await checkLogin();
     const mwHint = document.getElementById('mwLoginHint');
     if (mwHint) mwHint.style.display = isLoggedIn ? 'none' : '';

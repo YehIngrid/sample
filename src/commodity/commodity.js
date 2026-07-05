@@ -209,8 +209,10 @@ async function loadProducts() {
     renderPagination(totalCount);
 
     if (items.length === 0 && keyword) {
+      showWishCta(keyword);
       showYouMightLike();
     } else {
+      document.getElementById('wish-cta')?.classList.add('d-none');
       document.getElementById('you-might-like')?.classList.add('d-none');
     }
 
@@ -251,9 +253,10 @@ function renderProductsBootstrap(items) {
         return;
     }
 
-    // 有商品 → 隱藏無商品提示＆你可能也喜歡
+    // 有商品 → 隱藏無商品提示＆你可能也喜歡＆許願 CTA
     noProducts.style.display = 'none';
     document.getElementById('you-might-like')?.classList.add('d-none');
+    document.getElementById('wish-cta')?.classList.add('d-none');
 
   const categoryMap = {
     education:   '課業學習',
@@ -511,6 +514,22 @@ if (layoutGridBtn && layoutListBtn) {
     layoutListBtn.classList.add('active');
     layoutGridBtn.classList.remove('active');
   });
+}
+
+// ── 搜尋無結果：主動許願 CTA ──
+function showWishCta(keyword) {
+  const cta = document.getElementById('wish-cta');
+  if (!cta) return;
+  const kwEl = document.getElementById('wish-cta-keyword');
+  if (kwEl) kwEl.textContent = keyword;
+  const btn = document.getElementById('wish-cta-btn');
+  if (btn) {
+    // 用 onclick 覆寫，避免多次搜尋累積重複監聽
+    btn.onclick = () => {
+      location.href = `../wishpool/wishpool.html?wish=${encodeURIComponent(keyword)}#makewish`;
+    };
+  }
+  cta.classList.remove('d-none');
 }
 
 // ── 搜尋無結果：你可能也喜歡 ──
