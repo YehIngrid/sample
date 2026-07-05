@@ -51,7 +51,7 @@
     .swatch:hover { transform: scale(1.14); }
 
     /* ===== layout ===== */
-    .ce-wrap { width: 80vw; margin: 0 auto; padding: 26px 28px 96px; display: grid; grid-template-columns: 1fr 300px; gap: 26px; align-items: start; }
+    .ce-wrap { width: 80vw; margin: 0 auto; padding: 16px 16px 96px; display: grid; grid-template-columns: 1fr 300px; gap: 26px; align-items: start; }
 
     /* editor sheet */
     .ce-sheet { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 40px 52px 60px; min-height: 70vh; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
@@ -235,7 +235,7 @@
         <a href="school.html">攻略首頁</a>
         <a href="school-about.html">攻略介紹</a>
         <a href="school-article.html">全部文章</a>
-        <a href="school-composer.html" class="on">撰寫攻略</a>
+        <a href="school-studio.html" class="on">撰寫攻略</a>
       </div>
     </div>
     <a href="../questions/questions.html">常見問題</a>
@@ -447,7 +447,7 @@
       <img class="nav-icon nav-icon-inactive" src="../svg/campus-guide-noactive.svg" alt="點擊進入攻略介紹" height="24" width="24">
         <span>攻略介紹</span>
     </a>
-    <a href="school-composer.html" class="bottom-nav-item nav-tab-write active">
+    <a href="school-studio.html" class="bottom-nav-item nav-tab-write active">
         <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         <span>撰寫攻略</span>
@@ -658,7 +658,8 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem(KEY, JSON.stringify({
           title: document.getElementById('titleInput').value,
           subtitle: document.getElementById('subtitleInput').value,
-          html: editor.innerHTML
+          html: editor.innerHTML,
+          savedAt: Date.now()
         }));
       } catch (e) {}
       s.classList.remove('saving');
@@ -670,8 +671,14 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('titleInput').addEventListener('input', scheduleSave);
   document.getElementById('subtitleInput').addEventListener('input', scheduleSave);
 
-  // restore draft
+  // restore draft（?new=1 由「創作起點」帶入 → 清掉舊草稿，從空白範本開始）
   (function () {
+    var startFresh = /[?&]new=1\b/.test(location.search);
+    if (startFresh) {
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      if (history.replaceState) history.replaceState(null, '', location.pathname);
+      return;
+    }
     try {
       var raw = localStorage.getItem(KEY);
       if (raw) {
