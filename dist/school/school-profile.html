@@ -102,6 +102,21 @@
     .cert-add .ct { font-size: 13px; font-weight: 700; color: var(--navy); }
     .cert-add .cs { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
+    /* 前台顯示名稱（半實名）設定 */
+    .nr-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 16px; }
+    .nr-card .nr-h { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+    .nr-card .nr-d { font-size: 12px; color: var(--muted); margin-top: 5px; line-height: 1.65; }
+    .nr-tiles { display: flex; gap: 8px; margin: 16px 0 14px; }
+    .nr-tile { width: 48px; height: 56px; border: 1.5px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; background: var(--alice); color: var(--muted); cursor: pointer; transition: all 0.15s; }
+    .nr-tile .nr-ch { font-size: 22px; font-weight: 700; line-height: 1; }
+    .nr-tile .nr-mark { font-size: 9px; font-weight: 700; letter-spacing: 0.04em; }
+    .nr-tile.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .nr-preview { display: flex; align-items: center; font-size: 12.5px; color: var(--muted); }
+    .nr-preview .nr-name { font-size: 17px; font-weight: 700; letter-spacing: 0.08em; color: var(--ink); }
+    .nr-preview .nr-name .hid { color: var(--muted); font-weight: 600; }
+    .nr-note { font-size: 11px; color: var(--muted); margin-top: 10px; }
+    .nr-note.warn { color: var(--warn); font-weight: 700; }
+
     /* settings */
     .set-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 4px 22px; }
     .set-row { display: flex; align-items: center; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line); }
@@ -182,7 +197,7 @@
       .side-nav button {
         flex-shrink: 0; width: auto; white-space: nowrap; gap: 0;
         padding: 13px 12px; border-radius: 0; color: var(--muted);
-        border-bottom: 2px solid transparent; margin-bottom: -1px;
+        border-bottom: 2px solid transparent; overflow-y: hidden;
       }
       .side-nav button svg { display: none; }
       .side-nav button:hover { background: transparent; color: var(--navy); }
@@ -201,7 +216,7 @@
   <script type="module" crossorigin src="/assets/default-DxlzImvO.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/default-CI3V8wLq.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
-  <link rel="stylesheet" crossorigin href="/assets/school-C1piaLMj.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-3JNW_RVQ.css">
 </head>
 <body>
 
@@ -544,12 +559,21 @@
     
     <div class="pane" data-pane="settings">
       <div class="pane-head">帳號設定</div>
+
+      <div class="nr-card">
+        <div class="nr-h">前台顯示名稱（半實名）</div>
+        <div class="nr-d">選一個要公開的字（不一定是姓）。前台只顯示「<b>該字 ＋ 同學</b>」，<b>不會透露它在姓名中的位置</b>——別人無法得知你的姓名順序。系級與年級固定顯示。</div>
+        <div class="nr-tiles" id="nrTiles"></div>
+        <div class="nr-preview">前台顯示為&nbsp;<span class="nr-name" id="nrPreview"></span></div>
+        <div class="nr-note" id="nrNote">後台真實姓名僅本人與審查可見。</div>
+      </div>
+
       <div class="set-card">
         <div class="set-row">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 h16 a2 2 0 0 1 2 2 v12 a2 2 0 0 1-2 2 H4 a2 2 0 0 1-2-2 V6 a2 2 0 0 1 2-2Z"/><path d="m22 7-10 5 L2 7"/></svg></div>
           <div class="sbody">
             <div class="stitle">校園信箱實名認證</div>
-            <div class="sdesc">後台真實身分：范同學（fan****@nchu.edu.tw）· 僅你本人可見</div>
+            <div class="sdesc">後台真實身分：葉潔頤（yeh****@nchu.edu.tw）· 僅你本人可見</div>
           </div>
           <span class="pill-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已驗證</span>
         </div>
@@ -660,6 +684,45 @@ document.addEventListener('DOMContentLoaded', function() {
     this.querySelectorAll('.f').forEach(function (x) { x.classList.remove('on'); });
     f.classList.add('on');
   });
+
+  /* ---------- 前台顯示名稱（半實名）：只公開一個字＋同學，不透露位置 ---------- */
+  (function () {
+    var FULL = '葉潔頤';        // 後台真實姓名（示範，正式由後端提供）
+    var DEPT = '創產系 大二';    // 系級／年級（固定顯示）
+    var SUFFIX = '同學';
+    var KEY = 'th_cg_namePublicIdx';
+    var tiles = document.getElementById('nrTiles');
+    var preview = document.getElementById('nrPreview');
+    var idName = document.querySelector('.id-name');
+    if (!tiles) return;
+
+    var chars = FULL.split('');
+    var idx = parseInt(localStorage.getItem(KEY), 10);
+    if (isNaN(idx) || idx < 0 || idx >= chars.length) idx = 0; // 預設公開第一個字
+
+    // 共用：給定全名＋公開字索引 → 前台顯示（單字＋同學，不含位置資訊）
+    function publicName() { return chars[idx] + SUFFIX; }
+
+    function render() {
+      tiles.innerHTML = '';
+      chars.forEach(function (ch, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'nr-tile' + (i === idx ? ' on' : '');
+        b.innerHTML = '<span class="nr-ch">' + ch + '</span>' +
+          '<span class="nr-mark">' + (i === idx ? '公開' : '隱藏') + '</span>';
+        b.addEventListener('click', function () {
+          idx = i;
+          try { localStorage.setItem(KEY, String(idx)); } catch (e) {}
+          render();
+        });
+        tiles.appendChild(b);
+      });
+      preview.textContent = publicName();
+      if (idName) idName.textContent = DEPT + ' ' + publicName();
+    }
+    render();
+  })();
 </script>
 </body>
 </html>

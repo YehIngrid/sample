@@ -605,16 +605,4 @@ document.getElementById('resendVerifyBtn').addEventListener('click', async funct
   }
 });
 
-// ── 密碼顯示 300ms 後隱藏 ────────────────────────────────
-let timer;
-document.querySelectorAll(".pwd").forEach((pwd) => {
-  pwd.addEventListener("input", function() {
-    pwd.type = "text";
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      pwd.type = "password";
-    }, 300);
-  });
-});
-
 window.startCountdown = startCountdown;

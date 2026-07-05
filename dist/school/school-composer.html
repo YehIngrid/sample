@@ -88,6 +88,14 @@
     .editor sup.fn { color: var(--navy); font-weight: 800; cursor: pointer; padding: 0 1px; font-size: 0.72em; vertical-align: super; }
     .editor sup.fn:hover { text-decoration: underline; }
 
+    /* 表格增/刪 列與欄 浮動工具列 */
+    .tbl-tools { position: absolute; z-index: 70; display: none; gap: 4px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 5px; box-shadow: 0 8px 24px -12px rgba(0,40,80,0.3); }
+    .tbl-tools.on { display: inline-flex; }
+    .tbl-tools button { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--ink); padding: 6px 10px; border-radius: 7px; transition: all 0.15s; white-space: nowrap; }
+    .tbl-tools button:hover { background: var(--alice); color: var(--navy); }
+    .tbl-tools button.danger:hover { background: #faf0e6; color: var(--warn); }
+    .tbl-tools .sep { width: 1px; background: var(--line); margin: 2px 2px; }
+
     /* references list */
     .refs { margin-top: 40px; padding-top: 22px; border-top: 2px solid var(--line); }
     .refs h4 { font-size: 15px; font-weight: 800; color: var(--ink); letter-spacing: 0.06em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
@@ -201,7 +209,7 @@
   <script type="module" crossorigin src="/assets/default-DxlzImvO.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/default-CI3V8wLq.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
-  <link rel="stylesheet" crossorigin href="/assets/school-C1piaLMj.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-3JNW_RVQ.css">
 </head>
 <body>
 
@@ -389,8 +397,8 @@
       </div>
       <div class="fld" id="pvWrap">
         <div class="field-label">免費預覽比例</div>
-        <div class="range-row"><input type="range" id="pvRange" min="5" max="50" step="5" value="20" /><span class="range-val" id="pvVal">20%</span></div>
-        <div class="subdesc">仿電子書試讀，建議 15–25%。</div>
+        <div class="range-row"><input type="range" id="pvRange" min="20" max="50" step="5" value="20" /><span class="range-val" id="pvVal">20%</span></div>
+        <div class="subdesc">仿電子書試讀，最低 20%，建議 20–30%。</div>
       </div>
       <div class="fld">
         <div class="toggle-row"><div class="tl">業配文章<small>收受廠商費用的合作內容</small></div><div class="switch2" id="bizSw" role="switch" aria-checked="false"></div></div>
@@ -716,6 +724,109 @@ document.addEventListener('DOMContentLoaded', function() {
   function refreshPub() { var all = Array.prototype.every.call(checks, function (c) { return c.classList.contains('on'); }); if (pubBtn) pubBtn.disabled = !all; if (pubTop) pubTop.disabled = !all; if (lockNote) lockNote.style.display = all ? 'none' : 'flex'; }
   checks.forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); refreshPub(); }); });
   refreshPub();
+
+  /* ---------- 表格：增/刪 列與欄 ---------- */
+  (function () {
+    var tools = document.createElement('div');
+    tools.className = 'tbl-tools';
+    tools.innerHTML =
+      '<button type="button" data-act="addrow" title="在下方新增一列">＋ 列</button>' +
+      '<button type="button" data-act="addcol" title="在右方新增一欄">＋ 欄</button>' +
+      '<span class="sep"></span>' +
+      '<button type="button" class="danger" data-act="delrow" title="刪除目前列">刪列</button>' +
+      '<button type="button" class="danger" data-act="delcol" title="刪除目前欄">刪欄</button>';
+    document.body.appendChild(tools);
+
+    var lastInfo = null;
+
+    function getCellInfo() {
+      var sel = window.getSelection();
+      if (!sel || !sel.rangeCount) return null;
+      var node = sel.getRangeAt(0).startContainer;
+      var el = node.nodeType === 3 ? node.parentElement : node;
+      var cell = el && el.closest ? el.closest('td, th') : null;
+      if (!cell) return null;
+      var table = cell.closest('table.tbl');
+      if (!table || !editor.contains(table)) return null;
+      return { table: table, cell: cell };
+    }
+    function positionTools(table) {
+      var r = table.getBoundingClientRect();
+      tools.style.top = (window.scrollY + r.top - tools.offsetHeight - 8) + 'px';
+      tools.style.left = (window.scrollX + r.left) + 'px';
+    }
+    function showTools(info) { lastInfo = info; tools.classList.add('on'); positionTools(info.table); }
+    function hideTools() { tools.classList.remove('on'); lastInfo = null; }
+    function refresh() { var info = getCellInfo(); if (info) showTools(info); else hideTools(); }
+
+    document.addEventListener('selectionchange', function () { if (document.activeElement === editor) refresh(); });
+    editor.addEventListener('click', refresh);
+    editor.addEventListener('keyup', refresh);
+    window.addEventListener('scroll', function () { if (tools.classList.contains('on') && lastInfo) positionTools(lastInfo.table); }, true);
+    window.addEventListener('resize', function () { if (tools.classList.contains('on') && lastInfo) positionTools(lastInfo.table); });
+    document.addEventListener('mousedown', function (e) {
+      if (tools.contains(e.target) || editor.contains(e.target)) return;
+      hideTools();
+    });
+
+    function addColumn(info) {
+      var idx = info.cell.cellIndex, rows = info.table.rows;
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i], isHead = row.parentNode.tagName === 'THEAD';
+        var c = document.createElement(isHead ? 'th' : 'td');
+        c.innerHTML = isHead ? '欄位' : '　';
+        row.insertBefore(c, row.cells[idx + 1] || null);
+      }
+    }
+    function addRow(info) {
+      var table = info.table, tbody = table.tBodies[0] || table;
+      var cols = table.rows[0] ? table.rows[0].cells.length : info.cell.parentNode.cells.length;
+      var tr = document.createElement('tr');
+      for (var i = 0; i < cols; i++) { var td = document.createElement('td'); td.innerHTML = '　'; tr.appendChild(td); }
+      var curRow = info.cell.parentNode;
+      if (curRow.parentNode === tbody) tbody.insertBefore(tr, curRow.nextSibling);
+      else tbody.insertBefore(tr, tbody.firstChild);
+    }
+    function delColumn(info) {
+      if (info.table.rows[0].cells.length <= 1) return;
+      var idx = info.cell.cellIndex, rows = info.table.rows;
+      for (var i = 0; i < rows.length; i++) { if (rows[i].cells[idx]) rows[i].deleteCell(idx); }
+      hideTools();
+    }
+    function delRow(info) {
+      var tbody = info.table.tBodies[0], curRow = info.cell.parentNode;
+      if (curRow.parentNode.tagName === 'THEAD') return; // 不刪表頭
+      if (!tbody || tbody.rows.length <= 1) return;        // 至少保留一列
+      curRow.parentNode.removeChild(curRow);
+      hideTools();
+    }
+
+    tools.querySelectorAll('button').forEach(function (btn) {
+      btn.addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        var info = lastInfo;
+        if (!info || !editor.contains(info.table)) { hideTools(); return; }
+        var act = btn.dataset.act;
+        if (act === 'addrow') addRow(info);
+        else if (act === 'addcol') addColumn(info);
+        else if (act === 'delrow') delRow(info);
+        else if (act === 'delcol') delColumn(info);
+        scheduleUpdate();
+        if (editor.contains(info.table)) positionTools(info.table);
+      });
+    });
+  })();
+
+  /* ---------- 前台顯示身分：套用個人檔案的半實名（單字＋同學） ---------- */
+  (function () {
+    var FULL = '葉潔頤', DEPT = '創產系 大二', SUFFIX = '同學', KEY = 'th_cg_namePublicIdx';
+    var el = document.querySelector('.ident .iname');
+    if (!el) return;
+    var chars = FULL.split('');
+    var idx = parseInt(localStorage.getItem(KEY), 10);
+    if (isNaN(idx) || idx < 0 || idx >= chars.length) idx = 0;
+    el.textContent = DEPT + ' ' + chars[idx] + SUFFIX;
+  })();
 
   update();
 </script>
