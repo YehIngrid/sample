@@ -62,7 +62,7 @@ body { background: var(--alice); }
   letter-spacing: 0.14em;
 }
 
-.article-body { padding: 32px 40px 40px; }
+.post-body { padding: 32px 40px 40px; }
 
 .post-head h1 {
   font-size: 30px; font-weight: 700; color: var(--ink);
@@ -133,43 +133,7 @@ body { background: var(--alice); }
 .preview-flag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--warn); }
 
 /* prose */
-.prose { color: #28415e; font-size: 16px; line-height: 1.95; letter-spacing: 0.01em; }
-.prose h2 {
-  font-size: 21px; font-weight: 700; color: var(--ink);
-  letter-spacing: 0.02em; margin: 32px 0 14px;
-  padding-left: 14px; border-left: 4px solid var(--navy);
-}
-.prose h3 { font-size: 18px; font-weight: 800; color: var(--navy); margin: 24px 0 10px; }
-.prose h4 { font-size: 15px; font-weight: 800; color: var(--ink); margin: 18px 0 8px; letter-spacing: 0.02em; }
-.prose p { margin-bottom: 18px; text-wrap: pretty; }
-.prose strong { color: var(--ink); font-weight: 700; }
-.prose .callout {
-  background: var(--alice);
-  border-radius: 12px;
-  padding: 16px 20px;
-  font-size: 14.5px;
-  color: #28415e;
-  margin: 20px 0;
-  border-left: 3px solid var(--navy);
-}
-.prose ol.steps { counter-reset: s; margin: 8px 0 20px; list-style: none; }
-.prose ol.steps li {
-  counter-increment: s;
-  position: relative;
-  padding-left: 40px;
-  margin-bottom: 14px;
-  font-size: 15px;
-}
-.prose ol.steps li::before {
-  content: counter(s);
-  position: absolute; left: 0; top: 1px;
-  width: 26px; height: 26px; border-radius: 50%;
-  background: var(--navy); color: #fff;
-  font-size: 13px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-}
-.prose sup.ref { color: var(--navy); font-weight: 800; font-size: 0.72em; vertical-align: super; cursor: pointer; padding: 0 1px; }
-.prose sup.ref:hover { text-decoration: underline; }
+/* 文章本文排版已統一至 article-body.css（.article-body），全站單一來源 */
 
 .art-refs { margin-top: 34px; padding-top: 20px; border-top: 2px solid var(--line); }
 .art-refs h4 { font-size: 15px; font-weight: 800; color: var(--ink); letter-spacing: 0.05em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
@@ -414,13 +378,9 @@ body.unlocked .unlocked-only { display: block; }
   .sp-container { padding: 16px 16px 30px; width: 100%; }
   .sp-layout { grid-template-columns: 1fr; }
   .side { display: none; }              /* 手機版隱藏側欄，改用底部 sticky 購買列 */
-  .article-body { padding: 22px 18px 26px; }
+  .post-body { padding: 22px 18px 26px; }
   .sp-hero { height: 168px; }
   .post-head h1 { font-size: 22px; }
-  .prose { font-size: 15.5px; line-height: 1.9; }
-  .prose h2 { font-size: 18px; }
-  .prose h3 { font-size: 16px; }
-  .prose h4 { font-size: 14px; }
   .panel { padding: 20px 18px; border-radius: 16px; }
   .rating-summary { gap: 20px; padding: 16px; }
   .rating-summary .big .score { font-size: 36px; }

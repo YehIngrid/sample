@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="../default/default.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
+  <link rel="stylesheet" href="article-body.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet" />
   <script type="module" src="../default/default.js"></script>
   <style>
@@ -44,7 +45,9 @@
     .save-status.saving .d { background: var(--cream); }
 
     /* ===== formatting toolbar ===== */
-    .ce-toolbar { position: sticky; top: var(--navh, 46px); z-index: 45; background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: 8px 28px; display: flex; justify-content: center;  align-items: center; gap: 6px; flex-wrap: wrap; width: 100%; }
+    .ce-toolbar { position: sticky; top: var(--navh, 46px); z-index: 45; background: rgba(255,255,255,0.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: 8px 28px; display: flex; justify-content: center;  align-items: center; gap: 6px; width: 100%; }
+    /* 中間可捲動容器：桌機維持置中換行 */
+    .ce-toolbar-scroll { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; width: 100%; min-width: 0; }
     .ce-toolbar .grp { display: flex; align-items: center; gap: 3px; }
     .ce-toolbar .ce-sep { width: 1px; height: 22px; background: var(--line); margin: 0 6px; }
     .tb { min-width: 32px; height: 32px; padding: 0 8px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-size: 13px; font-weight: 700; color: var(--ink); transition: all 0.15s; }
@@ -53,10 +56,23 @@
     .tb svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .tb.i { font-style: italic; font-family: Georgia, serif; }
     .tb.u { text-decoration: underline; }
+    /* 手機工具列兩端固定的捲動箭頭（桌機隱藏） */
+    .tb-scroll { display: none; }
     .tsel { height: 32px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); font-size: 13px; font-weight: 600; padding: 0 26px 0 10px; letter-spacing: 0.02em; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
     .swatch-wrap { display: flex; align-items: center; gap: 4px; padding: 0 4px; }
     .swatch { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.12s; }
     .swatch:hover { transform: scale(1.14); }
+    .swatch-custom { position: relative; overflow: hidden; background: conic-gradient(from 90deg, #ff5b5b, #ffd35b, #5bff9d, #5bd7ff, #8f5bff, #ff5bd0, #ff5b5b); display: inline-block; }
+    .swatch-custom input { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); opacity: 0; cursor: pointer; padding: 0; border: none; }
+
+    /* 全文排版群組（整篇套用，與選取式工具用底色＋標籤區隔）*/
+    .doc-grp { background: var(--alice); border: 1px solid #dbe7f3; border-radius: 10px; padding: 3px 6px; }
+    .doc-tag { font-size: 10px; font-weight: 800; letter-spacing: .1em; color: var(--navy); background: #fff; border: 1px solid #dbe7f3; border-radius: 6px; padding: 3px 7px; }
+    .doc-step { min-width: 30px; height: 30px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--ink); background: #fff; border: 1px solid var(--line); font-size: 14px; transition: all .15s; }
+    .doc-step:hover { border-color: var(--navy); color: var(--navy); }
+    .doc-step:disabled { opacity: .4; cursor: not-allowed; }
+    .doc-step .pm { font-size: 11px; margin-left: 1px; }
+    .doc-size-val { font-size: 11.5px; font-weight: 800; color: var(--navy); min-width: 30px; text-align: center; letter-spacing: .04em; }
 
     /* ===== layout ===== */
     .ce-wrap { width: 80vw; margin: 0 auto; padding: 16px 16px 96px; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 26px; align-items: start; }
@@ -76,57 +92,18 @@
     .subtitle-input { width: 100%; border: none; outline: none; font-size: 15px; color: var(--muted); margin-bottom: 22px; font-family: inherit; background: transparent; }
     .subtitle-input::placeholder { color: #c8d5e2; }
 
-    /* editable prose */
-    .editor { outline: none; color: #28415e; font-size: 16px; line-height: 1.95; letter-spacing: 0.01em; min-height: 300px; max-width: 100%; overflow-wrap: anywhere; word-break: break-word; }
-    /* 內文所有元素都不得超出稿紙寬度 */
-    .editor * { max-width: 100%; }
-    .editor img { height: auto; }
-    .editor pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+    /* editor chrome（文章排版樣式已抽到 article-body.css，撰寫與閱讀共用）*/
+    .editor { position: relative; outline: none; min-height: 300px; }
     .editor:focus { outline: none; }
-    .editor > *:first-child { margin-top: 0; }
-    .editor h2 { font-size: 23px; font-weight: 800; color: var(--ink); letter-spacing: 0.02em; margin: 34px 0 14px; padding-left: 14px; border-left: 4px solid var(--navy); scroll-margin-top: 110px; }
-    .editor h3 { font-size: 18.5px; font-weight: 800; color: var(--navy); margin: 24px 0 10px; scroll-margin-top: 110px; }
-    .editor h4 { font-size: 15.5px; font-weight: 800; color: var(--ink); margin: 18px 0 8px; letter-spacing: 0.02em; }
-    .editor p { margin-bottom: 16px; }
-    .editor strong { color: var(--ink); font-weight: 800; }
-    .editor blockquote.lead { background: var(--alice); border-left: 4px solid var(--navy); border-radius: 0 12px 12px 0; padding: 18px 22px; margin: 20px 0; font-size: 16.5px; color: var(--ink); font-weight: 600; }
-    .editor ul, .editor ol { margin: 8px 0 18px 26px; }
-    .editor ul { list-style: disc; }
-    .editor ol { list-style: decimal; }
-    .editor li { display: list-item; }
-    .editor li { margin-bottom: 8px; }
-    .editor hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
-    .editor details.fold { background: #fbfcfe; border: 1px solid var(--line); border-radius: 12px; padding: 4px 18px; margin: 20px 0; }
-    .editor details.fold > summary { cursor: pointer; font-weight: 800; color: var(--ink); padding: 12px 0; font-size: 15px; list-style: none; display: flex; align-items: center; gap: 8px; }
-    .editor details.fold > summary::before { content: "▸"; color: var(--navy); transition: transform 0.2s; }
-    .editor details.fold[open] > summary::before { transform: rotate(90deg); }
-    .editor details.fold .fold-body { padding: 0 0 14px; font-size: 15px; }
-    .editor figure.img { margin: 18px 0; }
-    .editor figure.img.left { float: left; width: 44%; margin: 6px 22px 12px 0; }
-    .editor figure.img.right { float: right; width: 44%; margin: 6px 0 12px 22px; }
-    .editor figure.img .ph { height: 150px; border-radius: 10px; background: repeating-linear-gradient(135deg, #e4eef7, #e4eef7 9px, #dbe8f4 9px, #dbe8f4 18px); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; font-family: ui-monospace, monospace; letter-spacing: 0.04em; }
-    .editor figure.img img { width: 100%; height: auto; border-radius: 10px; display: block; }
-    /* 單張圖片：置中縮圖，不佔滿整個版面 */
-    .editor figure.img.full { float: none; width: auto; margin: 18px 0; text-align: center; }
-    .editor figure.img.full img { display: inline-block; width: auto; height: auto; max-width: min(340px, 82%); }
-    .editor figure.img.full figcaption { text-align: center; }
-    /* 幻燈片輪播 */
-    .editor figure.carousel { position: relative; float: none; width: 100%; margin: 18px 0; overflow: hidden; }
-    .editor figure.carousel .carousel-track { display: flex; transition: transform .32s cubic-bezier(.22,1,.36,1); }
-    .editor figure.carousel .carousel-track img { width: 100%; flex: 0 0 100%; border-radius: 12px; }
-    .editor figure.carousel .carousel-nav { position: absolute; top: calc(50% - 20px); transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; background: rgba(15,39,69,.55); color: #fff; font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(3px); transition: background .2s; }
-    .editor figure.carousel .carousel-nav:hover { background: rgba(15,39,69,.8); }
-    .editor figure.carousel .carousel-nav.prev { left: 10px; }
-    .editor figure.carousel .carousel-nav.next { right: 10px; }
-    .editor figure.carousel .carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
-    .editor figure.carousel .carousel-dots .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line); transition: all .2s; cursor: pointer; }
-    .editor figure.carousel .carousel-dots .dot.on { background: var(--navy); width: 20px; border-radius: 999px; }
-    .editor figure.img figcaption { font-size: 12px; color: var(--muted); text-align: center; margin-top: 6px; letter-spacing: 0.02em; }
-    .editor table.tbl { border-collapse: collapse; width: 100%; table-layout: fixed; margin: 18px 0; font-size: 14.5px; }
-    .editor table.tbl th, .editor table.tbl td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; overflow-wrap: anywhere; word-break: break-word; }
-    .editor table.tbl th { background: var(--alice); color: var(--ink); font-weight: 800; }
-    .editor sup.fn { color: var(--navy); font-weight: 800; cursor: pointer; padding: 0 1px; font-size: 0.72em; vertical-align: super; }
-    .editor sup.fn:hover { text-decoration: underline; }
+    .editor.is-empty::before { content: attr(data-placeholder); position: absolute; top: 0; left: 0; color: #c2d0de; pointer-events: none; }
+    .editor details.fold > summary { padding-right: 40px; }   /* 讓出右上角 × 鈕空間 */
+    /* 編輯專用：摺疊／圖片右上角 × 刪除鈕（閱讀頁不會有）*/
+    .editor .fold-del { position: absolute; top: 9px; right: 10px; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: #fff; border: 1px solid var(--line); color: var(--muted); cursor: pointer; transition: all .15s; z-index: 2; }
+    .editor .fold-del:hover { background: #fdeeea; border-color: var(--warn); color: var(--warn); }
+    .editor .fold-del svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+    .editor .fig-del { position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: rgba(15,39,69,.6); color: #fff; cursor: pointer; z-index: 3; transition: all .15s; }
+    .editor .fig-del:hover { background: var(--warn); }
+    .editor .fig-del svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
 
     /* 表格增/刪 列與欄 浮動工具列 */
     .tbl-tools { position: absolute; z-index: 70; display: none; gap: 4px; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 5px; box-shadow: 0 8px 24px -12px rgba(0,40,80,0.3); }
@@ -138,6 +115,7 @@
 
     /* references list */
     .refs { margin-top: 40px; padding-top: 22px; border-top: 2px solid var(--line); }
+    .refs:empty { display: none; }   /* 沒有註腳時不顯示分隔線 */
     .refs h4 { font-size: 15px; font-weight: 800; color: var(--ink); letter-spacing: 0.06em; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .refs h4 .cnt { font-size: 11px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 2px 9px; border-radius: 999px; }
     .refs ol { margin: 0; padding-left: 22px; }
@@ -191,10 +169,10 @@
     .meter .hint { font-size: 11.5px; color: var(--green-d); font-weight: 700; margin-top: 8px; }
 
     /* TOC */
-    .toc-list { display: flex; flex-direction: column; gap: 2px; max-height: 320px; overflow-y: auto; }
+    .toc-list { display: flex; flex-direction: column; gap: 2px; max-height: 320px; overflow-y: auto; overflow-x: hidden; }
     .toc-h2 > .row { display: flex; align-items: center; gap: 6px; padding: 7px 8px; border-radius: 8px; font-size: 13.5px; font-weight: 700; color: var(--ink); cursor: pointer; letter-spacing: 0.02em; }
     .toc-h2 > .row:hover { background: var(--alice); color: var(--navy); }
-    .toc-h2 > .row .tw { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .toc-h2 > .row .tw { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .toc-h2 > .row .caret { width: 16px; height: 16px; flex-shrink: 0; color: var(--muted); transition: transform 0.2s; }
     .toc-h2.collapsed > .row .caret { transform: rotate(-90deg); }
     .toc-h2.collapsed .toc-sub { display: none; }
@@ -206,6 +184,18 @@
 
     /* category + tags */
     .cat-sel { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink); font-size: 13.5px; font-weight: 600; padding: 0 30px 0 12px; appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 11px center; margin-bottom: 14px; }
+    /* 長期適用 dot 切換 */
+    #yearWrap { transition: opacity .2s; }
+    #yearWrap.disabled { opacity: .42; pointer-events: none; }
+    #yearWrap .cat-sel { margin-bottom: 0; }
+    .longterm { display: flex; align-items: center; gap: 9px; margin-top: 8px; margin-bottom: 20px; cursor: pointer; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; transition: all .2s; }
+    .longterm:hover { border-color: var(--sky); }
+    .longterm.on { border-color: var(--navy); background: var(--alice); }
+    .longterm .dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #c3d2e2; flex-shrink: 0; position: relative; transition: all .2s; }
+    .longterm.on .dot { border-color: var(--navy); }
+    .longterm.on .dot::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--navy); }
+    .longterm .lt-text { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+
     .tag-note { font-size: 11px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; display: flex; gap: 6px; }
     .tag-note svg { width: 13px; height: 13px; color: var(--navy); flex-shrink: 0; margin-top: 1px; fill: none; stroke: currentColor; stroke-width: 2; }
     .tags { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -292,8 +282,6 @@
     .pub-checklist li.warn { color: #8a6d2a; }
     .pub-checklist li.warn .ci { background: #d9b74f; }
 
-    /* 桌機：單張圖片鈕隱藏（用左右浮動即可）；輪播鈕保留 */
-    .tb[data-ins="img"] { display: none; }
 
     /* ── 手機：底部操作列 + 設定抽屜（桌機隱藏） ── */
     .ce-mobilebar { display: none; }
@@ -310,11 +298,16 @@
 
     /* ============ 手機 ============ */
     @media (max-width: 860px) {
-      /* 工具列：單排、可橫向捲動，不再疊成好幾排；釘在導覽列正下方 */
-      .ce-toolbar { top: var(--navh, 46px); padding: 6px 10px; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; gap: 4px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-      .ce-toolbar::-webkit-scrollbar { display: none; }
-      .ce-toolbar .grp, .ce-toolbar .ce-sep, .tsel, .swatch-wrap { flex-shrink: 0; }
-      .ce-toolbar .ce-sep { margin: 0 3px; }
+      /* 工具列：左箭頭 | 中間單排捲動容器 | 右箭頭（釘在導覽列正下方）*/
+      .ce-toolbar { top: var(--navh, 46px); padding: 6px 6px; justify-content: flex-start; flex-wrap: nowrap; gap: 4px; align-items: center; }
+      .ce-toolbar-scroll { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; justify-content: flex-start; gap: 4px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 0 2px; }
+      .ce-toolbar-scroll::-webkit-scrollbar { display: none; }
+      .ce-toolbar-scroll .grp, .ce-toolbar-scroll .ce-sep, .tsel, .swatch-wrap { flex-shrink: 0; }
+      .ce-toolbar-scroll .ce-sep { margin: 0 3px; }
+      /* 兩端各佔一格固定空間的捲動箭頭（不疊在內容上）*/
+      .tb-scroll { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 30px; height: 34px; background: var(--alice); color: var(--navy); border: 1px solid var(--line); border-radius: 9px; }
+      .tb-scroll:active { background: #e2edf7; }
+      .tb-scroll svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
       .ce-wrap { width: 100%; max-width: 100%; padding: 12px 12px 88px; }
       .ce-sheet { border-radius: 14px; padding: 22px 18px 34px; min-height: 58vh; }
@@ -351,10 +344,9 @@
       .nav .right .save-status, .nav .right #previewBtn, .nav .right #pubTop, .focus-toggle { display: none !important; }
       .bottom-nav { display: none !important; }
       body.focus .ce-side { display: flex; }   /* 手機不套用專注模式的藏側欄 */
-      /* 手機：圖片不提供置左右，改用「單張」；並讓任何浮動圖片變全寬 */
-      .tb[data-ins="img-left"], .tb[data-ins="img-right"] { display: none; }
-      .tb[data-ins="img"] { display: inline-flex; }
+      /* 手機：浮動圖片／幻燈片改全寬堆疊，讓作者以電腦版面為主、手機自動調整 */
       .editor figure.img.left, .editor figure.img.right { float: none; width: 100%; margin: 18px 0; }
+      .editor figure.carousel.center { width: 82%; }
     }
 
     @media (max-width: 380px) {
@@ -380,6 +372,28 @@
     .sel-bar .nub { position: absolute; bottom: -4px; left: 50%; width: 10px; height: 10px; background: var(--ink); transform: translateX(-50%) rotate(45deg); border-radius: 2px; }
     .sel-bar.below .nub { top: -4px; bottom: auto; }
 
+    /* ── 自訂下拉選單（美化原生 select 的展開清單）── */
+    .psel { position: relative; display: inline-flex; vertical-align: middle; }
+    .psel > select.psel-native { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; margin: 0; }
+    .psel-trigger { text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .psel-trigger.open { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,75,151,.12); }
+    .psel-menu { position: fixed; z-index: 200; display: none; min-width: 150px; max-height: 320px; overflow-y: auto;
+      background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 6px;
+      box-shadow: 0 20px 46px -18px rgba(0,40,80,.42); opacity: 0; transform: translateY(-6px);
+      transition: opacity .16s ease, transform .16s ease; }
+    .psel-menu.open { opacity: 1; transform: none; }
+    .psel-menu::-webkit-scrollbar { width: 8px; }
+    .psel-menu::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; }
+    .psel-group { font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 9px 12px 4px; }
+    .psel-group:first-child { padding-top: 4px; }
+    .psel-opt { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; text-align: left;
+      padding: 9px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 600; color: var(--ink); cursor: pointer; transition: background .12s, color .12s; }
+    .psel-opt:hover { background: var(--alice); color: var(--navy); }
+    .psel-opt.sel { color: var(--navy); font-weight: 800; background: var(--alice); }
+    .psel-opt .tick { width: 14px; height: 14px; flex-shrink: 0; opacity: 0; }
+    .psel-opt.sel .tick { opacity: 1; }
+    .psel-opt .tick svg { width: 14px; height: 14px; fill: none; stroke: var(--navy); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+
     /* ── 表格大小選擇器 ── */
     .tbl-picker { position: absolute; z-index: 82; display: none; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 12px; box-shadow: 0 16px 40px -16px rgba(0,40,80,.35); }
     .tbl-picker.on { display: block; }
@@ -387,6 +401,18 @@
     .tp-cell { width: 22px; height: 22px; border: 1px solid var(--line); border-radius: 3px; background: #fff; cursor: pointer; transition: background .08s, border-color .08s; }
     .tp-cell.on { background: var(--sky); border-color: var(--navy); }
     .tp-label { text-align: center; font-size: 12px; font-weight: 700; color: var(--ink); margin-top: 10px; letter-spacing: .04em; }
+
+    /* ── 插入圖片面板（張數＋版面）── */
+    .img-panel { position: absolute; z-index: 82; display: none; width: 290px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; box-shadow: 0 16px 40px -16px rgba(0,40,80,.35); }
+    .img-panel.on { display: block; }
+    .ip-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .ip-label { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: .06em; width: 34px; flex-shrink: 0; }
+    .ip-seg { display: flex; flex-wrap: wrap; gap: 5px; flex: 1; min-width: 0; }
+    .ip-seg button { font-size: 12.5px; font-weight: 700; color: var(--ink); background: var(--alice); border: 1px solid transparent; border-radius: 8px; padding: 7px 11px; transition: all .15s; }
+    .ip-seg button:hover { border-color: var(--sky); }
+    .ip-seg button.on { background: var(--navy); color: #fff; }
+    .ip-go { width: 100%; margin-top: 2px; padding: 10px; border-radius: 999px; background: var(--navy); color: #fff; font-size: 13.5px; font-weight: 700; letter-spacing: .04em; transition: background .2s; }
+    .ip-go:hover { background: var(--navy-d); }
   </style>
 </head>
 <body>
@@ -451,6 +477,8 @@
 
 <!-- 格式工具列 -->
 <div class="ce-toolbar" id="toolbar">
+  <button class="tb-scroll left" id="tbScrollL" type="button" aria-label="工具列往左" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <div class="ce-toolbar-scroll" id="toolbarScroll">
   <div class="grp">
     <select class="tsel" id="blockStyle" title="段落樣式">
       <option value="p">內文</option>
@@ -462,18 +490,20 @@
   </div>
   <div class="ce-sep"></div>
   <div class="grp">
-    <select class="tsel" id="fontFamily" title="字體">
-      <option value="'Noto Sans TC', sans-serif">微軟正黑體</option>
-      <option value="'Noto Serif TC', 'KaiTi', serif">標楷體</option>
-      <option value="'Noto Serif TC', serif">思源宋體</option>
+    <select class="tsel" id="fontFamily" title="字體（套用到選取文字）">
+      <option value="'Microsoft JhengHei', '微軟正黑體', 'PingFang TC', 'Noto Sans TC', sans-serif">微軟正黑體</option>
+      <option value="'標楷體', 'DFKai-SB', 'BiauKai', 'Kaiti TC', 'KaiTi', 'Kaiti', serif">標楷體</option>
+      <option value="'Noto Serif TC', 'PMingLiU', 'Songti TC', serif">思源宋體</option>
     </select>
-    <select class="tsel" id="fontSize" title="字體大小" style="min-width:76px">
-      <option value="2">小</option>
-      <option value="3" selected>一般</option>
-      <option value="5">大</option>
-      <option value="6">特大</option>
-    </select>
-    <select class="tsel" id="lineHeight" title="行距" style="min-width:88px">
+  </div>
+  <div class="ce-sep"></div>
+  <!-- 全文排版：套用到整篇（與選取式功能區隔）-->
+  <div class="grp doc-grp" title="全文排版（套用到整篇文章）">
+    <span class="doc-tag">全文</span>
+    <button class="doc-step" data-docsize="dec" type="button" title="整體字級縮小">A<span class="pm">−</span></button>
+    <span class="doc-size-val" id="docSizeVal">一般</span>
+    <button class="doc-step" data-docsize="inc" type="button" title="整體字級放大">A<span class="pm">＋</span></button>
+    <select class="tsel" id="lineHeight" title="行距（整篇）" style="min-width:88px">
       <option value="1.6">行距 緊</option>
       <option value="1.95" selected>行距 標準</option>
       <option value="2.4">行距 寬</option>
@@ -498,14 +528,13 @@
     <button class="tb" data-ins="ul" title="項目符號"><svg viewBox="0 0 24 24"><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/><path d="M9 6h11M9 12h11M9 18h11"/></svg></button>
     <button class="tb" data-ins="ol" title="編號清單"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 4v3M3.5 4h1M3.3 10.5h1.4L3.3 13h1.6M3.4 16.4c.3-.5 1.3-.5 1.3.3 0 .5-.7.8-1.3 1.6h1.4" fill="none"/></svg></button>
     <button class="tb" data-ins="fold" title="摺疊區塊"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 18h16"/><path d="M9 12h6"/><path d="M12 9v6"/></svg></button>
-    <button class="tb" data-ins="img" title="插入圖片（單張）"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16 16 11 5 20"/></svg></button>
-    <button class="tb" data-ins="img-left" title="圖片（靠左）"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="9" height="9" rx="1"/><path d="M15 7h6M15 11h6M4 18h16"/></svg></button>
-    <button class="tb" data-ins="img-right" title="圖片（靠右）"><svg viewBox="0 0 24 24"><rect x="12" y="5" width="9" height="9" rx="1"/><path d="M3 7h6M3 11h6M4 18h16"/></svg></button>
-    <button class="tb" data-ins="carousel" title="幻燈片輪播（多張）"><svg viewBox="0 0 24 24"><rect x="7" y="5" width="10" height="14" rx="1.5"/><path d="M4 8v8M20 8v8"/></svg></button>
+    <button class="tb" data-ins="image" title="插入圖片（單張 / 幻燈片）"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16 16 11 5 20"/></svg></button>
     <button class="tb" data-ins="table" title="表格"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M3 15h18M9 4v16M15 4v16"/></svg></button>
     <button class="tb" data-ins="fn" title="插入來源標註"><svg viewBox="0 0 24 24"><path d="M6 4v10a4 4 0 0 0 8 0V6a2.5 2.5 0 0 0-5 0v8"/><text x="17" y="11" font-size="9" font-weight="800" fill="currentColor" stroke="none">1</text></svg></button>
     <button class="tb" data-ins="hr" title="分隔線"><svg viewBox="0 0 24 24"><path d="M3 12h18"/></svg></button>
   </div>
+  </div><!-- /ce-toolbar-scroll -->
+  <button class="tb-scroll right" id="tbScrollR" type="button" aria-label="工具列往右" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
 </div>
 
 <div class="ce-wrap">
@@ -515,7 +544,7 @@
     <input class="title-input" id="titleInput" placeholder="輸入標題…" />
     <input class="subtitle-input" id="subtitleInput" placeholder="副標／一句話重點（選填）" />
 
-    <div class="editor" id="editor" contenteditable="true" spellcheck="false">
+    <div class="editor article-body" id="editor" contenteditable="true" spellcheck="false" data-placeholder="開始撰寫你的攻略，把你親身走過一遍的經驗整理出來…">
       <p>開始撰寫你的攻略。把你<strong>親身走過一遍</strong>的經驗整理出來，讀者少走冤枉路，你也能把用心換成回報。</p>
       <blockquote class="lead">傳承的不是「知識」，是「經驗」。用上方工具列加入大／中／小標題、引言框、清單、圖片、表格與來源標註。</blockquote>
       <h2>一、先寫下你的核心結論</h2>
@@ -569,17 +598,29 @@
       <div class="h">分類與標籤</div>
       <div class="field-label">文章分類</div>
       <select class="cat-sel" id="catSel">
-        <optgroup label="課業與學分通關"><option>必修攻略</option><option>通識指南</option><option>實驗範本</option></optgroup>
-        <optgroup label="升學、轉學與跨校"><option selected>研究所推甄</option><option>研究計畫申請</option><option>轉學考 / 內轉</option></optgroup>
-        <optgroup label="證照、競賽與技能"><option>語言檢定</option><option>專業考照</option><option>競賽攻略</option></optgroup>
-        <optgroup label="職涯探索"><option>實習與面試</option><option>交換生申請</option></optgroup>
+        <option selected>研究所推甄</option>
+        <option>學分攻略</option>
+        <option>證照檢定</option>
+        <option>實習與面試</option>
+        <option>美食地圖</option>
+        <option>校園資源</option>
+        <option>轉學／轉系</option>
+        <option>交換學生</option>
+        <option>專題研究</option>
+        <option>生活指南</option>
       </select>
       <div class="field-label" style="margin-top:14px">適用學年度（時效標籤）</div>
-      <select class="cat-sel" id="yearSel">
-        <option>適用 115 學年</option>
-        <option>適用 114 學年</option>
-        <option>長期適用（不隨學年變動）</option>
-      </select>
+      <div id="yearWrap">
+        <select class="cat-sel" id="yearSel">
+          <option>適用 115 學年</option>
+          <option>適用 114 學年</option>
+          <option>適用 113 學年</option>
+        </select>
+      </div>
+      <label class="longterm" id="longtermToggle">
+        <span class="dot"></span>
+        <span class="lt-text">長期適用（不隨學年變動）</span>
+      </label>
       <div class="tag-note"><svg viewBox="0 0 24 24"><path d="M20.6 13.4 11 3.8a2 2 0 0 0-1.4-.6H4a1 1 0 0 0-1 1v5.6a2 2 0 0 0 .6 1.4l9.6 9.6a2 2 0 0 0 2.8 0l4.6-4.6a2 2 0 0 0 0-2.8Z"/><circle cx="7.5" cy="7.5" r="0.6"/></svg>標好標籤，許願池才容易把想要這主題的同學媒合給你。</div>
       <div class="tags" id="tags">
         <span class="tag">台大 <span class="x">×</span></span>
@@ -717,6 +758,15 @@ document.addEventListener('DOMContentLoaded', function() {
   /* 讓 execCommand 以行內 CSS 樣式套用（字體/大小/顏色才蓋得過頁面 CSS，不會沒作用） */
   try { document.execCommand('styleWithCSS', false, true); } catch (e) {}
 
+  /* 目前作用目標：編輯區 / 標題 / 副標（字體與顏色會套用到最後聚焦的那個）*/
+  var activeTarget = editor;
+  ['titleInput', 'subtitleInput'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('focus', function () { activeTarget = el; });
+  });
+  editor.addEventListener('focus', function () { activeTarget = editor; });
+  function targetIsField() { return activeTarget && activeTarget !== editor; }
+
   /* ---------- 量測導覽列高度：讓工具列精準釘在其正下方（各螢幕都不跑） ---------- */
   (function () {
     var nav = document.querySelector('.nav');
@@ -727,15 +777,54 @@ document.addEventListener('DOMContentLoaded', function() {
   })();
 
   /* ---------- swatches ---------- */
-  var COLORS = ['#1a2840', '#004b97', 'rgb(36,182,133)', '#c97f5a', '#8a6d2a'];
+  var COLORS = ['#1a2840', '#004b97', 'rgb(36,182,133)']; // 黑、藍、綠
   var sw = document.getElementById('swatches');
+  function applyColor(c) {
+    if (targetIsField()) { activeTarget.style.color = c; scheduleSave(); return; }
+    restoreEditorRange(); document.execCommand('foreColor', false, c); scheduleSave();
+  }
   COLORS.forEach(function (c) {
     var b = document.createElement('span'); b.className = 'swatch'; b.style.background = c;
-    var apply = function (e) { e.preventDefault(); restoreEditorRange(); document.execCommand('foreColor', false, c); scheduleSave(); };
+    var apply = function (e) { e.preventDefault(); applyColor(c); };
     b.addEventListener('mousedown', apply);
     b.addEventListener('touchstart', apply, { passive: false });
     sw.appendChild(b);
   });
+  // 顏色：自訂色盤 + 最近使用顏色（localStorage）
+  (function () {
+    var RECENT_KEY = 'cg-recent-color';
+    var recentColor = '';
+    try { recentColor = localStorage.getItem(RECENT_KEY) || ''; } catch (e) {}
+    if (!recentColor) recentColor = '#c97f5a';
+
+    // 自訂色盤
+    var lbl = document.createElement('label'); lbl.className = 'swatch swatch-custom'; lbl.title = '自訂顏色';
+    var ci = document.createElement('input'); ci.type = 'color'; ci.value = recentColor;
+    lbl.appendChild(ci); sw.appendChild(lbl);
+
+    // 最近使用顏色
+    var recent = document.createElement('span'); recent.className = 'swatch swatch-recent'; recent.title = '最近使用的顏色';
+    recent.style.background = recentColor; recent.dataset.color = recentColor;
+    var applyRecent = function (e) { e.preventDefault(); applyColor(recent.dataset.color); };
+    recent.addEventListener('mousedown', applyRecent);
+    recent.addEventListener('touchstart', applyRecent, { passive: false });
+    sw.appendChild(recent);
+    function setRecent(c) { recent.dataset.color = c; recent.style.background = c; try { localStorage.setItem(RECENT_KEY, c); } catch (e) {} }
+
+    var savedForColor = null;
+    lbl.addEventListener('pointerdown', function () {
+      var s = window.getSelection();
+      if (s && s.rangeCount) { var n = s.getRangeAt(0).commonAncestorContainer; n = n.nodeType === 3 ? n.parentNode : n; if (editor.contains(n)) savedForColor = s.getRangeAt(0).cloneRange(); }
+    });
+    // change：色盤關閉後才套用（開著時文件失焦，execCommand 無效）；並記為最近使用
+    ci.addEventListener('change', function () {
+      if (targetIsField()) { activeTarget.style.color = ci.value; scheduleSave(); setRecent(ci.value); return; }
+      editor.focus();
+      if (savedForColor) { var s = window.getSelection(); s.removeAllRanges(); s.addRange(savedForColor); }
+      document.execCommand('foreColor', false, ci.value); scheduleSave();
+      setRecent(ci.value);
+    });
+  })();
 
   /* ---------- inline formatting（含對齊）：先還原選取再套用，手機才有效 ---------- */
   document.querySelectorAll('.tb[data-cmd]').forEach(function (btn) {
@@ -772,14 +861,33 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   document.getElementById('fontFamily').addEventListener('change', function () {
+    if (targetIsField()) { activeTarget.style.fontFamily = this.value; scheduleSave(); return; }
     restoreEditorRange(); document.execCommand('fontName', false, this.value); scheduleSave();
-  });
-  document.getElementById('fontSize').addEventListener('change', function () {
-    restoreEditorRange(); document.execCommand('fontSize', false, this.value); scheduleSave();
   });
   document.getElementById('lineHeight').addEventListener('change', function () {
     editor.style.lineHeight = this.value;
   });
+
+  /* ---------- 全文字級：整體加大／縮小（非選取式）---------- */
+  var DOC_SIZES = [14, 15, 16, 17, 18, 20];
+  var DOC_LABELS = ['最小', '小', '一般', '大', '特大', '超大'];
+  var docSizeIdx = 2; // 預設 16px = 一般
+  function applyDocSize() {
+    editor.style.fontSize = DOC_SIZES[docSizeIdx] + 'px';
+    var lbl = document.getElementById('docSizeVal'); if (lbl) lbl.textContent = DOC_LABELS[docSizeIdx];
+    var dec = document.querySelector('.doc-step[data-docsize=dec]'), inc = document.querySelector('.doc-step[data-docsize=inc]');
+    if (dec) dec.disabled = docSizeIdx <= 0;
+    if (inc) inc.disabled = docSizeIdx >= DOC_SIZES.length - 1;
+  }
+  document.querySelectorAll('.doc-step').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (btn.dataset.docsize === 'inc') docSizeIdx = Math.min(DOC_SIZES.length - 1, docSizeIdx + 1);
+      else docSizeIdx = Math.max(0, docSizeIdx - 1);
+      applyDocSize(); scheduleSave();
+    });
+  });
+  applyDocSize();
 
   /* ---------- block style ---------- */
   document.getElementById('blockStyle').addEventListener('change', function () {
@@ -809,34 +917,67 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   function insertHTML(html) { restoreEditorRange(); document.execCommand('insertHTML', false, html); scheduleUpdate(); scheduleSave(); }
 
-  /* 圖片：開檔案選擇器 → 讀成 dataURL 插入內文 */
-  var pendingImgSide = 'left';
-  var imgInput = document.createElement('input');
-  imgInput.type = 'file'; imgInput.accept = 'image/*'; imgInput.style.display = 'none';
-  document.body.appendChild(imgInput);
-  imgInput.addEventListener('change', function () {
-    var file = imgInput.files && imgInput.files[0];
-    imgInput.value = '';
-    if (!file) return;
+  /* 圖片／幻燈片：單一面板選「張數＋版面」→ 選檔插入 */
+  var FIG_DEL = '<button class="fig-del" contenteditable="false" type="button" aria-label="刪除"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+  function insertSingleImage(file, layout) {
     var reader = new FileReader();
     reader.onload = function () {
-      insertHTML('<figure class="img ' + pendingImgSide + '" contenteditable="false"><img src="' + reader.result + '" alt=""><figcaption contenteditable="true">圖說（選填）</figcaption></figure><p><br></p>');
+      insertHTML('<figure class="img ' + layout + '" contenteditable="false">' + FIG_DEL + '<img src="' + reader.result + '" alt=""><figcaption contenteditable="true">圖說（選填）</figcaption></figure><p><br></p>');
     };
     reader.readAsDataURL(file);
-  });
+  }
+  function insertCarousel(files, layout) {
+    Promise.all(files.map(function (f) { return new Promise(function (res) { var rd = new FileReader(); rd.onload = function () { res(rd.result); }; rd.readAsDataURL(f); }); })).then(function (urls) {
+      var imgs = urls.map(function (u) { return '<img src="' + u + '" alt="">'; }).join('');
+      var dots = urls.map(function (_, i) { return '<span class="dot' + (i === 0 ? ' on' : '') + '"></span>'; }).join('');
+      var nav = urls.length > 1 ? '<button class="carousel-nav prev" contenteditable="false" type="button">‹</button><button class="carousel-nav next" contenteditable="false" type="button">›</button>' : '';
+      insertHTML('<figure class="img carousel ' + layout + '" contenteditable="false" data-idx="0">' + FIG_DEL + '<div class="carousel-track">' + imgs + '</div>' + nav + '<div class="carousel-dots">' + dots + '</div><figcaption contenteditable="true">圖說（選填）</figcaption></figure><p><br></p>');
+    });
+  }
+  var imagePanel = (function () {
+    var pop = document.createElement('div'); pop.className = 'img-panel';
+    pop.innerHTML =
+      '<div class="ip-row"><span class="ip-label">張數</span><div class="ip-seg" data-ipseg="count"><button type="button" class="on" data-v="single">單張</button><button type="button" data-v="multi">多張 · 幻燈片</button></div></div>' +
+      '<div class="ip-row"><span class="ip-label">版面</span><div class="ip-seg" data-ipseg="layout"><button type="button" data-v="left">靠左</button><button type="button" data-v="right">靠右</button><button type="button" class="on" data-v="center">置中縮圖</button><button type="button" data-v="wide">滿版</button></div></div>' +
+      '<button class="ip-go" type="button">選擇檔案並插入</button>';
+    document.body.appendChild(pop);
+    var count = 'single', layout = 'center';
+    pop.querySelectorAll('.ip-seg').forEach(function (seg) {
+      seg.addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        seg.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        if (seg.dataset.ipseg === 'count') count = b.dataset.v; else layout = b.dataset.v;
+      });
+    });
+    var input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.style.display = 'none';
+    document.body.appendChild(input);
+    input.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(input.files || []); input.value = '';
+      if (!files.length) return;
+      if (count === 'multi') insertCarousel(files, layout); else insertSingleImage(files[0], layout);
+    });
+    pop.querySelector('.ip-go').addEventListener('click', function () { input.multiple = (count === 'multi'); hide(); input.click(); });
+    function hide() { pop.classList.remove('on'); }
+    function show(anchor) {
+      pop.classList.add('on');
+      var r = anchor.getBoundingClientRect();
+      var pw = pop.offsetWidth;
+      var left = Math.max(window.scrollX + 8, Math.min(window.scrollX + r.left, window.scrollX + window.innerWidth - pw - 8));
+      pop.style.top = (window.scrollY + r.bottom + 8) + 'px'; pop.style.left = left + 'px';
+    }
+    document.addEventListener('mousedown', function (e) { if (pop.classList.contains('on') && !pop.contains(e.target) && !(e.target.closest && e.target.closest('.tb[data-ins="image"]'))) hide(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+    return { show: show, hide: hide };
+  })();
 
   function insert(kind) {
     if (kind === 'ul') { restoreEditorRange(); document.execCommand('insertUnorderedList'); scheduleUpdate(); scheduleSave(); return; }
     if (kind === 'ol') { restoreEditorRange(); document.execCommand('insertOrderedList'); scheduleUpdate(); scheduleSave(); return; }
     if (kind === 'hr') { insertHTML('<hr>'); return; }
-    if (kind === 'fold') { insertHTML('<details class="fold"><summary>點我展開次要資訊</summary><div class="fold-body">在這裡補充延伸內容…</div></details><p><br></p>'); return; }
+    if (kind === 'fold') { insertHTML('<details class="fold"><summary>點我展開次要資訊<button class="fold-del" type="button" contenteditable="false" aria-label="刪除摺疊區塊"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></summary><div class="fold-body">在這裡補充延伸內容…</div></details><p><br></p>'); return; }
     if (kind === 'table') { tablePicker.show(document.querySelector('.tb[data-ins="table"]')); return; }
-    if (kind === 'img' || kind === 'img-left' || kind === 'img-right') {
-      pendingImgSide = kind === 'img-left' ? 'left' : (kind === 'img-right' ? 'right' : 'full');
-      imgInput.click();
-      return;
-    }
-    if (kind === 'carousel') { carouselInput.click(); return; }
+    if (kind === 'image') { imagePanel.show(document.querySelector('.tb[data-ins="image"]')); return; }
     if (kind === 'fn') {
       var src = window.prompt('來源說明（例：作者、標題、年份）：'); if (src === null) return;
       var url = window.prompt('來源連結（選填）：') || '';
@@ -878,23 +1019,10 @@ document.addEventListener('DOMContentLoaded', function() {
     cols = Math.max(1, cols); rows = Math.max(1, rows);
     var head = '<tr>'; for (var c = 0; c < cols; c++) head += '<th>' + (c === 0 ? '項目' : '欄位') + '</th>'; head += '</tr>';
     var body = ''; for (var r = 0; r < rows - 1; r++) { body += '<tr>'; for (var c2 = 0; c2 < cols; c2++) body += '<td>　</td>'; body += '</tr>'; }
-    insertHTML('<table class="tbl"><thead>' + head + '</thead><tbody>' + body + '</tbody></table><p><br></p>');
+    insertHTML('<div class="tbl-wrap"><table class="tbl"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div><p><br></p>');
   }
 
-  /* ---------- 幻燈片輪播（多張圖片）---------- */
-  var carouselInput = document.createElement('input');
-  carouselInput.type = 'file'; carouselInput.accept = 'image/*'; carouselInput.multiple = true; carouselInput.style.display = 'none';
-  document.body.appendChild(carouselInput);
-  carouselInput.addEventListener('change', function () {
-    var files = Array.prototype.slice.call(carouselInput.files || []); carouselInput.value = '';
-    if (!files.length) return;
-    Promise.all(files.map(function (f) { return new Promise(function (res) { var rd = new FileReader(); rd.onload = function () { res(rd.result); }; rd.readAsDataURL(f); }); })).then(function (urls) {
-      var imgs = urls.map(function (u) { return '<img src="' + u + '" alt="">'; }).join('');
-      var dots = urls.map(function (_, i) { return '<span class="dot' + (i === 0 ? ' on' : '') + '"></span>'; }).join('');
-      var nav = urls.length > 1 ? '<button class="carousel-nav prev" contenteditable="false" type="button">‹</button><button class="carousel-nav next" contenteditable="false" type="button">›</button>' : '';
-      insertHTML('<figure class="img carousel" contenteditable="false" data-idx="0"><div class="carousel-track">' + imgs + '</div>' + nav + '<div class="carousel-dots">' + dots + '</div><figcaption contenteditable="true">圖說（選填）</figcaption></figure><p><br></p>');
-    });
-  });
+  /* ---------- 幻燈片輪播：切換 ---------- */
   function carouselGo(fig, idx) {
     var track = fig.querySelector('.carousel-track'); if (!track) return;
     var n = track.children.length; idx = Math.max(0, Math.min(idx, n - 1));
@@ -913,6 +1041,31 @@ document.addEventListener('DOMContentLoaded', function() {
     var dx = e.changedTouches[0].clientX - t._sx; t._sx = null;
     if (Math.abs(dx) > 40) { var fig = t.closest('.carousel'); carouselGo(fig, (+fig.dataset.idx || 0) + (dx < 0 ? 1 : -1)); }
   }, { passive: true });
+
+  /* ---------- 右上角 × 刪除整塊（摺疊 / 圖片 / 幻燈片）---------- */
+  editor.addEventListener('click', function (e) {
+    var del = e.target.closest && e.target.closest('.fold-del, .fig-del');
+    if (!del) return;
+    e.preventDefault(); e.stopPropagation();
+    var block = del.closest('details.fold, figure.img');
+    if (block) { block.remove(); scheduleUpdate(); scheduleSave(); }
+  });
+  // 舊草稿還原的區塊補上 × 鈕
+  var DEL_SVG = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  function ensureFoldControls() {
+    editor.querySelectorAll('details.fold > summary').forEach(function (sm) {
+      if (sm.querySelector('.fold-del')) return;
+      var b = document.createElement('button');
+      b.className = 'fold-del'; b.type = 'button'; b.setAttribute('contenteditable', 'false'); b.setAttribute('aria-label', '刪除摺疊區塊');
+      b.innerHTML = DEL_SVG; sm.appendChild(b);
+    });
+    editor.querySelectorAll('figure.img').forEach(function (fig) {
+      if (fig.querySelector(':scope > .fig-del')) return;
+      var b = document.createElement('button');
+      b.className = 'fig-del'; b.type = 'button'; b.setAttribute('contenteditable', 'false'); b.setAttribute('aria-label', '刪除');
+      b.innerHTML = DEL_SVG; fig.insertBefore(b, fig.firstChild);
+    });
+  }
 
   /* ---------- footnotes + references ---------- */
   function renumberFootnotes() {
@@ -963,30 +1116,17 @@ document.addEventListener('DOMContentLoaded', function() {
   /* ---------- TOC (auto) ---------- */
   function buildTOC() {
     var list = document.getElementById('tocList');
-    var nodes = editor.querySelectorAll('h2, h3');
-    if (!nodes.length) { list.innerHTML = '<div class="toc-empty">加入「大標題／中標題」後會自動出現。</div>'; return; }
-    var html = ''; var idc = 0; var openGroup = false;
+    var nodes = editor.querySelectorAll('h2');   // 目錄只列大標題
+    if (!nodes.length) { list.innerHTML = '<div class="toc-empty">加入「大標題」後會自動出現。</div>'; return; }
+    var html = ''; var idc = 0;
     nodes.forEach(function (el) {
       el.id = 'sec' + (idc++);
-      if (el.tagName === 'H2') {
-        if (openGroup) html += '</div></div>';
-        html += '<div class="toc-h2"><div class="row" data-target="' + el.id + '"><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 12 15 18 9"/></svg><span class="tw">' + escText(el.textContent) + '</span></div><div class="toc-sub">';
-        openGroup = true;
-      } else {
-        html += '<a data-target="' + el.id + '">' + escText(el.textContent) + '</a>';
-      }
+      html += '<div class="toc-h2"><div class="row" data-target="' + el.id + '"><span class="nocaret"></span><span class="tw">' + escText(el.textContent) + '</span></div></div>';
     });
-    if (openGroup) html += '</div></div>';
     list.innerHTML = html;
     list.querySelectorAll('.toc-h2 .row').forEach(function (row) {
-      row.addEventListener('click', function (e) {
-        var grp = row.parentElement;
-        var sub = grp.querySelector('.toc-sub');
-        if (sub && sub.children.length && e.target.closest('.caret')) { grp.classList.toggle('collapsed'); return; }
-        jumpTo(row.dataset.target);
-      });
+      row.addEventListener('click', function () { jumpTo(row.dataset.target); });
     });
-    list.querySelectorAll('.toc-sub a').forEach(function (a) { a.addEventListener('click', function () { jumpTo(a.dataset.target); }); });
   }
   function escText(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
   function jumpTo(id) { var el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); }
@@ -995,7 +1135,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var KEY = 'cg-composer-draft';
   var saveTimer, updateTimer;
   function scheduleUpdate() { clearTimeout(updateTimer); updateTimer = setTimeout(update, 150); }
-  function update() { countWords(); buildTOC(); renumberFootnotes(); }
+  function editorIsEmpty() {
+    if (editor.querySelector('img, figure, table, hr, ul, ol, blockquote, details, h1, h2, h3, h4')) return false;
+    return editor.textContent.replace(/[\s 　]/g, '') === '';
+  }
+  function update() { countWords(); buildTOC(); renumberFootnotes(); ensureFoldControls(); editor.classList.toggle('is-empty', editorIsEmpty()); }
   function setSaveState(saving, text) {
     ['saveStatus', 'mbSave'].forEach(function (id) { var el = document.getElementById(id); if (el) el.classList.toggle('saving', saving); });
     var a = document.getElementById('saveText'); if (a) a.textContent = text;
@@ -1167,7 +1311,9 @@ document.addEventListener('DOMContentLoaded', function() {
       '<button type="button" data-act="addcol" title="在右方新增一欄">＋ 欄</button>' +
       '<span class="sep"></span>' +
       '<button type="button" class="danger" data-act="delrow" title="刪除目前列">刪列</button>' +
-      '<button type="button" class="danger" data-act="delcol" title="刪除目前欄">刪欄</button>';
+      '<button type="button" class="danger" data-act="delcol" title="刪除目前欄">刪欄</button>' +
+      '<span class="sep"></span>' +
+      '<button type="button" class="danger" data-act="deltable" title="刪除整個表格">刪表格</button>';
     document.body.appendChild(tools);
 
     var lastInfo = null;
@@ -1240,6 +1386,11 @@ document.addEventListener('DOMContentLoaded', function() {
         var info = lastInfo;
         if (!info || !editor.contains(info.table)) { hideTools(); return; }
         var act = btn.dataset.act;
+        if (act === 'deltable') {
+          var wrap = info.table.closest('.tbl-wrap') || info.table;
+          wrap.remove(); hideTools(); scheduleUpdate(); scheduleSave();
+          return;
+        }
         if (act === 'addrow') addRow(info);
         else if (act === 'addcol') addColumn(info);
         else if (act === 'delrow') delRow(info);
@@ -1415,6 +1566,163 @@ document.addEventListener('DOMContentLoaded', function() {
       var i = parseInt(del.closest('.att').dataset.i, 10);
       if (i >= 0) { items.splice(i, 1); render(); }
     });
+  })();
+
+  /* ---------- 手機工具列兩端捲動箭頭 ---------- */
+  (function () {
+    var bar = document.getElementById('toolbarScroll');
+    var L = document.getElementById('tbScrollL'), R = document.getElementById('tbScrollR');
+    if (!bar || !L || !R) return;
+    function step(dx) {
+      var max = bar.scrollWidth - bar.clientWidth;
+      bar.scrollLeft = Math.max(0, Math.min(bar.scrollLeft + dx, max)); // CSS scroll-behavior 負責平滑
+    }
+    function updateArrows() {
+      var maxScroll = bar.scrollWidth - bar.clientWidth;
+      L.style.opacity = bar.scrollLeft > 4 ? '1' : '0.3';
+      R.style.opacity = bar.scrollLeft < maxScroll - 4 ? '1' : '0.3';
+    }
+    L.addEventListener('click', function () { step(-Math.round(bar.clientWidth * 0.7)); });
+    R.addEventListener('click', function () { step(Math.round(bar.clientWidth * 0.7)); });
+    bar.addEventListener('scroll', updateArrows, { passive: true });
+    window.addEventListener('resize', updateArrows);
+    updateArrows();
+  })();
+
+  /* ---------- 自訂下拉選單（美化原生 select 的展開清單）---------- */
+  (function () {
+    var openRef = null;
+    function closeAll() { if (openRef) openRef(); }
+    document.addEventListener('mousedown', function (e) {
+      if (openRef && !(e.target.closest && (e.target.closest('.psel-menu') || e.target.closest('.psel-trigger')))) closeAll();
+    });
+    window.addEventListener('scroll', function (e) {
+      if (openRef && e.target && e.target.closest && e.target.closest('.psel-menu')) return; // 選單內部捲動不關閉
+      closeAll();
+    }, true);
+    window.addEventListener('resize', function () { closeAll(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
+
+    var TICK = '<span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17 4 12"/></svg></span>';
+    function enhance(sel) {
+      var wrap = document.createElement('span'); wrap.className = 'psel';
+      sel.parentNode.insertBefore(wrap, sel);
+      wrap.appendChild(sel);
+      var trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = sel.className + ' psel-trigger';
+      if (sel.style.minWidth) trigger.style.minWidth = sel.style.minWidth;
+      sel.classList.add('psel-native');
+      wrap.appendChild(trigger);
+      var menu = document.createElement('div'); menu.className = 'psel-menu';
+      document.body.appendChild(menu);
+      var isOpen = false;
+
+      function mkOpt(o) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'psel-opt';
+        b.innerHTML = '<span class="lb"></span>' + TICK;
+        b.querySelector('.lb').textContent = o.textContent;
+        if (sel.id === 'fontFamily') b.style.fontFamily = o.value;
+        if (o.selected) b.classList.add('sel');
+        b.addEventListener('mousedown', function (e) { e.preventDefault(); });
+        b.addEventListener('click', function (e) { e.preventDefault(); choose(o); });
+        return b;
+      }
+      function build() {
+        menu.innerHTML = '';
+        Array.prototype.forEach.call(sel.children, function (child) {
+          if (child.tagName === 'OPTGROUP') {
+            var g = document.createElement('div'); g.className = 'psel-group'; g.textContent = child.label; menu.appendChild(g);
+            Array.prototype.forEach.call(child.children, function (o) { menu.appendChild(mkOpt(o)); });
+          } else if (child.tagName === 'OPTION') { menu.appendChild(mkOpt(child)); }
+        });
+      }
+      function syncTrigger() { var o = sel.options[sel.selectedIndex]; trigger.textContent = o ? o.textContent : ''; }
+      function choose(o) {
+        sel.value = o.value;
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+        close(); syncTrigger();
+      }
+      function position() {
+        var r = trigger.getBoundingClientRect();
+        menu.style.minWidth = r.width + 'px';
+        menu.style.left = r.left + 'px';
+        menu.style.top = (r.bottom + 6) + 'px';
+        var mh = menu.offsetHeight, mw = menu.offsetWidth;
+        if (r.bottom + 6 + mh > window.innerHeight - 10) menu.style.top = Math.max(8, r.top - 6 - mh) + 'px';
+        if (r.left + mw > window.innerWidth - 8) menu.style.left = Math.max(8, window.innerWidth - 8 - mw) + 'px';
+      }
+      function open() {
+        closeAll(); build();
+        menu.style.display = 'block'; position(); menu.classList.add('open');
+        trigger.classList.add('open'); isOpen = true; openRef = close;
+      }
+      function close() {
+        if (!isOpen) return;
+        menu.classList.remove('open'); trigger.classList.remove('open'); isOpen = false;
+        if (openRef === close) openRef = null;
+        setTimeout(function () { if (!isOpen) menu.style.display = 'none'; }, 180);
+      }
+      trigger.addEventListener('mousedown', function (e) { e.preventDefault(); });
+      trigger.addEventListener('click', function (e) { e.preventDefault(); if (isOpen) close(); else open(); });
+      syncTrigger();
+    }
+    document.querySelectorAll('select.tsel, select.cat-sel').forEach(enhance);
+  })();
+
+  /* ---------- 適用學年度：長期適用 dot 切換 ---------- */
+  (function () {
+    var t = document.getElementById('longtermToggle');
+    var wrap = document.getElementById('yearWrap');
+    if (!t || !wrap) return;
+    t.addEventListener('click', function () {
+      wrap.classList.toggle('disabled', t.classList.toggle('on'));
+    });
+  })();
+
+  /* ---------- 預覽：存下內容 → 開閱讀頁 ---------- */
+  (function () {
+    function buildPreviewData() {
+      var clone = editor.cloneNode(true);
+      clone.querySelectorAll('.fig-del, .fold-del').forEach(function (b) { b.remove(); });
+      clone.querySelectorAll('[contenteditable]').forEach(function (el) { el.removeAttribute('contenteditable'); });
+      clone.classList.remove('is-empty');
+      var refsEl = document.getElementById('refs');
+      var cover = ''; var cs = document.getElementById('coverSlot');
+      if (cs && cs.classList.contains('has-cover')) cover = cs.style.backgroundImage;
+      var catSel = document.getElementById('catSel');
+      var ltOn = document.getElementById('longtermToggle');
+      ltOn = ltOn && ltOn.classList.contains('on');
+      var yearSel = document.getElementById('yearSel');
+      var paid = isPaidNow();
+      var words = (editor.innerText || '').replace(/\s+/g, '').length;
+      return {
+        title: document.getElementById('titleInput').value,
+        titleStyle: document.getElementById('titleInput').getAttribute('style') || '',
+        subtitle: document.getElementById('subtitleInput').value,
+        subtitleStyle: document.getElementById('subtitleInput').getAttribute('style') || '',
+        bodyHTML: clone.innerHTML,
+        refsHTML: refsEl ? refsEl.innerHTML : '',
+        fontSize: editor.style.fontSize || '16px',
+        lineHeight: editor.style.lineHeight || '',
+        cover: cover,
+        category: catSel ? catSel.value : '',
+        year: ltOn ? '長期適用' : (yearSel ? yearSel.value : ''),
+        paid: paid,
+        price: paid ? (parseInt(priceIn.value, 10) || 0) : 0,
+        words: words,
+        readMin: Math.max(1, Math.round(words / 500)),
+        author: (document.querySelector('.ident .iname') || {}).textContent || '',
+        titles: [].map.call(document.querySelectorAll('.ident .titles .t'), function (x) { return x.textContent; }),
+        savedAt: Date.now()
+      };
+    }
+    function openPreview() {
+      try { localStorage.setItem('cg-preview', JSON.stringify(buildPreviewData())); } catch (e) {}
+      window.open('school-preview.html', '_blank');
+    }
+    var pv = document.getElementById('previewBtn');
+    if (pv) pv.addEventListener('click', openPreview);
   })();
 
   update();
