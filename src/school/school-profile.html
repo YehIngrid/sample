@@ -36,6 +36,10 @@
     .id-titles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
     .id-titles .t { font-size: 10.5px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em; }
     .id-sub { font-size: 11.5px; color: var(--muted); margin-top: 9px; letter-spacing: 0.02em; }
+    /* 帳號設定捷徑（名字卡右上齒輪按鈕） */
+    .id-gear { position: absolute; top: 42px; right: 18px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px 5px 9px; background: #fff; border: 1px solid var(--line); border-radius: 999px; color: var(--navy); font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; transition: all 0.22s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .id-gear svg { width: 15px; height: 15px; }
+    .id-gear:hover { border-color: var(--navy); background: var(--alice); transform: translateY(-1px); box-shadow: 0 8px 18px -12px rgba(0,75,151,0.4); }
     .id-edit { margin-top: 14px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 0; border-radius: 999px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; border: 1.5px solid var(--line); color: var(--ink); background: #fff; transition: all 0.2s; }
     .id-edit:hover { border-color: var(--navy); color: var(--navy); }
     .id-edit svg { width: 13px; height: 13px; }
@@ -155,7 +159,7 @@
     .an-m .an-trend.flat { color: var(--muted); }
 
     .an-grid2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; margin-bottom: 20px; }
-    .an-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 16px; }
+    .an-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 32px; }
     .an-ch-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 20px; }
     .an-ch-tot { color: var(--navy); font-weight: 700; font-size: 15px; }
     .an-bars { display: flex; align-items: flex-end; gap: 14px; height: 140px; }
@@ -282,6 +286,10 @@
     <div class="id-card">
       <div class="id-banner"></div>
       <div class="id-main">
+        <button class="id-gear" id="idGear" type="button" title="帳號設定" aria-label="前往帳號設定">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15 a1.65 1.65 0 0 0 .33 1.82 l.06.06 a2 2 0 1 1-2.83 2.83 l-.06-.06 a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51 V21 a2 2 0 0 1-4 0 v-.09 A1.65 1.65 0 0 0 9 19.4 a1.65 1.65 0 0 0-1.82.33 l-.06.06 a2 2 0 1 1-2.83-2.83 l.06-.06 a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1 H3 a2 2 0 0 1 0-4 h.09 A1.65 1.65 0 0 0 4.6 9 a1.65 1.65 0 0 0-.33-1.82 l-.06-.06 a2 2 0 1 1 2.83-2.83 l.06.06 a1.65 1.65 0 0 0 1.82.33 H9 a1.65 1.65 0 0 0 1-1.51 V3 a2 2 0 0 1 4 0 v.09 a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33 l.06-.06 a2 2 0 1 1 2.83 2.83 l-.06.06 a1.65 1.65 0 0 0-.33 1.82 V9 a1.65 1.65 0 0 0 1.51 1 H21 a2 2 0 0 1 0 4 h-.09 a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+          <span>帳號設定</span>
+        </button>
         <div class="id-av"></div>
         <div class="id-name">創產系 大二 范同學</div>
         <div class="id-titles">
@@ -676,6 +684,15 @@ document.addEventListener('DOMContentLoaded', function() {
       this.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
+
+  // 名字卡右上齒輪 → 直接跳到「帳號設定」分頁
+  var idGear = document.getElementById('idGear');
+  if (idGear) {
+    idGear.addEventListener('click', function () {
+      var btn = document.querySelector('#sideNav button[data-pane="settings"]');
+      if (btn) btn.click();
+    });
+  }
 
   // 我的攻略篩選
   document.querySelector('.filters').addEventListener('click', function (e) {
