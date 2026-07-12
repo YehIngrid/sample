@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <title>拾貨寶庫官方後台管理</title>
+  <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="manifest" href="/assets/manifest-BKd0kgUD.json">
+    <link rel="apple-touch-icon" href="/assets/bigLogo-BTISbBqw.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="拾貨寶庫官方後台管理">
+  <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+  <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
+  <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+  <script type="module" crossorigin src="/assets/official-official-wNOOMHM1.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/BackendService-BDPKRJHu.js">
+  <link rel="modulepreload" crossorigin href="/assets/default-Dt79Ygus.js">
+  <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-BnZ3tb9F.js">
+  <link rel="modulepreload" crossorigin href="/assets/wpBackendService-8jEBVtgQ.js">
+  <link rel="stylesheet" crossorigin href="/assets/official-official-D3hWts5h.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-CP8iiMwN.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-font-CKrxaKSe.css">
+  <link rel="stylesheet" crossorigin href="/assets/news-BzBW8EMh.css">
+</head>
+<body>
+
+  
+  <header class="mobile-topbar">
+    <button id="sidebarToggle" class="sidebar-toggle" aria-label="開啟選單">
+      <i class="fa fa-bars"></i>
+    </button>
+    <span class="mobile-title">拾貨寶庫官方後台</span>
+  </header>
+
+  
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="official-layout">
+
+    
+    <aside class="official-sidebar" id="officialSidebar">
+      <div class="sidebar-brand">
+        <img src="data:image/webp;base64,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" alt="logo" onerror="this.style.display='none'" style="border-radius: 50%;">
+        <span>拾貨寶庫<br><small>官方後台</small></span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-panel="panel-dashboard">
+          <i class="fa fa-home"></i> 總覽
+        </button>
+
+        
+        <div class="nav-group" id="navgroup-broadcast">
+          <button class="nav-group-toggle">
+            <i class="fa fa-bullhorn"></i>
+            <span>公告</span>
+            <i class="fa fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-items">
+            <button class="nav-btn nav-sub" data-panel="panel-broadcast">
+              <i class="fa fa-paper-plane"></i> 發送公告
+            </button>
+            <button class="nav-btn nav-sub" data-panel="panel-channel">
+              <i class="fa fa-plus-circle"></i> 建立頻道
+            </button>
+            <button class="nav-btn nav-sub" data-panel="panel-history">
+              <i class="fa fa-history"></i> 公告紀錄
+            </button>
+          </div>
+        </div>
+
+        <button class="nav-btn" data-panel="panel-news">
+          <i class="fa fa-newspaper"></i> 最新資訊
+        </button>
+        
+        <div class="nav-group" id="navgroup-manage">
+          <button class="nav-group-toggle">
+            <i class="fa fa-shield-alt"></i>
+            <span>管理</span>
+            <i class="fa fa-chevron-down nav-group-arrow"></i>
+          </button>
+          <div class="nav-group-items">
+            <button class="nav-btn nav-sub" data-panel="panel-reports">
+              <i class="fa fa-flag"></i> 檢舉管理
+            </button>
+            <button class="nav-btn nav-sub" data-panel="panel-report-categories">
+              <i class="fa fa-list-alt"></i> 檢舉類別
+            </button>
+            <button class="nav-btn nav-sub" data-panel="panel-review-tags">
+              <i class="fa fa-tags"></i> 評論標籤
+            </button>
+          </div>
+        </div>
+
+        <button class="nav-btn" data-panel="panel-analytics">
+          <i class="fa fa-bar-chart"></i> 數據分析
+        </button>
+      </nav>
+      <div class="sidebar-user">
+        <span id="adminName">載入中...</span>
+        <a href="../shop/shop.html" class="btn btn-sm btn-outline-secondary mt-2 w-100">
+          <i class="fa fa-arrow-left me-1"></i> 返回購物頁
+        </a>
+        <button class="btn btn-sm btn-danger mt-2" id="logoutBtn">登出</button>
+      </div>
+    </aside>
+
+    
+    <main class="official-main">
+
+      
+      <section id="panel-dashboard" class="panel active">
+        <div class="dashboard-welcome">
+          <div class="dashboard-welcome-text">
+            <h2>歡迎回來，<span id="dashAdminName">管理員</span> 👋</h2>
+            <p>這裡是拾貨寶庫官方後台，請選擇下方功能開始操作。</p>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="dashboard-card" onclick="switchPanel('panel-broadcast')">
+            <div class="dashboard-card-icon" style="background:#e8f0fe;">
+              <i class="fa fa-bullhorn" style="color:#1a73e8;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">發送公告</div>
+              <div class="dashboard-card-desc">對所有訂閱頻道的會員發送文字或圖片公告，適合活動通知、緊急公告等。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-news')">
+            <div class="dashboard-card-icon" style="background:#fff3e0;">
+              <i class="fa fa-newspaper" style="color:#f57c00;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">最新資訊</div>
+              <div class="dashboard-card-desc">撰寫並發布最新消息文章，支援圖文排版、附件上傳，發布後立即顯示在前台公告頁。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-analytics')">
+            <div class="dashboard-card-icon" style="background:#f3e8fd;">
+              <i class="fa fa-bar-chart" style="color:#7b1fa2;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">數據分析</div>
+              <div class="dashboard-card-desc">查看平台商品數量、許願池狀況、熱門搜尋關鍵字等即時統計數據。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-reports')">
+            <div class="dashboard-card-icon" style="background:#fce8e6;">
+              <i class="fa fa-flag" style="color:#d93025;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">檢舉管理</div>
+              <div class="dashboard-card-desc">審核使用者提交的檢舉案件，通過審核可調整被檢舉人信譽積分。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-review-tags')">
+            <div class="dashboard-card-icon" style="background:#e8f5e9;">
+              <i class="fa fa-tags" style="color:#388e3c;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">評論標籤</div>
+              <div class="dashboard-card-desc">建立與管理評論標籤規則，設定標籤說明與正負面屬性。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-report-categories')">
+            <div class="dashboard-card-icon" style="background:#fce8e6;">
+              <i class="fa fa-list-alt" style="color:#d93025;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">檢舉類別</div>
+              <div class="dashboard-card-desc">新增檢舉類別供使用者選擇，讓檢舉系統分類更清晰。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-history')">
+            <div class="dashboard-card-icon" style="background:#fce8e6;">
+              <i class="fa fa-history" style="color:#d93025;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">公告紀錄</div>
+              <div class="dashboard-card-desc">查詢特定頻道過去發送的所有公告內容與時間，方便追蹤發送記錄。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-channel')">
+            <div class="dashboard-card-icon" style="background:#e0f7fa;">
+              <i class="fa fa-plus-circle" style="color:#0097a7;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">建立頻道</div>
+              <div class="dashboard-card-desc">初次使用請先在此建立官方廣播頻道，取得頻道 ID 後即可開始發送公告。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+        </div>
+      </section>
+
+      
+      <section id="panel-broadcast" class="panel">
+        <h2 class="panel-title"><i class="fa fa-bullhorn me-2"></i>發送官方公告</h2>
+
+        
+        <div class="mb-4">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <label class="form-label mb-0 fw-bold">① 選擇頻道</label>
+            <button id="refreshChannelsBtn" class="btn btn-sm btn-outline-secondary" type="button">
+              <i class="fa fa-refresh me-1"></i>重新載入
+            </button>
+          </div>
+          <div id="channelSelector" class="channel-selector">
+            <div class="text-muted text-center py-3 small">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入頻道中...
+            </div>
+          </div>
+          <input type="hidden" id="broadcastChannelId">
+          <div id="selectedChannelBadge" class="selected-badge d-none mt-2">
+            <i class="fa fa-check-circle me-1"></i><span id="selectedChannelName"></span>
+          </div>
+        </div>
+
+        
+        <form id="broadcastForm" class="official-form">
+          <label class="form-label fw-bold mb-2">② 撰寫公告</label>
+          <div class="mb-3">
+            <textarea id="broadcastMessage" class="form-control" rows="5" placeholder="輸入公告內容..." maxlength="2000"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">附件圖片 <small class="text-muted">（選填，可拖曳）</small></label>
+            <div class="img-upload-area" id="broadcastImgArea">
+              <input type="file" id="broadcastImgInput" accept="image/*" class="d-none">
+              <div id="broadcastImgPlaceholder" class="img-placeholder">
+                <i class="fa fa-image fa-2x mb-2 d-block text-muted"></i>
+                <span class="text-muted small">點擊或拖曳上傳圖片</span>
+              </div>
+              <img id="broadcastImgPreview" class="img-preview-thumb d-none" alt="預覽">
+              <button type="button" id="clearImgBtn" class="clear-img-btn d-none">×</button>
+            </div>
+          </div>
+          <button type="submit" id="broadcastSubmitBtn" class="btn official-btn w-100" style="color: white;">
+            <i class="fa fa-paper-plane me-1"></i> 發送公告
+          </button>
+        </form>
+        <div id="broadcastResult" class="result-box mt-3 d-none"></div>
+      </section>
+
+      
+      <section id="panel-channel" class="panel">
+        <h2 class="panel-title"><i class="fa fa-plus-circle me-2"></i>建立官方頻道<span style="color: red;">（目前只限建立一個官方頻道）</span></h2>
+        <p class="text-muted">填寫頻道資訊後點擊建立。建立成功後請複製頻道 ID 供發送公告使用。</p>
+        <form id="createChannelForm" class="official-form">
+          <div class="mb-3">
+            <label class="form-label">頻道名稱</label>
+            <input type="text" id="channelName" class="form-control" placeholder="例：拾貨寶庫官方帳號" maxlength="50" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">頻道描述 <small class="text-muted">（選填）</small></label>
+            <input type="text" id="channelDescription" class="form-control" placeholder="例：僅作收公告用，無專人服務" maxlength="200">
+          </div>
+          <button type="submit" id="createChannelBtn" class="btn official-btn px-5" style="color: white;">
+            <i class="fa fa-plus me-1"></i> 建立官方頻道
+          </button>
+        </form>
+        <div id="channelResult" class="result-box mt-3 d-none"></div>
+      </section>
+
+      
+      <section id="panel-history" class="panel">
+        <h2 class="panel-title"><i class="fa fa-history me-2"></i>公告紀錄</h2>
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <label class="form-label mb-0 fw-bold">選擇頻道</label>
+          <button id="refreshHistoryChannelsBtn" class="btn btn-sm btn-outline-secondary" type="button">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+        <div id="historyChannelSelector" class="channel-selector mb-3">
+          <div class="text-muted text-center py-3 small">
+            <span class="spinner-border spinner-border-sm me-1"></span>載入頻道中...
+          </div>
+        </div>
+        <div id="historyList" class="history-list">
+          <p class="text-muted text-center py-4">請選擇頻道以查看公告紀錄</p>
+        </div>
+      </section>
+
+      
+      <section id="panel-news" class="panel">
+        <h2 class="panel-title"><i class="fa fa-newspaper me-2"></i>最新資訊管理</h2>
+
+        
+        <div class="news-editor-card">
+          <div class="news-editor-header">
+            <span id="newsEditorLabel">新增文章</span>
+            <button type="button" class="btn btn-sm btn-outline-secondary d-none" id="newsCancelEditBtn">取消編輯</button>
+          </div>
+          <form id="newsForm" class="official-form mt-3">
+            <input type="hidden" id="newsEditId">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-8">
+                <label class="form-label">標題 <span style="color:red;">*</span></label>
+                <input type="text" id="newsTitle" class="form-control" placeholder="文章標題" maxlength="120" required>
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">狀態</label>
+                <select id="newsStatus" class="form-select form-select-official">
+                  <option value="DRAFT">草稿（暫存）</option>
+                  <option value="PUBLISHED">立即發布</option>
+                  <option value="ARCHIVED">封存</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">內容 <span style="color:red;">*</span></label>
+              <div id="newsEditor"></div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">附件 <small class="text-muted">（圖片、PDF、Word，最多 10 個，每個 ≤ 5MB）</small></label>
+              <div class="news-attach-zone" id="newsAttachZone">
+                <input type="file" id="newsAttachInput" class="d-none" multiple
+                       accept="image/*,.pdf,.doc,.docx">
+                <i class="fa fa-paperclip me-2 text-muted"></i>
+                <span class="text-muted small">點擊選擇或拖曳附件</span>
+              </div>
+              <div id="newsExistingAttachList" class="attach-list mt-2"></div>
+              <div id="newsNewAttachList" class="attach-list mt-1"></div>
+            </div>
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+              <button type="submit" id="newsSubmitBtn" class="btn official-btn" style="color:white;">
+                <i class="fa fa-paper-plane me-1"></i> 發布文章
+              </button>
+              <button type="button" id="newsPreviewBtn" class="btn btn-outline-secondary">
+                <i class="fa fa-eye me-1"></i> 預覽
+              </button>
+              <span id="newsDraftBadge" class="draft-badge d-none">
+                <i class="fa fa-clock-o me-1"></i>已有暫存草稿
+                <button type="button" id="newsClearDraftBtn" class="draft-clear-btn" title="清除草稿">×</button>
+              </span>
+            </div>
+          </form>
+          <div id="newsFormResult" class="result-box mt-3 d-none"></div>
+        </div>
+
+        
+        <div class="modal fade" id="newsPreviewModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header" style="border-bottom:1px solid #eee;">
+                <span class="fw-bold" style="color:#333;">文章預覽</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body news-preview-body">
+                <div class="detail-meta">
+                  <span id="previewBadge" class="news-badge"></span>
+                </div>
+                <h2 class="detail-title" id="previewTitle"></h2>
+                <div class="detail-info" id="previewDate"></div>
+                <div class="detailcontent" id="previewContent"></div>
+                <div id="previewAttachments" style="display:none;margin-top:16px;">
+                  <div style="font-size:13px;color:#6f87a0;margin-bottom:8px;">附件圖片</div>
+                  <div id="previewAttachList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="news-admin-list-header mt-4 mb-2">
+          <span class="fw-bold" style="color:#333;">現有文章</span>
+          <div class="d-flex gap-2 align-items-center">
+            <select id="newsStatusFilter" class="form-select form-select-sm" style="width:auto;">
+              <option value="">全部</option>
+              <option value="DRAFT">草稿</option>
+              <option value="PUBLISHED">已發布</option>
+              <option value="ARCHIVED">已封存</option>
+            </select>
+            <button class="btn btn-sm btn-outline-primary" id="refreshNewsBtn">
+              <i class="fa fa-refresh me-1"></i>重新載入
+            </button>
+          </div>
+        </div>
+        <div id="newsAdminList" class="news-admin-list">
+          <div class="text-muted text-center py-3 small">
+            <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+          </div>
+        </div>
+      </section>
+
+
+      
+      <section id="panel-analytics" class="panel">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h2 class="panel-title mb-0"><i class="fa fa-bar-chart me-2"></i>數據分析</h2>
+          <button class="btn btn-sm btn-outline-primary" id="refreshAnalyticsBtn">
+            <i class="fa fa-refresh me-1"></i>重新整理
+          </button>
+        </div>
+        <p class="text-muted mb-4" style="font-size:0.82rem;">
+          <span class="badge-live">即時</span> 資料來自平台 API。
+          <span class="badge-na">需後端</span> 需新增統計 API。
+          <span class="badge-local">本機</span> 資料來自此瀏覽器。
+        </p>
+
+        
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-tachometer me-1"></i> 流量關鍵指標
+            <span class="badge-na ms-2">需後端 API</span>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#dbeafe;"><i class="fa fa-user-plus" style="color:#2563eb;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">日活躍人數 (DAU)</div>
+                <div class="stat-value" id="stat-dau">–</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#dcfce7;"><i class="fa fa-calendar" style="color:#16a34a;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">月活躍人數 (MAU)</div>
+                <div class="stat-value" id="stat-mau">–</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fff7ed;"><i class="fa fa-clock-o" style="color:#ea580c;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">平均停留時間</div>
+                <div class="stat-value stat-value-sm" id="stat-session">–</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fef2f2;"><i class="fa fa-repeat" style="color:#dc2626;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">次日留存率</div>
+                <div class="stat-value" id="stat-retention">–</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-cubes me-1"></i> 平台規模
+            <span class="badge-live ms-2">即時</span>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-shopping-bag" style="color:#1a73e8;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">上架商品總數</div>
+                <div class="stat-value" id="stat-products"><span class="spinner-border spinner-border-sm"></span></div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fce8e6;"><i class="fa fa-fire" style="color:#d93025;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">熱門競標商品</div>
+                <div class="stat-value" id="stat-hot"><span class="spinner-border spinner-border-sm"></span></div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#f3e8fd;"><i class="fa fa-star" style="color:#7b1fa2;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">許願池心願數</div>
+                <div class="stat-value" id="stat-wishes"><span class="spinner-border spinner-border-sm"></span></div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e6f4ea;"><i class="fa fa-users" style="color:#28a745;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">註冊用戶數 <span class="badge-na">需後端</span></div>
+                <div class="stat-value" id="stat-users">–</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fff3e0;"><i class="fa fa-file-text-o" style="color:#f57c00;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">總訂單數 <span class="badge-na">需後端</span></div>
+                <div class="stat-value" id="stat-orders">–</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e8f5e9;"><i class="fa fa-check-circle-o" style="color:#388e3c;"></i></div>
+              <div class="stat-body">
+                <div class="stat-label">最新資訊文章數</div>
+                <div class="stat-value" id="stat-news">–</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-pie-chart me-1"></i> 分類商品數量分佈
+            <span class="badge-live ms-2">即時</span>
+          </div>
+          <div style="position:relative; height:220px;">
+            <div class="text-muted text-center py-4" id="categoryChartLoader">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+            </div>
+            <canvas id="categoryChart" style="display:none;"></canvas>
+          </div>
+        </div>
+
+        
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-lightbulb-o me-1"></i> 許願池最新心願（未被滿足的需求）
+            <span class="badge-live ms-2">即時</span>
+          </div>
+          <div id="wishpoolInsights" class="analytics-item-list">
+            <div class="text-muted text-center py-3 small">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-search me-1"></i> 熱門搜尋關鍵字
+            <span class="badge-local ms-2">本機資料</span>
+          </div>
+          <p class="text-muted mb-2" style="font-size:0.8rem;">
+            目前顯示此瀏覽器的搜尋紀錄。全體用戶統計需後端新增 <code>POST /api/analytics/search</code> 並在搜尋頁呼叫。
+          </p>
+          <div id="searchKeywordsWrap"></div>
+        </div>
+
+        
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-id-card-o me-1"></i> 用戶畫像
+            <span class="badge-na ms-2">需後端 API</span>
+          </div>
+          <div class="demographics-placeholder">
+            <div class="demo-row">
+              <i class="fa fa-graduation-cap demo-icon"></i>
+              <div>
+                <div class="demo-title">系所 / 年級分佈</div>
+                <div class="demo-desc">後端需提供 <code>GET /api/admin/analytics/user-demographics</code>，回傳各系所與年級的用戶比例，可繪製圓餅圖。招商時可精準對接目標補習班（大四→公職班、法律/會計系→證照班）。</div>
+              </div>
+            </div>
+            <div class="demo-row">
+              <i class="fa fa-clock-o demo-icon"></i>
+              <div>
+                <div class="demo-title">熱門上線時段（24hr）</div>
+                <div class="demo-desc">後端需提供 <code>GET /api/admin/analytics/peak-hours</code>，回傳各小時的 session 數。可繪製折線圖，告知廣告主最佳限時廣告投放時段（例：深夜 23:00–01:00）。</div>
+              </div>
+            </div>
+            <div class="demo-row">
+              <i class="fa fa-line-chart demo-icon"></i>
+              <div>
+                <div class="demo-title">DAU / MAU 趨勢（近 30 天）</div>
+                <div class="demo-desc">後端需提供 <code>GET /api/admin/analytics/dau-mau?days=30</code>，回傳每日活躍用戶數。這是招商的基本門檻數據，向廠商證明平台「有人氣、活躍中」。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="analytics-block pitch-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-handshake-o me-1"></i> 招商數據摘要
+          </div>
+          <div id="pitchSummary">
+            <span class="spinner-border spinner-border-sm"></span>
+          </div>
+        </div>
+
+        
+        <div class="analytics-block">
+          <div class="analytics-block-header">
+            <i class="fa fa-tag me-1"></i> 最新上架商品
+            <span class="badge-live ms-2">即時</span>
+          </div>
+          <div id="analyticsNewItems" class="analytics-item-list">
+            <div class="text-muted text-center py-3 small">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+      <section id="panel-report-categories" class="panel">
+        <h2 class="panel-title"><i class="fa fa-list-alt me-2"></i>檢舉類別管理</h2>
+        <p class="text-muted small mb-3">建立後，使用者送出檢舉時可從這些類別中選擇。</p>
+
+        
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="fw-bold" style="color:#333;">現有類別</span>
+          <button class="btn btn-sm btn-outline-primary" id="refreshReportCatsBtn"><i class="fa fa-refresh me-1"></i>重新載入</button>
+        </div>
+        <div id="reportCatsList" class="mb-4">
+          <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+        </div>
+
+        
+        <div class="news-editor-card">
+          <div class="news-editor-header"><span>新增檢舉類別</span></div>
+          <form id="createReportCatForm" class="official-form mt-3">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-5">
+                <label class="form-label">類別代碼 (英文) <span style="color:red">*</span></label>
+                <input type="text" id="newCatKey" class="form-control" placeholder="例：illegal_goods" maxlength="50" required>
+                <div class="form-text">只能使用英文字母、數字與底線</div>
+              </div>
+              <div class="col-sm-7">
+                <label class="form-label">類別說明 <span style="color:red">*</span></label>
+                <input type="text" id="newCatDesc" class="form-control" placeholder="例：違法或違禁商品" maxlength="100" required>
+              </div>
+            </div>
+            <button type="submit" class="btn official-btn" style="color:white;">
+              <i class="fa fa-plus me-1"></i> 建立類別
+            </button>
+          </form>
+          <div id="createReportCatResult" class="result-box mt-3 d-none"></div>
+        </div>
+      </section>
+
+      
+      <section id="panel-review-tags" class="panel">
+        <h2 class="panel-title"><i class="fa fa-tags me-2"></i>評論標籤管理</h2>
+        <p class="text-muted small mb-3">建立或修改評論標籤規則（tag 自動轉大寫）。</p>
+
+        
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="fw-bold" style="color:#333;">現有標籤</span>
+          <button class="btn btn-sm btn-outline-primary" id="refreshTagsBtn"><i class="fa fa-refresh me-1"></i>重新載入</button>
+        </div>
+        <div id="reviewTagsList" class="mb-4">
+          <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+        </div>
+
+        
+        <div class="news-editor-card">
+          <div class="news-editor-header"><span>新增標籤</span></div>
+          <form id="createTagForm" class="official-form mt-3">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-4">
+                <label class="form-label">標籤名稱 (英文) <span style="color:red">*</span></label>
+                <input type="text" id="newTagName" class="form-control" placeholder="例：FAST_SHIPPING" maxlength="50" required>
+              </div>
+              <div class="col-sm-5">
+                <label class="form-label">說明 <span style="color:red">*</span></label>
+                <input type="text" id="newTagMeaning" class="form-control" placeholder="例：出貨速度快" maxlength="100" required>
+              </div>
+              <div class="col-sm-3">
+                <label class="form-label">分數增減 (delta) <span style="color:red">*</span></label>
+                <input type="number" id="newTagDelta" class="form-control" placeholder="例：1 或 -5" min="-100" max="100" required>
+              </div>
+            </div>
+            <button type="submit" class="btn official-btn" style="color:white;">
+              <i class="fa fa-plus me-1"></i> 建立標籤
+            </button>
+          </form>
+          <div id="createTagResult" class="result-box mt-3 d-none"></div>
+        </div>
+      </section>
+
+      
+      <section id="panel-reports" class="panel">
+        <h2 class="panel-title"><i class="fa fa-flag me-2"></i>檢舉管理</h2>
+
+        
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+          <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+          <select id="reportsStatusFilter" class="form-select form-select-sm" style="width:auto;">
+            <option value="">全部</option>
+            <option value="pending">審核中</option>
+            <option value="approved">已通過</option>
+            <option value="rejected">已駁回</option>
+          </select>
+          <button class="btn btn-sm btn-outline-primary" id="refreshReportsBtn">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+
+        
+        <div id="reportsAdminList">
+          <div class="text-muted text-center py-3 small">
+            <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+          </div>
+        </div>
+        <div id="reportsAdminPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+
+        
+        <div class="modal fade" id="reviewReportModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">審核檢舉</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body" id="reviewReportBody">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="reviewRejectBtn">駁回</button>
+                <button type="button" class="btn btn-success" id="reviewApproveBtn">通過</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  
+  <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" integrity="sha384-ecIckRi4QlKYya/FQUbBUjS4qp65jF/J87Guw5uzTbO1C1Jfa/6kYmd6dXUF6D7i" crossorigin="anonymous" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js" integrity="sha384-utBUCeG4SYaCm4m7GQZYr8Hy8Fpy3V4KGjBZaf4WTKOcwhCYpt/0PfeEe3HNlwx8" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js" integrity="sha384-e6cc9LaIG7xZ3XD5B+jtr1NhTWPQGQdRCh6xiZ+ZFUtWCpg4ycv3Sh+SkZoopvUY" crossorigin="anonymous"></script>
+</body>
+</html>

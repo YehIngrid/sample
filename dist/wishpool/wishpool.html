@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <script>(function(){if(window.innerWidth<=991&&sessionStorage.getItem('skipLoader')==='1'){sessionStorage.removeItem('skipLoader');document.documentElement.classList.add('skip-loader');}})();</script>
+    <title>拾貨寶庫 | 許願池</title>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="manifest" href="/assets/manifest-BKd0kgUD.json">
+    <link rel="apple-touch-icon" href="/assets/bigLogo-BTISbBqw.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
+    <meta property="og:title" content="許願池">
+    <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+    <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
+    <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
+    
+    
+    <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" rel="stylesheet"  >
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" integrity="sha384-6LFfkTKLRlzFtgx8xsWyBdKGpcMMQTkv+dB7rAbugeJAu1Ym2q1Aji1cjHBG12Xh" crossorigin="anonymous">
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"  ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
+  <script type="module" crossorigin src="/assets/wishpool-wishpool-B3AO38pE.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/BackendService-BDPKRJHu.js">
+  <link rel="modulepreload" crossorigin href="/assets/questions-v2KOxZmY.js">
+  <link rel="modulepreload" crossorigin href="/assets/wpBackendService-8jEBVtgQ.js">
+  <link rel="modulepreload" crossorigin href="/assets/default-Dt79Ygus.js">
+  <link rel="stylesheet" crossorigin href="/assets/wishpool-wishpool-CxlTc-ik.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-CP8iiMwN.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-font-CKrxaKSe.css">
+</head>
+
+<body>
+  <div id="whatcontent">
+    
+    <div class="header">
+        
+        <nav class="navbar navbar-expand-lg navtb wp-navbar sticky-top">
+            <div class="container d-flex align-items-center wp-navbar-inner">
+                
+                <button class="navbar-toggler d-lg-none mobile-hamburger" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span><img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="手機版選單" style="width: 20px;"></span>
+                </button>
+                
+                <div class="d-flex align-items-center me-4 flex-shrink-0 gap-2">
+                    <a class="navbar-brand picture" href="../newhome/newhome.html">
+                        <img src="/assets/TREASUREHUBCHEN-DooKZtdE.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
+                    </a>
+                    <a class="wp-back-btn d-none d-lg-inline-block" href="../shop/shop.html">← 返回購物首頁</a>
+                </div>
+                
+                <div class="d-none d-lg-flex wp-nav-tabs-wrap">
+                    <ul class="navbar-nav flex-row wp-nav-pill">
+                        <li class="nav-item"><a class="nav-link spa-tab" href="#about" data-spa>創立理念</a></li>
+                        <li class="nav-item"><a class="nav-link spa-tab active" href="#wishpool" data-spa>許願池</a></li>
+                        <li class="nav-item"><a class="nav-link spa-tab" href="#makewish" data-spa>我要許願</a></li>
+                        <li class="nav-item"><a class="nav-link spa-tab" href="#mywishes" data-spa>我的願望</a></li>
+                    </ul>
+                </div>
+                
+                <div class="d-flex align-items-center ms-auto gap-2">
+                    <div class="login d-flex align-items-center">
+                        <a href="../person/person.html" style="margin-right: 10px; cursor: pointer;">
+                            <img class="nav-user-avatar"/>
+                        </a>
+                        <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container-fluid1 d-lg-none">
+            <div class="collapse navbar-collapse mt-2" id="navbarNav">
+                <ul class="navbar-nav mobileNav">
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shop.html">購物首頁</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../commodity/commodity.html">購物商場</a></li>
+                    <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                    <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    
+    <main class="container">
+      <section id="mywishes" class="page">
+        <h3 class="cardTitle" style="margin-bottom: 4px; color: #004b97;">我的願望</h3>
+        <p class="section-subtitle">共 <span id="my-total">0</span> 件</p>
+        <div class="mywish-filter-tabs" id="myWishFilter">
+          <button class="mywish-tab active" data-status="0">全部</button>
+          <button class="mywish-tab" data-status="1">活躍中</button>
+          <button class="mywish-tab" data-status="2">已過期</button>
+          <button class="mywish-tab" data-status="3">已刪除</button>
+        </div>
+        <div class="wishpoolcontainer col-12">
+          <div class="wishgrid">
+            <div id="empty" class="d-flex justify-content-center"></div>
+            <div class="my-item-list" id="myWishGrid">
+              
+            </div>
+            <div class="pagination-controls text-center my-3">
+              <button id="myprevPage" class="wishpage">上一頁</button>
+              <span id="mypageInfo" class="mx-2" style="color: var(--brand-color);"></span>
+              <button id="mynextPage" class="wishpage">下一頁</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="about" class="page about-section">
+        <div class="pageContainer about-layout">
+          
+          <svg class="about-philosophy-bg" viewBox="0 0 1000 110" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="philosShimmer" x1="-100%" y1="0" x2="0%" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%"   stop-color="rgba(0,75,151,0.06)" />
+                <stop offset="40%"  stop-color="rgba(0,75,151,0.06)" />
+                <stop offset="50%"  stop-color="rgba(255,255,255,0.28)" />
+                <stop offset="60%"  stop-color="rgba(0,75,151,0.06)" />
+                <stop offset="100%" stop-color="rgba(0,75,151,0.06)" />
+                <animateTransform attributeName="gradientTransform" type="translate"
+                  from="-1000 0" to="2000 0" dur="3.5s" repeatCount="indefinite" />
+              </linearGradient>
+            </defs>
+            <text x="500" y="96" text-anchor="middle" textLength="1000" lengthAdjust="spacingAndGlyphs"
+                  font-family="'Noto Sans TC', sans-serif" font-size="108" font-weight="900"
+                  fill="url(#philosShimmer)">OUR PHILOSOPHY</text>
+          </svg>
+          
+          <div class="about-text">
+            <h3 class="cardTitle about-anim-title" style="margin-bottom: 16px;">創立理念</h3>
+            <p class="about-anim-p" style="--i:0">在資源有限的校園生活中，有些需求不應只是運氣，更該被主動滿足。</p>
+            <p class="about-anim-p" style="--i:1">「許願池」的創立理念在於建立一種「買家主動、賣家響應」的「反向媒合機制」。</p>
+            <p class="about-anim-p" style="--i:2">透過公開許願，讓閒置資源能精準流向最需要的人手中，打破「找不到、買不到」的困境，打造一個更具數位溫度與信任感的校園經濟生態。</p>
+            <p class="about-anim-p" style="--i:3">傳統平台讓你大海撈針，「許願池」則讓資源主動找上你。</p>
+          </div>
+          
+          <div class="about-circles-section about-anim-circles">
+            <svg class="about-circles-svg" viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="circleGradL" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%"   stop-color="#7aaed6"/>
+                  <stop offset="55%"  stop-color="#b8d8f0"/>
+                  <stop offset="100%" stop-color="#f0f8ff"/>
+                </linearGradient>
+                <linearGradient id="circleGradR" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%"   stop-color="#f0f8ff"/>
+                  <stop offset="50%"  stop-color="#abdad5"/>
+                  <stop offset="100%" stop-color="#7aaed6"/>
+                </linearGradient>
+              </defs>
+              
+              <circle class="about-circle-breath about-circle-L" cx="196" cy="140" r="118" fill="white" fill-opacity="0.75" stroke="url(#circleGradL)" stroke-width="13"/>
+              
+              <circle class="about-circle-breath about-circle-R" cx="364" cy="140" r="118" fill="white" fill-opacity="0.75" stroke="url(#circleGradR)" stroke-width="13"/>
+              
+              <g class="about-arrow-group">
+                <line x1="268" y1="140" x2="292" y2="140" stroke="#abdad5" stroke-width="2.5" stroke-linecap="round"/>
+                <polyline points="286,134 294,140 286,146" fill="none" stroke="#abdad5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+              
+              <text x="162" y="147" text-anchor="middle" font-family="'Noto Sans TC', sans-serif" font-size="21" font-weight="700" fill="#004b97" letter-spacing="3">買家許願</text>
+              
+              <text x="398" y="147" text-anchor="middle" font-family="'Noto Sans TC', sans-serif" font-size="21" font-weight="700" fill="#004b97" letter-spacing="3">賣家實現</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+      <section id="wishpool" class="page">
+        
+        <div class="wp-hero">
+          <div class="wp-hero-text">
+            <span class="wp-hero-eyebrow">WISH POOL · 心願媒合</span>
+            <h1 class="wp-hero-title">將心願投進<br><span class="wp-hero-accent">拾貨寶庫許願池</span></h1>
+            <div class="wp-hero-feats">
+              <span class="wp-hero-feat">✦ 同學互助</span>
+              <span class="wp-hero-feat">✦ 免費刊登</span>
+              <span class="wp-hero-feat">✦ 安心交易</span>
+            </div>
+            <div class="wp-hero-btns">
+              <a href="#makewish" data-spa class="wp-btn-primary">↗ 前往許願</a>
+              <button class="wp-btn-secondary" id="exploreBtn">探索心願</button>
+            </div>
+          </div>
+          <div class="wp-hero-img">
+            <span class="wp-spark k1"></span>
+            <span class="wp-spark k2"></span>
+            <span class="wp-spark k3"></span>
+            <span class="wp-spark k4"></span>
+            <div class="wp-pc-stack">
+              <div class="wp-pc pc-1"><div class="wp-lines"><span></span><span></span><span></span><span></span></div></div>
+              <div class="wp-pc pc-2"><div class="wp-lines"><span></span><span></span><span></span><span></span></div></div>
+              <div class="wp-pc pc-3">
+                <div class="wp-lines"><span></span><span></span><span></span><span></span></div>
+                <div class="wp-stamp-mark">許願池<br>WISHED</div>
+                <div class="wp-stamp">許願池<br>POSTMARK</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="wp-filter-card">
+          <div class="wp-filter-header" id="filterToggle">
+            <div class="wp-filter-header-left">
+              <span class="wp-filter-title">篩選條件</span>
+              <small class="wp-filter-count">共 <span id="total">0</span> 件（未篩選）</small>
+            </div>
+            <span class="wp-filter-reset" id="filterReset">清除篩選</span>
+            <i class="ti ti-chevron-down wp-filter-chevron"></i>
+          </div>
+          <div class="wp-filter-body" id="filterBody">
+            <div class="tag-list">
+              <span class="wp-filter-label">急 迫 度</span>
+              <button class="tag tag-u-h" data-tag="necessary"><span class="tag-dot"></span>急迫度高</button>
+              <button class="tag tag-u-m" data-tag="normal"><span class="tag-dot"></span>一般急迫度</button>
+              <button class="tag tag-u-l" data-tag="nonecessary"><span class="tag-dot"></span>急迫度低</button>
+            </div>
+            <div class="tag-list" style="margin-top: 10px;">
+              <span class="wp-filter-label">收 購 價</span>
+              <button class="tag" data-tag="hundred">0 ~ 100 元</button>
+              <button class="tag" data-tag="fiveh">100 ~ 500 元</button>
+              <button class="tag" data-tag="tothous">500 ~ 1000 元</button>
+              <button class="tag" data-tag="thousand">1000 元以上</button>
+              <button class="tag" data-tag="trithou">3000 元以上</button>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="wishpoolcontainer" style="margin-bottom: 36vh;">
+          <div class="wishgrid">
+            <div class="item-list" id="wishGrid">
+              
+            </div>
+          </div>
+          <div class="pagination-controls text-center my-3">
+            <button id="prevPage" class="wishpage">上一頁</button>
+            <span id="pageInfo" class="mx-2" style="color: var(--brand-color);"></span>
+            <button id="nextPage" class="wishpage">下一頁</button>
+          </div>
+        </div>
+      </section>
+      <section id="makewish" class="page">
+        <div class="mw-layout">
+
+          
+          <div class="mw-card mw-form">
+            <h6 class="cardTitle mw-card-title">許願表單</h6>
+            <p class="mw-login-hint" id="mwLoginHint" style="display:none">請先<span class="loginfirst">登入會員</span>才可提交許願表單！</p>
+            <div class="formwish">
+              <form id="wishForm">
+
+                <div class="mb-3">
+                  <div class="mw-field-label">
+                    <label class="form-label">商品照片</label>
+                    <small class="mw-hint">非必填 &middot; &lt; 5 MB（jpg / png / webp）</small>
+                  </div>
+                  <div class="img-preview" id="imgPreview">
+                    <span class="placeholder"><i class="ti ti-photo-up"></i> 點擊或拖曳上傳</span>
+                    <img id="imgPreviewImg" alt="圖片容器">
+                    <span class="img-filename" id="imgFilename"></span>
+                  </div>
+                  <input type="file" id="wish-image" name="image" accept="image/jpeg, image/jpg, image/png, image/webp" style="display:none">
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="mw-field-label">
+                    <label for="wishName" class="form-label">商品名稱 <span class="mw-required">*</span></label>
+                    <span class="mw-charcount" id="wishNameCount">0 / 60 字</span>
+                  </div>
+                  <input type="text" id="wishName" class="form-control" placeholder="例：iPad 10 代 64GB（粉）" maxlength="60">
+                  <div class="invalid-feedback">請輸入商品名稱</div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="mw-field-label">
+                    <label for="budgetMax" class="form-label">預算上限 <span class="mw-required">*</span></label>
+                    <small class="mw-hint">單位：元</small>
+                  </div>
+                  <input type="number" id="budgetMax" class="form-control" placeholder="0">
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="mw-field-label">
+                    <label for="wishDesc" class="form-label">內容說明 <span class="mw-required">*</span></label>
+                    <span class="mw-charcount" id="wishDescCount">0 / 300 字</span>
+                  </div>
+                  <small class="mw-hint">至少 10 字</small>
+                  <textarea id="wishDesc" rows="4" class="form-control" placeholder="型號、顏色、尺寸、方便聯絡時間等…" maxlength="300"></textarea>
+                  <div class="invalid-feedback">請至少輸入 10 字以上的說明</div>
+                </div>
+
+                <div class="mb-4">
+                  <div class="mw-field-label">
+                    <label for="urgency" class="form-label">急迫度 <span class="mw-required">*</span></label>
+                  </div>
+                  <select id="urgency" class="form-select">
+                    <option value="" selected disabled>請選擇急迫度</option>
+                    <option value="3">急需</option>
+                    <option value="2">一般</option>
+                    <option value="1">不急</option>
+                  </select>
+                  <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="reset" class="btn btn-ghost mw-reset-btn">清除表單</button>
+                  <div class="buttons">
+                    <button class="blob-btn" type="submit" id="wishFormbtn">
+                      送出許願
+                      <span class="blob-btn__inner">
+                        <span class="blob-btn__blobs">
+                          <span class="blob-btn__blob"></span>
+                          <span class="blob-btn__blob"></span>
+                          <span class="blob-btn__blob"></span>
+                          <span class="blob-btn__blob"></span>
+                        </span>
+                      </span>
+                    </button>
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="position:absolute;width:0;height:0;overflow:hidden">
+                      <defs>
+                        <filter id="goo">
+                          <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10"></feGaussianBlur>
+                          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7" result="goo"></feColorMatrix>
+                          <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
+                        </filter>
+                      </defs>
+                    </svg>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          
+          <div class="mw-right">
+
+          
+          <div class="mw-card mw-steps">
+            <h6 class="cardTitle mw-card-title">許願步驟</h6>
+            <ul class="ulstep">
+              <li class="listep">
+                <div class="step-badge"><span class="step-num">1</span></div>
+                <div class="listep-content">
+                  <h3>登入填寫表單</h3>
+                  <p>買家填寫許願單（需登入會員）</p>
+                </div>
+              </li>
+              <li class="listep">
+                <div class="step-badge"><span class="step-num">2</span></div>
+                <div class="listep-content">
+                  <h3>系統展示願望</h3>
+                  <p>系統將願望集中展示在許願池區域</p>
+                </div>
+              </li>
+              <li class="listep">
+                <div class="step-badge"><span class="step-num">3</span></div>
+                <div class="listep-content">
+                  <h3>賣家回應願望</h3>
+                  <p>賣家依願望內容上架商品並標註「回應許願」</p>
+                </div>
+              </li>
+              <li class="listep">
+                <div class="step-badge"><span class="step-num">4</span></div>
+                <div class="listep-content">
+                  <h3>平台通知買家</h3>
+                  <p>平台通知買家，完成配對並引導交易</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          
+          <div class="mw-card mw-notice">
+            <h6 class="cardTitle mw-card-title">注意事項</h6>
+            <ul class="mw-notice-list">
+              <li><i class="ti ti-lock"></i>需登入才可提交表單</li>
+              <li><i class="ti ti-calendar-time"></i>7 天內只可以許 1 個願望</li>
+              <li><i class="ti ti-clock-off"></i>1 個願望展示 7 天後過期</li>
+            </ul>
+          </div>
+
+          </div>
+
+        </div>
+      </section>
+    </main>
+    
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col footer-brand">
+      <a href="../newhome/newhome.html"><img src="/assets/TREASUREHUBwhite-TNTDzVFW.svg" alt="拾貨寶庫" loading="lazy"></a>
+      <p class="footer-tagline">專為大學生打造的校園二手拍賣市集</p>
+    </div>
+    <div class="footer-links-row">
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速連結</h4>
+      <ul class="footer-links">
+        <li><a href="../shop/shop.html">購物首頁</a></li>
+        <li><a href="../commodity/commodity.html">購物商場</a></li>
+        <li><a href="../shop/shop.html?page=seller">賣家專區</a></li>
+        <li><a href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">幫助中心</h4>
+      <ul class="footer-links">
+        <li><a href="../questions/questions.html">常見問題</a></li>
+        <li><a href="../communication/communication.html">客服諮詢</a></li>
+        <li><a href="../policy/policy.html#privacy">隱私權政策</a></li>
+        <li><a href="../policy/policy.html#terms">服務條款</a></li>
+      </ul>
+    </div>
+
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">聯絡我們</h4>
+      <p class="footer-email"><a href="mailto:help@treasurehub.tw">help@treasurehub.tw</a></p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>Copyright &copy; 2026 拾貨寶庫｜All Rights Reserved.</span>
+  </div>
+</footer>
+
+        <div id="globalLoading" class="loading-overlay d-none">
+          <div class="loader-wrap">
+            <div class="shelf">
+              <div class="item it-book"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+              <div class="item it-laptop"><div class="screen"></div><div class="base"></div></div>
+              <div class="item it-lamp"><div class="shade"></div><div class="neck"></div><div class="base"></div></div>
+              <div class="item it-ball"><div class="body"></div><div class="seam"></div></div>
+              <div class="item it-shirt"><div class="sl"></div><div class="sr"></div><div class="body"></div><div class="collar"></div></div>
+              <div class="item it-gift"><div class="box"></div><div class="lid"></div><div class="vrib"></div><div class="bowL"></div><div class="bowR"></div><div class="knot"></div></div>
+            </div>
+            <div class="loader-text">
+              <p class="brand">拾貨寶庫</p>
+              <p class="tag">送出許願中</p>
+            </div>
+          </div>
+        </div>
+        
+    
+    <nav class="wp-spa-nav d-lg-none" id="wpSpaNav">
+      <a class="wp-spa-item spa-tab nav-link" href="#about" data-spa>
+        <img class="wp-tab-icon wp-tab-inactive" src="data:image/svg+xml,%3csvg%20width='30'%20height='31'%20viewBox='0%200%2030%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='15'%20cy='15'%20r='10'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='15'%20cy='27'%20r='4'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='1.5'%20cy='13.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='15'%20cy='1.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='28.5'%20cy='13.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='24.5'%20cy='5.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='5.5'%20cy='5.5'%20r='1.5'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="創立理念">
+        <img class="wp-tab-icon wp-tab-active" src="data:image/svg+xml,%3csvg%20width='30'%20height='31'%20viewBox='0%200%2030%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='15'%20cy='15'%20r='10'%20fill='%23004B97'/%3e%3ccircle%20cx='15'%20cy='27'%20r='4'%20fill='%23004B97'/%3e%3ccircle%20cx='1.5'%20cy='13.5'%20r='1.5'%20fill='%23ABDAD5'/%3e%3ccircle%20cx='15'%20cy='1.5'%20r='1.5'%20fill='%23ABDAD5'/%3e%3ccircle%20cx='28.5'%20cy='13.5'%20r='1.5'%20fill='%23ABDAD5'/%3e%3ccircle%20cx='24.5'%20cy='5.5'%20r='1.5'%20fill='%23ABDAD5'/%3e%3ccircle%20cx='5.5'%20cy='5.5'%20r='1.5'%20fill='%23ABDAD5'/%3e%3c/svg%3e" alt="創立理念">
+        <span>創立理念</span>
+      </a>
+      <a class="wp-spa-item spa-tab nav-link active" href="#wishpool" data-spa>
+        <img class="wp-tab-icon wp-tab-inactive" src="data:image/svg+xml,%3csvg%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M14.7166%200.815217C14.81%200.546549%2015.19%200.546548%2015.2834%200.815216L18.4582%209.94871C18.4994%2010.0672%2018.61%2010.1476%2018.7354%2010.1502L28.403%2010.3472C28.6873%2010.353%2028.8048%2010.7143%2028.5781%2010.8862L20.8727%2016.728C20.7727%2016.8038%2020.7305%2016.9338%2020.7668%2017.0539L23.5669%2026.3092C23.6492%2026.5814%2023.3418%2026.8048%2023.1084%2026.6423L15.1714%2021.1192C15.0684%2021.0476%2014.9316%2021.0476%2014.8286%2021.1192L6.89164%2026.6423C6.65817%2026.8048%206.35078%2026.5814%206.43314%2026.3092L9.23321%2017.0539C9.26954%2016.9338%209.2273%2016.8038%209.12731%2016.728L1.4219%2010.8862C1.19524%2010.7143%201.31266%2010.353%201.59703%2010.3472L11.2646%2010.1502C11.39%2010.1476%2011.5006%2010.0672%2011.5418%209.94871L14.7166%200.815217Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="許願池">
+        <img class="wp-tab-icon wp-tab-active" src="data:image/svg+xml,%3csvg%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M14.7166%200.815217C14.81%200.546549%2015.19%200.546548%2015.2834%200.815216L18.4582%209.94871C18.4994%2010.0672%2018.61%2010.1476%2018.7354%2010.1502L28.403%2010.3472C28.6873%2010.353%2028.8048%2010.7143%2028.5781%2010.8862L20.8727%2016.728C20.7727%2016.8038%2020.7305%2016.9338%2020.7668%2017.0539L23.5669%2026.3092C23.6492%2026.5814%2023.3418%2026.8048%2023.1084%2026.6423L15.1714%2021.1192C15.0684%2021.0476%2014.9316%2021.0476%2014.8286%2021.1192L6.89164%2026.6423C6.65817%2026.8048%206.35078%2026.5814%206.43314%2026.3092L9.23321%2017.0539C9.26954%2016.9338%209.2273%2016.8038%209.12731%2016.728L1.4219%2010.8862C1.19524%2010.7143%201.31266%2010.353%201.59703%2010.3472L11.2646%2010.1502C11.39%2010.1476%2011.5006%2010.0672%2011.5418%209.94871L14.7166%200.815217Z'%20fill='url(%23paint0_linear_978_1697)'/%3e%3cpath%20d='M22.9557%2025.9302L19.8808%2023.8409L21.8795%2022.3572L22.9557%2025.9302Z'%20fill='%23ABDAD5'%20stroke='%23ABDAD5'%20stroke-linecap='round'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_978_1697'%20x1='15'%20y1='0'%20x2='15'%20y2='30'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="許願池">
+        <span>許願池</span>
+      </a>
+      <a class="wp-spa-item spa-tab nav-link" href="#makewish" data-spa>
+        <img class="wp-tab-icon wp-tab-inactive" src="data:image/svg+xml,%3csvg%20width='22'%20height='25'%20viewBox='0%200%2022%2025'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20x='13.3857'%20width='8'%20height='24'%20rx='0.3'%20transform='rotate(30%2013.3857%200)'%20fill='%23B4B4B4'/%3e%3cpath%20d='M5%200.133545L5.84853%202.28502L8%203.13354L5.84853%203.98207L5%206.13354L4.15147%203.98207L2%203.13354L4.15147%202.28502L5%200.133545Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M19.5%2013.1335L20.2071%2014.9264L22%2015.6335L20.2071%2016.3407L19.5%2018.1335L18.7929%2016.3407L17%2015.6335L18.7929%2014.9264L19.5%2013.1335Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M1.5%209.13354L1.92426%2010.2093L3%2010.6335L1.92426%2011.0578L1.5%2012.1335L1.07574%2011.0578L0%2010.6335L1.07574%2010.2093L1.5%209.13354Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="我要許願">
+        <img class="wp-tab-icon wp-tab-active" src="data:image/svg+xml,%3csvg%20width='22'%20height='25'%20viewBox='0%200%2022%2025'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20x='13.3857'%20width='8'%20height='24'%20rx='0.3'%20transform='rotate(30%2013.3857%200)'%20fill='%23004B97'/%3e%3cpath%20d='M5%200.133545L5.84853%202.28502L8%203.13354L5.84853%203.98207L5%206.13354L4.15147%203.98207L2%203.13354L4.15147%202.28502L5%200.133545Z'%20fill='%23ABDAD5'/%3e%3cpath%20d='M19.5%2013.1335L20.2071%2014.9264L22%2015.6335L20.2071%2016.3407L19.5%2018.1335L18.7929%2016.3407L17%2015.6335L18.7929%2014.9264L19.5%2013.1335Z'%20fill='%23ABDAD5'/%3e%3cpath%20d='M1.5%209.13354L1.92426%2010.2093L3%2010.6335L1.92426%2011.0578L1.5%2012.1335L1.07574%2011.0578L0%2010.6335L1.07574%2010.2093L1.5%209.13354Z'%20fill='%23ABDAD5'/%3e%3c/svg%3e" alt="我要許願">
+        <span>我要許願</span>
+      </a>
+      <a class="wp-spa-item spa-tab nav-link" href="#mywishes" data-spa>
+        <img class="wp-tab-icon wp-tab-inactive" src="data:image/svg+xml,%3csvg%20width='29'%20height='31'%20viewBox='0%200%2029%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M25.1816%205.95459C24.5645%205.29456%2023.8317%204.77097%2023.0252%204.41374C22.2187%204.05652%2021.3542%203.87265%2020.4812%203.87265C19.6082%203.87265%2018.7438%204.05652%2017.9373%204.41374C17.1307%204.77097%2016.398%205.29456%2015.7808%205.95459L14.5%207.32376L13.2191%205.95459C11.9725%204.62199%2010.2817%203.87334%208.51873%203.87334C6.75573%203.87334%205.06494%204.62199%203.81831%205.95459C2.57169%207.28719%201.87134%209.09459%201.87134%2010.9792C1.87134%2012.8638%202.57169%2014.6712%203.81831%2016.0038L14.5%2027.4221L25.1816%2016.0038C25.7991%2015.344%2026.2889%2014.5607%2026.6231%2013.6986C26.9573%2012.8365%2027.1293%2011.9124%2027.1293%2010.9792C27.1293%2010.046%2026.9573%209.12189%2026.6231%208.25976C26.2889%207.39762%2025.7991%206.61432%2025.1816%205.95459Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="我的願望">
+        <img class="wp-tab-icon wp-tab-active" src="data:image/svg+xml,%3csvg%20width='29'%20height='31'%20viewBox='0%200%2029%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M25.1816%205.95459C24.5645%205.29456%2023.8317%204.77097%2023.0252%204.41374C22.2187%204.05652%2021.3542%203.87265%2020.4812%203.87265C19.6082%203.87265%2018.7438%204.05652%2017.9373%204.41374C17.1307%204.77097%2016.398%205.29456%2015.7808%205.95459L14.5%207.32376L13.2191%205.95459C11.9725%204.62199%2010.2817%203.87334%208.51873%203.87334C6.75573%203.87334%205.06494%204.62199%203.81831%205.95459C2.57169%207.28719%201.87134%209.09459%201.87134%2010.9792C1.87134%2012.8638%202.57169%2014.6712%203.81831%2016.0038L14.5%2027.4221L25.1816%2016.0038C25.7991%2015.344%2026.2889%2014.5607%2026.6231%2013.6986C26.9573%2012.8365%2027.1293%2011.9124%2027.1293%2010.9792C27.1293%2010.046%2026.9573%209.12189%2026.6231%208.25976C26.2889%207.39762%2025.7991%206.61432%2025.1816%205.95459Z'%20fill='%23004B97'/%3e%3cpath%20d='M20.1387%204.18207C21.9835%204.01209%2023.8563%204.7978%2025.2881%206.67523C26.7407%208.58009%2027.1998%2010.5678%2026.9082%2012.2885C26.6359%2013.8951%2025.7029%2015.3072%2024.2344%2016.2436L15.1543%207.31293C16.5792%205.37936%2018.383%204.34389%2020.1387%204.18207Z'%20fill='%23ABDAD5'%20stroke='%23ABDAD5'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="我的願望">
+        <span>我的願望</span>
+      </a>
+    </nav>
+    
+    <nav class="bottom-nav">
+      <a href="../shop/shop.html" class="bottom-nav-item">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23004B97'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23004B97'%20stroke='%23004B97'/%3e%3c/svg%3e" alt="正在購物首頁">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23B4B4B4'%20stroke='%23B4B4B4'/%3e%3c/svg%3e" alt="點擊前往購物首頁">
+        <span>購物首頁</span>
+      </a>
+      <a href="../commodity/commodity.html" class="bottom-nav-item">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='35'%20height='35'%20viewBox='0%200%2035%2035'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M17.8756%2022.5725C17.6765%2022.7991%2017.3235%2022.7991%2017.1244%2022.5725L3.07378%206.58001C2.78994%206.25694%203.01935%205.75%203.44941%205.75H31.5506C31.9807%205.75%2032.2101%206.25694%2031.9262%206.58001L17.8756%2022.5725Z'%20fill='%23004B97'/%3e%3cpath%20d='M14.5%2018.5C14.5%2018.2239%2014.7239%2018%2015%2018H20C20.2761%2018%2020.5%2018.2239%2020.5%2018.5V34C20.5%2034.412%2020.0296%2034.6472%2019.7%2034.4L14.7%2030.65C14.5741%2030.5556%2014.5%2030.4074%2014.5%2030.25V18.5Z'%20fill='%23004B97'/%3e%3c/svg%3e" alt="正在購物商場">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='35'%20height='35'%20viewBox='0%200%2035%2035'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M17.8756%2022.5725C17.6765%2022.7991%2017.3235%2022.7991%2017.1244%2022.5725L3.07378%206.58001C2.78994%206.25694%203.01935%205.75%203.44941%205.75H31.5506C31.9807%205.75%2032.2101%206.25694%2031.9262%206.58001L17.8756%2022.5725Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M14.5%2018.5C14.5%2018.2239%2014.7239%2018%2015%2018H20C20.2761%2018%2020.5%2018.2239%2020.5%2018.5V34C20.5%2034.412%2020.0296%2034.6472%2019.7%2034.4L14.7%2030.65C14.5741%2030.5556%2014.5%2030.4074%2014.5%2030.25V18.5Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="點擊前往購物商場">
+        <span>購物商場</span>
+      </a>
+      <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-center nav-tab-chat">
+        <div class="nav-center-circle">
+          <img class="nav-icon" src="data:image/svg+xml,%3csvg%20width='23'%20height='23'%20viewBox='0%200%2023%2023'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M12.458%203.83301C15.1499%203.83301%2016.496%203.83348%2017.4629%204.47949C17.8815%204.75917%2018.2408%205.11855%2018.5205%205.53711C19.1665%206.50396%2019.167%207.85014%2019.167%2010.542C19.167%2013.2334%2019.1663%2014.5791%2018.5205%2015.5459C18.2409%2015.9644%2017.8814%2016.3239%2017.4629%2016.6035C16.6183%2017.1678%2015.4846%2017.239%2013.417%2017.248V17.25L12.3945%2019.2949C12.0259%2020.0316%2010.9741%2020.0316%2010.6055%2019.2949L9.58301%2017.25V17.248C7.51542%2017.239%206.38169%2017.1678%205.53711%2016.6035C5.1186%2016.3239%204.75914%2015.9644%204.47949%2015.5459C3.83366%2014.5791%203.83301%2013.2334%203.83301%2010.542C3.83301%207.85014%203.83348%206.50396%204.47949%205.53711C4.75917%205.11855%205.11855%204.75917%205.53711%204.47949C6.50396%203.83348%207.85014%203.83301%2010.542%203.83301H12.458Z'%20fill='url(%23paint0_linear_879_1119)'/%3e%3cellipse%20cx='15.3333'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='11.5'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='7.66666'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_879_1119'%20x1='11.5'%20y1='3.83301'%20x2='11.5'%20y2='19.8474'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="聊天室">
+        </div>
+        <span class="bottom-nav-badge" id="chatNavBadge"></span>
+        <span>聊天室</span>
+      </a>
+      <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='41'%20height='31'%20viewBox='0%200%2041%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cellipse%20cx='12.6357'%20cy='27.7'%20rx='2.63571'%20ry='2.7'%20fill='%23004B97'/%3e%3ccircle%20cx='26.6357'%20cy='27.6357'%20r='2.63571'%20fill='%23004B97'/%3e%3cpath%20d='M8%206L33%206L30.5%2020L10.5%2020L8%206Z'%20fill='%23004B97'/%3e%3crect%20x='8.70001'%20y='22'%20width='21.4762'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3crect%20width='2.5696'%20height='23.3413'%20rx='1'%20transform='matrix(0.988954%20-0.148225%200.143341%200.989673%205.41626%201.46036)'%20fill='%23004B97'/%3e%3crect%20x='0.976196'%20width='6.83333'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3cpath%20d='M9.59576%2012.7941H31.8404'%20stroke='white'/%3e%3cline%20x1='15.4994'%20y1='5.97547'%20x2='16.2015'%20y2='20.2696'%20stroke='white'/%3e%3crect%20width='1'%20height='15'%20transform='translate(23.617%205.29413)'%20fill='white'/%3e%3c/svg%3e" alt="正在購物車頁">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='41'%20height='31'%20viewBox='0%200%2041%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cellipse%20cx='12.6357'%20cy='27.7'%20rx='2.63571'%20ry='2.7'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='26.6357'%20cy='27.6357'%20r='2.63571'%20fill='%23B4B4B4'/%3e%3cpath%20d='M8%206L33%206L30.5%2020L10.5%2020L8%206Z'%20fill='%23B4B4B4'/%3e%3crect%20x='8.70001'%20y='22'%20width='21.4762'%20height='3'%20rx='1'%20fill='%23B4B4B4'/%3e%3crect%20width='2.5696'%20height='23.3413'%20rx='1'%20transform='matrix(0.988954%20-0.148225%200.143341%200.989673%205.41626%201.46036)'%20fill='%23B4B4B4'/%3e%3crect%20x='0.976196'%20width='6.83333'%20height='3'%20rx='1'%20fill='%23B4B4B4'/%3e%3cpath%20d='M9.59576%2012.7941H31.8404'%20stroke='white'/%3e%3cline%20x1='15.4994'%20y1='5.97547'%20x2='16.2015'%20y2='20.2696'%20stroke='white'/%3e%3crect%20width='1'%20height='15'%20transform='translate(23.617%205.29413)'%20fill='white'/%3e%3c/svg%3e" alt="點擊前往購物車頁">
+        <span>購物車</span>
+      </a>
+      <a href="../person/person.html" class="bottom-nav-item">
+        <img class="nav-icon nav-icon-active" src="/assets/default-avatar-B4oh15VT.webp" alt="正在我的帳戶">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='150'%20height='150'%20viewBox='0%200%20150%20150'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_879_1133)'%3e%3crect%20width='150'%20height='150'%20rx='50'%20fill='white'/%3e%3ccircle%20cx='75'%20cy='75'%20r='75'%20fill='%23B4B4B4'/%3e%3cellipse%20cx='75'%20cy='126'%20rx='60'%20ry='40'%20fill='white'/%3e%3ccircle%20cx='75'%20cy='49'%20r='30'%20fill='white'/%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_879_1133'%3e%3crect%20width='150'%20height='150'%20rx='50'%20fill='white'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="點擊前往我的帳戶">
+        <span>我的帳戶</span>
+      </a>
+    </nav>
+  </div>
+
+    
+    <div class="modal fade" id="wishCropModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header py-2">
+            <h5 class="modal-title">裁切圖片</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-0" style="background:#111;">
+            <div style="height:60vh;overflow:hidden;">
+              <img id="wishCropImg" style="display:block;max-width:100%;" alt="裁切照片範圍">
+            </div>
+          </div>
+          <div class="modal-footer py-2">
+            <small class="text-muted me-auto">拖曳調整裁切範圍，滾輪縮放</small>
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary btn-sm" id="wishCropConfirm">確認裁切</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" integrity="sha384-jrOgQzBlDeUNdmQn3rUt/PZD+pdcRBdWd/HWRqRo+n2OR2QtGyjSaJC0GiCeH+ir" crossorigin="anonymous"></script>
+</body>
+</html>

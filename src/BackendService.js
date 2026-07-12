@@ -78,16 +78,6 @@ function _attach401Handler(instance) {
             }
 
             if (status === 401 && msg === 'Email not verified') {
-                if (!window.location.pathname.includes('account.html')) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '帳號尚未驗證',
-                        text: '請前往信箱點擊認證連結，開通帳號後再登入。',
-                        confirmButtonText: '確定'
-                    }).then(() => {
-                        location.href = '../account/account.html';
-                    });
-                }
                 return Promise.reject(err);
             }
 

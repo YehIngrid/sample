@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+    <html lang="zh-TW">
+    <head>
+        <title>登入與註冊</title>
+            
+        
+        <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="manifest" href="/assets/manifest-BKd0kgUD.json">
+    <link rel="apple-touch-icon" href="/assets/bigLogo-BTISbBqw.jpg">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集 | 帳戶登入"/>
+        <meta property="og:title" content="登入與註冊">
+        <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+        <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
+        <meta name="keywords" content="拾獲寶庫、拾貨寶庫、拾貨寶庫登入、中興二手"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        
+        
+        <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet"  >
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
+      <script type="module" crossorigin src="/assets/account-account-Cz4Y-He0.js"></script>
+      <link rel="modulepreload" crossorigin href="/assets/BackendService-BDPKRJHu.js">
+      <link rel="modulepreload" crossorigin href="/assets/default-Dt79Ygus.js">
+      <link rel="stylesheet" crossorigin href="/assets/account-account-Bx6JMePT.css">
+      <link rel="stylesheet" crossorigin href="/assets/default-CP8iiMwN.css">
+      <link rel="stylesheet" crossorigin href="/assets/default-font-CKrxaKSe.css">
+    </head>
+
+    <body>
+      <div id="loader">
+        <div class="loader-wrap">
+          <div class="shelf">
+            <div class="item it-book"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+            <div class="item it-laptop"><div class="screen"></div><div class="base"></div></div>
+            <div class="item it-lamp"><div class="shade"></div><div class="neck"></div><div class="base"></div></div>
+            <div class="item it-ball"><div class="body"></div><div class="seam"></div></div>
+            <div class="item it-shirt"><div class="sl"></div><div class="sr"></div><div class="body"></div><div class="collar"></div></div>
+            <div class="item it-gift"><div class="box"></div><div class="lid"></div><div class="vrib"></div><div class="bowL"></div><div class="bowR"></div><div class="knot"></div></div>
+          </div>
+          <div class="loader-text">
+            <p class="brand">拾貨寶庫</p>
+            <p class="tag">驗證身份中</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="whatcontent" class="d-none">
+  
+  <div class="header">
+    
+    
+        <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
+          <div class="container-fluid d-flex align-items-center">
+
+            
+            <button class="navbar-toggler d-lg-none me-2 order-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"   
+                    aria-label="Toggle navigation">
+              <img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="選單" style="width:20px;">
+            </button>
+
+            
+            <a class="navbar-brand picture order-1 me-4"
+              href="../newhome/newhome.html">
+              <img src="/assets/TREASUREHUBCHEN-DooKZtdE.svg" alt="拾貨寶庫登入頁面"
+                   style="width: 100px; margin-right: 10px; border-radius: 0%;">
+            </a>
+
+            
+            <div class="d-none d-lg-flex order-2">
+              <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shop.html">購物首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../commodity/commodity.html">購物商場</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
+              </ul>
+            </div>
+
+            
+            <div class="d-flex align-items-center ms-auto order-3">
+              <div class="login me-2">
+                <a id="username" class="username" href="../person/person.html"></a>
+                <a class="navbar-brand" href="account.html" id="loginornot">登入</a>
+              </div>
+              <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
+                <img src="data:image/svg+xml,%3csvg%20width='41'%20height='31'%20viewBox='0%200%2041%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cellipse%20cx='12.6357'%20cy='27.7'%20rx='2.63571'%20ry='2.7'%20fill='%23004B97'/%3e%3ccircle%20cx='26.6357'%20cy='27.6357'%20r='2.63571'%20fill='%23004B97'/%3e%3cpath%20d='M8%206L33%206L30.5%2020L10.5%2020L8%206Z'%20fill='%23004B97'/%3e%3crect%20x='8.70001'%20y='22'%20width='21.4762'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3crect%20width='2.5696'%20height='23.3413'%20rx='1'%20transform='matrix(0.988954%20-0.148225%200.143341%200.989673%205.41626%201.46036)'%20fill='%23004B97'/%3e%3crect%20x='0.976196'%20width='6.83333'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3cpath%20d='M9.59576%2012.7941H31.8404'%20stroke='white'/%3e%3cline%20x1='15.4994'%20y1='5.97547'%20x2='16.2015'%20y2='20.2696'%20stroke='white'/%3e%3crect%20width='1'%20height='15'%20transform='translate(23.617%205.29413)'%20fill='white'/%3e%3c/svg%3e" alt="我的購物車">
+              </a>
+            </div>
+          </div>
+
+          
+          <ul class="navbar-nav mobileNav d-none">
+            <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
+            <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
+            <li class="nav-item"><a class="nav-link" href="../shop/shop.html">購物首頁</a></li>
+            <li class="nav-item"><a class="nav-link" href="../commodity/commodity.html">購物商場</a></li>
+            <li class="nav-item"><a class="nav-link" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+            <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
+            <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
+          </ul>
+        </nav>
+
+  </div>
+</div>
+        
+        <div class="auth-bg">
+          <div class="auth-blob auth-blob-1"></div>
+          <div class="auth-blob auth-blob-2"></div>
+          <div class="auth-blob auth-blob-3"></div>
+        </div>
+        <div class="form-signin">
+          <div class="content">
+            <div id="loginModal" class="auth-step">
+              <div class="modalwhat glass-card">
+                <form id="loginForm">
+                  <h2>登入</h2>
+                  <div class="form-floating">
+                    <input type="email" class="form-control form-control-lg" id="floatingInput" placeholder="s4113001001@mail.nchu.edu.tw">
+                    <label for="floatingInput">請輸入您的電子信箱</label>
+                  </div>
+                  <p class="field-error" id="err-login-email"></p>
+                  <div class="form-floating pwd-wrap">
+                    <input type="password" class="form-control form-control-lg" id="floatingPassword" placeholder="Password" maxlength="128">
+                    <label for="floatingPassword">請輸入密碼</label>
+                  </div>
+                  <p class="field-error" id="err-login-pwd"></p>
+                  <button type="submit" id="send" class="css-button-gradient--4">登入</button>
+                  <br>
+                  <a href="#" class="p" id="forgetPasswordbtn">忘記密碼？</a>
+                </form>
+                <p class="p"><br>
+                  還沒有加入拾貨寶庫的會員嗎？<a id="signupLink" href="#">快速註冊</a>
+                </p>
+              </div>
+            </div>
+            
+            <div id="forgetpwdpage" class="auth-step">
+              <div id="forgetpwdModal" class="modalwhat glass-card" >
+                <form id="forgetpwdForm">
+                  <a class="backlogin" id="forgetBacklogin">返回登入頁</a>
+                  <h2 style="margin-bottom: 18px;">重設密碼<br></h2>
+                  <div class="form-floating form-forgetemail">
+                  <input class="form-control" type="email" id="forgetemail" placeholder="請輸入您的帳號電子郵件">
+                  <label for="floatingInput">請輸入您的帳號電子郵件</label>
+                  </div>
+                  <p class="field-error" id="err-forget-email"></p>
+                  <p class="remindForget">請輸入您的 Email，若此信箱已完成註冊，系統將寄送<strong>重設密碼連結</strong>至信箱。</p>
+                  <button type="submit" id="forgetSendbtn" class="forgetbtn css-button-gradient--4">送出</button>
+                </form>
+              </div>
+            </div>
+            
+            <div id="getLinkPage" class="auth-step">
+              <div id="getLinkModal" class="modalwhat glass-card" >
+                <form id="getLinkForm">
+                  <h2>重設密碼連結已寄出</h2>
+                  <div style="text-align:center; margin: 10px 0 18px;">
+                    <i class="fa-regular fa-envelope" style="font-size:2.4rem; color:#004b97;"></i>
+                  </div>
+                  <p class="checkRemind">請前往信箱<strong>點擊連結</strong>以重設密碼，連結將在 <strong>1 小時後失效</strong>。</p>
+                  <button type="button" id="checkBackLogin1" class="css-button-gradient--4" style="margin-top:28px;" onclick="event.preventDefault(); document.getElementById('forgetBacklogin').click()">返回登入</button>
+                </form>
+              </div>
+            </div>
+            
+            <div id="resetpwdpage" class="auth-step">
+              <div id="resetpwdModal" class="modalwhat glass-card" >
+                <form id="resetpwdForm">
+                  <h2>設定您的新密碼</h2>
+                  <div class="form-floating form-resettpass pwd-wrap">
+                  <input class="pwd form-control" type="password" id="newPwd1" placeholder="至少 10 位，含大小寫、數字、特殊符號" maxlength="128">
+                  <label for="floatingPassword" class="p">至少 8 位，需含大寫、小寫字母及數字</label>
+                  </div>
+                  <div class="form-floating form-resetbpass pwd-wrap">
+                  <input class="form-control pwd" type="password" id="newPwd2" placeholder="請再次輸入密碼" maxlength="128">
+                  <label for="floatingPassword" class="p">請再次輸入密碼</label>
+                  </div>
+                  <button type="submit" id="resetbtn" class="signbtn css-button-gradient--4">重設新密碼</button>
+                </form>
+              </div>
+            </div>
+            
+            <div id="resetsuccesspage" class="auth-step">
+              <div id="resetsuccessModal" class="modalwhat glass-card" >
+                <form id="resetsuccessForm">
+                  <h2>密碼重設成功！<br></h2>
+                  <i class="fa-regular fa-circle-check" style="color: #28a745; font-size: 4rem; margin-top: 10px;margin-bottom: 15px;"></i>
+                  <p class="remind">您的密碼已<strong>成功重設</strong>，請使用<strong>新密碼</strong>登入。</p>
+                  <button type="submit" id="resetSuccessBackLogin" class="checkBackbtn css-button-gradient--4">返回登入頁</button>
+                </form>
+              </div>
+            </div>
+            
+            <div id="signuppage" class="auth-step">
+              <div id="signupModal" class="modalwhat glass-card" >
+                <form id="signupForm">
+                  <a class="backlogin" id="backlogin">返回登入頁</a>
+                  <h2>註冊</h2>
+                  <div class="form-floating form-signemail">
+                  <input class="form-control" type="email" id="email" placeholder="請使用學校的電子郵件註冊">
+                  <label for="floatingInput">請使用學校的電子郵件註冊</label>
+                  </div>
+                  <p class="field-error" id="err-signup-email"></p>
+                  <div class="form-floating form-signpass pwd-wrap">
+                  <input class="form-control pwd" type="password" id="password1" placeholder="至少 10 位，含大小寫、數字、特殊符號" maxlength="128">
+                  <label for="floatingPassword" class="p">至少 8 位，需含大寫、小寫字母及數字</label>
+                  </div>
+                  <p class="field-error" id="err-signup-pwd1"></p>
+                  <div class="form-floating form-signpass pwd-wrap">
+                  <input class="form-control pwd" type="password" id="password2" placeholder="請再次輸入密碼" maxlength="128">
+                  <label for="floatingPassword" class="p">請再次輸入密碼</label>
+                  </div>
+                  <p class="field-error" id="err-signup-pwd2"></p>
+                  <div class="form-floating form-signnick">
+                  <input class="form-control" type="text" id="name" placeholder="請輸入暱稱">
+                  <label for="floatingInput" >請輸入您的暱稱</label>
+                  </div>
+                  <p class="field-error" id="err-signup-name"></p>
+                  <div class="terms-agree-row">
+                    <input type="checkbox" id="agreeTerms" disabled>
+                    <span class="terms-agree-text">我已閱讀並同意<button type="button" class="terms-open-btn" id="openTermsModal">服務條款與隱私權政策</button></span>
+                  </div>
+                  <button type="submit" id="sign" class="signbtn css-button-gradient--4" disabled>註冊</button>
+                  <p class="remind">註冊後系統將寄送<strong>認證連結</strong>至您的信箱，請<strong>點擊郵件連結</strong>開通帳號後即可登入。</p>
+                </form>
+              </div>
+            </div>
+            <div id="checkEmailPage" class="auth-step">
+              <div id="checkModal" class="modalwhat glass-card" >
+                <form id="checkForm">
+                  <h2>請確認信箱有無認證信</h2>
+                  <div style="text-align:center; margin: 10px 0 18px;">
+                    <i class="fa-regular fa-envelope" style="font-size:2.4rem; color:#004b97;"></i>
+                  </div>
+                  <p class="checkRemind">系統已將<strong>認證連結</strong>寄至您的電子信箱，請<strong>點擊郵件連結</strong>開通帳號後即可登入。</p>
+                  <p class="checkRemind" style="margin-top:8px;">沒收到信？請先檢查<strong>垃圾郵件資料夾</strong>。</p>
+                  <p class="checkRemind" style="margin-top:8px; color:#666;">認證連結將於 <strong>24 小時</strong>後失效。若連結已過期，請重新登入，系統會自動補寄認證信。</p>
+                  <button type="button" id="resendVerifyBtn" class="css-button-gradient--4 resend-btn" disabled style="display:none">
+                    重新發送認證信&ensp;<span id="resendCountdown"></span>
+                  </button>
+                  <button type="button" id="checkBackLogin" class="checkBackbtn css-button-gradient--4">我瞭解了，返回登入頁</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col footer-brand">
+      <a href="../newhome/newhome.html"><img src="/assets/TREASUREHUBwhite-TNTDzVFW.svg" alt="拾貨寶庫" loading="lazy"></a>
+      <p class="footer-tagline">專為大學生打造的校園二手拍賣市集</p>
+    </div>
+    <div class="footer-links-row">
+
+    <div class="footer-col">
+      <h4 class="footer-heading">快速連結</h4>
+      <ul class="footer-links">
+        <li><a href="../shop/shop.html">購物首頁</a></li>
+        <li><a href="../commodity/commodity.html">購物商場</a></li>
+        <li><a href="../shop/shop.html?page=seller">賣家專區</a></li>
+        <li><a href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">幫助中心</h4>
+      <ul class="footer-links">
+        <li><a href="../questions/questions.html">常見問題</a></li>
+        <li><a href="../communication/communication.html">客服諮詢</a></li>
+        <li><a href="../policy/policy.html#privacy">隱私權政策</a></li>
+        <li><a href="../policy/policy.html#terms">服務條款</a></li>
+      </ul>
+    </div>
+
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">聯絡我們</h4>
+      <p class="footer-email"><a href="mailto:help@treasurehub.tw">help@treasurehub.tw</a></p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>Copyright &copy; 2026 拾貨寶庫｜All Rights Reserved.</span>
+  </div>
+</footer>
+      </div>
+      
+<div id="loader-wrapper">
+  <div class="loader-wrap">
+    <div class="shelf">
+      <div class="item it-book"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+      <div class="item it-laptop"><div class="screen"></div><div class="base"></div></div>
+      <div class="item it-lamp"><div class="shade"></div><div class="neck"></div><div class="base"></div></div>
+      <div class="item it-ball"><div class="body"></div><div class="seam"></div></div>
+      <div class="item it-shirt"><div class="sl"></div><div class="sr"></div><div class="body"></div><div class="collar"></div></div>
+      <div class="item it-gift"><div class="box"></div><div class="lid"></div><div class="vrib"></div><div class="bowL"></div><div class="bowR"></div><div class="knot"></div></div>
+    </div>
+    <div class="loader-text">
+      <p class="brand">拾貨寶庫</p>
+      <p class="tag">建立帳號中</p>
+    </div>
+  </div>
+</div>
+<div id="loaderLogin">
+  <div class="loader-wrap">
+    <div class="shelf">
+      <div class="item it-book"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+      <div class="item it-laptop"><div class="screen"></div><div class="base"></div></div>
+      <div class="item it-lamp"><div class="shade"></div><div class="neck"></div><div class="base"></div></div>
+      <div class="item it-ball"><div class="body"></div><div class="seam"></div></div>
+      <div class="item it-shirt"><div class="sl"></div><div class="sr"></div><div class="body"></div><div class="collar"></div></div>
+      <div class="item it-gift"><div class="box"></div><div class="lid"></div><div class="vrib"></div><div class="bowL"></div><div class="bowR"></div><div class="knot"></div></div>
+    </div>
+    <div class="loader-text">
+      <p class="brand">拾貨寶庫</p>
+      <p class="tag">登入帳號中</p>
+    </div>
+  </div>
+</div>
+
+
+<div class="terms-modal-overlay" id="termsModalOverlay">
+  <div class="terms-modal">
+    <div class="terms-modal-header">
+      <span>服務條款與隱私權政策</span>
+      <button type="button" class="terms-modal-close" id="termsModalClose" aria-label="關閉">×</button>
+    </div>
+    <div class="terms-modal-body" id="termsModalBody">
+      <p class="terms-section-title">壹、服務條款</p>
+      <p>歡迎使用「拾貨寶庫」。本平台係由中興大學創業團隊開發，專供校園內部二手物資交換與資訊服務使用。當您完成註冊程序時，即表示您已閱讀、瞭解並同意接受本條款之所有內容。</p>
+      <p><strong>1. 用戶資格與身分驗證</strong></p>
+      <ul>
+        <li>本平台僅限國立中興大學之在學學生、校友使用。</li>
+        <li>用戶必須使用 mail.nchu.edu.tw 校園信箱完成認證始得開啟買賣權限。</li>
+        <li>用戶應保證所提供之資料真實無誤，不得冒用他人身分。</li>
+      </ul>
+      <p><strong>2. 平台定位與交易模式</strong></p>
+      <p>本平台僅提供資訊媒合之技術空間，並非交易契約之主體。用戶間之交易行為（包含但不限於商品確認、價金交付、售後維護）屬買賣雙方之民事契約行為。</p>
+      <p><strong>3. 交易爭議免責條款</strong></p>
+      <ul>
+        <li><strong>現場驗貨義務：</strong>本平台強烈建議雙方採取「面交」。買家應於交付價金前仔細檢查商品，一旦完成交付，即視為買家認可商品現況。</li>
+        <li><strong>免責範圍：</strong>經營團隊不對商品之品質、真偽、合法性、安全性及賣家之履約能力負擔任何擔保責任。</li>
+        <li><strong>糾紛處理：</strong>用戶間之交易糾紛應由雙方自行協商。平台僅在接獲檢舉並查證屬實後，依內部規則對違規者執行「信用積分扣除」或「停權」處分，不負賠償責任。</li>
+      </ul>
+      <p><strong>4. 禁止行為與商品規範</strong></p>
+      <ul>
+        <li><strong>法律禁售品：</strong>菸酒、藥品（處方藥、醫療器材如隱形眼鏡）、槍砲彈藥。</li>
+        <li><strong>侵權商品：</strong>非法影印之教科書／講義、盜版軟體、未經授權之數位課程。</li>
+        <li><strong>詐騙行為：</strong>引導至釣魚網站、要求私下先行匯款。</li>
+        <li><strong>干擾營運：</strong>惡意洗版、人身攻擊、發布虛假評論。</li>
+      </ul>
+      <p class="terms-section-title">貳、隱私權政策</p>
+      <p><strong>1. 資料收集範圍</strong></p>
+      <ul>
+        <li><strong>帳號資訊：</strong>學號、校園信箱、系級、性別。</li>
+        <li><strong>平台紀錄：</strong>商品上架內容、搜尋關鍵字、交易紀錄、信用評分。</li>
+        <li><strong>設備資訊：</strong>IP 位址、瀏覽器類型（僅用於防止惡意攻擊）。</li>
+      </ul>
+      <p><strong>2. 資料使用目的</strong></p>
+      <ul>
+        <li><strong>身分確認：</strong>確保平台用戶均為校內成員。</li>
+        <li><strong>商業分析：</strong>對數據進行去識別化處理，用於統計熱門商品類別、流量時段及客群洞察。</li>
+        <li><strong>行政通知：</strong>寄送交易確認、信用警告及平台重要公告。</li>
+      </ul>
+      <p><strong>3. 資料分享與第三方揭露</strong></p>
+      <ul>
+        <li>除司法機關依法令要求調閱外，未經用戶同意，本平台絕不將足以識別個人身分之資料提供給任何第三方。</li>
+        <li>統計分析數據（去識別化後）可能提供予潛在廣告合作夥伴。</li>
+      </ul>
+      <p class="terms-section-title">參、管轄法院</p>
+      <p>本協議之解釋與適用，均依照中華民國法律予以處理。如有訴訟必要，雙方同意以台灣台中地方法院為第一審管轄法院。</p>
+    </div>
+    <div class="terms-modal-footer">
+      <span id="termsScrollHint" class="terms-scroll-hint">↓ 請繼續捲動閱讀</span>
+      <button type="button" class="terms-agree-btn" id="termsAgreeBtn" disabled>我已閱讀完畢，同意條款</button>
+    </div>
+  </div>
+</div>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    </body>
+    </html>

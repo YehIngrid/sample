@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
-import '../default/default.js';
+import { requireEmailVerified } from '../default/default.js';
 
 let backendService;
 let wpbackendService;
@@ -123,8 +123,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById('searchInputOC')?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      doSearch(e.target.value);
+      const val = e.target.value.trim();
+      if (val && window.addSearchHistory) window.addSearchHistory(val);
+      doSearch(val);
     }
+  });
+  document.getElementById('searchInputOC')?.addEventListener('input', (e) => {
+    const btn = document.getElementById('searchClearBtnOC');
+    if (btn) btn.classList.toggle('visible', e.target.value.length > 0);
   });
   const iframe = document.getElementById('talkInterface');
   iframe.src = '../chatroom/chatroom.html';
@@ -327,6 +333,7 @@ nextHotBtn.addEventListener("click", () => {
 
  
   async function createCommodity() {
+  if (!await requireEmailVerified()) return;
   // 1. 商品名稱
   const nameEl = document.getElementById('name');
   if (!nameEl.value.trim()) {

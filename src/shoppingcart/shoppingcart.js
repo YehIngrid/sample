@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
-import { requireLogin } from '../default/default.js';
+import { requireLogin, requireEmailVerified } from '../default/default.js';
 
 // ================== Service ==================
 let backendService = null;
@@ -369,6 +369,8 @@ async function openCloseChatInterface() {
 const checkoutBtn = document.getElementById('checkout-btn');
 if (checkoutBtn) {
   checkoutBtn.addEventListener('click', async () => {
+
+    if (!await requireEmailVerified()) return;
 
     // ===== 防重複送單 =====
     if (isCheckingOut) return;

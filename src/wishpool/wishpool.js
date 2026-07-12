@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
-import { requireLogin } from '../default/default.js';
+import { requireLogin, requireEmailVerified } from '../default/default.js';
 
 history.scrollRestoration = 'manual';
 
@@ -316,6 +316,12 @@ function showMyInfo(data) {
   });
 }
 async function resendWish(wish) {
+  await Swal.fire({
+    icon: 'info',
+    title: '請重新上傳圖片',
+    text: '重新發送願望時，圖片無法自動帶入，請重新選擇並上傳照片。',
+    confirmButtonText: '我知道了'
+  });
   // 切換到許願表單頁
   location.hash = '#makewish';
   await new Promise(r => setTimeout(r, 80));
@@ -648,9 +654,11 @@ if (!wishFormbig) {
   console.error("[wish] 缺少必要元素：", wishFormbig);
 }
 // 綁定送出事件
-wishFormbig.addEventListener("click", function (e) {
+wishFormbig.addEventListener("click", async function (e) {
   console.log("送出表單，進行最終驗證");
   e.preventDefault(); // 一律阻止原生送出
+
+  if (!await requireEmailVerified()) return;
 
   let isValid = true;
 
@@ -1008,6 +1016,8 @@ async function handleContactWisher(wishId, btn, ownerUid = '') {
 
   const loggedIn = await requireLogin();
   if (!loggedIn) return;
+
+  if (!await requireEmailVerified()) return;
 
   const myUid = String(localStorage.getItem('uid') || '');
   if (myUid && ownerUid && myUid === String(ownerUid)) {

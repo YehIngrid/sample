@@ -33,6 +33,16 @@ body {
     position: relative;
     z-index: 10000 !important;
 }
+body.modal-open .navbar,
+body.modal-open .bottom-nav {
+    z-index: 1040 !important;
+}
+body.modal-open #whatcontent {
+    transform: none !important;
+}
+.modal-backdrop {
+    --bs-backdrop-zindex: 1040;
+}
 .navbar .nav-link {
     color: #4a627a !important;
 }
@@ -280,7 +290,7 @@ ul{
   .search-input-wrap {
     position: relative;
     width: 100%;
-    z-index: 1;
+    z-index: 200;
   }
 
   /* 輸入框內的搜尋 icon */

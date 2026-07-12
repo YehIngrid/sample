@@ -71,13 +71,38 @@ class ChatRoomList {
     async init() {
         if (this.alreadyInit) return;
         this.alreadyInit = true;
+        // 刷新當前登入者資料，避免 localStorage 有舊帳號殘留導致 isSelf 比對錯誤
+        try {
+            await this.auth.getMe();
+            this.userId = localStorage.getItem('uid');
+            this.username = localStorage.getItem('username') || '';
+        } catch (_) {}
         this.setupMobileView();
         document.getElementById('messagesContainer')?.addEventListener('click', e => {
             const img = e.target.closest('.chat-image');
             if (!img) return;
             Swal.fire({ imageUrl: img.src, imageAlt: '圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
         });
-        if (this.userId) {
+        if (this.userId && localStorage.getItem('emailVerify') === 'false') {
+            // 已登入但信箱未驗證
+            const loader = document.getElementById('chatLoader');
+            if (loader) loader.style.display = 'none';
+            const chatList = document.getElementById('chatList');
+            if (chatList) {
+                const redirect = encodeURIComponent(location.pathname + location.search);
+                chatList.innerHTML = `
+                    <div style="padding:32px 16px;text-align:center;color:#888;">
+                        <i class="ti ti-mail-exclamation" style="font-size:2.2rem;display:block;margin-bottom:12px;color:#004b97;"></i>
+                        <p style="margin-bottom:4px;font-size:0.9rem;font-weight:600;color:#333;">信箱尚未驗證</p>
+                        <p style="margin-bottom:16px;font-size:0.85rem;line-height:1.6;color:#888;">完成電子信箱驗證後<br>即可使用聊天室</p>
+                        <button onclick="location.replace('../account/account.html?redirect=${redirect}')"
+                           style="display:inline-block;padding:8px 24px;background:#004b97;color:#fff;border-radius:8px;border:none;font-size:0.85rem;cursor:pointer;">
+                            前往驗證
+                        </button>
+                    </div>`;
+            }
+            return;
+        } else if (this.userId) {
             await this.loadRooms();
             this.connectSSE(); // 帳號層級 SSE，開啟一次即可
             if (this.currentRoomId) {
@@ -356,7 +381,7 @@ class ChatRoomList {
     appendCombinedMessage(data, prepend = false) {
         const container = document.getElementById('messagesContainer');
         const wrapper = document.createElement('div');
-        const isSelf = data.isSelf === true || data.username === this.username;
+        const isSelf = data.isSelf === true || (data.userId && this.userId ? data.userId === this.userId : data.username === this.username);
         wrapper.className = `imgAndMessage ${isSelf ? 'message-self' : 'message-other'}`;
         wrapper.dataset.timestamp = data.timestamp;
         wrapper.dataset.messageId = data.id ?? '';
@@ -409,7 +434,7 @@ class ChatRoomList {
         this.hideEmptyHint();
         const container = document.getElementById('messagesContainer');
         const imgWrapper = document.createElement('div');
-        const isSelf = data.isSelf === true || data.username === this.username;
+        const isSelf = data.isSelf === true || (data.userId && this.userId ? data.userId === this.userId : data.username === this.username);
         imgWrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
         imgWrapper.dataset.timestamp = data.timestamp;
         imgWrapper.dataset.messageId = data.id ?? '';
@@ -1485,7 +1510,9 @@ class ChatRoomList {
 
         const container = document.getElementById('messagesContainer');
         this.username = localStorage.getItem('username');
-        const isSelf = this.username === data.username;
+        this.userId = this.userId || localStorage.getItem('uid');
+        console.log('[isSelf debug]', { dataUserId: data.userId, myUserId: this.userId, dataUsername: data.username, myUsername: this.username });
+        const isSelf = (data.userId && this.userId) ? data.userId === this.userId : this.username === data.username;
         const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
         });
