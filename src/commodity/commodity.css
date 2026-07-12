@@ -80,9 +80,6 @@
 .sort_item:hover .sort-cat-icon {
     filter: opacity(1);
 }
-.sort_item.active .sort-cat-icon {
-    filter: opacity(1) brightness(0) invert(1);
-}
 .sort-cat-icon {
   width: 16px;
   height: 16px;
@@ -664,7 +661,6 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
   border: none;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.13);
   border-radius: 14px;
-  padding: 6px;
   min-width: 170px;
   margin-top: 6px !important;
 }
@@ -944,4 +940,62 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
     padding: 5px 10px !important;
     border: 1.5px solid transparent !important;
   }
+}
+.you-might-like-title {
+  font-weight: 700;
+  color: #004b97;
+  margin-bottom: 1rem;
+  padding-left: 2px;
+  border-left: 4px solid #abdad5;
+  padding-left: 10px;
+}
+
+/* 搜尋無結果：主動許願 CTA */
+.wish-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  padding: 20px 24px;
+  border: 1px solid #d6e2ec;
+  border-radius: 18px;
+  background: linear-gradient(120deg, aliceblue 0%, rgba(171, 218, 213, 0.28) 100%);
+}
+.wish-cta-title {
+  font-weight: 700;
+  color: #0f2745;
+  font-size: 1.02rem;
+  margin-bottom: 4px;
+}
+.wish-cta-sub {
+  color: #6f87a0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.wish-cta-sub #wish-cta-keyword {
+  color: #004b97;
+  font-weight: 600;
+}
+.wish-cta-btn {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 999px;
+  background: #004b97;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+.wish-cta-btn:hover {
+  background: rgb(36, 182, 133);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px -16px rgba(0, 75, 151, 0.5);
+}
+@media (max-width: 575.98px) {
+  .wish-cta { flex-direction: column; align-items: stretch; text-align: left; }
+  .wish-cta-btn { width: 100%; }
 }

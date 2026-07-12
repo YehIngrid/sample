@@ -71,7 +71,7 @@ ul{
   gap: 14px;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.22s ease;
+  transition: background 0.22s ease, border-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
   border: 2px solid transparent;
 }
 .qa-btn:hover { transform: translateY(-2px); text-decoration: none; }
@@ -103,7 +103,7 @@ ul{
 .qa-copy { flex: 1; min-width: 0; }
 .qa-t { font-size: 16px; font-weight: 700; letter-spacing: 0.06em; }
 .qa-s { font-size: 12px; margin-top: 2px; letter-spacing: 0.04em; opacity: 0.92; }
-.qa-arr { font-size: 18px; opacity: 0.55; transition: all 0.22s ease; }
+.qa-arr { font-size: 18px; opacity: 0.55; transition: opacity 0.22s ease, transform 0.22s ease; }
 .qa-btn:hover .qa-arr { opacity: 1; transform: translateX(3px); }
 
 /* shop icon (CSS 畫法) */
@@ -301,7 +301,7 @@ ul{
     padding: 6px 8px;
     margin-bottom: 4px;
     border-radius: 8px;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
     display: block;
 }
 
@@ -389,7 +389,6 @@ ul{
 .seller-header-row {
   display: flex;
   align-items: center;
-  gap: 8px;
   margin: 10px 0;
 }
 .seller-header-row .nav-tabs {
@@ -399,6 +398,7 @@ ul{
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-left: 9px !important;
 }
 .seller-quick-btn {
   display: inline-flex;
@@ -434,6 +434,7 @@ ul{
   border-radius: 10px;
   padding: 3.6rem;
   padding-bottom: 7rem;
+  overflow-x: hidden;
 }
 @media (max-width: 400px) {
   .form-store {
@@ -496,12 +497,51 @@ ul{
    賣家表單：多步驟 Wizard
 ══════════════════════════════════════ */
 
+/* 草稿恢復 banner */
+.sell-draft-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f0f7ff;
+  border: 1px solid rgba(0,75,151,0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 10px 1.2rem 0;
+  font-size: 0.88rem;
+  color: #004b97;
+}
+.sell-draft-banner i { font-size: 1.1rem; flex-shrink: 0; }
+.sell-draft-banner > span { flex: 1; }
+.sell-draft-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.sell-draft-btn-restore {
+  background: #004b97;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sell-draft-btn-restore:hover { background: rgb(36,182,133); }
+.sell-draft-btn-discard {
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.sell-draft-btn-discard:hover { background: #e0e0e0; }
+
 /* 步驟指示器 */
 .sell-steps {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 0;
+  margin: 0.8rem 1.2rem 0;   /* 與 .form-store 水平 margin 對齊 */
 }
 .sell-step {
   display: flex;
@@ -549,7 +589,6 @@ ul{
   background: #d0dbe8;
   margin: 0 8px;
   margin-bottom: 22px;
-  max-width: 80px;
   transition: background 0.3s;
 }
 .sell-step-line.done { background: rgb(36,182,133); }
@@ -601,14 +640,14 @@ ul{
   background: none;
   border: none;
   padding: 0 0 0 4px;
-  color: #abdad5;
+  color: #004b97;
   font-size: 1rem;
   cursor: pointer;
   vertical-align: middle;
   line-height: 1;
   transition: color 0.15s;
 }
-.sell-info-btn:hover { color: #004b97; }
+.sell-info-btn:hover { color: rgb(36,182,133); }
 .sell-cat-popover-list {
   margin: 0;
   padding-left: 16px;
@@ -665,6 +704,16 @@ ul{
 @media (max-width: 640px) {
   .sell-two-col { grid-template-columns: 1fr; }
   .sell-cat-grid { grid-template-columns: repeat(3, 1fr); }
+  .sell-steps { margin: 0.8rem 0 0; }
+}
+@media (max-width: 400px) {
+  .sell-cat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .sell-cat-card { padding: 10px 6px; }
+  .sell-size-group { flex-wrap: wrap; }
+  .sell-size-card { flex: 1 1 calc(50% - 5px); }
+  .sell-step-label { font-size: 0.68rem; }
+  .sell-step-line { margin: 0 4px; }
+  .sell-steps { margin: 0.8rem 1rem 0; }
 }
 
 /* 尺寸選卡 */
@@ -731,6 +780,8 @@ ul{
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   transition: border 0.2s, background 0.2s;
+  min-width: 0;
+  margin-top: 0.5rem !important;
 }
 .sell-condition-card input { display: none; }
 .sell-condition-card:hover { background: aliceblue; }
@@ -749,6 +800,10 @@ ul{
   font-weight: 400;
   color: #6f87a0;
   margin-left: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 /* 售價 */
@@ -788,13 +843,61 @@ ul{
   background: aliceblue;
   cursor: pointer;
   color: #004b97;
-  font-size: 0.9rem;
+  font-size: 0.9rem !important;
   font-weight: 600;
   transition: border-color 0.2s, background 0.2s;
   margin-bottom: 12px;
 }
 .sell-upload-zone i { font-size: 2rem; opacity: 0.7; }
 .sell-upload-zone:hover { border-color: #004b97; background: #ddeeff; }
+
+/* 上傳區 + 相機按鈕並排 */
+.sell-upload-row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 0;
+}
+.sell-upload-row .sell-upload-zone {
+  flex: 1;
+  margin-bottom: 0;
+}
+.sell-camera-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 72px;
+  border: 2px solid #004b97;
+  border-radius: 12px;
+  background: #fff;
+  color: #004b97;
+  font-size: 0.9rem !important;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  padding: 8px 0;
+}
+.sell-camera-btn i { font-size: 1.5rem; }
+.sell-camera-btn:hover { background: #004b97; color: #fff; }
+@media (min-width: 768px) { .sell-camera-btn { display: none; } }
+
+/* 商品名稱關鍵字警告 */
+.sell-keyword-warning {
+  margin-top: 6px;
+  padding: 8px 12px;
+  background: #fff8e1;
+  border: 1px solid #f5c842;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: #7a5800;
+  line-height: 1.6;
+}
+.sell-keyword-warning .kww-title {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
 
 /* 照片預覽 */
 .sell-preview-single img {
@@ -883,7 +986,7 @@ ul{
   color: #004b97;
   font-weight: 600;
   font-size: 0.9rem;
-  padding: 9px 20px;
+  padding: 9px 10px;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -898,7 +1001,7 @@ ul{
   color: #fff;
   font-weight: 700;
   font-size: 0.95rem;
-  padding: 10px 24px;
+  padding: 10px 15px;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -974,7 +1077,7 @@ ul{
 .more-link {
   opacity: 0;
   transform: translateY(1px);
-  transition: all 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
   display: block;
   background-color: rgb(36,182,133);
   color: #fff;
@@ -1478,7 +1581,7 @@ tbody > tr:nth-of-type(even) {
   font-size: 1.2rem;
   display: inline-block;
   font-weight: 700;
-  padding: 8px 16px;
+  padding: 8px 10px;
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -1502,7 +1605,7 @@ tbody > tr:nth-of-type(even) {
   transform: rotate(0deg);
 }
 #spinwheelnew path {
-  transition: all 0.3s ease;
+  transition: fill 0.3s ease, stroke 0.3s ease;
 }
 #spinwheelnew {
   transform-origin: 50% 50%;
@@ -1727,6 +1830,7 @@ tbody > tr:nth-of-type(even) {
 #seller .nav-link {
   color: #000 !important;
   font-weight: 500;
+  padding: 7px 10px;
 }
 #seller .nav-tabs .nav-link.active {
   color: #004b97 !important;
@@ -1798,7 +1902,7 @@ tbody > tr:nth-of-type(even) {
   position: absolute;
   opacity: 0;
   transform: translateY(100%);
-  transition: all 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .news-list li.active {
@@ -2101,7 +2205,7 @@ tbody > tr:nth-of-type(even) {
   border: none;
   background: #c0ccd8;
   opacity: 1;
-  transition: all 0.3s;
+  transition: background-color 0.3s, width 0.3s;
   flex-shrink: 0;
   margin: 0;
 }
@@ -2160,8 +2264,19 @@ tbody > tr:nth-of-type(even) {
   padding: 8px 10px 6px;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  background: transparent;
+  background: #fff;
 }
+
+.icon-box {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+.icon-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .cat-pills::-webkit-scrollbar { display: none; }
 
 .cat-pill {
@@ -2986,41 +3101,6 @@ html{ scroll-behavior:smooth; }
   background-color: #f0f0f0;
 }
 
-/* ── 最新上架：手機版隱藏電腦版分頁 ── */
-@media (max-width: 991px) {
-  #newPager { display: none !important; }
-}
-
-/* ── 最新上架：手機版滑動提示列 ── */
-.new-swipe-hint {
-  padding: 0 2px;
-  margin-bottom: 6px;
-}
-.swipe-hint-text {
-  font-size: 0.72rem;
-  color: #aaa;
-  letter-spacing: 0.5px;
-}
-.swipe-arrow {
-  color: #004b97;
-  font-size: 1rem;
-  opacity: 0.5;
-  transition: opacity 0.3s;
-}
-.swipe-arrow-right {
-  animation: swipe-nudge-right 2s ease-in-out infinite;
-}
-.swipe-arrow-left {
-  animation: swipe-nudge-left 2s ease-in-out infinite;
-}
-@keyframes swipe-nudge-right {
-  0%, 100% { opacity: 0.3; transform: translateX(0); }
-  50%       { opacity: 0.9; transform: translateX(4px); }
-}
-@keyframes swipe-nudge-left {
-  0%, 100% { opacity: 0.3; transform: translateX(0); }
-  50%       { opacity: 0.9; transform: translateX(-4px); }
-}
 
 /* ── 最新上架：手機版頁碼小點 ── */
 .swipe-dot {
@@ -3123,4 +3203,11 @@ html{ scroll-behavior:smooth; }
   font-size: 0.8rem;
   color: #4a627a;
   line-height: 1.4;
+}
+
+/* 裁切 Modal backdrop 一律保持透明（等同 .fade 狀態），
+   防止 Safari/手機版 transitionend 未觸發導致遮罩卡住擋操作 */
+.modal-backdrop {
+  opacity: 0 !important;
+  pointer-events: none !important;
 }

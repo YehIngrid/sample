@@ -44,6 +44,19 @@ window.onload = async function() {
   const resetToken = params.get('reset_token');
   const verifyToken = params.get('verify_token');
 
+  // 已登入 → 直接跳轉（reset/verify 流程不跳）
+  if (!resetToken && !verifyToken && localStorage.getItem('uid')) {
+    try {
+      const bs = new BackendService();
+      await bs.whoami();
+      location.replace('../shop/shop.html');
+      return;
+    } catch (_) {
+      // session 已失效，清掉 uid，繼續顯示登入頁
+      localStorage.removeItem('uid');
+    }
+  }
+
   if (resetToken) {
     _resetToken = resetToken;
     showPage('resetpwdpage');
@@ -64,8 +77,15 @@ window.onload = async function() {
             if (t.origin === window.location.origin) target = t.href;
           } catch (_) {}
         }
-        await Swal.fire({ icon: 'success', title: '帳號驗證成功！', showConfirmButton: false, timer: 1500 });
-        window.location.replace(target);
+        const verifyResult = await Swal.fire({
+          icon: 'success',
+          title: '帳號驗證成功！',
+          html: '歡迎加入拾貨寶庫！<br><small style="color:#888;margin-top:4px;display:block;">建議前往「個人中心」設定常用聯絡信箱，方便買賣雙方聯繫。</small>',
+          confirmButtonText: '前往個人中心',
+          cancelButtonText: '先去逛逛',
+          showCancelButton: true,
+        });
+        window.location.replace(verifyResult.isConfirmed ? '../person/person.html' : target);
       } catch (_) {
         // 無 session → 顯示登入框
         await Swal.fire({ icon: 'success', title: '帳號驗證成功！', text: '請登入以繼續。', confirmButtonText: '確定' });
@@ -104,6 +124,17 @@ function fieldClear(inputId, errorId) {
   document.getElementById(inputId)?.addEventListener('input', () => fieldClear(inputId, errorId));
 });
 
+// 註冊 email：接受 @mail.nchu.edu.tw / @dragon.nchu.edu.tw / @nchu.edu.tw / @treasurehub.tw
+function isValidSignupEmail(email) {
+  return /^[^@]+@(mail\.nchu\.edu\.tw|dragon\.nchu\.edu\.tw|nchu\.edu\.tw|treasurehub\.tw)$/i.test(email);
+}
+document.getElementById('email')?.addEventListener('blur', function() {
+  const val = this.value.trim();
+  if (val && !isValidSignupEmail(val)) {
+    fieldError('email', 'err-signup-email', '請使用 @mail.nchu.edu.tw 或 @dragon.nchu.edu.tw 的學校信箱註冊');
+  }
+});
+
 // ── 註冊 ──────────────────────────────────────────────────
 const signuppage = document.getElementById('signuppage');
 
@@ -140,7 +171,14 @@ async function callSignUp() {
 
   try {
     await backendService.signup(payload);
+    loader.style.display = 'none';
     _pendingEmail = payload.email;
+    await Swal.fire({
+      icon: 'success',
+      title: '註冊成功！',
+      html: `驗證信已寄至 <strong>${payload.email}</strong>，請點擊信中連結開通帳號。<br><small style="color:#888;margin-top:6px;display:block;">若在收件匣找不到驗證信，新信可能被「重要郵件」覆蓋在下方，可使用信箱搜尋功能找到。</small>`,
+      confirmButtonText: '我知道了',
+    });
     showPage('checkEmailPage');
   } catch (e) {
     Swal.fire({
@@ -212,8 +250,6 @@ async function callLogin() {
       timer: 2100
     });
 
-    await backendService.getUserData?.();
-
     const params = new URLSearchParams(window.location.search);
     const redirectUrl = params.get("redirect");
     if (redirectUrl) {
@@ -262,7 +298,6 @@ document.querySelectorAll('.pwd-wrap').forEach(wrap => {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'pwd-toggle';
-  btn.setAttribute('aria-label', '切換密碼顯示');
   btn.innerHTML = '<i class="fa-regular fa-eye"></i>';
   wrap.appendChild(btn);
   btn.addEventListener('click', () => {
@@ -311,7 +346,17 @@ document.querySelectorAll('.pwd-wrap').forEach(wrap => {
     checkbox.disabled = false;
     checkbox.checked  = true;
     signbtn.disabled  = false;
+    const hint = document.getElementById('sign-hint');
+    if (hint) hint.remove();
     closeModal();
+  });
+
+  const checkboxRow = checkbox.closest('.terms-agree-row') || checkbox.parentElement;
+  checkboxRow.addEventListener('click', function(e) {
+    if (checkbox.disabled && e.target !== openBtn) {
+      e.preventDefault();
+      openModal();
+    }
   });
 
   checkbox.addEventListener('change', function() {
@@ -325,8 +370,11 @@ signbtn.addEventListener('click', function(e) {
   e.preventDefault();
   if (!document.getElementById('agreeTerms').checked) return;
   let hasError = false;
-  if (!document.getElementById('email').value.trim()) {
+  const signupEmailVal = document.getElementById('email').value.trim();
+  if (!signupEmailVal) {
     fieldError('email', 'err-signup-email', '請輸入電子信箱'); hasError = true;
+  } else if (!isValidSignupEmail(signupEmailVal)) {
+    fieldError('email', 'err-signup-email', '請使用 @mail.nchu.edu.tw 或 @dragon.nchu.edu.tw 的學校信箱註冊'); hasError = true;
   }
   if (!document.getElementById('password1').value) {
     fieldError('password1', 'err-signup-pwd1', '請輸入密碼'); hasError = true;
@@ -555,18 +603,6 @@ document.getElementById('resendVerifyBtn').addEventListener('click', async funct
     }
     this.disabled = false;
   }
-});
-
-// ── 密碼顯示 300ms 後隱藏 ────────────────────────────────
-let timer;
-document.querySelectorAll(".pwd").forEach((pwd) => {
-  pwd.addEventListener("input", function() {
-    pwd.type = "text";
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      pwd.type = "password";
-    }, 300);
-  });
 });
 
 window.startCountdown = startCountdown;

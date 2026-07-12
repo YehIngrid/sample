@@ -6,10 +6,10 @@
 
   <!-- meta -->
   <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../image/bigLogo.jpg">
+    <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
   <meta property="og:title" content="商品詳細資訊 | 拾貨寶庫">
@@ -31,11 +31,31 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet"  >
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" integrity="sha384-XGjxtQfXaH2tnPFa9x+ruJTuLE3Aa6LhHSWRr1XeTyhezb4abCG4ccI5AkVDxqC+" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css">
 
-
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PQ6ND9EY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-45PQ6ND9EY');
+  </script>
+  <!-- End Google Analytics -->
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TNDMCCKZ');</script>
+  <!-- End Google Tag Manager -->
 </head>
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TNDMCCKZ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <!-- Loading -->
   <div id="loader">
     <div class="loader-wrap">
@@ -58,11 +78,12 @@
 
     <!-- ===== 手機版導覽列（含跑馬燈） ===== -->
     <div class="d-lg-none sticky-top" style="z-index:3000;">
-      <div class="safety-ticker">
+      <div class="safety-ticker" id="mobileAnnounceTicker">
         <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
         <div class="safety-ticker__track">
           <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
         </div>
+        <button class="safety-ticker__close" aria-label="關閉公告">×</button>
       </div>
       <nav class="mobile-product-nav">
         <button class="mobile-nav-back" id="mobileBackBtn" aria-label="返回上一頁">
@@ -82,7 +103,7 @@
           <a class="navbar-brand picture me-4" href="../newhome/newhome.html">
             <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫 Logo" style="width: 100px; border-radius: 0;">
           </a>
-          <div class="d-none d-lg-flex">
+          <div class="d-none d-lg-flex align-items-center">
             <ul class="navbar-nav">
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
@@ -90,6 +111,12 @@
               <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
               <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
             </ul>
+            <div class="safety-ticker safety-ticker--inline navbar-ticker">
+              <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
+              <div class="safety-ticker__track">
+                <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
+              </div>
+            </div>
           </div>
           <div class="d-flex align-items-center ms-auto">
             <div class="login">
@@ -104,15 +131,9 @@
       </nav>
     </div>
 
-    <!-- 桌機版返回鍵 + 跑馬燈 -->
+    <!-- 桌機版返回鍵 -->
     <div class="product-back-ticker d-none d-lg-flex">
       <i class="fa-solid fa-circle-arrow-left icon-button" id="back-btn"></i>
-      <div class="safety-ticker safety-ticker--inline">
-        <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
-        <div class="safety-ticker__track">
-          <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
-        </div>
-      </div>
     </div>
 
     <!-- ===== 商品主體 ===== -->
@@ -164,6 +185,8 @@
               <div class="desktop-price-currency">NT$</div>
             </div>
           </div>
+          <!-- 分類 chip（名稱下方） -->
+          <div id="product-cat-chip-wrap"></div>
 
           <hr style="margin: 0 auto;">
 
@@ -202,6 +225,12 @@
           <div class="cta-wrap d-none d-lg-flex gap-3 mt-auto pt-4">
             <button class="btn flex-fill buybtn order" type="button">馬上下單</button>
             <button class="btn flex-fill shopcart" type="button">加入購物車</button>
+            <button class="btn d-none" id="quickChatBtnDesktop" type="button">
+              <i class="fa-regular fa-comment-dots me-1"></i>聊聊
+            </button>
+            <a id="editProductBtn" href="#" class="btn d-none" style="flex:1;background:#004b97;color:#fff;border-radius:8px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:background 0.15s,transform 0.1s;box-shadow:0 1px 4px rgba(0,75,151,0.2); text-decoration: none;">
+              編輯
+            </a>
           </div>
         </div>
 
@@ -230,6 +259,7 @@
               </div>
               <div class="seller-profile">
                 <h3 class="seller-name" id="sellerName"></h3>
+                <p class="seller-join-date" id="sellerJoinDate"></p>
                 <p class="seller-intro" id="sellerIntro"></p>
               </div>
             </div>
@@ -268,6 +298,73 @@
             <div class="seller-card-divider"></div>
             <!-- 評價卡片列表（JS 動態渲染至此） -->
             <div id="reviewerInfo"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 交易流程 -->
+      <div class="typeofcommodity" style="padding-bottom: 8px;">
+        <h5 class="topic">交易流程</h5>
+
+        <!-- 買賣雙方交易小叮嚀（買家優先） -->
+        <div class="fls-group fls-group--trade">
+          <div class="fls-group-header">
+            <div class="fls-group-icon"><i class="fa-solid fa-handshake"></i></div>
+            <div>
+              <div class="fls-group-title">買賣雙方｜交易小叮嚀</div>
+              <div class="fls-group-sub">平台媒合，雙方私下交易</div>
+            </div>
+          </div>
+          <div class="fls-cards">
+            <div class="fls-card">
+              <div class="fls-step-label">STEP 01</div>
+              <div class="fls-card-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+              <div class="fls-card-title">買家下單</div>
+              <div class="fls-card-desc">找到心儀商品後點選下單，系統會<strong>自動通知賣家</strong>。</div>
+            </div>
+            <div class="fls-card">
+              <div class="fls-step-label">STEP 02</div>
+              <div class="fls-card-icon"><i class="fa-solid fa-comments"></i></div>
+              <div class="fls-card-title">聯繫確認</div>
+              <div class="fls-card-desc">透過聊天室確認<strong>付款方式</strong>與<strong>交貨時間</strong>。</div>
+            </div>
+            <div class="fls-card">
+              <div class="fls-step-label">STEP 03</div>
+              <div class="fls-card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+              <div class="fls-card-title">安全交貨</div>
+              <div class="fls-card-desc">面交時以<strong> PIN 碼</strong>驗證訂單，建議約在人多、有監視器的<strong>公共場所</strong>，當場驗貨最安心！</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 賣家輕鬆上架 -->
+        <div class="fls-group">
+          <div class="fls-group-header">
+            <div class="fls-group-icon"><i class="fa-solid fa-store"></i></div>
+            <div>
+              <div class="fls-group-title">賣家輕鬆上架</div>
+              <div class="fls-group-sub">三步驟把寶物變現金</div>
+            </div>
+          </div>
+          <div class="fls-cards">
+            <div class="fls-card">
+              <div class="fls-step-label">STEP 01</div>
+              <div class="fls-card-icon"><i class="fa-solid fa-user-plus"></i></div>
+              <div class="fls-card-title">快速註冊</div>
+              <div class="fls-card-desc">使用學校 <strong>Email</strong> 快速建立帳號，即可解鎖賣家權限。</div>
+            </div>
+            <div class="fls-card">
+              <div class="fls-step-label">STEP 02</div>
+              <div class="fls-card-icon"><i class="fa-solid fa-camera"></i></div>
+              <div class="fls-card-title">拍上照片</div>
+              <div class="fls-card-desc">點擊「<strong>上架商品</strong>」，上傳你的寶物照片（如：質感植栽、二手好書、設計小物）。</div>
+            </div>
+            <div class="fls-card">
+              <div class="fls-step-label">STEP 03</div>
+              <div class="fls-card-icon"><i class="fa-solid fa-file-lines"></i></div>
+              <div class="fls-card-title">填寫資訊</div>
+              <div class="fls-card-desc">輸入商品名稱、甜甜價與<strong>面交 / 寄送方式</strong>，點擊發布就搞定！</div>
+            </div>
           </div>
         </div>
       </div>
@@ -326,11 +423,17 @@
         </div>
       </div>
 
+      <!-- 相似商品 -->
+      <div class="similarCommodities" style="display:none;">
+        <h5 class="sellertopic topic">你可能也喜歡</h5>
+        <div id="similarProducts" class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 mt-0"></div>
+      </div>
+
       <!-- 賣家其他商品 -->
       <div class="sellerCommodities">
         <h5 class="sellertopic topic">賣家其他商品</h5>
         <div id="otherProducts" class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2 mt-0"></div>
-        <div id="sellerMobileDots" class="d-flex d-lg-none justify-content-center align-items-center gap-1 mt-2" style="min-height:14px;"></div>
+        <div id="sellerMobileDots" class="d-none"></div>
         <div class="pager seller-pager" id="sellerPager">
           <button id="prevSellerBtn">‹ 上一頁</button>
           <span id="sellerPageInfo"></span>
@@ -344,6 +447,10 @@
     <div class="phonebuy d-flex d-lg-none fixed-bottom">
       <button class="buy order">馬上下單</button>
       <button class="shopcart">加入購物車</button>
+      <button class="chat-quick d-none" id="quickChatBtnMobile" title="聊聊賣家"><i class="fa-regular fa-comment-dots"></i></button>
+      <a id="editProductBtnMobile" href="#" class="d-none" style="flex:1;background:#004b97;color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center;gap:5px;font-size:0.9rem; text-decoration: none;">
+        編輯
+      </a>
     </div>
 
   </div>
@@ -368,10 +475,10 @@
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
   <script type="module" src="../chatroom/chat.js"></script>
   <script type="module" src="product.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   <script>
   (function(){
     const slogans=[
@@ -387,17 +494,22 @@
       '一鍵檢舉：發現違規商品請利用檢舉功能，共同維護純淨校園環境。'
     ];
     const els = [...document.querySelectorAll('.safety-ticker__text')];
-    if (window.matchMedia('(min-width:992px)').matches) {
-      let i = 0;
-      els.forEach(el => { el.textContent = slogans[0]; });
-      setInterval(() => {
-        els.forEach(el => el.classList.add('ticker-fade'));
-        setTimeout(() => { i=(i+1)%slogans.length; els.forEach(el => { el.textContent=slogans[i]; el.classList.remove('ticker-fade'); }); }, 400);
-      }, 5000);
-    } else {
-      const strip = slogans.join('　　　　　') + '　　　　　';
-      els.forEach(el => { el.textContent = strip + strip; });
+    const strip = slogans.join('　　　　　') + '　　　　　';
+    els.forEach(el => { el.textContent = strip + strip; });
+  })();
+
+  // 手機版跑馬燈關閉
+  (function(){
+    const ticker = document.getElementById('mobileAnnounceTicker');
+    if (!ticker) return;
+    if (sessionStorage.getItem('mobileTickerClosed') === '1') {
+      ticker.classList.add('ticker-closed');
     }
+    ticker.querySelector('.safety-ticker__close')?.addEventListener('click', () => {
+      ticker.classList.add('ticker-closing');
+      setTimeout(() => ticker.classList.add('ticker-closed'), 300);
+      sessionStorage.setItem('mobileTickerClosed', '1');
+    });
   })();
   </script>
 </body>

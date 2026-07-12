@@ -730,6 +730,15 @@ small { font-size: 10px; color: #004b97; }
   transition: background 0.15s, border-color 0.15s, color 0.15s;
   user-select: none;
 }
+@media (max-width: 480px) {
+  .review-chip span {
+    padding: 4px 9px;
+    font-size: 12px;
+  }
+  .review-chips-row {
+    gap: 5px;
+  }
+}
 .review-chip:hover span {
   border-color: #004b97;
   color: #004b97;
@@ -1044,15 +1053,17 @@ small { font-size: 10px; color: #004b97; }
   background: none;
   border: none;
   padding: 2px 4px;
-  color: #ccc;
+  color: #e74c3c;
   cursor: pointer;
   font-size: 13px;
   line-height: 1;
   transition: color 0.15s;
 }
-.review-report-btn:hover { color: #e53935; }
+.review-report-btn:hover { color: #c0392b; }
 .reviewText { font-size: 13px; color: #4a627a; line-height: 1.5; padding-top: 4px; padding-left: 8px; }
-.review-card__chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
+.review-card__chips { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
+.review-tag-row { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.review-tag-row__label { font-size: 12.5px; color: #6f87a0; white-space: nowrap; flex-shrink: 0; }
 .review-empty {
   text-align: center;
   padding: 32px 16px;
@@ -1907,6 +1918,14 @@ small { font-size: 10px; color: #004b97; }
 .showInfo {
   font-size: 1rem;
 }
+.disable-account-zone {
+  margin-top: 48px;
+  padding: 24px 0 8px;
+  border-top: 1px solid #f0d0d0;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .disableAccount {
   border: none;
   border-radius: 5px;
@@ -2496,6 +2515,20 @@ small { font-size: 10px; color: #004b97; }
   border-radius: 50%; opacity: 0.45;
   flex-shrink: 0;
 }
+.notif-sub {
+  font-size: 12px; color: var(--p-muted);
+  margin-bottom: 3px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.notif-inline-link {
+  font-size: 11px; color: var(--p-navy);
+  text-decoration: none; font-weight: 600; flex-shrink: 0;
+}
+.notif-inline-link:hover { color: rgb(36,182,133); }
+.notif-unread .notif-ttl { color: var(--p-navy); }
+.notif-item--link { cursor: pointer; }
+.notif-item--link:hover { background: var(--p-alice); }
+.notif-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 3px 0; }
 
 /* ── 手機版個人資料卡 (redesigned) ── */
 .mobile-profile-card {
@@ -3221,6 +3254,16 @@ small { font-size: 10px; color: #004b97; }
 .od-btn-person:hover { background: var(--p-navy); color: #fff; }
 .od-btn-person img { width: 15px; height: 15px; }
 
+/* ── PIN 碼按鈕 ── */
+.od-pin-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px; border-radius: 6px; border: 1px solid #004b97;
+  background: #fff; color: #004b97; font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s;
+}
+.od-pin-btn:hover { background: #004b97; color: #fff; }
+.od-pin-btn svg { flex-shrink: 0; }
+
 /* ── 評論空白狀態 ── */
 .od-review-empty {
   text-align: center; padding: 28px 16px;
@@ -3345,4 +3388,48 @@ small { font-size: 10px; color: #004b97; }
 @media (max-width: 575px) {
   .od-status-banner { flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px; }
   .od-person-actions { flex-direction: column; }
+}
+
+/* ── 首次上架引導 banner ─────────────────────────────────── */
+.first-listing-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #e8f0fb 0%, #dceeff 100%);
+  border: 1px solid rgba(0,75,151,0.18);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.flb-icon { flex-shrink: 0; width: 40px; height: 40px; background: #004b97; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.flb-icon img { width: 22px; height: 22px; filter: brightness(0) invert(1); }
+.flb-body { flex: 1; min-width: 0; }
+.flb-title { font-size: 0.95rem; font-weight: 700; color: #004b97; margin-bottom: 2px; }
+.flb-sub { font-size: 0.82rem; color: #555; }
+.flb-btn {
+  flex-shrink: 0;
+  background: #004b97;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.flb-btn:hover { background: rgb(36,182,133); color: #fff; }
+.flb-close {
+  position: absolute;
+  top: 10px; right: 12px;
+  background: none; border: none;
+  font-size: 1.1rem; color: #999;
+  cursor: pointer; line-height: 1;
+  padding: 0;
+}
+.flb-close:hover { color: #333; }
+@media (max-width: 575px) {
+  .first-listing-banner { flex-wrap: wrap; }
+  .flb-btn { width: 100%; text-align: center; margin-top: 4px; }
 }

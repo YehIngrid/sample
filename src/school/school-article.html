@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>全部文章 · 校園攻略站</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="description" content="校園攻略站全部文章列表 — 中興大學同學分享選課策略、社團生活、實習經驗與宿舍攻略。"/>
+  <link rel="canonical" href="https://treasurehub.tw/school/school-article.html"/>
+  <link rel="shortcut icon" href="../treasurehubIcon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
+  <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/default-font.css">
+  <link rel="stylesheet" href="school.css">
+  <script type="module" src="../default/default.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <!-- 手機版漢堡選單按鈕 -->
+  <div class="d-flex gap-2">
+    <button class="mobile-hamburger d-lg-none" type="button">
+      <img src="../svg/navbar.svg" alt="" style="width: 20px;">
+    </button>
+
+    <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+      <img src="../svg/TREASUREHUBCHEN.svg" alt="">
+    </a>
+  </div>
+  <div class="tabs">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <div class="tab-drop">
+      <a href="school.html" class="on">校園攻略站
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="drop-menu">
+        <a href="school.html">攻略首頁</a>
+        <a href="school-about.html">攻略介紹</a>
+        <a href="school-article.html" class="on">全部文章</a>
+        <a href="school-studio.html">撰寫攻略</a>
+      </div>
+    </div>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+  <div class="right">
+    <a class="btn-sm navy d-none d-lg-inline-flex" href="school-studio.html" id="openOnboarding">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
+      撰寫攻略
+    </a>
+    <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">
+      登入
+    </button>
+    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
+      <span class="avatar"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- 手機版側面菜單 -->
+<div class="mobile-menu-backdrop"></div>
+<div class="mobile-menu-wrapper" id="navbarMenu">
+  <div class="mobile-menu">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <a href="school.html">校園攻略站</a>
+    <a href="../news/news.html">最新資訊</a>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16 16"/></svg>
+      <input type="text" placeholder="搜尋課程、教授、科系、關鍵字..." id="schoolSearchInput" />
+      <span class="scope">全部</span>
+    </div>
+    <div class="d-flex" style="gap: 12px;">
+      <div class="select-wrap">
+        <select id="sortSelect">
+          <option>排序：最新發佈</option>
+          <option>排序：最多閱讀</option>
+          <option>排序：價格由低到高</option>
+          <option>排序：本學年適用優先</option>
+          <option>排序：作者認證等級</option>
+        </select>
+      </div>
+      <a class="btn-toolbar" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 H20"/><path d="M7 12 H17"/><path d="M10 18 H14"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile Category Bar -->
+  <div class="mobile-cat-bar">
+    <a href="#" class="on">全部文章 <span class="count">316</span></a>
+    <a href="#">研究所推甄 <span class="count">42</span></a>
+    <a href="#">學分攻略 <span class="count">88</span></a>
+    <a href="#">證照檢定 <span class="count">37</span></a>
+    <a href="#">實習與面試 <span class="count">29</span></a>
+    <a href="#">美食地圖 <span class="count">24</span></a>
+    <a href="#">校園資源 <span class="count">31</span></a>
+    <a href="#">轉學 / 轉系 <span class="count">18</span></a>
+    <a href="#">交換學生 <span class="count">21</span></a>
+    <a href="#">專題研究 <span class="count">16</span></a>
+    <a href="#">生活指南 <span class="count">10</span></a>
+  </div>
+
+  <!-- Body grid -->
+  <div class="body-grid">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="side-panel">
+        <div class="head">文章分類</div>
+        <div class="cat-list">
+          <a href="#" class="on">全部文章 <span class="count">316</span></a>
+          <a href="#">研究所推甄 <span class="count">42</span></a>
+          <a href="#">學分攻略 <span class="count">88</span></a>
+          <a href="#">證照檢定 <span class="count">37</span></a>
+          <a href="#">實習與面試 <span class="count">29</span></a>
+          <a href="#">美食地圖 <span class="count">24</span></a>
+          <a href="#">校園資源 <span class="count">31</span></a>
+          <a href="#">轉學 / 轉系 <span class="count">18</span></a>
+          <a href="#">交換學生 <span class="count">21</span></a>
+          <a href="#">專題研究 <span class="count">16</span></a>
+          <a href="#">生活指南 <span class="count">10</span></a>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div class="head">熱門標籤</div>
+        <div class="tag-list">
+          <a href="#">#頂大推甄</a>
+          <a href="#">#備審資料</a>
+          <a href="#">#必修筆記</a>
+          <a href="#">#通識涼課</a>
+          <a href="#">#考題詳解</a>
+          <a href="#">#教授評價</a>
+          <a href="#">#英文檢定</a>
+          <a href="#">#履歷模板</a>
+          <a href="#">#面試實錄</a>
+          <a href="#">#獎學金申請</a>
+          <a href="#">#手寫詳解</a>
+          <a href="#">#外文自傳</a>
+        </div>
+      </div>
+
+      <div class="vote-card">
+        <div class="label">想要新主題？</div>
+        <h4>到許願池按「我也想要」</h4>
+        <p>找不到想看的主題？到許願池許願，越多人按「我也想要」、熱度越高，我們就優先開站。</p>
+        <div class="vote-demo">
+          <span class="wish-txt">我想要『推甄頂大』的攻略</span>
+          <span class="fire"><img src="../svg/wantToo.svg" alt="想要" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 4px;"> 24</span>
+        </div>
+        <a class="more" href="../wishpool/wishpool.html#wishpool">我也想要 →</a>
+      </div>
+
+      <div class="seed-card">
+        <div class="label">CONTEST</div>
+        <h4>種子創作者計劃</h4>
+        <p>首屆攻略徵稿開跑！最多人喜愛的文章可獲頭銜加成與獎金。把你的經驗變成學弟妹的捷徑。</p>
+        <a class="more" href="school-studio.html">我要投稿 →</a>
+      </div>
+
+      <div class="trust-card">
+        <div class="label">VERIFIED</div>
+        <h4>什麼是已認證？</h4>
+        <p>後台以校園信箱完全實名審查身分、獎項與升學證明；前台保留半匿名顯示，防肉搜也防詐騙。</p>
+        <a class="more" href="#">了解半實名制 →</a>
+      </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <div class="sec-label">全部文章 <span class="pill">316 篇 · 依發佈時間</span></div>
+
+      <!-- Article grid -->
+      <div class="articles-grid" id="articleList"></div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="paginationWrap">
+        <button class="pg-btn">←</button>
+        <button class="pg-num on">1</button>
+        <button class="pg-num">2</button>
+        <button class="pg-num">3</button>
+        <button class="pg-num">4</button>
+        <button class="pg-btn">→</button>
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
+
+<!-- ── Bottom nav (mobile) ── -->
+<script>if(window !== window.parent) document.write('<style>.bottom-nav{display:none!important}</style>');</script>
+<nav class="bottom-nav" id="schoolBottomNav">
+    <a href="school.html" class="bottom-nav-item nav-tab-home">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>攻略首頁</span>
+    </a>
+    <a href="school-article.html" class="bottom-nav-item nav-tab-articles active">
+      <img class="nav-icon nav-icon-active" src="../svg/all-article.svg" alt="全部文章" height="24" width="24">
+      <img class="nav-icon nav-icon-inactive" src="../svg/all-article-inactive.svg" alt="點擊閱覽全部文章" height="24" width="24">
+        <span>全部文章</span>
+    </a>
+    <a href="school-about.html" class="bottom-nav-item nav-tab-about">
+      <img class="nav-icon nav-icon-active" src="../svg/campus-guide.svg" alt="攻略介紹" height="24" width="24">
+      <img class="nav-icon nav-icon-inactive" src="../svg/campus-guide-noactive.svg" alt="點擊進入攻略介紹" height="24" width="24">
+        <span>攻略介紹</span>
+    </a>
+    <a href="school-studio.html" class="bottom-nav-item nav-tab-write">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span>撰寫攻略</span>
+    </a>
+    <a href="school-profile.html" class="bottom-nav-item nav-tab-account">
+        <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>我的檔案</span>
+    </a>
+</nav>
+
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script defer src="school-new.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburger = document.querySelector('.mobile-hamburger');
+  const menuWrapper = document.getElementById('navbarMenu');
+  const backdrop = document.querySelector('.mobile-menu-backdrop');
+  const menuLinks = document.querySelectorAll('.mobile-menu a');
+
+  function toggleMenu() {
+    menuWrapper.classList.toggle('show');
+    backdrop.classList.toggle('active');
+    hamburger.classList.toggle('active');
+  }
+
+  function closeMenu() {
+    menuWrapper.classList.remove('show');
+    backdrop.classList.remove('active');
+    hamburger.classList.remove('active');
+  }
+
+  hamburger.addEventListener('click', toggleMenu);
+  backdrop.addEventListener('click', closeMenu);
+  menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+});
+</script>
+</body>
+</html>

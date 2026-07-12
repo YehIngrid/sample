@@ -51,6 +51,20 @@ function flattenSrcDir() {
         cpSync(srcDir, resolve(__dirname, 'dist'), { recursive: true })
         rmSync(srcDir, { recursive: true })
       }
+
+      // 特別處理 school 目錄：把 dist/src/school 的 JS/CSS 複製到 dist/school 根目錄
+      const schoolSrcPath = resolve(__dirname, 'dist/school/src/school')
+      const schoolDestPath = resolve(__dirname, 'dist/school')
+      if (existsSync(schoolSrcPath)) {
+        const files = glob.sync('dist/school/src/school/*')
+        files.forEach(file => {
+          const fileName = file.split(/[\\/]/).pop()
+          if (fileName && (fileName.endsWith('.js') || fileName.endsWith('.css'))) {
+            cpSync(file, resolve(schoolDestPath, fileName))
+          }
+        })
+        rmSync(resolve(__dirname, 'dist/school/src'), { recursive: true })
+      }
     }
   }
 }
@@ -68,15 +82,32 @@ function copyStaticFolders() {
         const src = resolve(__dirname, file)
         if (existsSync(src)) cpSync(src, resolve(__dirname, `dist/${file}`))
       }
+      // llms.txt（在 src/ 底下）
+      const llmsSrc = resolve(__dirname, 'src/llms.txt')
+      if (existsSync(llmsSrc)) cpSync(llmsSrc, resolve(__dirname, 'dist/llms.txt'))
+      // favicon（在 src/ 底下）
+      const faviconSrc = resolve(__dirname, 'src/treasurehubIcon.ico')
+      if (existsSync(faviconSrc)) cpSync(faviconSrc, resolve(__dirname, 'dist/treasurehubIcon.ico'))
       // PWA manifest
       const manifestSrc = resolve(__dirname, 'src/manifest.json')
       if (existsSync(manifestSrc)) cpSync(manifestSrc, resolve(__dirname, 'dist/manifest.json'))
+      // 複製 school 目錄中的 JS 和 CSS 文件
+      const schoolSrcDir = resolve(__dirname, 'src/school')
+      const schoolDestDir = resolve(__dirname, 'dist/school')
+      if (existsSync(schoolSrcDir)) {
+        const jsFiles = glob.sync('src/school/*.js')
+        const cssFiles = glob.sync('src/school/*.css')
+        ;[...jsFiles, ...cssFiles].forEach(file => {
+          const fileName = file.split('/').pop()
+          cpSync(file, resolve(schoolDestDir, fileName))
+        })
+      }
     }
   }
 }
 
 const htmlFiles = glob.sync('src/**/*.html', {
-  ignore: ['src/school/**'] // school 頁面使用非 module script，暫時排除
+  ignore: []
 })
 const input = {
   index: resolve(__dirname, 'index.html'),

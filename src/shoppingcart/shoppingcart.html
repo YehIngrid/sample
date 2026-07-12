@@ -6,10 +6,10 @@
         
     <!-- meta部分 -->
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../image/bigLogo.jpg">
+    <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
     <meta property="og:title" content="購物車 | 拾貨寶庫">
@@ -57,6 +57,11 @@
         <!-- 響應式選單 -->
         <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
           <div class="container-fluid d-flex align-items-center">
+
+            <!-- (MOBILE) 返回按鈕 -->
+            <button class="btn btn-link d-lg-none me-1 order-0 p-1" onclick="history.back()" style="color:#004b97;font-size:1.2rem;line-height:1;">
+              <i class="bi bi-arrow-left"></i>
+            </button>
 
             <!-- (MOBILE) 漢堡選單：手機顯示、在 Logo 左邊 -->
             <button class="navbar-toggler d-lg-none me-2 order-0"
@@ -254,9 +259,9 @@ document.getElementById('chaticon').addEventListener('click', () => {
 </main>
 
         <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
         <script type="module" src="../chatroom/chat.js"></script>
         <script type="module" src="shoppingcart.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -115,7 +115,12 @@ async function _openReportSwal({ title, targetLabel, userId, reviewId }) {
       if (value.detail) fd.append('detail', value.detail);
       await _svc.submitReport(fd);
     } else if (reviewId) {
-      await _svc.reportReview(reviewId, { reason: value.category, subject: value.subject, detail: value.detail });
+      const fd = new FormData();
+      fd.append('reviewId', reviewId);
+      fd.append('category', value.category);
+      fd.append('subject', value.subject);
+      if (value.detail) fd.append('detail', value.detail);
+      await _svc.submitReport(fd);
     }
     Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
   } catch (_) {

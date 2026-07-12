@@ -435,13 +435,21 @@ async function handleAction(action, id, el) {
 
     openChatWithTarget(targetId);
   } else if (action === 'cancel') {
-    if (confirm('確定要取消訂單嗎?')) {
+    const { isConfirmed } = await Swal.fire({
+      title: '確定要取消訂單嗎？',
+      text: '取消後無法復原，請確認後再操作',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '確定取消',
+      cancelButtonText: '返回',
+    });
+    if (isConfirmed) {
       try {
         await backendService.cancelMyOrder(id);
         showOrderSwal('cancel').then(() => handleRouting()).then(() => window.location.reload());
       } catch (error) {
         Swal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
-      } 
+      }
     }
   } else if(action === '接受訂單') {
     try {
@@ -451,19 +459,70 @@ async function handleAction(action, id, el) {
       Swal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
     }
   } else if (action === '即將出貨') {
+    // PIN 碼提醒（可關閉）
+    if (!localStorage.getItem('th_no_pin_reminder')) {
+      const remind = await Swal.fire({
+        icon: 'info',
+        title: 'PIN 碼提醒',
+        text: '請務必在收取貨款或進行商品確認後，立即填寫 PIN 碼以確保雙方權益',
+        confirmButtonText: '我知道了',
+        input: 'checkbox',
+        inputValue: 0,
+        inputPlaceholder: '以後不要再提醒',
+      });
+      if (remind.value === 1) localStorage.setItem('th_no_pin_reminder', '1');
+    }
     try {
       await backendService.sellerDeliveredOrders(id);
       showOrderSwal('deliver').then(() => handleRouting()).then(() => window.location.reload());
     } catch (error) {
       Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
-  } else if (action === '成功取貨') {
+  } else if (action === '查看 PIN 碼') {
+    let pincode = (window.currentOrder?.id == id ? window.currentOrder?.pinCode : null)
+               || goodsOrder?.find(o => o.id == id)?.pinCode;
+    if (!pincode) {
+      try {
+        const res = await backendService.getOrderDetails(id);
+        const detail = res.data?.data;
+        window.currentOrder = detail;
+        pincode = detail?.pinCode;
+      } catch (e) {
+        Swal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: e?.message || '請重新整理後再試' });
+        return;
+      }
+    }
+    if (!pincode) {
+      Swal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: '此訂單尚未產生 PIN 碼' });
+      return;
+    }
+    Swal.fire({
+      title: '交易 PIN 碼',
+      html: `<div style="font-size:2.4rem;font-weight:700;letter-spacing:0.25em;color:#004b97;margin:12px 0;">${esc(String(pincode))}</div><div style="font-size:0.82rem;color:#888;">面交時將此 PIN 碼告知賣家，<br>由賣家輸入確認完成交貨</div>`,
+      confirmButtonText: '我知道了',
+      showCloseButton: true,
+    });
+  } else if (action === '確認交貨') {
+    const { value: pin, isConfirmed } = await Swal.fire({
+      title: '確認交貨',
+      html: '<div style="font-size:0.85rem;color:#666;margin-bottom:8px;">請輸入買家提供的 6 位 PIN 碼</div>',
+      input: 'text',
+      inputPlaceholder: '例：123456',
+      inputAttributes: { maxlength: 6, autocomplete: 'off', inputmode: 'numeric' },
+      showCancelButton: true,
+      confirmButtonText: '確認',
+      cancelButtonText: '取消',
+      inputValidator: (v) => {
+        if (!v) return '請輸入 PIN 碼';
+        if (!/^\d{6}$/.test(v)) return 'PIN 碼須為 6 位數字';
+      },
+    });
+    if (!isConfirmed) return;
     try {
-      await backendService.buyerCompletedOrders(id);
-      await showOrderSwal('completed');
-      await loadBuyerOrders(1);
+      await backendService.sellerCompletedOrders(id, pin);
+      showOrderSwal('completed').then(() => handleRouting()).then(() => window.location.reload());
     } catch (error) {
-      Swal.fire({ title: '系統登記取貨失敗', icon: 'error', text: error });
+      Swal.fire({ title: '確認交貨失敗', icon: 'error', text: error?.response?.data?.message || String(error) });
     }
   } else if (action === '給對方評價') {
     openReviewModal(id, findTargetIdByOrderId(goodsOrder, id), sectionId === 'sellProducts' ? 'buyer' : 'seller');
@@ -586,22 +645,54 @@ async function handleRouting() {
   try {
     if (page === 'sellProducts') {
       window.currentOrder = null;
-      currentSellStatus = 'all';
-      document.querySelectorAll('#sellFilter .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.status === 'all'));
+      currentSellStatus = 'pending';
+      const sellTabs = document.querySelectorAll('#sellFilter .filter-tab');
+      sellTabs.forEach(t => t.classList.remove('active'));
+      sellTabs[0]?.classList.add('active');
       document.querySelector('#sellProducts tbody').innerHTML =
         `<tr><td colspan="4" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('sell-product').innerHTML =
         `<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
-      await loadSellerOrders(1);
+      // 同時發 pending（顯示用）和 all（建立快取 + 各 tab 數量）
+      const [sellPendingRes, sellAllRes] = await Promise.all([
+        backendService.getSellerOrders(1, 'pending').catch(() => null),
+        backendService.getSellerOrders(1, null).catch(() => null),
+      ]);
+      const sellPendingList = sellPendingRes?.data?.data?.orders ?? [];
+      const sellPendingPage = sellPendingRes?.data?.data?.pagination ?? {};
+      const sellAllList = sellAllRes?.data?.data?.orders ?? [];
+      const sellAllPage = sellAllRes?.data?.data?.pagination ?? {};
+      goodsOrder = sellAllList;
+      renderSellerOrders(sellPendingList);
+      renderSellerCards(sellPendingList);
+      renderOrderPagination('sellPagination', sellPendingPage, loadSellerOrders);
+      updateFilterTabCounts(sellAllList, 'sellFilter', sellAllPage, 'all');
+      updateFilterTabCounts(sellPendingList, 'sellFilter', sellPendingPage, 'pending');
     } else if (page === 'buyProducts') {
       window.currentOrder = null;
-      currentBuyStatus = 'all';
-      document.querySelectorAll('#buyFilter .filter-tab').forEach(t => t.classList.toggle('active', t.dataset.status === 'all'));
+      currentBuyStatus = 'pending';
+      const buyTabs = document.querySelectorAll('#buyFilter .filter-tab');
+      buyTabs.forEach(t => t.classList.remove('active'));
+      buyTabs[0]?.classList.add('active');
       document.querySelector('#buyProducts tbody').innerHTML =
         `<tr><td colspan="5" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('buy-product').innerHTML =
         `<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
-      await loadBuyerOrders(1);
+      // 同時發 pending（顯示用）和 all（建立快取 + 各 tab 數量）
+      const [buyPendingRes, buyAllRes] = await Promise.all([
+        backendService.getBuyerOrders(1, 'pending').catch(() => null),
+        backendService.getBuyerOrders(1, null).catch(() => null),
+      ]);
+      const buyPendingList = buyPendingRes?.data?.data?.orders ?? [];
+      const buyPendingPage = buyPendingRes?.data?.data?.pagination ?? {};
+      const buyAllList = buyAllRes?.data?.data?.orders ?? [];
+      const buyAllPage = buyAllRes?.data?.data?.pagination ?? {};
+      goodsOrder = buyAllList;
+      renderBuyerOrders(buyPendingList);
+      renderBuyerCards(buyPendingList);
+      renderOrderPagination('buyPagination', buyPendingPage, loadBuyerOrders);
+      updateFilterTabCounts(buyAllList, 'buyFilter', buyAllPage, 'all');
+      updateFilterTabCounts(buyPendingList, 'buyFilter', buyPendingPage, 'pending');
     } else if (page === 'products') {
       myItemsPage = 1;
       await loadMyItems(1);
@@ -911,7 +1002,27 @@ async function loadSettingsData() {
       if (verified) {
         badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:rgb(36,182,133);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-circle-check"></i>已驗證</span>`;
       } else {
-        badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:#e67e22;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-alert-circle"></i>未驗證</span>`;
+        badgeEl.innerHTML = `<span id="unverifiedBadge" style="display:inline-flex;align-items:center;gap:4px;background:#e67e22;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;cursor:pointer;"><i class="ti ti-alert-circle"></i>未驗證</span>`;
+        document.getElementById('unverifiedBadge')?.addEventListener('click', async () => {
+          const result = await Swal.fire({
+            icon: 'warning',
+            title: '信箱尚未驗證',
+            text: '是否立即發送驗證信至您的登入信箱？',
+            confirmButtonText: '發送驗證信',
+            cancelButtonText: '取消',
+            showCancelButton: true,
+          });
+          if (!result.isConfirmed) return;
+          try {
+            await backendService.resendVerificationEmail();
+            Swal.fire({ icon: 'success', title: '驗證信已寄出', text: '請前往信箱點擊連結完成驗證', confirmButtonText: '確定' });
+          } catch (e) {
+            const msg = e?.message === 'RATE_LIMIT'
+              ? '發送過於頻繁，請 5 分鐘後再試'
+              : (e?.message || '發送失敗，請稍後再試');
+            Swal.fire({ icon: 'error', title: '發送失敗', text: msg, confirmButtonText: '確定' });
+          }
+        });
       }
     }
 
@@ -929,13 +1040,13 @@ async function loadSettingsData() {
   }
 }
 
-async function loadStatCards() {
+// 合併 loadStatCards + loadOrderBadges，共用同一批 API response，省去重複請求
+async function loadDashboardData() {
   const elProducts = document.getElementById('statProducts');
   const elOrders   = document.getElementById('statOrders');
   const elScore    = document.getElementById('statScore');
-  if (!elProducts && !elOrders && !elScore) return;
 
-  // 信譽積分直接從 localStorage 填入
+  // 信譽積分直接從 localStorage 填入（不需要 API）
   if (elScore) elScore.textContent = localStorage.getItem('rate') || '—';
 
   try {
@@ -945,35 +1056,53 @@ async function loadStatCards() {
       backendService.getBuyerOrders(1),
     ]);
 
+    const sellList = sellRes?.data?.data?.orders ?? [];
+    const buyList  = buyRes?.data?.data?.orders  ?? [];
+    const sellPag  = sellRes?.data?.data?.pagination ?? {};
+    const buyPag   = buyRes?.data?.data?.pagination  ?? {};
+
+    // stat cards
     if (elProducts) {
       const raw = itemRes?.data;
-      const total = raw?.total ?? raw?.count ?? (Array.isArray(raw) ? raw.length : (raw?.commodities ?? raw?.data ?? []).length);
+      const total = raw?.pagination?.totalItems ?? (raw?.commodities ?? []).length;
       elProducts.textContent = total ?? '—';
+
+      // 首次上架引導 banner
+      const banner = document.getElementById('firstListingBanner');
+      if (banner && total === 0 && !localStorage.getItem('firstListingBannerDismissed')) {
+        banner.classList.remove('d-none');
+        document.getElementById('firstListingBannerClose')?.addEventListener('click', () => {
+          banner.classList.add('d-none');
+          localStorage.setItem('firstListingBannerDismissed', '1');
+        });
+      }
     }
     if (elOrders) {
       const ACTIVE = new Set(['pending','preparing','delivered','review_pending']);
-      const sellList = sellRes?.data?.data?.orders ?? [];
-      const buyList  = buyRes?.data?.data?.orders  ?? [];
       const count = [...sellList, ...buyList].filter(o => ACTIVE.has((o.status ?? '').toLowerCase())).length;
-      const sellPag = sellRes?.data?.data?.pagination ?? {};
-      const buyPag  = buyRes?.data?.data?.pagination  ?? {};
       const sellTotal = sellPag.totalItems ?? sellList.length;
       const buyTotal  = buyPag.totalItems  ?? buyList.length;
       elOrders.textContent = count > 0 ? count : (sellTotal + buyTotal > 0 ? '0' : '0');
     }
+
+    // sidebar badges（原 loadOrderBadges 的工作）
+    updateSidebarBadge('sellProducts', sellList, sellPag);
+    updateSidebarBadge('buyProducts',  buyList,  buyPag);
   } catch { /* silent */ }
 }
 
 const _NOTIF_LABELS = {
-  wishpool_contact: '許願池聯絡',
-  order_placed:     '訂單成立',
-  order_completed:  '訂單完成',
-  order_cancelled:  '訂單取消',
-  review:           '收到評價',
-  system:           '系統通知',
-  new_message:      '新訊息',
-  product_sold:     '商品已售出',
-  product_liked:    '商品被收藏',
+  wishpool_contact:  '許願池聯絡',
+  order_placed:      '訂單成立',
+  order_update:      '訂單更新',
+  order_completed:   '訂單完成',
+  order_cancelled:   '訂單取消',
+  review:            '收到評價',
+  report_result:     '檢舉結果',
+  new_message:       '新訊息',
+  product_sold:      '商品已售出',
+  product_liked:     '商品被收藏',
+  system:            '系統通知',
 };
 function _relTime(d) {
   if (!d) return '';
@@ -1052,128 +1181,88 @@ function _detectReportHistoryChanges(records) {
   return synth;
 }
 
+function _notifNavHref(n) {
+  if (n.productId)  return `../product/product.html?id=${n.productId}`;
+  if (n.wishId)     return `../wishpool/wishpool.html?id=${n.wishId}#wishpool`;
+  const orderId = n.meta?.orderId;
+  if (orderId) {
+    // order_update: 根據 meta.role 判斷買賣頁，沒有就預設買家
+    const isSell = n.meta?.role === 'SELLER' || n.type === 'product_sold';
+    return `?page=${isSell ? 'sellOrderDetail' : 'buyerOrderDetail'}&id=${orderId}&orderId=${orderId}`;
+  }
+  if (['review', 'report_result'].includes(n.type)) return `?page=profile`;
+  if (n.type === 'new_message' && (n.actorId ?? n.meta?.actor?.accountId)) {
+    return `../chatroom/chatroom.html?openChat=${n.actorId ?? n.meta.actor.accountId}`;
+  }
+  return '';
+}
+
+function _renderRecentNotifItem(n) {
+  const title = n.title || _NOTIF_LABELS[n.type] || '';
+  const body  = n.body ?? '';
+  const time  = _relTime(n.createdAt);
+  const unread = !n.isRead;
+  const href  = _notifNavHref(n);
+
+  let chips = '';
+  if (n.productName) chips += `<span class="notif-chip notif-chip--product"><i class="ti ti-package me-1"></i>${htmlEncode(n.productName)}</span>`;
+  if (n.wishId && !n.productId) chips += `<span class="notif-chip notif-chip--wish"><i class="ti ti-wand me-1"></i>許願</span>`;
+
+  return `<div class="notif-item${unread ? ' notif-unread' : ''}${href ? ' notif-item--link' : ''}"
+    data-notif-id="${n.id ?? ''}" data-notif-href="${href}">
+    <span class="notif-dot${unread ? '' : ' read'}"></span>
+    <div class="notif-body">
+      ${title ? `<div class="notif-ttl">${htmlEncode(title)}</div>` : ''}
+      ${body  ? `<div class="notif-sub">${htmlEncode(body)}</div>` : ''}
+      ${chips ? `<div class="notif-chips">${chips}</div>` : ''}
+      <div class="notif-meta">
+        <span>${time}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
 async function loadRecentNotifications() {
   const container = document.getElementById('recentNotifList');
   if (!container) return;
   try {
-    const isAdmin = ['admin', 'moderator'].includes((sessionStorage.getItem('role') ?? '').toLowerCase());
-    const [notifRes, rptRes, rptHistRaw, sellPendingRes, buyDeliveredRes, sellReviewRes, buyReviewRes, adminRptRes] = await Promise.all([
-      backendService.getNotifications(1, 20),
-      backendService.getMyReports({ page: 1, limit: 20 }).catch(() => null),
-      backendService.getReportHistory({ page: 1, limit: 10 }).catch(() => null),
-      backendService.getSellerOrders(1, 'pending').catch(() => null),
-      backendService.getBuyerOrders(1, 'delivered').catch(() => null),
-      backendService.getSellerOrders(1, 'review_pending').catch(() => null),
-      backendService.getBuyerOrders(1, 'review_pending').catch(() => null),
-      isAdmin ? backendService.getAllReports({ status: 'pending', page: 1, limit: 1 }).catch(() => null) : Promise.resolve(null),
-    ]);
+    const res = await backendService.getNotifications(1, 10);
+    const payload = res?.data?.data ?? {};
+    const items   = payload.notifications ?? [];
+    const unreadCount = payload.unreadCount ?? items.filter(n => !n.isRead).length;
 
-    // API 通知：取最近 8 筆，不限已讀／未讀
-    const apiItems = (notifRes?.data?.data?.notifications ?? []).slice(0, 8);
-    const reports  = rptRes?.data?.reports ?? [];
-    const rptHistRecords = Array.isArray(rptHistRaw) ? rptHistRaw : (rptHistRaw?.data ?? []);
-
-    // ── 訂單合成通知 ───────────────────────────────────────
-    const orderSynth = [];
-
-    // 待確認訂單（賣家）
-    const pendingOrders = sellPendingRes?.data?.data?.orders ?? [];
-    const pendingTotal  = sellPendingRes?.data?.data?.pagination?.totalItems ?? pendingOrders.length;
-    if (pendingTotal > 0) {
-      orderSynth.push({
-        text: `您有 ${pendingTotal} 筆待確認訂單，請盡快處理`,
-        meta: '銷售訂單',
-        time: '',
-        unread: true,
-        href: '?page=sellProducts',
-      });
-    }
-
-    // 待收貨（買家確認收貨）
-    const deliveredOrders = buyDeliveredRes?.data?.data?.orders ?? [];
-    const deliveredTotal  = buyDeliveredRes?.data?.data?.pagination?.totalItems ?? deliveredOrders.length;
-    if (deliveredTotal > 0) {
-      orderSynth.push({
-        text: `您有 ${deliveredTotal} 筆待收貨訂單，請確認收貨`,
-        meta: '消費訂單',
-        time: '',
-        unread: true,
-        href: '?page=buyProducts',
-      });
-    }
-
-    // 待評價（賣家）
-    const sellReviewOrders = sellReviewRes?.data?.data?.orders ?? [];
-    const sellNeedReview   = sellReviewOrders.filter(o => !o.reviewProgress?.sellerReviewed);
-    const sellReviewTotal  = sellReviewRes?.data?.data?.pagination?.totalItems ?? sellNeedReview.length;
-    if (sellReviewTotal > 0) {
-      orderSynth.push({
-        text: `您有 ${sellReviewTotal} 筆待評價訂單（賣家），完成後雙方各 +5 分`,
-        meta: '評價提醒',
-        time: '',
-        unread: true,
-        href: '?page=sellProducts',
-      });
-    }
-
-    // 待評價（買家）
-    const buyReviewOrders = buyReviewRes?.data?.data?.orders ?? [];
-    const buyNeedReview   = buyReviewOrders.filter(o => !o.reviewProgress?.buyerReviewed);
-    const buyReviewTotal  = buyReviewRes?.data?.data?.pagination?.totalItems ?? buyNeedReview.length;
-    if (buyReviewTotal > 0) {
-      orderSynth.push({
-        text: `您有 ${buyReviewTotal} 筆待評價訂單（買家），完成後雙方各 +5 分`,
-        meta: '評價提醒',
-        time: '',
-        unread: true,
-        href: '?page=buyProducts',
-      });
-    }
-
-    // ── Admin：待審核檢舉 ──────────────────────────────────
-    if (isAdmin) {
-      const adminPendingTotal = adminRptRes?.data?.pagination?.totalItems
-        ?? adminRptRes?.pagination?.totalItems
-        ?? (Array.isArray(adminRptRes?.data) ? adminRptRes.data.length : (adminRptRes?.reports?.length ?? 0));
-      if (adminPendingTotal > 0) {
-        orderSynth.push({
-          text: `有 ${adminPendingTotal} 件檢舉待審核`,
-          meta: '管理員待處理',
-          time: '',
-          unread: true,
-          href: '',
-        });
-      }
-    }
-
-    const synthNotifs = [
-      ..._detectReportChanges(reports),
-      ..._detectReportHistoryChanges(rptHistRecords),
-    ];
-
-    const apiHtml = apiItems.map(n => {
-      const typeLabel   = _NOTIF_LABELS[n.type] ?? n.type ?? '';
-      const displayText = n.title || typeLabel;
-      const metaType    = typeLabel || n.title || '';
-      return _notifItemHtml(displayText, metaType, _relTime(n.createdAt), !n.isRead);
-    }).join('');
-
-    const orderHtml = orderSynth.map(s =>
-      _notifItemHtml(s.text, s.meta, s.time, s.unread, s.href)
-    ).join('');
-
-    const synthHtml = synthNotifs.map(s =>
-      _notifItemHtml(s.text, s.meta, s.time, s.unread)
-    ).join('');
-
-    const combined = orderHtml + synthHtml + apiHtml;
-    container.innerHTML = combined || '<div class="review-empty"><i class="ti ti-bell-off review-empty-icon"></i><div class="review-empty-title">目前沒有通知</div><div class="review-empty-sub">訂單更新、評價回覆等通知會顯示在這裡</div></div>';
-
-    // 有需要處理的事項時亮紅點
-    const hasPending = orderSynth.length > 0 || synthNotifs.length > 0;
     const dotEl = document.getElementById('notifPanelDot');
-    if (dotEl) dotEl.style.display = hasPending ? 'inline-block' : 'none';
+    if (dotEl) dotEl.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+
+    if (!items.length) {
+      container.innerHTML = '<div class="review-empty"><i class="ti ti-bell-off review-empty-icon"></i><div class="review-empty-title">目前沒有通知</div><div class="review-empty-sub">訂單更新、評價回覆等通知會顯示在這裡</div></div>';
+      return;
+    }
+
+    container.innerHTML = items.map(_renderRecentNotifItem).join('');
+
+    // 點擊：標記已讀 + 導頁
+    container.addEventListener('click', async e => {
+      if (e.target.closest('a')) return; // 讓原生 <a> 自己處理
+      const item = e.target.closest('.notif-item[data-notif-id]');
+      if (!item) return;
+
+      if (item.classList.contains('notif-unread')) {
+        try {
+          await backendService.markNotificationRead(item.dataset.notifId);
+          item.classList.remove('notif-unread');
+          item.querySelector('.notif-dot')?.classList.add('read');
+          const remaining = container.querySelectorAll('.notif-unread').length;
+          if (dotEl) dotEl.style.display = remaining > 0 ? 'inline-block' : 'none';
+        } catch (_) {}
+      }
+
+      const href = item.dataset.notifHref;
+      if (href) window.location.href = href;
+    });
+
   } catch (e) {
+    console.error('[loadRecentNotifications 失敗]', e);
     container.innerHTML = '<div class="text-center text-muted py-3" style="font-size:14px;"><i class="ti ti-alert-circle" style="font-size:1.4rem;display:block;margin-bottom:4px;opacity:0.4;"></i>無法載入通知</div>';
   }
 }
@@ -1195,11 +1284,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  loadRecentNotifications();
-  loadStatCards();
+  // stat cards + sidebar badges 合併為一次 API（原本 loadStatCards + loadOrderBadges 各打一遍）
+  loadDashboardData();
 
-  // 預載入側邊欄 / 手機按鈕的訂單計數紅點
-  loadOrderBadges();
+  // 通知面板非首屏必要，等瀏覽器閒置再載入，不卡主畫面
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadRecentNotifications, { timeout: 2000 });
+  } else {
+    setTimeout(loadRecentNotifications, 300);
+  }
 
   // 監聽瀏覽器上一頁/下一頁
   window.onpopstate = function() {
@@ -1227,8 +1320,8 @@ document.addEventListener('DOMContentLoaded', () => {
 const order_STATUS_MAP = {
   pending:        { text: '待確認', badge: 'order-badge-pending',    action: '接受訂單',         icon: '../svg/acceptOrder.svg'},
   preparing:      { text: '待出貨', badge: 'order-badge-preparing',  action: '即將出貨',         icon: '../svg/readyDeliver.svg'},
-  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '等待買家確認收貨',  icon: '../svg/waitBuyer.svg'},
-  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '等待買家確認收貨',  icon: '../svg/waitBuyer.svg'},
+  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '確認交貨',  icon: '../svg/waitBuyer.svg'},
+  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '確認交貨',  icon: '../svg/waitBuyer.svg'},
   review_pending: { text: '待評價', badge: 'order-badge-completed',  action: '給對方評價',       icon: '../svg/giveStar.svg'},
   completed:      { text: '已完成', badge: 'order-badge-scored',     action: null,               icon: null},
   canceled:       { text: '已取消', badge: 'order-badge-canceled',   action: null,               icon: null}
@@ -1236,8 +1329,8 @@ const order_STATUS_MAP = {
 const buyer_STATUS_MAP = {
   pending:        { text: '待確認', badge: 'order-badge-pending',    action: '聯絡賣家',   icon: '../svg/canChat.svg'},
   preparing:      { text: '待出貨', badge: 'order-badge-preparing',  action: '聯絡賣家',   icon: '../svg/canChat.svg'},
-  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '成功取貨',   icon: '../svg/acceptOrder.svg'},
-  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '成功取貨',   icon: '../svg/acceptOrder.svg'},
+  shipping:       { text: '配送中', badge: 'order-badge-delivered',  action: '查看 PIN 碼',   icon: '../svg/acceptOrder.svg'},
+  delivered:      { text: '待收貨', badge: 'order-badge-delivered',  action: '查看 PIN 碼',   icon: '../svg/acceptOrder.svg'},
   review_pending: { text: '待評價', badge: 'order-badge-completed',  action: '給對方評價', icon: '../svg/giveStar.svg'},
   completed:      { text: '已完成', badge: 'order-badge-scored',     action: null,         icon: null},
   canceled:       { text: '已取消', badge: 'order-badge-canceled',   action: null,         icon: null}
@@ -1323,6 +1416,7 @@ function renderBuyerOrders(list) {
     const key      = (item.status ?? 'listed').toLowerCase();
     const st       = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
     const log = esc(item.log || '無詳細資訊');
+    const pinAttr  = (key === 'delivered' || key === 'shipping') && item.pinCode ? ` data-pincode="${esc(String(item.pinCode))}"` : '';
 
   return `
       <tr data-id="${esc(id)}" style="animation-delay:${i * 0.05}s">
@@ -1332,7 +1426,7 @@ function renderBuyerOrders(list) {
         <td>${price} 元</td>
         <td>
           <div class="d-flex gap-2 flex-wrap align-items-center">
-            ${renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}">
+            ${renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}"${pinAttr}>
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
             </button>` : '')}
@@ -1367,7 +1461,6 @@ function renderSellerOrders(list) {
     const created  = fmtDate(item.createdAt);
     const key = (item.status ?? 'listed').toLowerCase();
     const st  = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
-    const isDisabled = (st.action === '等待買家確認收貨') ? 'disabled' : '';
     return `
       <tr data-id="${esc(id)}" style="animation-delay:${i * 0.05}s">
         <td>${label}</td>
@@ -1375,7 +1468,7 @@ function renderSellerOrders(list) {
         <td>${created}</td>
         <td>
           <div class="d-flex gap-2 flex-wrap align-items-center">
-            ${renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}" ${isDisabled}>
+            ${renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `<button class="checkInfoBtn action-btn btn-row-action" data-action="${st.action}" data-id="${id}">
               <img src="${st.icon}" alt="${st.action}icon"/>
               <div>${st.action}</div>
             </button>` : '')}
@@ -1541,14 +1634,13 @@ function renderSellerCards(list = []) {
     const key     = (item.status ?? 'listed').toLowerCase();
     const st      = order_STATUS_MAP[key] ?? order_STATUS_MAP.pending;
     const pillCls = statusPillClass(item.status);
-    const isDisabled = st.action === '等待買家確認收貨' ? 'disabled' : '';
     const imgUrl  = item.orderItems?.[0]?.item?.mainImage || item.orderItems?.[0]?.item?.imageUrl || null;
     const thumb   = imgUrl
       ? `<img src="${esc(imgUrl)}" alt="${label}">`
       : '';
 
     const actionBtn = renderReviewAction(item, true, id) ?? (item.status !== 'canceled' && st.action ? `
-      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}" ${isDisabled}>
+      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
         <img src="${st.icon}" alt="${st.action}"><div>${st.action}</div>
       </button>` : '');
     const cancelBtn = (item.status === 'pending' || item.status === 'preparing') ? `
@@ -1611,13 +1703,14 @@ function renderBuyerCards(list = []) {
     const key     = (item.status ?? 'listed').toLowerCase();
     const st      = buyer_STATUS_MAP[key] ?? buyer_STATUS_MAP.pending;
     const pillCls = statusPillClass(item.status);
+    const pinAttr = (key === 'delivered' || key === 'shipping') && item.pinCode ? ` data-pincode="${esc(String(item.pinCode))}"` : '';
     const imgUrl  = item.orderItems?.[0]?.item?.mainImage || item.orderItems?.[0]?.item?.imageUrl || null;
     const thumb   = imgUrl
       ? `<img src="${esc(imgUrl)}" alt="${label}">`
       : '';
 
     const actionBtn = renderReviewAction(item, false, id) ?? (item.status !== 'canceled' && st.action ? `
-      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}">
+      <button class="checkInfoBtn action-btn btn-card-action" data-id="${id}" data-action="${st.action}"${pinAttr}>
         <img src="${st.icon}" alt="${st.action}"><div>${st.action}</div>
       </button>` : '');
     const cancelBtn = (item.status === 'pending' || item.status === 'preparing') ? `
@@ -1682,7 +1775,7 @@ function renderOrderReviews(reviews, isSell) {
     const isBuyerToSeller = r.role === 'BUYER_TO_SELLER';
     const roleLabel = isBuyerToSeller ? '買家 → 賣家' : '賣家 → 買家';
     const tags = Array.isArray(r?.tags) ? r.tags : [];
-    const tagChips = tags.map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`).join('');
+    const tagHtml = renderTagsByGroup(tags);
     return `
       <div class="review-card mt-2">
         <div class="review-card__header">
@@ -1692,7 +1785,7 @@ function renderOrderReviews(reviews, isSell) {
             <span class="review-role-label">${roleLabel}</span>
           </div>
         </div>
-        ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
+        ${tagHtml ? `<div class="review-card__chips">${tagHtml}</div>` : ''}
         <div class="reviewText">${r.comment || '<span style="color:#aaa">（無文字評論）</span>'}</div>
       </div>`;
   }).join('');
@@ -1746,17 +1839,17 @@ async function getDetail(id) {
       x:     `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9"/><path d="M15 9L9 15M9 9L15 15"/></svg>`,
     };
     const STATUS_TITLE = {
-      pending: '等待賣家接受', preparing: '備貨準備中', delivered: '等待確認收貨',
+      pending: '等待賣家接受', preparing: '備貨準備中', delivered: '面交確認中',
       review_pending: '等待評價', completed: '訂單已完成', canceled: '訂單已取消',
     };
     const SELL_DESC = {
       pending: '有新訂單等待您接受，請盡快確認', preparing: '您已接受訂單，請備妥商品',
-      delivered: '商品已出貨，等待買家確認收貨', review_pending: '買家已確認收貨，請對買家留下評價',
+      delivered: '商品已出貨，請向買家索取 PIN 碼並輸入確認交貨', review_pending: '交貨已完成，請對買家留下評價',
       completed: '訂單已完成，感謝您的交易',
     };
     const BUY_DESC = {
       pending: '訂單已建立，等待賣家確認接受', preparing: '賣家正在為您備貨中',
-      delivered: '賣家已出貨，請確認收貨', review_pending: '您已確認收貨，記得留下評價',
+      delivered: '賣家已出貨，請查看 PIN 碼並於面交時告知賣家', review_pending: '賣家已確認交貨，記得留下評價',
       completed: '感謝您使用拾貨寶庫',
     };
 
@@ -1782,7 +1875,9 @@ async function getDetail(id) {
     if (Object.keys(_tagMeaningCache).length === 0) {
       try {
         const tagRes = await backendService.getReviewTags();
-        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+        (tagRes?.data?.data?.groups ?? []).forEach(g => {
+          (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; _tagGroupNameCache[t.tag] = g.name; });
+        });
       } catch (e) {}
     }
 
@@ -1832,7 +1927,7 @@ async function getDetail(id) {
       const STATUS_PILL = {
         pending:        { cls: 'sp-pend', text: '等待賣家接受' },
         preparing:      { cls: 'sp-pack', text: '備貨準備中' },
-        delivered:      { cls: 'sp-ship', text: '等待確認收貨' },
+        delivered:      { cls: 'sp-ship', text: '面交確認中' },
         review_pending: { cls: 'sp-eval', text: '等待評價' },
         completed:      { cls: 'sp-done', text: '已完成' },
         canceled:       { cls: 'sp-canc', text: '已取消' },
@@ -1875,6 +1970,16 @@ async function getDetail(id) {
             <span class="od-info-lbl">訂單編號</span>
             <span class="od-info-val od-mono">${id}</span>
           </div>
+          ${!isSell && (data.status === 'delivered' || data.status === 'shipping') && data.pinCode ? `
+          <div class="od-info-row">
+            <span class="od-info-lbl">交易 PIN 碼</span>
+            <span class="od-info-val">
+              <button class="od-pin-btn action-btn" data-action="查看 PIN 碼" data-id="${id}" data-pincode="${esc(String(data.pinCode))}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                查看 PIN 碼
+              </button>
+            </span>
+          </div>` : ''}
         </div>
         <div class="od-person-section">
           <div class="od-person-card">
@@ -1924,6 +2029,8 @@ async function getDetail(id) {
         } else if (data.status === 'preparing') {
           actionRows.push({ action: '即將出貨', icon: '../svg/readyDeliver.svg', title: '登記出貨', desc: '通知買家已備妥，準備交貨', danger: false });
           actionRows.push({ action: 'cancel',   icon: '../svg/cancelOrder.svg',  title: '取消訂單', desc: '取消此筆訂單', danger: true });
+        } else if (data.status === 'delivered') {
+          actionRows.push({ action: '確認交貨', icon: '../svg/waitBuyer.svg', title: '確認交貨', desc: '輸入買家的 PIN 碼完成交貨', danger: false });
         } else if (data.status === 'review_pending' && !rp.sellerReviewed) {
           actionRows.push({ action: '給對方評價', icon: '../svg/giveStar.svg', title: '留下評價', desc: '對買家的交易留下評論', danger: false });
         }
@@ -1931,8 +2038,7 @@ async function getDetail(id) {
         if (data.status === 'pending' || data.status === 'preparing') {
           actionRows.push({ action: 'cancel', icon: '../svg/cancelOrder.svg', title: '取消訂單', desc: '取消此筆訂單', danger: true });
         } else if (data.status === 'delivered') {
-          actionRows.push({ action: '成功取貨', icon: '../svg/acceptOrder.svg', title: '確認收貨', desc: '確認已取得商品', danger: false });
-          actionRows.push({ action: 'cancel',   icon: '../svg/cancelOrder.svg', title: '取消訂單', desc: '取消此筆訂單', danger: true });
+          actionRows.push({ action: '查看 PIN 碼', icon: '../svg/acceptOrder.svg', title: '查看 PIN 碼', desc: '將 PIN 碼告知賣家以完成交貨', danger: false });
         } else if (data.status === 'review_pending' && !rp.buyerReviewed) {
           actionRows.push({ action: '給對方評價', icon: '../svg/giveStar.svg', title: '留下評價', desc: '對賣家的交易留下評論', danger: false });
         }
@@ -2069,7 +2175,7 @@ const updateStatusUI = (data, container) => {
   const defaultTextMap = {
     pending:        '訂單已建立',
     preparing:      '準備商品',
-    delivered:      '已出貨',
+    delivered:      '面交備妥',
     review_pending: '待評價',
     completed:      '已完成',
   };
@@ -2449,6 +2555,9 @@ const updateStatusUI = (data, container) => {
     el.imagesInput.files = dt.files;
   }
 
+  // 暴露給 IIFE 外部使用（product.html「去編輯」按鈕跳轉用）
+  window.openEditDrawer = openEditDrawer;
+
 })();
 function goToPage(pageName, scrollTarget) {
   const url = new URL(window.location.href);
@@ -2498,35 +2607,59 @@ if (changePasswordBtn) {
   });
 }
 
-//TODO 停用帳號
+// 停用帳號（兩步驟確認）
 const disableAccountBtn = document.getElementById('disableAccountBtn');
 if (disableAccountBtn) {
   disableAccountBtn.addEventListener('click', async () => {
-    const result = await Swal.fire({
+    // 步驟一：第一次確認
+    const step1 = await Swal.fire({
       title: '確定要停用帳號嗎？',
-      text: '停用後將無法登入，且資料將被刪除',
+      text: '停用後將無法登入，且所有資料將被刪除，此操作無法復原。',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: '是的，停用帳號',
-      cancelButtonText: '取消'
+      confirmButtonText: '繼續',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#e03',
     });
-    if (result.isConfirmed) {
-      try {
-        await backendService.disableAccount();
-        Swal.fire({
-          title: '帳號已停用',
-          text: '您的帳號已成功停用，將被登出',
-          icon: 'success'
-        }).then(() => {
-          // 停用後登出並導向首頁
-          backendService.logout().finally(() => {
-            window.location.href = '/';
-          });
-        });
-      } catch (error) {
-        console.error('停用帳號失敗:', error);
-        Swal.fire({ title: '錯誤', text: '停用帳號失敗，請稍後再試', icon: 'error' });
-      }
+    if (!step1.isConfirmed) return;
+
+    // 步驟二：輸入 TreasureHub 確認
+    const step2 = await Swal.fire({
+      title: '請輸入確認文字',
+      html: `<p style="font-size:0.9rem;color:#555;margin-bottom:8px;">請輸入 <strong>TreasureHub</strong> 以確認停用帳號</p>
+             <input id="swal-confirm-input" class="swal2-input" placeholder="TreasureHub">`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '確定停用',
+      cancelButtonText: '取消',
+      confirmButtonColor: '#e03',
+      focusConfirm: false,
+      preConfirm: () => {
+        const val = document.getElementById('swal-confirm-input').value.trim();
+        if (val !== 'TreasureHub') {
+          Swal.showValidationMessage('請輸入正確的確認文字：TreasureHub');
+          return false;
+        }
+        return true;
+      },
+    });
+    if (!step2.isConfirmed) return;
+
+    // 送出停用 API
+    try {
+      await backendService.disableAccount();
+      await Swal.fire({
+        title: '帳號已停用',
+        text: '您的帳號已成功停用，將被登出。',
+        icon: 'success',
+        confirmButtonColor: '#004b97',
+      });
+      backendService.logout().finally(() => {
+        window.location.href = '/';
+      });
+    } catch (error) {
+      console.error('停用帳號失敗:', error);
+      Swal.fire({ title: '錯誤', text: '停用帳號失敗，請稍後再試', icon: 'error' });
     }
   });
 }
@@ -2560,21 +2693,37 @@ async function openReviewModal(orderId, targetId, targetRole) {
   const targetName       = targetUser?.name || roleName;
   const targetCredit     = targetUser?.rate ?? '-';
 
-  // 從 API 取得 tags，並填入全域 cache 供顯示使用
-  let tagItems = [];
+  // 從 API 取得 tag groups，依 targetRole 篩選後填入全域 cache
+  let tagGroups = [];
   try {
     const tagRes = await backendService.getReviewTags();
-    tagItems = tagRes?.data?.data?.tags ?? [];
-    tagItems.forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+    const allGroups = tagRes?.data?.data?.groups ?? [];
+    allGroups.forEach(g => {
+      (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+    });
+    // 買家評賣家 → BUYER_TO_SELLER；賣家評買家 → SELLER_TO_BUYER
+    const relevantRole = isRatingBuyer ? 'SELLER_TO_BUYER' : 'BUYER_TO_SELLER';
+    tagGroups = allGroups.filter(g => g.targetRole === relevantRole);
   } catch (e) {
     console.warn('取得評論標籤失敗', e);
   }
 
-  const tagChipsHtml = tagItems.map(t => `
-    <label class="review-chip">
-      <input type="checkbox" class="review-tag-check" data-key="${esc(t.tag)}">
-      <span>${esc(t.meaning)}</span>
-    </label>`).join('');
+  const tagGroupsHtml = tagGroups.length
+    ? tagGroups.map(g => {
+        const hint = g.exclusive ? '單選' : '可複選';
+        const tagsHtml = (g.tags ?? []).map(t => `
+          <label class="review-chip${t.positive === false ? ' negative' : ''}">
+            <input type="${g.exclusive ? 'radio' : 'checkbox'}"
+              ${g.exclusive ? `name="review-group-${esc(g.id)}"` : ''}
+              class="review-tag-check" data-key="${esc(t.tag)}">
+            <span>${esc(t.meaning)}</span>
+          </label>`).join('');
+        return `<div class="review-group-block">
+          <div class="review-section-label">${esc(g.name)} <span class="review-section-hint">（${hint}）</span></div>
+          <div class="review-chips-row">${tagsHtml}</div>
+        </div>`;
+      }).join('')
+    : '<span class="review-section-hint">無可用標籤</span>';
 
   Swal.fire({
     title: `評價${roleName}`,
@@ -2594,9 +2743,8 @@ async function openReviewModal(orderId, targetId, targetRole) {
           </div>
         </div>
 
-        <!-- 評價標籤 -->
-        <div class="review-section-label">評價標籤 <span class="review-section-hint">（可複選）</span></div>
-        <div class="review-chips-row">${tagChipsHtml || '<span class="review-section-hint">無可用標籤</span>'}</div>
+        <!-- 評價標籤（按群組分類） -->
+        ${tagGroupsHtml}
 
         <!-- 文字評價 -->
         <div class="review-section-label" style="margin-top:12px;">文字評價 <span class="review-section-hint">（選填）</span></div>
@@ -2619,7 +2767,7 @@ async function openReviewModal(orderId, targetId, targetRole) {
       const comment     = document.getElementById('review-comment').value.trim();
       const isAnonymous = !isRatingBuyer && (document.getElementById('review-anonymous')?.checked ?? false);
       const tags        = [...document.querySelectorAll('.review-tag-check:checked')]
-                           .map(el => el.dataset.key.toUpperCase());
+                           .map(el => el.dataset.key);
 
       try {
         const res = await backendService.postReview(orderId, { comment, isAnonymous, tags });
@@ -2682,6 +2830,23 @@ async function loadMyItems(p = 1) {
     renderCards(list);
     renderProductsPager({ totalPages, total: totalCalc, hasPrevPage: p > 1, hasNextPage: p < totalPages }, p);
     goodsOrder = list;
+
+    // 從 product.html 點「去編輯」跳來時，自動開啟 edit drawer
+    const editId = new URLSearchParams(window.location.search).get('editId');
+    if (editId && p === 1) {
+      const targetItem = list.find(item => String(item.id) === String(editId));
+      if (targetItem) {
+        // 稍微延遲確保 DOM 已渲染
+        setTimeout(() => {
+          const triggerEl = document.querySelector(`[data-action="編輯商品"][data-id="${editId}"]`);
+          openEditDrawer(editId, triggerEl);
+          // 清掉 URL 參數避免重整再次觸發
+          const url = new URL(window.location.href);
+          url.searchParams.delete('editId');
+          window.history.replaceState({}, '', url);
+        }, 300);
+      }
+    }
   } catch (err) {
     console.error(err);
   }
@@ -2730,18 +2895,41 @@ const REVIEW_TAG_LABELS = {
 const SELLER_TAG_KEYS = new Set(['fast_shipping','great_packaging','accurate_description','slow_shipping','poor_packaging','misleading_description','no_show']);
 const BUYER_TAG_KEYS  = new Set(['quick_payment','late_payment','no_show']);
 
-// 快取從 getReviewTags 拿到的 tag→meaning / tag→positive
-const _tagMeaningCache  = {};
-const _tagPositiveCache = {};
+// 快取從 getReviewTags 拿到的 tag→meaning / tag→positive / tag→groupName
+const _tagMeaningCache   = {};
+const _tagPositiveCache  = {};
+const _tagGroupNameCache = {};
 function getTagLabel(tag) {
   if (!tag) return '';
-  if (_tagMeaningCache[tag]) return _tagMeaningCache[tag];
-  return REVIEW_TAG_LABELS[tag] ?? REVIEW_TAG_LABELS[tag.toLowerCase()] ?? tag;
+  const key = tag.toLowerCase();
+  return _tagMeaningCache[key] ?? _tagMeaningCache[tag] ?? REVIEW_TAG_LABELS[key] ?? REVIEW_TAG_LABELS[tag] ?? tag;
 }
 function isTagPositive(tag) {
   if (!tag) return true;
   const v = _tagPositiveCache[tag] ?? _tagPositiveCache[tag.toLowerCase()];
   return v !== undefined ? v : true;
+}
+function renderTagsByGroup(tags) {
+  if (!tags.length) return '';
+  const grouped = new Map();
+  const ungrouped = [];
+  tags.forEach(tk => {
+    const key = tk.toLowerCase();
+    const groupName = _tagGroupNameCache[key] ?? _tagGroupNameCache[tk];
+    if (groupName) {
+      if (!grouped.has(groupName)) grouped.set(groupName, []);
+      grouped.get(groupName).push(tk);
+    } else {
+      ungrouped.push(tk);
+    }
+  });
+  const chip = tk => `<span class="review-display-chip ${isTagPositive(tk) ? 'positive' : 'negative'}">${getTagLabel(tk)}</span>`;
+  let html = '';
+  grouped.forEach((gtags, groupName) => {
+    html += `<div class="review-tag-row"><span class="review-tag-row__label">${groupName}：</span>${gtags.map(chip).join('')}</div>`;
+  });
+  if (ungrouped.length) html += `<div class="review-tag-row">${ungrouped.map(chip).join('')}</div>`;
+  return html;
 }
 
 // bindReviewerClicks 與 openReviewerProfileModal 已由 ../shared/reviewerModal.js 提供
@@ -2756,7 +2944,7 @@ function renderPersonReviewCard(review, role) {
   const roleBadge = role === 'seller' ? '賣' : role === 'buyer' ? '買' : '';
   const roleClass = role === 'seller' ? 'reviewer-role-badge--seller' : role === 'buyer' ? 'reviewer-role-badge--buyer' : '';
   const tags      = Array.isArray(review?.tags) ? review.tags : [];
-  const tagChips  = tags.map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`).join('');
+  const tagHtml   = renderTagsByGroup(tags);
   return `
     <div class="review-card">
       <div class="review-card__header">
@@ -2773,7 +2961,7 @@ function renderPersonReviewCard(review, role) {
           ${reviewId ? `<button class="review-report-btn" data-report-review-id="${reviewId}" data-report-reviewer-id="${rid}" data-report-reviewer-name="${esc(name)}" title="檢舉此評價"><i class="ti ti-flag"></i></button>` : ''}
         </div>
       </div>
-      ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
+      ${tagHtml ? `<div class="review-card__chips">${tagHtml}</div>` : ''}
       ${review?.comment ? `<div class="reviewText">${esc(review.comment)}</div>` : ''}
     </div>`;
 }
@@ -2785,12 +2973,15 @@ async function loadMyReviewStats() {
   if (!container) return;
   const uid = localStorage.getItem('uid');
   if (!uid) return;
+  if (!backendService) backendService = new BackendService();
 
   try {
     if (Object.keys(_tagMeaningCache).length === 0) {
       try {
         const tagRes = await backendService.getReviewTags();
-        (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+        (tagRes?.data?.data?.groups ?? []).forEach(g => {
+          (g.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.meaning; _tagPositiveCache[t.tag] = t.positive; _tagGroupNameCache[t.tag] = g.name; });
+        });
       } catch (e) { /* silent */ }
     }
 
@@ -2931,8 +3122,9 @@ async function loadReportHistory(page = 1) {
   list.innerHTML = '<div class="text-center text-muted py-4" style="font-size:14px;">載入中...</div>';
   pager.innerHTML = '';
   try {
-    const data = await backendService.getReportHistory({ page, limit: LIMIT });
-    const records = Array.isArray(data) ? data : (data?.data ?? []);
+    const res = await backendService.getReportHistory({ page, limit: LIMIT });
+    const records    = res?.data?.reports ?? [];
+    const pagination = res?.data?.pagination ?? {};
     if (!records.length) {
       list.innerHTML = `
         <div class="review-empty">
@@ -2959,13 +3151,11 @@ async function loadReportHistory(page = 1) {
         </div>`;
     }).join('');
 
-    if (records.length === LIMIT || page > 1) {
+    const total = pagination.totalPages ?? 1;
+    if (total > 1) {
       let html = '<div class="order-pagination">';
-      if (page > 1) {
-        html += `<button class="order-page-num" onclick="loadReportHistory(${page - 1})">‹ 上一頁</button>`;
-      }
-      if (records.length === LIMIT) {
-        html += `<button class="order-page-num" onclick="loadReportHistory(${page + 1})">下一頁 ›</button>`;
+      for (let i = 1; i <= total; i++) {
+        html += `<button class="order-page-num${i === page ? ' active' : ''}" onclick="loadReportHistory(${i})">${i}</button>`;
       }
       html += '</div>';
       pager.innerHTML = html;

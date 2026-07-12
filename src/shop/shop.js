@@ -8,6 +8,12 @@ let chatInnerWin;
 let chatInnerDoc;
 let chatRoomList;
 
+// ── Image variant helpers ──
+function toBigImg(url) {
+  if (!url) return url;
+  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_big$1$2');
+}
+
 // ── Skeleton helpers ──
 function hotSkeletonHTML(n = 6) {
   return Array.from({length: n}, () => `
@@ -76,11 +82,14 @@ const midcontent = document.getElementById('midcontent');
 // TODO seller
 document.addEventListener("DOMContentLoaded", async () => {
   // 管理後台按鈕（MODERATOR / ADMIN）& 隱藏聊天室
-  if (['MODERATOR', 'ADMIN'].includes(sessionStorage.getItem('role'))) {
+  const _role = localStorage.getItem('role');
+  if (['MODERATOR', 'ADMIN'].includes(_role)) {
     document.getElementById('moderatorBtn').style.display = 'block';
-    document.getElementById('chaticon')?.style.setProperty('display', 'none', 'important');
-    document.getElementById('talkInterface')?.style.setProperty('display', 'none', 'important');
-    document.querySelector('.nav-tab-chat')?.style.setProperty('display', 'none', 'important');
+  }
+  if (_role === 'ADMIN') {
+    document.getElementById('apiDocsBtn').style.display = 'block';
+    document.getElementById('designSystemBtn').style.display = 'block';
+    document.getElementById('schoolGuideBtn').style.display = 'block';
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -230,7 +239,7 @@ function renderItems(items){
         <div class="card">
           <div class="img-box">
             <img src="../svg/topicon.svg" class="hot-top-icon" alt="熱門商品標誌" width="46" height="46" decoding="async">
-            <img class="main" src="${item.mainImage}" alt="${esc(item.name)}" loading="lazy" decoding="async">
+            <img class="main" src="${toBigImg(item.mainImage)}" alt="${esc(item.name)}" loading="lazy" decoding="async">
           </div>
           <div class="hot-item-footer">
             <div class="hotItemName">${esc(item.name)}</div>
@@ -359,55 +368,21 @@ nextHotBtn.addEventListener("click", () => {
     return;
   }
 
-  // 4. 尺寸：從 radio 或隱藏 input 讀取
-  const formElRef = document.getElementById('createCommodityForm');
-  const checkedSizeRadio = formElRef.querySelector('input[name="sizeRadio"]:checked');
-  const _rawSize = checkedSizeRadio?.value ?? document.getElementById('size').value;
-  const sizeValue = _rawSize !== '' ? Number(_rawSize) : '';
-  if (sizeValue === '') {
-    Swal.fire({ title: "請選擇商品尺寸", icon: "warning" });
-    return;
-  }
-
-  // 5. 新舊程度
-  if (!document.getElementById('new_or_old').value) {
-    Swal.fire({ title: "請選擇商品的新舊程度", icon: "warning" });
-    return;
-  }
-
-  // 6. 分類
-  const category = document.getElementById('category').value;
-  if (!category || category === 'notselyet') {
-    Swal.fire({ title: "請選擇商品分類", icon: "warning" });
-    return;
-  }
-
-  // 7. 主要照片
+  // 4. 主要照片（必填）
   if (document.getElementById('mainImage').files.length === 0) {
     Swal.fire({ title: "請上傳主要照片", icon: "warning" });
     return;
   }
-  // 8. 其他照片
-  if (document.getElementById('image').files.length === 0) {
-    Swal.fire({ title: "請至少上傳一張其他照片", icon: "warning" });
-    return;
-  }
 
-  // 9. 庫存（數字檢查）
+  // 5. 選填欄位：取值但不強制
+  const formElRef = document.getElementById('createCommodityForm');
+  const checkedSizeRadio = formElRef.querySelector('input[name="sizeRadio"]:checked');
+  const _rawSize = checkedSizeRadio?.value ?? document.getElementById('size').value;
+  const sizeValue = _rawSize !== '' ? Number(_rawSize) : null;
   const stockStr = document.getElementById('stock').value.trim();
-  const stock = Number(stockStr);
-  if (stockStr === '' || Number.isNaN(stock) || stock < 0) {
-    Swal.fire({ title: "請填入庫存數量", icon: "warning" });
-    return;
-  }
-
-  // 10. 年齡（允許 -1 表示不詳）
+  const stock = stockStr !== '' ? Number(stockStr) : 1;
   const ageStr = document.getElementById('age').value.trim();
-  const age = Number(ageStr);
-  if (ageStr === '' || Number.isNaN(age) || age < -1) {
-    Swal.fire({ title: "請選擇商品年齡", icon: "warning" });
-    return;
-  }
+  const age = ageStr !== '' ? Number(ageStr) : null;
 
   // 二次確認
   const confirmRes = await Swal.fire({
@@ -430,11 +405,13 @@ nextHotBtn.addEventListener("click", () => {
   // 保險起見，把數字欄位用 set 覆蓋成數字字串
   sellData.set('price', String(price));
   sellData.set('stock', String(stock));
-  sellData.set('age', String(age));
-  // 明確同步 radio → select 的值，並移除不應送後端的 radio 欄位
-  sellData.set('size', String(sizeValue));
-  sellData.set('new_or_old', document.getElementById('new_or_old').value);
-  sellData.set('category', document.getElementById('category').value);
+  // 選填欄位：有值才送，否則從 FormData 移除
+  if (age !== null) sellData.set('age', String(age)); else sellData.delete('age');
+  if (sizeValue !== null) sellData.set('size', String(sizeValue)); else sellData.delete('size');
+  const condVal = document.getElementById('new_or_old').value;
+  if (condVal) sellData.set('new_or_old', condVal); else sellData.delete('new_or_old');
+  const catVal = document.getElementById('category').value;
+  if (catVal && catVal !== 'notselyet') sellData.set('category', catVal); else sellData.delete('category');
   sellData.delete('sizeRadio');
   sellData.delete('conditionRadio');
   sellData.delete('categoryRadio');
@@ -445,19 +422,37 @@ nextHotBtn.addEventListener("click", () => {
     await backendService.create(sellData);
     loaderOverlay.classList.remove('d-flex');
     loaderOverlay.classList.add('d-none');
-    await Swal.fire({
-      title: "商品上架成功!",
-      text: "請至首頁確認是否顯示您的商品",
-      icon: "success"
+    const successResult = await Swal.fire({
+      title: "商品上架成功！",
+      text: "商品已送出，通過審核後將顯示在首頁",
+      icon: "success",
+      showCancelButton: true,
+      confirmButtonText: "查看商品",
+      cancelButtonText: "再上架一件",
+      reverseButtons: true,
     });
-    formEl.reset();
-    window.location.href = "shop.html";
+    if (successResult.isConfirmed) {
+      window.sellClearDraft?.();
+      window.location.href = "shop.html";
+    } else {
+      window.sellResetForRelisting?.();
+    }
   } catch (e) {
-    Swal.fire({
-      title: "Oops...發生錯誤，請稍後再試",
-      text: e?.message || 'Failed to create commodity.',
-      icon: "error"
-    });
+    const status = e?.response?.status ?? e?.status;
+    const msg = e?.response?.data?.message ?? e?.message ?? '';
+    if (status === 403 || msg.toLowerCase().includes('limit') || msg.toLowerCase().includes('quota') || msg.includes('limits') || msg.includes('額度')) {
+      Swal.fire({
+        title: "本月上架額度已達上限",
+        text: "您本月的商品上架數量已達上限，請下個月再繼續上架。",
+        icon: "warning"
+      });
+    } else {
+      Swal.fire({
+        title: "Oops...發生錯誤，請稍後再試",
+        text: msg || 'Failed to create commodity.',
+        icon: "error"
+      });
+    }
   } finally {
     loaderOverlay.classList.add('d-none');
     loaderOverlay.classList.remove('d-flex');
@@ -477,7 +472,10 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
       canvas.toBlob(
-        b => resolve(new File([b], 'image.webp', { type: 'image/webp' })),
+        b => {
+          if (!b) { resolve(null); return; }
+          resolve(new File([b], 'image.webp', { type: 'image/webp' }));
+        },
         'image/webp', quality
       );
     };
@@ -489,9 +487,10 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
 let shopCropper        = null;
 let shopCropQueue      = [];   // 待裁切的原始 File 物件（主圖用）
 let shopCroppedFiles   = [];   // 主圖裁切結果
-let shopCropTarget     = '';   // 'main' | 'single'
+let shopCropTarget     = '';   // 'main' | 'single' | 'new-multi'
 let shopCropFromConfirm = false;
 let shopCropSingleIdx  = -1;   // 正在裁切的 multi 圖索引
+let shopCropNewQueue   = [];   // 超大新圖待裁切佇列
 
 // 其他照片的檔案陣列（最多 5 張，可個別裁切）
 let shopMultiFiles = [];
@@ -550,6 +549,21 @@ function renderMultiPreviews() {
   });
 }
 
+// 開啟裁切 Modal（新上傳的超大圖，裁完後 push 進 shopMultiFiles）
+function openShopCropNew(file) {
+  shopCropTarget    = 'new-multi';
+  shopCropQueue     = [file];
+  shopCroppedFiles  = [];
+  shopCropCounter.textContent = '';
+  if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    shopCropImg.src = e.target.result;
+    shopCropModal.show();
+  };
+  reader.readAsDataURL(file);
+}
+
 // 開啟裁切 Modal（主圖 or 單張 multi）
 function openShopCropSingle(file, idx) {
   shopCropTarget    = 'single';
@@ -604,6 +618,7 @@ document.getElementById('shopCropConfirm').addEventListener('click', () => {
   shopCropModal.hide();
   canvas.toBlob(async (blob) => {
     const compressed = await compressImage(blob, 1200, 0.82);
+    if (!compressed) { Swal.fire({ icon: 'error', title: '圖片處理失敗', text: '無法壓縮圖片，請重新嘗試或換一張圖片。' }); return; }
     if (shopCropTarget === 'main') {
       // 主圖：直接更新 input + 預覽
       const input = document.getElementById('mainImage');
@@ -617,6 +632,14 @@ document.getElementById('shopCropConfirm').addEventListener('click', () => {
       img.onload = () => URL.revokeObjectURL(url);
       img.src = url;
       preview.appendChild(img);
+    } else if (shopCropTarget === 'new-multi') {
+      // 新上傳的超大圖：裁完後 push
+      shopMultiFiles.push(compressed);
+      syncMultiToInput();
+      renderMultiPreviews();
+      if (shopCropNewQueue.length > 0) {
+        setTimeout(() => openShopCropNew(shopCropNewQueue.shift()), 350);
+      }
     } else {
       // 單張 multi：更新對應索引
       shopMultiFiles[shopCropSingleIdx] = compressed;
@@ -626,10 +649,27 @@ document.getElementById('shopCropConfirm').addEventListener('click', () => {
   }, 'image/webp', 0.92);
 });
 
-shopCropModalEl.addEventListener('hidden.bs.modal', () => {
+shopCropModalEl.addEventListener('hidden.bs.modal', async () => {
+  const wasConfirmed = shopCropFromConfirm;
+  const wasTarget    = shopCropTarget;
+  const originalFile = shopCropQueue[0] || null;
+
+  resetMosaicState();
   if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
   shopCropImg.src = '';
   shopCropFromConfirm = false;
+
+  // 使用者關閉 modal 但沒按確認（new-multi 模式）→ 自動壓縮並加入
+  if (!wasConfirmed && wasTarget === 'new-multi' && originalFile) {
+    const compressed = await compressImage(originalFile, 1200, 0.82);
+    if (!compressed) { Swal.fire({ icon: 'error', title: '圖片處理失敗', text: '無法壓縮圖片，請重新嘗試或換一張圖片。' }); return; }
+    shopMultiFiles.push(compressed);
+    syncMultiToInput();
+    renderMultiPreviews();
+    if (shopCropNewQueue.length > 0) {
+      setTimeout(() => openShopCropNew(shopCropNewQueue.shift()), 350);
+    }
+  }
 });
 
 document.getElementById('mainImage').addEventListener('change', function (e) {
@@ -657,18 +697,273 @@ document.getElementById('image').addEventListener('change', async function (e) {
   if (newFiles.length > remaining) {
     Swal.fire({ icon: 'info', title: `已自動截取前 ${remaining} 張`, text: `最多 5 張，超出部分已忽略。` });
   }
-  const oversized = toAdd.find(f => f.size > 5000000);
-  if (oversized) {
-    Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
+  const oversizedList = toAdd.filter(f => f.size > 5000000);
+  const normalList    = toAdd.filter(f => f.size <= 5000000);
+
+  if (oversizedList.length > 0) {
+    const { isConfirmed } = await Swal.fire({
+      icon: 'info',
+      title: '部分照片較大',
+      text: `有 ${oversizedList.length} 張超過 5MB，建議裁剪以縮小檔案大小，或直接自動壓縮上傳。`,
+      confirmButtonText: '前往裁剪',
+      cancelButtonText: '自動壓縮上傳',
+      showCancelButton: true,
+      reverseButtons: true,
+    });
+
+    // 不論選哪個，正常大小的照片先壓縮加入
+    if (normalList.length) {
+      const compressedNormal = (await Promise.all(normalList.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
+      shopMultiFiles.push(...compressedNormal);
+      syncMultiToInput();
+      renderMultiPreviews();
+    }
+
+    if (isConfirmed) {
+      // 前往裁剪：逐張開啟 crop modal
+      shopCropNewQueue = oversizedList.slice(1);
+      openShopCropNew(oversizedList[0]);
+    } else {
+      // 自動壓縮上傳
+      const compressedOver = (await Promise.all(oversizedList.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
+      shopMultiFiles.push(...compressedOver);
+      syncMultiToInput();
+      renderMultiPreviews();
+    }
     return;
   }
 
-  // 自動壓縮每張照片（縮至 1200px，轉 WebP）
-  const compressed = await Promise.all(toAdd.map(f => compressImage(f, 1200, 0.82)));
+  // 全部正常大小：自動壓縮
+  const compressed = (await Promise.all(toAdd.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
   shopMultiFiles.push(...compressed);
   syncMultiToInput();
   renderMultiPreviews();
 });
+
+// ── 相機 input 接線 ───────────────────────────────────────
+document.getElementById('mainImageCamera').addEventListener('change', function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = '';
+  if (file.size > 5000000) {
+    Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
+    return;
+  }
+  openShopCrop([file], 'main');
+});
+
+document.getElementById('subImageCamera').addEventListener('change', async function (e) {
+  const newFiles = Array.from(e.target.files);
+  if (!newFiles.length) return;
+  e.target.value = '';
+
+  const remaining = 5 - shopMultiFiles.length;
+  if (remaining <= 0) {
+    Swal.fire({ icon: 'warning', title: '已達上限', text: '最多只能上傳 5 張其他照片。' });
+    return;
+  }
+  const toAdd = newFiles.slice(0, remaining);
+  const oversizedList = toAdd.filter(f => f.size > 5000000);
+  const normalList    = toAdd.filter(f => f.size <= 5000000);
+
+  if (oversizedList.length > 0) {
+    const { isConfirmed } = await Swal.fire({
+      icon: 'info',
+      title: '部分照片較大',
+      text: `有 ${oversizedList.length} 張超過 5MB，建議裁剪以縮小檔案大小，或直接自動壓縮上傳。`,
+      confirmButtonText: '前往裁剪',
+      cancelButtonText: '自動壓縮上傳',
+      showCancelButton: true,
+      reverseButtons: true,
+    });
+
+    if (normalList.length) {
+      const compressedNormal = (await Promise.all(normalList.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
+      shopMultiFiles.push(...compressedNormal);
+      syncMultiToInput();
+      renderMultiPreviews();
+    }
+
+    if (isConfirmed) {
+      shopCropNewQueue = oversizedList.slice(1);
+      openShopCropNew(oversizedList[0]);
+    } else {
+      const compressedOver = (await Promise.all(oversizedList.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
+      shopMultiFiles.push(...compressedOver);
+      syncMultiToInput();
+      renderMultiPreviews();
+    }
+    return;
+  }
+
+  const compressed = (await Promise.all(toAdd.map(f => compressImage(f, 1200, 0.82)))).filter(Boolean);
+  shopMultiFiles.push(...compressed);
+  syncMultiToInput();
+  renderMultiPreviews();
+});
+
+// ── 商品名稱關鍵字偵測 ───────────────────────────────────
+const KEYWORD_RULES = [
+  { keywords: ['槍', '子彈', '彈藥', '爆炸物', '炸藥'], msg: '疑似違禁品（武器/爆炸物），禁止販售' },
+  { keywords: ['毒品', '大麻', '安非他命', '海洛因', 'K他命', '搖頭丸', 'MDMA'], msg: '疑似違禁藥物，禁止販售' },
+  { keywords: ['抗痘', '消炎', '殺菌', '美白', '去疤', '療效', '醫療'], msg: '商品名稱含療效宣稱字眼，請移除或改用描述性文字（如「控油保濕乳液」而非「抗痘消炎乳液」）' },
+  { keywords: ['高仿', 'A貨', '仿名牌', '仿冒', '山寨'], msg: '疑似仿冒品，禁止販售' },
+  { keywords: ['統一發票', '發票', '增值稅'], msg: '發票類商品可能違反稅務規定，請確認是否合規' },
+  { keywords: ['個資', '個人資料', '帳號', '密碼', '信用卡', '帳', '密'], msg: '禁止販售個人資料或帳號密碼' },
+  { keywords: ['香菸', '菸', '電子菸', '加熱菸', '菸草', '雪茄', '酒', '啤酒', '紅酒', '烈酒', '威士忌', '高粱', '米酒'], msg: '菸酒類商品須符合法規限制，未成年禁止購買，請確認商品符合販售規定' },
+];
+
+const nameInput = document.getElementById('name');
+const nameWarning = document.getElementById('nameKeywordWarning');
+
+nameInput.addEventListener('input', () => {
+  const val = nameInput.value;
+  const hits = [];
+  for (const rule of KEYWORD_RULES) {
+    const matched = rule.keywords.filter(k => val.includes(k));
+    if (matched.length) hits.push({ matched, msg: rule.msg });
+  }
+  if (hits.length === 0) {
+    nameWarning.style.display = 'none';
+    return;
+  }
+  nameWarning.innerHTML = `<div class="kww-title">⚠️ 請注意以下問題：</div>` +
+    hits.map(h => `<div>「${h.matched.join('、')}」— ${h.msg}</div>`).join('');
+  nameWarning.style.display = 'block';
+});
+
+// ── 裁切 modal 轉向按鈕 ──────────────────────────────────
+document.getElementById('shopCropRotateR').addEventListener('click', () => {
+  if (shopCropper) shopCropper.rotate(90);
+});
+
+// ── 馬賽克筆 ─────────────────────────────────────────────
+const MOSAIC_BLOCK = 16; // 每格 mosaic 的顯示像素大小
+let shopMosaicMode    = false;
+let shopMosaicDrawing = false;
+let shopMosaicOffscreen = null; // 全解析度備份 canvas
+
+const shopMosaicCanvas = document.getElementById('shopMosaicCanvas');
+const shopMosaicCtx    = shopMosaicCanvas.getContext('2d');
+
+function shopMosaicGetPos(e) {
+  const rect   = shopMosaicCanvas.getBoundingClientRect();
+  const src    = e.touches ? e.touches[0] : e;
+  return {
+    x: (src.clientX - rect.left) * (shopMosaicCanvas.width  / rect.width),
+    y: (src.clientY - rect.top)  * (shopMosaicCanvas.height / rect.height),
+  };
+}
+
+function shopMosaicApplyBlock(x, y) {
+  const bx = Math.floor(x / MOSAIC_BLOCK) * MOSAIC_BLOCK;
+  const by = Math.floor(y / MOSAIC_BLOCK) * MOSAIC_BLOCK;
+  const scaleX = shopMosaicOffscreen.width  / shopMosaicCanvas.width;
+  const scaleY = shopMosaicOffscreen.height / shopMosaicCanvas.height;
+  const offX = Math.round(bx * scaleX);
+  const offY = Math.round(by * scaleY);
+  const offW = Math.max(1, Math.round(MOSAIC_BLOCK * scaleX));
+  const offH = Math.max(1, Math.round(MOSAIC_BLOCK * scaleY));
+
+  const offCtx = shopMosaicOffscreen.getContext('2d');
+  const data   = offCtx.getImageData(offX, offY, offW, offH).data;
+  let r = 0, g = 0, b = 0;
+  const pixels = data.length / 4;
+  for (let i = 0; i < data.length; i += 4) { r += data[i]; g += data[i+1]; b += data[i+2]; }
+  r = Math.round(r / pixels); g = Math.round(g / pixels); b = Math.round(b / pixels);
+
+  const fill = `rgb(${r},${g},${b})`;
+  shopMosaicCtx.fillStyle = fill;
+  shopMosaicCtx.fillRect(bx, by, MOSAIC_BLOCK, MOSAIC_BLOCK);
+  offCtx.fillStyle = fill;
+  offCtx.fillRect(offX, offY, offW, offH);
+}
+
+function enterMosaicMode() {
+  if (!shopCropImg.complete || !shopCropImg.naturalWidth) return;
+  shopMosaicMode = true;
+  const wrap = document.getElementById('shopCropImgWrap');
+  shopMosaicCanvas.width  = wrap.offsetWidth;
+  shopMosaicCanvas.height = wrap.offsetHeight;
+  shopMosaicCtx.drawImage(shopCropImg, 0, 0, shopMosaicCanvas.width, shopMosaicCanvas.height);
+
+  shopMosaicOffscreen = document.createElement('canvas');
+  shopMosaicOffscreen.width  = shopCropImg.naturalWidth;
+  shopMosaicOffscreen.height = shopCropImg.naturalHeight;
+  shopMosaicOffscreen.getContext('2d').drawImage(shopCropImg, 0, 0);
+
+  if (shopCropper) shopCropper.disable();
+  shopMosaicCanvas.style.display = 'block';
+  document.querySelectorAll('.shop-crop-ctrl').forEach(el => el.classList.add('d-none'));
+  document.getElementById('shopMosaicDoneBtn').classList.remove('d-none');
+  document.getElementById('shopCropHint').textContent = '塗抹要遮蓋的區域';
+}
+
+function exitMosaicMode() {
+  shopMosaicMode    = false;
+  shopMosaicDrawing = false;
+  shopMosaicCanvas.style.display = 'none';
+
+  const dataUrl = shopMosaicOffscreen.toDataURL('image/png');
+  shopMosaicOffscreen = null;
+
+  if (shopCropper) { shopCropper.destroy(); shopCropper = null; }
+  shopCropImg.src = dataUrl;
+
+  const reinit = () => {
+    shopCropper = new Cropper(shopCropImg, { viewMode: 1, autoCropArea: 0.9, responsive: true });
+  };
+  if (shopCropImg.complete && shopCropImg.naturalWidth > 0) reinit();
+  else shopCropImg.addEventListener('load', reinit, { once: true });
+
+  document.querySelectorAll('.shop-crop-ctrl').forEach(el => el.classList.remove('d-none'));
+  document.getElementById('shopMosaicDoneBtn').classList.add('d-none');
+  document.getElementById('shopCropHint').textContent = '拖曳調整裁切範圍，滾輪縮放';
+}
+
+function resetMosaicState() {
+  if (shopMosaicMode) {
+    shopMosaicMode    = false;
+    shopMosaicDrawing = false;
+    shopMosaicOffscreen = null;
+    shopMosaicCanvas.style.display = 'none';
+    document.querySelectorAll('.shop-crop-ctrl').forEach(el => el.classList.remove('d-none'));
+    document.getElementById('shopMosaicDoneBtn').classList.add('d-none');
+    document.getElementById('shopCropHint').textContent = '拖曳調整裁切範圍，滾輪縮放';
+  }
+}
+
+document.getElementById('shopMosaicBtn').addEventListener('click', enterMosaicMode);
+document.getElementById('shopMosaicDoneBtn').addEventListener('click', exitMosaicMode);
+
+shopMosaicCanvas.addEventListener('mousedown', (e) => {
+  if (!shopMosaicMode) return;
+  shopMosaicDrawing = true;
+  const { x, y } = shopMosaicGetPos(e);
+  shopMosaicApplyBlock(x, y);
+});
+shopMosaicCanvas.addEventListener('mousemove', (e) => {
+  if (!shopMosaicMode || !shopMosaicDrawing) return;
+  const { x, y } = shopMosaicGetPos(e);
+  shopMosaicApplyBlock(x, y);
+});
+shopMosaicCanvas.addEventListener('mouseup',    () => { shopMosaicDrawing = false; });
+shopMosaicCanvas.addEventListener('mouseleave', () => { shopMosaicDrawing = false; });
+
+shopMosaicCanvas.addEventListener('touchstart', (e) => {
+  if (!shopMosaicMode) return;
+  e.preventDefault();
+  shopMosaicDrawing = true;
+  const { x, y } = shopMosaicGetPos(e);
+  shopMosaicApplyBlock(x, y);
+}, { passive: false });
+shopMosaicCanvas.addEventListener('touchmove', (e) => {
+  if (!shopMosaicMode || !shopMosaicDrawing) return;
+  e.preventDefault();
+  const { x, y } = shopMosaicGetPos(e);
+  shopMosaicApplyBlock(x, y);
+}, { passive: false });
+shopMosaicCanvas.addEventListener('touchend', () => { shopMosaicDrawing = false; });
 
 // TODO member
 // const member = document.getElementById('member');
@@ -815,13 +1110,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dotsEl)    dotsEl.style.display    = 'none';
   }
   function showMobileUI() {
-    if (swipeHint) swipeHint.style.display = '';
-    if (dotsEl)    dotsEl.style.display    = '';
+    if (swipeHint) swipeHint.style.display = 'none';
+    if (dotsEl)    dotsEl.style.display    = 'none';
+    const newPagerEl = document.getElementById('newPager');
+    if (newPagerEl) newPagerEl.style.display = '';
   }
 
-  // ────────── 電腦版 ──────────
-  prevBtn.addEventListener('click', () => { if (!prevBtn.disabled) fetchDesktopPage(desktopPage - 1); });
-  nextBtn.addEventListener('click', () => { if (!nextBtn.disabled) fetchDesktopPage(desktopPage + 1); });
+  // ────────── 電腦版 / 手機版 共用按鈕 ──────────
+  prevBtn.addEventListener('click', () => {
+    if (isDesktop()) { if (!prevBtn.disabled) fetchDesktopPage(desktopPage - 1); }
+    else swipeToPrev();
+  });
+  nextBtn.addEventListener('click', () => {
+    if (isDesktop()) { if (!nextBtn.disabled) fetchDesktopPage(desktopPage + 1); }
+    else swipeToNext();
+  });
 
   async function fetchDesktopPage(p) {
     prevBtn.disabled = true;
@@ -881,36 +1184,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateDots() {
-    if (!dotsEl) return;
     const totalChunks = Math.max(1, Math.ceil(mobileBuffer.length / MOBILE_CHUNK));
-    let html = '';
-    for (let i = 0; i < totalChunks; i++) {
-      html += `<span class="swipe-dot${i === mobileChunk ? ' active' : ''}"></span>`;
+    if (!isDesktop()) {
+      prevBtn.disabled = mobileChunk <= 0;
+      nextBtn.disabled = mobileChunk >= totalChunks - 1 && !backendHasMore;
+      pageInfo.textContent = `第 ${mobileChunk + 1} / ${totalChunks}${backendHasMore ? '+' : ''} 頁`;
     }
-    if (backendHasMore) html += `<span class="swipe-dot swipe-dot-more"></span>`;
-    dotsEl.innerHTML = html;
-
-    // 更新左右箭頭透明度
-    const leftArrow  = swipeHint?.querySelector('.swipe-arrow-left');
-    const rightArrow = swipeHint?.querySelector('.swipe-arrow-right');
-    if (leftArrow)  leftArrow.style.opacity  = mobileChunk > 0 ? '1' : '0.25';
-    if (rightArrow) rightArrow.style.opacity = (mobileChunk < totalChunks - 1 || backendHasMore) ? '1' : '0.25';
   }
-
-  // ── 觸控滑動偵測 ──
-  let touchX = 0, touchY = 0;
-  container.addEventListener('touchstart', e => {
-    touchX = e.touches[0].clientX;
-    touchY = e.touches[0].clientY;
-  }, { passive: true });
-  container.addEventListener('touchend', e => {
-    if (isDesktop()) return;
-    const dx = e.changedTouches[0].clientX - touchX;
-    const dy = e.changedTouches[0].clientY - touchY;
-    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return; // 不夠水平
-    if (dx < 0) swipeToNext();
-    else         swipeToPrev();
-  }, { passive: true });
 
   function swipeToNext() {
     const totalChunks = Math.ceil(mobileBuffer.length / MOBILE_CHUNK);
@@ -971,7 +1251,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.dataset.id = product.id;
       card.style.width = '100%';
       card.style.borderRadius = '0.3rem';
-      const imgUrl   = product.mainImage || '/img/placeholder.webp';
+      const imgUrl   = toBigImg(product.mainImage) || '/img/placeholder.webp';
       const category = categoryMap[product.category] ?? '其他';
       const newOrOld = newOrOldMap[product.newOrOld] ?? '';
       card.innerHTML = `
@@ -1087,11 +1367,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const sendBtn = document.getElementById("sendBtn");
   const messageInput = document.getElementById("messageInput");
   const chatBox = document.getElementById("chatBox");
- if (!chatList || !chatConversation || !chatTargetName || !backToList || !sendBtn || !messageInput || !chatBox) {
-    console.warn("缺少必要的聊天介面元素");
+  if (!chatList || !chatConversation || !chatTargetName || !backToList || !sendBtn || !messageInput || !chatBox) {
     return;
-  } else {
-    console.log("聊天介面元素載入完成");
   }
   // 點擊聊天清單 → 進入對話
   document.querySelectorAll(".person").forEach(person => {

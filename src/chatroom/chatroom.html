@@ -2,27 +2,53 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../image/bigLogo.jpg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>聊天室</title>
+    <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>聊天室｜拾貨寶庫</title>
     <link rel="shortcut icon" href="../treasurehubIcon.ico">
-    <meta property="og:title" content="聊天室">
-    <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+    <meta name="description" content="拾貨寶庫即時聊天室 — 與賣家直接議價、確認交易細節，或聯繫平台客服小幫手取得即時協助。"/>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://treasurehub.tw/chatroom/chatroom.html">
+    <meta property="og:title" content="聊天室｜拾貨寶庫">
+    <meta property="og:description" content="拾貨寶庫即時聊天室 — 與賣家直接議價、確認交易細節，或聯繫平台客服小幫手取得即時協助。">
     <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" integrity="sha384-l4UPAMHGzl7zwogLW4nOwaU2XTk6oiM1jhCRQstZEndoIiA2I5bg6fST3wzBSRBD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
-    <link rel="stylesheet" href="chatroom.css">
+    <link rel="stylesheet" href="chatroom.css?v=5">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" integrity="sha384-6LFfkTKLRlzFtgx8xsWyBdKGpcMMQTkv+dB7rAbugeJAu1Ym2q1Aji1cjHBG12Xh" crossorigin="anonymous">
     <link rel="stylesheet" href="../default/default-font.css">
     <link rel="stylesheet" href="../default/tokens.css">
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PQ6ND9EY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-45PQ6ND9EY');
+    </script>
+    <!-- End Google Analytics -->
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TNDMCCKZ');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TNDMCCKZ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <!-- 頁面載入遮罩 -->
     <div id="chatLoader" class="chat-loader">
       <div class="loader-wrap">
@@ -52,6 +78,21 @@
                     <h5 class="mb-0">聊天室</h5>
                 </div>
                 
+                <!-- Sidebar 頂部：LINE 官方帳號 -->
+                <div class="sidebar-footer">
+                    <a href="https://lin.ee/U7uZmHV" target="_blank" rel="noopener noreferrer" class="sidebar-line-btn">
+                        <svg class="sidebar-line-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <rect width="40" height="40" rx="10" fill="#06C755"/>
+                            <path d="M33 18.8C33 13.4 27.6 9 21 9S9 13.4 9 18.8c0 4.8 4.3 8.9 10.1 9.6.4.1.9.3 1 .6.1.3.1.7 0 1l-.2 1c-.1.3-.3 1.3 1.1.7 1.4-.6 7.6-4.5 10.4-7.7C32.2 21.9 33 20.4 33 18.8z" fill="white"/>
+                        </svg>
+                        <span class="sidebar-line-text">
+                            <span class="sidebar-line-title">LINE 官方帳號</span>
+                            <span class="sidebar-line-sub">加入好友，即時取得最新消息</span>
+                        </span>
+                        <i class="bi bi-chevron-right sidebar-line-arrow"></i>
+                    </a>
+                </div>
+
                 <!-- 聊天室列表 -->
                 <div class="chat-list" id="chatList">
                     <div class="chat-item" data-room="general">
@@ -114,9 +155,15 @@
                                             <span id="notifBtnLabel">桌面通知</span>
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="chat-dropdown-item" href="#" id="openRoomInfoBtn">
+                                            <span class="chat-dropdown-icon"><i class="bi bi-info-circle"></i></span>
+                                            聊天室資訊
+                                        </a>
+                                    </li>
                                     <li><hr class="chat-dropdown-divider"></li>
                                     <li>
-                                        <a class="chat-dropdown-item chat-dropdown-danger" href="#">
+                                        <a class="chat-dropdown-item chat-dropdown-danger" href="#" id="reportBtn">
                                             <span class="chat-dropdown-icon"><i class="bi bi-flag"></i></span>
                                             檢舉
                                         </a>
@@ -128,10 +175,25 @@
                     </div>
                 </div>
 
+                <!-- 聊天室資訊 Side Panel -->
+                <div id="roomInfoPanel" class="room-info-panel">
+                    <div class="room-info-panel-header">
+                        <span><i class="bi bi-info-circle me-1"></i>聊天室資訊 · <span id="roomInfoPanelTitle"></span></span>
+                        <button id="closeRoomInfoPanel" class="room-info-close-btn" aria-label="關閉">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                    <div class="room-info-panel-body" id="roomInfoBody"></div>
+                </div>
+                <div id="roomInfoOverlay" class="room-info-overlay"></div>
+
                 <!-- SSE 斷線提示 -->
                 <div id="sseDisconnectBanner" class="sse-disconnect-banner" style="display:none;">
                     <i class="bi bi-wifi-off me-2"></i>連線中斷，嘗試重新連線中…
                 </div>
+
+                <!-- 客服單狀態橫幅 -->
+                <div id="ticketBanner" class="ticket-banner" style="display:none;"></div>
 
                 <!-- 訊息顯示區 -->
                 <div class="messages-container" id="messagesContainer"></div>
@@ -147,6 +209,7 @@
                 <div class="message-input-container p-3 border-top">
                     <!-- 快速回覆 -->
                     <div id="quickReplyBar" class="quick-reply-bar" style="display:none;">
+                        <button id="requestSupportBtn" class="support-request-chip"><i class="bi bi-headset"></i> 聯絡客服</button>
                         <button class="quick-reply-chip" data-text="請問還有嗎？">請問還有嗎？</button>
                         <button class="quick-reply-chip" data-text="請問有瑕疵嗎？">請問有瑕疵嗎？</button>
                         <button class="quick-reply-chip" data-text="可以拍更多照片嗎？">可以拍更多照片嗎？</button>
@@ -200,6 +263,7 @@
                             <button class="cs-bot-option" data-bot-option="1"><i class="bi bi-box-seam"></i>訂單查詢</button>
                             <button class="cs-bot-option" data-bot-option="2"><i class="bi bi-people"></i>面交說明</button>
                             <button class="cs-bot-option" data-bot-option="3"><i class="bi bi-question-circle"></i>常見問題</button>
+                            <button class="cs-bot-option" data-bot-option="4" id="csBotHumanAgent"><i class="bi bi-headset"></i>真人客服</button>
                         </div>
                     </div>
 
@@ -349,10 +413,10 @@
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" integrity="sha384-jrOgQzBlDeUNdmQn3rUt/PZD+pdcRBdWd/HWRqRo+n2OR2QtGyjSaJC0GiCeH+ir" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" integrity="sha384-jrOgQzBlDeUNdmQn3rUt/PZD+pdcRBdWd/HWRqRo+n2OR2QtGyjSaJC0GiCeH+ir" crossorigin="anonymous"></script>
     <script>
       // 更新底部導覽列「我的帳戶」icon 為使用者頭像（已登入時）
       document.addEventListener('DOMContentLoaded', () => {
@@ -373,7 +437,7 @@
         }
       });
     </script>
-    <script type="module" src="chatroom.js"></script>
+    <script type="module" src="chatroom.js?v=4"></script>
 
     <!-- 底部導航 (手機版，iframe 內不顯示) -->
     <script>if(window !== window.parent) document.write('<style>#bottomNav{display:none!important}</style>');</script>

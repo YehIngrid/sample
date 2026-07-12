@@ -1,6 +1,3 @@
-axios.defaults.withCredentials = true;
-axios.defaults.timeout = 30000;
-
 // ── 重試工具：network 錯誤或 5xx 才重試，4xx 直接拋出 ────────────
 async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
     let lastErr;
@@ -44,9 +41,44 @@ function _showNetworkBanner() {
     if (existing) return;
     const el = document.createElement('div');
     el.id = '_netBanner';
-    el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#004b97;color:#fff;font-size:14px;font-weight:600;text-align:center;padding:10px 16px;letter-spacing:0.02em;box-shadow:0 2px 8px rgba(0,0,0,0.25);';
-    el.innerHTML = '⚠️ 無法連線伺服器，請確認網路狀態，或網站正在維護更新中。<button onclick="location.reload()" style="margin-left:16px;background:#abdad5;color:#004b97;border:none;border-radius:6px;padding:3px 12px;cursor:pointer;font-weight:700;">重新整理</button>';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#004b97;color:#fff;font-size:14px;font-weight:600;text-align:center;padding:10px 16px;letter-spacing:0.02em;box-shadow:0 2px 8px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;gap:10px;';
+    el.innerHTML = `
+      <span>⚠️ 無法連線伺服器，請確認網路狀態，或網站正在維護更新中。</span>
+      <span id="_netBannerDots" style="display:inline-flex;gap:3px;align-items:center;">
+        <span class="_nd" style="width:5px;height:5px;border-radius:50%;background:#abdad5;display:inline-block;animation:_ndPulse 1.2s ease-in-out infinite;"></span>
+        <span class="_nd" style="width:5px;height:5px;border-radius:50%;background:#abdad5;display:inline-block;animation:_ndPulse 1.2s ease-in-out 0.2s infinite;"></span>
+        <span class="_nd" style="width:5px;height:5px;border-radius:50%;background:#abdad5;display:inline-block;animation:_ndPulse 1.2s ease-in-out 0.4s infinite;"></span>
+      </span>
+      <span style="font-size:12px;opacity:0.85;font-weight:400;" id="_netBannerStatus">正在嘗試重連</span>
+      <button onclick="location.reload()" style="background:#abdad5;color:#004b97;border:none;border-radius:6px;padding:3px 12px;cursor:pointer;font-weight:700;flex-shrink:0;">重新整理</button>
+    `;
+    if (!document.getElementById('_ndStyle')) {
+      const style = document.createElement('style');
+      style.id = '_ndStyle';
+      style.textContent = '@keyframes _ndPulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}';
+      document.head.appendChild(style);
+    }
     document.body.prepend(el);
+}
+
+// ── 全域攔截：任何 axios call 碰到網路層錯誤就顯示 banner ────────────
+let _axiosInited = false;
+function _initAxios() {
+    if (_axiosInited) return;
+    _axiosInited = true;
+    axios.defaults.withCredentials = true;
+    axios.defaults.timeout = 30000;
+    axios.interceptors.response.use(
+        res => res,
+        err => {
+            const isNetworkError = err.code === 'ECONNABORTED'
+                || err.message === 'Network Error'
+                || !err.response;
+            if (isNetworkError) _showNetworkBanner();
+            return Promise.reject(err);
+        }
+    );
+    _attach401Handler(axios);
 }
 
 function _attach401Handler(instance) {
@@ -57,9 +89,8 @@ function _attach401Handler(instance) {
             const status = err?.response?.status;
             const msg = err?.response?.data?.message || '';
 
-            // 逾時或網路中斷
+            // 逾時或網路中斷（banner 由全域 interceptor 處理，這裡直接跳過）
             if (err.code === 'ECONNABORTED' || err.message === 'Network Error' || !err.response) {
-                _showNetworkBanner();
                 return Promise.reject(err);
             }
 
@@ -83,6 +114,12 @@ function _attach401Handler(instance) {
 
             const skip = _SKIP_401.some(p => url.includes(p));
             const onAccountPage = window.location.pathname.includes('account.html');
+            // 從未登入的訪客遇到 401 → 靜默更新 UI，不跳「登入已過期」
+            const hadSession = !!localStorage.getItem('uid');
+            if (status === 401 && !skip && !hadSession && !onAccountPage) {
+                if (typeof window._showLoggedOutUI === 'function') window._showLoggedOutUI();
+                return Promise.reject(err);
+            }
             if (status === 401 && !skip && !_handlingExpiry && !onAccountPage) {
                 _handlingExpiry = true;
                 window.isLoggedIn = false;
@@ -119,10 +156,9 @@ function _attach401Handler(instance) {
         }
     );
 }
-_attach401Handler(axios); // 覆蓋絕大多數 API 呼叫
-
 export default class BackendService {
     constructor() {
+        _initAxios(); // 確保 axios.defaults 和 global interceptors 設定好（只執行一次）
         this.baseUrl = import.meta.env.VITE_API_BASE_URL;
         this.http = axios.create({
             baseURL: this.baseUrl,
@@ -167,15 +203,11 @@ export default class BackendService {
 
             const d = response?.data?.data;
             if (d?.uid)          localStorage.setItem('uid', d.uid);
-            if (d?.role)         sessionStorage.setItem('role', d.role);   // 分頁獨立，避免跨分頁污染
+            if (d?.role)         localStorage.setItem('role', d.role);
             if (d?.emailVerify != null) localStorage.setItem('emailVerify', String(d.emailVerify));
 
-            // 若 whoami / getUserData 是 Promise 版
             if (typeof this.whoami === 'function') {
             try { await this.whoami(); } catch (_) {}
-            }
-            if (typeof this.getUserData === 'function') {
-            try { await this.getUserData(); } catch (_) {}
             }
 
             return response;
@@ -206,7 +238,7 @@ export default class BackendService {
             localStorage.removeItem('intro');
             localStorage.removeItem('avatar');
             localStorage.removeItem('rate');
-            sessionStorage.removeItem('role');
+            localStorage.removeItem('role');
             localStorage.removeItem('emailVerify');
             localStorage.removeItem('loginEmail');
             return response;
@@ -257,7 +289,7 @@ export default class BackendService {
             return Promise.reject(error);
         }
         // 更新成功後，儲存新的使用者資料到 localStorage
-        await _this.getUserData();
+        await _this.getMe();
         return response;
     }
     async whoami() {
@@ -281,7 +313,8 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/account/me`, { withCredentials: true });
             const d = response.data?.data;
             if (d) {
-                if(d.uid) localStorage.setItem('uid', d.uid);
+                if (d.uid)              localStorage.setItem('uid', d.uid);
+                if (d.role)             localStorage.setItem('role', d.role);
                 if (d.name)             localStorage.setItem('username', d.name);
                 if (d.introduction != null) localStorage.setItem('intro', d.introduction);
                 if (d.photoURL)         localStorage.setItem('avatar', d.photoURL);
@@ -434,9 +467,11 @@ export default class BackendService {
             return response.data;
         } catch (err) {
             console.error(err);
-            // 從後端取更精確的錯誤訊息
+            const status = err?.response?.status;
             const msg = err?.response?.data?.message || '上架商品失敗';
-            return Promise.reject(new Error(msg));
+            const error = new Error(msg);
+            error.status = status;
+            return Promise.reject(error);
         }
     }
 
@@ -752,9 +787,20 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
+    async sellerCompletedOrders(id, pin) {
+        try {
+            const response = await axios.post(
+                `${this.baseUrl}/api/order/${id}/completed?pinCode=${encodeURIComponent(pin)}`
+            );
+            return response;
+        } catch (error) {
+            console.error("發生錯誤", error);
+            return Promise.reject(error);
+        }
+    }
     async reportSeller(userId, payload) {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/report/user/${userId}`, payload);
+            const response = await axios.post(`${this.baseUrl}/api/reports`, { reportedUserId: userId, ...payload });
             return response;
         } catch (error) {
             console.error("檢舉失敗", error);
@@ -763,7 +809,10 @@ export default class BackendService {
     }
     async reportReview(reviewId, payload) {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/report/review/${reviewId}`, payload);
+            const fd = new FormData();
+            fd.append('reviewId', reviewId);
+            if (payload) Object.entries(payload).forEach(([k, v]) => { if (v != null) fd.append(k, v); });
+            const response = await axios.post(`${this.baseUrl}/api/reports`, fd);
             return response;
         } catch (error) {
             console.error("檢舉評價失敗", error);
@@ -803,6 +852,44 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("全部已讀失敗", error);
+            return Promise.reject(error);
+        }
+    }
+
+    // ── Review Tag Groups Admin API ───────────────────────
+    async getReviewTagGroups() {
+        try {
+            const response = await this.http.get('/api/review/tag-groups');
+            return response.data;
+        } catch (error) {
+            console.error("取得評論標籤群組失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async createReviewTagGroup(payload) {
+        try {
+            const response = await this.http.post('/api/review/tag-groups', payload);
+            return response.data;
+        } catch (error) {
+            console.error("建立評論標籤群組失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async updateReviewTagGroup(id, payload) {
+        try {
+            const response = await this.http.patch(`/api/review/tag-groups/${encodeURIComponent(id)}`, payload);
+            return response.data;
+        } catch (error) {
+            console.error("更新評論標籤群組失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async deleteReviewTagGroup(id) {
+        try {
+            const response = await this.http.delete(`/api/review/tag-groups/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (error) {
+            console.error("刪除評論標籤群組失敗", error);
             return Promise.reject(error);
         }
     }
@@ -896,7 +983,7 @@ export default class BackendService {
 
     async getReportHistory({ page = 1, limit = 10 } = {}) {
         try {
-            const response = await this.http.get('/api/report/history', {
+            const response = await this.http.get('/api/reports/history', {
                 params: { page, limit }
             });
             return response.data;

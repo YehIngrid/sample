@@ -818,6 +818,28 @@ body {
   padding: 10px 14px;
 }
 
+/* ── 數據分析 Sub-tabs ── */
+.stats-tab { animation: fadeIn 0.15s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+#analyticsTabNav { border-bottom: 2px solid #e0e6ef; }
+#analyticsTabNav .nav-link {
+  color: #4a627a;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 8px 14px;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+#analyticsTabNav .nav-link.active {
+  color: #004b97;
+  border-bottom-color: #004b97;
+  font-weight: 700;
+  background: transparent;
+}
+#analyticsTabNav .nav-link:hover:not(.active) { color: #004b97; background: #f0f4fa; border-radius: 4px 4px 0 0; }
+.stats-quick-btn { font-size: 0.8rem; padding: 3px 10px; }
+
 /* ── RWD ── */
 @media (max-width: 640px) {
   .mobile-topbar { display: flex; }

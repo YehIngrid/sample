@@ -22,15 +22,21 @@ class ChatRoomList {
         this.submitBtn = document.querySelector('#messageForm button[type="submit"]');
         this.isSending = false;
         this.alreadyInit = false;
+        this.optimisticQueue = [];
 
         // 每個房間各自記錄 lastReadMessageId 和 lastReadTimestamp
         this.lastReadMap = new Map(); // roomId -> { id, timestamp }（自己的已讀進度）
         this.partnerReadMap = new Map(); // roomId -> { id }（對方的已讀進度）
         this.partnerInfoMap = new Map(); // roomId -> { name, photoURL }（對方的個人資訊）
+        this.userInfoMap = new Map(); // userId -> { photoURL, role }（所有房間成員，供訊息頭像查詢）
 
         this.officialRoomsSet = new Set(); // 記錄官方頻道房間 ID
         this.officialChannelToRoomMap = new Map(); // channelId → roomId（SSE channelId 轉換用）
         this.supportRoomsSet = new Set(); // 客服頻道（官方但可雙向傳訊）
+        this.mySupportRoomsSet = new Set(); // 自己是 SUPPORT 角色的房間
+        this.supportTypeRoomsSet = new Set(); // type === 'SUPPORT' 的客服處理聊天室
+        this.roomDataMap = new Map(); // roomId -> 原始 room data（供 info panel 使用）
+        this.currentTicket = null; // 目前 SUPPORT 房間的客服單
 
         this.markReadTimer = null;
         this.readObserver = new IntersectionObserver(entries => {
@@ -71,7 +77,9 @@ class ChatRoomList {
     async init() {
         if (this.alreadyInit) return;
         this.alreadyInit = true;
-        // 刷新當前登入者資料，避免 localStorage 有舊帳號殘留導致 isSelf 比對錯誤
+        // 預設未登入，getMe 成功才視為已登入（避免 localStorage 殘留舊帳號被當成有效 session）
+        this.userId = null;
+        this.username = '';
         try {
             await this.auth.getMe();
             this.userId = localStorage.getItem('uid');
@@ -157,6 +165,7 @@ class ChatRoomList {
             return;
         }
         window.addEventListener('resize', () => this.handleResize());
+        this._initVisualViewport();
         this.bindEvents();
         this.putImage();
         this.closePreview();
@@ -250,6 +259,7 @@ class ChatRoomList {
         this.input.placeholder = '官方頻道不支援傳送訊息';
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = 'none';
+        _syncQuickReplyPad(false);
         document.getElementById('time-picker-btn')?.style.setProperty('display', 'none');
         document.getElementById('location-picker-btn')?.style.setProperty('display', 'none');
         document.getElementById('timePicker').style.display = 'none';
@@ -381,11 +391,12 @@ class ChatRoomList {
     appendCombinedMessage(data, prepend = false) {
         const container = document.getElementById('messagesContainer');
         const wrapper = document.createElement('div');
-        const isSelf = data.isSelf === true || (data.userId && this.userId ? data.userId === this.userId : data.username === this.username);
+        const isSelf = data.isSelf === true || (this.userId ? String(data.userId) === String(this.userId) : data.username === this.username);
         wrapper.className = `imgAndMessage ${isSelf ? 'message-self' : 'message-other'}`;
         wrapper.dataset.timestamp = data.timestamp;
         wrapper.dataset.messageId = data.id ?? '';
-        wrapper.dataset.username = data.username ?? '';
+        const _senderName1 = data.username || this.userInfoMap.get(String(data.userId))?.name || '';
+        wrapper.dataset.username = _senderName1;
 
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
@@ -393,13 +404,26 @@ class ChatRoomList {
         const imageUrl = Array.isArray(data.attachments)
             ? (data.attachments[0] || '')
             : (data.attachments || '');
+        const _uInfo = this.userInfoMap.get(String(data.userId));
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
+            : (_uInfo !== undefined
+                ? (_uInfo.photoURL || '../image/default-avatar.webp')
+                : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp'));
+        const _msgAvatar1 = (() => {
+            if (isSelf) return '';
+            const _isDefault = partnerPhoto === '../image/default-avatar.webp';
+            const _role = this.userInfoMap.get(String(data.userId))?.role ?? this.partnerInfoMap.get(String(this.currentRoomId))?.role;
+            const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
+            const _themeBg = (() => { try { return JSON.parse(localStorage.getItem('chatBubbleTheme'))?.from || '#abdad5'; } catch(e) { return '#abdad5'; } })();
+            const _img = _isDefault ? `<div class="avatar-default-msg" style="width:30px;height:30px;border-radius:50%;background:${_themeBg};display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:20px;height:20px;opacity:0.85;filter:brightness(10);"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
+        })();
 
         wrapper.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;"/></div>` : ''}
+            ${_msgAvatar1}
             <div class="message-content">
+                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(_senderName1)}</small>` : ''}
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
                     <div class="d-flex flex-row align-items-center gap-1 me-2">
@@ -407,8 +431,8 @@ class ChatRoomList {
                         <small class="text-muted msg-time" style="font-size:0.75rem;">${time}</small>
                     </div>` : ''}
                     <div class="combined-bubble">
-                        <img src="${imageUrl}" alt="Image" loading="lazy" class="chat-image" style="cursor:pointer;">
                         <div class="combined-caption">${this.escapeHtml(data.message || '').replace(/\n/g, '<br>')}</div>
+                        <img src="${imageUrl}" alt="Image" loading="lazy" class="chat-image" style="cursor:pointer;display:block;margin-top:6px;">
                     </div>
                     ${isSelf ? '' : `<small class="text-muted ms-2 msg-time" style="font-size:0.75rem;">${time}</small>`}
                 </div>
@@ -434,11 +458,12 @@ class ChatRoomList {
         this.hideEmptyHint();
         const container = document.getElementById('messagesContainer');
         const imgWrapper = document.createElement('div');
-        const isSelf = data.isSelf === true || (data.userId && this.userId ? data.userId === this.userId : data.username === this.username);
+        const isSelf = data.isSelf === true || (this.userId ? String(data.userId) === String(this.userId) : data.username === this.username);
         imgWrapper.className = `imgmessage ${isSelf ? 'message-self' : 'message-other'}`;
         imgWrapper.dataset.timestamp = data.timestamp;
         imgWrapper.dataset.messageId = data.id ?? '';
-        imgWrapper.dataset.username = data.username ?? '';
+        const _senderName2 = data.username || this.userInfoMap.get(String(data.userId))?.name || '';
+        imgWrapper.dataset.username = _senderName2;
 
         const time = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
@@ -449,12 +474,25 @@ class ChatRoomList {
             ? data.attachments[0]
             : (data.attachments || '');
 
+        const _uInfo = this.userInfoMap.get(String(data.userId));
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
+            : (_uInfo !== undefined
+                ? (_uInfo.photoURL || '../image/default-avatar.webp')
+                : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp'));
+        const _msgAvatar2 = (() => {
+            if (isSelf) return '';
+            const _isDefault = partnerPhoto === '../image/default-avatar.webp';
+            const _role = this.userInfoMap.get(String(data.userId))?.role ?? this.partnerInfoMap.get(String(this.currentRoomId))?.role;
+            const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
+            const _themeBg = (() => { try { return JSON.parse(localStorage.getItem('chatBubbleTheme'))?.from || '#abdad5'; } catch(e) { return '#abdad5'; } })();
+            const _img = _isDefault ? `<div class="avatar-default-msg" style="width:30px;height:30px;border-radius:50%;background:${_themeBg};display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:20px;height:20px;opacity:0.85;filter:brightness(10);"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
+        })();
         imgWrapper.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
+            ${_msgAvatar2}
             <div class="message-content">
+                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(_senderName2)}</small>` : ''}
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
                     <div class="d-flex flex-row align-items-center gap-1 me-2">
@@ -485,11 +523,72 @@ class ChatRoomList {
         this.detectRead(imgWrapper);
     }
 
+    _renderOptimisticImage(localUrl, caption = null) {
+        const container = document.getElementById('messagesContainer');
+        const wasNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+        const wrapper = document.createElement('div');
+
+        if (caption) {
+            wrapper.className = 'imgAndMessage message-self optimistic-msg';
+            wrapper.innerHTML = `
+                <div class="message-content">
+                    <div class="d-flex align-items-end">
+                        <div class="d-flex flex-row align-items-center gap-1 me-2">
+                            <small class="text-muted msg-time" style="font-size:0.75rem;">--:--</small>
+                        </div>
+                        <div class="combined-bubble">
+                            <div style="position:relative;">
+                                <img src="${localUrl}" alt="Image" class="chat-image" style="opacity:0.8;">
+                                <div class="img-upload-spinner"></div>
+                            </div>
+                            <div class="combined-caption">${this.escapeHtml(caption).replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                </div>`;
+        } else {
+            wrapper.className = 'imgmessage message-self optimistic-msg';
+            wrapper.innerHTML = `
+                <div class="message-content">
+                    <div class="d-flex align-items-end">
+                        <div class="d-flex flex-row align-items-center gap-1 me-2">
+                            <small class="text-muted msg-time" style="font-size:0.75rem;">--:--</small>
+                        </div>
+                        <div class="message-image-wrapper" style="margin-top:8px;position:relative;">
+                            <img src="${localUrl}" alt="Image" class="chat-image"
+                                 style="width:200px;background:#f0f0f0;border-radius:8px;opacity:0.8;">
+                            <div class="img-upload-spinner"></div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        container.appendChild(wrapper);
+        requestAnimationFrame(() => { container.scrollTop = container.scrollHeight; });
+        return wrapper;
+    }
+
     setupMobileView() {
         if (this.isMobile) {
             this.showSidebar();
             this.hideChatMain();
         }
+    }
+
+    _initVisualViewport() {
+        if (!window.visualViewport) return;
+        const chatMain = document.getElementById('chatMain');
+        if (!chatMain) return;
+        const update = () => {
+            if (window.innerWidth < 768) {
+                chatMain.style.height = window.visualViewport.height + 'px';
+                chatMain.style.top = window.visualViewport.offsetTop + 'px';
+            } else {
+                chatMain.style.height = '';
+                chatMain.style.top = '';
+            }
+        };
+        window.visualViewport.addEventListener('resize', update);
+        window.visualViewport.addEventListener('scroll', update);
     }
 
     handleResize() {
@@ -509,7 +608,15 @@ class ChatRoomList {
                 // 切到電腦：移除所有 mobile-hidden，讓 Bootstrap 並排
                 this.showSidebar();
                 this.showChatMain();
+                // 切回電腦：清除 mobile 的 padding-bottom
+                const mc = document.querySelector('.messages-container');
+                if (mc) mc.style.removeProperty('padding-bottom');
             }
+        }
+        // 手機鍵盤開關會觸發 resize（viewport 縮小），重新同步 padding
+        if (this.isMobile) {
+            const bar = document.getElementById('quickReplyBar');
+            _syncQuickReplyPad(bar && bar.style.display !== 'none');
         }
     }
 
@@ -533,6 +640,12 @@ class ChatRoomList {
         document.addEventListener('click', async (e) => {
             if (!e.target.closest('#backButton')) return;
             this.backToSidebar();
+            // 清除 openSupport 參數，避免返回後再次自動開啟客服頻道
+            const url = new URL(window.location.href);
+            if (url.searchParams.has('openSupport')) {
+                url.searchParams.delete('openSupport');
+                history.replaceState(null, '', url.toString());
+            }
             if (this.userId) {
                 await this.loadRooms();
             } else {
@@ -590,18 +703,16 @@ class ChatRoomList {
             });
         }
 
-        // 隨內容自動撐高
+        // 隨內容自動撐高 + 偵測輸入中（throttle 3s，避免 429）
+        let typingLastSent = 0;
         this.input.addEventListener('input', () => {
             this.input.style.height = 'auto';
             this.input.style.height = Math.min(this.input.scrollHeight, 120) + 'px';
-        });
-
-        let typingTimer;
-        this.input.addEventListener('input', () => {
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(() => {
-                this.backend.typing(this.currentRoomId);
-            }, 400);
+            const now = Date.now();
+            if (now - typingLastSent > 3000) {
+                typingLastSent = now;
+                this.backend.typing(this.currentRoomId).catch(() => {});
+            }
         });
 
         const container = document.getElementById('messagesContainer');
@@ -827,6 +938,16 @@ class ChatRoomList {
         audio.play().catch(() => {});
     }
 
+    appendSystemMessage(text) {
+        const container = document.getElementById('messagesContainer');
+        if (!container) return;
+        const div = document.createElement('div');
+        div.className = 'system-message';
+        div.textContent = text;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
     appendBotMessage(text, actionHtml = '') {
         const container = document.getElementById('messagesContainer');
         if (!container) return;
@@ -885,8 +1006,43 @@ class ChatRoomList {
                         `<a class="cs-bot-link-btn" href="../questions/questions.html" target="_parent"><i class="bi bi-book"></i> 前往常見問題</a>`
                     );
                     break;
+                case '4':
+                    this.contactHumanAgent();
+                    break;
             }
         }, 600);
+    }
+
+    async contactHumanAgent() {
+        const roomId = this.currentRoomId;
+        if (!roomId) return;
+
+        try {
+            const myTicketRes = await this.backend.getMyTickets();
+            const myTicket = myTicketRes?.data ?? null;
+            if (myTicket) {
+                this.appendBotMessage('您目前有一筆尚未結束的客服單，請等客服人員將問題標記為已解決後再重新聯絡。');
+                return;
+            }
+        } catch { }
+
+        const infoBox = `<div style="background:#fff8f0;border:1px solid #f5cba7;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:0.8rem;color:#7d4e00;"><i class="bi bi-info-circle me-1"></i>送出後將由客服人員認領，請耐心等候。</div>`;
+        const { isConfirmed } = await Swal.fire({
+            title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
+            html: `<div style="text-align:left;padding:0 4px;">${infoBox}<p style="font-size:0.85rem;color:#555;margin:0;">確認後將建立客服單，客服人員認領後會加入本聊天室協助您。</p></div>`,
+            showCancelButton: true,
+            confirmButtonText: '確認送出',
+            cancelButtonText: '取消',
+            customClass: { popup: 'support-swal-popup' },
+        });
+        if (!isConfirmed) return;
+        try {
+            await this.backend.createTicket({});
+            this.appendBotMessage('感謝您的耐心，客服單已建立。客服人員將盡快認領並協助您。');
+            await this.loadRooms();
+        } catch {
+            this.appendBotMessage('抱歉，建立客服單失敗，請稍後重試。');
+        }
     }
 
     startOnboarding() {
@@ -994,16 +1150,21 @@ class ChatRoomList {
 
             const officialRooms = [];
             const privateRooms = [];
+            const supportTypeRooms = [];
 
             rooms.data.items.forEach(data => {
                 if (data.type === 'OFFICIAL') {
                     officialRooms.push(data);
+                } else if (data.type === 'SUPPORT') {
+                    supportTypeRooms.push(data);
+                    this.supportTypeRoomsSet.add(String(data.id));
                 } else {
                     privateRooms.push(data);
                 }
             });
 
             const renderRoomItem = (data) => {
+                this.roomDataMap.set(String(data.id), data);
                 const isOfficial = data.type === 'OFFICIAL';
                 if (isOfficial) {
                     this.officialRoomsSet.add(String(data.id));
@@ -1012,19 +1173,43 @@ class ChatRoomList {
                     if (chId) this.officialChannelToRoomMap.set(String(chId), String(data.id));
                     // 客服頻道：名稱含「客服」的官方頻道支援雙向傳訊
                     const chName = data.officialChannel?.name ?? data.name ?? '';
-                    if (chName.includes('客服')) this.supportRoomsSet.add(String(data.id));
+                    if (chName.includes('客服') || chName.includes('小助手')) this.supportRoomsSet.add(String(data.id));
                 }
-                const target = isOfficial ? null : data.members?.find(m => m.name !== this.username);
+                const isSupport = data.type === 'SUPPORT';
+                const target = isOfficial ? null :
+                    (data.members?.find(m => m.role === 'USER' && String(m.userId) !== String(this.userId))
+                    ?? data.members?.find(m => String(m.userId) !== String(this.userId)));
                 // ✅ 官方頻道也要找到自己，才能判斷已讀狀態
-                const myself = data.members?.find(m => m.name === this.username);
+                const myself = data.members?.find(m => String(m.userId) === String(this.userId));
+                if (myself?.role === 'SUPPORT') this.mySupportRoomsSet.add(String(data.id));
 
-                const roomName   = isOfficial ? (data.officialChannel?.name ?? '官方帳號') : (target?.name ?? '未知');
-                const roomAvatar = isOfficial ? '../webP/treasurehub.webp' : (target?.photoURL || '../image/default-avatar.webp');
+                // SUPPORT 房間：對方是客服人員（SUPPORT role），若還沒加入則顯示「等待客服人員加入」
+                let roomName, roomAvatar;
+                if (isOfficial) {
+                    roomName   = data.officialChannel?.name ?? '官方帳號';
+                    roomAvatar = '../webP/treasurehub.webp';
+                } else if (isSupport) {
+                    const agent = data.members?.find(m => m.role === 'SUPPORT' && String(m.userId) !== String(this.userId));
+                    const userMember = data.members?.find(m => m.role === 'USER' && String(m.userId) !== String(this.userId));
+                    // 若我是 USER，顯示客服人員名稱（或等待中）；若我是 SUPPORT，顯示提單用戶名稱
+                    if (myself?.role === 'SUPPORT') {
+                        roomName   = userMember?.name ?? target?.name ?? '用戶';
+                        roomAvatar = userMember?.photoURL || target?.photoURL || '../image/default-avatar.webp';
+                    } else {
+                        roomName   = agent?.name ?? '客服尚未加入';
+                        roomAvatar = agent?.photoURL || '../image/default-avatar.webp';
+                    }
+                } else {
+                    roomName   = target?.name ?? '未知';
+                    roomAvatar = target?.photoURL || '../image/default-avatar.webp';
+                }
 
                 const isMyMessage  = data.lastMessage?.username === myself?.name;
+                // ✅ 官方頻道：lastMessageId 可能在 officialChannel 上
+                const lastMsgId = data.lastMessageId ?? (isOfficial ? data.officialChannel?.lastMessageId : null);
                 // ✅ 官方頻道：有 lastMessageId 且未讀就顯示紅點；一般頻道：對方訊息未讀才顯示
-                const isNewMessage = data.lastMessageId != null
-                    && myself?.lastReadMessageId !== data.lastMessageId
+                const isNewMessage = lastMsgId != null
+                    && myself?.lastReadMessageId !== lastMsgId
                     && (isOfficial || !isMyMessage);
 
                 // ✅ 用 Map 記錄每個房間的已讀資訊（id + timestamp）
@@ -1041,29 +1226,44 @@ class ChatRoomList {
                     this.partnerInfoMap.set(String(data.id), {
                         name: target.name ?? '未知用戶',
                         photoURL: target.photoURL || '../image/default-avatar.webp',
-                        id: target.id ?? target.accountId ?? target.userId ?? null
+                        id: target.id ?? target.accountId ?? target.userId ?? null,
+                        role: target.role ?? null
                     });
                 }
+                // 將所有成員的頭像存入 userInfoMap，供訊息渲染時按 userId 查詢
+                data.members?.forEach(m => {
+                    if (m.userId && !this.userInfoMap.has(String(m.userId))) {
+                        this.userInfoMap.set(String(m.userId), {
+                            photoURL: m.photoURL || null,
+                            role: m.role ?? null
+                        });
+                    }
+                });
 
                 const item = document.createElement('div');
                 item.className = 'chat-item';
                 item.dataset.roomId = data.id;
+                const _isDefaultAvatar = roomAvatar === '../image/default-avatar.webp';
+                const _targetRole = target?.role;
+                const _avatarInner = _isDefaultAvatar
+                    ? `<img src="../svg/default-avatar.svg" style="width:45px;height:45px;">`
+                    : `<img src="${roomAvatar}" alt="${this.escapeHtml(roomName)}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;object-position:center;${isOfficial ? 'border:2px solid var(--primary-color,#004b97);' : ''}">`;
+                const _roleBadge = !isOfficial && (_targetRole === 'ADMIN' || _targetRole === 'MODERATOR')
+                    ? `<span class="role-badge"><i class="ti ti-shield-check"></i></span>`
+                    : '';
+                const _hasAdmin = !isOfficial && data.members?.some(m => m.role === 'ADMIN' || m.role === 'MODERATOR');
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
-                            <img src="${roomAvatar}"
-                                 alt="${this.escapeHtml(roomName)}"
-                                 style="width: 45px; height: 45px; border-radius: 50px; object-fit: cover; object-position: center;${isOfficial ? ' border: 2px solid var(--primary-color,#004b97);' : ''}">
+                            ${_avatarInner}${_roleBadge}
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}</h6>
                             <small class="text-muted lastMessage">${this.escapeHtml(isOfficial
-                                ? this.getLastMessageText(
-                                    data.lastMessage ?? data.officialChannel?.lastMessage ?? data.lastBroadcast,
-                                    data.officialChannel?.description || '官方公告頻道'
-                                  )
+                                ? (data.officialChannel?.description || '官方公告頻道')
                                 : this.getLastMessageText(data.lastMessage)
                             )}</small>
+                            ${_hasAdmin ? `<small class="admin-in-chat-note"><i class="ti ti-shield-half"></i> 管理員已加入此對話</small>` : ''}
                         </div>
                         <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
                             width: 10px; height: 10px;
@@ -1085,6 +1285,16 @@ class ChatRoomList {
                 officialRooms.forEach(renderRoomItem);
             }
 
+            // 客服處理 section
+            if (supportTypeRooms.length > 0) {
+                const supHeader = document.createElement('div');
+                supHeader.className = 'px-3 py-1 fw-semibold text-muted border-bottom';
+                supHeader.style.cssText = 'font-size:0.72rem;background:#f8f9fa;letter-spacing:0.05em;';
+                supHeader.innerHTML = '<i class="bi bi-headset" style="margin-right:4px;"></i>客服處理';
+                chatList.appendChild(supHeader);
+                supportTypeRooms.forEach(renderRoomItem);
+            }
+
             // 私人訊息 section
             if (privateRooms.length > 0) {
                 const pvtHeader = document.createElement('div');
@@ -1104,12 +1314,15 @@ class ChatRoomList {
                 this.switchRoom(item.dataset.roomId, item.querySelector('.roomName').textContent);
             });
 
+            // 載入客服單 badge
+            this._loadTicketBadges();
+
             // ?openSupport=1：自動切換到客服頻道
             if (new URLSearchParams(window.location.search).get('openSupport') === '1') {
                 const supportRoomId = [...this.supportRoomsSet][0];
                 if (supportRoomId) {
                     const supportItem = document.querySelector(`[data-room-id="${supportRoomId}"]`);
-                    const supportName = supportItem?.querySelector('.roomName')?.textContent || '客服小幫手';
+                    const supportName = supportItem?.querySelector('.roomName')?.textContent || '客服小助手';
                     await this.switchRoom(supportRoomId, supportName);
                 }
             }
@@ -1117,13 +1330,14 @@ class ChatRoomList {
             // 初始未讀檢查：通知外層 chaticon 顯示紅點
             const hasUnread = rooms.data.items.some(data => {
                 const isOfficial = data.type === 'OFFICIAL';
-                const myself = data.members?.find(m => m.name === this.username);
+                const myself = data.members?.find(m => String(m.userId) === String(this.userId));
                 const isMyMessage = data.lastMessage?.username === myself?.name;
                 return data.lastMessageId != null
                     && myself?.lastReadMessageId !== data.lastMessageId
                     && (isOfficial || !isMyMessage);
             });
-            if (hasUnread) window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
+            // 雙向同步：讓 parent 紅點狀態與實際 unread 一致
+            window.parent?.dispatchEvent(new CustomEvent(hasUnread ? 'chatUnread' : 'chatRead'));
 
         } catch (err) {
             console.error('聊天室列表載入失敗', err);
@@ -1132,13 +1346,30 @@ class ChatRoomList {
 
     async switchRoom(roomId, targetName) {
         if (this.readObserver) this.readObserver.disconnect();
+        // 清除 typing / read timers，避免舊房間的殘留操作
+        clearTimeout(this.markReadTimer);
+        clearTimeout(this.typingTimer);
+        clearTimeout(this.typingListTimer);
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) typingIndicator.style.display = 'none';
+        // 還原側邊欄被 typing 覆蓋的 lastMessage 文字
+        document.querySelectorAll('[data-original-text]').forEach(el => {
+            el.textContent = el.dataset.originalText;
+            delete el.dataset.originalText;
+        });
         if (this.isMobile) { this.hideSidebar(); this.showChatMain(); }
+        document.getElementById('roomInfoPanel')?.classList.remove('open');
+        document.getElementById('roomInfoOverlay')?.classList.remove('open');
+        const _infoBody = document.getElementById('roomInfoBody');
+        if (_infoBody) _infoBody.innerHTML = '';
 
         this.currentRoomId = roomId;
         const info = this.partnerInfoMap.get(String(roomId));
         const resolvedName = targetName || info?.name || '未知用戶';
         this.currentRoomName = resolvedName;
         this.hasMore = true;
+        const _infoPanelTitle = document.getElementById('roomInfoPanelTitle');
+        if (_infoPanelTitle) _infoPanelTitle.textContent = resolvedName;
 
         document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
         document.querySelector(`[data-room-id="${roomId}"]`)?.classList.add('active');
@@ -1166,8 +1397,14 @@ class ChatRoomList {
         // 快速回覆 / 面交工具只在私人聊天顯示
         const quickReplyBar = document.getElementById('quickReplyBar');
         if (quickReplyBar) quickReplyBar.style.display = isOfficialRoom ? 'none' : 'flex';
+        _syncQuickReplyPad(!isOfficialRoom);
         const csBotMenu = document.getElementById('csBotMenu');
         if (csBotMenu) csBotMenu.style.display = isSupportRoom ? 'block' : 'none';
+        const isSupportTypeRoom = this.supportTypeRoomsSet.has(String(roomId));
+        const isMySupport = this.mySupportRoomsSet.has(String(roomId));
+        const requestSupportBtn = document.getElementById('requestSupportBtn');
+        // 聯絡客服：只在一般 DIRECT 聊天室顯示（非官方、非客服處理房間）
+        if (requestSupportBtn) requestSupportBtn.style.display = (!isOfficialRoom && !isSupportTypeRoom) ? '' : 'none';
         const _pickerDisplay = isOfficialRoom ? 'none' : '';
         document.getElementById('time-picker-btn')?.style.setProperty('display', _pickerDisplay);
         document.getElementById('location-picker-btn')?.style.setProperty('display', _pickerDisplay);
@@ -1176,14 +1413,14 @@ class ChatRoomList {
             document.getElementById('locationPicker').style.display = 'none';
         }
 
-        // ✅ 開啟官方頻道：立即清除列表上的未讀紅點，並通知後端已讀
+        // ✅ 開啟房間：立即清除列表上的未讀紅點
+        document.querySelector(`[data-room-id="${roomId}"]`)
+            ?.querySelector('.unread-dot')?.classList.add('d-none');
+        window.parent?.dispatchEvent(new CustomEvent('chatRead'));
         if (isOfficialRoom) {
-            document.querySelector(`[data-room-id="${roomId}"]`)
-                ?.querySelector('.unread-dot')?.classList.add('d-none');
+            // 官方頻道 read SSE 不一定回傳，主動送一次
             const readAt = new Date().toISOString();
             this.backend.markAsRead(roomId, readAt).catch(() => {});
-            // 官方頻道的 read SSE 事件不一定會回傳，直接通知外層清除紅點
-            window.parent?.dispatchEvent(new CustomEvent('chatRead'));
         }
 
         const container = document.getElementById('messagesContainer');
@@ -1192,15 +1429,35 @@ class ChatRoomList {
         container.innerHTML = '';
 
         // ✅ GET /api/chat/history?room=&limit=&before=
+        // DIRECT 房間回傳 { roomId, members, history }；OFFICIAL 房間回傳扁平訊息陣列
         const before = new Date().toISOString();
         const history = await this.backend.getHistory(roomId, 50, before);
 
-        if (history.data?.length > 0) {
+        const isDirectRoom = !this.officialRoomsSet.has(String(roomId));
+        // 從 history 取出訊息陣列（DIRECT: data.history；OFFICIAL: data 本身）
+        const rawMessages = isDirectRoom
+            ? (history.data?.history ?? [])
+            : (Array.isArray(history.data) ? history.data : []);
+
+        // DIRECT 房間：從 history 的 members 更新 userInfoMap（含後來加入的客服人員）
+        if (isDirectRoom && history.data?.members) {
+            history.data.members.forEach(m => {
+                if (m.userId) {
+                    this.userInfoMap.set(String(m.userId), {
+                        photoURL: m.user?.photoURL || null,
+                        name: m.user?.name || null,
+                        role: m.role ?? null
+                    });
+                }
+            });
+        }
+
+        if (rawMessages.length > 0) {
             const roomRead = this.lastReadMap.get(String(roomId));
             const lastReadTimestamp = roomRead?.timestamp ?? null;
 
             // ✅ id 是 string，用 timestamp 排序
-            const messages = history.data.sort((a, b) =>
+            const messages = rawMessages.sort((a, b) =>
                 new Date(a.timestamp) - new Date(b.timestamp)
             );
             const firstUnread = lastReadTimestamp
@@ -1232,6 +1489,15 @@ class ChatRoomList {
             this.isInitialLoading = false;
         }
 
+        // 非官方頻道的房間都嘗試載入客服單橫幅（有 ticket 才顯示，沒有就隱藏）
+        if (!isOfficialRoom) {
+            await this._loadSupportTicket(roomId);
+        } else {
+            this.currentTicket = null;
+            const banner = document.getElementById('ticketBanner');
+            if (banner) banner.style.display = 'none';
+        }
+
         this.connectSSE(); // SSE 已在 init() 開啟，此處為 idempotent 保護
 
         // 客服頻道：顯示客服機器人歡迎訊息
@@ -1251,7 +1517,7 @@ class ChatRoomList {
             const { productName, productPrice, _rawMessage } = _pendingProductCtx;
             _pendingProductCtx = null;
             const priceText = productPrice ? `（NT$ ${Number(productPrice).toLocaleString()}）` : '';
-            this.input.value = _rawMessage || `你好，我對「${productName}」有興趣${priceText}`;
+            this.input.value = _rawMessage || `你好，我對「${productName}」有興趣${priceText}。`;
             this.input.dispatchEvent(new Event('input'));
             this.input.focus();
         }
@@ -1280,8 +1546,119 @@ class ChatRoomList {
         }
     }
 
+    // ── 客服單 badge：顯示在聊天室列表 ──
+    async _loadTicketBadges() {
+        const STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中' };
+        const STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97' };
+        try {
+            const res = await this.backend.getMyTickets();
+            // API 可能回傳單筆 { data: {...} }、{ data: { items: [...] } } 或陣列
+            let tickets;
+            if (Array.isArray(res)) tickets = res;
+            else if (Array.isArray(res?.data?.items)) tickets = res.data.items;
+            else if (Array.isArray(res?.data)) tickets = res.data;
+            else if (res?.data && typeof res.data === 'object') tickets = [res.data];
+            else tickets = [];
+            tickets.forEach(ticket => {
+                const rId = ticket.roomId ?? ticket.room?.id ?? ticket.supportRoomId;
+                if (!rId) return;
+                const roomItem = document.querySelector(`[data-room-id="${rId}"]`);
+                if (!roomItem) return;
+                // 關閉的單不顯示
+                if (ticket.status === 'RESOLVED' || ticket.status === 'ADJUDICATED') return;
+                // 避免重複加
+                roomItem.querySelector('.ticket-status-chip')?.remove();
+                const label = STATUS_LABEL[ticket.status] ?? ticket.status;
+                const color = STATUS_COLOR[ticket.status] ?? '#888';
+                const chip = document.createElement('span');
+                chip.className = 'ticket-status-chip';
+                chip.style.cssText = `font-size:0.65rem;font-weight:700;border-radius:20px;padding:1px 8px;background:${color}15;color:${color};border:1px solid ${color}40;white-space:nowrap;margin-left:4px;`;
+                chip.textContent = label;
+                const unreadDot = roomItem.querySelector('.unread-dot');
+                if (unreadDot) unreadDot.before(chip);
+                else roomItem.querySelector('.d-flex.align-items-center')?.appendChild(chip);
+            });
+        } catch { /* 靜默失敗 */ }
+    }
+
+    // ── 客服單：載入並渲染橫幅 ──
+    async _loadSupportTicket(roomId) {
+        this.currentTicket = null;
+        const banner = document.getElementById('ticketBanner');
+        if (!banner) return;
+        try {
+            const res = await this.backend.getTicketsByRoom(roomId);
+            const list = Array.isArray(res) ? res
+                : Array.isArray(res?.data?.items) ? res.data.items
+                : Array.isArray(res?.data) ? res.data
+                : res?.data ? [res.data] : [];
+            this.currentTicket = list[0] ?? null;
+        } catch { /* 靜默失敗 */ }
+        this._renderTicketBanner(this.currentTicket);
+    }
+
+    _renderTicketBanner(ticket) {
+        const banner = document.getElementById('ticketBanner');
+        if (!banner) return;
+        if (!ticket) { banner.style.display = 'none'; return; }
+
+        const STATUS_LABEL   = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決' };
+        const STATUS_COLOR   = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: 'rgb(36,182,133)' };
+        const STATUS_CLASS   = { UNRESOLVED: 'status-unresolved', CLAIMED: 'status-claimed', RESOLVED: 'status-resolved' };
+        const STATUS_ICON    = { UNRESOLVED: 'bi-hourglass-split', CLAIMED: 'bi-headset', RESOLVED: 'bi-check-circle-fill' };
+        const status = ticket.status ?? 'UNRESOLVED';
+        const statusLabel = STATUS_LABEL[status] ?? status;
+        const statusColor = STATUS_COLOR[status] ?? '#888';
+        const statusCls   = STATUS_CLASS[status] ?? '';
+        const statusIcon  = STATUS_ICON[status] ?? 'bi-headset';
+        const isClosed = status === 'RESOLVED';
+        const isMySupport = this.mySupportRoomsSet.has(String(this.currentRoomId));
+        const isClaimedByMe = ticket.claimedBy != null && String(ticket.claimedBy) === String(this.userId);
+
+        let actionsHtml = '';
+        if (!isClosed && isMySupport) {
+            if (status === 'UNRESOLVED') {
+                actionsHtml = `<button class="ticket-action-btn" id="ticketClaimBtn"><i class="bi bi-hand-index-thumb me-1"></i>認領</button>`;
+            } else if (status === 'CLAIMED' && isClaimedByMe) {
+                actionsHtml = `<button class="ticket-action-btn ticket-action-resolve" id="ticketResolveBtn"><i class="bi bi-check-circle me-1"></i>解決</button>`;
+            } else if (status === 'CLAIMED' && !isClaimedByMe) {
+                actionsHtml = `<span style="font-size:0.7rem;color:#888;font-style:italic;">已由其他客服認領</span>`;
+            }
+        }
+
+        const orderLine = ticket.orderId
+            ? `<div style="font-size:0.68rem;color:#888;margin-top:1px;">訂單：${this.escapeHtml(ticket.orderId)}</div>`
+            : '';
+
+        const closeBtn = isClosed
+            ? `<button id="ticketBannerClose" style="background:none;border:none;cursor:pointer;padding:2px 4px;color:#aaa;font-size:1rem;line-height:1;flex-shrink:0;" title="關閉">×</button>`
+            : '';
+
+        banner.className = `ticket-banner ${statusCls}`;
+        banner.innerHTML = `
+            <div class="ticket-banner-icon"><i class="bi ${statusIcon}"></i></div>
+            <div class="ticket-banner-body">
+                <div class="ticket-banner-label">客服單</div>
+                <div class="ticket-banner-reason" title="${this.escapeHtml(ticket.reason ?? '')}">
+                    ${this.escapeHtml(ticket.reason ?? '找客服問問題')}
+                </div>
+                ${orderLine}
+            </div>
+            <div class="ticket-banner-right">
+                <span class="ticket-status-badge" style="background:${statusColor}18;color:${statusColor};border:1px solid ${statusColor}40;">${statusLabel}</span>
+                ${actionsHtml}
+                ${closeBtn}
+            </div>
+        `;
+        banner.style.display = 'flex';
+        document.getElementById('ticketBannerClose')?.addEventListener('click', () => {
+            banner.style.display = 'none';
+        });
+    }
+
     // ✅ 帳號層級 SSE：只連線一次，接收所有聊天室的事件
     connectSSE() {
+        if (!this.userId) return; // 未登入不建立 SSE 連線
         if (this.eventSource) return; // 已連線，不重複開啟
 
         this.eventSource = new EventSource(
@@ -1346,12 +1723,35 @@ class ChatRoomList {
             }
         });
 
+        this.eventSource.addEventListener('stopTyping', (event) => {
+            const data = JSON.parse(event.data);
+            if (data.username === this.username) return;
+            if (String(data.room) === String(this.currentRoomId)) {
+                clearTimeout(this.typingTimer);
+                const indicator = document.getElementById('typingIndicator');
+                if (indicator) indicator.style.display = 'none';
+                if (this._typingAudio) { this._typingAudio.pause(); this._typingAudio.currentTime = 0; }
+            }
+            const chatItem = document.querySelector(`[data-room-id="${data.room}"]`);
+            if (chatItem) {
+                const lastMsgEl = chatItem.querySelector('.lastMessage');
+                if (lastMsgEl && lastMsgEl.dataset.originalText !== undefined) {
+                    clearTimeout(this.typingListTimer);
+                    lastMsgEl.textContent = lastMsgEl.dataset.originalText;
+                    delete lastMsgEl.dataset.originalText;
+                }
+            }
+        });
+
         this.eventSource.addEventListener('read', (event) => {
             const data = JSON.parse(event.data);
             const partnerInfo = this.partnerInfoMap.get(String(data.room));
-            const isPartnerRead = partnerInfo?.id != null
+            const isMeRead = this.userId
+                ? String(data.userId) === String(this.userId)
+                : data.username === this.username;
+            const isPartnerRead = !isMeRead && (partnerInfo?.id != null
                 ? String(data.userId) === String(partnerInfo.id)
-                : data.username !== this.username; // fallback: ID 欄位不明時改用 username
+                : data.username !== this.username);
 
             if (isPartnerRead) {
                 // ✅ 對方已讀：更新目前聊天室訊息的「已讀」標記
@@ -1392,7 +1792,7 @@ class ChatRoomList {
                 if (chatItem) {
                     const lastMsgEl = chatItem.querySelector('.lastMessage');
                     if (lastMsgEl) {
-                        const msgText = data.message || (data.attachments?.length ? '傳送了一張圖片' : '官方公告');
+                        const msgText = this.getLastMessageText(data, '官方公告');
                         lastMsgEl.innerHTML = '<img src="../svg/alarm.svg" style="width:12px;height:12px;margin-right:3px;vertical-align:middle;">';
                         lastMsgEl.appendChild(document.createTextNode(msgText));
                     }
@@ -1407,18 +1807,33 @@ class ChatRoomList {
             window.parent?.dispatchEvent(new CustomEvent('chatUnread'));
         });
 
+        this.eventSource.addEventListener('memberJoin', (event) => {
+            const data = JSON.parse(event.data);
+            if (String(data.room) !== String(this.currentRoomId)) return;
+            this.appendSystemMessage('管理員已加入聊天室');
+        });
+
+        this.eventSource.addEventListener('memberLeft', (event) => {
+            const data = JSON.parse(event.data);
+            if (String(data.room) !== String(this.currentRoomId)) return;
+            this.appendSystemMessage('管理員已離開聊天室');
+        });
+
         this.eventSource.addEventListener('ping', () => {});
         this.eventSource.addEventListener('ready', () => {
             document.getElementById('sseDisconnectBanner').style.display = 'none';
+            _syncQuickReplyPad(document.getElementById('quickReplyBar')?.style.display !== 'none');
         });
         this.eventSource.onopen = () => {
             document.getElementById('sseDisconnectBanner').style.display = 'none';
+            _syncQuickReplyPad(document.getElementById('quickReplyBar')?.style.display !== 'none');
         };
 
         this.eventSource.onerror = () => {
             this.eventSource?.close();
             this.eventSource = null;
             document.getElementById('sseDisconnectBanner').style.display = 'flex';
+            _syncQuickReplyPad(document.getElementById('quickReplyBar')?.style.display !== 'none');
             clearTimeout(this._reconnectTimer);
             this._reconnectTimer = setTimeout(() => this.connectSSE(), 4000);
         };
@@ -1450,6 +1865,13 @@ class ChatRoomList {
             input.style.height = 'auto';
             const charCount = document.getElementById('msgCharCount');
             if (charCount) charCount.style.display = 'none';
+        }
+
+        // Optimistic UI: 傳送照片前先渲染本地預覽
+        if (hasImage) {
+            const localUrl = URL.createObjectURL(imageFile);
+            const optimisticEl = this._renderOptimisticImage(localUrl, hasText ? text : null);
+            this.optimisticQueue.push({ el: optimisticEl, localUrl });
         }
 
         try {
@@ -1493,6 +1915,13 @@ class ChatRoomList {
         const hasAttachments = (Array.isArray(data.attachments) && data.attachments.length > 0)
             || (typeof data.attachments === 'string' && data.attachments.trim() !== '');
         if (hasAttachments) {
+            // 移除 optimistic 預覽泡泡（僅自己送出的訊息）
+            const isSelfMsg = this.userId ? String(data.userId) === String(this.userId) : data.username === this.username;
+            if (isSelfMsg && !prepend && this.optimisticQueue.length > 0) {
+                const { el, localUrl } = this.optimisticQueue.shift();
+                el.remove();
+                URL.revokeObjectURL(localUrl);
+            }
             if (data.message && data.message.trim()) {
                 // 圖片 + 文字 caption：合併顯示
                 this.appendCombinedMessage(data, prepend);
@@ -1511,8 +1940,7 @@ class ChatRoomList {
         const container = document.getElementById('messagesContainer');
         this.username = localStorage.getItem('username');
         this.userId = this.userId || localStorage.getItem('uid');
-        console.log('[isSelf debug]', { dataUserId: data.userId, myUserId: this.userId, dataUsername: data.username, myUsername: this.username });
-        const isSelf = (data.userId && this.userId) ? data.userId === this.userId : this.username === data.username;
+const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.username === data.username;
         const timestamp = new Date(data.timestamp).toLocaleTimeString('zh-TW', {
             hour: '2-digit', minute: '2-digit', hour12: false
         });
@@ -1521,13 +1949,28 @@ class ChatRoomList {
         div.className = `message ${isSelf ? 'message-self' : 'message-other'}`;
         div.dataset.timestamp = data.timestamp;  // ISO 字串，用於 markAsRead
         div.dataset.messageId = data.id;          // string
-        div.dataset.username = data.username;
+        // username 可能不在訊息本體內（新版 history API），從 userInfoMap 補齊
+        const _senderName = data.username || this.userInfoMap.get(String(data.userId))?.name || '';
+        div.dataset.username = _senderName;
+        const _uInfo = this.userInfoMap.get(String(data.userId));
         const partnerPhoto = this.officialRoomsSet.has(String(this.currentRoomId))
             ? '../webP/treasurehub.webp'
-            : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp');
+            : (_uInfo !== undefined
+                ? (_uInfo.photoURL || '../image/default-avatar.webp')
+                : (this.partnerInfoMap.get(String(this.currentRoomId))?.photoURL || data.photoURL || '../image/default-avatar.webp'));
+        const _msgAvatar3 = (() => {
+            if (isSelf) return '';
+            const _isDefault = partnerPhoto === '../image/default-avatar.webp';
+            const _role = this.userInfoMap.get(String(data.userId))?.role ?? this.partnerInfoMap.get(String(this.currentRoomId))?.role;
+            const _badge = (_role === 'ADMIN' || _role === 'MODERATOR') ? `<span class="role-badge role-badge-sm"><i class="ti ti-shield-check"></i></span>` : '';
+            const _themeBg = (() => { try { return JSON.parse(localStorage.getItem('chatBubbleTheme'))?.from || '#abdad5'; } catch(e) { return '#abdad5'; } })();
+            const _img = _isDefault ? `<div class="avatar-default-msg" style="width:30px;height:30px;border-radius:50%;background:${_themeBg};display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:20px;height:20px;opacity:0.85;filter:brightness(10);"></div>` : `<img src="${partnerPhoto}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            return `<div class="message-avatar" style="position:relative;">${_img}${_badge}</div>`;
+        })();
         div.innerHTML = `
-            ${!isSelf ? `<div class="message-avatar"><img src="${partnerPhoto}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;"/></div>` : ''}
+            ${_msgAvatar3}
             <div class="message-content">
+                ${!isSelf ? `<small class="msg-sender-name">${this.escapeHtml(_senderName)}</small>` : ''}
                 <div class="d-flex align-items-end">
                     ${isSelf ? `
                     <div class="d-flex flex-row align-items-center gap-1 me-2">
@@ -1673,9 +2116,15 @@ class ChatRoomList {
             this.isLoading = true;
             const history = await this.backend.getHistory(this.currentRoomId, 50, before);
 
-            if (history.data?.length > 0) {
+            // DIRECT 房間回傳 { roomId, members, history }；OFFICIAL 回傳扁平陣列
+            const _isDirectRoom = !this.officialRoomsSet.has(String(this.currentRoomId));
+            const msgs = _isDirectRoom
+                ? (history.data?.history ?? [])
+                : (Array.isArray(history.data) ? history.data : []);
+
+            if (msgs.length > 0) {
                 // 由新到舊排序後反向 prepend，確保畫面順序正確
-                const sorted = history.data.sort((a, b) =>
+                const sorted = msgs.sort((a, b) =>
                     new Date(b.timestamp) - new Date(a.timestamp)
                 );
                 for (const msg of sorted) {
@@ -1683,7 +2132,7 @@ class ChatRoomList {
                 }
                 this.regroupAll();
                 container.scrollTop = container.scrollHeight - oldScrollHeight;
-                if (history.data.length < 50) {
+                if (msgs.length < 50) {
                     this.hasMore = false;
                     this.renderNoMoreHint(container);
                 }
@@ -1715,10 +2164,10 @@ class ChatRoomList {
             ? new Date(data.timestamp).toLocaleString('zh-TW', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })
             : '';
 
-        // ✅ attachments 可能是陣列或字串，統一取第一個有效值
-        const broadcastImg = Array.isArray(data.attachments)
-            ? (data.attachments[0] || null)
-            : (data.attachments || data.attachment || data.imageUrl || null);
+        // ✅ attachments 統一轉成陣列
+        const broadcastImgs = Array.isArray(data.attachments)
+            ? data.attachments.filter(Boolean)
+            : (data.attachments || data.attachment || data.imageUrl ? [data.attachments || data.attachment || data.imageUrl] : []);
 
         const channelName = data.channelName || data.channel?.name || '拾貨寶庫提醒您';
 
@@ -1731,9 +2180,8 @@ class ChatRoomList {
                     <span class="broadcast-label">${this.escapeHtml(channelName)}</span>
                     <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>
                 </div>
-                ${broadcastImg ? `
-                <img src="${broadcastImg}" class="broadcast-img chat-image" alt="公告圖片" loading="lazy" style="cursor:pointer;">` : ''}
                 ${data.message ? `<div class="broadcast-text">${this.linkify(this.escapeHtml(data.message).replace(/\n/g, '<br>'))}</div>` : ''}
+                ${broadcastImgs.map(src => `<img src="${src}" class="broadcast-img chat-image" alt="公告圖片" loading="lazy" style="cursor:pointer;">`).join('')}
                 ${time ? `<div class="broadcast-time">${time}</div>` : ''}
             </div>`;
         container.appendChild(el);
@@ -1778,6 +2226,22 @@ function compressImage(blob, maxWidth = 1200, quality = 0.82) {
             );
         };
         img.src = url;
+    });
+}
+
+function _syncQuickReplyPad(visible) {
+    if (window.innerWidth >= 768) return; // desktop 不需要
+    const mc = document.querySelector('.messages-container');
+    if (!mc) return;
+    if (visible) {
+        mc.style.setProperty('padding-bottom', '56px', 'important');
+    } else {
+        mc.style.removeProperty('padding-bottom');
+    }
+    // padding 改變後若已在底部附近，重新捲到底確保最後一則訊息可見
+    requestAnimationFrame(() => {
+        const nearBottom = mc.scrollHeight - mc.scrollTop - mc.clientHeight < 120;
+        if (nearBottom) mc.scrollTop = mc.scrollHeight;
     });
 }
 
@@ -1998,8 +2462,441 @@ async function openChatWithTarget(targetUserId) {
         _updateNotifUI();
     });
 
+    // ── 聊天室資訊 ──
+    const _roomInfoPanel = document.getElementById('roomInfoPanel');
+    const _roomInfoOverlay = document.getElementById('roomInfoOverlay');
+    const _openRoomInfoPanel = () => { _roomInfoPanel?.classList.add('open'); _roomInfoOverlay?.classList.add('open'); };
+    const _closeRoomInfoPanel = () => { _roomInfoPanel?.classList.remove('open'); _roomInfoOverlay?.classList.remove('open'); };
+    document.getElementById('closeRoomInfoPanel')?.addEventListener('click', _closeRoomInfoPanel);
+    _roomInfoOverlay?.addEventListener('click', _closeRoomInfoPanel);
+
+
+    document.getElementById('openRoomInfoBtn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const roomId = chatRoomList.currentRoomId;
+        if (!roomId) return;
+        const room = chatRoomList.roomDataMap.get(String(roomId));
+        if (!room) return;
+
+        const isOfficial = room.type === 'OFFICIAL';
+        const createdAt = room.createdAt
+            ? new Date(room.createdAt).toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })
+            : '—';
+
+        const members = (room.members ?? []).slice().sort((a, b) => {
+            const order = { USER: 0, MODERATOR: 1, ADMIN: 2 };
+            return (order[a.role] ?? 9) - (order[b.role] ?? 9);
+        });
+
+        const roleLabel = { USER: '聊天對象', MODERATOR: '管理員', ADMIN: '系統管理員', SUPPORT: '客服人員' };
+        const roleBadgeStyle = {
+            USER:      'background:#e8f0fb;color:#004b97;',
+            MODERATOR: 'background:#e8f0fb;color:#004b97;',
+            ADMIN:     'background:#e8f0fb;color:#004b97;',
+            SUPPORT:   'background:#fff3e0;color:#e67e22;',
+        };
+        const memberHtml = members.map(m => {
+            const avatar = m.photoURL
+                ? `<img src="${m.photoURL}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">`
+                : `<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(to right bottom,var(--primary-color,#004b97),var(--secondary-color,#abdad5));display:flex;align-items:center;justify-content:center;"><img src="../svg/default-avatar.svg" style="width:30px;height:30px;"></div>`;
+            const badge = roleLabel[m.role]
+                ? `<span style="font-size:0.62rem;${roleBadgeStyle[m.role] ?? ''}border-radius:4px;padding:1px 5px;margin-left:4px;">${roleLabel[m.role]}</span>`
+                : '';
+            return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f0f0f0;">
+                        ${avatar}
+                        <span style="font-size:0.85rem;">${m.name ?? '未知'}${badge}</span>
+                    </div>`;
+        }).join('');
+
+        const isSupportTypeRoom = chatRoomList.supportTypeRoomsSet.has(String(roomId));
+        const ticket = chatRoomList.currentTicket;
+        const TICKET_STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決' };
+        const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60' };
+        const ticketStatusColor = ticket ? (TICKET_STATUS_COLOR[ticket.status] ?? '#888') : '#888';
+        const isClaimedByMe = ticket?.claimedBy != null && String(ticket.claimedBy) === String(chatRoomList.userId);
+
+        const infoHtml = `
+            <div style="font-size:0.8rem;color:#888;margin-bottom:14px;">
+                <i class="bi bi-calendar3 me-1"></i>建立時間
+                <div style="color:#333;font-size:0.85rem;margin-top:3px;font-weight:500;">${createdAt}</div>
+            </div>
+            ${isOfficial && room.officialChannel?.description ? `
+            <div style="font-size:0.8rem;color:#888;margin-bottom:14px;">
+                <i class="bi bi-megaphone me-1"></i>頻道說明
+                <div style="color:#333;font-size:0.85rem;margin-top:3px;">${room.officialChannel.description}</div>
+            </div>` : ''}
+            ${ticket ? `
+            <div style="font-size:0.8rem;color:#888;margin-bottom:8px;margin-top:4px;">
+                <i class="bi bi-ticket-detailed me-1"></i>客服單資訊
+            </div>
+            <div style="background:#fff8f0;border:1px solid #f5cba7;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:0.82rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <span style="color:#555;">狀態</span>
+                    <span style="font-weight:600;color:${ticketStatusColor};">${TICKET_STATUS_LABEL[ticket.status] ?? ticket.status}</span>
+                </div>
+                <div style="color:#555;margin-bottom:4px;">原因：<span style="color:#333;">${chatRoomList.escapeHtml(ticket.reason ?? '找客服問問題')}</span></div>
+                ${ticket.claimedBy ? `<div style="color:#555;">負責客服：<span style="color:#333;">${chatRoomList.escapeHtml(ticket.claimed?.name ?? String(ticket.claimedBy))}</span></div>` : ''}
+            </div>
+            ${isClaimedByMe ? `
+            <div style="font-size:0.8rem;color:#888;margin-bottom:8px;">
+                <i class="bi bi-box-seam me-1"></i>關聯訂單
+            </div>
+            <div id="ticketOrderInfo"><div style="text-align:center;padding:12px 0;color:#aaa;font-size:0.8rem;"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div></div>
+            <div style="font-size:0.8rem;color:#888;margin-bottom:8px;margin-top:14px;">
+                <i class="bi bi-chat-left-text me-1"></i>原始對話記錄
+            </div>
+            <div id="ticketHistoryList"><div style="text-align:center;padding:12px 0;color:#aaa;font-size:0.8rem;"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div></div>
+            ` : ''}
+            ` : ''}
+            <div style="font-size:0.8rem;color:#888;margin-bottom:8px;">
+                <i class="bi bi-people me-1"></i>成員（${members.length} 人）
+            </div>
+            <div style="margin-bottom:14px;">${memberHtml}</div>
+            ${!isOfficial && !isSupportTypeRoom ? `
+            <div style="font-size:0.8rem;color:#888;margin-bottom:8px;margin-top:4px;">
+                <i class="bi bi-receipt me-1"></i>交易紀錄
+            </div>
+            <div id="roomOrdersList"><div style="text-align:center;padding:12px 0;color:#aaa;font-size:0.8rem;"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div></div>
+            ` : ''}`;
+
+        document.getElementById('roomInfoBody').innerHTML = infoHtml;
+        _openRoomInfoPanel();
+
+        // 載入關聯訂單（客服已認領 + 是認領者 + 有 orderId）
+        if (ticket && isClaimedByMe) {
+            if (!ticket.orderId) {
+                const el = document.getElementById('ticketOrderInfo');
+                if (el) el.innerHTML = `<div style="text-align:center;padding:10px 0;color:#aaa;font-size:0.78rem;">此客服單無關聯訂單</div>`;
+            } else
+            chatRoomList.backend.getTicketOrder(ticket.id).then(orderRes => {
+                const el = document.getElementById('ticketOrderInfo');
+                if (!el) return;
+                const o = orderRes?.data ?? orderRes;
+                if (!o) { el.innerHTML = `<div style="text-align:center;padding:10px 0;color:#aaa;font-size:0.78rem;">無關聯訂單資訊</div>`; return; }
+                const orderItems = o.orderItems ?? [];
+                const first = orderItems[0];
+                const productName = first?.item?.name ?? first?.name ?? '商品';
+                const price = o.totalAmount != null ? `NT$ ${Number(o.totalAmount).toLocaleString('zh-TW')}` : '—';
+                const buyerName = o.buyerUser?.name ?? o.buyerUser?.username ?? '—';
+                const sellerName = o.sellerUser?.name ?? o.sellerUser?.username ?? '—';
+                el.innerHTML = `
+                    <div style="background:#f0f4ff;border:1px solid #c5d5f5;border-radius:8px;padding:10px 12px;font-size:0.81rem;margin-bottom:12px;">
+                        <div style="font-weight:600;color:#333;margin-bottom:6px;">${chatRoomList.escapeHtml(productName)}${orderItems.length > 1 ? ` …等${orderItems.length}件` : ''}</div>
+                        <div style="display:flex;justify-content:space-between;color:#555;margin-bottom:3px;">
+                            <span>買家</span><span style="color:#004b97;font-weight:600;">${chatRoomList.escapeHtml(buyerName)}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;color:#555;margin-bottom:3px;">
+                            <span>賣家</span><span style="color:#27ae60;font-weight:600;">${chatRoomList.escapeHtml(sellerName)}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;color:#555;">
+                            <span>金額</span><span style="color:#004b97;font-weight:600;">${price}</span>
+                        </div>
+                    </div>`;
+            }).catch(() => {
+                const el = document.getElementById('ticketOrderInfo');
+                if (el) el.innerHTML = `<div style="text-align:center;padding:10px 0;color:#ccc;font-size:0.78rem;">無法載入訂單資訊</div>`;
+            });
+
+            // 原始對話記錄
+            chatRoomList.backend.getTicketHistory(ticket.id).then(histRes => {
+                const el = document.getElementById('ticketHistoryList');
+                if (!el) return;
+                const msgs = Array.isArray(histRes) ? histRes : (Array.isArray(histRes?.data) ? histRes.data : []);
+                if (!msgs.length) {
+                    el.innerHTML = `<div style="text-align:center;padding:10px 0;color:#aaa;font-size:0.78rem;">無對話記錄</div>`;
+                    return;
+                }
+                el.innerHTML = `<div style="max-height:220px;overflow-y:auto;border:1px solid #eee;border-radius:8px;padding:8px;">` +
+                    msgs.map(m => {
+                        const time = m.createdAt ? new Date(m.createdAt).toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+                        return `<div style="margin-bottom:8px;font-size:0.78rem;">
+                            <span style="font-weight:600;color:#004b97;">${chatRoomList.escapeHtml(m.senderName ?? m.username ?? '用戶')}</span>
+                            <span style="color:#aaa;font-size:0.7rem;margin-left:6px;">${time}</span>
+                            <div style="color:#333;margin-top:2px;">${chatRoomList.escapeHtml(m.content ?? m.message ?? '')}</div>
+                        </div>`;
+                    }).join('') + `</div>`;
+            }).catch(() => {
+                const el = document.getElementById('ticketHistoryList');
+                if (el) el.innerHTML = `<div style="text-align:center;padding:10px 0;color:#ccc;font-size:0.78rem;">無法載入對話記錄</div>`;
+            });
+        }
+
+        if (!isOfficial && !isSupportTypeRoom) {
+            const _renderRoomOrders = (orders) => {
+                const el = document.getElementById('roomOrdersList');
+                if (!el) return;
+                const STATUS_LABEL = {
+                    pending: '待確認', preparing: '待出貨', shipping: '配送中',
+                    delivered: '待收貨', review_pending: '待評價',
+                    completed: '已完成', canceled: '已取消'
+                };
+                const STATUS_COLOR = {
+                    pending: '#e67e22', preparing: '#004b97', shipping: '#004b97',
+                    delivered: '#004b97', review_pending: '#27ae60',
+                    completed: '#888', canceled: '#ccc'
+                };
+                if (!Array.isArray(orders) || orders.length === 0) {
+                    el.innerHTML = `<div style="text-align:center;padding:16px 0;color:#aaa;font-size:0.8rem;"><i class="bi bi-receipt" style="font-size:1.4rem;display:block;margin-bottom:6px;"></i>尚無交易紀錄</div>`;
+                    return;
+                }
+                const myUid = String(localStorage.getItem('uid') ?? '');
+                el.innerHTML = orders.map(order => {
+                    const orderItems = order.orderItems ?? [];
+                    const first = orderItems[0];
+                    const productName = first?.item?.name ?? first?.name ?? order.name ?? '商品';
+                    const qty = first?.quantity ?? 1;
+                    const extra = orderItems.length > 1 ? ` …等 ${orderItems.length} 件` : '';
+                    const label = `${productName} × ${qty}${extra}`;
+                    const statusKey = (order.status ?? '').toLowerCase();
+                    const statusText = STATUS_LABEL[statusKey] ?? order.status ?? '—';
+                    const statusColor = STATUS_COLOR[statusKey] ?? '#888';
+                    const price = order.totalAmount != null ? `NT$ ${Number(order.totalAmount).toLocaleString('zh-TW')}` : '—';
+                    const date = order.createdAt ? new Date(order.createdAt).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '—';
+                    const isBuyer = String(order.buyerUser?.accountId ?? order.buyerUser?.id ?? order.buyer ?? '') === myUid;
+                    const role = isBuyer ? '買家' : '賣家';
+                    const roleColor = isBuyer ? '#004b97' : '#27ae60';
+                    return `<div style="padding:9px 0;border-bottom:1px solid #f0f0f0;">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:3px;">
+                            <span style="font-size:0.82rem;color:#333;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${productName}">${label}</span>
+                            <span style="font-size:0.7rem;font-weight:600;color:${statusColor};white-space:nowrap;">${statusText}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:0.75rem;color:#888;">${date} · <span style="color:${roleColor};">${role}</span></span>
+                            <span style="font-size:0.78rem;color:#004b97;font-weight:600;">${price}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            };
+            chatRoomList.backend.getRoomOrders(roomId).then(res => {
+                const list = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
+                _renderRoomOrders(list);
+            }).catch(() => {
+                const el = document.getElementById('roomOrdersList');
+                if (el) el.innerHTML = `<div style="text-align:center;padding:12px 0;color:#ccc;font-size:0.78rem;">無法載入交易紀錄</div>`;
+            });
+        }
+
+    });
+
+    // ── 聯絡客服 ──
+    document.getElementById('requestSupportBtn')?.addEventListener('click', async () => {
+        const roomId = chatRoomList.currentRoomId;
+        if (!roomId) return;
+
+        // 偵測是否已有進行中的客服單（SUPPORT 房間只能同時存在一間）
+        try {
+            const myTicketRes = await chatRoomList.backend.getMyTickets();
+            const myTicket = myTicketRes?.data ?? null;
+            if (myTicket) {
+                await Swal.fire({
+                    icon: 'info',
+                    title: '已有進行中的客服單',
+                    html: `<p style="font-size:0.88rem;color:#555;margin:0;">您目前有一筆尚未結束的客服單，<br>請等客服人員將問題標記為已解決後再重新聯絡。</p>`,
+                    confirmButtonText: '我知道了',
+                });
+                return;
+            }
+        } catch { /* 靜默失敗，允許繼續 */ }
+
+        // 載入該聊天室的訂單
+        let orders = [];
+        try {
+            const ordersRes = await chatRoomList.backend.getRoomOrders(roomId);
+            orders = Array.isArray(ordersRes) ? ordersRes : Array.isArray(ordersRes?.data) ? ordersRes.data : [];
+        } catch { /* 靜默失敗 */ }
+        const hasOrders = Array.isArray(orders) && orders.length > 0;
+
+        // ── 第一步：選擇問題類型 ──
+        const swalCommonStyle = 'font-size:0.85rem;font-weight:600;color:#444;';
+        const infoBox = `<div style="background:#fff8f0;border:1px solid #f5cba7;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:0.8rem;color:#7d4e00;"><i class="bi bi-info-circle me-1"></i>送出後將由客服人員認領，請耐心等候。</div>`;
+
+        if (hasOrders) {
+            // ── 有訂單：先問是單純問問題還是訂單問題 ──
+            const { isConfirmed: typeConfirmed, value: typeValue } = await Swal.fire({
+                title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
+                html: `
+                    <div style="text-align:left;padding:0 4px;">
+                        ${infoBox}
+                        <label style="display:block;margin-bottom:10px;${swalCommonStyle}">請問您的問題類型？</label>
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #ddd;border-radius:8px;cursor:pointer;">
+                                <input type="radio" name="swal-type" value="general" checked style="accent-color:#004b97;">
+                                <span style="font-size:0.85rem;color:#333;">單純問問題</span>
+                            </label>
+                            <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #ddd;border-radius:8px;cursor:pointer;">
+                                <input type="radio" name="swal-type" value="order" style="accent-color:#004b97;">
+                                <span style="font-size:0.85rem;color:#333;">與訂單有關</span>
+                            </label>
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '下一步',
+                cancelButtonText: '取消',
+                focusConfirm: false,
+                customClass: { popup: 'support-swal-popup' },
+                preConfirm: () => {
+                    const type = document.querySelector('input[name="swal-type"]:checked')?.value;
+                    return { type };
+                }
+            });
+            if (!typeConfirmed) return;
+
+            if (typeValue.type === 'general') {
+                // ── 單純問問題 → createTicket ──
+                const { isConfirmed } = await Swal.fire({
+                    title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
+                    html: `<div style="text-align:left;padding:0 4px;">${infoBox}<p style="font-size:0.85rem;color:#555;margin:0;">確認後將建立客服單，客服人員認領後會加入本聊天室協助您。</p></div>`,
+                    showCancelButton: true,
+                    confirmButtonText: '確認送出',
+                    cancelButtonText: '取消',
+                    customClass: { popup: 'support-swal-popup' },
+                });
+                if (!isConfirmed) return;
+                try {
+                    await chatRoomList.backend.createTicket({});
+                    await Swal.fire({ icon: 'success', title: '客服單已建立', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
+                    await chatRoomList.loadRooms();
+                } catch {
+                    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+                }
+            } else {
+                // ── 訂單問題 → requestSupport ──
+                const orderOptions = orders.map(o => {
+                    const first = o.orderItems?.[0];
+                    const name = first?.item?.name ?? first?.name ?? '商品';
+                    const qty = first?.quantity ?? 1;
+                    const extra = (o.orderItems?.length ?? 0) > 1 ? ` …等${o.orderItems.length}件` : '';
+                    return `<option value="${o.id}">${name} × ${qty}${extra}</option>`;
+                }).join('');
+
+                const { isConfirmed, value } = await Swal.fire({
+                    title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>訂單問題',
+                    html: `
+                        <div style="text-align:left;padding:0 4px;">
+                            ${infoBox}
+                            <label style="display:block;${swalCommonStyle}margin-bottom:6px;">關聯訂單</label>
+                            <select id="swal-order" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:8px 10px;font-size:0.85rem;color:#333;background:#fff;margin-bottom:14px;outline:none;">
+                                ${orderOptions}
+                            </select>
+                            <label style="display:block;${swalCommonStyle}margin-bottom:6px;">問題描述</label>
+                            <textarea id="swal-reason" style="width:100%;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:0.85rem;color:#333;resize:vertical;min-height:90px;box-sizing:border-box;outline:none;" placeholder="請描述需要客服協助的原因..."></textarea>
+                        </div>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: '送出',
+                    cancelButtonText: '取消',
+                    focusConfirm: false,
+                    customClass: { popup: 'support-swal-popup' },
+                    preConfirm: () => {
+                        const orderId = document.getElementById('swal-order').value;
+                        const reason = document.getElementById('swal-reason').value.trim();
+                        if (!reason) { Swal.showValidationMessage('請描述問題原因'); return false; }
+                        return { orderId, reason };
+                    }
+                });
+                if (!isConfirmed) return;
+                const { isConfirmed: warned } = await Swal.fire({
+                    icon: 'info',
+                    title: '送出前請確認',
+                    html: `<p style="font-size:0.88rem;color:#444;line-height:1.6;margin:0;">同一筆訂單僅能提出一次處理請求，客服處理完畢後若尚有問題，請點選「單純問問題」提問。</p>`,
+                    showCancelButton: true,
+                    confirmButtonText: '確認送出',
+                    cancelButtonText: '取消',
+                    customClass: { popup: 'support-swal-popup' },
+                });
+                if (!warned) return;
+                try {
+                    await chatRoomList.backend.requestSupport(roomId, value.orderId, value.reason);
+                    await Swal.fire({ icon: 'success', title: '客服請求已送出', text: '客服人員將透過系統查看您的訂單紀錄，認領後會盡快處理。', timer: 2500, showConfirmButton: false });
+                } catch (err) {
+                    if (err?.response?.status === 400) {
+                        Swal.fire({ icon: 'warning', title: '無法重複開單', text: '此訂單曾經進行過客服，無法重複開單。' });
+                    } else {
+                        Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+                    }
+                }
+            }
+        } else {
+            // ── 無訂單 → 直接確認建立 ticket ──
+            const { isConfirmed } = await Swal.fire({
+                title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
+                html: `<div style="text-align:left;padding:0 4px;">${infoBox}<p style="font-size:0.85rem;color:#555;margin:0;">確認後將建立客服單，客服人員認領後會加入本聊天室協助您。</p></div>`,
+                showCancelButton: true,
+                confirmButtonText: '確認送出',
+                cancelButtonText: '取消',
+                customClass: { popup: 'support-swal-popup' },
+            });
+            if (!isConfirmed) return;
+            try {
+                await chatRoomList.backend.createTicket({});
+                await Swal.fire({ icon: 'success', title: '客服單已建立', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
+                await chatRoomList.loadRooms();
+            } catch {
+                Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+            }
+        }
+    });
+
+
+    // ── 客服單操作（認領 / 解決 / 裁定）──
+    document.getElementById('ticketBanner')?.addEventListener('click', async (e) => {
+        const ticket = chatRoomList.currentTicket;
+        if (!ticket) return;
+
+        // 認領
+        if (e.target.closest('#ticketClaimBtn')) {
+            const { isConfirmed } = await Swal.fire({
+                title: '認領客服單',
+                text: '確定要認領此客服單嗎？認領後由您負責處理。',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '確定認領',
+                cancelButtonText: '取消',
+            });
+            if (!isConfirmed) return;
+            try {
+                await chatRoomList.backend.claimTicket(ticket.id);
+                await chatRoomList._loadSupportTicket(chatRoomList.currentRoomId);
+                Swal.fire({ icon: 'success', title: '已認領客服單', timer: 1500, showConfirmButton: false });
+            } catch {
+                Swal.fire({ icon: 'error', title: '認領失敗', text: '請稍後再試' });
+            }
+        }
+
+        // 解決
+        if (e.target.closest('#ticketResolveBtn')) {
+            const { isConfirmed } = await Swal.fire({
+                title: '標記為已解決',
+                text: '確定要將此客服單標記為已解決並離開聊天室嗎？',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '確定',
+                cancelButtonText: '取消',
+            });
+            if (!isConfirmed) return;
+            try {
+                const roomId = chatRoomList.currentRoomId;
+                await chatRoomList.backend.resolveTicket(ticket.id);
+                await Swal.fire({ icon: 'success', title: '客服單已解決', timer: 1500, showConfirmButton: false });
+                chatRoomList.mySupportRoomsSet.delete(String(roomId));
+                chatRoomList.supportTypeRoomsSet.delete(String(roomId));
+                await chatRoomList.loadRooms();
+                const officialRoomId = [...chatRoomList.officialRoomsSet][0];
+                if (officialRoomId) {
+                    const officialItem = document.querySelector(`[data-room-id="${officialRoomId}"]`);
+                    const officialName = officialItem?.querySelector('.roomName')?.textContent || '官方頻道';
+                    chatRoomList.switchRoom(officialRoomId, officialName);
+                }
+            } catch {
+                Swal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
+            }
+        }
+
+    });
+
     // ── 檢舉 ──
-    document.querySelector('.chat-dropdown-danger')?.addEventListener('click', async (e) => {
+    document.getElementById('reportBtn')?.addEventListener('click', async (e) => {
         e.preventDefault();
         const partnerInfo = chatRoomList.partnerInfoMap.get(String(chatRoomList.currentRoomId));
         const partnerName = partnerInfo?.name ?? '對方用戶';
@@ -2048,8 +2945,8 @@ async function openChatWithTarget(targetUserId) {
         if (!isConfirmed || !value) return;
 
         try {
-            await backendService.reportSeller(partnerId, {
-                reason: value.category,
+            await chatRoomList.auth.reportSeller(partnerId, {
+                category: value.category,
                 subject: value.subject,
                 detail: value.detail,
                 roomId: chatRoomList.currentRoomId

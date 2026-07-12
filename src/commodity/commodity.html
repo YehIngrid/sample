@@ -5,22 +5,16 @@
     <title>拾貨寶庫 | 校園最大二手商店</title>
     <!-- meta部分 -->
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../image/bigLogo.jpg">
+    <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
     <meta property="og:title" content="拾貨寶庫 | 校園最大二手商店">
     <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
     <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
     <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-    <meta http-equiv="cache-control" content="max-age=0" />
-    <meta http-equiv="cache-control" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-    <meta http-equiv="pragma" content="no-cache" />
     <!-- link部分 -->
     <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
     <link rel="shortcut icon" href="../treasurehubIcon.ico">
@@ -34,22 +28,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
     <!-- script部分 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PQ6ND9EY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-45PQ6ND9EY');
+    </script>
+    <!-- End Google Analytics -->
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TNDMCCKZ');</script>
+    <!-- End Google Tag Manager -->
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TNDMCCKZ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="whatcontent">
         <div class="header d-block ">
             <!-- 跑馬燈：手機版顯示在 navbar 上方 -->
-            <div class="safety-ticker d-flex d-lg-none">
+            <div class="safety-ticker d-flex d-lg-none" id="mobileCommodityTicker">
               <img src="../svg/alarm.svg" class="safety-ticker__icon" alt="">
               <div class="safety-ticker__track">
                 <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
               </div>
+              <button class="safety-ticker__close" aria-label="關閉公告">×</button>
             </div>
             <nav class="navbar navbar-expand-lg navbar-color bg-color header_new d-block d-lg-none" style="box-shadow: 0 0 2px rgb(0,0,0,0.2);">
             <div class="container-fluid d-flex align-items-center sticky-top">
@@ -257,17 +272,22 @@
                     '一鍵檢舉：發現違規商品請利用檢舉功能，共同維護純淨校園環境。'
                   ];
                   const els = [...document.querySelectorAll('.safety-ticker__text')];
-                  if (window.matchMedia('(min-width:992px)').matches) {
-                    let i = 0;
-                    els.forEach(el => { el.textContent = slogans[0]; });
-                    setInterval(() => {
-                      els.forEach(el => el.classList.add('ticker-fade'));
-                      setTimeout(() => { i=(i+1)%slogans.length; els.forEach(el => { el.textContent=slogans[i]; el.classList.remove('ticker-fade'); }); }, 400);
-                    }, 5000);
-                  } else {
-                    const strip = slogans.join('　　　　　') + '　　　　　';
-                    els.forEach(el => { el.textContent = strip + strip; });
+                  const strip = slogans.join('　　　　　') + '　　　　　';
+                  els.forEach(el => { el.textContent = strip + strip; });
+                })();
+
+                // 手機版跑馬燈關閉
+                (function(){
+                  const ticker = document.getElementById('mobileCommodityTicker');
+                  if (!ticker) return;
+                  if (sessionStorage.getItem('mobileTickerClosed') === '1') {
+                    ticker.classList.add('ticker-closed');
                   }
+                  ticker.querySelector('.safety-ticker__close')?.addEventListener('click', () => {
+                    ticker.classList.add('ticker-closing');
+                    setTimeout(() => ticker.classList.add('ticker-closed'), 300);
+                    sessionStorage.setItem('mobileTickerClosed', '1');
+                  });
                 })();
                 </script>
                 <!-- 主要區塊：用 bootstrap row/col 來排版 -->
@@ -286,10 +306,24 @@
 
                 <!-- 無商品元件 -->
                 <div id="no-products" class="text-center my-5" style="display: none;">
-                <i class="fas fa-box-open fa-4x text-muted"></i>
-                <p class="mt-3 text-muted">目前沒有商品</p>
+                  <i class="fas fa-box-open fa-4x text-muted"></i>
+                  <p class="mt-3 text-muted" id="no-products-text">目前沒有商品</p>
                 </div>
 
+                <!-- 搜尋無結果：主動許願 CTA -->
+                <div id="wish-cta" class="wish-cta d-none">
+                  <div class="wish-cta-text">
+                    <div class="wish-cta-title">站上還沒有你要找的東西？</div>
+                    <div class="wish-cta-sub">把「<span id="wish-cta-keyword"></span>」發成願望，讓更多賣家看見你的需求。</div>
+                  </div>
+                  <button type="button" id="wish-cta-btn" class="wish-cta-btn">發出願望，讓更多人看見</button>
+                </div>
+
+                <!-- 你可能也喜歡（搜尋無結果時顯示） -->
+                <div id="you-might-like" class="d-none" style="margin-top:2rem;">
+                  <h5 class="you-might-like-title">你可能也喜歡</h5>
+                  <div id="youMightLikeGrid" class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-2"></div>
+                </div>
 
                 <div id="pagination" class="d-flex justify-content-center mt-3"></div>
 
@@ -329,8 +363,10 @@
       <h4 class="footer-heading">聯絡我們</h4>
       <p class="footer-email"><a href="mailto:help@treasurehub.tw">help@treasurehub.tw</a></p>
       <div class="footer-social">
-        <a href="https://www.instagram.com" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
+        <a href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://lin.ee/U7uZmHV" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
+        <a href="https://www.threads.com/@treasurehub.tw?igshid=NTc4MTIwNjQ2YQ==" target="_blank" aria-label="Threads"><img src="../svg/threadslogo.avif" alt="Threads" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;border-radius:50%;"></a>
+        <a href="https://www.dcard.tw/@treasurehub?cid=266cb62d-37e6-4d89-ae26-5b4ac1ee5d96" target="_blank" aria-label="Dcard"><img src="../svg/dcardlogo.png" alt="Dcard" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;"></a>
       </div>
     </div>
   </div>

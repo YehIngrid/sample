@@ -80,8 +80,22 @@ function _applyLoggedInUI() {
     });
   }
 
+  const _role = localStorage.getItem('role');
+  const _roleBadge = _role === 'ADMIN'
+    ? `<span class="nav-role-badge nav-role-badge--admin" title="管理員">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 17h18l-2-8-4 4-3-7-3 7-4-4-2 8z"/>
+        </svg>
+       </span>`
+    : _role === 'MODERATOR'
+    ? `<span class="nav-role-badge nav-role-badge--mod" title="版主">
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L4 5v6c0 5 3.5 9.3 8 10.4C16.5 20.3 20 16 20 11V5l-8-3z"/>
+        </svg>
+       </span>`
+    : '';
   document.querySelectorAll('.username').forEach((el) => {
-    el.innerHTML = `<img class="nav-username-avatar" src="${avatarSrc}" alt="頭像">`;
+    el.innerHTML = `<span class="nav-avatar-wrap"><img class="nav-username-avatar" src="${avatarSrc}" alt="頭像">${_roleBadge}</span>`;
     el.style.display = '';
   });
   document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = avatarSrc; });
@@ -110,10 +124,6 @@ async function renderAuthUI() {
       if (!hasCache) _authResolve(true);
       _applyLoggedInUI();
 
-      // Session keep-alive：每 5 分鐘 ping 一次，避免 cookie session 過期
-      setInterval(async () => {
-        try { await backendService.whoami(); } catch (_) {}
-      }, 5 * 60 * 1000);
 
       // 登入後立即更新購物車數量
       refreshCartBadge();
@@ -141,9 +151,9 @@ async function renderAuthUI() {
         }
 
         const currentUrl = window.location.pathname + window.location.search;
-        el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
-
-        el.onclick = null;
+        const loginHref = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+        el.href = loginHref;
+        el.onclick = _loginClick(loginHref);
       });
 
       // 桌機版 navbar 下拉選單：未登入狀態
@@ -153,12 +163,28 @@ async function renderAuthUI() {
     }
 }
 
+function _loginClick(href) {
+  return function(e) {
+    e.preventDefault();
+    Swal.fire({
+      title: '前往登入頁面？',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '前往登入',
+      cancelButtonText: '取消',
+    }).then(result => {
+      if (result.isConfirmed) window.location.href = href;
+    });
+  };
+}
+
 // 供 BackendService 401 攔截器呼叫：更新 navbar 為未登入狀態（不跳頁）
 window._showLoggedOutUI = function() {
   window.isLoggedIn = false;
   localStorage.removeItem('uid');
   localStorage.removeItem('username');
   localStorage.removeItem('avatar');
+  localStorage.removeItem('role');
   document.querySelectorAll('.username').forEach((el) => {
     el.innerHTML = `<img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像">`;
     el.style.display = '';
@@ -173,8 +199,9 @@ window._showLoggedOutUI = function() {
       el.textContent = '登入';
     }
     const currentUrl = window.location.pathname + window.location.search;
-    el.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
-    el.onclick = null;
+    const loginHref = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+    el.href = loginHref;
+    el.onclick = _loginClick(loginHref);
   });
   document.querySelectorAll('.nav-guest-label').forEach(el => el.classList.remove('d-none'));
   document.querySelectorAll('.nav-loggedin-area').forEach(el => el.classList.add('d-none'));
@@ -183,6 +210,7 @@ window._showLoggedOutUI = function() {
 
 async function doLogout() {
   await backendService.logout(); // 清除 token
+  localStorage.removeItem('role');
   // 自動登出提示
   let timerInterval;
   Swal.fire({
@@ -434,12 +462,17 @@ let _notifHasMore = false;
 let _notifLoading = false;
 
 const _NOTIF_TYPE_LABELS = {
-  wishpool_contact: '許願池聯絡',
-  order_placed: '訂單成立',
-  order_completed: '訂單完成',
-  order_cancelled: '訂單取消',
-  review: '收到評價',
-  system: '系統通知',
+  wishpool_contact:  '許願池聯絡',
+  order_placed:      '訂單成立',
+  order_update:      '訂單更新',
+  order_completed:   '訂單完成',
+  order_cancelled:   '訂單取消',
+  review:            '收到評價',
+  report_result:     '檢舉結果',
+  new_message:       '新訊息',
+  product_sold:      '商品已售出',
+  product_liked:     '商品被收藏',
+  system:            '系統通知',
 };
 
 function _notifRelativeTime(dateStr) {
@@ -455,7 +488,7 @@ function _notifRelativeTime(dateStr) {
 
 function _renderNotifItem(n) {
   const avatar = n.actor?.photoURL ?? n.actor?.avatar ?? '../image/default-avatar.webp';
-  const title = n.title ?? _NOTIF_TYPE_LABELS[n.type] ?? '';
+  const title = n.title || _NOTIF_TYPE_LABELS[n.type] || '';
   const body = n.body ?? n.content ?? n.message ?? '';
   const time = _notifRelativeTime(n.createdAt);
   const unread = !n.isRead;
@@ -465,7 +498,7 @@ function _renderNotifItem(n) {
   const productName = n.productName ?? n.meta?.product?.name ?? null;
   const productId = n.productId ?? n.meta?.product?.id ?? null;
   const wishId = n.wishId ?? n.meta?.wish?.id ?? null;
-  const chatRoomActorId = n.meta?.actor?.accountId ?? null;
+  const chatRoomActorId = n.actorId ?? n.meta?.actor?.accountId ?? null;
 
   const metaChips = [];
   if (wishName) metaChips.push(`<span class="notif-chip notif-chip--wish"><i class="ti ti-wand me-1"></i>${wishName}</span>`);
@@ -476,7 +509,17 @@ function _renderNotifItem(n) {
   if (productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-product-id="${productId}"><i class="ti ti-eye me-1"></i>看商品</button>`);
   if (wishId && !productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-wish-id="${wishId}"><i class="ti ti-eye me-1"></i>看願望</button>`);
 
-  return `<div class="notif-item${unread ? ' notif-unread' : ''}" data-notif-id="${id}">
+  const orderId = n.meta?.orderId ?? null;
+  let _href = '';
+  if (productId) _href = `../product/product.html?id=${productId}`;
+  else if (wishId) _href = `../wishpool/wishpool.html?id=${wishId}#wishpool`;
+  else if (orderId) {
+    const isSell = n.meta?.role === 'SELLER' || n.type === 'product_sold';
+    _href = `../person/person.html?page=${isSell ? 'sellOrderDetail' : 'buyerOrderDetail'}&id=${orderId}&orderId=${orderId}`;
+  } else if (n.type === 'new_message' && chatRoomActorId) {
+    _href = `../chatroom/chatroom.html?openChat=${chatRoomActorId}`;
+  }
+  return `<div class="notif-item${unread ? ' notif-unread' : ''}" data-notif-id="${id}" data-notif-href="${_href}">
     <img src="${avatar}" class="notif-avatar" alt="通知" onerror="this.src='../image/default-avatar.webp'">
     <div class="notif-body">
       ${title ? `<div class="notif-text"><strong>${title}</strong></div>` : ''}
@@ -554,7 +597,7 @@ function _initNotifSystem() {
       sessionStorage.setItem('chatroomReturnUrl', window.location.href);
       const notifItem = chatBtn.closest('.notif-item');
       const wishName = notifItem?.querySelector('.notif-chip--wish')?.textContent?.trim() ?? '';
-      const defaultMsg = wishName ? `你好，關於「${wishName}」的許願，` : '';
+      const defaultMsg = wishName ? `你好，關於「${wishName}」的許願，我想詢問：` : '';
       const msgParam = defaultMsg ? `&message=${encodeURIComponent(defaultMsg)}` : '';
       window.location.href = `../chatroom/chatroom.html?openChat=${chatBtn.dataset.chatActor}${msgParam}`;
       return;
@@ -574,6 +617,13 @@ function _initNotifSystem() {
       _closeNotifPanel();
       window.location.href = `../wishpool/wishpool.html?id=${wishBtn.dataset.wishId}#wishpool`;
       return;
+    }
+
+    // 點擊 item 本體導頁
+    const href = item.dataset.notifHref;
+    if (href) {
+      _closeNotifPanel();
+      window.location.href = href;
     }
   });
 }

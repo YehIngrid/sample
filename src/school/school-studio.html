@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>創作起點 · 校園攻略站</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="description" content="創作起點 — 深呼吸，這裡是屬於你的創作角落。接著未完成的草稿，或展開全新的一頁攻略。"/>
+  <link rel="shortcut icon" href="../treasurehubIcon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+  <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/default-font.css">
+  <link rel="stylesheet" href="school.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== studio scope ===== */
+    :root { --green: rgb(36,182,133); }
+    html, body { height: 100%; }
+    body {
+      min-height: 100vh; overflow: hidden;
+      display: flex; flex-direction: column;
+      color: var(--ink);
+    }
+
+    /* ── 夢幻天空背景 ── */
+    .sky {
+      position: fixed; inset: 0; z-index: -3; pointer-events: none;
+      background:
+        radial-gradient(1200px 720px at 15% -8%, rgba(126,184,216,0.55) 0%, transparent 58%),
+        radial-gradient(1000px 700px at 100% 4%, rgba(171,218,213,0.50) 0%, transparent 55%),
+        radial-gradient(1100px 780px at 80% 110%, rgba(74,133,196,0.32) 0%, transparent 55%),
+        radial-gradient(900px 620px at 8% 108%, rgba(243,227,181,0.30) 0%, transparent 55%),
+        linear-gradient(168deg, #eef6fe 0%, #dcebf9 46%, #cadff2 100%);
+    }
+    /* 緩慢流動的極光層 */
+    .aurora {
+      position: fixed; inset: -20%; z-index: -2; pointer-events: none;
+      background:
+        radial-gradient(680px 480px at 30% 40%, rgba(126,184,216,0.40) 0%, transparent 60%),
+        radial-gradient(620px 460px at 72% 60%, rgba(171,218,213,0.38) 0%, transparent 60%);
+      filter: blur(12px);
+      animation: aurora-drift 26s ease-in-out infinite alternate;
+    }
+    @keyframes aurora-drift {
+      0%   { transform: translate3d(-3%, -2%, 0) scale(1.05); }
+      50%  { transform: translate3d(4%, 3%, 0) scale(1.12); }
+      100% { transform: translate3d(-2%, 4%, 0) scale(1.06); }
+    }
+
+    /* 漂浮的柔霧雲朵（純 CSS 橢圓 + blur） */
+    .clouds { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; }
+    .cloud {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(ellipse 62% 38% at 50% 50%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.6) 34%, rgba(255,255,255,0.22) 58%, rgba(255,255,255,0) 78%);
+      filter: blur(18px); opacity: 0.9;
+      animation: cloud-drift linear infinite;
+    }
+    .cloud.c1 { width: 380px; height: 200px; top: 15%; left: -22%; animation-duration: 60s; }
+    .cloud.c2 { width: 280px; height: 150px; top: 57%; left: -22%; animation-duration: 82s; animation-delay: -18s; opacity: 0.72; }
+    .cloud.c3 { width: 470px; height: 240px; top: 73%; left: -28%; animation-duration: 96s; animation-delay: -40s; opacity: 0.6; }
+    .cloud.c4 { width: 230px; height: 130px; top: 33%; left: -16%; animation-duration: 72s; animation-delay: -55s; opacity: 0.78; }
+    @keyframes cloud-drift {
+      from { transform: translateX(0); }
+      to   { transform: translateX(160vw); }
+    }
+
+    /* 上升的微光點 */
+    .motes { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .mote {
+      position: absolute; bottom: -10px; width: 7px; height: 7px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(171,218,213,0.5) 60%, transparent 75%);
+      box-shadow: 0 0 8px rgba(255,255,255,0.7);
+      animation: mote-rise linear infinite;
+    }
+    @keyframes mote-rise {
+      0%   { transform: translateY(0) translateX(0); opacity: 0; }
+      12%  { opacity: 0.9; }
+      88%  { opacity: 0.9; }
+      100% { transform: translateY(-108vh) translateX(28px); opacity: 0; }
+    }
+
+    /* ── 頂端極簡列 ── */
+    .studio-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px clamp(20px, 6vw, 64px); flex-shrink: 0;
+    }
+    .studio-top .logo img { height: 30px; display: block; }
+    .leave-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.04em; color: var(--navy);
+      background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.85);
+      padding: 8px 16px; border-radius: 999px; backdrop-filter: blur(6px);
+      transition: all 0.22s;
+    }
+    .leave-link:hover { background: #fff; color: var(--navy-d); transform: translateY(-1px); box-shadow: 0 10px 24px -14px rgba(0,75,151,0.5); }
+    .leave-link svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── 中央舞台 ── */
+    .stage {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 8px clamp(20px, 6vw, 64px) 56px; text-align: center;
+      min-height: 0;
+    }
+    .eyebrow {
+      font-size: 11px; letter-spacing: 0.34em; text-transform: uppercase;
+      color: var(--navy); font-weight: 700; margin-bottom: 16px;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .eyebrow::before, .eyebrow::after { content: ""; width: 22px; height: 1.5px; border-radius: 2px; background: rgba(0,75,151,0.5); }
+    .greeting {
+      font-family: "Noto Serif TC", "PingFang TC", serif;
+      font-size: clamp(30px, 5vw, 52px); font-weight: 900; line-height: 1.28;
+      color: var(--ink); letter-spacing: 0.03em; margin-bottom: 16px; text-wrap: balance;
+    }
+    .greeting .name { color: var(--navy); }
+    .sub {
+      font-size: clamp(14px, 1.6vw, 16.5px); line-height: 1.9; color: #33506f;
+      max-width: 560px; margin: 0 auto 44px;
+    }
+
+    /* ── 兩張選擇卡 ── */
+    .choices {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 340px)); gap: 26px;
+      width: 100%; max-width: 740px;
+    }
+    .choice {
+      position: relative; text-align: left; cursor: pointer;
+      display: flex; flex-direction: column;
+      background: rgba(255,255,255,0.62); border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 22px; padding: 26px 26px 24px;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 20px 50px -30px rgba(0,60,120,0.55);
+      transition: transform 0.28s cubic-bezier(0.22,1,0.36,1), box-shadow 0.28s ease, border-color 0.28s ease, background 0.28s ease;
+      overflow: hidden;
+    }
+    .choice::after {
+      content: ""; position: absolute; inset: 0; border-radius: 22px; pointer-events: none;
+      background: radial-gradient(340px 200px at 80% -10%, rgba(126,184,216,0.28) 0%, transparent 70%);
+      opacity: 0; transition: opacity 0.28s ease;
+    }
+    .choice:hover { transform: translateY(-6px); border-color: rgba(126,184,216,0.9); background: rgba(255,255,255,0.78); box-shadow: 0 32px 64px -30px rgba(0,60,120,0.6); }
+    .choice:hover::after { opacity: 1; }
+    .choice:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
+    .c-head { min-width: 0; }
+    .c-body { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
+
+    .choice .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10.5px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 4px 11px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .choice.draft .badge { color: #007568; background: rgba(171,218,213,0.5); }
+    .choice.fresh .badge { color: var(--navy); background: var(--alice); }
+
+    .choice .ic {
+      width: 52px; height: 52px; border-radius: 15px; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .choice.draft .ic { background: linear-gradient(135deg, var(--aqua), var(--sky)); }
+    .choice.fresh .ic { background: linear-gradient(135deg, var(--mid), var(--navy)); }
+    .choice .ic svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .choice h2 { font-size: 21px; font-weight: 800; color: var(--ink); letter-spacing: 0.02em; margin-bottom: 8px; }
+    .choice .desc { font-size: 13px; line-height: 1.75; color: var(--muted); margin-bottom: 18px; min-height: 44px; }
+
+    /* 草稿預覽小卡 */
+    .draft-peek {
+      background: rgba(255,255,255,0.7); border: 1px solid var(--line); border-radius: 14px;
+      padding: 13px 15px; margin-bottom: 18px;
+    }
+    .draft-peek .dt { font-size: 14.5px; font-weight: 800; color: var(--navy); letter-spacing: 0.01em; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .draft-peek .dsnip { font-size: 12px; color: #52678a; line-height: 1.6; margin-bottom: 9px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .draft-peek .dmeta { display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--muted); font-weight: 600; }
+    .draft-peek .dmeta .di { display: inline-flex; align-items: center; gap: 4px; }
+    .draft-peek .dmeta svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* 空草稿狀態 */
+    .draft-empty {
+      background: rgba(255,255,255,0.45); border: 1px dashed var(--line); border-radius: 14px;
+      padding: 15px; margin-bottom: 18px; font-size: 12.5px; color: var(--muted); line-height: 1.7;
+    }
+
+    .go {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: auto; align-self: flex-end;
+      font-size: 13.5px; font-weight: 800; letter-spacing: 0.04em;
+      color: var(--navy); transition: gap 0.22s ease;
+    }
+    .choice.fresh .go { color: var(--navy); }
+    .choice:hover .go { gap: 13px; }
+    .go svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .choice.draft.is-disabled { pointer-events: none; opacity: 0.62; }
+    .choice.draft.is-disabled .go { color: var(--muted); }
+
+    .tip {
+      margin-top: 34px; font-size: 12px; color: #5a739a; letter-spacing: 0.02em;
+      display: inline-flex; align-items: center; gap: 7px;
+    }
+    .tip svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── 進場動畫 ── */
+    .fade-up { opacity: 0; transform: translateY(22px); animation: fade-up 0.85s cubic-bezier(0.22,1,0.36,1) forwards; }
+    .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.16s; } .d3 { animation-delay: 0.27s; }
+    .d4 { animation-delay: 0.4s; } .d5 { animation-delay: 0.52s; }
+    @keyframes fade-up { to { opacity: 1; transform: none; } }
+
+    @media (max-width: 720px) {
+      body { overflow: auto; }
+      .studio-top { padding: 14px 16px; }
+      .stage { padding: 8px 16px 28px; justify-content: flex-start; }
+      .eyebrow { margin-bottom: 10px; letter-spacing: 0.24em; }
+      .greeting { font-size: clamp(24px, 7vw, 30px); margin-bottom: 8px; }
+      .sub { font-size: 13px; line-height: 1.7; margin-bottom: 22px; }
+      /* 一排一張、堆疊；卡片內部改成橫向（圖示左、文字右）*/
+      .choices { display: flex; flex-direction: column; gap: 13px; max-width: 460px; }
+      .choice.fresh { order: -1; }                 /* 手機版「全新」置頂 */
+      .choice { flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: 14px; row-gap: 13px; padding: 16px; }
+      .choice .badge { flex-basis: 100%; margin-bottom: 0; }
+      .choice .ic { width: 46px; height: 46px; border-radius: 12px; margin-bottom: 0; flex-shrink: 0; }
+      .choice .ic svg { width: 23px; height: 23px; }
+      .choice .c-head { flex: 1 1 0; min-width: 0; }        /* 標題+小標貼在 icon 右側 */
+      .choice .c-body { flex-basis: 100%; }                 /* 預覽+按鈕整行放下方 */
+      .choice h2 { font-size: 16.5px; margin-bottom: 4px; }
+      .choice .desc { font-size: 12.5px; line-height: 1.6; min-height: 0; margin-bottom: 0; }
+      .draft-peek { padding: 10px 12px; margin-bottom: 10px; }
+      .draft-peek .dsnip { -webkit-line-clamp: 2; }
+      .tip { margin-top: 22px; font-size: 11px; padding: 0 8px; text-align: center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .aurora, .cloud, .mote { animation: none !important; }
+      .motes, .clouds { display: none; }
+      .fade-up { opacity: 1; transform: none; animation: none; }
+      .choice { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 夢幻背景層 -->
+<div class="sky" aria-hidden="true"></div>
+<div class="aurora" aria-hidden="true"></div>
+<div class="clouds" aria-hidden="true">
+  <span class="cloud c1"></span>
+  <span class="cloud c2"></span>
+  <span class="cloud c3"></span>
+  <span class="cloud c4"></span>
+</div>
+<div class="motes" id="motes" aria-hidden="true"></div>
+
+<!-- 頂端極簡列 -->
+<header class="studio-top">
+  <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+    <img src="../svg/TREASUREHUBCHEN.svg" alt="拾貨寶庫">
+  </a>
+  <a class="leave-link" href="school.html">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    離開創作室
+  </a>
+</header>
+
+<!-- 中央舞台 -->
+<main class="stage">
+  <div class="eyebrow fade-up d1">Creator Studio · 創作起點</div>
+  <h1 class="greeting fade-up d2" id="greeting">歡迎回來，<span class="name">創作者</span></h1>
+  <p class="sub fade-up d3">深呼吸，這裡是屬於你的創作角落。<br>要接著那篇還沒說完的故事，還是展開全新的一頁？</p>
+
+  <div class="choices">
+    <!-- 繼續草稿 -->
+    <a class="choice draft fade-up d4" id="draftCard" href="school-composer.html">
+      <span class="badge">草稿</span>
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></div>
+      <div class="c-head">
+        <h2>繼續未完成的草稿</h2>
+        <p class="desc" id="draftDesc">回到你上次停筆的地方，把靈感接下去。</p>
+      </div>
+      <div class="c-body">
+        <div id="draftSlot"></div>
+        <span class="go">回到草稿 <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg></span>
+      </div>
+    </a>
+
+    <!-- 開新的一篇 -->
+    <a class="choice fresh fade-up d5" href="school-composer.html?new=1">
+      <span class="badge">全新</span>
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M3 12h18"/></svg></div>
+      <div class="c-head">
+        <h2>展開全新的一頁</h2>
+        <p class="desc">乾淨的稿紙已鋪好。把你親身走過的經驗，整理成別人的捷徑。</p>
+      </div>
+      <div class="c-body">
+        <span class="go">開始撰寫 <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg></span>
+      </div>
+    </a>
+  </div>
+
+  <div class="tip fade-up d5">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+    草稿會自動儲存在這台裝置上，隨時回來都在。
+  </div>
+</main>
+
+<script>
+  /* ---------- 依時段問候 + 姓名 ---------- */
+  (function () {
+    var h = new Date().getHours();
+    var g = h < 5 ? '夜深了' : h < 11 ? '早安' : h < 14 ? '午安' : h < 18 ? '午後好' : '晚安';
+    var name = '創作者';
+    try {
+      var u = localStorage.getItem('username');
+      if (u && u.trim()) name = u.trim();
+    } catch (e) {}
+    var el = document.getElementById('greeting');
+    el.innerHTML = g + '，<span class="name"></span>';
+    el.querySelector('.name').textContent = name;
+  })();
+
+  /* ---------- 讀取草稿，決定「繼續」卡的樣貌 ---------- */
+  (function () {
+    var KEY = 'cg-composer-draft';
+    var slot = document.getElementById('draftSlot');
+    var card = document.getElementById('draftCard');
+    var desc = document.getElementById('draftDesc');
+    var raw = null;
+    try { raw = localStorage.getItem(KEY); } catch (e) {}
+
+    function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+    function textFromHtml(html) {
+      var d = document.createElement('div'); d.innerHTML = html || '';
+      return (d.textContent || '').replace(/ /g, ' ').trim();
+    }
+    function relTime(ts) {
+      if (!ts) return null;
+      var diff = Date.now() - ts;
+      if (diff < 0) diff = 0;
+      var m = Math.floor(diff / 60000);
+      if (m < 1) return '剛剛';
+      if (m < 60) return m + ' 分鐘前';
+      var hr = Math.floor(m / 60);
+      if (hr < 24) return hr + ' 小時前';
+      var day = Math.floor(hr / 24);
+      if (day < 7) return day + ' 天前';
+      var dt = new Date(ts);
+      return (dt.getMonth() + 1) + '/' + dt.getDate();
+    }
+
+    var d = null;
+    if (raw) { try { d = JSON.parse(raw); } catch (e) {} }
+
+    var text = d ? textFromHtml(d.html) : '';
+    var title = d && d.title && d.title.trim() ? d.title.trim() : '';
+    var hasDraft = !!(d && (title || text));
+
+    if (!hasDraft) {
+      card.classList.add('is-disabled');
+      card.removeAttribute('href');
+      card.setAttribute('aria-disabled', 'true');
+      desc.textContent = '目前還沒有草稿。先從右邊開一篇新的吧！';
+      slot.innerHTML = '<div class="draft-empty">這裡會保留你上次寫到一半的攻略，方便下次回來續寫。</div>';
+      return;
+    }
+
+    var words = text.replace(/\s+/g, '').length;
+    var snippet = (d.subtitle && d.subtitle.trim()) ? d.subtitle.trim() : text;
+    var when = relTime(d.savedAt);
+
+    slot.innerHTML =
+      '<div class="draft-peek">' +
+        '<div class="dt">' + esc(title || '（未命名草稿）') + '</div>' +
+        '<div class="dsnip">' + esc(snippet.slice(0, 90) || '尚無內文…') + '</div>' +
+        '<div class="dmeta">' +
+          '<span class="di"><svg viewBox="0 0 24 24"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>' + words.toLocaleString() + ' 字</span>' +
+          (when ? '<span class="di"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' + when + '</span>' : '') +
+        '</div>' +
+      '</div>';
+  })();
+
+  /* ---------- 生成上升微光點 ---------- */
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var wrap = document.getElementById('motes');
+    if (!wrap) return;
+    var N = 18;
+    for (var i = 0; i < N; i++) {
+      var m = document.createElement('span');
+      m.className = 'mote';
+      var size = 4 + Math.random() * 6;
+      m.style.left = (Math.random() * 100) + 'vw';
+      m.style.width = size + 'px';
+      m.style.height = size + 'px';
+      m.style.animationDuration = (14 + Math.random() * 16) + 's';
+      m.style.animationDelay = (-Math.random() * 20) + 's';
+      wrap.appendChild(m);
+    }
+  })();
+</script>
+</body>
+</html>

@@ -752,6 +752,8 @@ right: 0;
     .hero-left {
         align-items: center;
         order: 1;
+        position: relative;
+        z-index: 5;   /* 確保按鈕在手機圖上方 */
     }
     .buttontwo {
         justify-content: center;
@@ -762,7 +764,7 @@ right: 0;
         bottom: -60px;
         left: 50%;
         transform: translateX(-50%);
-        z-index: 20;
+        z-index: 1;   /* 降低，不蓋按鈕 */
         width: 200px;
     }
     #hero {
@@ -780,6 +782,44 @@ right: 0;
     }
     .titlecenter h1 {
         font-size: 3.5rem;
+    }
+}
+/* ── Tablet landscape：還原左右並排，避免手機圖遮住按鈕 ── */
+@media screen and (min-width: 769px) and (max-width: 1100px) and (orientation: landscape) {
+    .titlecenter {
+        flex-direction: row;
+        text-align: left;
+        max-width: 90vw;
+        gap: 4vw;
+        padding: 0 1rem;
+        height: 90vh;
+        min-height: unset;
+    }
+    .hero-left {
+        align-items: flex-start;
+        order: unset;
+    }
+    .buttontwo {
+        justify-content: flex-start;
+    }
+    .hero-right {
+        order: unset;
+        position: relative;
+        bottom: unset;
+        left: unset;
+        transform: none;
+        z-index: unset;
+        width: 220px;
+    }
+    #hero {
+        overflow: hidden !important;
+    }
+    #contentofnewhome {
+        overflow: unset;
+    }
+    #next-section {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
     }
 }
 @media screen and (max-width: 768px) {

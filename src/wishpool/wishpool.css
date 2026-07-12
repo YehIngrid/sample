@@ -43,6 +43,26 @@ body {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
     }
+    /* 手機版：flex，logo 絕對置中 */
+    .wp-navbar-inner {
+        display: flex !important;
+        align-items: center;
+        position: relative;
+        padding: 6px 12px !important;
+        width: 100%;
+    }
+    /* Logo div → 絕對置中，不佔 flex 空間 */
+    .wp-navbar-inner > .d-flex.flex-shrink-0 {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-right: 0 !important;
+        pointer-events: auto;
+    }
+    /* 右側登入維持 ms-auto 推到最右 */
+    .wp-navbar-inner > .ms-auto {
+        margin-left: auto;
+    }
 }
 
 /* container-fluid 需設 position:relative 以供 tabs 絕對置中 */
@@ -1432,7 +1452,7 @@ body {
 .loading-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: aliceblue;
     z-index: 9999;
     display: flex;
     align-items: center;

@@ -3,6 +3,16 @@ import ChatBackendService from '../chatroom/ChatBackendService.js';
 import { formatTaipeiTime, requireLogin } from '../default/default.js';
 import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewerModal.js';
 
+// ── Image variant helpers ──
+function toSmallImg(url) {
+  if (!url) return url;
+  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_small$1$2');
+}
+function toBigImg(url) {
+  if (!url) return url;
+  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_big$1$2');
+}
+
 // ── Skeleton helper ──
 function sellerProductSkeletonHTML(n = 6) {
   return Array.from({length: n}, () => `
@@ -43,7 +53,7 @@ function _renderSellerPage(page) {
     const col = document.createElement('div');
     col.className = 'col';
     const pid = product.id ?? product._id ?? product.commodityId ?? '';
-    const imgSrc = product.mainImage || '';
+    const imgSrc = toBigImg(product.mainImage) || '';
     const name   = product.name || '未命名';
     const price  = Number(product.price ?? 0).toLocaleString('zh-TW');
     col.innerHTML = `
@@ -81,16 +91,6 @@ function _renderSellerPage(page) {
   if (infoEl) infoEl.textContent = totalPages > 1 ? `${page} / ${totalPages}` : '';
   if (prevBtn) prevBtn.disabled = page <= 1;
   if (nextBtn) nextBtn.disabled = page >= totalPages;
-
-  // Mobile dots
-  if (dotsEl) {
-    dotsEl.innerHTML = '';
-    for (let i = 1; i <= totalPages; i++) {
-      const dot = document.createElement('span');
-      dot.style.cssText = `width:7px;height:7px;border-radius:50%;display:inline-block;background:${i === page ? '#004b97' : '#ccc'};transition:background 0.2s;`;
-      dotsEl.appendChild(dot);
-    }
-  }
 
   // Hide pager entirely if only 1 page
   const pagerEl = document.getElementById('sellerPager');
@@ -258,9 +258,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const newOrOld = newOrOldMap[product.newOrOld] ?? '未標示';
     const category = categoryMap?.[product.category] ?? '未分類(其他)';
     const sizeMap = {
-      0: '小',
-      1: '中',
-      2: '大'
+      1: '小',
+      2: '中',
+      3: '大'
     };
     const size = sizeMap?.[product.size] ?? '未標示';
     const updatedTime = formatTaipeiTime(product.updatedAt);
@@ -320,20 +320,29 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   if (!wrap) return;
 
   const ageText = (() => {
-    const a = product?.age;
-    if (a == null || String(a) === '-1') return '未知';
-    if (Number(a) === 0) return '不到 1 年';
-    return `${a} 年`;
+    const a = Number(product?.age);
+    if (product?.age == null || String(product?.age) === '-1' || isNaN(a)) return '不清楚';
+    if (a === 0) return '未滿 1 年';
+    if (a <= 3) return '1–3 年';
+    return '3 年以上';
   })();
 
+  // 分類 chip（名稱下方）
+  const chipWrap = document.getElementById('product-cat-chip-wrap');
+  if (chipWrap && category && category !== '未分類(其他)') {
+    chipWrap.innerHTML = `<span class="product-cat-chip">${category}</span>`;
+  }
+
+  const EMPTY = new Set(['-', '未知', '未標示', '未分類(其他)']);
   const fields = [
-    ['商品大小',  size ?? '-'],
+    ['商品大小',  size],
     ['商品年齡',  ageText],
-    ['新舊程度',  newOrOld ?? '未知'],
-    ['分類',      category ?? '未分類'],
-    ['上架時間',  createdTime ?? '-'],
-    ['更新時間',  updatedTime ?? '-'],
-  ];
+    ['新舊程度',  newOrOld],
+    ['上架時間',  createdTime],
+    ['更新時間',  updatedTime],
+  ].filter(([, v]) => v && !EMPTY.has(v));
+
+  if (!fields.length) { wrap.innerHTML = ''; return; }
 
   // 桌機版：原本的兩欄表格
   const desktopHTML = fields.map(([k, v]) => `
@@ -402,7 +411,7 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     thumbList.innerHTML = '';
     list.forEach((src, idx) => {
       const imgEl = document.createElement('img');
-      imgEl.src = src;
+      imgEl.src = toSmallImg(src);
       imgEl.alt = `縮圖 ${idx + 1}`;
       imgEl.loading = 'lazy';
       imgEl.className = 'thumb-img' + (idx === 0 ? ' active' : '');
@@ -450,11 +459,24 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
     }, { passive: true });
   }
 
-  // 3.6 點擊主圖放大
+  // 3.6 點擊主圖放大（PhotoSwipe）
   if (mainImg) {
-    mainImg.style.cursor = 'pointer';
-    mainImg.addEventListener('click', () => {
-      Swal.fire({ imageUrl: mainImg.src, imageAlt: '商品圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
+    mainImg.style.cursor = 'zoom-in';
+    mainImg.addEventListener('click', async () => {
+      const { default: PhotoSwipeLightbox } = await import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js');
+      const dataSource = await Promise.all(list.map(src => new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve({ src, width: img.naturalWidth, height: img.naturalHeight });
+        img.onerror = () => resolve({ src, width: 1200, height: 1200 });
+        img.src = src;
+      })));
+      const lb = new PhotoSwipeLightbox({
+        dataSource,
+        pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.js'),
+        bgOpacity: 0.9,
+      });
+      lb.init();
+      lb.loadAndOpen(currentIdx);
     });
   }
 })();
@@ -486,6 +508,14 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
         renderSellerInfo(data);
         showSellerCommodities(sellerId);
         await checkIsOwnProduct(sellerId);
+        backendService.getPublicUserProfile(sellerId).then(res => {
+          const createdAt = res?.data?.data?.createdAt;
+          const joinEl = document.getElementById('sellerJoinDate');
+          if (joinEl && createdAt) {
+            const d = new Date(createdAt);
+            joinEl.textContent = `${d.getFullYear()}年${d.getMonth() + 1}月加入`;
+          }
+        }).catch(() => {});
         backendService.getUserReviews(sellerId).then(res => {
           const stats = res?.data?.data?.stats;
           const countEl = document.getElementById('sellerReviewCount');
@@ -496,7 +526,55 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
       document.getElementById('sellerInfo')?.classList.add('d-none');
       console.log('略過賣家資訊渲染');
     }
+    // 無論有無 owner，都嘗試載入相似商品
+    loadSimilarProducts(product.category, product.id ?? product._id);
   };
+
+// === 相似商品 ===
+async function loadSimilarProducts(category, currentId) {
+  const container = document.getElementById('similarProducts');
+  const section = container?.closest('.similarCommodities');
+  if (!container || !category) { section && (section.style.display = 'none'); return; }
+  try {
+    const res = await new BackendService().getCommodityList(category, { page: 1, limit: 18 });
+    const items = (res?.data?.commodities || [])
+      .filter(p => {
+        if (String(p.id ?? p._id) === String(currentId)) return false;
+        if (sellerId && String(p.owner?.accountId ?? p.owner?.id) === String(sellerId)) return false;
+        return true;
+      })
+      .slice(0, 6);
+    if (!items.length) { section && (section.style.display = 'none'); return; }
+    items.forEach(product => {
+      const col = document.createElement('div');
+      col.className = 'col';
+      const pid = product.id ?? product._id ?? '';
+      col.innerHTML = `
+        <div class="product-card seller-product-card h-100" data-id="${pid}">
+          <div class="product-thumb">
+            <img src="${toBigImg(product.mainImage) || ''}" alt="${product.name || ''}" loading="lazy"
+                 onerror="this.src='../image/placeholder.webp'">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title ellipsis-text">${product.name || '未命名'}</h5>
+            <div class="mt-auto">
+              <span class="fw-bold" style="color:#004b97;">NT$ ${Number(product.price ?? 0).toLocaleString('zh-TW')}</span>
+            </div>
+          </div>
+        </div>`;
+      col.addEventListener('click', () => { if (pid) location.href = `product.html?id=${pid}`; });
+      const img = col.querySelector('.product-thumb img');
+      if (img) {
+        if (img.complete && img.naturalWidth > 0) img.closest('.product-thumb').classList.add('img-loaded');
+        else img.addEventListener('load', () => img.closest('.product-thumb')?.classList.add('img-loaded'), { once: true });
+      }
+      container.appendChild(col);
+    });
+    section && (section.style.display = '');
+  } catch {
+    section && (section.style.display = 'none');
+  }
+}
 
 // === 把資料渲染到 #sellerInfo ===
 function renderSellerInfo(data) {
@@ -550,6 +628,18 @@ function renderSellerInfo(data) {
   if (chatBtn)   chatBtn.onclick   = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
   if (rateBtn)   rateBtn.onclick   = () => toggleSellerReviews();
   if (reportBtn) reportBtn.onclick = () => reportSeller(data.id, data.name);
+
+  // 快速聊聊按鈕（價格旁桌機版 + 手機底部列）
+  const quickChatDesktop = document.getElementById('quickChatBtnDesktop');
+  const quickChatMobile  = document.getElementById('quickChatBtnMobile');
+  if (quickChatDesktop) {
+    quickChatDesktop.classList.remove('d-none');
+    quickChatDesktop.onclick = () => openChatWithSeller(data.id);
+  }
+  if (quickChatMobile) {
+    quickChatMobile.classList.remove('d-none');
+    quickChatMobile.onclick = () => openChatWithSeller(data.id);
+  }
 }
 
 // === chatReady handshake ===
@@ -621,7 +711,14 @@ async function toggleSellerReviews() {
         if (Object.keys(_tagMeaningCache).length === 0) {
           try {
             const tagRes = await backendService.getReviewTags();
-            (tagRes?.data?.data?.tags ?? []).forEach(t => { _tagMeaningCache[t.tag] = t.description ?? t.meaning; _tagPositiveCache[t.tag] = t.positive; });
+            (tagRes?.data?.data?.groups ?? []).forEach(g => {
+              (g.tags ?? []).forEach(t => {
+                _tagMeaningCache[t.tag]   = t.meaning;
+                _tagPositiveCache[t.tag]  = t.positive;
+                _tagDeltaCache[t.tag]     = t.delta;
+                _tagGroupNameCache[t.tag] = g.name;
+              });
+            });
           } catch (e) { /* silent */ }
         }
         const res = await backendService.getUserReviews(_currentSellerId);
@@ -762,7 +859,8 @@ async function onAddToCart(e) {
     btn.classList.add('cart-added');
     btn.disabled = false;
     window.refreshCartBadge?.();
-    Swal.fire({ title: '已加入購物車！', icon: 'success', showConfirmButton: false, timer: 1200 });
+    const cartRes = await Swal.fire({ title: '已加入購物車！', text: '要前往結帳嗎？', icon: 'success', showCancelButton: true, confirmButtonText: '去結帳 →', cancelButtonText: '繼續瀏覽', timer: 4000, timerProgressBar: true, reverseButtons: true });
+    if (cartRes.isConfirmed) window.location.href = '../shoppingcart/shoppingcart.html';
   } catch (err) {
     // 失敗：還原原始狀態
     btn.innerHTML = origHtml;
@@ -802,6 +900,7 @@ async function showSellerCommodities(id) {
     const itemCountEl = document.getElementById('sellerItemCount');
     if (itemCountEl) itemCountEl.textContent = products.length;
 
+
     // Wire pagination buttons
     const prevBtn = document.getElementById('prevSellerBtn');
     const nextBtn = document.getElementById('nextSellerBtn');
@@ -812,16 +911,6 @@ async function showSellerCommodities(id) {
       const total = Math.ceil(_sellerAllProducts.length / SELLER_PER_PAGE);
       if (_sellerCurrentPage < total) { _sellerCurrentPage++; _renderSellerPage(_sellerCurrentPage); }
     });
-
-    // Touch swipe (mobile)
-    let touchStartX = 0;
-    container.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    container.addEventListener('touchend', e => {
-      const diff = touchStartX - e.changedTouches[0].clientX;
-      const total = Math.ceil(_sellerAllProducts.length / SELLER_PER_PAGE);
-      if (diff > 40 && _sellerCurrentPage < total) { _sellerCurrentPage++; _renderSellerPage(_sellerCurrentPage); }
-      else if (diff < -40 && _sellerCurrentPage > 1) { _sellerCurrentPage--; _renderSellerPage(_sellerCurrentPage); }
-    }, { passive: true });
 
   } catch (err) {
     console.error('取得賣家商品失敗：', err);
@@ -932,17 +1021,41 @@ const TAG_LABELS = {
   late_payment:           '付款延遲',
   no_show:                '未到場或失聯',
 };
-const _tagMeaningCache  = {};
-const _tagPositiveCache = {};
+const _tagMeaningCache   = {};
+const _tagPositiveCache  = {};
+const _tagDeltaCache     = {};
+const _tagGroupNameCache = {};
 function getTagLabel(tag) {
   if (!tag) return '';
-  if (_tagMeaningCache[tag]) return _tagMeaningCache[tag];
-  return TAG_LABELS[tag] ?? TAG_LABELS[tag.toLowerCase()] ?? tag;
+  const key = tag.toLowerCase();
+  return _tagMeaningCache[key] ?? _tagMeaningCache[tag] ?? TAG_LABELS[key] ?? TAG_LABELS[tag] ?? tag;
 }
 function isTagPositive(tag) {
   if (!tag) return true;
   const v = _tagPositiveCache[tag] ?? _tagPositiveCache[tag.toLowerCase()];
   return v !== undefined ? v : true;
+}
+function renderTagsByGroup(tags) {
+  if (!tags.length) return '';
+  const grouped = new Map();
+  const ungrouped = [];
+  tags.forEach(tk => {
+    const key = tk.toLowerCase();
+    const groupName = _tagGroupNameCache[key] ?? _tagGroupNameCache[tk];
+    if (groupName) {
+      if (!grouped.has(groupName)) grouped.set(groupName, []);
+      grouped.get(groupName).push(tk);
+    } else {
+      ungrouped.push(tk);
+    }
+  });
+  const chip = tk => `<span class="review-display-chip ${isTagPositive(tk) ? 'positive' : 'negative'}">${getTagLabel(tk)}</span>`;
+  let html = '';
+  grouped.forEach((gtags, groupName) => {
+    html += `<div class="review-tag-row"><span class="review-tag-row__label">${groupName}：</span>${gtags.map(chip).join('')}</div>`;
+  });
+  if (ungrouped.length) html += `<div class="review-tag-row">${ungrouped.map(chip).join('')}</div>`;
+  return html;
 }
 
 // bindReviewerClicks 已由 ../shared/reviewerModal.js 提供
@@ -959,9 +1072,7 @@ function renderReviewCard(review, role) {
   const roleBadge = role === 'seller' ? '賣' : role === 'buyer' ? '買' : '';
   const roleClass = role === 'seller' ? 'reviewer-role-badge--seller' : role === 'buyer' ? 'reviewer-role-badge--buyer' : '';
 
-  const tagChips = tags
-    .map(t => `<span class="review-display-chip ${isTagPositive(t) ? 'positive' : 'negative'}">${getTagLabel(t)}</span>`)
-    .join('');
+  const tagHtml = renderTagsByGroup(tags);
 
   const rid      = review?.reviewer?.accountId ?? '';
   const reviewId = review?.id ?? '';
@@ -984,7 +1095,7 @@ function renderReviewCard(review, role) {
           ${reviewId ? `<button class="review-report-btn" data-report-review-id="${reviewId}" data-report-reviewer-id="${rid}" data-report-reviewer-name="${name.replace(/"/g,'&quot;')}" title="檢舉此評價"><i class="ti ti-flag"></i></button>` : ''}
         </div>
       </div>
-      ${tagChips ? `<div class="review-card__chips">${tagChips}</div>` : ''}
+      ${tagHtml ? `<div class="review-card__chips">${tagHtml}</div>` : ''}
       ${comment ? `<div class="reviewText">${comment}</div>` : ''}
     </div>
   `;
@@ -1036,5 +1147,17 @@ function disableActionButtons() {
             btn.title = '您不能購買或檢舉自己的商品';
             btn.onclick = ownProductAlert;
         });
+    });
+
+    // 顯示「去編輯」按鈕
+    const pid = new URLSearchParams(location.search).get('id');
+    const editUrl = `../person/person.html?page=products&editId=${encodeURIComponent(pid)}`;
+    ['#editProductBtn', '#editProductBtnMobile'].forEach(id => {
+        const el = document.querySelector(id);
+        if (!el) return;
+        el.href = editUrl;
+        el.classList.remove('d-none');
+        el.onmouseover = () => { el.style.background = 'rgb(36,182,133)'; };
+        el.onmouseout  = () => { el.style.background = '#004b97'; };
     });
 }

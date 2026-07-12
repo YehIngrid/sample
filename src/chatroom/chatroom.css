@@ -108,7 +108,7 @@ html, body {
 .sidebar {
     background-color: #fff;
     height: 100vh;
-    overflow-y: auto;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -128,13 +128,78 @@ html, body {
 .chat-list {
     flex: 1;
     overflow-y: auto;
+    min-height: 0;
+    padding-bottom: 80px;
 }
+
+/* ── Sidebar 底部 LINE 官方帳號 ── */
+.sidebar-footer {
+    flex-shrink: 0;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e8eef5;
+    background: #f7fafd;
+}
+.sidebar-line-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border: 1px solid #d6eadc;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+.sidebar-line-btn:hover {
+    background: #edfaf2;
+    box-shadow: 0 2px 8px rgba(6,199,85,0.12);
+    color: inherit;
+}
+.sidebar-line-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 8px;
+}
+.sidebar-line-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+}
+.sidebar-line-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #1a2840;
+    white-space: nowrap;
+}
+.sidebar-line-sub {
+    font-size: 0.7rem;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sidebar-line-arrow {
+    font-size: 0.75rem;
+    color: #aaa;
+    flex-shrink: 0;
+}
+[data-theme-dark] .sidebar-footer { background: #181825; border-top-color: #2a2a3a; }
+[data-theme-dark] .sidebar-line-btn { background: #1e1e2e; border-color: #2a3a2e; color: #cdd6f4; }
+[data-theme-dark] .sidebar-line-btn:hover { background: #1e2e1e; }
+[data-theme-dark] .sidebar-line-title { color: #cdd6f4; }
 
 .chat-item {
     padding: 12px 16px;
     cursor: pointer;
     transition: background-color 0.2s;
     border-bottom: 1px solid var(--border-color);
+}
+.chat-item .flex-grow-1 {
+    min-width: 0;
 }
 
 .chat-item:hover {
@@ -158,6 +223,43 @@ html, body {
     justify-content: center;
     margin-right: 12px;
     font-size: 1.2rem;
+    position: relative;
+}
+
+.role-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 18px;
+    height: 18px;
+    background: var(--primary-color, #004b97);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    font-size: 0.6rem;
+    color: white;
+    line-height: 1;
+    z-index: 1;
+}
+
+.role-badge-sm {
+    width: 14px;
+    height: 14px;
+    font-size: 0.5rem;
+    bottom: -1px;
+    right: -1px;
+}
+
+.avatar-default-msg {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(to right bottom, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .online-users {
@@ -193,6 +295,7 @@ html, body {
 
 .messages-container {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
     padding: 16px;
     padding-left: 10px;
@@ -240,6 +343,9 @@ html, body {
 }
 .message-grouped .message-avatar {
     visibility: hidden;
+}
+.message-grouped .msg-sender-name {
+    display: none;
 }
 .msg-time-hidden {
     display: none;
@@ -314,8 +420,35 @@ html, body {
     display: block;
 }
 
+.msg-sender-name {
+    font-size: 0.7rem;
+    color: #999;
+    display: block;
+    margin-bottom: 2px;
+    padding-left: 2px;
+}
+
+.admin-in-chat-note {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--primary-color, #004b97);
+    opacity: 0.7;
+    margin-top: 1px;
+}
+
+.chat-partner-tag {
+    font-size: 0.62rem;
+    background: #e8f0fb;
+    color: #004b97;
+    border-radius: 4px;
+    padding: 1px 5px;
+    margin-left: 5px;
+    vertical-align: middle;
+    font-weight: 500;
+}
+
 .message-content {
-    max-width: 60%;
+    max-width: 85%;
     min-width: 0;
 }
 
@@ -329,7 +462,7 @@ html, body {
     margin-bottom: 4px;
 }
 
-/* 客服頻道：對方（小幫手）訊息泡泡跟隨使用者主題色 */
+/* 客服頻道：對方（小助手）訊息泡泡跟隨使用者主題色 */
 [data-support-room="1"] .message-other .message-text {
     background-color: var(--self-bubble-bg, aliceblue);
     border: 1px solid var(--self-bubble-border, rgba(0,75,151,0.2));
@@ -394,10 +527,6 @@ html, body {
     50% { opacity: 0.5; }
 }
 
-/* 訊息內容最大寬度 */
-.message-content {
-    max-width: 80%;
-}
 
 /* 滾動條樣式 */
 .messages-container::-webkit-scrollbar,
@@ -451,9 +580,10 @@ html, body {
     #chatMain {
         position: fixed;
         top: 0;
+        bottom: 0;
         left: 0;
         width: 100%;
-        height: calc(100vh - 60px);
+        height: auto;
         z-index: 1040;
         transition: transform 0.3s ease-in-out;
     }
@@ -466,6 +596,9 @@ html, body {
     }
     .message-text {
         padding: 7px 12px;
+    }
+    .message-input-container {
+        flex-shrink: 0;
     }
 }
 
@@ -481,9 +614,6 @@ html, body {
     opacity: 0.8;
 }
 
-.message-content {
-    max-width: 85%;
-}
 .message-input-container .btn {
     padding: 0.375rem 0.5rem;
 }
@@ -536,6 +666,23 @@ html, body {
     background: var(--self-bubble-bg, #ddf1ff);
     border-color: var(--self-bubble-border, #b3d9f5);
 }
+/* ── Optimistic image upload spinner ── */
+.img-upload-spinner {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: imgSpinnerRot 0.75s linear infinite;
+    pointer-events: none;
+}
+@keyframes imgSpinnerRot {
+    to { transform: rotate(360deg); }
+}
+
 .sendicon:disabled {
     opacity: 0.4;
     cursor: not-allowed;
@@ -574,11 +721,12 @@ html, body {
 .lastMessage {
     font-size: 12px;
     color: #4a627a;
-    max-width: 140px;
+    max-width: 100%;
     text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    display: block;
 }
 .unread-divider {
   text-align: center;
@@ -676,6 +824,7 @@ html, body {
     max-width: 100%;
     border-radius: 6px;
     display: block;
+    margin-top: 8px;
 }
 .broadcast-time {
     margin-top: 8px;
@@ -683,6 +832,67 @@ html, body {
     color: #6f87a0;
     text-align: right;
 }
+
+/* ================== 聊天室資訊 Side Panel ================== */
+.room-info-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100%;
+    background: #fff;
+    box-shadow: -4px 0 20px rgba(0,0,0,0.12);
+    z-index: 1500;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    border-left: 1px solid #e8edf2;
+}
+.room-info-panel.open {
+    transform: translateX(0);
+}
+.room-info-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--primary-color, #004b97);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.room-info-close-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.8;
+    padding: 2px 4px;
+}
+.room-info-close-btn:hover { opacity: 1; }
+.room-info-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+.room-info-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.2);
+    z-index: 1499;
+}
+.room-info-overlay.open { display: block; }
+
+[data-theme-dark] .room-info-panel {
+    background: #1e1e2e;
+    border-left-color: #2a2a3a;
+}
+[data-theme-dark] .room-info-panel-body { color: #cdd6f4; }
 
 /* ================== 訊息主題面板 ================== */
 .theme-panel-overlay {
@@ -1022,6 +1232,7 @@ html, body {
 [data-theme-dark] .chat-header { background: #181825 !important; border-color: #45475a !important; }
 [data-theme-dark] .chat-header h6,
 [data-theme-dark] .chat-header .mobile-back-btn { color: #cdd6f4; }
+.message-input-container { position: relative; }
 [data-theme-dark] .message-input-container { background: #181825; border-color: #45475a !important; }
 [data-theme-dark] #messageInput {
     background: #313244;
@@ -1055,7 +1266,7 @@ html, body {
 [data-theme-dark] .msg-context-menu { background: #313244; box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
 [data-theme-dark] .msg-context-menu button { color: #cdd6f4; }
 [data-theme-dark] .msg-context-menu button:hover { background: #45475a; }
-[data-theme-dark] .sse-disconnect-banner { background: #3b3000; color: #f9e2af; border-color: #f9e2af; }
+[data-theme-dark] .sse-disconnect-banner { background: color-mix(in srgb, var(--primary-color, #84a2d4) 18%, #1e1e2e); color: var(--primary-color, #84a2d4); border-color: color-mix(in srgb, var(--primary-color, #84a2d4) 35%, #1e1e2e); }
 [data-theme-dark] .empty-chat-hint { color: #6c7086; }
 [data-theme-dark] .theme-panel { background: #313244; color: #cdd6f4; }
 [data-theme-dark] .theme-panel-header { border-color: #45475a; }
@@ -1066,13 +1277,123 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff3cd;
-    color: #856404;
+    background: color-mix(in srgb, var(--primary-color, #004b97) 12%, white);
+    color: var(--primary-color, #004b97);
     font-size: 0.8rem;
     padding: 6px 12px;
-    border-bottom: 1px solid #ffc107;
+    border-bottom: 1px solid color-mix(in srgb, var(--primary-color, #004b97) 30%, white);
+    flex-shrink: 0;
+    letter-spacing: 0.01em;
+}
+
+/* ── 客服單狀態橫幅 ── */
+.ticket-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: aliceblue;
+    border-bottom: 1px solid #cde4f8;
+    border-left: 4px solid #004b97;
+    flex-shrink: 0;
+    font-size: 0.82rem;
+    transition: border-left-color 0.2s;
+}
+.ticket-banner.status-unresolved { border-left-color: #e67e22; }
+.ticket-banner.status-claimed    { border-left-color: #004b97; }
+.ticket-banner.status-resolved   { border-left-color: rgb(36,182,133); }
+.ticket-banner-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+    color: #fff;
+    background: #004b97;
+    transition: background 0.2s;
+}
+.ticket-banner.status-unresolved .ticket-banner-icon { background: #e67e22; }
+.ticket-banner.status-resolved   .ticket-banner-icon { background: rgb(36,182,133); }
+.ticket-banner-body {
+    flex: 1;
+    min-width: 0;
+}
+.ticket-banner-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #004b97;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+.ticket-banner.status-unresolved .ticket-banner-label { color: #e67e22; }
+.ticket-banner.status-resolved   .ticket-banner-label { color: rgb(36,182,133); }
+.ticket-banner-reason {
+    color: #333;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.82rem;
+}
+.ticket-banner-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     flex-shrink: 0;
 }
+.ticket-status-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.ticket-status-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+    flex-shrink: 0;
+}
+.ticket-action-btn {
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 13px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
+    white-space: nowrap;
+    background: #004b97;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0,75,151,0.2);
+}
+.ticket-action-btn:hover {
+    background: rgb(36,182,133);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(36,182,133,0.25);
+}
+.ticket-action-resolve {
+    background: rgb(36,182,133);
+    box-shadow: 0 1px 3px rgba(36,182,133,0.25);
+}
+.ticket-action-resolve:hover {
+    background: #1ea876;
+    box-shadow: 0 3px 8px rgba(36,182,133,0.3);
+}
+[data-theme-dark] .ticket-banner { background: #0e1f33; border-bottom-color: #1a3a5c; }
+[data-theme-dark] .ticket-banner-reason { color: #cdd6f4; }
+[data-theme-dark] .ticket-banner-label { opacity: 0.9; }
+[data-theme-dark] .ticket-action-btn { box-shadow: none; }
 
 /* ── 空白聊天室引導 ── */
 .empty-chat-hint {
@@ -1122,6 +1443,59 @@ html, body {
     scrollbar-width: none;
 }
 .quick-reply-bar::-webkit-scrollbar { display: none; }
+@media (max-width: 767px) {
+    .quick-reply-bar {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        right: 0;
+        padding: 8px 16px;
+        background: var(--chat-bg, #fff);
+        border-top: 1px solid var(--border-color, #e8edf2);
+    }
+    [data-theme-dark] .quick-reply-bar {
+        background: #181825;
+        border-top-color: #45475a;
+    }
+}
+.support-request-chip {
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid #e67e22;
+    color: #e67e22;
+    border-radius: 16px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+}
+.support-request-chip:hover { background: #e67e22; color: #fff; }
+[data-theme-dark] .support-request-chip { color: #fab387; border-color: #fab387; }
+[data-theme-dark] .support-request-chip:hover { background: #fab387; color: #1e1e2e; }
+
+.system-message {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 12px;
+    color: #6f87a0;
+    position: relative;
+}
+.system-message::before,
+.system-message::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 28%;
+    height: 1px;
+    background: #ddd;
+}
+.system-message::before { left: 0; }
+.system-message::after { right: 0; }
+[data-theme-dark] .system-message { color: #6c7086; }
+[data-theme-dark] .system-message::before,
+[data-theme-dark] .system-message::after { background: #45475a; }
+
 .quick-reply-chip {
     flex-shrink: 0;
     background: none;
@@ -1609,4 +1983,38 @@ html, body {
 }
 .chat-link:hover {
   color: rgb(36,182,133);
+}
+
+/* ── iOS Safari：用 dvh 取代 vh，避免底部網址列遮住內容 ── */
+@supports (-webkit-touch-callout: none) {
+  .container-fluid {
+    height: 100dvh;
+  }
+  .sidebar {
+    height: 100dvh;
+  }
+  .chat-main {
+    height: 100dvh;
+  }
+  @media (max-width: 767px) {
+    #chatMain {
+      top: 0;
+      bottom: 0;
+      height: auto !important;
+    }
+  }
+  @media (max-width: 991px) {
+    .container-fluid {
+      height: calc(100dvh - 60px);
+    }
+    .sidebar {
+      height: calc(100dvh - 60px);
+    }
+    .chat-main {
+      height: calc(100dvh - 60px);
+    }
+  }
+  .message-input-container {
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
 }

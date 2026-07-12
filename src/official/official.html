@@ -3,22 +3,51 @@
 <head>
   <title>拾貨寶庫官方後台管理</title>
   <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../image/bigLogo.jpg">
+    <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta property="og:title" content="拾貨寶庫官方後台管理">
   <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
   <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
   <link rel="shortcut icon" href="../treasurehubIcon.ico">
-  <link rel="stylesheet" href="official.css">
-  <link rel="stylesheet" href="../default/default.css">
-  <link rel="stylesheet" href="../default/default-font.css">
+  <link rel="stylesheet" href="official.css?v=20260616">
+  <link rel="stylesheet" href="../default/default.css?v=20260616">
+  <link rel="stylesheet" href="../default/default-font.css?v=20260616">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" integrity="sha384-ecIckRi4QlKYya/FQUbBUjS4qp65jF/J87Guw5uzTbO1C1Jfa/6kYmd6dXUF6D7i" crossorigin="anonymous" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js" integrity="sha384-utBUCeG4SYaCm4m7GQZYr8Hy8Fpy3V4KGjBZaf4WTKOcwhCYpt/0PfeEe3HNlwx8" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js" integrity="sha384-e6cc9LaIG7xZ3XD5B+jtr1NhTWPQGQdRCh6xiZ+ZFUtWCpg4ycv3Sh+SkZoopvUY" crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PQ6ND9EY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-45PQ6ND9EY');
+  </script>
+  <!-- End Google Analytics -->
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TNDMCCKZ');</script>
+  <!-- End Google Tag Manager -->
 </head>
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TNDMCCKZ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <!-- 手機版頂部欄 -->
   <header class="mobile-topbar">
@@ -87,6 +116,9 @@
           </div>
         </div>
 
+        <button class="nav-btn" data-panel="panel-tickets">
+          <i class="fa fa-headphones"></i> 客服單管理
+        </button>
         <button class="nav-btn" data-panel="panel-analytics">
           <i class="fa fa-bar-chart"></i> 數據分析
         </button>
@@ -192,6 +224,16 @@
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-tickets')">
+            <div class="dashboard-card-icon" style="background:#fff3e0;">
+              <i class="fa fa-headphones" style="color:#e67e22;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">客服單管理</div>
+              <div class="dashboard-card-desc">查看所有客服單狀態，認領待處理的客服請求，或查看已解決的案件紀錄。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
         </div>
       </section>
 
@@ -225,16 +267,14 @@
             <textarea id="broadcastMessage" class="form-control" rows="5" placeholder="輸入公告內容..." maxlength="2000"></textarea>
           </div>
           <div class="mb-3">
-            <label class="form-label">附件圖片 <small class="text-muted">（選填，可拖曳）</small></label>
-            <div class="img-upload-area" id="broadcastImgArea">
-              <input type="file" id="broadcastImgInput" accept="image/*" class="d-none">
-              <div id="broadcastImgPlaceholder" class="img-placeholder">
-                <i class="fa fa-image fa-2x mb-2 d-block text-muted"></i>
-                <span class="text-muted small">點擊或拖曳上傳圖片</span>
-              </div>
-              <img id="broadcastImgPreview" class="img-preview-thumb d-none" alt="預覽">
-              <button type="button" id="clearImgBtn" class="clear-img-btn d-none">×</button>
+            <label class="form-label">附件圖片 <small class="text-muted">（選填，最多 10 張，每張 ≤ 5MB，可拖曳）</small></label>
+            <div class="news-attach-zone" id="broadcastImgArea">
+              <input type="file" id="broadcastImgInput" accept="image/*" class="d-none" multiple>
+              <i class="fa fa-image me-2 text-muted"></i>
+              <span class="text-muted small">點擊選擇或拖曳圖片（可多張）</span>
             </div>
+            <div id="broadcastImgList" class="attach-list mt-2"></div>
+
           </div>
           <button type="submit" id="broadcastSubmitBtn" class="btn official-btn w-100" style="color: white;">
             <i class="fa fa-paper-plane me-1"></i> 發送公告
@@ -388,200 +428,243 @@
 
       <!-- Panel: 數據分析 -->
       <section id="panel-analytics" class="panel">
-        <div class="d-flex align-items-center justify-content-between mb-3">
+        <!-- Header -->
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
           <h2 class="panel-title mb-0"><i class="fa fa-bar-chart me-2"></i>數據分析</h2>
           <button class="btn btn-sm btn-outline-primary" id="refreshAnalyticsBtn">
             <i class="fa fa-refresh me-1"></i>重新整理
           </button>
         </div>
-        <p class="text-muted mb-4" style="font-size:0.82rem;">
-          <span class="badge-live">即時</span> 資料來自平台 API。
-          <span class="badge-na">需後端</span> 需新增統計 API。
-          <span class="badge-local">本機</span> 資料來自此瀏覽器。
-        </p>
 
-        <!-- 流量關鍵指標（需後端） -->
-        <div class="analytics-block">
-          <div class="analytics-block-header">
-            <i class="fa fa-tachometer me-1"></i> 流量關鍵指標
-            <span class="badge-na ms-2">需後端 API</span>
-          </div>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon" style="background:#dbeafe;"><i class="fa fa-user-plus" style="color:#2563eb;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">日活躍人數 (DAU)</div>
-                <div class="stat-value" id="stat-dau">–</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon" style="background:#dcfce7;"><i class="fa fa-calendar" style="color:#16a34a;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">月活躍人數 (MAU)</div>
-                <div class="stat-value" id="stat-mau">–</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon" style="background:#fff7ed;"><i class="fa fa-clock-o" style="color:#ea580c;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">平均停留時間</div>
-                <div class="stat-value stat-value-sm" id="stat-session">–</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon" style="background:#fef2f2;"><i class="fa fa-repeat" style="color:#dc2626;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">次日留存率</div>
-                <div class="stat-value" id="stat-retention">–</div>
-              </div>
-            </div>
+        <!-- Date range -->
+        <div class="analytics-block mb-4" style="padding:14px 18px;">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <i class="fa fa-calendar text-muted me-1"></i>
+            <label class="fw-bold mb-0" style="font-size:0.88rem;white-space:nowrap;">時間範圍</label>
+            <input type="date" id="statsStartDate" class="form-control form-control-sm" style="width:auto;">
+            <span class="text-muted">～</span>
+            <input type="date" id="statsEndDate" class="form-control form-control-sm" style="width:auto;">
+            <button class="btn btn-sm btn-outline-secondary stats-quick-btn" data-days="7">近 7 天</button>
+            <button class="btn btn-sm btn-outline-secondary stats-quick-btn" data-days="30">近 30 天</button>
+            <button class="btn btn-sm btn-outline-secondary stats-quick-btn" data-days="90">近 90 天</button>
           </div>
         </div>
 
-        <!-- 平台規模 -->
-        <div class="analytics-block">
-          <div class="analytics-block-header">
-            <i class="fa fa-cubes me-1"></i> 平台規模
-            <span class="badge-live ms-2">即時</span>
-          </div>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-shopping-bag" style="color:#1a73e8;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">上架商品總數</div>
-                <div class="stat-value" id="stat-products"><span class="spinner-border spinner-border-sm"></span></div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon" style="background:#fce8e6;"><i class="fa fa-fire" style="color:#d93025;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">熱門競標商品</div>
-                <div class="stat-value" id="stat-hot"><span class="spinner-border spinner-border-sm"></span></div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon" style="background:#f3e8fd;"><i class="fa fa-star" style="color:#7b1fa2;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">許願池心願數</div>
-                <div class="stat-value" id="stat-wishes"><span class="spinner-border spinner-border-sm"></span></div>
-              </div>
-            </div>
+        <!-- Sub-tabs -->
+        <ul class="nav nav-tabs mb-3" id="analyticsTabNav" style="flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;">
+          <li class="nav-item"><button class="nav-link active" data-stats-tab="tab-dashboard">總覽</button></li>
+          <li class="nav-item"><button class="nav-link" data-stats-tab="tab-users">用戶</button></li>
+          <li class="nav-item"><button class="nav-link" data-stats-tab="tab-commodities">商品</button></li>
+          <li class="nav-item"><button class="nav-link" data-stats-tab="tab-orders">訂單</button></li>
+          <li class="nav-item"><button class="nav-link" data-stats-tab="tab-stat-reports">檢舉</button></li>
+          <li class="nav-item"><button class="nav-link" data-stats-tab="tab-wishpool">願望池</button></li>
+          <li class="nav-item"><button class="nav-link" data-stats-tab="tab-search">搜尋</button></li>
+        </ul>
+
+        <!-- Tab: 總覽 -->
+        <div id="tab-dashboard" class="stats-tab">
+          <div class="stats-grid mb-3">
             <div class="stat-card">
               <div class="stat-icon" style="background:#e6f4ea;"><i class="fa fa-users" style="color:#28a745;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">註冊用戶數 <span class="badge-na">需後端</span></div>
-                <div class="stat-value" id="stat-users">–</div>
-              </div>
+              <div class="stat-body"><div class="stat-label">用戶總數</div><div class="stat-value" id="stat-total-users"><span class="spinner-border spinner-border-sm"></span></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-shopping-bag" style="color:#1a73e8;"></i></div>
+              <div class="stat-body"><div class="stat-label">商品總數</div><div class="stat-value" id="stat-total-products"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
             <div class="stat-card">
               <div class="stat-icon" style="background:#fff3e0;"><i class="fa fa-file-text-o" style="color:#f57c00;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">總訂單數 <span class="badge-na">需後端</span></div>
-                <div class="stat-value" id="stat-orders">–</div>
-              </div>
+              <div class="stat-body"><div class="stat-label">訂單總數</div><div class="stat-value" id="stat-total-orders"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon" style="background:#e8f5e9;"><i class="fa fa-check-circle-o" style="color:#388e3c;"></i></div>
-              <div class="stat-body">
-                <div class="stat-label">最新資訊文章數</div>
-                <div class="stat-value" id="stat-news">–</div>
+              <div class="stat-icon" style="background:#fce8e6;"><i class="fa fa-flag" style="color:#d93025;"></i></div>
+              <div class="stat-body"><div class="stat-label">檢舉件數</div><div class="stat-value" id="stat-total-reports"><span class="spinner-border spinner-border-sm"></span></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#f3e8fd;"><i class="fa fa-star" style="color:#7b1fa2;"></i></div>
+              <div class="stat-body"><div class="stat-label">願望池心願數</div><div class="stat-value" id="stat-total-wishpool"><span class="spinner-border spinner-border-sm"></span></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e6f4ea;"><i class="fa fa-user-plus" style="color:#28a745;"></i></div>
+              <div class="stat-body"><div class="stat-label">今日新用戶</div><div class="stat-value" id="stat-new-users-today"><span class="spinner-border spinner-border-sm"></span></div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-bar-chart" style="color:#1a73e8;"></i></div>
+              <div class="stat-body"><div class="stat-label">7 日活躍用戶</div><div class="stat-value" id="stat-active-users-7d"><span class="spinner-border spinner-border-sm"></span></div></div>
+            </div>
+          </div>
+          <p id="stat-total-error" class="text-danger small d-none mt-2">載入失敗，請稍後重試。</p>
+          <div class="analytics-block mt-3">
+            <div class="analytics-block-header"><i class="fa fa-line-chart me-1"></i> 用戶活躍趨勢</div>
+            <div style="position:relative;height:220px;"><canvas id="chart-dashboard-trend"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Tab: 用戶 -->
+        <div id="tab-users" class="stats-tab d-none">
+          <div class="analytics-block">
+            <div class="analytics-block-header"><i class="fa fa-line-chart me-1"></i> 用戶註冊趨勢</div>
+            <div style="position:relative;height:220px;"><canvas id="chart-user-reg-trend"></canvas></div>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-pie-chart me-1"></i> 角色分布</div>
+                <div style="position:relative;height:200px;"><canvas id="chart-user-role"></canvas></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-star me-1"></i> 評分分布</div>
+                <div style="position:relative;height:200px;"><canvas id="chart-user-rating"></canvas></div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-envelope me-1"></i> 信箱驗證狀態</div>
+                <div style="position:relative;height:180px;"><canvas id="chart-user-email-verify"></canvas></div>
+              </div>
+            </div>
+          </div>
+          <div id="user-extra-stats" class=""></div>
+        </div>
+
+        <!-- Tab: 商品 -->
+        <div id="tab-commodities" class="stats-tab d-none">
+          <div class="analytics-block">
+            <div class="analytics-block-header"><i class="fa fa-line-chart me-1"></i> 商品上架趨勢</div>
+            <div style="position:relative;height:220px;"><canvas id="chart-commodity-trend"></canvas></div>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-pie-chart me-1"></i> 分類分布</div>
+                <div style="position:relative;height:200px;"><canvas id="chart-commodity-category"></canvas></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-dollar me-1"></i> 價格統計</div>
+                <div id="commodity-price-stats" class="p-3"></div>
+              </div>
+            </div>
+          </div>
+          <div class="analytics-block">
+            <div class="analytics-block-header"><i class="fa fa-trophy me-1"></i> 熱門賣家 Top 5</div>
+            <div id="commodity-top-sellers" class="analytics-item-list"></div>
+          </div>
+        </div>
+
+        <!-- Tab: 訂單 -->
+        <div id="tab-orders" class="stats-tab d-none">
+          <div class="analytics-block">
+            <div class="analytics-block-header"><i class="fa fa-line-chart me-1"></i> 訂單趨勢</div>
+            <div style="position:relative;height:220px;"><canvas id="chart-order-trend"></canvas></div>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-pie-chart me-1"></i> 訂單狀態分布</div>
+                <div style="position:relative;height:200px;"><canvas id="chart-order-status"></canvas></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-money me-1"></i> 營收 & 取消率</div>
+                <div id="order-revenue-stats" class="p-3"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="analytics-block mb-0">
+                <div class="analytics-block-header"><i class="fa fa-user me-1"></i> 熱門買家 Top 5</div>
+                <div id="order-top-buyers" class="analytics-item-list"></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="analytics-block mb-0">
+                <div class="analytics-block-header"><i class="fa fa-user me-1"></i> 熱門賣家 Top 5</div>
+                <div id="order-top-sellers" class="analytics-item-list"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 分類商品數量圖表 -->
-        <div class="analytics-block">
-          <div class="analytics-block-header">
-            <i class="fa fa-pie-chart me-1"></i> 分類商品數量分佈
-            <span class="badge-live ms-2">即時</span>
+        <!-- Tab: 檢舉 -->
+        <div id="tab-stat-reports" class="stats-tab d-none">
+          <div class="analytics-block">
+            <div class="analytics-block-header"><i class="fa fa-line-chart me-1"></i> 檢舉趨勢</div>
+            <div style="position:relative;height:220px;"><canvas id="chart-report-trend"></canvas></div>
           </div>
-          <div style="position:relative; height:220px;">
-            <div class="text-muted text-center py-4" id="categoryChartLoader">
-              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
-            </div>
-            <canvas id="categoryChart" style="display:none;"></canvas>
-          </div>
-        </div>
-
-        <!-- 許願池未滿足需求 -->
-        <div class="analytics-block">
-          <div class="analytics-block-header">
-            <i class="fa fa-lightbulb-o me-1"></i> 許願池最新心願（未被滿足的需求）
-            <span class="badge-live ms-2">即時</span>
-          </div>
-          <div id="wishpoolInsights" class="analytics-item-list">
-            <div class="text-muted text-center py-3 small">
-              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
-            </div>
-          </div>
-        </div>
-
-        <!-- 熱門搜尋關鍵字 -->
-        <div class="analytics-block">
-          <div class="analytics-block-header">
-            <i class="fa fa-search me-1"></i> 熱門搜尋關鍵字
-            <span class="badge-local ms-2">本機資料</span>
-          </div>
-          <p class="text-muted mb-2" style="font-size:0.8rem;">
-            目前顯示此瀏覽器的搜尋紀錄。全體用戶統計需後端新增 <code>POST /api/analytics/search</code> 並在搜尋頁呼叫。
-          </p>
-          <div id="searchKeywordsWrap"></div>
-        </div>
-
-        <!-- 用戶畫像（需後端） -->
-        <div class="analytics-block">
-          <div class="analytics-block-header">
-            <i class="fa fa-id-card-o me-1"></i> 用戶畫像
-            <span class="badge-na ms-2">需後端 API</span>
-          </div>
-          <div class="demographics-placeholder">
-            <div class="demo-row">
-              <i class="fa fa-graduation-cap demo-icon"></i>
-              <div>
-                <div class="demo-title">系所 / 年級分佈</div>
-                <div class="demo-desc">後端需提供 <code>GET /api/admin/analytics/user-demographics</code>，回傳各系所與年級的用戶比例，可繪製圓餅圖。招商時可精準對接目標補習班（大四→公職班、法律/會計系→證照班）。</div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-7">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-bar-chart me-1"></i> 類別分布</div>
+                <div style="position:relative;height:200px;"><canvas id="chart-report-category"></canvas></div>
               </div>
             </div>
-            <div class="demo-row">
-              <i class="fa fa-clock-o demo-icon"></i>
-              <div>
-                <div class="demo-title">熱門上線時段（24hr）</div>
-                <div class="demo-desc">後端需提供 <code>GET /api/admin/analytics/peak-hours</code>，回傳各小時的 session 數。可繪製折線圖，告知廣告主最佳限時廣告投放時段（例：深夜 23:00–01:00）。</div>
-              </div>
-            </div>
-            <div class="demo-row">
-              <i class="fa fa-line-chart demo-icon"></i>
-              <div>
-                <div class="demo-title">DAU / MAU 趨勢（近 30 天）</div>
-                <div class="demo-desc">後端需提供 <code>GET /api/admin/analytics/dau-mau?days=30</code>，回傳每日活躍用戶數。這是招商的基本門檻數據，向廠商證明平台「有人氣、活躍中」。</div>
+            <div class="col-md-5">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-check-circle me-1"></i> 審核統計</div>
+                <div id="report-review-stats" class="p-3"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 招商數據摘要 -->
-        <div class="analytics-block pitch-block">
-          <div class="analytics-block-header">
-            <i class="fa fa-handshake-o me-1"></i> 招商數據摘要
+        <!-- Tab: 願望池 -->
+        <div id="tab-wishpool" class="stats-tab d-none">
+          <div class="analytics-block">
+            <div class="analytics-block-header"><i class="fa fa-line-chart me-1"></i> 許願趨勢</div>
+            <div style="position:relative;height:220px;"><canvas id="chart-wishpool-trend"></canvas></div>
           </div>
-          <div id="pitchSummary">
-            <span class="spinner-border spinner-border-sm"></span>
-          </div>
-        </div>
-
-        <!-- 最新上架商品 -->
-        <div class="analytics-block">
-          <div class="analytics-block-header">
-            <i class="fa fa-tag me-1"></i> 最新上架商品
-            <span class="badge-live ms-2">即時</span>
-          </div>
-          <div id="analyticsNewItems" class="analytics-item-list">
-            <div class="text-muted text-center py-3 small">
-              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-pie-chart me-1"></i> 狀態分布</div>
+                <div style="position:relative;height:200px;"><canvas id="chart-wishpool-status"></canvas></div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-sort-amount-desc me-1"></i> 優先級分布</div>
+                <div style="position:relative;height:200px;"><canvas id="chart-wishpool-priority"></canvas></div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-money me-1"></i> 預算分布</div>
+                <div style="position:relative;height:200px;"><canvas id="chart-wishpool-budget"></canvas></div>
+              </div>
             </div>
           </div>
         </div>
+
+        <!-- Tab: 搜尋 -->
+        <div id="tab-search" class="stats-tab d-none">
+          <div class="analytics-block">
+            <div class="analytics-block-header"><i class="fa fa-line-chart me-1"></i> 搜尋趨勢</div>
+            <div style="position:relative;height:220px;"><canvas id="chart-search-trend"></canvas></div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-7">
+              <div class="analytics-block mb-0">
+                <div class="analytics-block-header"><i class="fa fa-search me-1"></i> 熱門關鍵字 Top 20</div>
+                <div id="search-keywords-cloud"></div>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="analytics-block mb-0">
+                <div class="analytics-block-header"><i class="fa fa-pie-chart me-1"></i> 登入 / 訪客搜尋比</div>
+                <div style="position:relative;height:200px;"><canvas id="chart-search-auth"></canvas></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </section>
 
       <!-- Panel: 檢舉類別管理 -->
@@ -624,13 +707,56 @@
       <!-- Panel: 評論標籤管理 -->
       <section id="panel-review-tags" class="panel">
         <h2 class="panel-title"><i class="fa fa-tags me-2"></i>評論標籤管理</h2>
-        <p class="text-muted small mb-3">建立或修改評論標籤規則（tag 自動轉大寫）。</p>
 
-        <!-- 現有標籤列表 -->
+        <!-- ── 標籤群組 ── -->
         <div class="d-flex align-items-center justify-content-between mb-2">
-          <span class="fw-bold" style="color:#333;">現有標籤</span>
+          <span class="fw-bold" style="color:#333;">標籤群組</span>
+          <button class="btn btn-sm btn-outline-primary" id="refreshTagGroupsBtn"><i class="fa fa-refresh me-1"></i>重新載入</button>
+        </div>
+        <p class="text-muted small mb-2">每個群組對應一個評價維度（例：商品品質、面交狀況）。互斥群組只能選一個標籤。</p>
+        <div id="reviewTagGroupsList" class="mb-4">
+          <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+        </div>
+
+        <!-- 新增群組 -->
+        <div class="news-editor-card mb-4">
+          <div class="news-editor-header"><span>新增標籤群組</span></div>
+          <form id="createTagGroupForm" class="official-form mt-3">
+            <div class="row g-3 mb-3">
+              <div class="col-sm-5">
+                <label class="form-label">群組名稱 <span style="color:red">*</span></label>
+                <input type="text" id="newGroupName" class="form-control" placeholder="例：商品品質" maxlength="50" required>
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">適用對象 <span style="color:red">*</span></label>
+                <select id="newGroupTargetRole" class="form-select form-select-official">
+                  <option value="BUYER_TO_SELLER">買家評賣家</option>
+                  <option value="SELLER_TO_BUYER">賣家評買家</option>
+                </select>
+              </div>
+              <div class="col-sm-3">
+                <label class="form-label">選取模式 <span style="color:red">*</span></label>
+                <select id="newGroupExclusive" class="form-select form-select-official">
+                  <option value="true">互斥（單選）</option>
+                  <option value="false">可複選</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn official-btn" style="color:white;">
+              <i class="fa fa-plus me-1"></i> 建立群組
+            </button>
+          </form>
+          <div id="createTagGroupResult" class="result-box mt-3 d-none"></div>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- ── 標籤列表 ── -->
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="fw-bold" style="color:#333;">標籤列表</span>
           <button class="btn btn-sm btn-outline-primary" id="refreshTagsBtn"><i class="fa fa-refresh me-1"></i>重新載入</button>
         </div>
+        <p class="text-muted small mb-2">建立或修改評論標籤規則（tag 自動轉大寫）。</p>
         <div id="reviewTagsList" class="mb-4">
           <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
         </div>
@@ -640,17 +766,23 @@
           <div class="news-editor-header"><span>新增標籤</span></div>
           <form id="createTagForm" class="official-form mt-3">
             <div class="row g-3 mb-3">
-              <div class="col-sm-4">
+              <div class="col-sm-3">
                 <label class="form-label">標籤名稱 (英文) <span style="color:red">*</span></label>
-                <input type="text" id="newTagName" class="form-control" placeholder="例：FAST_SHIPPING" maxlength="50" required>
+                <input type="text" id="newTagName" class="form-control" placeholder="例：fast_shipping" maxlength="50" required>
               </div>
-              <div class="col-sm-5">
+              <div class="col-sm-4">
                 <label class="form-label">說明 <span style="color:red">*</span></label>
                 <input type="text" id="newTagMeaning" class="form-control" placeholder="例：出貨速度快" maxlength="100" required>
               </div>
+              <div class="col-sm-2">
+                <label class="form-label">分數增減 <span style="color:red">*</span></label>
+                <input type="number" id="newTagDelta" class="form-control" placeholder="1 或 -5" min="-100" max="100" required>
+              </div>
               <div class="col-sm-3">
-                <label class="form-label">分數增減 (delta) <span style="color:red">*</span></label>
-                <input type="number" id="newTagDelta" class="form-control" placeholder="例：1 或 -5" min="-100" max="100" required>
+                <label class="form-label">所屬群組</label>
+                <select id="newTagGroupId" class="form-select form-select-official">
+                  <option value="">（不指定群組）</option>
+                </select>
               </div>
             </div>
             <button type="submit" class="btn official-btn" style="color:white;">
@@ -707,17 +839,63 @@
         </div>
       </section>
 
+      <!-- Panel: 客服單管理 -->
+      <section id="panel-tickets" class="panel">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <h2 class="panel-title mb-0"><i class="fa fa-headphones me-2"></i>客服單管理</h2>
+          <button class="btn btn-sm btn-outline-primary" id="refreshTicketsBtn">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+
+        <!-- 狀態篩選 -->
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+          <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+          <select id="ticketsStatusFilter" class="form-select form-select-sm" style="width:auto;">
+            <option value="">全部</option>
+            <option value="UNRESOLVED">等待認領</option>
+            <option value="CLAIMED">處理中</option>
+            <option value="RESOLVED">已解決</option>
+          </select>
+        </div>
+
+        <!-- 列表 -->
+        <div id="ticketsAdminList">
+          <div class="text-muted text-center py-3 small">
+            <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+          </div>
+        </div>
+        <div id="ticketsAdminPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+      </section>
+
     </main>
   </div>
 
-  <!-- Scripts -->
-  <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" integrity="sha384-ecIckRi4QlKYya/FQUbBUjS4qp65jF/J87Guw5uzTbO1C1Jfa/6kYmd6dXUF6D7i" crossorigin="anonymous" rel="stylesheet">
+  <!-- 客服單歷史記錄 Modal -->
+  <div class="modal fade" id="ticketHistoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header" style="border-bottom:1px solid #eee;">
+          <span class="fw-bold" style="color:#333;"><i class="fa fa-history me-2"></i>客服單記錄</span>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="ticketHistoryModalBody">
+          <div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+        </div>
+        <div class="modal-footer flex-column align-items-stretch gap-2" id="ticketAdjudicateFooter" style="display:none!important;border-top:1px solid #eee;padding:16px 20px;">
+          <div class="fw-bold mb-1" style="font-size:0.85rem;color:#555;"><i class="bi bi-scale me-1"></i>填寫仲裁單</div>
+          <textarea id="adjudicationText" class="form-control form-control-sm" rows="3" placeholder="裁定結論，例：買家提供的商品與描述不符，建議退款處理"></textarea>
+          <textarea id="adjudicationReply" class="form-control form-control-sm" rows="2" placeholder="回覆訊息（傳送給雙方）"></textarea>
+          <div class="d-flex gap-2 justify-content-end">
+            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-sm" id="adjudicateSubmitBtn" style="background:#8e44ad;color:#fff;">送出仲裁並解決</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <link rel="stylesheet" href="../news/news.css">
-  <script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js" integrity="sha384-utBUCeG4SYaCm4m7GQZYr8Hy8Fpy3V4KGjBZaf4WTKOcwhCYpt/0PfeEe3HNlwx8" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js" integrity="sha384-e6cc9LaIG7xZ3XD5B+jtr1NhTWPQGQdRCh6xiZ+ZFUtWCpg4ycv3Sh+SkZoopvUY" crossorigin="anonymous"></script>
-  <script type="module" src="official.js"></script>
+  <script type="module" src="official.js?v=20260616"></script>
 </body>
 </html>

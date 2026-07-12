@@ -449,7 +449,9 @@ window.addEventListener('load', async () => {
             }
         });
 
-        if (hasUnread) window.dispatchEvent(new CustomEvent('chatUnread'));
+        const _iframe = document.getElementById('talkInterface');
+        const _iframeOpen = _iframe && _iframe.style.display !== 'none';
+        if (hasUnread && !_iframeOpen) window.dispatchEvent(new CustomEvent('chatUnread'));
     } catch (e) { /* 未登入或錯誤，略過 */ }
 
     const _notifSse = new EventSource(
@@ -459,7 +461,12 @@ window.addEventListener('load', async () => {
     _notifSse.addEventListener('newMessage', (event) => {
         const data = JSON.parse(event.data);
         if (data.username !== myUsername) {
-            window.dispatchEvent(new CustomEvent('chatUnread'));
+            // iframe 開著時，chatroom.js 的 SSE 也會觸發 chatUnread/chatRead
+            // 若 parent 也搶先觸發 chatUnread，會造成 race condition（chatRead 先到、chatUnread 後到，紅點消不掉）
+            // → iframe 可見時交給 chatroom.js 管理紅點狀態
+            const _iframe = document.getElementById('talkInterface');
+            const _iframeOpen = _iframe && _iframe.style.display !== 'none';
+            if (!_iframeOpen) window.dispatchEvent(new CustomEvent('chatUnread'));
             _showChatToast(data);
             const partner = _partnerCache.get(data.username);
             _showBrowserNotif(
@@ -503,6 +510,7 @@ function _updateNavBadge(show) {
 }
 
 window.addEventListener('chatUnread', () => _updateNavBadge(true));
+window.addEventListener('chatRead', () => _updateNavBadge(false));
 
 window.toggleChatInterface = toggleChatInterface;
 window.canEnterChat = canEnterChat;

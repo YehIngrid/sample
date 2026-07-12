@@ -18,48 +18,99 @@
         
     <!-- meta部分 -->
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
-    <link rel="apple-touch-icon" href="../image/bigLogo.jpg">
+    <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
-    <meta property="og:title" content="☆ 拾貨寶庫｜二手商店 ☆">
-    <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+    <meta name="description" content="瀏覽拾貨寶庫二手商店，搶先發現中興大學同學上架的教科書、3C、服飾、生活用品。立即競標或直接購買，用合理價格找到你需要的好物。"/>
+    <link rel="canonical" href="https://treasurehub.tw/shop/shop.html"/>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://treasurehub.tw/shop/shop.html">
+    <meta property="og:title" content="拾貨寶庫｜二手商店">
+    <meta property="og:description" content="瀏覽拾貨寶庫二手商店，搶先發現中興大學同學上架的教科書、3C、服飾、生活用品。立即競標或直接購買，用合理價格找到你需要的好物。">
     <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
-    <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-    <meta http-equiv="cache-control" content="max-age=0" />
-    <meta http-equiv="cache-control" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
-    <meta http-equiv="pragma" content="no-cache" />
+    <meta name="keywords" content="拾貨寶庫、中興大學二手、二手教科書、二手3C、校園拍賣"/>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "url": "https://treasurehub.tw/shop/shop.html",
+      "name": "拾貨寶庫｜二手商店",
+      "description": "瀏覽拾貨寶庫二手商店，搶先發現中興大學同學上架的教科書、3C、服飾、生活用品。立即競標或直接購買，用合理價格找到你需要的好物。",
+      "inLanguage": "zh-TW",
+      "isPartOf": { "@id": "https://treasurehub.tw/#website" },
+      "publisher": { "@id": "https://treasurehub.tw/#organization" }
+    }
+    </script>
     <!-- link部分 -->
     <!-- *icon/css/fontawesome/fontgoogle/bootstrap_net/font*2/webfont_icons -->
+    <!-- preconnect 先建連線，加速後續 CDN 請求 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="shortcut icon" href="../treasurehubIcon.ico">
-    <link rel="stylesheet" href="shop.css">
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 合併兩個 Google Fonts 為一個請求 -->
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700&family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../default/default.css">
     <link rel="stylesheet" href="../default/default-font.css">
+    <link rel="stylesheet" href="shop.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet"  >
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
     <!-- script部分 -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" integrity="sha384-QjoPbdj/93O7LUz0wqTxepA3tIabUD3jzfZX+x5QLvqFtHBzSw4eYFLSVthB+EDT" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PQ6ND9EY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-45PQ6ND9EY');
+    </script>
+    <!-- End Google Analytics -->
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TNDMCCKZ');</script>
+    <!-- End Google Tag Manager -->
 </head>
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TNDMCCKZ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <a id="moderatorBtn" href="../official/official.html"
      style="display:none;position:fixed;top:70px;right:18px;z-index:9999;background:#e63946;color:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 3px 12px rgba(230,57,70,0.45);transition:background 0.2s;"
      onmouseover="this.style.background='#c1121f'" onmouseout="this.style.background='#e63946'">
     <i class="ti ti-shield-check me-1"></i>管理後台
+  </a>
+  <a id="apiDocsBtn" href="https://treasurehub.tw/api/api-docs/" target="_blank" rel="noopener"
+     style="display:none;position:fixed;top:114px;right:18px;z-index:9999;background:#004b97;color:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 3px 12px rgba(0,75,151,0.35);transition:background 0.2s;"
+     onmouseover="this.style.background='rgb(36,182,133)'" onmouseout="this.style.background='#004b97'">
+    <i class="ti ti-file-description me-1"></i>API 文件
+  </a>
+  <a id="designSystemBtn" href="../shop/Design System.html" target="_blank" rel="noopener"
+     style="display:none;position:fixed;top:158px;right:18px;z-index:9999;background:#4a85c4;color:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 3px 12px rgba(74,133,196,0.4);transition:background 0.2s;"
+     onmouseover="this.style.background='#003a78'" onmouseout="this.style.background='#4a85c4'">
+    <i class="ti ti-palette me-1"></i>設計系統
+  </a>
+  <a id="schoolGuideBtn" href="../school/school.html"
+     style="display:none;position:fixed;top:202px;right:18px;z-index:9999;background:#004b97;color:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:600;text-decoration:none;box-shadow:0 3px 12px rgba(0,75,151,0.35);transition:background 0.2s;"
+     onmouseover="this.style.background='rgb(36,182,133)'" onmouseout="this.style.background='#004b97'">
+    <i class="ti ti-book-2 me-1"></i>校園攻略站
   </a>
   <div id="whatcontent">
     <!-- TODO header -->
@@ -70,6 +121,7 @@
           <div class="safety-ticker__track">
             <span class="safety-ticker__text">守護智慧財產：本平台嚴禁販售非法影印、掃描書籍及未授權電子檔。</span>
           </div>
+          <button class="safety-ticker__close" aria-label="關閉公告">×</button>
         </div>
         <script>
           if(new URLSearchParams(location.search).get('page')==='seller')
@@ -108,7 +160,7 @@
               <div class="login">
                 <a class="username" href="../person/person.html"></a>
                 <!-- TODO 登入登出id -->
-                <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
+                <a class="navbar-brand loginornot" href="#">登出</a>
               </div>
               <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
                 <img src="../svg/shoppingcart.svg" alt="購物車">
@@ -129,8 +181,8 @@
 
                 <!-- 搜尋下拉面板（手機 + 電腦） -->
                 <div id="searchDropdown" class="search-dropdown" style="display:none!important;">
-                  <!-- 商品分類 -->
-                  <div class="search-drop-section">
+                  <!-- 商品分類（桌機才顯示） -->
+                  <div class="search-drop-section d-none d-lg-block">
                     <div class="search-drop-header"><span>商品分類</span></div>
                     <div class="cat-pills" style="padding:6px 0 4px;background:transparent;flex-wrap:wrap;overflow-x:visible;gap:6px;">
                       <a href="../commodity/commodity.html?category=education" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/book.svg" alt="課業學習"></div>課業學習</a>
@@ -149,8 +201,13 @@
                     </div>
                     <ul id="desktopHistoryList" class="search-drop-list"></ul>
                   </div>
-
-                  <ul id="desktopTrendList" class="search-drop-list" style="display:none!important;"></ul>
+                  <!-- 大家都在搜 -->
+                  <div class="search-drop-section">
+                    <div class="search-drop-header"><span><i class="fa-solid fa-fire" style="color:#e8952a;margin-right:4px;"></i>大家都在搜</span></div>
+                    <ul id="desktopTrendList" class="search-drop-list search-drop-trend">
+                      <li class="search-drop-empty"><i class="ti ti-ban" style="margin-right:3px;opacity:0.5;font-size:0.85em;"></i>暫無資料</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </form>
@@ -368,12 +425,7 @@
       <a href="../commodity/commodity.html?category=new" class="more"><span class="more-btn">查看更多 →</span></a>
     </div>
     <div class="mgMobile">
-      <div class="new-swipe-hint d-flex d-lg-none align-items-center justify-content-between mb-2" id="newSwipeHint">
-        <span class="swipe-arrow swipe-arrow-left"><i class="fa-solid fa-chevron-left"></i></span>
-        <span class="swipe-hint-text">向左右滑動切換</span>
-        <span class="swipe-arrow swipe-arrow-right"><i class="fa-solid fa-chevron-right"></i></span>
-      </div>
-      <div id="product-grid" class="container-card row row-cols-2 row-cols-md-3 g-2 mt-0"></div>
+<div id="product-grid" class="container-card row row-cols-2 row-cols-md-3 g-2 mt-0"></div>
       <div id="newMobileDots" class="d-flex d-lg-none justify-content-center align-items-center gap-1 mt-2" style="min-height:16px;"></div>
     </div>
     <div class="pager" id="newPager">
@@ -457,15 +509,94 @@
     </div>
   </div>
 
-  <!-- 4. 操作說明 -->
+  <!-- 4.5 交易流程 -->
+  <div class="firstlinesell d-block justify-content-center gap-lg-4" id="flowSection">
+    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 24px; margin-top: 40px;">
+      <h3 class="section-title">交易流程</h3>
+      <button id="dismissFlow" class="dismiss-guide-btn" title="永久不再顯示此區塊">
+        <i class="fa-solid fa-xmark"></i> 不再顯示
+      </button>
+    </div>
+
+    <!-- 開張 Banner -->
+    <div class="fls-banner">
+      <div class="fls-banner-tag">GET STARTED · 3 步驟開張</div>
+      <div class="fls-banner-title">拾貨寶庫｜3 步驟輕鬆開張！</div>
+      <div class="fls-banner-sub">歡迎來到拾貨寶庫！在這裡，人人都能把身邊的寶物變成現金。簡單三步驟，馬上開始你的微型創業。</div>
+    </div>
+
+    <!-- 賣家輕鬆上架 -->
+    <div class="fls-group">
+      <div class="fls-group-header">
+        <div class="fls-group-icon"><i class="fa-solid fa-store"></i></div>
+        <div>
+          <div class="fls-group-title">賣家輕鬆上架</div>
+          <div class="fls-group-sub">三步驟把寶物變現金</div>
+        </div>
+      </div>
+      <div class="fls-cards">
+        <div class="fls-card">
+          <div class="fls-step-label">STEP 01</div>
+          <div class="fls-card-icon"><i class="fa-solid fa-user-plus"></i></div>
+          <div class="fls-card-title">快速註冊</div>
+          <div class="fls-card-desc">使用學校 <strong>Email</strong> 快速建立帳號，即可解鎖賣家權限。</div>
+        </div>
+        <div class="fls-card">
+          <div class="fls-step-label">STEP 02</div>
+          <div class="fls-card-icon"><i class="fa-solid fa-camera"></i></div>
+          <div class="fls-card-title">拍上照片</div>
+          <div class="fls-card-desc">點擊「<strong>上架商品</strong>」，上傳你的寶物照片（如：質感植栽、二手好書、設計小物）。</div>
+        </div>
+        <div class="fls-card">
+          <div class="fls-step-label">STEP 03</div>
+          <div class="fls-card-icon"><i class="fa-solid fa-file-lines"></i></div>
+          <div class="fls-card-title">填寫資訊</div>
+          <div class="fls-card-desc">輸入商品名稱、甜甜價與<strong>面交 / 寄送方式</strong>，點擊發布就搞定！</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 買賣雙方交易小叮嚀 -->
+    <div class="fls-group fls-group--trade">
+      <div class="fls-group-header">
+        <div class="fls-group-icon"><i class="fa-solid fa-handshake"></i></div>
+        <div>
+          <div class="fls-group-title">買賣雙方｜交易小叮嚀</div>
+          <div class="fls-group-sub">平台媒合，雙方私下交易</div>
+        </div>
+      </div>
+      <div class="fls-cards">
+        <div class="fls-card">
+          <div class="fls-step-label">STEP 01</div>
+          <div class="fls-card-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+          <div class="fls-card-title">買家下單</div>
+          <div class="fls-card-desc">找到心儀商品後點選下單，系統會<strong>自動通知賣家</strong>。</div>
+        </div>
+        <div class="fls-card">
+          <div class="fls-step-label">STEP 02</div>
+          <div class="fls-card-icon"><i class="fa-solid fa-comments"></i></div>
+          <div class="fls-card-title">聯繫確認</div>
+          <div class="fls-card-desc">透過聊天室確認<strong>付款方式</strong>與<strong>交貨時間</strong>。</div>
+        </div>
+        <div class="fls-card">
+          <div class="fls-step-label">STEP 03</div>
+          <div class="fls-card-icon"><i class="fa-solid fa-shield"></i></div>
+          <div class="fls-card-title">安全交貨</div>
+          <div class="fls-card-desc">面交時以<strong> PIN 碼</strong>驗證訂單，建議約在人多、有監視器的<strong>公共場所</strong>，當場驗貨最安心！</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 操作說明 -->
   <div class="firstlinesell d-block justify-content-center gap-lg-4" id="guideSection">
-    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 20px; margin-top: 40px;">
+    <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 20px; margin-top: 72px;">
       <h3 class="section-title">操作說明</h3>
       <button id="dismissGuide" class="dismiss-guide-btn" title="永久不再顯示此區塊">
         <i class="fa-solid fa-xmark"></i> 不再顯示
       </button>
     </div>
-    <div class="explainStep" style="margin-bottom: 40px;">
+    <div class="explainStep" style="margin-bottom: 64px;">
       <div class="rule-wrapper">
         <button class="arrow left" id="ruleLeft">‹</button>
         <div class="rule-container" id="ruleContainer">
@@ -565,17 +696,22 @@
       '一鍵檢舉：發現違規商品請利用檢舉功能，共同維護純淨校園環境。'
     ];
     const els = [...document.querySelectorAll('.safety-ticker__text')];
-    if (window.matchMedia('(min-width:992px)').matches) {
-      let i = 0;
-      els.forEach(el => { el.textContent = slogans[0]; });
-      setInterval(() => {
-        els.forEach(el => el.classList.add('ticker-fade'));
-        setTimeout(() => { i=(i+1)%slogans.length; els.forEach(el => { el.textContent=slogans[i]; el.classList.remove('ticker-fade'); }); }, 400);
-      }, 5000);
-    } else {
-      const strip = slogans.join('　　　　　') + '　　　　　';
-      els.forEach(el => { el.textContent = strip + strip; });
+    const strip = slogans.join('　　　　　') + '　　　　　';
+    els.forEach(el => { el.textContent = strip + strip; });
+  })();
+
+  // 手機版跑馬燈關閉
+  (function(){
+    const ticker = document.getElementById('mobileSellerTicker');
+    if (!ticker) return;
+    if (sessionStorage.getItem('mobileTickerClosed') === '1') {
+      ticker.classList.add('ticker-closed');
     }
+    ticker.querySelector('.safety-ticker__close')?.addEventListener('click', () => {
+      ticker.classList.add('ticker-closing');
+      setTimeout(() => ticker.classList.add('ticker-closed'), 300);
+      sessionStorage.setItem('mobileTickerClosed', '1');
+    });
   })();
   </script>
     <div class="tab-content" id="myTabContent">
@@ -792,6 +928,14 @@
         </div>
       </div>
 
+      <p style="color:#4a627a;font-size:0.88rem;margin-bottom:12px;font-weight:600;">3-1. 化妝品專項規範</p>
+      <div class="rule-item" style="margin-bottom:20px;">
+        <div class="rule-grid">
+          <strong>禁止療效宣稱</strong><span>商品名稱與描述中，絕對不能出現「抗痘、消炎、殺菌、美白、去疤」等宣稱療效的字眼，違者商品將被下架。</span>
+          <strong>有效期限必標示</strong><span>上架化妝品時，必須在商品描述中清楚標示有效期限，過期商品一律禁止上架。</span>
+        </div>
+      </div>
+
       <p style="color:#4a627a;font-size:0.88rem;margin-bottom:12px;font-weight:600;">4. 交易安全與防詐騙</p>
       <div class="rule-item" style="margin-bottom:20px;">
         <div class="rule-grid">
@@ -823,12 +967,22 @@
           <div class="sell-step-line"></div>
           <div class="sell-step" data-step="2">
             <div class="sell-step-badge">2</div>
-            <span class="sell-step-label">規格與定價</span>
+            <span class="sell-step-label">商品照片</span>
           </div>
           <div class="sell-step-line"></div>
           <div class="sell-step" data-step="3">
             <div class="sell-step-badge">3</div>
-            <span class="sell-step-label">照片上傳</span>
+            <span class="sell-step-label">補充資訊</span>
+          </div>
+        </div>
+
+        <!-- 草稿恢復提示 -->
+        <div id="sellDraftBanner" class="sell-draft-banner d-none">
+          <i class="ti ti-file-text"></i>
+          <span>您有一份未完成的草稿</span>
+          <div class="sell-draft-actions">
+            <button type="button" id="sellDraftRestore" class="sell-draft-btn-restore">繼續填寫</button>
+            <button type="button" id="sellDraftDiscard" class="sell-draft-btn-discard">捨棄</button>
           </div>
         </div>
 
@@ -841,19 +995,64 @@
               <div class="sell-field">
                 <label for="name" class="sell-label">商品名稱 <span class="sell-required">*</span><span class="sell-charcount" id="nameCount">0 / 60 字</span></label>
                 <input type="text" id="name" name="name" class="form-control" placeholder="建議使用正式名稱，例如：台大有機化學課本第三版" maxlength="60" />
+                <div id="nameKeywordWarning" class="sell-keyword-warning" style="display:none;"></div>
               </div>
 
               <div class="sell-field">
                 <label for="description" class="sell-label">商品狀態描述 <span class="sell-required">*</span><span class="sell-charcount" id="descCount">0 / 500 字</span></label>
-                <small class="sell-hint">可列出商品規格、注意事項、BSMI、ISBN；說明販售原因、瑕疵部位等，建議 30 字以上</small>
+                <small class="sell-hint">可列出商品規格、注意事項、面交地點時間、BSMI、ISBN；說明販售原因、瑕疵部位等，建議 30 字以上</small>
                 <textarea class="form-control" id="description" name="description" rows="5" placeholder="例如：九成新，只用了一學期，無劃線無書寫..." maxlength="500"></textarea>
+                <div id="descError" style="display:none;color:#e03;font-size:0.82rem;margin-top:4px;">商品描述至少需要 10 字</div>
               </div>
 
               <div class="sell-field">
-                <label for="category" class="sell-label">所屬分類 <span class="sell-required">*</span>
+                <label for="price" class="sell-label">售價（元）<span class="sell-required">*</span></label>
+                <div class="sell-price-wrap">
+                  <span class="sell-price-prefix">NT$</span>
+                  <input type="number" id="price" name="price" class="form-control" placeholder="0" min="0" />
+                </div>
+              </div>
+
+              <div class="sell-nav">
+                <span></span>
+                <button type="button" class="sell-next-btn" id="step1Next">下一步：上傳主圖 <i class="ti ti-arrow-right"></i></button>
+              </div>
+            </div>
+
+            <!-- ── Step 2：商品照片 ── -->
+            <div class="sell-panel" id="sellStep2">
+              <div class="sell-field">
+                <label class="sell-label">主要照片（封面）<span class="sell-required">*</span></label>
+                <small class="sell-hint">≤ 5MB，格式：JPEG / PNG / WebP；建議清晰明亮，能展示商品外觀</small>
+                <div class="sell-upload-row">
+                  <label class="sell-upload-zone" id="mainUploadZone" for="mainImage">
+                    <i class="ti ti-photo-up"></i>
+                    <span>點擊或拖曳上傳封面照</span>
+                  </label>
+                  <label class="sell-camera-btn" for="mainImageCamera" title="開啟相機拍照">
+                    <i class="ti ti-camera"></i><span>拍照</span>
+                  </label>
+                </div>
+                <input type="file" id="mainImage" name="mainImage" class="d-none" accept="image/jpeg,image/png,image/webp" />
+                <input type="file" id="mainImageCamera" class="d-none" accept="image/*" capture="environment" />
+                <div id="mainImagePreview" class="sell-preview-single"></div>
+              </div>
+
+              <div class="sell-nav">
+                <button type="button" class="sell-prev-btn" id="step2Prev"><i class="ti ti-arrow-left"></i> 上一步</button>
+                <button type="button" class="sell-next-btn" id="step2Next">下一步：補充資訊 <i class="ti ti-arrow-right"></i></button>
+              </div>
+            </div>
+
+            <!-- ── Step 3：補充資訊（選填） ── -->
+            <div class="sell-panel" id="sellStep3">
+              <p class="sell-hint" style="margin-bottom:16px;">以下欄位皆為選填，填寫越完整越容易賣出！</p>
+
+              <div class="sell-field">
+                <label class="sell-label">所屬分類
                   <button type="button" class="sell-info-btn" id="catInfoBtn"
                     data-bs-toggle="popover" data-bs-placement="right" data-bs-html="true" data-bs-trigger="click"
-                    data-bs-content="<ul class='sell-cat-popover-list'><li><b>書籍與學籍用品</b>：教科書、參考書、文具、計算機等</li><li><b>宿舍與生活用品</b>：床墊、衣架、燈具、電鍋等</li><li><b>學生專用器材</b>：實驗器材、護目鏡、測量工具等</li><li><b>環保生活用品</b>：環保餐具、購物袋、水瓶等</li><li><b>儲物與收納用品</b>：收納盒、文件夾、掛鉤等</li><li><b>其他</b>：不確定分類請選此項</li></ul>"
+                    data-bs-content="<ul class='sell-cat-popover-list'><li><b>課業學習</b>：教科書、二手參考書、考試用書、計算機、實驗器材、個人手寫筆記、文具</li><li><b>3C 電子</b>：筆電、平板、手機、耳機、行動電源、相機、螢幕、各種周邊配件</li><li><b>住宿生活</b>：小家電、收納用品、寢具、清潔工具、延長線、燈具、置物架、小型家具</li><li><b>運動休閒</b>：球拍、瑜珈墊、啞鈴、腳踏車、運動服飾、戶外用品</li><li><b>服飾配件</b>：二手衣物、球鞋、包包、配件、保養品</li><li><b>二手好物</b>：樂器、模型公仔、演唱會周邊、桌遊、其他雜項</li></ul>"
                     aria-label="分類說明">
                     <i class="ti ti-info-circle"></i>
                   </button>
@@ -890,7 +1089,6 @@
                     <span>二手好物</span>
                   </label>
                 </div>
-                <!-- 隱藏的 select 供送出使用 -->
                 <select name="category" id="category" class="d-none">
                   <option value="notselyet">請選擇商品分類</option>
                   <option value="education">課業學習</option>
@@ -902,35 +1100,25 @@
                 </select>
               </div>
 
-              <div class="sell-nav">
-                <span></span>
-                <button type="button" class="sell-next-btn" id="step1Next">下一步：規格與定價 <i class="ti ti-arrow-right"></i></button>
-              </div>
-            </div>
-
-            <!-- ── Step 2：規格與定價 ── -->
-            <div class="sell-panel" id="sellStep2">
               <div class="sell-step2-grid">
-
-                <!-- 左欄：商品大小 + 定價資訊 -->
                 <div class="sell-step2-left">
                   <div class="sell-field">
-                    <label for="size" class="sell-label">商品尺寸 <span class="sell-required">*</span></label>
+                    <label for="size" class="sell-label">商品尺寸</label>
                     <div class="sell-size-group">
                       <label class="sell-size-card">
-                        <input type="radio" name="sizeRadio" value="2">
+                        <input type="radio" name="sizeRadio" value="3">
                         <div class="sell-size-icon"><i class="ti ti-package"></i></div>
                         <strong>大型</strong>
                         <small>長寬高 &gt; 150cm</small>
                       </label>
                       <label class="sell-size-card">
-                        <input type="radio" name="sizeRadio" value="1">
+                        <input type="radio" name="sizeRadio" value="2">
                         <div class="sell-size-icon"><i class="ti ti-box"></i></div>
                         <strong>中型</strong>
                         <small>30cm – 150cm</small>
                       </label>
                       <label class="sell-size-card">
-                        <input type="radio" name="sizeRadio" value="0">
+                        <input type="radio" name="sizeRadio" value="1">
                         <div class="sell-size-icon"><i class="ti ti-device-mobile"></i></div>
                         <strong>小型</strong>
                         <small>&lt; 30cm</small>
@@ -938,32 +1126,26 @@
                     </div>
                     <input type="hidden" name="size" id="size" value="">
                   </div>
-
                   <div class="sell-two-col">
                     <div class="sell-field">
-                      <label for="price" class="sell-label">售價（元）<span class="sell-required">*</span></label>
-                      <div class="sell-price-wrap">
-                        <span class="sell-price-prefix">NT$</span>
-                        <input type="number" id="price" name="price" class="form-control" placeholder="0" min="0" />
-                      </div>
+                      <label for="age" class="sell-label">物品年齡</label>
+                      <select id="age" name="age" class="form-control">
+                        <option value="" disabled selected>請選擇</option>
+                        <option value="0">未滿 1 年</option>
+                        <option value="2">1–3 年</option>
+                        <option value="5">3 年以上</option>
+                        <option value="-1">不清楚</option>
+                      </select>
                     </div>
                     <div class="sell-field">
-                      <label for="stock" class="sell-label">庫存數量 <span class="sell-required">*</span></label>
-                      <input type="number" id="stock" name="stock" class="form-control" placeholder="可販賣數量" min="1" />
+                      <label for="stock" class="sell-label">庫存數量</label>
+                      <input type="number" id="stock" name="stock" class="form-control" placeholder="可販賣數量" min="1" value="1" />
                     </div>
                   </div>
-
-                  <div class="sell-field">
-                    <label for="age" class="sell-label">物品年齡（年）<span class="sell-required">*</span></label>
-                    <small class="sell-hint">不到一年填 0；未知填 -1</small>
-                    <input type="number" id="age" name="age" class="form-control" placeholder="-1" min="-1" value="-1" />
-                  </div>
                 </div>
-
-                <!-- 右欄：新舊程度 -->
                 <div class="sell-step2-right">
                   <div class="sell-field">
-                    <label for="new_or_old" class="sell-label">新舊程度 <span class="sell-required">*</span></label>
+                    <label for="new_or_old" class="sell-label">新舊程度</label>
                     <div class="sell-condition-group">
                       <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="1"><span class="sell-cond-dot cond-1"></span>全新<span class="sell-cond-desc">（未使用過）</span></label>
                       <label class="sell-condition-card"><input type="radio" name="conditionRadio" value="2"><span class="sell-cond-dot cond-2"></span>幾乎全新<span class="sell-cond-desc">（使用次數極少）</span></label>
@@ -983,36 +1165,22 @@
                     </select>
                   </div>
                 </div>
-
-              </div>
-
-              <div class="sell-nav">
-                <button type="button" class="sell-prev-btn" id="step2Prev"><i class="ti ti-arrow-left"></i> 上一步</button>
-                <button type="button" class="sell-next-btn" id="step2Next">下一步：照片上傳 <i class="ti ti-arrow-right"></i></button>
-              </div>
-            </div>
-
-            <!-- ── Step 3：照片上傳 ── -->
-            <div class="sell-panel" id="sellStep3">
-              <div class="sell-field">
-                <label class="sell-label">主要照片（封面）<span class="sell-required">*</span></label>
-                <small class="sell-hint">≤ 5MB，格式：JPEG / PNG / WebP；建議清晰明亮，能展示商品外觀</small>
-                <label class="sell-upload-zone" id="mainUploadZone" for="mainImage">
-                  <i class="ti ti-photo-up"></i>
-                  <span>點擊或拖曳上傳封面照</span>
-                </label>
-                <input type="file" id="mainImage" name="mainImage" class="d-none" accept="image/jpeg,image/png,image/webp" />
-                <div id="mainImagePreview" class="sell-preview-single"></div>
               </div>
 
               <div class="sell-field">
-                <label class="sell-label">其他照片（最多 5 張）<span class="sell-required">*</span></label>
+                <label class="sell-label">其他照片（最多 5 張）</label>
                 <small class="sell-hint">展示商品其他角度或細節；選擇新檔案會覆蓋全部次要照片；每張 ≤ 5MB</small>
-                <label class="sell-upload-zone" id="subUploadZone" for="image">
-                  <i class="ti ti-photos"></i>
-                  <span>點擊或拖曳上傳（可多選）</span>
-                </label>
+                <div class="sell-upload-row">
+                  <label class="sell-upload-zone" id="subUploadZone" for="image">
+                    <i class="ti ti-photos"></i>
+                    <span>點擊或拖曳上傳（可多選）</span>
+                  </label>
+                  <label class="sell-camera-btn" for="subImageCamera" title="開啟相機拍照">
+                    <i class="ti ti-camera"></i><span>拍照</span>
+                  </label>
+                </div>
                 <input type="file" id="image" name="images" class="d-none" accept="image/jpeg,image/png,image/webp" multiple />
+                <input type="file" id="subImageCamera" class="d-none" accept="image/*" capture="environment" />
                 <div class="sell-hint" id="multiImagesHint" style="margin-top:4px;">已選 0 / 5</div>
                 <div id="previewArea" class="sell-preview-grid"></div>
               </div>
@@ -1036,17 +1204,17 @@
 
 <!-- TODO member -->
 <section class="member" id="member" style="display: none;">
-  <img src="../webP/admember.webp" class="admember_" alt="立即加入拾貨寶庫白金會員" loading="lazy" style="margin: 0 auto; margin-top: 20px;">
+  <img data-src="../webP/admember.webp" class="admember_" alt="" loading="lazy" style="margin: 0 auto; margin-top: 20px;">
   <div class="membercontent" style="width:86vw; margin: 0 auto;">
-    
-    <img src="../webP/member.webp" alt="立即加入拾貨寶庫會員" loading="lazy" class="d-block d-lg-none" style="margin: 0 auto;">
+
+    <img data-src="../webP/member.webp" alt="" loading="lazy" class="d-block d-lg-none" style="margin: 0 auto;">
     <hr>
     <div class="d-block d-lg-flex justify-content-between">
       <div class="icon-button" id="back-btn2" style="margin-bottom: 10px;">Back</div>
       <div class="div">
         <!-- TODO 未解決：排版問題 -->
         <button style="border: none; background-color: transparent;">
-          <img src="../webP/memberbtn.webp" alt="立即加入拾貨寶庫會員" loading="lazy">
+          <img data-src="../webP/memberbtn.webp" alt="" loading="lazy">
         </button>
       </div>
     </div>
@@ -1168,12 +1336,12 @@
       <div class="form-floating">
         <select class="form-select form-select-lg" id="floatingSelect" aria-label="Floating label select">
           <option selected>請選擇類型</option>
-          <option value="1">書籍與學籍用品</option>
-          <option value="2">宿舍與生活用品</option>
-          <option value="3">學生專用器材</option>
-          <option value="4">環保生活用品</option>
-          <option value="5">儲物與收納用品</option>
-          <option value="6">其他</option>
+          <option value="education">課業學習</option>
+          <option value="electronics">3C 電子</option>
+          <option value="living">住宿生活</option>
+          <option value="sports">運動休閒</option>
+          <option value="accessories">服飾配件</option>
+          <option value="other">二手好物</option>
         </select>
         <label for="floatingSelect">選擇神秘箱類型</label>
       </div>
@@ -1399,8 +1567,10 @@ const timer = setInterval(() => {
       <h4 class="footer-heading">聯絡我們</h4>
       <p class="footer-email"><a href="mailto:help@treasurehub.tw">help@treasurehub.tw</a></p>
       <div class="footer-social">
-        <a href="https://www.instagram.com" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
+        <a href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://lin.ee/U7uZmHV" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
+        <a href="https://www.threads.com/@treasurehub.tw?igshid=NTc4MTIwNjQ2YQ==" target="_blank" aria-label="Threads"><img src="../svg/threadslogo.avif" alt="Threads" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;border-radius:50%;"></a>
+        <a href="https://www.dcard.tw/@treasurehub?cid=266cb62d-37e6-4d89-ae26-5b4ac1ee5d96" target="_blank" aria-label="Dcard"><img src="../svg/dcardlogo.png" alt="Dcard" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;"></a>
       </div>
     </div>
   </div>
@@ -1474,12 +1644,12 @@ const timer = setInterval(() => {
       <small class="fw-bold text-muted">商品分類</small>
     </div>
     <div class="cat-pills border-bottom pb-2" style="flex-wrap:wrap;overflow-x:visible;">
-      <a href="../commodity/commodity.html?category=書籍與學籍用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/book.svg" alt="書籍與學籍用品篩選按鈕"></div>書籍與學籍用品</a>
-      <a href="../commodity/commodity.html?category=宿舍與生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/life.svg" alt="宿舍與生活用品篩選按鈕"></div>宿舍與生活用品</a>
-      <a href="../commodity/commodity.html?category=學生專用器材" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/ruler.svg" alt="學生專用器材篩選按鈕"></div>學生專用器材</a>
-      <a href="../commodity/commodity.html?category=環保生活用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/bag.svg" alt="環保生活用品篩選按鈕"></div>環保生活用品</a>
-      <a href="../commodity/commodity.html?category=儲物與收納用品" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/save.svg" alt="儲物與收納用品篩選按鈕"></div>儲物與收納用品</a>
-      <a href="../commodity/commodity.html?category=其他" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/Other.svg" alt="其他商品篩選按鈕"></div>其他</a>
+      <a href="../commodity/commodity.html?category=education" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/book.svg" alt="課業學習"></div>課業學習</a>
+      <a href="../commodity/commodity.html?category=electronics" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/phone.svg" alt="3C 電子"></div>3C 電子</a>
+      <a href="../commodity/commodity.html?category=living" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/life.svg" alt="住宿生活"></div>住宿生活</a>
+      <a href="../commodity/commodity.html?category=sports" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/sport.svg" alt="運動休閒"></div>運動休閒</a>
+      <a href="../commodity/commodity.html?category=accessories" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/accessories.svg" alt="服飾配件"></div>服飾配件</a>
+      <a href="../commodity/commodity.html?category=other" class="cat-pill d-flex align-items-center"><div class="icon-box d-flex"><img src="../svg/save.svg" alt="二手好物"></div>二手好物</a>
     </div>
 
     <!-- 搜尋紀錄 -->
@@ -1505,6 +1675,61 @@ const timer = setInterval(() => {
     </div>
   </div>
 </div>
+
+<script>
+// ── 交易流程區塊 永久不顯示 ──
+(function () {
+  const FLOW_KEY = 'hideFlowSection';
+  const section = document.getElementById('flowSection');
+  if (!section) return;
+
+  if (localStorage.getItem(FLOW_KEY) === '1') {
+    section.classList.remove('d-block');
+    section.classList.add('d-none');
+    return;
+  }
+
+  document.getElementById('dismissFlow')?.addEventListener('click', function () {
+    section.style.transition = 'opacity 0.35s ease, max-height 0.45s ease, margin 0.45s ease, padding 0.45s ease';
+    section.style.overflow = 'hidden';
+    section.style.maxHeight = section.offsetHeight + 'px';
+    section.getBoundingClientRect();
+    section.style.opacity = '0';
+    section.style.maxHeight = '0';
+    section.style.marginTop = '0';
+    section.style.marginBottom = '0';
+
+    section.addEventListener('transitionend', function handler(e) {
+      if (e.propertyName !== 'max-height') return;
+      section.classList.remove('d-block');
+      section.classList.add('d-none');
+      section.removeEventListener('transitionend', handler);
+    });
+
+    let saveTimer = setTimeout(() => localStorage.setItem(FLOW_KEY, '1'), 4000);
+
+    const toast = document.createElement('div');
+    toast.className = 'guide-undo-toast';
+    toast.innerHTML = '交易流程已隱藏 <button id="undoFlow">復原</button>';
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    let removeTimer = setTimeout(() => toast.remove(), 4500);
+
+    toast.querySelector('#undoFlow').addEventListener('click', function () {
+      clearTimeout(saveTimer);
+      clearTimeout(removeTimer);
+      toast.remove();
+      section.classList.remove('d-none');
+      section.classList.add('d-block');
+      section.style.transition = 'opacity 0.35s ease, max-height 0.45s ease';
+      section.style.maxHeight = '2000px';
+      section.style.opacity = '1';
+      section.style.marginTop = '';
+      section.style.marginBottom = '';
+    });
+  });
+})();
+</script>
 
 <script>
 // ── 操作說明區塊 永久不顯示 ──
@@ -1731,13 +1956,8 @@ const timer = setInterval(() => {
     const dropdown  = document.getElementById('searchDropdown');
     if (!mainInput) return;
 
-    // ── 搜尋欄：手機版開 offcanvas，桌機版開 dropdown ──
+    // ── 搜尋欄：手機 / 桌機統一使用 dropdown ──
     mainInput.addEventListener('focus', function () {
-      if (window.innerWidth < 992) {
-        mainInput.blur();
-        bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('searchOffcanvas')).show();
-        return;
-      }
       if (mainInput.value.trim()) _setHotTagsVisible(false);
       openDropdown();
     });
@@ -1835,14 +2055,18 @@ const timer = setInterval(() => {
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body p-0" style="background:#111;">
-            <div style="height:60vh;overflow:hidden;">
+            <div id="shopCropImgWrap" style="height:60vh;overflow:hidden;position:relative;">
               <img id="shopCropImg" style="display:block;max-width:100%;" alt="裁切照片範圍">
+              <canvas id="shopMosaicCanvas" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair;touch-action:none;"></canvas>
             </div>
           </div>
           <div class="modal-footer py-2">
-            <small class="text-muted me-auto">拖曳調整裁切範圍，滾輪縮放</small>
-            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary btn-sm" id="shopCropConfirm">確認裁切</button>
+            <small class="text-muted me-auto" id="shopCropHint">拖曳調整裁切範圍，滾輪縮放</small>
+            <button type="button" class="btn btn-outline-secondary btn-sm shop-crop-ctrl" id="shopCropRotateR" title="旋轉"><i class="ti ti-rotate-clockwise"></i> 旋轉</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm shop-crop-ctrl" id="shopMosaicBtn"><i class="ti ti-brush"></i> 馬賽克</button>
+            <button type="button" class="btn btn-secondary btn-sm shop-crop-ctrl" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary btn-sm shop-crop-ctrl" id="shopCropConfirm">確認裁切</button>
+            <button type="button" class="btn btn-primary btn-sm d-none" id="shopMosaicDoneBtn">完成</button>
           </div>
         </div>
       </div>
@@ -1864,7 +2088,7 @@ const timer = setInterval(() => {
       });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
     <script type="module" src="../chatroom/chat.js"></script>
     <script type="module" src="shop.js"></script>
 
@@ -1895,6 +2119,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   bindCharCount('name', 'nameCount', 60);
   bindCharCount('description', 'descCount', 500);
+
+  // 描述欄：離開或輸入時即時顯示「至少 10 字」提示
+  const descEl = document.getElementById('description');
+  const descError = document.getElementById('descError');
+  function checkDescMin() {
+    if (descEl && descError) {
+      const tooShort = descEl.value.trim().length > 0 && descEl.value.trim().length < 10;
+      descError.style.display = tooShort ? '' : 'none';
+      descEl.style.borderColor = tooShort ? '#e03' : '';
+    }
+  }
+  descEl?.addEventListener('input', checkDescMin);
+  descEl?.addEventListener('blur', checkDescMin);
 })();
 
 // ── 賣家表單多步驟 Wizard ──
@@ -1949,34 +2186,113 @@ document.addEventListener('DOMContentLoaded', () => {
   // Step 1 → 2 驗證
   document.getElementById('step1Next')?.addEventListener('click', async () => {
     const name = document.getElementById('name').value.trim();
-    const category = document.getElementById('category').value;
     const desc = document.getElementById('description').value.trim();
+    const priceStr = document.getElementById('price').value.trim();
     if (!name) { await Swal.fire({ icon: 'warning', title: '請填寫商品名稱' }); return; }
-    if (!category || category === 'notselyet') { await Swal.fire({ icon: 'warning', title: '請選擇商品分類' }); return; }
     if (!desc) { await Swal.fire({ icon: 'warning', title: '請填寫商品狀態描述' }); return; }
+    if (desc.length < 10) { document.getElementById('description').focus(); await Swal.fire({ icon: 'warning', title: '商品描述至少需要 10 字' }); return; }
+    if (priceStr === '' || Number(priceStr) < 0) { await Swal.fire({ icon: 'warning', title: '請輸入正確售價' }); return; }
     setStep(2, false);
   });
 
   // Step 2 → 1
   document.getElementById('step2Prev')?.addEventListener('click', () => setStep(1, true));
 
-  // Step 2 → 3 驗證
+  // Step 2 → 3 驗證（只檢查主圖）
   document.getElementById('step2Next')?.addEventListener('click', async () => {
-    const size = document.getElementById('size').value;
-    const cond = document.getElementById('new_or_old').value;
-    const priceStr = document.getElementById('price').value.trim();
-    const stockStr = document.getElementById('stock').value.trim();
-    const ageStr = document.getElementById('age').value.trim();
-    if (!size) { await Swal.fire({ icon: 'warning', title: '請選擇商品尺寸' }); return; }
-    if (!cond) { await Swal.fire({ icon: 'warning', title: '請選擇新舊程度' }); return; }
-    if (priceStr === '' || Number(priceStr) < 0) { await Swal.fire({ icon: 'warning', title: '請輸入正確售價' }); return; }
-    if (stockStr === '' || Number(stockStr) < 1) { await Swal.fire({ icon: 'warning', title: '請輸入庫存數量' }); return; }
-    if (ageStr === '' || Number(ageStr) < -1) { await Swal.fire({ icon: 'warning', title: '物品年齡請填 -1 以上' }); return; }
+    if (document.getElementById('mainImage').files.length === 0) {
+      await Swal.fire({ icon: 'warning', title: '請上傳主要照片' }); return;
+    }
     setStep(3, false);
   });
 
   // Step 3 → 2
   document.getElementById('step3Prev')?.addEventListener('click', () => setStep(2, true));
+
+  // ── 草稿儲存 ──
+  const DRAFT_KEY = 'sellDraft';
+
+  function saveDraft() {
+    const draft = {
+      name: document.getElementById('name')?.value || '',
+      description: document.getElementById('description')?.value || '',
+      price: document.getElementById('price')?.value || '',
+      stock: document.getElementById('stock')?.value || '',
+      age: document.getElementById('age')?.value || '',
+      category: document.getElementById('category')?.value || '',
+      size: document.getElementById('size')?.value || '',
+      new_or_old: document.getElementById('new_or_old')?.value || '',
+    };
+    if (draft.name || draft.description || draft.price) {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    }
+  }
+
+  function restoreDraft(draft) {
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    set('name', draft.name);
+    set('description', draft.description);
+    set('price', draft.price);
+    set('stock', draft.stock);
+    set('age', draft.age);
+    if (draft.category && draft.category !== 'notselyet') {
+      set('category', draft.category);
+      document.querySelector(`input[name="categoryRadio"][value="${draft.category}"]`)?.click();
+    }
+    if (draft.size) {
+      set('size', draft.size);
+      document.querySelector(`input[name="sizeRadio"][value="${draft.size}"]`)?.click();
+    }
+    if (draft.new_or_old) {
+      set('new_or_old', draft.new_or_old);
+      document.querySelector(`input[name="conditionRadio"][value="${draft.new_or_old}"]`)?.click();
+    }
+    // 同步字數計數器
+    ['name', 'description'].forEach(id => {
+      document.getElementById(id)?.dispatchEvent(new Event('input'));
+    });
+  }
+
+  // 頁面載入時檢查草稿
+  const draftBanner = document.getElementById('sellDraftBanner');
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (raw && draftBanner) {
+      const draft = JSON.parse(raw);
+      if (draft.name || draft.description || draft.price) {
+        draftBanner.classList.remove('d-none');
+        document.getElementById('sellDraftRestore')?.addEventListener('click', () => {
+          restoreDraft(draft);
+          draftBanner.classList.add('d-none');
+          setStep(1, false);
+        });
+        document.getElementById('sellDraftDiscard')?.addEventListener('click', () => {
+          localStorage.removeItem(DRAFT_KEY);
+          draftBanner.classList.add('d-none');
+        });
+      }
+    }
+  } catch {}
+
+  // 自動儲存草稿
+  document.getElementById('createCommodityForm')?.addEventListener('input', saveDraft);
+
+  // 暴露給 shop.js (module scope) 使用
+  window.sellSetStep = setStep;
+  window.sellClearDraft = () => localStorage.removeItem(DRAFT_KEY);
+  window.sellResetForRelisting = () => {
+    const form = document.getElementById('createCommodityForm');
+    form?.reset();
+    const mainPrev = document.getElementById('mainImagePreview');
+    if (mainPrev) mainPrev.innerHTML = '';
+    const subPrev = document.getElementById('previewArea');
+    if (subPrev) subPrev.innerHTML = '';
+    const hint = document.getElementById('multiImagesHint');
+    if (hint) hint.textContent = '已選 0 / 5';
+    localStorage.removeItem(DRAFT_KEY);
+    setStep(1, false);
+    document.getElementById('createCommodityForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   // 上傳區 label 拖曳支援
   ['mainUploadZone', 'subUploadZone'].forEach(id => {
