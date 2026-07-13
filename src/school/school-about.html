@@ -187,61 +187,87 @@
     html { background: #ffffff; }
     body { background: transparent; min-height: 100vh; }
     .bg-stage { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-    .about-wrap { position: relative; z-index: 1; }
-    .bg-stage .bg-layer { position: absolute; inset: 0; opacity: 0; transition: opacity 0.9s ease; }
-    .bg-stage .bg-layer.active { opacity: 1; }
-    /* hero：藍（最豐富，雙光暈） */
+    .about-wrap { position: relative; z-index: 2; }
+    .bg-stage .bg-layer { position: absolute; inset: -20%; opacity: 0; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); filter: blur(120px) contrast(1.2) saturate(1.1); }
+    .bg-stage .bg-layer.active { opacity: 1; animation: watercolor-flow 12s ease-in-out infinite; }
+
+    @keyframes watercolor-flow {
+      0%, 100% { transform: translate(0, 0) scale(1); filter: blur(60px); }
+      50% { transform: translate(20px, -20px) scale(1.05); filter: blur(80px); }
+    }
+
+    /* 點擊漣漪效果 */
+    .ripple {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: ripple-expand 0.8s ease-out forwards;
+    }
+
+    @keyframes ripple-expand {
+      0% {
+        transform: scale(0);
+        background: radial-gradient(circle, rgba(207,224,244,0.85) 0%, rgba(126,184,216,0.45) 60%, transparent 100%);
+        box-shadow: 0 0 50px rgba(126,184,216,0.5);
+      }
+      100% {
+        transform: scale(1);
+        background: radial-gradient(circle, rgba(207,224,244,0) 0%, rgba(126,184,216,0) 60%, transparent 100%);
+        box-shadow: 0 0 100px rgba(126,184,216,0);
+      }
+    }
+    /* hero：藍（深色，柔和暈開） */
     .bg-layer[data-bg="0"] {
       background:
-        radial-gradient(1100px 620px at 12% -5%, rgba(126,184,216,0.50) 0%, transparent 60%),
-        radial-gradient(900px 640px at 105% 110%, rgba(74,133,196,0.32) 0%, transparent 55%),
-        linear-gradient(165deg, #e8f2fc 0%, #cfe0f4 55%, #c2d7ef 100%);
+        radial-gradient(1200px 700px at 10% 5%, rgba(78,144,200,0.6) 0%, transparent 65%),
+        radial-gradient(1100px 750px at 95% 120%, rgba(126,184,216,0.45) 0%, transparent 58%),
+        linear-gradient(135deg, #d4e5f5 0%, #b8d2ec 50%, #a0c5e6 100%);
     }
-    /* What：藍淡一階 */
+    /* What：藍淡柔和 */
     .bg-layer[data-bg="1"] {
       background:
-        radial-gradient(1000px 600px at 90% 0%, rgba(126,184,216,0.36) 0%, transparent 60%),
-        radial-gradient(900px 600px at 0% 100%, rgba(74,133,196,0.20) 0%, transparent 55%),
-        linear-gradient(165deg, #eef5fd 0%, #dce8f6 100%);
+        radial-gradient(1150px 700px at 85% -10%, rgba(126,184,216,0.45) 0%, transparent 62%),
+        radial-gradient(1000px 650px at 5% 110%, rgba(74,133,196,0.28) 0%, transparent 60%),
+        linear-gradient(120deg, #e5f0f9 0%, #d0e4f5 100%);
     }
-    /* Why us：接近白 */
+    /* Why us：淺藍白 */
     .bg-layer[data-bg="2"] {
       background:
-        radial-gradient(900px 560px at 15% 0%, rgba(126,184,216,0.22) 0%, transparent 60%),
-        linear-gradient(180deg, #f4f9fe 0%, #e7f1fb 100%);
+        radial-gradient(1000px 650px at 15% -5%, rgba(126,184,216,0.32) 0%, transparent 65%),
+        linear-gradient(140deg, #f0f7fc 0%, #e2eff8 100%);
     }
-    /* Categories：白（僅一絲微光） */
+    /* Categories：幾乎白（微微藍） */
     .bg-layer[data-bg="3"] {
       background:
-        radial-gradient(900px 500px at 50% 0%, rgba(126,184,216,0.10) 0%, transparent 65%),
-        linear-gradient(180deg, #ffffff 0%, #f7fafe 100%);
+        radial-gradient(1000px 600px at 50% 10%, rgba(126,184,216,0.15) 0%, transparent 70%),
+        linear-gradient(180deg, #fafbfc 0%, #f5f9fc 100%);
     }
-    /* Protection：接近白 */
+    /* Protection：淺藍白 */
     .bg-layer[data-bg="4"] {
       background:
-        radial-gradient(900px 560px at 85% 0%, rgba(126,184,216,0.22) 0%, transparent 60%),
-        linear-gradient(180deg, #f4f9fe 0%, #e7f1fb 100%);
+        radial-gradient(1050px 650px at 80% -5%, rgba(126,184,216,0.28) 0%, transparent 68%),
+        linear-gradient(135deg, #f0f7fc 0%, #e8f3fa 100%);
     }
-    /* How：藍回來 */
+    /* How：藍回來柔和 */
     .bg-layer[data-bg="5"] {
       background:
-        radial-gradient(1000px 600px at 10% 0%, rgba(126,184,216,0.36) 0%, transparent 60%),
-        radial-gradient(900px 600px at 100% 100%, rgba(74,133,196,0.20) 0%, transparent 55%),
-        linear-gradient(165deg, #eef5fd 0%, #dce8f6 100%);
+        radial-gradient(1150px 700px at 12% 5%, rgba(126,184,216,0.42) 0%, transparent 62%),
+        radial-gradient(1050px 700px at 105% 95%, rgba(74,133,196,0.25) 0%, transparent 60%),
+        linear-gradient(125deg, #e8f2fa 0%, #d5e8f5 100%);
     }
-    /* Wishpool：更藍 */
+    /* Wishpool：深藍暈開 */
     .bg-layer[data-bg="6"] {
       background:
-        radial-gradient(1100px 620px at 88% -5%, rgba(126,184,216,0.50) 0%, transparent 60%),
-        radial-gradient(900px 640px at 0% 110%, rgba(74,133,196,0.32) 0%, transparent 55%),
-        linear-gradient(165deg, #e8f2fc 0%, #cfe0f4 55%, #c2d7ef 100%);
+        radial-gradient(1250px 750px at 88% -5%, rgba(126,184,216,0.5) 0%, transparent 60%),
+        radial-gradient(1100px 700px at 0% 115%, rgba(74,133,196,0.35) 0%, transparent 58%),
+        linear-gradient(130deg, #d8e9f7 0%, #c0ddf2 50%, #a8d0ed 100%);
     }
-    /* Disclaimer：藍收尾（最深） */
+    /* Disclaimer：深藍收尾 */
     .bg-layer[data-bg="7"] {
       background:
-        radial-gradient(1100px 640px at 20% 0%, rgba(126,184,216,0.52) 0%, transparent 60%),
-        radial-gradient(1000px 680px at 100% 100%, rgba(74,133,196,0.36) 0%, transparent 55%),
-        linear-gradient(165deg, #e4eff9 0%, #c9dcf1 55%, #bcd3ee 100%);
+        radial-gradient(1200px 750px at 20% 10%, rgba(126,184,216,0.55) 0%, transparent 62%),
+        radial-gradient(1150px 800px at 98% 105%, rgba(78,144,200,0.4) 0%, transparent 60%),
+        linear-gradient(140deg, #d0e3f3 0%, #b8d7ee 50%, #a0cceb 100%);
     }
     @media (prefers-reduced-motion: reduce) {
       .bg-stage .bg-layer { transition: none; }
@@ -713,6 +739,62 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }, { threshold: 0.35 });
   io.observe(cta);
+})();
+
+// ── 水彩背景互動效果（強化滑鼠跟蹤 + 捲動視差 + 顏色反饋 + 點擊漣漪）──
+(function () {
+  const bgLayers = document.querySelectorAll('.bg-layer.active');
+  const bgStage = document.querySelector('.bg-stage');
+  if (!bgLayers.length || !bgStage) return;
+
+  let mouseX = 0, mouseY = 0;
+  const handleMouseMove = (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 200; // ±100px
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 150; // ±75px
+    updateBg();
+  };
+
+  const handleScroll = () => {
+    updateBg();
+  };
+
+  const handleClick = (e) => {
+    createRipple(e.clientX, e.clientY);
+  };
+
+  const createRipple = (x, y) => {
+    const ripple = document.createElement('div');
+    ripple.className = 'ripple';
+    const size = Math.random() * 100 + 150; // 150-250px
+    ripple.style.width = size + 'px';
+    ripple.style.height = size + 'px';
+    ripple.style.left = (x - size / 2) + 'px';
+    ripple.style.top = (y - size / 2) + 'px';
+    document.body.appendChild(ripple);
+
+    // 動畫結束後移除元素
+    setTimeout(() => ripple.remove(), 800);
+  };
+
+  const updateBg = () => {
+    const scrollRatio = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight || 1);
+    const offsetY = scrollRatio * 150 + mouseY; // 捲動（0-150px）+ 滑鼠偏移
+
+    // 計算亮度和飽和度變化
+    const brightness = 1 + (Math.abs(mouseX) / 200) * 0.15; // 滑鼠越遠亮度越高
+    const saturate = 1 + (Math.abs(mouseY) / 150) * 0.2; // 滑鼠越下飽和度越高
+
+    bgLayers.forEach(layer => {
+      layer.style.transform = `translate(${mouseX}px, ${offsetY}px) scale(1.02)`;
+    });
+
+    bgStage.style.filter = `blur(120px) brightness(${brightness}) saturate(${saturate})`;
+  };
+
+  window.addEventListener('mousemove', handleMouseMove, { passive: true });
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('click', handleClick, { passive: true });
+  updateBg();
 })();
 
 // ── 回到最上面按鈕（捲到接近底部才出現）──
