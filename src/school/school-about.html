@@ -273,6 +273,11 @@
       .bg-stage .bg-layer { transition: none; }
     }
 
+    /* ── 返回上一頁按鈕 ── */
+    .back-arrow { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: #fff; color: var(--navy); cursor: pointer; transition: all 0.2s; margin-right: 8px; }
+    .back-arrow:hover { border-color: var(--navy); background: var(--alice); }
+    .back-arrow svg { width: 20px; height: 20px; }
+
     /* ── 捲動進場動畫（初始隱藏狀態只在 JS 啟用時套用，確保無 JS 也能看到內容）── */
     /* 區塊本身只淡入，位移與交錯交給內部元素，避免 transform 疊加 */
     html.reveal-on [data-reveal] {
@@ -333,6 +338,10 @@
 <!-- NAV -->
 <nav class="nav">
   <div class="d-flex gap-2">
+    <button class="back-arrow" id="backBtn" type="button" title="返回上一頁" onclick="window.history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+
     <button class="mobile-hamburger d-lg-none" type="button">
       <img src="../svg/navbar.svg" alt="" style="width: 20px;">
     </button>
