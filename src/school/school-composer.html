@@ -798,41 +798,6 @@ document.addEventListener('DOMContentLoaded', function() {
     b.addEventListener('touchstart', apply, { passive: false });
     sw.appendChild(b);
   });
-  // 顏色：自訂色盤 + 最近使用顏色（localStorage）
-  (function () {
-    var RECENT_KEY = 'cg-recent-color';
-    var recentColor = '';
-    try { recentColor = localStorage.getItem(RECENT_KEY) || ''; } catch (e) {}
-    if (!recentColor) recentColor = '#c97f5a';
-
-    // 自訂色盤
-    var lbl = document.createElement('label'); lbl.className = 'swatch swatch-custom'; lbl.title = '自訂顏色';
-    var ci = document.createElement('input'); ci.type = 'color'; ci.value = recentColor;
-    lbl.appendChild(ci); sw.appendChild(lbl);
-
-    // 最近使用顏色
-    var recent = document.createElement('span'); recent.className = 'swatch swatch-recent'; recent.title = '最近使用的顏色';
-    recent.style.background = recentColor; recent.dataset.color = recentColor;
-    var applyRecent = function (e) { e.preventDefault(); applyColor(recent.dataset.color); };
-    recent.addEventListener('mousedown', applyRecent);
-    recent.addEventListener('touchstart', applyRecent, { passive: false });
-    sw.appendChild(recent);
-    function setRecent(c) { recent.dataset.color = c; recent.style.background = c; try { localStorage.setItem(RECENT_KEY, c); } catch (e) {} }
-
-    var savedForColor = null;
-    lbl.addEventListener('pointerdown', function () {
-      var s = window.getSelection();
-      if (s && s.rangeCount) { var n = s.getRangeAt(0).commonAncestorContainer; n = n.nodeType === 3 ? n.parentNode : n; if (editor.contains(n)) savedForColor = s.getRangeAt(0).cloneRange(); }
-    });
-    // change：色盤關閉後才套用（開著時文件失焦，execCommand 無效）；並記為最近使用
-    ci.addEventListener('change', function () {
-      if (targetIsField()) { activeTarget.style.color = ci.value; scheduleSave(); setRecent(ci.value); return; }
-      editor.focus();
-      if (savedForColor) { var s = window.getSelection(); s.removeAllRanges(); s.addRange(savedForColor); }
-      document.execCommand('foreColor', false, ci.value); scheduleSave();
-      setRecent(ci.value);
-    });
-  })();
 
   /* ---------- inline formatting（含對齊）：先還原選取再套用，手機才有效 ---------- */
   document.querySelectorAll('.tb[data-cmd]').forEach(function (btn) {
