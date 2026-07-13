@@ -108,6 +108,13 @@ body { background: var(--alice); }
   display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
 }
 .author-block .name .verified { color: var(--navy); font-size: 12px; font-weight: 700; }
+.author-rating {
+  display: flex; align-items: center; gap: 8px; margin: 6px 0;
+  font-size: 12px; color: var(--navy);
+}
+.author-rating .stars { color: var(--gold); font-size: 13px; letter-spacing: 1px; }
+.author-rating .score { font-weight: 700; }
+.author-rating .cnt { color: var(--muted); font-size: 11px; }
 .author-block .titles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 .author-block .titles .t {
   font-size: 11px; font-weight: 700; color: var(--navy);

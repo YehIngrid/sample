@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import { glob } from 'glob'
-import { cpSync, existsSync, rmSync } from 'fs'
+import { cpSync, existsSync, rmSync, readFileSync } from 'fs'
 
 // dev server：把所有非 Vite 系統路徑自動 rewrite 到 /src/
 // 並移除 CSP meta 讓 localhost 可以連 treasurehub.tw API
@@ -123,9 +123,14 @@ export default defineConfig(() => ({
   base: '/',
   server: {
     port: 3000,
+    https: existsSync('localhost+1-key.pem') && existsSync('localhost+1.pem') ? {
+      key: readFileSync('localhost+1-key.pem'),
+      cert: readFileSync('localhost+1.pem'),
+    } : true,
   },
   build: {
     outDir: 'dist',
+    sourcemap: process.env.SOURCE_MAP === 'true',
     rollupOptions: { input },
   },
   plugins: [devSrcRewrite(), stripHtmlComments(), copyStaticFolders(), flattenSrcDir()],

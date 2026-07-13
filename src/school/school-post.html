@@ -125,6 +125,11 @@
             <div class="av"></div>
             <div class="info">
               <div class="name">創產系 大四 范同學</div>
+              <div class="author-rating">
+                <span class="stars">★★★★★</span>
+                <span class="score">4.8</span>
+                <span class="cnt">96 則評分</span>
+              </div>
               <div class="titles">
                 <span class="t">*台大碩士*</span>
                 <span class="t">*書卷獎*</span>
@@ -401,6 +406,32 @@
   </div>
 </div>
 
+<!-- ============ 評分模態框 ============ -->
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+    <div class="modal-content">
+      <div class="modal-header" style="border-bottom: 1px solid var(--line);">
+        <h5 class="modal-title" style="font-weight: 700;">為這篇攻略評分</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding: 32px 24px; text-align: center;">
+        <div style="margin-bottom: 24px;">
+          <div style="font-size: 14px; color: var(--muted); margin-bottom: 12px;">你覺得這篇攻略如何？</div>
+          <div class="star-rating" style="font-size: 40px; letter-spacing: 8px; cursor: pointer;">
+            <span class="star" data-value="1">☆</span>
+            <span class="star" data-value="2">☆</span>
+            <span class="star" data-value="3">☆</span>
+            <span class="star" data-value="4">☆</span>
+            <span class="star" data-value="5">☆</span>
+          </div>
+        </div>
+        <textarea id="ratingComment" placeholder="選填：分享你的看法（可留言或評分作者）..." style="width: 100%; height: 100px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; resize: none; margin-bottom: 16px; font-family: inherit;"></textarea>
+        <button id="submitRating" class="btn btn-primary" style="width: 100%; background-color: var(--navy); border: none; padding: 10px; border-radius: 10px; color: white; font-weight: 700;">送出評分</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 <script defer src="school-new.js"></script>
 <script>
@@ -447,9 +478,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById(id);
     if (btn) btn.addEventListener('click', toggleUnlock);
   });
-  // 已解鎖狀態下的「評分」鈕再點一次可上鎖（方便測試）
+  // ── 評分功能 ──
+  const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
   document.querySelectorAll('.ubuy .rate-btn, .sp-actionbar .rate').forEach(btn => {
-    btn.addEventListener('click', toggleUnlock);
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      ratingModal.show();
+    });
+  });
+
+  // 星號互動
+  const stars = document.querySelectorAll('.star-rating .star');
+  let selectedRating = 0;
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      selectedRating = parseInt(star.dataset.value);
+      stars.forEach((s, idx) => {
+        if (idx < selectedRating) s.textContent = '★';
+        else s.textContent = '☆';
+      });
+    });
+  });
+
+  // 提交評分
+  document.getElementById('submitRating').addEventListener('click', () => {
+    if (selectedRating === 0) {
+      alert('請先選擇評分');
+      return;
+    }
+    alert(`感謝你的 ${selectedRating} 星評分！`);
+    ratingModal.hide();
   });
 });
 </script>

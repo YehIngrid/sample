@@ -736,6 +736,7 @@
 </nav>
 
 <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="school-data.js"></script>
 <script defer src="school-new.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -757,6 +758,55 @@ document.addEventListener('DOMContentLoaded', function() {
   if (hamburger) hamburger.addEventListener('click', toggleMenu);
   if (backdrop) backdrop.addEventListener('click', closeMenu);
   menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+  // ── 主題選擇 & 預設標籤 ──
+  const catSel = document.getElementById('catSel');
+  const tagsContainer = document.getElementById('tags');
+  const tagAdd = document.getElementById('tagAdd');
+
+  function renderDefaultTags() {
+    const selectedTopic = catSel.value;
+    const topicData = Object.values(TOPICS).find(t => Object.keys(TOPICS).some(k => TOPICS[k].id === t.id && k === selectedTopic));
+    if (!topicData) return;
+
+    // 找到對應主題
+    const topicName = Object.keys(TOPICS).find(k => k === selectedTopic);
+    if (!topicName) return;
+
+    const tags = TOPICS[topicName].tags;
+    const currentTags = Array.from(tagsContainer.querySelectorAll('.tag:not(.tag-add)')).map(el => el.textContent.trim().replace('×', '').trim());
+
+    // 清除並重新添加預設標籤
+    tagsContainer.querySelectorAll('.tag:not(.tag-add)').forEach(el => el.remove());
+
+    // 添加預設標籤
+    tags.forEach(tag => {
+      const tagEl = document.createElement('span');
+      tagEl.className = 'tag';
+      tagEl.innerHTML = `${tag} <span class="x">×</span>`;
+      tagEl.querySelector('.x').addEventListener('click', () => tagEl.remove());
+      tagsContainer.insertBefore(tagEl, tagAdd);
+    });
+  }
+
+  if (catSel) {
+    catSel.addEventListener('change', renderDefaultTags);
+    renderDefaultTags(); // 初始化
+  }
+
+  // 新增自訂標籤
+  if (tagAdd) {
+    tagAdd.addEventListener('click', () => {
+      const tagName = prompt('輸入標籤名稱：');
+      if (tagName && tagName.trim()) {
+        const tagEl = document.createElement('span');
+        tagEl.className = 'tag';
+        tagEl.innerHTML = `${tagName.trim()} <span class="x">×</span>`;
+        tagEl.querySelector('.x').addEventListener('click', () => tagEl.remove());
+        tagsContainer.insertBefore(tagEl, tagAdd);
+      }
+    });
+  }
 });
 </script>
 
@@ -1102,7 +1152,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   function escText(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-  function jumpTo(id) { var el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); }
+  function jumpTo(id) { var el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 180, behavior: 'smooth' }); }
 
   /* ---------- autosave ---------- */
   var KEY = 'cg-composer-draft';
