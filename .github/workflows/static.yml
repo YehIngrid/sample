@@ -40,7 +40,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add dist/
+          git add -f dist/
           git diff --quiet --cached || git commit -m "build: 自動構建產生 dist 文件
 
 由 GitHub Actions 自動構建並提交。"
