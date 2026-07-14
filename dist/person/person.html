@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <script>(function(){if(window.innerWidth<=991&&sessionStorage.getItem('skipLoader')==='1'){sessionStorage.removeItem('skipLoader');document.documentElement.classList.add('skip-loader');}})();</script>
+  <title>帳戶管理中心 | 拾貨寶庫</title>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="manifest" href="/assets/manifest-DMriwSiS.json">
+    <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="拾貨寶庫是中興大學最方便的二手拍賣市集"/>
+    <meta property="og:title" content="帳戶管理中心 | 拾貨寶庫">
+    <meta property="og:description" content="拾貨寶庫是中興大學最方便的二手拍賣市集。">
+    <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
+    <meta name="keywords" content="拾獲寶庫、拾貨寶庫、中興二手"/>
+    
+    
+    <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet"  >
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" integrity="sha384-XGjxtQfXaH2tnPFa9x+ruJTuLE3Aa6LhHSWRr1XeTyhezb4abCG4ccI5AkVDxqC+" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PQ6ND9EY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-45PQ6ND9EY');
+    </script>
+    
+    
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TNDMCCKZ');</script>
+    
+  <script type="module" crossorigin src="/assets/src-person-person-BUo1TYHX.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/default-DxlzImvO.js">
+  <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-CIIsA5uw.js">
+  <link rel="modulepreload" crossorigin href="/assets/chat-B1iZex39.js">
+  <link rel="modulepreload" crossorigin href="/assets/reviewerModal-GrUxzItM.js">
+  <link rel="stylesheet" crossorigin href="/assets/src-person-person-dNttTQ0B.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-CI3V8wLq.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
+</head>
+<body>
+  
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TNDMCCKZ"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  
+  <div id="loader">
+    <div class="loader-wrap">
+      <div class="shelf">
+        <div class="item it-book"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+        <div class="item it-laptop"><div class="screen"></div><div class="base"></div></div>
+        <div class="item it-lamp"><div class="shade"></div><div class="neck"></div><div class="base"></div></div>
+        <div class="item it-ball"><div class="body"></div><div class="seam"></div></div>
+        <div class="item it-shirt"><div class="sl"></div><div class="sr"></div><div class="body"></div><div class="collar"></div></div>
+        <div class="item it-gift"><div class="box"></div><div class="lid"></div><div class="vrib"></div><div class="bowL"></div><div class="bowR"></div><div class="knot"></div></div>
+      </div>
+      <div class="loader-text">
+        <p class="brand">拾貨寶庫</p>
+        <p class="tag">載入個人資料中</p>
+      </div>
+    </div>
+  </div>
+  <div id="whatcontent" class="d-none">
+    
+    <div class="header">
+        
+        <nav class="navbar navbar-expand-lg navbar-light bg-color header_new sticky-top" style="box-shadow: 0 0 2px rgb(0,0,0,0.2); display: block !important;">
+          <div class="container-fluid d-flex align-items-center">
+
+            
+            <button class="navbar-toggler d-lg-none me-2 order-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+              <img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="選單" style="width:20px;">
+            </button>
+
+            
+            <a class="navbar-brand picture order-1 me-4"
+              href="../newhome/newhome.html">
+              <img src="/assets/TREASUREHUBCHEN-XT8sW0do.svg" alt="拾貨寶庫·帳戶管理中心"
+                   style="width: 100px; margin-right: 10px; border-radius: 0%;">
+            </a>
+
+            
+            <div class="d-none d-lg-flex order-2">
+              <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../newhome/newhome.html">首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../news/news.html">最新資訊</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../shop/shop.html">購物首頁</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../commodity/commodity.html">購物商場</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+                <li class="nav-item"><a class="nav-link" style="color: #383838;" href="../questions/questions.html">常見問題</a></li>
+                <li class="nav-item specialpadding"><a class="nav-link" style="color: #383838;" href="../communication/communication.html">客服諮詢</a></li>
+              </ul>
+            </div>
+
+            
+            <div class="d-flex align-items-center ms-auto order-3">
+              <div class="login me-2">
+                <a class="username" href="../person/person.html"></a>
+                <a class="navbar-brand loginornot" href="../account/account.html">登入</a>
+              </div>
+              <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
+                <img src="data:image/svg+xml,%3csvg%20width='41'%20height='31'%20viewBox='0%200%2041%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cellipse%20cx='12.6357'%20cy='27.7'%20rx='2.63571'%20ry='2.7'%20fill='%23004B97'/%3e%3ccircle%20cx='26.6357'%20cy='27.6357'%20r='2.63571'%20fill='%23004B97'/%3e%3cpath%20d='M8%206L33%206L30.5%2020L10.5%2020L8%206Z'%20fill='%23004B97'/%3e%3crect%20x='8.70001'%20y='22'%20width='21.4762'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3crect%20width='2.5696'%20height='23.3413'%20rx='1'%20transform='matrix(0.988954%20-0.148225%200.143341%200.989673%205.41626%201.46036)'%20fill='%23004B97'/%3e%3crect%20x='0.976196'%20width='6.83333'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3cpath%20d='M9.59576%2012.7941H31.8404'%20stroke='white'/%3e%3cline%20x1='15.4994'%20y1='5.97547'%20x2='16.2015'%20y2='20.2696'%20stroke='white'/%3e%3crect%20width='1'%20height='15'%20transform='translate(23.617%205.29413)'%20fill='white'/%3e%3c/svg%3e" alt="我的購物車">
+              </a>
+            </div>
+          </div>
+
+          
+          <ul class="navbar-nav mobileNav d-none">
+            <li class="nav-item"><a class="nav-link" href="../newhome/newhome.html">首頁</a></li>
+            <li class="nav-item"><a class="nav-link" href="../news/news.html">最新資訊</a></li>
+            <li class="nav-item"><a class="nav-link" href="../shop/shop.html">購物首頁</a></li>
+            <li class="nav-item"><a class="nav-link" href="../commodity/commodity.html">購物商場</a></li>
+            <li class="nav-item"><a class="nav-link" href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+            <li class="nav-item"><a class="nav-link" href="../questions/questions.html">常見問題</a></li>
+            <li class="nav-item specialpadding"><a class="nav-link" href="../communication/communication.html">客服諮詢</a></li>
+          </ul>
+        </nav>
+    </div>
+
+<div class="container-fluid py-3" id="mainContent" style="font-size: 1.2rem;">
+    <div class="row g-3">
+      
+      <aside class="col-lg-3 d-none d-lg-block">
+        <div class="sidebar">
+
+          
+          <div class="new-profile-card mb-3">
+            <div class="new-av-wrap">
+              <img alt="頭像" id="profileAvatar" class="new-av-img">
+            </div>
+            <div class="new-role-tag">校園認證會員</div>
+            <div class="new-profile-name" id="profileName"></div>
+            <div class="new-profile-uid">UID · <span id="uid"></span></div>
+            <p class="new-profile-bio" id="profileInfo"></p>
+            <div class="new-score-row my-tooltip" data-text="信用積分制度：起始 100 分，上限 150 分。完成一筆交易雙方各 +5、獲得良好評價 +2。爽約失聯 -15、商品嚴重不符 -10、遲到超過 10 分鐘 -5。積分低於 80 分限制上架 5 件，低於 50 分暫停交易 7 天，歸零則永久停權。">
+              <span class="new-score-lbl">信譽積分</span>
+              <strong class="new-score-val" id="rate"></strong>
+            </div>
+          </div>
+
+          
+          <nav class="new-side-nav">
+            <div class="new-group-label">商品 / 訂單管理</div>
+            <a class="new-nav-link active" href="#" data-target="account">
+              <img src="/assets/default-avatar-B4oh15VT.webp" alt="帳戶管理icon" class="new-nav-icon">
+              <span>帳戶管理中心</span>
+            </a>
+            <a class="new-nav-link" href="#" data-target="products">
+              <img src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='20'%20cy='20'%20r='20'%20fill='white'/%3e%3crect%20x='11'%20y='9'%20width='18'%20height='23'%20fill='url(%23paint0_linear_713_936)'/%3e%3cline%20x1='15'%20y1='14.48'%20x2='25'%20y2='14.48'%20stroke='white'/%3e%3cline%20x1='15'%20y1='26.4399'%20x2='25'%20y2='26.4399'%20stroke='white'/%3e%3cline%20x1='15'%20y1='20.46'%20x2='25'%20y2='20.46'%20stroke='white'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_713_936'%20x1='24.8'%20y1='12.22'%20x2='11.3492'%20y2='25.5296'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="我的商品icon" class="new-nav-icon">
+              <span>商品管理</span>
+            </a>
+            <a class="new-nav-link" href="#" data-target="sellProducts">
+              <img src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='20'%20cy='20'%20r='20'%20fill='white'/%3e%3crect%20width='32'%20height='16'%20transform='translate(4%2012)'%20fill='url(%23paint0_linear_779_1064)'/%3e%3crect%20x='4'%20y='12'%20width='32'%20height='16'%20fill='url(%23paint1_linear_779_1064)'/%3e%3crect%20x='4.25'%20y='12.25'%20width='31.5'%20height='15.5'%20stroke='%230C6F91'%20stroke-opacity='0.533654'%20stroke-width='0.5'/%3e%3cellipse%20cx='19.5897'%20cy='20'%20rx='7.38462'%20ry='7.2'%20fill='white'/%3e%3cpath%20d='M19.5898%2013.3C23.4041%2013.3001%2026.4746%2016.3118%2026.4746%2020.0002C26.4745%2023.6885%2023.404%2026.7003%2019.5898%2026.7004C15.7756%2026.7004%2012.7052%2023.6885%2012.7051%2020.0002C12.7051%2016.3117%2015.7756%2013.3%2019.5898%2013.3Z'%20stroke='url(%23paint2_linear_779_1064)'%20stroke-opacity='0.6'/%3e%3cpath%20d='M18.824%2026.128V24.912C18.3973%2024.8907%2017.96%2024.864%2017.512%2024.832C17.0747%2024.8%2016.696%2024.7573%2016.376%2024.704V23.616C16.5147%2023.6267%2016.6747%2023.6427%2016.856%2023.664C17.048%2023.6853%2017.2613%2023.7013%2017.496%2023.712C17.7307%2023.7227%2017.9867%2023.7387%2018.264%2023.76C18.5413%2023.7707%2018.84%2023.776%2019.16%2023.776C19.7573%2023.776%2020.2%2023.7387%2020.488%2023.664C20.776%2023.5893%2020.9627%2023.456%2021.048%2023.264C21.144%2023.0613%2021.192%2022.784%2021.192%2022.432C21.192%2022.048%2021.16%2021.776%2021.096%2021.616C21.0427%2021.4453%2020.9413%2021.3333%2020.792%2021.28C20.6427%2021.2267%2020.4347%2021.1893%2020.168%2021.168L17.928%2020.912C17.4373%2020.8373%2017.0587%2020.7147%2016.792%2020.544C16.536%2020.3627%2016.3547%2020.112%2016.248%2019.792C16.152%2019.4613%2016.104%2019.0613%2016.104%2018.592C16.104%2017.952%2016.2107%2017.4613%2016.424%2017.12C16.6373%2016.7787%2016.9413%2016.5387%2017.336%2016.4C17.7413%2016.2507%2018.2373%2016.16%2018.824%2016.128V14.864H19.848V16.112C20.264%2016.1227%2020.648%2016.144%2021%2016.176C21.352%2016.208%2021.6933%2016.2613%2022.024%2016.336V17.424C21.7573%2017.3813%2021.4693%2017.3493%2021.16%2017.328C20.8507%2017.296%2020.5467%2017.2747%2020.248%2017.264C19.9493%2017.2533%2019.6667%2017.248%2019.4%2017.248C19.08%2017.248%2018.7973%2017.2587%2018.552%2017.28C18.3067%2017.2907%2018.0987%2017.3387%2017.928%2017.424C17.7573%2017.4987%2017.624%2017.6267%2017.528%2017.808C17.4427%2017.9787%2017.4%2018.2187%2017.4%2018.528C17.4%2018.8693%2017.4213%2019.1253%2017.464%2019.296C17.5173%2019.456%2017.6187%2019.568%2017.768%2019.632C17.9173%2019.6853%2018.1307%2019.728%2018.408%2019.76L20.808%2020.016C21.224%2020.0587%2021.5547%2020.1493%2021.8%2020.288C22.0453%2020.4267%2022.2213%2020.6613%2022.328%2020.992C22.4347%2021.3227%2022.488%2021.792%2022.488%2022.4C22.488%2023.0293%2022.4027%2023.52%2022.232%2023.872C22.0613%2024.2133%2021.784%2024.464%2021.4%2024.624C21.016%2024.7733%2020.4987%2024.864%2019.848%2024.896V26.128H18.824Z'%20fill='%23FFC857'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1064'%20x1='16'%20y1='0'%20x2='16'%20y2='16'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='white'/%3e%3cstop%20offset='1'%20stop-color='%23999999'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1064'%20x1='20'%20y1='12'%20x2='20'%20y2='28'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23719AC5'/%3e%3cstop%20offset='1'%20stop-color='%2393DDC4'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint2_linear_779_1064'%20x1='19.5897'%20y1='12.8'%20x2='19.5897'%20y2='27.2'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23689EBE'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.8'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="我的銷售訂單icon" class="new-nav-icon">
+              <span>銷售訂單</span>
+            </a>
+            <a class="new-nav-link" href="#" data-target="buyProducts">
+              <img src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='20'%20cy='20'%20r='20'%20fill='white'/%3e%3cpath%20d='M10%2013.2479H31.8182L30%2025.3691H11.8182L10%2013.2479Z'%20fill='url(%23paint0_linear_530_475)'/%3e%3ccircle%20cx='20.6059'%20cy='18.4848'%20r='8.48485'%20fill='white'/%3e%3ccircle%20cx='20.6059'%20cy='18.4848'%20r='7.98485'%20stroke='%23004B97'%20stroke-opacity='0.8'/%3e%3cline%20x1='3.63623'%20y1='11.9242'%20x2='9.69684'%20y2='11.9242'%20stroke='%23004B97'%20stroke-opacity='0.7'/%3e%3cline%20x1='9.32478'%20y1='11.0708'%20x2='12.4925'%20y2='29.1617'%20stroke='%234D81B7'/%3e%3cline%20x1='12'%20y1='28.7479'%20x2='28.9697'%20y2='28.7479'%20stroke='%234D81B7'/%3e%3ccircle%20cx='15.8182'%20cy='31.0661'%20r='1.81818'%20fill='%2393DDC4'/%3e%3ccircle%20cx='24.8182'%20cy='31.0661'%20r='1.81818'%20fill='%2393DDC4'/%3e%3cpath%20d='M21.106%2013.6364C21.106%2013.3602%2020.8821%2013.1364%2020.606%2013.1364C20.3298%2013.1364%2020.106%2013.3602%2020.106%2013.6364H20.606H21.106ZM20.2524%2023.6869C20.4477%2023.8821%2020.7642%2023.8821%2020.9595%2023.6869L24.1415%2020.5049C24.3368%2020.3096%2024.3368%2019.9931%2024.1415%2019.7978C23.9462%2019.6025%2023.6296%2019.6025%2023.4344%2019.7978L20.606%2022.6262L17.7775%2019.7978C17.5823%2019.6025%2017.2657%2019.6025%2017.0704%2019.7978C16.8752%2019.9931%2016.8752%2020.3096%2017.0704%2020.5049L20.2524%2023.6869ZM20.606%2013.6364H20.106V23.3333H20.606H21.106V13.6364H20.606Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_530_475'%20x1='20.9091'%20y1='13.2479'%20x2='20.9091'%20y2='25.3691'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23A7C5DA'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="我的購買訂單icon" class="new-nav-icon">
+              <span>消費訂單</span>
+            </a>
+            <hr class="new-nav-hr" />
+            <a class="new-nav-link" href="#" data-target="settings">
+              <img src="data:image/svg+xml,%3csvg%20width='26'%20height='26'%20viewBox='0%200%2026%2026'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='13'%20cy='13'%20r='13'%20fill='white'/%3e%3cpath%20d='M13.6318%203C14.0675%203%2014.2858%203.00028%2014.4629%203.07031C14.6878%203.15934%2014.8726%203.32699%2014.9834%203.54199C15.0707%203.71127%2015.0925%203.92789%2015.1357%204.36133C15.2177%205.18213%2015.2589%205.59316%2015.4307%205.81836C15.6486%206.10394%2016.0033%206.251%2016.3594%206.20312C16.64%206.16528%2016.9591%205.90323%2017.5977%205.38086C17.9353%205.10467%2018.1045%204.96713%2018.2861%204.90918C18.5165%204.8357%2018.7655%204.84826%2018.9873%204.94434C19.1622%205.0201%2019.3167%205.17412%2019.625%205.48242L20.5176%206.375C20.8258%206.68323%2020.9799%206.83787%2021.0557%207.0127C21.1517%207.23455%2021.1643%207.48357%2021.0908%207.71387C21.0328%207.89534%2020.8942%208.0641%2020.6182%208.40137C20.0958%209.03946%2019.8349%209.35905%2019.7969%209.63965C19.7489%209.99576%2019.896%2010.3504%2020.1816%2010.5684C20.4068%2010.7401%2020.8176%2010.7811%2021.6387%2010.8633C22.0724%2010.9067%2022.2897%2010.9292%2022.459%2011.0166C22.6737%2011.1275%2022.8408%2011.3124%2022.9297%2011.5371C22.9998%2011.7143%2023%2011.9323%2023%2012.3682V13.6318C23%2014.0675%2022.9997%2014.2858%2022.9297%2014.4629C22.8407%2014.6878%2022.673%2014.8726%2022.458%2014.9834C22.2887%2015.0706%2022.0721%2015.0925%2021.6387%2015.1357C20.8181%2015.2177%2020.4078%2015.259%2020.1826%2015.4307C19.8967%2015.6486%2019.7498%2016.0031%2019.7979%2016.3594C19.8357%2016.6399%2020.0969%2016.9594%2020.6191%2017.5977C20.8947%2017.9345%2021.0328%2018.103%2021.0908%2018.2842C21.1645%2018.5146%2021.1518%2018.7643%2021.0557%2018.9863C20.9799%2019.1611%2020.8257%2019.316%2020.5176%2019.624L19.625%2020.5166C19.3167%2020.8249%2019.1622%2020.9789%2018.9873%2021.0547C18.7654%2021.1508%2018.5165%2021.1633%2018.2861%2021.0898C18.1045%2021.0319%2017.9352%2020.8943%2017.5977%2020.6182C16.9588%2020.0956%2016.6392%2019.8336%2016.3584%2019.7959C16.0026%2019.7483%2015.6484%2019.8953%2015.4307%2020.1807C15.2588%2020.4059%2015.2177%2020.8166%2015.1357%2021.6377C15.0924%2022.0714%2015.0707%2022.2886%2014.9834%2022.458C14.8725%2022.6729%2014.6877%2022.8407%2014.4629%2022.9297C14.2856%2022.9998%2014.067%2023%2013.6309%2023H12.3682C11.9323%2023%2011.7143%2022.9998%2011.5371%2022.9297C11.3124%2022.8408%2011.1275%2022.6737%2011.0166%2022.459C10.9292%2022.2897%2010.9067%2022.0724%2010.8633%2021.6387C10.7811%2020.8176%2010.7401%2020.4068%2010.5684%2020.1816C10.3504%2019.896%209.99576%2019.7489%209.63965%2019.7969C9.35905%2019.8349%209.03946%2020.0958%208.40137%2020.6182C8.0641%2020.8942%207.89534%2021.0328%207.71387%2021.0908C7.48357%2021.1643%207.23455%2021.1517%207.0127%2021.0557C6.83787%2020.9799%206.68323%2020.8258%206.375%2020.5176L5.48242%2019.625C5.17412%2019.3167%205.0201%2019.1622%204.94434%2018.9873C4.84826%2018.7655%204.8357%2018.5165%204.90918%2018.2861C4.96713%2018.1045%205.10467%2017.9353%205.38086%2017.5977C5.90323%2016.9591%206.16528%2016.64%206.20312%2016.3594C6.251%2016.0033%206.10394%2015.6486%205.81836%2015.4307C5.59316%2015.2589%205.18213%2015.2177%204.36133%2015.1357C3.92789%2015.0925%203.71127%2015.0707%203.54199%2014.9834C3.32699%2014.8726%203.15934%2014.6878%203.07031%2014.4629C3.00028%2014.2858%203%2014.0675%203%2013.6318V12.3682C3%2011.9323%203.00023%2011.7143%203.07031%2011.5371C3.15921%2011.3124%203.32634%2011.1275%203.54102%2011.0166C3.71035%2010.9292%203.9276%2010.9067%204.36133%2010.8633C5.18237%2010.7811%205.59316%2010.7402%205.81836%2010.5684C6.10372%2010.3505%206.25086%209.99645%206.20312%209.64062C6.16537%209.35987%205.90335%209.03991%205.38086%208.40137C5.10503%208.06427%204.96714%207.89531%204.90918%207.71387C4.83569%207.48354%204.84827%207.23456%204.94434%207.0127C5.02008%206.83785%205.17418%206.68324%205.48242%206.375L6.375%205.48242C6.68326%205.17417%206.83783%205.02009%207.0127%204.94434C7.23457%204.84823%207.48352%204.8357%207.71387%204.90918C7.89541%204.96713%208.06487%205.10482%208.40234%205.38086C9.04077%205.90307%209.35992%206.16444%209.64062%206.20215C9.99654%206.24992%2010.3505%206.10287%2010.5684%205.81738C10.7401%205.59218%2010.7811%205.18199%2010.8633%204.36133C10.9067%203.92763%2010.9292%203.71034%2011.0166%203.54102C11.1275%203.32633%2011.3124%203.15921%2011.5371%203.07031C11.7143%203.00025%2011.9323%203%2012.3682%203H13.6318ZM13%209C10.7909%209%209%2010.7909%209%2013C9%2015.2091%2010.7909%2017%2013%2017C15.2091%2017%2017%2015.2091%2017%2013C17%2010.7909%2015.2091%209%2013%209Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3c/svg%3e" alt="帳號設定icon" class="new-nav-icon">
+              <span>個人中心</span>
+            </a>
+            <a class="new-nav-link new-nav-danger" href="#" id="logout">
+              <img src="data:image/svg+xml,%3csvg%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='30'%20height='30'%20fill='white'/%3e%3crect%20width='30'%20height='30'%20fill='white'/%3e%3cpath%20d='M24%205V25H6V5H24Z'%20stroke='url(%23paint0_linear_779_1028)'%20stroke-opacity='0.7'%20stroke-width='2'/%3e%3crect%20x='23'%20y='6'%20width='2'%20height='18'%20fill='white'/%3e%3cpath%20d='M10%2014.5C9.72386%2014.5%209.5%2014.7239%209.5%2015C9.5%2015.2761%209.72386%2015.5%2010%2015.5V15V14.5ZM23.3536%2015.3536C23.5488%2015.1583%2023.5488%2014.8417%2023.3536%2014.6464L20.1716%2011.4645C19.9763%2011.2692%2019.6597%2011.2692%2019.4645%2011.4645C19.2692%2011.6597%2019.2692%2011.9763%2019.4645%2012.1716L22.2929%2015L19.4645%2017.8284C19.2692%2018.0237%2019.2692%2018.3403%2019.4645%2018.5355C19.6597%2018.7308%2019.9763%2018.7308%2020.1716%2018.5355L23.3536%2015.3536ZM10%2015V15.5H23V15V14.5H10V15Z'%20fill='url(%23paint1_linear_779_1028)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1028'%20x1='15'%20y1='4'%20x2='15'%20y2='26'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='0.475962'%20stop-color='%235E99B9'/%3e%3cstop%20offset='1'%20stop-color='%23004B97'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1028'%20x1='10.6602'%20y1='11.134'%20x2='22.3398'%20y2='17.366'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23BDDFDF'/%3e%3cstop%20offset='1'%20stop-color='%235084B8'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="登出按鍵" class="new-nav-icon">
+              <span>登出</span>
+            </a>
+          </nav>
+
+        </div>
+      </aside>
+      
+      
+      
+      
+      <section class="col-lg-9 d-none content-section"  id="products">
+        <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
+        <div class="page-head">
+          <div class="ph-left">
+            <h2 class="ph-title">上架商品管理</h2>
+            <p class="ph-sub">查看、編輯或下架您的商品</p>
+            <p class="text-muted small mt-2" style="font-size:1rem;">
+              <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
+              庫存為 0 的商品將由後端自動封存，僅賣家本人可檢視，其他使用者無法看到。
+            </p>
+          </div>
+        </div>
+        <div class="col-12">
+          <div>
+            <div class="card-body">
+              <div class="table-responsive" style="overflow-x: hidden;">
+                
+                <table class="table align-middle d-none product-manage-table">
+                  <thead><tr><th>商品</th><th>庫存</th><th>價格</th><th>建立時間</th><th>最後更新</th><th>相關操作</th></tr></thead>
+                  <tbody></tbody>
+                </table>
+                
+                <div id="product-cards" class="order-list-new"></div>
+
+                
+                <div id="products-pager" class="d-flex justify-content-center align-items-center flex-wrap gap-1 mt-3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+       <section class="col-lg-9 d-none content-section" id="sellProducts">
+  <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
+  <div class="page-head">
+    <div class="ph-left">
+      <h2 class="ph-title">銷售訂單</h2>
+      <p class="ph-sub">管理買家送出的訂單、確認出貨狀態</p>
+    </div>
+  </div>
+
+  
+  <div id="sellOrderDetail" class="d-none od-wrapper">
+
+    
+    <div class="od-head">
+      <button class="od-back-link" id="backToSellTable" title="返回訂單列表">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18L9 12L15 6"/></svg>
+        回銷售訂單
+      </button>
+      <div class="od-breadcrumb">帳戶管理中心 <span class="od-sep">›</span> 銷售訂單 <span class="od-sep">›</span> 訂單詳情</div>
+      <div class="od-head-row">
+        <div class="od-title">
+          <h2>訂單詳細資訊</h2>
+          <div class="od-oid">訂單編號 <span id="sellOrderIdSpan" class="od-oid-val">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="od-status-banner" id="sellStatusBanner" style="background: linear-gradient(135deg, #6f87a0 0%, #4a6278 100%);">
+      <div class="od-sb-ic" id="sellSbIc">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      </div>
+      <div class="od-sb-info">
+        <div class="od-sb-title" id="sellSbTitle">載入中…</div>
+        <div class="od-sb-desc" id="sellSbDesc"></div>
+      </div>
+    </div>
+
+    
+    <div class="od-timeline-panel">
+      <div class="od-tl-head">
+        <h3 class="od-tl-title">訂單進度</h3>
+        <span class="od-tl-hint" id="sellTlHint"></span>
+      </div>
+      <div class="od-timeline">
+        <div class="od-step status-item" data-status="pending">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='101'%20viewBox='0%200%20100%20101'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3cpath%20d='M66%2024.5C66%2027.7174%2065.5732%2030.9033%2064.744%2033.8757C63.9148%2036.8482%2062.6994%2039.5491%2061.1673%2041.8241C59.6351%2044.0992%2057.8161%2045.9038%2055.8143%2047.135C53.8124%2048.3663%2051.6668%2049%2049.5%2049C47.3332%2049%2045.1876%2048.3663%2043.1857%2047.135C41.1839%2045.9038%2039.3649%2044.0992%2037.8327%2041.8241C36.3006%2039.5491%2035.0852%2036.8482%2034.256%2033.8757C33.4268%2030.9033%2033%2027.7174%2033%2024.5L49.5%2024.5H66Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M60%2036.5C60%2038.0102%2059.7155%2039.5056%2059.1627%2040.9009C58.6099%2042.2961%2057.7996%2043.5639%2056.7782%2044.6317C55.7567%2045.6996%2054.5441%2046.5467%2053.2095%2047.1246C51.8749%2047.7025%2050.4445%2048%2049%2048C47.5555%2048%2046.1251%2047.7025%2044.7905%2047.1246C43.4559%2046.5467%2042.2433%2045.6996%2041.2218%2044.6317C40.2004%2043.5639%2039.3901%2042.2961%2038.8373%2040.9009C38.2845%2039.5056%2038%2038.0102%2038%2036.5L49%2036.5H60Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M66%2076.5C66%2073.2826%2065.5732%2070.0967%2064.744%2067.1243C63.9148%2064.1518%2062.6994%2061.4509%2061.1673%2059.1759C59.6351%2056.9008%2057.8161%2055.0962%2055.8143%2053.865C53.8124%2052.6337%2051.6668%2052%2049.5%2052C47.3332%2052%2045.1876%2052.6337%2043.1857%2053.865C41.1839%2055.0962%2039.3649%2056.9008%2037.8327%2059.1759C36.3006%2061.4509%2035.0852%2064.1518%2034.256%2067.1243C33.4268%2070.0967%2033%2073.2826%2033%2076.5L49.5%2076.5H66Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M47.5%2048H50.5C50.1343%2050.6642%2050.1446%2050.4689%2050.5%2052.5H47.5C48.0689%2050.1508%2047.5%2048%2047.5%2048Z'%20fill='%23D9D9D9'/%3e%3crect%20opacity='0.44'%20x='30'%20y='76'%20width='40'%20height='7'%20rx='3.5'%20fill='%23D9D9D9'/%3e%3crect%20opacity='0.44'%20x='29'%20y='18'%20width='40'%20height='7'%20rx='3.5'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='49.5'%20cy='49.5'%20r='0.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='49.5'%20cy='52.5'%20r='0.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='48.5'%20cy='51.5'%20r='0.5'%20fill='%23B4B4B4'/%3e%3cpath%20d='M35%2070C36%2067.9999%2064%2070%2064%2070C64.9861%2071.9083%2065.1663%2073.0077%2065%2075H34C34.3905%2073.0473%2034%2072%2035%2070Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="訂單已建立"></div>
+          <div class="od-lbl stateText">訂單已建立</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="preparing">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='100'%20viewBox='0%200%20100%20100'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3cpath%20d='M12%2049.9381L20.367%2036.3299L52.4404%2020L83.1193%2036.3299V65.5876L52.4404%2086L20.367%2068.9897V54.0206L12%2049.9381Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M20.367%2036.3299L12%2049.9381L20.367%2054.0206M20.367%2036.3299L52.4404%2053.3402M20.367%2036.3299L52.4404%2020L83.1193%2036.3299M52.4404%2053.3402L44.0734%2066.9485L20.367%2054.0206M52.4404%2053.3402L83.1193%2036.3299M52.4404%2053.3402V86M83.1193%2036.3299V65.5876L52.4404%2086M83.1193%2036.3299L88%2045.8557M52.4404%2086L20.367%2068.9897V54.0206'%20stroke='%23EEEEEE'%20stroke-width='4'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M53%2041.5L61%2046L53%2051L45%2046L53%2041.5Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="準備商品"></div>
+          <div class="od-lbl stateText">準備商品</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="delivered">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='100'%20viewBox='0%200%20100%20100'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3cpath%20d='M49.5%2072L34.7776%2044.25H64.2224L49.5%2072Z'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='49.5'%20cy='34.5'%20r='17.5'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='50'%20cy='34'%20r='6'%20fill='%23EEEEEE'/%3e%3cellipse%20cx='49.5'%20cy='78.5'%20rx='16.5'%20ry='4.5'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="已出貨"></div>
+          <div class="od-lbl stateText">已出貨</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="review_pending">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='100'%20viewBox='0%200%20100%20100'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3crect%20x='23'%20y='26'%20width='47'%20height='47'%20rx='9'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='40.5'%20cy='71.5'%20r='6'%20fill='%23EEEEEE'%20stroke='%23B4B4B4'%20stroke-width='5'/%3e%3cpath%20d='M15%2031C13.3431%2031%2012%2032.3431%2012%2034C12%2035.6569%2013.3431%2037%2015%2037V34V31ZM15%2034V37H25V34V31H15V34Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M38%2037C39.6569%2037%2041%2038.3431%2041%2040C41%2041.6569%2039.6569%2043%2038%2043V40V37ZM38%2040V43H23V40V37H38V40Z'%20fill='white'/%3e%3cpath%20d='M33%2049C34.6569%2049%2036%2050.3431%2036%2052C36%2053.6569%2034.6569%2055%2033%2055V52V49ZM33%2052V55H23V52V49H33V52Z'%20fill='white'/%3e%3cpath%20d='M15%2055C13.3431%2055%2012%2056.3431%2012%2058C12%2059.6569%2013.3431%2061%2015%2061V58V55ZM15%2058V61H25V58V55H15V58Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M15%2043C13.3431%2043%2012%2044.3431%2012%2046C12%2047.6569%2013.3431%2049%2015%2049V46V43ZM15%2046V49H25V46V43H15V46Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M70%2037.5H78C82.0387%2040.7861%2084.1171%2042.8369%2087.5%2047V67.5C86.971%2070.366%2086.1353%2071.3844%2084%2072.5C81.6567%2073.081%2080.3432%2073.1636%2078%2072.5L70%2063V37.5Z'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='70.5'%20cy='71.5'%20r='6'%20fill='%23EEEEEE'%20stroke='%23B4B4B4'%20stroke-width='5'/%3e%3cpath%20d='M70%2044H75.5L80.5%2049V55H70V44Z'%20fill='%23EEEEEE'/%3e%3c/svg%3e" alt="待評價"></div>
+          <div class="od-lbl stateText">待評價</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="completed">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='100'%20viewBox='0%200%20100%20100'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3cpath%20d='M60.5%2041L75.6554%2077H45.3446L60.5%2041Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M38%2049L55.3205%2076.75H20.6795L38%2049Z'%20fill='%23D9D9D9'/%3e%3cline%20x1='60.5'%20y1='42'%20x2='60.5'%20y2='20'%20stroke='%23B4B4B4'/%3e%3cpath%20d='M37%2020H60V36H37L43%2028L37%2020Z'%20fill='%23D9D9D9'/%3e%3cline%20x1='18'%20y1='76'%20x2='82'%20y2='76'%20stroke='%23B4B4B4'%20stroke-width='2'/%3e%3cpath%20d='M60.5%2041.5L55%2055L58%2060L60.5%2057L63.5%2060L66%2055L60.5%2041.5Z'%20fill='%23EEEEEE'%20stroke='%23EEEEEE'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/svg%3e" alt="已完成"></div>
+          <div class="od-lbl stateText">已完成</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="od-body-grid">
+      <div class="od-panel od-product-block">
+        <div class="od-panel-head">
+          <h3>訂購商品</h3>
+          <span class="od-badge" id="sellItemCount"></span>
+        </div>
+        <div class="od-panel-body" id="sellOrderProducts">
+          <div class="d-flex justify-content-center py-4"><div class="spinner-border text-secondary" role="status"></div></div>
+        </div>
+      </div>
+      <div class="od-panel">
+        <div class="od-panel-head"><h3>訂單資訊</h3></div>
+        <div class="od-panel-body" id="sellOrderInfo"></div>
+      </div>
+    </div>
+
+    
+    <div class="od-bottom-grid">
+      <div class="od-panel od-review-panel">
+        <div class="od-panel-head">
+          <h3>訂單評論</h3>
+          <span class="od-badge" id="sellReviewCount">0 則</span>
+        </div>
+        <div class="od-panel-body" id="sellOrderReviews"></div>
+      </div>
+      <div class="od-panel od-actions-panel">
+        <div class="od-panel-head"><h3>更多操作</h3></div>
+        <div class="od-panel-body" id="sellOrderActions"></div>
+      </div>
+    </div>
+
+  </div>
+
+  
+  <div class="order-list-container">
+
+    
+    <div class="order-filter-tabs" id="sellFilter">
+      <button class="filter-tab active" data-status="pending">待確認</button>
+      <button class="filter-tab" data-status="preparing">待出貨</button>
+      <button class="filter-tab" data-status="delivered">待收貨</button>
+      <button class="filter-tab" data-status="review">待評價</button>
+      <button class="filter-tab" data-status="completed">已完成</button>
+      <button class="filter-tab" data-status="cancelled">已取消</button>
+    </div>
+
+    <div id="sellTable" style="display:none;">
+      <table class="table align-middle d-none">
+        <thead>
+          <tr>
+            <th>商品</th>
+            <th>狀態</th>
+            <th>買家下單時間</th>
+            <th>相關操作</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="sell-product" class="order-list-new"></div>
+    <div id="sellPagination" class="order-pagination"></div>
+  </div>
+
+</section>
+      
+<section class="col-lg-9 d-none content-section" id="buyProducts">
+  <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
+  <div class="page-head">
+    <div class="ph-left">
+      <h2 class="ph-title">消費訂單</h2>
+      <p class="ph-sub">查看您的購買紀錄與訂單進度</p>
+    </div>
+  </div>
+
+  
+  <div id="buyerOrderDetail" class="d-none od-wrapper">
+
+    
+    <div class="od-head">
+      <button class="od-back-link" id="backToBuyTable" title="返回訂單列表">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18L9 12L15 6"/></svg>
+        回消費訂單
+      </button>
+      <div class="od-breadcrumb">帳戶管理中心 <span class="od-sep">›</span> 消費訂單 <span class="od-sep">›</span> 訂單詳情</div>
+      <div class="od-head-row">
+        <div class="od-title">
+          <h2>訂單詳細資訊</h2>
+          <div class="od-oid">訂單編號 <span id="buyOrderIdSpan" class="od-oid-val">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="od-status-banner" id="buyStatusBanner" style="background: linear-gradient(135deg, #6f87a0 0%, #4a6278 100%);">
+      <div class="od-sb-ic" id="buySbIc">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      </div>
+      <div class="od-sb-info">
+        <div class="od-sb-title" id="buySbTitle">載入中…</div>
+        <div class="od-sb-desc" id="buySbDesc"></div>
+      </div>
+    </div>
+
+    
+    <div class="od-timeline-panel">
+      <div class="od-tl-head">
+        <h3 class="od-tl-title">訂單進度</h3>
+        <span class="od-tl-hint" id="buyTlHint"></span>
+      </div>
+      <div class="od-timeline">
+        <div class="od-step status-item" data-status="pending">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='101'%20viewBox='0%200%20100%20101'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3cpath%20d='M66%2024.5C66%2027.7174%2065.5732%2030.9033%2064.744%2033.8757C63.9148%2036.8482%2062.6994%2039.5491%2061.1673%2041.8241C59.6351%2044.0992%2057.8161%2045.9038%2055.8143%2047.135C53.8124%2048.3663%2051.6668%2049%2049.5%2049C47.3332%2049%2045.1876%2048.3663%2043.1857%2047.135C41.1839%2045.9038%2039.3649%2044.0992%2037.8327%2041.8241C36.3006%2039.5491%2035.0852%2036.8482%2034.256%2033.8757C33.4268%2030.9033%2033%2027.7174%2033%2024.5L49.5%2024.5H66Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M60%2036.5C60%2038.0102%2059.7155%2039.5056%2059.1627%2040.9009C58.6099%2042.2961%2057.7996%2043.5639%2056.7782%2044.6317C55.7567%2045.6996%2054.5441%2046.5467%2053.2095%2047.1246C51.8749%2047.7025%2050.4445%2048%2049%2048C47.5555%2048%2046.1251%2047.7025%2044.7905%2047.1246C43.4559%2046.5467%2042.2433%2045.6996%2041.2218%2044.6317C40.2004%2043.5639%2039.3901%2042.2961%2038.8373%2040.9009C38.2845%2039.5056%2038%2038.0102%2038%2036.5L49%2036.5H60Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M66%2076.5C66%2073.2826%2065.5732%2070.0967%2064.744%2067.1243C63.9148%2064.1518%2062.6994%2061.4509%2061.1673%2059.1759C59.6351%2056.9008%2057.8161%2055.0962%2055.8143%2053.865C53.8124%2052.6337%2051.6668%2052%2049.5%2052C47.3332%2052%2045.1876%2052.6337%2043.1857%2053.865C41.1839%2055.0962%2039.3649%2056.9008%2037.8327%2059.1759C36.3006%2061.4509%2035.0852%2064.1518%2034.256%2067.1243C33.4268%2070.0967%2033%2073.2826%2033%2076.5L49.5%2076.5H66Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M47.5%2048H50.5C50.1343%2050.6642%2050.1446%2050.4689%2050.5%2052.5H47.5C48.0689%2050.1508%2047.5%2048%2047.5%2048Z'%20fill='%23D9D9D9'/%3e%3crect%20opacity='0.44'%20x='30'%20y='76'%20width='40'%20height='7'%20rx='3.5'%20fill='%23D9D9D9'/%3e%3crect%20opacity='0.44'%20x='29'%20y='18'%20width='40'%20height='7'%20rx='3.5'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='49.5'%20cy='49.5'%20r='0.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='49.5'%20cy='52.5'%20r='0.5'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='48.5'%20cy='51.5'%20r='0.5'%20fill='%23B4B4B4'/%3e%3cpath%20d='M35%2070C36%2067.9999%2064%2070%2064%2070C64.9861%2071.9083%2065.1663%2073.0077%2065%2075H34C34.3905%2073.0473%2034%2072%2035%2070Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="訂單已建立"></div>
+          <div class="od-lbl stateText">訂單已建立</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="preparing">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='100'%20viewBox='0%200%20100%20100'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3cpath%20d='M12%2049.9381L20.367%2036.3299L52.4404%2020L83.1193%2036.3299V65.5876L52.4404%2086L20.367%2068.9897V54.0206L12%2049.9381Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M20.367%2036.3299L12%2049.9381L20.367%2054.0206M20.367%2036.3299L52.4404%2053.3402M20.367%2036.3299L52.4404%2020L83.1193%2036.3299M52.4404%2053.3402L44.0734%2066.9485L20.367%2054.0206M52.4404%2053.3402L83.1193%2036.3299M52.4404%2053.3402V86M83.1193%2036.3299V65.5876L52.4404%2086M83.1193%2036.3299L88%2045.8557M52.4404%2086L20.367%2068.9897V54.0206'%20stroke='%23EEEEEE'%20stroke-width='4'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20d='M53%2041.5L61%2046L53%2051L45%2046L53%2041.5Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="準備商品"></div>
+          <div class="od-lbl stateText">準備商品</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="delivered">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='100'%20viewBox='0%200%20100%20100'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3cpath%20d='M49.5%2072L34.7776%2044.25H64.2224L49.5%2072Z'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='49.5'%20cy='34.5'%20r='17.5'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='50'%20cy='34'%20r='6'%20fill='%23EEEEEE'/%3e%3cellipse%20cx='49.5'%20cy='78.5'%20rx='16.5'%20ry='4.5'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="已出貨"></div>
+          <div class="od-lbl stateText">已出貨</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="review_pending">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='100'%20viewBox='0%200%20100%20100'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3crect%20x='23'%20y='26'%20width='47'%20height='47'%20rx='9'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='40.5'%20cy='71.5'%20r='6'%20fill='%23EEEEEE'%20stroke='%23B4B4B4'%20stroke-width='5'/%3e%3cpath%20d='M15%2031C13.3431%2031%2012%2032.3431%2012%2034C12%2035.6569%2013.3431%2037%2015%2037V34V31ZM15%2034V37H25V34V31H15V34Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M38%2037C39.6569%2037%2041%2038.3431%2041%2040C41%2041.6569%2039.6569%2043%2038%2043V40V37ZM38%2040V43H23V40V37H38V40Z'%20fill='white'/%3e%3cpath%20d='M33%2049C34.6569%2049%2036%2050.3431%2036%2052C36%2053.6569%2034.6569%2055%2033%2055V52V49ZM33%2052V55H23V52V49H33V52Z'%20fill='white'/%3e%3cpath%20d='M15%2055C13.3431%2055%2012%2056.3431%2012%2058C12%2059.6569%2013.3431%2061%2015%2061V58V55ZM15%2058V61H25V58V55H15V58Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M15%2043C13.3431%2043%2012%2044.3431%2012%2046C12%2047.6569%2013.3431%2049%2015%2049V46V43ZM15%2046V49H25V46V43H15V46Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M70%2037.5H78C82.0387%2040.7861%2084.1171%2042.8369%2087.5%2047V67.5C86.971%2070.366%2086.1353%2071.3844%2084%2072.5C81.6567%2073.081%2080.3432%2073.1636%2078%2072.5L70%2063V37.5Z'%20fill='%23D9D9D9'/%3e%3ccircle%20cx='70.5'%20cy='71.5'%20r='6'%20fill='%23EEEEEE'%20stroke='%23B4B4B4'%20stroke-width='5'/%3e%3cpath%20d='M70%2044H75.5L80.5%2049V55H70V44Z'%20fill='%23EEEEEE'/%3e%3c/svg%3e" alt="待評價"></div>
+          <div class="od-lbl stateText">待評價</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+        <div class="od-step status-item" data-status="completed">
+          <div class="od-dot"><img src="data:image/svg+xml,%3csvg%20width='100'%20height='100'%20viewBox='0%200%20100%20100'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='100'%20height='100'%20rx='50'%20fill='white'/%3e%3cpath%20d='M60.5%2041L75.6554%2077H45.3446L60.5%2041Z'%20fill='%23D9D9D9'/%3e%3cpath%20d='M38%2049L55.3205%2076.75H20.6795L38%2049Z'%20fill='%23D9D9D9'/%3e%3cline%20x1='60.5'%20y1='42'%20x2='60.5'%20y2='20'%20stroke='%23B4B4B4'/%3e%3cpath%20d='M37%2020H60V36H37L43%2028L37%2020Z'%20fill='%23D9D9D9'/%3e%3cline%20x1='18'%20y1='76'%20x2='82'%20y2='76'%20stroke='%23B4B4B4'%20stroke-width='2'/%3e%3cpath%20d='M60.5%2041.5L55%2055L58%2060L60.5%2057L63.5%2060L66%2055L60.5%2041.5Z'%20fill='%23EEEEEE'%20stroke='%23EEEEEE'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/svg%3e" alt="已完成"></div>
+          <div class="od-lbl stateText">已完成</div>
+          <div class="od-ts timestamp"></div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="od-body-grid">
+      <div class="od-panel od-product-block">
+        <div class="od-panel-head">
+          <h3>訂購商品</h3>
+          <span class="od-badge" id="buyItemCount"></span>
+        </div>
+        <div class="od-panel-body" id="buyOrderProducts">
+          <div class="d-flex justify-content-center py-4"><div class="spinner-border text-secondary" role="status"></div></div>
+        </div>
+      </div>
+      <div class="od-panel">
+        <div class="od-panel-head"><h3>訂單資訊</h3></div>
+        <div class="od-panel-body" id="buyerOrderInfo"></div>
+      </div>
+    </div>
+
+    
+    <div class="od-bottom-grid">
+      <div class="od-panel od-review-panel">
+        <div class="od-panel-head">
+          <h3>訂單評論</h3>
+          <span class="od-badge" id="buyReviewCount">0 則</span>
+        </div>
+        <div class="od-panel-body" id="buyOrderReviews"></div>
+      </div>
+      <div class="od-panel od-actions-panel">
+        <div class="od-panel-head"><h3>更多操作</h3></div>
+        <div class="od-panel-body" id="buyOrderActions"></div>
+      </div>
+    </div>
+
+  </div>
+
+  
+  <div class="order-list-container">
+
+    
+    <div class="order-filter-tabs" id="buyFilter">
+      <button class="filter-tab active" data-status="pending">待確認</button>
+      <button class="filter-tab" data-status="preparing">待出貨</button>
+      <button class="filter-tab" data-status="delivered">待收貨</button>
+      <button class="filter-tab" data-status="review">待評價</button>
+      <button class="filter-tab" data-status="completed">已完成</button>
+      <button class="filter-tab" data-status="cancelled">已取消</button>
+    </div>
+
+    <div id="buyTable" style="display:none;">
+      <table class="table align-middle d-none">
+        <thead>
+          <tr>
+            <th>商品</th><th>狀態</th><th>下單時間</th><th>總計</th><th>相關操作</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="buy-product" class="order-list-new"></div>
+    <div id="buyPagination" class="order-pagination"></div>
+  </div>
+
+</section>
+
+      
+      <section class="col-lg-9 d-none content-section" id="settings">
+        <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
+        <div class="page-head">
+          <div class="ph-left">
+            <h2 class="ph-title">個人中心</h2>
+            <p class="ph-sub">修改個人資料、密碼與帳號設定</p>
+          </div>
+        </div>
+        <div class="profile-info-card col-12">
+          <div class="profile-info-header">
+            <i class="ti ti-id-badge-2"></i>
+            <span>帳號資訊</span>
+          </div>
+          <div class="profile-info-body">
+            <div class="info-row">
+              <span class="info-label"><i class="ti ti-user"></i>用戶名</span>
+              <div class="info-row-right">
+                <span class="info-value" id="showName"></span>
+              </div>
+            </div>
+            <div class="info-row">
+              <span class="info-label"><i class="ti ti-file-description"></i>關於我</span>
+              <span class="info-value" id="showIntro"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label"><i class="ti ti-at"></i>登入信箱/帳號</span>
+              <div class="info-row-right">
+                <span class="info-value" id="showLoginEmail">—</span>
+                <span id="emailVerifyBadge"></span>
+              </div>
+            </div>
+            <div class="info-row" style="border-bottom: none;">
+              <span class="info-label"><i class="ti ti-mail"></i>常用帳號</span>
+              <div class="info-row-right">
+                <span class="info-value" id="showEmail">尚未設定</span>
+                <button class="checkInfoBtn" id="setEmailBtn">
+                  <img src="data:image/svg+xml,%3csvg%20width='26'%20height='26'%20viewBox='0%200%2026%2026'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='13'%20cy='13'%20r='13'%20fill='white'/%3e%3cpath%20d='M13.6318%203C14.0675%203%2014.2858%203.00028%2014.4629%203.07031C14.6878%203.15934%2014.8726%203.32699%2014.9834%203.54199C15.0707%203.71127%2015.0925%203.92789%2015.1357%204.36133C15.2177%205.18213%2015.2589%205.59316%2015.4307%205.81836C15.6486%206.10394%2016.0033%206.251%2016.3594%206.20312C16.64%206.16528%2016.9591%205.90323%2017.5977%205.38086C17.9353%205.10467%2018.1045%204.96713%2018.2861%204.90918C18.5165%204.8357%2018.7655%204.84826%2018.9873%204.94434C19.1622%205.0201%2019.3167%205.17412%2019.625%205.48242L20.5176%206.375C20.8258%206.68323%2020.9799%206.83787%2021.0557%207.0127C21.1517%207.23455%2021.1643%207.48357%2021.0908%207.71387C21.0328%207.89534%2020.8942%208.0641%2020.6182%208.40137C20.0958%209.03946%2019.8349%209.35905%2019.7969%209.63965C19.7489%209.99576%2019.896%2010.3504%2020.1816%2010.5684C20.4068%2010.7401%2020.8176%2010.7811%2021.6387%2010.8633C22.0724%2010.9067%2022.2897%2010.9292%2022.459%2011.0166C22.6737%2011.1275%2022.8408%2011.3124%2022.9297%2011.5371C22.9998%2011.7143%2023%2011.9323%2023%2012.3682V13.6318C23%2014.0675%2022.9997%2014.2858%2022.9297%2014.4629C22.8407%2014.6878%2022.673%2014.8726%2022.458%2014.9834C22.2887%2015.0706%2022.0721%2015.0925%2021.6387%2015.1357C20.8181%2015.2177%2020.4078%2015.259%2020.1826%2015.4307C19.8967%2015.6486%2019.7498%2016.0031%2019.7979%2016.3594C19.8357%2016.6399%2020.0969%2016.9594%2020.6191%2017.5977C20.8947%2017.9345%2021.0328%2018.103%2021.0908%2018.2842C21.1645%2018.5146%2021.1518%2018.7643%2021.0557%2018.9863C20.9799%2019.1611%2020.8257%2019.316%2020.5176%2019.624L19.625%2020.5166C19.3167%2020.8249%2019.1622%2020.9789%2018.9873%2021.0547C18.7654%2021.1508%2018.5165%2021.1633%2018.2861%2021.0898C18.1045%2021.0319%2017.9352%2020.8943%2017.5977%2020.6182C16.9588%2020.0956%2016.6392%2019.8336%2016.3584%2019.7959C16.0026%2019.7483%2015.6484%2019.8953%2015.4307%2020.1807C15.2588%2020.4059%2015.2177%2020.8166%2015.1357%2021.6377C15.0924%2022.0714%2015.0707%2022.2886%2014.9834%2022.458C14.8725%2022.6729%2014.6877%2022.8407%2014.4629%2022.9297C14.2856%2022.9998%2014.067%2023%2013.6309%2023H12.3682C11.9323%2023%2011.7143%2022.9998%2011.5371%2022.9297C11.3124%2022.8408%2011.1275%2022.6737%2011.0166%2022.459C10.9292%2022.2897%2010.9067%2022.0724%2010.8633%2021.6387C10.7811%2020.8176%2010.7401%2020.4068%2010.5684%2020.1816C10.3504%2019.896%209.99576%2019.7489%209.63965%2019.7969C9.35905%2019.8349%209.03946%2020.0958%208.40137%2020.6182C8.0641%2020.8942%207.89534%2021.0328%207.71387%2021.0908C7.48357%2021.1643%207.23455%2021.1517%207.0127%2021.0557C6.83787%2020.9799%206.68323%2020.8258%206.375%2020.5176L5.48242%2019.625C5.17412%2019.3167%205.0201%2019.1622%204.94434%2018.9873C4.84826%2018.7655%204.8357%2018.5165%204.90918%2018.2861C4.96713%2018.1045%205.10467%2017.9353%205.38086%2017.5977C5.90323%2016.9591%206.16528%2016.64%206.20312%2016.3594C6.251%2016.0033%206.10394%2015.6486%205.81836%2015.4307C5.59316%2015.2589%205.18213%2015.2177%204.36133%2015.1357C3.92789%2015.0925%203.71127%2015.0707%203.54199%2014.9834C3.32699%2014.8726%203.15934%2014.6878%203.07031%2014.4629C3.00028%2014.2858%203%2014.0675%203%2013.6318V12.3682C3%2011.9323%203.00023%2011.7143%203.07031%2011.5371C3.15921%2011.3124%203.32634%2011.1275%203.54102%2011.0166C3.71035%2010.9292%203.9276%2010.9067%204.36133%2010.8633C5.18237%2010.7811%205.59316%2010.7402%205.81836%2010.5684C6.10372%2010.3505%206.25086%209.99645%206.20312%209.64062C6.16537%209.35987%205.90335%209.03991%205.38086%208.40137C5.10503%208.06427%204.96714%207.89531%204.90918%207.71387C4.83569%207.48354%204.84827%207.23456%204.94434%207.0127C5.02008%206.83785%205.17418%206.68324%205.48242%206.375L6.375%205.48242C6.68326%205.17417%206.83783%205.02009%207.0127%204.94434C7.23457%204.84823%207.48352%204.8357%207.71387%204.90918C7.89541%204.96713%208.06487%205.10482%208.40234%205.38086C9.04077%205.90307%209.35992%206.16444%209.64062%206.20215C9.99654%206.24992%2010.3505%206.10287%2010.5684%205.81738C10.7401%205.59218%2010.7811%205.18199%2010.8633%204.36133C10.9067%203.92763%2010.9292%203.71034%2011.0166%203.54102C11.1275%203.32633%2011.3124%203.15921%2011.5371%203.07031C11.7143%203.00025%2011.9323%203%2012.3682%203H13.6318ZM13%209C10.7909%209%209%2010.7909%209%2013C9%2015.2091%2010.7909%2017%2013%2017C15.2091%2017%2017%2015.2091%2017%2013C17%2010.7909%2015.2091%209%2013%209Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3c/svg%3e" alt="設定常用帳號icon">
+                  <div>設定</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="profile-edit-card mt-3" id="profile-edit-section">
+          <div class="profile-edit-header">
+            <i class="ti ti-user-edit"></i>
+            <span>個人資料更改</span>
+          </div>
+          <div class="profile-edit-body">
+
+            
+            <div class="sell-field">
+              <label class="sell-label">大頭照</label>
+              <small class="sell-hint">照片大小需 ≤ 5MB，格式限 png / jpg / jpeg / webp</small>
+              <label class="sell-upload-zone" for="photo">
+                <i class="ti ti-user-circle" style="font-size: 2rem; opacity: 0.6;"></i>
+                <span>點擊上傳大頭照</span>
+              </label>
+              <input class="d-none" type="file" id="photo" name="image" accept="image/png, image/jpg, image/jpeg, image/webp">
+              <div id="myAvatarPreview" class="sell-preview-single"></div>
+            </div>
+
+            
+            <div class="sell-field">
+              <label for="display-name" class="sell-label">暱稱</label>
+              <div class="input-group">
+                <span class="input-group-text">@</span>
+                <input type="text" class="form-control" id="display-name" placeholder="Username">
+              </div>
+            </div>
+
+            
+            <div class="sell-field">
+              <label for="bio" class="sell-label">個人簡介</label>
+              <textarea class="form-control" id="bio" rows="4" placeholder="簡單介紹一下自己..."></textarea>
+            </div>
+
+            
+            <div class="profile-edit-footer">
+              <span class="loader" id="loader1" style="display: none;"></span>
+              <button class="profile-submit-btn" id="update-profile">
+                <i class="ti ti-check"></i> 更新個人資料
+              </button>
+            </div>
+
+          </div>
+        </div>
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header">
+            <i class="ti ti-lock"></i>
+            <span>修改密碼</span>
+          </div>
+          <div class="profile-edit-body">
+            <div class="sell-field">
+              <label for="current-password" class="sell-label">目前密碼</label>
+              <input type="password" class="form-control" id="current-password" placeholder="請輸入目前密碼" maxlength="128">
+            </div>
+            <div class="sell-field">
+              <label for="new-password" class="sell-label">新密碼</label>
+              <small class="sell-hint">至少 8 位，需含大寫、小寫字母及數字</small>
+              <input type="password" class="form-control" id="new-password" placeholder="請輸入新密碼" maxlength="128">
+            </div>
+            <div class="sell-field">
+              <label for="confirm-password" class="sell-label">確認新密碼</label>
+              <input type="password" class="form-control" id="confirm-password" placeholder="請再次輸入新密碼" maxlength="128">
+            </div>
+            <div class="profile-edit-footer">
+              <button class="profile-submit-btn" id="change-password-btn">
+                <i class="ti ti-lock-check"></i> 確認修改密碼
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header collapsible" data-collapse-target="reviewsBody">
+            <i class="ti ti-message-star"></i>
+            <span>我的評價</span>
+            <i class="ti ti-chevron-down profile-edit-toggle"></i>
+          </div>
+          <div class="profile-edit-body collapsible-body" id="reviewsBody">
+            
+            <div id="reviewsContainer">
+              <div class="review-empty">
+                <i class="ti ti-message-circle review-empty-icon"></i>
+                <div class="review-empty-title">目前還沒有評價</div>
+                <div class="review-empty-sub">完成交易後，買賣雙方可互相留下評價</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header collapsible" data-collapse-target="reportsBody">
+            <i class="ti ti-flag"></i>
+            <span>我的檢舉</span>
+            <i class="ti ti-chevron-down profile-edit-toggle"></i>
+          </div>
+          <div class="profile-edit-body collapsible-body" id="reportsBody">
+            <p class="text-muted small mb-3" style="font-size:0.82rem;">
+              <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
+              檢舉送出後將由管理員審核，審核結果會反映在此頁面。
+            </p>
+            <div id="myReportsList">
+              <div class="text-center text-muted py-4" style="font-size:14px;">載入中...</div>
+            </div>
+            <div id="myReportsPager" class="d-flex justify-content-center align-items-center flex-wrap gap-1 mt-3"></div>
+          </div>
+        </div>
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header collapsible" data-collapse-target="receivedReportsBody">
+            <i class="ti ti-alert-triangle"></i>
+            <span>被檢舉紀錄</span>
+            <i class="ti ti-chevron-down profile-edit-toggle"></i>
+          </div>
+          <div class="profile-edit-body collapsible-body" id="receivedReportsBody">
+            <p class="text-muted small mb-3" style="font-size:0.82rem;">
+              <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
+              以下為其他使用者對您提出且審核通過的檢舉結果及信譽積分異動紀錄。
+            </p>
+            <p class="text-muted small mb-3" style="font-size:0.82rem;background:#fff8f0;border:1px solid #f5cba7;border-radius:6px;padding:10px;color:#7d4e00;">
+              若不滿拾貨寶庫人員審核結果，請點擊聊天室中的真人客服進行溝通。
+            </p>
+            <div id="receivedReportsList">
+              <div class="text-center text-muted py-4" style="font-size:14px;">載入中...</div>
+            </div>
+            <div id="receivedReportsPager" class="d-flex justify-content-center align-items-center flex-wrap gap-1 mt-3"></div>
+          </div>
+        </div>
+      </section>
+      
+      <main class="col-lg-9 content-section" id="account">
+
+        
+        <div class="page-head">
+          <div class="ph-left">
+            <h2 class="ph-title">帳戶管理中心</h2>
+            <p class="ph-sub">管理您的帳號、商品與訂單</p>
+          </div>
+          <div class="ph-right">
+            <div class="ph-greeting">歡迎回來，<span style="color: #0c7d9d;" id="phUsername">—</span></div>
+            <div class="ph-date" id="phDate"></div>
+          </div>
+        </div>
+
+        
+        <div class="d-lg-none mb-3">
+          <div class="mobile-profile-card">
+            <div class="mobile-profile-top">
+              <div class="mobile-av-outer">
+                <img id="mProfileAvatar" class="mobile-av" alt="頭像">
+              </div>
+              <div class="mobile-profile-detail">
+                <div class="fw-bold" id="mProfileName"></div>
+                <div class="uid">UID · <span id="muid"></span></div>
+                <div class="text-muted" id="mProfileInfo"></div>
+              </div>
+              <button class="mobile-settings-btn" data-target="settings">
+                <img src="data:image/svg+xml,%3csvg%20width='26'%20height='26'%20viewBox='0%200%2026%2026'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='13'%20cy='13'%20r='13'%20fill='white'/%3e%3cpath%20d='M13.6318%203C14.0675%203%2014.2858%203.00028%2014.4629%203.07031C14.6878%203.15934%2014.8726%203.32699%2014.9834%203.54199C15.0707%203.71127%2015.0925%203.92789%2015.1357%204.36133C15.2177%205.18213%2015.2589%205.59316%2015.4307%205.81836C15.6486%206.10394%2016.0033%206.251%2016.3594%206.20312C16.64%206.16528%2016.9591%205.90323%2017.5977%205.38086C17.9353%205.10467%2018.1045%204.96713%2018.2861%204.90918C18.5165%204.8357%2018.7655%204.84826%2018.9873%204.94434C19.1622%205.0201%2019.3167%205.17412%2019.625%205.48242L20.5176%206.375C20.8258%206.68323%2020.9799%206.83787%2021.0557%207.0127C21.1517%207.23455%2021.1643%207.48357%2021.0908%207.71387C21.0328%207.89534%2020.8942%208.0641%2020.6182%208.40137C20.0958%209.03946%2019.8349%209.35905%2019.7969%209.63965C19.7489%209.99576%2019.896%2010.3504%2020.1816%2010.5684C20.4068%2010.7401%2020.8176%2010.7811%2021.6387%2010.8633C22.0724%2010.9067%2022.2897%2010.9292%2022.459%2011.0166C22.6737%2011.1275%2022.8408%2011.3124%2022.9297%2011.5371C22.9998%2011.7143%2023%2011.9323%2023%2012.3682V13.6318C23%2014.0675%2022.9997%2014.2858%2022.9297%2014.4629C22.8407%2014.6878%2022.673%2014.8726%2022.458%2014.9834C22.2887%2015.0706%2022.0721%2015.0925%2021.6387%2015.1357C20.8181%2015.2177%2020.4078%2015.259%2020.1826%2015.4307C19.8967%2015.6486%2019.7498%2016.0031%2019.7979%2016.3594C19.8357%2016.6399%2020.0969%2016.9594%2020.6191%2017.5977C20.8947%2017.9345%2021.0328%2018.103%2021.0908%2018.2842C21.1645%2018.5146%2021.1518%2018.7643%2021.0557%2018.9863C20.9799%2019.1611%2020.8257%2019.316%2020.5176%2019.624L19.625%2020.5166C19.3167%2020.8249%2019.1622%2020.9789%2018.9873%2021.0547C18.7654%2021.1508%2018.5165%2021.1633%2018.2861%2021.0898C18.1045%2021.0319%2017.9352%2020.8943%2017.5977%2020.6182C16.9588%2020.0956%2016.6392%2019.8336%2016.3584%2019.7959C16.0026%2019.7483%2015.6484%2019.8953%2015.4307%2020.1807C15.2588%2020.4059%2015.2177%2020.8166%2015.1357%2021.6377C15.0924%2022.0714%2015.0707%2022.2886%2014.9834%2022.458C14.8725%2022.6729%2014.6877%2022.8407%2014.4629%2022.9297C14.2856%2022.9998%2014.067%2023%2013.6309%2023H12.3682C11.9323%2023%2011.7143%2022.9998%2011.5371%2022.9297C11.3124%2022.8408%2011.1275%2022.6737%2011.0166%2022.459C10.9292%2022.2897%2010.9067%2022.0724%2010.8633%2021.6387C10.7811%2020.8176%2010.7401%2020.4068%2010.5684%2020.1816C10.3504%2019.896%209.99576%2019.7489%209.63965%2019.7969C9.35905%2019.8349%209.03946%2020.0958%208.40137%2020.6182C8.0641%2020.8942%207.89534%2021.0328%207.71387%2021.0908C7.48357%2021.1643%207.23455%2021.1517%207.0127%2021.0557C6.83787%2020.9799%206.68323%2020.8258%206.375%2020.5176L5.48242%2019.625C5.17412%2019.3167%205.0201%2019.1622%204.94434%2018.9873C4.84826%2018.7655%204.8357%2018.5165%204.90918%2018.2861C4.96713%2018.1045%205.10467%2017.9353%205.38086%2017.5977C5.90323%2016.9591%206.16528%2016.64%206.20312%2016.3594C6.251%2016.0033%206.10394%2015.6486%205.81836%2015.4307C5.59316%2015.2589%205.18213%2015.2177%204.36133%2015.1357C3.92789%2015.0925%203.71127%2015.0707%203.54199%2014.9834C3.32699%2014.8726%203.15934%2014.6878%203.07031%2014.4629C3.00028%2014.2858%203%2014.0675%203%2013.6318V12.3682C3%2011.9323%203.00023%2011.7143%203.07031%2011.5371C3.15921%2011.3124%203.32634%2011.1275%203.54102%2011.0166C3.71035%2010.9292%203.9276%2010.9067%204.36133%2010.8633C5.18237%2010.7811%205.59316%2010.7402%205.81836%2010.5684C6.10372%2010.3505%206.25086%209.99645%206.20312%209.64062C6.16537%209.35987%205.90335%209.03991%205.38086%208.40137C5.10503%208.06427%204.96714%207.89531%204.90918%207.71387C4.83569%207.48354%204.84827%207.23456%204.94434%207.0127C5.02008%206.83785%205.17418%206.68324%205.48242%206.375L6.375%205.48242C6.68326%205.17417%206.83783%205.02009%207.0127%204.94434C7.23457%204.84823%207.48352%204.8357%207.71387%204.90918C7.89541%204.96713%208.06487%205.10482%208.40234%205.38086C9.04077%205.90307%209.35992%206.16444%209.64062%206.20215C9.99654%206.24992%2010.3505%206.10287%2010.5684%205.81738C10.7401%205.59218%2010.7811%205.18199%2010.8633%204.36133C10.9067%203.92763%2010.9292%203.71034%2011.0166%203.54102C11.1275%203.32633%2011.3124%203.15921%2011.5371%203.07031C11.7143%203.00025%2011.9323%203%2012.3682%203H13.6318ZM13%209C10.7909%209%209%2010.7909%209%2013C9%2015.2091%2010.7909%2017%2013%2017C15.2091%2017%2017%2015.2091%2017%2013C17%2010.7909%2015.2091%209%2013%209Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3c/svg%3e" alt="設定">
+              </button>
+            </div>
+            <div class="mobile-score-strip my-tooltip" data-text="信用積分制度：起始 100 分，上限 150 分。完成一筆交易雙方各 +5、獲得良好評價 +2。爽約失聯 -15、商品嚴重不符 -10、遲到超過 10 分鐘 -5。積分低於 80 分限制上架 5 件，低於 50 分暫停交易 7 天，歸零則永久停權。">
+              <span class="mobile-score-lbl">信譽積分</span>
+              <strong class="mobile-score-val" id="rate2"></strong>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="d-none d-lg-flex stat-cards-row mb-3">
+          <div class="stat-card-new">
+            <div class="stat-ic-new"><img src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='20'%20cy='20'%20r='20'%20fill='white'/%3e%3crect%20x='11'%20y='9'%20width='18'%20height='23'%20fill='url(%23paint0_linear_713_936)'/%3e%3cline%20x1='15'%20y1='14.48'%20x2='25'%20y2='14.48'%20stroke='white'/%3e%3cline%20x1='15'%20y1='26.4399'%20x2='25'%20y2='26.4399'%20stroke='white'/%3e%3cline%20x1='15'%20y1='20.46'%20x2='25'%20y2='20.46'%20stroke='white'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_713_936'%20x1='24.8'%20y1='12.22'%20x2='11.3492'%20y2='25.5296'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="" class="stat-icon-img"></div>
+            <div>
+              <div class="stat-num-new" id="statProducts">—</div>
+              <div class="stat-lbl-new">上架商品</div>
+            </div>
+          </div>
+          <div class="stat-card-new stat-aqua">
+            <div class="stat-ic-new"><img src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='20'%20cy='20'%20r='20'%20fill='white'/%3e%3crect%20width='32'%20height='16'%20transform='translate(4%2012)'%20fill='url(%23paint0_linear_779_1064)'/%3e%3crect%20x='4'%20y='12'%20width='32'%20height='16'%20fill='url(%23paint1_linear_779_1064)'/%3e%3crect%20x='4.25'%20y='12.25'%20width='31.5'%20height='15.5'%20stroke='%230C6F91'%20stroke-opacity='0.533654'%20stroke-width='0.5'/%3e%3cellipse%20cx='19.5897'%20cy='20'%20rx='7.38462'%20ry='7.2'%20fill='white'/%3e%3cpath%20d='M19.5898%2013.3C23.4041%2013.3001%2026.4746%2016.3118%2026.4746%2020.0002C26.4745%2023.6885%2023.404%2026.7003%2019.5898%2026.7004C15.7756%2026.7004%2012.7052%2023.6885%2012.7051%2020.0002C12.7051%2016.3117%2015.7756%2013.3%2019.5898%2013.3Z'%20stroke='url(%23paint2_linear_779_1064)'%20stroke-opacity='0.6'/%3e%3cpath%20d='M18.824%2026.128V24.912C18.3973%2024.8907%2017.96%2024.864%2017.512%2024.832C17.0747%2024.8%2016.696%2024.7573%2016.376%2024.704V23.616C16.5147%2023.6267%2016.6747%2023.6427%2016.856%2023.664C17.048%2023.6853%2017.2613%2023.7013%2017.496%2023.712C17.7307%2023.7227%2017.9867%2023.7387%2018.264%2023.76C18.5413%2023.7707%2018.84%2023.776%2019.16%2023.776C19.7573%2023.776%2020.2%2023.7387%2020.488%2023.664C20.776%2023.5893%2020.9627%2023.456%2021.048%2023.264C21.144%2023.0613%2021.192%2022.784%2021.192%2022.432C21.192%2022.048%2021.16%2021.776%2021.096%2021.616C21.0427%2021.4453%2020.9413%2021.3333%2020.792%2021.28C20.6427%2021.2267%2020.4347%2021.1893%2020.168%2021.168L17.928%2020.912C17.4373%2020.8373%2017.0587%2020.7147%2016.792%2020.544C16.536%2020.3627%2016.3547%2020.112%2016.248%2019.792C16.152%2019.4613%2016.104%2019.0613%2016.104%2018.592C16.104%2017.952%2016.2107%2017.4613%2016.424%2017.12C16.6373%2016.7787%2016.9413%2016.5387%2017.336%2016.4C17.7413%2016.2507%2018.2373%2016.16%2018.824%2016.128V14.864H19.848V16.112C20.264%2016.1227%2020.648%2016.144%2021%2016.176C21.352%2016.208%2021.6933%2016.2613%2022.024%2016.336V17.424C21.7573%2017.3813%2021.4693%2017.3493%2021.16%2017.328C20.8507%2017.296%2020.5467%2017.2747%2020.248%2017.264C19.9493%2017.2533%2019.6667%2017.248%2019.4%2017.248C19.08%2017.248%2018.7973%2017.2587%2018.552%2017.28C18.3067%2017.2907%2018.0987%2017.3387%2017.928%2017.424C17.7573%2017.4987%2017.624%2017.6267%2017.528%2017.808C17.4427%2017.9787%2017.4%2018.2187%2017.4%2018.528C17.4%2018.8693%2017.4213%2019.1253%2017.464%2019.296C17.5173%2019.456%2017.6187%2019.568%2017.768%2019.632C17.9173%2019.6853%2018.1307%2019.728%2018.408%2019.76L20.808%2020.016C21.224%2020.0587%2021.5547%2020.1493%2021.8%2020.288C22.0453%2020.4267%2022.2213%2020.6613%2022.328%2020.992C22.4347%2021.3227%2022.488%2021.792%2022.488%2022.4C22.488%2023.0293%2022.4027%2023.52%2022.232%2023.872C22.0613%2024.2133%2021.784%2024.464%2021.4%2024.624C21.016%2024.7733%2020.4987%2024.864%2019.848%2024.896V26.128H18.824Z'%20fill='%23FFC857'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1064'%20x1='16'%20y1='0'%20x2='16'%20y2='16'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='white'/%3e%3cstop%20offset='1'%20stop-color='%23999999'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1064'%20x1='20'%20y1='12'%20x2='20'%20y2='28'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23719AC5'/%3e%3cstop%20offset='1'%20stop-color='%2393DDC4'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint2_linear_779_1064'%20x1='19.5897'%20y1='12.8'%20x2='19.5897'%20y2='27.2'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23689EBE'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.8'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="" class="stat-icon-img"></div>
+            <div>
+              <div class="stat-num-new" id="statOrders">—</div>
+              <div class="stat-lbl-new">進行中訂單</div>
+            </div>
+          </div>
+          <div class="stat-card-new">
+            <div class="stat-ic-new"><img src="data:image/svg+xml,%3csvg%20width='30'%20height='31'%20viewBox='0%200%2030%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='30'%20height='31'%20fill='white'/%3e%3cmask%20id='path-2-inside-1_779_1021'%20fill='white'%3e%3crect%20x='2'%20y='5'%20width='25'%20height='20'%20rx='1'/%3e%3c/mask%3e%3crect%20x='2'%20y='5'%20width='25'%20height='20'%20rx='1'%20stroke='url(%23paint0_linear_779_1021)'%20stroke-width='4'%20mask='url(%23path-2-inside-1_779_1021)'/%3e%3cline%20x1='6'%20y1='16.5'%20x2='23'%20y2='16.5'%20stroke='%2383B4C8'/%3e%3cline%20x1='6'%20y1='19.5'%20x2='15'%20y2='19.5'%20stroke='%23A8D7D4'/%3e%3crect%20x='6'%20y='9'%20width='17'%20height='5'%20fill='url(%23paint1_linear_779_1021)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1021'%20x1='14.5'%20y1='5'%20x2='14.5'%20y2='25'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%234E82B7'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1021'%20x1='14.5'%20y1='9'%20x2='14.5'%20y2='14'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%235185B8'/%3e%3cstop%20offset='1'%20stop-color='%236A9DC0'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="" class="stat-icon-img"></div>
+            <div>
+              <div class="stat-num-new" id="statScore">—</div>
+              <div class="stat-lbl-new">信譽積分</div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div id="firstListingBanner" class="first-listing-banner d-none">
+          <div class="flb-icon"><img src="data:image/svg+xml,%3csvg%20width='26'%20height='22'%20viewBox='0%200%2026%2022'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_4_31)'%3e%3crect%20width='16'%20height='10'%20rx='1'%20transform='matrix(-1%200%200%201%2021%2011)'%20fill='url(%23paint0_linear_4_31)'%20fill-opacity='0.6'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%203.94%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.6'%20cy='1'%20rx='1.6'%20ry='1'%20transform='matrix(-1%200%200%201%2022.1%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2012.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%209.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%206.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2015.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2018.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2025.1%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cpath%20d='M12.9142%20-10.6567C12.953%20-10.7215%2013.047%20-10.7215%2013.0858%20-10.6567L25.0337%209.29863C25.0736%209.36528%2025.0256%209.45%2024.9479%209.45H1.05207C0.974385%209.45%200.926367%209.36529%200.966275%209.29863L12.9142%20-10.6567Z'%20fill='url(%23paint1_linear_4_31)'%20fill-opacity='0.6'/%3e%3crect%20x='7'%20y='11'%20width='12'%20height='7'%20fill='white'/%3e%3c/g%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_4_31'%20x1='8'%20y1='10'%20x2='8'%20y2='0'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20offset='0.2'%20stop-color='%230D779D'/%3e%3cstop%20offset='0.879808'%20stop-color='%2324B685'%20stop-opacity='0.8'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_4_31'%20x1='13'%20y1='16.2'%20x2='13'%20y2='-10.8'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'/%3e%3cstop%20offset='0.576923'%20stop-color='%23009497'%20stop-opacity='0.8'/%3e%3c/linearGradient%3e%3cclipPath%20id='clip0_4_31'%3e%3crect%20width='26'%20height='22'%20fill='white'%20transform='matrix(-1%200%200%201%2026%200)'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt=""></div>
+          <div class="flb-body">
+            <div class="flb-title">還沒有上架商品？</div>
+            <div class="flb-sub">把不再用的物品賣給下一位同學，讓它繼續發揮價值！</div>
+          </div>
+          <a href="../shop/shop.html?page=seller" class="flb-btn">立即上架</a>
+          <button class="flb-close" id="firstListingBannerClose" aria-label="關閉">×</button>
+        </div>
+
+        
+        <div class="row g-3">
+
+          
+          <div class="d-lg-block d-none col-lg-7">
+            <div class="account-panel">
+              <div class="account-panel-head">快速操作</div>
+              <div class="account-panel-body">
+                <button class="fastIcon qa-card-new qa-primary-new" style="margin-bottom: 8px;" onclick="window.location.href='../shop/shop.html?page=seller'">
+                  <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='26'%20height='22'%20viewBox='0%200%2026%2022'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_4_31)'%3e%3crect%20width='16'%20height='10'%20rx='1'%20transform='matrix(-1%200%200%201%2021%2011)'%20fill='url(%23paint0_linear_4_31)'%20fill-opacity='0.6'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%203.94%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.6'%20cy='1'%20rx='1.6'%20ry='1'%20transform='matrix(-1%200%200%201%2022.1%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2012.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%209.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%206.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2015.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2018.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2025.1%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cpath%20d='M12.9142%20-10.6567C12.953%20-10.7215%2013.047%20-10.7215%2013.0858%20-10.6567L25.0337%209.29863C25.0736%209.36528%2025.0256%209.45%2024.9479%209.45H1.05207C0.974385%209.45%200.926367%209.36529%200.966275%209.29863L12.9142%20-10.6567Z'%20fill='url(%23paint1_linear_4_31)'%20fill-opacity='0.6'/%3e%3crect%20x='7'%20y='11'%20width='12'%20height='7'%20fill='white'/%3e%3c/g%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_4_31'%20x1='8'%20y1='10'%20x2='8'%20y2='0'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20offset='0.2'%20stop-color='%230D779D'/%3e%3cstop%20offset='0.879808'%20stop-color='%2324B685'%20stop-opacity='0.8'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_4_31'%20x1='13'%20y1='16.2'%20x2='13'%20y2='-10.8'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'/%3e%3cstop%20offset='0.576923'%20stop-color='%23009497'%20stop-opacity='0.8'/%3e%3c/linearGradient%3e%3cclipPath%20id='clip0_4_31'%3e%3crect%20width='26'%20height='22'%20fill='white'%20transform='matrix(-1%200%200%201%2026%200)'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="出售商品icon"></div>
+                  <div class="qa-copy-new">
+                    <div class="qa-title-new">出售商品</div>
+                    <div class="qa-sub-new">把不再用的物品交給下一位同學</div>
+                  </div>
+                  <span class="qa-arr-new">→</span>
+                </button>
+                <div class="qa-grid-new fastContainer">
+                  <div class="fastIcon qa-card-new" onclick="goToPage('settings', 'profile-edit-section')">
+                    <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='30'%20height='30'%20fill='white'/%3e%3crect%20x='4.5'%20y='4.5'%20width='21'%20height='21'%20rx='4.5'%20stroke='url(%23paint0_linear_779_1006)'/%3e%3ccircle%20cx='25'%20cy='5'%20r='5'%20fill='white'/%3e%3crect%20x='20.8748'%20y='4.94006'%20width='5.62725'%20height='5.78797'%20rx='1'%20transform='rotate(-45.4569%2020.8748%204.94006)'%20fill='url(%23paint1_linear_779_1006)'%20fill-opacity='0.7'/%3e%3cpath%20d='M24%2010L20%206L10%2016.5L8.34739%2021.4578C8.21172%2021.8649%208.618%2022.2425%209.01404%2022.0775L14%2020L24%2010Z'%20fill='url(%23paint2_linear_779_1006)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1006'%20x1='8.4'%20y1='8.95'%20x2='24.35'%20y2='23.25'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1006'%20x1='24.4609'%20y1='4.39246'%20x2='21.9269'%20y2='11.7971'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint2_linear_779_1006'%20x1='13'%20y1='9.5'%20x2='22.5'%20y2='18.5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.6'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.7'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="修改個資icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new">修改個資</div>
+                      <div class="qa-sub-new">頭像、聯絡方式</div>
+                    </div>
+                    <span class="qa-arr-new">→</span>
+                  </div>
+                  <div class="fastIcon qa-card-new" onclick="goToPage('settings', 'reviewsContainer')">
+                    <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='30'%20height='31'%20viewBox='0%200%2030%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='30'%20height='31'%20fill='white'/%3e%3cmask%20id='path-2-inside-1_779_1021'%20fill='white'%3e%3crect%20x='2'%20y='5'%20width='25'%20height='20'%20rx='1'/%3e%3c/mask%3e%3crect%20x='2'%20y='5'%20width='25'%20height='20'%20rx='1'%20stroke='url(%23paint0_linear_779_1021)'%20stroke-width='4'%20mask='url(%23path-2-inside-1_779_1021)'/%3e%3cline%20x1='6'%20y1='16.5'%20x2='23'%20y2='16.5'%20stroke='%2383B4C8'/%3e%3cline%20x1='6'%20y1='19.5'%20x2='15'%20y2='19.5'%20stroke='%23A8D7D4'/%3e%3crect%20x='6'%20y='9'%20width='17'%20height='5'%20fill='url(%23paint1_linear_779_1021)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1021'%20x1='14.5'%20y1='5'%20x2='14.5'%20y2='25'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%234E82B7'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1021'%20x1='14.5'%20y1='9'%20x2='14.5'%20y2='14'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%235185B8'/%3e%3cstop%20offset='1'%20stop-color='%236A9DC0'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="查看評價icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new">查看評價</div>
+                      <div class="qa-sub-new">買家、賣家給你的評論</div>
+                    </div>
+                    <span class="qa-arr-new">→</span>
+                  </div>
+                  <div class="fastIcon qa-card-new" onclick="window.location.href='../wishpool/wishpool.html#makewish'">
+                    <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='29'%20height='27'%20viewBox='0%200%2029%2027'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_894_1211)'%3e%3cellipse%20cx='13.6875'%20cy='13.5'%20rx='12.6875'%20ry='13.5'%20fill='url(%23paint0_linear_894_1211)'%20fill-opacity='0.7'/%3e%3cg%20clip-path='url(%23clip1_894_1211)'%3e%3crect%20width='29'%20height='18.3214'%20transform='translate(-1.5)'%20fill='white'/%3e%3cpath%20d='M13.44%2011.9L10.0279%207.39999H16.8521L13.44%2011.9Z'%20fill='%23E2C9C9'/%3e%3cellipse%20cx='11.595'%20cy='6.04999'%20rx='2.055'%20ry='2'%20fill='%23E2C9C9'/%3e%3cellipse%20cx='15.41'%20cy='6'%20rx='2.05'%20ry='2'%20fill='%23E2C9C9'/%3e%3cellipse%20cx='13.43'%20cy='7.89999'%20rx='2.05'%20ry='2'%20fill='%23E2C9C9'/%3e%3cellipse%20cx='7.5'%20cy='17'%20rx='5'%20ry='8'%20fill='%23004B97'%20fill-opacity='0.4'/%3e%3cellipse%20cx='19.5'%20cy='17'%20rx='5'%20ry='8'%20fill='%23004B97'%20fill-opacity='0.6'/%3e%3cellipse%20cx='6.00761'%20cy='16.4459'%20rx='5.4404'%20ry='6.7773'%20transform='rotate(147.638%206.00761%2016.4459)'%20fill='white'/%3e%3cellipse%20cx='21.5757'%20cy='16.5187'%20rx='6.34642'%20ry='6.06341'%20transform='rotate(165.708%2021.5757%2016.5187)'%20fill='white'/%3e%3cellipse%20cx='7'%20cy='17.5'%20rx='2.5'%20ry='3.5'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3cellipse%20cx='20'%20cy='17.5'%20rx='2.5'%20ry='3.5'%20fill='%23004B97'%20fill-opacity='0.5'/%3e%3cellipse%20cx='6'%20cy='17.5'%20rx='2.5'%20ry='3.5'%20fill='white'/%3e%3cellipse%20cx='21'%20cy='17.5'%20rx='2.5'%20ry='3.5'%20fill='white'/%3e%3c/g%3e%3cellipse%20cx='9.96875'%20cy='22.1786'%20rx='0.90625'%20ry='0.964286'%20fill='white'/%3e%3cellipse%20cx='17.2188'%20cy='22.1786'%20rx='0.90625'%20ry='0.964286'%20fill='white'/%3e%3cellipse%20cx='13.5938'%20cy='22.1786'%20rx='0.90625'%20ry='0.964286'%20fill='white'/%3e%3c/g%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_894_1211'%20x1='13.6875'%20y1='27'%20x2='13.6875'%20y2='0'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3cstop%20offset='0.293269'%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3c/linearGradient%3e%3cclipPath%20id='clip0_894_1211'%3e%3crect%20width='29'%20height='27'%20fill='white'/%3e%3c/clipPath%3e%3cclipPath%20id='clip1_894_1211'%3e%3crect%20width='29'%20height='18.3214'%20fill='white'%20transform='translate(-1.5)'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="前往許願icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new">前往許願</div>
+                      <div class="qa-sub-new">說出你想要的物品</div>
+                    </div>
+                    <span class="qa-arr-new">→</span>
+                  </div>
+                  <div class="fastIcon qa-card-new" id="logoutMobile">
+                    <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='30'%20height='30'%20fill='white'/%3e%3crect%20width='30'%20height='30'%20fill='white'/%3e%3cpath%20d='M24%205V25H6V5H24Z'%20stroke='url(%23paint0_linear_779_1028)'%20stroke-opacity='0.7'%20stroke-width='2'/%3e%3crect%20x='23'%20y='6'%20width='2'%20height='18'%20fill='white'/%3e%3cpath%20d='M10%2014.5C9.72386%2014.5%209.5%2014.7239%209.5%2015C9.5%2015.2761%209.72386%2015.5%2010%2015.5V15V14.5ZM23.3536%2015.3536C23.5488%2015.1583%2023.5488%2014.8417%2023.3536%2014.6464L20.1716%2011.4645C19.9763%2011.2692%2019.6597%2011.2692%2019.4645%2011.4645C19.2692%2011.6597%2019.2692%2011.9763%2019.4645%2012.1716L22.2929%2015L19.4645%2017.8284C19.2692%2018.0237%2019.2692%2018.3403%2019.4645%2018.5355C19.6597%2018.7308%2019.9763%2018.7308%2020.1716%2018.5355L23.3536%2015.3536ZM10%2015V15.5H23V15V14.5H10V15Z'%20fill='url(%23paint1_linear_779_1028)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1028'%20x1='15'%20y1='4'%20x2='15'%20y2='26'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='0.475962'%20stop-color='%235E99B9'/%3e%3cstop%20offset='1'%20stop-color='%23004B97'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1028'%20x1='10.6602'%20y1='11.134'%20x2='22.3398'%20y2='17.366'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23BDDFDF'/%3e%3cstop%20offset='1'%20stop-color='%235084B8'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="登出icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new">登出</div>
+                      <div class="qa-sub-new">安全退出帳戶</div>
+                    </div>
+                    <span class="qa-arr-new">→</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="d-lg-none d-block col-12">
+            <div class="account-panel">
+              <div class="account-panel-head">快速操作</div>
+              <div class="">
+                <div class="itemContainer">
+                  <button class="mb-btn" onclick="window.location.href='../shop/shop.html?page=seller'">
+                    <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='26'%20height='22'%20viewBox='0%200%2026%2022'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_4_31)'%3e%3crect%20width='16'%20height='10'%20rx='1'%20transform='matrix(-1%200%200%201%2021%2011)'%20fill='url(%23paint0_linear_4_31)'%20fill-opacity='0.6'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%203.94%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.6'%20cy='1'%20rx='1.6'%20ry='1'%20transform='matrix(-1%200%200%201%2022.1%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2012.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%209.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%206.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2015.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2018.9%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cellipse%20cx='1.5'%20cy='1'%20rx='1.5'%20ry='1'%20transform='matrix(-1%200%200%201%2025.1%208.5)'%20fill='%23009497'%20fill-opacity='0.4'/%3e%3cpath%20d='M12.9142%20-10.6567C12.953%20-10.7215%2013.047%20-10.7215%2013.0858%20-10.6567L25.0337%209.29863C25.0736%209.36528%2025.0256%209.45%2024.9479%209.45H1.05207C0.974385%209.45%200.926367%209.36529%200.966275%209.29863L12.9142%20-10.6567Z'%20fill='url(%23paint1_linear_4_31)'%20fill-opacity='0.6'/%3e%3crect%20x='7'%20y='11'%20width='12'%20height='7'%20fill='white'/%3e%3c/g%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_4_31'%20x1='8'%20y1='10'%20x2='8'%20y2='0'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20offset='0.2'%20stop-color='%230D779D'/%3e%3cstop%20offset='0.879808'%20stop-color='%2324B685'%20stop-opacity='0.8'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_4_31'%20x1='13'%20y1='16.2'%20x2='13'%20y2='-10.8'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'/%3e%3cstop%20offset='0.576923'%20stop-color='%23009497'%20stop-opacity='0.8'/%3e%3c/linearGradient%3e%3cclipPath%20id='clip0_4_31'%3e%3crect%20width='26'%20height='22'%20fill='white'%20transform='matrix(-1%200%200%201%2026%200)'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="出售商品icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">出售商品</div>
+                    </div>
+                  </button>
+                  <div class="mb-btn" onclick="goToPage('settings', 'profile-edit-section')">
+                    <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='30'%20height='30'%20fill='white'/%3e%3crect%20x='4.5'%20y='4.5'%20width='21'%20height='21'%20rx='4.5'%20stroke='url(%23paint0_linear_779_1006)'/%3e%3ccircle%20cx='25'%20cy='5'%20r='5'%20fill='white'/%3e%3crect%20x='20.8748'%20y='4.94006'%20width='5.62725'%20height='5.78797'%20rx='1'%20transform='rotate(-45.4569%2020.8748%204.94006)'%20fill='url(%23paint1_linear_779_1006)'%20fill-opacity='0.7'/%3e%3cpath%20d='M24%2010L20%206L10%2016.5L8.34739%2021.4578C8.21172%2021.8649%208.618%2022.2425%209.01404%2022.0775L14%2020L24%2010Z'%20fill='url(%23paint2_linear_779_1006)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1006'%20x1='8.4'%20y1='8.95'%20x2='24.35'%20y2='23.25'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1006'%20x1='24.4609'%20y1='4.39246'%20x2='21.9269'%20y2='11.7971'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint2_linear_779_1006'%20x1='13'%20y1='9.5'%20x2='22.5'%20y2='18.5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.6'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.7'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="修改個資icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">修改個資</div>
+                    </div>
+                  </div>
+                  <div class="mb-btn" onclick="goToPage('settings', 'reviewsContainer')">
+                    <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='30'%20height='31'%20viewBox='0%200%2030%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='30'%20height='31'%20fill='white'/%3e%3cmask%20id='path-2-inside-1_779_1021'%20fill='white'%3e%3crect%20x='2'%20y='5'%20width='25'%20height='20'%20rx='1'/%3e%3c/mask%3e%3crect%20x='2'%20y='5'%20width='25'%20height='20'%20rx='1'%20stroke='url(%23paint0_linear_779_1021)'%20stroke-width='4'%20mask='url(%23path-2-inside-1_779_1021)'/%3e%3cline%20x1='6'%20y1='16.5'%20x2='23'%20y2='16.5'%20stroke='%2383B4C8'/%3e%3cline%20x1='6'%20y1='19.5'%20x2='15'%20y2='19.5'%20stroke='%23A8D7D4'/%3e%3crect%20x='6'%20y='9'%20width='17'%20height='5'%20fill='url(%23paint1_linear_779_1021)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1021'%20x1='14.5'%20y1='5'%20x2='14.5'%20y2='25'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%234E82B7'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1021'%20x1='14.5'%20y1='9'%20x2='14.5'%20y2='14'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%235185B8'/%3e%3cstop%20offset='1'%20stop-color='%236A9DC0'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="查看評價icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">查看評價</div>
+                    </div>
+                  </div>
+                  <div class="mb-btn" onclick="window.location.href='../wishpool/wishpool.html#makewish'">
+                    <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='29'%20height='27'%20viewBox='0%200%2029%2027'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_894_1211)'%3e%3cellipse%20cx='13.6875'%20cy='13.5'%20rx='12.6875'%20ry='13.5'%20fill='url(%23paint0_linear_894_1211)'%20fill-opacity='0.7'/%3e%3cg%20clip-path='url(%23clip1_894_1211)'%3e%3crect%20width='29'%20height='18.3214'%20transform='translate(-1.5)'%20fill='white'/%3e%3cpath%20d='M13.44%2011.9L10.0279%207.39999H16.8521L13.44%2011.9Z'%20fill='%23E2C9C9'/%3e%3cellipse%20cx='11.595'%20cy='6.04999'%20rx='2.055'%20ry='2'%20fill='%23E2C9C9'/%3e%3cellipse%20cx='15.41'%20cy='6'%20rx='2.05'%20ry='2'%20fill='%23E2C9C9'/%3e%3cellipse%20cx='13.43'%20cy='7.89999'%20rx='2.05'%20ry='2'%20fill='%23E2C9C9'/%3e%3cellipse%20cx='7.5'%20cy='17'%20rx='5'%20ry='8'%20fill='%23004B97'%20fill-opacity='0.4'/%3e%3cellipse%20cx='19.5'%20cy='17'%20rx='5'%20ry='8'%20fill='%23004B97'%20fill-opacity='0.6'/%3e%3cellipse%20cx='6.00761'%20cy='16.4459'%20rx='5.4404'%20ry='6.7773'%20transform='rotate(147.638%206.00761%2016.4459)'%20fill='white'/%3e%3cellipse%20cx='21.5757'%20cy='16.5187'%20rx='6.34642'%20ry='6.06341'%20transform='rotate(165.708%2021.5757%2016.5187)'%20fill='white'/%3e%3cellipse%20cx='7'%20cy='17.5'%20rx='2.5'%20ry='3.5'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3cellipse%20cx='20'%20cy='17.5'%20rx='2.5'%20ry='3.5'%20fill='%23004B97'%20fill-opacity='0.5'/%3e%3cellipse%20cx='6'%20cy='17.5'%20rx='2.5'%20ry='3.5'%20fill='white'/%3e%3cellipse%20cx='21'%20cy='17.5'%20rx='2.5'%20ry='3.5'%20fill='white'/%3e%3c/g%3e%3cellipse%20cx='9.96875'%20cy='22.1786'%20rx='0.90625'%20ry='0.964286'%20fill='white'/%3e%3cellipse%20cx='17.2188'%20cy='22.1786'%20rx='0.90625'%20ry='0.964286'%20fill='white'/%3e%3cellipse%20cx='13.5938'%20cy='22.1786'%20rx='0.90625'%20ry='0.964286'%20fill='white'/%3e%3c/g%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_894_1211'%20x1='13.6875'%20y1='27'%20x2='13.6875'%20y2='0'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3cstop%20offset='0.293269'%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3c/linearGradient%3e%3cclipPath%20id='clip0_894_1211'%3e%3crect%20width='29'%20height='27'%20fill='white'/%3e%3c/clipPath%3e%3cclipPath%20id='clip1_894_1211'%3e%3crect%20width='29'%20height='18.3214'%20fill='white'%20transform='translate(-1.5)'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="前往許願icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">前往許願</div>
+                    </div>
+                  </div>
+                  <div class="mb-btn" id="logoutMobileBtn">
+                    <div class="qa-ic-new"><img src="data:image/svg+xml,%3csvg%20width='30'%20height='30'%20viewBox='0%200%2030%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='30'%20height='30'%20fill='white'/%3e%3crect%20width='30'%20height='30'%20fill='white'/%3e%3cpath%20d='M24%205V25H6V5H24Z'%20stroke='url(%23paint0_linear_779_1028)'%20stroke-opacity='0.7'%20stroke-width='2'/%3e%3crect%20x='23'%20y='6'%20width='2'%20height='18'%20fill='white'/%3e%3cpath%20d='M10%2014.5C9.72386%2014.5%209.5%2014.7239%209.5%2015C9.5%2015.2761%209.72386%2015.5%2010%2015.5V15V14.5ZM23.3536%2015.3536C23.5488%2015.1583%2023.5488%2014.8417%2023.3536%2014.6464L20.1716%2011.4645C19.9763%2011.2692%2019.6597%2011.2692%2019.4645%2011.4645C19.2692%2011.6597%2019.2692%2011.9763%2019.4645%2012.1716L22.2929%2015L19.4645%2017.8284C19.2692%2018.0237%2019.2692%2018.3403%2019.4645%2018.5355C19.6597%2018.7308%2019.9763%2018.7308%2020.1716%2018.5355L23.3536%2015.3536ZM10%2015V15.5H23V15V14.5H10V15Z'%20fill='url(%23paint1_linear_779_1028)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1028'%20x1='15'%20y1='4'%20x2='15'%20y2='26'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='0.475962'%20stop-color='%235E99B9'/%3e%3cstop%20offset='1'%20stop-color='%23004B97'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1028'%20x1='10.6602'%20y1='11.134'%20x2='22.3398'%20y2='17.366'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23BDDFDF'/%3e%3cstop%20offset='1'%20stop-color='%235084B8'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="登出icon"></div>
+                    <div class="qa-copy-new">
+                      <div class="qa-title-new" style="font-size: 12px;">登出</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-12 d-lg-none mb-3">
+            <div class="cardContainer">
+              <div class="title">商品訂單管理</div>
+                <div class="itemContainer">
+                  <button data-target="products">
+                    <img src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='20'%20cy='20'%20r='20'%20fill='white'/%3e%3crect%20x='11'%20y='9'%20width='18'%20height='23'%20fill='url(%23paint0_linear_713_936)'/%3e%3cline%20x1='15'%20y1='14.48'%20x2='25'%20y2='14.48'%20stroke='white'/%3e%3cline%20x1='15'%20y1='26.4399'%20x2='25'%20y2='26.4399'%20stroke='white'/%3e%3cline%20x1='15'%20y1='20.46'%20x2='25'%20y2='20.46'%20stroke='white'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_713_936'%20x1='24.8'%20y1='12.22'%20x2='11.3492'%20y2='25.5296'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="查看我的商品進行管理與編輯、上架操作">
+                    <span>商品管理</span>
+                  </button>
+                  <button data-target="sellProducts">
+                    <img src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='20'%20cy='20'%20r='20'%20fill='white'/%3e%3crect%20width='32'%20height='16'%20transform='translate(4%2012)'%20fill='url(%23paint0_linear_779_1064)'/%3e%3crect%20x='4'%20y='12'%20width='32'%20height='16'%20fill='url(%23paint1_linear_779_1064)'/%3e%3crect%20x='4.25'%20y='12.25'%20width='31.5'%20height='15.5'%20stroke='%230C6F91'%20stroke-opacity='0.533654'%20stroke-width='0.5'/%3e%3cellipse%20cx='19.5897'%20cy='20'%20rx='7.38462'%20ry='7.2'%20fill='white'/%3e%3cpath%20d='M19.5898%2013.3C23.4041%2013.3001%2026.4746%2016.3118%2026.4746%2020.0002C26.4745%2023.6885%2023.404%2026.7003%2019.5898%2026.7004C15.7756%2026.7004%2012.7052%2023.6885%2012.7051%2020.0002C12.7051%2016.3117%2015.7756%2013.3%2019.5898%2013.3Z'%20stroke='url(%23paint2_linear_779_1064)'%20stroke-opacity='0.6'/%3e%3cpath%20d='M18.824%2026.128V24.912C18.3973%2024.8907%2017.96%2024.864%2017.512%2024.832C17.0747%2024.8%2016.696%2024.7573%2016.376%2024.704V23.616C16.5147%2023.6267%2016.6747%2023.6427%2016.856%2023.664C17.048%2023.6853%2017.2613%2023.7013%2017.496%2023.712C17.7307%2023.7227%2017.9867%2023.7387%2018.264%2023.76C18.5413%2023.7707%2018.84%2023.776%2019.16%2023.776C19.7573%2023.776%2020.2%2023.7387%2020.488%2023.664C20.776%2023.5893%2020.9627%2023.456%2021.048%2023.264C21.144%2023.0613%2021.192%2022.784%2021.192%2022.432C21.192%2022.048%2021.16%2021.776%2021.096%2021.616C21.0427%2021.4453%2020.9413%2021.3333%2020.792%2021.28C20.6427%2021.2267%2020.4347%2021.1893%2020.168%2021.168L17.928%2020.912C17.4373%2020.8373%2017.0587%2020.7147%2016.792%2020.544C16.536%2020.3627%2016.3547%2020.112%2016.248%2019.792C16.152%2019.4613%2016.104%2019.0613%2016.104%2018.592C16.104%2017.952%2016.2107%2017.4613%2016.424%2017.12C16.6373%2016.7787%2016.9413%2016.5387%2017.336%2016.4C17.7413%2016.2507%2018.2373%2016.16%2018.824%2016.128V14.864H19.848V16.112C20.264%2016.1227%2020.648%2016.144%2021%2016.176C21.352%2016.208%2021.6933%2016.2613%2022.024%2016.336V17.424C21.7573%2017.3813%2021.4693%2017.3493%2021.16%2017.328C20.8507%2017.296%2020.5467%2017.2747%2020.248%2017.264C19.9493%2017.2533%2019.6667%2017.248%2019.4%2017.248C19.08%2017.248%2018.7973%2017.2587%2018.552%2017.28C18.3067%2017.2907%2018.0987%2017.3387%2017.928%2017.424C17.7573%2017.4987%2017.624%2017.6267%2017.528%2017.808C17.4427%2017.9787%2017.4%2018.2187%2017.4%2018.528C17.4%2018.8693%2017.4213%2019.1253%2017.464%2019.296C17.5173%2019.456%2017.6187%2019.568%2017.768%2019.632C17.9173%2019.6853%2018.1307%2019.728%2018.408%2019.76L20.808%2020.016C21.224%2020.0587%2021.5547%2020.1493%2021.8%2020.288C22.0453%2020.4267%2022.2213%2020.6613%2022.328%2020.992C22.4347%2021.3227%2022.488%2021.792%2022.488%2022.4C22.488%2023.0293%2022.4027%2023.52%2022.232%2023.872C22.0613%2024.2133%2021.784%2024.464%2021.4%2024.624C21.016%2024.7733%2020.4987%2024.864%2019.848%2024.896V26.128H18.824Z'%20fill='%23FFC857'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_779_1064'%20x1='16'%20y1='0'%20x2='16'%20y2='16'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='white'/%3e%3cstop%20offset='1'%20stop-color='%23999999'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_779_1064'%20x1='20'%20y1='12'%20x2='20'%20y2='28'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23719AC5'/%3e%3cstop%20offset='1'%20stop-color='%2393DDC4'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint2_linear_779_1064'%20x1='19.5897'%20y1='12.8'%20x2='19.5897'%20y2='27.2'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23689EBE'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.8'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="查看與管理我的銷售訂單">
+                    <span>銷售訂單</span>
+                  </button>
+                  <button data-target="buyProducts">
+                    <img src="data:image/svg+xml,%3csvg%20width='40'%20height='40'%20viewBox='0%200%2040%2040'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='20'%20cy='20'%20r='20'%20fill='white'/%3e%3cpath%20d='M10%2013.2479H31.8182L30%2025.3691H11.8182L10%2013.2479Z'%20fill='url(%23paint0_linear_530_475)'/%3e%3ccircle%20cx='20.6059'%20cy='18.4848'%20r='8.48485'%20fill='white'/%3e%3ccircle%20cx='20.6059'%20cy='18.4848'%20r='7.98485'%20stroke='%23004B97'%20stroke-opacity='0.8'/%3e%3cline%20x1='3.63623'%20y1='11.9242'%20x2='9.69684'%20y2='11.9242'%20stroke='%23004B97'%20stroke-opacity='0.7'/%3e%3cline%20x1='9.32478'%20y1='11.0708'%20x2='12.4925'%20y2='29.1617'%20stroke='%234D81B7'/%3e%3cline%20x1='12'%20y1='28.7479'%20x2='28.9697'%20y2='28.7479'%20stroke='%234D81B7'/%3e%3ccircle%20cx='15.8182'%20cy='31.0661'%20r='1.81818'%20fill='%2393DDC4'/%3e%3ccircle%20cx='24.8182'%20cy='31.0661'%20r='1.81818'%20fill='%2393DDC4'/%3e%3cpath%20d='M21.106%2013.6364C21.106%2013.3602%2020.8821%2013.1364%2020.606%2013.1364C20.3298%2013.1364%2020.106%2013.3602%2020.106%2013.6364H20.606H21.106ZM20.2524%2023.6869C20.4477%2023.8821%2020.7642%2023.8821%2020.9595%2023.6869L24.1415%2020.5049C24.3368%2020.3096%2024.3368%2019.9931%2024.1415%2019.7978C23.9462%2019.6025%2023.6296%2019.6025%2023.4344%2019.7978L20.606%2022.6262L17.7775%2019.7978C17.5823%2019.6025%2017.2657%2019.6025%2017.0704%2019.7978C16.8752%2019.9931%2016.8752%2020.3096%2017.0704%2020.5049L20.2524%2023.6869ZM20.606%2013.6364H20.106V23.3333H20.606H21.106V13.6364H20.606Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_530_475'%20x1='20.9091'%20y1='13.2479'%20x2='20.9091'%20y2='25.3691'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23A7C5DA'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="查看與管理我的消費訂單與紀錄">
+                    <span>消費訂單</span>
+                  </button>
+                </div>
+            </div>
+          </div>
+
+          
+          <div class="col-lg-5 col-12">
+            <div class="account-panel">
+              <div class="account-panel-head">
+                近期通知 <img src="data:image/svg+xml,%3csvg%20width='18'%20height='11'%20viewBox='0%200%2018%2011'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1%203.65C1%203.56111%201.05867%203.48289%201.144%203.458L12.744%200.0746667C12.872%200.0373333%2013%200.133333%2013%200.266667V9.73333C13%209.86667%2012.872%209.96267%2012.744%209.92533L1.144%206.542C1.05867%206.51711%201%206.43889%201%206.35V3.65Z'%20fill='%23004B97'%20fill-opacity='0.7'/%3e%3crect%20x='11'%20width='2'%20height='10'%20rx='0.2'%20fill='url(%23paint0_linear_814_1076)'/%3e%3cpath%20d='M4.05811%207.39355L4.02197%207.89225L6.94186%209.10643L7.01413%208.10904'%20stroke='%23004B97'%20stroke-width='0.2'%20stroke-linecap='round'/%3e%3cline%20x1='14.6588'%20y1='8.74316'%20x2='16.4901'%20y2='9.54712'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3cline%20x1='0.5'%20y1='-0.5'%20x2='2.5'%20y2='-0.5'%20transform='matrix(0.91565%20-0.401976%20-0.401976%20-0.91565%2014%201.20593)'%20stroke='%23004B97'%20stroke-linecap='round'/%3e%3cline%20x1='15.5'%20y1='5'%20x2='17.5'%20y2='5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-linecap='round'/%3e%3crect%20y='3'%20width='2'%20height='4'%20rx='0.2'%20fill='url(%23paint1_linear_814_1076)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_814_1076'%20x1='13'%20y1='5'%20x2='11'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%2386B8D5'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_814_1076'%20x1='2'%20y1='5'%20x2='0'%20y2='5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%238DBAEA'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="通知icon" style="width:15px;margin-left:4px;vertical-align:middle;opacity:0.7;">
+                <span id="notifPanelDot" style="display:none;width:8px;height:8px;background:#e74c3c;border-radius:50%;margin-left:6px;flex-shrink:0;"></span>
+              </div>
+              <div class="notif-panel-body" id="recentNotifList">
+                <div class="text-center text-muted py-3" style="font-size:14px;">載入中...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="d-block mt-3">
+          <div class="desk-guide-panel">
+            <div class="desk-guide-head">
+              <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>訂單進度說明
+            </div>
+            <div class="desk-guide-body p-0">
+              <div class="table-responsive">
+                <table class="order-guide-table">
+                  <thead>
+                    <tr><th>狀態</th><th>買家</th><th>賣家</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="badge order-badge-pending">待確認</span></td>
+                      <td>已送出訂單，等待賣家確認。若需取消請先聯絡賣家。</td>
+                      <td>請盡快確認庫存，可接單點「接受訂單」，不能接單請先聯絡買家再取消。</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge order-badge-preparing">待出貨</span></td>
+                      <td>賣家已接受訂單，正在準備商品，請耐心等候並確認面交時間地點。</td>
+                      <td>請準備商品，確認完整無誤後點「準備出貨」。</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge order-badge-delivered">待收貨</span></td>
+                      <td>請準時赴約，查看 PIN 碼並告知賣家，由賣家輸入 PIN 碼確認完成交貨。</td>
+                      <td>請準時攜帶商品赴約，向買家索取 PIN 碼後點「確認交貨」並輸入 PIN 碼。</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge order-badge-completed">待評價</span></td>
+                      <td>交貨已完成，請為賣家留下評價。</td>
+                      <td>已完成交貨確認，請為買家留下評價。</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge order-badge-scored">已完成</span></td>
+                      <td colspan="2">訂單已完成，本筆交易正式結束。</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="order-guide-note px-3 pb-2" style="border-top:1px solid #e0f0ee;padding-top:8px;margin-top:0; background: aliceblue;">若交易過程有任何問題，請務必提前與對方溝通，避免爭議。</p>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="d-block mt-3 mb-2">
+          <div class="desk-guide-panel">
+            <div class="desk-guide-head">
+              <i class="ti ti-info-circle" style="color:#004b97;"></i>商品管理 / 常見操作說明
+            </div>
+            <div class="desk-guide-body">
+              <div class="desk-help-row">
+                <div class="desk-help-btn">
+                  <img src="data:image/svg+xml,%3csvg%20width='26'%20height='26'%20viewBox='0%200%2026%2026'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20x='1'%20y='1'%20width='25'%20height='25'%20rx='12.5'%20fill='white'/%3e%3cline%20x1='16.3128'%20y1='15.9578'%20x2='21.7721'%20y2='20.3392'%20stroke='url(%23paint0_linear_798_1056)'%20stroke-width='2'%20stroke-linecap='round'/%3e%3ccircle%20cx='10.5'%20cy='11.5'%20r='6.5'%20stroke='url(%23paint1_linear_798_1056)'%20stroke-width='2'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_798_1056'%20x1='14.594'%20y1='16.5018'%20x2='21.6131'%20y2='22.1349'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%2393DDC4'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_798_1056'%20x1='5'%20y1='7.5'%20x2='16.5'%20y2='16.5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="查看商品">查看商品
+                </div>
+                <p class="desk-help-desc mb-0">點擊後將跳轉至商品頁面，可查看商品詳細資訊與目前狀態。</p>
+              </div>
+              <div class="desk-help-row">
+                <div class="desk-help-btn">
+                  <img src="data:image/svg+xml,%3csvg%20width='25'%20height='25'%20viewBox='0%200%2025%2025'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='25'%20height='25'%20rx='12.5'%20fill='white'/%3e%3crect%20width='4.91043'%20height='5.12459'%20rx='1'%20transform='matrix(0.474518%20-0.880246%200.890058%200.455848%2013.6978%206.32239)'%20fill='url(%23paint0_linear_798_1058)'%20fill-opacity='0.7'/%3e%3cpath%20d='M17.6643%209.74011L13.2253%207.42241L7.40955%2018.6546L7.28274%2023.0485C7.27043%2023.4752%207.76995%2023.7243%208.1028%2023.4574L11.7197%2020.5571L17.6643%209.74011Z'%20fill='url(%23paint1_linear_798_1058)'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_798_1058'%20x1='3.12935'%20y1='-0.48484'%20x2='0.859962'%20y2='6.05093'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_798_1058'%20x1='8.16231'%20y1='12.0873'%20x2='18.4674'%20y2='17.3881'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.6'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.7'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="編輯商品">編輯商品
+                </div>
+                <p class="desk-help-desc mb-0">點擊後下方將顯示該商品的所有資訊，可進行修改（可僅更新部分欄位），最後點擊更新按鈕完成編輯。若更改「多張照片」，將一次<strong>替換所有照片</strong>。</p>
+              </div>
+              <div class="desk-help-row">
+                <div class="desk-help-btn">
+                  <img src="data:image/svg+xml,%3csvg%20width='25'%20height='25'%20viewBox='0%200%2025%2025'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='25'%20height='25'%20rx='12.5'%20fill='white'/%3e%3cline%20x1='5.70711'%20y1='6.29289'%20x2='18.435'%20y2='19.0208'%20stroke='url(%23paint0_linear_798_1057)'%20stroke-width='2'/%3e%3ccircle%20cx='12.5'%20cy='12.5'%20r='8.5'%20stroke='url(%23paint1_linear_798_1057)'%20stroke-width='2'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_798_1057'%20x1='4.64645'%20y1='7.35355'%20x2='17.3744'%20y2='20.0815'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23FF3636'/%3e%3cstop%20offset='1'%20stop-color='%23DF5656'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_798_1057'%20x1='5.375'%20y1='6.8'%20x2='19.625'%20y2='20.1'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23FF3636'/%3e%3cstop%20offset='1'%20stop-color='%23DF5656'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="永久下架">永久下架
+                </div>
+                <p class="desk-help-desc mb-0">點擊後將<strong>永久刪除</strong>該商品，且不會再出現在商品清單與架上。僅在無相關進行中訂單時才能執行。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="disable-account-zone">
+          <button class="d-flex align-items-center gap-1 disableAccount" id="disableAccountBtn">
+            <img src="data:image/svg+xml,%3csvg%20width='25'%20height='25'%20viewBox='0%200%2025%2025'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='25'%20height='25'%20rx='12.5'%20fill='white'/%3e%3cline%20x1='5.70711'%20y1='6.29289'%20x2='18.435'%20y2='19.0208'%20stroke='url(%23paint0_linear_798_1057)'%20stroke-width='2'/%3e%3ccircle%20cx='12.5'%20cy='12.5'%20r='8.5'%20stroke='url(%23paint1_linear_798_1057)'%20stroke-width='2'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_798_1057'%20x1='4.64645'%20y1='7.35355'%20x2='17.3744'%20y2='20.0815'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23FF3636'/%3e%3cstop%20offset='1'%20stop-color='%23DF5656'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_798_1057'%20x1='5.375'%20y1='6.8'%20x2='19.625'%20y2='20.1'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23FF3636'/%3e%3cstop%20offset='1'%20stop-color='%23DF5656'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e"/>
+            <div>停用帳戶</div>
+          </button>
+        </div>
+      </main>
+      
+      
+
+    </div>
+  </div>
+
+
+
+
+<div class="modal fade" id="editDrawer" tabindex="-1" aria-labelledby="editDrawerTitle" aria-modal="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header border-bottom">
+        <h5 class="modal-title" id="editDrawerTitle">編輯商品</h5>
+        <button type="button" class="btn-close" id="editDrawerCloseBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+      <form id="editItemForm">
+        <input type="hidden" id="edit-id" name="id">
+
+    
+    <div class="sell-field">
+      <label for="edit-name" class="sell-label">商品名稱 <span class="sell-required">*</span></label>
+      <input type="text" class="form-control" id="edit-name" name="name" placeholder="請輸入商品名稱">
+    </div>
+
+    
+    <div class="sell-field">
+      <label class="sell-label">所屬分類 <span class="sell-optional">選填</span></label>
+      <div class="sell-cat-grid edit-cat-grid">
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="education">
+          <img src="data:image/svg+xml,%3csvg%20width='75'%20height='77'%20viewBox='0%200%2075%2077'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M17.4145%2075H72.5C72.7761%2075%2073%2074.7761%2073%2074.5V2.5C73%202.22386%2072.7761%202%2072.5%202H13.292C13.0159%202%2012.792%202.22386%2012.792%202.5V74.5C12.792%2074.7761%2012.5681%2075%2012.292%2075H2.5C2.22386%2075%202%2074.7761%202%2074.5V2.5C2%202.22386%202.22386%202%202.5%202H8.07237'%20stroke='url(%23paint0_linear_914_48)'%20stroke-width='4'/%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M23.5197%2015.1026C23.2436%2015.1026%2023.0197%2015.3264%2023.0197%2015.6026V30.5128C23.0197%2030.789%2023.2436%2031.0128%2023.5197%2031.0128H61.7566C62.0327%2031.0128%2062.2566%2030.789%2062.2566%2030.5128V15.6026C62.2566%2015.3264%2062.0327%2015.1026%2061.7566%2015.1026H23.5197Z'%20stroke='url(%23paint1_linear_914_48)'%20stroke-width='4'/%3e%3cpath%20d='M42.6382%2060.0256H62.2566'%20stroke='url(%23paint2_linear_914_48)'%20stroke-width='4'/%3e%3cpath%20d='M42.6382%2047.859H62.2566'%20stroke='url(%23paint3_linear_914_48)'%20stroke-width='4'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_914_48'%20x1='37.5'%20y1='2'%20x2='37.5'%20y2='75'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%23729BC6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_914_48'%20x1='42.6382'%20y1='15.1026'%20x2='42.6382'%20y2='31.0128'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23729BC6'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint2_linear_914_48'%20x1='52.4474'%20y1='60.0256'%20x2='52.4474'%20y2='61.0256'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23729BC6'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint3_linear_914_48'%20x1='52.4474'%20y1='47.859'%20x2='52.4474'%20y2='48.859'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23729BC6'/%3e%3cstop%20offset='1'%20stop-color='%23ABDAD5'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="課業學習"><span>課業學習</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="electronics">
+          <img src="data:image/svg+xml,%3csvg%20width='84'%20height='64'%20viewBox='0%200%2084%2064'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M2%202C2%202%2011.5%202.00009%2026.5%202C41.5%201.99991%2041%2027.9999%2026.5%2030.5M26.5%2030.5H7M26.5%2030.5C41%2036%2041%2061.5%2026.5%2061.5C12%2061.5%202%2061.5%202%2061.5'%20stroke='url(%23paint0_linear_1040_1696)'%20stroke-width='4'%20stroke-linecap='round'/%3e%3cpath%20d='M82%202.49983C72.5%200.999908%2044.5%205.4999%2044.5%2030.9998C44.5%2056.4997%2060%2061.9999%2082%2061.9999'%20stroke='url(%23paint1_linear_1040_1696)'%20stroke-width='4'%20stroke-linecap='round'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_1040_1696'%20x1='19.7816'%20y1='2'%20x2='19.7816'%20y2='61.5'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ACDBD6'/%3e%3cstop%20offset='1'%20stop-color='%23739CC7'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_1040_1696'%20x1='63.25'%20y1='2.24261'%20x2='63.25'%20y2='61.9999'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ACDBD6'/%3e%3cstop%20offset='1'%20stop-color='%23739CC7'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="3C 電子"><span>3C 電子</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="living">
+          <img src="data:image/svg+xml,%3csvg%20width='89'%20height='89'%20viewBox='0%200%2089%2089'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='44.5'%20cy='44.5'%20r='42.5'%20stroke='url(%23paint0_linear_914_37)'%20stroke-width='4'/%3e%3cpath%20d='M34.7748%2044.6878C34.7334%2044.6445%2034.6618%2044.6475%2034.6221%2044.6935C33.7904%2045.6582%2033.1818%2046.0074%2031.7768%2045.9563C31.7621%2045.9557%2031.7471%2045.9519%2031.7341%2045.9453C21.4642%2040.7543%2015.4331%2039.2756%2012.4833%2043.5253C12.4763%2043.5353%2012.4712%2043.5464%2012.4684%2043.5581C9.68181%2055.082%2018.9655%2076.417%2035.4122%2068.0752C35.4194%2068.0716%2035.4267%2068.0668%2035.4328%2068.0616C39.5825%2064.5369%2041.2536%2061.3366%2042.9697%2053.31C42.9764%2053.2787%2042.9674%2053.2456%2042.9453%2053.2225L34.7748%2044.6878Z'%20stroke='url(%23paint1_linear_914_37)'%20stroke-width='4'/%3e%3cpath%20d='M49.9628%2037.345C50.0231%2037.3503%2050.0736%2037.3019%2050.0712%2037.242C50.0212%2035.9873%2050.2318%2035.3345%2051.3117%2034.4645C51.3229%2034.4555%2051.3365%2034.4488%2051.3504%2034.4453C62.5788%2031.667%2068.0858%2028.8687%2067.3356%2023.8039C67.3338%2023.7918%2067.3298%2023.78%2067.3237%2023.7692C61.4139%2013.4032%2039.7385%203.54505%2033.2911%2020.3734C33.2883%2020.3808%2033.2862%2020.3891%2033.2852%2020.3971C32.6419%2025.6984%2033.6161%2029.157%2037.8991%2036.2317C37.9159%2036.2595%2037.9455%2036.2784%2037.9778%2036.2812L49.9628%2037.345Z'%20stroke='url(%23paint2_linear_914_37)'%20stroke-width='4'/%3e%3cpath%20d='M48.4477%2053.0834C48.4264%2053.141%2048.4618%2053.204%2048.522%2053.2166C49.7918%2053.4815%2050.394%2053.8407%2050.9978%2055.066C51.0045%2055.0797%2051.0081%2055.0954%2051.0081%2055.1106C51.0039%2066.3072%2052.4418%2072.1547%2057.708%2072.7102C57.7195%2072.7114%2057.7311%2072.7107%2057.7423%2072.7079C69.6058%2069.7555%2084.8797%2051.9226%2069.6061%2041.7075C69.5996%2041.7032%2069.5923%2041.6994%2069.585%2041.6967C64.4284%2039.7769%2060.7181%2039.829%2052.5581%2042.0789C52.5271%2042.0874%2052.5012%2042.1107%2052.49%2042.1409L48.4477%2053.0834Z'%20stroke='url(%23paint3_linear_914_37)'%20stroke-width='4'/%3e%3cpath%20d='M44.4998%2035.2527C49.6915%2035.2527%2053.7466%2039.2566%2053.7469%2044.0106C53.7469%2048.7647%2049.6916%2052.7693%2044.4998%2052.7693C39.3081%2052.7693%2035.2527%2048.7647%2035.2527%2044.0106C35.253%2039.2566%2039.3082%2035.2528%2044.4998%2035.2527Z'%20fill='white'%20stroke='url(%23paint4_linear_914_37)'%20stroke-width='4'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_914_37'%20x1='44.5'%20y1='0'%20x2='44.5'%20y2='89'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%23719AC5'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_914_37'%20x1='40.0315'%20y1='62.5449'%20x2='10.945'%20y2='46.271'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23AAD9D5'/%3e%3cstop%20offset='1'%20stop-color='%2384AFCA'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint2_linear_914_37'%20x1='33.6877'%20y1='27.4692'%20x2='66.2155'%20y2='19.3235'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23AAD9D5'/%3e%3cstop%20offset='1'%20stop-color='%2384AFCA'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint3_linear_914_37'%20x1='62.3928'%20y1='40.3155'%20x2='61.9602'%20y2='72.7685'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23AAD9D5'/%3e%3cstop%20offset='1'%20stop-color='%2384AFCA'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint4_linear_914_37'%20x1='44.5'%20y1='33.2527'%20x2='44.5'%20y2='54.7692'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%23719AC5'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="住宿生活"><span>住宿生活</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="sports">
+          <img src="data:image/svg+xml,%3csvg%20width='90'%20height='90'%20viewBox='0%200%2090%2090'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3ccircle%20cx='45'%20cy='45'%20r='43'%20stroke='url(%23paint0_linear_1039_1695)'%20stroke-width='4'/%3e%3cpath%20d='M5.17241%2057.931C18.1922%2028.3146%2042.4138%2012.4138%2076.0345%2017.069M19.6552%2010.8621C31.5517%2040.3448%2046.0345%2062.069%2067.7586%2080.6897M28.9655%2084.3104C14.4828%2067.2414%2022.877%2033.0807%2010.8621%2024.3104M35.1724%205.17242C25.4596%2028.298%2078.6207%2033.6207%2085.8621%2050.1724'%20stroke='url(%23paint1_linear_1039_1695)'%20stroke-width='4'%20stroke-linecap='round'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_1039_1695'%20x1='45'%20y1='0'%20x2='45'%20y2='90'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23AAD9D5'/%3e%3cstop%20offset='1'%20stop-color='%23729BC6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='paint1_linear_1039_1695'%20x1='45.5172'%20y1='5.17242'%20x2='45.5172'%20y2='84.3104'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23AAD9D5'/%3e%3cstop%20offset='1'%20stop-color='%23729BC6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="運動休閒"><span>運動休閒</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="accessories">
+          <img src="/assets/accessories-1hyaXGxa.svg" alt="服飾配件"><span>服飾配件</span>
+        </label>
+        <label class="sell-cat-card">
+          <input type="radio" name="editCategoryRadio" value="other">
+          <img src="data:image/svg+xml,%3csvg%20width='82'%20height='81'%20viewBox='0%200%2082%2081'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M2%2020.8092L13.1374%202.24279C13.2277%202.09217%2013.3905%202%2013.5661%202H70.369C70.559%202%2070.7326%202.10772%2070.817%202.27799L80%2020.8092M2%2020.8092H80M2%2020.8092V78.5C2%2078.7761%202.22386%2079%202.5%2079H79.5C79.7761%2079%2080%2078.7761%2080%2078.5V20.8092M60.3774%2032.4771V41.4695C60.3774%2041.7456%2060.1535%2041.9695%2059.8774%2041.9695H19.1792C18.9031%2041.9695%2018.6792%2041.7456%2018.6792%2041.4695V32.4771C18.6792%2032.201%2018.9031%2031.9771%2019.1792%2031.9771H59.8774C60.1535%2031.9771%2060.3774%2032.201%2060.3774%2032.4771Z'%20stroke='url(%23paint0_linear_914_58)'%20stroke-width='4'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_914_58'%20x1='41'%20y1='2'%20x2='41'%20y2='79'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ABDAD5'/%3e%3cstop%20offset='1'%20stop-color='%23759EC6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="二手好物"><span>二手好物</span>
+        </label>
+      </div>
+      
+      <select id="edit-category" name="category" class="d-none">
+        <option value="education">課業學習</option>
+        <option value="electronics">3C 電子</option>
+        <option value="living">住宿生活</option>
+        <option value="sports">運動休閒</option>
+        <option value="accessories">服飾配件</option>
+        <option value="other">二手好物</option>
+      </select>
+    </div>
+
+    
+    <div class="sell-two-col">
+      <div class="sell-field">
+        <label for="edit-price" class="sell-label">售價（元）<span class="sell-required">*</span></label>
+        <div class="sell-price-wrap">
+          <span class="sell-price-prefix">NT$</span>
+          <input type="number" class="form-control" id="edit-price" name="price" placeholder="0" min="0" step="1">
+        </div>
+      </div>
+      <div class="sell-field">
+        <label for="edit-stock" class="sell-label">庫存數量 <span class="sell-optional">選填</span></label>
+        <input type="number" class="form-control" id="edit-stock" name="stock" min="0" step="1" placeholder="可販賣數量">
+      </div>
+    </div>
+
+    
+    <div class="sell-field">
+      <label class="sell-label">商品尺寸 <span class="sell-optional">選填</span></label>
+      <div class="sell-size-group">
+        <label class="sell-size-card">
+          <input type="radio" name="editSizeRadio" value="3">
+          <div class="sell-size-icon"><i class="ti ti-package"></i></div>
+          <strong>大型</strong><small>&gt; 150cm</small>
+        </label>
+        <label class="sell-size-card">
+          <input type="radio" name="editSizeRadio" value="2">
+          <div class="sell-size-icon"><i class="ti ti-box"></i></div>
+          <strong>中型</strong><small>30–150cm</small>
+        </label>
+        <label class="sell-size-card">
+          <input type="radio" name="editSizeRadio" value="1">
+          <div class="sell-size-icon"><i class="ti ti-device-mobile"></i></div>
+          <strong>小型</strong><small>&lt; 30cm</small>
+        </label>
+      </div>
+      <input type="hidden" id="edit-size" name="size">
+    </div>
+
+    
+    <div class="sell-field">
+      <label class="sell-label">新舊程度 <span class="sell-optional">選填</span></label>
+      <div class="sell-condition-group">
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="1"><span class="sell-cond-dot cond-1"></span>全新<span class="sell-cond-desc">（未使用過）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="2"><span class="sell-cond-dot cond-2"></span>幾乎全新<span class="sell-cond-desc">（使用次數極少）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="3"><span class="sell-cond-dot cond-3"></span>半新<span class="sell-cond-desc">（使用過，狀態良好）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="4"><span class="sell-cond-dot cond-4"></span>適中<span class="sell-cond-desc">（有明顯使用痕跡）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="5"><span class="sell-cond-dot cond-5"></span>稍舊<span class="sell-cond-desc">（有較多痕跡或輕微損壞）</span></label>
+        <label class="sell-condition-card"><input type="radio" name="editConditionRadio" value="6"><span class="sell-cond-dot cond-6"></span>全舊<span class="sell-cond-desc">（明顯損壞或缺陷）</span></label>
+      </div>
+      <input type="hidden" id="edit-condition" name="new_or_old">
+    </div>
+
+    
+    <div class="sell-field">
+      <label for="edit-description" class="sell-label">商品狀態描述 <span class="sell-required">*</span></label>
+      <small class="sell-hint">說明販售原因、瑕疵部位、規格等，建議 30 字以上</small>
+      <textarea class="form-control" id="edit-description" name="description" rows="4" placeholder="例如：九成新，只用了一學期，無劃線無書寫..."></textarea>
+    </div>
+
+    
+    <div class="sell-field">
+      <label class="sell-label">主要照片（封面）<span class="sell-required">*</span></label>
+      <small class="sell-hint">不更換請留空；≤ 5MB；JPEG / PNG / WebP</small>
+      <label class="sell-upload-zone" for="edit-image">
+        <i class="ti ti-photo-up"></i>
+        <span>點擊上傳新封面照</span>
+      </label>
+      <input type="file" id="edit-image" name="image" class="d-none" accept="image/jpeg,image/png,image/webp">
+      <div class="sell-preview-single">
+        <img id="edit-image-preview" alt="預覽" class="d-none">
+      </div>
+    </div>
+
+    
+    <div class="sell-field">
+      <label class="sell-label">其他照片（最多 5 張）<span class="sell-optional">選填</span></label>
+      <small class="sell-hint">選擇新檔案將覆蓋全部次要照片；每張 ≤ 5MB</small>
+      <label class="sell-upload-zone" for="edit-images">
+        <i class="ti ti-photos"></i>
+        <span>點擊上傳（可多選）</span>
+      </label>
+      <input type="file" id="edit-images" name="otherImages" class="d-none" accept="image/jpeg,image/png,image/webp" multiple>
+      <div class="sell-hint" id="edit-images-hint" style="margin-top:4px;">已選 0 / 5</div>
+      <div id="edit-images-preview" class="sell-preview-grid mt-2"></div>
+    </div>
+
+      </form>
+      </div>
+      <div class="modal-footer d-flex justify-content-between">
+        <button type="button" class="sell-prev-btn" id="editDrawerCancelBtn" data-bs-dismiss="modal">取消</button>
+        <button type="submit" form="editItemForm" class="sell-next-btn"><i class="ti ti-check"></i> 儲存變更</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// 底部導覽列：點擊時設定 skipLoader 旗標（person.html 不載入 default.js，需在此獨立設定）
+document.querySelectorAll('.bottom-nav-item').forEach(function(item) {
+  item.addEventListener('click', function() {
+    if (window.innerWidth <= 991) sessionStorage.setItem('skipLoader', '1');
+  });
+});
+</script>
+
+    
+    <nav class="bottom-nav">
+      <a href="../shop/shop.html" class="bottom-nav-item nav-tab-home">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23004B97'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23004B97'%20stroke='%23004B97'/%3e%3c/svg%3e" alt="正在購物首頁">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='38'%20height='30'%20viewBox='0%200%2038%2030'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.6543%200.330934C18.8476%200.145869%2019.1524%200.145869%2019.3457%200.330934L34.5548%2014.8888C34.8804%2015.2005%2034.6598%2015.75%2034.209%2015.75H3.79098C3.34023%2015.75%203.11962%2015.2005%203.44524%2014.8888L18.6543%200.330934Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M14.2%2029.5C14.6418%2029.5%2015%2029.1418%2015%2028.7V19.3C15%2018.8582%2015.3582%2018.5%2015.8%2018.5H22.2C22.6418%2018.5%2023%2018.8582%2023%2019.3V28.7C23%2029.1418%2023.3582%2029.5%2023.8%2029.5H29.2C29.6418%2029.5%2030%2029.1418%2030%2028.7V15.8C30%2015.3582%2029.6418%2015%2029.2%2015H8.8C8.35817%2015%208%2015.3582%208%2015.8V28.7C8%2029.1418%208.35817%2029.5%208.8%2029.5H14.2Z'%20fill='%23B4B4B4'%20stroke='%23B4B4B4'/%3e%3c/svg%3e" alt="點擊前往購物首頁">
+        <span>購物首頁</span>
+      </a>
+      <a href="../commodity/commodity.html" class="bottom-nav-item nav-tab-market">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='35'%20height='35'%20viewBox='0%200%2035%2035'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M17.8756%2022.5725C17.6765%2022.7991%2017.3235%2022.7991%2017.1244%2022.5725L3.07378%206.58001C2.78994%206.25694%203.01935%205.75%203.44941%205.75H31.5506C31.9807%205.75%2032.2101%206.25694%2031.9262%206.58001L17.8756%2022.5725Z'%20fill='%23004B97'/%3e%3cpath%20d='M14.5%2018.5C14.5%2018.2239%2014.7239%2018%2015%2018H20C20.2761%2018%2020.5%2018.2239%2020.5%2018.5V34C20.5%2034.412%2020.0296%2034.6472%2019.7%2034.4L14.7%2030.65C14.5741%2030.5556%2014.5%2030.4074%2014.5%2030.25V18.5Z'%20fill='%23004B97'/%3e%3c/svg%3e" alt="正在購物商場">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='35'%20height='35'%20viewBox='0%200%2035%2035'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M17.8756%2022.5725C17.6765%2022.7991%2017.3235%2022.7991%2017.1244%2022.5725L3.07378%206.58001C2.78994%206.25694%203.01935%205.75%203.44941%205.75H31.5506C31.9807%205.75%2032.2101%206.25694%2031.9262%206.58001L17.8756%2022.5725Z'%20fill='%23B4B4B4'/%3e%3cpath%20d='M14.5%2018.5C14.5%2018.2239%2014.7239%2018%2015%2018H20C20.2761%2018%2020.5%2018.2239%2020.5%2018.5V34C20.5%2034.412%2020.0296%2034.6472%2019.7%2034.4L14.7%2030.65C14.5741%2030.5556%2014.5%2030.4074%2014.5%2030.25V18.5Z'%20fill='%23B4B4B4'/%3e%3c/svg%3e" alt="點擊前往購物商場">
+        <span>購物商場</span>
+      </a>
+      <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-tab-chat">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='23'%20height='23'%20viewBox='0%200%2023%2023'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M12.458%203.83301C15.1499%203.83301%2016.496%203.83348%2017.4629%204.47949C17.8815%204.75917%2018.2408%205.11855%2018.5205%205.53711C19.1665%206.50396%2019.167%207.85014%2019.167%2010.542C19.167%2013.2334%2019.1663%2014.5791%2018.5205%2015.5459C18.2409%2015.9644%2017.8814%2016.3239%2017.4629%2016.6035C16.6183%2017.1678%2015.4846%2017.239%2013.417%2017.248V17.25L12.3945%2019.2949C12.0259%2020.0316%2010.9741%2020.0316%2010.6055%2019.2949L9.58301%2017.25V17.248C7.51542%2017.239%206.38169%2017.1678%205.53711%2016.6035C5.1186%2016.3239%204.75914%2015.9644%204.47949%2015.5459C3.83366%2014.5791%203.83301%2013.2334%203.83301%2010.542C3.83301%207.85014%203.83348%206.50396%204.47949%205.53711C4.75917%205.11855%205.11855%204.75917%205.53711%204.47949C6.50396%203.83348%207.85014%203.83301%2010.542%203.83301H12.458Z'%20fill='url(%23paint0_linear_879_1119)'/%3e%3cellipse%20cx='15.3333'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='11.5'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='7.66666'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_879_1119'%20x1='11.5'%20y1='3.83301'%20x2='11.5'%20y2='19.8474'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="正在聊天室">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='23'%20height='23'%20viewBox='0%200%2023%2023'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M12.458%203.83301C15.1499%203.83301%2016.496%203.83348%2017.4629%204.47949C17.8815%204.75917%2018.2408%205.11855%2018.5205%205.53711C19.1665%206.50396%2019.167%207.85014%2019.167%2010.542C19.167%2013.2334%2019.1663%2014.5791%2018.5205%2015.5459C18.2409%2015.9644%2017.8814%2016.3239%2017.4629%2016.6035C16.6183%2017.1678%2015.4846%2017.239%2013.417%2017.248V17.25L12.3945%2019.2949C12.0259%2020.0316%2010.9741%2020.0316%2010.6055%2019.2949L9.58301%2017.25V17.248C7.51542%2017.239%206.38169%2017.1678%205.53711%2016.6035C5.1186%2016.3239%204.75914%2015.9644%204.47949%2015.5459C3.83366%2014.5791%203.83301%2013.2334%203.83301%2010.542C3.83301%207.85014%203.83348%206.50396%204.47949%205.53711C4.75917%205.11855%205.11855%204.75917%205.53711%204.47949C6.50396%203.83348%207.85014%203.83301%2010.542%203.83301H12.458Z'%20fill='%23B4B4B4'/%3e%3cellipse%20cx='15.3333'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='11.5'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3cellipse%20cx='7.66666'%20cy='10.5417'%20rx='0.958333'%20ry='0.958333'%20fill='white'/%3e%3c/svg%3e" alt="前往聊天室">
+        <span class="bottom-nav-badge" id="chatNavBadge"></span>
+        <span>聊天室</span>
+      </a>
+      <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item nav-tab-cart">
+        <img class="nav-icon nav-icon-active" src="data:image/svg+xml,%3csvg%20width='41'%20height='31'%20viewBox='0%200%2041%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cellipse%20cx='12.6357'%20cy='27.7'%20rx='2.63571'%20ry='2.7'%20fill='%23004B97'/%3e%3ccircle%20cx='26.6357'%20cy='27.6357'%20r='2.63571'%20fill='%23004B97'/%3e%3cpath%20d='M8%206L33%206L30.5%2020L10.5%2020L8%206Z'%20fill='%23004B97'/%3e%3crect%20x='8.70001'%20y='22'%20width='21.4762'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3crect%20width='2.5696'%20height='23.3413'%20rx='1'%20transform='matrix(0.988954%20-0.148225%200.143341%200.989673%205.41626%201.46036)'%20fill='%23004B97'/%3e%3crect%20x='0.976196'%20width='6.83333'%20height='3'%20rx='1'%20fill='%23004B97'/%3e%3cpath%20d='M9.59576%2012.7941H31.8404'%20stroke='white'/%3e%3cline%20x1='15.4994'%20y1='5.97547'%20x2='16.2015'%20y2='20.2696'%20stroke='white'/%3e%3crect%20width='1'%20height='15'%20transform='translate(23.617%205.29413)'%20fill='white'/%3e%3c/svg%3e" alt="正在購物車頁">
+        <img class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='41'%20height='31'%20viewBox='0%200%2041%2031'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cellipse%20cx='12.6357'%20cy='27.7'%20rx='2.63571'%20ry='2.7'%20fill='%23B4B4B4'/%3e%3ccircle%20cx='26.6357'%20cy='27.6357'%20r='2.63571'%20fill='%23B4B4B4'/%3e%3cpath%20d='M8%206L33%206L30.5%2020L10.5%2020L8%206Z'%20fill='%23B4B4B4'/%3e%3crect%20x='8.70001'%20y='22'%20width='21.4762'%20height='3'%20rx='1'%20fill='%23B4B4B4'/%3e%3crect%20width='2.5696'%20height='23.3413'%20rx='1'%20transform='matrix(0.988954%20-0.148225%200.143341%200.989673%205.41626%201.46036)'%20fill='%23B4B4B4'/%3e%3crect%20x='0.976196'%20width='6.83333'%20height='3'%20rx='1'%20fill='%23B4B4B4'/%3e%3cpath%20d='M9.59576%2012.7941H31.8404'%20stroke='white'/%3e%3cline%20x1='15.4994'%20y1='5.97547'%20x2='16.2015'%20y2='20.2696'%20stroke='white'/%3e%3crect%20width='1'%20height='15'%20transform='translate(23.617%205.29413)'%20fill='white'/%3e%3c/svg%3e" alt="點擊前往購物車頁">
+        <span>購物車</span>
+      </a>
+      <a href="../person/person.html" class="bottom-nav-item nav-tab-account active">
+        <img style="border-radius: 50%;" class="nav-icon nav-icon-active" src="/assets/default-avatar-B4oh15VT.webp" alt="正在我的帳戶">
+        <img style="border-radius: 50%;" class="nav-icon nav-icon-inactive" src="data:image/svg+xml,%3csvg%20width='150'%20height='150'%20viewBox='0%200%20150%20150'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_879_1133)'%3e%3crect%20width='150'%20height='150'%20rx='50'%20fill='white'/%3e%3ccircle%20cx='75'%20cy='75'%20r='75'%20fill='%23B4B4B4'/%3e%3cellipse%20cx='75'%20cy='126'%20rx='60'%20ry='40'%20fill='white'/%3e%3ccircle%20cx='75'%20cy='49'%20r='30'%20fill='white'/%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_879_1133'%3e%3crect%20width='150'%20height='150'%20rx='50'%20fill='white'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="點擊前往我的帳戶">
+        <span>我的帳戶</span>
+      </a>
+    </nav>
+
+    
+    
+    <button class="chaticon d-none d-lg-flex" id="chaticon" title="開啟聊天室">
+      <img src="data:image/svg+xml,%3csvg%20width='24'%20height='24'%20viewBox='0%200%2024%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M13%204C15.8089%204%2017.2138%203.99971%2018.2227%204.67383C18.6593%204.96562%2019.0344%205.34068%2019.3262%205.77734C20.0003%206.78624%2020%208.19108%2020%2011C20%2013.8089%2020.0003%2015.2138%2019.3262%2016.2227C19.0344%2016.6593%2018.6593%2017.0344%2018.2227%2017.3262C17.3413%2017.9151%2016.1577%2017.9886%2014%2017.998V18L12.8945%2020.2109C12.526%2020.948%2011.474%2020.948%2011.1055%2020.2109L10%2018V17.998C7.8423%2017.9886%206.65869%2017.9151%205.77734%2017.3262C5.34068%2017.0344%204.96562%2016.6593%204.67383%2016.2227C3.99971%2015.2138%204%2013.8089%204%2011C4%208.19108%203.99971%206.78624%204.67383%205.77734C4.96562%205.34068%205.34068%204.96562%205.77734%204.67383C6.78624%203.99971%208.19108%204%2011%204H13Z'%20fill='url(%23paint0_linear_636_917)'/%3e%3ccircle%20cx='16'%20cy='11'%20r='1'%20fill='white'/%3e%3ccircle%20cx='12'%20cy='11'%20r='1'%20fill='white'/%3e%3ccircle%20cx='8'%20cy='11'%20r='1'%20fill='white'/%3e%3cdefs%3e%3clinearGradient%20id='paint0_linear_636_917'%20x1='12'%20y1='4'%20x2='12'%20y2='20.7639'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23004B97'%20stop-opacity='0.7'/%3e%3cstop%20offset='1'%20stop-color='%2324B685'%20stop-opacity='0.6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e" alt="聊天室icon點擊開啟聊天室">
+      <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
+    </button>
+    <iframe id="talkInterface" style="display:none;"></iframe>
+
+    <script>
+      window.addEventListener('chatUnread', () => {
+        document.getElementById('chatUnreadDot').style.display = 'block';
+      });
+      window.addEventListener('chatRead', () => {
+        document.getElementById('chatUnreadDot').style.display = 'none';
+      });
+      document.getElementById('chaticon')?.addEventListener('click', () => {
+        const iframe = document.getElementById('talkInterface');
+        const isOpen = iframe.style.display !== 'none';
+        iframe.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen && !iframe.src) {
+          iframe.src = '../chatroom/chatroom.html';
+        }
+      });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11" crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"></script>
+    <script defer src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js" integrity="sha384-YnGSHPPWEUDKMHFPOVmNP7Xyfwx5G0CHet6IoNgiX6CbFZS8gCeIfEgB1MgPwjdI" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+
+<div class="modal fade" id="avatarCropModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h5 class="modal-title">裁切大頭照</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-0" style="background:#111;">
+        <div style="height:360px;overflow:hidden;">
+          <img id="avatarCropImg" style="display:block;max-width:100%;" alt="裁切大頭照">
+        </div>
+      </div>
+      <div class="modal-footer py-2">
+        <small class="text-muted me-auto">拖曳調整，滾輪縮放</small>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary btn-sm" id="avatarCropConfirm">確認裁切</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
