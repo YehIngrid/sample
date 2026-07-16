@@ -155,6 +155,7 @@ const i18n = {
     'about.school3':'國立高雄科技大學 運籌管理系',
     'about.school4':'國立中興大學 資訊工程學系',
     'about.school5':'國立中興大學 資訊工程學系',
+    'about.stats.users':'用戶總數','about.stats.active':'活躍用戶','about.stats.items':'商品個數',
     'about.history.title':'團隊經歷',
     'about.history.desc1':'我們的團隊成員擁有豐富的競賽經驗，並在多項創新創業比賽中獲得佳績。',
     'about.history.desc2':'我們相信，結合資訊科技、產業經營、行銷管理與行政專業的跨領域優勢，能為社會帶來更具影響力的創新解決方案，推動綠色消費、循環經濟與資訊交易的發展！',
@@ -258,6 +259,7 @@ const i18n = {
     'about.school3':'NKUST – Logistics Management',
     'about.school4':'NCHU – Computer Science',
     'about.school5':'NCHU – Computer Science',
+    'about.stats.users':'Total Users','about.stats.active':'Active Users','about.stats.items':'Items Listed',
     'about.history.title':'Team Achievements',
     'about.history.desc1':'Our team members have rich competition experience and have won awards in multiple innovation and entrepreneurship competitions.',
     'about.history.desc2':'We believe that combining IT, business management, marketing, and administrative expertise can bring more impactful solutions to society — driving green consumption, circular economy, and information trading.',
@@ -367,4 +369,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('nhHistoryClose')?.addEventListener('click', closeModal);
   historyModal?.addEventListener('click', (e) => { if (e.target === historyModal) closeModal(); });
+});
+/* ── 統計數字 count-up ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const nums = document.querySelectorAll('.nh-stat-num[data-count]');
+  if (!nums.length) return;
+  const animate = (el) => {
+    const target = parseInt(el.dataset.count, 10);
+    const dur = 1200;
+    const start = performance.now();
+    const tick = (now) => {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      el.textContent = Math.round(target * eased) + '+';
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animate(entry.target);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  nums.forEach(el => io.observe(el));
 });
