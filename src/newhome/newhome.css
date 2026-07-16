@@ -1587,18 +1587,25 @@ right: 0;
 .nh-m2 .nh-member-avatar { background: linear-gradient(135deg, #4a85c4, #7eb8d8); }
 .nh-m3 .nh-member-avatar { background: linear-gradient(135deg, #003a78, #4a85c4); }
 .nh-m4 .nh-member-avatar { background: linear-gradient(135deg, #7eb8d8, #abdad5); color: #004b97; }
+.nh-member-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
 .nh-member-role {
   display: inline-block; background: #fff; border: 1px solid #d6e2ec;
   padding: 4px 11px; border-radius: 999px;
   font-size: 11px; color: #004b97; font-weight: 600;
-  letter-spacing: 0.1em; margin-bottom: 10px; width: fit-content;
+  letter-spacing: 0.1em; width: fit-content;
 }
 .nh-member-name { font-size: 20px; font-weight: 700; color: #0f2745; letter-spacing: 0.04em; margin-bottom: 12px; }
-.nh-member-title { font-size: 12px; font-weight: 600; color: #004b97; letter-spacing: 0.08em; white-space: nowrap; }
+.nh-member-title {
+  display: inline-block; background: #004b97; border: 1px solid #004b97;
+  padding: 4px 11px; border-radius: 999px;
+  font-size: 11px; color: #fff; font-weight: 700;
+  letter-spacing: 0.1em; width: fit-content; white-space: nowrap;
+}
 .nh-member-school { padding-top: 12px; border-top: 1px dashed #d6e2ec; font-size: 12px; color: #6f87a0; line-height: 1.55; }
 .nh-dept { color: #0f2745; font-weight: 600; margin-top: 2px; display: block; }
 .nh-member-exp {
-  margin: 10px 0 0; padding: 10px 0 0 16px;
+  list-style: none;
+  margin: 10px 0 0; padding: 10px 0 0;
   border-top: 1px dashed #d6e2ec;
   font-size: 12px; color: #6f87a0; line-height: 1.6;
 }
