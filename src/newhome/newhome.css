@@ -1594,8 +1594,16 @@ right: 0;
   letter-spacing: 0.1em; margin-bottom: 10px; width: fit-content;
 }
 .nh-member-name { font-size: 20px; font-weight: 700; color: #0f2745; letter-spacing: 0.04em; margin-bottom: 12px; }
+.nh-member-title { font-size: 12px; font-weight: 600; color: #004b97; letter-spacing: 0.08em; white-space: nowrap; }
 .nh-member-school { padding-top: 12px; border-top: 1px dashed #d6e2ec; font-size: 12px; color: #6f87a0; line-height: 1.55; }
 .nh-dept { color: #0f2745; font-weight: 600; margin-top: 2px; display: block; }
+.nh-member-exp {
+  margin: 10px 0 0; padding: 10px 0 0 16px;
+  border-top: 1px dashed #d6e2ec;
+  font-size: 12px; color: #6f87a0; line-height: 1.6;
+}
+.nh-member-exp li { margin-bottom: 4px; }
+.nh-member-exp li:last-child { margin-bottom: 0; }
 
 /* achievements */
 .nh-achievements {
