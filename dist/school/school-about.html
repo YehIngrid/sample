@@ -6,14 +6,14 @@
   <title>攻略站介紹 · 校園攻略站</title>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <link rel="manifest" href="/assets/manifest-DMriwSiS.json">
+  <link rel="manifest" href="/assets/manifest-5--vV4vC.json">
   <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
   <meta name="robots" content="noindex, nofollow"/>
   <meta name="description" content="校園攻略站介紹 — 把學長姐的真實經驗變成你的捷徑。半實名制人工認證，告別 AI 內容與業配雜訊。"/>
   <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
   <style>
     .about-wrap { width: 80vw; max-width: 80vw; margin: 0 auto; padding: 24px 40px 60px; overflow-x: clip; }
 
@@ -212,6 +212,7 @@
         box-shadow: 0 0 100px rgba(126,184,216,0);
       }
     }
+
     /* hero：藍（深色，柔和暈開） */
     .bg-layer[data-bg="0"] {
       background:
@@ -348,7 +349,7 @@
     </button>
 
     <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
-      <img src="/assets/TREASUREHUBCHEN-XT8sW0do.svg" alt="">
+      <img src="/assets/TREASUREHUBCHEN-DooKZtdE.svg" alt="">
     </a>
   </div>
 
@@ -449,7 +450,7 @@
         <p class="lead">從升學、實習到宿舍生活，這些是同學最常搜尋的方向。找不到想看的，也能到許願池提名。</p>
       </div>
       <div class="cat-cloud">
-        <img src="/assets/cloud-DYFc5D_s.svg" alt="熱門攻略主題文字雲：研究所推甄、學分攻略、實習與面試、證照檢定、交換學生、生活指南等">
+        <img src="/assets/cloud-O1_wrW3C.svg" alt="熱門攻略主題文字雲：研究所推甄、學分攻略、實習與面試、證照檢定、交換學生、生活指南等">
       </div>
     </div>
   </section>
@@ -505,7 +506,7 @@
       <div class="step-card">
         <div class="num">04</div>
         <h4>換你分享</h4>
-        <p>把你的經驗寫成攻略上架，通過認證後就能開始變現。</p>
+        <p>通過創作者認證後，將你的經驗變現，讓文章持續為你賺錢</p>
       </div>
     </div>
   </section>
@@ -751,27 +752,9 @@ document.addEventListener('DOMContentLoaded', function() {
   io.observe(cta);
 })();
 
-// ── 水彩背景互動效果（強化滑鼠跟蹤 + 捲動視差 + 顏色反饋 + 點擊漣漪）──
+
+// ── 點擊漣漪效果 ──
 (function () {
-  const bgLayers = document.querySelectorAll('.bg-layer.active');
-  const bgStage = document.querySelector('.bg-stage');
-  if (!bgLayers.length || !bgStage) return;
-
-  let mouseX = 0, mouseY = 0;
-  const handleMouseMove = (e) => {
-    mouseX = (e.clientX / window.innerWidth - 0.5) * 200; // ±100px
-    mouseY = (e.clientY / window.innerHeight - 0.5) * 150; // ±75px
-    updateBg();
-  };
-
-  const handleScroll = () => {
-    updateBg();
-  };
-
-  const handleClick = (e) => {
-    createRipple(e.clientX, e.clientY);
-  };
-
   const createRipple = (x, y) => {
     const ripple = document.createElement('div');
     ripple.className = 'ripple';
@@ -786,25 +769,11 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => ripple.remove(), 800);
   };
 
-  const updateBg = () => {
-    const scrollRatio = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight || 1);
-    const offsetY = scrollRatio * 150 + mouseY; // 捲動（0-150px）+ 滑鼠偏移
-
-    // 計算亮度和飽和度變化
-    const brightness = 1 + (Math.abs(mouseX) / 200) * 0.15; // 滑鼠越遠亮度越高
-    const saturate = 1 + (Math.abs(mouseY) / 150) * 0.2; // 滑鼠越下飽和度越高
-
-    bgLayers.forEach(layer => {
-      layer.style.transform = `translate(${mouseX}px, ${offsetY}px) scale(1.02)`;
-    });
-
-    bgStage.style.filter = `blur(120px) brightness(${brightness}) saturate(${saturate})`;
+  const handleClick = (e) => {
+    createRipple(e.clientX, e.clientY);
   };
 
-  window.addEventListener('mousemove', handleMouseMove, { passive: true });
-  window.addEventListener('scroll', handleScroll, { passive: true });
   window.addEventListener('click', handleClick, { passive: true });
-  updateBg();
 })();
 
 // ── 回到最上面按鈕（捲到接近底部才出現）──
