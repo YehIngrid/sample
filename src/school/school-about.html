@@ -216,6 +216,7 @@
         box-shadow: 0 0 100px rgba(126,184,216,0);
       }
     }
+
     /* hero：藍（深色，柔和暈開） */
     .bg-layer[data-bg="0"] {
       background:
@@ -504,7 +505,7 @@
       <div class="step-card">
         <div class="num">04</div>
         <h4>換你分享</h4>
-        <p>把你的經驗寫成攻略上架，通過認證後就能開始變現。</p>
+        <p>通過創作者認證後，將你的經驗變現，讓文章持續為你賺錢</p>
       </div>
     </div>
   </section>
@@ -750,27 +751,9 @@ document.addEventListener('DOMContentLoaded', function() {
   io.observe(cta);
 })();
 
-// ── 水彩背景互動效果（強化滑鼠跟蹤 + 捲動視差 + 顏色反饋 + 點擊漣漪）──
+
+// ── 點擊漣漪效果 ──
 (function () {
-  const bgLayers = document.querySelectorAll('.bg-layer.active');
-  const bgStage = document.querySelector('.bg-stage');
-  if (!bgLayers.length || !bgStage) return;
-
-  let mouseX = 0, mouseY = 0;
-  const handleMouseMove = (e) => {
-    mouseX = (e.clientX / window.innerWidth - 0.5) * 200; // ±100px
-    mouseY = (e.clientY / window.innerHeight - 0.5) * 150; // ±75px
-    updateBg();
-  };
-
-  const handleScroll = () => {
-    updateBg();
-  };
-
-  const handleClick = (e) => {
-    createRipple(e.clientX, e.clientY);
-  };
-
   const createRipple = (x, y) => {
     const ripple = document.createElement('div');
     ripple.className = 'ripple';
@@ -785,25 +768,11 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => ripple.remove(), 800);
   };
 
-  const updateBg = () => {
-    const scrollRatio = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight || 1);
-    const offsetY = scrollRatio * 150 + mouseY; // 捲動（0-150px）+ 滑鼠偏移
-
-    // 計算亮度和飽和度變化
-    const brightness = 1 + (Math.abs(mouseX) / 200) * 0.15; // 滑鼠越遠亮度越高
-    const saturate = 1 + (Math.abs(mouseY) / 150) * 0.2; // 滑鼠越下飽和度越高
-
-    bgLayers.forEach(layer => {
-      layer.style.transform = `translate(${mouseX}px, ${offsetY}px) scale(1.02)`;
-    });
-
-    bgStage.style.filter = `blur(120px) brightness(${brightness}) saturate(${saturate})`;
+  const handleClick = (e) => {
+    createRipple(e.clientX, e.clientY);
   };
 
-  window.addEventListener('mousemove', handleMouseMove, { passive: true });
-  window.addEventListener('scroll', handleScroll, { passive: true });
   window.addEventListener('click', handleClick, { passive: true });
-  updateBg();
 })();
 
 // ── 回到最上面按鈕（捲到接近底部才出現）──

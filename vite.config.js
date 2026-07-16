@@ -123,10 +123,10 @@ export default defineConfig(() => ({
   base: '/',
   server: {
     port: 3000,
-    https: existsSync('localhost+1-key.pem') && existsSync('localhost+1.pem') ? {
-      key: readFileSync('localhost+1-key.pem'),
-      cert: readFileSync('localhost+1.pem'),
-    } : true,
+    // https: existsSync('localhost+1-key.pem') && existsSync('localhost+1.pem') ? {
+    //   key: readFileSync('localhost+1-key.pem'),
+    //   cert: readFileSync('localhost+1.pem'),
+    // } : true,
   },
   build: {
     outDir: 'dist',
