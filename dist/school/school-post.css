@@ -169,6 +169,23 @@ body { background: var(--alice); }
   color: var(--terracotta);
 }
 
+/* 側欄喜歡按鈕 */
+.side-like {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 0; margin-bottom: 8px; border-radius: 999px;
+  border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+  font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+  cursor: pointer; transition: all 0.22s;
+}
+.side-like svg { width: 15px; height: 15px; stroke: var(--terracotta); flex-shrink: 0; }
+.side-like:hover { border-color: var(--terracotta); color: var(--terracotta); transform: translateY(-1px); }
+.side-like.liked { border-color: var(--terracotta); color: var(--terracotta); background: rgba(201,127,90,0.08); }
+.side-like.liked svg { fill: var(--terracotta); }
+
+/* 手機操作列喜歡按鈕 */
+.sp-actionbar .ico.liked { border-color: var(--terracotta); color: var(--terracotta); }
+.sp-actionbar .ico.liked svg { fill: var(--terracotta); stroke: var(--terracotta); }
+
 /* article tags */
 .post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0 18px; }
 .post-tags a {
