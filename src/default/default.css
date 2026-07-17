@@ -2558,3 +2558,12 @@ html.skip-loader #whatcontent { display: block !important; }
     scroll-snap-align: start;
   }
 }
+
+/* 登出確認對話字體調整 */
+.swal-logout-title {
+  font-size: 1.5rem !important;
+}
+
+.swal-logout-text {
+  font-size: 0.95rem !important;
+}

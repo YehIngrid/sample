@@ -29,7 +29,11 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
     icon: 'question',
     showCancelButton: true,
     confirmButtonText: '登出',
-    cancelButtonText: '取消'
+    cancelButtonText: '取消',
+    customClass: {
+      title: 'swal-logout-title',
+      htmlContainer: 'swal-logout-text'
+    }
   });
   if (!confirm.isConfirmed) return;
   try { await backendSvc.logout(); } catch (_) {}
