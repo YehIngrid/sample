@@ -382,6 +382,10 @@
             解鎖完整攻略
           </button>
         </div>
+        <button class="side-like" type="button" id="sideLikeBtn" title="喜歡這篇攻略">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          喜歡 <span id="sideLikeCount">96</span>
+        </button>
         <a class="btn-ghost" href="#">
           加入收藏
           <svg viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M6 3 h12 a1 1 0 0 1 1 1 v17 l-7-4 -7 4 V4 a1 1 0 0 1 1-1 Z"/></svg>
@@ -415,6 +419,9 @@
 
 <!-- ============ 手機版 sticky 購買列 ============ -->
 <div class="sp-actionbar">
+  <button class="ico" id="barLikeBtn" aria-label="喜歡這篇攻略" type="button">
+    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  </button>
   <button class="ico" aria-label="加入收藏" type="button">
     <svg viewBox="0 0 24 24"><path d="M6 3 h12 a1 1 0 0 1 1 1 v17 l-7-4 -7 4 V4 a1 1 0 0 1 1-1 Z"/></svg>
   </button>
@@ -504,21 +511,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById(id);
     if (btn) btn.addEventListener('click', toggleUnlock);
   });
-  // ── 文章愛心按鈕 ──
-  const likeBtn = document.getElementById('postLikeBtn');
+  // ── 文章愛心按鈕（文末 / 側欄 / 手機操作列 同步） ──
   const likeCount = document.getElementById('postLikeCount');
+  const sideLikeCount = document.getElementById('sideLikeCount');
+  const likeBtns = ['postLikeBtn', 'sideLikeBtn', 'barLikeBtn']
+    .map(id => document.getElementById(id)).filter(Boolean);
   let isLiked = false;
   let likeNum = 96;
 
-  if (likeBtn) {
-    likeBtn.addEventListener('click', () => {
-      isLiked = !isLiked;
-      likeNum += isLiked ? 1 : -1;
-      likeCount.textContent = likeNum;
-      likeBtn.classList.toggle('liked', isLiked);
-      likeBtn.title = isLiked ? '已收藏這篇文章' : '點擊收藏這篇文章';
+  function renderLike() {
+    if (likeCount) likeCount.textContent = likeNum;
+    if (sideLikeCount) sideLikeCount.textContent = likeNum;
+    likeBtns.forEach(b => {
+      b.classList.toggle('liked', isLiked);
+      b.title = isLiked ? '已喜歡這篇攻略' : '喜歡這篇攻略';
     });
   }
+  likeBtns.forEach(b => b.addEventListener('click', () => {
+    isLiked = !isLiked;
+    likeNum += isLiked ? 1 : -1;
+    renderLike();
+  }));
+  renderLike();
 
   // ── 評分功能 ──
   const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
