@@ -215,6 +215,9 @@ input, select { font-family: inherit; }
 .btn-toolbar:hover { background: var(--navy-d); transform: translateY(-1px); }
 .btn-toolbar svg { width: 14px; height: 14px; }
 
+/* 標籤選單（訊息泡泡）：桌機已有側欄「熱門標籤」，僅手機顯示 */
+.tag-picker { display: none; }
+
 /* ============ Body grid ============ */
 .body-grid {
   display: grid;
@@ -538,21 +541,19 @@ input, select { font-family: inherit; }
   overflow: hidden;
 }
 .article.nocover .body { padding-top: 22px; position: relative; z-index: 1; }
-.article.nocover::before {
-  content: "\201C";
-  position: absolute; top: -18px; right: 10px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 130px; line-height: 1;
-  color: var(--navy);
-  opacity: 0.08;
-  z-index: 0;
-}
 .cat-pill-inline {
   display: inline-flex; align-items: center;
   margin-bottom: 14px;
   color: var(--navy);
   font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
 }
+/* 分類眉標＋學年標籤同一行 */
+.article .meta-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.article .meta-row .cat-pill-inline,
+.article .meta-row .valid-tag { margin-bottom: 0; }
 .cat-pill-inline::before {
   content: ""; width: 16px; height: 2px;
   background: var(--navy); margin-right: 8px;
@@ -639,13 +640,22 @@ input, select { font-family: inherit; }
   color: var(--navy); font-size: 10px; margin-left: 2px;
 }
 .article .author-meta .sub { margin-top: 1px; }
+.article .author-meta .badge-pill {
+  display: inline-block;
+  padding: 1px 8px;
+  background: var(--alice);
+  color: var(--navy);
+  border-radius: 999px;
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: 0.04em;
+}
 .article .price {
   font-size: 15px; font-weight: 700; color: var(--navy);
   letter-spacing: 0.02em;
 }
 .article .price.free { color: var(--muted); font-weight: 600; }
 .article .read-stats {
-  display: flex; gap: 12px;
+  display: flex; align-items: center; gap: 12px;
   font-size: 11px; color: var(--muted);
   margin-top: 8px;
   letter-spacing: 0.04em;
@@ -1344,7 +1354,7 @@ input, select { font-family: inherit; }
   inset: 0;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-in-out, visibility 0.5s;
   display: flex;
   align-items: stretch;
   justify-content: stretch;
@@ -1556,7 +1566,7 @@ input, select { font-family: inherit; }
     inset: 0;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s;
     display: flex;
     align-items: stretch;
     justify-content: stretch;
@@ -1617,6 +1627,91 @@ input, select { font-family: inherit; }
   }
   .search input { padding: 11px 8px; font-size: 13px; }
   .search .scope { display: none; }
+  /* 排序＋標籤＋進階篩選同一排 */
+  .toolbar .d-flex { gap: 8px !important; align-items: center; position: relative; }
+  .toolbar .select-wrap { min-width: 0; flex: 1; }
+  .toolbar .select-wrap select { padding: 11px 26px 11px 12px; }
+  .toolbar .select-wrap::after { right: 10px; }
+  .btn-toolbar { flex-shrink: 0; }
+
+  /* ── 標籤選單：點按鈕彈出訊息泡泡，可多選 ── */
+  .tag-picker { display: block; flex-shrink: 0; }
+  .tag-picker-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 11px 16px;
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.22s;
+  }
+  .tag-picker-btn::after { content: "▾"; color: var(--muted); font-size: 11px; }
+  .tag-picker-btn.open,
+  .tag-picker-btn.has-sel { border-color: var(--navy); color: var(--navy); }
+  .tag-count {
+    background: var(--navy);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 999px;
+  }
+  .tag-count:empty { display: none; }
+  .tag-bubble {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    left: 0;
+    z-index: 60;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px;
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 18px;
+    box-shadow: 0 16px 36px -22px rgba(0, 75, 151, 0.3);
+  }
+  .tag-bubble.open { display: flex; animation: tagBubbleIn 0.18s ease; }
+  @keyframes tagBubbleIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* 泡泡的小尾巴：指向「標籤」按鈕 */
+  .tag-bubble::before {
+    content: "";
+    position: absolute;
+    top: -7px;
+    right: 84px;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-left: 1.5px solid var(--line);
+    border-top: 1.5px solid var(--line);
+    transform: rotate(45deg);
+  }
+  /* 標籤顏色與桌機側欄 .tag-list 一致 */
+  .tag-bubble button {
+    padding: 8px 14px;
+    background: var(--alice);
+    border: none;
+    border-radius: 999px;
+    font-size: 12.5px;
+    color: var(--navy);
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tag-bubble button.on {
+    background: var(--navy);
+    color: #fff;
+  }
 
   /* ── BODY GRID ── */
   .body-grid { grid-template-columns: 1fr; gap: 20px; }
@@ -1650,7 +1745,7 @@ input, select { font-family: inherit; }
     gap: 8px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 12px 0;
+    padding: 0 0 16px;
     scrollbar-width: none;
   }
   .mobile-cat-bar::-webkit-scrollbar { display: none; }

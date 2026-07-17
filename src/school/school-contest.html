@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>競賽活動 · 校園攻略站</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="description" content="校園攻略站競賽活動 — 徵稿比賽、獎項與人氣排行榜。"/>
+  <link rel="shortcut icon" href="../treasurehubIcon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
+  <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/default-font.css">
+  <link rel="stylesheet" href="school.css">
+  <script type="module" src="../default/default.js"></script>
+  <style>
+    /* ===== contest scope ===== */
+    html { overflow-x: hidden; }
+    body { background: #f6f9fc; }
+    .ct-wrap { width: min(1080px, 92vw); margin: 0 auto; padding: 26px 0 96px; }
+
+    /* back */
+    .ct-back { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; padding: 0; margin-bottom: 14px; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
+    .ct-back:hover { color: var(--navy); }
+    .ct-back svg { width: 14px; height: 14px; }
+
+    /* hero */
+    .ct-hero { border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: #fff; }
+    .ct-banner { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: cover; background: var(--cream); }
+    .ct-banner.ph { display: flex; align-items: center; justify-content: center; background: linear-gradient(120deg, var(--navy), var(--mid) 70%, var(--aqua)); }
+    .ct-banner.ph span { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: 0.2em; }
+    .ct-head { padding: 22px 26px 24px; }
+    .ct-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.28em; color: var(--muted); }
+    .ct-title-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+    .ct-title { font-size: clamp(26px, 4vw, 40px); font-weight: 700; letter-spacing: 0.06em; color: var(--ink); line-height: 1.25; }
+    .ct-status { font-size: 11px; font-weight: 700; padding: 5px 13px; border-radius: 999px; letter-spacing: 0.08em; flex-shrink: 0; }
+    .ct-status.live { background: rgba(171,218,213,0.45); color: #007568; }
+    .ct-status.upcoming { background: rgba(243,227,181,0.55); color: #a08540; }
+    .ct-status.ended { background: #f0f2f4; color: var(--muted); }
+    .ct-period { font-size: 12.5px; color: var(--muted); letter-spacing: 0.04em; margin-top: 8px; }
+    .ct-desc { font-size: 15px; line-height: 1.7; color: var(--body); margin-top: 12px; max-width: 720px; }
+    .ct-cta { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+    .ct-btn { display: inline-flex; align-items: center; gap: 7px; padding: 11px 22px; border-radius: 999px; font-size: 13.5px; font-weight: 700; letter-spacing: 0.06em; border: 1.5px solid transparent; cursor: pointer; transition: all 0.22s ease; }
+    .ct-btn svg { width: 15px; height: 15px; }
+    .ct-btn.primary { background: var(--navy); color: #fff; }
+    .ct-btn.primary:hover { background: rgb(36,182,133); }
+    .ct-btn.primary[disabled] { background: #c6d3de; cursor: default; }
+    .ct-btn.ghost { background: #fff; border-color: var(--line); color: var(--ink); }
+    .ct-btn.ghost:hover { border-color: var(--navy); color: var(--navy); }
+
+    /* stat strip */
+    .ct-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 16px; }
+    .ct-stat { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px 20px; }
+    .ct-stat .l { font-size: 11px; letter-spacing: 0.1em; color: var(--muted); }
+    .ct-stat .v { font-size: 22px; font-weight: 700; color: var(--ink); margin-top: 7px; }
+    .ct-stat .v .u { font-size: 12px; color: var(--muted); font-weight: 500; margin-left: 2px; }
+
+    /* sections */
+    .ct-sec { margin-top: 36px; }
+    .ct-sec-h { font-size: 20px; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); margin-bottom: 14px; }
+    .ct-sec-h span { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 10px; letter-spacing: 0.02em; }
+
+    /* prizes */
+    .ct-prizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .ct-prize { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; transition: all 0.22s ease; }
+    .ct-prize:hover { transform: translateY(-3px); border-color: var(--navy); box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3); }
+    .ct-prize .medal { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; }
+    .ct-prize.g .medal { background: rgba(243,227,181,0.55); color: #a08540; }
+    .ct-prize.s .medal { background: #eef2f6; color: #6f87a0; }
+    .ct-prize.b .medal { background: rgba(201,127,90,0.16); color: var(--terracotta); }
+    .ct-prize.x .medal { background: var(--alice); color: var(--navy); }
+    .ct-prize .pn { font-size: 14.5px; font-weight: 700; color: var(--ink); margin-top: 12px; letter-spacing: 0.02em; }
+    .ct-prize .pa { font-size: 20px; font-weight: 700; color: var(--navy); margin-top: 4px; }
+    .ct-prize .pd { font-size: 12px; color: var(--muted); line-height: 1.65; margin-top: 6px; }
+    .ct-prize.wide { grid-column: span 3; display: flex; align-items: center; gap: 18px; }
+    .ct-prize.wide .medal { margin: 0; flex-shrink: 0; }
+    .ct-prize.wide .pn, .ct-prize.wide .pa { margin-top: 0; }
+    .ct-prize.wide .pd { margin-top: 3px; }
+    .ct-prize.wide .pbody { flex: 1; }
+
+    /* scoring */
+    .ct-score-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; }
+    .ct-formula { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .ct-f-item { background: var(--alice); border-radius: 12px; padding: 10px 16px; text-align: center; }
+    .ct-f-item .n { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .ct-f-item .t { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.04em; }
+    .ct-f-op { font-size: 16px; font-weight: 700; color: var(--muted); }
+    .ct-rules { margin: 16px 0 0; padding: 14px 0 0; border-top: 1px solid var(--line); }
+    .ct-rules li { font-size: 12.5px; color: var(--muted); line-height: 1.8; list-style: none; position: relative; padding-left: 16px; }
+    .ct-rules li::before { content: ""; position: absolute; left: 2px; top: 0.75em; width: 5px; height: 5px; border-radius: 50%; background: var(--sky); }
+
+    /* leaderboard */
+    .ct-board { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+    .ct-me-bar { display: flex; align-items: center; gap: 14px; padding: 14px 22px; background: linear-gradient(120deg, var(--navy), var(--navy-d)); color: #fff; }
+    .ct-me-bar .rk { font-size: 17px; font-weight: 800; background: rgba(255,255,255,0.18); padding: 4px 14px; border-radius: 999px; letter-spacing: 0.02em; flex-shrink: 0; }
+    .ct-me-bar .tx { font-size: 13px; letter-spacing: 0.03em; flex: 1; min-width: 0; }
+    .ct-me-bar .tx b { font-weight: 700; }
+    .ct-me-bar .gap { font-size: 11.5px; color: rgba(255,255,255,0.75); flex-shrink: 0; }
+    .ct-bhead, .ct-brow { display: grid; grid-template-columns: 64px 1.2fr 1.8fr 110px; gap: 12px; padding: 13px 22px; align-items: center; }
+    .ct-bhead { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; border-bottom: 1px solid var(--line); }
+    .ct-brow { border-bottom: 1px solid var(--line); font-size: 13.5px; color: var(--ink); }
+    .ct-brow:last-child { border-bottom: none; }
+    .ct-brow .rk { font-size: 14px; font-weight: 800; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .ct-brow.top1 .rk, .ct-brow.top2 .rk, .ct-brow.top3 .rk { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; }
+    .ct-brow.top1 .rk { background: #d9a72c; }
+    .ct-brow.top2 .rk { background: #9aabbc; }
+    .ct-brow.top3 .rk { background: var(--terracotta); }
+    .ct-brow .who { font-weight: 700; letter-spacing: 0.02em; }
+    .ct-brow .who .me-tag { font-size: 10px; font-weight: 700; color: #fff; background: var(--navy); border-radius: 999px; padding: 2px 8px; margin-left: 7px; vertical-align: 1px; letter-spacing: 0.08em; }
+    .ct-brow .work { font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ct-brow .work b { color: var(--body); font-weight: 600; }
+    .ct-brow .pt { font-size: 14px; font-weight: 700; color: var(--navy); text-align: right; font-variant-numeric: tabular-nums; }
+    .ct-brow.me { background: var(--alice); }
+    .ct-bskip { text-align: center; padding: 8px 0; color: var(--muted); font-size: 14px; letter-spacing: 0.3em; border-bottom: 1px solid var(--line); }
+    .ct-bfoot { padding: 13px 22px; font-size: 11.5px; color: var(--muted); letter-spacing: 0.02em; }
+    .ct-board-empty { padding: 46px 20px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+    /* other contests */
+    .ct-others { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .ct-oc { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; cursor: pointer; transition: all 0.22s ease; }
+    .ct-oc:hover { transform: translateY(-3px); border-color: var(--navy); box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3); }
+    .ct-oc .art { height: 92px; background: linear-gradient(120deg, var(--navy), var(--mid) 70%, var(--aqua)); position: relative; }
+    .ct-oc .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ct-oc .body { padding: 14px 18px 18px; }
+    .ct-oc .on { font-size: 14.5px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+    .ct-oc .od { font-size: 11.5px; color: var(--muted); margin-top: 5px; letter-spacing: 0.03em; }
+    .ct-oc .ct-status { margin-top: 10px; display: inline-block; }
+    .ct-oc.cur { border-color: var(--navy); box-shadow: 0 0 0 1px var(--navy) inset; cursor: default; }
+    .ct-oc.cur:hover { transform: none; }
+
+    @media (max-width: 980px) {
+      .ct-wrap { width: 100%; padding: 14px 16px 96px; }
+      .ct-stats { grid-template-columns: repeat(2, 1fr); }
+      .ct-prizes { grid-template-columns: 1fr; }
+      .ct-prize.wide { grid-column: auto; }
+      .ct-others { grid-template-columns: 1fr; }
+      .ct-bhead { display: none; }
+      .ct-brow { grid-template-columns: 40px 1fr 90px; }
+      .ct-brow .work { display: none; }
+      .ct-me-bar { flex-wrap: wrap; gap: 8px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="d-flex gap-2">
+    <button class="mobile-hamburger d-lg-none" type="button">
+      <img src="../svg/navbar.svg" alt="" style="width: 20px;">
+    </button>
+    <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+      <img src="../svg/TREASUREHUBCHEN.svg" alt="">
+    </a>
+  </div>
+  <div class="tabs">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <div class="tab-drop">
+      <a href="school.html" class="on">校園攻略站
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="drop-menu">
+        <a href="school.html">攻略首頁</a>
+        <a href="school-about.html">攻略介紹</a>
+        <a href="school-article.html">全部文章</a>
+        <a href="school-studio.html">撰寫攻略</a>
+      </div>
+    </div>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+  <div class="right">
+    <a class="btn-sm navy d-none d-lg-inline-flex" href="school-studio.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
+      撰寫攻略
+    </a>
+    <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">登入</button>
+    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
+      <span class="avatar"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- 手機版側面菜單 -->
+<div class="mobile-menu-backdrop"></div>
+<div class="mobile-menu-wrapper" id="navbarMenu">
+  <div class="mobile-menu">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <a href="school.html" class="on">校園攻略站</a>
+    <a href="../news/news.html">最新資訊</a>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+</div>
+
+<div class="ct-wrap">
+
+  <button class="ct-back" type="button" id="ctBack">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
+    返回上一頁
+  </button>
+
+  <!-- HERO -->
+  <div class="ct-hero">
+    <div id="ctBanner"></div>
+    <div class="ct-head">
+      <div class="ct-eyebrow">CAMPUS CONTEST</div>
+      <div class="ct-title-row">
+        <h1 class="ct-title" id="ctTitle"></h1>
+        <span class="ct-status" id="ctStatus"></span>
+      </div>
+      <div class="ct-period" id="ctPeriod"></div>
+      <p class="ct-desc" id="ctDesc"></p>
+      <div class="ct-cta">
+        <a class="ct-btn primary" id="ctJoin" href="school-studio.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          撰寫攻略參賽
+        </a>
+        <button class="ct-btn ghost" id="ctRuleBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 H6 a2 2 0 0 0-2 2 v16 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2-2 V8Z"/><path d="M14 2 v6 h6"/></svg>
+          查看規則
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 數據列 -->
+  <div class="ct-stats" id="ctStats"></div>
+
+  <!-- 獎項 -->
+  <div class="ct-sec">
+    <div class="ct-sec-h">獎項內容<span id="ctPrizeSub"></span></div>
+    <div class="ct-prizes" id="ctPrizes"></div>
+  </div>
+
+  <!-- 積分規則 -->
+  <div class="ct-sec" id="ctRuleSec">
+    <div class="ct-sec-h">人氣積分怎麼算</div>
+    <div class="ct-score-card">
+      <div class="ct-formula" id="ctFormula"></div>
+      <ul class="ct-rules" id="ctRules"></ul>
+    </div>
+  </div>
+
+  <!-- 排行榜 -->
+  <div class="ct-sec">
+    <div class="ct-sec-h">人氣排行榜<span id="ctBoardSub"></span></div>
+    <div class="ct-board" id="ctBoard"></div>
+  </div>
+
+  <!-- 更多競賽 -->
+  <div class="ct-sec">
+    <div class="ct-sec-h">更多競賽</div>
+    <div class="ct-others" id="ctOthers"></div>
+  </div>
+
+</div>
+
+<!-- ── Bottom nav (mobile) ── -->
+<script>if(window !== window.parent) document.write('<style>.bottom-nav{display:none!important}</style>');</script>
+
+<nav class="bottom-nav" id="schoolBottomNav">
+  <a href="school.html" class="bottom-nav-item nav-tab-home">
+    <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>攻略首頁</span>
+  </a>
+  <a href="school-article.html" class="bottom-nav-item nav-tab-articles">
+    <img class="nav-icon nav-icon-active" src="../svg/all-article.svg" alt="全部文章" height="24" width="24">
+    <img class="nav-icon nav-icon-inactive" src="../svg/all-article-inactive.svg" alt="點擊閱覽全部文章" height="24" width="24">
+    <span>全部文章</span>
+  </a>
+  <a href="school-about.html" class="bottom-nav-item nav-tab-about">
+    <img class="nav-icon nav-icon-active" src="../svg/campus-guide.svg" alt="攻略介紹" height="24" width="24">
+    <img class="nav-icon nav-icon-inactive" src="../svg/campus-guide-noactive.svg" alt="點擊進入攻略介紹" height="24" width="24">
+    <span>攻略介紹</span>
+  </a>
+  <a href="school-studio.html" class="bottom-nav-item nav-tab-write">
+    <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <span>撰寫攻略</span>
+  </a>
+  <a href="school-profile.html" class="bottom-nav-item nav-tab-account">
+    <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>我的檔案</span>
+  </a>
+</nav>
+
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script defer src="school-new.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburger = document.querySelector('.mobile-hamburger');
+  const menuWrapper = document.getElementById('navbarMenu');
+  const backdrop = document.querySelector('.mobile-menu-backdrop');
+  const menuLinks = document.querySelectorAll('.mobile-menu a');
+  function toggleMenu() {
+    menuWrapper.classList.toggle('show');
+    backdrop.classList.toggle('active');
+    hamburger.classList.toggle('active');
+  }
+  function closeMenu() {
+    menuWrapper.classList.remove('show');
+    backdrop.classList.remove('active');
+    hamburger.classList.remove('active');
+  }
+  if (hamburger) hamburger.addEventListener('click', toggleMenu);
+  if (backdrop) backdrop.addEventListener('click', closeMenu);
+  menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+});
+</script>
+
+<script>
+  /* ---------- 競賽資料（之後有新比賽只要加一筆） ---------- */
+  var CONTESTS = {
+    'seed2026': {
+      name: '種子創作者計劃',
+      tagline: '首屆攻略徵稿',
+      status: 'live',                     // live | upcoming | ended
+      start: '2026-06-01', end: '2026-08-31',
+      art: '../svg/contestad.svg',
+      desc: '首屆攻略徵稿活動。徵稿期間發佈的攻略都會自動列入計分，依人氣積分排出名次——寫下你最擅長的推甄、證照、實習或選課心得，讓好內容被看見，還能抱走獎金。',
+      stats: { works: 126, creators: 87 },
+      pool: 30000,
+      prizes: [
+        { tier: 'g', medal: '1', name: '冠軍', amt: 'NT$ 10,000', desc: '人氣積分第 1 名，另獲首頁輪播推薦一個月。' },
+        { tier: 's', medal: '2', name: '亞軍', amt: 'NT$ 6,000', desc: '人氣積分第 2 名，獲首頁精選推薦兩週。' },
+        { tier: 'b', medal: '3', name: '季軍', amt: 'NT$ 4,000', desc: '人氣積分第 3 名，獲首頁精選推薦一週。' },
+        { tier: 'x', medal: '★', name: '人氣黑馬獎 × 2', amt: 'NT$ 2,000', desc: '徵稿期最後兩週積分成長幅度最高的兩位創作者。', wide: true },
+        { tier: 'x', medal: '✦', name: '優選 × 6', amt: 'NT$ 1,000', desc: '第 4 至 9 名，並獲得「種子創作者」限定頭銜。', wide: true }
+      ],
+      formula: [
+        { n: '閱讀', w: '× 1' }, { n: '收藏', w: '× 5' }, { n: '獲得評價', w: '× 10' }
+      ],
+      rules: [
+        '限徵稿期間（2026/06/01 – 08/31）發佈的攻略列入計分，多篇作品積分可累加。',
+        '參賽作品需為原創內容；經檢舉抄襲或灌水成立者，取消參賽資格。',
+        '積分每日 00:00 更新一次，結算以 08/31 23:59 的數據為準。',
+        '得獎名單於 09/07 公布，獎金隨當月收益一併撥款。'
+      ],
+      board: {
+        me: { rank: 14, score: 1284, gap: 36 },
+        top: [
+          { rank: 1, who: '資工系 大四 陳同學', work: '從零開始的實習面試指南', works: 4, score: 8742 },
+          { rank: 2, who: '外文系 大三 林同學', work: '多益金色證書終極刷題法', works: 3, score: 8516 },
+          { rank: 3, who: '財金系 大二 張同學', work: 'CFA L1 在學考過全紀錄', works: 2, score: 7980 },
+          { rank: 4, who: '機械系 大四 黃同學', work: '研替 vs 預官選擇攻略', works: 3, score: 7421 },
+          { rank: 5, who: '園藝系 大三 吳同學', work: '公費交換申請時程全解析', works: 2, score: 6875 },
+          { rank: 6, who: '法律系 大二 劉同學', work: '轉學考上榜讀書計畫', works: 2, score: 6540 },
+          { rank: 7, who: '食生系 大四 蔡同學', work: '食品技師證照衝刺筆記', works: 1, score: 6122 },
+          { rank: 8, who: '土木系 大三 許同學', work: '暑期實習履歷改造前後', works: 2, score: 5860 },
+          { rank: 9, who: '獸醫系 大五 鄭同學', work: '獸醫國考科目地圖', works: 1, score: 5433 },
+          { rank: 10, who: '中文系 大二 王同學', work: '文組跨域轉職資料科學', works: 2, score: 5104 }
+        ],
+        near: [
+          { rank: 13, who: '森林系 大二 周同學', work: '林務局暑期工讀申請', works: 1, score: 1320 },
+          { rank: 14, who: '創產系 大二 葉同學', work: '中興推台清交：備審修改前後對比', works: 2, score: 1284, me: true },
+          { rank: 15, who: '昆蟲系 大三 郭同學', work: '科博館導覽志工心得', works: 1, score: 1251 }
+        ]
+      }
+    },
+    'notefest2026': {
+      name: '期中筆記祭',
+      tagline: '第二彈徵稿 · 即將開始',
+      status: 'upcoming',
+      start: '2026-10-12', end: '2026-11-15',
+      art: null,
+      desc: '期中考週最需要的就是一份好筆記。徵求各系所必修科目的重點整理與應考攻略，開賽後同步開放報名，獎項內容陸續公布。',
+      stats: { works: 0, creators: 0 },
+      pool: 20000,
+      prizes: [
+        { tier: 'g', medal: '1', name: '冠軍', amt: 'NT$ 8,000', desc: '開賽後公布完整辦法。' },
+        { tier: 's', medal: '2', name: '亞軍', amt: 'NT$ 5,000', desc: '開賽後公布完整辦法。' },
+        { tier: 'b', medal: '3', name: '季軍', amt: 'NT$ 3,000', desc: '開賽後公布完整辦法。' }
+      ],
+      formula: [
+        { n: '閱讀', w: '× 1' }, { n: '收藏', w: '× 5' }, { n: '獲得評價', w: '× 10' }
+      ],
+      rules: [
+        '詳細計分與參賽辦法將於開賽前一週公布。',
+        '限徵稿期間發佈的攻略列入計分。'
+      ],
+      board: null
+    },
+    'freshman2026': {
+      name: '新生攻略月',
+      tagline: '2026 春季徵稿 · 已結束',
+      status: 'ended',
+      start: '2026-02-01', end: '2026-03-15',
+      art: null,
+      desc: '為新生而寫：選課、宿舍、社團、打工與校園生存指南徵稿。活動已圓滿結束，恭喜所有得獎創作者！',
+      stats: { works: 94, creators: 61 },
+      pool: 15000,
+      prizes: [
+        { tier: 'g', medal: '1', name: '冠軍', amt: 'NT$ 6,000', desc: '得獎作品：〈大一新生選課避雷全指南〉' },
+        { tier: 's', medal: '2', name: '亞軍', amt: 'NT$ 4,000', desc: '得獎作品：〈宿舍生存與外宿比較攻略〉' },
+        { tier: 'b', medal: '3', name: '季軍', amt: 'NT$ 2,500', desc: '得獎作品：〈社團博覽會逛展路線圖〉' }
+      ],
+      formula: [
+        { n: '閱讀', w: '× 1' }, { n: '收藏', w: '× 5' }, { n: '獲得評價', w: '× 10' }
+      ],
+      rules: [
+        '本活動已於 2026/03/15 結束，名次以結算日數據為準。'
+      ],
+      board: {
+        me: null,
+        top: [
+          { rank: 1, who: '歷史系 大二 楊同學', work: '大一新生選課避雷全指南', works: 2, score: 6210 },
+          { rank: 2, who: '應數系 大三 賴同學', work: '宿舍生存與外宿比較攻略', works: 1, score: 5877 },
+          { rank: 3, who: '行銷系 大二 蕭同學', work: '社團博覽會逛展路線圖', works: 1, score: 5432 }
+        ],
+        near: []
+      }
+    }
+  };
+  var STATUS_TXT = { live: '進行中', upcoming: '即將開始', ended: '已結束' };
+
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+    /* 返回：有瀏覽紀錄就回上一頁，直接開啟本頁則回攻略首頁 */
+    document.getElementById('ctBack').addEventListener('click', function () {
+      if (history.length > 1 && document.referrer) history.back();
+      else location.href = 'school.html';
+    });
+
+    var params = new URLSearchParams(location.search);
+    var id = params.get('id');
+    var c = CONTESTS[id] || CONTESTS['seed2026'];
+    if (!CONTESTS[id]) id = 'seed2026';
+
+    function fmt(n) { return n.toLocaleString('en-US'); }
+    function fmtDate(s) { return s.replace(/-/g, '/'); }
+    function daysBetween(a, b) { return Math.ceil((b - a) / 86400000); }
+
+    /* hero */
+    document.title = c.name + ' · 校園攻略站';
+    var banner = $('ctBanner');
+    if (c.art) {
+      var img = document.createElement('img');
+      img.className = 'ct-banner'; img.src = c.art; img.alt = c.name + ' 活動主視覺';
+      banner.appendChild(img);
+    } else {
+      var ph = document.createElement('div');
+      ph.className = 'ct-banner ph';
+      var t = document.createElement('span'); t.textContent = c.name;
+      ph.appendChild(t);
+      banner.appendChild(ph);
+    }
+    $('ctTitle').textContent = c.name;
+    var st = $('ctStatus');
+    st.textContent = STATUS_TXT[c.status];
+    st.className = 'ct-status ' + c.status;
+    $('ctPeriod').textContent = c.tagline + ' · 徵稿期間 ' + fmtDate(c.start) + ' – ' + fmtDate(c.end);
+    $('ctDesc').textContent = c.desc;
+    if (c.status !== 'live') {
+      var join = $('ctJoin');
+      join.removeAttribute('href');
+      join.setAttribute('disabled', '');
+      join.textContent = c.status === 'upcoming' ? '尚未開放投稿' : '活動已結束';
+    }
+    $('ctRuleBtn').addEventListener('click', function (e) {
+      e.preventDefault();
+      $('ctRuleSec').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    /* 數據列 */
+    var now = new Date();
+    var endD = new Date(c.end + 'T23:59:59');
+    var startD = new Date(c.start + 'T00:00:00');
+    var countLbl, countVal;
+    if (c.status === 'live') { countLbl = '距離截止'; countVal = Math.max(0, daysBetween(now, endD)); }
+    else if (c.status === 'upcoming') { countLbl = '距離開賽'; countVal = Math.max(0, daysBetween(now, startD)); }
+    else { countLbl = '活動狀態'; countVal = null; }
+    var stats = [
+      { l: '參賽作品', v: fmt(c.stats.works), u: '篇' },
+      { l: '參與創作者', v: fmt(c.stats.creators), u: '位' },
+      { l: '總獎金', v: 'NT$ ' + fmt(c.pool), u: '' },
+      { l: countLbl, v: countVal === null ? '已結束' : String(countVal), u: countVal === null ? '' : '天' }
+    ];
+    stats.forEach(function (s) {
+      var d = document.createElement('div');
+      d.className = 'ct-stat';
+      var l = document.createElement('div'); l.className = 'l'; l.textContent = s.l;
+      var v = document.createElement('div'); v.className = 'v'; v.textContent = s.v;
+      if (s.u) { var u = document.createElement('span'); u.className = 'u'; u.textContent = ' ' + s.u; v.appendChild(u); }
+      d.appendChild(l); d.appendChild(v);
+      $('ctStats').appendChild(d);
+    });
+
+    /* 獎項 */
+    $('ctPrizeSub').textContent = '總獎金 NT$ ' + fmt(c.pool);
+    c.prizes.forEach(function (p) {
+      var d = document.createElement('div');
+      d.className = 'ct-prize ' + p.tier + (p.wide ? ' wide' : '');
+      var medal = document.createElement('div'); medal.className = 'medal'; medal.textContent = p.medal;
+      var body = document.createElement('div'); body.className = 'pbody';
+      var pn = document.createElement('div'); pn.className = 'pn'; pn.textContent = p.name;
+      var pa = document.createElement('div'); pa.className = 'pa'; pa.textContent = p.amt;
+      var pd = document.createElement('div'); pd.className = 'pd'; pd.textContent = p.desc;
+      body.appendChild(pn); body.appendChild(pa); body.appendChild(pd);
+      d.appendChild(medal); d.appendChild(body);
+      $('ctPrizes').appendChild(d);
+    });
+
+    /* 積分規則 */
+    var formula = $('ctFormula');
+    c.formula.forEach(function (f, i) {
+      if (i > 0) {
+        var op = document.createElement('span'); op.className = 'ct-f-op'; op.textContent = '＋';
+        formula.appendChild(op);
+      }
+      var item = document.createElement('div'); item.className = 'ct-f-item';
+      var n = document.createElement('div'); n.className = 'n'; n.textContent = f.n + ' ' + f.w;
+      var t = document.createElement('div'); t.className = 't'; t.textContent = i === 0 ? '基礎分' : '加權分';
+      item.appendChild(n); item.appendChild(t);
+      formula.appendChild(item);
+    });
+    var eq = document.createElement('span'); eq.className = 'ct-f-op'; eq.textContent = '＝ 人氣積分';
+    formula.appendChild(eq);
+    c.rules.forEach(function (r) {
+      var li = document.createElement('li'); li.textContent = r;
+      $('ctRules').appendChild(li);
+    });
+
+    /* 排行榜 */
+    var board = $('ctBoard');
+    if (!c.board) {
+      $('ctBoardSub').textContent = '開賽後每日更新';
+      var empty = document.createElement('div');
+      empty.className = 'ct-board-empty';
+      empty.textContent = '排行榜將於開賽後啟用，敬請期待。';
+      board.appendChild(empty);
+    } else {
+      $('ctBoardSub').textContent = c.status === 'ended' ? '最終結算名次' : '每日 00:00 更新';
+      if (c.board.me) {
+        var meBar = document.createElement('div');
+        meBar.className = 'ct-me-bar';
+        var rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = '#' + c.board.me.rank;
+        var tx = document.createElement('span'); tx.className = 'tx';
+        tx.appendChild(document.createTextNode('你目前的人氣積分 '));
+        var b = document.createElement('b'); b.textContent = fmt(c.board.me.score);
+        tx.appendChild(b);
+        var gap = document.createElement('span'); gap.className = 'gap';
+        gap.textContent = '距前一名還差 ' + fmt(c.board.me.gap) + ' 分，加油！';
+        meBar.appendChild(rk); meBar.appendChild(tx); meBar.appendChild(gap);
+        board.appendChild(meBar);
+      }
+      var head = document.createElement('div');
+      head.className = 'ct-bhead';
+      ['名次', '創作者', '代表作', '人氣積分'].forEach(function (h, i) {
+        var s = document.createElement('span'); s.textContent = h;
+        if (i === 3) s.style.textAlign = 'right';
+        head.appendChild(s);
+      });
+      board.appendChild(head);
+
+      function addRow(r) {
+        var row = document.createElement('div');
+        row.className = 'ct-brow' + (r.rank <= 3 ? ' top' + r.rank : '') + (r.me ? ' me' : '');
+        var rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = r.rank;
+        var who = document.createElement('span'); who.className = 'who'; who.textContent = r.who;
+        if (r.me) {
+          var tag = document.createElement('span'); tag.className = 'me-tag'; tag.textContent = '你';
+          who.appendChild(tag);
+        }
+        var work = document.createElement('span'); work.className = 'work';
+        var wb = document.createElement('b'); wb.textContent = r.work;
+        work.appendChild(wb);
+        work.appendChild(document.createTextNode(' · 共 ' + r.works + ' 篇參賽'));
+        var pt = document.createElement('span'); pt.className = 'pt'; pt.textContent = fmt(r.score);
+        row.appendChild(rk); row.appendChild(who); row.appendChild(work); row.appendChild(pt);
+        board.appendChild(row);
+      }
+      c.board.top.forEach(addRow);
+      if (c.board.near && c.board.near.length) {
+        var skip = document.createElement('div');
+        skip.className = 'ct-bskip'; skip.textContent = '⋯';
+        board.appendChild(skip);
+        c.board.near.forEach(addRow);
+      }
+      var foot = document.createElement('div');
+      foot.className = 'ct-bfoot';
+      foot.textContent = c.status === 'ended'
+        ? '名次以 ' + fmtDate(c.end) + ' 23:59 結算數據為準。'
+        : '顯示前 10 名與你附近的名次。積分每日 00:00 更新，結算以 ' + fmtDate(c.end) + ' 23:59 為準。';
+      board.appendChild(foot);
+    }
+
+    /* 更多競賽 */
+    Object.keys(CONTESTS).forEach(function (key) {
+      var o = CONTESTS[key];
+      var card = document.createElement('div');
+      card.className = 'ct-oc' + (key === id ? ' cur' : '');
+      var art = document.createElement('div'); art.className = 'art';
+      if (o.art) {
+        var img = document.createElement('img'); img.src = o.art; img.alt = '';
+        art.appendChild(img);
+      }
+      var body = document.createElement('div'); body.className = 'body';
+      var on = document.createElement('div'); on.className = 'on'; on.textContent = o.name;
+      var od = document.createElement('div'); od.className = 'od';
+      od.textContent = fmtDate(o.start) + ' – ' + fmtDate(o.end) + ' · 總獎金 NT$ ' + fmt(o.pool);
+      var stp = document.createElement('span');
+      stp.className = 'ct-status ' + o.status;
+      stp.textContent = key === id ? '目前瀏覽中' : STATUS_TXT[o.status];
+      body.appendChild(on); body.appendChild(od); body.appendChild(stp);
+      card.appendChild(art); card.appendChild(body);
+      if (key !== id) {
+        card.addEventListener('click', function () { location.href = 'school-contest.html?id=' + key; });
+      }
+      $('ctOthers').appendChild(card);
+    });
+  })();
+</script>
+</body>
+</html>
