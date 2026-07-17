@@ -16,10 +16,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
   <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
-  <script type="module" crossorigin src="/assets/default-DxlzImvO.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/default-CI3V8wLq.css">
+  <script type="module" crossorigin src="/assets/default-C8gMrLxA.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/default-CyZpfHTJ.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
-  <link rel="stylesheet" crossorigin href="/assets/school-3JNW_RVQ.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-0wJ3LjQ0.css">
 </head>
 <body>
 
@@ -98,6 +98,45 @@
           <option>排序：作者認證等級</option>
         </select>
       </div>
+      <div class="tag-picker">
+        <button type="button" class="tag-picker-btn" id="tagPickerBtn">標籤<span class="tag-count" id="tagCount"></span></button>
+        <div class="tag-bubble" id="tagBubble">
+          <button type="button">#頂大推甄</button>
+          <button type="button">#推甄面試</button>
+          <button type="button">#備審資料</button>
+          <button type="button">#必修筆記</button>
+          <button type="button">#通識涼課</button>
+          <button type="button">#考題詳解</button>
+          <button type="button">#教授評價</button>
+          <button type="button">#英文檢定</button>
+          <button type="button">#履歷模板</button>
+          <button type="button">#面試實錄</button>
+          <button type="button">#實習避雷</button>
+          <button type="button">#暑期實習</button>
+          <button type="button">#聚餐口袋名單</button>
+          <button type="button">#學生優惠清單</button>
+          <button type="button">#宵夜推薦</button>
+          <button type="button">#獎學金申請</button>
+          <button type="button">#校內工讀</button>
+          <button type="button">#數位資源</button>
+          <button type="button">#免費資源</button>
+          <button type="button">#手寫詳解</button>
+          <button type="button">#書面審查</button>
+          <button type="button">#口試密技</button>
+          <button type="button">#準備心得</button>
+          <button type="button">#外文自傳</button>
+          <button type="button">#讀書計畫</button>
+          <button type="button">#國外生活攻略</button>
+          <button type="button">#專題架構</button>
+          <button type="button">#問卷統計</button>
+          <button type="button">#數據分析</button>
+          <button type="button">#教授推薦</button>
+          <button type="button">#新生必知</button>
+          <button type="button">#選課教學</button>
+          <button type="button">#租屋攻略</button>
+          <button type="button">#商家推薦</button>
+        </div>
+      </div>
       <a class="btn-toolbar" href="#">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 H20"/><path d="M7 12 H17"/><path d="M10 18 H14"/></svg>
       </a>
@@ -146,6 +185,7 @@
         <div class="head">熱門標籤</div>
         <div class="tag-list">
           <a href="#">#頂大推甄</a>
+          <a href="#">#推甄面試</a>
           <a href="#">#備審資料</a>
           <a href="#">#必修筆記</a>
           <a href="#">#通識涼課</a>
@@ -154,9 +194,30 @@
           <a href="#">#英文檢定</a>
           <a href="#">#履歷模板</a>
           <a href="#">#面試實錄</a>
+          <a href="#">#實習避雷</a>
+          <a href="#">#暑期實習</a>
+          <a href="#">#聚餐口袋名單</a>
+          <a href="#">#學生優惠清單</a>
+          <a href="#">#宵夜推薦</a>
           <a href="#">#獎學金申請</a>
+          <a href="#">#校內工讀</a>
+          <a href="#">#數位資源</a>
+          <a href="#">#免費資源</a>
           <a href="#">#手寫詳解</a>
+          <a href="#">#書面審查</a>
+          <a href="#">#口試密技</a>
+          <a href="#">#準備心得</a>
           <a href="#">#外文自傳</a>
+          <a href="#">#讀書計畫</a>
+          <a href="#">#國外生活攻略</a>
+          <a href="#">#專題架構</a>
+          <a href="#">#問卷統計</a>
+          <a href="#">#數據分析</a>
+          <a href="#">#教授推薦</a>
+          <a href="#">#新生必知</a>
+          <a href="#">#選課教學</a>
+          <a href="#">#租屋攻略</a>
+          <a href="#">#商家推薦</a>
         </div>
       </div>
 
@@ -265,6 +326,32 @@ document.addEventListener('DOMContentLoaded', function() {
   hamburger.addEventListener('click', toggleMenu);
   backdrop.addEventListener('click', closeMenu);
   menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+  // 手機版標籤選單（訊息泡泡，可多選）
+  const tagBtn = document.getElementById('tagPickerBtn');
+  const tagBubble = document.getElementById('tagBubble');
+  const tagCount = document.getElementById('tagCount');
+  if (tagBtn && tagBubble) {
+    tagBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      tagBubble.classList.toggle('open');
+      tagBtn.classList.toggle('open');
+    });
+    tagBubble.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        b.classList.toggle('on');
+        const n = tagBubble.querySelectorAll('button.on').length;
+        tagCount.textContent = n > 0 ? n : '';
+        tagBtn.classList.toggle('has-sel', n > 0);
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!tagBubble.contains(e.target) && !tagBtn.contains(e.target)) {
+        tagBubble.classList.remove('open');
+        tagBtn.classList.remove('open');
+      }
+    });
+  }
 });
 </script>
 </body>

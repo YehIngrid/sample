@@ -413,12 +413,26 @@
     .ip-seg button.on { background: var(--navy); color: #fff; }
     .ip-go { width: 100%; margin-top: 2px; padding: 10px; border-radius: 999px; background: var(--navy); color: #fff; font-size: 13.5px; font-weight: 700; letter-spacing: .04em; transition: background .2s; }
     .ip-go:hover { background: var(--navy-d); }
+
+    /* ── 參加競賽（可選） ── */
+    .ctp-opt { display: flex; align-items: center; gap: 11px; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 13px; margin-bottom: 8px; cursor: pointer; transition: all 0.22s ease; background: #fff; }
+    .ctp-opt:hover { border-color: var(--navy); }
+    .ctp-opt.on { border-color: var(--navy); background: var(--alice); }
+    .ctp-opt .r { width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid var(--line); flex-shrink: 0; position: relative; transition: all 0.22s ease; background: #fff; }
+    .ctp-opt.on .r { border-color: var(--navy); }
+    .ctp-opt.on .r::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--navy); }
+    .ctp-opt .b { flex: 1; min-width: 0; }
+    .ctp-opt .b b { display: block; font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+    .ctp-opt .b small { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.02em; line-height: 1.5; }
+    .ctp-opt .lnk { font-size: 11.5px; font-weight: 700; color: var(--navy); flex-shrink: 0; letter-spacing: 0.02em; }
+    .ctp-opt .lnk:hover { text-decoration: underline; }
+    .ctp-live { font-size: 10px; font-weight: 700; color: #007568; background: rgba(171,218,213,0.45); border-radius: 999px; padding: 2px 8px; margin-left: 6px; letter-spacing: 0.06em; vertical-align: 1px; }
   </style>
   <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
-  <script type="module" crossorigin src="/assets/default-DxlzImvO.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/default-CI3V8wLq.css">
+  <script type="module" crossorigin src="/assets/default-C8gMrLxA.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/default-CyZpfHTJ.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
-  <link rel="stylesheet" crossorigin href="/assets/school-3JNW_RVQ.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-0wJ3LjQ0.css">
   <link rel="stylesheet" crossorigin href="/assets/article-body-5r_qsYpo.css">
 </head>
 <body>
@@ -662,12 +676,29 @@
     </div>
 
     <div class="ce-card">
+      <div class="h">參加競賽（可選）</div>
+      <div class="ctp-opt on" data-contest="">
+        <span class="r"></span>
+        <div class="b"><b>不參加</b><small>單純發佈文章，不列入任何競賽計分。</small></div>
+      </div>
+      <div class="ctp-opt" data-contest="seed2026">
+        <span class="r"></span>
+        <div class="b">
+          <b>種子創作者計劃<span class="ctp-live">進行中</span></b>
+          <small>徵稿至 2026/08/31 · 總獎金 NT$ 30,000</small>
+        </div>
+        <a class="lnk" href="school-contest.html?id=seed2026">詳情 →</a>
+      </div>
+      <div class="subdesc">發佈後自動列入人氣計分（閱讀、收藏、評價加權），參賽即同意競賽規範，之後也可以隨時退出。</div>
+    </div>
+
+    <div class="ce-card">
       <div class="h">前台顯示身分（半實名）</div>
       <div class="ident">
         <div class="av"></div>
         <div>
           <div class="iname">創產系 大二 范同學</div>
-          <div class="titles"><span class="t">＊台大碩士＊</span><span class="t">＊書卷獎＊</span></div>
+          <div class="titles"><span class="t">台大碩士</span><span class="t">書卷獎</span></div>
         </div>
       </div>
       <div class="ident-real">後台已以校園信箱完成實名認證 <span class="arrow">→</span> 前台顯示為半匿名，防肉搜也防詐騙。頭銜由人工審查獎項後給予。</div>
@@ -1288,6 +1319,19 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   checks.forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); refreshPub(); }); });
   refreshPub();
+
+  /* ---------- 參加競賽（可選）：單選卡片 ---------- */
+  (function () {
+    var opts = document.querySelectorAll('.ctp-opt');
+    if (!opts.length) return;
+    opts.forEach(function (o) {
+      o.addEventListener('click', function (e) {
+        if (e.target.closest('.lnk')) return; // 點「詳情」只開連結，不改選擇
+        opts.forEach(function (x) { x.classList.remove('on'); });
+        o.classList.add('on');
+      });
+    });
+  })();
 
   /* ---------- 專注模式 / 手機設定抽屜 / 底部操作列 ---------- */
   (function () {
