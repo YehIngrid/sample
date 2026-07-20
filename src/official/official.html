@@ -139,98 +139,119 @@
       <section id="panel-dashboard" class="panel active">
         <div class="dashboard-welcome">
           <div class="dashboard-welcome-text">
-            <h2>歡迎回來，<span id="dashAdminName">管理員</span> 👋</h2>
-            <p>這裡是拾貨寶庫官方後台，請選擇下方功能開始操作。</p>
+            <h2>歡迎回來，<span id="dashAdminName">管理員</span></h2>
           </div>
         </div>
+
+        <!-- 平台即時數據（主題色） -->
+        <div class="dashboard-stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-users" style="color:var(--color-primary);"></i></div>
+            <div class="stat-body"><div class="stat-label">用戶總數</div><div class="stat-value" id="home-stat-users"><span class="spinner-border spinner-border-sm"></span></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-check-circle" style="color:var(--color-primary);"></i></div>
+            <div class="stat-body"><div class="stat-label">信箱已驗證總數</div><div class="stat-value" id="home-stat-verified"><span class="spinner-border spinner-border-sm"></span></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-star" style="color:var(--color-primary);"></i></div>
+            <div class="stat-body"><div class="stat-label">許願總數</div><div class="stat-value" id="home-stat-wishes"><span class="spinner-border spinner-border-sm"></span></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-shopping-bag" style="color:var(--color-primary);"></i></div>
+            <div class="stat-body"><div class="stat-label">訂單總數</div><div class="stat-value" id="home-stat-orders"><span class="spinner-border spinner-border-sm"></span></div></div>
+          </div>
+        </div>
+
+        <!-- 待處理提醒：客服單等待認領 -->
+        <div class="dashboard-card dashboard-alert-card" onclick="switchPanel('panel-tickets')">
+          <div class="dashboard-card-icon dashboard-alert-icon"><i class="fa fa-headphones"></i></div>
+          <div class="dashboard-card-body">
+            <div class="dashboard-card-title">客服單等待認領</div>
+          </div>
+          <div class="dashboard-alert-value" id="home-stat-pending-tickets"><span class="spinner-border spinner-border-sm"></span></div>
+          <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+        </div>
+
         <div class="dashboard-grid">
-          <div class="dashboard-card" onclick="switchPanel('panel-broadcast')">
-            <div class="dashboard-card-icon" style="background:#e8f0fe;">
-              <i class="fa fa-bullhorn" style="color:#1a73e8;"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">發送公告</div>
-              <div class="dashboard-card-desc">對所有訂閱頻道的會員發送文字或圖片公告，適合活動通知、緊急公告等。</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
-          <div class="dashboard-card" onclick="switchPanel('panel-news')">
-            <div class="dashboard-card-icon" style="background:#fff3e0;">
-              <i class="fa fa-newspaper" style="color:#f57c00;"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">最新資訊</div>
-              <div class="dashboard-card-desc">撰寫並發布最新消息文章，支援圖文排版、附件上傳，發布後立即顯示在前台公告頁。</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
           <div class="dashboard-card" onclick="switchPanel('panel-analytics')">
-            <div class="dashboard-card-icon" style="background:#f3e8fd;">
-              <i class="fa fa-bar-chart" style="color:#7b1fa2;"></i>
+            <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
+              <i class="fa fa-bar-chart" style="color:var(--color-primary);"></i>
             </div>
             <div class="dashboard-card-body">
               <div class="dashboard-card-title">數據分析</div>
-              <div class="dashboard-card-desc">查看平台商品數量、許願池狀況、熱門搜尋關鍵字等即時統計數據。</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
-          <div class="dashboard-card" onclick="switchPanel('panel-reports')">
-            <div class="dashboard-card-icon" style="background:#fce8e6;">
-              <i class="fa fa-flag" style="color:#d93025;"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">檢舉管理</div>
-              <div class="dashboard-card-desc">審核使用者提交的檢舉案件，通過審核可調整被檢舉人信譽積分。</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
-          <div class="dashboard-card" onclick="switchPanel('panel-review-tags')">
-            <div class="dashboard-card-icon" style="background:#e8f5e9;">
-              <i class="fa fa-tags" style="color:#388e3c;"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">評論標籤</div>
-              <div class="dashboard-card-desc">建立與管理評論標籤規則，設定標籤說明與正負面屬性。</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
-          <div class="dashboard-card" onclick="switchPanel('panel-report-categories')">
-            <div class="dashboard-card-icon" style="background:#fce8e6;">
-              <i class="fa fa-list-alt" style="color:#d93025;"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">檢舉類別</div>
-              <div class="dashboard-card-desc">新增檢舉類別供使用者選擇，讓檢舉系統分類更清晰。</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
-          <div class="dashboard-card" onclick="switchPanel('panel-history')">
-            <div class="dashboard-card-icon" style="background:#fce8e6;">
-              <i class="fa fa-history" style="color:#d93025;"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">公告紀錄</div>
-              <div class="dashboard-card-desc">查詢特定頻道過去發送的所有公告內容與時間，方便追蹤發送記錄。</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
-          <div class="dashboard-card" onclick="switchPanel('panel-channel')">
-            <div class="dashboard-card-icon" style="background:#e0f7fa;">
-              <i class="fa fa-plus-circle" style="color:#0097a7;"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">建立頻道</div>
-              <div class="dashboard-card-desc">初次使用請先在此建立官方廣播頻道，取得頻道 ID 後即可開始發送公告。</div>
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
           <div class="dashboard-card" onclick="switchPanel('panel-tickets')">
-            <div class="dashboard-card-icon" style="background:#fff3e0;">
-              <i class="fa fa-headphones" style="color:#e67e22;"></i>
+            <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
+              <i class="fa fa-headphones" style="color:var(--color-primary);"></i>
             </div>
             <div class="dashboard-card-body">
               <div class="dashboard-card-title">客服單管理</div>
-              <div class="dashboard-card-desc">查看所有客服單狀態，認領待處理的客服請求，或查看已解決的案件紀錄。</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-broadcast')">
+            <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
+              <i class="fa fa-bullhorn" style="color:var(--color-primary);"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">發送公告</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-news')">
+            <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
+              <i class="fa fa-newspaper" style="color:var(--color-primary);"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">最新資訊</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-reports')">
+            <div class="dashboard-card-icon" style="background:rgba(201,127,90,0.14);">
+              <i class="fa fa-flag" style="color:#c97f5a;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">檢舉管理</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-review-tags')">
+            <div class="dashboard-card-icon" style="background:rgba(171,218,213,0.35);">
+              <i class="fa fa-tags" style="color:#007568;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">評論標籤</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-report-categories')">
+            <div class="dashboard-card-icon" style="background:rgba(201,127,90,0.14);">
+              <i class="fa fa-list-alt" style="color:#c97f5a;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">檢舉類別</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-history')">
+            <div class="dashboard-card-icon" style="background:rgba(171,218,213,0.35);">
+              <i class="fa fa-history" style="color:#007568;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">公告紀錄</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-channel')">
+            <div class="dashboard-card-icon" style="background:rgba(171,218,213,0.35);">
+              <i class="fa fa-plus-circle" style="color:#007568;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">建立頻道</div>
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
@@ -239,6 +260,7 @@
 
       <!-- Panel: 發送公告 -->
       <section id="panel-broadcast" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <h2 class="panel-title"><i class="fa fa-bullhorn me-2"></i>發送官方公告</h2>
 
         <!-- 步驟一：選擇頻道 -->
@@ -285,6 +307,7 @@
 
       <!-- Panel: 建立頻道 -->
       <section id="panel-channel" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <h2 class="panel-title"><i class="fa fa-plus-circle me-2"></i>建立官方頻道<span style="color: red;">（目前只限建立一個官方頻道）</span></h2>
         <p class="text-muted">填寫頻道資訊後點擊建立。建立成功後請複製頻道 ID 供發送公告使用。</p>
         <form id="createChannelForm" class="official-form">
@@ -305,6 +328,7 @@
 
       <!-- Panel: 公告紀錄 -->
       <section id="panel-history" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <h2 class="panel-title"><i class="fa fa-history me-2"></i>公告紀錄</h2>
         <div class="d-flex align-items-center justify-content-between mb-2">
           <label class="form-label mb-0 fw-bold">選擇頻道</label>
@@ -324,6 +348,7 @@
 
       <!-- Panel: 最新資訊管理 -->
       <section id="panel-news" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <h2 class="panel-title"><i class="fa fa-newspaper me-2"></i>最新資訊管理</h2>
 
         <!-- 新增 / 編輯文章 -->
@@ -428,6 +453,7 @@
 
       <!-- Panel: 數據分析 -->
       <section id="panel-analytics" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <!-- Header -->
         <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
           <h2 class="panel-title mb-0"><i class="fa fa-bar-chart me-2"></i>數據分析</h2>
@@ -465,31 +491,31 @@
         <div id="tab-dashboard" class="stats-tab">
           <div class="stats-grid mb-3">
             <div class="stat-card">
-              <div class="stat-icon" style="background:#e6f4ea;"><i class="fa fa-users" style="color:#28a745;"></i></div>
+              <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-users" style="color:var(--color-primary);"></i></div>
               <div class="stat-body"><div class="stat-label">用戶總數</div><div class="stat-value" id="stat-total-users"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-shopping-bag" style="color:#1a73e8;"></i></div>
+              <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-shopping-bag" style="color:var(--color-primary);"></i></div>
               <div class="stat-body"><div class="stat-label">商品總數</div><div class="stat-value" id="stat-total-products"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon" style="background:#fff3e0;"><i class="fa fa-file-text-o" style="color:#f57c00;"></i></div>
+              <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-file-text-o" style="color:var(--color-primary);"></i></div>
               <div class="stat-body"><div class="stat-label">訂單總數</div><div class="stat-value" id="stat-total-orders"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon" style="background:#fce8e6;"><i class="fa fa-flag" style="color:#d93025;"></i></div>
+              <div class="stat-icon" style="background:rgba(201,127,90,0.14);"><i class="fa fa-flag" style="color:#c97f5a;"></i></div>
               <div class="stat-body"><div class="stat-label">檢舉件數</div><div class="stat-value" id="stat-total-reports"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon" style="background:#f3e8fd;"><i class="fa fa-star" style="color:#7b1fa2;"></i></div>
+              <div class="stat-icon" style="background:rgba(171,218,213,0.35);"><i class="fa fa-star" style="color:#007568;"></i></div>
               <div class="stat-body"><div class="stat-label">願望池心願數</div><div class="stat-value" id="stat-total-wishpool"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon" style="background:#e6f4ea;"><i class="fa fa-user-plus" style="color:#28a745;"></i></div>
+              <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-user-plus" style="color:var(--color-primary);"></i></div>
               <div class="stat-body"><div class="stat-label">今日新用戶</div><div class="stat-value" id="stat-new-users-today"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon" style="background:#e8f0fe;"><i class="fa fa-bar-chart" style="color:#1a73e8;"></i></div>
+              <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-bar-chart" style="color:var(--color-primary);"></i></div>
               <div class="stat-body"><div class="stat-label">7 日活躍用戶</div><div class="stat-value" id="stat-active-users-7d"><span class="spinner-border spinner-border-sm"></span></div></div>
             </div>
           </div>
@@ -669,6 +695,7 @@
 
       <!-- Panel: 檢舉類別管理 -->
       <section id="panel-report-categories" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <h2 class="panel-title"><i class="fa fa-list-alt me-2"></i>檢舉類別管理</h2>
         <p class="text-muted small mb-3">建立後，使用者送出檢舉時可從這些類別中選擇。</p>
 
@@ -706,6 +733,7 @@
 
       <!-- Panel: 評論標籤管理 -->
       <section id="panel-review-tags" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <h2 class="panel-title"><i class="fa fa-tags me-2"></i>評論標籤管理</h2>
 
         <!-- ── 標籤群組 ── -->
@@ -795,6 +823,7 @@
 
       <!-- Panel: 檢舉管理 -->
       <section id="panel-reports" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <h2 class="panel-title"><i class="fa fa-flag me-2"></i>檢舉管理</h2>
 
         <!-- 篩選 -->
@@ -841,6 +870,7 @@
 
       <!-- Panel: 客服單管理 -->
       <section id="panel-tickets" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
           <h2 class="panel-title mb-0"><i class="fa fa-headphones me-2"></i>客服單管理</h2>
           <button class="btn btn-sm btn-outline-primary" id="refreshTicketsBtn">

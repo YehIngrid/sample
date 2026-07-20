@@ -699,7 +699,7 @@ window.deleteNews = async function(id, title) {
     showCancelButton: true,
     confirmButtonText: '刪除',
     cancelButtonText: '取消',
-    confirmButtonColor: '#dc3545',
+    confirmButtonColor: '#c97f5a',
   });
   if (!confirm.isConfirmed) return;
   try {
@@ -762,10 +762,10 @@ function _makeChart(id, config) {
   return _statsCharts[id];
 }
 
-// ── Chart config helpers ──
-const _PALETTE = ['#1a73e8','#28a745','#f57c00','#7b1fa2','#d93025','#0097a7','#fbc02d','#6c757d','#e91e63','#009688'];
+// ── Chart config helpers（配色比照設計系統：藍綠光譜為主，terracotta 為唯一暖色點綴） ──
+const _PALETTE = ['#004b97','#4a85c4','#7eb8d8','#abdad5','#003a78','#1a5b85','#2d7d70','#6f87a0','#c97f5a','#8fb8a8'];
 
-function _trendCfg(labels, data, label, color = '#1a73e8') {
+function _trendCfg(labels, data, label, color = '#004b97') {
   return {
     type: 'line',
     data: { labels, datasets: [{ label, data, borderColor: color, backgroundColor: color + '22', fill: true, tension: 0.4, pointRadius: 3 }] },
@@ -773,7 +773,7 @@ function _trendCfg(labels, data, label, color = '#1a73e8') {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f0f4fa' } },
+        y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#d6e2ec' } },
         x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0 } },
       },
     },
@@ -856,6 +856,36 @@ async function _fetchStats(path, params) {
   return res.data?.data ?? res.data;
 }
 
+// ── 首頁即時數據（用戶總數 / 信箱已驗證總數 / 許願總數 / 訂單總數 / 待認領客服單） ──
+async function loadHomeStats() {
+  const ids = ['home-stat-users', 'home-stat-verified', 'home-stat-wishes', 'home-stat-orders'];
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val != null ? Number(val).toLocaleString() : '–'; };
+  try {
+    const [dash, users] = await Promise.all([
+      _fetchStats('/api/admin/stats/dashboard'),
+      _fetchStats('/api/admin/stats/users'),
+    ]);
+    const ov = dash?.overview ?? dash;
+    const verified = (users?.emailVerificationStats ?? []).find(e => e.verified === true)?.count ?? 0;
+    set('home-stat-users',    ov?.totalUsers);
+    set('home-stat-verified', verified);
+    set('home-stat-wishes',   ov?.totalWishes);
+    set('home-stat-orders',   ov?.totalOrders);
+  } catch {
+    ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '–'; });
+  }
+
+  try {
+    const pending = await chatSvc.listAdminTickets('UNRESOLVED', 1, 1);
+    const el = document.getElementById('home-stat-pending-tickets');
+    if (el) el.textContent = `${(pending?.data?.total ?? 0).toLocaleString()} 筆`;
+  } catch {
+    const el = document.getElementById('home-stat-pending-tickets');
+    if (el) el.textContent = '–';
+  }
+}
+loadHomeStats();
+
 // ── Per-tab loaders ──
 async function _loadDashboard(params) {
   const ids = ['stat-total-users','stat-total-products','stat-total-orders','stat-total-reports','stat-total-wishpool','stat-new-users-today','stat-active-users-7d'];
@@ -875,7 +905,7 @@ async function _loadDashboard(params) {
 
     // 趨勢折線圖
     const { labels: tL, values: tV } = _parseTrend(d?.trends ?? []);
-    _makeChart('chart-dashboard-trend', _trendCfg(tL, tV, '活躍人數', '#1a73e8'));
+    _makeChart('chart-dashboard-trend', _trendCfg(tL, tV, '活躍人數', '#004b97'));
   } catch {
     ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '–'; });
     document.getElementById('stat-total-error')?.classList.remove('d-none');
@@ -888,7 +918,7 @@ async function _loadUserStats(params) {
 
     // 註冊趨勢
     const { labels: rL, values: rV } = _parseTrend(d?.registrationTrend ?? []);
-    _makeChart('chart-user-reg-trend', _trendCfg(rL, rV, '新增用戶', '#1a73e8'));
+    _makeChart('chart-user-reg-trend', _trendCfg(rL, rV, '新增用戶', '#004b97'));
 
     // 角色分布 [{ role, count }]
     const roleArr = d?.roleDistribution ?? [];
@@ -916,9 +946,9 @@ async function _loadUserStats(params) {
       { label: '7 天活躍用戶',  value: act.last7Days },
       { label: '14 天活躍用戶', value: act.last14Days },
       { label: '30 天活躍用戶', value: act.last30Days },
-      { label: '停權用戶數',    value: susp || 0, color: susp > 0 ? '#d93025' : undefined },
+      { label: '停權用戶數',    value: susp || 0, color: susp > 0 ? '#c97f5a' : undefined },
       { label: '信箱已驗證',    value: verified },
-      { label: '信箱未驗證',    value: unverified, color: unverified > 0 ? '#f57c00' : undefined },
+      { label: '信箱未驗證',    value: unverified, color: unverified > 0 ? '#c97f5a' : undefined },
     ]);
 
     // 信箱驗證狀態圓餅圖
@@ -937,7 +967,7 @@ async function _loadCommodityStats(params) {
 
     // 上架趨勢
     const { labels: tL, values: tV } = _parseTrend(d?.listingTrend ?? []);
-    _makeChart('chart-commodity-trend', _trendCfg(tL, tV, '新增商品', '#1a73e8'));
+    _makeChart('chart-commodity-trend', _trendCfg(tL, tV, '新增商品', '#4a85c4'));
 
     // 分類分布 [{ category, count }]
     const catArr = d?.categoryDistribution ?? [];
@@ -953,7 +983,7 @@ async function _loadCommodityStats(params) {
       { label: '平均售價', value: price.average != null ? `NT$ ${Number(price.average).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
       { label: '最高售價', value: price.max     != null ? `NT$ ${Number(price.max).toLocaleString()}` : null },
       { label: '最低售價', value: price.min     != null ? `NT$ ${Number(price.min).toLocaleString()}` : null },
-      { label: '熱門商品', value: d?.hotCount,  color: '#f57c00' },
+      { label: '熱門商品', value: d?.hotCount,  color: '#4a85c4' },
     ]);
 
     // 熱門賣家（count 欄位是 commodityCount）
@@ -973,7 +1003,7 @@ async function _loadOrderStats(params) {
     const d = await _fetchStats('/api/admin/stats/orders', params);
 
     const { labels: tL, values: tV } = _parseTrend(d?.orderTrend ?? []);
-    _makeChart('chart-order-trend', _trendCfg(tL, tV, '訂單數', '#f57c00'));
+    _makeChart('chart-order-trend', _trendCfg(tL, tV, '訂單數', '#003a78'));
 
     // statusDistribution [{ status, count }]
     const statArr = d?.statusDistribution ?? [];
@@ -986,9 +1016,9 @@ async function _loadOrderStats(params) {
     const pct = v => (v != null && v !== '') ? `${(Number(v) * (Number(v) > 1 ? 1 : 100)).toFixed(1)}%` : null;
     const revEl = document.getElementById('order-revenue-stats');
     if (revEl) revEl.innerHTML = _statBlock([
-      { label: '總營收',    value: d?.totalRevenue != null ? `NT$ ${Number(d.totalRevenue).toLocaleString()}` : null, color: '#28a745' },
+      { label: '總營收',    value: d?.totalRevenue != null ? `NT$ ${Number(d.totalRevenue).toLocaleString()}` : null, color: 'rgb(36, 182, 133)' },
       { label: '平均客單價', value: d?.averageOrderAmount != null ? `NT$ ${Number(d.averageOrderAmount).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
-      { label: '取消率',    value: pct(cancelRate), color: '#d93025' },
+      { label: '取消率',    value: pct(cancelRate), color: '#c97f5a' },
       { label: '完成訂單',  value: d?.completedOrders ?? d?.completed },
     ]);
 
@@ -1004,7 +1034,7 @@ async function _loadReportStats(params) {
     const d = await _fetchStats('/api/admin/stats/reports', params);
 
     const { labels: tL, values: tV } = _parseTrend(d?.reportTrend ?? []);
-    _makeChart('chart-report-trend', _trendCfg(tL, tV, '檢舉數', '#d93025'));
+    _makeChart('chart-report-trend', _trendCfg(tL, tV, '檢舉數', '#c97f5a'));
 
     // categoryDistribution [{ category, count }]
     const catArr = d?.categoryDistribution ?? [];
@@ -1018,7 +1048,7 @@ async function _loadReportStats(params) {
     const avgTime = d?.avgReviewTimeHours ?? d?.avgReviewTime ?? d?.avgTime;
     const revEl = document.getElementById('report-review-stats');
     if (revEl) revEl.innerHTML = _statBlock([
-      { label: '審核通過率',   value: pct(d?.approvalRate), color: '#28a745' },
+      { label: '審核通過率',   value: pct(d?.approvalRate), color: 'rgb(36, 182, 133)' },
       { label: '平均審核時間', value: avgTime != null && avgTime !== '' ? `${Number(avgTime).toFixed(1)} 小時` : null },
       { label: '待審核件數',   value: (d?.statusDistribution ?? []).find(s => s.status === 'pending')?.count ?? d?.pendingCount },
       { label: '本期檢舉總數', value: (d?.statusDistribution ?? []).reduce((n, s) => n + (s.count ?? 0), 0) || null },
@@ -1034,7 +1064,7 @@ async function _loadWishpoolStats(params) {
 
     // wishTrend（API 用 wishTrend 不是 wishpoolTrend）
     const { labels: tL, values: tV } = _parseTrend(d?.wishTrend ?? d?.wishpoolTrend ?? []);
-    _makeChart('chart-wishpool-trend', _trendCfg(tL, tV, '新增心願', '#7b1fa2'));
+    _makeChart('chart-wishpool-trend', _trendCfg(tL, tV, '新增心願', '#7eb8d8'));
 
     // statusDistribution [{ status, count }]
     const statArr = d?.statusDistribution ?? [];
@@ -1065,7 +1095,7 @@ async function _loadSearchStats(params) {
   try {
     const d = await _fetchStats('/api/admin/stats/search', params);
     const { labels: tL, values: tV } = _parseTrend(d?.searchTrend ?? d?.trend ?? []);
-    _makeChart('chart-search-trend', _trendCfg(tL, tV, '搜尋次數', '#0097a7'));
+    _makeChart('chart-search-trend', _trendCfg(tL, tV, '搜尋次數', '#4a85c4'));
     const kws = d?.popularKeywords ?? d?.topKeywords ?? d?.keywords ?? [];
     const kwEl = document.getElementById('search-keywords-cloud');
     if (kwEl) {
@@ -1447,7 +1477,7 @@ window.deleteTagGroup = async function(id, name, tagCount) {
     showCancelButton: true,
     confirmButtonText: '刪除',
     cancelButtonText: '取消',
-    confirmButtonColor: '#dc3545',
+    confirmButtonColor: '#c97f5a',
   });
   if (!confirm.isConfirmed) return;
   try {
@@ -1648,7 +1678,7 @@ document.getElementById('createReportCatForm')?.addEventListener('submit', async
 //  客服單管理
 // ════════════════════════════════════════════════════
 const TICKET_STATUS_LABEL = { UNRESOLVED: '等待認領', CLAIMED: '處理中', RESOLVED: '已解決' };
-const TICKET_STATUS_COLOR = { UNRESOLVED: '#e67e22', CLAIMED: '#004b97', RESOLVED: '#27ae60' };
+const TICKET_STATUS_COLOR = { UNRESOLVED: '#c97f5a', CLAIMED: '#004b97', RESOLVED: 'rgb(36, 182, 133)' };
 
 let _ticketCurrentPage = 1;
 let _ticketHistoryModal = null;
@@ -1775,12 +1805,12 @@ async function loadAdminTickets(page = 1) {
               const buyerName = o.buyerUser?.name ?? o.buyerUser?.username ?? '—';
               const sellerName = o.sellerUser?.name ?? o.sellerUser?.username ?? '—';
               html += `
-                <div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-shopping-bag me-1"></i>關聯訂單</div>
-                <div style="background:#f0f4ff;border:1px solid #c5d5f5;border-radius:8px;padding:10px 14px;font-size:0.82rem;margin-bottom:20px;">
-                  <div style="font-weight:600;color:#333;margin-bottom:6px;">${esc(productName)}${orderItems.length > 1 ? ` …等${orderItems.length}件` : ''}</div>
-                  <div style="display:flex;justify-content:space-between;color:#555;margin-bottom:3px;"><span>買家</span><span style="color:#004b97;font-weight:600;">${esc(buyerName)}</span></div>
-                  <div style="display:flex;justify-content:space-between;color:#555;margin-bottom:3px;"><span>賣家</span><span style="color:#27ae60;font-weight:600;">${esc(sellerName)}</span></div>
-                  <div style="display:flex;justify-content:space-between;color:#555;"><span>金額</span><span style="color:#004b97;font-weight:600;">${price}</span></div>
+                <div class="fw-bold mb-2" style="font-size:0.85rem;color:#6f87a0;"><i class="fa fa-shopping-bag me-1"></i>關聯訂單</div>
+                <div style="background:#e8f0fe;border:1px solid rgba(0,75,151,0.25);border-radius:8px;padding:10px 14px;font-size:0.82rem;margin-bottom:20px;">
+                  <div style="font-weight:600;color:#1a2840;margin-bottom:6px;">${esc(productName)}${orderItems.length > 1 ? ` …等${orderItems.length}件` : ''}</div>
+                  <div style="display:flex;justify-content:space-between;color:#6f87a0;margin-bottom:3px;"><span>買家</span><span style="color:#004b97;font-weight:600;">${esc(buyerName)}</span></div>
+                  <div style="display:flex;justify-content:space-between;color:#6f87a0;margin-bottom:3px;"><span>賣家</span><span style="color:#004b97;font-weight:600;">${esc(sellerName)}</span></div>
+                  <div style="display:flex;justify-content:space-between;color:#6f87a0;"><span>金額</span><span style="color:#004b97;font-weight:600;">${price}</span></div>
                 </div>`;
             }
           }
@@ -1788,7 +1818,7 @@ async function loadAdminTickets(page = 1) {
           // 聊天記錄
           const histData = histRes.status === 'fulfilled' ? histRes.value?.data : null;
           const msgs = Array.isArray(histData?.history) ? [...histData.history].reverse() : [];
-          html += `<div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-comments me-1"></i>聊天記錄</div>`;
+          html += `<div class="fw-bold mb-2" style="font-size:0.85rem;color:#6f87a0;"><i class="fa fa-comments me-1"></i>聊天記錄</div>`;
           if (!msgs.length) {
             html += `<div class="text-muted text-center py-3 small">無聊天記錄</div>`;
           } else {
@@ -1800,13 +1830,13 @@ async function loadAdminTickets(page = 1) {
                 const senderName = m.senderName ?? m.username ?? (isComplainant ? '投訴者' : isSupport ? '客服人員' : '對方');
                 const align = isComplainant ? 'flex-end' : 'flex-start';
                 const bg = isComplainant ? '#e8f0fe' : '#f8f9fa';
-                const nameColor = isComplainant ? '#004b97' : '#555';
+                const nameColor = isComplainant ? '#004b97' : '#6f87a0';
                 const nameAlign = isComplainant ? 'right' : 'left';
                 return `<div style="display:flex;flex-direction:column;align-items:${align};gap:2px;">
                   <span style="font-size:0.68rem;color:${nameColor};font-weight:600;padding:0 4px;text-align:${nameAlign};">${esc(senderName)}</span>
-                  <div style="max-width:80%;padding:7px 11px;background:${bg};border-radius:10px;font-size:0.82rem;color:#333;border:1px solid ${isComplainant ? '#c5d5f5' : '#eee'};">
+                  <div style="max-width:80%;padding:7px 11px;background:${bg};border-radius:10px;font-size:0.82rem;color:#1a2840;border:1px solid ${isComplainant ? 'rgba(0,75,151,0.25)' : '#e0e6ef'};">
                     ${esc(m.content ?? m.message ?? '')}
-                    <div style="font-size:0.65rem;color:#aaa;margin-top:3px;text-align:right;">${time}</div>
+                    <div style="font-size:0.65rem;color:#6f87a0;margin-top:3px;text-align:right;">${time}</div>
                   </div>
                 </div>`;
               }).join('') + `</div>`;
@@ -1855,18 +1885,18 @@ async function loadAdminTickets(page = 1) {
               const buyerName = o.buyerUser?.name ?? o.buyerUser?.username ?? '—';
               const sellerName = o.sellerUser?.name ?? o.sellerUser?.username ?? '—';
               html += `
-                <div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-shopping-bag me-1"></i>關聯訂單</div>
-                <div style="background:#f0f4ff;border:1px solid #c5d5f5;border-radius:8px;padding:10px 14px;font-size:0.82rem;margin-bottom:20px;">
-                  <div style="font-weight:600;color:#333;margin-bottom:6px;">${esc(productName)}${orderItems.length > 1 ? ` …等${orderItems.length}件` : ''}</div>
-                  <div style="display:flex;justify-content:space-between;color:#555;margin-bottom:3px;"><span>買家</span><span style="color:#004b97;font-weight:600;">${esc(buyerName)}</span></div>
-                  <div style="display:flex;justify-content:space-between;color:#555;margin-bottom:3px;"><span>賣家</span><span style="color:#27ae60;font-weight:600;">${esc(sellerName)}</span></div>
-                  <div style="display:flex;justify-content:space-between;color:#555;"><span>金額</span><span style="color:#004b97;font-weight:600;">${price}</span></div>
+                <div class="fw-bold mb-2" style="font-size:0.85rem;color:#6f87a0;"><i class="fa fa-shopping-bag me-1"></i>關聯訂單</div>
+                <div style="background:#e8f0fe;border:1px solid rgba(0,75,151,0.25);border-radius:8px;padding:10px 14px;font-size:0.82rem;margin-bottom:20px;">
+                  <div style="font-weight:600;color:#1a2840;margin-bottom:6px;">${esc(productName)}${orderItems.length > 1 ? ` …等${orderItems.length}件` : ''}</div>
+                  <div style="display:flex;justify-content:space-between;color:#6f87a0;margin-bottom:3px;"><span>買家</span><span style="color:#004b97;font-weight:600;">${esc(buyerName)}</span></div>
+                  <div style="display:flex;justify-content:space-between;color:#6f87a0;margin-bottom:3px;"><span>賣家</span><span style="color:#004b97;font-weight:600;">${esc(sellerName)}</span></div>
+                  <div style="display:flex;justify-content:space-between;color:#6f87a0;"><span>金額</span><span style="color:#004b97;font-weight:600;">${price}</span></div>
                 </div>`;
             }
           }
           const histData2 = histRes.status === 'fulfilled' ? histRes.value?.data : null;
           const msgs2 = Array.isArray(histData2?.history) ? [...histData2.history].reverse() : [];
-          html += `<div class="fw-bold mb-2" style="font-size:0.85rem;color:#555;"><i class="fa fa-comments me-1"></i>聊天記錄</div>`;
+          html += `<div class="fw-bold mb-2" style="font-size:0.85rem;color:#6f87a0;"><i class="fa fa-comments me-1"></i>聊天記錄</div>`;
           if (!msgs2.length) {
             html += `<div class="text-muted text-center py-3 small">無聊天記錄</div>`;
           } else {
@@ -1878,13 +1908,13 @@ async function loadAdminTickets(page = 1) {
                 const senderName = m.senderName ?? m.username ?? (isComplainant ? '投訴者' : isSupport2 ? '客服人員' : '對方');
                 const align = isComplainant ? 'flex-end' : 'flex-start';
                 const bg = isComplainant ? '#e8f0fe' : '#f8f9fa';
-                const nameColor = isComplainant ? '#004b97' : '#555';
+                const nameColor = isComplainant ? '#004b97' : '#6f87a0';
                 const nameAlign = isComplainant ? 'right' : 'left';
                 return `<div style="display:flex;flex-direction:column;align-items:${align};gap:2px;">
                   <span style="font-size:0.68rem;color:${nameColor};font-weight:600;padding:0 4px;text-align:${nameAlign};">${esc(senderName)}</span>
-                  <div style="max-width:80%;padding:7px 11px;background:${bg};border-radius:10px;font-size:0.82rem;color:#333;border:1px solid ${isComplainant ? '#c5d5f5' : '#eee'};">
+                  <div style="max-width:80%;padding:7px 11px;background:${bg};border-radius:10px;font-size:0.82rem;color:#1a2840;border:1px solid ${isComplainant ? 'rgba(0,75,151,0.25)' : '#e0e6ef'};">
                     ${esc(m.content ?? m.message ?? '')}
-                    <div style="font-size:0.65rem;color:#aaa;margin-top:3px;text-align:right;">${time}</div>
+                    <div style="font-size:0.65rem;color:#6f87a0;margin-top:3px;text-align:right;">${time}</div>
                   </div>
                 </div>`;
               }).join('') + `</div>`;
