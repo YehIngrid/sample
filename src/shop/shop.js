@@ -80,14 +80,105 @@ const midcontent = document.getElementById('midcontent');
   const nextBtn = document.getElementById('nextBtn');
 
 // TODO seller
+// ── 即時願望輪播：桌機 = 許願專區卡泡泡；手機 = 信封抽信 ──
+async function initWishTicker() {
+  const isDesktop = window.matchMedia('(min-width: 992px)').matches;
+  const live = document.getElementById('qaWishLive');       // 桌機容器
+  const letterRow = document.getElementById('wishLetterRow'); // 手機容器
+  if (isDesktop ? !live : !letterRow) return;
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+  const wishAvatar = w =>
+    (w.owner?.photoURL && w.owner.photoURL !== 'null') ? w.owner.photoURL : '../webP/default-avatar.webp';
+
+  let wishes;
+  try {
+    wpbackendService = wpbackendService || new wpBackendService();
+    const res = await wpbackendService.listWishes(1);
+    wishes = (res.data?.wishes || []).filter(w => w.itemName);
+  } catch (_) {
+    return; // 載入失敗時保持頁面原樣
+  }
+
+  // 沒有願望時顯示吸引人的標語
+  if (!wishes?.length) {
+    wishes = [
+      { id: 'empty-1', itemName: '許個願望吧！', owner: {} },
+      { id: 'empty-2', itemName: '告訴我們你想要什麼', owner: {} },
+      { id: 'empty-3', itemName: '發起心願，讓賣家實現', owner: {} },
+    ];
+  }
+  let idx = 0;
+
+  const wishHref = w => `../wishpool/wishpool.html?id=${encodeURIComponent(w.id)}#wishpool`;
+
+  if (isDesktop) {
+    const render = () => {
+      const w = wishes[idx % wishes.length];
+      live.dataset.wishHref = wishHref(w);
+      live.innerHTML = `
+        <img class="qwl-avatar" src="${esc(wishAvatar(w))}" alt="許願者頭像" onerror="this.src='../webP/default-avatar.webp'">
+        <div class="qwl-bubble" title="想要${esc(w.itemName)}">想要${esc(w.itemName)}</div>
+        <span class="qwl-dot"></span>
+        <svg class="qwl-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5l3.09 6.58 7.16.83-5.3 4.94 1.42 7.07L12 17.4l-6.37 3.52 1.42-7.07-5.3-4.94 7.16-.83L12 1.5z"/></svg>`;
+      idx++;
+    };
+    // 點擊泡泡 → 直接跳到許願池裡「這一則」願望卡（蓋過整張卡的預設連結）
+    live.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (live.dataset.wishHref) window.location.href = live.dataset.wishHref;
+    });
+    render();
+    if (wishes.length > 1) {
+      setInterval(() => {
+        live.classList.add('qwl-out');
+        setTimeout(() => { render(); live.classList.remove('qwl-out'); }, 260);
+      }, 4200);
+    }
+    return;
+  }
+
+  // 手機：信件自左入場（先見糖果紋背面）→ 往上翻開內容 → 蓋回換下一張
+  const avatarEl = letterRow.querySelector('.wl-avatar');
+  const textEl = letterRow.querySelector('.wl-text');
+  const render = () => {
+    const w = wishes[idx % wishes.length];
+    avatarEl.src = wishAvatar(w);
+    textEl.textContent = w.itemName.startsWith('想要') || w.itemName.startsWith('許') || w.itemName.startsWith('發') || w.itemName.startsWith('告')
+      ? w.itemName
+      : `想要${w.itemName}`;
+    // 若是空狀態標語則導向許願池首頁，否則導向特定願望卡
+    letterRow.href = w.id.startsWith('empty-') ? '../wishpool/wishpool.html#wishpool' : wishHref(w);
+    idx++;
+  };
+  render();
+  letterRow.style.display = 'flex';
+  letterRow.classList.add('enter');                              // 信封背面自左滑入
+  setTimeout(() => letterRow.classList.add('open'), 900);        // 往上翻開
+  if (wishes.length > 1) {
+    setInterval(() => {
+      letterRow.classList.remove('open');                        // 蓋起來
+      setTimeout(() => { render(); letterRow.classList.add('open'); }, 700); // 換內容再翻開
+    }, 6000);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
+  initWishTicker();
+
   // 管理後台按鈕（MODERATOR / ADMIN）& 隱藏聊天室
   const _role = localStorage.getItem('role');
   if (['MODERATOR', 'ADMIN'].includes(_role)) {
     document.getElementById('moderatorBtn').style.display = 'block';
   }
   if (_role === 'ADMIN') {
-    document.getElementById('apiDocsBtn').style.display = 'block';
+    const apiDocsBtn = document.getElementById('apiDocsBtn');
+    // API 文件跟著環境走（dev → dev.treasurehub.tw、正式 → treasurehub.tw）
+    apiDocsBtn.href = `${import.meta.env.VITE_API_BASE_URL}/api/api-docs/`;
+    apiDocsBtn.style.display = 'block';
     document.getElementById('designSystemBtn').style.display = 'block';
     document.getElementById('schoolGuideBtn').style.display = 'block';
   }

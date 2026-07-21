@@ -62,6 +62,12 @@ Every page includes these three files.
 3. On confirm: `getCroppedCanvas()` → `toBlob()` → `compressImage()` (Canvas API → WebP)
 4. Result assigned to `input.files` via `DataTransfer` API
 
+### Invite System (site-wide)
+`default.js` — after login, pages with `#chaticon` get an injected `#inviteFab.invite-fab` button pinned above the chat icon (`syncPos()` reads the chaticon's computed position; when chaticon is hidden on mobile, the fab falls back to above `.bottom-nav`). Clicking opens `#invitePanel.invite-panel` (right slide-in, mirrors notif-panel) showing `GET /api/account/invite-code` and paginated `GET /api/account/invites`. Invite link format: `account.html?page=signup&invite=CODE`. Signup passes optional `inviteCode` in the `POST /api/account/signup` payload.
+
+### account.html URL-driven forms
+`?page=login|signup|forgot` selects which auth form is shown; in-page form switches sync the URL via `history.replaceState` (no history pollution). `?invite=CODE` pre-fills the signup invite field (implies signup form if no `page` param). `reset_token` / `verify_token` flows take precedence over `page`.
+
 ### Notification Panel (wishpool)
 HTML: `#notificationPanel.notif-panel` (position:fixed, toggled via `.open` class).
 JS: `wish.js` — `loadNotifications()` renders into `#notifList`; `relativeTime()` formats timestamps.
@@ -142,4 +148,4 @@ Font stack: `"Helvetica Neue", Helvetica, "PingFang TC", "Noto Sans TC", Arial, 
 - **PhotoSwipe CDN**: Must use jsDelivr (`cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css`), not cdnjs (which 404s for v5.4.4).
 - **Cropper.js modal overflow**: The `overflow:hidden` constraint must be on an inner wrapper `<div>`, not on `.modal-body` itself — otherwise drag handles are clipped.
 - **TOC anchor links in shop `page=seller`**: Use `scrollIntoView({behavior:'smooth'})` + `preventDefault()` instead of `href="#id"` to avoid polluting history stack.
-- **CSS custom property `--card-color`** on wish cards: photo wishes use random `#C1E8DD`/`#BDD6E1`, no-photo wishes use `#ffffff` (with `wishbg.svg` positioned `absolute; bottom:0`).
+- **Wish cards (wishpool)**: candy-stripe border via `border: 4px solid transparent` + two-layer `background-image` (`linear-gradient` white fill + `repeating-linear-gradient(45deg, navy/aqua)`) with `background-clip: padding-box, border-box`. Two layouts on one `.wn-card`: `.wn-has-photo` (88px photo left, 68px mobile) and `.wn-no-photo` (text-only column). Grid is 2-col desktop / 1-col mobile. The "我也想要" button from the design comp is deferred — no backend API yet.

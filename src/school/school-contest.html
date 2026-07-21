@@ -60,6 +60,31 @@
     .ct-stat .v { font-size: 22px; font-weight: 700; color: var(--ink); margin-top: 7px; }
     .ct-stat .v .u { font-size: 12px; color: var(--muted); font-weight: 500; margin-left: 2px; }
 
+    /* 加碼獎機制（達標解鎖加碼獎金） */
+    .ct-bonus {
+      margin-top: 16px; border-radius: 18px; padding: 20px 24px;
+      background: linear-gradient(135deg, rgba(243,227,181,0.4), rgba(243,227,181,0.1));
+      border: 1.5px solid rgba(160,133,64,0.3);
+    }
+    .ct-bonus.unlocked {
+      background: linear-gradient(135deg, rgba(171,218,213,0.4), rgba(171,218,213,0.1));
+      border-color: rgba(0,117,104,0.3);
+    }
+    .ct-bonus-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .ct-bonus-tag {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #a08540; background: rgba(243,227,181,0.65); padding: 4px 12px; border-radius: 999px;
+    }
+    .ct-bonus.unlocked .ct-bonus-tag { color: #007568; background: rgba(171,218,213,0.65); }
+    .ct-bonus-name { font-size: 14.5px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+    .ct-bonus-msg { font-size: 14px; line-height: 1.75; color: var(--body); margin-top: 10px; }
+    .ct-bonus-msg b { font-size: 17px; color: #a08540; }
+    .ct-bonus.unlocked .ct-bonus-msg b { color: #007568; }
+    .ct-bonus-bar { margin-top: 14px; height: 8px; border-radius: 999px; background: #fff; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
+    .ct-bonus-bar .fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--cream), #e0b354); transition: width 0.6s ease; }
+    .ct-bonus.unlocked .ct-bonus-bar .fill { background: linear-gradient(90deg, var(--aqua), #007568); }
+    .ct-bonus-foot { display: flex; justify-content: space-between; margin-top: 7px; font-size: 11.5px; color: var(--muted); letter-spacing: 0.02em; }
+
     /* sections */
     .ct-sec { margin-top: 36px; }
     .ct-sec-h { font-size: 20px; font-weight: 700; letter-spacing: 0.04em; color: var(--ink); margin-bottom: 14px; }
@@ -234,6 +259,9 @@
   <!-- 數據列 -->
   <div class="ct-stats" id="ctStats"></div>
 
+  <!-- 加碼獎機制 -->
+  <div class="ct-bonus" id="ctBonus" style="display:none;"></div>
+
   <!-- 獎項 -->
   <div class="ct-sec">
     <div class="ct-sec-h">獎項內容<span id="ctPrizeSub"></span></div>
@@ -328,8 +356,9 @@ document.addEventListener('DOMContentLoaded', function() {
       start: '2026-06-01', end: '2026-08-31',
       art: '../svg/contestad.svg',
       desc: '首屆攻略徵稿活動。徵稿期間發佈的攻略都會自動列入計分，依人氣積分排出名次——寫下你最擅長的推甄、證照、實習或選課心得，讓好內容被看見，還能抱走獎金。',
-      stats: { works: 126, creators: 87 },
+      stats: { works: 126, creators: 87, newThisWeek: 7 },
       pool: 30000,
+      bonus: { unlockAt: 100, amount: 5000, name: '拾貨嚴選獎' },
       prizes: [
         { tier: 'g', medal: '1', name: '冠軍', amt: 'NT$ 10,000', desc: '人氣積分第 1 名，另獲首頁輪播推薦一個月。' },
         { tier: 's', medal: '2', name: '亞軍', amt: 'NT$ 6,000', desc: '人氣積分第 2 名，獲首頁精選推薦兩週。' },
@@ -479,9 +508,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (c.status === 'live') { countLbl = '距離截止'; countVal = Math.max(0, daysBetween(now, endD)); }
     else if (c.status === 'upcoming') { countLbl = '距離開賽'; countVal = Math.max(0, daysBetween(now, startD)); }
     else { countLbl = '活動狀態'; countVal = null; }
+    // 徵稿進行中且有「本週新增」數據時，用成長性數字取代創作者總數
+    // （例如「本週新增 7 人創作者」比「創作者總數 87 位」更能鼓勵參與）
+    var creatorStat = (c.status === 'live' && c.stats.newThisWeek != null)
+      ? { l: '本週新增創作者', v: '+' + fmt(c.stats.newThisWeek), u: '人' }
+      : { l: '參與創作者', v: fmt(c.stats.creators), u: '位' };
     var stats = [
       { l: '參賽作品', v: fmt(c.stats.works), u: '篇' },
-      { l: '參與創作者', v: fmt(c.stats.creators), u: '位' },
+      creatorStat,
       { l: '總獎金', v: 'NT$ ' + fmt(c.pool), u: '' },
       { l: countLbl, v: countVal === null ? '已結束' : String(countVal), u: countVal === null ? '' : '天' }
     ];
@@ -494,6 +528,30 @@ document.addEventListener('DOMContentLoaded', function() {
       d.appendChild(l); d.appendChild(v);
       $('ctStats').appendChild(d);
     });
+
+    /* 加碼獎機制：達標人數自動解鎖加碼獎金，鼓勵用戶邀請同學一起參賽 */
+    var bonusEl = $('ctBonus');
+    if (c.bonus && c.status === 'live') {
+      var bCurrent = c.stats.creators;
+      var bRemain = Math.max(0, c.bonus.unlockAt - bCurrent);
+      var bPct = Math.min(100, Math.round(bCurrent / c.bonus.unlockAt * 100));
+      var bUnlocked = bRemain === 0;
+      bonusEl.classList.toggle('unlocked', bUnlocked);
+      bonusEl.innerHTML =
+        '<div class="ct-bonus-head">' +
+          '<span class="ct-bonus-tag">' + (bUnlocked ? '加碼獎已解鎖' : '加碼獎機制') + '</span>' +
+          '<span class="ct-bonus-name">' + c.bonus.name + ' · NT$ ' + fmt(c.bonus.amount) + '</span>' +
+        '</div>' +
+        '<div class="ct-bonus-msg">' + (bUnlocked
+          ? '🎉 已達 ' + fmt(c.bonus.unlockAt) + ' 位創作者門檻，本屆加碼開出「' + c.bonus.name + '」獎金 NT$ ' + fmt(c.bonus.amount) + '！'
+          : '只要再有 <b>' + fmt(bRemain) + '</b> 位同學加入創作，就加碼開出「' + c.bonus.name + '」獎金 NT$ ' + fmt(c.bonus.amount) + '——快邀請同學一起寫攻略！') +
+        '</div>' +
+        '<div class="ct-bonus-bar"><div class="fill" style="width:' + bPct + '%"></div></div>' +
+        '<div class="ct-bonus-foot"><span>目前 ' + fmt(bCurrent) + ' 位創作者</span><span>達標 ' + fmt(c.bonus.unlockAt) + ' 位解鎖</span></div>';
+      bonusEl.style.display = '';
+    } else {
+      bonusEl.style.display = 'none';
+    }
 
     /* 獎項 */
     $('ctPrizeSub').textContent = '總獎金 NT$ ' + fmt(c.pool);

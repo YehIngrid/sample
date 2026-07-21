@@ -150,26 +150,31 @@ body { background: var(--alice); }
 .like-btn svg {
   width: 18px;
   height: 18px;
-  color: var(--terracotta);
-  stroke: var(--terracotta);
+  color: #e63946;
+  stroke: #e63946;
   flex-shrink: 0;
 }
 .like-btn:hover {
-  border-color: var(--terracotta);
-  color: var(--terracotta);
+  border-color: #e63946;
+  color: #e63946;
   transform: translateY(-1px);
 }
 .like-btn.liked {
-  background: rgba(201,127,90,0.08);
-  border-color: var(--terracotta);
-  color: var(--terracotta);
+  background: rgba(230,57,70,0.08);
+  border-color: #e63946;
+  color: #e63946;
 }
 .like-btn.liked svg {
-  fill: var(--terracotta);
-  color: var(--terracotta);
+  fill: #e63946;
+  color: #e63946;
 }
 
 /* 側欄喜歡按鈕 */
+/* 「喜歡」「加入收藏」並排（桌機）：外層 flex row，兩顆按鈕各佔一半 */
+.buy-actions { display: flex; gap: 8px; margin-top: 14px; margin-bottom: 8px; }
+.buy-actions .side-like,
+.buy-actions .btn-ghost { flex: 1; width: auto; min-width: 0; margin: 0; }
+
 .side-like {
   width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px;
   padding: 10px 0; margin-bottom: 8px; border-radius: 999px;
@@ -177,14 +182,14 @@ body { background: var(--alice); }
   font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
   cursor: pointer; transition: all 0.22s;
 }
-.side-like svg { width: 15px; height: 15px; stroke: var(--terracotta); flex-shrink: 0; }
-.side-like:hover { border-color: var(--terracotta); color: var(--terracotta); transform: translateY(-1px); }
-.side-like.liked { border-color: var(--terracotta); color: var(--terracotta); background: rgba(201,127,90,0.08); }
-.side-like.liked svg { fill: var(--terracotta); }
+.side-like svg { width: 15px; height: 15px; stroke: #e63946; flex-shrink: 0; }
+.side-like:hover { border-color: #e63946; color: #e63946; transform: translateY(-1px); }
+.side-like.liked { border-color: #e63946; color: #e63946; background: rgba(230,57,70,0.08); }
+.side-like.liked svg { fill: #e63946; }
 
 /* 手機操作列喜歡按鈕 */
-.sp-actionbar .ico.liked { border-color: var(--terracotta); color: var(--terracotta); }
-.sp-actionbar .ico.liked svg { fill: var(--terracotta); stroke: var(--terracotta); }
+.sp-actionbar .ico.liked { border-color: #e63946; color: #e63946; }
+.sp-actionbar .ico.liked svg { fill: #e63946; stroke: #e63946; }
 
 /* article tags */
 .post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0 18px; }
@@ -386,12 +391,13 @@ body { background: var(--alice); }
 .buy-card .btn-buy svg { width: 16px; height: 16px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .buy-card .btn-ghost {
   display: flex; align-items: center; justify-content: center; gap: 6px;
-  width: 100%; padding: 11px; border-radius: 999px; margin-top: 10px;
-  border: 1.5px solid var(--line); color: var(--ink);
+  padding: 11px; border-radius: 999px;
+  border: 1.5px solid var(--navy); color: var(--navy);
   font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
   transition: all 0.2s;
 }
-.buy-card .btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
+.buy-card .btn-ghost svg { fill: currentColor; flex-shrink: 0; }
+.buy-card .btn-ghost:hover { border-color: var(--navy-d); color: var(--navy-d); }
 .buy-card .ledger { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
 .buy-card .ledger .li { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--muted); letter-spacing: 0.02em; }
 .buy-card .ledger .li svg { width: 14px; height: 14px; color: var(--navy); flex-shrink: 0; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
@@ -467,6 +473,7 @@ body.unlocked .unlocked-only { display: block; }
   .sp-container { padding: 16px 16px 30px; width: 100%; }
   .sp-layout { grid-template-columns: 1fr; }
   .side { display: none; }              /* 手機版隱藏側欄，改用底部 sticky 購買列 */
+  .post-like { display: none; }         /* 手機版隱藏文末喜歡按鈕，已有 sticky 操作列的喜歡圖示 */
   .post-body { padding: 22px 18px 26px; }
   .sp-hero { height: 168px; }
   .post-head h1 { font-size: 22px; }

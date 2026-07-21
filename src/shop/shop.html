@@ -262,6 +262,7 @@
         <div class="qa-t">許願專區</div>
         <div class="qa-s">說出你想要的</div>
       </div>
+      <div class="qa-wish-live d-none d-lg-flex" id="qaWishLive" role="link" tabindex="0" aria-label="查看這則願望"></div>
       <span class="qa-arr">→</span>
     </a>
 
@@ -339,7 +340,7 @@
               <span class="promo-banner__badge">許願池</span>
               <span class="promo-banner__kv">買家許願，賣家實現</span>
             </div>
-            <div class="promo-banner__illus"><i class="ti ti-star"></i></div>
+            <div class="promo-banner__illus"><img src="../svg/wishinkad.svg" alt=""></div>
             <div class="promo-banner__tags">
               <span>#發起心願</span>
               <span>#賣家媒合</span>
@@ -394,6 +395,28 @@
   </div>
 </div>
 </div><!-- /.my-section -->
+
+  <!-- 手機版：許願信封輪播（信封抽出糖果紋信件） -->
+  <a class="wish-letter-row d-lg-none" id="wishLetterRow" href="../wishpool/wishpool.html#wishpool" style="display:none;" aria-label="前往許願專區">
+    <span class="wl-envelope" aria-hidden="true">
+      <svg viewBox="0 0 56 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="52" height="70" rx="6" fill="#eaf6f4"/>
+        <path d="M54 4 L30 37 L54 70" fill="#abdad5" stroke-linejoin="round"/>
+        <text x="16" y="58" font-size="11" font-weight="700" letter-spacing="1.5" fill="#0f2745" transform="rotate(-90 16 58)">WISH</text>
+      </svg>
+    </span>
+    <span class="wl-letter">
+      <span class="wl-flip">
+        <span class="wl-face wl-back"><img class="wl-ink-back" src="../svg/wishink.svg" alt="" aria-hidden="true"></span>
+        <span class="wl-face wl-front">
+          <img class="wl-avatar" src="../webP/default-avatar.webp" alt="許願者頭像" onerror="this.src='../webP/default-avatar.webp'">
+          <span class="wl-text"></span>
+          <img class="wl-ink" src="../svg/wishink.svg" alt="" aria-hidden="true">
+          <span class="wl-arr">→</span>
+        </span>
+      </span>
+    </span>
+  </a>
 
   <!-- 1. 熱門商品 -->
   <div class="firstlinesell d-block justify-content-center gap-lg-4">

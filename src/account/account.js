@@ -1,11 +1,33 @@
 import BackendService from '../BackendService.js';
 import '../default/default.js';
 
+// ── URL ↔ 表單對應（account.html?page=login / signup / forgot）──
+const _PAGE_TO_STEP = {
+  login:  'loginModal',
+  signup: 'signuppage',
+  forgot: 'forgetpwdpage',
+};
+const _STEP_TO_PAGE = Object.fromEntries(
+  Object.entries(_PAGE_TO_STEP).map(([page, step]) => [step, page])
+);
+
+// 切換表單時同步網址（replaceState 不汙染上一頁的歷史記錄）
+function _syncUrlToStep(stepId) {
+  const page = _STEP_TO_PAGE[stepId];
+  if (!page) return; // 中間步驟（認證信提示、重設密碼等）不寫入網址
+  const url = new URL(window.location.href);
+  if (url.searchParams.get('page') === page) return;
+  url.searchParams.set('page', page);
+  history.replaceState(null, '', url);
+}
+
 // ── 頁面切換 ──────────────────────────────────────────────
 function showPage(nextId) {
   const current = document.querySelector('.auth-step.active');
   const next = document.getElementById(nextId);
   if (!next || (current && current === next)) return;
+
+  _syncUrlToStep(nextId);
 
   if (!current) {
     // 第一次顯示，直接帶入
@@ -49,6 +71,15 @@ window.onload = async function() {
     try {
       const bs = new BackendService();
       await bs.whoami();
+      // 已登入者點了邀請連結 → 先提示再跳轉
+      if (params.get('invite')) {
+        await Swal.fire({
+          icon: 'info',
+          title: '您已經有帳號囉',
+          text: '邀請碼是給新朋友註冊時使用的，歡迎把您自己的邀請連結分享給朋友！',
+          confirmButtonText: '前往購物首頁',
+        });
+      }
       location.replace('../shop/shop.html');
       return;
     } catch (_) {
@@ -94,7 +125,22 @@ window.onload = async function() {
       await Swal.fire({ icon: 'error', title: '驗證失敗', text: e.message, confirmButtonText: '確定' });
     }
   } else {
-    showPage('loginModal');
+    // 依網址決定顯示哪個表單：?page=login / signup / forgot
+    const pageParam = (params.get('page') || '').toLowerCase();
+    const inviteParam = params.get('invite');
+    if (inviteParam) {
+      // 邀請連結：自動帶入邀請碼
+      const inviteInput = document.getElementById('inviteCode');
+      if (inviteInput) inviteInput.value = inviteParam.trim();
+    }
+    if (_PAGE_TO_STEP[pageParam]) {
+      showPage(_PAGE_TO_STEP[pageParam]);
+    } else if (inviteParam) {
+      // 只帶 invite 沒帶 page → 也開註冊頁
+      showPage('signuppage');
+    } else {
+      showPage('loginModal');
+    }
   }
 };
 
@@ -119,6 +165,7 @@ function fieldClear(inputId, errorId) {
   ['password1',      'err-signup-pwd1'],
   ['password2',      'err-signup-pwd2'],
   ['name',           'err-signup-name'],
+  ['inviteCode',     'err-signup-invite'],
   ['forgetemail',    'err-forget-email'],
 ].forEach(([inputId, errorId]) => {
   document.getElementById(inputId)?.addEventListener('input', () => fieldClear(inputId, errorId));
@@ -163,6 +210,8 @@ async function callSignUp() {
     password: passwordInput1.value,
     username: nameInput.value.trim()
   };
+  const inviteCodeVal = document.getElementById('inviteCode')?.value.trim();
+  if (inviteCodeVal) payload.inviteCode = inviteCodeVal;
 
   const loader = document.getElementById('loader-wrapper');
   loader.style.display = 'flex';
@@ -374,7 +423,7 @@ signbtn.addEventListener('click', function(e) {
   if (!signupEmailVal) {
     fieldError('email', 'err-signup-email', '請輸入電子信箱'); hasError = true;
   } else if (!isValidSignupEmail(signupEmailVal)) {
-    fieldError('email', 'err-signup-email', '請使用 @mail.nchu.edu.tw 或 @dragon.nchu.edu.tw 的學校信箱註冊'); hasError = true;
+    fieldError('email', 'err-signup-email', '請輸入有效的電子信箱'); hasError = true;
   }
   if (!document.getElementById('password1').value) {
     fieldError('password1', 'err-signup-pwd1', '請輸入密碼'); hasError = true;

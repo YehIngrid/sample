@@ -16,18 +16,21 @@ document.addEventListener('load', e => {
 }, true);
 
 // ── Constants ──
-const CARD_COLORS = ['#FFD966','#FF9F9F','#A8D8EA','#B5EAD7','#FFDAC1','#C7CEEA','#E2F0CB','#F7CAC9'];
-const PHOTO_CARD_COLORS = ['#C1E8DD','#BDD6E1'];
 const PRIORITY_LABEL = { LOW:'不急', MEDIUM:'一般', HIGH:'緊急', 1:'不急', 2:'一般', 3:'急需' };
 const PRIORITY_COLOR  = { LOW:'#6bb56b', MEDIUM:'#e6a817', HIGH:'#e05353', 1:'#6bb56b', 2:'#e6a817', 3:'#e05353' };
 
-function randomCardColor() {
-  return CARD_COLORS[Math.floor(Math.random() * CARD_COLORS.length)];
-}
-
-// ── Skeleton helper ──
-function wishSkeletonHTML(n = 8) {
-  return Array.from({length: n}, () => `<div class="wish-skel-wrapper"></div>`).join('');
+// ── Skeleton helper（形狀對齊新版糖果紋願望卡）──
+function wishSkeletonHTML(n = 6) {
+  return Array.from({length: n}, () => `
+    <div class="wish-skel-wrapper">
+      <div class="skel-photo"></div>
+      <div class="skel-lines">
+        <span class="skel-line skel-w60"></span>
+        <span class="skel-line skel-w90"></span>
+        <span class="skel-line skel-w40"></span>
+        <span class="skel-btn"></span>
+      </div>
+    </div>`).join('');
 }
 let isLoggedIn;
 let currentPage = 1;
@@ -763,7 +766,7 @@ async function submit() {
     Swal.fire({
       icon: 'error',
       title: '願望送出失敗',
-      text: '請稍後再試，或聯絡客服人員。',
+      text: error.message || '請稍後再試，或聯絡客服人員。',
     });
   } finally {
     hideLoading();
@@ -838,12 +841,16 @@ function createWishCard(wish, isMyWish) {
 
   const statusMap = { ACTIVE: '上架中', EXPIRED: '已過期', DELETED: '已刪除' };
   const statusBadgeHtml = (isMyWish && wish.status !== 'ACTIVE')
-    ? `<span class="wn-status-badge" style="background:#aaa;">${statusMap[wish.status] || wish.status}</span>`
+    ? `<span class="wn-status-pill">${statusMap[wish.status] || wish.status}</span>`
+    : '';
+  const priorityPillHtml = priorityLabel
+    ? `<span class="wn-priority-pill" style="--pill-c:${priorityColor};">${priorityLabel}</span>`
     : '';
 
-  const mediaHtml = wish.photoURL
-    ? `<img class="wn-photo" src="${wish.photoURL}" alt="${wish.itemName}" loading="lazy">`
-    : `<div class="wn-placeholder"><img src="../svg/wishbg.svg" alt="" class="wn-placeholder-bg" aria-hidden="true"></div>`;
+  const hasPhoto = !!wish.photoURL;
+  const mediaHtml = hasPhoto
+    ? `<div class="wn-media"><img class="wn-photo" src="${wish.photoURL}" alt="${wish.itemName}" loading="lazy"></div>`
+    : '';
 
   const ownerAvatar = wish.owner?.photoURL || '../webP/default-avatar.webp';
   const ownerName = wish.owner?.name || '許願者';
@@ -857,27 +864,29 @@ function createWishCard(wish, isMyWish) {
     : `<button class="wn-contact-btn wn-action-js"><i class="ti ti-mail"></i> 聯絡許願者</button>`;
 
   wrapper.innerHTML = `
-    <div class="wn-card">
-      <div class="wn-media">
-        ${mediaHtml}
-        ${priorityLabel ? `<span class="wn-priority-badge" style="background:${priorityColor};">${priorityLabel}</span>` : ''}
-        ${statusBadgeHtml}
-      </div>
+    <div class="wn-card ${hasPhoto ? 'wn-has-photo' : 'wn-no-photo'}">
+      ${mediaHtml}
       <div class="wn-body">
-        <div class="wn-title">${wish.itemName}</div>
+        <div class="wn-head">
+          <div class="wn-title">${wish.itemName}</div>
+          ${statusBadgeHtml}${priorityPillHtml}
+        </div>
         ${wish.description ? `<div class="wn-desc">${wish.description}</div>` : ''}
         <div class="wn-user">
           <img class="wn-avatar" src="${ownerAvatar}" alt="許願者頭像" onerror="this.src='../webP/default-avatar.webp'">
           <span class="wn-username">${ownerName}</span>
+          ${dateText ? `<span class="wn-dot"></span><span class="wn-date">${dateText}</span>` : ''}
         </div>
         <div class="wn-footer">
           <div class="wn-budget-col">
             <span class="wn-budget-label">預算</span>
             <span class="wn-budget">NT$ ${priceFormatted}</span>
           </div>
-          ${dateText ? `<div class="wn-date-col"><span class="wn-date-label">發布於</span><span class="wn-date">${dateText}</span></div>` : ''}
+          <div class="wn-side">
+            <img class="wn-ink" src="../svg/wishink.svg" alt="" aria-hidden="true">
+            <div class="wn-actions">${actionHtml}</div>
+          </div>
         </div>
-        <div class="wn-actions">${actionHtml}</div>
       </div>
     </div>
   `;

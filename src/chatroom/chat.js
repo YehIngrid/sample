@@ -454,6 +454,9 @@ window.addEventListener('load', async () => {
         if (hasUnread && !_iframeOpen) window.dispatchEvent(new CustomEvent('chatUnread'));
     } catch (e) { /* 未登入或錯誤，略過 */ }
 
+    // 未登入時不建立 SSE 連線
+    if (!myUsername) return;
+
     const _notifSse = new EventSource(
         `${_notifSvc.baseUrl}/api/chat/stream`,
         { withCredentials: true }

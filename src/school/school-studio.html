@@ -21,7 +21,7 @@
     :root { --green: rgb(36,182,133); }
     html, body { height: 100%; }
     body {
-      min-height: 100vh; overflow: hidden;
+      min-height: 100vh; overflow-y: auto; overflow-x: hidden;
       display: flex; flex-direction: column;
       color: var(--ink);
     }
@@ -202,6 +202,31 @@
     }
     .tip svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
+    /* ── 近期比賽：寫作之餘，順手看有沒有比賽可以投 ── */
+    .contests { margin-top: 26px; width: 100%; max-width: 740px; text-align: left; }
+    .contests-h {
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
+      color: #5a739a; margin-bottom: 10px;
+    }
+    .contests-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .contest-chip {
+      display: flex; align-items: center; gap: 12px; flex: 1 1 260px; min-width: 0;
+      background: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.85);
+      border-radius: 16px; padding: 12px 14px; text-decoration: none;
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      cursor: pointer; transition: all 0.22s ease;
+    }
+    .contest-chip:hover { background: rgba(255,255,255,0.8); transform: translateY(-2px); box-shadow: 0 16px 34px -20px rgba(0,60,120,0.5); }
+    .contest-chip .cc-status {
+      flex-shrink: 0; font-size: 10px; font-weight: 800; letter-spacing: 0.06em; padding: 3px 9px; border-radius: 999px;
+    }
+    .contest-chip .cc-status.live { background: rgba(171,218,213,0.6); color: #007568; }
+    .contest-chip .cc-status.upcoming { background: rgba(243,227,181,0.65); color: #a08540; }
+    .contest-chip .cc-body { flex: 1; min-width: 0; }
+    .contest-chip .cc-name { display: block; font-size: 13.5px; font-weight: 800; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .contest-chip .cc-meta { display: block; font-size: 11px; color: #5a739a; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .contest-chip .cc-arrow { flex-shrink: 0; width: 15px; height: 15px; color: var(--navy); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
     /* ── 進場動畫 ── */
     .fade-up { opacity: 0; transform: translateY(22px); animation: fade-up 0.85s cubic-bezier(0.22,1,0.36,1) forwards; }
     .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.16s; } .d3 { animation-delay: 0.27s; }
@@ -209,7 +234,8 @@
     @keyframes fade-up { to { opacity: 1; transform: none; } }
 
     @media (max-width: 720px) {
-      body { overflow: auto; }
+      .contests { margin-top: 20px; max-width: 460px; }
+      .contest-chip { flex: 1 1 100%; padding: 11px 13px; }
       .studio-top { padding: 14px 16px; }
       .stage { padding: 8px 16px 28px; justify-content: flex-start; }
       .eyebrow { margin-bottom: 10px; letter-spacing: 0.24em; }
@@ -301,6 +327,12 @@
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
     草稿會自動儲存在這台裝置上，隨時回來都在。
   </div>
+
+  <!-- 近期比賽：下筆之餘，順手看看有沒有比賽可以投 -->
+  <div class="contests fade-up d5" id="studioContests">
+    <div class="contests-h">近期比賽</div>
+    <div class="contests-row" id="contestsRow"></div>
+  </div>
 </main>
 
 <script>
@@ -376,6 +408,38 @@
           (when ? '<span class="di"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' + when + '</span>' : '') +
         '</div>' +
       '</div>';
+  })();
+
+  /* ---------- 近期比賽：只列進行中／即將開始，鼓勵順手投稿 ---------- */
+  (function () {
+    var CONTESTS = [
+      { key: 'seed2026',     name: '種子創作者計劃', status: 'live',     start: '2026-06-01', end: '2026-08-31', pool: 30000 },
+      { key: 'notefest2026', name: '期中筆記祭',     status: 'upcoming', start: '2026-10-12', end: '2026-11-15', pool: 20000 }
+    ];
+    var STATUS_TXT = { live: '進行中', upcoming: '即將開始' };
+    var wrap = document.getElementById('studioContests');
+    var row = document.getElementById('contestsRow');
+    if (!wrap || !row) return;
+
+    function fmt(n) { return n.toLocaleString('en-US'); }
+    function fmtDate(s) { return s.replace(/-/g, '/'); }
+
+    var visible = CONTESTS.filter(function (c) { return c.status === 'live' || c.status === 'upcoming'; });
+    if (!visible.length) { wrap.style.display = 'none'; return; }
+
+    visible.forEach(function (c) {
+      var a = document.createElement('a');
+      a.className = 'contest-chip';
+      a.href = 'school-contest.html?id=' + c.key;
+      a.innerHTML =
+        '<span class="cc-status ' + c.status + '">' + STATUS_TXT[c.status] + '</span>' +
+        '<span class="cc-body">' +
+          '<span class="cc-name">' + c.name + '</span>' +
+          '<span class="cc-meta">' + fmtDate(c.start) + ' – ' + fmtDate(c.end) + ' · 總獎金 NT$ ' + fmt(c.pool) + '</span>' +
+        '</span>' +
+        '<svg class="cc-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>';
+      row.appendChild(a);
+    });
   })();
 
   /* ---------- 生成上升微光點 ---------- */

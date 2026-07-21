@@ -35,7 +35,7 @@ export default class wpBackendService {
             );
             return response.data;
         } catch (error) {
-            if (error?.response?.status === 403) throw new Error('超過一周上傳上限');
+            if (error?.response?.status === 403) throw new Error('一個禮拜只能許一個願望，請下週再來許願喔！');
             console.error('Error posting wish:', error);
             return Promise.reject(error);
         }

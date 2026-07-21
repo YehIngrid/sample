@@ -186,11 +186,32 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("註冊錯誤：", error);
-            if (error.response?.data?.message == "Email already exists") {
+            const beMsg = error.response?.data?.message;
+            if (beMsg == "Email already exists") {
                 throw new Error("此帳號已被註冊");
+            } else if (beMsg && /invite/i.test(beMsg)) {
+                throw new Error("邀請碼無效，請確認後再試，或留空跳過");
             } else {
                 throw new Error("系統發生錯誤，請稍後再試");
             }
+        }
+    }
+    async getInviteCode() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/account/invite-code`);
+            return response;
+        } catch (error) {
+            console.error("取得邀請碼失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async getInvites(page = 1, limit = 10) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/account/invites`, { params: { page, limit } });
+            return response;
+        } catch (error) {
+            console.error("取得邀請清單失敗", error);
+            return Promise.reject(error);
         }
     }
     async login(userData) {

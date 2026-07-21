@@ -382,14 +382,16 @@
             解鎖完整攻略
           </button>
         </div>
-        <button class="side-like" type="button" id="sideLikeBtn" title="喜歡這篇攻略">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          喜歡 <span id="sideLikeCount">96</span>
-        </button>
-        <a class="btn-ghost" href="#">
-          加入收藏
-          <svg viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M6 3 h12 a1 1 0 0 1 1 1 v17 l-7-4 -7 4 V4 a1 1 0 0 1 1-1 Z"/></svg>
-        </a>
+        <div class="buy-actions">
+          <button class="side-like" type="button" id="sideLikeBtn" title="喜歡這篇攻略">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            喜歡
+          </button>
+          <a class="btn-ghost" href="#">
+            加入收藏
+            <svg viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M6 3 h12 a1 1 0 0 1 1 1 v17 l-7-4 -7 4 V4 a1 1 0 0 1 1-1 Z"/></svg>
+          </a>
+        </div>
         <div class="ledger">
           <div class="li"><svg viewBox="0 0 24 24"><path d="M20 6 9 17 4 12"/></svg>後台校園信箱實名認證</div>
           <div class="li"><svg viewBox="0 0 24 24"><path d="M20 6 9 17 4 12"/></svg>付費內容含讀者浮水印防外流</div>
@@ -511,9 +513,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById(id);
     if (btn) btn.addEventListener('click', toggleUnlock);
   });
-  // ── 文章愛心按鈕（文末 / 側欄 / 手機操作列 同步） ──
+  // ── 文章愛心按鈕（文末 / 側欄 / 手機操作列 同步；側欄按鈕不顯示數字） ──
   const likeCount = document.getElementById('postLikeCount');
-  const sideLikeCount = document.getElementById('sideLikeCount');
   const likeBtns = ['postLikeBtn', 'sideLikeBtn', 'barLikeBtn']
     .map(id => document.getElementById(id)).filter(Boolean);
   let isLiked = false;
@@ -521,7 +522,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function renderLike() {
     if (likeCount) likeCount.textContent = likeNum;
-    if (sideLikeCount) sideLikeCount.textContent = likeNum;
     likeBtns.forEach(b => {
       b.classList.toggle('liked', isLiked);
       b.title = isLiked ? '已喜歡這篇攻略' : '喜歡這篇攻略';

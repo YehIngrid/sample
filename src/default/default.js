@@ -95,7 +95,7 @@ function _applyLoggedInUI() {
        </span>`
     : '';
   document.querySelectorAll('.username').forEach((el) => {
-    el.innerHTML = `<span class="nav-avatar-wrap"><img class="nav-username-avatar" src="${avatarSrc}" alt="頭像">${_roleBadge}</span>`;
+    el.innerHTML = `<span class="nav-avatar-wrap"><img class="nav-username-avatar" src="${_escapeHtml(avatarSrc)}" alt="頭像">${_roleBadge}</span>`;
     el.style.display = '';
   });
   document.querySelectorAll('.nav-user-avatar, .nav-user-avatar-sm').forEach(img => { img.src = avatarSrc; });
@@ -131,6 +131,9 @@ async function renderAuthUI() {
       // 通知系統
       _initNotifSystem();
       _loadNotifications();
+
+      // 邀請好友（聊天室 icon 上方的浮動按鈕）
+      _initInviteFab();
 
     } catch (err) {
       window.isLoggedIn = false;
@@ -504,12 +507,13 @@ function _notifRelativeTime(dateStr) {
 }
 
 function _renderNotifItem(n) {
-  const avatar = n.actor?.photoURL ?? n.actor?.avatar ?? '../image/default-avatar.webp';
-  const title = n.title || _NOTIF_TYPE_LABELS[n.type] || '';
-  const body = n.body ?? n.content ?? n.message ?? '';
+  // 後端內容（暱稱、訊息、商品名等為使用者可控）一律經 _escapeHtml 再進 innerHTML
+  const avatar = _escapeHtml(n.actor?.photoURL ?? n.actor?.avatar ?? '../image/default-avatar.webp');
+  const title = _escapeHtml(n.title || _NOTIF_TYPE_LABELS[n.type] || '');
+  const body = _escapeHtml(n.body ?? n.content ?? n.message ?? '');
   const time = _notifRelativeTime(n.createdAt);
   const unread = !n.isRead;
-  const id = n.id ?? '';
+  const id = _escapeHtml(String(n.id ?? ''));
 
   const wishName = n.meta?.wish?.itemName ?? n.wish?.itemName ?? null;
   const productName = n.productName ?? n.meta?.product?.name ?? null;
@@ -518,25 +522,25 @@ function _renderNotifItem(n) {
   const chatRoomActorId = n.actorId ?? n.meta?.actor?.accountId ?? null;
 
   const metaChips = [];
-  if (wishName) metaChips.push(`<span class="notif-chip notif-chip--wish"><i class="ti ti-wand me-1"></i>${wishName}</span>`);
-  if (productName) metaChips.push(`<span class="notif-chip notif-chip--product"><i class="ti ti-package me-1"></i>${productName}</span>`);
+  if (wishName) metaChips.push(`<span class="notif-chip notif-chip--wish"><i class="ti ti-wand me-1"></i>${_escapeHtml(wishName)}</span>`);
+  if (productName) metaChips.push(`<span class="notif-chip notif-chip--product"><i class="ti ti-package me-1"></i>${_escapeHtml(productName)}</span>`);
 
   const actionBtns = [];
-  if (chatRoomActorId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--chat" data-chat-actor="${chatRoomActorId}"><i class="ti ti-message me-1"></i>聯絡賣家</button>`);
-  if (productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-product-id="${productId}"><i class="ti ti-eye me-1"></i>看商品</button>`);
-  if (wishId && !productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-wish-id="${wishId}"><i class="ti ti-eye me-1"></i>看願望</button>`);
+  if (chatRoomActorId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--chat" data-chat-actor="${_escapeHtml(String(chatRoomActorId))}"><i class="ti ti-message me-1"></i>聯絡賣家</button>`);
+  if (productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-product-id="${_escapeHtml(String(productId))}"><i class="ti ti-eye me-1"></i>看商品</button>`);
+  if (wishId && !productId) actionBtns.push(`<button class="notif-action-btn notif-action-btn--product" data-wish-id="${_escapeHtml(String(wishId))}"><i class="ti ti-eye me-1"></i>看願望</button>`);
 
   const orderId = n.meta?.orderId ?? null;
   let _href = '';
-  if (productId) _href = `../product/product.html?id=${productId}`;
-  else if (wishId) _href = `../wishpool/wishpool.html?id=${wishId}#wishpool`;
+  if (productId) _href = `../product/product.html?id=${encodeURIComponent(productId)}`;
+  else if (wishId) _href = `../wishpool/wishpool.html?id=${encodeURIComponent(wishId)}#wishpool`;
   else if (orderId) {
     const isSell = n.meta?.role === 'SELLER' || n.type === 'product_sold';
-    _href = `../person/person.html?page=${isSell ? 'sellOrderDetail' : 'buyerOrderDetail'}&id=${orderId}&orderId=${orderId}`;
+    _href = `../person/person.html?page=${isSell ? 'sellOrderDetail' : 'buyerOrderDetail'}&id=${encodeURIComponent(orderId)}&orderId=${encodeURIComponent(orderId)}`;
   } else if (n.type === 'new_message' && chatRoomActorId) {
-    _href = `../chatroom/chatroom.html?openChat=${chatRoomActorId}`;
+    _href = `../chatroom/chatroom.html?openChat=${encodeURIComponent(chatRoomActorId)}`;
   }
-  return `<div class="notif-item${unread ? ' notif-unread' : ''}" data-notif-id="${id}" data-notif-href="${_href}">
+  return `<div class="notif-item${unread ? ' notif-unread' : ''}" data-notif-id="${id}" data-notif-href="${_escapeHtml(_href)}">
     <img src="${avatar}" class="notif-avatar" alt="通知" onerror="this.src='../image/default-avatar.webp'">
     <div class="notif-body">
       ${title ? `<div class="notif-text"><strong>${title}</strong></div>` : ''}
@@ -726,6 +730,236 @@ async function _markAllNotifRead() {
 }
 
 window.refreshNotifBadge = () => _loadNotifications(1, false);
+// ─────────────────────────────────────────────────────────────────────────
+
+// ── 邀請好友（Invite Code）─────────────────────────────────────────────────
+let _invitePage = 1;
+let _inviteHasMore = false;
+let _inviteLoading = false;
+let _inviteCodeCache = null;
+
+function _initInviteFab() {
+  const chat = document.getElementById('chaticon');
+  if (!chat || document.getElementById('inviteFab')) return;
+
+  const fab = document.createElement('button');
+  fab.id = 'inviteFab';
+  fab.className = 'invite-fab';
+  fab.title = '邀請好友';
+  fab.setAttribute('aria-label', '邀請好友');
+  fab.innerHTML = '<i class="ti ti-gift"></i>';
+  document.body.appendChild(fab);
+
+  // 跟隨各頁 .chaticon 的位置（含各頁 media query 覆寫），固定貼在其上方
+  const syncPos = () => {
+    const cs = getComputedStyle(chat);
+    if (cs.display === 'none') {
+      // 手機版：chaticon 隱藏（聊天入口在底部導覽列）→ 改停在底部導覽列上方
+      const nav = document.querySelector('.bottom-nav');
+      const navVisible = nav && getComputedStyle(nav).display !== 'none';
+      fab.style.bottom = navVisible ? (nav.offsetHeight + 24) + 'px' : '20px';
+      fab.style.right = '16px';
+      return;
+    }
+    const bottom = parseFloat(cs.bottom) || 74;
+    const height = chat.offsetHeight || 50;
+    fab.style.bottom = (bottom + height + 12) + 'px';
+    fab.style.right = cs.right;
+  };
+  syncPos();
+  window.addEventListener('resize', syncPos);
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="inviteBackdrop" class="notif-backdrop"></div>
+    <div id="invitePanel" class="invite-panel">
+      <div class="notif-header">
+        <span class="notif-title"><i class="ti ti-gift me-2"></i>邀請好友</span>
+        <div class="notif-header-actions">
+          <button class="notif-close" id="inviteCloseBtn" aria-label="關閉邀請面板"><i class="ti ti-x"></i></button>
+        </div>
+      </div>
+      <div class="icc-scene">
+        <div class="icc-card">
+          <div class="icc-glow"></div>
+          <div class="icc-glass">
+            <div class="icc-head">
+              <div class="icc-top">
+                <span class="icc-chip"></span>
+                <svg class="icc-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8.82a9 9 0 0 1 12 0"/><path d="M9 12a5 5 0 0 1 6 0"/><path d="M12 15.5v.01"/></svg>
+                <span class="icc-brand">拾貨寶庫</span>
+              </div>
+              <div class="icc-num-label">我的邀請碼</div>
+            </div>
+            <div class="icc-num">
+              <span id="inviteCodeText">--------</span>
+              <button class="icc-copy" id="inviteCopyBtn" title="複製邀請碼"><i class="ti ti-copy"></i></button>
+            </div>
+            <div class="icc-bottom">
+              <span class="icc-holder"><label>INVITER</label><b>${_escapeHtml(localStorage.getItem('username') || '—')}</b></span>
+              <span class="icc-exp"><label>INVITED</label><b id="iccInvited">0</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="invite-actions">
+        <button class="invite-link-btn" id="inviteCopyLinkBtn"><i class="ti ti-link me-1"></i>複製邀請連結</button>
+        <p class="invite-hint">好友註冊時填入你的邀請碼，即算邀請成功。</p>
+      </div>
+      <div class="invite-list-head">已邀請 <strong id="inviteTotal">0</strong> 位好友</div>
+      <div class="invite-list" id="inviteList"></div>
+      <div class="invite-footer" id="inviteFooter" style="display:none;">
+        <button class="notif-load-more" id="inviteLoadMore">載入更多</button>
+      </div>
+    </div>
+  `);
+
+  fab.addEventListener('click', _openInvitePanel);
+  document.getElementById('inviteCloseBtn').addEventListener('click', _closeInvitePanel);
+  document.getElementById('inviteBackdrop').addEventListener('click', _closeInvitePanel);
+  document.getElementById('inviteLoadMore').addEventListener('click', () => {
+    if (!_inviteLoading && _inviteHasMore) _loadInvites(_invitePage + 1, true);
+  });
+  document.getElementById('inviteCopyBtn').addEventListener('click', async () => {
+    if (!_inviteCodeCache) return;
+    if (await _copyToClipboard(_inviteCodeCache)) _inviteCopiedToast('已複製邀請碼');
+  });
+  document.getElementById('inviteCopyLinkBtn').addEventListener('click', async () => {
+    if (!_inviteCodeCache) return;
+    const link = new URL(`../account/account.html?page=signup&invite=${encodeURIComponent(_inviteCodeCache)}`, window.location.href).href;
+    if (await _copyToClipboard(link)) _inviteCopiedToast('已複製邀請連結');
+  });
+}
+
+function _openInvitePanel() {
+  document.getElementById('invitePanel')?.classList.add('open');
+  document.getElementById('inviteBackdrop')?.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  _loadInviteCode();
+  _loadInvites(1, false);
+}
+
+function _closeInvitePanel() {
+  document.getElementById('invitePanel')?.classList.remove('open');
+  document.getElementById('inviteBackdrop')?.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function _loadInviteCode() {
+  const el = document.getElementById('inviteCodeText');
+  if (!el) return;
+  if (_inviteCodeCache) { el.textContent = _inviteCodeCache; return; }
+  try {
+    const res = await backendService.getInviteCode();
+    _inviteCodeCache = res?.data?.data?.inviteCode ?? null;
+    el.textContent = _inviteCodeCache ?? '--------';
+  } catch (_) {
+    el.textContent = '--------';
+  }
+}
+
+function _inviteJoinDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('zh-TW', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' });
+}
+
+// 使用者自訂內容（暱稱、頭像網址）進 innerHTML 前先跳脫，避免 XSS
+function _escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+function _renderInviteItem(u) {
+  const avatar = (u.photoURL && u.photoURL !== 'null') ? u.photoURL : '../image/default-avatar.webp';
+  const joined = _inviteJoinDate(u.joinedAt);
+  return `<div class="invite-item">
+    <img src="${_escapeHtml(avatar)}" class="invite-avatar" alt="好友頭像" onerror="this.src='../image/default-avatar.webp'">
+    <div class="invite-item-body">
+      <span class="invite-name">${_escapeHtml(u.name ?? '')}</span>
+      ${joined ? `<span class="invite-time">${joined} 加入</span>` : ''}
+    </div>
+    <i class="ti ti-user-check invite-check"></i>
+  </div>`;
+}
+
+async function _loadInvites(page = 1, append = false) {
+  if (_inviteLoading) return;
+  _inviteLoading = true;
+  const list = document.getElementById('inviteList');
+  const footer = document.getElementById('inviteFooter');
+  if (!list) { _inviteLoading = false; return; }
+
+  if (!append) {
+    list.innerHTML = '<div class="notif-loading"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>';
+  } else {
+    document.getElementById('inviteLoadMore')?.setAttribute('disabled', '');
+  }
+
+  try {
+    const res = await backendService.getInvites(page, 10);
+    const payload = res?.data?.data ?? {};
+    const items = payload.invitedUsers ?? [];
+    const pagination = payload.pagination ?? {};
+    _inviteHasMore = pagination.hasNextPage ?? (page < (pagination.totalPages ?? 0));
+    _invitePage = page;
+
+    const total = payload.totalInvites ?? pagination.totalItems ?? items.length;
+    const totalEl = document.getElementById('inviteTotal');
+    if (totalEl) totalEl.textContent = total;
+    const iccEl = document.getElementById('iccInvited');
+    if (iccEl) iccEl.textContent = total;
+
+    if (!append) list.innerHTML = '';
+    if (items.length === 0 && !append) {
+      list.innerHTML = '<div class="notif-empty"><i class="ti ti-users" style="font-size:1.6rem;display:block;margin-bottom:6px;opacity:0.4;"></i>還沒有邀請任何好友<br><small>分享你的邀請碼給朋友吧！</small></div>';
+    } else {
+      items.forEach(u => {
+        const div = document.createElement('div');
+        div.innerHTML = _renderInviteItem(u);
+        list.appendChild(div.firstElementChild);
+      });
+    }
+    if (footer) footer.style.display = _inviteHasMore ? '' : 'none';
+  } catch (_) {
+    if (!append) list.innerHTML = '<div class="notif-empty"><i class="ti ti-alert-circle" style="font-size:1.6rem;display:block;margin-bottom:6px;opacity:0.4;"></i>載入失敗</div>';
+  } finally {
+    _inviteLoading = false;
+    document.getElementById('inviteLoadMore')?.removeAttribute('disabled');
+  }
+}
+
+async function _copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (_) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (_) {}
+    ta.remove();
+    return ok;
+  }
+}
+
+function _inviteCopiedToast(title) {
+  if (typeof Swal === 'undefined') return;
+  Swal.fire({
+    toast: true,
+    position: 'top',
+    icon: 'success',
+    title,
+    showConfirmButton: false,
+    timer: 1600,
+    customClass: { container: 'invite-toast-z' }, // 高於邀請面板 z-index
+  });
+}
 // ─────────────────────────────────────────────────────────────────────────
 
 // ── Konami Code Terminal Easter Egg ──────────────────────

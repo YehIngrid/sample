@@ -87,6 +87,20 @@ ul{
 .qa-btn.aqua:hover { background: #9ccfc8; border-color: #9ccfc8; }
 .qa-btn.aqua .qa-ic-wrap { background: rgba(255,255,255,0.5); }
 .qa-btn.aqua .qa-s { color: #2d5e8f; }
+/* 桌機版：白底 + 糖果紋邊框（手機維持 aqua 綠底） */
+@media (min-width: 701px) {
+  .qa-btn.aqua,
+  .qa-btn.aqua:hover {
+    border: 4px solid transparent;
+    background-image:
+      linear-gradient(#fff, #fff),
+      repeating-linear-gradient(45deg, #004b97 0 7px, #fff 7px 11px, #abdad5 11px 18px, #fff 18px 22px);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+  .qa-btn.aqua .qa-ic-wrap { background: rgba(171,218,213,0.45); }
+  .qwl-bubble { border: 1px solid #d6e2ec; }
+}
 
 /* 輔助 — 常見問題 */
 .qa-btn.secondary { background: aliceblue; color: #004b97; border-color: transparent; }
@@ -105,6 +119,175 @@ ul{
 .qa-s { font-size: 12px; margin-top: 2px; letter-spacing: 0.04em; opacity: 0.92; }
 .qa-arr { font-size: 18px; opacity: 0.55; transition: opacity 0.22s ease, transform 0.22s ease; }
 .qa-btn:hover .qa-arr { opacity: 1; transform: translateX(3px); }
+
+/* ── 許願專區卡：即時願望輪播（桌機） ── */
+.qa-wish-live {
+  position: relative;
+  align-items: center;
+  flex-shrink: 1;
+  min-width: 0;
+  margin-right: 10px;
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+.qa-wish-live.qwl-out { opacity: 0; }
+.qwl-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.14);
+  position: absolute;
+  top: -13px;
+  left: -9px;
+  z-index: 2;
+  animation: qwlPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.qwl-bubble {
+  background: #fff;
+  color: #1a2840;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 10px 20px 10px 22px;
+  border-radius: 999px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 230px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  animation: qwlPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.42s both;
+}
+.qwl-dot {
+  position: absolute;
+  bottom: -9px;
+  left: 26px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #004b97;
+  animation: qwlPop 0.3s ease 0.28s both;
+}
+.qwl-star {
+  position: absolute;
+  top: -16px;
+  right: -10px;
+  width: 26px;
+  height: 26px;
+  color: #f3e3b5;
+  z-index: 3;
+  animation: qwlPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+}
+@keyframes qwlPop {
+  from { opacity: 0; transform: scale(0.4); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qwl-avatar, .qwl-bubble, .qwl-dot, .qwl-star { animation: none; }
+}
+
+/* ── 手機版：許願信封輪播（熱賣專區上方） ── */
+.wish-letter-row {
+  width: 92vw;
+  margin: 14px auto 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.wl-envelope {
+  width: 46px;
+  height: 60px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+.wl-envelope svg { width: 100%; height: 100%; display: block; }
+.wl-letter {
+  flex: 1;
+  min-width: 0;
+  height: 54px;
+  position: relative;
+  perspective: 600px;
+}
+.wl-flip {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform: rotateX(0deg);
+}
+.wish-letter-row.open .wl-flip { transform: rotateX(180deg); }
+.wl-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 4px solid transparent;
+  border-radius: 14px;
+  background-image:
+    linear-gradient(#fff, #fff),
+    repeating-linear-gradient(45deg, #004b97 0 7px, #fff 7px 11px, #abdad5 11px 18px, #fff 18px 22px);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  padding: 8px 12px;
+}
+.wl-back { justify-content: center; }
+.wl-ink-back {
+  width: 30px;
+  height: 30px;
+  transform: rotate(180deg);
+}
+.wl-front { transform: rotateX(180deg); }
+.wl-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #004b97;
+  flex-shrink: 0;
+}
+.wl-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1a2840;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wl-ink {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  transform: rotate(-6deg);
+}
+.wl-arr {
+  font-size: 20px;
+  color: #0f2745;
+  flex-shrink: 0;
+  line-height: 1;
+}
+/* 入場：信封背面自左滑入；翻面由 .open 的 rotateX 過渡處理 */
+.wish-letter-row .wl-letter { opacity: 0; }
+.wish-letter-row.enter .wl-letter {
+  animation: wlEnter 0.6s ease both;
+}
+@keyframes wlEnter {
+  from { opacity: 0; transform: translateX(-36px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wish-letter-row .wl-letter { opacity: 1; animation: none !important; }
+  .wl-flip { transition: none; }
+}
 
 /* shop icon (CSS 畫法) */
 .qa-ic { width: 24px; height: 24px; display: block; flex-shrink: 0; }
@@ -2162,6 +2345,14 @@ tbody > tr:nth-of-type(even) {
   flex: 1;
   pointer-events: none;
 }
+.promo-banner__illus img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 62px;
+  height: 62px;
+  transform: translate(-50%, -50%) rotate(-10deg);
+}
 .promo-banner__illus i {
   position: absolute;
   left: 50%;
@@ -2226,6 +2417,7 @@ tbody > tr:nth-of-type(even) {
   .promo-banner__tags span { font-size: 0.7rem; }
   .promo-banner__tags span:not(:first-child) { display: none; }
   .promo-banner__illus i { font-size: 1.1rem; }
+  .promo-banner__illus img { width: 20px; height: 20px; }
 }
 @media (max-width: 500px) {
   .smallmysection {
