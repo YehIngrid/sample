@@ -14,7 +14,8 @@ function devSrcRewrite() {
         const url = req.url || ''
         const skip = url.startsWith('/src/') || url.startsWith('/@') ||
                      url.startsWith('/node_modules') || url === '/' ||
-                     url.startsWith('/favicon') || url.startsWith('/__vite')
+                     url.startsWith('/favicon') || url.startsWith('/__vite') ||
+                     url.startsWith('/sw.js') || url.startsWith('/robots.txt') || url.startsWith('/sitemap.xml')
         if (!skip) {
           req.url = '/src' + url
         }
