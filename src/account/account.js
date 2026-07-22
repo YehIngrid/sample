@@ -434,8 +434,7 @@ signbtn.addEventListener('click', function(e) {
   if (!document.getElementById('name').value.trim()) {
     fieldError('name', 'err-signup-name', '請輸入暱稱'); hasError = true;
   }
-  //test
-  if (!hasError) return;
+  if (hasError) return;
   callSignUp();
 });
 
