@@ -1602,6 +1602,25 @@ const timer = setInterval(() => {
   </div>
 </footer>
   </div>
+
+  <!-- 廣告表單彈跳視窗 -->
+  <div id="adFormModal" class="ad-form-modal-backdrop" style="display:none;">
+    <div class="ad-form-modal">
+      <button type="button" class="ad-form-modal-close" id="adFormModalClose" aria-label="關閉">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <img class="ad-form-modal-img" src="../svg/ad_form.svg" alt="意見調查表單">
+      <div class="ad-form-modal-actions">
+        <a class="ad-form-modal-btn primary" href="https://docs.google.com/forms/d/1Vi6imI05WnJ8lgGWPf9n2TuqqfSiKDk9VG_mc4IBDPY" target="_blank" rel="noopener">前往填寫表單 →</a>
+        <a class="ad-form-modal-btn ghost" href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i> 前往官方 IG</a>
+      </div>
+      <label class="ad-form-modal-hide">
+        <input type="checkbox" id="adFormModalHideCheck">
+        以後都不要顯示
+      </label>
+    </div>
+  </div>
+
   <!-- Loading 遮罩 -->
 <div id="loadingOverlay" class="loading-overlay d-none">
   <div class="loader-wrap">
@@ -2335,6 +2354,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 })();
+</script>
+
+<script>
+// ── 廣告表單彈跳視窗 ──
+document.addEventListener('DOMContentLoaded', () => {
+  const AD_FORM_HIDE_KEY = 'th_shop_ad_form_hide';
+  const modal = document.getElementById('adFormModal');
+  if (!modal) return;
+  const closeBtn = document.getElementById('adFormModalClose');
+  const hideCheck = document.getElementById('adFormModalHideCheck');
+
+  function closeModal() {
+    if (hideCheck?.checked) localStorage.setItem(AD_FORM_HIDE_KEY, '1');
+    modal.style.display = 'none';
+  }
+
+  if (localStorage.getItem(AD_FORM_HIDE_KEY) !== '1') {
+    modal.style.display = 'flex';
+  }
+
+  closeBtn?.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+});
 </script>
 </body>
 </html>
