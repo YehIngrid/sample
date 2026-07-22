@@ -1,3 +1,5 @@
+import { captureException } from './default/sentry-init.js';
+
 // ── 重試工具：network 錯誤或 5xx 才重試，4xx 直接拋出 ────────────
 async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
     let lastErr;
@@ -192,6 +194,7 @@ export default class BackendService {
             } else if (beMsg && /invite/i.test(beMsg)) {
                 throw new Error("邀請碼無效，請確認後再試，或留空跳過");
             } else {
+                captureException(error);
                 throw new Error("系統發生錯誤，請稍後再試");
             }
         }
@@ -247,6 +250,7 @@ export default class BackendService {
             if (status === 429) {
             throw new Error('嘗試次數過多，請稍後再試');
             }
+            captureException(error);
             throw new Error('登入失敗，請稍後再試');
         }
         }
@@ -265,6 +269,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("登出錯誤：", error);
+            captureException(error);
             throw new Error("系統發生錯誤，請稍後再試");
         }
     }
@@ -307,6 +312,7 @@ export default class BackendService {
             } else {
                 console.error("更新失敗，請稍後再試", error);
             }
+            captureException(error);
             return Promise.reject(error);
         }
         // 更新成功後，儲存新的使用者資料到 localStorage
@@ -365,6 +371,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error('忘記密碼錯誤：', error);
+            captureException(error);
             throw new Error('系統發生錯誤，請稍後再試');
         }
     }
@@ -376,6 +383,7 @@ export default class BackendService {
             console.error('重設密碼錯誤：', error);
             const msg = error?.response?.data?.message;
             if (error?.response?.status === 400) throw new Error(msg || '連結無效或已過期，請重新申請');
+            captureException(error);
             throw new Error('系統發生錯誤，請稍後再試');
         }
     }
@@ -397,6 +405,7 @@ export default class BackendService {
             const status = error?.response?.status;
             const msg = error?.response?.data?.message;
             if (status === 429) throw new Error('RATE_LIMIT');
+            captureException(error);
             throw new Error(msg || '發送失敗，請稍後再試');
         }
     }
@@ -409,6 +418,7 @@ export default class BackendService {
             const status = error?.response?.status;
             const msg = error?.response?.data?.message;
             if (status === 400 || status === 401) throw new Error(msg || '目前密碼錯誤');
+            captureException(error);
             throw new Error('系統發生錯誤，請稍後再試');
         }
     }
@@ -488,6 +498,7 @@ export default class BackendService {
             return response.data;
         } catch (err) {
             console.error(err);
+            captureException(err);
             const status = err?.response?.status;
             const msg = err?.response?.data?.message || '上架商品失敗';
             const error = new Error(msg);
@@ -566,6 +577,7 @@ export default class BackendService {
         } catch (error) {
             this._forbidden(error);
             console.error(error);
+            captureException(error);
             return Promise.reject(new Error("無法刪除商品"));
         }
     }
@@ -587,6 +599,7 @@ export default class BackendService {
             return res;
         } catch (error) {
             console.error("更新錯誤：", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -607,6 +620,7 @@ export default class BackendService {
         } catch (error) {
             this._forbidden(error);
             console.error("發生錯誤", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -628,6 +642,7 @@ export default class BackendService {
         } catch (error) {
             this._forbidden(error);
             console.error("發生錯誤", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -646,6 +661,7 @@ export default class BackendService {
         } catch (error) {
             this._forbidden(error);
             console.error("發生錯誤", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -656,6 +672,7 @@ export default class BackendService {
         } catch (error) {
             this._forbidden(error);
             console.error("發生錯誤", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -695,6 +712,7 @@ export default class BackendService {
         } catch (error) {
             this._forbidden(error);
             console.error('建立訂單失敗', error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -775,6 +793,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("送出評價失敗", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -787,6 +806,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -796,6 +816,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -805,6 +826,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -816,6 +838,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -825,6 +848,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("檢舉失敗", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -837,6 +861,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("檢舉評價失敗", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -846,6 +871,7 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("發生錯誤", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }
@@ -951,6 +977,7 @@ export default class BackendService {
             return response.data;
         } catch (error) {
             console.error("送出檢舉失敗", error);
+            captureException(error);
             return Promise.reject(error);
         }
     }

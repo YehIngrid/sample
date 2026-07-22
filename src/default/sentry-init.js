@@ -42,10 +42,22 @@ function loadScript(src) {
   });
 }
 
+let _devSentry = null; // 開發環境下 dynamic import 完成後的 SDK 參考
+
+// 手動回報：try/catch 接住但想讓 Sentry 知道的錯誤呼叫這個，兩種環境都能用
+export function captureException(error, context) {
+  if (import.meta.env.DEV) {
+    _devSentry?.captureException(error, context);
+  } else {
+    window.Sentry?.captureException(error, context);
+  }
+}
+
 async function initSentry() {
   if (import.meta.env.DEV) {
     // 開發環境：npm 套件 + ESM import
     const Sentry = await import('@sentry/browser');
+    _devSentry = Sentry;
     Sentry.init({
       dsn: DSN,
       release: RELEASE,
