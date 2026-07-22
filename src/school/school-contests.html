@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>全部競賽 · 校園攻略站</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="description" content="校園攻略站全部競賽總覽 — 查看所有進行中、即將開始與已結束的徵稿活動。"/>
+  <link rel="shortcut icon" href="../treasurehubIcon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
+  <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/default-font.css">
+  <link rel="stylesheet" href="school.css">
+  <script type="module" src="../default/default.js"></script>
+  <style>
+    /* ===== contests listing scope ===== */
+    html { overflow-x: hidden; }
+    body { background: #f6f9fc; }
+    .cc-wrap { width: 80vw; max-width: 80vw; margin: 0 auto; padding: 26px 0 96px; }
+
+    .cc-back { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; padding: 0; margin-bottom: 14px; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
+    .cc-back:hover { color: var(--navy); }
+    .cc-back svg { width: 14px; height: 14px; }
+
+    .cc-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.28em; color: var(--muted); }
+    .cc-title { font-size: clamp(26px, 4vw, 40px); font-weight: 700; letter-spacing: 0.06em; color: var(--ink); line-height: 1.25; margin-top: 8px; }
+    .cc-sub { font-size: 15px; line-height: 1.7; color: var(--body); margin-top: 10px; max-width: 640px; }
+
+    .cc-filters { display: flex; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
+    .cc-filter { font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; padding: 8px 18px; border-radius: 999px; border: 1.5px solid var(--line); background: #fff; color: var(--muted); cursor: pointer; transition: all 0.22s ease; }
+    .cc-filter:hover { border-color: var(--navy); color: var(--navy); }
+    .cc-filter.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    .cc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
+    .cc-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; cursor: pointer; transition: all 0.22s ease; display: flex; flex-direction: column; }
+    .cc-card:hover { transform: translateY(-3px); border-color: var(--navy); box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3); }
+    .cc-card .art { height: 130px; background: linear-gradient(120deg, var(--navy), var(--mid) 70%, var(--aqua)); position: relative; flex-shrink: 0; }
+    .cc-card .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cc-card .art .ct-status { position: absolute; top: 12px; right: 12px; }
+    .cc-card .body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
+    .cc-card .tagline { font-size: 11px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+    .cc-card .name { font-size: 18px; font-weight: 700; color: var(--ink); margin-top: 6px; letter-spacing: 0.02em; }
+    .cc-card .period { font-size: 12px; color: var(--muted); margin-top: 6px; letter-spacing: 0.02em; }
+    .cc-card .desc { font-size: 13px; color: var(--body); line-height: 1.65; margin-top: 10px; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .cc-card .foot { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .cc-card .pool { font-size: 15px; font-weight: 700; color: var(--navy); }
+    .cc-card .pool span { font-size: 11px; color: var(--muted); font-weight: 400; margin-left: 4px; }
+    .cc-card .go { font-size: 12.5px; font-weight: 700; color: var(--navy); letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 4px; }
+    .cc-card .go svg { width: 13px; height: 13px; }
+
+    /* pill (shared with school-contest.html) */
+    .ct-status { font-size: 11px; font-weight: 700; padding: 5px 13px; border-radius: 999px; letter-spacing: 0.08em; flex-shrink: 0; }
+    .ct-status.live { background: rgba(171,218,213,0.65); color: #007568; }
+    .ct-status.upcoming { background: rgba(243,227,181,0.75); color: #a08540; }
+    .ct-status.ended { background: rgba(240,242,244,0.9); color: var(--muted); }
+
+    .cc-empty { padding: 60px 20px; text-align: center; color: var(--muted); font-size: 13.5px; line-height: 1.8; }
+
+    @media (max-width: 980px) {
+      .cc-wrap { width: 100%; padding: 14px 16px 96px; }
+      .cc-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="d-flex gap-2">
+    <button class="mobile-hamburger d-lg-none" type="button">
+      <img src="../svg/navbar.svg" alt="" style="width: 20px;">
+    </button>
+    <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+      <img src="../svg/TREASUREHUBCHEN.svg" alt="">
+    </a>
+  </div>
+  <div class="tabs">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <div class="tab-drop">
+      <a href="school.html" class="on">校園攻略站
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="drop-menu">
+        <a href="school.html">攻略首頁</a>
+        <a href="school-about.html">攻略介紹</a>
+        <a href="school-article.html">全部文章</a>
+        <a href="school-studio.html">撰寫攻略</a>
+        <a href="school-contests.html" class="on">全部競賽</a>
+      </div>
+    </div>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+  <div class="right">
+    <a class="btn-sm navy d-none d-lg-inline-flex" href="school-studio.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
+      撰寫攻略
+    </a>
+    <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">登入</button>
+    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
+      <span class="avatar"></span>
+    </div>
+  </div>
+</nav>
+
+<!-- 手機版側面菜單 -->
+<div class="mobile-menu-backdrop"></div>
+<div class="mobile-menu-wrapper" id="navbarMenu">
+  <div class="mobile-menu">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <a href="school.html" class="on">校園攻略站</a>
+    <a href="../news/news.html">最新資訊</a>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+</div>
+
+<div class="cc-wrap">
+
+  <button class="cc-back" type="button" id="ccBack">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
+    返回上一頁
+  </button>
+
+  <div class="cc-eyebrow">CAMPUS CONTEST</div>
+  <h1 class="cc-title">校園攻略比賽總覽</h1>
+  <p class="cc-sub">查看所有校園攻略徵稿活動，掌握徵稿期間、獎金與參賽方式，點擊卡片查看完整規則與排行榜。</p>
+
+  <div class="cc-filters" id="ccFilters">
+    <button class="cc-filter active" data-status="all" type="button">全部</button>
+    <button class="cc-filter" data-status="live" type="button">進行中</button>
+    <button class="cc-filter" data-status="upcoming" type="button">即將開始</button>
+    <button class="cc-filter" data-status="ended" type="button">已結束</button>
+  </div>
+
+  <div class="cc-grid" id="ccGrid"></div>
+
+</div>
+
+<!-- ── Bottom nav (mobile) ── -->
+<script>if(window !== window.parent) document.write('<style>.bottom-nav{display:none!important}</style>');</script>
+
+<nav class="bottom-nav" id="schoolBottomNav">
+  <a href="school.html" class="bottom-nav-item nav-tab-home">
+    <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>攻略首頁</span>
+  </a>
+  <a href="school-article.html" class="bottom-nav-item nav-tab-articles">
+    <img class="nav-icon nav-icon-active" src="../svg/all-article.svg" alt="全部文章" height="24" width="24">
+    <img class="nav-icon nav-icon-inactive" src="../svg/all-article-inactive.svg" alt="點擊閱覽全部文章" height="24" width="24">
+    <span>全部文章</span>
+  </a>
+  <a href="school-about.html" class="bottom-nav-item nav-tab-about">
+    <img class="nav-icon nav-icon-active" src="../svg/campus-guide.svg" alt="攻略介紹" height="24" width="24">
+    <img class="nav-icon nav-icon-inactive" src="../svg/campus-guide-noactive.svg" alt="點擊進入攻略介紹" height="24" width="24">
+    <span>攻略介紹</span>
+  </a>
+  <a href="school-studio.html" class="bottom-nav-item nav-tab-write">
+    <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <span>撰寫攻略</span>
+  </a>
+  <a href="school-profile.html" class="bottom-nav-item nav-tab-account">
+    <svg class="nav-icon nav-icon-active" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <svg class="nav-icon nav-icon-inactive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>我的檔案</span>
+  </a>
+</nav>
+
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script defer src="school-new.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const hamburger = document.querySelector('.mobile-hamburger');
+  const menuWrapper = document.getElementById('navbarMenu');
+  const backdrop = document.querySelector('.mobile-menu-backdrop');
+  const menuLinks = document.querySelectorAll('.mobile-menu a');
+  function toggleMenu() {
+    menuWrapper.classList.toggle('show');
+    backdrop.classList.toggle('active');
+    hamburger.classList.toggle('active');
+  }
+  function closeMenu() {
+    menuWrapper.classList.remove('show');
+    backdrop.classList.remove('active');
+    hamburger.classList.remove('active');
+  }
+  if (hamburger) hamburger.addEventListener('click', toggleMenu);
+  if (backdrop) backdrop.addEventListener('click', closeMenu);
+  menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+});
+</script>
+
+<script>
+  /* ---------- 競賽資料（之後有新比賽只要加一筆，與 school-contest.html 保持同步） ---------- */
+  var CONTESTS = {
+    'seed2026': {
+      name: '種子創作者計劃',
+      tagline: '首屆攻略徵稿',
+      status: 'live',
+      start: '2026-06-01', end: '2026-08-31',
+      art: '../svg/contestad.svg',
+      desc: '首屆攻略徵稿活動。徵稿期間發佈的攻略都會自動列入計分，依人氣積分排出名次——寫下你最擅長的推甄、證照、實習或選課心得，讓好內容被看見，還能抱走獎金。',
+      pool: 30000
+    },
+    'notefest2026': {
+      name: '期中筆記祭',
+      tagline: '第二彈徵稿 · 即將開始',
+      status: 'upcoming',
+      start: '2026-10-12', end: '2026-11-15',
+      art: null,
+      desc: '期中考週最需要的就是一份好筆記。徵求各系所必修科目的重點整理與應考攻略，開賽後同步開放報名，獎項內容陸續公布。',
+      pool: 20000
+    },
+    'freshman2026': {
+      name: '新生攻略月',
+      tagline: '2026 春季徵稿 · 已結束',
+      status: 'ended',
+      start: '2026-02-01', end: '2026-03-15',
+      art: null,
+      desc: '為新生而寫：選課、宿舍、社團、打工與校園生存指南徵稿。活動已圓滿結束，恭喜所有得獎創作者！',
+      pool: 15000
+    }
+  };
+  var STATUS_TXT = { live: '進行中', upcoming: '即將開始', ended: '已結束' };
+  var STATUS_ORDER = { live: 0, upcoming: 1, ended: 2 };
+
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+
+    document.getElementById('ccBack').addEventListener('click', function () {
+      if (history.length > 1 && document.referrer) history.back();
+      else location.href = 'school.html';
+    });
+
+    function fmt(n) { return n.toLocaleString('en-US'); }
+    function fmtDate(s) { return s.replace(/-/g, '/'); }
+
+    var keys = Object.keys(CONTESTS).sort(function (a, b) {
+      return STATUS_ORDER[CONTESTS[a].status] - STATUS_ORDER[CONTESTS[b].status];
+    });
+
+    function render(filter) {
+      var grid = $('ccGrid');
+      grid.innerHTML = '';
+      var shown = keys.filter(function (key) {
+        return filter === 'all' || CONTESTS[key].status === filter;
+      });
+
+      if (!shown.length) {
+        var empty = document.createElement('div');
+        empty.className = 'cc-empty';
+        empty.textContent = '目前沒有符合條件的競賽。';
+        grid.appendChild(empty);
+        return;
+      }
+
+      shown.forEach(function (key) {
+        var o = CONTESTS[key];
+        var card = document.createElement('div');
+        card.className = 'cc-card';
+
+        var art = document.createElement('div'); art.className = 'art';
+        if (o.art) {
+          var img = document.createElement('img'); img.src = o.art; img.alt = '';
+          art.appendChild(img);
+        }
+        var stp = document.createElement('span');
+        stp.className = 'ct-status ' + o.status;
+        stp.textContent = STATUS_TXT[o.status];
+        art.appendChild(stp);
+
+        var body = document.createElement('div'); body.className = 'body';
+        var tagline = document.createElement('div'); tagline.className = 'tagline'; tagline.textContent = o.tagline;
+        var name = document.createElement('div'); name.className = 'name'; name.textContent = o.name;
+        var period = document.createElement('div'); period.className = 'period';
+        period.textContent = '徵稿期間 ' + fmtDate(o.start) + ' – ' + fmtDate(o.end);
+        var desc = document.createElement('div'); desc.className = 'desc'; desc.textContent = o.desc;
+
+        var foot = document.createElement('div'); foot.className = 'foot';
+        var pool = document.createElement('div'); pool.className = 'pool';
+        pool.innerHTML = 'NT$ ' + fmt(o.pool) + '<span>總獎金</span>';
+        var go = document.createElement('div'); go.className = 'go';
+        go.innerHTML = '查看詳情 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19"/><path d="m12 5 7 7-7 7"/></svg>';
+        foot.appendChild(pool); foot.appendChild(go);
+
+        body.appendChild(tagline); body.appendChild(name); body.appendChild(period);
+        body.appendChild(desc); body.appendChild(foot);
+        card.appendChild(art); card.appendChild(body);
+
+        card.addEventListener('click', function () { location.href = 'school-contest.html?id=' + key; });
+        grid.appendChild(card);
+      });
+    }
+
+    var filters = document.querySelectorAll('.cc-filter');
+    filters.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        filters.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        render(btn.getAttribute('data-status'));
+      });
+    });
+
+    render('all');
+  })();
+</script>
+</body>
+</html>

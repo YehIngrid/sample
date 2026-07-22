@@ -173,7 +173,7 @@ function fieldClear(inputId, errorId) {
 
 // 註冊 email：接受 @mail.nchu.edu.tw / @dragon.nchu.edu.tw / @nchu.edu.tw / @treasurehub.tw
 function isValidSignupEmail(email) {
-  return /^[^@]+@(mail\.nchu\.edu\.tw|dragon\.nchu\.edu\.tw|nchu\.edu\.tw|treasurehub\.tw)$/i.test(email);
+  //return /^[^@]+@(mail\.nchu\.edu\.tw|dragon\.nchu\.edu\.tw|nchu\.edu\.tw|treasurehub\.tw)$/i.test(email);
 }
 document.getElementById('email')?.addEventListener('blur', function() {
   const val = this.value.trim();
@@ -434,7 +434,8 @@ signbtn.addEventListener('click', function(e) {
   if (!document.getElementById('name').value.trim()) {
     fieldError('name', 'err-signup-name', '請輸入暱稱'); hasError = true;
   }
-  if (hasError) return;
+  //test
+  if (!hasError) return;
   callSignUp();
 });
 

@@ -104,6 +104,9 @@
             <i class="fa fa-chevron-down nav-group-arrow"></i>
           </button>
           <div class="nav-group-items">
+            <button class="nav-btn nav-sub" data-panel="panel-users">
+              <i class="fa fa-users"></i> 用戶管理
+            </button>
             <button class="nav-btn nav-sub" data-panel="panel-reports">
               <i class="fa fa-flag"></i> 檢舉管理
             </button>
@@ -180,6 +183,15 @@
             </div>
             <div class="dashboard-card-body">
               <div class="dashboard-card-title">數據分析</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-users')">
+            <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
+              <i class="fa fa-users" style="color:var(--color-primary);"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">用戶管理</div>
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
@@ -820,6 +832,57 @@
           <div id="createTagResult" class="result-box mt-3 d-none"></div>
         </div>
       </section>
+
+      <!-- Panel: 用戶管理 -->
+      <section id="panel-users" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
+        <h2 class="panel-title"><i class="fa fa-users me-2"></i>用戶管理</h2>
+
+        <!-- 搜尋與排序 -->
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+          <input type="text" id="userSearchInput" class="form-control form-control-sm" placeholder="搜尋用戶 ID..." style="max-width:250px;">
+          <select id="userSortBy" class="form-select form-select-sm" style="width:auto;">
+            <option value="createdAt">依註冊時間排序</option>
+            <option value="lastLogin">依最後登入排序</option>
+            <option value="rate">依評分排序</option>
+            <option value="name">依名稱排序</option>
+            <option value="email">依信箱排序</option>
+          </select>
+          <select id="userSortOrder" class="form-select form-select-sm" style="width:auto;">
+            <option value="desc">新到舊</option>
+            <option value="asc">舊到新</option>
+          </select>
+          <button class="btn btn-sm btn-outline-primary" id="userSearchBtn">
+            <i class="fa fa-search me-1"></i>查詢
+          </button>
+          <button class="btn btn-sm btn-outline-secondary" id="userRefreshBtn">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+
+        <!-- 用戶列表 -->
+        <div id="usersAdminList">
+          <div class="text-muted text-center py-3 small">
+            <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+          </div>
+        </div>
+        <div id="usersAdminPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+      </section>
+
+      <!-- Panel: 用戶詳細資訊 Modal -->
+      <div class="modal fade" id="userDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header" style="border-bottom:1px solid #eee;">
+              <span class="fw-bold" style="color:#333;"><i class="fa fa-user me-2"></i>用戶詳細資訊</span>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="userDetailBody">
+              <div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Panel: 檢舉管理 -->
       <section id="panel-reports" class="panel">

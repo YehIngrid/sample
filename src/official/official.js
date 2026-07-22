@@ -67,6 +67,7 @@ function switchPanel(panelId) {
   if (panelId === 'panel-history') loadHistoryChannels();
   if (panelId === 'panel-news') loadNewsAdmin();
   if (panelId === 'panel-analytics') loadAnalytics();
+  if (panelId === 'panel-users') loadAdminUsers(1);
   if (panelId === 'panel-reports') loadAllReports(1);
   if (panelId === 'panel-report-categories') loadReportCategories();
   if (panelId === 'panel-review-tags') { loadReviewTagGroups(); loadReviewTags(); }
@@ -1965,3 +1966,193 @@ async function loadAdminTickets(page = 1) {
 
 document.getElementById('ticketsStatusFilter')?.addEventListener('change', () => loadAdminTickets(1));
 document.getElementById('refreshTicketsBtn')?.addEventListener('click', () => loadAdminTickets(1));
+
+// ════════════════════════════════════════════════════
+//  用戶管理
+// ════════════════════════════════════════════════════
+let _userCurrentPage = 1;
+let _userDetailModal = null;
+
+async function loadAdminUsers(page = 1) {
+  _userCurrentPage = page;
+  const searchId = document.getElementById('userSearchInput')?.value?.trim() ?? '';
+  const sortBy = document.getElementById('userSortBy')?.value ?? 'createdAt';
+  const sortOrder = document.getElementById('userSortOrder')?.value ?? 'desc';
+
+  const listEl = document.getElementById('usersAdminList');
+  const pagerEl = document.getElementById('usersAdminPager');
+  if (!listEl) return;
+
+  listEl.innerHTML = `<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
+  if (pagerEl) pagerEl.innerHTML = '';
+
+  try {
+    const params = {
+      page,
+      limit: 20,
+      sortBy,
+      sortOrder
+    };
+    if (searchId) params.id = searchId;
+
+    const res = await backendSvc.http.get('/api/admin/users', { params });
+    const resData = res?.data?.data || {};
+    const users = resData.items || [];
+    const total = resData.total || 0;
+    const totalPages = resData.totalPages || Math.ceil(total / 20);
+
+    if (!users || users.length === 0) {
+      listEl.innerHTML = `<div class="text-muted text-center py-4 small">無用戶記錄</div>`;
+      return;
+    }
+
+    listEl.innerHTML = users.map(user => `
+      <div class="user-admin-item" style="border:1px solid #e0e0e0;border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <div style="flex:1;">
+          <div style="font-weight:600;color:#333;margin-bottom:4px;">
+            ${esc(user.name || '未設定名稱')}
+            ${user.emailVerify ? '<span style="color:rgb(36,182,133);font-size:0.85rem;margin-left:6px;"><i class="fa fa-check-circle"></i> 已驗證</span>' : '<span style="color:#c97f5a;font-size:0.85rem;margin-left:6px;"><i class="fa fa-times-circle"></i> 未驗證</span>'}
+          </div>
+          <div style="color:#666;font-size:0.9rem;margin-bottom:2px;">ID: ${esc(user.id)}</div>
+          <div style="color:#999;font-size:0.85rem;margin-bottom:2px;">信箱: ${esc(user.email || 'N/A')}</div>
+          <div style="color:#999;font-size:0.85rem;">評分: ★ ${(user.rate ?? 0).toFixed(2)}</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-primary view-user-btn" data-user-id="${esc(user.id)}">
+          <i class="fa fa-eye me-1"></i>查看詳情
+        </button>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.view-user-btn').forEach(btn => {
+      btn.addEventListener('click', () => loadUserDetail(btn.dataset.userId));
+    });
+
+    if (pagerEl && totalPages > 1) {
+      pagerEl.innerHTML = Array.from({ length: totalPages }, (_, i) => i + 1).map(p =>
+        `<button class="btn btn-sm ${p === page ? 'btn-primary' : 'btn-outline-secondary'}" data-page="${p}">${p}</button>`
+      ).join('');
+      pagerEl.querySelectorAll('[data-page]').forEach(btn => {
+        btn.addEventListener('click', () => loadAdminUsers(Number(btn.dataset.page)));
+      });
+    }
+  } catch (err) {
+    listEl.innerHTML = `<div class="text-danger text-center py-3 small">載入失敗：${esc(err?.response?.data?.message ?? err?.message ?? '請稍後再試')}</div>`;
+  }
+}
+
+async function loadUserDetail(userId) {
+  const modalEl = document.getElementById('userDetailModal');
+  const bodyEl = document.getElementById('userDetailBody');
+  if (!modalEl || !bodyEl) return;
+
+  bodyEl.innerHTML = `<div class="text-center py-4"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>`;
+
+  if (!_userDetailModal) {
+    _userDetailModal = new bootstrap.Modal(modalEl);
+  }
+  _userDetailModal.show();
+
+  try {
+    const res = await backendSvc.http.get(`/api/admin/users/${encodeURIComponent(userId)}`);
+    const user = res?.data?.data || res?.data || {};
+    const profile = user.profile || {};
+    const stats = user.stats || {};
+
+    const formatDate = (date) => {
+      if (!date) return 'N/A';
+      const d = new Date(date);
+      return d.toLocaleString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    };
+
+    bodyEl.innerHTML = `
+      <div style="margin-bottom:20px;">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="fa fa-user" style="font-size:2rem;color:#004b97;"></i>
+          <div>
+            <div style="font-weight:600;font-size:1.1rem;color:#333;">${esc(profile.name || '未設定名稱')}</div>
+            <div style="color:#999;font-size:0.9rem;">ID: ${esc(user.id)}</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div style="padding:12px;background:#f5f5f5;border-radius:6px;">
+            <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">評分</div>
+            <div style="font-weight:600;font-size:1.2rem;color:#004b97;">★ ${(profile.rate ?? 0).toFixed(2)}</div>
+          </div>
+          <div style="padding:12px;background:#f5f5f5;border-radius:6px;">
+            <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">驗證狀態</div>
+            <div style="font-weight:600;color:${user.emailVerify ? 'rgb(36,182,133)' : '#c97f5a'};">
+              ${user.emailVerify ? '<i class="fa fa-check-circle me-1"></i>已驗證' : '<i class="fa fa-times-circle me-1"></i>未驗證'}
+            </div>
+          </div>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid #e0e0e0;">
+
+        <div style="margin-bottom:12px;">
+          <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">信箱</div>
+          <div style="color:#333;word-break:break-all;">${esc(user.email || 'N/A')}</div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">聯繫信箱</div>
+          <div style="color:#333;word-break:break-all;">${esc(profile.contactEmail || 'N/A')}</div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">自我介紹</div>
+          <div style="color:#333;">${esc(profile.introduction || 'N/A')}</div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">註冊時間</div>
+          <div style="color:#333;">${formatDate(user.createdAt)}</div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">最後登入時間</div>
+          <div style="color:#333;">${formatDate(user.lastLogin)}</div>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid #e0e0e0;">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="padding:12px;background:#f5f5f5;border-radius:6px;">
+            <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">商品數</div>
+            <div style="font-weight:600;font-size:1.2rem;color:#004b97;">${stats.itemsCount ?? 0}</div>
+          </div>
+          <div style="padding:12px;background:#f5f5f5;border-radius:6px;">
+            <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">訂單數</div>
+            <div style="font-weight:600;font-size:1.2rem;color:#004b97;">${(stats.buyerOrdersCount ?? 0) + (stats.sellerOrdersCount ?? 0)}</div>
+          </div>
+          <div style="padding:12px;background:#f5f5f5;border-radius:6px;">
+            <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">評價數</div>
+            <div style="font-weight:600;font-size:1.2rem;color:#004b97;">${stats.reviewsReceivedCount ?? 0}</div>
+          </div>
+          <div style="padding:12px;background:#f5f5f5;border-radius:6px;">
+            <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">被檢舉數</div>
+            <div style="font-weight:600;font-size:1.2rem;color:#c97f5a;">${stats.reportsReceivedCount ?? 0}</div>
+          </div>
+          <div style="padding:12px;background:#f5f5f5;border-radius:6px;">
+            <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">邀請人數</div>
+            <div style="font-weight:600;font-size:1.2rem;color:#004b97;">${stats.inviteesCount ?? 0}</div>
+          </div>
+          <div style="padding:12px;background:#f5f5f5;border-radius:6px;">
+            <div style="color:#666;font-size:0.85rem;margin-bottom:4px;">帳停等級</div>
+            <div style="font-weight:600;font-size:0.95rem;color:${profile.suspensionLevel === 'NONE' ? '#004b97' : '#c97f5a'};">${esc(profile.suspensionLevel || 'N/A')}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    bodyEl.innerHTML = `<div class="text-danger text-center py-3 small">載入失敗：${esc(err?.response?.data?.message ?? err?.message ?? '請稍後再試')}</div>`;
+  }
+}
+
+document.getElementById('userSearchBtn')?.addEventListener('click', () => loadAdminUsers(1));
+document.getElementById('userRefreshBtn')?.addEventListener('click', () => loadAdminUsers(1));
+document.getElementById('userSortBy')?.addEventListener('change', () => loadAdminUsers(1));
+document.getElementById('userSortOrder')?.addEventListener('change', () => loadAdminUsers(1));
+document.getElementById('userSearchInput')?.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') loadAdminUsers(1);
+});

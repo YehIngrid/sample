@@ -191,7 +191,7 @@ ul{
 /* ── 手機版：許願信封輪播（熱賣專區上方） ── */
 .wish-letter-row {
   width: 92vw;
-  margin: 14px auto 2px;
+  margin: 24px auto 2px;
   display: flex;
   align-items: center;
   gap: 10px;

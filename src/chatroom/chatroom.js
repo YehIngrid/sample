@@ -115,11 +115,15 @@ class ChatRoomList {
             this.connectSSE(); // 帳號層級 SSE，開啟一次即可
             if (this.currentRoomId) {
                 // 直接聯絡對方：進入指定房間
+                // 注意：剛建立的新房間可能還沒出現在 loadRooms() 渲染出的列表 DOM 裡（後端剛寫入、
+                // 前端列表渲染時序差一拍），不能只在 DOM 裡找得到才切換，否則會靜默失敗、
+                // 使用者點擊聊聊/聯絡賣家後完全沒反應。switchRoom 本身有 fallback 名稱，
+                // 不需要房間先存在於列表中才能開啟。
                 const roomEl = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
-                if (roomEl) {
-                    const name = roomEl.querySelector('.roomName')?.textContent || '未知';
-                    await this.switchRoom(this.currentRoomId, name);
-                }
+                const name = roomEl?.querySelector('.roomName')?.textContent
+                    || this.partnerInfoMap.get(String(this.currentRoomId))?.name
+                    || '聊天';
+                await this.switchRoom(this.currentRoomId, name);
             } else if (!this.isMobile && !new URLSearchParams(window.location.search).get('openChat')) {
                 // 電腦版預設進入官方帳號房間（openChat 參數存在時跳過，由 openChatWithTarget 負責）
                 const officialItem = [...document.querySelectorAll('.chat-item[data-room-id]')]
@@ -1135,7 +1139,22 @@ class ChatRoomList {
         return fallback;
     }
 
+    // loadRooms() 內部會用 cloneNode+replaceChild 換掉 #chatList 節點；若在它還在
+    // await 網路請求時又被呼叫第二次，兩次呼叫各自持有的節點參照就會打架——
+    // 先完成的那次把節點換掉後，另一次手上的舊參照 parentNode 會變成 null，
+    // 呼叫 replaceChild 就會直接噴錯。用一個共用的進行中 Promise 擋掉重疊呼叫，
+    // 讓後到的呼叫直接等前一次做完即可，不重複打 API、也不會有節點競爭。
     async loadRooms() {
+        if (this._loadRoomsPromise) return this._loadRoomsPromise;
+        this._loadRoomsPromise = this._loadRoomsInner();
+        try {
+            return await this._loadRoomsPromise;
+        } finally {
+            this._loadRoomsPromise = null;
+        }
+    }
+
+    async _loadRoomsInner() {
         const chatList = document.getElementById('chatList');
         if (!chatList) return;
         chatList.innerHTML = '';
@@ -2274,7 +2293,13 @@ window.addEventListener('load', () => {
     // 讀取 URL 參數，自動開啟與指定用戶的聊天（手機版跳轉時使用）
     const _urlParams = new URLSearchParams(window.location.search);
     const openChatId = _urlParams.get('openChat');
-    if (openChatId) {
+    // 官方後台「客服單」認領/前往聊天室連結帶的是房間 ID（roomId），不是對方 user ID，
+    // 不能走 openChatWithTarget（那是用 createRoom 找/建房間，roomId 不是有效的目標 user）。
+    // 已知房間 ID 時直接切換過去即可，不需要再打一次 createRoom。
+    const directRoomId = _urlParams.get('roomId');
+    if (directRoomId) {
+        openChatRoomList(directRoomId);
+    } else if (openChatId) {
         const productName = _urlParams.get('productName') || '';
         const productPrice = _urlParams.get('productPrice') || '';
         const message = _urlParams.get('message') || '';

@@ -48,6 +48,7 @@
         <a href="school-about.html">攻略介紹</a>
         <a href="school-article.html" class="on">全部文章</a>
         <a href="school-studio.html">撰寫攻略</a>
+        <a href="school-contests.html">全部競賽</a>
       </div>
     </div>
     <a href="../questions/questions.html">常見問題</a>
@@ -223,15 +224,6 @@
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- like button -->
-          <div class="post-like">
-            <button class="like-btn" id="postLikeBtn" title="點擊收藏這篇文章">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-              <span class="like-count" id="postLikeCount">96</span>
-              <span class="like-text">喜歡</span>
-            </button>
           </div>
 
           <!-- tags -->
@@ -513,27 +505,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById(id);
     if (btn) btn.addEventListener('click', toggleUnlock);
   });
-  // ── 文章愛心按鈕（文末 / 側欄 / 手機操作列 同步；側欄按鈕不顯示數字） ──
-  const likeCount = document.getElementById('postLikeCount');
-  const likeBtns = ['postLikeBtn', 'sideLikeBtn', 'barLikeBtn']
-    .map(id => document.getElementById(id)).filter(Boolean);
-  let isLiked = false;
-  let likeNum = 96;
-
-  function renderLike() {
-    if (likeCount) likeCount.textContent = likeNum;
-    likeBtns.forEach(b => {
-      b.classList.toggle('liked', isLiked);
-      b.title = isLiked ? '已喜歡這篇攻略' : '喜歡這篇攻略';
-    });
-  }
-  likeBtns.forEach(b => b.addEventListener('click', () => {
-    isLiked = !isLiked;
-    likeNum += isLiked ? 1 : -1;
-    renderLike();
-  }));
-  renderLike();
-
   // ── 評分功能 ──
   const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
   document.querySelectorAll('.ubuy .rate-btn, .sp-actionbar .rate').forEach(btn => {

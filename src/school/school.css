@@ -683,6 +683,29 @@ input, select { font-family: inherit; }
 }
 .save-btn.saved svg { fill: #ffffff; }
 
+/* ── 文章卡片右上角：可點擊喜歡（愛心），疊在封面/內文交界處 ── */
+.like-fab {
+  position: absolute;
+  top: 116px; /* .cover 高度 140px，往上 24px 讓按鈕一半疊在封面、一半疊在內文 */
+  right: 14px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 12px -4px rgba(0,0,0,0.25);
+  color: #c97f5a;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+.like-fab svg { width: 19px; height: 19px; }
+.like-fab:hover { transform: translateY(-1px) scale(1.05); box-shadow: 0 6px 16px -4px rgba(0,0,0,0.3); }
+.like-fab.liked { background: #c97f5a; border-color: #c97f5a; color: #ffffff; }
+.like-fab.liked svg { fill: #ffffff; }
+/* 無封面卡片：沒有封面/內文交界，改貼齊卡片右上角 */
+.article.nocover .like-fab { top: 14px; }
+
 /* Pagination */
 .pagination {
   display: flex; align-items: center; justify-content: center;
@@ -1195,6 +1218,61 @@ input, select { font-family: inherit; }
 @media (max-width: 900px) {
   .wishpool-school { width: 90vw; max-width: 90vw; }
   .wp-title-school { font-size: 28px; }
+}
+
+/* ── Contest teaser (school homepage) ── */
+.contest-school {
+  width: 80vw; max-width: 80vw; margin: 60px auto 0;
+}
+
+.cs-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+}
+
+.cs-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 18px;
+  overflow: hidden; cursor: pointer; transition: all 0.22s ease;
+  display: flex; flex-direction: column; text-decoration: none;
+}
+
+.cs-card:hover {
+  transform: translateY(-3px); border-color: var(--navy);
+  box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3);
+}
+
+.cs-card .art {
+  height: 120px; background: linear-gradient(120deg, var(--navy), var(--mid) 70%, var(--aqua));
+  position: relative; flex-shrink: 0;
+}
+
+.cs-card .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.cs-status {
+  font-size: 11px; font-weight: 700; padding: 5px 13px; border-radius: 999px;
+  letter-spacing: 0.08em; flex-shrink: 0; position: absolute; top: 12px; right: 12px;
+}
+
+.cs-status.live { background: rgba(171,218,213,0.75); color: #007568; }
+.cs-status.upcoming { background: rgba(243,227,181,0.8); color: #a08540; }
+.cs-status.ended { background: rgba(240,242,244,0.9); color: var(--muted); }
+
+.cs-card .body { padding: 18px 20px 20px; }
+.cs-card .tagline { font-size: 11px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+.cs-card .name { font-size: 17px; font-weight: 700; color: var(--ink); margin-top: 6px; letter-spacing: 0.02em; }
+.cs-card .period { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+.cs-card .foot {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+}
+
+.cs-card .pool { font-size: 15px; font-weight: 700; color: var(--navy); }
+.cs-card .pool span { font-size: 11px; color: var(--muted); font-weight: 400; margin-left: 4px; }
+.cs-card .go { font-size: 12.5px; font-weight: 700; color: var(--navy); letter-spacing: 0.04em; }
+
+@media (max-width: 900px) {
+  .contest-school { width: 90vw; max-width: 90vw; }
+  .cs-grid { grid-template-columns: 1fr; }
 }
 
 /* Advertisement Banner */
