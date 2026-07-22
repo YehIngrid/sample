@@ -1606,8 +1606,9 @@ const timer = setInterval(() => {
   <!-- 廣告表單彈跳視窗 -->
   <div id="adFormModal" class="ad-form-modal-backdrop" style="display:none;">
     <div class="ad-form-modal">
-      <button type="button" class="ad-form-modal-close" id="adFormModalClose" aria-label="關閉">
-        <i class="fa-solid fa-xmark"></i>
+      <button type="button" class="ad-form-modal-close" id="adFormModalClose">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        <span class="visually-hidden">關閉</span>
       </button>
       <img class="ad-form-modal-img" src="../svg/ad_form.svg" alt="意見調查表單">
       <div class="ad-form-modal-actions">
