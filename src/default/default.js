@@ -1,4 +1,5 @@
 import BackendService from '../BackendService.js';
+import './sentry-init.js';
 
 let backendService;
 

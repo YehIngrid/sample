@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import { glob } from 'glob'
 import { cpSync, existsSync, rmSync, readFileSync } from 'fs'
+import { execSync } from 'child_process'
 
 // dev server：把所有非 Vite 系統路徑自動 rewrite 到 /src/
 // 並移除 CSP meta 讓 localhost 可以連 treasurehub.tw API
@@ -119,8 +120,18 @@ const input = {
   )
 }
 
+const pkgVersion = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf-8')).version
+let gitCommit = 'unknown'
+try {
+  gitCommit = execSync('git rev-parse --short HEAD').toString().trim()
+} catch {}
+
 export default defineConfig(() => ({
   base: '/',
+  define: {
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkgVersion),
+    'import.meta.env.VITE_GIT_COMMIT': JSON.stringify(gitCommit),
+  },
   server: {
     port: 3000,
     // https: existsSync('localhost+1-key.pem') && existsSync('localhost+1.pem') ? {
