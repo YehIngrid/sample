@@ -31,7 +31,10 @@
     .id-banner { height: 64px; background: linear-gradient(120deg, var(--navy), var(--mid) 70%, var(--aqua)); position: relative; }
     .id-banner::after { content: ""; position: absolute; right: -30px; top: -30px; width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.08); }
     .id-main { padding: 0 22px 20px; margin-top: -34px; position: relative; }
-    .id-av { width: 68px; height: 68px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 6px 20px -8px rgba(0,75,151,0.4); background: linear-gradient(135deg, var(--mid), var(--aqua)); }
+    .id-av { width: 68px; height: 68px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 6px 20px -8px rgba(0,75,151,0.4); background: linear-gradient(135deg, var(--mid), var(--aqua)); position: relative; }
+    .av-edit { position: absolute; right: -4px; bottom: -4px; width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--navy); cursor: pointer; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.22s ease; }
+    .av-edit:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .av-edit svg { width: 12px; height: 12px; }
     .id-name { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-top: 12px; }
     .id-titles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
     .id-titles .t { font-size: 10.5px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em; }
@@ -77,6 +80,7 @@
     .art-row .thumb.b { background: linear-gradient(135deg, var(--sky), var(--aqua)); }
     .art-row .thumb.c { background: linear-gradient(135deg, var(--navy-d), var(--sky)); }
     .art-row .thumb.d { background: linear-gradient(135deg, var(--mid), var(--aqua)); }
+    .art-row.no-thumb .thumb { display: none; }
     .art-row .a-mid { flex: 1; min-width: 0; }
     .art-row .a-cat { font-size: 11px; color: var(--navy); font-weight: 700; letter-spacing: 0.06em; }
     .art-row h4 { font-size: 15px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin: 4px 0 6px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -86,6 +90,7 @@
     .pf-badge.pub { background: #e7f4ee; color: var(--green, #2f9e6f); }
     .pf-badge.draft { background: #f0f4f8; color: var(--muted); }
     .pf-badge.stale { background: #faf0e6; color: var(--warn); }
+    .pf-badge.contest { background: rgba(171,218,213,0.45); color: #007568; }
     .art-row .a-price { font-size: 15px; font-weight: 700; color: var(--navy); }
     .art-row .a-price.free { color: var(--muted); font-weight: 600; font-size: 13px; }
     .row-act { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
@@ -140,6 +145,28 @@
     .pill-link:hover { color: var(--navy-d); }
     .pay-tags { display: flex; gap: 6px; }
     .pay-tags .pt { font-size: 11px; font-weight: 700; color: var(--ink); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
+
+    /* 設定子頁（金流／隱私／通知） */
+    .pane-back { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; padding: 0; margin-bottom: 14px; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
+    .pane-back:hover { color: var(--navy); }
+    .pane-back svg { width: 14px; height: 14px; }
+    .tgl { position: relative; width: 40px; height: 22px; border-radius: 999px; background: var(--line); border: none; padding: 0; cursor: pointer; flex-shrink: 0; transition: all 0.22s ease; }
+    .tgl::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: all 0.22s ease; }
+    .tgl.on { background: var(--navy); }
+    .tgl.on::after { left: 21px; }
+    .ntf-head { display: flex; justify-content: flex-end; gap: 26px; padding: 16px 0 0; font-size: 10.5px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; }
+    .ntf-head span { width: 40px; text-align: center; }
+    .ntf-cols { display: flex; gap: 26px; flex-shrink: 0; }
+    .rec-row { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--body); line-height: 1.6; }
+    .rec-row:last-child { border-bottom: none; }
+    .rec-row .rd { color: var(--muted); font-size: 12px; width: 84px; flex-shrink: 0; }
+    .rec-row .rt { flex: 1; min-width: 0; }
+    .rec-row .ra { font-weight: 700; color: var(--navy); flex-shrink: 0; }
+    .pill-done { font-size: 10.5px; font-weight: 700; background: var(--navy); color: #fff; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.06em; flex-shrink: 0; }
+    .pill-gray { font-size: 10.5px; font-weight: 700; background: #f0f2f4; color: var(--muted); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.06em; flex-shrink: 0; }
+    .set-add { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 12px 0; margin: 12px 0 16px; border: 1.5px dashed var(--line); border-radius: 12px; background: none; color: var(--muted); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.22s ease; }
+    .set-add:hover { border-color: var(--navy); color: var(--navy); }
+    .set-add svg { width: 14px; height: 14px; }
     .switch { width: 42px; height: 24px; border-radius: 999px; background: var(--navy); position: relative; transition: all 0.2s; flex-shrink: 0; cursor: pointer; }
     .switch::after { content: ""; position: absolute; top: 2px; left: 20px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
     .switch.off { background: var(--line); }
@@ -162,10 +189,15 @@
     .an-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 32px; }
     .an-ch-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 20px; }
     .an-ch-tot { color: var(--navy); font-weight: 700; font-size: 15px; }
-    .an-bars { display: flex; align-items: flex-end; gap: 14px; height: 140px; }
-    .an-bar { flex: 1; background: var(--alice); border-radius: 6px 6px 0 0; position: relative; }
-    .an-bar.on { background: var(--navy); }
-    .an-bar span { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
+    .an-bars { display: flex; align-items: flex-end; gap: 8px; height: 140px; }
+    .an-slot { flex: 1; height: 100%; display: flex; align-items: flex-end; justify-content: center; position: relative; cursor: pointer; }
+    .an-slot.static { cursor: default; }
+    .an-slot .mo { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
+    .an-bar { width: 24px; max-width: 60%; border-radius: 4px 4px 0 0; background: #d9e6f3; position: relative; transition: background 0.18s ease, height 0.35s ease; }
+    .an-slot:hover .an-bar { background: #b9d3ea; }
+    .an-slot.on .an-bar { background: #1560ab; }
+    .an-bar .cap { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 10.5px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+    .an-hint { margin-top: 30px; font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
 
     .an-mix-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; }
     .an-mix-head { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 18px; }
@@ -191,7 +223,12 @@
       .pf-container { padding: 0 0 96px; flex-direction: column; gap: 0; width: 100vw; }
       .pf-side { width: 100%; position: static; gap: 0; }
       .id-card { border-radius: 0; border-left: none; border-right: none; border-top: none; }
-      .promo-card { display: none; }
+      /* 競賽卡：手機改為精簡橫條 */
+      .promo-card { display: flex; align-items: center; gap: 10px; border-radius: 0; padding: 12px 16px; }
+      .promo-top { flex: 1; min-width: 0; }
+      .promo-t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .promo-d { display: none; }
+      .promo-link { margin-top: 0; flex-shrink: 0; font-size: 12.5px; }
 
       /* 側邊選單 → 手機水平分頁列 */
       .side-nav {
@@ -213,11 +250,213 @@
 
       .pf-main { padding: 14px 16px 4px; }
 
+      /* 攻略卡片：縮圖縮小、標題兩行、右欄改為底部橫列 */
+      .art-row { flex-wrap: wrap; padding: 12px 14px; gap: 12px; }
+      .art-row .thumb { width: 64px; height: 48px; border-radius: 8px; }
+      .art-row h4 { font-size: 14px; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+      .art-row .a-meta { gap: 10px; }
+      .art-row:not(.no-thumb) .a-meta span:nth-child(n+4) { display: none; }
+      .art-row .a-right { flex-direction: row; align-items: center; width: 100%; gap: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
+      .art-row .a-right .row-act { margin-left: auto; }
+
       .cert-grid { grid-template-columns: 1fr; }
       .an-metrics { grid-template-columns: repeat(2, 1fr); }
       .an-grid2 { grid-template-columns: 1fr; }
       .an-thead { display: none; }
-      .an-trow { grid-template-columns: 1fr; gap: 4px; }
+      .an-trow { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 13px 16px; }
+      .an-trow .tt { width: 100%; white-space: normal; }
+      .an-table-card { counter-reset: an-rank; }
+      .an-trow .tt::before { counter-increment: an-rank; content: counter(an-rank) ". "; font-weight: 700; color: var(--navy); }
+      .an-trow .tn::before { content: ""; display: inline-block; width: 13px; height: 13px; margin-right: 4px; vertical-align: -2px; background: center/contain no-repeat; }
+      .an-trow span:nth-child(2)::before { background-image: url("../svg/read.svg"); }
+      .an-trow span:nth-child(3)::before { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23004b97' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z'/></svg>"); }
+      .an-trow span:nth-child(4)::before { background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fbbf24' stroke='%23fbbf24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.26L7 14.14 2 9.27l6.91-1.01z'/></svg>"); }
+      .an-trow .rev { margin-left: auto; }
+      .an-trow .rev::before { content: "總收益 "; font-weight: 400; font-size: 11px; color: var(--muted); }
+
+      /* 設定子頁 */
+      .ntf-head, .ntf-cols { gap: 14px; }
+      .rec-row { flex-wrap: wrap; gap: 6px 14px; }
+    }
+
+    /* ===== 新增付款方式 Modal ===== */
+    .pm-backdrop { position: fixed; inset: 0; z-index: 1200; background: rgba(15,39,69,0.45); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+    .pm-backdrop.open { opacity: 1; pointer-events: auto; }
+    .pm-dialog { width: min(440px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; background: #fff; border-radius: 22px; box-shadow: 0 24px 60px -18px rgba(0,40,80,0.5); transform: translateY(16px) scale(0.97); transition: transform 0.3s cubic-bezier(0.34,1.35,0.5,1); }
+    .pm-backdrop.open .pm-dialog { transform: none; }
+    .pm-step { display: none; padding: 20px 22px 22px; }
+    .pm-step.on { display: block; animation: pmIn 0.28s ease both; }
+    @keyframes pmIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+    .pm-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .pm-title { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; flex: 1; }
+    .pm-x, .pm-back { width: 30px; height: 30px; border-radius: 50%; border: none; background: var(--alice); color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.22s ease; padding: 0; }
+    .pm-x:hover, .pm-back:hover { background: var(--navy); color: #fff; }
+    .pm-x svg, .pm-back svg { width: 15px; height: 15px; }
+    .pm-sub { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+
+    /* step 1: 選擇類型 */
+    .pm-choice { width: 100%; display: flex; align-items: center; gap: 14px; text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.22s ease; }
+    .pm-choice:hover { border-color: var(--navy); transform: translateY(-2px); box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3); }
+    .pm-choice:hover .pm-arrow { transform: translateX(3px); color: var(--navy); }
+    .pm-cic { width: 44px; height: 44px; border-radius: 13px; background: var(--alice); color: var(--navy); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pm-cic svg { width: 21px; height: 21px; }
+    .pm-ctxt { flex: 1; min-width: 0; }
+    .pm-ctxt b { display: block; font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+    .pm-ctxt i { display: block; font-style: normal; font-size: 11.5px; color: var(--muted); margin-top: 3px; letter-spacing: 0.02em; }
+    .pm-arrow { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; transition: all 0.22s ease; }
+    .pm-safe { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--muted); line-height: 1.5; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .pm-safe svg { width: 13px; height: 13px; flex-shrink: 0; color: var(--navy); }
+
+    /* step 2: 卡片預覽（3D 翻轉 + 游標傾斜/光暈） */
+    .cc-scene { perspective: 1100px; margin: 12px 0 18px; }
+    .cc-tilt { transform: perspective(1000px); transition: transform 0.5s ease; will-change: transform; }
+    .cc-card { position: relative; width: 100%; aspect-ratio: 1.586; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.35,0.1,0.2,1); }
+    .cc-card.flip { transform: rotateY(180deg); }
+
+    /* 主題：御璽卡（已完成實名認證） */
+    .cc-card.cc-theme-jade {
+      --cc-ink: #0f2745; --cc-sub: #6f87a0; --cc-wave: #004b97;
+      --cc-shadow: rgba(0,75,151,0.35);
+      --cc-hlb: rgba(0,75,151,0.5);
+      --cc-chip-bg: linear-gradient(150deg, #f4f6f8 0%, #d3dbe2 40%, #f4f6f8 65%, #b9c4cd 100%);
+      --cc-chip-line: rgba(80,100,120,0.3);
+      --cc-front-bg:
+        radial-gradient(120% 140% at 10% 0%, rgba(126,184,216,0.5) 0%, rgba(126,184,216,0) 45%),
+        radial-gradient(140% 160% at 100% 100%, rgba(171,218,213,0.7) 0%, rgba(171,218,213,0) 55%),
+        linear-gradient(135deg, #cfe4ee 0%, #a9cfe0 30%, #7eb8d8 55%, #9cd0cb 78%, #cfe9e4 100%);
+      --cc-back-bg:
+        radial-gradient(130% 150% at 90% 100%, rgba(171,218,213,0.6) 0%, rgba(171,218,213,0) 55%),
+        linear-gradient(135deg, #a9cfe0 0%, #7eb8d8 35%, #9cd0cb 65%, #cfe9e4 100%);
+    }
+    /* 主題：玫瑰金粉（未完成實名認證） */
+    .cc-card.cc-theme-rose {
+      --cc-ink: #7a3b46; --cc-sub: #a67c72; --cc-wave: #b06a4f;
+      --cc-shadow: rgba(200,120,90,0.3);
+      --cc-hlb: rgba(176,106,79,0.55);
+      --cc-chip-bg: linear-gradient(150deg, #f3d9c4 0%, #d9a679 40%, #f3d9c4 65%, #c98f5c 100%);
+      --cc-chip-line: rgba(150,100,60,0.35);
+      --cc-front-bg:
+        radial-gradient(120% 140% at 10% 0%, rgba(249,224,230,0.65) 0%, rgba(249,224,230,0) 45%),
+        radial-gradient(140% 160% at 100% 100%, rgba(224,169,143,0.55) 0%, rgba(224,169,143,0) 55%),
+        linear-gradient(135deg, #fbe6e9 0%, #f2c6ce 30%, #e8b4a0 55%, #d99a7c 78%, #f6e0d3 100%);
+      --cc-back-bg:
+        radial-gradient(130% 150% at 90% 100%, rgba(224,169,143,0.5) 0%, rgba(224,169,143,0) 55%),
+        linear-gradient(135deg, #f2c6ce 0%, #e8b4a0 35%, #d99a7c 65%, #f6e0d3 100%);
+    }
+
+    .cc-face { position: absolute; inset: 0; border-radius: 22px; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden; color: var(--cc-ink); border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 24px 60px -24px var(--cc-shadow), 0 4px 14px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7); }
+    .cc-front { background: var(--cc-front-bg); }
+    .cc-back { transform: rotateY(180deg); background: var(--cc-back-bg); display: flex; flex-direction: column; }
+    .cc-glow { position: absolute; top: -60px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%); }
+    .cc-glare { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: overlay; opacity: 0; transition: opacity 0.4s ease; z-index: 5; }
+
+    .cc-glass { position: absolute; inset: 13px; border-radius: 14px; backdrop-filter: blur(2px); background: linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.1) 30%); border: 1px solid rgba(255,255,255,0.7); display: flex; flex-direction: column; justify-content: space-between; padding: 13px 15px; }
+    .cc-top { display: flex; align-items: center; gap: 10px; }
+    .cc-chip { width: 40px; height: 29px; border-radius: 7px; background: var(--cc-chip-bg); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.15); position: relative; flex-shrink: 0; }
+    .cc-chip::before { content: ""; position: absolute; inset: 5px; border: 1px solid var(--cc-chip-line); border-radius: 3px; }
+    .cc-chip::after { content: ""; position: absolute; left: 50%; top: 5px; bottom: 5px; width: 1px; background: var(--cc-chip-line); }
+    .cc-wave { width: 18px; height: 18px; color: var(--cc-wave); }
+    .cc-brand { margin-left: auto; font-size: 16px; font-weight: 800; font-style: italic; letter-spacing: 0.06em; min-height: 22px; display: flex; align-items: center; color: var(--cc-ink); }
+    .cc-brand .mc { display: inline-flex; }
+    .cc-brand .mc i { width: 20px; height: 20px; border-radius: 50%; background: var(--cc-wave); opacity: 0.85; }
+    .cc-brand .mc i + i { margin-left: -8px; background: var(--cc-sub); }
+    .cc-hl { border: 1.5px dashed transparent; border-radius: 10px; transition: border-color 0.25s ease, background 0.25s ease; }
+    .cc-hl.lit { border-color: var(--cc-hlb); background: rgba(255,255,255,0.35); }
+    .cc-num { display: flex; align-items: center; gap: 4px; padding: 6px 8px; font-size: clamp(16px, 5vw, 20px); font-weight: 600; color: var(--cc-ink); text-shadow: 0 1px 1px rgba(255,255,255,0.6); }
+    .cc-num span { flex: 1; text-align: center; letter-spacing: 0.14em; white-space: nowrap; font-family: "SFMono-Regular", Consolas, "Courier New", monospace; }
+    .cc-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+    .cc-holder, .cc-exp { padding: 4px 8px; min-width: 0; }
+    .cc-holder { flex: 1; }
+    .cc-exp { text-align: right; flex-shrink: 0; }
+    .cc-holder label, .cc-exp label { display: block; font-size: 9px; letter-spacing: 0.24em; color: var(--cc-sub); margin-bottom: 3px; }
+    .cc-holder b, .cc-exp b { font-size: 14px; font-weight: 700; letter-spacing: 0.05em; color: var(--cc-ink); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+    .cc-exp b { font-family: "SFMono-Regular", Consolas, "Courier New", monospace; }
+    .cc-stripe { height: 42px; background: linear-gradient(180deg, #2a2a2a, #0a0a0a); margin-top: 20px; }
+    .cc-sign-row { display: flex; align-items: center; gap: 10px; padding: 16px 18px 0; }
+    .cc-sign { flex: 1; height: 34px; border-radius: 4px; background: repeating-linear-gradient(115deg, #f4ede0 0 6px, #e9e0cd 6px 12px); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); }
+    .cc-cvc-box { width: 56px; height: 34px; background: #fff; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cc-cvc-box b { font-family: "SFMono-Regular", Consolas, "Courier New", monospace; font-style: italic; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: var(--cc-ink); }
+    .cc-back-note { padding: 14px 18px 0; font-size: 9px; letter-spacing: 0.18em; color: var(--cc-sub); line-height: 1.6; }
+
+    /* step 2: 表單 */
+    .pm-field { margin-bottom: 13px; }
+    .pm-field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+    .pm-field input { width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: 14px; color: var(--ink); letter-spacing: 0.05em; background: #fff; outline: none; transition: all 0.22s ease; font-variant-numeric: tabular-nums; }
+    .pm-field input::placeholder { color: #b9c6d4; letter-spacing: 0.05em; }
+    .pm-field input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,75,151,0.12); }
+    .pm-field.err input { border-color: var(--terracotta); box-shadow: 0 0 0 3px rgba(201,127,90,0.12); }
+    .pm-err { display: none; font-size: 11px; color: var(--terracotta); font-weight: 600; margin-top: 5px; letter-spacing: 0.02em; }
+    .pm-field.err .pm-err { display: block; animation: pmIn 0.2s ease both; }
+    .pm-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pm-inwrap { position: relative; }
+    .pm-inwrap .pm-brand-mini { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 11px; font-weight: 800; font-style: italic; color: var(--navy); letter-spacing: 0.04em; pointer-events: none; }
+    .pm-submit { width: 100%; margin-top: 6px; padding: 13px 0; border: none; border-radius: 999px; background: var(--navy); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; cursor: pointer; transition: all 0.22s ease; }
+    .pm-submit:hover { background: rgb(36,182,133); }
+    .pm-submit:disabled { opacity: 0.55; cursor: default; }
+    .pm-submit:disabled:hover { background: var(--navy); }
+
+    /* LINE Pay step */
+    .pm-line-hero { display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--alice); border: 1px solid var(--line); border-radius: 16px; padding: 30px 20px; margin: 12px 0 16px; }
+    .pm-line-hero .lp-badge { width: 46px; height: 46px; border-radius: 13px; background: #06c755; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; letter-spacing: 0.02em; }
+    .pm-line-hero .lp-txt { font-size: 15px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; }
+
+    /* success step */
+    .pm-done { text-align: center; padding: 26px 0 10px; }
+    .pm-done svg { width: 62px; height: 62px; }
+    .pm-done .ring { stroke: var(--aqua); stroke-dasharray: 166; stroke-dashoffset: 166; animation: pmRing 0.5s ease forwards; }
+    .pm-done .tick { stroke: var(--navy); stroke-dasharray: 48; stroke-dashoffset: 48; animation: pmRing 0.35s 0.4s ease forwards; }
+    @keyframes pmRing { to { stroke-dashoffset: 0; } }
+    .pm-done-t { font-size: 15px; font-weight: 700; color: var(--ink); margin-top: 14px; letter-spacing: 0.03em; }
+    .pm-done-d { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    /* ===== 申請新頭銜 Modal ===== */
+    .ca-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .ca-t { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
+    .ca-t svg { width: 18px; height: 18px; }
+    .ca-t:hover { border-color: var(--navy); color: var(--navy); }
+    .ca-t.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .ca-drop { border: 1.5px dashed var(--line); border-radius: 14px; padding: 20px 14px; text-align: center; cursor: pointer; transition: all 0.22s ease; }
+    .ca-drop:hover, .ca-drop.drag { border-color: var(--navy); background: var(--alice); }
+    .ca-drop .di { width: 36px; height: 36px; border-radius: 50%; background: var(--alice); color: var(--navy); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+    .ca-drop .di svg { width: 17px; height: 17px; }
+    .ca-drop .dt { font-size: 12.5px; font-weight: 700; color: var(--navy); }
+    .ca-drop .dd { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .ca-fileRow { display: none; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+    .ca-fileRow.show { display: flex; }
+    .ca-fileRow .fthumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: var(--alice); flex-shrink: 0; }
+    .ca-fileRow .fpdf { width: 44px; height: 44px; border-radius: 8px; background: var(--alice); color: var(--navy); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ca-fileRow .fpdf svg { width: 20px; height: 20px; }
+    .ca-fileRow .fmeta { flex: 1; min-width: 0; }
+    .ca-fileRow .fname { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ca-fileRow .fsize { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .ca-fileRow .fdel { width: 26px; height: 26px; border-radius: 50%; border: none; background: var(--alice); color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.22s ease; flex-shrink: 0; padding: 0; }
+    .ca-fileRow .fdel:hover { background: var(--terracotta); color: #fff; }
+    .ca-fileRow .fdel svg { width: 13px; height: 13px; }
+
+    /* ===== 數據分析：期間選擇 / 圓餅圖 / 單篇分析 ===== */
+    .an-sel { -webkit-appearance: none; appearance: none; border: 1px solid var(--line); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/12px; border-radius: 999px; padding: 7px 32px 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--ink); letter-spacing: 0.03em; cursor: pointer; transition: all 0.22s ease; }
+    .an-sel:hover { border-color: var(--navy); color: var(--navy); }
+    .an-mix-body { display: flex; align-items: center; gap: 20px; }
+    .an-donut { width: 128px; height: 128px; flex-shrink: 0; }
+    .an-donut .sl { fill: none; stroke-width: 15; transition: stroke-width 0.18s ease; cursor: pointer; }
+    .an-donut .sl.hl { stroke-width: 19; }
+    .an-donut text { fill: var(--ink); }
+    .an-mix-rows { flex: 1; min-width: 0; }
+    .an-mix-rows .an-mix-row { margin: 0 -6px 6px; padding: 4px 6px; border-radius: 8px; transition: background 0.18s ease; }
+    .an-mix-rows .an-mix-row:last-child { margin-bottom: 0; }
+    .an-mix-rows .an-mix-row.hl { background: var(--alice); }
+    .an-tip { position: fixed; z-index: 1300; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 7px 11px; box-shadow: 0 10px 26px -10px rgba(0,40,80,0.3); pointer-events: none; font-size: 11.5px; color: var(--muted); letter-spacing: 0.02em; }
+    .an-tip b { display: block; font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .an-table-sub { font-size: 11px; color: var(--muted); font-weight: 400; margin-left: 10px; letter-spacing: 0.02em; }
+    #anRows .an-trow { cursor: pointer; transition: background 0.15s ease; }
+    #anRows .an-trow:hover { background: var(--alice); }
+    .an-detail-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 40px; }
+    .an-dt-cat { font-size: 11px; color: var(--navy); font-weight: 700; letter-spacing: 0.06em; }
+    .an-dt-title { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-top: 5px; line-height: 1.4; }
+    .an-dt-metrics { margin: 18px 0 22px; }
+    @media (max-width: 980px) {
+      .an-mix-body { flex-wrap: wrap; justify-content: center; }
+      .an-dt-metrics { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -290,11 +529,15 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15 a1.65 1.65 0 0 0 .33 1.82 l.06.06 a2 2 0 1 1-2.83 2.83 l-.06-.06 a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51 V21 a2 2 0 0 1-4 0 v-.09 A1.65 1.65 0 0 0 9 19.4 a1.65 1.65 0 0 0-1.82.33 l-.06.06 a2 2 0 1 1-2.83-2.83 l.06-.06 a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1 H3 a2 2 0 0 1 0-4 h.09 A1.65 1.65 0 0 0 4.6 9 a1.65 1.65 0 0 0-.33-1.82 l-.06-.06 a2 2 0 1 1 2.83-2.83 l.06.06 a1.65 1.65 0 0 0 1.82.33 H9 a1.65 1.65 0 0 0 1-1.51 V3 a2 2 0 0 1 4 0 v.09 a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33 l.06-.06 a2 2 0 1 1 2.83 2.83 l-.06.06 a1.65 1.65 0 0 0-.33 1.82 V9 a1.65 1.65 0 0 0 1.51 1 H21 a2 2 0 0 1 0 4 h-.09 a1.65 1.65 0 0 0-1.51 1Z"/></svg>
           <span>帳號設定</span>
         </button>
-        <div class="id-av"></div>
-        <div class="id-name">創產系 大二 范同學</div>
+        <div class="id-av">
+          <button class="av-edit" type="button" title="更換頭像" aria-label="更換頭像">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19 a2 2 0 0 1-2 2 H3 a2 2 0 0 1-2-2 V8 a2 2 0 0 1 2-2 h4 l2-3 h6 l2 3 h4 a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg>
+          </button>
+        </div>
+        <div class="id-name">創產系 114級 范同學</div>
         <div class="id-titles">
-          <span class="t">＊台大碩士＊</span>
-          <span class="t">＊書卷獎＊</span>
+          <span class="t">台大碩士</span>
+          <span class="t">書卷獎</span>
         </div>
         <div class="id-sub">加入於 2025 / 09 · 半匿名顯示</div>
       </div>
@@ -306,7 +549,7 @@
         <span class="promo-t">種子創作者計劃</span>
       </div>
       <div class="promo-d">首屆攻略徵稿 · 目前累計人氣排名第 14 名</div>
-      <a class="promo-link" href="#">查看排名 →</a>
+      <a class="promo-link" href="school-contest.html?id=seed2026">查看排名 →</a>
     </div>
 
     <div class="side-nav" id="sideNav">
@@ -359,6 +602,7 @@
         </div>
         <div class="a-right">
           <span class="pf-badge pub">已發佈</span>
+          <span class="pf-badge contest" title="種子創作者計劃">參賽中</span>
           <span class="a-price">NT$ 129</span>
           <a class="row-act" href="school-post.html?id=1">查看 →</a>
         </div>
@@ -373,6 +617,7 @@
         <div class="a-right">
           <span class="pf-badge pub">已發佈</span>
           <span class="a-price">NT$ 99</span>
+          <a class="row-act" href="#" data-join-contest>加入比賽</a>
           <a class="row-act" href="school-composer.html">編輯</a>
         </div>
       </div>
@@ -389,8 +634,7 @@
           <a class="row-act" href="school-composer.html">更新</a>
         </div>
       </div>
-      <div class="art-row">
-        <div class="thumb d"></div>
+      <div class="art-row no-thumb">
         <div class="a-mid">
           <div class="a-cat">研究所推甄</div>
           <h4>（草稿）推甄面試最常被問的 12 題與回答框架</h4>
@@ -411,7 +655,7 @@
         <div class="a-mid">
           <div class="a-cat">語言檢定</div>
           <h4>多益一個月 500 → 850：刷題進度表與破題技巧</h4>
-          <div class="a-meta"><span>作者 黃同學 ✓</span><span>已解鎖 · 永久閱讀</span><span>你的評分 ★★★★★</span></div>
+          <div class="a-meta"><span>作者 黃同學</span><span>已解鎖 · 永久閱讀</span><span>你的評分 ★★★★★</span></div>
         </div>
         <div class="a-right">
           <span class="pf-badge pub">已解鎖</span>
@@ -423,7 +667,7 @@
         <div class="a-mid">
           <div class="a-cat">實習與面試</div>
           <h4>拿到台積電實習的英文履歷＋三輪面試心法</h4>
-          <div class="a-meta"><span>作者 王同學 ✓</span><span>已解鎖 · 永久閱讀</span><span>尚未評分</span></div>
+          <div class="a-meta"><span>作者 王同學</span><span>已解鎖 · 永久閱讀</span><span>尚未評分</span></div>
         </div>
         <div class="a-right">
           <span class="pf-badge pub">已解鎖</span>
@@ -440,7 +684,7 @@
         <div class="a-mid">
           <div class="a-cat">競賽攻略</div>
           <h4>ATCC / 梅竹黑客松 得獎企劃書範本＋跨領域組隊框架</h4>
-          <div class="a-meta"><span>作者 陳同學 ✓</span><span>收藏於 1 週前</span></div>
+          <div class="a-meta"><span>作者 陳同學</span><span>收藏於 1 週前</span></div>
         </div>
         <div class="a-right">
           <span class="a-price">NT$ 119</span>
@@ -452,7 +696,7 @@
         <div class="a-mid">
           <div class="a-cat">交換生申請</div>
           <h4>交換生讀書計畫與自傳＋姊妹校性價比分析</h4>
-          <div class="a-meta"><span>作者 林同學 ✓</span><span>收藏於 2 週前</span></div>
+          <div class="a-meta"><span>作者 林同學</span><span>收藏於 2 週前</span></div>
         </div>
         <div class="a-right">
           <span class="a-price">NT$ 149</span>
@@ -465,64 +709,70 @@
     <div class="pane" data-pane="analytics">
       <div class="an-range">
         <div class="pane-head" style="margin-bottom:0">數據分析</div>
-        <span class="an-rd">2026/06/01 – 2026/06/30</span>
+        <select class="an-sel" id="anRange" aria-label="選擇資料期間"></select>
       </div>
 
       <div class="an-metrics">
         <div class="an-m">
           <div class="an-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8Z"/><circle cx="12" cy="12" r="3"/></svg>總閱讀數</div>
-          <div class="an-val">18,420</div>
-          <div class="an-trend up">↑ 7.5% 較上月</div>
+          <div class="an-val" id="anReads">0</div>
+          <div class="an-trend flat" id="anReadsT"></div>
         </div>
         <div class="an-m">
-          <div class="an-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 v20"/><path d="M17 6 a5 3.2 0 0 0-5-2 c-3 0-5 1.4-5 3.2 s2 3.2 5 3.2 5 1.4 5 3.2-2 3.2-5 3.2 a5 3.2 0 0 1-5-2"/></svg>累計收益</div>
-          <div class="an-val">NT$ 8,640</div>
-          <div class="an-trend up">↑ 17.6% 較上月</div>
+          <div class="an-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 v20"/><path d="M17 6 a5 3.2 0 0 0-5-2 c-3 0-5 1.4-5 3.2 s2 3.2 5 3.2 5 1.4 5 3.2-2 3.2-5 3.2 a5 3.2 0 0 1-5-2"/></svg>收益</div>
+          <div class="an-val" id="anRev">0</div>
+          <div class="an-trend flat" id="anRevT"></div>
         </div>
         <div class="an-m">
           <div class="an-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg>平均評分</div>
-          <div class="an-val">4.8<span class="u">/5</span></div>
-          <div class="an-trend flat">共 96 則評價</div>
+          <div class="an-val" id="anRate">0</div>
+          <div class="an-trend flat" id="anRateT"></div>
         </div>
         <div class="an-m">
           <div class="an-lbl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9 h18"/></svg>已發佈攻略</div>
-          <div class="an-val">12</div>
-          <div class="an-trend flat">1 篇草稿中</div>
+          <div class="an-val" id="anPub">0</div>
+          <div class="an-trend flat" id="anPubT"></div>
         </div>
       </div>
 
       <div class="an-grid2">
         <div class="an-chart-card">
-          <div class="an-ch-head"><span>近 6 個月收益趨勢</span><span class="an-ch-tot">NT$ 8,640</span></div>
-          <div class="an-bars">
-            <div class="an-bar" style="height:38%"><span>1月</span></div>
-            <div class="an-bar" style="height:52%"><span>2月</span></div>
-            <div class="an-bar" style="height:44%"><span>3月</span></div>
-            <div class="an-bar" style="height:68%"><span>4月</span></div>
-            <div class="an-bar" style="height:80%"><span>5月</span></div>
-            <div class="an-bar on" style="height:100%"><span>6月</span></div>
-          </div>
+          <div class="an-ch-head"><span>近 6 個月收益趨勢</span><span class="an-ch-tot" id="anChTot"></span></div>
+          <div class="an-bars" id="anBars"></div>
+          <div class="an-hint">點擊柱條可切換至該月份的數據</div>
         </div>
         <div class="an-mix-card">
           <div class="an-mix-head">讀者來源分佈</div>
-          <div class="an-mix-row"><span class="an-mix-dot" style="background:var(--navy)"></span><span class="an-mix-lbl">攻略站首頁推薦</span><span class="an-mix-pct">46%</span></div>
-          <div class="an-mix-row"><span class="an-mix-dot" style="background:var(--mid)"></span><span class="an-mix-lbl">搜尋 / 分類瀏覽</span><span class="an-mix-pct">31%</span></div>
-          <div class="an-mix-row"><span class="an-mix-dot" style="background:var(--sky)"></span><span class="an-mix-lbl">站外分享連結</span><span class="an-mix-pct">15%</span></div>
-          <div class="an-mix-row"><span class="an-mix-dot" style="background:var(--aqua)"></span><span class="an-mix-lbl">作者主頁</span><span class="an-mix-pct">8%</span></div>
+          <div class="an-mix-body">
+            <svg class="an-donut" id="anDonut" viewBox="0 0 120 120" role="img" aria-label="讀者來源分佈圓餅圖"></svg>
+            <div class="an-mix-rows" id="anMixRows"></div>
+          </div>
         </div>
       </div>
 
-      <div class="an-table-card">
-        <div class="an-table-head">熱門攻略排行</div>
+      <div class="an-table-card" id="anTableCard">
+        <div class="an-table-head">熱門攻略排行<span class="an-table-sub">點擊文章查看單篇分析</span></div>
         <div class="an-thead"><span>文章</span><span>閱讀</span><span>收藏</span><span>評分</span><span>收益</span></div>
-        <div class="an-trow">
-          <span class="tt">中興推台清交：備審修改前後對比＋面試真題還原</span><span class="tn">2,184</span><span class="tn">96</span><span class="tn">4.9</span><span class="rev">NT$ 2,451</span>
-        </div>
-        <div class="an-trow">
-          <span class="tt">某通識「如何拿到 A+」報告範本＋分組避雷名單</span><span class="tn">1,456</span><span class="tn">112</span><span class="tn">4.7</span><span class="rev">免費</span>
-        </div>
-        <div class="an-trow">
-          <span class="tt">成功獲補助的研究計畫書撰寫架構＋如何找指導教授</span><span class="tn">1,402</span><span class="tn">78</span><span class="tn">4.8</span><span class="rev">NT$ 1,782</span>
+        <div id="anRows"></div>
+      </div>
+
+      <!-- 單篇文章分析 -->
+      <div class="an-detail" id="anDetail" hidden>
+        <button class="pane-back" type="button" id="anDetailBack" style="margin:2px 0 12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
+          返回熱門排行
+        </button>
+        <div class="an-detail-card">
+          <div class="an-dt-cat" id="anDtCat"></div>
+          <div class="an-dt-title" id="anDtTitle"></div>
+          <div class="an-metrics an-dt-metrics">
+            <div class="an-m"><div class="an-lbl">閱讀</div><div class="an-val" id="anDtReads"></div></div>
+            <div class="an-m"><div class="an-lbl">收藏</div><div class="an-val" id="anDtFavs"></div></div>
+            <div class="an-m"><div class="an-lbl">收益</div><div class="an-val" id="anDtRev"></div></div>
+            <div class="an-m"><div class="an-lbl">平均評分</div><div class="an-val" id="anDtRate"></div></div>
+          </div>
+          <div class="an-ch-head"><span>各月閱讀數</span></div>
+          <div class="an-bars" id="anDtBars" style="margin-bottom:30px;"></div>
         </div>
       </div>
     </div>
@@ -534,7 +784,7 @@
         <div class="cert">
           <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg></div>
           <div class="cbody">
-            <div class="cname">＊台大碩士＊ 升學認證</div>
+            <div class="cname">台大碩士 升學認證</div>
             <div class="cdesc">已上傳台大研究所正取通知，經人工審查通過，顯示於文章作者頭銜。</div>
             <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
           </div>
@@ -542,7 +792,7 @@
         <div class="cert">
           <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg></div>
           <div class="cbody">
-            <div class="cname">＊書卷獎＊ 獎項認證</div>
+            <div class="cname">書卷獎 獎項認證</div>
             <div class="cdesc">已上傳系上書卷獎證明，經人工審查通過，提升文章觸及率。</div>
             <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
           </div>
@@ -550,12 +800,12 @@
         <div class="cert">
           <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg></div>
           <div class="cbody">
-            <div class="cname">＊多益 935＊ 證照認證</div>
+            <div class="cname">多益 935 證照認證</div>
             <div class="cdesc">成績單審查中，通常 1–3 個工作天完成。通過後將自動加上頭銜。</div>
             <span class="cstatus pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審查中</span>
           </div>
         </div>
-        <div class="cert cert-add">
+        <div class="cert cert-add" id="certAddBtn">
           <div class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg></div>
           <div class="ct">申請新頭銜</div>
           <div class="cs">上傳證照、獎項或升學證明，人工審查後給予特殊頭銜。</div>
@@ -577,12 +827,12 @@
 
       <div class="set-card">
         <div class="set-row">
-          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 h16 a2 2 0 0 1 2 2 v12 a2 2 0 0 1-2 2 H4 a2 2 0 0 1-2-2 V6 a2 2 0 0 1 2-2Z"/><path d="m22 7-10 5 L2 7"/></svg></div>
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 H6 a2 2 0 0 0-2 2 v16 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2-2 V8Z"/><path d="M14 2 v6 h6"/><path d="m9 15 2 2 4-4"/></svg></div>
           <div class="sbody">
-            <div class="stitle">校園信箱實名認證</div>
-            <div class="sdesc">後台真實身分：葉潔頤（yeh****@nchu.edu.tw）· 僅你本人可見</div>
+            <div class="stitle">就學證明實名認證</div>
+            <div class="sdesc">後台真實身分：葉潔頤（國立中興大學・在學）· 就學證明經人工審核通過 · 僅你本人可見</div>
           </div>
-          <span class="pill-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已驗證</span>
+          <span class="pill-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
         </div>
         <div class="set-row">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10 h20"/></svg></div>
@@ -591,6 +841,7 @@
             <div class="sdesc">已綁定收款方式，售出文章款項將撥入指定帳戶。</div>
           </div>
           <div class="pay-tags"><span class="pt">信用卡</span><span class="pt">LINE Pay</span></div>
+          <a class="pill-link" href="#" data-goto-pane="set-payment">管理 →</a>
         </div>
         <div class="set-row">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5 v6 c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10 V5Z"/></svg></div>
@@ -598,7 +849,7 @@
             <div class="stitle">隱私與安全</div>
             <div class="sdesc">敏感字詞過濾、檢舉處置紀錄、付費內容浮水印偏好設定。</div>
           </div>
-          <a class="pill-link" href="#">管理 →</a>
+          <a class="pill-link" href="#" data-goto-pane="set-privacy">管理 →</a>
         </div>
         <div class="set-row">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10 h20"/></svg></div>
@@ -606,8 +857,375 @@
             <div class="stitle">通知偏好</div>
             <div class="sdesc">留言、回覆、收藏、售出——選擇哪些要推播與 Email 提醒。</div>
           </div>
-          <a class="pill-link" href="#">管理 →</a>
+          <a class="pill-link" href="#" data-goto-pane="set-notify">管理 →</a>
         </div>
+      </div>
+    </div>
+
+    <!-- PANE: 金流與收款設定（設定子頁） -->
+    <div class="pane" data-pane="set-payment">
+      <button class="pane-back" type="button" data-goto-pane="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
+        返回帳號設定
+      </button>
+      <div class="pane-head">金流與收款設定</div>
+
+      <div class="nr-card">
+        <div class="nr-h">付款方式</div>
+        <div class="nr-d">購買他人攻略時使用的付款方式。</div>
+        <div class="set-row">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10 h20"/></svg></div>
+          <div class="sbody">
+            <div class="stitle">信用卡 •••• 4321</div>
+            <div class="sdesc">VISA · 到期 03/28</div>
+          </div>
+          <span class="pill-done">預設</span>
+        </div>
+        <div class="set-row">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12 V7 H5 a2 2 0 0 1 0-4 h14 v4"/><path d="M3 5 v14 a2 2 0 0 0 2 2 h16 v-5"/><path d="M18 12 a2 2 0 0 0 0 4 h4 v-4Z"/></svg></div>
+          <div class="sbody">
+            <div class="stitle">LINE Pay</div>
+            <div class="sdesc">已連結 · ing****@gmail.com</div>
+          </div>
+          <a class="pill-link" href="#">設為預設</a>
+        </div>
+        <button class="set-add" type="button" id="addPayBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
+          新增付款方式
+        </button>
+      </div>
+
+      <div class="nr-card">
+        <div class="nr-h">撥款帳戶</div>
+        <div class="nr-d">售出攻略的收益將於每月 1 日自動撥入以下帳戶。</div>
+        <div class="set-row">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21 h18"/><path d="M5 6 l7-3 7 3"/><path d="M4 10 h16"/><path d="M5 10 v11"/><path d="M19 10 v11"/><path d="M9 14 v3"/><path d="M15 14 v3"/></svg></div>
+          <div class="sbody">
+            <div class="stitle">台灣銀行（004）</div>
+            <div class="sdesc">帳號末五碼 ***56789 · 戶名與後台實名一致</div>
+          </div>
+          <a class="pill-link" href="#">編輯</a>
+        </div>
+      </div>
+
+      <div class="nr-card">
+        <div class="nr-h">撥款紀錄</div>
+        <div class="nr-d">近三個月的收益撥款。</div>
+        <div class="rec-row"><span class="rd">2026/07/01</span><span class="rt">六月收益撥款</span><span class="ra">NT$ 1,820</span><span class="pill-done">已撥款</span></div>
+        <div class="rec-row"><span class="rd">2026/06/01</span><span class="rt">五月收益撥款</span><span class="ra">NT$ 1,540</span><span class="pill-done">已撥款</span></div>
+        <div class="rec-row"><span class="rd">2026/05/01</span><span class="rt">四月收益撥款</span><span class="ra">NT$ 1,310</span><span class="pill-done">已撥款</span></div>
+      </div>
+    </div>
+
+    <!-- PANE: 隱私與安全（設定子頁） -->
+    <div class="pane" data-pane="set-privacy">
+      <button class="pane-back" type="button" data-goto-pane="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
+        返回帳號設定
+      </button>
+      <div class="pane-head">隱私與安全</div>
+
+      <div class="nr-card">
+        <div class="nr-h">內容安全</div>
+        <div class="nr-d">保護你的攻略內容與留言區。</div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">敏感字詞過濾</div>
+            <div class="sdesc">自動遮蔽留言中的人身攻擊與敏感字詞，被遮蔽的留言僅留言者本人可見。</div>
+          </div>
+          <button class="tgl on" type="button" aria-label="敏感字詞過濾"></button>
+        </div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">付費內容浮水印</div>
+            <div class="sdesc">在付費章節加上購買者的半匿名浮水印，截圖外流時可追溯來源。</div>
+          </div>
+          <button class="tgl on" type="button" aria-label="付費內容浮水印"></button>
+        </div>
+      </div>
+
+      <div class="nr-card">
+        <div class="nr-h">檢舉處置紀錄</div>
+        <div class="nr-d">你送出的檢舉，以及你的內容被檢舉後的處理結果。</div>
+        <div class="rec-row"><span class="rd">2026/06/28</span><span class="rt">你檢舉的留言（惡意洗版）經審查成立，該留言已移除。</span><span class="pill-done">已成立</span></div>
+        <div class="rec-row"><span class="rd">2026/05/12</span><span class="rt">你的攻略〈某通識「如何拿到 A+」〉被檢舉內容過時，經審查未違規。</span><span class="pill-gray">不成立</span></div>
+      </div>
+    </div>
+
+    <!-- PANE: 通知偏好（設定子頁） -->
+    <div class="pane" data-pane="set-notify">
+      <button class="pane-back" type="button" data-goto-pane="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
+        返回帳號設定
+      </button>
+      <div class="pane-head">通知偏好</div>
+
+      <div class="nr-card">
+        <div class="nr-h">互動通知</div>
+        <div class="nr-d">和你的攻略有關的互動事件。</div>
+        <div class="ntf-head"><span>推播</span><span>Email</span></div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">留言</div>
+            <div class="sdesc">有人在你的攻略下留言時通知。</div>
+          </div>
+          <div class="ntf-cols"><button class="tgl on" type="button" aria-label="留言推播"></button><button class="tgl" type="button" aria-label="留言 Email"></button></div>
+        </div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">回覆</div>
+            <div class="sdesc">有人回覆你的留言時通知。</div>
+          </div>
+          <div class="ntf-cols"><button class="tgl on" type="button" aria-label="回覆推播"></button><button class="tgl on" type="button" aria-label="回覆 Email"></button></div>
+        </div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">收藏</div>
+            <div class="sdesc">有人收藏你的攻略時通知。</div>
+          </div>
+          <div class="ntf-cols"><button class="tgl on" type="button" aria-label="收藏推播"></button><button class="tgl" type="button" aria-label="收藏 Email"></button></div>
+        </div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">售出</div>
+            <div class="sdesc">攻略售出、收益入帳時通知。</div>
+          </div>
+          <div class="ntf-cols"><button class="tgl on" type="button" aria-label="售出推播"></button><button class="tgl on" type="button" aria-label="售出 Email"></button></div>
+        </div>
+      </div>
+
+      <div class="nr-card">
+        <div class="nr-h">平台通知</div>
+        <div class="nr-d">來自校園攻略站的提醒與公告。</div>
+        <div class="ntf-head"><span>推播</span><span>Email</span></div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">學年更新提醒</div>
+            <div class="sdesc">新學年開始時，提醒你檢查攻略的適用學年。</div>
+          </div>
+          <div class="ntf-cols"><button class="tgl on" type="button" aria-label="學年更新提醒推播"></button><button class="tgl on" type="button" aria-label="學年更新提醒 Email"></button></div>
+        </div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">公告與活動</div>
+            <div class="sdesc">平台功能更新、徵稿活動與優惠訊息。</div>
+          </div>
+          <div class="ntf-cols"><button class="tgl" type="button" aria-label="公告與活動推播"></button><button class="tgl on" type="button" aria-label="公告與活動 Email"></button></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 新增付款方式 Modal ===== -->
+<div class="pm-backdrop" id="pmBackdrop" aria-hidden="true">
+  <div class="pm-dialog" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+
+    <!-- STEP 1: 選擇付款方式類型 -->
+    <div class="pm-step on" data-step="choose">
+      <div class="pm-head">
+        <div class="pm-title" id="pmTitle">新增付款方式</div>
+        <button class="pm-x" type="button" data-pm-close aria-label="關閉">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="pm-sub">選擇要新增的付款方式類型。</div>
+      <button class="pm-choice" type="button" data-pm-goto="card">
+        <span class="pm-cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10 h20"/></svg></span>
+        <span class="pm-ctxt"><b>信用卡 / 簽帳金融卡</b><i>支援 VISA、Mastercard、JCB</i></span>
+        <svg class="pm-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <button class="pm-choice" type="button" data-pm-goto="line">
+        <span class="pm-cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12 V7 H5 a2 2 0 0 1 0-4 h14 v4"/><path d="M3 5 v14 a2 2 0 0 0 2 2 h16 v-5"/><path d="M18 12 a2 2 0 0 0 0 4 h4 v-4Z"/></svg></span>
+        <span class="pm-ctxt"><b>LINE Pay</b><i>連結 LINE 帳號，付款免輸入卡號</i></span>
+        <svg class="pm-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div class="pm-safe">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11 V7 a5 5 0 0 1 10 0 v4"/></svg>
+        付款資訊經 SSL 加密傳輸，本站不會儲存完整卡號與安全碼。
+      </div>
+    </div>
+
+    <!-- STEP 2: 信用卡表單 -->
+    <div class="pm-step" data-step="card">
+      <div class="pm-head">
+        <button class="pm-back" type="button" data-pm-goto="choose" aria-label="返回">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </button>
+        <div class="pm-title">新增信用卡</div>
+        <button class="pm-x" type="button" data-pm-close aria-label="關閉">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="cc-scene">
+        <div class="cc-tilt" id="ccTilt">
+          <div class="cc-card" id="ccCard">
+            <div class="cc-face cc-front">
+              <div class="cc-glow"></div>
+              <div class="cc-glare"></div>
+              <div class="cc-glass">
+                <div class="cc-top">
+                  <span class="cc-chip"></span>
+                  <svg class="cc-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8.82a9 9 0 0 1 12 0"/><path d="M9 12a5 5 0 0 1 6 0"/><path d="M12 15.5v.01"/></svg>
+                  <span class="cc-brand" id="ccBrand"></span>
+                </div>
+                <div class="cc-num cc-hl" id="hlNum"><span>••••</span><span>••••</span><span>••••</span><span>••••</span></div>
+                <div class="cc-bottom">
+                  <span class="cc-holder cc-hl" id="hlName"><label>CARD HOLDER</label><b id="ccNameOut">YOUR NAME</b></span>
+                  <span class="cc-exp cc-hl" id="hlExp"><label>VALID THRU</label><b id="ccExpOut">MM/YY</b></span>
+                </div>
+              </div>
+            </div>
+            <div class="cc-face cc-back">
+              <div class="cc-glare"></div>
+              <div class="cc-stripe"></div>
+              <div class="cc-sign-row">
+                <span class="cc-sign"></span>
+                <span class="cc-cvc-box cc-hl" id="hlCvc"><b id="ccCvcOut">•••</b></span>
+              </div>
+              <div class="cc-back-note">此安全碼僅用於本次驗證，不會被儲存。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pm-field" id="fNum">
+        <label for="pmNum">卡號</label>
+        <div class="pm-inwrap">
+          <input id="pmNum" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" maxlength="19">
+          <span class="pm-brand-mini" id="pmBrandMini"></span>
+        </div>
+        <div class="pm-err">請輸入有效的 16 位卡號</div>
+      </div>
+      <div class="pm-2col">
+        <div class="pm-field" id="fExp">
+          <label for="pmExp">有效期限</label>
+          <input id="pmExp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5">
+          <div class="pm-err">效期無效或已過期</div>
+        </div>
+        <div class="pm-field" id="fCvc">
+          <label for="pmCvc">安全碼</label>
+          <input id="pmCvc" inputmode="numeric" autocomplete="cc-csc" placeholder="背面 3 碼" maxlength="3">
+          <div class="pm-err">請輸入卡片背面 3 碼</div>
+        </div>
+      </div>
+      <div class="pm-field" id="fName">
+        <label for="pmName">持卡人姓名（同卡片英文姓名）</label>
+        <input id="pmName" autocomplete="cc-name" placeholder="WANG XIAOMING" maxlength="26">
+        <div class="pm-err">請輸入持卡人姓名</div>
+      </div>
+      <button class="pm-submit" id="pmSubmit" type="button" disabled>新增這張卡</button>
+    </div>
+
+    <!-- STEP: LINE Pay -->
+    <div class="pm-step" data-step="line">
+      <div class="pm-head">
+        <button class="pm-back" type="button" data-pm-goto="choose" aria-label="返回">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </button>
+        <div class="pm-title">連結 LINE Pay</div>
+        <button class="pm-x" type="button" data-pm-close aria-label="關閉">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="pm-line-hero">
+        <span class="lp-badge">LINE</span>
+        <span class="lp-txt">LINE Pay</span>
+      </div>
+      <div class="pm-sub">將開啟 LINE 進行授權，完成後自動返回本頁。連結後付款免輸入卡號，並可使用 LINE POINTS 折抵。</div>
+      <button class="pm-submit" id="pmLineBtn" type="button">前往 LINE Pay 授權</button>
+    </div>
+
+    <!-- STEP: 完成 -->
+    <div class="pm-step" data-step="done">
+      <div class="pm-done">
+        <svg viewBox="0 0 60 60" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <circle class="ring" cx="30" cy="30" r="26" stroke-width="3"/>
+          <path class="tick" d="M19 31 l8 8 14-16" stroke-width="4"/>
+        </svg>
+        <div class="pm-done-t" id="pmDoneT">已新增付款方式</div>
+        <div class="pm-done-d" id="pmDoneD"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 申請新頭銜 Modal ===== -->
+<div class="pm-backdrop" id="caBackdrop" aria-hidden="true">
+  <div class="pm-dialog" role="dialog" aria-modal="true" aria-labelledby="caTitle">
+
+    <!-- STEP: 表單 -->
+    <div class="pm-step on" data-step="form">
+      <div class="pm-head">
+        <div class="pm-title" id="caTitle">申請新頭銜</div>
+        <button class="pm-x" type="button" data-ca-close aria-label="關閉">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="pm-sub">上傳證照、獎項或升學證明，人工審查通過後將顯示於你的作者頭銜。</div>
+
+      <div class="pm-field">
+        <label>認證類型</label>
+        <div class="ca-types" id="caTypes">
+          <button class="ca-t on" type="button" data-type="證照">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg>
+            證照
+          </button>
+          <button class="ca-t" type="button" data-type="獎項">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg>
+            獎項
+          </button>
+          <button class="ca-t" type="button" data-type="升學">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg>
+            升學
+          </button>
+        </div>
+      </div>
+
+      <div class="pm-field" id="caFName">
+        <label for="caName">頭銜名稱</label>
+        <input id="caName" placeholder="例如：多益 935、書卷獎、台大碩士" maxlength="12">
+        <div class="pm-err">請輸入頭銜名稱</div>
+      </div>
+
+      <div class="pm-field" id="caFFile">
+        <label>證明文件</label>
+        <div class="ca-drop" id="caDrop">
+          <div class="di"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15 v4 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 v-4"/><path d="M17 8 12 3 7 8"/><path d="M12 3 v12"/></svg></div>
+          <div class="dt">點擊上傳或拖曳檔案到這裡</div>
+          <div class="dd">支援 JPG / PNG / PDF，10MB 以內</div>
+        </div>
+        <div class="ca-fileRow" id="caFileRow">
+          <img class="fthumb" id="caThumb" alt="證明文件預覽" style="display:none;">
+          <span class="fpdf" id="caPdfIc" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 H6 a2 2 0 0 0-2 2 v16 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2-2 V8Z"/><path d="M14 2 v6 h6"/></svg></span>
+          <span class="fmeta"><span class="fname" id="caFileName"></span><span class="fsize" id="caFileSize"></span></span>
+          <button class="fdel" type="button" id="caFileDel" aria-label="移除檔案">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        <input type="file" id="caFile" accept="image/*,.pdf" hidden>
+        <div class="pm-err">請上傳證明文件</div>
+      </div>
+
+      <div class="pm-safe">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5 v6 c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10 V5Z"/></svg>
+        證明文件僅供審查人員核對，不會公開顯示。
+      </div>
+      <button class="pm-submit" id="caSubmit" type="button" disabled>送出申請</button>
+    </div>
+
+    <!-- STEP: 完成 -->
+    <div class="pm-step" data-step="done">
+      <div class="pm-done">
+        <svg viewBox="0 0 60 60" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <circle class="ring" cx="30" cy="30" r="26" stroke-width="3"/>
+          <path class="tick" d="M19 31 l8 8 14-16" stroke-width="4"/>
+        </svg>
+        <div class="pm-done-t">已送出申請</div>
+        <div class="pm-done-d" id="caDoneD"></div>
       </div>
     </div>
 
@@ -694,11 +1312,42 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // 我的攻略：加入比賽（示範：點擊後換成參賽中徽章，正式版由後端記錄）
+  document.addEventListener('click', function (e) {
+    var j = e.target.closest('[data-join-contest]'); if (!j) return;
+    e.preventDefault();
+    var badge = document.createElement('span');
+    badge.className = 'pf-badge contest';
+    badge.title = '種子創作者計劃';
+    badge.textContent = '參賽中';
+    var right = j.closest('.a-right');
+    right.insertBefore(badge, right.querySelector('.a-price'));
+    j.remove();
+  });
+
   // 我的攻略篩選
   document.querySelector('.filters').addEventListener('click', function (e) {
     var f = e.target.closest('.f'); if (!f) return;
     this.querySelectorAll('.f').forEach(function (x) { x.classList.remove('on'); });
     f.classList.add('on');
+  });
+
+  // 帳號設定 → 子頁面（金流／隱私／通知）切換
+  document.addEventListener('click', function (e) {
+    var g = e.target.closest('[data-goto-pane]'); if (!g) return;
+    e.preventDefault();
+    var target = g.dataset.gotoPane;
+    panes.forEach(function (p) { p.classList.toggle('on', p.dataset.pane === target); });
+    var navKey = target.indexOf('set-') === 0 ? 'settings' : target;
+    document.querySelectorAll('#sideNav button').forEach(function (x) {
+      x.classList.toggle('on', x.dataset.pane === navKey);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 設定開關
+  document.querySelectorAll('.tgl').forEach(function (t) {
+    t.addEventListener('click', function () { t.classList.toggle('on'); });
   });
 
   /* ---------- 前台顯示名稱（半實名）：只公開一個字＋同學，不透露位置 ---------- */
@@ -736,6 +1385,595 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       preview.textContent = publicName();
       if (idName) idName.textContent = DEPT + ' ' + publicName();
+    }
+    render();
+  })();
+</script>
+
+<script>
+  /* ---------- 新增付款方式 Modal ---------- */
+  (function () {
+    var backdrop = document.getElementById('pmBackdrop');
+    var steps = backdrop.querySelectorAll('.pm-step');
+    var card = document.getElementById('ccCard');
+    var inNum = document.getElementById('pmNum');
+    var inExp = document.getElementById('pmExp');
+    var inCvc = document.getElementById('pmCvc');
+    var inName = document.getElementById('pmName');
+    var outNum = document.getElementById('hlNum').querySelectorAll('span');
+    var outName = document.getElementById('ccNameOut');
+    var outExp = document.getElementById('ccExpOut');
+    var outCvc = document.getElementById('ccCvcOut');
+    var brandEl = document.getElementById('ccBrand');
+    var brandMini = document.getElementById('pmBrandMini');
+    var submitBtn = document.getElementById('pmSubmit');
+    var closeTimer = null;
+
+    function goStep(name) {
+      steps.forEach(function (s) { s.classList.toggle('on', s.dataset.step === name); });
+      if (name === 'card') setTimeout(function () { inNum.focus(); }, 250);
+    }
+    function openModal() {
+      resetForm();
+      // 已完成實名認證 → 御璽卡；否則玫瑰金粉（正式版由後端 whoami 判斷）
+      var verified = !!document.querySelector('.pane[data-pane="settings"] .set-row .pill-ok');
+      card.classList.toggle('cc-theme-jade', verified);
+      card.classList.toggle('cc-theme-rose', !verified);
+      goStep('choose');
+      backdrop.classList.add('open');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      clearTimeout(closeTimer);
+      backdrop.classList.remove('open');
+      backdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('addPayBtn').addEventListener('click', openModal);
+    backdrop.addEventListener('click', function (e) { if (e.target === backdrop) closeModal(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal(); });
+    backdrop.addEventListener('click', function (e) {
+      if (e.target.closest('[data-pm-close]')) closeModal();
+      var g = e.target.closest('[data-pm-goto]');
+      if (g) goStep(g.dataset.pmGoto);
+    });
+
+    /* ----- 卡號：4-4-4-4 分組 + 品牌偵測 + 即時同步卡面 ----- */
+    function digits(v) { return v.replace(/\D/g, ''); }
+    function detectBrand(d) {
+      if (/^4/.test(d)) return 'VISA';
+      if (/^(5[1-5]|2[2-7])/.test(d)) return 'Mastercard';
+      if (/^35/.test(d)) return 'JCB';
+      return '';
+    }
+    function luhn(d) {
+      var sum = 0, alt = false;
+      for (var i = d.length - 1; i >= 0; i--) {
+        var n = +d[i];
+        if (alt) { n *= 2; if (n > 9) n -= 9; }
+        sum += n; alt = !alt;
+      }
+      return sum % 10 === 0;
+    }
+    inNum.addEventListener('input', function () {
+      var d = digits(inNum.value).slice(0, 16);
+      inNum.value = (d.match(/.{1,4}/g) || []).join(' ');
+      for (var i = 0; i < 4; i++) {
+        var g = d.substr(i * 4, 4);
+        outNum[i].textContent = (g + '••••'.slice(g.length)) || '••••';
+      }
+      var b = detectBrand(d);
+      brandMini.textContent = b;
+      if (b === 'Mastercard') brandEl.innerHTML = '<span class="mc"><i></i><i></i></span>';
+      else brandEl.textContent = b;
+      clearErr('fNum');
+      if (d.length === 16) inExp.focus();
+      refreshReady();
+    });
+
+    /* ----- 效期：MM/YY 自動補斜線 ----- */
+    inExp.addEventListener('input', function () {
+      var d = digits(inExp.value).slice(0, 4);
+      if (d.length >= 1 && +d[0] > 1) d = '0' + d; // 輸入 3 → 03
+      inExp.value = d.length > 2 ? d.slice(0, 2) + '/' + d.slice(2) : d;
+      outExp.textContent = inExp.value || 'MM/YY';
+      clearErr('fExp');
+      if (d.length === 4) inCvc.focus();
+      refreshReady();
+    });
+
+    /* ----- 安全碼：聚焦時翻到卡片背面 ----- */
+    inCvc.addEventListener('focus', function () { card.classList.add('flip'); });
+    inCvc.addEventListener('blur', function () { card.classList.remove('flip'); });
+    inCvc.addEventListener('input', function () {
+      var d = digits(inCvc.value).slice(0, 3);
+      inCvc.value = d;
+      outCvc.textContent = d + '•••'.slice(d.length);
+      clearErr('fCvc');
+      refreshReady();
+    });
+
+    /* ----- 持卡人姓名 ----- */
+    inName.addEventListener('input', function () {
+      outName.textContent = inName.value.trim().toUpperCase() || 'YOUR NAME';
+      clearErr('fName');
+      refreshReady();
+    });
+
+    /* ----- 游標傾斜 + 光暈跟隨 ----- */
+    var tiltEl = document.getElementById('ccTilt');
+    var sceneEl = backdrop.querySelector('.cc-scene');
+    var glares = backdrop.querySelectorAll('.cc-glare');
+    function resetTilt() {
+      tiltEl.style.transition = 'transform 0.5s ease';
+      tiltEl.style.transform = 'perspective(1000px)';
+      glares.forEach(function (g) { g.style.opacity = 0; });
+    }
+    sceneEl.addEventListener('mousemove', function (e) {
+      var r = tiltEl.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width * 100;
+      var y = (e.clientY - r.top) / r.height * 100;
+      var tx = ((y - 50) / 50 * -8).toFixed(2);
+      var ty = ((x - 50) / 50 * 8).toFixed(2);
+      tiltEl.style.transition = 'transform 0.05s ease-out';
+      tiltEl.style.transform = 'perspective(1000px) rotateX(' + tx + 'deg) rotateY(' + ty + 'deg) scale(1.02)';
+      glares.forEach(function (g) {
+        g.style.opacity = 1;
+        g.style.background = 'radial-gradient(circle at ' + x.toFixed(1) + '% ' + y.toFixed(1) + '%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.15) 30%, rgba(255,255,255,0) 55%)';
+      });
+    });
+    sceneEl.addEventListener('mouseleave', resetTilt);
+
+    /* ----- 聚焦哪個欄位，卡面就亮哪一區 ----- */
+    [[inNum, 'hlNum'], [inExp, 'hlExp'], [inCvc, 'hlCvc'], [inName, 'hlName']].forEach(function (pair) {
+      pair[0].addEventListener('focus', function () { document.getElementById(pair[1]).classList.add('lit'); });
+      pair[0].addEventListener('blur', function () { document.getElementById(pair[1]).classList.remove('lit'); });
+    });
+
+    /* ----- 驗證 ----- */
+    function expValid() {
+      var m = inExp.value.match(/^(\d{2})\/(\d{2})$/);
+      if (!m || +m[1] < 1 || +m[1] > 12) return false;
+      var now = new Date();
+      return (+m[2] * 100 + +m[1]) >= ((now.getFullYear() % 100) * 100 + now.getMonth() + 1);
+    }
+    function numValid() { var d = digits(inNum.value); return d.length === 16 && luhn(d); }
+    function allValid() {
+      return numValid() && expValid() && inCvc.value.length === 3 && inName.value.trim().length > 0;
+    }
+    function refreshReady() { submitBtn.disabled = !allValid(); }
+    function setErr(id, on) { document.getElementById(id).classList.toggle('err', on); }
+    function clearErr(id) { setErr(id, false); }
+
+    function resetForm() {
+      [inNum, inExp, inCvc, inName].forEach(function (i) { i.value = ''; });
+      ['fNum', 'fExp', 'fCvc', 'fName'].forEach(clearErr);
+      outNum.forEach(function (s) { s.textContent = '••••'; });
+      outName.textContent = 'YOUR NAME';
+      outExp.textContent = 'MM/YY';
+      outCvc.textContent = '•••';
+      brandEl.textContent = '';
+      brandMini.textContent = '';
+      card.classList.remove('flip');
+      resetTilt();
+      submitBtn.disabled = true;
+      var lineBtn = document.getElementById('pmLineBtn');
+      lineBtn.disabled = false; lineBtn.textContent = '前往 LINE Pay 授權';
+    }
+
+    /* ----- 送出：成功動畫 → 插入付款方式列表 ----- */
+    submitBtn.addEventListener('click', function () {
+      setErr('fNum', !numValid());
+      setErr('fExp', !expValid());
+      setErr('fCvc', inCvc.value.length !== 3);
+      setErr('fName', inName.value.trim().length === 0);
+      if (!allValid()) return;
+
+      var d = digits(inNum.value);
+      var brand = detectBrand(d) || '信用卡';
+      var last4 = d.slice(-4);
+      document.getElementById('pmDoneT').textContent = '已新增信用卡';
+      document.getElementById('pmDoneD').textContent = brand + ' •••• ' + last4 + ' · 到期 ' + inExp.value;
+      goStep('done');
+
+      var row = document.createElement('div');
+      row.className = 'set-row';
+      row.innerHTML =
+        '<div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10 h20"/></svg></div>' +
+        '<div class="sbody"><div class="stitle">信用卡 •••• ' + last4 + '</div>' +
+        '<div class="sdesc">' + brand + ' · 到期 ' + inExp.value + '</div></div>' +
+        '<a class="pill-link" href="#">設為預設</a>';
+      var addBtn = document.getElementById('addPayBtn');
+      addBtn.parentNode.insertBefore(row, addBtn);
+
+      closeTimer = setTimeout(closeModal, 1600);
+    });
+
+    /* ----- LINE Pay：模擬授權流程 ----- */
+    document.getElementById('pmLineBtn').addEventListener('click', function () {
+      var btn = this;
+      btn.disabled = true;
+      btn.textContent = '正在連結 LINE Pay…';
+      setTimeout(function () {
+        document.getElementById('pmDoneT').textContent = 'LINE Pay 已連結';
+        document.getElementById('pmDoneD').textContent = '之後付款可直接使用 LINE Pay 扣款。';
+        goStep('done');
+        closeTimer = setTimeout(closeModal, 1600);
+      }, 1200);
+    });
+  })();
+</script>
+
+<script>
+  /* ---------- 申請新頭銜 Modal ---------- */
+  (function () {
+    var backdrop = document.getElementById('caBackdrop');
+    var steps = backdrop.querySelectorAll('.pm-step');
+    var typesEl = document.getElementById('caTypes');
+    var nameIn = document.getElementById('caName');
+    var fileIn = document.getElementById('caFile');
+    var drop = document.getElementById('caDrop');
+    var fileRow = document.getElementById('caFileRow');
+    var thumbEl = document.getElementById('caThumb');
+    var pdfIc = document.getElementById('caPdfIc');
+    var fnameEl = document.getElementById('caFileName');
+    var fsizeEl = document.getElementById('caFileSize');
+    var submitBtn = document.getElementById('caSubmit');
+    var curType = '證照';
+    var curFile = null;
+    var closeTimer = null;
+
+    var TYPE_ICONS = {
+      '證照': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg>',
+      '獎項': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg>',
+      '升學': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg>'
+    };
+
+    function goStep(name) {
+      steps.forEach(function (s) { s.classList.toggle('on', s.dataset.step === name); });
+    }
+    function setErr(id, on) { document.getElementById(id).classList.toggle('err', on); }
+    function refreshReady() { submitBtn.disabled = !(nameIn.value.trim() && curFile); }
+
+    function clearFile() {
+      curFile = null;
+      fileIn.value = '';
+      fileRow.classList.remove('show');
+      drop.style.display = '';
+      thumbEl.style.display = 'none';
+      pdfIc.style.display = 'none';
+      refreshReady();
+    }
+    function resetForm() {
+      nameIn.value = '';
+      clearFile();
+      setErr('caFName', false); setErr('caFFile', false);
+      typesEl.querySelectorAll('.ca-t').forEach(function (b, i) { b.classList.toggle('on', i === 0); });
+      curType = '證照';
+    }
+    function openModal() {
+      resetForm();
+      goStep('form');
+      backdrop.classList.add('open');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      clearTimeout(closeTimer);
+      backdrop.classList.remove('open');
+      backdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('certAddBtn').addEventListener('click', openModal);
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop || e.target.closest('[data-ca-close]')) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
+    });
+
+    /* 認證類型 */
+    typesEl.addEventListener('click', function (e) {
+      var b = e.target.closest('.ca-t'); if (!b) return;
+      typesEl.querySelectorAll('.ca-t').forEach(function (x) { x.classList.remove('on'); });
+      b.classList.add('on');
+      curType = b.dataset.type;
+    });
+
+    nameIn.addEventListener('input', function () { setErr('caFName', false); refreshReady(); });
+
+    /* 檔案上傳：點擊 / 拖曳 */
+    drop.addEventListener('click', function () { fileIn.click(); });
+    ['dragover', 'dragenter'].forEach(function (ev) {
+      drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('drag'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('drag'); });
+    });
+    drop.addEventListener('drop', function (e) {
+      if (e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
+    });
+    fileIn.addEventListener('change', function () {
+      if (fileIn.files.length) setFile(fileIn.files[0]);
+    });
+
+    function setFile(f) {
+      var isImg = /^image\//.test(f.type);
+      var isPdf = f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+      if (!isImg && !isPdf) return;
+      if (f.size > 10 * 1024 * 1024) { setErr('caFFile', true); return; }
+      curFile = f;
+      setErr('caFFile', false);
+      fnameEl.textContent = f.name;
+      fsizeEl.textContent = (f.size / 1024 / 1024).toFixed(f.size > 1024 * 1024 ? 1 : 2) + ' MB';
+      drop.style.display = 'none';
+      fileRow.classList.add('show');
+      if (isImg) {
+        var reader = new FileReader();
+        reader.onload = function () { thumbEl.src = reader.result; thumbEl.style.display = ''; };
+        reader.readAsDataURL(f);
+        pdfIc.style.display = 'none';
+      } else {
+        thumbEl.style.display = 'none';
+        pdfIc.style.display = 'flex';
+      }
+      refreshReady();
+    }
+    document.getElementById('caFileDel').addEventListener('click', function (e) {
+      e.stopPropagation();
+      clearFile();
+    });
+
+    /* 送出 → 成功動畫 → 插入審查中卡片 */
+    submitBtn.addEventListener('click', function () {
+      setErr('caFName', !nameIn.value.trim());
+      setErr('caFFile', !curFile);
+      if (!nameIn.value.trim() || !curFile) return;
+
+      var title = nameIn.value.trim();
+      document.getElementById('caDoneD').textContent = title + ' ' + curType + '認證 · 審查通常 1–3 個工作天完成';
+      goStep('done');
+
+      var cert = document.createElement('div');
+      cert.className = 'cert';
+      cert.innerHTML =
+        '<div class="cic">' + TYPE_ICONS[curType] + '</div>' +
+        '<div class="cbody">' +
+          '<div class="cname"></div>' +
+          '<div class="cdesc">證明文件審查中，通常 1–3 個工作天完成。通過後將自動加上頭銜。</div>' +
+          '<span class="cstatus pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審查中</span>' +
+        '</div>';
+      cert.querySelector('.cname').textContent = title + ' ' + curType + '認證';
+      var addCard = document.getElementById('certAddBtn');
+      addCard.parentNode.insertBefore(cert, addCard);
+
+      closeTimer = setTimeout(closeModal, 1600);
+    });
+  })();
+</script>
+
+<script>
+  /* ---------- 數據分析：期間篩選 / 圓餅圖 / 單篇分析 ---------- */
+  (function () {
+    /* 經 dataviz 驗證的藍綠光譜分類色（固定順序，色彩跟著來源走） */
+    var PAL = ['#1560ab', '#6fb1e8', '#0e8a78', '#3fbf8f'];
+    var MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月'];
+    var TOT = {
+      reads: [2050, 2480, 2260, 3120, 3890, 4620],
+      rev:   [860, 1176, 995, 1538, 1809, 2262],
+      rate:  [4.7, 4.7, 4.8, 4.8, 4.8, 4.9],
+      rateN: [9, 11, 13, 17, 21, 25],
+      pub:   [7, 8, 9, 10, 11, 12]
+    };
+    var SRC = [
+      [40, 34, 17, 9], [42, 33, 16, 9], [44, 32, 15, 9],
+      [45, 31, 16, 8], [47, 30, 15, 8], [48, 29, 15, 8]
+    ];
+    var SRC_ALL = [46, 31, 15, 8];
+    var SRC_NAMES = ['攻略站首頁推薦', '搜尋 / 分類瀏覽', '站外分享連結', '作者主頁'];
+    var ARTS = [
+      { cat: '研究所推甄', title: '中興推台清交：備審修改前後對比＋面試真題還原', price: 129, rating: 4.9,
+        reads: [220, 260, 300, 380, 460, 564], favs: [8, 11, 14, 17, 21, 25], sales: [2, 3, 3, 4, 3, 4] },
+      { cat: '通識指南', title: '某通識「如何拿到 A+」報告範本＋分組避雷名單', price: 0, rating: 4.7,
+        reads: [150, 190, 230, 270, 300, 316], favs: [12, 15, 18, 20, 22, 25], sales: [0, 0, 0, 0, 0, 0] },
+      { cat: '研究計畫申請', title: '成功獲補助的研究計畫書撰寫架構＋如何找指導教授', price: 99, rating: 4.8,
+        reads: [180, 200, 220, 240, 270, 292], favs: [7, 10, 12, 15, 16, 18], sales: [2, 2, 3, 3, 4, 4] }
+    ];
+
+    var sel = 'all';   // 'all' 或月份 index
+    var curArt = null; // null = 排行表；否則為單篇文章
+
+    var $ = function (id) { return document.getElementById(id); };
+    function fmt(n) { return n.toLocaleString('en-US'); }
+    function nt(n) { return 'NT$ ' + fmt(n); }
+    function sumArr(a) { return a.reduce(function (x, y) { return x + y; }, 0); }
+    function pick(a) { return sel === 'all' ? sumArr(a) : a[sel]; }
+
+    /* 共用 tooltip（值為主、名稱為輔，只用 textContent） */
+    var tip = document.createElement('div');
+    tip.className = 'an-tip'; tip.hidden = true;
+    var tipV = document.createElement('b'), tipL = document.createElement('span');
+    tip.appendChild(tipV); tip.appendChild(tipL);
+    document.body.appendChild(tip);
+    function showTip(e, value, label) {
+      tipV.textContent = value; tipL.textContent = label;
+      tip.hidden = false;
+      tip.style.left = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 10) + 'px';
+      tip.style.top = (e.clientY + 14) + 'px';
+    }
+    function hideTip() { tip.hidden = true; }
+
+    /* 期間選單 */
+    var rangeSel = $('anRange');
+    var optAll = document.createElement('option');
+    optAll.value = 'all'; optAll.textContent = '近 6 個月';
+    rangeSel.appendChild(optAll);
+    MONTHS.forEach(function (m, i) {
+      var o = document.createElement('option');
+      o.value = String(i); o.textContent = '2026 年 ' + m;
+      rangeSel.appendChild(o);
+    });
+    rangeSel.addEventListener('change', function () {
+      sel = rangeSel.value === 'all' ? 'all' : +rangeSel.value;
+      render();
+    });
+
+    /* 指標卡 */
+    function trendTxt(el, arr) {
+      if (sel === 'all') { el.textContent = '近 6 個月累計'; el.className = 'an-trend flat'; return; }
+      if (sel === 0) { el.textContent = '無前期資料'; el.className = 'an-trend flat'; return; }
+      var p = (arr[sel] - arr[sel - 1]) / arr[sel - 1] * 100;
+      el.textContent = (p >= 0 ? '↑ ' : '↓ ') + Math.abs(p).toFixed(1) + '% 較上月';
+      el.className = 'an-trend ' + (p >= 0 ? 'up' : 'flat');
+    }
+    function renderMetrics() {
+      $('anReads').textContent = fmt(pick(TOT.reads));
+      $('anRev').textContent = nt(pick(TOT.rev));
+      $('anRate').innerHTML = (sel === 'all' ? 4.8 : TOT.rate[sel]).toFixed(1) + '<span class="u">/5</span>';
+      $('anPub').textContent = sel === 'all' ? 12 : TOT.pub[sel];
+      trendTxt($('anReadsT'), TOT.reads);
+      trendTxt($('anRevT'), TOT.rev);
+      $('anRateT').textContent = '共 ' + (sel === 'all' ? 96 : TOT.rateN[sel]) + ' 則評價';
+      $('anRateT').className = 'an-trend flat';
+      $('anPubT').textContent = sel === 'all' ? '1 篇草稿中' : '截至當月累計';
+      $('anPubT').className = 'an-trend flat';
+    }
+
+    /* 柱狀圖（月份柱條，點擊跳到該月） */
+    function buildBars(host, values, clickable, fmtVal) {
+      host.innerHTML = '';
+      var max = Math.max.apply(null, values);
+      values.forEach(function (v, i) {
+        var slot = document.createElement('div');
+        slot.className = 'an-slot' + (clickable ? '' : ' static') + (sel === i ? ' on' : '');
+        var bar = document.createElement('div');
+        bar.className = 'an-bar';
+        bar.style.height = Math.max(4, v / max * 100) + '%';
+        if (sel === i) {
+          var cap = document.createElement('span');
+          cap.className = 'cap'; cap.textContent = fmtVal(v);
+          bar.appendChild(cap);
+        }
+        var mo = document.createElement('span');
+        mo.className = 'mo'; mo.textContent = MONTHS[i];
+        slot.appendChild(bar); slot.appendChild(mo);
+        slot.addEventListener('pointermove', function (e) { showTip(e, fmtVal(v), '2026 年 ' + MONTHS[i]); });
+        slot.addEventListener('pointerleave', hideTip);
+        if (clickable) {
+          slot.addEventListener('click', function () {
+            sel = (sel === i) ? 'all' : i;   // 再點一次取消，回到近 6 個月
+            rangeSel.value = String(sel);
+            hideTip();
+            render();
+          });
+        }
+        host.appendChild(slot);
+      });
+    }
+
+    /* 讀者來源圓餅圖（donut，2px surface gap） */
+    var NS = 'http://www.w3.org/2000/svg';
+    function hlSlice(i, on) {
+      $('anDonut').querySelectorAll('.sl').forEach(function (c) {
+        c.classList.toggle('hl', on && +c.dataset.i === i);
+      });
+      $('anMixRows').querySelectorAll('.an-mix-row').forEach(function (r, j) {
+        r.classList.toggle('hl', on && j === i);
+      });
+    }
+    function renderDonut() {
+      var src = sel === 'all' ? SRC_ALL : SRC[sel];
+      var svg = $('anDonut');
+      svg.innerHTML = '';
+      var C = 2 * Math.PI * 44, GAP = 2.5, start = 0;
+      src.forEach(function (p, i) {
+        var len = Math.max(0, p / 100 * C - GAP);
+        var c = document.createElementNS(NS, 'circle');
+        c.setAttribute('class', 'sl');
+        c.setAttribute('cx', 60); c.setAttribute('cy', 60); c.setAttribute('r', 44);
+        c.setAttribute('stroke', PAL[i]);
+        c.setAttribute('stroke-dasharray', len + ' ' + (C - len));
+        c.setAttribute('stroke-dashoffset', String(-(start + GAP / 2)));
+        c.setAttribute('transform', 'rotate(-90 60 60)');
+        c.dataset.i = i;
+        c.addEventListener('pointermove', function (e) { hlSlice(i, true); showTip(e, p + '%', SRC_NAMES[i]); });
+        c.addEventListener('pointerleave', function () { hlSlice(i, false); hideTip(); });
+        svg.appendChild(c);
+        start += p / 100 * C;
+      });
+      var t1 = document.createElementNS(NS, 'text');
+      t1.setAttribute('x', 60); t1.setAttribute('y', 58); t1.setAttribute('text-anchor', 'middle');
+      t1.setAttribute('style', 'font-size:14px;font-weight:700;');
+      t1.textContent = fmt(pick(TOT.reads));
+      var t2 = document.createElementNS(NS, 'text');
+      t2.setAttribute('x', 60); t2.setAttribute('y', 73); t2.setAttribute('text-anchor', 'middle');
+      t2.setAttribute('style', 'font-size:8.5px;fill:#6f87a0;letter-spacing:0.1em;');
+      t2.textContent = '總閱讀';
+      svg.appendChild(t1); svg.appendChild(t2);
+
+      var rows = $('anMixRows');
+      rows.innerHTML = '';
+      src.forEach(function (p, i) {
+        var row = document.createElement('div');
+        row.className = 'an-mix-row';
+        var dot = document.createElement('span'); dot.className = 'an-mix-dot'; dot.style.background = PAL[i];
+        var lbl = document.createElement('span'); lbl.className = 'an-mix-lbl'; lbl.textContent = SRC_NAMES[i];
+        var pc = document.createElement('span'); pc.className = 'an-mix-pct'; pc.textContent = p + '%';
+        row.appendChild(dot); row.appendChild(lbl); row.appendChild(pc);
+        row.addEventListener('pointerenter', function () { hlSlice(i, true); });
+        row.addEventListener('pointerleave', function () { hlSlice(i, false); });
+        rows.appendChild(row);
+      });
+    }
+
+    /* 熱門排行表（依期間重算、點擊進單篇） */
+    function renderTable() {
+      var host = $('anRows');
+      host.innerHTML = '';
+      ARTS.map(function (a) {
+        return { a: a, reads: pick(a.reads), favs: pick(a.favs), rev: pick(a.sales) * a.price };
+      }).sort(function (x, y) { return y.reads - x.reads; })
+        .forEach(function (it) {
+          var row = document.createElement('div');
+          row.className = 'an-trow';
+          var tt = document.createElement('span'); tt.className = 'tt'; tt.textContent = it.a.title;
+          var r1 = document.createElement('span'); r1.className = 'tn'; r1.textContent = fmt(it.reads);
+          var r2 = document.createElement('span'); r2.className = 'tn'; r2.textContent = fmt(it.favs);
+          var r3 = document.createElement('span'); r3.className = 'tn'; r3.textContent = it.a.rating.toFixed(1);
+          var r4 = document.createElement('span'); r4.className = 'rev'; r4.textContent = it.a.price ? nt(it.rev) : '免費';
+          [tt, r1, r2, r3, r4].forEach(function (el) { row.appendChild(el); });
+          row.addEventListener('click', function () { curArt = it.a; render(); });
+          host.appendChild(row);
+        });
+    }
+
+    /* 單篇文章分析 */
+    function renderDetail() {
+      var a = curArt;
+      $('anDtCat').textContent = a.cat;
+      $('anDtTitle').textContent = a.title;
+      $('anDtReads').textContent = fmt(pick(a.reads));
+      $('anDtFavs').textContent = fmt(pick(a.favs));
+      $('anDtRev').textContent = a.price ? nt(pick(a.sales) * a.price) : '免費';
+      $('anDtRate').innerHTML = a.rating.toFixed(1) + '<span class="u">/5</span>';
+      buildBars($('anDtBars'), a.reads, false, fmt);
+    }
+    $('anDetailBack').addEventListener('click', function () { curArt = null; render(); });
+
+    function render() {
+      renderMetrics();
+      $('anChTot').textContent = sel === 'all'
+        ? nt(sumArr(TOT.rev))
+        : nt(TOT.rev[sel]) + '（' + MONTHS[sel] + '）';
+      buildBars($('anBars'), TOT.rev, true, nt);
+      renderDonut();
+      var detail = curArt !== null;
+      $('anTableCard').style.display = detail ? 'none' : '';
+      $('anDetail').hidden = !detail;
+      if (detail) renderDetail(); else renderTable();
     }
     render();
   })();

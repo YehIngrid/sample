@@ -1,14 +1,50 @@
-// ── Shared mock data（之後換成後端 API）──
-const BADGE_CLASS = { study: 'badge-study', life: 'badge-life', career: 'badge-career', trade: 'badge-trade', newbie: 'badge-newbie', all: 'badge-all' };
-const BADGE_LABEL = { study: '學習攻略', life: '生活指南', career: '實習求職', trade: '二手交易', newbie: '新生必看', all: '全部' };
+// ── Topics with preset tags ──
+const TOPICS = {
+  '研究所推甄': { id: 'grad-admission', tags: ['頂大推甄', '推甄面試', '備審資料'], icon: '🎓', color: '#004b97' },
+  '學分攻略': { id: 'credit-guide', tags: ['必修筆記', '通識涼課', '考題詳解', '教授評價'], icon: '📚', color: '#4a85c4' },
+  '證照檢定': { id: 'certifications', tags: ['英文檢定'], icon: '🏆', color: '#7eb8d8' },
+  '實習與面試': { id: 'internship-interview', tags: ['履歷模板', '面試實錄', '實習避雷', '暑期實習'], icon: '💼', color: '#7eb8d8' },
+  '美食地圖': { id: 'food-map', tags: ['聚餐口袋名單', '學生優惠清單', '宵夜推薦'], icon: '🍱', color: '#abdad5' },
+  '校園資源': { id: 'campus-resources', tags: ['獎學金申請', '校內工讀', '數位資源', '免費資源'], icon: '🎯', color: '#7eb8d8' },
+  '轉學/轉系': { id: 'transfer', tags: ['手寫詳解', '書面審查', '口試密技'], icon: '🔄', color: '#4a85c4' },
+  '交換學生': { id: 'exchange-student', tags: ['準備心得', '外文自傳', '讀書計畫', '國外生活攻略'], icon: '✈️', color: '#7eb8d8' },
+  '專題研究': { id: 'capstone-project', tags: ['專題架構', '問卷統計', '數據分析', '教授推薦'], icon: '🔬', color: '#4a85c4' },
+  '生活指南': { id: 'life-guide', tags: ['新生必知', '選課教學', '租屋攻略', '商家推薦'], icon: '🏠', color: '#abdad5' },
+};
+
+const BADGE_CLASS = {
+  'grad-admission': 'badge-grad',
+  'credit-guide': 'badge-credit',
+  'certifications': 'badge-cert',
+  'internship-interview': 'badge-career',
+  'food-map': 'badge-food',
+  'campus-resources': 'badge-resources',
+  'transfer': 'badge-transfer',
+  'exchange-student': 'badge-exchange',
+  'capstone-project': 'badge-capstone',
+  'life-guide': 'badge-life'
+};
+
+const BADGE_LABEL = {
+  'grad-admission': '研究所推甄',
+  'credit-guide': '學分攻略',
+  'certifications': '證照檢定',
+  'internship-interview': '實習與面試',
+  'food-map': '美食地圖',
+  'campus-resources': '校園資源',
+  'transfer': '轉學/轉系',
+  'exchange-student': '交換學生',
+  'capstone-project': '專題研究',
+  'life-guide': '生活指南'
+};
 
 const MOCK_ARTICLES = [
   {
     id: 1, featured: true,
-    cat: 'newbie', title: '中興大學新生必看：開學前完整準備清單',
+    topic: 'life-guide', title: '中興大學新生必看：開學前完整準備清單',
     excerpt: '從選課、住宿到日常用品，第一次離家的你一定要看！整理了所有入學前需要準備的事項，讓你開學第一週不手忙腳亂。',
-    author: '王小明', authorEmoji: '🎓', date: '3小時前', readTime: '8分鐘', likes: 128, comments: 32,
-    emoji: '🏫', tags: ['新生', '選課', '住宿'],
+    author: '王小明', authorEmoji: '🎓', authorRating: 4.8, date: '3小時前', readTime: '8分鐘', likes: 128, comments: 32, rating: 4.9,
+    emoji: '🏫', tags: ['新生必知', '選課教學', '住宿'],
     body: `<p>要進入中興大學了，心情既期待又有點緊張？這篇攻略整理了開學前所有你應該完成的事，讓你第一週就能游刃有餘。</p>
 <h3>📋 一、報到前的行政手續</h3>
 <ul>
@@ -39,10 +75,10 @@ const MOCK_ARTICLES = [
   },
   {
     id: 2, featured: false,
-    cat: 'study', title: '期末考前兩週：高效複習策略完整版',
+    topic: 'credit-guide', title: '期末考前兩週：高效複習策略完整版',
     excerpt: '分享如何在短時間內有效複習並提高考試成績，包含番茄鐘工作法、記憶宮殿技巧與考古題解析方法。',
-    author: '陳小雨', authorEmoji: '📖', date: '1天前', readTime: '5分鐘', likes: 89, comments: 14,
-    emoji: '📚', tags: ['讀書方法', '期末考', '效率'],
+    author: '陳小雨', authorEmoji: '📖', authorRating: 4.7, date: '1天前', readTime: '5分鐘', likes: 89, comments: 14, rating: 4.6,
+    emoji: '📚', tags: ['考題詳解', '必修筆記'],
     body: `<p>期末考前兩週是關鍵期，方法對了事半功倍。以下是我親身測試有效的複習流程。</p>
 <h3>⏰ 番茄鐘工作法（Pomodoro）</h3>
 <p>每次專注 25 分鐘，休息 5 分鐘，完成 4 個番茄後休息 15～30 分鐘。搭配 Forest 或 Be Focused App 追蹤效果很好。</p>
@@ -59,10 +95,10 @@ const MOCK_ARTICLES = [
   },
   {
     id: 3, featured: false,
-    cat: 'life', title: '宿舍收納神技：小空間大利用的15個技巧',
+    topic: 'life-guide', title: '宿舍收納神技：小空間大利用的15個技巧',
     excerpt: '住宿生必備！從床下空間到衣櫥分層，用不到500元讓你的宿舍煥然一新，還附上好物推薦清單。',
-    author: '林美美', authorEmoji: '🏠', date: '2天前', readTime: '4分鐘', likes: 203, comments: 41,
-    emoji: '🛏️', tags: ['宿舍', '收納', '生活好物'],
+    author: '林美美', authorEmoji: '🏠', authorRating: 4.9, date: '2天前', readTime: '4分鐘', likes: 203, comments: 41, rating: 4.8,
+    emoji: '🛏️', tags: ['租屋攻略', '商家推薦'],
     body: `<p>宿舍空間小，但只要善用垂直空間與收納工具，一樣可以住得舒適整潔。</p>
 <h3>🛏️ 床下空間</h3>
 <ul>
@@ -86,10 +122,10 @@ const MOCK_ARTICLES = [
   },
   {
     id: 4, featured: false,
-    cat: 'career', title: '大三就要開始：台中在地實習求職攻略',
+    topic: 'internship-interview', title: '大三就要開始：台中在地實習求職攻略',
     excerpt: '整理了中興大學周邊企業與台中主要科技廠的實習申請管道，附上履歷撰寫、面試準備一手心得。',
-    author: '張大偉', authorEmoji: '💼', date: '3天前', readTime: '7分鐘', likes: 156, comments: 28,
-    emoji: '💻', tags: ['實習', '求職', '台中'],
+    author: '張大偉', authorEmoji: '💼', authorRating: 4.8, date: '3天前', readTime: '7分鐘', likes: 156, comments: 28, rating: 4.7,
+    emoji: '💻', tags: ['履歷模板', '面試實錄', '暑期實習'],
     body: `<p>很多同學大三才開始想實習，其實越早準備越有優勢。以下是我整理的台中在地求職路線。</p>
 <h3>🏭 台中主要實習機會來源</h3>
 <ul>
@@ -109,10 +145,10 @@ const MOCK_ARTICLES = [
   },
   {
     id: 5, featured: false,
-    cat: 'trade', title: '二手交易保護自己：防詐騙三步驟',
-    excerpt: '身為拾貨寶庫的老用戶，整理了這幾年遇過的各種情況，教你如何辨識異常賣家、保障交易安全。',
-    author: '黃阿成', authorEmoji: '🛡️', date: '4天前', readTime: '3分鐘', likes: 312, comments: 57,
-    emoji: '🔒', tags: ['二手交易', '防詐', '安全'],
+    topic: 'campus-resources', title: '校園防詐騙三部曲：保護自己的財務安全',
+    excerpt: '身為拾貨寶庫的老用戶，整理了這幾年遇過的各種情況，教你如何辨識異常狀況、保護校園安全。',
+    author: '黃阿成', authorEmoji: '🛡️', authorRating: 4.9, date: '4天前', readTime: '3分鐘', likes: 312, comments: 57, rating: 4.9,
+    emoji: '🔒', tags: ['免費資源', '數位資源'],
     body: `<p>二手交易雖然方便省錢，但也有潛在風險。以下三個步驟幫你保護自己。</p>
 <h3>✅ 步驟一：確認賣家信譽</h3>
 <ul>
@@ -136,10 +172,10 @@ const MOCK_ARTICLES = [
   },
   {
     id: 6, featured: false,
-    cat: 'study', title: '選課必看：這幾門通識課CP值超高',
+    topic: 'credit-guide', title: '選課必看：這幾門通識課CP值超高',
     excerpt: '根據歷屆同學的課程評論整理，這幾門通識課不但有趣還容易拿分，每學期秒殺的秘密終於公開！',
-    author: '蔡文星', authorEmoji: '⭐', date: '5天前', readTime: '4分鐘', likes: 445, comments: 88,
-    emoji: '🗓️', tags: ['選課', '通識', '課程評價'],
+    author: '蔡文星', authorEmoji: '⭐', authorRating: 4.9, date: '5天前', readTime: '4分鐘', likes: 445, comments: 88, rating: 4.9,
+    emoji: '🗓️', tags: ['通識涼課', '教授評價'],
     body: `<p>通識課是大學生活的一大亮點（或夢魘），選對了輕鬆拿學分、還能學到有用的東西！</p>
 <h3>⭐ 高CP值通識推薦方向</h3>
 <ul>
@@ -158,10 +194,10 @@ const MOCK_ARTICLES = [
   },
   {
     id: 7, featured: false,
-    cat: 'life', title: '台中美食地圖：中興大學周邊必吃30間',
+    topic: 'food-map', title: '台中美食地圖：中興大學周邊必吃30間',
     excerpt: '在地四年的美食踩點報告！從銅板價到特殊場合的餐廳，依照距離和預算完整分類，附上Google地圖連結。',
-    author: '吳食神', authorEmoji: '🍜', date: '6天前', readTime: '6分鐘', likes: 521, comments: 95,
-    emoji: '🍱', tags: ['美食', '台中', '校園周邊'],
+    author: '吳食神', authorEmoji: '🍜', authorRating: 4.9, date: '6天前', readTime: '6分鐘', likes: 521, comments: 95, rating: 4.9,
+    emoji: '🍱', tags: ['聚餐口袋名單', '學生優惠清單'],
     body: `<p>在興大讀了四年，把周邊所有值得吃的店都踩點完了。按照距離幫你整理！</p>
 <h3>🚶 步行 5 分鐘內（校門口周邊）</h3>
 <ul>
@@ -183,10 +219,10 @@ const MOCK_ARTICLES = [
   },
   {
     id: 8, featured: false,
-    cat: 'newbie', title: '中興大學系館地圖：新生第一週不迷路',
+    topic: 'life-guide', title: '中興大學系館地圖：新生第一週不迷路',
     excerpt: '第一次到興大很容易找不到教室？這份手繪風格地圖配上文字說明，讓你快速搞定各系館位置。',
-    author: '何地圖', authorEmoji: '🗺️', date: '1週前', readTime: '3分鐘', likes: 187, comments: 33,
-    emoji: '🗺️', tags: ['新生', '地圖', '校園'],
+    author: '何地圖', authorEmoji: '🗺️', authorRating: 4.8, date: '1週前', readTime: '3分鐘', likes: 187, comments: 33, rating: 4.8,
+    emoji: '🗺️', tags: ['新生必知', '選課教學'],
     body: `<p>興大校區不算小，第一週找教室迷路是正常的。這篇幫你快速建立空間感。</p>
 <h3>🗺️ 校園方位基本概念</h3>
 <p>興大正門朝向興大路，進門後筆直的大道叫「中興路」（校內），大多數系館在這條路的兩側。圖書館在校園中央，是最好的地標。</p>
@@ -203,10 +239,10 @@ const MOCK_ARTICLES = [
   },
   {
     id: 9, featured: false,
-    cat: 'career', title: '大學四年規劃建議：從大一就要做的事',
+    topic: 'internship-interview', title: '大學四年規劃建議：從大一就要做的事',
     excerpt: '現在大四回頭看，這些事情如果大一就做，現在會輕鬆很多。包含證照、社團、實習、人脈的時程規劃。',
-    author: '劉規劃', authorEmoji: '📋', date: '1週前', readTime: '9分鐘', likes: 672, comments: 104,
-    emoji: '🎯', tags: ['生涯規劃', '大學生活', '建議'],
+    author: '劉規劃', authorEmoji: '📋', authorRating: 4.8, date: '1週前', readTime: '9分鐘', likes: 672, comments: 104, rating: 4.8,
+    emoji: '🎯', tags: ['面試實錄', '暑期實習'],
     body: `<p>大四的我，如果能回到大一，一定會更早做這些事。希望這篇能幫到你。</p>
 <h3>大一：打基礎</h3>
 <ul>
@@ -234,10 +270,10 @@ const MOCK_ARTICLES = [
   },
   {
     id: 10, featured: false,
-    cat: 'trade', title: '二手教科書怎麼買最省？完整攻略',
+    topic: 'credit-guide', title: '二手教科書怎麼買最省？完整攻略',
     excerpt: '每本教科書動輒四五百元，這篇告訴你如何在拾貨寶庫、Dcard、PTT找到最便宜的二手教科書，還有如何快速出手。',
-    author: '省錢王', authorEmoji: '💰', date: '2週前', readTime: '5分鐘', likes: 389, comments: 62,
-    emoji: '📗', tags: ['二手教科書', '省錢', '交易'],
+    author: '省錢王', authorEmoji: '💰', authorRating: 4.7, date: '2週前', readTime: '5分鐘', likes: 389, comments: 62, rating: 4.7,
+    emoji: '📗', tags: ['必修筆記', '教授評價'],
     body: `<p>教科書貴到不像話？其實你不需要花全額！以下是我節省教科書費的完整方法。</p>
 <h3>📚 在哪裡找二手教科書？</h3>
 <ul>
@@ -264,8 +300,55 @@ const MOCK_ARTICLES = [
 const MOCK_TAGS = ['選課', '新生', '宿舍', '實習', '二手教科書', '讀書方法', '台中美食', '防詐騙', '通識', '求職', '期末考', '生涯規劃'];
 
 const MOCK_AUTHORS = [
-  { name: '劉規劃', emoji: '📋', articles: 12, desc: '生涯規劃達人' },
-  { name: '吳食神', emoji: '🍜', articles: 8,  desc: '台中美食踩點' },
-  { name: '蔡文星', emoji: '⭐', articles: 15, desc: '選課情報王' },
-  { name: '黃阿成', emoji: '🛡️', articles: 6, desc: '交易安全守護者' },
+  { name: '劉規劃', emoji: '📋', articles: 12, desc: '生涯規劃達人', rating: 4.8 },
+  { name: '吳食神', emoji: '🍜', articles: 8,  desc: '台中美食踩點', rating: 4.9 },
+  { name: '蔡文星', emoji: '⭐', articles: 15, desc: '選課情報王', rating: 4.9 },
+  { name: '黃阿成', emoji: '🛡️', articles: 6, desc: '交易安全守護者', rating: 4.9 },
 ];
+
+// ── Search result grouping by topic ──
+function groupArticlesByTopic(articles, keyword = '') {
+  const grouped = {};
+
+  // Initialize all topics
+  Object.keys(TOPICS).forEach(topicName => {
+    grouped[topicName] = [];
+  });
+
+  // Filter and group articles
+  articles.forEach(article => {
+    // Find topic name by id
+    let topicName = Object.keys(TOPICS).find(key => TOPICS[key].id === article.topic);
+    if (!topicName) return;
+
+    // Filter by keyword if provided
+    if (keyword) {
+      const searchTerm = keyword.toLowerCase();
+      const matches =
+        article.title.toLowerCase().includes(searchTerm) ||
+        article.excerpt.toLowerCase().includes(searchTerm) ||
+        article.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
+        article.author.toLowerCase().includes(searchTerm);
+      if (!matches) return;
+    }
+
+    grouped[topicName].push(article);
+  });
+
+  // Sort articles within each topic by likes (hottest first) and limit to 2 previews
+  Object.keys(grouped).forEach(topicName => {
+    grouped[topicName].sort((a, b) => b.likes - a.likes);
+  });
+
+  return grouped;
+}
+
+// ── Get hot articles for search preview ──
+function getTopicPreview(topicName) {
+  const articles = MOCK_ARTICLES.filter(a => {
+    const tn = Object.keys(TOPICS).find(key => TOPICS[key].id === a.topic);
+    return tn === topicName;
+  });
+  articles.sort((a, b) => b.likes - a.likes);
+  return articles.slice(0, 2); // Preview top 2 articles
+}

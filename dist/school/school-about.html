@@ -6,7 +6,7 @@
   <title>攻略站介紹 · 校園攻略站</title>
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <link rel="manifest" href="/assets/manifest-DMriwSiS.json">
+  <link rel="manifest" href="/assets/manifest-5--vV4vC.json">
   <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
   <meta name="robots" content="noindex, nofollow"/>
   <meta name="description" content="校園攻略站介紹 — 把學長姐的真實經驗變成你的捷徑。半實名制人工認證，告別 AI 內容與業配雜訊。"/>
@@ -15,12 +15,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
   <style>
-    .about-wrap { width: 80vw; max-width: 80vw; margin: 0 auto; padding: 32px 40px 90px; overflow-x: clip; }
+    .about-wrap { width: 80vw; max-width: 80vw; margin: 0 auto; padding: 24px 40px 60px; overflow-x: clip; }
 
     /* hero */
     .about-hero {
-      border-radius: 22px; padding: 54px 44px; position: relative; overflow: hidden;
-      margin-bottom: 40px;
+      border-radius: 22px; padding: 40px 44px; position: relative; overflow: hidden;
+      margin-bottom: 30px;
     }
     .about-hero::before { content:""; position:absolute; right:-60px; bottom:-60px; width:260px; height:260px;background:rgba(255,255,255,0.00); }
     .about-hero .eyebrow { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: #004b97; font-weight: 700; margin-bottom: 14px; }
@@ -32,8 +32,8 @@
 
     /* section（透明，min-height 讓每區佔更多螢幕高度、內容垂直置中） */
     .about-sec {
-      padding: 72px 0;
-      min-height: 78vh;
+      padding: 48px 0;
+      min-height: 60vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -78,7 +78,7 @@
     /* CTA */
     .about-cta {
       background: var(--alice); border: 1px solid var(--line); border-radius: 20px;
-      padding: 40px; text-align: center; margin-top: 50px;
+      padding: 30px; text-align: center; margin-top: 40px;
     }
     .about-cta h2 { font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; margin-bottom: 8px; }
     .about-cta p { font-size: 14.5px; color: var(--muted); margin-bottom: 22px; }
@@ -136,7 +136,7 @@
     .cat-cloud img { display: inline-block; width: 240px; max-width: 100%; height: auto; }
 
     /* protection */
-    .prot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 24px; }
+    .prot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
     .prot-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px 20px; transition: all 0.22s; }
     .prot-card:hover { transform: translateY(-3px); border-color: var(--navy); box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3); }
     .prot-card .ic { width: 46px; height: 46px; border-radius: 12px; background: var(--navy); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
@@ -158,13 +158,24 @@
     .disc .dbody { padding: 0 22px 20px 68px; }
     .disc .dbody p { font-size: 13.5px; line-height: 1.8; color: var(--body); }
     .disc .dbody p b { color: var(--navy); font-weight: 700; }
+    .disc .dmore { display: inline-flex; align-items: center; gap: 4px; margin-top: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--navy); background: none; border: none; padding: 0; cursor: pointer; }
+    .disc .dmore:hover { color: #003a78; text-decoration: underline; }
+    .disc .dmore svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.25s; }
+    .disc .dmore.open svg { transform: rotate(180deg); }
+    .disc .dfull { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+    .disc .dfull.open { display: block; }
+    .disc .dfull ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+    .disc .dfull li { font-size: 13px; line-height: 1.8; color: var(--body); }
+    .disc .dbody ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 8px; }
+    .disc .dbody li { font-size: 13px; line-height: 1.8; color: var(--body); }
 
     @media (max-width: 991px) {
       .about-wrap { width: 100%; max-width: 100%; padding: 20px 16px 96px; }
       .about-sec { padding: 48px 0; min-height: 60vh; }
       .prot-grid { grid-template-columns: 1fr 1fr; }
+      .prot-grid .prot-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
       .disc .dbody { padding: 0 20px 18px 20px; }
-      .about-hero { padding: 36px 24px; border-radius: 18px; }
+      .about-hero { padding: 48px 24px; border-radius: 18px; }
       .about-hero h1 { font-size: 27px; }
       .about-hero .hero-stats { gap: 26px; }
       .about-sec h2 { font-size: 22px; }
@@ -182,65 +193,105 @@
     /* ── body 漸層背景（隨捲動在不同區塊間變色）── */
     html { background: #ffffff; }
     body { background: transparent; min-height: 100vh; }
-    .bg-stage { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-    .bg-stage .bg-layer { position: absolute; inset: 0; opacity: 0; transition: opacity 0.9s ease; }
-    .bg-stage .bg-layer.active { opacity: 1; }
-    /* hero：藍（最豐富，雙光暈） */
+    .bg-stage { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .about-wrap { position: relative; z-index: 2; }
+    .bg-stage .bg-layer { position: absolute; inset: -20%; opacity: 0; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); filter: blur(120px) contrast(1.2) saturate(1.1); }
+    .bg-stage .bg-layer.active { opacity: 1; animation: watercolor-flow 12s ease-in-out infinite; }
+
+    @keyframes watercolor-flow {
+      0%, 100% { transform: translate(0, 0) scale(1); filter: blur(60px); }
+      50% { transform: translate(20px, -20px) scale(1.05); filter: blur(80px); }
+    }
+
+    /* 點擊漣漪效果 */
+    .ripple {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: ripple-expand 0.8s ease-out forwards;
+    }
+
+    @keyframes ripple-expand {
+      0% {
+        transform: scale(0);
+        background: radial-gradient(circle, rgba(207,224,244,0.85) 0%, rgba(126,184,216,0.45) 60%, transparent 100%);
+        box-shadow: 0 0 50px rgba(126,184,216,0.5);
+      }
+      100% {
+        transform: scale(1);
+        background: radial-gradient(circle, rgba(207,224,244,0) 0%, rgba(126,184,216,0) 60%, transparent 100%);
+        box-shadow: 0 0 100px rgba(126,184,216,0);
+      }
+    }
+
+    /* hero：藍（深色，柔和暈開） */
     .bg-layer[data-bg="0"] {
       background:
-        radial-gradient(1100px 620px at 12% -5%, rgba(126,184,216,0.50) 0%, transparent 60%),
-        radial-gradient(900px 640px at 105% 110%, rgba(74,133,196,0.32) 0%, transparent 55%),
-        linear-gradient(165deg, #e8f2fc 0%, #cfe0f4 55%, #c2d7ef 100%);
+        radial-gradient(1200px 700px at 10% 5%, rgba(78,144,200,0.6) 0%, transparent 65%),
+        radial-gradient(1100px 750px at 95% 120%, rgba(126,184,216,0.45) 0%, transparent 58%),
+        linear-gradient(135deg, #d4e5f5 0%, #b8d2ec 50%, #a0c5e6 100%);
     }
-    /* What：藍淡一階 */
+    /* What：藍淡柔和 */
     .bg-layer[data-bg="1"] {
       background:
-        radial-gradient(1000px 600px at 90% 0%, rgba(126,184,216,0.36) 0%, transparent 60%),
-        radial-gradient(900px 600px at 0% 100%, rgba(74,133,196,0.20) 0%, transparent 55%),
-        linear-gradient(165deg, #eef5fd 0%, #dce8f6 100%);
+        radial-gradient(1150px 700px at 85% -10%, rgba(126,184,216,0.45) 0%, transparent 62%),
+        radial-gradient(1000px 650px at 5% 110%, rgba(74,133,196,0.28) 0%, transparent 60%),
+        linear-gradient(120deg, #e5f0f9 0%, #d0e4f5 100%);
     }
-    /* Why us：接近白 */
+    /* Why us：淺藍白 */
     .bg-layer[data-bg="2"] {
       background:
-        radial-gradient(900px 560px at 15% 0%, rgba(126,184,216,0.22) 0%, transparent 60%),
-        linear-gradient(180deg, #f4f9fe 0%, #e7f1fb 100%);
+        radial-gradient(1000px 650px at 15% -5%, rgba(126,184,216,0.32) 0%, transparent 65%),
+        linear-gradient(140deg, #f0f7fc 0%, #e2eff8 100%);
     }
-    /* Categories：白（僅一絲微光） */
+    /* Categories：幾乎白（微微藍） */
     .bg-layer[data-bg="3"] {
       background:
-        radial-gradient(900px 500px at 50% 0%, rgba(126,184,216,0.10) 0%, transparent 65%),
-        linear-gradient(180deg, #ffffff 0%, #f7fafe 100%);
+        radial-gradient(1000px 600px at 50% 10%, rgba(126,184,216,0.15) 0%, transparent 70%),
+        linear-gradient(180deg, #fafbfc 0%, #f5f9fc 100%);
     }
-    /* Protection：接近白 */
+    /* Protection：淺藍白 */
     .bg-layer[data-bg="4"] {
       background:
-        radial-gradient(900px 560px at 85% 0%, rgba(126,184,216,0.22) 0%, transparent 60%),
-        linear-gradient(180deg, #f4f9fe 0%, #e7f1fb 100%);
+        radial-gradient(1050px 650px at 80% -5%, rgba(126,184,216,0.28) 0%, transparent 68%),
+        linear-gradient(135deg, #f0f7fc 0%, #e8f3fa 100%);
     }
-    /* How：藍回來 */
+    /* How：藍回來柔和 */
     .bg-layer[data-bg="5"] {
       background:
-        radial-gradient(1000px 600px at 10% 0%, rgba(126,184,216,0.36) 0%, transparent 60%),
-        radial-gradient(900px 600px at 100% 100%, rgba(74,133,196,0.20) 0%, transparent 55%),
-        linear-gradient(165deg, #eef5fd 0%, #dce8f6 100%);
+        radial-gradient(1150px 700px at 12% 5%, rgba(126,184,216,0.42) 0%, transparent 62%),
+        radial-gradient(1050px 700px at 105% 95%, rgba(74,133,196,0.25) 0%, transparent 60%),
+        linear-gradient(125deg, #e8f2fa 0%, #d5e8f5 100%);
     }
-    /* Wishpool：更藍 */
+    /* Wishpool：深藍暈開 */
     .bg-layer[data-bg="6"] {
       background:
-        radial-gradient(1100px 620px at 88% -5%, rgba(126,184,216,0.50) 0%, transparent 60%),
-        radial-gradient(900px 640px at 0% 110%, rgba(74,133,196,0.32) 0%, transparent 55%),
-        linear-gradient(165deg, #e8f2fc 0%, #cfe0f4 55%, #c2d7ef 100%);
+        radial-gradient(1250px 750px at 88% -5%, rgba(126,184,216,0.5) 0%, transparent 60%),
+        radial-gradient(1100px 700px at 0% 115%, rgba(74,133,196,0.35) 0%, transparent 58%),
+        linear-gradient(130deg, #d8e9f7 0%, #c0ddf2 50%, #a8d0ed 100%);
     }
-    /* Disclaimer：藍收尾（最深） */
+    /* Disclaimer：深藍收尾 */
     .bg-layer[data-bg="7"] {
       background:
-        radial-gradient(1100px 640px at 20% 0%, rgba(126,184,216,0.52) 0%, transparent 60%),
-        radial-gradient(1000px 680px at 100% 100%, rgba(74,133,196,0.36) 0%, transparent 55%),
-        linear-gradient(165deg, #e4eff9 0%, #c9dcf1 55%, #bcd3ee 100%);
+        radial-gradient(1200px 750px at 20% 10%, rgba(126,184,216,0.55) 0%, transparent 62%),
+        radial-gradient(1150px 800px at 98% 105%, rgba(78,144,200,0.4) 0%, transparent 60%),
+        linear-gradient(140deg, #d0e3f3 0%, #b8d7ee 50%, #a0cceb 100%);
+    }
+    /* Rules：深藍延續 */
+    .bg-layer[data-bg="8"] {
+      background:
+        radial-gradient(1200px 750px at 82% 8%, rgba(78,144,200,0.5) 0%, transparent 62%),
+        radial-gradient(1100px 750px at 5% 110%, rgba(126,184,216,0.45) 0%, transparent 58%),
+        linear-gradient(135deg, #d4e5f5 0%, #bcd8ef 50%, #a6cfec 100%);
     }
     @media (prefers-reduced-motion: reduce) {
       .bg-stage .bg-layer { transition: none; }
     }
+
+    /* ── 返回上一頁按鈕 ── */
+    .back-arrow { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: #fff; color: var(--navy); cursor: pointer; transition: all 0.2s; margin-right: 8px; }
+    .back-arrow:hover { border-color: var(--navy); background: var(--alice); }
+    .back-arrow svg { width: 20px; height: 20px; }
 
     /* ── 捲動進場動畫（初始隱藏狀態只在 JS 啟用時套用，確保無 JS 也能看到內容）── */
     /* 區塊本身只淡入，位移與交錯交給內部元素，避免 transform 疊加 */
@@ -284,10 +335,10 @@
     }
   </style>
   <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
-  <script type="module" crossorigin src="/assets/default-DxlzImvO.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/default-CI3V8wLq.css">
+  <script type="module" crossorigin src="/assets/default-C8gMrLxA.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/default-CyZpfHTJ.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
-  <link rel="stylesheet" crossorigin href="/assets/school-3JNW_RVQ.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-0wJ3LjQ0.css">
 </head>
 <body>
 <script>document.documentElement.classList.add('reveal-on');</script>
@@ -302,17 +353,22 @@
   <div class="bg-layer" data-bg="5"></div>
   <div class="bg-layer" data-bg="6"></div>
   <div class="bg-layer" data-bg="7"></div>
+  <div class="bg-layer" data-bg="8"></div>
 </div>
 
 
 <nav class="nav">
   <div class="d-flex gap-2">
+    <button class="back-arrow" id="backBtn" type="button" title="返回上一頁" onclick="window.history.back()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+
     <button class="mobile-hamburger d-lg-none" type="button">
       <img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="" style="width: 20px;">
     </button>
 
     <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
-      <img src="/assets/TREASUREHUBCHEN-XT8sW0do.svg" alt="">
+      <img src="/assets/TREASUREHUBCHEN-DooKZtdE.svg" alt="">
     </a>
   </div>
 
@@ -438,11 +494,6 @@
         <h3>防複製與截圖</h3>
         <p>停用選取、右鍵與下載，並偵測截圖行為。</p>
       </div>
-      <div class="prot-card">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H4z"/><path d="M4 8l8 5 8-5"/><path d="M9 20h6"/></svg></div>
-        <h3>學校信箱驗證</h3>
-        <p>校內信箱實名綁定，交易與責任皆可追溯。</p>
-      </div>
     </div>
   </section>
 
@@ -469,7 +520,7 @@
       <div class="step-card">
         <div class="num">04</div>
         <h4>換你分享</h4>
-        <p>把你的經驗寫成攻略上架，通過認證後就能開始變現。</p>
+        <p>通過創作者認證後，將你的經驗變現，讓文章持續為你賺錢</p>
       </div>
     </div>
   </section>
@@ -489,23 +540,155 @@
     <div class="disc-grid">
       <details class="disc">
         <summary><span class="dn">01</span><span class="dt">智慧財產權與侵權免責</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody"><p>平台僅提供刊登與交易媒介，<b>不做實質內容審查</b>。內容須為原創或已取得授權，嚴禁複製教授講義／PPT／考題、掃描教科書、盜錄課程。查證屬實即下架停權，法律責任由上傳者承擔。</p></div>
+        <div class="dbody">
+          <p>平台僅提供刊登與交易媒介，<b>不做實質內容審查</b>。內容須為原創或已取得授權，嚴禁複製教授講義／PPT／考題、掃描教科書、盜錄課程。查證屬實即下架停權，法律責任由上傳者承擔。</p>
+          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="dfull">
+            <ul>
+              <li>本平台僅提供數位內容之刊登與交易媒介，不對用戶上架之內容進行實質內容審查。</li>
+              <li>用戶保證其上架之筆記、攻略、報告等數位商品皆為個人原創內容或已取得合法授權。</li>
+              <li>嚴禁上傳、重製、散布任何侵害他人著作權之內容（例如：直接複製教授之課堂講義／PPT／考題、掃描教科書、盜錄課程音檔或影片等）。若經權利人檢舉並查證屬實，平台有權不經通知直接下架該商品，並對違規帳號進行限制或永久停權；一切法律責任由上傳用戶自行承擔，概與本平台無涉。</li>
+            </ul>
+          </div>
+        </div>
       </details>
       <details class="disc">
         <summary><span class="dn">02</span><span class="dt">學術誠信與校規免責</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody"><p>所有內容<b>僅供學術交流與個人學習參考</b>，不得用於集體舞弊、抄襲計分作業或任何違反校規之行為。因不當使用導致校方懲戒，平台不負連帶責任。</p></div>
+        <div class="dbody">
+          <p>所有內容<b>僅供學術交流與個人學習參考</b>，不得用於集體舞弊、抄襲計分作業或任何違反校規之行為。因不當使用導致校方懲戒，平台不負連帶責任。</p>
+          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="dfull">
+            <ul>
+              <li>本平台所有上架之期末筆記、考題詳解、報告模板及推甄心得，僅供學術交流與個人學習參考之用。</li>
+              <li>用戶不得利用本平台內容進行集體舞弊、直接抄襲作為學校計分作業、或任何違反所屬學校學術誠信及校規之行為。若用戶因不當使用本平台資源而導致校方懲戒（如：記過、開除學籍或學期成績零分），本平台不負任何連帶責任。</li>
+            </ul>
+          </div>
+        </div>
       </details>
       <details class="disc">
         <summary><span class="dn">03</span><span class="dt">數位商品價值與退費免責</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody"><p>屬「非以有形媒介提供之數位內容」，依消保法<b>不適用 7 天鑑賞期</b>，付費完成原則上不退費。品質由賣家負責，購買前請參考評價與預覽頁。</p></div>
+        <div class="dbody">
+          <p>屬「非以有形媒介提供之數位內容」，依消保法<b>不適用 7 天鑑賞期</b>，付費完成原則上不退費。品質由賣家負責，購買前請參考評價與預覽頁。</p>
+          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="dfull">
+            <ul>
+              <li>依據《消費者保護法》通訊交易解除權合理例外情事適用準則，本平台銷售之校園攻略、筆記等屬於「非以有形媒介提供之數位內容，一經提供即為完成之線上服務」，不適用 7 天鑑賞期，一經付費完成，原則上不予退費。</li>
+              <li>數位商品之品質、字體清晰度、內容準確性等皆由賣家自行負責。買家於購買前應審慎評估（如參考賣家評價、預覽頁面）。若發生品質嚴重不符之消費糾紛，平台僅協助內部申訴調解，不承擔商品瑕疵擔保責任。</li>
+            </ul>
+          </div>
+        </div>
       </details>
       <details class="disc">
         <summary><span class="dn">04</span><span class="dt">內容時效性與準確性免責</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody"><p>課堂資訊具時效性（教授異動、評分變更、教材改版），<b>不保證 100% 適用當前學期</b>。因課程變更導致之失利，平台與作者不負補償責任。</p></div>
+        <div class="dbody">
+          <p>課堂資訊具時效性（教授異動、評分變更、教材改版），<b>不保證 100% 適用當前學期</b>。因課程變更導致之失利，平台與作者不負補償責任。</p>
+          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="dfull">
+            <ul>
+              <li>校園課堂資訊具有時效性（如授課教授異動、評分標準變更、教材改版等）。本平台所有攻略與筆記不保證 100% 適用於當前學期之課程要求。</li>
+              <li>因課程內容變更導致之考試失利或分數未達預期，本平台及原創作者不承擔任何補償或法律責任。</li>
+            </ul>
+          </div>
+        </div>
       </details>
       <details class="disc">
         <summary><span class="dn">05</span><span class="dt">個人隱私與資料調閱聲明</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody"><p>為交易安全暫存互動與交易紀錄，<b>絕不無故調閱</b>；惟重大違規、檢舉侵權或配合司法調查時依需求調閱。註冊綁定之學校信箱作為身分驗證與責任追溯依據。</p></div>
+        <div class="dbody">
+          <p>為交易安全暫存互動與交易紀錄，<b>絕不無故調閱</b>；惟重大違規、檢舉侵權或配合司法調查時依需求調閱。註冊綁定之學校信箱作為身分驗證與責任追溯依據。</p>
+          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="dfull">
+            <ul>
+              <li>為維護校園交易安全、預防不法詐騙及處理消費糾紛，平台會暫存買賣雙方之互動與交易紀錄。平台管理團隊絕不無故調閱用戶隱私，惟當發生重大違規、惡意騷擾、侵害智財權遭檢舉、或配合司法機關調查時，平台有權依據營運與仲裁需求調閱相關紀錄。</li>
+              <li>用戶註冊所綁定之學校信箱將作為身分驗證與責任追溯之依據。若情節嚴重涉及違法犯罪，平台將依法提供相關資訊予校方或司法警察機關處理。</li>
+            </ul>
+          </div>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  
+  <section class="about-sec" data-reveal data-bg="8">
+    <div class="sec-eyebrow">Rules</div>
+    <h2>平台版規</h2>
+    <p class="lead">為維護內容品質與交易安全，所有用戶皆須遵守以下版規。違規行為依情節輕重處置，平台保留最終認定與處置權。</p>
+    <div class="disc-grid">
+      <details class="disc">
+        <summary><span class="dn">01</span><span class="dt">智慧財產權／抄襲類</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="dbody">
+          <p><b>一經檢舉查證屬實，不經通知即可下架＋帳號停權。</b></p>
+          <ul>
+            <li>禁止直接複製教授的課堂講義、PPT、考題、教科書掃描檔。</li>
+            <li>禁止盜錄課程音檔或影片後上架販售。</li>
+          </ul>
+        </div>
+      </details>
+      <details class="disc">
+        <summary><span class="dn">02</span><span class="dt">學術誠信類</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="dbody">
+          <p><b>因使用平台內容而違反校規遭懲處，平台不負連帶責任。</b></p>
+          <ul>
+            <li>禁止販售可直接抄襲繳交的完整作業、報告成品。</li>
+            <li>禁止協助集體舞弊。</li>
+          </ul>
+        </div>
+      </details>
+      <details class="disc">
+        <summary><span class="dn">03</span><span class="dt">人身攻擊／誹謗類</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="dbody">
+          <p><b>涉及誹謗或人身攻擊時，平台會配合校方／司法調閱後台實名資料，並可永久停權。</b></p>
+          <ul>
+            <li>禁止針對特定教授、同學、店家的人身攻擊、公開羞辱、人肉搜索。</li>
+          </ul>
+        </div>
+      </details>
+      <details class="disc">
+        <summary><span class="dn">04</span><span class="dt">內容時效性／準確性揭露</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="dbody">
+          <p><b>平台不保證內容 100% 適用於當下學期。</b></p>
+          <ul>
+            <li>創作者需標示適用學年度、學期。</li>
+            <li>過期內容需標註或自動降價提示。</li>
+          </ul>
+        </div>
+      </details>
+      <details class="disc">
+        <summary><span class="dn">05</span><span class="dt">消費糾紛／惡意退費防範</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="dbody">
+          <p><b>數位內容「一經解鎖即完成服務」，不適用七天鑑賞期。</b></p>
+          <ul>
+            <li>禁止「買完後，進行截圖（或其他任何留存文章之形式），並惡意差評逼退費」，違者列入黑名單禁止再消費。</li>
+            <li>評分、留言禁止暴雷。</li>
+          </ul>
+        </div>
+      </details>
+      <details class="disc">
+        <summary><span class="dn">06</span><span class="dt">隱私／防肉搜類</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="dbody">
+          <ul>
+            <li>禁止公開他人真實姓名、學號、聯絡方式。</li>
+            <li>禁止利用平台功能（如私訊、留言）進行騷擾或起底。</li>
+          </ul>
+        </div>
+      </details>
+      <details class="disc">
+        <summary><span class="dn">07</span><span class="dt">業配／商業置入</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="dbody">
+          <ul>
+            <li>禁止提及商家名稱、地址、優惠碼等置入性內容。</li>
+          </ul>
+        </div>
+      </details>
+      <details class="disc">
+        <summary><span class="dn">08</span><span class="dt">檢舉與違規處置機制</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+        <div class="dbody">
+          <ul>
+            <li><b>檢舉流程</b>：用戶檢舉 → 平台要求雙方提出訴求及舉證 → 平台確認最終判決。</li>
+            <li><b>違規分級</b>（依情節是否重大而定）：警告 → 下架 → 停權。</li>
+            <li><b>違規處置</b>：若營利文章涉及業配或詐騙，除了下架或停權處置外，還需歸還文章營利所得，並且賠償平台的名譽損失。</li>
+            <li>平台保留最終認定與處置權。</li>
+          </ul>
+        </div>
       </details>
     </div>
   </section>
@@ -585,6 +768,16 @@ document.addEventListener('DOMContentLoaded', function() {
   if (hamburger) hamburger.addEventListener('click', toggleMenu);
   if (backdrop) backdrop.addEventListener('click', closeMenu);
   menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+  // 免責聲明「展開更多」完整條文
+  document.querySelectorAll('.disc .dmore').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const full = btn.nextElementSibling;
+      const open = full.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      btn.querySelector('span').textContent = open ? '收合' : '展開更多';
+    });
+  });
 });
 </script>
 
@@ -713,6 +906,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }, { threshold: 0.35 });
   io.observe(cta);
+})();
+
+
+// ── 點擊漣漪效果 ──
+(function () {
+  const createRipple = (x, y) => {
+    const ripple = document.createElement('div');
+    ripple.className = 'ripple';
+    const size = Math.random() * 100 + 150; // 150-250px
+    ripple.style.width = size + 'px';
+    ripple.style.height = size + 'px';
+    ripple.style.left = (x - size / 2) + 'px';
+    ripple.style.top = (y - size / 2) + 'px';
+    document.body.appendChild(ripple);
+
+    // 動畫結束後移除元素
+    setTimeout(() => ripple.remove(), 800);
+  };
+
+  const handleClick = (e) => {
+    createRipple(e.clientX, e.clientY);
+  };
+
+  window.addEventListener('click', handleClick, { passive: true });
 })();
 
 // ── 回到最上面按鈕（捲到接近底部才出現）──

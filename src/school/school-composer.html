@@ -418,6 +418,20 @@
     .ip-seg button.on { background: var(--navy); color: #fff; }
     .ip-go { width: 100%; margin-top: 2px; padding: 10px; border-radius: 999px; background: var(--navy); color: #fff; font-size: 13.5px; font-weight: 700; letter-spacing: .04em; transition: background .2s; }
     .ip-go:hover { background: var(--navy-d); }
+
+    /* ── 參加競賽（可選） ── */
+    .ctp-opt { display: flex; align-items: center; gap: 11px; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 13px; margin-bottom: 8px; cursor: pointer; transition: all 0.22s ease; background: #fff; }
+    .ctp-opt:hover { border-color: var(--navy); }
+    .ctp-opt.on { border-color: var(--navy); background: var(--alice); }
+    .ctp-opt .r { width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid var(--line); flex-shrink: 0; position: relative; transition: all 0.22s ease; background: #fff; }
+    .ctp-opt.on .r { border-color: var(--navy); }
+    .ctp-opt.on .r::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--navy); }
+    .ctp-opt .b { flex: 1; min-width: 0; }
+    .ctp-opt .b b { display: block; font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+    .ctp-opt .b small { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.02em; line-height: 1.5; }
+    .ctp-opt .lnk { font-size: 11.5px; font-weight: 700; color: var(--navy); flex-shrink: 0; letter-spacing: 0.02em; }
+    .ctp-opt .lnk:hover { text-decoration: underline; }
+    .ctp-live { font-size: 10px; font-weight: 700; color: #007568; background: rgba(171,218,213,0.45); border-radius: 999px; padding: 2px 8px; margin-left: 6px; letter-spacing: 0.06em; vertical-align: 1px; }
   </style>
 </head>
 <body>
@@ -425,9 +439,9 @@
 <!-- NAV -->
 <nav class="nav">
   <div class="d-flex gap-2 align-items-center">
-    <a href="school.html" class="ce-back d-lg-none" title="返回攻略站首頁" aria-label="返回攻略站首頁">
+    <button class="ce-back" type="button" title="返回上一頁" onclick="window.history.back()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-    </a>
+    </button>
     <button class="mobile-hamburger d-lg-none" type="button">
       <img src="../svg/navbar.svg" alt="" style="width: 20px;">
     </button>
@@ -661,12 +675,29 @@
     </div>
 
     <div class="ce-card">
+      <div class="h">參加競賽（可選）</div>
+      <div class="ctp-opt on" data-contest="">
+        <span class="r"></span>
+        <div class="b"><b>不參加</b><small>單純發佈文章，不列入任何競賽計分。</small></div>
+      </div>
+      <div class="ctp-opt" data-contest="seed2026">
+        <span class="r"></span>
+        <div class="b">
+          <b>種子創作者計劃<span class="ctp-live">進行中</span></b>
+          <small>徵稿至 2026/08/31 · 總獎金 NT$ 30,000</small>
+        </div>
+        <a class="lnk" href="school-contest.html?id=seed2026">詳情 →</a>
+      </div>
+      <div class="subdesc">發佈後自動列入人氣計分（閱讀、收藏、評價加權），參賽即同意競賽規範，之後也可以隨時退出。</div>
+    </div>
+
+    <div class="ce-card">
       <div class="h">前台顯示身分（半實名）</div>
       <div class="ident">
         <div class="av"></div>
         <div>
           <div class="iname">創產系 大二 范同學</div>
-          <div class="titles"><span class="t">＊台大碩士＊</span><span class="t">＊書卷獎＊</span></div>
+          <div class="titles"><span class="t">台大碩士</span><span class="t">書卷獎</span></div>
         </div>
       </div>
       <div class="ident-real">後台已以校園信箱完成實名認證 <span class="arrow">→</span> 前台顯示為半匿名，防肉搜也防詐騙。頭銜由人工審查獎項後給予。</div>
@@ -736,6 +767,7 @@
 </nav>
 
 <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="school-data.js"></script>
 <script defer src="school-new.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -757,6 +789,55 @@ document.addEventListener('DOMContentLoaded', function() {
   if (hamburger) hamburger.addEventListener('click', toggleMenu);
   if (backdrop) backdrop.addEventListener('click', closeMenu);
   menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+  // ── 主題選擇 & 預設標籤 ──
+  const catSel = document.getElementById('catSel');
+  const tagsContainer = document.getElementById('tags');
+  const tagAdd = document.getElementById('tagAdd');
+
+  function renderDefaultTags() {
+    const selectedTopic = catSel.value;
+    const topicData = Object.values(TOPICS).find(t => Object.keys(TOPICS).some(k => TOPICS[k].id === t.id && k === selectedTopic));
+    if (!topicData) return;
+
+    // 找到對應主題
+    const topicName = Object.keys(TOPICS).find(k => k === selectedTopic);
+    if (!topicName) return;
+
+    const tags = TOPICS[topicName].tags;
+    const currentTags = Array.from(tagsContainer.querySelectorAll('.tag:not(.tag-add)')).map(el => el.textContent.trim().replace('×', '').trim());
+
+    // 清除並重新添加預設標籤
+    tagsContainer.querySelectorAll('.tag:not(.tag-add)').forEach(el => el.remove());
+
+    // 添加預設標籤
+    tags.forEach(tag => {
+      const tagEl = document.createElement('span');
+      tagEl.className = 'tag';
+      tagEl.innerHTML = `${tag} <span class="x">×</span>`;
+      tagEl.querySelector('.x').addEventListener('click', () => tagEl.remove());
+      tagsContainer.insertBefore(tagEl, tagAdd);
+    });
+  }
+
+  if (catSel) {
+    catSel.addEventListener('change', renderDefaultTags);
+    renderDefaultTags(); // 初始化
+  }
+
+  // 新增自訂標籤
+  if (tagAdd) {
+    tagAdd.addEventListener('click', () => {
+      const tagName = prompt('輸入標籤名稱：');
+      if (tagName && tagName.trim()) {
+        const tagEl = document.createElement('span');
+        tagEl.className = 'tag';
+        tagEl.innerHTML = `${tagName.trim()} <span class="x">×</span>`;
+        tagEl.querySelector('.x').addEventListener('click', () => tagEl.remove());
+        tagsContainer.insertBefore(tagEl, tagAdd);
+      }
+    });
+  }
 });
 </script>
 
@@ -785,7 +866,7 @@ document.addEventListener('DOMContentLoaded', function() {
   })();
 
   /* ---------- swatches ---------- */
-  var COLORS = ['#1a2840', '#004b97', 'rgb(36,182,133)']; // 黑、藍、綠
+  var COLORS = ['#1a2840', '#2a78d6', '#E24B4A', '#1D9E75', '#BA7517', '#7F77DD']; // 黑、藍、紅、綠、橘、紫
   var sw = document.getElementById('swatches');
   function applyColor(c) {
     if (targetIsField()) { activeTarget.style.color = c; scheduleSave(); return; }
@@ -798,41 +879,6 @@ document.addEventListener('DOMContentLoaded', function() {
     b.addEventListener('touchstart', apply, { passive: false });
     sw.appendChild(b);
   });
-  // 顏色：自訂色盤 + 最近使用顏色（localStorage）
-  (function () {
-    var RECENT_KEY = 'cg-recent-color';
-    var recentColor = '';
-    try { recentColor = localStorage.getItem(RECENT_KEY) || ''; } catch (e) {}
-    if (!recentColor) recentColor = '#c97f5a';
-
-    // 自訂色盤
-    var lbl = document.createElement('label'); lbl.className = 'swatch swatch-custom'; lbl.title = '自訂顏色';
-    var ci = document.createElement('input'); ci.type = 'color'; ci.value = recentColor;
-    lbl.appendChild(ci); sw.appendChild(lbl);
-
-    // 最近使用顏色
-    var recent = document.createElement('span'); recent.className = 'swatch swatch-recent'; recent.title = '最近使用的顏色';
-    recent.style.background = recentColor; recent.dataset.color = recentColor;
-    var applyRecent = function (e) { e.preventDefault(); applyColor(recent.dataset.color); };
-    recent.addEventListener('mousedown', applyRecent);
-    recent.addEventListener('touchstart', applyRecent, { passive: false });
-    sw.appendChild(recent);
-    function setRecent(c) { recent.dataset.color = c; recent.style.background = c; try { localStorage.setItem(RECENT_KEY, c); } catch (e) {} }
-
-    var savedForColor = null;
-    lbl.addEventListener('pointerdown', function () {
-      var s = window.getSelection();
-      if (s && s.rangeCount) { var n = s.getRangeAt(0).commonAncestorContainer; n = n.nodeType === 3 ? n.parentNode : n; if (editor.contains(n)) savedForColor = s.getRangeAt(0).cloneRange(); }
-    });
-    // change：色盤關閉後才套用（開著時文件失焦，execCommand 無效）；並記為最近使用
-    ci.addEventListener('change', function () {
-      if (targetIsField()) { activeTarget.style.color = ci.value; scheduleSave(); setRecent(ci.value); return; }
-      editor.focus();
-      if (savedForColor) { var s = window.getSelection(); s.removeAllRanges(); s.addRange(savedForColor); }
-      document.execCommand('foreColor', false, ci.value); scheduleSave();
-      setRecent(ci.value);
-    });
-  })();
 
   /* ---------- inline formatting（含對齊）：先還原選取再套用，手機才有效 ---------- */
   document.querySelectorAll('.tb[data-cmd]').forEach(function (btn) {
@@ -1137,7 +1183,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   function escText(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-  function jumpTo(id) { var el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' }); }
+  function jumpTo(id) { var el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 180, behavior: 'smooth' }); }
 
   /* ---------- autosave ---------- */
   var KEY = 'cg-composer-draft';
@@ -1272,6 +1318,19 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   checks.forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); refreshPub(); }); });
   refreshPub();
+
+  /* ---------- 參加競賽（可選）：單選卡片 ---------- */
+  (function () {
+    var opts = document.querySelectorAll('.ctp-opt');
+    if (!opts.length) return;
+    opts.forEach(function (o) {
+      o.addEventListener('click', function (e) {
+        if (e.target.closest('.lnk')) return; // 點「詳情」只開連結，不改選擇
+        opts.forEach(function (x) { x.classList.remove('on'); });
+        o.classList.add('on');
+      });
+    });
+  })();
 
   /* ---------- 專注模式 / 手機設定抽屜 / 底部操作列 ---------- */
   (function () {
@@ -1429,9 +1488,12 @@ document.addEventListener('DOMContentLoaded', function() {
       '<button class="i" data-cmd="italic" title="斜體">I</button>' +
       '<button class="u" data-cmd="underline" title="底線">U</button>' +
       '<span class="sep"></span>' +
-      '<button class="sw" data-color="#004b97" title="藍色重點"><span class="dot" style="background:#004b97"></span></button>' +
-      '<button class="sw" data-color="rgb(36,182,133)" title="綠色重點"><span class="dot" style="background:rgb(36,182,133)"></span></button>' +
-      '<button class="sw" data-color="#1a2840" title="恢復預設色"><span class="dot" style="background:#1a2840"></span></button>' +
+      '<button class="sw" data-color="#2a78d6" title="藍色"><span class="dot" style="background:#2a78d6"></span></button>' +
+      '<button class="sw" data-color="#E24B4A" title="紅色"><span class="dot" style="background:#E24B4A"></span></button>' +
+      '<button class="sw" data-color="#1D9E75" title="綠色"><span class="dot" style="background:#1D9E75"></span></button>' +
+      '<button class="sw" data-color="#BA7517" title="橘色"><span class="dot" style="background:#BA7517"></span></button>' +
+      '<button class="sw" data-color="#7F77DD" title="紫色"><span class="dot" style="background:#7F77DD"></span></button>' +
+      '<button class="sw" data-color="#1a2840" title="黑色（預設）"><span class="dot" style="background:#1a2840"></span></button>' +
       '<span class="sep"></span>' +
       '<button data-link title="插入連結"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.07 0l2.12-2.12a5 5 0 0 0-7.07-7.07l-1.06 1.06"/><path d="M14 11a5 5 0 0 0-7.07 0L4.8 13.12a5 5 0 0 0 7.07 7.07l1.06-1.06"/></svg></button>' +
       '<span class="nub"></span>';

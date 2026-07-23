@@ -130,11 +130,32 @@ const i18n = {
     'about.members.desc':'我們是一支充滿創新與多元背景的團隊，來自不同領域的年輕創業者，致力於打造可持續發展的二手買賣、資訊交易、校園商機平台 「拾貨寶庫」。',
     'about.role1':'企劃策略','about.role2':'營運部門','about.role3':'行銷企劃',
     'about.role4':'技術部門 後端開發','about.role5':'技術部門 前端設計',
+    'about.title1':' 執行長','about.title2':' 營運長',
+    'about.title4':' 技術長','about.title5':' 產品設計長',
+    'about.exp1.1':'108年 臺北市教育局生涯學習檔案競賽榮獲4項特優',
+    'about.exp1.2':'110年 黃導體實習生',
+    'about.exp1.3':'112年 台積電實習生',
+    'about.exp1.4':'112年 TCSOL 證照',
+    'about.exp1.5':'113年 學習 Python',
+    'about.exp2.1':'110年 ACLS、BLS 證照',
+    'about.exp2.2':'111年 學習護理行政',
+    'about.exp2.3':'111年 竹崎衛生所和嘉義基督教、臺大、聖馬爾定、若瑟、高雄小港、彰濱秀傳等醫院實習',
+    'about.exp2.4':'112年 護理師證照',
+    'about.exp4.1':'113年 AIS3 暑期課程',
+    'about.exp4.2':'113年 iPAS 資安工程師初級',
+    'about.exp4.3':'113年 學習 Python、JavaScript',
+    'about.exp4.4':'113年 SITCON 會眾',
+    'about.exp4.5':'113年 HITCON 社群攤位',
+    'about.exp5.1':'105年 南部英語讀劇比賽特優',
+    'about.exp5.2':'112年 多益 TOEIC 825 分',
+    'about.exp5.3':'113年 學習 C語言、Python、HTML、JavaScript、CSS 程式語言',
+    'about.exp5.4':'114年 學習 Java、Vue.js',
     'about.school1':'國立中興大學 創新產業經營系',
     'about.school2':'私立崇仁醫護管理專科學校 護理系',
     'about.school3':'國立高雄科技大學 運籌管理系',
     'about.school4':'國立中興大學 資訊工程學系',
     'about.school5':'國立中興大學 資訊工程學系',
+    'about.stats.users':'用戶總數','about.stats.active':'活躍用戶','about.stats.items':'商品個數',
     'about.history.title':'團隊經歷',
     'about.history.desc1':'我們的團隊成員擁有豐富的競賽經驗，並在多項創新創業比賽中獲得佳績。',
     'about.history.desc2':'我們相信，結合資訊科技、產業經營、行銷管理與行政專業的跨領域優勢，能為社會帶來更具影響力的創新解決方案，推動綠色消費、循環經濟與資訊交易的發展！',
@@ -213,11 +234,32 @@ const i18n = {
     'about.members.desc':'We are an innovative team from diverse backgrounds — young entrepreneurs dedicated to building a sustainable platform for secondhand trading, information exchange, and campus business.',
     'about.role1':'Strategy & Planning','about.role2':'Operations','about.role3':'Marketing',
     'about.role4':'Tech – Backend Dev','about.role5':'Tech – Frontend Design',
+    'about.title1':'','about.title2':'',
+    'about.title4':'','about.title5':'',
+    'about.exp1.1':'2019: Won 4 Excellence Awards, Taipei City Career Portfolio Competition',
+    'about.exp1.2':'110年 黃導體實習生',
+    'about.exp1.3':'2023: TSMC Intern',
+    'about.exp1.4':'2023: TCSOL Certification',
+    'about.exp1.5':'2024: Learned Python',
+    'about.exp2.1':'2021: ACLS & BLS Certifications',
+    'about.exp2.2':'2022: Studied Nursing Administration',
+    'about.exp2.3':'2022: Clinical internships at Zhuqi Health Center, Chiayi Christian, NTU, St. Martin De Porres, St. Joseph, Kaohsiung Siaogang & Changbin Show Chwan Hospitals',
+    'about.exp2.4':'2023: Registered Nurse License',
+    'about.exp4.1':'2024: AIS3 Summer Program',
+    'about.exp4.2':'2024: iPAS Junior Information Security Engineer',
+    'about.exp4.3':'2024: Learned Python & JavaScript',
+    'about.exp4.4':'2024: SITCON Attendee',
+    'about.exp4.5':'2024: HITCON Community Booth',
+    'about.exp5.1':'2016: Excellence Award, Southern Taiwan English Readers\' Theater Contest',
+    'about.exp5.2':'2023: TOEIC 825',
+    'about.exp5.3':'2024: Learned C, Python, HTML, JavaScript & CSS',
+    'about.exp5.4':'2025: Learned Java & Vue.js',
     'about.school1':'NCHU – Innovation & Entrepreneurship',
     'about.school2':'Chung Jen College – Nursing',
     'about.school3':'NKUST – Logistics Management',
     'about.school4':'NCHU – Computer Science',
     'about.school5':'NCHU – Computer Science',
+    'about.stats.users':'Total Users','about.stats.active':'Active Users','about.stats.items':'Items Listed',
     'about.history.title':'Team Achievements',
     'about.history.desc1':'Our team members have rich competition experience and have won awards in multiple innovation and entrepreneurship competitions.',
     'about.history.desc2':'We believe that combining IT, business management, marketing, and administrative expertise can bring more impactful solutions to society — driving green consumption, circular economy, and information trading.',
@@ -327,4 +369,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('nhHistoryClose')?.addEventListener('click', closeModal);
   historyModal?.addEventListener('click', (e) => { if (e.target === historyModal) closeModal(); });
+});
+/* ── 統計數字 count-up ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const nums = document.querySelectorAll('.nh-stat-num[data-count]');
+  if (!nums.length) return;
+  const animate = (el) => {
+    const target = parseInt(el.dataset.count, 10);
+    const dur = 1200;
+    const start = performance.now();
+    const tick = (now) => {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      el.textContent = Math.round(target * eased) + '+';
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animate(entry.target);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  nums.forEach(el => io.observe(el));
 });

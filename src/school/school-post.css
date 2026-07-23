@@ -108,6 +108,13 @@ body { background: var(--alice); }
   display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
 }
 .author-block .name .verified { color: var(--navy); font-size: 12px; font-weight: 700; }
+.author-rating {
+  display: flex; align-items: center; gap: 8px; margin: 6px 0;
+  font-size: 12px; color: var(--navy);
+}
+.author-rating .stars { color: var(--gold); font-size: 13px; letter-spacing: 1px; }
+.author-rating .score { font-weight: 700; }
+.author-rating .cnt { color: var(--muted); font-size: 11px; }
 .author-block .titles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 .author-block .titles .t {
   font-size: 11px; font-weight: 700; color: var(--navy);
@@ -122,6 +129,75 @@ body { background: var(--alice); }
   transition: all 0.2s; flex-shrink: 0;
 }
 .author-block .follow:hover { background: var(--navy); color: #fff; }
+
+/* like button */
+.post-like { margin-bottom: 20px; }
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.22s;
+  cursor: pointer;
+}
+.like-btn svg {
+  width: 18px;
+  height: 18px;
+  color: var(--terracotta);
+  stroke: var(--terracotta);
+  flex-shrink: 0;
+}
+.like-btn:hover {
+  border-color: var(--terracotta);
+  color: var(--terracotta);
+  transform: translateY(-1px);
+}
+.like-btn.liked {
+  background: rgba(201,127,90,0.08);
+  border-color: var(--terracotta);
+  color: var(--terracotta);
+}
+.like-btn.liked svg {
+  fill: var(--terracotta);
+  color: var(--terracotta);
+}
+
+/* 側欄喜歡按鈕 */
+.side-like {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 0; margin-bottom: 8px; border-radius: 999px;
+  border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+  font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+  cursor: pointer; transition: all 0.22s;
+}
+.side-like svg { width: 15px; height: 15px; stroke: var(--terracotta); flex-shrink: 0; }
+.side-like:hover { border-color: var(--terracotta); color: var(--terracotta); transform: translateY(-1px); }
+.side-like.liked { border-color: var(--terracotta); color: var(--terracotta); background: rgba(201,127,90,0.08); }
+.side-like.liked svg { fill: var(--terracotta); }
+
+/* 手機操作列喜歡按鈕 */
+.sp-actionbar .ico.liked { border-color: var(--terracotta); color: var(--terracotta); }
+.sp-actionbar .ico.liked svg { fill: var(--terracotta); stroke: var(--terracotta); }
+
+/* article tags */
+.post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0 18px; }
+.post-tags a {
+  padding: 5px 12px;
+  background: var(--alice);
+  color: var(--navy);
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  transition: all 0.2s;
+}
+.post-tags a:hover { background: var(--navy); color: #fff; }
 
 /* preview label */
 .preview-flag {
@@ -363,6 +439,19 @@ body.unlocked .toc a .locked { display: none; }
 .rel-card .ra { font-size: 11px; color: var(--muted); }
 .rel-card .rp { font-size: 13px; font-weight: 700; color: var(--navy); }
 .rel-card .rp.free { color: var(--muted); font-weight: 600; }
+/* 無封面變體：分類以眉標線呈現（比照文章列表 nocover 卡） */
+.rel-card.nocover .rb { padding-top: 16px; }
+.rel-card.nocover .p-line {
+  display: inline-flex; align-items: center;
+  color: var(--navy);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
+  margin-bottom: 10px;
+}
+.rel-card.nocover .p-line::before {
+  content: ""; width: 14px; height: 2px;
+  background: var(--navy); margin-right: 7px;
+}
+.rel-card.nocover h4 { -webkit-line-clamp: 3; }
 
 /* ============ 解鎖狀態切換 ============ */
 .unlocked-only { display: none; }
@@ -437,6 +526,13 @@ body.unlocked .unlocked-only { display: block; }
 @media (max-width: 560px) {
   .promises { flex-direction: column; gap: 9px; }
   .meta-row { gap: 6px 12px; font-size: 11.5px; }
-  .author-block { padding: 14px; gap: 12px; }
-  .author-block .follow { padding: 7px 15px; font-size: 12.5px; }
+  /* 追蹤鈕換行成整寬按鈕，作者資訊與頭銜才有完整寬度可排 */
+  .author-block { padding: 14px; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+  .author-block .follow {
+    flex: 1 0 100%;
+    text-align: center;
+    padding: 8px 15px;
+    font-size: 12.5px;
+    margin-top: 2px;
+  }
 }

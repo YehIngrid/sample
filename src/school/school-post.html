@@ -108,6 +108,8 @@
             <div class="meta-row">
               <span>2026 / 05 / 22 發佈</span>
               <span class="dot"></span>
+              <span>2026 / 06 / 10 編輯</span>
+              <span class="dot"></span>
               <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> 2,184 次閱讀</span>
               <span class="dot"></span>
               <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 96 喜歡</span>
@@ -125,10 +127,15 @@
             <div class="av"></div>
             <div class="info">
               <div class="name">創產系 大四 范同學</div>
+              <div class="author-rating">
+                <span class="stars">★★★★★</span>
+                <span class="score">4.8</span>
+                <span class="cnt">96 則評分</span>
+              </div>
               <div class="titles">
-                <span class="t">*台大碩士*</span>
-                <span class="t">*書卷獎*</span>
-                <span class="t">*推甄正取 ×3*</span>
+                <span class="t">台大碩士</span>
+                <span class="t">書卷獎</span>
+                <span class="t">推甄正取 ×3</span>
               </div>
             </div>
             <a class="follow" href="#">＋ 追蹤</a>
@@ -218,6 +225,23 @@
             </div>
           </div>
 
+          <!-- like button -->
+          <div class="post-like">
+            <button class="like-btn" id="postLikeBtn" title="點擊收藏這篇文章">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              <span class="like-count" id="postLikeCount">96</span>
+              <span class="like-text">喜歡</span>
+            </button>
+          </div>
+
+          <!-- tags -->
+          <div class="post-tags">
+            <a href="school-article.html">#頂大推甄</a>
+            <a href="school-article.html">#備審資料</a>
+            <a href="school-article.html">#面試實錄</a>
+            <a href="school-article.html">#教授評價</a>
+          </div>
+
           <!-- promises + 聲明 -->
           <div class="promises">
             <span class="pr"><svg viewBox="0 0 24 24"><path d="M20 6 9 17 4 12"/></svg>解鎖後永久閱讀</span>
@@ -266,7 +290,7 @@
               <span class="c-date">3 天前</span>
             </div>
             <div class="c-text">備審改版前後對比真的太實用，第一段砍掉形容詞那段我直接照做。面試逐字稿也很還原，謝謝學姊！</div>
-            <div class="c-actions"><a href="#">👍 有幫助 (42)</a><a href="#">回覆</a></div>
+            <div class="c-actions"><a href="#"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c97f5a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>有幫助 (42)</a><a href="#">回覆</a></div>
           </div>
         </div>
 
@@ -280,7 +304,7 @@
               <span class="c-date">1 週前</span>
             </div>
             <div class="c-text">經驗很扎實，雖然我不是創產但思路通用。希望之後能補一篇交大的版本～</div>
-            <div class="c-actions"><a href="#">👍 有幫助 (18)</a><a href="#">回覆</a></div>
+            <div class="c-actions"><a href="#"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c97f5a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>有幫助 (18)</a><a href="#">回覆</a></div>
           </div>
         </div>
 
@@ -293,7 +317,7 @@
               <span class="c-date">2 天前</span>
             </div>
             <div class="c-text">@周同學 交大版本我整理中，預計下個月上架，追蹤我就會在通知收到提醒！</div>
-            <div class="c-actions"><a href="#">👍 有幫助 (9)</a></div>
+            <div class="c-actions"><a href="#"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c97f5a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>有幫助 (9)</a></div>
           </div>
         </div>
 
@@ -328,6 +352,13 @@
               <div class="rfoot"><span class="ra">張同學</span><span class="rp">NT$ 69</span></div>
             </div>
           </a>
+          <a class="rel-card nocover" href="#">
+            <div class="rb">
+              <span class="p-line">研究所推甄</span>
+              <h4>推甄備取遞補全流程：意願序怎麼填最不吃虧</h4>
+              <div class="rfoot"><span class="ra">范同學</span><span class="rp">NT$ 59</span></div>
+            </div>
+          </a>
         </div>
       </section>
     </div>
@@ -351,6 +382,10 @@
             解鎖完整攻略
           </button>
         </div>
+        <button class="side-like" type="button" id="sideLikeBtn" title="喜歡這篇攻略">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          喜歡 <span id="sideLikeCount">96</span>
+        </button>
         <a class="btn-ghost" href="#">
           加入收藏
           <svg viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M6 3 h12 a1 1 0 0 1 1 1 v17 l-7-4 -7 4 V4 a1 1 0 0 1 1-1 Z"/></svg>
@@ -384,6 +419,9 @@
 
 <!-- ============ 手機版 sticky 購買列 ============ -->
 <div class="sp-actionbar">
+  <button class="ico" id="barLikeBtn" aria-label="喜歡這篇攻略" type="button">
+    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  </button>
   <button class="ico" aria-label="加入收藏" type="button">
     <svg viewBox="0 0 24 24"><path d="M6 3 h12 a1 1 0 0 1 1 1 v17 l-7-4 -7 4 V4 a1 1 0 0 1 1-1 Z"/></svg>
   </button>
@@ -398,6 +436,32 @@
   <div class="unlocked-wrap">
     <span class="done"><svg viewBox="0 0 24 24"><path d="M20 6 9 17 4 12"/></svg>已解鎖 · 永久閱讀</span>
     <button class="rate" type="button">給評分</button>
+  </div>
+</div>
+
+<!-- ============ 評分模態框 ============ -->
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+    <div class="modal-content">
+      <div class="modal-header" style="border-bottom: 1px solid var(--line);">
+        <h5 class="modal-title" style="font-weight: 700;">為這篇攻略評分</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="padding: 32px 24px; text-align: center;">
+        <div style="margin-bottom: 24px;">
+          <div style="font-size: 14px; color: var(--muted); margin-bottom: 12px;">你覺得這篇攻略如何？</div>
+          <div class="star-rating" style="font-size: 40px; letter-spacing: 8px; cursor: pointer;">
+            <span class="star" data-value="1">☆</span>
+            <span class="star" data-value="2">☆</span>
+            <span class="star" data-value="3">☆</span>
+            <span class="star" data-value="4">☆</span>
+            <span class="star" data-value="5">☆</span>
+          </div>
+        </div>
+        <textarea id="ratingComment" placeholder="選填：分享你的看法（可留言或評分作者）..." style="width: 100%; height: 100px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; resize: none; margin-bottom: 16px; font-family: inherit;"></textarea>
+        <button id="submitRating" class="btn btn-primary" style="width: 100%; background-color: var(--navy); border: none; padding: 10px; border-radius: 10px; color: white; font-weight: 700;">送出評分</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -447,9 +511,59 @@ document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById(id);
     if (btn) btn.addEventListener('click', toggleUnlock);
   });
-  // 已解鎖狀態下的「評分」鈕再點一次可上鎖（方便測試）
+  // ── 文章愛心按鈕（文末 / 側欄 / 手機操作列 同步） ──
+  const likeCount = document.getElementById('postLikeCount');
+  const sideLikeCount = document.getElementById('sideLikeCount');
+  const likeBtns = ['postLikeBtn', 'sideLikeBtn', 'barLikeBtn']
+    .map(id => document.getElementById(id)).filter(Boolean);
+  let isLiked = false;
+  let likeNum = 96;
+
+  function renderLike() {
+    if (likeCount) likeCount.textContent = likeNum;
+    if (sideLikeCount) sideLikeCount.textContent = likeNum;
+    likeBtns.forEach(b => {
+      b.classList.toggle('liked', isLiked);
+      b.title = isLiked ? '已喜歡這篇攻略' : '喜歡這篇攻略';
+    });
+  }
+  likeBtns.forEach(b => b.addEventListener('click', () => {
+    isLiked = !isLiked;
+    likeNum += isLiked ? 1 : -1;
+    renderLike();
+  }));
+  renderLike();
+
+  // ── 評分功能 ──
+  const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
   document.querySelectorAll('.ubuy .rate-btn, .sp-actionbar .rate').forEach(btn => {
-    btn.addEventListener('click', toggleUnlock);
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      ratingModal.show();
+    });
+  });
+
+  // 星號互動
+  const stars = document.querySelectorAll('.star-rating .star');
+  let selectedRating = 0;
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      selectedRating = parseInt(star.dataset.value);
+      stars.forEach((s, idx) => {
+        if (idx < selectedRating) s.textContent = '★';
+        else s.textContent = '☆';
+      });
+    });
+  });
+
+  // 提交評分
+  document.getElementById('submitRating').addEventListener('click', () => {
+    if (selectedRating === 0) {
+      alert('請先選擇評分');
+      return;
+    }
+    alert(`感謝你的 ${selectedRating} 星評分！`);
+    ratingModal.hide();
   });
 });
 </script>

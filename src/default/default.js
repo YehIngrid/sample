@@ -209,6 +209,19 @@ window._showLoggedOutUI = function() {
 };
 
 async function doLogout() {
+  const confirm = await Swal.fire({
+    title: '確定要登出？',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: '登出',
+    cancelButtonText: '取消',
+    customClass: {
+      title: 'swal-logout-title',
+      htmlContainer: 'swal-logout-text'
+    }
+  });
+  if (!confirm.isConfirmed) return;
+
   await backendService.logout(); // 清除 token
   localStorage.removeItem('role');
   // 自動登出提示
@@ -218,6 +231,10 @@ async function doLogout() {
     html: "將在 <b></b> 秒後回到登入頁",
     timer: 3000, // 2 秒後自動跳轉
     timerProgressBar: true,
+    customClass: {
+      title: 'swal-logout-title',
+      htmlContainer: 'swal-logout-text'
+    },
     didOpen: () => {
       Swal.showLoading();
       const timer = Swal.getPopup().querySelector("b");

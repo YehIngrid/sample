@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>搜尋結果 · 校園攻略站</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
+  <link rel="manifest" href="/assets/manifest-5--vV4vC.json">
+  <link rel="shortcut icon" href="/assets/treasurehubIcon-CWMA98NJ.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
+  <style>
+    .search-result-container { padding: 32px 0; }
+    .search-header { margin-bottom: 40px; }
+    .search-header h1 { font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+    .search-header .keyword { color: var(--navy); font-weight: 700; }
+    .search-header .count { color: var(--muted); font-size: 16px; }
+
+    .topic-section { margin-bottom: 48px; }
+    .topic-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; cursor: pointer; transition: all 0.2s; }
+    .topic-header:hover { gap: 16px; }
+    .topic-icon { font-size: 28px; }
+    .topic-title { flex: 1; font-size: 20px; font-weight: 700; color: var(--ink); }
+    .topic-count { background: var(--alice); color: var(--navy); padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+    .topic-link { color: var(--navy); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; }
+    .topic-link:hover { gap: 10px; }
+
+    .preview-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
+    @media (min-width: 768px) {
+      .preview-cards { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .preview-card { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: #fff; transition: all 0.22s; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 12px; }
+    .preview-card:hover { border-color: var(--navy); box-shadow: 0 8px 20px -10px rgba(0,75,151,0.25); transform: translateY(-2px); }
+
+    .preview-title { font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+    .preview-excerpt { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .preview-meta { font-size: 12px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-state svg { width: 80px; height: 80px; margin-bottom: 16px; opacity: 0.3; }
+  </style>
+  <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
+  <script type="module" crossorigin src="/assets/default-C8gMrLxA.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/default-CyZpfHTJ.css">
+  <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-0wJ3LjQ0.css">
+</head>
+<body>
+
+
+<nav class="nav">
+  <div class="d-flex gap-2">
+    <button class="mobile-hamburger d-lg-none" type="button">
+      <img src="data:image/svg+xml,%3csvg%20width='27'%20height='19'%20viewBox='0%200%2027%2019'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M1.5%201.5H25.5'%20stroke='%23004B97'%20stroke-opacity='0.9'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%209.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3cpath%20d='M1.5%2017.5H25.5'%20stroke='%23004B97'%20stroke-width='3'%20stroke-linecap='round'/%3e%3c/svg%3e" alt="" style="width: 20px;">
+    </button>
+    <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+      <img src="/assets/TREASUREHUBCHEN-DooKZtdE.svg" alt="">
+    </a>
+  </div>
+  <div class="tabs">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <div class="tab-drop">
+      <a href="school.html" class="on">校園攻略站
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="drop-menu">
+        <a href="school.html" class="on">攻略首頁</a>
+        <a href="school-about.html">攻略介紹</a>
+        <a href="school-article.html">全部文章</a>
+        <a href="school-studio.html">撰寫攻略</a>
+      </div>
+    </div>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+  <div class="right">
+    <a class="btn-sm navy d-none d-lg-inline-flex" href="school-studio.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
+      撰寫攻略
+    </a>
+    <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">登入</button>
+    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
+      <span class="avatar"></span>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="search-result-container">
+    <div class="search-header">
+      <h1>搜尋 "<span class="keyword" id="searchKeyword"></span>"</h1>
+      <p class="count">在 <span id="totalCount">0</span> 篇文章中找到相關結果</p>
+    </div>
+
+    <div id="searchResults"></div>
+
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="M21 21l-4.35-4.35"></path>
+      </svg>
+      <p>找不到相關結果，試試其他關鍵字吧！</p>
+    </div>
+  </div>
+</div>
+
+<footer style="background-color: #004b97; color: rgba(255,255,255,0.85); margin-top: 80px;">
+  <div style="display:grid; grid-template-columns:1.4fr 2fr 1fr; gap:24px; width:80vw; margin:0 auto; padding:48px 0 36px;">
+    <div>
+      <img src="/assets/TREASUREHUBwhite-TNTDzVFW.svg" alt="拾貨寶庫 TreasureHub" style="max-width:120px; margin-bottom:12px; display:block;">
+      <p style="font-size:13px; color:rgba(255,255,255,0.55); line-height:1.6; margin:0; max-width:280px;">專為大學生打造的校園二手拍賣市集</p>
+    </div>
+    <div style="display:flex; gap:24px;">
+      <div style="flex:1;">
+        <h5 style="font-size:14px; font-weight:700; color:#abdad5; letter-spacing:0.5px; margin-bottom:10px; margin-top:0;">快速連結</h5>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0;">
+          <li><a href="../newhome/newhome.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">購物首頁</a></li>
+          <li><a href="../commodity/commodity.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">購物商場</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div style="border-top: 1px solid rgba(255,255,255,0.12); text-align: center; padding: 14px 0; font-size: 13px; color: rgba(255,255,255,0.45); width:80vw; margin:0 auto;">
+    <span>Copyright © 2026 拾貨寶庫｜All Rights Reserved.</span>
+  </div>
+</footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="school-data.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const keyword = params.get('q') || '';
+
+  if (!keyword) {
+    window.location.href = 'school.html';
+    return;
+  }
+
+  document.getElementById('searchKeyword').textContent = keyword;
+
+  // Group articles by topic
+  const grouped = groupArticlesByTopic(MOCK_ARTICLES, keyword);
+  const resultsContainer = document.getElementById('searchResults');
+  const emptyState = document.getElementById('emptyState');
+
+  let totalCount = 0;
+  Object.values(grouped).forEach(articles => {
+    totalCount += articles.length;
+  });
+
+  document.getElementById('totalCount').textContent = totalCount;
+
+  if (totalCount === 0) {
+    emptyState.style.display = 'block';
+    return;
+  }
+
+  // Render results grouped by topic
+  Object.entries(grouped).forEach(([topicName, articles]) => {
+    if (articles.length === 0) return;
+
+    const topic = TOPICS[topicName];
+    const section = document.createElement('div');
+    section.className = 'topic-section';
+    section.innerHTML = `
+      <div class="topic-header" onclick="location.href='school-article.html?topic=${topic.id}'">
+        <span class="topic-icon">${topic.icon}</span>
+        <h2 class="topic-title">${topicName}</h2>
+        <span class="topic-count">${articles.length}篇</span>
+        <a class="topic-link" href="school-article.html?topic=${topic.id}">查看全部 →</a>
+      </div>
+      <div class="preview-cards" id="preview-${topic.id}"></div>
+    `;
+
+    const preview = section.querySelector(`#preview-${topic.id}`);
+    articles.slice(0, 2).forEach(article => {
+      const card = document.createElement('a');
+      card.href = `school-post.html?id=${article.id}`;
+      card.className = 'preview-card';
+      card.innerHTML = `
+        <div class="preview-title">${article.title}</div>
+        <div class="preview-excerpt">${article.excerpt}</div>
+        <div class="preview-meta">
+          <span>${article.author}</span>
+          <span>·</span>
+          <span>${article.readTime}</span>
+          <span>·</span>
+          <span>❤️ ${article.likes}</span>
+        </div>
+      `;
+      preview.appendChild(card);
+    });
+
+    resultsContainer.appendChild(section);
+  });
+});
+</script>
+</body>
+</html>

@@ -19,7 +19,10 @@ let page = 1;
 
 // ── Filter & sort ──
 function getFiltered() {
-  let list = currentCat === 'all' ? MOCK_ARTICLES : MOCK_ARTICLES.filter(a => a.cat === currentCat);
+  let list = currentCat === 'all' ? MOCK_ARTICLES : MOCK_ARTICLES.filter(a => {
+    const topicName = Object.keys(TOPICS).find(k => TOPICS[k].id === a.topic);
+    return topicName === currentCat;
+  });
   if (currentSort === 'hot') list = [...list].sort((a, b) => b.likes - a.likes);
   return list;
 }
@@ -39,7 +42,7 @@ function renderFeatured() {
       <div class="school-featured-body">
         <div>
           <div class="school-featured-label">精選攻略</div>
-          <span class="article-badge ${BADGE_CLASS[art.cat]}">${BADGE_LABEL[art.cat]}</span>
+          <span class="article-badge ${BADGE_CLASS[art.topic]}">${BADGE_LABEL[art.topic]}</span>
           <h2 class="school-featured-title">${art.title}</h2>
           <p class="school-featured-excerpt">${art.excerpt}</p>
         </div>
@@ -209,6 +212,17 @@ document.addEventListener('DOMContentLoaded', () => {
         searchWrap.classList.remove('open');
       }
     });
+    // Search submit
+    if (searchInput) {
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const keyword = searchInput.value.trim();
+          if (keyword) {
+            window.location.href = `school-search.html?q=${encodeURIComponent(keyword)}`;
+          }
+        }
+      });
+    }
   }
 
   // FinisherHeader on modal open

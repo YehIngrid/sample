@@ -256,11 +256,15 @@ document.getElementById('update-profile').addEventListener('click', async () => 
 const logoutButton = document.getElementById('logout');
 logoutButton?.addEventListener('click', function() {
   Swal.fire({
-    title: '確定要登出嗎？',
-    icon: 'warning',
+    title: '確定要登出?',
+    icon: 'question',
     showCancelButton: true,
     confirmButtonText: '登出',
-    cancelButtonText: '取消'
+    cancelButtonText: '取消',
+    customClass: {
+      title: 'swal-logout-title',
+      htmlContainer: 'swal-logout-text'
+    }
   }).then((result) => {
     if (result.isConfirmed) {
       localStorage.removeItem('uid');
@@ -270,29 +274,51 @@ logoutButton?.addEventListener('click', function() {
       Swal.fire({
         icon: 'success',
         title: '登出成功',
-        text: '您已成功登出'
+        text: '您已成功登出',
+        customClass: {
+          title: 'swal-logout-title',
+          htmlContainer: 'swal-logout-text'
+        }
       }).then(() => {
-        window.location.href = '../account/account.html'; // 登出後跳轉到首頁
+        window.location.href = '../account/account.html';
       });
     }
   });
 });
 function doLogoutSwal() {
   Swal.fire({
-    title: '確定要登出嗎？',
-    icon: 'warning',
+    title: '確定要登出?',
+    icon: 'question',
     showCancelButton: true,
     confirmButtonText: '登出',
-    cancelButtonText: '取消'
+    cancelButtonText: '取消',
+    customClass: {
+      title: 'swal-logout-title',
+      htmlContainer: 'swal-logout-text'
+    }
   }).then(async(result) => {
     if (result.isConfirmed) {
       try {
         if (!backendService) backendService = new BackendService();
         await backendService.logout();
-        Swal.fire({ icon: 'success', title: '登出成功', text: '您已成功登出' })
-          .then(() => { window.location.href = '../account/account.html'; });
+        Swal.fire({
+          icon: 'success',
+          title: '登出成功',
+          text: '您已成功登出',
+          customClass: {
+            title: 'swal-logout-title',
+            htmlContainer: 'swal-logout-text'
+          }
+        }).then(() => { window.location.href = '../account/account.html'; });
       } catch (error) {
-        Swal.fire({ icon: 'error', title: '登出失敗請稍後重試' });
+        Swal.fire({
+          icon: 'error',
+          title: '登出失敗請稍後重試',
+          customClass: {
+            title: 'swal-logout-title',
+            htmlContainer: 'swal-logout-text'
+          }
+        });
       }
     }
   });
