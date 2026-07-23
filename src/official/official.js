@@ -256,7 +256,7 @@ imgInput.addEventListener('change', () => {
   imgInput.value = '';
 });
 
-function addBroadcastFiles(files) {
+async function addBroadcastFiles(files) {
   for (const f of files) {
     if (broadcastFiles.length >= BROADCAST_MAX) {
       Swal.fire({ icon: 'warning', title: `最多 ${BROADCAST_MAX} 張圖片` });
@@ -267,7 +267,12 @@ function addBroadcastFiles(files) {
       Swal.fire({ icon: 'warning', title: `「${f.name}」超過 5MB 限制` });
       continue;
     }
-    broadcastFiles.push(f);
+    const url = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(f);
+    });
+    broadcastFiles.push({ file: f, url });
   }
   renderBroadcastImgList();
 }
@@ -278,18 +283,26 @@ function removeBroadcastFile(i) {
 }
 
 function renderBroadcastImgList() {
-  imgList.innerHTML = broadcastFiles.map((f, i) =>
-    `<span class="attach-chip attach-chip-new">
-       <i class="fa fa-image me-1"></i>${esc(f.name)}
-       <button type="button" class="attach-chip-remove" onclick="removeBroadcastFile(${i})">×</button>
-     </span>`
-  ).join('');
+  if (broadcastFiles.length === 0) { imgList.innerHTML = ''; return; }
+  imgList.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">${
+    broadcastFiles.map(({ url, file }, i) => `
+      <div style="position:relative;display:inline-block;">
+        <img src="${url}" alt="${esc(file.name)}"
+             style="width:80px;height:80px;object-fit:cover;border-radius:10px;border:1px solid #d6e2ec;display:block;">
+        <button type="button" onclick="removeBroadcastFile(${i})"
+                style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:none;background:#c97f5a;color:#fff;font-size:12px;line-height:20px;text-align:center;cursor:pointer;padding:0;"
+                aria-label="移除">×</button>
+        <div style="font-size:10px;color:#6f87a0;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">${esc(file.name)}</div>
+      </div>`).join('')
+  }</div>`;
 }
 
 function clearBroadcastFiles() {
   broadcastFiles = [];
   renderBroadcastImgList();
 }
+// onclick 屬性需要 global scope（module 內函式預設不是全域）
+window.removeBroadcastFile = removeBroadcastFile;
 
 // ════════════════════════════════════════════════════
 //  發送官方公告
@@ -316,7 +329,7 @@ document.getElementById('broadcastForm').addEventListener('submit', async (e) =>
   resultBox.className = 'result-box mt-3 d-none';
 
   try {
-    await chatSvc.broadCastOfficial(channelId, message || undefined, broadcastFiles);
+    await chatSvc.broadCastOfficial(channelId, message || undefined, broadcastFiles.map(e => e.file));
     resultBox.className = 'result-box mt-3 success';
     resultBox.innerHTML = '<div class="fw-bold">✅ 公告發送成功！</div>';
     document.getElementById('broadcastMessage').value = '';

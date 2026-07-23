@@ -1271,6 +1271,19 @@ class ChatRoomList {
                     ? `<span class="role-badge"><i class="ti ti-shield-check"></i></span>`
                     : '';
                 const _hasAdmin = !isOfficial && data.members?.some(m => m.role === 'ADMIN' || m.role === 'MODERATOR');
+                const _lastMsgHtml = (() => {
+                    if (!isOfficial) return this.escapeHtml(this.getLastMessageText(data.lastMessage));
+                    const lm = data.lastMessage;
+                    if (!lm) return this.escapeHtml(data.officialChannel?.description || '官方公告頻道');
+                    const _attachUrl = Array.isArray(lm.attachments) && lm.attachments.length > 0
+                        ? lm.attachments[0]
+                        : (typeof lm.attachments === 'string' && lm.attachments.trim() ? lm.attachments : null);
+                    const _txt = this.getLastMessageText(lm, data.officialChannel?.description || '官方公告頻道');
+                    return (_attachUrl
+                        ? `<img src="${this.escapeHtml(_attachUrl)}" style="width:16px;height:16px;object-fit:cover;border-radius:2px;margin-right:3px;vertical-align:middle;" onerror="this.remove()">`
+                        : '')
+                        + this.escapeHtml(_txt);
+                })();
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
@@ -1278,10 +1291,7 @@ class ChatRoomList {
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}</h6>
-                            <small class="text-muted lastMessage">${this.escapeHtml(isOfficial
-                                ? (data.officialChannel?.description || '官方公告頻道')
-                                : this.getLastMessageText(data.lastMessage)
-                            )}</small>
+                            <small class="text-muted lastMessage">${_lastMsgHtml}</small>
                             ${_hasAdmin ? `<small class="admin-in-chat-note"><i class="ti ti-shield-half"></i> 管理員已加入此對話</small>` : ''}
                         </div>
                         <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
@@ -1812,7 +1822,17 @@ class ChatRoomList {
                     const lastMsgEl = chatItem.querySelector('.lastMessage');
                     if (lastMsgEl) {
                         const msgText = this.getLastMessageText(data, '官方公告');
-                        lastMsgEl.innerHTML = '<img src="../svg/alarm.svg" style="width:12px;height:12px;margin-right:3px;vertical-align:middle;">';
+                        const _broadcastAttach = Array.isArray(data.attachments) && data.attachments.length > 0
+                            ? data.attachments[0]
+                            : (typeof data.attachments === 'string' && data.attachments.trim() ? data.attachments : null);
+                        lastMsgEl.innerHTML = '';
+                        if (_broadcastAttach) {
+                            const _img = document.createElement('img');
+                            _img.src = _broadcastAttach;
+                            _img.style.cssText = 'width:16px;height:16px;object-fit:cover;border-radius:2px;margin-right:3px;vertical-align:middle;';
+                            _img.onerror = () => _img.remove();
+                            lastMsgEl.appendChild(_img);
+                        }
                         lastMsgEl.appendChild(document.createTextNode(msgText));
                     }
                     // 非目前開著的房間才顯示未讀紅點
@@ -2199,8 +2219,8 @@ const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.
                     <span class="broadcast-label">${this.escapeHtml(channelName)}</span>
                     <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>
                 </div>
-                ${data.message ? `<div class="broadcast-text">${this.linkify(this.escapeHtml(data.message).replace(/\n/g, '<br>'))}</div>` : ''}
                 ${broadcastImgs.map(src => `<img src="${src}" class="broadcast-img chat-image" alt="公告圖片" loading="lazy" style="cursor:pointer;">`).join('')}
+                ${data.message ? `<div class="broadcast-text">${this.linkify(this.escapeHtml(data.message).replace(/\n/g, '<br>'))}</div>` : ''}
                 ${time ? `<div class="broadcast-time">${time}</div>` : ''}
             </div>`;
         container.appendChild(el);

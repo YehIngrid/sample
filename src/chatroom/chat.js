@@ -129,20 +129,15 @@ const _toastMap = new Map();     // username → { el, timer, count }
   s.textContent = `
     #chat-toast-container {
       position: fixed;
-      bottom: 90px;
-      right: 20px;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 340px;
       z-index: 99999;
       display: flex;
-      flex-direction: column-reverse;
+      flex-direction: column;
       gap: 8px;
       pointer-events: none;
-    }
-    @media (min-width: 992px) {
-      #chat-toast-container {
-        left: auto;
-        right: 30px;
-        bottom: 150px;
-      }
     }
     #talkInterface {
       transition: top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease,
@@ -186,16 +181,15 @@ const _toastMap = new Map();     // username → { el, timer, count }
       box-shadow: 0 6px 24px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.07);
       pointer-events: auto;
       cursor: pointer;
-      max-width: 290px;
-      min-width: 210px;
+      width: 100%;
       overflow: hidden;
       opacity: 0;
-      transform: translateX(14px);
+      transform: translateY(-8px);
       transition: opacity 0.25s ease, transform 0.25s ease;
     }
     .chat-toast--visible {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateY(0);
     }
     .chat-toast:hover {
       box-shadow: 0 8px 28px rgba(0,0,0,0.18);

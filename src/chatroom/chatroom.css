@@ -767,7 +767,7 @@ html, body {
 .broadcast-msg {
     display: flex;
     justify-content: center;
-    padding: 8px 16px;
+    padding: 8px 6px;
 }
 .broadcast-inner {
     background: var(--self-bubble-bg, aliceblue);
@@ -824,7 +824,7 @@ html, body {
     max-width: 100%;
     border-radius: 6px;
     display: block;
-    margin-top: 8px;
+    margin: 0 auto 14px;
 }
 .broadcast-time {
     margin-top: 8px;
