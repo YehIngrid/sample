@@ -130,6 +130,41 @@ body { background: var(--alice); }
 }
 .author-block .follow:hover { background: var(--navy); color: #fff; }
 
+/* 側欄喜歡按鈕 */
+/* 「喜歡」「加入收藏」並排（桌機）：外層 flex row，兩顆按鈕各佔一半 */
+.buy-actions { display: flex; gap: 8px; margin-top: 14px; margin-bottom: 8px; }
+.buy-actions .side-like,
+.buy-actions .btn-ghost { flex: 1; width: auto; min-width: 0; margin: 0; }
+
+.side-like {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 0; margin-bottom: 8px; border-radius: 999px;
+  border: 1.5px solid var(--line); background: #fff; color: var(--ink);
+  font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+  cursor: pointer; transition: all 0.22s;
+}
+.side-like svg { width: 15px; height: 15px; stroke: #e63946; flex-shrink: 0; }
+.side-like:hover { border-color: #e63946; color: #e63946; transform: translateY(-1px); }
+.side-like.liked { border-color: #e63946; color: #e63946; background: rgba(230,57,70,0.08); }
+.side-like.liked svg { fill: #e63946; }
+
+/* 手機操作列喜歡按鈕 */
+.sp-actionbar .ico.liked { border-color: #e63946; color: #e63946; }
+.sp-actionbar .ico.liked svg { fill: #e63946; stroke: #e63946; }
+
+/* article tags */
+.post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0 18px; }
+.post-tags a {
+  padding: 5px 12px;
+  background: var(--alice);
+  color: var(--navy);
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  transition: all 0.2s;
+}
+.post-tags a:hover { background: var(--navy); color: #fff; }
+
 /* preview label */
 .preview-flag {
   display: inline-flex; align-items: center; gap: 6px;
@@ -317,12 +352,13 @@ body { background: var(--alice); }
 .buy-card .btn-buy svg { width: 16px; height: 16px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .buy-card .btn-ghost {
   display: flex; align-items: center; justify-content: center; gap: 6px;
-  width: 100%; padding: 11px; border-radius: 999px; margin-top: 10px;
-  border: 1.5px solid var(--line); color: var(--ink);
+  padding: 11px; border-radius: 999px;
+  border: 1.5px solid var(--navy); color: var(--navy);
   font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
   transition: all 0.2s;
 }
-.buy-card .btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
+.buy-card .btn-ghost svg { fill: currentColor; flex-shrink: 0; }
+.buy-card .btn-ghost:hover { border-color: var(--navy-d); color: var(--navy-d); }
 .buy-card .ledger { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
 .buy-card .ledger .li { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--muted); letter-spacing: 0.02em; }
 .buy-card .ledger .li svg { width: 14px; height: 14px; color: var(--navy); flex-shrink: 0; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
@@ -370,6 +406,19 @@ body.unlocked .toc a .locked { display: none; }
 .rel-card .ra { font-size: 11px; color: var(--muted); }
 .rel-card .rp { font-size: 13px; font-weight: 700; color: var(--navy); }
 .rel-card .rp.free { color: var(--muted); font-weight: 600; }
+/* 無封面變體：分類以眉標線呈現（比照文章列表 nocover 卡） */
+.rel-card.nocover .rb { padding-top: 16px; }
+.rel-card.nocover .p-line {
+  display: inline-flex; align-items: center;
+  color: var(--navy);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
+  margin-bottom: 10px;
+}
+.rel-card.nocover .p-line::before {
+  content: ""; width: 14px; height: 2px;
+  background: var(--navy); margin-right: 7px;
+}
+.rel-card.nocover h4 { -webkit-line-clamp: 3; }
 
 /* ============ 解鎖狀態切換 ============ */
 .unlocked-only { display: none; }
@@ -385,6 +434,7 @@ body.unlocked .unlocked-only { display: block; }
   .sp-container { padding: 16px 16px 30px; width: 100%; }
   .sp-layout { grid-template-columns: 1fr; }
   .side { display: none; }              /* 手機版隱藏側欄，改用底部 sticky 購買列 */
+  .post-like { display: none; }         /* 手機版隱藏文末喜歡按鈕，已有 sticky 操作列的喜歡圖示 */
   .post-body { padding: 22px 18px 26px; }
   .sp-hero { height: 168px; }
   .post-head h1 { font-size: 22px; }
@@ -444,6 +494,13 @@ body.unlocked .unlocked-only { display: block; }
 @media (max-width: 560px) {
   .promises { flex-direction: column; gap: 9px; }
   .meta-row { gap: 6px 12px; font-size: 11.5px; }
-  .author-block { padding: 14px; gap: 12px; }
-  .author-block .follow { padding: 7px 15px; font-size: 12.5px; }
+  /* 追蹤鈕換行成整寬按鈕，作者資訊與頭銜才有完整寬度可排 */
+  .author-block { padding: 14px; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+  .author-block .follow {
+    flex: 1 0 100%;
+    text-align: center;
+    padding: 8px 15px;
+    font-size: 12.5px;
+    margin-top: 2px;
+  }
 }
