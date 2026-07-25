@@ -114,7 +114,7 @@ ul{
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.qa-copy { flex: 1; min-width: 0; }
+.qa-copy { flex: 1; min-width: 84px; }
 .qa-t { font-size: 16px; font-weight: 700; letter-spacing: 0.06em; }
 .qa-s { font-size: 12px; margin-top: 2px; letter-spacing: 0.04em; opacity: 0.92; }
 .qa-arr { font-size: 18px; opacity: 0.55; transition: opacity 0.22s ease, transform 0.22s ease; }
