@@ -153,6 +153,22 @@ ul{
   margin: 16px auto 12px !important;
   transform: scale(0.85);
 }
+/* toast 模式：還原被上方 !important 蓋掉的緊湊佈局（如複製邀請碼提示） */
+.swal2-popup.swal2-toast {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px;
+  padding: 10px 16px !important;
+  box-shadow: 0 4px 12px rgba(0,75,151,0.18) !important;
+}
+.swal2-popup.swal2-toast .swal2-icon {
+  margin: 0 10px 0 0 !important;
+  transform: none;
+}
+.swal2-popup.swal2-toast .swal2-title {
+  margin: 0 !important;
+  font-size: var(--font-size-sm) !important;
+}
 
 @media (max-width:1200px) {
     .specialpadding{
@@ -2396,6 +2412,239 @@ html.skip-loader #whatcontent { display: block !important; }
   transition: top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease,
               width 0.25s ease, height 0.25s ease, border-radius 0.25s ease;
 }
+
+/* ── 全站共用：邀請好友 FAB（聊天室 icon 上方）+ 面板 ── */
+.invite-fab {
+  width: 50px;
+  height: 50px;
+  position: fixed;
+  bottom: 136px;
+  right: 30px;
+  border-radius: 50%;
+  border: none;
+  color: #fff;
+  font-size: 1.35rem;
+  /* 整顆藍 ↔ 紅 每隔幾秒切換（各停留約 1.8 秒，中間平滑過渡） */
+  background: #004b97;
+  animation: inviteColorSwap 4s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.invite-fab:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -22px rgba(0,75,151,0.5);
+}
+@keyframes inviteColorSwap {
+  0%, 45%   { background-color: #004b97; }
+  55%, 95%  { background-color: #e63946; }
+  100%      { background-color: #004b97; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .invite-fab { animation: none; }
+}
+
+.invite-panel {
+  position: fixed;
+  width: min(400px, 100vw);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 16px 0 0 16px;
+  z-index: 11000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: -4px 0 32px rgba(0,75,151,0.12);
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.invite-panel.open { transform: translateX(0); }
+
+/* 玉璽卡（jade）造型的邀請碼卡片 */
+.icc-scene { margin: 16px 16px 0; flex-shrink: 0; }
+.icc-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.586;
+  border-radius: 22px;
+  overflow: hidden;
+  color: #0f2745;
+  border: 1px solid rgba(255,255,255,0.6);
+  background:
+    radial-gradient(120% 140% at 10% 0%, rgba(126,184,216,0.5) 0%, rgba(126,184,216,0) 45%),
+    radial-gradient(140% 160% at 100% 100%, rgba(171,218,213,0.7) 0%, rgba(171,218,213,0) 55%),
+    linear-gradient(135deg, #cfe4ee 0%, #a9cfe0 30%, #7eb8d8 55%, #9cd0cb 78%, #cfe9e4 100%);
+  box-shadow: 0 24px 60px -24px rgba(0,75,151,0.35), 0 4px 14px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
+}
+.icc-glow {
+  position: absolute;
+  top: -60px; right: -40px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+}
+.icc-glass {
+  position: absolute;
+  inset: 13px;
+  border-radius: 14px;
+  backdrop-filter: blur(2px);
+  background: linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.1) 30%);
+  border: 1px solid rgba(255,255,255,0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 13px 15px;
+}
+.icc-top { display: flex; align-items: center; gap: 10px; }
+.icc-chip {
+  width: 40px; height: 29px;
+  border-radius: 7px;
+  background: linear-gradient(150deg, #f4f6f8 0%, #d3dbe2 40%, #f4f6f8 65%, #b9c4cd 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.15);
+  position: relative;
+  flex-shrink: 0;
+}
+.icc-chip::before { content: ""; position: absolute; inset: 5px; border: 1px solid rgba(80,100,120,0.3); border-radius: 3px; }
+.icc-chip::after { content: ""; position: absolute; left: 50%; top: 5px; bottom: 5px; width: 1px; background: rgba(80,100,120,0.3); }
+.icc-wave { width: 18px; height: 18px; color: #004b97; }
+.icc-brand { margin-left: auto; font-size: 15px; font-weight: 800; font-style: italic; letter-spacing: 0.06em; color: #0f2745; }
+.icc-num-label {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: #6f87a0;
+  margin-top: 8px;
+}
+.icc-num { display: flex; align-items: center; gap: 8px; padding: 4px 8px; }
+.icc-num span {
+  flex: 1;
+  text-align: center;
+  font-size: clamp(20px, 6vw, 26px);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #0f2745;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.6);
+  font-family: "SFMono-Regular", Consolas, "Courier New", monospace;
+  user-select: all;
+  white-space: nowrap;
+}
+.icc-copy {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.45);
+  color: #004b97;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.22s ease;
+}
+.icc-copy:hover { background: #004b97; color: #fff; border-color: #004b97; }
+.icc-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.icc-holder, .icc-exp { min-width: 0; }
+.icc-exp { text-align: right; flex-shrink: 0; }
+.icc-holder label, .icc-exp label { display: block; font-size: 9px; letter-spacing: 0.24em; color: #6f87a0; margin-bottom: 3px; }
+.icc-holder b, .icc-exp b {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #0f2745;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+.invite-actions { margin: 0 16px; flex-shrink: 0; }
+.invite-link-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 8px 0;
+  border-radius: 999px;
+  border: none;
+  background: #004b97;
+  color: #fff;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.22s ease;
+}
+.invite-link-btn:hover { background: rgb(36, 182, 133); }
+.invite-hint {
+  margin: 10px 0 0;
+  font-size: var(--font-size-xs);
+  color: #6f87a0;
+  line-height: 1.6;
+}
+.invite-list-head {
+  padding: 16px 20px 8px;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: #0f2745;
+  flex-shrink: 0;
+}
+.invite-list-head strong { color: #004b97; }
+.invite-list {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding: 0 8px;
+}
+.invite-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  transition: background 0.15s;
+}
+.invite-item:hover { background: aliceblue; }
+.invite-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #d6e2ec;
+  flex-shrink: 0;
+}
+.invite-item-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.invite-name {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: #1a2840;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.invite-time {
+  font-size: var(--font-size-xs);
+  color: #6f87a0;
+}
+.invite-check {
+  color: rgb(36, 182, 133);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+.invite-footer {
+  padding: 10px 16px 14px;
+  flex-shrink: 0;
+}
+.swal2-container.invite-toast-z { z-index: 12000; }
 
 /* ── 交易流程 Banner ── */
 .fls-banner {

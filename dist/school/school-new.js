@@ -60,6 +60,50 @@ function attachSaveButtons() {
   });
 }
 
+// ── 每篇文章卡片右上角：可點擊的喜歡（愛心）── 疊在封面/內文交界處
+var LIKE_KEY = 'th_cg_liked';
+var liked = {};
+try { liked = JSON.parse(localStorage.getItem(LIKE_KEY) || '{}'); } catch (e) { liked = {}; }
+
+function persistLikes() {
+  try { localStorage.setItem(LIKE_KEY, JSON.stringify(liked)); } catch (e) {}
+}
+
+var LIKE_HEART_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>';
+
+function attachLikeButtons() {
+  document.querySelectorAll('.article').forEach(function (card, i) {
+    // 防止重複添加
+    if (card.querySelector('.like-fab')) return;
+
+    var id = 'a' + i;
+    var countEl = card.querySelector('.like-count-display .likes-num');
+    var baseCount = countEl ? (parseInt(String(countEl.textContent).replace(/[^\d]/g, ''), 10) || 0) : 0;
+    var isLiked = !!liked[id];
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'like-fab' + (isLiked ? ' liked' : '');
+    btn.setAttribute('aria-pressed', isLiked ? 'true' : 'false');
+    btn.setAttribute('aria-label', '喜歡這篇文章');
+    btn.innerHTML = LIKE_HEART_SVG;
+    if (countEl) countEl.textContent = baseCount + (isLiked ? 1 : 0);
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation(); // 卡片本身若之後加上點擊導覽，避免誤觸跳轉
+      var on = !btn.classList.contains('liked');
+      btn.classList.toggle('liked', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (on) { liked[id] = true; } else { delete liked[id]; }
+      persistLikes();
+      if (countEl) countEl.textContent = baseCount + (on ? 1 : 0);
+    });
+
+    card.appendChild(btn);
+  });
+}
+
 // ── Admin button for 校園攻略站 ──
 (function () {
   const schoolAdminBtn = document.getElementById('schoolAdminBtn');
@@ -224,7 +268,7 @@ function attachSaveButtons() {
               </div>
               <div class="read-stats">
                 <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${art.views}</span>
-                <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> ${art.likes}</span>
+                <span class="like-count-display"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span class="likes-num">${art.likes}</span></span>
                 <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> ${art.comments}</span>
               </div>
             </div>
@@ -255,7 +299,7 @@ function attachSaveButtons() {
             </div>
             <div class="read-stats">
               <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${art.views}</span>
-              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> ${art.likes}</span>
+              <span class="like-count-display"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span class="likes-num">${art.likes}</span></span>
               <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> ${art.comments}</span>
             </div>
           </div>
@@ -263,8 +307,9 @@ function attachSaveButtons() {
       `;
     }).join('');
 
-    // 在渲染完成後附加儲存按鈕
+    // 在渲染完成後附加儲存按鈕、喜歡按鈕
     attachSaveButtons();
+    attachLikeButtons();
   }
 
   document.addEventListener('DOMContentLoaded', renderArticles);

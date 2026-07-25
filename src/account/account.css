@@ -173,6 +173,10 @@ input::placeholder {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
+/* ── 邀請碼欄：選填、與上方四欄分開 ── */
+.form-signinvite input[type="text"] {
+  margin-top: 10px;
+}
 /* ── 重設密碼：兩欄連接 ── */
 .form-resettpass input[type="password"] {
   margin-bottom: -1px;

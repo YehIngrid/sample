@@ -250,6 +250,9 @@ export default class ChatBackendService {
         }
     }
     openSse() {
+        // 未登入時不建立 SSE 連線
+        if (!localStorage.getItem('uid')) return null;
+
         const url = `${this.baseUrl}/api/chat/stream`;
         const eventSource = new EventSource(url, { withCredentials: true });
 

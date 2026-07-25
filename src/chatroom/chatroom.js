@@ -115,11 +115,15 @@ class ChatRoomList {
             this.connectSSE(); // 帳號層級 SSE，開啟一次即可
             if (this.currentRoomId) {
                 // 直接聯絡對方：進入指定房間
+                // 注意：剛建立的新房間可能還沒出現在 loadRooms() 渲染出的列表 DOM 裡（後端剛寫入、
+                // 前端列表渲染時序差一拍），不能只在 DOM 裡找得到才切換，否則會靜默失敗、
+                // 使用者點擊聊聊/聯絡賣家後完全沒反應。switchRoom 本身有 fallback 名稱，
+                // 不需要房間先存在於列表中才能開啟。
                 const roomEl = document.querySelector(`[data-room-id="${this.currentRoomId}"]`);
-                if (roomEl) {
-                    const name = roomEl.querySelector('.roomName')?.textContent || '未知';
-                    await this.switchRoom(this.currentRoomId, name);
-                }
+                const name = roomEl?.querySelector('.roomName')?.textContent
+                    || this.partnerInfoMap.get(String(this.currentRoomId))?.name
+                    || '聊天';
+                await this.switchRoom(this.currentRoomId, name);
             } else if (!this.isMobile && !new URLSearchParams(window.location.search).get('openChat')) {
                 // 電腦版預設進入官方帳號房間（openChat 參數存在時跳過，由 openChatWithTarget 負責）
                 const officialItem = [...document.querySelectorAll('.chat-item[data-room-id]')]
@@ -1135,7 +1139,22 @@ class ChatRoomList {
         return fallback;
     }
 
+    // loadRooms() 內部會用 cloneNode+replaceChild 換掉 #chatList 節點；若在它還在
+    // await 網路請求時又被呼叫第二次，兩次呼叫各自持有的節點參照就會打架——
+    // 先完成的那次把節點換掉後，另一次手上的舊參照 parentNode 會變成 null，
+    // 呼叫 replaceChild 就會直接噴錯。用一個共用的進行中 Promise 擋掉重疊呼叫，
+    // 讓後到的呼叫直接等前一次做完即可，不重複打 API、也不會有節點競爭。
     async loadRooms() {
+        if (this._loadRoomsPromise) return this._loadRoomsPromise;
+        this._loadRoomsPromise = this._loadRoomsInner();
+        try {
+            return await this._loadRoomsPromise;
+        } finally {
+            this._loadRoomsPromise = null;
+        }
+    }
+
+    async _loadRoomsInner() {
         const chatList = document.getElementById('chatList');
         if (!chatList) return;
         chatList.innerHTML = '';
@@ -1252,6 +1271,19 @@ class ChatRoomList {
                     ? `<span class="role-badge"><i class="ti ti-shield-check"></i></span>`
                     : '';
                 const _hasAdmin = !isOfficial && data.members?.some(m => m.role === 'ADMIN' || m.role === 'MODERATOR');
+                const _lastMsgHtml = (() => {
+                    if (!isOfficial) return this.escapeHtml(this.getLastMessageText(data.lastMessage));
+                    const lm = data.lastMessage;
+                    if (!lm) return this.escapeHtml(data.officialChannel?.description || '官方公告頻道');
+                    const _attachUrl = Array.isArray(lm.attachments) && lm.attachments.length > 0
+                        ? lm.attachments[0]
+                        : (typeof lm.attachments === 'string' && lm.attachments.trim() ? lm.attachments : null);
+                    const _txt = this.getLastMessageText(lm, data.officialChannel?.description || '官方公告頻道');
+                    return (_attachUrl
+                        ? `<img src="${this.escapeHtml(_attachUrl)}" style="width:16px;height:16px;object-fit:cover;border-radius:2px;margin-right:3px;vertical-align:middle;" onerror="this.remove()">`
+                        : '')
+                        + this.escapeHtml(_txt);
+                })();
                 item.innerHTML = `
                     <div class="d-flex align-items-center">
                         <div class="chat-avatar">
@@ -1259,10 +1291,7 @@ class ChatRoomList {
                         </div>
                         <div class="flex-grow-1">
                             <h6 class="mb-0 roomName">${this.escapeHtml(roomName)}${isOfficial ? ' <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>' : ''}</h6>
-                            <small class="text-muted lastMessage">${this.escapeHtml(isOfficial
-                                ? (data.officialChannel?.description || '官方公告頻道')
-                                : this.getLastMessageText(data.lastMessage)
-                            )}</small>
+                            <small class="text-muted lastMessage">${_lastMsgHtml}</small>
                             ${_hasAdmin ? `<small class="admin-in-chat-note"><i class="ti ti-shield-half"></i> 管理員已加入此對話</small>` : ''}
                         </div>
                         <span class="unread-dot ${isNewMessage ? '' : 'd-none'}" style="
@@ -1793,7 +1822,17 @@ class ChatRoomList {
                     const lastMsgEl = chatItem.querySelector('.lastMessage');
                     if (lastMsgEl) {
                         const msgText = this.getLastMessageText(data, '官方公告');
-                        lastMsgEl.innerHTML = '<img src="../svg/alarm.svg" style="width:12px;height:12px;margin-right:3px;vertical-align:middle;">';
+                        const _broadcastAttach = Array.isArray(data.attachments) && data.attachments.length > 0
+                            ? data.attachments[0]
+                            : (typeof data.attachments === 'string' && data.attachments.trim() ? data.attachments : null);
+                        lastMsgEl.innerHTML = '';
+                        if (_broadcastAttach) {
+                            const _img = document.createElement('img');
+                            _img.src = _broadcastAttach;
+                            _img.style.cssText = 'width:16px;height:16px;object-fit:cover;border-radius:2px;margin-right:3px;vertical-align:middle;';
+                            _img.onerror = () => _img.remove();
+                            lastMsgEl.appendChild(_img);
+                        }
                         lastMsgEl.appendChild(document.createTextNode(msgText));
                     }
                     // 非目前開著的房間才顯示未讀紅點
@@ -2180,8 +2219,8 @@ const isSelf = this.userId ? String(data.userId) === String(this.userId) : this.
                     <span class="broadcast-label">${this.escapeHtml(channelName)}</span>
                     <span class="broadcast-tag"><i class="bi bi-patch-check-fill"></i></span>
                 </div>
-                ${data.message ? `<div class="broadcast-text">${this.linkify(this.escapeHtml(data.message).replace(/\n/g, '<br>'))}</div>` : ''}
                 ${broadcastImgs.map(src => `<img src="${src}" class="broadcast-img chat-image" alt="公告圖片" loading="lazy" style="cursor:pointer;">`).join('')}
+                ${data.message ? `<div class="broadcast-text">${this.linkify(this.escapeHtml(data.message).replace(/\n/g, '<br>'))}</div>` : ''}
                 ${time ? `<div class="broadcast-time">${time}</div>` : ''}
             </div>`;
         container.appendChild(el);
@@ -2274,7 +2313,13 @@ window.addEventListener('load', () => {
     // 讀取 URL 參數，自動開啟與指定用戶的聊天（手機版跳轉時使用）
     const _urlParams = new URLSearchParams(window.location.search);
     const openChatId = _urlParams.get('openChat');
-    if (openChatId) {
+    // 官方後台「客服單」認領/前往聊天室連結帶的是房間 ID（roomId），不是對方 user ID，
+    // 不能走 openChatWithTarget（那是用 createRoom 找/建房間，roomId 不是有效的目標 user）。
+    // 已知房間 ID 時直接切換過去即可，不需要再打一次 createRoom。
+    const directRoomId = _urlParams.get('roomId');
+    if (directRoomId) {
+        openChatRoomList(directRoomId);
+    } else if (openChatId) {
         const productName = _urlParams.get('productName') || '';
         const productPrice = _urlParams.get('productPrice') || '';
         const message = _urlParams.get('message') || '';

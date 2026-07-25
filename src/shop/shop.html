@@ -21,7 +21,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com js.sentry-cdn.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com https://o4511592734130176.ingest.us.sentry.io; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
@@ -262,6 +262,7 @@
         <div class="qa-t">許願專區</div>
         <div class="qa-s">說出你想要的</div>
       </div>
+      <div class="qa-wish-live d-none d-lg-flex" id="qaWishLive" role="link" tabindex="0" aria-label="查看這則願望"></div>
       <span class="qa-arr">→</span>
     </a>
 
@@ -292,108 +293,29 @@
     </a>
 
   </div>
-<!-- 促銷 banner 輪播 -->
-<div class="promo-banner smallmysection">
-  <div id="promoBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-    <div class="carousel-inner">
-
-      <!-- Slide 1：期間限定0手續費 -->
-      <div class="carousel-item active">
-        <div class="promo-banner__inner promo-slide--fee">
-          <div class="promo-banner__body">
-            <span class="promo-banner__badge">期間限定</span>
-            <span class="promo-banner__kv">全館手續費 0 元</span>
-          </div>
-          <div class="promo-banner__illus"><i class="ti ti-tag"></i></div>
-          <div class="promo-banner__tags">
-            <span>#免費上架</span>
-            <span>#輕鬆交易</span>
-            <span>#零手續費</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 2：賣家專區 -->
-      <div class="carousel-item">
-        <a href="../shop/shop.html?page=seller" class="promo-banner__link">
-          <div class="promo-banner__inner promo-slide--seller">
-            <div class="promo-banner__body">
-              <span class="promo-banner__badge">賣家專區</span>
-              <span class="promo-banner__kv">讓寶物找到新的歸屬</span>
-            </div>
-            <div class="promo-banner__illus"><i class="ti ti-building-store"></i></div>
-            <div class="promo-banner__tags">
-              <span>#免費上架</span>
-              <span>#安心交易</span>
-              <span>#立即開賣</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Slide 3：許願池 -->
-      <div class="carousel-item">
-        <a href="../wishpool/wishpool.html#wishpool" class="promo-banner__link">
-          <div class="promo-banner__inner promo-slide--wish">
-            <div class="promo-banner__body">
-              <span class="promo-banner__badge">許願池</span>
-              <span class="promo-banner__kv">買家許願，賣家實現</span>
-            </div>
-            <div class="promo-banner__illus"><i class="ti ti-star"></i></div>
-            <div class="promo-banner__tags">
-              <span>#發起心願</span>
-              <span>#賣家媒合</span>
-              <span>#找到好物</span>
-            </div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Slide 4：安全提醒 -->
-      <div class="carousel-item">
-        <div class="promo-banner__inner promo-slide--safety">
-          <div class="promo-banner__body">
-            <span class="promo-banner__badge">安全提醒</span>
-            <span class="promo-banner__kv">謹慎交易，防範詐騙</span>
-          </div>
-          <div class="promo-banner__illus"><i class="ti ti-shield-check"></i></div>
-          <div class="promo-banner__tags">
-            <span>#平台內交易</span>
-            <span>#勿私下匯款</span>
-            <span>#保障雙方</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 5：環保理念 -->
-      <div class="carousel-item">
-        <div class="promo-banner__inner promo-slide--eco">
-          <div class="promo-banner__body">
-            <span class="promo-banner__badge">永續理念</span>
-            <span class="promo-banner__kv">二手交易，減碳同行</span>
-          </div>
-          <div class="promo-banner__illus"><i class="ti ti-leaf"></i></div>
-          <div class="promo-banner__tags">
-            <span>#減少碳排放</span>
-            <span>#循環經濟</span>
-            <span>#愛護地球</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- 指示點 -->
-    <div class="carousel-indicators promo-carousel-indicators">
-      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
-      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="1"></button>
-      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="2"></button>
-      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="3"></button>
-      <button type="button" data-bs-target="#promoBannerCarousel" data-bs-slide-to="4"></button>
-    </div>
-  </div>
-</div>
 </div><!-- /.my-section -->
+
+  <!-- 手機版：許願信封輪播（信封抽出糖果紋信件） -->
+  <a class="wish-letter-row d-lg-none" id="wishLetterRow" href="../wishpool/wishpool.html#wishpool" style="display:none;" aria-label="前往許願專區">
+    <span class="wl-envelope" aria-hidden="true">
+      <svg viewBox="0 0 56 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="2" width="52" height="70" rx="6" fill="#eaf6f4"/>
+        <path d="M54 4 L30 37 L54 70" fill="#abdad5" stroke-linejoin="round"/>
+        <text x="16" y="58" font-size="11" font-weight="700" letter-spacing="1.5" fill="#0f2745" transform="rotate(-90 16 58)">WISH</text>
+      </svg>
+    </span>
+    <span class="wl-letter">
+      <span class="wl-flip">
+        <span class="wl-face wl-back"><img class="wl-ink-back" src="../svg/wishink.svg" alt="" aria-hidden="true"></span>
+        <span class="wl-face wl-front">
+          <img class="wl-avatar" src="../webP/default-avatar.webp" alt="許願者頭像" onerror="this.src='../webP/default-avatar.webp'">
+          <span class="wl-text"></span>
+          <img class="wl-ink" src="../svg/wishink.svg" alt="" aria-hidden="true">
+          <span class="wl-arr">→</span>
+        </span>
+      </span>
+    </span>
+  </a>
 
   <!-- 1. 熱門商品 -->
   <div class="firstlinesell d-block justify-content-center gap-lg-4">
@@ -1579,6 +1501,26 @@ const timer = setInterval(() => {
   </div>
 </footer>
   </div>
+
+  <!-- 廣告表單彈跳視窗 -->
+  <div id="adFormModal" class="ad-form-modal-backdrop" style="display:none;">
+    <div class="ad-form-modal">
+      <button type="button" class="ad-form-modal-close" id="adFormModalClose">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        <span class="visually-hidden">關閉</span>
+      </button>
+      <img class="ad-form-modal-img" src="../svg/ad_form.svg" alt="意見調查表單">
+      <div class="ad-form-modal-actions">
+        <a class="ad-form-modal-btn primary" href="https://docs.google.com/forms/d/1Vi6imI05WnJ8lgGWPf9n2TuqqfSiKDk9VG_mc4IBDPY" target="_blank" rel="noopener">前往填寫表單 →</a>
+        <a class="ad-form-modal-btn ghost" href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i> 前往官方 IG</a>
+      </div>
+      <label class="ad-form-modal-hide">
+        <input type="checkbox" id="adFormModalHideCheck">
+        以後都不要顯示
+      </label>
+    </div>
+  </div>
+
   <!-- Loading 遮罩 -->
 <div id="loadingOverlay" class="loading-overlay d-none">
   <div class="loader-wrap">
@@ -2312,6 +2254,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 })();
+</script>
+
+<script>
+// ── 廣告表單彈跳視窗 ──
+document.addEventListener('DOMContentLoaded', () => {
+  const AD_FORM_HIDE_KEY = 'th_shop_ad_form_hide';
+  const modal = document.getElementById('adFormModal');
+  if (!modal) return;
+  const closeBtn = document.getElementById('adFormModalClose');
+  const hideCheck = document.getElementById('adFormModalHideCheck');
+
+  function closeModal() {
+    if (hideCheck?.checked) localStorage.setItem(AD_FORM_HIDE_KEY, '1');
+    modal.style.display = 'none';
+  }
+
+  if (localStorage.getItem(AD_FORM_HIDE_KEY) !== '1') {
+    modal.style.display = 'flex';
+  }
+
+  closeBtn?.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+});
 </script>
 </body>
 </html>
