@@ -5,7 +5,7 @@
             
         
         <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com js.sentry-cdn.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com https://o4511592734130176.ingest.us.sentry.io; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="/assets/manifest-5--vV4vC.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
@@ -56,11 +56,11 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-TNDMCCKZ');</script>
         
-      <script type="module" crossorigin src="/assets/account-account-B-Q4oEUH.js"></script>
-      <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
-      <link rel="modulepreload" crossorigin href="/assets/default-C8gMrLxA.js">
-      <link rel="stylesheet" crossorigin href="/assets/account-account-CzwdWWXp.css">
-      <link rel="stylesheet" crossorigin href="/assets/default-CyZpfHTJ.css">
+      <script type="module" crossorigin src="/assets/account-account-GbFohd9A.js"></script>
+      <link rel="modulepreload" crossorigin href="/assets/sentry-init-BDQnsgCH.js">
+      <link rel="modulepreload" crossorigin href="/assets/default-DUd17B6x.js">
+      <link rel="stylesheet" crossorigin href="/assets/account-account-Bt6ykAYf.css">
+      <link rel="stylesheet" crossorigin href="/assets/default-hDEtLZfo.css">
       <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
     </head>
 
@@ -266,6 +266,11 @@
                   <label for="floatingInput" >請輸入您的暱稱</label>
                   </div>
                   <p class="field-error" id="err-signup-name"></p>
+                  <div class="form-floating form-signinvite">
+                  <input class="form-control" type="text" id="inviteCode" placeholder="邀請碼（選填）" maxlength="16" autocomplete="off">
+                  <label for="inviteCode">邀請碼（選填）</label>
+                  </div>
+                  <p class="field-error" id="err-signup-invite"></p>
                   <div class="terms-agree-row">
                     <input type="checkbox" id="agreeTerms" disabled>
                     <span class="terms-agree-text">我已閱讀並同意<button type="button" class="terms-open-btn" id="openTermsModal">服務條款與隱私權政策</button></span>

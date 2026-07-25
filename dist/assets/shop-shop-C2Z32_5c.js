@@ -1,4 +1,4 @@
-import"./sentry-init-pUGNG12d.js";/* empty css                *//* empty css                     *//* empty css             */import"./chat-H4Ukawzw.js";import{B as ge,r as ke}from"./default-Cr2YOKZN.js";import{w as Ie}from"./wpBackendService-De-xHby_.js";import"./ChatBackendService-B7XEl7RX.js";let ie,oe,Se,Re;function Le(e){return e&&e.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i,"_big$1$2")}function Te(e=6){return Array.from({length:e},()=>`
+import"./sentry-init-BDQnsgCH.js";/* empty css                *//* empty css                     *//* empty css             */import"./chat-H4Ukawzw.js";import{B as ge,r as ke}from"./default-DUd17B6x.js";import{w as Ie}from"./wpBackendService-De-xHby_.js";import"./ChatBackendService-B7XEl7RX.js";let ie,oe,Se,Re;function Le(e){return e&&e.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i,"_big$1$2")}function Te(e=6){return Array.from({length:e},()=>`
     <div class="hot-item">
       <div class="card">
         <div class="img-box skeleton" style="border-radius:10px 10px 0 0;"></div>
