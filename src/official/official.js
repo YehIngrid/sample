@@ -2029,6 +2029,7 @@ async function loadAdminUsers(page = 1) {
           <div style="color:#666;font-size:0.9rem;margin-bottom:2px;">ID: ${esc(user.id)}</div>
           <div style="color:#999;font-size:0.85rem;margin-bottom:2px;">信箱: ${esc(user.email || 'N/A')}</div>
           <div style="color:#999;font-size:0.85rem;">評分: ★ ${(user.rate ?? 0).toFixed(2)}</div>
+          ${user.inviteesCount !== undefined ? `<div style="color:#999;font-size:0.85rem;">邀請人數: ${user.inviteesCount}</div>` : ''}
         </div>
         <button type="button" class="btn btn-sm btn-primary view-user-btn" data-user-id="${esc(user.id)}">
           <i class="fa fa-eye me-1"></i>查看詳情
