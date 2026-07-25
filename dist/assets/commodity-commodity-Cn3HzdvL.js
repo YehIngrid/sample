@@ -1,4 +1,4 @@
-import"./sentry-init-BDQnsgCH.js";/* empty css                *//* empty css                     */import"./chat-H4Ukawzw.js";import{B as G}from"./default-DUd17B6x.js";import"./ChatBackendService-B7XEl7RX.js";function _(e){return e&&e.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i,"_big$1$2")}document.addEventListener("load",e=>{const n=e.target;if(n.tagName!=="IMG")return;const t=n.closest(".product-card .product-thumb");t&&t.classList.add("img-loaded")},!0);function O(e=12){return Array.from({length:e},()=>`
+import"./sentry-init-ClBo0A_U.js";/* empty css                *//* empty css                     */import"./chat-H4Ukawzw.js";import{B as G}from"./default-A7QoEh2h.js";import"./ChatBackendService-B7XEl7RX.js";function _(e){return e&&e.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i,"_big$1$2")}document.addEventListener("load",e=>{const n=e.target;if(n.tagName!=="IMG")return;const t=n.closest(".product-card .product-thumb");t&&t.classList.add("img-loaded")},!0);function O(e=12){return Array.from({length:e},()=>`
     <div class="col">
       <div class="product-card h-100">
         <div class="product-thumb skeleton" style="border-radius:8px 8px 0 0;"></div>
