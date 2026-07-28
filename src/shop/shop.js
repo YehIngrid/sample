@@ -92,6 +92,8 @@ async function initWishTicker() {
   ));
   const wishAvatar = w =>
     (w.owner?.photoURL && w.owner.photoURL !== 'null') ? w.owner.photoURL : '../webP/default-avatar.webp';
+  // 空狀態標語本身已經是完整句子（許個願望吧／告訴我們…／發起心願…），不該再疊加「想要」
+  const wishLabel = name => /^(想要|許|發|告)/.test(name) ? name : `想要${name}`;
 
   let wishes;
   try {
@@ -118,9 +120,10 @@ async function initWishTicker() {
     const render = () => {
       const w = wishes[idx % wishes.length];
       live.dataset.wishHref = wishHref(w);
+      const label = esc(wishLabel(w.itemName));
       live.innerHTML = `
         <img class="qwl-avatar" src="${esc(wishAvatar(w))}" alt="許願者頭像" onerror="this.src='../webP/default-avatar.webp'">
-        <div class="qwl-bubble" title="想要${esc(w.itemName)}">想要${esc(w.itemName)}</div>
+        <div class="qwl-bubble" title="${label}">${label}</div>
         <span class="qwl-dot"></span>
         <svg class="qwl-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5l3.09 6.58 7.16.83-5.3 4.94 1.42 7.07L12 17.4l-6.37 3.52 1.42-7.07-5.3-4.94 7.16-.83L12 1.5z"/></svg>`;
       idx++;
@@ -147,9 +150,7 @@ async function initWishTicker() {
   const render = () => {
     const w = wishes[idx % wishes.length];
     avatarEl.src = wishAvatar(w);
-    textEl.textContent = w.itemName.startsWith('想要') || w.itemName.startsWith('許') || w.itemName.startsWith('發') || w.itemName.startsWith('告')
-      ? w.itemName
-      : `想要${w.itemName}`;
+    textEl.textContent = wishLabel(w.itemName);
     // 若是空狀態標語則導向許願池首頁，否則導向特定願望卡
     letterRow.href = w.id.startsWith('empty-') ? '../wishpool/wishpool.html#wishpool' : wishHref(w);
     idx++;

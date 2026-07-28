@@ -334,6 +334,11 @@ ul{
     padding-bottom: 0 !important;
     box-shadow: none;
   }
+  /* 管理員用的浮動捷徑（管理後台/API 文件/設計系統/校園攻略站）在手機版空間不足，
+     會直接疊在許願專區、常見問題卡片上；手機上隱藏，桌機維持原本的 JS 顯示邏輯 */
+  #moderatorBtn, #apiDocsBtn, #designSystemBtn, #schoolGuideBtn {
+    display: none !important;
+  }
 }
 #mainImagePreview img {
   max-width: 100%;
