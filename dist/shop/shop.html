@@ -82,15 +82,15 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-TNDMCCKZ');</script>
     
-  <script type="module" crossorigin src="/assets/shop-shop-CwGSd427.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/sentry-init-yWFOPVll.js">
+  <script type="module" crossorigin src="/assets/shop-shop-BuiNQlig.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/sentry-init-XXpofcO4.js">
   <link rel="modulepreload" crossorigin href="/assets/ChatBackendService-B7XEl7RX.js">
   <link rel="modulepreload" crossorigin href="/assets/chat-H4Ukawzw.js">
-  <link rel="modulepreload" crossorigin href="/assets/default-BGF-Doj1.js">
+  <link rel="modulepreload" crossorigin href="/assets/default-2aFZgpSb.js">
   <link rel="modulepreload" crossorigin href="/assets/wpBackendService-De-xHby_.js">
   <link rel="stylesheet" crossorigin href="/assets/default-hDEtLZfo.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
-  <link rel="stylesheet" crossorigin href="/assets/shop-DQWeGqPR.css">
+  <link rel="stylesheet" crossorigin href="/assets/shop-Cy54INEf.css">
 </head>
 
 <body>
@@ -1285,25 +1285,6 @@
   </div>
 
   
-  <div id="adFormModal" class="ad-form-modal-backdrop" style="display:none;">
-    <div class="ad-form-modal">
-      <button type="button" class="ad-form-modal-close" id="adFormModalClose">
-        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-        <span class="visually-hidden">關閉</span>
-      </button>
-      <img class="ad-form-modal-img" src="/assets/ad_form-raGdmADC.svg" alt="意見調查表單">
-      <div class="ad-form-modal-actions">
-        <a class="ad-form-modal-btn primary" href="https://docs.google.com/forms/d/1Vi6imI05WnJ8lgGWPf9n2TuqqfSiKDk9VG_mc4IBDPY" target="_blank" rel="noopener">前往填寫表單 →</a>
-        <a class="ad-form-modal-btn ghost" href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i> 前往官方 IG</a>
-      </div>
-      <label class="ad-form-modal-hide">
-        <input type="checkbox" id="adFormModalHideCheck">
-        以後都不要顯示
-      </label>
-    </div>
-  </div>
-
-  
 <div id="loadingOverlay" class="loading-overlay d-none">
   <div class="loader-wrap">
     <div class="shelf">
@@ -2036,29 +2017,5 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
-<script>
-// ── 廣告表單彈跳視窗 ──
-document.addEventListener('DOMContentLoaded', () => {
-  const AD_FORM_HIDE_KEY = 'th_shop_ad_form_hide';
-  const modal = document.getElementById('adFormModal');
-  if (!modal) return;
-  const closeBtn = document.getElementById('adFormModalClose');
-  const hideCheck = document.getElementById('adFormModalHideCheck');
-
-  function closeModal() {
-    if (hideCheck?.checked) localStorage.setItem(AD_FORM_HIDE_KEY, '1');
-    modal.style.display = 'none';
-  }
-
-  if (localStorage.getItem(AD_FORM_HIDE_KEY) !== '1') {
-    modal.style.display = 'flex';
-  }
-
-  closeBtn?.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-  });
-});
-</script>
 </body>
 </html>
