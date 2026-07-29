@@ -315,8 +315,13 @@ export default class BackendService {
             captureException(error);
             return Promise.reject(error);
         }
-        // 更新成功後，儲存新的使用者資料到 localStorage
-        await _this.getMe();
+        // 更新成功後，嘗試同步 localStorage 快取；這步只是刷新本地快取，
+        // 失敗不代表資料沒存進去（PATCH 已經成功），不應該讓整個 updateProfile 被視為失敗
+        try {
+            await _this.getMe();
+        } catch (error) {
+            console.error("更新成功，但重新取得使用者資料失敗", error);
+        }
         return response;
     }
     async whoami() {

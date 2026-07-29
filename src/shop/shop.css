@@ -114,7 +114,12 @@ ul{
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.qa-copy { flex: 1; min-width: 84px; }
+.qa-copy { flex: 1; }
+/* 84px 下限只有桌機需要：中間卡片桌機才會顯示 .qa-wish-live 願望泡泡，會跟文字搶空間；
+   手機/平板沒有這個泡泡，強制 84px 下限反而會讓 3 顆按鈕加起來比 100vw 寬，造成整頁橫向溢出 */
+@media (min-width: 992px) {
+  .qa-copy { min-width: 84px; }
+}
 .qa-t { font-size: 16px; font-weight: 700; letter-spacing: 0.06em; }
 .qa-s { font-size: 12px; margin-top: 2px; letter-spacing: 0.04em; opacity: 0.92; }
 .qa-arr { font-size: 18px; opacity: 0.55; transition: opacity 0.22s ease, transform 0.22s ease; }
@@ -3253,91 +3258,4 @@ html{ scroll-behavior:smooth; }
 .modal-backdrop {
   opacity: 0 !important;
   pointer-events: none !important;
-}
-
-/* ── 廣告表單彈跳視窗 ── */
-.ad-form-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 10600;
-  background: rgba(15,39,69,0.55);
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.ad-form-modal {
-  position: relative;
-  width: min(380px, 100%);
-  background: #fff;
-  border-radius: 20px;
-  padding: 20px 20px 24px;
-  box-shadow: 0 24px 60px -20px rgba(0,0,0,0.35);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-.ad-form-modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: none;
-  background: #f0f2f4;
-  color: #6f87a0;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.ad-form-modal-close:hover { background: #004b97; color: #fff; }
-.ad-form-modal-img {
-  width: 100%;
-  border-radius: 14px;
-  display: block;
-}
-.ad-form-modal-actions {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.ad-form-modal-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 11px 18px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-decoration: none;
-  transition: all 0.22s ease;
-  box-sizing: border-box;
-}
-.ad-form-modal-btn.primary { background: #004b97; color: #fff; }
-.ad-form-modal-btn.primary:hover { background: rgb(36,182,133); }
-.ad-form-modal-btn.ghost { background: #fff; border: 1.5px solid #d6e2ec; color: #0f2745; }
-.ad-form-modal-btn.ghost:hover { border-color: #004b97; color: #004b97; }
-.ad-form-modal-hide {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  color: #6f87a0;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  user-select: none;
-}
-.ad-form-modal-hide input {
-  width: 15px;
-  height: 15px;
-  accent-color: #004b97;
-  cursor: pointer;
 }

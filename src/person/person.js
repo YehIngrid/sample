@@ -231,12 +231,12 @@ document.getElementById('update-profile').addEventListener('click', async () => 
             profileAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.webp';
 
             window.location.reload(); // 重新載入頁面以顯示最新資料
-          } catch (errorMessage) {
-            console.error("更新失敗：", errorMessage);
+          } catch (error) {
+            console.error("更新失敗：", error);
             Swal.fire({
               icon: "error",
               title: "更新失敗",
-              text: errorMessage
+              text: error?.response?.data?.message || "請稍後再試"
             });
           } finally {
             loader1.style.display = 'none';
