@@ -180,56 +180,64 @@ function attachLikeButtons() {
       excerpt: '期中期末必考題型整理、給分習慣、最容易被當的章節，附我自己手寫的考古題逐題詳解。',
       category: '學分攻略', gradient: 'g1', tag: '同校生限定', year: '115 學年',
       author: '資工系 114級 李同學', verified: true, badge: '書卷獎', time: '2 天前', price: 'NT$ 99',
-      views: '1,182', likes: '96', comments: '31'
+      views: '1,182', likes: '96', comments: '31',
+      anchorValues: { courseName: '微積分（一）', instructor: '王大明', semester: '115 學年度上學期' }
     },
     {
       id: 3, title: '拿到台積電實習的英文履歷怎麼寫 ＋ 三輪面試心態與提問心法',
       excerpt: '附 STAR 法則範例與我面試的提問清單，從投遞到拿到 offer 的整個流程與每一關的準備。',
       category: '實習與面試', gradient: 'g2', year: '115 學年',
       author: '電機系 112級 王同學', verified: true, badge: '台積電實習', time: '5 天前', price: 'NT$ 149',
-      views: '1,604', likes: '128', comments: '44'
+      views: '1,604', likes: '128', comments: '44',
+      anchorValues: { companyName: '台灣積體電路', positionName: '軟體工程實習生', applyYear: '115 年暑期' }
     },
     {
       id: 4, title: '多益一個月 500 → 850：我的刷題進度表與聽力閱讀破題技巧',
       excerpt: '低成本速過畢業門檻指南。完整公開我一個月內的每日進度表...',
       category: '證照檢定', nocover: true, year: '長期適用',
       author: '外文系 113級 黃同學', verified: true, badge: '多益 935', time: '1 週前', price: 'NT$ 89',
-      views: '968', likes: '74', comments: '20'
+      views: '968', likes: '74', comments: '20',
+      anchorValues: { certName: '多益 TOEIC', examDate: '2026/04/12', score: '850 分' }
     },
     {
       id: 5, title: '交換生讀書計畫與自傳怎麼寫 ＋ 姊妹校性價比分析',
       excerpt: '如何向學校評審推銷自己，哪間姊妹校補助多、學分好抵免，附我的申請文件範本。',
       category: '交換學生', gradient: 'g4', year: '115 學年',
       author: '日文系 112級 林同學', verified: true, badge: 'JLPT N1', time: '1 週前', price: 'NT$ 149',
-      views: '932', likes: '64', comments: '22'
+      views: '932', likes: '64', comments: '22',
+      anchorValues: { exchangeSchool: '日本早稻田大學', exchangeSemester: '115 學年度上學期', applyChannel: '校級交換生甄選' }
     },
     {
       id: 6, title: '某通識「如何拿到 A+」報告範本 ＋ 分組避雷名單與隱藏加分',
       excerpt: '想刷高 GPA 推甄、申獎學金必看。期末報告架構、潛規則與哪些組員千萬別碰。',
       category: '學分攻略', gradient: 'g5', tag: '免費', year: '115 學年',
       author: '創產系 113級 范同學', verified: true, time: '2 週前', price: '免費閱讀',
-      views: '1,456', likes: '112', comments: '38'
+      views: '1,456', likes: '112', comments: '38',
+      anchorValues: { courseName: '性別與社會通識', instructor: '林美惠', semester: '115 學年度上學期' }
     },
     {
       id: 7, title: 'ATCC / 梅竹黑客松 得獎企劃書範本 ＋ 跨領域組隊分工框架',
       excerpt: '商管＋技術怎麼組隊、評審看什麼、企劃書架構與簡報節奏，附我們的得獎作品拆解。',
       category: '專題研究', gradient: 'g6', year: '長期適用',
       author: '資管系 112級 陳同學', verified: true, badge: 'ATCC 全國前八強', time: '3 週前', price: 'NT$ 119',
-      views: '742', likes: '58', comments: '16'
+      views: '742', likes: '58', comments: '16',
+      anchorValues: { projectName: 'ATCC 全國創新創業競賽企劃', advisor: '陳建宏', toolsUsed: 'Figma＋Notion 專案管理' }
     },
     {
       id: 8, title: 'CPE 程式能力檢定：兩題／三題通關常用程式碼樣板整理',
       excerpt: '考前一週救急用，把最常考的題型與可直接套用的 C++ 樣板都整理進來了。',
       category: '證照檢定', gradient: 'g3', year: '長期適用',
       author: '資工系 113級 吳同學', verified: true, badge: 'CPE 5 題', time: '3 週前', price: 'NT$ 79',
-      views: '624', likes: '47', comments: '11'
+      views: '624', likes: '47', comments: '11',
+      anchorValues: { certName: 'CPE 程式能力檢定', examDate: '2026/01/10', score: '5 題通過' }
     },
     {
       id: 9, title: '轉系面試＋轉學考：經濟學與微積分準備時程表與錯題本',
       excerpt: '大一不滿意想翻身必看。獨家準備時程、專業科目錯題本與面試常被問的問題。',
-      category: '轉學 / 轉系', gradient: 'g1', stale: true, year: '114 學年 · 已降價',
+      category: '轉學/轉系', gradient: 'g1', stale: true, year: '114 學年 · 已降價',
       author: '財金系 114級 張同學', verified: true, time: '1 個月前', price: 'NT$ 69',
-      views: '538', likes: '33', comments: '14'
+      views: '538', likes: '33', comments: '14',
+      anchorValues: { fromSchool: '中興大學財金系', toSchool: '中興大學經濟系', transferYear: '115 學年度' }
     },
     {
       id: 10, title: '中興周邊高 CP 值美食 30 家 ＋ 聚餐口袋名單與隱藏學生優惠',
@@ -239,6 +247,15 @@ function attachLikeButtons() {
       views: '2,038', likes: '174', comments: '52'
     }
   ];
+
+  function anchorRowHTML(art) {
+    var fields = (typeof TOPICS !== 'undefined' && TOPICS[art.category] && TOPICS[art.category].anchorFields) || [];
+    var values = art.anchorValues || {};
+    var parts = fields.filter(function (f) { return values[f.key]; })
+      .map(function (f) { return '<span class="ar-item"><span class="ar-k">' + f.label + '</span><span class="ar-v">' + values[f.key] + '</span></span>'; });
+    if (!parts.length) return '';
+    return '<div class="anchor-row">' + parts.join('<span class="ar-sep">·</span>') + '</div>';
+  }
 
   function renderArticles() {
     const container = document.getElementById('articleList');
@@ -258,6 +275,7 @@ function attachLikeButtons() {
               </div>
               <h2>${art.title}</h2>
               <p class="excerpt">${art.excerpt}</p>
+              ${anchorRowHTML(art)}
               <div class="author-row">
                 <div class="av-sm"></div>
                 <div class="author-meta">
@@ -289,6 +307,7 @@ function attachLikeButtons() {
             </span>
             <h2>${art.title}</h2>
             <p class="excerpt">${art.excerpt}</p>
+            ${anchorRowHTML(art)}
             <div class="author-row">
               <div class="av-sm"></div>
               <div class="author-meta">

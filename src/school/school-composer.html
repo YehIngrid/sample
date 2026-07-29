@@ -236,6 +236,33 @@
     .biz-note.show { display: block; }
     .fld { margin-bottom: 15px; }
     .fld:last-child { margin-bottom: 0; }
+
+    /* ── 主題必填錨點欄位 ── */
+    .req-mark { display: inline-block; font-size: 10px; font-weight: 700; color: #a34a2b; background: rgba(201,127,90,0.14); border: 1px solid rgba(201,127,90,0.4); border-radius: 999px; padding: 1px 8px; margin-left: 6px; letter-spacing: 0.06em; vertical-align: middle; }
+    .anchor-hint { font-size: 11px; color: var(--muted); line-height: 1.6; margin: -2px 0 12px; }
+    .anchor-fld { margin-bottom: 12px; }
+    .anchor-fld:last-child { margin-bottom: 0; }
+    .anchor-fld .field-label { margin-bottom: 5px; }
+    .anchor-input { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 9px; padding: 0 12px; font-size: 13.5px; color: var(--ink); outline: none; box-sizing: border-box; }
+    .anchor-input:focus { border-color: var(--navy); }
+    .anchor-input.empty-required { border-color: #c97f5a; }
+
+    /* ── 手機版：新文章先選主題 + 填錨點的全螢幕引導 ── */
+    .topic-wizard { display: none; position: fixed; inset: 0; z-index: 90; background: var(--page); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .topic-wizard.open { display: block; }
+    .tw-head { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; background: var(--page); border-bottom: 1px solid var(--line); }
+    .tw-head .tt { font-size: 15px; font-weight: 800; color: var(--ink); }
+    .tw-close { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--muted); flex-shrink: 0; }
+    .tw-close svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+    .tw-body { padding: 20px 18px 100px; max-width: 520px; margin: 0 auto; }
+    .tw-step-label { font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
+    .tw-step2 { display: none; margin-top: 22px; }
+    .tw-step2.show { display: block; }
+    .tw-anchor-box { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+    .tw-footer { position: fixed; left: 0; right: 0; bottom: 0; padding: 14px 18px; background: #fff; border-top: 1px solid var(--line); z-index: 2; }
+    .tw-next-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; }
+    /* 平板／桌機一律不顯示這個引導層，即使 JS 誤判也擋得住（跟本檔案手機斷點 860px 對齊） */
+    @media (min-width: 861px) { .topic-wizard { display: none !important; } }
     .check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; cursor: pointer; }
     .check + .check { border-top: 1px solid var(--line); }
     .check .box { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--line); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
@@ -627,7 +654,7 @@
         <option>實習與面試</option>
         <option>美食地圖</option>
         <option>校園資源</option>
-        <option>轉學／轉系</option>
+        <option>轉學/轉系</option>
         <option>交換學生</option>
         <option>專題研究</option>
         <option>生活指南</option>
@@ -652,6 +679,12 @@
         <span class="tag">備審 <span class="x">×</span></span>
         <button class="tag-add" id="tagAdd">＋ 標籤</button>
       </div>
+    </div>
+
+    <div class="ce-card" id="anchorCard" style="display:none">
+      <div class="h">主題必填資訊<span class="req-mark">必填</span></div>
+      <div class="anchor-hint">依主題不同，這幾項會直接顯示在文章頁面上，讓讀者一眼確認內容符不符合需求。</div>
+      <div id="anchorFieldsList"></div>
     </div>
 
     <div class="ce-card">
@@ -719,6 +752,33 @@
 
 <!-- 手機設定抽屜背幕 -->
 <div class="ce-drawer-backdrop" id="drawerBackdrop"></div>
+
+<!-- 手機版：新文章先選主題 → 再填錨點欄位，才進編輯器 -->
+<div class="topic-wizard" id="topicWizard">
+  <div class="tw-head">
+    <span class="tt">開始撰寫攻略</span>
+    <a class="tw-close" href="school-studio.html" aria-label="返回撰寫攻略首頁">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </a>
+  </div>
+  <div class="tw-body">
+    <div class="tw-step-label">第一步：選擇主題</div>
+    <select class="cat-sel" id="twTopicSelect">
+      <option value="" selected>請選擇文章主題</option>
+    </select>
+
+    <div class="tw-step2" id="twStep2">
+      <div class="tw-step-label" id="twStep2Label">第二步：必填錨點欄位</div>
+      <div class="tw-anchor-box">
+        <div id="twAnchorList"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tw-footer">
+    <button class="ce-btn primary block" id="twConfirm" type="button" disabled>開始撰寫</button>
+    <div class="tw-next-note" id="twNote">請先選擇主題</div>
+  </div>
+</div>
 
 <!-- 手機底部操作列 -->
 <nav class="ce-mobilebar" id="ceMobilebar" aria-label="編輯器操作">
@@ -1209,6 +1269,8 @@ document.addEventListener('DOMContentLoaded', function() {
           title: document.getElementById('titleInput').value,
           subtitle: document.getElementById('subtitleInput').value,
           html: editor.innerHTML,
+          category: catSel ? catSel.value : '',
+          anchorValues: anchorValues,
           savedAt: Date.now()
         }));
       } catch (e) {}
@@ -1219,6 +1281,119 @@ document.addEventListener('DOMContentLoaded', function() {
   editor.addEventListener('input', function () { scheduleUpdate(); scheduleSave(); refreshPub(); });
   document.getElementById('titleInput').addEventListener('input', function () { scheduleSave(); refreshPub(); });
   document.getElementById('subtitleInput').addEventListener('input', scheduleSave);
+
+  // ── 主題必填錨點欄位（依 school-data.js 的 TOPICS[topic].anchorFields 動態產生） ──
+  // 注意：這個 <script> 跟上面「主題選擇 & 預設標籤」是分開的 script 區塊（各自獨立作用域），
+  // 所以這裡重新取一次 #catSel（同一個 DOM 節點），不會跟上面互相干擾。
+  var catSel = document.getElementById('catSel');
+  var anchorCard = document.getElementById('anchorCard');
+  var anchorFieldsList = document.getElementById('anchorFieldsList');
+  var anchorValues = {}; // { fieldKey: value }
+  var savedAnchorValues = null; // 草稿還原用
+
+  function anchorFieldsForTopic(topicName) {
+    return (catSel && TOPICS[topicName] && TOPICS[topicName].anchorFields) || [];
+  }
+
+  function renderAnchorFields() {
+    if (!anchorCard || !anchorFieldsList || !catSel) return;
+    var fields = anchorFieldsForTopic(catSel.value);
+    // 換主題時，前一個主題填的值不該誤植到新主題的欄位上
+    anchorValues = {};
+    anchorCard.style.display = fields.length ? '' : 'none';
+    anchorFieldsList.innerHTML = fields.map(function (f) {
+      return '<div class="anchor-fld">' +
+        '<div class="field-label">' + f.label + '</div>' +
+        '<input type="text" class="anchor-input" data-anchor-key="' + f.key + '" placeholder="' + f.placeholder + '">' +
+        '</div>';
+    }).join('');
+    anchorFieldsList.querySelectorAll('[data-anchor-key]').forEach(function (input) {
+      input.addEventListener('input', function () {
+        anchorValues[input.dataset.anchorKey] = input.value;
+        input.classList.remove('empty-required');
+        refreshPub();
+        scheduleSave();
+      });
+    });
+    refreshPub();
+  }
+  if (catSel) catSel.addEventListener('change', renderAnchorFields);
+
+  // ── 手機版：新文章先選主題 → 填錨點，才進編輯器 ──
+  (function () {
+    var wizard = document.getElementById('topicWizard');
+    var twTopicSelect = document.getElementById('twTopicSelect');
+    var twStep2 = document.getElementById('twStep2');
+    var twAnchorList = document.getElementById('twAnchorList');
+    var twConfirm = document.getElementById('twConfirm');
+    var twNote = document.getElementById('twNote');
+    if (!wizard || !twTopicSelect || !catSel) return;
+
+    var isMobile = window.matchMedia('(max-width: 860px)').matches;
+    var startFresh = /[?&]new=1\b/.test(location.search);
+    if (!isMobile || !startFresh) return;
+
+    var wizardTopic = '';
+    var wizardValues = {};
+
+    function renderTwTopicOptions() {
+      Object.keys(TOPICS).forEach(function (name) {
+        var opt = document.createElement('option');
+        opt.value = name; opt.textContent = name;
+        twTopicSelect.appendChild(opt);
+      });
+      twTopicSelect.addEventListener('change', function () {
+        wizardTopic = twTopicSelect.value;
+        wizardValues = {};
+        renderTwStep2();
+        refreshTwConfirm();
+      });
+    }
+
+    function renderTwStep2() {
+      var fields = anchorFieldsForTopic(wizardTopic);
+      if (!fields.length) { twStep2.classList.remove('show'); return; }
+      twStep2.classList.add('show');
+      twAnchorList.innerHTML = fields.map(function (f) {
+        return '<div class="anchor-fld">' +
+          '<div class="field-label">' + f.label + '</div>' +
+          '<input type="text" class="anchor-input" data-tw-key="' + f.key + '" placeholder="' + f.placeholder + '">' +
+          '</div>';
+      }).join('');
+      twAnchorList.querySelectorAll('[data-tw-key]').forEach(function (input) {
+        input.addEventListener('input', function () {
+          wizardValues[input.dataset.twKey] = input.value;
+          refreshTwConfirm();
+        });
+      });
+    }
+
+    function refreshTwConfirm() {
+      if (!wizardTopic) { twConfirm.disabled = true; twNote.textContent = '請先選擇主題'; return; }
+      var fields = anchorFieldsForTopic(wizardTopic);
+      var missing = fields.filter(function (f) { return !(wizardValues[f.key] || '').trim(); });
+      twConfirm.disabled = missing.length > 0;
+      twNote.textContent = missing.length ? '請填寫「' + missing.map(function (f) { return f.label; }).join('、') + '」' : '準備好了，開始撰寫吧！';
+    }
+
+    twConfirm.addEventListener('click', function () {
+      if (twConfirm.disabled) return;
+      catSel.value = wizardTopic;
+      catSel.dispatchEvent(new Event('change', { bubbles: true })); // 觸發 renderDefaultTags + renderAnchorFields
+      anchorValues = Object.assign({}, wizardValues);
+      anchorFieldsList.querySelectorAll('[data-anchor-key]').forEach(function (input) {
+        var v = anchorValues[input.dataset.anchorKey];
+        if (v) input.value = v;
+      });
+      refreshPub();
+      wizard.classList.remove('open');
+      document.getElementById('titleInput').focus();
+    });
+
+    renderTwTopicOptions();
+    refreshTwConfirm();
+    wizard.classList.add('open');
+  })();
 
   // restore draft（?new=1 由「創作起點」帶入 → 清掉舊草稿，從空白範本開始）
   (function () {
@@ -1235,6 +1410,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (d.title) document.getElementById('titleInput').value = d.title;
         if (d.subtitle) document.getElementById('subtitleInput').value = d.subtitle;
         if (d.html) editor.innerHTML = d.html;
+        if (d.category && catSel) catSel.value = d.category;
+        if (d.anchorValues) savedAnchorValues = d.anchorValues;
       }
     } catch (e) {}
   })();
@@ -1297,12 +1474,19 @@ document.addEventListener('DOMContentLoaded', function() {
     var words = (editor.innerText || '').replace(/\s+/g, '').length;
     var lengthOK = words >= 300;
 
+    var anchorFields = anchorFieldsForTopic(catSel.value);
+    var anchorMissing = anchorFields.filter(function (f) { return !(anchorValues[f.key] || '').trim(); });
+    var anchorOK = anchorMissing.length === 0;
+
     var items = [
       { ok: titleOK, req: true, t: titleOK ? '標題已填寫' : '請填寫文章標題' },
       { ok: priceOK, req: true, t: !paid ? '免費文章，無需定價' : (priceOK ? '售價 NT$ ' + priceVal.toLocaleString() : '請設定有效售價（大於 0）') },
       { ok: declOK, req: true, t: declOK ? '已同意兩項發佈聲明' : '請勾選上方兩項聲明' },
       { ok: lengthOK, req: false, t: lengthOK ? '份量足夠（' + words.toLocaleString() + ' 字）' : '建議滿 300 字再發佈（目前 ' + words.toLocaleString() + ' 字）' }
     ];
+    if (anchorFields.length) {
+      items.splice(1, 0, { ok: anchorOK, req: true, t: anchorOK ? '主題必填資訊已填寫' : '請填寫「' + anchorMissing.map(function (f) { return f.label; }).join('、') + '」' });
+    }
     var cl = document.getElementById('pubChecklist');
     if (cl) {
       cl.innerHTML = items.map(function (it) {
@@ -1311,13 +1495,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return '<li class="' + cls + '"><span class="ci">' + icon + '</span><span>' + it.t + '</span></li>';
       }).join('');
     }
-    var ready = titleOK && priceOK && declOK; // 份量僅提醒、不擋發佈
+    var ready = titleOK && priceOK && declOK && anchorOK; // 份量僅提醒、不擋發佈
     if (pubBtn) pubBtn.disabled = !ready;
     if (pubTop) pubTop.disabled = !ready;
     if (mbPublish) mbPublish.disabled = !ready;
     if (lockNote) lockNote.style.display = ready ? 'none' : 'flex';
   }
   checks.forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); refreshPub(); }); });
+  renderAnchorFields(); // 這裡才呼叫：refreshPub 依賴的變數已就緒
+  if (savedAnchorValues) {
+    anchorValues = savedAnchorValues;
+    anchorFieldsList.querySelectorAll('[data-anchor-key]').forEach(function (input) {
+      var v = anchorValues[input.dataset.anchorKey];
+      if (v) input.value = v;
+    });
+  }
   refreshPub();
 
   /* ---------- 參加競賽（可選）：單選卡片 ---------- */
@@ -1761,7 +1953,6 @@ document.addEventListener('DOMContentLoaded', function() {
       var refsEl = document.getElementById('refs');
       var cover = ''; var cs = document.getElementById('coverSlot');
       if (cs && cs.classList.contains('has-cover')) cover = cs.style.backgroundImage;
-      var catSel = document.getElementById('catSel');
       var ltOn = document.getElementById('longtermToggle');
       ltOn = ltOn && ltOn.classList.contains('on');
       var yearSel = document.getElementById('yearSel');
@@ -1778,6 +1969,8 @@ document.addEventListener('DOMContentLoaded', function() {
         lineHeight: editor.style.lineHeight || '',
         cover: cover,
         category: catSel ? catSel.value : '',
+        anchorFields: anchorFieldsForTopic(catSel ? catSel.value : ''),
+        anchorValues: anchorValues,
         year: ltOn ? '長期適用' : (yearSel ? yearSel.value : ''),
         paid: paid,
         price: paid ? (parseInt(priceIn.value, 10) || 0) : 0,
