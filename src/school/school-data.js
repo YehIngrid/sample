@@ -1,15 +1,57 @@
 // ── Topics with preset tags ──
+// anchorFields：每個主題撰寫文章時的必填錨點欄位（具體到 AI 難以泛用生成），顯示頁也會秀出來。
+// 尚未提供的主題先給空陣列，之後補上對應欄位即可，不用改其他程式碼。
 const TOPICS = {
-  '研究所推甄': { id: 'grad-admission', tags: ['頂大推甄', '推甄面試', '備審資料'], icon: '🎓', color: '#004b97' },
-  '學分攻略': { id: 'credit-guide', tags: ['必修筆記', '通識涼課', '考題詳解', '教授評價'], icon: '📚', color: '#4a85c4' },
-  '證照檢定': { id: 'certifications', tags: ['英文檢定'], icon: '🏆', color: '#7eb8d8' },
-  '實習與面試': { id: 'internship-interview', tags: ['履歷模板', '面試實錄', '實習避雷', '暑期實習'], icon: '💼', color: '#7eb8d8' },
-  '美食地圖': { id: 'food-map', tags: ['聚餐口袋名單', '學生優惠清單', '宵夜推薦'], icon: '🍱', color: '#abdad5' },
-  '校園資源': { id: 'campus-resources', tags: ['獎學金申請', '校內工讀', '數位資源', '免費資源'], icon: '🎯', color: '#7eb8d8' },
-  '轉學/轉系': { id: 'transfer', tags: ['手寫詳解', '書面審查', '口試密技'], icon: '🔄', color: '#4a85c4' },
-  '交換學生': { id: 'exchange-student', tags: ['準備心得', '外文自傳', '讀書計畫', '國外生活攻略'], icon: '✈️', color: '#7eb8d8' },
-  '專題研究': { id: 'capstone-project', tags: ['專題架構', '問卷統計', '數據分析', '教授推薦'], icon: '🔬', color: '#4a85c4' },
-  '生活指南': { id: 'life-guide', tags: ['新生必知', '選課教學', '租屋攻略', '商家推薦'], icon: '🏠', color: '#abdad5' },
+  '研究所推甄': { id: 'grad-admission', tags: ['頂大推甄', '推甄面試', '備審資料'], icon: '🎓', color: '#004b97',
+    anchorFields: [
+      { key: 'admittedSchool', label: '錄取校系所', placeholder: '例：台大資工碩士班' },
+      { key: 'admissionYear', label: '推甄年度', placeholder: '例：114 學年度' },
+      { key: 'interviewFormat', label: '面試方式', placeholder: '例：口試＋書面審查' },
+    ] },
+  '學分攻略': { id: 'credit-guide', tags: ['必修筆記', '通識涼課', '考題詳解', '教授評價'], icon: '📚', color: '#4a85c4',
+    anchorFields: [
+      { key: 'courseName', label: '課程名稱', placeholder: '例：微積分（一）' },
+      { key: 'instructor', label: '授課教授', placeholder: '例：王大明' },
+      { key: 'semester', label: '開課學期', placeholder: '例：115 學年度上學期' },
+    ] },
+  '證照檢定': { id: 'certifications', tags: ['英文檢定'], icon: '🏆', color: '#7eb8d8',
+    anchorFields: [
+      { key: 'certName', label: '證照名稱', placeholder: '例：多益 TOEIC' },
+      { key: 'examDate', label: '考試日期', placeholder: '例：2026/03/15' },
+      { key: 'score', label: '應考成績', placeholder: '例：850 分' },
+    ] },
+  '實習與面試': { id: 'internship-interview', tags: ['履歷模板', '面試實錄', '實習避雷', '暑期實習'], icon: '💼', color: '#7eb8d8',
+    anchorFields: [
+      { key: 'companyName', label: '公司名稱', placeholder: '例：台灣積體電路' },
+      { key: 'positionName', label: '實習職缺名稱', placeholder: '例：軟體工程實習生' },
+      { key: 'applyYear', label: '應徵年度', placeholder: '例：115 年暑期' },
+    ] },
+  '美食地圖': { id: 'food-map', tags: ['聚餐口袋名單', '學生優惠清單', '宵夜推薦'], icon: '🍱', color: '#abdad5', anchorFields: [] },
+  '校園資源': { id: 'campus-resources', tags: ['獎學金申請', '校內工讀', '數位資源', '免費資源'], icon: '🎯', color: '#7eb8d8',
+    anchorFields: [
+      { key: 'resourceName', label: '資源名稱', placeholder: '例：清寒助學金' },
+      { key: 'deadline', label: '申請截止時間', placeholder: '例：115/03/31' },
+      { key: 'organizer', label: '主辦單位', placeholder: '例：學生事務處' },
+    ] },
+  '轉學/轉系': { id: 'transfer', tags: ['手寫詳解', '書面審查', '口試密技'], icon: '🔄', color: '#4a85c4',
+    anchorFields: [
+      { key: 'fromSchool', label: '原系所及學校', placeholder: '例：中興大學財金系' },
+      { key: 'toSchool', label: '目標系所及學校', placeholder: '例：台灣大學經濟系' },
+      { key: 'transferYear', label: '轉入年度', placeholder: '例：115 學年度' },
+    ] },
+  '交換學生': { id: 'exchange-student', tags: ['準備心得', '外文自傳', '讀書計畫', '國外生活攻略'], icon: '✈️', color: '#7eb8d8',
+    anchorFields: [
+      { key: 'exchangeSchool', label: '交換學校', placeholder: '例：日本早稻田大學' },
+      { key: 'exchangeSemester', label: '交換學期', placeholder: '例：115 學年度上學期' },
+      { key: 'applyChannel', label: '申請管道', placeholder: '例：校級交換生甄選' },
+    ] },
+  '專題研究': { id: 'capstone-project', tags: ['專題架構', '問卷統計', '數據分析', '教授推薦'], icon: '🔬', color: '#4a85c4',
+    anchorFields: [
+      { key: 'projectName', label: '專題名稱', placeholder: '例：校園二手交易平台使用行為研究' },
+      { key: 'advisor', label: '指導教授', placeholder: '例：陳小華' },
+      { key: 'toolsUsed', label: '使用工具/方法', placeholder: '例：問卷調查＋SPSS 統計分析' },
+    ] },
+  '生活指南': { id: 'life-guide', tags: ['新生必知', '選課教學', '租屋攻略', '商家推薦'], icon: '🏠', color: '#abdad5', anchorFields: [] },
 };
 
 const BADGE_CLASS = {

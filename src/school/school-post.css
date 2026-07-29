@@ -92,6 +92,16 @@ body { background: var(--alice); }
 }
 .meta-row .valid-tag svg { width: 11px; height: 11px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
+/* 錨點資訊：主題必填欄位，撰寫頁設定的值原樣顯示在這裡 */
+.anchor-box { background: #ffffff; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin: 18px 0; }
+.anchor-box .ab-title { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.anchor-box .req-mark { display: inline-block; font-size: 10px; font-weight: 700; color: #a34a2b; background: rgba(201,127,90,0.14); border: 1px solid rgba(201,127,90,0.4); border-radius: 999px; padding: 1px 8px; margin-left: 6px; letter-spacing: 0.06em; vertical-align: middle; }
+.anchor-box .ab-row { display: flex; justify-content: space-between; gap: 16px; padding: 7px 0; font-size: 13.5px; border-top: 1px solid var(--line); }
+.anchor-box .ab-row:first-child { border-top: none; }
+.anchor-box .ab-k { color: var(--muted); flex-shrink: 0; }
+.anchor-box .ab-v { color: var(--ink); font-weight: 700; text-align: right; }
+.side .anchor-box { margin: 0; } /* 側欄本身用 gap 控制間距，不需要卡片自帶 margin */
+
 /* author block */
 .author-block {
   display: flex; align-items: center; gap: 14px;
@@ -368,7 +378,7 @@ body { background: var(--alice); }
 .buy-card .ledger .li { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--muted); letter-spacing: 0.02em; }
 .buy-card .ledger .li svg { width: 14px; height: 14px; color: var(--navy); flex-shrink: 0; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .ubuy { text-align: center; margin-bottom: 4px; }
-.ubuy .done { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--green-d); background: #e2f3ea; padding: 9px 16px; border-radius: 999px; letter-spacing: 0.04em; }
+.ubuy .done { display: inline-flex; width:100%; justify-content: center; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--green-d); background: #e2f3ea; padding: 12px; border-radius: 999px; letter-spacing: 0.04em; }
 .ubuy .done svg { fill:none; stroke: currentColor; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
 .ubuy .rate-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; border-radius: 999px; margin-top: 14px; background: var(--navy); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; }
 .ubuy .rate-btn:hover { background: var(--navy-d); }
@@ -440,6 +450,7 @@ body.unlocked .unlocked-only { display: block; }
   .sp-layout { grid-template-columns: 1fr; }
   .side { display: none; }              /* 手機版隱藏側欄，改用底部 sticky 購買列 */
   .post-like { display: none; }         /* 手機版隱藏文末喜歡按鈕，已有 sticky 操作列的喜歡圖示 */
+  .anchor-box { border: none; border-radius: 0; padding: 16px 0; }
   .post-body { padding: 22px 18px 26px; }
   .sp-hero { height: 168px; }
   .post-head h1 { font-size: 22px; }

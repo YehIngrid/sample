@@ -171,17 +171,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   initWishTicker();
 
   // 管理後台按鈕（MODERATOR / ADMIN）& 隱藏聊天室
+  // 桌機版：右上角浮動按鈕（css 在手機版強制隱藏，見 shop.css）
+  // 手機版：收進漢堡選單，同一組身分判斷各自控制對應項目
   const _role = localStorage.getItem('role');
   if (['MODERATOR', 'ADMIN'].includes(_role)) {
     document.getElementById('moderatorBtn').style.display = 'block';
+    document.getElementById('mobileModeratorItem').classList.remove('d-none');
   }
   if (_role === 'ADMIN') {
-    const apiDocsBtn = document.getElementById('apiDocsBtn');
+    const apiDocsUrl = `${import.meta.env.VITE_API_BASE_URL}/api/api-docs/`;
     // API 文件跟著環境走（dev → dev.treasurehub.tw、正式 → treasurehub.tw）
-    apiDocsBtn.href = `${import.meta.env.VITE_API_BASE_URL}/api/api-docs/`;
+    const apiDocsBtn = document.getElementById('apiDocsBtn');
+    apiDocsBtn.href = apiDocsUrl;
     apiDocsBtn.style.display = 'block';
     document.getElementById('designSystemBtn').style.display = 'block';
     document.getElementById('schoolGuideBtn').style.display = 'block';
+
+    document.getElementById('mobileApiDocsLink').href = apiDocsUrl;
+    document.getElementById('mobileApiDocsItem').classList.remove('d-none');
+    document.getElementById('mobileDesignSystemItem').classList.remove('d-none');
+    document.getElementById('mobileSchoolGuideItem').classList.remove('d-none');
   }
 
   const params = new URLSearchParams(window.location.search);
