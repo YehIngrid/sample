@@ -121,8 +121,11 @@ async function initWishTicker() {
       const w = wishes[idx % wishes.length];
       live.dataset.wishHref = wishHref(w);
       const label = esc(wishLabel(w.itemName));
+      // 空狀態標語沒有真實許願者，不該顯示頭像
+      const isPlaceholder = String(w.id).startsWith('empty-');
+      const avatarHTML = isPlaceholder ? '' : `<img class="qwl-avatar" src="${esc(wishAvatar(w))}" alt="許願者頭像" onerror="this.src='../webP/default-avatar.webp'">`;
       live.innerHTML = `
-        <img class="qwl-avatar" src="${esc(wishAvatar(w))}" alt="許願者頭像" onerror="this.src='../webP/default-avatar.webp'">
+        ${avatarHTML}
         <div class="qwl-bubble" title="${label}">${label}</div>
         <span class="qwl-dot"></span>
         <svg class="qwl-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5l3.09 6.58 7.16.83-5.3 4.94 1.42 7.07L12 17.4l-6.37 3.52 1.42-7.07-5.3-4.94 7.16-.83L12 1.5z"/></svg>`;

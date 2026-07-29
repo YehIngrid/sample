@@ -1,5 +1,6 @@
+import * as Sentry from '@sentry/browser';
+
 const DSN = 'https://8603e73bd47744aacaac70ee0977a3cd@o4511592734130176.ingest.us.sentry.io/4511779060842496';
-const SENTRY_LOADER_URL = 'https://js.sentry-cdn.com/8603e73bd47744aacaac70ee0977a3cd.min.js';
 const RELEASE = `treasurehub@${import.meta.env.VITE_APP_VERSION}+${import.meta.env.VITE_GIT_COMMIT}`;
 
 // 帳號相關 API 會用到的敏感欄位/header 名稱，送出前一律過濾掉
@@ -31,55 +32,21 @@ function beforeSend(event) {
   return event;
 }
 
-function loadScript(src) {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = src;
-    script.crossOrigin = 'anonymous';
-    script.onload = resolve;
-    script.onerror = reject;
-    document.head.appendChild(script);
-  });
-}
-
-let _devSentry = null; // 開發環境下 dynamic import 完成後的 SDK 參考
-
-// 手動回報：try/catch 接住但想讓 Sentry 知道的錯誤呼叫這個，兩種環境都能用
+// 手動回報：try/catch 接住但想讓 Sentry 知道的錯誤呼叫這個
 export function captureException(error, context) {
-  if (import.meta.env.DEV) {
-    _devSentry?.captureException(error, context);
-  } else {
-    window.Sentry?.captureException(error, context);
-  }
+  Sentry.captureException(error, context);
 }
 
-async function initSentry() {
-  if (import.meta.env.DEV) {
-    // 開發環境：npm 套件 + ESM import
-    const Sentry = await import('@sentry/browser');
-    _devSentry = Sentry;
-    Sentry.init({
-      dsn: DSN,
-      release: RELEASE,
-      environment: 'development',
-      integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-      tracesSampleRate: 1.0,
-      tracePropagationTargets: ['localhost', /^https:\/\/treasurehub\.tw/],
-      replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
-      beforeSend,
-    });
-  } else {
-    // 正式環境：CDN Loader Script（功能開關在 Sentry 後台 Project Settings 設定）
-    await loadScript(SENTRY_LOADER_URL);
-    window.Sentry.onLoad(function () {
-      window.Sentry.init({
-        release: RELEASE,
-        environment: 'production',
-        beforeSend,
-      });
-    });
-  }
-}
-
-initSentry();
+// 兩種環境都用 npm 套件直接打包進自己的 JS 檔，不再透過外部 CDN Loader Script 於執行期動態抓取 SDK
+// （CDN Loader 方式在 2026-07 發現會不穩定地載入失敗，導致正式環境完全收不到錯誤回報）
+Sentry.init({
+  dsn: DSN,
+  release: RELEASE,
+  environment: import.meta.env.DEV ? 'development' : 'production',
+  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+  tracesSampleRate: import.meta.env.DEV ? 1.0 : 0.2,
+  tracePropagationTargets: ['localhost', /^https:\/\/treasurehub\.tw/],
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+  beforeSend,
+});

@@ -45,6 +45,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // 密碼規則即時提示（跟註冊/帳號重設共用同一套規則：至少 8 碼＋大寫＋小寫＋數字）
+    const pwdInput = document.getElementById('new-password');
+    const pwdRules = {
+        len:   v => v.length >= 8,
+        upper: v => /[A-Z]/.test(v),
+        lower: v => /[a-z]/.test(v),
+        digit: v => /\d/.test(v),
+    };
+    function refreshPwdRules() {
+        const v = pwdInput.value;
+        Object.keys(pwdRules).forEach(rule => {
+            document.querySelector(`#pwd-rules [data-rule="${rule}"]`)
+                ?.classList.toggle('ok', pwdRules[rule](v));
+        });
+    }
+    function isPasswordValid(v) {
+        return Object.values(pwdRules).every(check => check(v));
+    }
+    pwdInput.addEventListener('input', refreshPwdRules);
+
     // 表單送出
     document.getElementById('reset-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -53,10 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const newPassword   = document.getElementById('new-password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
 
-        // 前端驗證
+        // 前端驗證（跟後端實際規則一致：至少 8 碼＋大寫＋小寫＋數字）
         let hasError = false;
-        if (newPassword.length < 8) {
-            setError('err-password', '密碼至少需要 8 個字元');
+        refreshPwdRules();
+        if (!isPasswordValid(newPassword)) {
+            setError('err-password', '密碼需至少 8 位，且包含大寫字母、小寫字母及數字');
             hasError = true;
         }
         if (newPassword !== confirmPassword) {
@@ -85,9 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
             showState('state-success');
         } catch (err) {
             const status = err.response?.status;
-            if (status === 400 || status === 404 || status === 410) {
-                // token 無效或已過期
+            if (status === 404 || status === 410) {
+                // token 不存在或已過期，才顯示「連結失效」畫面
                 showState('state-invalid');
+            } else if (status === 400) {
+                // 400 是驗證錯誤（例如密碼不符合規則），要把後端訊息秀出來，不能當成連結失效
+                setError('err-password', err.response?.data?.message || '密碼不符合規則，請重新確認');
             } else if (err.code === 'ECONNABORTED' || !err.response) {
                 Swal.fire({
                     icon: 'error',
