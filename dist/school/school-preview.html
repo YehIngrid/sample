@@ -25,8 +25,8 @@
   </style>
   <link rel="stylesheet" crossorigin href="/assets/default-hDEtLZfo.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
-  <link rel="stylesheet" crossorigin href="/assets/school-CyWSwroF.css">
-  <link rel="stylesheet" crossorigin href="/assets/school-post-B9TXsc_J.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-B4MXCxa_.css">
+  <link rel="stylesheet" crossorigin href="/assets/school-post-B0QR8Tf5.css">
   <link rel="stylesheet" crossorigin href="/assets/article-body-5r_qsYpo.css">
 </head>
 <body>
@@ -102,6 +102,14 @@
             <div class="meta-row" id="metaRow"></div>
           </div>
 
+          
+          <div class="d-lg-none">
+            <div class="anchor-box" id="anchorBoxMobile" style="display:none">
+              <div class="ab-title">錨點資訊</div>
+              <div id="anchorBoxListMobile"></div>
+            </div>
+          </div>
+
           <div class="author-block">
             <div class="av"></div>
             <div class="info">
@@ -127,6 +135,13 @@
           <span id="buyBtnLabel">立即解鎖閱讀</span>
         </button>
         <div class="ledger" id="ledger"></div>
+      </div>
+
+      <div class="d-none d-lg-block">
+        <div class="anchor-box" id="anchorBoxDesktop" style="display:none">
+          <div class="ab-title">錨點資訊</div>
+          <div id="anchorBoxListDesktop"></div>
+        </div>
       </div>
     </aside>
   </div>
@@ -167,6 +182,19 @@
       '<span>' + (d.words || 0).toLocaleString() + ' 字</span>';
     if (d.year) meta += '<span class="valid-tag"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>' + esc(d.year) + '</span>';
     document.getElementById('metaRow').innerHTML = meta;
+    // 錨點資訊（主題必填欄位，來自撰寫頁的 anchorFields / anchorValues）
+    if (d.anchorFields && d.anchorFields.length) {
+      var av = d.anchorValues || {};
+      var rows = d.anchorFields.filter(function (f) { return av[f.key]; }).map(function (f) {
+        return '<div class="ab-row"><span class="ab-k">' + esc(f.label) + '</span><span class="ab-v">' + esc(av[f.key]) + '</span></div>';
+      });
+      if (rows.length) {
+        document.getElementById('anchorBoxListMobile').innerHTML = rows.join('');
+        document.getElementById('anchorBoxListDesktop').innerHTML = rows.join('');
+        document.getElementById('anchorBoxMobile').style.display = '';
+        document.getElementById('anchorBoxDesktop').style.display = '';
+      }
+    }
     // 作者
     document.getElementById('authorName').textContent = d.author || '創作者';
     if (d.titles && d.titles.length) document.getElementById('authorTitles').innerHTML = d.titles.map(function (t) { return '<span class="t">' + esc(t) + '</span>'; }).join('');
