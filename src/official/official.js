@@ -1,7 +1,8 @@
-import '../default/default.js';
+import { requireAdminPage } from '../default/default.js';
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
 import wpBackendService from '../wpBackendService.js';
+import { AppModal } from '../default/app-modal.js';
 
 const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
@@ -9,22 +10,23 @@ const chatSvc = new ChatBackendService();
 const backendSvc = new BackendService();
 const wpSvc = new wpBackendService();
 
-// ── 登入驗證（以 cookie 為準，不依賴 localStorage）──────
+// ── 管理員權限驗證（整頁只給 ADMIN 看，非管理員直接導走）──────
 (async () => {
+  const ok = await requireAdminPage();
+  if (!ok) return;
+  document.body.style.visibility = '';
+
   try {
     const me = await backendSvc.getMe();
     const username = me?.data?.data?.name || localStorage.getItem('username') || '管理員';
     document.getElementById('adminName').textContent = username;
     document.getElementById('dashAdminName').textContent = username;
-  } catch (e) {
-    await Swal.fire({ icon: 'warning', title: '請先登入', text: '即將跳轉至登入頁' });
-    window.location.href = '../account/account.html';
-  }
+  } catch (e) {}
 })();
 
 // ── 登出 ──────────────────────────────────────────────
 document.getElementById('logoutBtn').addEventListener('click', async () => {
-  const confirm = await Swal.fire({
+  const confirm = await AppModal.fire({
     title: '確定要登出？',
     icon: 'question',
     showCancelButton: true,
@@ -259,12 +261,12 @@ imgInput.addEventListener('change', () => {
 async function addBroadcastFiles(files) {
   for (const f of files) {
     if (broadcastFiles.length >= BROADCAST_MAX) {
-      Swal.fire({ icon: 'warning', title: `最多 ${BROADCAST_MAX} 張圖片` });
+      AppModal.fire({ icon: 'warning', title: `最多 ${BROADCAST_MAX} 張圖片` });
       break;
     }
     if (!f.type.startsWith('image/')) continue;
     if (f.size > BROADCAST_MAX_MB) {
-      Swal.fire({ icon: 'warning', title: `「${f.name}」超過 5MB 限制` });
+      AppModal.fire({ icon: 'warning', title: `「${f.name}」超過 5MB 限制` });
       continue;
     }
     const url = await new Promise(resolve => {
@@ -316,11 +318,11 @@ document.getElementById('broadcastForm').addEventListener('submit', async (e) =>
   const submitBtn = document.getElementById('broadcastSubmitBtn');
 
   if (!channelId) {
-    Swal.fire({ icon: 'warning', title: '請先選擇頻道' });
+    AppModal.fire({ icon: 'warning', title: '請先選擇頻道' });
     return;
   }
   if (!message && broadcastFiles.length === 0) {
-    Swal.fire({ icon: 'warning', title: '請輸入公告內容或選擇圖片' });
+    AppModal.fire({ icon: 'warning', title: '請輸入公告內容或選擇圖片' });
     return;
   }
 
@@ -513,7 +515,7 @@ updateSubmitBtnLabel();
 quill.on('text-change', scheduleDraftSave);
 
 document.getElementById('newsClearDraftBtn').addEventListener('click', async () => {
-  const r = await Swal.fire({
+  const r = await AppModal.fire({
     title: '清除草稿？',
     icon: 'question',
     showCancelButton: true,
@@ -593,10 +595,10 @@ function addAttachFiles(files) {
   const MAX_MB = 5 * 1024 * 1024;
   for (const f of files) {
     if (newAttachFiles.length + keepAttachUrls.length >= MAX) {
-      Swal.fire({ icon: 'warning', title: `最多 ${MAX} 個附件` }); break;
+      AppModal.fire({ icon: 'warning', title: `最多 ${MAX} 個附件` }); break;
     }
     if (f.size > MAX_MB) {
-      Swal.fire({ icon: 'warning', title: `「${f.name}」超過 5MB` }); continue;
+      AppModal.fire({ icon: 'warning', title: `「${f.name}」超過 5MB` }); continue;
     }
     newAttachFiles.push(f);
   }
@@ -647,7 +649,7 @@ document.getElementById('newsForm').addEventListener('submit', async (e) => {
   const content = quill.getSemanticHTML();
 
   if (!title || !content || content === '<p></p>') {
-    Swal.fire({ icon: 'warning', title: '請填寫標題與內容' });
+    AppModal.fire({ icon: 'warning', title: '請填寫標題與內容' });
     return;
   }
 
@@ -707,7 +709,7 @@ window.startEditNews = function(id) {
 
 // ── 刪除 ────────────────────────────────────────────────
 window.deleteNews = async function(id, title) {
-  const confirm = await Swal.fire({
+  const confirm = await AppModal.fire({
     title: `確定刪除「${esc(title)}」？`,
     icon: 'warning',
     showCancelButton: true,
@@ -720,7 +722,7 @@ window.deleteNews = async function(id, title) {
     await backendSvc.deleteNews(id);
     await loadNewsAdmin();
   } catch (err) {
-    Swal.fire({ icon: 'error', title: '刪除失敗', text: err?.message });
+    AppModal.fire({ icon: 'error', title: '刪除失敗', text: err?.message });
   }
 };
 
@@ -1357,11 +1359,11 @@ async function submitReview(status) {
     await backendSvc.reviewReport(_currentReportId, payload);
     _reviewModal?.hide();
     _currentReportId = null;
-    Swal.fire({ icon: 'success', title: '審核完成', timer: 1500, showConfirmButton: false });
+    AppModal.fire({ icon: 'success', title: '審核完成', timer: 1500, showConfirmButton: false });
     loadAllReports(1);
   } catch (e) {
     const msg = e?.response?.data?.message || e?.message || '請稍後再試';
-    Swal.fire({ icon: 'error', title: '審核失敗', text: msg });
+    AppModal.fire({ icon: 'error', title: '審核失敗', text: msg });
   }
 }
 
@@ -1471,10 +1473,10 @@ function openEditTagGroupModal(id, name, targetRole, exclusive) {
     if (!isConfirmed || !value) return;
     try {
       await backendSvc.updateReviewTagGroup(id, value);
-      Swal.fire({ icon: 'success', title: '更新成功', timer: 1500, showConfirmButton: false });
+      AppModal.fire({ icon: 'success', title: '更新成功', timer: 1500, showConfirmButton: false });
       loadReviewTagGroups();
     } catch (err) {
-      Swal.fire({ icon: 'error', title: '更新失敗', text: err?.response?.data?.message || '請稍後再試' });
+      AppModal.fire({ icon: 'error', title: '更新失敗', text: err?.response?.data?.message || '請稍後再試' });
     }
   });
 }
@@ -1482,10 +1484,10 @@ window.openEditTagGroupModal = openEditTagGroupModal;
 
 window.deleteTagGroup = async function(id, name, tagCount) {
   if (tagCount > 0) {
-    Swal.fire({ icon: 'warning', title: '無法刪除', text: `群組「${name}」還有 ${tagCount} 個標籤，請先移除所有標籤後再刪除。` });
+    AppModal.fire({ icon: 'warning', title: '無法刪除', text: `群組「${name}」還有 ${tagCount} 個標籤，請先移除所有標籤後再刪除。` });
     return;
   }
-  const confirm = await Swal.fire({
+  const confirm = await AppModal.fire({
     title: `確定刪除群組「${esc(name)}」？`,
     icon: 'warning',
     showCancelButton: true,
@@ -1496,10 +1498,10 @@ window.deleteTagGroup = async function(id, name, tagCount) {
   if (!confirm.isConfirmed) return;
   try {
     await backendSvc.deleteReviewTagGroup(id);
-    Swal.fire({ icon: 'success', title: '刪除成功', timer: 1500, showConfirmButton: false });
+    AppModal.fire({ icon: 'success', title: '刪除成功', timer: 1500, showConfirmButton: false });
     loadReviewTagGroups();
   } catch (err) {
-    Swal.fire({ icon: 'error', title: '刪除失敗', text: err?.response?.data?.message || '請稍後再試' });
+    AppModal.fire({ icon: 'error', title: '刪除失敗', text: err?.response?.data?.message || '請稍後再試' });
   }
 };
 
@@ -1614,10 +1616,10 @@ function openEditTagModal(tag, meaning, positive, groupId = '') {
     if (!isConfirmed || !value) return;
     try {
       await backendSvc.updateReviewTag(tag, value);
-      Swal.fire({ icon: 'success', title: '更新成功', timer: 1500, showConfirmButton: false });
+      AppModal.fire({ icon: 'success', title: '更新成功', timer: 1500, showConfirmButton: false });
       loadReviewTags();
     } catch (err) {
-      Swal.fire({ icon: 'error', title: '更新失敗', text: err?.response?.data?.message || '請稍後再試' });
+      AppModal.fire({ icon: 'error', title: '更新失敗', text: err?.response?.data?.message || '請稍後再試' });
     }
   });
 }
@@ -1757,7 +1759,7 @@ async function loadAdminTickets(page = 1) {
       btn.addEventListener('click', async () => {
         const ticketId = btn.dataset.ticketId;
         const roomId = btn.dataset.roomId;
-        const { isConfirmed } = await Swal.fire({
+        const { isConfirmed } = await AppModal.fire({
           title: '確定認領此客服單？',
           text: '認領後您將成為負責客服人員並加入聊天室。',
           icon: 'question',
@@ -1772,16 +1774,16 @@ async function loadAdminTickets(page = 1) {
           await chatSvc.claimTicket(ticketId);
           const hasOrder = btn.dataset.hasOrder === 'true';
           if (hasOrder) {
-            await Swal.fire({ icon: 'success', title: '認領成功', text: '請透過「查看記錄 & 仲裁」處理此訂單客服單。', timer: 2000, showConfirmButton: false });
+            await AppModal.fire({ icon: 'success', title: '認領成功', text: '請透過「查看記錄 & 仲裁」處理此訂單客服單。', timer: 2000, showConfirmButton: false });
             loadAdminTickets(_ticketCurrentPage);
           } else {
-            await Swal.fire({ icon: 'success', title: '認領成功', text: '即將跳轉至聊天室。', timer: 1500, showConfirmButton: false });
+            await AppModal.fire({ icon: 'success', title: '認領成功', text: '即將跳轉至聊天室。', timer: 1500, showConfirmButton: false });
             if (roomId) window.location.href = `../chatroom/chatroom.html?roomId=${encodeURIComponent(roomId)}`;
           }
         } catch (err) {
           btn.disabled = false;
           btn.textContent = '認領';
-          Swal.fire({ icon: 'error', title: '認領失敗', text: err?.response?.data?.message ?? '請稍後再試' });
+          AppModal.fire({ icon: 'error', title: '認領失敗', text: err?.response?.data?.message ?? '請稍後再試' });
         }
       });
     });
@@ -1945,20 +1947,20 @@ async function loadAdminTickets(page = 1) {
         newSubmitBtn.addEventListener('click', async () => {
           const adjudication = document.getElementById('adjudicationText').value.trim();
           const replyMessage = document.getElementById('adjudicationReply').value.trim();
-          if (!adjudication) { Swal.fire({ icon: 'warning', title: '請填寫裁定結論' }); return; }
-          if (!replyMessage) { Swal.fire({ icon: 'warning', title: '請填寫回覆訊息' }); return; }
+          if (!adjudication) { AppModal.fire({ icon: 'warning', title: '請填寫裁定結論' }); return; }
+          if (!replyMessage) { AppModal.fire({ icon: 'warning', title: '請填寫回覆訊息' }); return; }
           try {
             newSubmitBtn.disabled = true;
             newSubmitBtn.textContent = '送出中...';
             await chatSvc.adjudicateTicket(ticketId, { adjudication, replyMessage });
             await chatSvc.resolveTicket(ticketId);
             _ticketHistoryModal.hide();
-            await Swal.fire({ icon: 'success', title: '仲裁完成', text: '客服單已標記為已解決。', timer: 1800, showConfirmButton: false });
+            await AppModal.fire({ icon: 'success', title: '仲裁完成', text: '客服單已標記為已解決。', timer: 1800, showConfirmButton: false });
             loadAdminTickets(_ticketCurrentPage);
           } catch {
             newSubmitBtn.disabled = false;
             newSubmitBtn.textContent = '送出仲裁並解決';
-            Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+            AppModal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
           }
         });
       });

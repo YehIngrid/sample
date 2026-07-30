@@ -71,6 +71,7 @@ input, select { font-family: inherit; }
 .nav .tabs .drop-menu a.on { background: var(--alice); color: var(--navy); font-weight: 700; }
 
 .nav .right { display: flex; align-items: center; gap: 12px; }
+.nav .right .user-chip { cursor: pointer; }
 .btn-sm {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 9px 16px; border-radius: 999px;
@@ -83,7 +84,7 @@ input, select { font-family: inherit; }
 .btn-sm.navy svg { width: 14px; height: 14px; }
 
 /* ============ LAYOUT ============ */
-.container { width: 80vw; max-width: 80vw; margin: 0 auto; padding: 32px 40px 80px; }
+.container { width: 80vw; max-width: 80vw; margin: 0 auto; padding: 32px 0 80px; }
 
 /* ============ Header + Ad Wrapper ============ */
 .header-ad-wrapper {
@@ -497,11 +498,19 @@ input, select { font-family: inherit; }
   box-shadow: 0 8px 20px rgba(0, 75, 151, 0.25);
 }
 
-/* Article grid */
+/* Article grid：改用 masonry（JS 依欄位高度分配卡片，見 school-new.js layoutMasonry），
+   卡片各自高度、不強制拉齊 */
 .articles-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  align-items: flex-start;
   gap: 18px;
+}
+.masonry-col {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+  min-width: 0;
 }
 .article {
   background: #ffffff;
@@ -950,7 +959,6 @@ input, select { font-family: inherit; }
     display: flex;
     flex-direction: column;
   }
-  .articles-grid { grid-template-columns: 1fr; }
   .featured { grid-template-columns: 1fr; }
   .featured .cover { height: 180px; }
   .toolbar { grid-template-columns: 1fr; }
@@ -1887,7 +1895,8 @@ input, select { font-family: inherit; }
   .featured .price-box .btn-read { margin-left: 0; width: 100%; justify-content: center; padding: 10px 16px; }
 
   /* ── ARTICLE GRID ── */
-  .articles-grid { grid-template-columns: 1fr; gap: 12px; }
+  .articles-grid { gap: 12px; }
+  .masonry-col { gap: 12px; }
   .article { border-radius: 12px; }
   .article .cover { height: 140px; }
   .article h2 { font-size: 15px; }
@@ -1976,6 +1985,7 @@ input, select { font-family: inherit; }
   .featured .price-box .btn-read { padding: 9px 14px; font-size: 12px; }
 
   .articles-grid { gap: 10px; }
+  .masonry-col { gap: 10px; }
   .article h2 { font-size: 18px; }
   .article .excerpt { font-size: 12px; }
 

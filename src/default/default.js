@@ -1,5 +1,6 @@
 import BackendService from '../BackendService.js';
 import './sentry-init.js';
+import { AppModal } from './app-modal.js';
 
 let backendService;
 
@@ -170,7 +171,7 @@ async function renderAuthUI() {
 function _loginClick(href) {
   return function(e) {
     e.preventDefault();
-    Swal.fire({
+    AppModal.fire({
       title: '前往登入頁面？',
       icon: 'question',
       showCancelButton: true,
@@ -213,7 +214,7 @@ window._showLoggedOutUI = function() {
 };
 
 async function doLogout() {
-  const confirm = await Swal.fire({
+  const confirm = await AppModal.fire({
     title: '確定要登出？',
     icon: 'question',
     showCancelButton: true,
@@ -230,20 +231,21 @@ async function doLogout() {
   localStorage.removeItem('role');
   // 自動登出提示
   let timerInterval;
-  Swal.fire({
+  const LOGOUT_TIMER_MS = 3000;
+  AppModal.fire({
     title: "登出成功",
     html: "將在 <b></b> 秒後回到登入頁",
-    timer: 3000, // 2 秒後自動跳轉
-    timerProgressBar: true,
+    timer: LOGOUT_TIMER_MS,
+    showConfirmButton: false,
     customClass: {
       title: 'swal-logout-title',
       htmlContainer: 'swal-logout-text'
     },
-    didOpen: () => {
-      Swal.showLoading();
-      const timer = Swal.getPopup().querySelector("b");
+    didOpen: (dialog) => {
+      const timerEl = dialog.querySelector('b');
+      const start = Date.now();
       timerInterval = setInterval(() => {
-        timer.textContent = Math.ceil(Swal.getTimerLeft() / 1000);
+        timerEl.textContent = Math.ceil(Math.max(0, LOGOUT_TIMER_MS - (Date.now() - start)) / 1000);
       }, 100);
     },
     willClose: () => {
@@ -437,7 +439,7 @@ export const formatTaipeiTime = (dateStr) => {
 };
 export async function requireEmailVerified() {
   if (localStorage.getItem('emailVerify') !== 'false') return true;
-  const result = await Swal.fire({
+  const result = await AppModal.fire({
     icon: 'warning',
     title: '信箱尚未驗證',
     text: '買賣商品前需完成電子信箱驗證，是否前往驗證？',
@@ -452,19 +454,49 @@ export async function requireEmailVerified() {
   return false;
 }
 
+// 整頁級的管理員守衛：用在「管理後台、設計文件、校園攻略站」這類整頁都只給 admin 看的頁面。
+// 跟 requireLogin() 不同——這裡沒有「確定/取消」給使用者選，未通過就直接導走。
+// 呼叫端請先把 <body> 藏起來（例如 opacity:0），等這個 resolve 為 true 再顯示，避免內容閃一下。
+export async function requireAdminPage() {
+  await window._authReady;
+  const currentUrl = window.location.pathname + window.location.search;
+
+  if (!window.isLoggedIn) {
+    await AppModal.fire({
+      icon: 'warning',
+      title: '請先登入',
+      text: '此頁面僅限管理員存取，請先登入。',
+      confirmButtonText: '前往登入',
+    });
+    window.location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+    return false;
+  }
+
+  if (localStorage.getItem('role') !== 'ADMIN') {
+    await AppModal.fire({
+      icon: 'error',
+      title: '沒有存取權限',
+      text: '此頁面僅限管理員存取。',
+      confirmButtonText: '確定',
+    });
+    window.location.href = '../newhome/newhome.html';
+    return false;
+  }
+
+  return true;
+}
+
 export async function requireLogin() {
   // 等 whoami 完成後查快取，不重複發請求
   await window._authReady;
   if (window.isLoggedIn) return true;
 
   const currentUrl = window.location.pathname + window.location.search;
-  const result = await Swal.fire({
+  const result = await AppModal.fire({
     title: "尚未登入",
     text: "此功能需要登入，是否前往登入？",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
     confirmButtonText: "前往登入",
     cancelButtonText: "取消"
   });
@@ -950,10 +982,8 @@ async function _copyToClipboard(text) {
 }
 
 function _inviteCopiedToast(title) {
-  if (typeof Swal === 'undefined') return;
-  Swal.fire({
+  AppModal.fire({
     toast: true,
-    position: 'top',
     icon: 'success',
     title,
     showConfirmButton: false,

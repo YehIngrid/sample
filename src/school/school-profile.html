@@ -15,15 +15,19 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
   <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" integrity="sha384-6LFfkTKLRlzFtgx8xsWyBdKGpcMMQTkv+dB7rAbugeJAu1Ym2q1Aji1cjHBG12Xh" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
   <script type="module" src="../default/default.js"></script>
   <style>
     /* ===== profile scope ===== */
     html { overflow-x: hidden; }
     body { background: #f6f9fc; }
     .pf-container, .pf-side, .pf-main { max-width: 100%; }
-    .pf-container { width: 80vw; margin: 0 auto; padding: 26px 40px 96px; display: flex; gap: 24px; align-items: flex-start; justify-content: space-between; }
+    .pf-container { width: 80vw; margin: 0 auto; padding: 26px 0 96px; display: flex; gap: 24px; align-items: flex-start; justify-content: space-between; }
+    .pf-crumb-wrap { width: 80vw; max-width: 80vw; margin: 16px auto 0; }
 
     /* ===== SIDEBAR ===== */
     .pf-side { width: 291px; flex-shrink: 0; position: sticky; top: 70px; display: flex; flex-direction: column; gap: 16px; }
@@ -32,6 +36,11 @@
     .id-banner::after { content: ""; position: absolute; right: -30px; top: -30px; width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.08); }
     .id-main { padding: 0 22px 20px; margin-top: -34px; position: relative; }
     .id-av { width: 68px; height: 68px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 6px 20px -8px rgba(0,75,151,0.4); background: linear-gradient(135deg, var(--mid), var(--aqua)); position: relative; }
+    .id-av img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+
+    /* 頭像裁切：Cropper.js 沒有原生圓形裁切，用 view-box/face 疊圓形遮罩模擬 */
+    #pfCropModal .cropper-view-box { border-radius: 50%; }
+    #pfCropModal .cropper-face { border-radius: 50%; }
     .av-edit { position: absolute; right: -4px; bottom: -4px; width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--navy); cursor: pointer; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.22s ease; }
     .av-edit:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
     .av-edit svg { width: 12px; height: 12px; }
@@ -101,13 +110,22 @@
     .cert { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start; }
     .cert .cic { width: 42px; height: 42px; border-radius: 11px; background: var(--alice); color: var(--navy); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .cert .cic svg { width: 20px; height: 20px; }
-    .cert .cbody { flex: 1; min-width: 0; }
+    .cert .cbody { flex: 1; min-width: 0; display: flex; flex-direction: column; }
     .cert .cname { font-size: 14.5px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
     .cert .cdesc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
-    .cert .cstatus { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; margin-top: 10px; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.04em; }
+    .cert .cstatus { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; margin-top: auto; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.04em; align-self: flex-start; }
     .cert .cstatus.ok { background: #e7f4ee; color: var(--green, #2f9e6f); }
     .cert .cstatus.pending { background: #fff6e8; color: var(--warn); }
+    .cert .cstatus.rejected { background: #faf0e6; color: var(--warn); }
+    .cert .cstatus.hidden { background: #f0f2f4; color: var(--muted); }
     .cert .cstatus svg { width: 12px; height: 12px; }
+    .cert .cfoot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 10px; }
+    .cert .cfoot .cstatus { margin-top: 0; }
+    .cert-vis { display: flex; align-items: center; gap: 6px; }
+    .cert-vis span { font-size: 11px; color: var(--muted); letter-spacing: 0.03em; white-space: nowrap; }
+    .cert-vis .tgl { width: 30px; height: 17px; }
+    .cert-vis .tgl::after { width: 11px; height: 11px; }
+    .cert-vis .tgl.on::after { left: 16px; }
     .cert-add { background: var(--alice); border: 1.5px dashed var(--sky); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 24px; cursor: pointer; transition: all 0.2s; }
     .cert-add:hover { border-color: var(--navy); }
     .cert-add .pic { width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--navy); display: flex; align-items: center; justify-content: center; }
@@ -141,8 +159,16 @@
     .set-row .sdesc { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
     .pill-ok { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: var(--green, #2f9e6f); background: #e7f4ee; padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; }
     .pill-ok svg { width: 12px; height: 12px; }
+    .pill-pending { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: var(--warn); background: #fff6e8; padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; }
+    .pill-pending svg { width: 12px; height: 12px; }
+    .pill-rejected { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: #fff; background: var(--warn); padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; }
+    .pill-rejected svg { width: 12px; height: 12px; }
     .pill-link { font-size: 12.5px; font-weight: 600; color: var(--navy); letter-spacing: 0.04em; flex-shrink: 0; }
     .pill-link:hover { color: var(--navy-d); }
+    .pill-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+    .pill-cta { border: none; background: none; font-size: 12.5px; font-weight: 700; color: var(--navy); letter-spacing: 0.04em; cursor: pointer; padding: 0; }
+    .pill-cta:hover { color: var(--navy-d); }
+    .pill-soon { display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 700; color: #a08540; background: rgba(243,227,181,0.55); padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; }
     .pay-tags { display: flex; gap: 6px; }
     .pay-tags .pt { font-size: 11px; font-weight: 700; color: var(--ink); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
 
@@ -221,6 +247,7 @@
 
     @media (max-width: 980px) {
       .pf-container { padding: 0 0 96px; flex-direction: column; gap: 0; width: 100vw; }
+      .pf-crumb-wrap { width: 100vw; max-width: 100vw; padding: 0 16px; margin-top: 12px; }
       .pf-side { width: 100%; position: static; gap: 0; }
       .id-card { border-radius: 0; border-left: none; border-right: none; border-top: none; }
       /* 競賽卡：手機改為精簡橫條 */
@@ -344,6 +371,21 @@
     .ca-fileRow .fdel:hover { background: var(--terracotta); color: #fff; }
     .ca-fileRow .fdel svg { width: 13px; height: 13px; }
 
+    /* ===== 就學證明實名認證 Modal ===== */
+    .pm-field select { width: 100%; -webkit-appearance: none; appearance: none; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: 14px; color: var(--ink); letter-spacing: 0.03em; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center/13px; outline: none; cursor: pointer; transition: all 0.22s ease; }
+    .pm-field select:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,75,151,0.12); }
+    .ev-cam-frame { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 14px; overflow: hidden; background: #0f2745; display: flex; align-items: center; justify-content: center; }
+    .ev-cam-frame video, .ev-cam-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ev-cam-placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(255,255,255,0.7); }
+    .ev-cam-placeholder svg { width: 30px; height: 30px; }
+    .ev-cam-placeholder div { font-size: 12.5px; letter-spacing: 0.03em; }
+    .ev-cam-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .ev-cam-btn { flex: 1; padding: 10px 0; border-radius: 999px; border: 1.5px solid var(--navy); background: var(--navy); color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
+    .ev-cam-btn:hover { background: var(--navy-d); }
+    .ev-cam-btn.ghost { background: #fff; color: var(--navy); }
+    .ev-cam-btn.ghost:hover { background: var(--alice); }
+    .ev-cam-hint { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+
     /* ===== 數據分析：期間選擇 / 圓餅圖 / 單篇分析 ===== */
     .an-sel { -webkit-appearance: none; appearance: none; border: 1px solid var(--line); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/12px; border-radius: 999px; padding: 7px 32px 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--ink); letter-spacing: 0.03em; cursor: pointer; transition: all 0.22s ease; }
     .an-sel:hover { border-color: var(--navy); color: var(--navy); }
@@ -370,6 +412,7 @@
       .an-dt-metrics { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
+<style class="am-admin-gate-style">body{visibility:hidden}</style>
 </head>
 <body>
 
@@ -412,7 +455,7 @@
       登入
     </button>
     <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
-      <span class="avatar"></span>
+      <img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像">
     </div>
   </div>
 </nav>
@@ -430,6 +473,14 @@
   </div>
 </div>
 
+<div class="pf-crumb-wrap">
+  <div class="breadcrumb">
+    <a href="school.html">校園攻略站</a>
+    <span class="sep">/</span>
+    <span class="cur">個人檔案</span>
+  </div>
+</div>
+
 <div class="pf-container">
 
   <!-- ===== SIDEBAR ===== -->
@@ -442,9 +493,11 @@
           <span>帳號設定</span>
         </button>
         <div class="id-av">
+          <img id="pfAvatarImg" src="../image/default-avatar.webp" alt="頭像">
           <button class="av-edit" type="button" title="更換頭像" aria-label="更換頭像">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19 a2 2 0 0 1-2 2 H3 a2 2 0 0 1-2-2 V8 a2 2 0 0 1 2-2 h4 l2-3 h6 l2 3 h4 a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg>
           </button>
+          <input type="file" id="pfAvatarFile" accept="image/*" hidden>
         </div>
         <div class="id-name">創產系 114級 范同學</div>
         <div class="id-titles">
@@ -505,6 +558,8 @@
         <span class="f">已發佈</span>
         <span class="f">草稿</span>
       </div>
+      <div class="pf-rows-skeleton" id="mineSkeleton"></div>
+      <div class="pf-rows" id="mineRows" style="display:none">
       <div class="art-row">
         <div class="thumb a"></div>
         <div class="a-mid">
@@ -557,11 +612,14 @@
           <a class="row-act" href="school-composer.html">繼續撰寫 →</a>
         </div>
       </div>
+      </div>
     </div>
 
     <!-- PANE: 已購買 -->
     <div class="pane" data-pane="bought">
       <div class="pane-head">已購買</div>
+      <div class="pf-rows-skeleton" id="boughtSkeleton"></div>
+      <div class="pf-rows" id="boughtRows" style="display:none">
       <div class="art-row">
         <div class="thumb b"></div>
         <div class="a-mid">
@@ -586,11 +644,14 @@
           <a class="row-act" href="school-post.html?id=3">閱讀 →</a>
         </div>
       </div>
+      </div>
     </div>
 
     <!-- PANE: 收藏 -->
     <div class="pane" data-pane="saved">
       <div class="pane-head">收藏</div>
+      <div class="pf-rows-skeleton" id="savedSkeleton"></div>
+      <div class="pf-rows" id="savedRows" style="display:none">
       <div class="art-row">
         <div class="thumb c"></div>
         <div class="a-mid">
@@ -614,6 +675,7 @@
           <span class="a-price">NT$ 149</span>
           <a class="row-act" href="school-post.html?id=5">前往購買 →</a>
         </div>
+      </div>
       </div>
     </div>
 
@@ -693,28 +755,42 @@
     <div class="pane" data-pane="cert">
       <div class="pane-head">認證與頭銜</div>
       <div class="cert-grid">
-        <div class="cert">
+        <div class="cert" data-cert-status="ok">
           <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg></div>
           <div class="cbody">
             <div class="cname">台大碩士 升學認證</div>
             <div class="cdesc">已上傳台大研究所正取通知，經人工審查通過，顯示於文章作者頭銜。</div>
-            <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
+            <div class="cfoot">
+              <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
+              <label class="cert-vis"><button class="tgl on" type="button" data-cert-toggle aria-label="是否公開顯示於作者頭銜"></button><span>公開顯示</span></label>
+            </div>
           </div>
         </div>
-        <div class="cert">
+        <div class="cert" data-cert-status="ok">
           <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg></div>
           <div class="cbody">
             <div class="cname">書卷獎 獎項認證</div>
             <div class="cdesc">已上傳系上書卷獎證明，經人工審查通過，提升文章觸及率。</div>
-            <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
+            <div class="cfoot">
+              <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
+              <label class="cert-vis"><button class="tgl on" type="button" data-cert-toggle aria-label="是否公開顯示於作者頭銜"></button><span>公開顯示</span></label>
+            </div>
           </div>
         </div>
-        <div class="cert">
+        <div class="cert" data-cert-status="pending">
           <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg></div>
           <div class="cbody">
             <div class="cname">多益 935 證照認證</div>
             <div class="cdesc">成績單審查中，通常 1–3 個工作天完成。通過後將自動加上頭銜。</div>
             <span class="cstatus pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審查中</span>
+          </div>
+        </div>
+        <div class="cert" data-cert-status="rejected">
+          <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg></div>
+          <div class="cbody">
+            <div class="cname">系排前 5% 獎項認證</div>
+            <div class="cdesc">審核未通過：上傳的成績單截圖不清楚，請重新上傳完整成績單。</div>
+            <span class="cstatus rejected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>已駁回</span>
           </div>
         </div>
         <div class="cert cert-add" id="certAddBtn">
@@ -738,13 +814,13 @@
       </div>
 
       <div class="set-card">
-        <div class="set-row">
+        <div class="set-row" id="evRow">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 H6 a2 2 0 0 0-2 2 v16 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2-2 V8Z"/><path d="M14 2 v6 h6"/><path d="m9 15 2 2 4-4"/></svg></div>
           <div class="sbody">
             <div class="stitle">就學證明實名認證</div>
-            <div class="sdesc">後台真實身分：葉潔頤（國立中興大學・在學）· 就學證明經人工審核通過 · 僅你本人可見</div>
+            <div class="sdesc" id="evDesc"></div>
           </div>
-          <span class="pill-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
+          <span class="pill-wrap" id="evPillWrap"></span>
         </div>
         <div class="set-row">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10 h20"/></svg></div>
@@ -752,7 +828,7 @@
             <div class="stitle">金流與收款設定</div>
             <div class="sdesc">售出文章款項將由金流服務撥入指定撥款帳戶。</div>
           </div>
-          <a class="pill-link" href="#" data-goto-pane="set-payment">管理 →</a>
+          <span class="pill-soon">敬請期待</span>
         </div>
         <div class="set-row">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5 v6 c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10 V5Z"/></svg></div>
@@ -886,13 +962,6 @@
         <div class="ntf-head"><span>推播</span><span>Email</span></div>
         <div class="set-row">
           <div class="sbody">
-            <div class="stitle">學年更新提醒</div>
-            <div class="sdesc">新學年開始時，提醒你檢查攻略的適用學年。</div>
-          </div>
-          <div class="ntf-cols"><button class="tgl on" type="button" aria-label="學年更新提醒推播"></button><button class="tgl on" type="button" aria-label="學年更新提醒 Email"></button></div>
-        </div>
-        <div class="set-row">
-          <div class="sbody">
             <div class="stitle">公告與活動</div>
             <div class="sdesc">平台功能更新、徵稿活動與優惠訊息。</div>
           </div>
@@ -983,6 +1052,92 @@
   </div>
 </div>
 
+<!-- ===== 就學證明實名認證 Modal ===== -->
+<div class="pm-backdrop" id="evBackdrop" aria-hidden="true">
+  <div class="pm-dialog" role="dialog" aria-modal="true" aria-labelledby="evTitle">
+
+    <!-- STEP: 表單 -->
+    <div class="pm-step on" data-step="form">
+      <div class="pm-head">
+        <div class="pm-title" id="evTitle">就學證明實名認證</div>
+        <button class="pm-x" type="button" data-ev-close aria-label="關閉">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="pm-sub" id="evSub">提交就學資料，人工審核通過後即完成實名認證。</div>
+
+      <div id="evRejectNote" class="pm-err" style="display:none; margin-bottom:13px;"></div>
+
+      <div id="evFullFields">
+        <div class="pm-field" id="evFSchool">
+          <label for="evSchool">學校名稱</label>
+          <input id="evSchool" placeholder="例：國立中興大學">
+          <div class="pm-err">請輸入學校名稱</div>
+        </div>
+        <div class="pm-field" id="evFStatus">
+          <label for="evStatus">就學狀態</label>
+          <select id="evStatus">
+            <option value="enrolled">在學</option>
+            <option value="transfer">轉學</option>
+            <option value="graduated">畢業</option>
+            <option value="withdrawn">肄業</option>
+          </select>
+        </div>
+        <div class="pm-field" id="evFYear">
+          <label for="evYear">入學年度</label>
+          <input id="evYear" placeholder="例：113" inputmode="numeric">
+          <div class="pm-err">請輸入入學年度</div>
+        </div>
+        <div class="pm-field" id="evFName">
+          <label for="evName">真實姓名</label>
+          <input id="evName" placeholder="請輸入真實姓名（僅供後台審核，不對外顯示）">
+          <div class="pm-err">請輸入真實姓名</div>
+        </div>
+      </div>
+
+      <div class="pm-field" id="evFCam">
+        <label>證明文件（需即時拍照，不可上傳現有照片）</label>
+        <div class="ev-cam-frame" id="evCamFrame">
+          <div class="ev-cam-placeholder" id="evCamPlaceholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19 a2 2 0 0 1-2 2 H3 a2 2 0 0 1-2-2 V8 a2 2 0 0 1 2-2 h4 l2-3 h6 l2 3 h4 a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg>
+            <div>啟動相機拍攝就學證明</div>
+          </div>
+          <video id="evCamVideo" autoplay playsinline muted style="display:none;"></video>
+          <img id="evCamPhoto" alt="已拍攝的證明文件" style="display:none;">
+        </div>
+        <canvas id="evCamCanvas" hidden></canvas>
+        <div class="ev-cam-actions">
+          <button type="button" class="ev-cam-btn" id="evCamStart">啟動相機</button>
+          <button type="button" class="ev-cam-btn" id="evCamShoot" style="display:none;">拍照</button>
+          <button type="button" class="ev-cam-btn ghost" id="evCamRetake" style="display:none;">重拍</button>
+        </div>
+        <div class="ev-cam-hint">僅接受當下拍攝的即時照片，無法從相簿選擇既有檔案。</div>
+        <input type="file" id="evCamFallback" accept="image/*" capture="environment" hidden>
+        <div class="pm-err">請完成拍照</div>
+      </div>
+
+      <div class="pm-safe">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5 v6 c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10 V5Z"/></svg>
+        證明文件僅供審查人員核對，不會公開顯示。送出後將重新進入審核排隊。
+      </div>
+      <button class="pm-submit" id="evSubmit" type="button" disabled>送出審核</button>
+    </div>
+
+    <!-- STEP: 完成 -->
+    <div class="pm-step" data-step="done">
+      <div class="pm-done">
+        <svg viewBox="0 0 60 60" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <circle class="ring" cx="30" cy="30" r="26" stroke-width="3"/>
+          <path class="tick" d="M19 31 l8 8 14-16" stroke-width="4"/>
+        </svg>
+        <div class="pm-done-t">已送出審核</div>
+        <div class="pm-done-d" id="evDoneD">審核通常 1–3 個工作天完成，請耐心等候。</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- ── Bottom nav (mobile) ── -->
 <script>if(window !== window.parent) document.write('<style>.bottom-nav{display:none!important}</style>');</script>
 
@@ -1014,8 +1169,39 @@
   </a>
 </nav>
 
+<!-- 頭像裁切 Modal -->
+<div class="modal fade" id="pfCropModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h5 class="modal-title">裁切頭像</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-0" style="background:#111;">
+        <div style="height:60vh;overflow:hidden;">
+          <img id="pfCropImg" style="display:block;max-width:100%;" alt="裁切頭像範圍">
+        </div>
+      </div>
+      <div class="modal-footer py-2">
+        <small class="text-muted me-auto">拖曳調整裁切範圍，滾輪縮放</small>
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary btn-sm" id="pfCropConfirm">確認裁切</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" integrity="sha384-jrOgQzBlDeUNdmQn3rUt/PZD+pdcRBdWd/HWRqRo+n2OR2QtGyjSaJC0GiCeH+ir" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script type="module">
+import { AppModal } from "../default/app-modal.js";
+import { requireAdminPage } from "../default/default.js";
+window.AppModal = AppModal;
+(async () => {
+  const ok = await requireAdminPage();
+  if (ok) document.body.style.visibility = "";
+})();
+</script>
 <script defer src="school-new.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -1041,18 +1227,67 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-  // 側邊分頁切換
+  // 側邊分頁切換（同步網址 ?pane=，方便重新整理／分享時停留在同一分頁，仿照 account.html 的 ?page= 慣例）
   var panes = document.querySelectorAll('.pane');
-  document.getElementById('sideNav').addEventListener('click', function (e) {
+  var sideNav = document.getElementById('sideNav');
+
+  function setPaneURL(name) {
+    var url = new URL(window.location.href);
+    url.searchParams.set('pane', name);
+    history.replaceState(null, '', url);
+  }
+
+  function activatePane(name) {
+    panes.forEach(function (p) { p.classList.toggle('on', p.dataset.pane === name); });
+    var navKey = name.indexOf('set-') === 0 ? 'settings' : name;
+    sideNav.querySelectorAll('button').forEach(function (x) {
+      x.classList.toggle('on', x.dataset.pane === navKey);
+    });
+    setPaneURL(name);
+  }
+
+  sideNav.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
-    this.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
-    b.classList.add('on');
-    panes.forEach(function (p) { p.classList.toggle('on', p.dataset.pane === b.dataset.pane); });
+    activatePane(b.dataset.pane);
     // 手機：切換分頁後把分頁列捲到頂端顯示新內容
     if (window.innerWidth <= 980) {
       this.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
+
+  // 進頁時依網址 ?pane= 還原分頁
+  (function () {
+    var initial = new URLSearchParams(window.location.search).get('pane');
+    var isValid = Array.prototype.some.call(panes, function (p) { return p.dataset.pane === initial; });
+    if (isValid) activatePane(initial);
+  })();
+
+  // 「我的攻略／已購買／收藏」先鋪一輪骨架屏，讓使用者知道內容正在載入
+  (function () {
+    function skeletonRowHTML() {
+      return '<div class="art-row">' +
+        '<div class="skeleton" style="width:84px;height:60px;border-radius:10px;flex-shrink:0;"></div>' +
+        '<div class="a-mid">' +
+          '<div class="skeleton skeleton-text" style="width:70px;height:11px;"></div>' +
+          '<div class="skeleton skeleton-text" style="width:80%;height:15px;margin-top:6px;"></div>' +
+          '<div class="skeleton skeleton-text" style="width:50%;"></div>' +
+        '</div>' +
+        '<div class="a-right" style="align-items:flex-end;">' +
+          '<div class="skeleton skeleton-text" style="width:60px;height:20px;margin:0;"></div>' +
+        '</div>' +
+      '</div>';
+    }
+    ['mine', 'bought', 'saved'].forEach(function (name) {
+      var skeletonEl = document.getElementById(name + 'Skeleton');
+      var rowsEl = document.getElementById(name + 'Rows');
+      if (!skeletonEl || !rowsEl) return;
+      skeletonEl.innerHTML = skeletonRowHTML() + skeletonRowHTML();
+      requestAnimationFrame(function () {
+        skeletonEl.style.display = 'none';
+        rowsEl.style.display = '';
+      });
+    });
+  })();
 
   // 名字卡右上齒輪 → 直接跳到「帳號設定」分頁
   var idGear = document.getElementById('idGear');
@@ -1062,6 +1297,67 @@ document.addEventListener('DOMContentLoaded', function() {
       if (btn) btn.click();
     });
   }
+
+  /* ---------- 更換頭像（僅前端預覽，無後端上傳）---------- */
+  // 等 DOMContentLoaded：bootstrap.bundle.min.js / cropper.min.js 都是 defer 載入，
+  // 此區塊本身沒有 defer，若立即執行會早於它們，導致 bootstrap/Cropper 尚未定義
+  document.addEventListener('DOMContentLoaded', function () {
+    var AVATAR_KEY = 'th_cg_profile_avatar';
+    var avEditBtn = document.querySelector('.av-edit');
+    var avatarFile = document.getElementById('pfAvatarFile');
+    var avatarImg = document.getElementById('pfAvatarImg');
+    if (!avEditBtn || !avatarFile || !avatarImg) return;
+
+    var saved = localStorage.getItem(AVATAR_KEY);
+    if (saved) avatarImg.src = saved;
+
+    var pfCropper = null;
+    var pfCropModalEl = document.getElementById('pfCropModal');
+    var pfCropImg = document.getElementById('pfCropImg');
+    var pfCropModal = bootstrap.Modal.getOrCreateInstance(pfCropModalEl);
+
+    avEditBtn.addEventListener('click', function () { avatarFile.click(); });
+
+    avatarFile.addEventListener('change', function (e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        pfCropImg.src = ev.target.result;
+        pfCropModal.show();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    pfCropModalEl.addEventListener('shown.bs.modal', function () {
+      if (pfCropper) pfCropper.destroy();
+      function init() {
+        pfCropper = new Cropper(pfCropImg, { viewMode: 1, aspectRatio: 1, autoCropArea: 0.9, responsive: true });
+      }
+      if (pfCropImg.complete && pfCropImg.naturalWidth > 0) init();
+      else pfCropImg.addEventListener('load', init, { once: true });
+    });
+
+    pfCropModalEl.addEventListener('hidden.bs.modal', function () {
+      if (pfCropper) { pfCropper.destroy(); pfCropper = null; }
+      pfCropImg.src = '';
+      avatarFile.value = '';
+    });
+
+    document.getElementById('pfCropConfirm').addEventListener('click', function () {
+      if (!pfCropper) return;
+      var canvas = pfCropper.getCroppedCanvas({ width: 300, height: 300 });
+      pfCropModal.hide();
+      canvas.toBlob(function (blob) {
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          avatarImg.src = ev.target.result;
+          localStorage.setItem(AVATAR_KEY, ev.target.result);
+        };
+        reader.readAsDataURL(blob);
+      }, 'image/webp', 0.85);
+    });
+  });
 
   // 我的攻略：加入比賽（示範：點擊後換成參賽中徽章，正式版由後端記錄）
   document.addEventListener('click', function (e) {
@@ -1087,18 +1383,29 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('click', function (e) {
     var g = e.target.closest('[data-goto-pane]'); if (!g) return;
     e.preventDefault();
-    var target = g.dataset.gotoPane;
-    panes.forEach(function (p) { p.classList.toggle('on', p.dataset.pane === target); });
-    var navKey = target.indexOf('set-') === 0 ? 'settings' : target;
-    document.querySelectorAll('#sideNav button').forEach(function (x) {
-      x.classList.toggle('on', x.dataset.pane === navKey);
-    });
+    activatePane(g.dataset.gotoPane);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   // 設定開關
-  document.querySelectorAll('.tgl').forEach(function (t) {
+  document.querySelectorAll('.tgl:not([data-cert-toggle])').forEach(function (t) {
     t.addEventListener('click', function () { t.classList.toggle('on'); });
+  });
+
+  // 已認證頭銜：公開顯示切換（不影響審查中／已駁回的頭銜，僅供已認證的頭銜調整是否顯示在作者頁）
+  document.querySelectorAll('[data-cert-toggle]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var visible = !btn.classList.contains('on');
+      btn.classList.toggle('on', visible);
+      var statusEl = btn.closest('.cert').querySelector('.cstatus');
+      if (visible) {
+        statusEl.className = 'cstatus ok';
+        statusEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證';
+      } else {
+        statusEl.className = 'cstatus hidden';
+        statusEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8Z"/><path d="m4 4 16 16"/></svg>不顯示';
+      }
+    });
   });
 
   /* ---------- 前台顯示名稱（半實名）：只公開一個字＋同學，不透露位置 ---------- */
@@ -1289,6 +1596,250 @@ document.addEventListener('DOMContentLoaded', function() {
 
       closeTimer = setTimeout(closeModal, 1600);
     });
+  })();
+</script>
+
+<script>
+  /* ---------- 就學證明實名認證 ---------- */
+  (function () {
+    var STATE_KEY = 'th_cg_enroll_verify';
+    var ENROLL_LABELS = { enrolled: '在學', transfer: '轉學', graduated: '畢業', withdrawn: '肄業' };
+
+    function getState() {
+      try {
+        var raw = localStorage.getItem(STATE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      // 預設種入一筆已審核通過的示範資料
+      var seed = {
+        status: 'approved',
+        schoolName: '國立中興大學',
+        enrollStatus: 'enrolled',
+        admissionYear: '113',
+        realName: '葉潔頤',
+        documentUrl: '',
+        rejectReason: '',
+        submittedAt: Date.now()
+      };
+      localStorage.setItem(STATE_KEY, JSON.stringify(seed));
+      return seed;
+    }
+    function setState(patch) {
+      var next = Object.assign({}, getState(), patch);
+      localStorage.setItem(STATE_KEY, JSON.stringify(next));
+      return next;
+    }
+
+    var backdrop = document.getElementById('evBackdrop');
+    var steps = backdrop.querySelectorAll('.pm-step');
+    var schoolIn = document.getElementById('evSchool');
+    var statusSel = document.getElementById('evStatus');
+    var yearIn = document.getElementById('evYear');
+    var nameIn = document.getElementById('evName');
+    var rejectNote = document.getElementById('evRejectNote');
+    var submitBtn = document.getElementById('evSubmit');
+
+    function goStep(name) {
+      steps.forEach(function (s) { s.classList.toggle('on', s.dataset.step === name); });
+    }
+    function setErr(id, on) { document.getElementById(id).classList.toggle('err', on); }
+
+    /* ── 相機拍照 ── */
+    var camFrame = document.getElementById('evCamFrame');
+    var camPlaceholder = document.getElementById('evCamPlaceholder');
+    var camVideo = document.getElementById('evCamVideo');
+    var camPhoto = document.getElementById('evCamPhoto');
+    var camCanvas = document.getElementById('evCamCanvas');
+    var camStartBtn = document.getElementById('evCamStart');
+    var camShootBtn = document.getElementById('evCamShoot');
+    var camRetakeBtn = document.getElementById('evCamRetake');
+    var camFallback = document.getElementById('evCamFallback');
+    var camStream = null;
+    var photoDataUrl = null;
+
+    function stopCamStream() {
+      if (camStream) { camStream.getTracks().forEach(function (t) { t.stop(); }); camStream = null; }
+    }
+    function refreshSubmitReady() {
+      submitBtn.disabled = !(photoDataUrl && schoolIn.value.trim() && yearIn.value.trim() && nameIn.value.trim());
+    }
+    function resetCam() {
+      stopCamStream();
+      photoDataUrl = null;
+      camPlaceholder.style.display = 'flex';
+      camVideo.style.display = 'none';
+      camPhoto.style.display = 'none';
+      camStartBtn.style.display = '';
+      camShootBtn.style.display = 'none';
+      camRetakeBtn.style.display = 'none';
+      setErr('evFCam', false);
+    }
+    camStartBtn.addEventListener('click', function () {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        camFallback.click();
+        return;
+      }
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+        .then(function (stream) {
+          camStream = stream;
+          camVideo.srcObject = stream;
+          camPlaceholder.style.display = 'none';
+          camVideo.style.display = '';
+          camStartBtn.style.display = 'none';
+          camShootBtn.style.display = '';
+        })
+        .catch(function () {
+          // 裝置無相機權限／不支援：退回原生相機檔案選取（僅限行動裝置的拍照鏡頭，不會出現相簿）
+          camFallback.click();
+        });
+    });
+    camShootBtn.addEventListener('click', function () {
+      camCanvas.width = camVideo.videoWidth;
+      camCanvas.height = camVideo.videoHeight;
+      camCanvas.getContext('2d').drawImage(camVideo, 0, 0);
+      photoDataUrl = camCanvas.toDataURL('image/webp', 0.85);
+      stopCamStream();
+      camVideo.style.display = 'none';
+      camPhoto.src = photoDataUrl;
+      camPhoto.style.display = '';
+      camShootBtn.style.display = 'none';
+      camRetakeBtn.style.display = '';
+      setErr('evFCam', false);
+      refreshSubmitReady();
+    });
+    camRetakeBtn.addEventListener('click', resetCam);
+    camFallback.addEventListener('change', function () {
+      var f = camFallback.files && camFallback.files[0];
+      if (!f) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        photoDataUrl = reader.result;
+        camPlaceholder.style.display = 'none';
+        camPhoto.src = photoDataUrl;
+        camPhoto.style.display = '';
+        camStartBtn.style.display = 'none';
+        camShootBtn.style.display = 'none';
+        camRetakeBtn.style.display = '';
+        setErr('evFCam', false);
+        refreshSubmitReady();
+      };
+      reader.readAsDataURL(f);
+    });
+
+    /* ── 開關 Modal ── */
+    function openModal() {
+      var s = getState();
+      resetCam();
+      setErr('evFSchool', false); setErr('evFYear', false); setErr('evFName', false);
+
+      schoolIn.value = s.schoolName || '';
+      statusSel.value = s.enrollStatus || 'enrolled';
+      yearIn.value = s.admissionYear || '';
+      nameIn.value = s.realName || '';
+      document.getElementById('evSub').textContent = s.status === 'unverified'
+        ? '提交就學資料，人工審核通過後即完成實名認證。'
+        : '重新確認以下資料，如證明文件不需更換可維持原檔，送出後將重新進入審核排隊。';
+
+      // 已有先前送出的證明文件：先顯示出來，使用者若不重拍就沿用原檔
+      if (s.documentUrl) {
+        photoDataUrl = s.documentUrl;
+        camPlaceholder.style.display = 'none';
+        camPhoto.src = s.documentUrl;
+        camPhoto.style.display = '';
+        camStartBtn.style.display = 'none';
+        camShootBtn.style.display = 'none';
+        camRetakeBtn.style.display = '';
+      }
+
+      if (s.status === 'rejected' && s.rejectReason) {
+        rejectNote.textContent = '上次審核未通過原因：' + s.rejectReason;
+        rejectNote.style.display = '';
+      } else {
+        rejectNote.style.display = 'none';
+      }
+
+      refreshSubmitReady();
+      goStep('form');
+      backdrop.classList.add('open');
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      stopCamStream();
+      backdrop.classList.remove('open');
+      backdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop || e.target.closest('[data-ev-close]')) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
+    });
+    schoolIn.addEventListener('input', function () { setErr('evFSchool', false); refreshSubmitReady(); });
+    nameIn.addEventListener('input', function () { setErr('evFName', false); refreshSubmitReady(); });
+
+    submitBtn.addEventListener('click', function () {
+      var schoolMissing = !schoolIn.value.trim();
+      var yearMissing = !yearIn.value.trim();
+      var nameMissing = !nameIn.value.trim();
+      setErr('evFSchool', schoolMissing);
+      setErr('evFYear', yearMissing);
+      setErr('evFName', nameMissing);
+      setErr('evFCam', !photoDataUrl);
+      if (schoolMissing || yearMissing || nameMissing || !photoDataUrl) return;
+
+      setState({
+        status: 'pending',
+        schoolName: schoolIn.value.trim(),
+        enrollStatus: statusSel.value,
+        admissionYear: yearIn.value.trim(),
+        realName: nameIn.value.trim(),
+        documentUrl: photoDataUrl,
+        rejectReason: '',
+        submittedAt: Date.now()
+      });
+      renderCard();
+      goStep('done');
+      setTimeout(closeModal, 1600);
+    });
+
+    /* ── 卡片渲染 ── */
+    function renderCard() {
+      var s = getState();
+      var desc = document.getElementById('evDesc');
+      var pillWrap = document.getElementById('evPillWrap');
+      var label = ENROLL_LABELS[s.enrollStatus] || '';
+      var yearLabel = s.admissionYear ? s.admissionYear + '級' : '';
+      var identity = [s.schoolName, yearLabel, label].filter(Boolean).join('・');
+
+      if (s.status === 'approved') {
+        desc.textContent = '後台真實身分：' + s.realName + '（' + identity + '）· 就學證明經人工審核通過 · 僅你本人可見';
+        pillWrap.innerHTML =
+          '<span class="pill-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>' +
+          '<button class="pill-cta" type="button" data-ev-action="edit">編輯</button>';
+      } else if (s.status === 'pending') {
+        desc.textContent = '已提交審核：' + s.realName + '（' + identity + '）· 審核通常 1–3 個工作天完成';
+        pillWrap.innerHTML =
+          '<span class="pill-pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審核中</span>' +
+          '<button class="pill-cta" type="button" data-ev-action="edit">重新繳交</button>';
+      } else if (s.status === 'rejected') {
+        desc.textContent = '審核未通過：' + (s.rejectReason || '請確認資料與證明文件是否清晰正確');
+        pillWrap.innerHTML =
+          '<span class="pill-rejected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>已駁回</span>' +
+          '<button class="pill-cta" type="button" data-ev-action="edit">重新送出</button>';
+      } else {
+        desc.textContent = '尚未完成身分驗證，請提交就學資料以完成實名認證。';
+        pillWrap.innerHTML = '<button class="pill-cta" type="button" data-ev-action="edit">前往認證 →</button>';
+      }
+    }
+    document.getElementById('evPillWrap').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-ev-action]'); if (!b) return;
+      var action = b.dataset.evAction;
+      openModal(action === 'doc-only' ? 'doc-only' : 'full');
+    });
+
+    renderCard();
   })();
 </script>
 

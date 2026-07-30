@@ -1,4 +1,5 @@
 import { captureException } from './default/sentry-init.js';
+import { AppModal } from './default/app-modal.js';
 
 // ── 重試工具：network 錯誤或 5xx 才重試，4xx 直接拋出 ────────────
 async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
@@ -101,7 +102,7 @@ function _attach401Handler(instance) {
                 const content = document.getElementById('whatcontent');
                 if (loader) { loader.classList.add('d-none'); loader.classList.remove('d-flex'); }
                 if (content) content.classList.remove('d-none');
-                Swal.fire({
+                AppModal.fire({
                     icon: 'error',
                     title: '帳號已被限制',
                     text: '信譽積分太低，無法使用',
@@ -134,7 +135,7 @@ function _attach401Handler(instance) {
                     return Promise.reject(err);
                 }
 
-                Swal.fire({
+                AppModal.fire({
                     icon: 'warning',
                     title: '登入已過期',
                     text: '是否前往重新登入？',

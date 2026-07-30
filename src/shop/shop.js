@@ -1,6 +1,8 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
 import { requireEmailVerified } from '../default/default.js';
+import { AppModal } from '../default/app-modal.js';
+window.AppModal = AppModal; // 給頁面內的 classic <script> 使用（抽獎輪盤、刊登表單驗證）
 
 let backendService;
 let wpbackendService;
@@ -152,7 +154,9 @@ async function initWishTicker() {
   const textEl = letterRow.querySelector('.wl-text');
   const render = () => {
     const w = wishes[idx % wishes.length];
-    avatarEl.src = wishAvatar(w);
+    const isPlaceholder = String(w.id).startsWith('empty-');
+    avatarEl.style.display = isPlaceholder ? 'none' : '';
+    if (!isPlaceholder) avatarEl.src = wishAvatar(w);
     textEl.textContent = wishLabel(w.itemName);
     // 若是空狀態標語則導向許願池首頁，否則導向特定願望卡
     letterRow.href = w.id.startsWith('empty-') ? '../wishpool/wishpool.html#wishpool' : wishHref(w);
@@ -450,17 +454,17 @@ nextHotBtn.addEventListener("click", () => {
   // 1. 商品名稱
   const nameEl = document.getElementById('name');
   if (!nameEl.value.trim()) {
-    Swal.fire({ title: "請輸入商品名稱", icon: "warning" });
+    AppModal.fire({ title: "請輸入商品名稱", icon: "warning" });
     return;
   }
 
   // 2. 商品描述
   const desc = document.getElementById('description').value.trim();
   if (!desc) {
-    Swal.fire({ title: "請輸入商品描述", icon: "warning" });
+    AppModal.fire({ title: "請輸入商品描述", icon: "warning" });
     return;
   } else if (desc.length < 10) {
-    Swal.fire({ title: "字數太少", text: "商品狀態描述至少需要 10 字以上，請再補充內容。", icon: "warning" });
+    AppModal.fire({ title: "字數太少", text: "商品狀態描述至少需要 10 字以上，請再補充內容。", icon: "warning" });
     return;
   }
 
@@ -468,13 +472,13 @@ nextHotBtn.addEventListener("click", () => {
   const priceStr = document.getElementById('price').value.trim();
   const price = Number(priceStr);
   if (priceStr === '' || Number.isNaN(price) || price < 0) {
-    Swal.fire({ title: "請輸入商品售價", text: "請確認金額為非負數", icon: "warning" });
+    AppModal.fire({ title: "請輸入商品售價", text: "請確認金額為非負數", icon: "warning" });
     return;
   }
 
   // 4. 主要照片（必填）
   if (document.getElementById('mainImage').files.length === 0) {
-    Swal.fire({ title: "請上傳主要照片", icon: "warning" });
+    AppModal.fire({ title: "請上傳主要照片", icon: "warning" });
     return;
   }
 
@@ -489,7 +493,7 @@ nextHotBtn.addEventListener("click", () => {
   const age = ageStr !== '' ? Number(ageStr) : null;
 
   // 二次確認
-  const confirmRes = await Swal.fire({
+  const confirmRes = await AppModal.fire({
     title: "確定要販賣此商品?",
     text: "請確認所有商品資訊與照片皆符合規定。",
     icon: "warning",
@@ -526,7 +530,7 @@ nextHotBtn.addEventListener("click", () => {
     await backendService.create(sellData);
     loaderOverlay.classList.remove('d-flex');
     loaderOverlay.classList.add('d-none');
-    const successResult = await Swal.fire({
+    const successResult = await AppModal.fire({
       title: "商品上架成功！",
       text: "商品已送出，通過審核後將顯示在首頁",
       icon: "success",
@@ -545,13 +549,13 @@ nextHotBtn.addEventListener("click", () => {
     const status = e?.response?.status ?? e?.status;
     const msg = e?.response?.data?.message ?? e?.message ?? '';
     if (status === 403 || msg.toLowerCase().includes('limit') || msg.toLowerCase().includes('quota') || msg.includes('limits') || msg.includes('額度')) {
-      Swal.fire({
+      AppModal.fire({
         title: "本月上架額度已達上限",
         text: "您本月的商品上架數量已達上限，請下個月再繼續上架。",
         icon: "warning"
       });
     } else {
-      Swal.fire({
+      AppModal.fire({
         title: "Oops...發生錯誤，請稍後再試",
         text: msg || 'Failed to create commodity.',
         icon: "error"
@@ -722,7 +726,7 @@ document.getElementById('shopCropConfirm').addEventListener('click', () => {
   shopCropModal.hide();
   canvas.toBlob(async (blob) => {
     const compressed = await compressImage(blob, 1200, 0.82);
-    if (!compressed) { Swal.fire({ icon: 'error', title: '圖片處理失敗', text: '無法壓縮圖片，請重新嘗試或換一張圖片。' }); return; }
+    if (!compressed) { AppModal.fire({ icon: 'error', title: '圖片處理失敗', text: '無法壓縮圖片，請重新嘗試或換一張圖片。' }); return; }
     if (shopCropTarget === 'main') {
       // 主圖：直接更新 input + 預覽
       const input = document.getElementById('mainImage');
@@ -766,7 +770,7 @@ shopCropModalEl.addEventListener('hidden.bs.modal', async () => {
   // 使用者關閉 modal 但沒按確認（new-multi 模式）→ 自動壓縮並加入
   if (!wasConfirmed && wasTarget === 'new-multi' && originalFile) {
     const compressed = await compressImage(originalFile, 1200, 0.82);
-    if (!compressed) { Swal.fire({ icon: 'error', title: '圖片處理失敗', text: '無法壓縮圖片，請重新嘗試或換一張圖片。' }); return; }
+    if (!compressed) { AppModal.fire({ icon: 'error', title: '圖片處理失敗', text: '無法壓縮圖片，請重新嘗試或換一張圖片。' }); return; }
     shopMultiFiles.push(compressed);
     syncMultiToInput();
     renderMultiPreviews();
@@ -780,7 +784,7 @@ document.getElementById('mainImage').addEventListener('change', function (e) {
   const file = e.target.files[0];
   if (!file) return;
   if (file.size > 5000000) {
-    Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
+    AppModal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
     return;
   }
   e.target.value = '';
@@ -794,18 +798,18 @@ document.getElementById('image').addEventListener('change', async function (e) {
 
   const remaining = 5 - shopMultiFiles.length;
   if (remaining <= 0) {
-    Swal.fire({ icon: 'warning', title: '已達上限', text: '最多只能上傳 5 張其他照片。' });
+    AppModal.fire({ icon: 'warning', title: '已達上限', text: '最多只能上傳 5 張其他照片。' });
     return;
   }
   const toAdd = newFiles.slice(0, remaining);
   if (newFiles.length > remaining) {
-    Swal.fire({ icon: 'info', title: `已自動截取前 ${remaining} 張`, text: `最多 5 張，超出部分已忽略。` });
+    AppModal.fire({ icon: 'info', title: `已自動截取前 ${remaining} 張`, text: `最多 5 張，超出部分已忽略。` });
   }
   const oversizedList = toAdd.filter(f => f.size > 5000000);
   const normalList    = toAdd.filter(f => f.size <= 5000000);
 
   if (oversizedList.length > 0) {
-    const { isConfirmed } = await Swal.fire({
+    const { isConfirmed } = await AppModal.fire({
       icon: 'info',
       title: '部分照片較大',
       text: `有 ${oversizedList.length} 張超過 5MB，建議裁剪以縮小檔案大小，或直接自動壓縮上傳。`,
@@ -850,7 +854,7 @@ document.getElementById('mainImageCamera').addEventListener('change', function (
   if (!file) return;
   e.target.value = '';
   if (file.size > 5000000) {
-    Swal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
+    AppModal.fire({ icon: 'warning', title: '照片太大', text: '單張照片不能超過 5MB，請壓縮後再上傳。' });
     return;
   }
   openShopCrop([file], 'main');
@@ -863,7 +867,7 @@ document.getElementById('subImageCamera').addEventListener('change', async funct
 
   const remaining = 5 - shopMultiFiles.length;
   if (remaining <= 0) {
-    Swal.fire({ icon: 'warning', title: '已達上限', text: '最多只能上傳 5 張其他照片。' });
+    AppModal.fire({ icon: 'warning', title: '已達上限', text: '最多只能上傳 5 張其他照片。' });
     return;
   }
   const toAdd = newFiles.slice(0, remaining);
@@ -871,7 +875,7 @@ document.getElementById('subImageCamera').addEventListener('change', async funct
   const normalList    = toAdd.filter(f => f.size <= 5000000);
 
   if (oversizedList.length > 0) {
-    const { isConfirmed } = await Swal.fire({
+    const { isConfirmed } = await AppModal.fire({
       icon: 'info',
       title: '部分照片較大',
       text: `有 ${oversizedList.length} 張超過 5MB，建議裁剪以縮小檔案大小，或直接自動壓縮上傳。`,

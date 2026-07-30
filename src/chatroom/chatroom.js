@@ -1,6 +1,7 @@
 import '../default/default.js';
 import BackendService from '../BackendService.js';
 import ChatBackendService from './ChatBackendService.js';
+import { AppModal } from '../default/app-modal.js';
 
 class ChatRoomList {
     constructor(initialRoomId = null) {
@@ -89,7 +90,7 @@ class ChatRoomList {
         document.getElementById('messagesContainer')?.addEventListener('click', e => {
             const img = e.target.closest('.chat-image');
             if (!img) return;
-            Swal.fire({ imageUrl: img.src, imageAlt: '圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
+            AppModal.fire({ imageUrl: img.src, imageAlt: '圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
         });
         if (this.userId && localStorage.getItem('emailVerify') === 'false') {
             // 已登入但信箱未驗證
@@ -299,7 +300,7 @@ class ChatRoomList {
             const file = e.target.files[0];
             if (!file) return;
             if (file.size > 5 * 1024 * 1024) {
-                Swal.fire({ icon: 'warning', title: '圖片大小超過 5MB 限制' });
+                AppModal.fire({ icon: 'warning', title: '圖片大小超過 5MB 限制' });
                 return;
             }
             this.previewArea.value = ''; // 清空，下次選同張也能觸發
@@ -1031,7 +1032,7 @@ class ChatRoomList {
         } catch { }
 
         const infoBox = `<div style="background:#fff8f0;border:1px solid #f5cba7;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:0.8rem;color:#7d4e00;"><i class="bi bi-info-circle me-1"></i>送出後將由客服人員認領，請耐心等候。</div>`;
-        const { isConfirmed } = await Swal.fire({
+        const { isConfirmed } = await AppModal.fire({
             title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
             html: `<div style="text-align:left;padding:0 4px;">${infoBox}<p style="font-size:0.85rem;color:#555;margin:0;">確認後將建立客服單，客服人員認領後會加入本聊天室協助您。</p></div>`,
             showCancelButton: true,
@@ -2364,7 +2365,7 @@ window.addEventListener('message', (e) => {
 });
 
 async function openChatWithTarget(targetUserId) {
-    if (!targetUserId) { Swal.fire({ icon: 'error', title: '無法開啟聊天室', text: '缺少 User ID' }); return; }
+    if (!targetUserId) { AppModal.fire({ icon: 'error', title: '無法開啟聊天室', text: '缺少 User ID' }); return; }
     const chatService = new ChatBackendService();
     try {
         const res = await chatService.createRoom(targetUserId);
@@ -2733,7 +2734,7 @@ async function openChatWithTarget(targetUserId) {
             const myTicketRes = await chatRoomList.backend.getMyTickets();
             const myTicket = myTicketRes?.data ?? null;
             if (myTicket) {
-                await Swal.fire({
+                await AppModal.fire({
                     icon: 'info',
                     title: '已有進行中的客服單',
                     html: `<p style="font-size:0.88rem;color:#555;margin:0;">您目前有一筆尚未結束的客服單，<br>請等客服人員將問題標記為已解決後再重新聯絡。</p>`,
@@ -2789,7 +2790,7 @@ async function openChatWithTarget(targetUserId) {
 
             if (typeValue.type === 'general') {
                 // ── 單純問問題 → createTicket ──
-                const { isConfirmed } = await Swal.fire({
+                const { isConfirmed } = await AppModal.fire({
                     title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
                     html: `<div style="text-align:left;padding:0 4px;">${infoBox}<p style="font-size:0.85rem;color:#555;margin:0;">確認後將建立客服單，客服人員認領後會加入本聊天室協助您。</p></div>`,
                     showCancelButton: true,
@@ -2800,10 +2801,10 @@ async function openChatWithTarget(targetUserId) {
                 if (!isConfirmed) return;
                 try {
                     await chatRoomList.backend.createTicket({});
-                    await Swal.fire({ icon: 'success', title: '客服單已建立', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
+                    await AppModal.fire({ icon: 'success', title: '客服單已建立', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
                     await chatRoomList.loadRooms();
                 } catch {
-                    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+                    AppModal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
                 }
             } else {
                 // ── 訂單問題 → requestSupport ──
@@ -2841,7 +2842,7 @@ async function openChatWithTarget(targetUserId) {
                     }
                 });
                 if (!isConfirmed) return;
-                const { isConfirmed: warned } = await Swal.fire({
+                const { isConfirmed: warned } = await AppModal.fire({
                     icon: 'info',
                     title: '送出前請確認',
                     html: `<p style="font-size:0.88rem;color:#444;line-height:1.6;margin:0;">同一筆訂單僅能提出一次處理請求，客服處理完畢後若尚有問題，請點選「單純問問題」提問。</p>`,
@@ -2853,18 +2854,18 @@ async function openChatWithTarget(targetUserId) {
                 if (!warned) return;
                 try {
                     await chatRoomList.backend.requestSupport(roomId, value.orderId, value.reason);
-                    await Swal.fire({ icon: 'success', title: '客服請求已送出', text: '客服人員將透過系統查看您的訂單紀錄，認領後會盡快處理。', timer: 2500, showConfirmButton: false });
+                    await AppModal.fire({ icon: 'success', title: '客服請求已送出', text: '客服人員將透過系統查看您的訂單紀錄，認領後會盡快處理。', timer: 2500, showConfirmButton: false });
                 } catch (err) {
                     if (err?.response?.status === 400) {
-                        Swal.fire({ icon: 'warning', title: '無法重複開單', text: '此訂單曾經進行過客服，無法重複開單。' });
+                        AppModal.fire({ icon: 'warning', title: '無法重複開單', text: '此訂單曾經進行過客服，無法重複開單。' });
                     } else {
-                        Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+                        AppModal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
                     }
                 }
             }
         } else {
             // ── 無訂單 → 直接確認建立 ticket ──
-            const { isConfirmed } = await Swal.fire({
+            const { isConfirmed } = await AppModal.fire({
                 title: '<i class="bi bi-headset" style="color:#e67e22;margin-right:6px;"></i>聯絡客服',
                 html: `<div style="text-align:left;padding:0 4px;">${infoBox}<p style="font-size:0.85rem;color:#555;margin:0;">確認後將建立客服單，客服人員認領後會加入本聊天室協助您。</p></div>`,
                 showCancelButton: true,
@@ -2875,10 +2876,10 @@ async function openChatWithTarget(targetUserId) {
             if (!isConfirmed) return;
             try {
                 await chatRoomList.backend.createTicket({});
-                await Swal.fire({ icon: 'success', title: '客服單已建立', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
+                await AppModal.fire({ icon: 'success', title: '客服單已建立', text: '請等待客服人員認領後介入協助。', timer: 2000, showConfirmButton: false });
                 await chatRoomList.loadRooms();
             } catch {
-                Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+                AppModal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
             }
         }
     });
@@ -2891,7 +2892,7 @@ async function openChatWithTarget(targetUserId) {
 
         // 認領
         if (e.target.closest('#ticketClaimBtn')) {
-            const { isConfirmed } = await Swal.fire({
+            const { isConfirmed } = await AppModal.fire({
                 title: '認領客服單',
                 text: '確定要認領此客服單嗎？認領後由您負責處理。',
                 icon: 'question',
@@ -2903,15 +2904,15 @@ async function openChatWithTarget(targetUserId) {
             try {
                 await chatRoomList.backend.claimTicket(ticket.id);
                 await chatRoomList._loadSupportTicket(chatRoomList.currentRoomId);
-                Swal.fire({ icon: 'success', title: '已認領客服單', timer: 1500, showConfirmButton: false });
+                AppModal.fire({ icon: 'success', title: '已認領客服單', timer: 1500, showConfirmButton: false });
             } catch {
-                Swal.fire({ icon: 'error', title: '認領失敗', text: '請稍後再試' });
+                AppModal.fire({ icon: 'error', title: '認領失敗', text: '請稍後再試' });
             }
         }
 
         // 解決
         if (e.target.closest('#ticketResolveBtn')) {
-            const { isConfirmed } = await Swal.fire({
+            const { isConfirmed } = await AppModal.fire({
                 title: '標記為已解決',
                 text: '確定要將此客服單標記為已解決並離開聊天室嗎？',
                 icon: 'question',
@@ -2923,7 +2924,7 @@ async function openChatWithTarget(targetUserId) {
             try {
                 const roomId = chatRoomList.currentRoomId;
                 await chatRoomList.backend.resolveTicket(ticket.id);
-                await Swal.fire({ icon: 'success', title: '客服單已解決', timer: 1500, showConfirmButton: false });
+                await AppModal.fire({ icon: 'success', title: '客服單已解決', timer: 1500, showConfirmButton: false });
                 chatRoomList.mySupportRoomsSet.delete(String(roomId));
                 chatRoomList.supportTypeRoomsSet.delete(String(roomId));
                 await chatRoomList.loadRooms();
@@ -2934,7 +2935,7 @@ async function openChatWithTarget(targetUserId) {
                     chatRoomList.switchRoom(officialRoomId, officialName);
                 }
             } catch {
-                Swal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
+                AppModal.fire({ icon: 'error', title: '操作失敗', text: '請稍後再試' });
             }
         }
 
@@ -2996,9 +2997,9 @@ async function openChatWithTarget(targetUserId) {
                 detail: value.detail,
                 roomId: chatRoomList.currentRoomId
             });
-            Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
+            AppModal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
         } catch {
-            Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+            AppModal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
         }
     });
 

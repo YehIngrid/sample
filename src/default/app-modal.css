@@ -1,0 +1,166 @@
+/* ═══════════════════════════════════════════════════════════════
+   AppModal — 站內自製彈窗樣式（取代 SweetAlert2）
+   色票／字級一律吃 tokens.css，不用另外定義品牌色
+   ═══════════════════════════════════════════════════════════════ */
+
+.am-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  visibility: visible; /* 蓋掉頁面用 body{visibility:hidden} 做內容守衛時，確保彈窗本身還是看得到 */
+  background: rgba(15, 39, 69, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-slow);
+}
+.am-backdrop.open { opacity: 1; pointer-events: auto; }
+
+.am-dialog {
+  width: min(420px, 100%);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 24px 60px -18px rgba(0, 40, 80, 0.5);
+  padding: 28px 26px 24px;
+  text-align: center;
+  transform: translateY(16px) scale(0.97);
+  transition: transform 0.3s cubic-bezier(0.34, 1.35, 0.5, 1);
+}
+.am-backdrop.open .am-dialog { transform: none; }
+
+.am-icon { margin: 4px auto 14px; }
+.am-icon-svg { width: 64px; height: 64px; }
+.am-ring {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  animation: am-ring-draw 0.5s ease forwards;
+}
+.am-mark-pop {
+  opacity: 0;
+  transform-origin: 30px 30px;
+  transform: scale(0.5);
+  animation: am-mark-pop 0.3s 0.35s ease forwards;
+}
+@keyframes am-ring-draw { to { stroke-dashoffset: 0; } }
+@keyframes am-mark-pop { to { opacity: 1; transform: scale(1); } }
+
+.am-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  letter-spacing: 0.02em;
+}
+.am-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+.am-text.am-text-left { text-align: left; }
+
+.am-input {
+  width: 100%;
+  margin-top: 16px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 11px 14px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  outline: none;
+  transition: all var(--transition-base);
+}
+.am-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-alpha12); }
+.am-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+}
+.am-checkbox input { width: 16px; height: 16px; accent-color: var(--color-primary); flex-shrink: 0; }
+
+.am-actions { display: flex; gap: 10px; margin-top: 20px; }
+.am-btn {
+  flex: 1;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 11px 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+.am-confirm { background: var(--color-primary); color: var(--color-white); }
+.am-confirm:hover { background: var(--color-accent); }
+.am-cancel { background: var(--color-border-light); color: var(--color-text-sub); }
+.am-cancel:hover { background: var(--color-border); color: var(--color-text); }
+
+/* ── Toast 模式：右上角小提示，無遮罩、無按鈕、限時自動消失 ── */
+.am-backdrop.am-toast-mode {
+  background: transparent;
+  backdrop-filter: none;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 16px;
+  pointer-events: none;
+}
+.am-dialog.am-toast {
+  width: auto;
+  max-width: min(320px, calc(100vw - 32px));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  text-align: left;
+  box-shadow: 0 4px 12px var(--color-primary-alpha20);
+  transform: translateY(-10px);
+}
+.am-backdrop.am-toast-mode.open .am-dialog.am-toast { transform: none; }
+.am-dialog.am-toast .am-icon { margin: 0; flex-shrink: 0; }
+.am-dialog.am-toast .am-icon-svg { width: 26px; height: 26px; }
+.am-dialog.am-toast .am-title { font-size: var(--font-size-sm); }
+
+/* ── 圖片燈箱 ── */
+.am-dialog.am-lightbox {
+  width: auto;
+  max-width: min(90vw, 900px);
+  max-height: 90vh;
+  background: #111;
+  padding: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+.am-lightbox-img { display: block; max-width: min(90vw, 900px); max-height: 90vh; object-fit: contain; }
+.am-lightbox-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition-base);
+}
+.am-lightbox-close:hover { background: rgba(255, 255, 255, 0.3); }
+.am-lightbox-close svg { width: 16px; height: 16px; }
+
+@media (max-width: 480px) {
+  .am-dialog:not(.am-lightbox) { padding: 24px 20px 20px; }
+}

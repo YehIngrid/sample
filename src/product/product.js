@@ -2,6 +2,7 @@ import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
 import { formatTaipeiTime, requireLogin } from '../default/default.js';
 import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewerModal.js';
+import { AppModal } from '../default/app-modal.js';
 
 // ── Image variant helpers ──
 function toSmallImg(url) {
@@ -155,9 +156,9 @@ async function copyLink() {
   const { url } = getShareInfo();
   try {
     await navigator.clipboard.writeText(url);
-    Swal.fire({ icon: 'success', title: '已複製連結', showConfirmButton: false, timer: 1400 });
+    AppModal.fire({ icon: 'success', title: '已複製連結', showConfirmButton: false, timer: 1400 });
   } catch (_) {
-    Swal.fire({ icon: 'info', title: '分享連結', text: url });
+    AppModal.fire({ icon: 'info', title: '分享連結', text: url });
   }
 }
 ['shareCopy', 'shareCopyM'].forEach(id => {
@@ -667,7 +668,7 @@ window.addEventListener('message', (e) => {
 // === 事件處理 ===
 async function openChatWithSeller(targetSellerId) {
   if (!targetSellerId) {
-    return Swal.fire({ icon: 'warning', title: '缺少sellerid' });
+    return AppModal.fire({ icon: 'warning', title: '缺少sellerid' });
   }
 
   const productCtx = _currentProduct ? {
@@ -814,13 +815,13 @@ async function reportSeller(sellerId, sellerName) {
     if (value.detail) fd.append('detail', value.detail);
     for (const f of value.files) fd.append('attachments', f);
     await backendService.submitReport(fd);
-    Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
+    AppModal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
   } catch (e) {
     const msg = e?.response?.data?.message || '';
     if (msg === 'Cannot report yourself') {
-      Swal.fire({ icon: 'warning', title: '無法自我檢舉' });
+      AppModal.fire({ icon: 'warning', title: '無法自我檢舉' });
     } else {
-      Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+      AppModal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
     }
   }
 }
@@ -831,14 +832,14 @@ async function onAddToCart(e) {
   // 防呆：service 是否就緒 & 方法存在
   if (!backendService || typeof backendService.addItemsToCart !== 'function') {
     console.error('backendService 尚未就緒或不存在 addItemsToCart：', backendService);
-    Swal.fire({ icon: 'error', title: '系統尚未就緒', text: '請重新整理後再試' });
+    AppModal.fire({ icon: 'error', title: '系統尚未就緒', text: '請重新整理後再試' });
     return;
   }
 
   // 取商品 id（優先 data-id，退而求其次用 URL ?id）
   const id = btn.dataset.id || new URLSearchParams(location.search).get('id');
   if (!id) {
-    Swal.fire({ icon: 'warning', title: '找不到商品編號' });
+    AppModal.fire({ icon: 'warning', title: '找不到商品編號' });
     return;
   }
 
@@ -859,7 +860,7 @@ async function onAddToCart(e) {
     btn.classList.add('cart-added');
     btn.disabled = false;
     window.refreshCartBadge?.();
-    const cartRes = await Swal.fire({ title: '已加入購物車！', text: '要前往結帳嗎？', icon: 'success', showCancelButton: true, confirmButtonText: '去結帳 →', cancelButtonText: '繼續瀏覽', timer: 4000, timerProgressBar: true, reverseButtons: true });
+    const cartRes = await AppModal.fire({ title: '已加入購物車！', text: '要前往結帳嗎？', icon: 'success', showCancelButton: true, confirmButtonText: '去結帳 →', cancelButtonText: '繼續瀏覽', timer: 4000, timerProgressBar: true, reverseButtons: true });
     if (cartRes.isConfirmed) window.location.href = '../shoppingcart/shoppingcart.html';
   } catch (err) {
     // 失敗：還原原始狀態
@@ -868,11 +869,11 @@ async function onAddToCart(e) {
     btn.disabled = false;
     const msg = err?.response?.data?.message || err?.message || '請稍後再試';
     if (String(msg).toLowerCase().includes('stock')) {
-      Swal.fire({ icon: 'warning', title: '庫存不足，您在購物車已有這個商品', text: msg });
+      AppModal.fire({ icon: 'warning', title: '庫存不足，您在購物車已有這個商品', text: msg });
     } else if (String(msg).toLowerCase().includes('No JWT token provided')) {
-      Swal.fire({ icon: 'warning', title: '請先登入才可將商品加入購物車', text: msg });
+      AppModal.fire({ icon: 'warning', title: '請先登入才可將商品加入購物車', text: msg });
     } else {
-      Swal.fire({ icon: 'error', title: '加入失敗', text: msg });
+      AppModal.fire({ icon: 'error', title: '加入失敗', text: msg });
     }
   }
 }
@@ -935,7 +936,7 @@ async function orderNow(e) {
 
   // 1. 防呆：backendService 是否存在
   if (!backendService || typeof backendService.addItemsToCart !== 'function') {
-    Swal.fire({ icon: 'error', title: '系統尚未就緒', text: '請重新整理後再試' });
+    AppModal.fire({ icon: 'error', title: '系統尚未就緒', text: '請重新整理後再試' });
     return;
   }
 
@@ -944,7 +945,7 @@ async function orderNow(e) {
   const id = btn.dataset.id || new URLSearchParams(location.search).get('id');
   
   if (!id) {
-    Swal.fire({ icon: 'warning', title: '找不到商品編號' });
+    AppModal.fire({ icon: 'warning', title: '找不到商品編號' });
     return;
   }
 
@@ -979,11 +980,11 @@ async function orderNow(e) {
     const msg = err?.response?.data?.message || err?.data?.message || err?.message || '請稍後再試';
     
     if (String(msg).toLowerCase().includes('stock')) {
-      Swal.fire({ icon: 'warning', title: '庫存不足', text: msg });
+      AppModal.fire({ icon: 'warning', title: '庫存不足', text: msg });
     } else if (String(msg).toLowerCase().includes('jwt')) {
-      Swal.fire({ icon: 'warning', title: '請先登入', text: '登入後即可進行購買' });
+      AppModal.fire({ icon: 'warning', title: '請先登入', text: '登入後即可進行購買' });
     } else {
-      Swal.fire({ icon: 'error', title: '下單失敗', text: msg });
+      AppModal.fire({ icon: 'error', title: '下單失敗', text: msg });
     }
   } finally {
     // 無論成功或失敗，都要把按鈕恢復 (雖然成功會跳頁，但為了保險起見)
@@ -1123,7 +1124,7 @@ function disableActionButtons() {
     const ownProductAlert = (e) => {
         e.preventDefault();
         e.stopImmediatePropagation();
-        Swal.fire({
+        AppModal.fire({
             icon: 'info',
             title: '這是您的商品或資料',
             text: '您無法對自己的商品與資料執行此操作'

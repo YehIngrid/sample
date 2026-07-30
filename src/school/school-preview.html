@@ -12,10 +12,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
   <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
   <link rel="stylesheet" href="school-post.css">
   <link rel="stylesheet" href="article-body.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+  <script type="module" src="../default/default.js"></script>
+  <script type="module">
+    import { requireAdminPage } from "../default/default.js";
+    (async () => {
+      const ok = await requireAdminPage();
+      if (ok) document.body.style.visibility = "";
+    })();
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet" />
   <style>
     /* 預覽提示條 */
@@ -28,6 +38,7 @@
     .r-empty { text-align: center; color: var(--muted); padding: 90px 20px; font-size: 15px; }
     .r-empty a { color: var(--navy); font-weight: 700; }
   </style>
+<style class="am-admin-gate-style">body{visibility:hidden}</style>
 </head>
 <body>
 
@@ -63,7 +74,7 @@
   <div class="right">
     <a class="btn-sm navy d-none d-lg-inline-flex" href="school-composer.html">← 返回編輯</a>
     <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">登入</button>
-    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單"><span class="avatar"></span></div>
+    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單"><img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像"></div>
   </div>
 </nav>
 
@@ -86,7 +97,6 @@
 
   <div class="sp-breadcrumb" id="crumb" style="display:none">
     <a href="school.html">校園攻略站</a><span class="sep">/</span>
-    <a href="school-article.html">全部文章</a><span class="sep">/</span>
     <span class="cur" id="crumbCat">攻略</span>
   </div>
 

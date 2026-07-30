@@ -15,10 +15,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
   <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
   <link rel="stylesheet" href="article-body.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
   <script type="module" src="../default/default.js"></script>
   <style>
     /* ===== composer scope ===== */
@@ -460,6 +462,7 @@
     .ctp-opt .lnk:hover { text-decoration: underline; }
     .ctp-live { font-size: 10px; font-weight: 700; color: #007568; background: rgba(171,218,213,0.45); border-radius: 999px; padding: 2px 8px; margin-left: 6px; letter-spacing: 0.06em; vertical-align: 1px; }
   </style>
+<style class="am-admin-gate-style">body{visibility:hidden}</style>
 </head>
 <body>
 
@@ -507,7 +510,7 @@
       登入
     </button>
     <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
-      <span class="avatar"></span>
+      <img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像">
     </div>
   </div>
 </nav>
@@ -829,6 +832,15 @@
 
 <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 <script src="school-data.js"></script>
+<script type="module">
+import { AppModal } from "../default/app-modal.js";
+import { requireAdminPage } from "../default/default.js";
+window.AppModal = AppModal;
+(async () => {
+  const ok = await requireAdminPage();
+  if (ok) document.body.style.visibility = "";
+})();
+</script>
 <script defer src="school-new.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

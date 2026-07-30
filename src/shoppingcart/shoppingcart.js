@@ -1,6 +1,7 @@
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
 import { requireLogin, requireEmailVerified } from '../default/default.js';
+import { AppModal } from '../default/app-modal.js';
 
 // ================== Service ==================
 let backendService = null;
@@ -224,7 +225,7 @@ cartList.addEventListener('change', async e => {
     try {
       await backendService.updateCartItemQuantity(item.id, v);
     } catch {
-      Swal.fire('數量更新失敗');
+      AppModal.fire('數量更新失敗');
     }
   }
 
@@ -253,7 +254,7 @@ cartList.addEventListener('click', async e => {
       renderCart();
       updateSummary();
     } catch {
-      Swal.fire('刪除失敗');
+      AppModal.fire('刪除失敗');
     }
   }
 
@@ -287,7 +288,7 @@ if (checkAllEl) {
       if (!isSameOwner) {
         // 3. 如果有不同賣家，跳出警告並將勾選框還原成未選取
         e.target.checked = false; 
-        Swal.fire({
+        AppModal.fire({
           icon: 'warning',
           title: '無法全選',
           text: '購物車內含不同賣家的商品，請手動挑選同一位賣家的商品進行結帳。'
@@ -331,19 +332,17 @@ function updateSummary() {
   if (mobileTotalEl) mobileTotalEl.textContent = `NT$ ${total.toLocaleString()}`;
 }
 function showCheckoutLoading() {
-  Swal.fire({
+  AppModal.fire({
     title: '訂單處理中',
     text: '請稍候，請勿重新整理或重複點擊',
     allowOutsideClick: false,
     allowEscapeKey: false,
-    didOpen: () => {
-      Swal.showLoading();
-    }
+    showConfirmButton: false
   });
 }
 
 function closeCheckoutLoading() {
-  Swal.close();
+  AppModal.close();
 }
 
 // ================== Chat ==================
@@ -377,11 +376,11 @@ if (checkoutBtn) {
 
     const selected = cartItems.filter(i => i.checked);
     if (selected.length === 0) {
-      Swal.fire('請先勾選要結帳的商品');
+      AppModal.fire('請先勾選要結帳的商品');
       return;
     }
 
-    const confirm = await Swal.fire({
+    const confirm = await AppModal.fire({
       icon: 'question',
       title: '確認送出訂單？',
       text: `共 ${selected.length} 件商品，送出後將通知賣家。`,
@@ -393,7 +392,7 @@ if (checkoutBtn) {
 
     // 面交提醒（可關閉）
     if (!localStorage.getItem('th_no_meeting_reminder')) {
-      const remind = await Swal.fire({
+      const remind = await AppModal.fire({
         icon: 'info',
         title: '面交提醒',
         text: '請與賣家討論面交地點與時間等相關事宜',
@@ -402,7 +401,7 @@ if (checkoutBtn) {
         inputValue: 0,
         inputPlaceholder: '以後不要再提醒',
       });
-      if (remind.value === 1) localStorage.setItem('th_no_meeting_reminder', '1');
+      if (remind.value) localStorage.setItem('th_no_meeting_reminder', '1');
     }
 
     try {
@@ -418,7 +417,7 @@ if (checkoutBtn) {
       );
 
       closeCheckoutLoading();
-      Swal.fire({
+      AppModal.fire({
         icon: 'success',
         title: '訂單建立成功！',
         text: '請至帳戶管理頁面中「消費訂單」查看',
@@ -431,7 +430,7 @@ if (checkoutBtn) {
     } catch (err) {
       console.error('建立訂單失敗', err);
       closeCheckoutLoading();
-      Swal.fire({
+      AppModal.fire({
         icon: 'error',
         title: '訂單建立失敗',
         text: '請稍後再試'
@@ -454,11 +453,11 @@ if (clearCheckedBtn) {
     const checkedItems = cartItems.filter(i => i.checked);
 
     if (checkedItems.length === 0) {
-      Swal.fire('沒有勾選任何商品');
+      AppModal.fire('沒有勾選任何商品');
       return;
     }
 
-    const result = await Swal.fire({
+    const result = await AppModal.fire({
       title: `確定移除 ${checkedItems.length} 件商品？`,
       icon: 'warning',
       showCancelButton: true,
@@ -478,7 +477,7 @@ if (clearCheckedBtn) {
       updateSummary();
     } catch (err) {
       console.error(err);
-      Swal.fire('移除失敗');
+      AppModal.fire('移除失敗');
     }
   });
 }
@@ -487,11 +486,11 @@ const clearAllBtn = document.getElementById('clear-all');
 if (clearAllBtn) {
   clearAllBtn.addEventListener('click', async () => {
     if (cartItems.length === 0) {
-      Swal.fire('購物車已經是空的');
+      AppModal.fire('購物車已經是空的');
       return;
     }
 
-    const result = await Swal.fire({
+    const result = await AppModal.fire({
       title: '確定清空購物車？',
       text: '此操作無法復原',
       icon: 'warning',
@@ -513,7 +512,7 @@ if (clearAllBtn) {
       updateSummary();
     } catch (err) {
       console.error(err);
-      Swal.fire('清空失敗');
+      AppModal.fire('清空失敗');
     }
   });
 }
@@ -559,7 +558,7 @@ window.addEventListener('message', (e) => {
 
 function openChatWithSeller(targetSellerId) {
   if (!targetSellerId) {
-    return Swal.fire({ icon: 'warning', title: '缺少sellerId' });
+    return AppModal.fire({ icon: 'warning', title: '缺少sellerId' });
   }
 
   // 直接顯示 iframe（不用 toggle，避免非同步時序問題）

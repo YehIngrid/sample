@@ -79,7 +79,8 @@ window.addEventListener('click', function(e) {
         !talkInterface.classList.contains('maximized') &&
         !talkInterface.contains(e.target) &&
         !chatopen?.contains(e.target) &&
-        !document.querySelector('.swal2-container')) {
+        !document.querySelector('.swal2-container') &&
+        !document.querySelector('.am-backdrop.open')) {
         talkInterface.style.display = 'none';
     }
 });
