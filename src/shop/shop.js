@@ -180,7 +180,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 管理後台按鈕（MODERATOR / ADMIN）& 隱藏聊天室
   // 桌機版：右上角浮動按鈕（css 在手機版強制隱藏，見 shop.css）
   // 手機版：收進漢堡選單，同一組身分判斷各自控制對應項目
-  const _role = localStorage.getItem('role');
+  //
+  // 等真正的登入驗證（whoami）跑完再讀 role，避免 session 已過期但
+  // localStorage 裡的舊 role 還沒被清掉時，短暫誤判成管理員而露出這些連結
+  await window._authReady;
+  const _role = window.isLoggedIn ? localStorage.getItem('role') : null;
   if (['MODERATOR', 'ADMIN'].includes(_role)) {
     document.getElementById('moderatorBtn').style.display = 'block';
     document.getElementById('mobileModeratorItem').classList.remove('d-none');

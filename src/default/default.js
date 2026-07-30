@@ -10,6 +10,22 @@ let _authResolve;
 window._authReady = new Promise(resolve => { _authResolve = resolve; });
 window.isLoggedIn = false;
 
+// ── 每天自動刷新一次 ──
+// 分頁開太久容易殘留過舊的快取狀態（例如登入角色），存一個時間戳記，
+// 超過一天就強制重整一次，重整後時間戳記更新，不會一直重複刷新。
+(function () {
+  const KEY = 'th_last_refresh_ts';
+  const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+  const last = parseInt(localStorage.getItem(KEY) || '0', 10);
+  const now = Date.now();
+  if (!last) {
+    localStorage.setItem(KEY, String(now));
+  } else if (now - last > ONE_DAY_MS) {
+    localStorage.setItem(KEY, String(now));
+    location.reload();
+  }
+})();
+
 // 當整個頁面載入完成後，隱藏 loader 並顯示主要內容
 window.onload = function() {
     // 當頁面載入完畢後隱藏載入動畫，顯示內容
@@ -233,6 +249,7 @@ async function doLogout() {
   let timerInterval;
   const LOGOUT_TIMER_MS = 3000;
   AppModal.fire({
+    icon: 'success',
     title: "登出成功",
     html: "將在 <b></b> 秒後回到登入頁",
     timer: LOGOUT_TIMER_MS,
