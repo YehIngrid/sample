@@ -2,6 +2,7 @@ import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
 import wpBackendService from '../wpBackendService.js';
 import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewerModal.js';
+import { AppModal } from '../default/app-modal.js';
 
 let backendService;
 let chatService;
@@ -186,7 +187,7 @@ document.getElementById('update-profile').addEventListener('click', async () => 
     const loader1 = document.getElementById('loader1');
     const formData = new FormData();
     if(!displayName && !bio && photoInput.files.length === 0){
-      Swal.fire({
+      AppModal.fire({
         icon: "warning",
         title: "請填寫完整資料",
         text: "請檢查是否有空白欄位"
@@ -198,7 +199,7 @@ document.getElementById('update-profile').addEventListener('click', async () => 
     if (photoInput.files.length > 0) formData.append('photo', photoInput.files[0]);
     
     try {
-      Swal.fire({
+      AppModal.fire({
         title: "確定要進行更新嗎?",
         icon: "warning",
         showCancelButton: true,
@@ -216,7 +217,7 @@ document.getElementById('update-profile').addEventListener('click', async () => 
             const response = await backendService.updateProfile(formData);
 
 
-            await Swal.fire({
+            await AppModal.fire({
               icon: "success",
               title: "更新成功",
               text: "個人資料已更新"
@@ -233,7 +234,7 @@ document.getElementById('update-profile').addEventListener('click', async () => 
             window.location.reload(); // 重新載入頁面以顯示最新資料
           } catch (error) {
             console.error("更新失敗：", error);
-            Swal.fire({
+            AppModal.fire({
               icon: "error",
               title: "更新失敗",
               text: error?.response?.data?.message || "請稍後再試"
@@ -245,7 +246,7 @@ document.getElementById('update-profile').addEventListener('click', async () => 
       });
     } catch (error) {
       console.error("更新失敗：", error);
-      Swal.fire({
+      AppModal.fire({
         icon: "error",
         title: "更新失敗",
         text: "請稍後再試"
@@ -255,7 +256,7 @@ document.getElementById('update-profile').addEventListener('click', async () => 
   
 const logoutButton = document.getElementById('logout');
 logoutButton?.addEventListener('click', function() {
-  Swal.fire({
+  AppModal.fire({
     title: '確定要登出?',
     icon: 'question',
     showCancelButton: true,
@@ -271,7 +272,7 @@ logoutButton?.addEventListener('click', function() {
       localStorage.removeItem('username');
       localStorage.removeItem('intro');
       localStorage.removeItem('avatar');
-      Swal.fire({
+      AppModal.fire({
         icon: 'success',
         title: '登出成功',
         text: '您已成功登出',
@@ -286,7 +287,7 @@ logoutButton?.addEventListener('click', function() {
   });
 });
 function doLogoutSwal() {
-  Swal.fire({
+  AppModal.fire({
     title: '確定要登出?',
     icon: 'question',
     showCancelButton: true,
@@ -301,7 +302,7 @@ function doLogoutSwal() {
       try {
         if (!backendService) backendService = new BackendService();
         await backendService.logout();
-        Swal.fire({
+        AppModal.fire({
           icon: 'success',
           title: '登出成功',
           text: '您已成功登出',
@@ -311,7 +312,7 @@ function doLogoutSwal() {
           }
         }).then(() => { window.location.href = '../account/account.html'; });
       } catch (error) {
-        Swal.fire({
+        AppModal.fire({
           icon: 'error',
           title: '登出失敗請稍後重試',
           customClass: {
@@ -358,9 +359,9 @@ document.getElementById('setEmailBtn')?.addEventListener('click', async () => {
     await backendService.updateProfile(formData);
     localStorage.setItem('contractEmail', email);
     document.getElementById('showEmail').textContent = email;
-    Swal.fire({ icon: 'success', title: '儲存成功', timer: 1500, showConfirmButton: false });
+    AppModal.fire({ icon: 'success', title: '儲存成功', timer: 1500, showConfirmButton: false });
   } catch {
-    Swal.fire({ icon: 'error', title: '儲存失敗', text: '請稍後再試' });
+    AppModal.fire({ icon: 'error', title: '儲存失敗', text: '請稍後再試' });
   }
 });
 
@@ -455,13 +456,13 @@ async function handleAction(action, id, el) {
 
     if (!targetId) {
       console.error("找不到聊天對象", { id, goodsOrder, currentOrder: window.currentOrder });
-      Swal.fire("錯誤", "找不到聊天對象", "error");
+      AppModal.fire("錯誤", "找不到聊天對象", "error");
       return;
     }
 
     openChatWithTarget(targetId);
   } else if (action === 'cancel') {
-    const { isConfirmed } = await Swal.fire({
+    const { isConfirmed } = await AppModal.fire({
       title: '確定要取消訂單嗎？',
       text: '取消後無法復原，請確認後再操作',
       icon: 'warning',
@@ -474,7 +475,7 @@ async function handleAction(action, id, el) {
         await backendService.cancelMyOrder(id);
         showOrderSwal('cancel').then(() => handleRouting()).then(() => window.location.reload());
       } catch (error) {
-        Swal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
+        AppModal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
       }
     }
   } else if(action === '接受訂單') {
@@ -482,12 +483,12 @@ async function handleAction(action, id, el) {
       await backendService.sellerAcceptOrders(id);
       showOrderSwal('accept').then(() => handleRouting()).then(() => window.location.reload());
     } catch (error) {
-      Swal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
+      AppModal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
     }
   } else if (action === '即將出貨') {
     // PIN 碼提醒（可關閉）
     if (!localStorage.getItem('th_no_pin_reminder')) {
-      const remind = await Swal.fire({
+      const remind = await AppModal.fire({
         icon: 'info',
         title: 'PIN 碼提醒',
         text: '請務必在收取貨款或進行商品確認後，立即填寫 PIN 碼以確保雙方權益',
@@ -496,13 +497,13 @@ async function handleAction(action, id, el) {
         inputValue: 0,
         inputPlaceholder: '以後不要再提醒',
       });
-      if (remind.value === 1) localStorage.setItem('th_no_pin_reminder', '1');
+      if (remind.value) localStorage.setItem('th_no_pin_reminder', '1');
     }
     try {
       await backendService.sellerDeliveredOrders(id);
       showOrderSwal('deliver').then(() => handleRouting()).then(() => window.location.reload());
     } catch (error) {
-      Swal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
+      AppModal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
   } else if (action === '查看 PIN 碼') {
     let pincode = (window.currentOrder?.id == id ? window.currentOrder?.pinCode : null)
@@ -514,15 +515,15 @@ async function handleAction(action, id, el) {
         window.currentOrder = detail;
         pincode = detail?.pinCode;
       } catch (e) {
-        Swal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: e?.message || '請重新整理後再試' });
+        AppModal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: e?.message || '請重新整理後再試' });
         return;
       }
     }
     if (!pincode) {
-      Swal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: '此訂單尚未產生 PIN 碼' });
+      AppModal.fire({ icon: 'error', title: '無法取得 PIN 碼', text: '此訂單尚未產生 PIN 碼' });
       return;
     }
-    Swal.fire({
+    AppModal.fire({
       title: '交易 PIN 碼',
       html: `<div style="font-size:2.4rem;font-weight:700;letter-spacing:0.25em;color:#004b97;margin:12px 0;">${esc(String(pincode))}</div><div style="font-size:0.82rem;color:#888;">面交時將此 PIN 碼告知賣家，<br>由賣家輸入確認完成交貨</div>`,
       confirmButtonText: '我知道了',
@@ -548,7 +549,7 @@ async function handleAction(action, id, el) {
       await backendService.sellerCompletedOrders(id, pin);
       showOrderSwal('completed').then(() => handleRouting()).then(() => window.location.reload());
     } catch (error) {
-      Swal.fire({ title: '確認交貨失敗', icon: 'error', text: error?.response?.data?.message || String(error) });
+      AppModal.fire({ title: '確認交貨失敗', icon: 'error', text: error?.response?.data?.message || String(error) });
     }
   } else if (action === '給對方評價') {
     openReviewModal(id, findTargetIdByOrderId(goodsOrder, id), sectionId === 'sellProducts' ? 'buyer' : 'seller');
@@ -560,7 +561,7 @@ async function handleAction(action, id, el) {
     const _pname = _partner?.name || '對方';
     openReviewerProfileModal(String(_pid), _pname, null);
   } else if (action === 'delete') {
-    Swal.fire({
+    AppModal.fire({
       title: "確定要下架並刪除此商品嗎？",
       icon: "warning",
       showCancelButton: true,
@@ -570,10 +571,10 @@ async function handleAction(action, id, el) {
       if (result.isConfirmed) {
         await backendService.deleteMyItems(id)
           .then(() => {
-            Swal.fire({ icon: "success", title: "商品下架成功" });
+            AppModal.fire({ icon: "success", title: "商品下架成功" });
             window.location.reload(); // 刪除後重新載入頁面以更新列表
           })
-          .catch(err => Swal.fire({ icon: 'error', title: '刪除失敗', text: String(err) }));
+          .catch(err => AppModal.fire({ icon: 'error', title: '刪除失敗', text: String(err) }));
       }
     });
   }
@@ -778,7 +779,7 @@ const ORDER_SWAL_CONFIG = {
 function showOrderSwal(type) {
   const cfg = ORDER_SWAL_CONFIG[type];
   if (!cfg) return Promise.resolve();
-  return Swal.fire({
+  return AppModal.fire({
     html: `
       <div class="swal-order-icon ${cfg.anim}${cfg.gray ? ' swal-grayscale' : ''}">
         <img src="${cfg.svg}" alt="">
@@ -1030,7 +1031,7 @@ async function loadSettingsData() {
       } else {
         badgeEl.innerHTML = `<span id="unverifiedBadge" style="display:inline-flex;align-items:center;gap:4px;background:#e67e22;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;cursor:pointer;"><i class="ti ti-alert-circle"></i>未驗證</span>`;
         document.getElementById('unverifiedBadge')?.addEventListener('click', async () => {
-          const result = await Swal.fire({
+          const result = await AppModal.fire({
             icon: 'warning',
             title: '信箱尚未驗證',
             text: '是否立即發送驗證信至您的登入信箱？',
@@ -1041,12 +1042,12 @@ async function loadSettingsData() {
           if (!result.isConfirmed) return;
           try {
             await backendService.resendVerificationEmail();
-            Swal.fire({ icon: 'success', title: '驗證信已寄出', text: '請前往信箱點擊連結完成驗證', confirmButtonText: '確定' });
+            AppModal.fire({ icon: 'success', title: '驗證信已寄出', text: '請前往信箱點擊連結完成驗證', confirmButtonText: '確定' });
           } catch (e) {
             const msg = e?.message === 'RATE_LIMIT'
               ? '發送過於頻繁，請 5 分鐘後再試'
               : (e?.message || '發送失敗，請稍後再試');
-            Swal.fire({ icon: 'error', title: '發送失敗', text: msg, confirmButtonText: '確定' });
+            AppModal.fire({ icon: 'error', title: '發送失敗', text: msg, confirmButtonText: '確定' });
           }
         });
       }
@@ -1942,7 +1943,7 @@ async function getDetail(id) {
           </div>`;
         productBox.querySelectorAll('.od-product-img').forEach(img => {
           img.addEventListener('click', () => {
-            Swal.fire({ imageUrl: img.src, imageAlt: '商品照片', showConfirmButton: false, showCloseButton: true, width: 'auto' });
+            AppModal.fire({ imageUrl: img.src, imageAlt: '商品照片', showConfirmButton: false, showCloseButton: true, width: 'auto' });
           });
         });
       }
@@ -2101,7 +2102,7 @@ async function getDetail(id) {
     }
 
   } catch (error) {
-    Swal.fire({ title: 'Oops', icon: 'error', text: error.message || error });
+    AppModal.fire({ title: 'Oops', icon: 'error', text: error.message || error });
   }
 }
 function openOrderDetail(id) {
@@ -2298,7 +2299,7 @@ const updateStatusUI = (data, container) => {
       for (const f of files) {
         const sizeMB = f.size / (1024 * 1024);
         if (sizeMB > LIMIT_MB) {
-          Swal.fire({ icon: 'warning', title: '檔案過大', text: `${f.name} 超過 ${LIMIT_MB}MB` });
+          AppModal.fire({ icon: 'warning', title: '檔案過大', text: `${f.name} 超過 ${LIMIT_MB}MB` });
           continue;
         }
         okFiles.push(f);
@@ -2368,7 +2369,7 @@ const updateStatusUI = (data, container) => {
         const config = { headers: { 'Content-Type': 'multipart/form-data' } };
         await backendService.updateMyItems(currentEditId, formData, config);
 
-        await Swal.fire({ icon: 'success', title: '已更新' });
+        await AppModal.fire({ icon: 'success', title: '已更新' });
 
         // 若你有前端即時更新列表可在這裡補：
         if (typeof window.tryUpdateListDom === 'function') {
@@ -2383,7 +2384,7 @@ const updateStatusUI = (data, container) => {
         location.reload();
       } catch (err) {
         console.error(err);
-        Swal.fire({ icon: 'error', title: '更新失敗', text: String(err || '請稍後再試') });
+        AppModal.fire({ icon: 'error', title: '更新失敗', text: String(err || '請稍後再試') });
       } finally {
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.orig || '儲存'; }
       }
@@ -2604,16 +2605,16 @@ if (changePasswordBtn) {
     const confirmPwd = document.getElementById('confirm-password').value;
 
     if (!currentPwd || !newPwd || !confirmPwd) {
-      Swal.fire({ icon: 'warning', title: '請填寫完整', text: '請輸入目前密碼與新密碼' });
+      AppModal.fire({ icon: 'warning', title: '請填寫完整', text: '請輸入目前密碼與新密碼' });
       return;
     }
     const isValid = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/.test(newPwd);
     if (!isValid) {
-      Swal.fire({ icon: 'warning', title: '密碼格式不符', text: '新密碼需至少 8 位，包含大寫、小寫字母及數字' });
+      AppModal.fire({ icon: 'warning', title: '密碼格式不符', text: '新密碼需至少 8 位，包含大寫、小寫字母及數字' });
       return;
     }
     if (newPwd !== confirmPwd) {
-      Swal.fire({ icon: 'warning', title: '密碼不一致', text: '兩次輸入的新密碼不相同' });
+      AppModal.fire({ icon: 'warning', title: '密碼不一致', text: '兩次輸入的新密碼不相同' });
       return;
     }
 
@@ -2624,9 +2625,9 @@ if (changePasswordBtn) {
       document.getElementById('current-password').value = '';
       document.getElementById('new-password').value = '';
       document.getElementById('confirm-password').value = '';
-      await Swal.fire({ icon: 'success', title: '密碼已更新', text: '請使用新密碼重新登入', confirmButtonText: '確定' });
+      await AppModal.fire({ icon: 'success', title: '密碼已更新', text: '請使用新密碼重新登入', confirmButtonText: '確定' });
     } catch (e) {
-      Swal.fire({ icon: 'error', title: '修改失敗', text: e.message });
+      AppModal.fire({ icon: 'error', title: '修改失敗', text: e.message });
     } finally {
       changePasswordBtn.disabled = false;
     }
@@ -2638,7 +2639,7 @@ const disableAccountBtn = document.getElementById('disableAccountBtn');
 if (disableAccountBtn) {
   disableAccountBtn.addEventListener('click', async () => {
     // 步驟一：第一次確認
-    const step1 = await Swal.fire({
+    const step1 = await AppModal.fire({
       title: '確定要停用帳號嗎？',
       text: '停用後將無法登入，且所有資料將被刪除，此操作無法復原。',
       icon: 'warning',
@@ -2674,7 +2675,7 @@ if (disableAccountBtn) {
     // 送出停用 API
     try {
       await backendService.disableAccount();
-      await Swal.fire({
+      await AppModal.fire({
         title: '帳號已停用',
         text: '您的帳號已成功停用，將被登出。',
         icon: 'success',
@@ -2685,14 +2686,14 @@ if (disableAccountBtn) {
       });
     } catch (error) {
       console.error('停用帳號失敗:', error);
-      Swal.fire({ title: '錯誤', text: '停用帳號失敗，請稍後再試', icon: 'error' });
+      AppModal.fire({ title: '錯誤', text: '停用帳號失敗，請稍後再試', icon: 'error' });
     }
   });
 }
 
 async function openChatWithTarget(targetUserId) {
   if (!targetUserId) {
-    return Swal.fire({ icon: 'warning', title: '缺少userid' });
+    return AppModal.fire({ icon: 'warning', title: '缺少userid' });
   }
   sessionStorage.setItem('chatroomReturnUrl', window.location.href);
   window.location.href = `../chatroom/chatroom.html?openChat=${targetUserId}`;
@@ -2811,7 +2812,7 @@ async function openReviewModal(orderId, targetId, targetRole) {
       await showOrderSwal('review');
       window.location.reload();
     } else {
-      Swal.fire({
+      AppModal.fire({
         icon: 'error',
         title: '送出失敗',
         text: result.value?.message || '評價送出失敗，請稍後再試',

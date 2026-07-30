@@ -1,4 +1,5 @@
 import BackendService from '../BackendService.js';
+import { AppModal } from '../default/app-modal.js';
 
 const _svc = new BackendService();
 const _tagMeaningCache = {};
@@ -122,9 +123,9 @@ async function _openReportSwal({ title, targetLabel, userId, reviewId }) {
       if (value.detail) fd.append('detail', value.detail);
       await _svc.submitReport(fd);
     }
-    Swal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
+    AppModal.fire({ icon: 'success', title: '檢舉已送出', text: '我們會盡快處理，謝謝你的回報。', timer: 2000, showConfirmButton: false });
   } catch (_) {
-    Swal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
+    AppModal.fire({ icon: 'error', title: '送出失敗', text: '請稍後再試' });
   }
 }
 
@@ -214,7 +215,7 @@ export async function openReviewerProfileModal(accountId, name, photo) {
        </button>`
     : '';
 
-  Swal.fire({
+  AppModal.fire({
     title: false,
     customClass: { htmlContainer: 'swal-left-body', popup: 'rp-modal-popup' },
     html: `

@@ -96,22 +96,24 @@ ul{
 .specialpadding{
     padding-right: 30px;
 }
-/* ── SweetAlert2 全站統一風格 ── */
+/* ── SweetAlert2 全站統一風格（跟 app-modal.css 的自製彈窗對齊，僅用於仍需要
+     preConfirm / inputValidator 等複雜表單邏輯、尚未改用 AppModal 的彈窗） ── */
 .swal2-container { z-index: 99999 !important; }
-.swal2-backdrop-show { z-index: 99998 !important; }
+.swal2-backdrop-show { z-index: 99998 !important; background: rgba(15, 39, 69, 0.45) !important; }
 .swal2-popup {
-  border-radius: 12px !important;
-  background: aliceblue !important;
+  border-radius: var(--radius-xl) !important;
+  background: var(--color-white) !important;
   padding: 24px !important;
+  box-shadow: 0 24px 60px -18px rgba(0, 40, 80, 0.5) !important;
 }
 .swal2-title {
-  color: #222 !important;
+  color: var(--color-text) !important;
   font-size: var(--font-size-md) !important;
   font-weight: 700 !important;
   letter-spacing: 0.02em;
 }
 .swal2-html-container {
-  color: #4a627a !important;
+  color: var(--color-text-muted) !important;
   font-size: var(--font-size-sm) !important;
   line-height: 1.6;
 }
@@ -120,46 +122,55 @@ ul{
   text-align: left !important;
 }
 .swal2-confirm {
-  background: #abdad5 !important;
-  color: #383838 !important;
-  border-radius: 8px !important;
+  background: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  border-radius: var(--radius-pill) !important;
   font-size: var(--font-size-sm) !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   padding: 10px 26px !important;
   box-shadow: none !important;
-  transition: background-color 0.2s !important;
+  transition: background-color 0.22s ease !important;
 }
 .swal2-confirm:hover,
 .swal2-confirm:focus {
-  background-color: #8fcac3 !important;
+  background-color: var(--color-accent) !important;
   box-shadow: none !important;
 }
 .swal2-cancel {
-  background-color: #f0f0f0 !important;
-  color: #4a627a !important;
-  border-radius: 8px !important;
+  background-color: var(--color-border-light) !important;
+  color: var(--color-text-sub) !important;
+  border-radius: var(--radius-pill) !important;
   font-size: var(--font-size-sm) !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   padding: 10px 26px !important;
   box-shadow: none !important;
+  transition: background-color 0.22s ease !important;
 }
 .swal2-cancel:hover,
 .swal2-cancel:focus {
-  background-color: #e0e0e0 !important;
-  color: #333 !important;
+  background-color: var(--color-border) !important;
+  color: var(--color-text) !important;
   box-shadow: none !important;
 }
 .swal2-icon {
   margin: 16px auto 12px !important;
   transform: scale(0.85);
 }
+/* 官方內建 icon 改配色，跟站內主色一致（success=navy/aqua、error/warning=terracotta 系、info/question=navy） */
+.swal2-icon.swal2-success .swal2-success-ring { border-color: var(--color-soft) !important; }
+.swal2-icon.swal2-success [class^='swal2-success-line'] { background-color: var(--color-primary) !important; }
+.swal2-icon.swal2-error { border-color: var(--color-error) !important; }
+.swal2-icon.swal2-error [class^='swal2-x-mark-line'] { background-color: var(--color-error) !important; }
+.swal2-icon.swal2-warning { border-color: var(--color-warning) !important; color: var(--color-warning) !important; }
+.swal2-icon.swal2-info { border-color: var(--color-primary) !important; color: var(--color-primary) !important; }
+.swal2-icon.swal2-question { border-color: var(--color-primary) !important; color: var(--color-primary) !important; }
 /* toast 模式：還原被上方 !important 蓋掉的緊湊佈局（如複製邀請碼提示） */
 .swal2-popup.swal2-toast {
   display: flex !important;
   align-items: center !important;
   gap: 8px;
   padding: 10px 16px !important;
-  box-shadow: 0 4px 12px rgba(0,75,151,0.18) !important;
+  box-shadow: 0 4px 12px var(--color-primary-alpha20) !important;
 }
 .swal2-popup.swal2-toast .swal2-icon {
   margin: 0 10px 0 0 !important;

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>AppModal 測試</title>
+<link rel="stylesheet" href="default.css">
+<link rel="stylesheet" href="default-font.css">
+<link rel="stylesheet" href="app-modal.css">
+<style>
+  body { padding: 40px; max-width: 900px; }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  .sub { color: #6f87a0; font-size: 13px; margin-bottom: 24px; }
+  h2 { font-size: 15px; margin: 32px 0 10px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; margin-bottom: 8px; }
+  th, td { border: 1px solid #d6e2ec; padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #eef4f8; }
+  code { background: #eef4f8; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  .demo-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+  button.demo { padding: 10px 18px; border-radius: 999px; border: 1px solid #d6e2ec; background: #fff; cursor: pointer; font-size: 13px; }
+</style>
+</head>
+<body>
+  <h1>AppModal 使用說明</h1>
+  <p class="sub">站內自製彈窗元件，取代 SweetAlert2。<code>import { AppModal } from '../default/app-modal.js';</code>，記得同時連結 <code>app-modal.css</code>。呼叫方式跟 <code>Swal.fire(opts)</code> 盡量對齊，回傳 <code>Promise&lt;{isConfirmed, isDismissed, value}&gt;</code>。</p>
+
+  <h2>基本欄位</h2>
+  <table>
+    <tr><th>欄位</th><th>型別</th><th>說明</th></tr>
+    <tr><td><code>icon</code></td><td>string</td><td><code>success</code> / <code>error</code> / <code>warning</code> / <code>info</code> / <code>question</code>，不填就不顯示圖示</td></tr>
+    <tr><td><code>title</code></td><td>string</td><td>標題，會自動跳脫 HTML</td></tr>
+    <tr><td><code>text</code></td><td>string</td><td>內文純文字，會自動跳脫 HTML</td></tr>
+    <tr><td><code>html</code></td><td>string</td><td>內文原始 HTML（跟 <code>text</code> 擇一，優先用 <code>html</code>）</td></tr>
+  </table>
+
+  <h2>按鈕</h2>
+  <table>
+    <tr><th>欄位</th><th>型別</th><th>說明</th></tr>
+    <tr><td><code>showConfirmButton</code></td><td>boolean</td><td>預設 <code>true</code>；設 <code>false</code> 可做成無按鈕的純提示／toast</td></tr>
+    <tr><td><code>confirmButtonText</code></td><td>string</td><td>預設「確定」</td></tr>
+    <tr><td><code>showCancelButton</code></td><td>boolean</td><td>預設 <code>false</code></td></tr>
+    <tr><td><code>cancelButtonText</code></td><td>string</td><td>預設「取消」</td></tr>
+    <tr><td><code>allowOutsideClick</code></td><td>boolean</td><td>預設 <code>true</code>；設 <code>false</code> 點背景不會關閉</td></tr>
+  </table>
+
+  <h2>輸入欄位</h2>
+  <table>
+    <tr><th>欄位</th><th>型別</th><th>說明</th></tr>
+    <tr><td><code>input</code></td><td>string</td><td><code>text</code> 或 <code>checkbox</code></td></tr>
+    <tr><td><code>inputPlaceholder</code></td><td>string</td><td><code>text</code> 時是 placeholder；<code>checkbox</code> 時是選項文字</td></tr>
+    <tr><td><code>inputValue</code></td><td>string / boolean</td><td>預設值（checkbox 用 boolean）</td></tr>
+  </table>
+  <p class="sub">確認後 <code>res.value</code> 會是輸入的文字，或 checkbox 的 true/false。</p>
+
+  <h2>Toast（右上角提示，自動消失）</h2>
+  <table>
+    <tr><th>欄位</th><th>型別</th><th>說明</th></tr>
+    <tr><td><code>toast</code></td><td>boolean</td><td>設 <code>true</code> 啟用 toast 模式（無遮罩、無按鈕、右上角小卡）</td></tr>
+    <tr><td><code>timer</code></td><td>number（ms）</td><td>幾毫秒後自動關閉；一般 alert 也能用，時間到自動視為取消關閉</td></tr>
+  </table>
+
+  <h2>圖片燈箱</h2>
+  <table>
+    <tr><th>欄位</th><th>型別</th><th>說明</th></tr>
+    <tr><td><code>imageUrl</code></td><td>string</td><td>設定後整個彈窗變成深色圖片檢視器，右上角一顆關閉鈕，其餘欄位（title/text/按鈕）都會被忽略</td></tr>
+    <tr><td><code>imageAlt</code></td><td>string</td><td>圖片 alt 文字</td></tr>
+  </table>
+
+  <h2>進階</h2>
+  <table>
+    <tr><th>欄位</th><th>型別</th><th>說明</th></tr>
+    <tr><td><code>didOpen</code></td><td>(dialogEl) => void</td><td>彈窗顯示動畫跑完後呼叫，參數是彈窗的 DOM 節點，適合在 <code>html</code> 裡放了互動元素、需要另外綁事件時使用</td></tr>
+    <tr><td><code>willClose</code></td><td>(dialogEl) => void</td><td>關閉前呼叫（例如清掉 <code>didOpen</code> 裡設的 <code>setInterval</code>）</td></tr>
+    <tr><td><code>customClass</code></td><td>{popup, title, htmlContainer, container}</td><td>個別加 class，比照 SweetAlert2 的用法</td></tr>
+    <tr><td><code>width</code></td><td>number / string</td><td>覆寫預設的最大寬度（例如 <code>520</code> 或 <code>'600px'</code>），圖片燈箱模式無效</td></tr>
+    <tr><td><code>allowEscapeKey</code></td><td>boolean</td><td>預設 <code>true</code>；設 <code>false</code> 按 Esc 不會關閉</td></tr>
+  </table>
+  <p class="sub"><code>AppModal.close()</code>：關閉目前開著、沒有按鈕的彈窗（例如先 <code>fire()</code> 一個「處理中」提示，API 回來後呼叫這個關掉，用法對齊 <code>Swal.close()</code>）。</p>
+  <p class="sub"><b>不支援</b> <code>preConfirm</code> / <code>inputValidator</code>（需要攔截確認、顯示驗證錯誤訊息的複雜表單）——這類彈窗目前仍維持用 SweetAlert2，樣式已另外調整成跟這個元件一致。</p>
+
+  <h2>下面按鈕都可以點來看效果</h2>
+  <div class="demo-row">
+  <button class="demo" id="b1">success 提示</button>
+  <button class="demo" id="b2">error 提示</button>
+  <button class="demo" id="b3">warning + 確認/取消</button>
+  <button class="demo" id="b4">info</button>
+  <button class="demo" id="b5">question + 文字輸入</button>
+  <button class="demo" id="b6">checkbox</button>
+  <button class="demo" id="b7">toast（1.5s 自動消失）</button>
+  <button class="demo" id="b8">圖片燈箱</button>
+  <button class="demo" id="b9">didOpen 綁事件</button>
+  </div>
+
+<script type="module">
+  import { AppModal } from './app-modal.js';
+
+  document.getElementById('b1').addEventListener('click', () => {
+    AppModal.fire({ icon: 'success', title: '已送出審核', text: '審核通常 1–3 個工作天完成' });
+  });
+  document.getElementById('b2').addEventListener('click', () => {
+    AppModal.fire({ icon: 'error', title: '上傳失敗', text: '檔案格式不支援，請改用 JPG / PNG' });
+  });
+  document.getElementById('b3').addEventListener('click', () => {
+    AppModal.fire({
+      icon: 'warning', title: '確定要登出？', showCancelButton: true,
+      confirmButtonText: '登出', cancelButtonText: '取消'
+    }).then(r => AppModal.fire({ icon: r.isConfirmed ? 'success' : 'info', title: r.isConfirmed ? '已登出' : '已取消' }));
+  });
+  document.getElementById('b4').addEventListener('click', () => {
+    AppModal.fire({ icon: 'info', title: '提醒', text: '這篇攻略已被收藏 12 次' });
+  });
+  document.getElementById('b5').addEventListener('click', () => {
+    AppModal.fire({ icon: 'question', title: '請輸入暱稱', input: 'text', inputPlaceholder: '暱稱' })
+      .then(r => { if (r.isConfirmed) AppModal.fire({ icon: 'success', title: '你輸入了：' + r.value }); });
+  });
+  document.getElementById('b6').addEventListener('click', () => {
+    AppModal.fire({ title: '服務條款', input: 'checkbox', inputPlaceholder: '我同意服務條款', showCancelButton: true })
+      .then(r => { if (r.isConfirmed) AppModal.fire({ icon: 'success', title: '勾選狀態：' + r.value }); });
+  });
+  document.getElementById('b7').addEventListener('click', () => {
+    AppModal.fire({ toast: true, icon: 'success', title: '已複製邀請碼', timer: 1500, showConfirmButton: false });
+  });
+  document.getElementById('b8').addEventListener('click', () => {
+    AppModal.fire({ imageUrl: 'https://picsum.photos/800/500', imageAlt: '範例圖片' });
+  });
+  document.getElementById('b9').addEventListener('click', () => {
+    AppModal.fire({
+      title: '互動範例',
+      html: '<button id="innerBtn" style="padding:8px 16px;border-radius:999px;border:1px solid #d6e2ec;background:#fff;cursor:pointer;">點我看看</button>',
+      showConfirmButton: false,
+      showCancelButton: true,
+      cancelButtonText: '關閉',
+      didOpen: (dialog) => {
+        dialog.querySelector('#innerBtn').addEventListener('click', () => {
+          AppModal.fire({ icon: 'success', title: 'didOpen 綁的事件觸發了' });
+        });
+      }
+    });
+  });
+</script>
+</body>
+</html>

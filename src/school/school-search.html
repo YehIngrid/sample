@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
   <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
   <script type="module" src="../default/default.js"></script>
@@ -83,12 +84,17 @@
     </a>
     <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">登入</button>
     <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
-      <span class="avatar"></span>
+      <img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像">
     </div>
   </div>
 </nav>
 
 <div class="container">
+  <div class="breadcrumb">
+    <a href="school.html">校園攻略站</a>
+    <span class="sep">/</span>
+    <span class="cur">搜尋結果</span>
+  </div>
   <div class="search-result-container">
     <div class="search-header">
       <h1>搜尋 "<span class="keyword" id="searchKeyword"></span>"</h1>
@@ -142,10 +148,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('searchKeyword').textContent = keyword;
 
-  // Group articles by topic
-  const grouped = groupArticlesByTopic(MOCK_ARTICLES, keyword);
   const resultsContainer = document.getElementById('searchResults');
   const emptyState = document.getElementById('emptyState');
+
+  // 先鋪一輪骨架屏，讓使用者知道搜尋結果正在載入
+  resultsContainer.innerHTML = Array.from({ length: 2 }).map(() => `
+    <div class="topic-section">
+      <div class="topic-header">
+        <span class="skeleton" style="width:22px;height:22px;border-radius:50%;display:inline-block;"></span>
+        <div class="skeleton skeleton-text" style="width:120px;height:18px;display:inline-block;margin:0 0 0 8px;"></div>
+      </div>
+      <div class="preview-cards">
+        ${Array.from({ length: 2 }).map(() => `
+          <div class="preview-card">
+            <div class="skeleton skeleton-text" style="width:80%;height:16px;"></div>
+            <div class="skeleton skeleton-text" style="width:100%;"></div>
+            <div class="skeleton skeleton-text" style="width:50%;"></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  requestAnimationFrame(() => {
+  // Group articles by topic
+  const grouped = groupArticlesByTopic(MOCK_ARTICLES, keyword);
 
   let totalCount = 0;
   Object.values(grouped).forEach(articles => {
@@ -153,6 +180,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('totalCount').textContent = totalCount;
+
+  resultsContainer.innerHTML = '';
 
   if (totalCount === 0) {
     emptyState.style.display = 'block';
@@ -196,6 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     resultsContainer.appendChild(section);
+  });
   });
 });
 </script>

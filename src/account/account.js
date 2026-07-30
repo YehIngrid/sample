@@ -1,5 +1,6 @@
 import BackendService from '../BackendService.js';
 import '../default/default.js';
+import { AppModal } from '../default/app-modal.js';
 
 // ── URL ↔ 表單對應（account.html?page=login / signup / forgot）──
 const _PAGE_TO_STEP = {
@@ -73,7 +74,7 @@ window.onload = async function() {
       await bs.whoami();
       // 已登入者點了邀請連結 → 先提示再跳轉
       if (params.get('invite')) {
-        await Swal.fire({
+        await AppModal.fire({
           icon: 'info',
           title: '您已經有帳號囉',
           text: '邀請碼是給新朋友註冊時使用的，歡迎把您自己的邀請連結分享給朋友！',
@@ -108,7 +109,7 @@ window.onload = async function() {
             if (t.origin === window.location.origin) target = t.href;
           } catch (_) {}
         }
-        const verifyResult = await Swal.fire({
+        const verifyResult = await AppModal.fire({
           icon: 'success',
           title: '帳號驗證成功！',
           html: '歡迎加入拾貨寶庫！<br><small style="color:#888;margin-top:4px;display:block;">建議前往「個人中心」設定常用聯絡信箱，方便買賣雙方聯繫。</small>',
@@ -119,10 +120,10 @@ window.onload = async function() {
         window.location.replace(verifyResult.isConfirmed ? '../person/person.html' : target);
       } catch (_) {
         // 無 session → 顯示登入框
-        await Swal.fire({ icon: 'success', title: '帳號驗證成功！', text: '請登入以繼續。', confirmButtonText: '確定' });
+        await AppModal.fire({ icon: 'success', title: '帳號驗證成功！', text: '請登入以繼續。', confirmButtonText: '確定' });
       }
     } catch (e) {
-      await Swal.fire({ icon: 'error', title: '驗證失敗', text: e.message, confirmButtonText: '確定' });
+      await AppModal.fire({ icon: 'error', title: '驗證失敗', text: e.message, confirmButtonText: '確定' });
     }
   } else {
     // 依網址決定顯示哪個表單：?page=login / signup / forgot
@@ -222,7 +223,7 @@ async function callSignUp() {
     await backendService.signup(payload);
     loader.style.display = 'none';
     _pendingEmail = payload.email;
-    await Swal.fire({
+    await AppModal.fire({
       icon: 'success',
       title: '註冊成功！',
       html: `驗證信已寄至 <strong>${payload.email}</strong>，請點擊信中連結開通帳號。<br><small style="color:#888;margin-top:6px;display:block;">若在收件匣找不到驗證信，新信可能被「重要郵件」覆蓋在下方，可使用信箱搜尋功能找到。</small>`,
@@ -230,7 +231,7 @@ async function callSignUp() {
     });
     showPage('checkEmailPage');
   } catch (e) {
-    Swal.fire({
+    AppModal.fire({
       icon: "error",
       title: "Oops...",
       text: e.message || "系統發生錯誤，請稍後再試"
@@ -248,7 +249,7 @@ async function callLogin() {
   const email = emailEl.value.trim();
   const password = pwdEl.value;
   if (!email || !password) {
-    Swal.fire({ icon: 'warning', title: '請輸入帳號與密碼' });
+    AppModal.fire({ icon: 'warning', title: '請輸入帳號與密碼' });
     return;
   }
 
@@ -263,7 +264,7 @@ async function callLogin() {
     // 若後端回傳 emailVerify: false，詢問現在或之後驗證
     if (resp.data?.data?.emailVerify === false) {
       _pendingEmail = email;
-      const choice = await Swal.fire({
+      const choice = await AppModal.fire({
         icon: 'warning',
         title: '帳號尚未驗證',
         html: `您的帳號尚未完成電子信箱驗證。<br><small style="color:#888;">未驗證前無法買賣商品。</small>`,
@@ -285,13 +286,13 @@ async function callLogin() {
             startResendCountdown(0);
           }
         }
-        await Swal.fire({ icon: 'info', title: '請查收信箱', text: resendMsg, confirmButtonText: '確定' });
+        await AppModal.fire({ icon: 'info', title: '請查收信箱', text: resendMsg, confirmButtonText: '確定' });
         return;
       }
       // 之後再說 → 繼續登入流程，但 emailVerify=false 已存入 localStorage
     }
 
-    await Swal.fire({
+    await AppModal.fire({
       icon: 'success',
       title: '登入成功',
       text: '歡迎回來！',
@@ -322,14 +323,14 @@ async function callLogin() {
       showPage('checkEmailPage');
       // 登入被拒沒有 session，無法自動送信；讓按鈕立即可用
       startResendCountdown(0);
-      await Swal.fire({
+      await AppModal.fire({
         icon: 'warning',
         title: '帳號尚未驗證',
         text: '請前往信箱點擊認證連結，或點擊「重新發送認證信」補寄。',
         confirmButtonText: '確定'
       });
     } else {
-      Swal.fire({
+      AppModal.fire({
         icon: 'error',
         title: 'Oops...',
         text: e?.message || '登入失敗，請稍後再試'
@@ -523,7 +524,7 @@ function finishCountdown() {
   const timerEl = document.getElementById("timer");
   if (timerEl) timerEl.textContent = "00:00";
 
-  Swal.fire({
+  AppModal.fire({
     title: "Oops...",
     text: "驗證連結已過期，請重新申請。",
     icon: "warning",
@@ -557,7 +558,7 @@ document.getElementById('forgetSendbtn').addEventListener('click', async functio
     await bs.forgotPassword(email);
     showPage('getLinkPage');
   } catch (err) {
-    Swal.fire({ icon: 'error', title: '發送失敗', text: err.message });
+    AppModal.fire({ icon: 'error', title: '發送失敗', text: err.message });
   } finally {
     btn.disabled = false;
   }
@@ -567,18 +568,18 @@ document.getElementById('forgetSendbtn').addEventListener('click', async functio
 document.getElementById('resetbtn').addEventListener('click', async function(e) {
   e.preventDefault();
   if (!_resetToken) {
-    Swal.fire({ icon: 'error', title: '連結無效', text: '請透過信箱中的重設密碼連結進行操作' });
+    AppModal.fire({ icon: 'error', title: '連結無效', text: '請透過信箱中的重設密碼連結進行操作' });
     return;
   }
   const pwd1 = document.getElementById('newPwd1').value;
   const pwd2 = document.getElementById('newPwd2').value;
   const isValid = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/.test(pwd1);
   if (!isValid) {
-    Swal.fire({ icon: 'warning', title: '密碼格式不符', text: '密碼需至少 8 位，包含大寫、小寫字母及數字' });
+    AppModal.fire({ icon: 'warning', title: '密碼格式不符', text: '密碼需至少 8 位，包含大寫、小寫字母及數字' });
     return;
   }
   if (pwd1 !== pwd2) {
-    Swal.fire({ icon: 'warning', title: '密碼不一致', text: '兩次輸入的密碼不相同' });
+    AppModal.fire({ icon: 'warning', title: '密碼不一致', text: '兩次輸入的密碼不相同' });
     return;
   }
   const btn = this;
@@ -588,7 +589,7 @@ document.getElementById('resetbtn').addEventListener('click', async function(e) 
     await bs.resetPassword(_resetToken, pwd1);
     showPage('resetsuccesspage');
   } catch (err) {
-    Swal.fire({ icon: 'error', title: '重設失敗', text: err.message });
+    AppModal.fire({ icon: 'error', title: '重設失敗', text: err.message });
   } finally {
     btn.disabled = false;
   }
@@ -642,13 +643,13 @@ document.getElementById('resendVerifyBtn').addEventListener('click', async funct
     const bs = new BackendService();
     await bs.resendVerificationEmail();
     const hint = _pendingEmail ? `認證信已寄至 ${_pendingEmail}` : '請至信箱查收認證信';
-    Swal.fire({ icon: 'success', title: '已重新發送', text: hint, confirmButtonText: '確定' });
+    AppModal.fire({ icon: 'success', title: '已重新發送', text: hint, confirmButtonText: '確定' });
     startResendCountdown(300); // 5 分鐘後才能再發
   } catch (e) {
     if (e?.message === 'RATE_LIMIT') {
-      Swal.fire({ icon: 'warning', title: '發送過於頻繁', text: '每 5 分鐘只能發送一次，每小時上限 3 次，請稍後再試。', confirmButtonText: '確定' });
+      AppModal.fire({ icon: 'warning', title: '發送過於頻繁', text: '每 5 分鐘只能發送一次，每小時上限 3 次，請稍後再試。', confirmButtonText: '確定' });
     } else {
-      Swal.fire({ icon: 'error', title: '發送失敗', text: e?.message || '請稍後再試' });
+      AppModal.fire({ icon: 'error', title: '發送失敗', text: e?.message || '請稍後再試' });
     }
     this.disabled = false;
   }

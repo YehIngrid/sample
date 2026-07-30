@@ -1,6 +1,7 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
 import { requireLogin, requireEmailVerified } from '../default/default.js';
+import { AppModal } from '../default/app-modal.js';
 
 history.scrollRestoration = 'manual';
 
@@ -141,7 +142,7 @@ async function showPage(hash) {
   if (hash === '#mywishes') {
     isLoggedIn = await checkLogin();
     if (!isLoggedIn) {
-      Swal.fire({
+      AppModal.fire({
         icon: 'warning',
         title: '請先登入會員',
         text: '需登入會員才可查看我的願望'
@@ -172,7 +173,7 @@ async function showPage(hash) {
     const mwHint = document.getElementById('mwLoginHint');
     if (mwHint) mwHint.style.display = isLoggedIn ? 'none' : '';
     if (!isLoggedIn) {
-      Swal.fire({
+      AppModal.fire({
         title: '請先登入會員',
         text: '需登入會員才可送出許願清單歐！'
       });
@@ -331,7 +332,7 @@ function showMyInfo(data) {
   });
 }
 async function resendWish(wish) {
-  await Swal.fire({
+  await AppModal.fire({
     icon: 'info',
     title: '請重新上傳圖片',
     text: '重新發送願望時，圖片無法自動帶入，請重新選擇並上傳照片。',
@@ -376,7 +377,7 @@ async function resendWish(wish) {
 
 async function deleteWish(id) {
   wpbackendService = wpbackendService || new wpBackendService();
-  const confirm = await Swal.fire({
+  const confirm = await AppModal.fire({
     icon: 'warning',
     title: '確定刪除？',
     text: '願望刪除後僅能在「我的願望」裡查看。',
@@ -392,10 +393,10 @@ async function deleteWish(id) {
       wrapper.querySelector('.wish-card')?.classList.remove('flipped');
       wrapper.classList.add('wish-disabled');
     }
-    Swal.fire({ icon: 'success', title: '刪除成功', timer: 1500, showConfirmButton: false });
+    AppModal.fire({ icon: 'success', title: '刪除成功', timer: 1500, showConfirmButton: false });
     setTimeout(() => listMyWishes(mycurrentPage), 1600);
   } catch (error) {
-    Swal.fire({ icon: 'error', title: 'Oops...刪除失敗', text: error.message });
+    AppModal.fire({ icon: 'error', title: 'Oops...刪除失敗', text: error.message });
   }
 }
 
@@ -719,14 +720,14 @@ wishFormbig.addEventListener("click", async function (e) {
   // ✅ 全部通過才真的送出
   if (!isValid) return;
   if (!isLoggedIn){
-    Swal.fire({
+    AppModal.fire({
       icon: 'warning',
       title: '請先登入會員',
       text: '需登入會員才可查看我的願望'
     });
     return;
   }
-  Swal.fire({
+  AppModal.fire({
     icon: 'warning',
     title: '確定送出？請詳閱下方規則',
     text: '願望送出後，7天後過期刪除，並且7天後才能許下一個願望。',
@@ -754,7 +755,7 @@ async function submit() {
       photo
     );
     console.log('願望建立成功：', result);
-    Swal.fire({
+    AppModal.fire({
       icon: 'success',
       title: '願望已送出！',
       text: '感謝您的參與，已將您的願望發布。',
@@ -763,7 +764,7 @@ async function submit() {
     });
   } catch (error) {
     console.error('願望建立失敗：', error);
-    Swal.fire({
+    AppModal.fire({
       icon: 'error',
       title: '願望送出失敗',
       text: error.message || '請稍後再試，或聯絡客服人員。',
@@ -896,7 +897,7 @@ function createWishCard(wish, isMyWish) {
     wnPhoto.style.cursor = 'zoom-in';
     wnPhoto.addEventListener('click', (e) => {
       e.stopPropagation();
-      Swal.fire({ imageUrl: wnPhoto.src, imageAlt: wnPhoto.alt || '許願圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
+      AppModal.fire({ imageUrl: wnPhoto.src, imageAlt: wnPhoto.alt || '許願圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
     });
   }
 
@@ -1034,7 +1035,7 @@ function initCardPhotoSwipe(backEl, wishId, photoUrl) {
   const img = backEl.querySelector('.wb-photo');
   if (!img) return;
   img.addEventListener('click', () => {
-    Swal.fire({ imageUrl: img.src, imageAlt: img.alt || '許願圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
+    AppModal.fire({ imageUrl: img.src, imageAlt: img.alt || '許願圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
   });
 }
 
@@ -1051,7 +1052,7 @@ async function handleContactWisher(wishId, btn, ownerUid = '') {
 
   const myUid = String(localStorage.getItem('uid') || '');
   if (myUid && ownerUid && myUid === String(ownerUid)) {
-    Swal.fire({ icon: 'info', title: '這是您自己的許願', text: '無法聯絡自己！' });
+    AppModal.fire({ icon: 'info', title: '這是您自己的許願', text: '無法聯絡自己！' });
     return;
   }
 
@@ -1066,7 +1067,7 @@ async function handleContactWisher(wishId, btn, ownerUid = '') {
 
     if (commodities.length === 0) {
       const redirectUrl = encodeURIComponent(window.location.pathname + window.location.hash);
-      const goSell = await Swal.fire({
+      const goSell = await AppModal.fire({
         icon: 'info',
         title: '您目前沒有上架的商品',
         text: '請先到個人頁面上架商品後再媒合。',
@@ -1142,7 +1143,7 @@ async function handleContactWisher(wishId, btn, ownerUid = '') {
         const partner = members.find(m => m.userId !== myUid);
         const partnerId = partner?.userId ?? null;
 
-        const { isConfirmed: goChat } = await Swal.fire({
+        const { isConfirmed: goChat } = await AppModal.fire({
           icon: 'success',
           title: '已聯絡許願者！',
           text: '聊天室已建立，是否立即前往？',
@@ -1162,13 +1163,13 @@ async function handleContactWisher(wishId, btn, ownerUid = '') {
         btn.disabled = false;
         btn.classList.remove('contacted');
         console.error('Error contacting wisher:', error);
-        Swal.fire({ icon: 'error', title: '聯絡失敗', text: '請稍後再試。' });
+        AppModal.fire({ icon: 'error', title: '聯絡失敗', text: '請稍後再試。' });
         return;
       }
     }
   } catch (error) {
     console.error('Error contacting wisher:', error);
-    Swal.fire({ icon: 'error', title: '聯絡失敗', text: '請稍後再試。' });
+    AppModal.fire({ icon: 'error', title: '聯絡失敗', text: '請稍後再試。' });
   } finally {
     btn.disabled = false;
     btn.textContent = origText;

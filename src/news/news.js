@@ -1,4 +1,5 @@
 import BackendService from '../BackendService.js';
+import { AppModal } from '../default/app-modal.js';
 
 const backendService = new BackendService();
 const ITEMS_PER_PAGE = 10;
@@ -120,7 +121,7 @@ async function showNewsDetail(id, cachedIdx) {
       const data = await backendService.getNewsItem(id);
       item = data?.data ?? data;
     } catch {
-      Swal.fire({ icon: 'error', title: '載入失敗', text: '無法讀取文章內容' });
+      AppModal.fire({ icon: 'error', title: '載入失敗', text: '無法讀取文章內容' });
       return;
     }
   }
@@ -253,9 +254,9 @@ function renderNews(page) { loadNewsList(page); }
 function shareNews() {
   const url = window.location.href;
   navigator.clipboard.writeText(url).then(() => {
-    Swal.fire({ icon: 'success', title: '連結已複製', text: url, timer: 2000, showConfirmButton: false });
+    AppModal.fire({ icon: 'success', title: '連結已複製', text: url, timer: 2000, showConfirmButton: false });
   }).catch(() => {
-    Swal.fire({ icon: 'info', title: '分享連結', text: url, confirmButtonText: '關閉' });
+    AppModal.fire({ icon: 'info', title: '分享連結', text: url, confirmButtonText: '關閉' });
   });
 }
 

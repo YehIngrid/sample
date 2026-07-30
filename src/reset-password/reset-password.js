@@ -1,4 +1,5 @@
 import BackendService from '../BackendService.js';
+import { AppModal } from '../default/app-modal.js';
 
 const BASE_URL = 'https://treasurehub.tw';
 
@@ -113,14 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 400 是驗證錯誤（例如密碼不符合規則），要把後端訊息秀出來，不能當成連結失效
                 setError('err-password', err.response?.data?.message || '密碼不符合規則，請重新確認');
             } else if (err.code === 'ECONNABORTED' || !err.response) {
-                Swal.fire({
+                AppModal.fire({
                     icon: 'error',
                     title: '網路連線異常',
                     text: '無法連線伺服器，請確認網路狀態後再試。',
                     confirmButtonText: '確定'
                 });
             } else {
-                Swal.fire({
+                AppModal.fire({
                     icon: 'error',
                     title: '重設失敗',
                     text: err.response?.data?.message ?? '請稍後再試，或重新申請重設連結。',
