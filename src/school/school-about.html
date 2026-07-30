@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
   <script type="module" src="../default/default.js"></script>
   <style>
     .about-wrap { width: 80vw; max-width: 80vw; margin: 0 auto; padding: 24px 40px 60px; overflow-x: clip; }
@@ -339,6 +340,7 @@
       }
     }
   </style>
+<style class="am-admin-gate-style">body{visibility:hidden}</style>
 </head>
 <body>
 <script>document.documentElement.classList.add('reveal-on');</script>
@@ -754,7 +756,15 @@
 </button>
 
 <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-<script type="module">import { AppModal } from "../default/app-modal.js"; window.AppModal = AppModal;</script>
+<script type="module">
+import { AppModal } from "../default/app-modal.js";
+import { requireAdminPage } from "../default/default.js";
+window.AppModal = AppModal;
+(async () => {
+  const ok = await requireAdminPage();
+  if (ok) document.body.style.visibility = "";
+})();
+</script>
 <script defer src="school-new.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

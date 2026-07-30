@@ -4,9 +4,19 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>設計系統｜拾貨寶庫</title>
+<link rel="stylesheet" href="../default/tokens.css">
+<link rel="stylesheet" href="../default/app-modal.css">
+<script type="module">
+  import { requireAdminPage } from '../default/default.js';
+  (async () => {
+    const ok = await requireAdminPage();
+    if (ok) document.body.style.visibility = '';
+  })();
+</script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
+    visibility: hidden;
     font-family: "Helvetica Neue", Helvetica, "PingFang TC", "Noto Sans TC", "Hiragino Sans", Arial, sans-serif;
     color: #1a2840;
     background: #eef4f8;

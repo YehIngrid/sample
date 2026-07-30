@@ -454,6 +454,38 @@ export async function requireEmailVerified() {
   return false;
 }
 
+// 整頁級的管理員守衛：用在「管理後台、設計文件、校園攻略站」這類整頁都只給 admin 看的頁面。
+// 跟 requireLogin() 不同——這裡沒有「確定/取消」給使用者選，未通過就直接導走。
+// 呼叫端請先把 <body> 藏起來（例如 opacity:0），等這個 resolve 為 true 再顯示，避免內容閃一下。
+export async function requireAdminPage() {
+  await window._authReady;
+  const currentUrl = window.location.pathname + window.location.search;
+
+  if (!window.isLoggedIn) {
+    await AppModal.fire({
+      icon: 'warning',
+      title: '請先登入',
+      text: '此頁面僅限管理員存取，請先登入。',
+      confirmButtonText: '前往登入',
+    });
+    window.location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+    return false;
+  }
+
+  if (localStorage.getItem('role') !== 'ADMIN') {
+    await AppModal.fire({
+      icon: 'error',
+      title: '沒有存取權限',
+      text: '此頁面僅限管理員存取。',
+      confirmButtonText: '確定',
+    });
+    window.location.href = '../newhome/newhome.html';
+    return false;
+  }
+
+  return true;
+}
+
 export async function requireLogin() {
   // 等 whoami 完成後查快取，不重複發請求
   await window._authReady;

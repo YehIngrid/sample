@@ -1,4 +1,4 @@
-import '../default/default.js';
+import { requireAdminPage } from '../default/default.js';
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
 import wpBackendService from '../wpBackendService.js';
@@ -10,17 +10,18 @@ const chatSvc = new ChatBackendService();
 const backendSvc = new BackendService();
 const wpSvc = new wpBackendService();
 
-// ── 登入驗證（以 cookie 為準，不依賴 localStorage）──────
+// ── 管理員權限驗證（整頁只給 ADMIN 看，非管理員直接導走）──────
 (async () => {
+  const ok = await requireAdminPage();
+  if (!ok) return;
+  document.body.style.visibility = '';
+
   try {
     const me = await backendSvc.getMe();
     const username = me?.data?.data?.name || localStorage.getItem('username') || '管理員';
     document.getElementById('adminName').textContent = username;
     document.getElementById('dashAdminName').textContent = username;
-  } catch (e) {
-    await AppModal.fire({ icon: 'warning', title: '請先登入', text: '即將跳轉至登入頁' });
-    window.location.href = '../account/account.html';
-  }
+  } catch (e) {}
 })();
 
 // ── 登出 ──────────────────────────────────────────────

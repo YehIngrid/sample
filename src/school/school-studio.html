@@ -17,6 +17,15 @@
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+  <script type="module" src="../default/default.js"></script>
+  <script type="module">
+    import { requireAdminPage } from "../default/default.js";
+    (async () => {
+      const ok = await requireAdminPage();
+      if (ok) document.body.style.visibility = "";
+    })();
+  </script>
   <style>
     /* ===== studio scope ===== */
     :root { --green: rgb(36,182,133); }
@@ -263,6 +272,7 @@
       .choice { transition: none; }
     }
   </style>
+<style class="am-admin-gate-style">body{visibility:hidden}</style>
 </head>
 <body>
 

@@ -7,6 +7,7 @@
   position: fixed;
   inset: 0;
   z-index: 99999;
+  visibility: visible; /* 蓋掉頁面用 body{visibility:hidden} 做內容守衛時，確保彈窗本身還是看得到 */
   background: rgba(15, 39, 69, 0.45);
   backdrop-filter: blur(3px);
   display: flex;

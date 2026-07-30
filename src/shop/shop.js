@@ -154,7 +154,9 @@ async function initWishTicker() {
   const textEl = letterRow.querySelector('.wl-text');
   const render = () => {
     const w = wishes[idx % wishes.length];
-    avatarEl.src = wishAvatar(w);
+    const isPlaceholder = String(w.id).startsWith('empty-');
+    avatarEl.style.display = isPlaceholder ? 'none' : '';
+    if (!isPlaceholder) avatarEl.src = wishAvatar(w);
     textEl.textContent = wishLabel(w.itemName);
     // 若是空狀態標語則導向許願池首頁，否則導向特定願望卡
     letterRow.href = w.id.startsWith('empty-') ? '../wishpool/wishpool.html#wishpool' : wishHref(w);

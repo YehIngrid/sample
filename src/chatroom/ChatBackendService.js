@@ -20,6 +20,7 @@ export default class ChatBackendService {
         } catch (error) {
             this._forbidden(error);
             console.error('Error sending message:', error);
+
             return Promise.reject(error);
         }
     }

@@ -14,7 +14,15 @@
   <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
   <script type="module" src="../default/default.js"></script>
+  <script type="module">
+    import { requireAdminPage } from "../default/default.js";
+    (async () => {
+      const ok = await requireAdminPage();
+      if (ok) document.body.style.visibility = "";
+    })();
+  </script>
   <style>
     .search-result-container { padding: 32px 0; }
     .search-header { margin-bottom: 40px; }
@@ -46,6 +54,7 @@
     .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
     .empty-state svg { width: 80px; height: 80px; margin-bottom: 16px; opacity: 0.3; }
   </style>
+<style class="am-admin-gate-style">body{visibility:hidden}</style>
 </head>
 <body>
 
