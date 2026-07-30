@@ -15,7 +15,6 @@ window.isTokenValid = true;
   try {
     if (localStorage.getItem('th_cg_auth') === null) {
       localStorage.setItem('th_cg_auth', '1');
-      localStorage.setItem('th_cg_avatar', '👤');
       localStorage.setItem('th_cg_username', '王同學');
     }
   } catch (e) {}
@@ -257,54 +256,18 @@ function attachLikeButtons() {
     return '<div class="anchor-row">' + parts.join('<span class="ar-sep">·</span>') + '</div>';
   }
 
-  function renderArticles() {
-    const container = document.getElementById('articleList');
-    if (!container) return;
-
-    container.innerHTML = ARTICLES.map((art, idx) => {
-      if (art.nocover) {
-        return `
-          <article class="article nocover">
-            <div class="body">
-              <div class="meta-row">
-                <span class="cat-pill-inline">${art.category}</span>
-                <span class="valid-tag ${art.stale ? 'stale' : ''}">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>
-                  ${art.year}
-                </span>
-              </div>
-              <h2>${art.title}</h2>
-              <p class="excerpt">${art.excerpt}</p>
-              ${anchorRowHTML(art)}
-              <div class="author-row">
-                <div class="av-sm"></div>
-                <div class="author-meta">
-                  <div class="name">${art.author}</div>
-                  <div class="sub">${art.badge ? `<span class="badge-pill">${art.badge.replace(/\*/g, '')}</span> · ` : ''}${art.time}</div>
-                </div>
-                <div class="price">${art.price}</div>
-              </div>
-              <div class="read-stats">
-                <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${art.views}</span>
-                <span class="like-count-display"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span class="likes-num">${art.likes}</span></span>
-                <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> ${art.comments}</span>
-              </div>
-            </div>
-          </article>
-        `;
-      }
-
+  function articleCardHTML(art) {
+    if (art.nocover) {
       return `
-        <article class="article">
-          <div class="cover ${art.gradient || 'g1'}">
-            <span class="cat-pill-cover">${art.category}</span>
-            ${art.tag ? `<span class="${art.tag === '免費' ? 'free-tag' : 'biz-tag'}">${art.tag}</span>` : ''}
-          </div>
+        <article class="article nocover">
           <div class="body">
-            <span class="valid-tag ${art.stale ? 'stale' : ''}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>
-              ${art.year}
-            </span>
+            <div class="meta-row">
+              <span class="cat-pill-inline">${art.category}</span>
+              <span class="valid-tag ${art.stale ? 'stale' : ''}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>
+                ${art.year}
+              </span>
+            </div>
             <h2>${art.title}</h2>
             <p class="excerpt">${art.excerpt}</p>
             ${anchorRowHTML(art)}
@@ -314,7 +277,7 @@ function attachLikeButtons() {
                 <div class="name">${art.author}</div>
                 <div class="sub">${art.badge ? `<span class="badge-pill">${art.badge.replace(/\*/g, '')}</span> · ` : ''}${art.time}</div>
               </div>
-              <div class="price ${art.price === '免費閱讀' ? 'free' : ''}">${art.price}</div>
+              <div class="price">${art.price}</div>
             </div>
             <div class="read-stats">
               <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${art.views}</span>
@@ -324,12 +287,112 @@ function attachLikeButtons() {
           </div>
         </article>
       `;
-    }).join('');
+    }
 
-    // 在渲染完成後附加儲存按鈕、喜歡按鈕
-    attachSaveButtons();
-    attachLikeButtons();
+    return `
+      <article class="article">
+        <div class="cover ${art.gradient || 'g1'}">
+          <span class="cat-pill-cover">${art.category}</span>
+          ${art.tag ? `<span class="${art.tag === '免費' ? 'free-tag' : 'biz-tag'}">${art.tag}</span>` : ''}
+        </div>
+        <div class="body">
+          <span class="valid-tag ${art.stale ? 'stale' : ''}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>
+            ${art.year}
+          </span>
+          <h2>${art.title}</h2>
+          <p class="excerpt">${art.excerpt}</p>
+          ${anchorRowHTML(art)}
+          <div class="author-row">
+            <div class="av-sm"></div>
+            <div class="author-meta">
+              <div class="name">${art.author}</div>
+              <div class="sub">${art.badge ? `<span class="badge-pill">${art.badge.replace(/\*/g, '')}</span> · ` : ''}${art.time}</div>
+            </div>
+            <div class="price ${art.price === '免費閱讀' ? 'free' : ''}">${art.price}</div>
+          </div>
+          <div class="read-stats">
+            <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${art.views}</span>
+            <span class="like-count-display"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span class="likes-num">${art.likes}</span></span>
+            <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> ${art.comments}</span>
+          </div>
+        </div>
+      </article>
+    `;
   }
+
+  // 卡片還沒渲染出來前的骨架屏（形狀比照 .article 的封面＋標題＋摘要＋作者列）
+  function articleSkeletonHTML() {
+    return `
+      <article class="article article-skeleton">
+        <div class="skeleton" style="height:140px;border-radius:0;"></div>
+        <div class="body">
+          <div class="skeleton skeleton-text" style="width:30%;height:20px;margin-bottom:10px;"></div>
+          <div class="skeleton skeleton-text" style="width:90%;height:20px;"></div>
+          <div class="skeleton skeleton-text" style="width:65%;height:20px;margin-bottom:14px;"></div>
+          <div class="skeleton skeleton-text" style="width:100%;"></div>
+          <div class="skeleton skeleton-text" style="width:55%;margin-bottom:16px;"></div>
+          <div style="display:flex;align-items:center;gap:10px;padding-top:14px;border-top:1px solid var(--line);">
+            <div class="skeleton" style="width:28px;height:28px;border-radius:50%;flex-shrink:0;"></div>
+            <div class="skeleton skeleton-text" style="width:40%;margin:0;"></div>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  // ── Masonry：卡片各自高度、不強制拉齊（跟蝦皮等電商的商品牆一樣），
+  // 依序把下一張卡放進目前最短的欄位，盡量保留原本的新舊排序 ──
+  function layoutMasonry(container, htmlList, evenSplit) {
+    const colCount = window.matchMedia('(max-width: 1000px)').matches ? 1 : 2;
+    container.innerHTML = '';
+    const cols = [];
+    for (let i = 0; i < colCount; i++) {
+      const col = document.createElement('div');
+      col.className = 'masonry-col';
+      container.appendChild(col);
+      cols.push(col);
+    }
+    htmlList.forEach((html, idx) => {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = html.trim();
+      const el = wrap.firstElementChild;
+      let target;
+      if (evenSplit || colCount === 1) {
+        target = cols[idx % colCount];
+      } else {
+        target = cols.reduce((shortest, col) => col.offsetHeight < shortest.offsetHeight ? col : shortest, cols[0]);
+      }
+      target.appendChild(el);
+    });
+  }
+
+  function renderArticles() {
+    const container = document.getElementById('articleList');
+    if (!container) return;
+
+    // 先鋪一輪骨架屏，讓使用者知道內容正在載入
+    layoutMasonry(container, ARTICLES.map(articleSkeletonHTML), true);
+
+    // ARTICLES 目前是本地假資料，之後接上真的清單 API 時，把下面這段搬進 fetch 的 then/await 之後即可
+    requestAnimationFrame(() => {
+      layoutMasonry(container, ARTICLES.map(articleCardHTML), false);
+      attachSaveButtons();
+      attachLikeButtons();
+    });
+  }
+
+  let _resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => {
+      const container = document.getElementById('articleList');
+      if (!container) return;
+      layoutMasonry(container, ARTICLES.map(articleCardHTML), false);
+      attachSaveButtons();
+      attachLikeButtons();
+    }, 200);
+  });
 
   document.addEventListener('DOMContentLoaded', renderArticles);
 })();
@@ -359,7 +422,6 @@ function attachLikeButtons() {
   if (!loginBtn || !userChip) return;
 
   const AUTH_KEY = 'th_cg_auth';
-  const AVATAR_KEY = 'th_cg_avatar';
   const USERNAME_KEY = 'th_cg_username';
 
   // 創建下拉選單
@@ -413,20 +475,13 @@ function attachLikeButtons() {
   }
 
   const isAuthed = localStorage.getItem(AUTH_KEY) === '1';
-  const avatar = localStorage.getItem(AVATAR_KEY) || '👤';
   const username = localStorage.getItem(USERNAME_KEY) || '王同學';
 
   applyAuth(isAuthed);
 
-  if (isAuthed) {
-    const avatarSpan = userChip.querySelector('.avatar');
-    if (avatarSpan) avatarSpan.textContent = avatar;
-  }
-
   loginBtn.addEventListener('click', function () {
-    // 模擬登入，設置頭像和用戶名
+    // 模擬登入，設置用戶名
     localStorage.setItem(AUTH_KEY, '1');
-    localStorage.setItem(AVATAR_KEY, '👤');
     localStorage.setItem(USERNAME_KEY, '王同學');
     applyAuth(true);
     location.reload();
@@ -439,7 +494,7 @@ function attachLikeButtons() {
 
   document.getElementById('logoutLink').addEventListener('click', function (e) {
     e.preventDefault();
-    Swal.fire({
+    AppModal.fire({
       title: '確定要登出?',
       icon: 'question',
       showCancelButton: true,
@@ -452,7 +507,6 @@ function attachLikeButtons() {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.setItem(AUTH_KEY, '0');
-        localStorage.removeItem(AVATAR_KEY);
         localStorage.removeItem(USERNAME_KEY);
         applyAuth(false);
         dropdown.style.display = 'none';
