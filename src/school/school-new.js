@@ -106,12 +106,14 @@ function attachLikeButtons() {
 // ── Admin button for 校園攻略站 ──
 (function () {
   const schoolAdminBtn = document.getElementById('schoolAdminBtn');
-  if (schoolAdminBtn) {
-    const role = localStorage.getItem('role');
+  if (!schoolAdminBtn) return;
+  // 等真正的登入驗證跑完再讀 role，避免 session 已過期但 localStorage 舊值還沒清掉時誤判
+  Promise.resolve(window._authReady).then(() => {
+    const role = window.isLoggedIn ? localStorage.getItem('role') : null;
     if (['MODERATOR', 'ADMIN'].includes(role)) {
       schoolAdminBtn.style.display = 'block';
     }
-  }
+  });
 })();
 
 // ── Render featured article ──
