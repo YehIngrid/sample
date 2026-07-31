@@ -380,17 +380,7 @@ function _initMobileDrawer() {
   // Nav content — clone .nav-item entries from whichever navbar collapse exists
   const navWrap = document.createElement('ul');
   navWrap.className = 'mobile-drawer-nav list-unstyled mb-0';
-  const sourceNav = document.querySelector('.mobileNav')
-                 || document.querySelector('.navbar-collapse .navbar-nav');
-  if (sourceNav) {
-    sourceNav.querySelectorAll('.nav-item').forEach(item => {
-      const clone = item.cloneNode(true);
-      clone.className = 'drawer-nav-item';
-      // Close drawer when any link inside is tapped
-      clone.querySelectorAll('a').forEach(a => a.addEventListener('click', _closeDrawer));
-      navWrap.appendChild(clone);
-    });
-  }
+  _populateDrawerNav(navWrap);
 
   drawer.appendChild(header);
   drawer.appendChild(navWrap);
@@ -414,9 +404,30 @@ function _initMobileDrawer() {
   });
 }
 
+// Clone .nav-item entries from the page's source nav into the drawer.
+// Preserves the source's classes (notably `d-none`) so role-gated items
+// (e.g. admin-only links) stay hidden unless the source has already revealed them.
+function _populateDrawerNav(navWrap) {
+  navWrap.innerHTML = '';
+  const sourceNav = document.querySelector('.mobileNav')
+                 || document.querySelector('.navbar-collapse .navbar-nav');
+  if (!sourceNav) return;
+  sourceNav.querySelectorAll('.nav-item').forEach(item => {
+    const clone = item.cloneNode(true);
+    clone.classList.add('drawer-nav-item');
+    // Close drawer when any link inside is tapped
+    clone.querySelectorAll('a').forEach(a => a.addEventListener('click', _closeDrawer));
+    navWrap.appendChild(clone);
+  });
+}
+
 function _openDrawer() {
   const drawer = document.getElementById('mobileNavDrawer');
   const toggler = document.querySelector('.navbar-toggler');
+  // Re-sync from the source nav — role-gated items (admin/moderator links) may have
+  // been revealed asynchronously (after whoami resolves) since the drawer was built.
+  const navWrap = drawer?.querySelector('.mobile-drawer-nav');
+  if (navWrap) _populateDrawerNav(navWrap);
   drawer?.classList.add('open');
   document.getElementById('mobileNavBackdrop')?.classList.add('open');
   document.body.style.overflow = 'hidden';
