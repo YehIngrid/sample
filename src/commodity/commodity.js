@@ -46,7 +46,6 @@ let activeKeyword = '';  // 只在搜尋表單提交時更新，sort/filter 不�
 // DOM 元素
 const productRow = document.getElementById('productRow');
 const sortItems = document.querySelectorAll('.sort_item');
-const paginationEl = document.getElementById('pagination');
 
 
 // 中文分類名稱 → API key 對照表
@@ -80,67 +79,54 @@ function changeCategory(category) {
   if (si) si.value = '';
   const mt = document.getElementById('searchTriggerMobile');
   if (mt) mt.value = '';
-  pageIndex = 0;
-  productRow.innerHTML = '';
   loadProducts();
 }
 
-//TODO 載入商品（分頁，含前端篩選與 totalCount 更新）
-// async function loadProducts() {
-//   if (isLoading) return;
-//   isLoading = true;
-// 
+// 無限捲動狀態
+let hasMore = true;
+let loadedCount = 0;
+const scrollSentinel = document.getElementById('scrollSentinel');
+const infiniteStatusEl = document.getElementById('infiniteStatus');
 
-//   try {
-//     let items = [];
-//     const backendService = new BackendService();
-//     const pagingInfo = { page: pageIndex + 1, limit: PAGE_SIZE };
-//     if (currentCategory === 'hot') {
-//         backendService.getHotItems(pagingInfo, (response => {
-//             console.log("call getHotItems()", response.data);
-//             items = response?.data?.commodities || [];
-//             finishRender(items);
-//         }), (errorMessage => {
-//           console.log(errorMessage);
-//         }))
-//     } else if (currentCategory === 'new') {
-//         backendService.getNewItems(pagingInfo, (response => {
-//             console.log("call getHotItems()", response.data);
-//             items = response?.data?.commodities || [];
-//             finishRender(items);
-//         }), (errorMessage => {
-//           console.log(errorMessage);
-//         }))
-//     } else {
-//         // 其他分類都撈全部，然後前端再篩選
-//         const response = await backendService.getAllCommodities(pagingInfo);
-//         // API 回傳的商品
-//         items = response.data?.commodities || [];
-//     }
-    
-    
-//     // 依 pageIndex 切出這一頁要顯示的商品
-//     const start = pageIndex * PAGE_SIZE;
-//     const pagedItems = filteredItems.slice(start, start + PAGE_SIZE);
+function setInfiniteStatus(mode) {
+  if (!infiniteStatusEl) return;
+  if (mode === 'loading') {
+    infiniteStatusEl.innerHTML = `<span class="infinite-spinner"></span> 載入更多商品中…`;
+    infiniteStatusEl.classList.add('is-visible');
+  } else if (mode === 'end') {
+    infiniteStatusEl.innerHTML = `<span class="infinite-end">沒有更多商品了</span>`;
+    infiniteStatusEl.classList.add('is-visible');
+  } else {
+    infiniteStatusEl.innerHTML = '';
+    infiniteStatusEl.classList.remove('is-visible');
+  }
+}
 
-//     // 清空後重新 render
-//     productRow.innerHTML = '';
-//     renderProductsBootstrap(pagedItems);
-//     renderPagination(totalCount);
+// 捲到底時自動載入下一頁
+if (scrollSentinel) {
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && hasMore && !isLoading) {
+      loadProducts(true);
+    }
+  }, { rootMargin: '400px 0px' });
+  observer.observe(scrollSentinel);
+}
 
-// 
-//   } catch (err) {
-//     console.error('API 載入失敗', err);
-// 
-//   } finally {
-//     isLoading = false;
-//   }
-// }
-async function loadProducts() {
+// 載入商品；append=false 為換分類/篩選/搜尋的全新查詢，append=true 為捲動載入下一頁
+async function loadProducts(append = false) {
   if (isLoading) return;
+  if (append && !hasMore) return;
   isLoading = true;
-  productRow.innerHTML = commoditySkeletonHTML(PAGE_SIZE);
 
+  if (append) {
+    setInfiniteStatus('loading');
+  } else {
+    pageIndex = 0;
+    hasMore = true;
+    loadedCount = 0;
+    productRow.innerHTML = commoditySkeletonHTML(PAGE_SIZE);
+    setInfiniteStatus('');
+  }
 
   try {
     const backendService = new BackendService();
@@ -204,14 +190,18 @@ async function loadProducts() {
       }
     }
 
-    productRow.innerHTML = '';
-    renderProductsBootstrap(items);
-    renderPagination(totalCount);
+    if (!append) productRow.innerHTML = '';
+    if (items.length > 0 || !append) renderProductsBootstrap(items);
 
-    if (items.length === 0 && keyword) {
+    loadedCount += items.length;
+    pageIndex += 1;
+    hasMore = items.length > 0 && loadedCount < totalCount;
+    setInfiniteStatus(hasMore ? '' : (loadedCount > 0 ? 'end' : ''));
+
+    if (items.length === 0 && keyword && !append) {
       showWishCta(keyword);
       showYouMightLike();
-    } else {
+    } else if (!append) {
       document.getElementById('wish-cta')?.classList.add('d-none');
       document.getElementById('you-might-like')?.classList.add('d-none');
     }
@@ -219,24 +209,16 @@ async function loadProducts() {
 
   } catch (err) {
     console.error('API 載入失敗', err);
+    if (append) setInfiniteStatus('');
 
   } finally {
     isLoading = false;
   }
-}
 
-function finishRender(items) {
-    // 篩選、分頁
-    const totalCount = items.length;
-    const start = pageIndex * PAGE_SIZE;
-    const pagedItems = items.slice(start, start + PAGE_SIZE);
-
-    productRow.innerHTML = '';
-    renderProductsBootstrap(pagedItems);
-    renderPagination(totalCount);
-
-
-    isLoading = false;
+  // 若這頁內容還沒把畫面填滿（沒東西可捲），主動補下一頁，避免卡住
+  if (hasMore && scrollSentinel && scrollSentinel.getBoundingClientRect().top < window.innerHeight) {
+    loadProducts(true);
+  }
 }
 
 // 使用 bootstrap row / col 來 render 商品
@@ -331,53 +313,6 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;');
 }
 
-// 分頁按鈕
-function renderPagination(totalCount) {
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-  paginationEl.innerHTML = '';
-  if (totalCount === 0) return;
-
-  // 上一頁
-  const prevBtn = document.createElement('button');
-  prevBtn.textContent = '‹ 上一頁';
-  prevBtn.className = 'pager-nav-btn' + (pageIndex === 0 ? ' disabled' : '');
-  prevBtn.disabled = pageIndex === 0;
-  prevBtn.addEventListener('click', () => {
-    if (pageIndex > 0) {
-      pageIndex--;
-      loadProducts();
-    }
-  });
-  paginationEl.appendChild(prevBtn);
-
-  // 頁數按鈕
-  for (let i = 0; i < totalPages; i++) {
-    const btn = document.createElement('button');
-    btn.textContent = i + 1;
-    btn.className = 'pager-nav-btn' + (i === pageIndex ? ' pager-nav-btn--active' : '');
-    btn.addEventListener('click', () => {
-      if (i !== pageIndex) {
-        pageIndex = i;
-        loadProducts();
-      }
-    });
-    paginationEl.appendChild(btn);
-  }
-
-  // 下一頁
-  const nextBtn = document.createElement('button');
-  nextBtn.textContent = '下一頁 ›';
-  nextBtn.className = 'pager-nav-btn' + (pageIndex === totalPages - 1 ? ' disabled' : '');
-  nextBtn.disabled = pageIndex === totalPages - 1;
-  nextBtn.addEventListener('click', () => {
-    if (pageIndex < totalPages - 1) {
-      pageIndex++;
-      loadProducts();
-    }
-  });
-  paginationEl.appendChild(nextBtn);
-}
-
 // 初始載入（修改後的版本）
 document.addEventListener('DOMContentLoaded', () => {
   // 設定聊天室 iframe src（桌機版）
@@ -387,8 +322,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('searchForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
     activeKeyword = (document.getElementById('searchInput')?.value.trim() || '').slice(0, 100);
-    pageIndex = 0;
-    productRow.innerHTML = '';
     loadProducts();
   });
 
@@ -399,8 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (si) si.value = '';
     const mt = document.getElementById('searchTriggerMobile');
     if (mt) mt.value = '';
-    pageIndex = 0;
-    productRow.innerHTML = '';
     loadProducts();
   });
 
@@ -408,16 +339,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('searchInput')?.addEventListener('input', (e) => {
     if (e.target.value.trim() === '' && activeKeyword !== '') {
       activeKeyword = '';
-      pageIndex = 0;
-      productRow.innerHTML = '';
       loadProducts();
     }
   });
   document.getElementById('searchTriggerMobile')?.addEventListener('input', (e) => {
     if (e.target.value.trim() === '' && activeKeyword !== '') {
       activeKeyword = '';
-      pageIndex = 0;
-      productRow.innerHTML = '';
       loadProducts();
     }
   });
@@ -448,7 +375,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (qFromUrl) {
     activeKeyword = qFromUrl;
     currentCategory = initialCategory;
-    pageIndex = 0;
     const si = document.getElementById('searchInput');
     if (si) { si.value = qFromUrl; si.dispatchEvent(new Event('input')); }
     const mt = document.getElementById('searchTriggerMobile');
@@ -470,8 +396,6 @@ function clearFilters() {
     maxPriceInput.value = '';
     newOrOldInput.value = 'default';
     sortSelect.value = 'default';
-    pageIndex = 0;
-    productRow.innerHTML = '';
     loadProducts();
 }
 
@@ -480,8 +404,6 @@ const maxPriceInput = document.getElementById('maxPriceInput');
 const newOrOldInput = document.getElementById('new_or_oldInput');
 
 function triggerFilter() {
-  pageIndex = 0;
-  productRow.innerHTML = '';
   loadProducts();
 }
 
