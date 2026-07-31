@@ -14,7 +14,7 @@ const wpSvc = new wpBackendService();
 (async () => {
   const ok = await requireAdminPage();
   if (!ok) return;
-  document.body.style.visibility = '';
+  document.body.style.visibility = 'visible';
 
   try {
     const me = await backendSvc.getMe();

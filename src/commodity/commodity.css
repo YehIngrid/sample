@@ -2,6 +2,46 @@
   --brand-color:        var(--color-primary); /* → tokens.css */
   --second-brand-color: var(--color-soft);    /* → tokens.css */
 }
+
+/* ── 無限捲動狀態列（載入中 / 已到底）── */
+#scrollSentinel {
+  height: 1px;
+}
+.infinite-status {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+.infinite-status.is-visible {
+  display: flex;
+}
+.infinite-status .infinite-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: infinite-spin 0.7s linear infinite;
+}
+@keyframes infinite-spin {
+  to { transform: rotate(360deg); }
+}
+.infinite-status .infinite-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.infinite-status .infinite-end::before,
+.infinite-status .infinite-end::after {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--color-border);
+}
 #whatcontent {
     display: flex;
     flex-direction: column;
