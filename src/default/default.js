@@ -647,7 +647,7 @@ function _initNotifSystem() {
     </div>
   `);
 
-  document.getElementById('notificationBtn').addEventListener('click', _openNotifPanel);
+  document.getElementById('notificationBtn')?.addEventListener('click', _openNotifPanel);
   document.getElementById('notifCloseBtn').addEventListener('click', _closeNotifPanel);
   document.getElementById('notifBackdrop').addEventListener('click', _closeNotifPanel);
   document.getElementById('notifReadAllBtn').addEventListener('click', _markAllNotifRead);

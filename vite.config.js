@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import { resolve } from 'path'
 import { glob } from 'glob'
 import { cpSync, existsSync, rmSync, readFileSync } from 'fs'
@@ -15,7 +15,8 @@ function devSrcRewrite() {
         const skip = url.startsWith('/src/') || url.startsWith('/@') ||
                      url.startsWith('/node_modules') || url === '/' ||
                      url.startsWith('/favicon') || url.startsWith('/__vite') ||
-                     url.startsWith('/sw.js') || url.startsWith('/robots.txt') || url.startsWith('/sitemap.xml')
+                     url.startsWith('/sw.js') || url.startsWith('/robots.txt') || url.startsWith('/sitemap.xml') ||
+                     url.startsWith('/api')
         if (!skip) {
           req.url = '/src' + url
         }
@@ -127,23 +128,42 @@ try {
   gitCommit = execSync('git rev-parse --short HEAD').toString().trim()
 } catch {}
 
-export default defineConfig(() => ({
-  base: '/',
-  define: {
-    'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkgVersion),
-    'import.meta.env.VITE_GIT_COMMIT': JSON.stringify(gitCommit),
-  },
-  server: {
-    port: 3000,
-    // https: existsSync('localhost+1-key.pem') && existsSync('localhost+1.pem') ? {
-    //   key: readFileSync('localhost+1-key.pem'),
-    //   cert: readFileSync('localhost+1.pem'),
-    // } : true,
-  },
-  build: {
-    outDir: 'dist',
-    sourcemap: process.env.SOURCE_MAP === 'true',
-    rollupOptions: { input },
-  },
-  plugins: [devSrcRewrite(), stripHtmlComments(), copyStaticFolders(), flattenSrcDir()],
-}))
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd())
+  const isDev = mode === 'development'
+
+  return {
+    base: '/',
+    define: {
+      'import.meta.env.VITE_APP_VERSION': JSON.stringify(pkgVersion),
+      'import.meta.env.VITE_GIT_COMMIT': JSON.stringify(gitCommit),
+      // dev 模式下讓瀏覽器端請求打相對路徑 /api/...（走下面的 proxy），
+      // 而不是直接跨網域打 dev.treasurehub.tw —— 否則登入後拿到的 JWT cookie
+      // 會被瀏覽器當第三方 cookie 擋掉，whoami 永遠 401 "No JWT token provided"
+      ...(isDev ? { 'import.meta.env.VITE_API_BASE_URL': JSON.stringify('') } : {}),
+    },
+    server: {
+      port: 3000,
+      // https: existsSync('localhost+1-key.pem') && existsSync('localhost+1.pem') ? {
+      //   key: readFileSync('localhost+1-key.pem'),
+      //   cert: readFileSync('localhost+1.pem'),
+      // } : true,
+      proxy: isDev ? {
+        '/api': {
+          target: env.VITE_API_BASE_URL,
+          changeOrigin: true,
+          secure: true,
+          // 後端 Set-Cookie 的 Domain 是 dev.treasurehub.tw，經 proxy 轉發後
+          // 瀏覽器看到的來源變成 localhost，要重寫成 localhost 才存得住
+          cookieDomainRewrite: 'localhost',
+        },
+      } : undefined,
+    },
+    build: {
+      outDir: 'dist',
+      sourcemap: process.env.SOURCE_MAP === 'true',
+      rollupOptions: { input },
+    },
+    plugins: [devSrcRewrite(), stripHtmlComments(), copyStaticFolders(), flattenSrcDir()],
+  }
+})
