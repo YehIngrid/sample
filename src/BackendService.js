@@ -194,6 +194,8 @@ export default class BackendService {
                 throw new Error("此帳號已被註冊");
             } else if (beMsg && /invite/i.test(beMsg)) {
                 throw new Error("邀請碼無效，請確認後再試，或留空跳過");
+            } else if (beMsg) {
+                throw new Error(beMsg);
             } else {
                 captureException(error);
                 throw new Error("系統發生錯誤，請稍後再試");
@@ -330,6 +332,10 @@ export default class BackendService {
             const response = await axios.get(`${this.baseUrl}/api/whoami`, {withCredentials: true });
             const d = response.data?.data ?? response.data;
             if (d?.contactEmail != null) localStorage.setItem('contractEmail', d.contactEmail);
+            // role 是權限判斷的關鍵欄位，每次 whoami 都要同步，不能只在 uid/username
+            // 缺漏時才補（否則已登入使用者被後台升級權限後，若沒有重新登入，
+            // localStorage 裡的舊 role 永遠不會更新，導致明明有權限卻一直被擋）
+            if (d?.role) localStorage.setItem('role', d.role);
             // 已登入但 localStorage 缺少使用者資料（如清除快取後）→ 自動補充
             if (!localStorage.getItem('username') || !localStorage.getItem('uid')) {
                 try { await this.getMe(); } catch (_) {}
