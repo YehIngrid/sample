@@ -172,17 +172,6 @@ function fieldClear(inputId, errorId) {
   document.getElementById(inputId)?.addEventListener('input', () => fieldClear(inputId, errorId));
 });
 
-// 註冊 email：接受 @mail.nchu.edu.tw / @dragon.nchu.edu.tw / @nchu.edu.tw / @treasurehub.tw
-function isValidSignupEmail(email) {
-  //return /^[^@]+@(mail\.nchu\.edu\.tw|dragon\.nchu\.edu\.tw|nchu\.edu\.tw|treasurehub\.tw)$/i.test(email);
-}
-document.getElementById('email')?.addEventListener('blur', function() {
-  const val = this.value.trim();
-  if (val && !isValidSignupEmail(val)) {
-    fieldError('email', 'err-signup-email', '請使用 @mail.nchu.edu.tw 或 @dragon.nchu.edu.tw 的學校信箱註冊');
-  }
-});
-
 // ── 註冊 ──────────────────────────────────────────────────
 const signuppage = document.getElementById('signuppage');
 
@@ -423,8 +412,6 @@ signbtn.addEventListener('click', function(e) {
   const signupEmailVal = document.getElementById('email').value.trim();
   if (!signupEmailVal) {
     fieldError('email', 'err-signup-email', '請輸入電子信箱'); hasError = true;
-  } else if (!isValidSignupEmail(signupEmailVal)) {
-    fieldError('email', 'err-signup-email', '請輸入有效的電子信箱'); hasError = true;
   }
   if (!document.getElementById('password1').value) {
     fieldError('password1', 'err-signup-pwd1', '請輸入密碼'); hasError = true;
