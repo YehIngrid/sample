@@ -194,6 +194,8 @@ export default class BackendService {
                 throw new Error("此帳號已被註冊");
             } else if (beMsg && /invite/i.test(beMsg)) {
                 throw new Error("邀請碼無效，請確認後再試，或留空跳過");
+            } else if (beMsg) {
+                throw new Error(beMsg);
             } else {
                 captureException(error);
                 throw new Error("系統發生錯誤，請稍後再試");
