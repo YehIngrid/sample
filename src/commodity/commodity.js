@@ -259,12 +259,14 @@ function renderProductsBootstrap(items) {
     const category = categoryMap[p.category] ?? '其他';
     const newOrOld = newOrOldMap[p.newOrOld] ?? '';
     const imgUrl   = toBigImg(p.mainImage) || '';
+    const viewCount = p.viewCount ?? 0;
     col.innerHTML = `
       <div class="product-card position-relative h-100" data-id="${escapeHtml(p.id)}">
         <div class="product-thumb">
           ${imgUrl
             ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(p.name)}" loading="lazy">`
             : `<div class="product-thumb-placeholder">${escapeHtml(p.name.slice(0,6))}</div>`}
+          ${viewCount > 0 ? `<span class="commodity-view-badge"><i class="ti ti-eye"></i> ${viewCount}</span>` : ''}
         </div>
         <div class="card-body">
           <div class="hotItemName ellipsis-text">${escapeHtml(p.name)}</div>
@@ -469,12 +471,14 @@ async function showYouMightLike() {
       const col = document.createElement('div');
       col.className = 'col';
       const imgUrl = toBigImg(p.mainImage) || '';
+      const viewCount = p.viewCount ?? 0;
       col.innerHTML = `
         <div class="product-card position-relative h-100" data-id="${escapeHtml(p.id)}">
           <div class="product-thumb">
             ${imgUrl
               ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(p.name)}" loading="lazy">`
               : `<div class="product-thumb-placeholder">${escapeHtml(p.name.slice(0,6))}</div>`}
+            ${viewCount > 0 ? `<span class="commodity-view-badge"><i class="ti ti-eye"></i> ${viewCount}</span>` : ''}
           </div>
           <div class="card-body">
             <div class="hotItemName ellipsis-text">${escapeHtml(p.name)}</div>

@@ -2415,6 +2415,23 @@ tbody > tr:nth-of-type(even) {
 .hot-items-container.overflows {
   justify-content: flex-start;
 }
+
+/* ── 熱賣卡片瀏覽數 badge ── */
+.hot-item-view-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.65rem;
+  color: #fff;
+  background: rgba(0, 75, 151, 0.75);
+  padding: 3px 6px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  z-index: 3;
+}
   
   .hot-items-container::-webkit-scrollbar {
   display: none;

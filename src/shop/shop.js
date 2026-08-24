@@ -347,11 +347,13 @@ function renderItems(items){
     const div = document.createElement("div");
       div.className = "hot-item";
       div.dataset.id = item.id;
+      const viewCount = item.viewCount ?? 0;
       div.innerHTML = `
         <div class="card">
           <div class="img-box">
             <img src="../svg/topicon.svg" class="hot-top-icon" alt="熱門商品標誌" width="46" height="46" decoding="async">
             <img class="main" src="${toBigImg(item.mainImage)}" alt="${esc(item.name)}" loading="lazy" decoding="async">
+            ${viewCount > 0 ? `<span class="hot-item-view-badge"><i class="ti ti-eye"></i> ${viewCount}</span>` : ''}
           </div>
           <div class="hot-item-footer">
             <div class="hotItemName">${esc(item.name)}</div>

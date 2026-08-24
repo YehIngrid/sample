@@ -1604,6 +1604,7 @@ function renderCards(list = []) {
     const created = fmtDate(item.createdAt);
     const img     = esc(item.mainImage || item.imageUrl || '../image/placeholder.webp');
     const stock   = item.stock ?? 0;
+    const viewCount = item.viewCount ?? 0;
     const stockCls = stock === 0 ? ' pcard-stock-out' : '';
 
     return `
@@ -1618,6 +1619,7 @@ function renderCards(list = []) {
           <div class="ocard-product" style="flex:1;">
             <div class="ocard-thumb">
               <img src="${img}" alt="${name}">
+              ${viewCount > 0 ? `<span class="ocard-view-badge"><i class="ti ti-eye"></i> ${viewCount}</span>` : ''}
             </div>
             <div class="ocard-info">
               <div class="ocard-sub">庫存：<span class="pcard-stock${stockCls}">${stock}</span></div>

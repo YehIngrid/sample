@@ -315,6 +315,17 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   minusBtn?.addEventListener('click', () => { qtyInput.textContent = clampQty(num(qtyInput.textContent) - 1); });
 })();
 
+/* ---------- 2a) 瀏覽數 badge ── */
+(function renderViewCountBadge() {
+  const badgeEl = document.getElementById('productViewBadge');
+  if (!badgeEl) return;
+  const viewCount = num(product?.viewCount, 0);
+  if (viewCount > 0) {
+    badgeEl.innerHTML = `<i class="ti ti-eye"></i> ${viewCount}`;
+    badgeEl.classList.remove('d-none');
+  }
+})();
+
 /* ---------- 2) 規格／屬性（使用 <dl>） ---------- */
 (function renderMeta() {
   const wrap = document.getElementById('product-category');

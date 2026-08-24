@@ -1008,6 +1008,7 @@
   font-weight: 500;
   text-align: right;
 }
+
 .otherimg {
   width: 120px;
   height: 120px;
@@ -1669,4 +1670,21 @@
   .chaticon { bottom: 70px !important; }
   #talkInterface { bottom: 110px !important;
   }
+}
+
+/* ── 商品主圖瀏覽數 badge ── */
+.product-view-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.65rem;
+  color: #fff;
+  background: rgba(0, 75, 151, 0.75);
+  padding: 3px 6px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  z-index: 3;
 }

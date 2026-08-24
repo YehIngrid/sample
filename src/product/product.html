@@ -151,6 +151,7 @@
                   <button class="img-nav-btn img-nav-prev" id="imgPrev" aria-label="上一張">&#8249;</button>
                   <button class="img-nav-btn img-nav-next" id="imgNext" aria-label="下一張">&#8250;</button>
                   <span class="img-counter d-none" id="imgCounter"></span>
+                  <span class="product-view-badge d-none" id="productViewBadge"></span>
                 </div>
               </div>
               <!-- 縮圖容器（主圖下方、分享上方） -->
@@ -191,9 +192,10 @@
 
           <hr style="margin: 0 auto;">
 
-          <!-- 分類屬性 -->
+          <!-- 分類屬性 + 瀏覽數 -->
           <div class="meta mobilesetting">
             <dl class="row" id="product-category"></dl>
+            <!-- 瀏覽數會由 JS 動態插入 -->
           </div>
 
           <!-- 庫存 + 數量 -->
