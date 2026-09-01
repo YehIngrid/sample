@@ -528,22 +528,53 @@
               <span class="info-label"><i class="ti ti-at"></i>登入信箱/帳號</span>
               <div class="info-row-right">
                 <span class="info-value" id="showLoginEmail">—</span>
-                <span id="emailVerifyBadge"></span>
               </div>
             </div>
             <div class="info-row" style="border-bottom: none;">
-              <span class="info-label"><i class="ti ti-mail"></i>常用帳號</span>
+              <span class="info-label"><i class="ti ti-mail"></i>聯絡信箱</span>
               <div class="info-row-right">
                 <span class="info-value" id="showEmail">尚未設定</span>
                 <button class="checkInfoBtn" id="setEmailBtn">
-                  <img src="../svg/settingicon.svg" alt="設定常用帳號icon">
+                  <img src="../svg/settingicon.svg" alt="設定聯絡信箱icon">
                   <div>設定</div>
                 </button>
               </div>
             </div>
           </div>
         </div>
-        
+
+        <div class="profile-edit-card mt-3">
+          <div class="profile-edit-header">
+            <i class="ti ti-school"></i>
+            <span>教育信箱驗證</span>
+          </div>
+          <div class="profile-edit-body">
+            <p class="text-muted small mb-3" style="font-size:0.82rem;">
+              <i class="fa-solid fa-circle-info" style="color:#004b97;"></i>
+              提交學校信箱以取得校園認證身分，網域須為系統允許的學校信箱（例如 @nchu.edu.tw）。
+            </p>
+            <div class="info-row">
+              <span class="info-label"><i class="ti ti-mail"></i>教育信箱</span>
+              <div class="info-row-right">
+                <span class="info-value" id="showEduEmail">尚未提交</span>
+                <span id="eduEmailBadge"></span>
+              </div>
+            </div>
+            <div class="sell-field mt-3" id="eduEmailFormWrap">
+              <label for="edu-email" class="sell-label">學校信箱</label>
+              <input type="email" class="form-control" id="edu-email" placeholder="student@nchu.edu.tw" maxlength="128">
+            </div>
+            <div class="profile-edit-footer">
+              <button class="profile-submit-btn" id="submit-edu-email-btn">
+                <i class="ti ti-send"></i> 送出驗證信
+              </button>
+              <button class="profile-submit-btn d-none" id="resend-edu-email-btn" style="background:#f0f2f4;color:#6f87a0;">
+                <i class="ti ti-refresh"></i> 重新發送驗證信
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="profile-edit-card mt-3" id="profile-edit-section">
           <div class="profile-edit-header">
             <i class="ti ti-user-edit"></i>
@@ -730,6 +761,16 @@
               <div class="stat-lbl-new">信譽積分</div>
             </div>
           </div>
+        </div>
+
+        <!-- 學生身分驗證引導 banner -->
+        <div id="eduVerifyBanner" class="first-listing-banner d-none">
+          <div class="flb-icon"><i class="ti ti-shield-check" style="color:#fff;font-size:20px;"></i></div>
+          <div class="flb-body">
+            <div class="flb-title">還沒有完成學生身分驗證？</div>
+            <div class="flb-sub">驗證教育信箱後才能上架與購買商品，立即完成驗證吧！</div>
+          </div>
+          <a href="#" class="flb-btn" id="eduVerifyBannerBtn">立即驗證</a>
         </div>
 
         <!-- 首次上架引導 banner -->

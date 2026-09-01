@@ -205,10 +205,10 @@ export async function openReviewerProfileModal(accountId, name, photo) {
   } catch (_) {}
 
   const reviewCount  = Number(stats?.reviewCount ?? 0);
-  const accountScore = rate ?? stats?.accountScore ?? '-';
+  const rateDisplay  = rate ?? '-';
   const statsLine = reviewCount > 0
-    ? `${reviewCount} 則評價 · 信譽積分 ${accountScore}`
-    : `信譽積分 ${accountScore}`;
+    ? `${reviewCount} 則評價 · 信譽積分 ${rateDisplay}`
+    : `信譽積分 ${rateDisplay}`;
 
   const suspensionBadge = (suspensionLevel && suspensionLevel !== 'NONE')
     ? `<span class="rp-badge rp-badge--danger">可疑帳號</span>` : '';

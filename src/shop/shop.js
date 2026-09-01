@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
-import { requireEmailVerified } from '../default/default.js';
+import { requireEduEmailVerified } from '../default/default.js';
 import { AppModal } from '../default/app-modal.js';
 window.AppModal = AppModal; // 給頁面內的 classic <script> 使用（抽獎輪盤、刊登表單驗證）
 
@@ -456,7 +456,7 @@ nextHotBtn.addEventListener("click", () => {
 
  
   async function createCommodity() {
-  if (!await requireEmailVerified()) return;
+  if (!await requireEduEmailVerified()) return;
   // 1. 商品名稱
   const nameEl = document.getElementById('name');
   if (!nameEl.value.trim()) {

@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
-import { requireLogin, requireEmailVerified } from '../default/default.js';
+import { requireLogin } from '../default/default.js';
 import { AppModal } from '../default/app-modal.js';
 
 history.scrollRestoration = 'manual';
@@ -674,8 +674,6 @@ wishFormbig.addEventListener("click", async function (e) {
   console.log("送出表單，進行最終驗證");
   e.preventDefault(); // 一律阻止原生送出
 
-  if (!await requireEmailVerified()) return;
-
   let isValid = true;
 
   const okPhoto = validatePhoto();
@@ -1047,8 +1045,6 @@ async function handleContactWisher(wishId, btn, ownerUid = '') {
 
   const loggedIn = await requireLogin();
   if (!loggedIn) return;
-
-  if (!await requireEmailVerified()) return;
 
   const myUid = String(localStorage.getItem('uid') || '');
   if (myUid && ownerUid && myUid === String(ownerUid)) {

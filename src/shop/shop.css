@@ -690,6 +690,49 @@ ul{
    賣家表單：多步驟 Wizard
 ══════════════════════════════════════ */
 
+/* 學生身分驗證提醒橫幅 */
+.edu-verify-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(243,227,181,0.35);
+  border: 1px solid rgba(243,227,181,0.9);
+  border-radius: 18px;
+  padding: 14px 18px;
+  margin: 12px 1.2rem 0;
+}
+.evb-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: #004b97;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px;
+}
+.evb-body { flex: 1; min-width: 0; }
+.evb-title { font-size: 0.95rem; font-weight: 700; color: #a08540; margin-bottom: 2px; }
+.evb-sub { font-size: 0.82rem; color: #6f5a2a; }
+.evb-btn {
+  flex-shrink: 0;
+  background: #004b97;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.22s ease;
+}
+.evb-btn:hover { background: rgb(36,182,133); color: #fff; }
+@media (max-width: 768px) {
+  .edu-verify-banner { flex-wrap: wrap; margin: 12px 1rem 0; }
+  .evb-btn { width: 100%; text-align: center; }
+}
+
 /* 草稿恢復 banner */
 .sell-draft-banner {
   display: flex;

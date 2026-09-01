@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
-import { formatTaipeiTime, requireLogin } from '../default/default.js';
+import { formatTaipeiTime, requireLogin, requireEduEmailVerified } from '../default/default.js';
 import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewerModal.js';
 import { AppModal } from '../default/app-modal.js';
 
@@ -921,6 +921,7 @@ document.addEventListener('click', async (e) => {
   e.preventDefault();
 
   if (!(await requireLogin())) return;
+  if (!(await requireEduEmailVerified())) return;
 
   orderNow(e);
 });
