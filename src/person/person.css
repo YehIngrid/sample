@@ -1390,6 +1390,11 @@ small { font-size: 10px; color: #004b97; }
 }
 .profile-submit-btn:hover { background: rgb(36,182,133); }
 .profile-submit-btn:active { background: rgb(30,160,115); }
+#resend-edu-email-btn, #edit-edu-email-btn {
+  font-size: var(--font-size-sm);
+  padding: 8px 20px;
+  font-weight: 600;
+}
 
 .updatebtn {
   display: flex;
