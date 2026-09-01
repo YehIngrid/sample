@@ -6,6 +6,11 @@ const _tagMeaningCache = {};
 const _tagPositiveCache = {};
 const DEFAULT_AVATAR = '../webP/default-avatar.webp';
 
+function toBigImg(url) {
+  if (!url) return url;
+  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_big$1$2');
+}
+
 function esc(str) {
   if (str == null) return '';
   return String(str)
@@ -174,11 +179,13 @@ export async function openReviewerProfileModal(accountId, name, photo) {
   let lowScoreStrikeCount = 0;
   let joinDate = '';
   let commodities = [];
+  let rate = null;
 
   try {
-    const [reviewRes, profileRes] = await Promise.all([
+    const [reviewRes, profileRes, commoditiesRes] = await Promise.all([
       _svc.getUserReviews(accountId),
       _svc.getPublicUserProfile(accountId).catch(() => null),
+      _svc.getUserCommodities(accountId).catch(() => null),
     ]);
     const d  = reviewRes?.data?.data;
     const pd = profileRes?.data?.data;
@@ -188,7 +195,8 @@ export async function openReviewerProfileModal(accountId, name, photo) {
     intro              = pd?.introduction ?? '';
     suspensionLevel    = pd?.suspensionLevel    ?? 'NONE';
     lowScoreStrikeCount = pd?.lowScoreStrikeCount ?? 0;
-    commodities        = Array.isArray(pd?.commodities) ? pd.commodities : [];
+    commodities        = commoditiesRes?.data?.data?.commodities ?? [];
+    rate               = Number.isFinite(+pd?.rate) ? +pd.rate : null;
     if (pd?.createdAt) {
       const jd = new Date(pd.createdAt);
       joinDate = `${jd.getFullYear()}年${jd.getMonth() + 1}月加入`;
@@ -197,10 +205,10 @@ export async function openReviewerProfileModal(accountId, name, photo) {
   } catch (_) {}
 
   const reviewCount  = Number(stats?.reviewCount ?? 0);
-  const accountScore = stats?.accountScore ?? '-';
+  const accountScore = rate ?? stats?.accountScore ?? '-';
   const statsLine = reviewCount > 0
     ? `${reviewCount} 則評價 · 信譽積分 ${accountScore}`
-    : '尚無評價紀錄';
+    : `信譽積分 ${accountScore}`;
 
   const suspensionBadge = (suspensionLevel && suspensionLevel !== 'NONE')
     ? `<span class="rp-badge rp-badge--danger">可疑帳號</span>` : '';
@@ -217,7 +225,7 @@ export async function openReviewerProfileModal(accountId, name, photo) {
 
   const commodityCards = commodities.map(c => {
     const cid   = c.id ?? c._id ?? '';
-    const cimg  = c.mainImage || c.photoURL || c.image || '';
+    const cimg  = toBigImg(c.mainImage) || '';
     const sold  = Number(c.stock) <= 0;
     return `
       <div class="rp-commodity-card" data-product-id="${esc(cid)}">

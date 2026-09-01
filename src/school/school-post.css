@@ -239,12 +239,12 @@ body { background: var(--alice); }
   box-shadow: 0 18px 40px -28px rgba(0,75,151,0.4);
 }
 .unlock .lock-ic {
-  width: 52px; height: 52px; border-radius: 50%;
+  width: 64px; height: 64px; border-radius: 50%;
   background: var(--alice); color: var(--navy);
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 14px;
 }
-.unlock .lock-ic svg { width: 24px; height: 24px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.unlock .lock-ic svg { width: 32px; height: 32px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .unlock h3 { font-size: 19px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; margin-bottom: 6px; }
 .unlock p { font-size: 13.5px; color: var(--muted); line-height: 1.7; max-width: 440px; margin: 0 auto 20px; }
 .unlock .price-row {
@@ -262,7 +262,7 @@ body { background: var(--alice); }
   transition: all 0.22s; cursor: pointer;
 }
 .unlock .btn-buy:hover { background: var(--green-d); transform: translateY(-1px); }
-.unlock .btn-buy svg { width: 16px; height: 16px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.unlock .btn-buy svg { width: 19px; height: 19px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .unlock .pay-methods {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   margin-top: 18px;
@@ -376,7 +376,7 @@ body { background: var(--alice); }
   transition: all 0.22s; cursor: pointer;
 }
 .buy-card .btn-buy:hover { background: var(--green-d); }
-.buy-card .btn-buy svg { width: 16px; height: 16px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.buy-card .btn-buy svg { width: 19px; height: 19px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .buy-card .btn-ghost {
   display: flex; align-items: center; justify-content: center; gap: 6px;
   padding: 11px; border-radius: 999px;
@@ -400,8 +400,12 @@ body { background: var(--alice); }
 .toc a { display: block; font-size: 13px; color: var(--ink); padding: 7px 0; border-bottom: 1px dashed var(--line); letter-spacing: 0.02em; }
 .toc a:last-child { border-bottom: none; }
 .toc a:hover { color: var(--navy); }
-.toc a .locked { font-size: 11px; color: var(--muted); margin-left: 4px; }
+.toc a .locked { display: inline-flex; vertical-align: -1px; margin-left: 4px; }
+.toc a .locked svg { width: 15px; height: 15px; fill:none; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
+.toc a .unlocked-mark { display: none; vertical-align: -1px; margin-left: 4px; color: var(--green-d); }
+.toc a .unlocked-mark svg { width: 15px; height: 15px; fill:none; stroke: currentColor; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; }
 body.unlocked .toc a .locked { display: none; }
+body.unlocked .toc a .unlocked-mark { display: inline-flex; }
 
 .report { text-align: center; }
 .report a { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; display: inline-flex; align-items: center; gap: 6px; }
@@ -504,9 +508,9 @@ body.unlocked .unlocked-only { display: block; }
   .sp-actionbar .priceb .s { font-size: 10.5px; color: var(--muted); margin-top: 3px; }
   .sp-actionbar .cta { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 13px; border-radius: 999px; background: var(--green); color: #fff; font-size: 14.5px; font-weight: 800; letter-spacing: 0.04em; transition: all 0.2s; cursor: pointer; }
   .sp-actionbar .cta:hover { background: var(--green-d); }
-  .sp-actionbar .cta svg { width: 16px; height: 16px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .sp-actionbar .cta svg { width: 19px; height: 19px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
   .sp-actionbar .done { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--green-d); flex: 1; justify-content: center; }
-  .sp-actionbar .done svg { width: 16px; height: 16px; fill:none; stroke: currentColor; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+  .sp-actionbar .done svg { width: 19px; height: 19px; fill:none; stroke: currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
   .sp-actionbar .rate { padding: 11px 18px; border-radius: 999px; background: var(--navy-solid); color: #fff; font-size: 13.5px; font-weight: 700; letter-spacing: 0.04em; flex-shrink: 0; }
   .sp-actionbar .unlocked-wrap { display: none; flex: 1; align-items: center; gap: 10px; }
   body.unlocked .sp-actionbar .locked-only { display: none; }

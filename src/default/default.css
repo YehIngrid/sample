@@ -1175,7 +1175,7 @@ a.specialpadding[href*="shoppingcart"] {
 :root[data-theme="dark"] .bottom-nav-item.active .bottom-nav-indicator { background: var(--navy, #6aa9e8); }
 :root[data-theme="dark"] .nav-center-circle { border-color: var(--card, #272e37); }
 :root[data-theme="dark"] .bottom-nav-badge { border-color: var(--card, #272e37); }
-:root[data-theme="dark"] .bottom-nav-item .nav-icon:not(.nav-center .nav-icon) { filter: brightness(0) invert(0.85); }
+:root[data-theme="dark"] .bottom-nav-item .nav-icon:not(.nav-center .nav-icon) { filter: brightness(0) invert(0.85); opacity: 1 !important; }
 :root[data-theme="dark"] .bottom-nav-item.active .nav-icon:not(.nav-center .nav-icon) { filter: brightness(0) invert(1); }
 
 /* ── 安全提示跑馬燈 ── */
