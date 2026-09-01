@@ -696,40 +696,35 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  padding: 9px 12px;
+  gap: 6px;
+  padding: 10px 16px;
   font-size: 0.85rem;
-  font-weight: 500;
-  border-radius: 8px;
+  font-weight: 700;
+  border-radius: 999px;
   border: none;
   cursor: pointer;
-  transition: background 0.15s, opacity 0.15s;
+  transition: all 0.22s ease;
   white-space: nowrap;
 }
 .seller-action-primary {
-  background: #abdad5;
-  color: #383838;
+  background: #004b97;
+  color: #fff;
 }
-.seller-action-primary:hover { opacity: 0.85; }
+.seller-action-primary:hover { background: #003a78; }
 .seller-action-secondary {
   background: #abdad5;
-  color: #383838;
+  color: #004b97;
 }
-.seller-action-secondary:hover { opacity: 0.85; }
+.seller-action-secondary:hover { background: #9ccfc8; }
 .seller-action-report {
   flex: 0 0 auto;
   background: transparent;
   color: #e74c3c;
   font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 8px;
 }
 .seller-action-report:hover { color: #c0392b; }
-
-/* 評價展開區 */
-.seller-card-divider {
-  height: 1px;
-  background: #ABDAD5;
-  margin: 16px 0;
-}
 .reviewer-avatar {
   width: 40px;
   height: 40px;
@@ -1133,19 +1128,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* 初始隱藏狀態：透明度 0 且往上偏移 */
-.fade-down {
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-}
-
-/* 顯示狀態：當 class 包含 .show 時，回到原位 */
-.fade-down.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 /* ── 主圖左右切換箭頭 ── */
 .img-nav-btn {
   position: absolute;

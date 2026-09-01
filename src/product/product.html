@@ -286,21 +286,25 @@
           </div>
           <!-- 按鈕列 -->
           <div class="seller-card-actions">
-            <button class="seller-action-btn seller-action-primary" id="sellerChat">
-              <i class="fa-regular fa-comment-dots"></i> 與賣家聊聊
+            <button class="seller-action-btn seller-action-primary" id="sellerGoProfile">
+              <i class="fa-regular fa-id-card"></i> 前往賣家主頁
             </button>
-            <button class="seller-action-btn seller-action-secondary" id="sellerRatebtn">
-              <i class="fa-regular fa-star"></i> 查看評價
+            <button class="seller-action-btn seller-action-secondary" id="sellerChat">
+              <i class="fa-regular fa-comment-dots"></i> 與賣家聊聊
             </button>
             <button class="seller-action-btn seller-action-report" id="sellerBad">
               <i class="fa-regular fa-flag"></i> 檢舉
             </button>
           </div>
-          <!-- 評價展開區 -->
-          <div class="d-none fade-down" id="sellerReviews">
-            <div class="seller-card-divider"></div>
-            <!-- 評價卡片列表（JS 動態渲染至此） -->
-            <div id="reviewerInfo"></div>
+        </div>
+      </div>
+
+      <!-- 賣家評論（直接呼叫 API 顯示，不需點擊展開） -->
+      <div class="typeofcommodity">
+        <h5 class="topic">賣家評論</h5>
+        <div id="sellerReviews" class="seller-card">
+          <div id="reviewerInfo">
+            <div class="review-empty">載入中...</div>
           </div>
         </div>
       </div>

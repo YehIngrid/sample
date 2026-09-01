@@ -172,6 +172,8 @@ export async function openReviewerProfileModal(accountId, name, photo) {
   let intro = '';
   let suspensionLevel = 'NONE';
   let lowScoreStrikeCount = 0;
+  let joinDate = '';
+  let commodities = [];
 
   try {
     const [reviewRes, profileRes] = await Promise.all([
@@ -186,6 +188,11 @@ export async function openReviewerProfileModal(accountId, name, photo) {
     intro              = pd?.introduction ?? '';
     suspensionLevel    = pd?.suspensionLevel    ?? 'NONE';
     lowScoreStrikeCount = pd?.lowScoreStrikeCount ?? 0;
+    commodities        = Array.isArray(pd?.commodities) ? pd.commodities : [];
+    if (pd?.createdAt) {
+      const jd = new Date(pd.createdAt);
+      joinDate = `${jd.getFullYear()}年${jd.getMonth() + 1}月加入`;
+    }
     if (!photo && pd?.photoURL) photo = pd.photoURL;
   } catch (_) {}
 
@@ -208,6 +215,24 @@ export async function openReviewerProfileModal(accountId, name, photo) {
     ? `<div class="review-list">${allCards}</div>`
     : `<div class="review-empty rp-empty"><i class="ti ti-message-circle" style="font-size:1.8rem;display:block;margin-bottom:6px;opacity:0.4;"></i>目前尚無評價紀錄</div>`;
 
+  const commodityCards = commodities.map(c => {
+    const cid   = c.id ?? c._id ?? '';
+    const cimg  = c.mainImage || c.photoURL || c.image || '';
+    const sold  = Number(c.stock) <= 0;
+    return `
+      <div class="rp-commodity-card" data-product-id="${esc(cid)}">
+        <div class="rp-commodity-thumb">
+          ${cimg ? `<img src="${esc(cimg)}" alt="${esc(c.name)}" onerror="this.parentElement.classList.add('rp-commodity-thumb--empty');this.remove();">` : ''}
+          ${sold ? `<span class="rp-commodity-sold">已售完</span>` : ''}
+        </div>
+        <div class="rp-commodity-name">${esc(c.name ?? '未命名商品')}</div>
+        <div class="rp-commodity-price">NT$ ${Number(c.price ?? 0).toLocaleString('zh-TW')}</div>
+      </div>`;
+  }).join('');
+  const commoditiesHtml = commodities.length
+    ? `<div class="rp-section-title">在售商品 · ${commodities.length}</div><div class="rp-commodities">${commodityCards}</div>`
+    : '';
+
   const myUid = localStorage.getItem('uid');
   const reportBtn = (accountId && String(accountId) !== String(myUid))
     ? `<button class="rp-report-btn" data-report-user-id="${accountId}" data-report-user-name="${esc(name)}">
@@ -224,16 +249,24 @@ export async function openReviewerProfileModal(accountId, name, photo) {
           onerror="this.src='${DEFAULT_AVATAR}'">
         <div class="rp-info">
           <div class="rp-name">${esc(name)}${suspensionBadge}${lowScoreBadge}</div>
-          <div class="rp-stats">${statsLine}</div>
+          <div class="rp-stats">${statsLine}${joinDate ? ` · ${esc(joinDate)}` : ''}</div>
           ${intro ? `<div class="rp-intro">${esc(intro)}</div>` : ''}
         </div>
         ${reportBtn}
       </div>
+      ${commoditiesHtml}
       <div class="rp-divider"></div>
       <div class="rp-reviews">${reviewHtml}</div>
     `,
     confirmButtonText: '關閉',
     width: 520,
-    didOpen: popup => bindReviewerClicks(popup),
+    didOpen: popup => {
+      bindReviewerClicks(popup);
+      popup.querySelectorAll('[data-product-id]').forEach(card => {
+        const pid = card.dataset.productId;
+        if (!pid) return;
+        card.addEventListener('click', () => { location.href = `../product/product.html?id=${pid}`; });
+      });
+    },
   });
 }
