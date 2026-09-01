@@ -204,6 +204,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById('mobileSchoolGuideItem').classList.remove('d-none');
   }
 
+  // 學生身分驗證提醒橫幅：已登入但尚未完成教育信箱驗證時顯示
+  const eduVerifyBanner = document.getElementById('eduVerifyBanner');
+  if (eduVerifyBanner) {
+    const eduVerified = localStorage.getItem('eduEmailVerified') === 'true';
+    eduVerifyBanner.classList.toggle('d-none', !window.isLoggedIn || eduVerified);
+  }
+
   const params = new URLSearchParams(window.location.search);
   const page = params.get("page");
 
