@@ -738,7 +738,7 @@ ul{
   .edu-verify-banner { width: 92vw; }
 }
 @media (max-width: 500px) {
-  .edu-verify-banner { width: 100vw; padding: 12px 4vw; }
+  .edu-verify-banner { width: auto; margin: 12px 4vw 0; }
 }
 
 /* 草稿恢復 banner */
