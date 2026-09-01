@@ -1048,6 +1048,7 @@ function renderEduEmailStatus(eduEmail, verified) {
   const formWrap  = document.getElementById('eduEmailFormWrap');
   const submitBtn = document.getElementById('submit-edu-email-btn');
   const resendBtn = document.getElementById('resend-edu-email-btn');
+  const editBtn   = document.getElementById('edit-edu-email-btn');
   if (!showEl || !badgeEl) return;
 
   if (!eduEmail) {
@@ -1056,6 +1057,7 @@ function renderEduEmailStatus(eduEmail, verified) {
     formWrap?.classList.remove('d-none');
     submitBtn?.classList.remove('d-none');
     resendBtn?.classList.add('d-none');
+    editBtn?.classList.add('d-none');
     return;
   }
 
@@ -1065,13 +1067,30 @@ function renderEduEmailStatus(eduEmail, verified) {
     formWrap?.classList.add('d-none');
     submitBtn?.classList.add('d-none');
     resendBtn?.classList.add('d-none');
+    editBtn?.classList.add('d-none');
   } else {
     badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:#e67e22;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-alert-circle"></i>待驗證</span>`;
+    // 待驗證狀態：預設收合表單，但保留「修改信箱」入口，避免打錯信箱時卡死等不到驗證信
     formWrap?.classList.add('d-none');
     submitBtn?.classList.add('d-none');
     resendBtn?.classList.remove('d-none');
+    editBtn?.classList.remove('d-none');
   }
 }
+
+document.getElementById('edit-edu-email-btn')?.addEventListener('click', () => {
+  const formWrap  = document.getElementById('eduEmailFormWrap');
+  const submitBtn = document.getElementById('submit-edu-email-btn');
+  const resendBtn = document.getElementById('resend-edu-email-btn');
+  const editBtn   = document.getElementById('edit-edu-email-btn');
+  const input     = document.getElementById('edu-email');
+  const current   = document.getElementById('showEduEmail')?.textContent?.trim();
+  if (input) input.value = (current && current !== '尚未提交') ? current : '';
+  formWrap?.classList.remove('d-none');
+  submitBtn?.classList.remove('d-none');
+  resendBtn?.classList.add('d-none');
+  editBtn?.classList.add('d-none');
+});
 
 document.getElementById('eduVerifyBannerBtn')?.addEventListener('click', (e) => {
   e.preventDefault();
