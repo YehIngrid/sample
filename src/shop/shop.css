@@ -325,12 +325,14 @@ ul{
   .qa-arr { display: none; }
   .qa-ic-wrap { width: 36px; height: 36px; }
   .qa-t { font-size: 14px; }
+  .edu-verify-banner { width: 92vw; }
 }
 @media (max-width: 500px) {
   .quick-actions { width: 100vw; gap: 8px; padding: 0 4vw; box-sizing: border-box; }
   .qa-btn { padding: 5px 6px; gap: 4px; border-radius: 10px; }
   .qa-ic-wrap { width: 22px; height: 22px; }
   .qa-ic { width: 14px; height: 14px; }
+  .edu-verify-banner { width: 100vw; padding: 12px 4vw; }
 }
 @media (max-width: 991.98px) {
   .navtb {
@@ -699,7 +701,9 @@ ul{
   border: 1px solid rgba(243,227,181,0.9);
   border-radius: 18px;
   padding: 14px 18px;
-  margin: 12px 1.2rem 0;
+  box-sizing: border-box;
+  width: 80vw;
+  margin: 12px auto 0;
 }
 .evb-icon {
   flex-shrink: 0;
@@ -729,7 +733,7 @@ ul{
 }
 .evb-btn:hover { background: rgb(36,182,133); color: #fff; }
 @media (max-width: 768px) {
-  .edu-verify-banner { flex-wrap: wrap; margin: 12px 1rem 0; }
+  .edu-verify-banner { flex-wrap: wrap; }
   .evb-btn { width: 100%; text-align: center; }
 }
 
