@@ -1599,12 +1599,15 @@ right: 0;
 .nh-member-avatar img {
   width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 50%;
 }
+.nh-member-avatar.nh-avatar-rect { width: 100px; height: 84px; border-radius: 12px; }
+.nh-member-avatar.nh-avatar-rect img { border-radius: 10px; object-position: center; }
 .nh-m2 .nh-member-avatar { background: linear-gradient(135deg, #4a85c4, #7eb8d8); }
 .nh-m3 .nh-member-avatar { background: linear-gradient(135deg, #003a78, #4a85c4); }
 .nh-m4 .nh-member-avatar { background: linear-gradient(135deg, #7eb8d8, #abdad5); color: #004b97; }
 .nh-m5 .nh-member-avatar { background: linear-gradient(135deg, #0f2745, #4a85c4); }
 .nh-member-info { min-width: 0; }
 .nh-member-name { font-size: 18px; font-weight: 700; color: #0f2745; letter-spacing: 0.04em; margin-bottom: 2px; }
+.nh-name-en { font-size: 12px; font-weight: 500; color: #6f87a0; letter-spacing: 0.03em; margin-left: 4px; }
 .nh-member-title-text {
   display: inline-block; width: fit-content; max-width: 100%;
   background: #abdad5; border: 2px solid #fff; padding: 4px 12px; border-radius: 14px;

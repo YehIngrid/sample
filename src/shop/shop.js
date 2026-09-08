@@ -95,7 +95,7 @@ async function initWishTicker() {
   const wishAvatar = w =>
     (w.owner?.photoURL && w.owner.photoURL !== 'null') ? w.owner.photoURL : '../webP/default-avatar.webp';
   // 空狀態標語本身已經是完整句子（許個願望吧／告訴我們…／發起心願…），不該再疊加「想要」
-  const wishLabel = name => /^(想要|許|發|告)/.test(name) ? name : `想要${name}`;
+  const wishLabel = name => /^(想要|許|發|告|徵)/.test(name) ? name : `徵${name}`;
 
   let wishes;
   try {
