@@ -646,11 +646,11 @@ function renderSellerInfo(data) {
   const quickChatMobile  = document.getElementById('quickChatBtnMobile');
   if (quickChatDesktop) {
     quickChatDesktop.classList.remove('d-none');
-    quickChatDesktop.onclick = () => openChatWithSeller(data.id);
+    quickChatDesktop.onclick = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
   }
   if (quickChatMobile) {
     quickChatMobile.classList.remove('d-none');
-    quickChatMobile.onclick = () => openChatWithSeller(data.id);
+    quickChatMobile.onclick = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
   }
 }
 
