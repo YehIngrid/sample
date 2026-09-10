@@ -1,5 +1,6 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
+import ChatBackendService from '../chatroom/ChatBackendService.js';
 import { requireEduEmailVerified } from '../default/default.js';
 import { AppModal } from '../default/app-modal.js';
 window.AppModal = AppModal; // 給頁面內的 classic <script> 使用（抽獎輪盤、刊登表單驗證）
@@ -1711,4 +1712,285 @@ rightBtn.addEventListener("click", () => {
 
 leftBtn.addEventListener("click", () => {
   container.scrollLeft -= scrollAmount;
+});
+
+// ── 進站提醒 Pill：有未讀通知／待處理訂單／聊天室新訊息時，
+//    在進入 shop.html 時額外跳一個提醒（紅點之外的加強提示），每日僅一次 ──
+// 注意：chat.js 的帳號層級初始檢查只有在「有未讀」時才會 dispatch chatUnread，
+// 沒有未讀時不會 dispatch chatRead，所以不能用等事件的方式判斷（等不到只能死等 timeout，
+// 這正是先前彈窗延遲出現的主因）。改成直接打一次 /api/chat/rooms，跟 chat.js 平行進行。
+async function _getChatHasUnread() {
+  const dot = document.getElementById('chatUnreadDot');
+  if (dot?.style.display === 'block') return true;
+  try {
+    const myUsername = localStorage.getItem('username');
+    const rooms = await new ChatBackendService().listRooms();
+    let hasUnread = false;
+    rooms?.data?.items?.forEach(data => {
+      const isOfficial = data.type === 'OFFICIAL';
+      const myself = data.members?.find(m => m.name === myUsername);
+      const isMyMessage = data.lastMessage?.username === myself?.name;
+      const myLastRead = myself?.lastReadMessageId ?? data.lastReadMessageId ?? null;
+      if (data.lastMessageId != null && myLastRead !== data.lastMessageId && (isOfficial || !isMyMessage)) {
+        hasUnread = true;
+      }
+    });
+    return hasUnread;
+  } catch (_) {
+    return false;
+  }
+}
+
+function _entryReminderTodayKey() {
+  const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' }); // YYYY-MM-DD
+  return `th_entry_reminder_${today}`;
+}
+
+function _positionEntryReminderPill(pill) {
+  const header = document.querySelector('.header');
+  const rect = header?.getBoundingClientRect();
+  pill.style.top = `${rect ? rect.bottom + 12 : 76}px`;
+
+  // 手機版：寬度／水平位置對齊搜尋欄，視覺上像是搜尋欄下方彈出的提示
+  const searchBar = document.querySelector('.search-input-wrap');
+  const sRect = (window.innerWidth < 992 && searchBar) ? searchBar.getBoundingClientRect() : null;
+  if (sRect && sRect.width > 0) {
+    pill.style.setProperty('--erp-x', '0');
+    pill.style.left = `${sRect.left}px`;
+    pill.style.width = `${sRect.width}px`;
+    pill.style.maxWidth = `${sRect.width}px`;
+  } else {
+    pill.style.setProperty('--erp-x', '-50%');
+    pill.style.left = '50%';
+    pill.style.width = '';
+    pill.style.maxWidth = '';
+  }
+}
+
+function _showEntryReminderPill({ notifCount, orderPending, chatUnread }) {
+  if (document.getElementById('entryReminderPill')) return;
+
+  const parts = [];
+  if (notifCount > 0) parts.push(`<strong class="erp-num">${notifCount}</strong> 則新通知`);
+  if (orderPending > 0) parts.push(`<strong class="erp-num">${orderPending}</strong> 筆待處理訂單`);
+  if (chatUnread) parts.push('聊天室新訊息');
+  if (!parts.length) return;
+
+  const pill = document.createElement('div');
+  pill.className = 'entry-reminder-pill';
+  pill.id = 'entryReminderPill';
+  pill.setAttribute('role', 'status');
+  pill.innerHTML = `
+    <span class="erp-icon"><i class="ti ti-bell"></i></span>
+    <span class="erp-text">你有 ${parts.join('、')}</span>
+    <button class="erp-action" id="erpActionBtn" type="button">查看</button>
+    <button class="erp-close" id="erpCloseBtn" type="button" aria-label="關閉提醒"><i class="ti ti-x"></i></button>
+  `;
+  document.body.appendChild(pill);
+  _positionEntryReminderPill(pill);
+
+  const onResize = () => _positionEntryReminderPill(pill);
+  window.addEventListener('resize', onResize);
+  requestAnimationFrame(() => pill.classList.add('show'));
+
+  const dismiss = () => {
+    pill.classList.remove('show');
+    window.removeEventListener('resize', onResize);
+    setTimeout(() => pill.remove(), 300);
+  };
+
+  document.getElementById('erpCloseBtn').addEventListener('click', dismiss);
+  document.getElementById('erpActionBtn').addEventListener('click', () => {
+    if (notifCount === 0 && orderPending === 0 && chatUnread) {
+      window.toggleChatInterface?.();
+    } else {
+      window.location.href = '../person/person.html';
+    }
+    dismiss();
+  });
+}
+
+async function initEntryReminder() {
+  await window._authReady;
+  if (!window.isLoggedIn) return;
+  // 新手引導還沒跑過 → 這次先不跳提醒 pill，避免兩個彈出式 UI 疊在一起
+  if (!localStorage.getItem('shopOnboardingDone')) return;
+  if (localStorage.getItem(_entryReminderTodayKey())) return;
+  if (!backendService) backendService = new BackendService();
+
+  const [notifRes, sellRes, buyRes, chatUnread] = await Promise.all([
+    backendService.getNotifications(1, 20).catch(() => null),
+    backendService.getSellerOrders(1, 'pending').catch(() => null),
+    backendService.getBuyerOrders(1, 'pending').catch(() => null),
+    _getChatHasUnread(),
+  ]);
+
+  const notifItems = notifRes?.data?.data?.notifications ?? [];
+  const notifCount = notifRes?.data?.data?.unreadCount ?? notifItems.filter(n => !n.isRead).length;
+  const sellPending = sellRes?.data?.data?.pagination?.totalItems ?? sellRes?.data?.data?.orders?.length ?? 0;
+  const buyPending = buyRes?.data?.data?.pagination?.totalItems ?? buyRes?.data?.data?.orders?.length ?? 0;
+  const orderPending = sellPending + buyPending;
+
+  if (notifCount <= 0 && orderPending <= 0 && !chatUnread) return;
+
+  _showEntryReminderPill({ notifCount, orderPending, chatUnread });
+  localStorage.setItem(_entryReminderTodayKey(), '1');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initEntryReminder();
+});
+
+// ── 新手引導：第一次登入進入 shop.html 時，依序介紹搜尋／通知／購物車／聊天室／
+//    賣家專區／許願專區。只給登入使用者看，只跑一次（localStorage 記錄）──
+const OB_STEPS = [
+  {
+    getTarget: () => document.getElementById('navSearchWrap'),
+    icon: 'ti-search',
+    title: '搜尋商品',
+    desc: '想找什麼直接在這裡搜尋，也能看到熱門標籤跟搜尋紀錄。',
+  },
+  {
+    getTarget: () => document.getElementById('notificationBtn'),
+    icon: 'ti-bell',
+    title: '通知中心',
+    desc: '訂單更新、聊天新訊息、評價回覆都會顯示在這裡，記得常常來看看。',
+  },
+  {
+    getTarget: () => (window.innerWidth < 992
+      ? document.getElementById('navTabCart')
+      : document.getElementById('navCartLink')),
+    icon: 'ti-shopping-cart',
+    title: '購物車',
+    desc: '看中的商品可以先加進購物車，之後再一次結帳。',
+  },
+  {
+    getTarget: () => (window.innerWidth < 992
+      ? document.getElementById('navTabChat')
+      : document.getElementById('chaticon')),
+    icon: 'ti-message-circle',
+    title: '聯絡聊天室',
+    desc: '有任何問題都能直接在這裡跟賣家或買家聊聊。',
+  },
+  {
+    getTarget: () => document.getElementById('qaSellerBtn'),
+    icon: 'ti-door',
+    title: '賣家專區',
+    desc: '想出清東西嗎？點這裡上架你的二手寶物。',
+  },
+  {
+    getTarget: () => document.getElementById('qaWishBtn'),
+    icon: 'ti-wand',
+    title: '許願專區',
+    desc: '找不到想要的商品？發布一則許願，讓賣家主動找上你。',
+  },
+];
+
+function startShopOnboarding() {
+  const overlay  = document.getElementById('shopOnboarding');
+  const tooltip  = document.getElementById('obTooltip');
+  const stepEl   = document.getElementById('obStep');
+  const iconEl   = document.getElementById('obIcon');
+  const titleEl  = document.getElementById('obTitle');
+  const descEl   = document.getElementById('obDesc');
+  const nextBtn  = document.getElementById('obNext');
+  const skipBtn  = document.getElementById('obSkip');
+  const header   = document.querySelector('.header');
+  if (!overlay || !tooltip) return;
+
+  // chaticon 等目標本身是 position:fixed/sticky 定位，z-index 不需要（也不能）
+  // 靠強制 position:relative 才生效，否則會打斷它原本的定位方式，整個跳版。
+  // 只有 position:static 的元素才需要臨時補上 relative 讓 z-index 生效。
+  const unhighlightAll = () => {
+    document.querySelectorAll('.ob-highlight').forEach(el => {
+      el.classList.remove('ob-highlight');
+      if (el.dataset.obForcedRelative) {
+        el.style.position = '';
+        delete el.dataset.obForcedRelative;
+      }
+    });
+  };
+  const highlight = (el) => {
+    el.classList.add('ob-highlight');
+    if (getComputedStyle(el).position === 'static') {
+      el.style.position = 'relative';
+      el.dataset.obForcedRelative = '1';
+    }
+  };
+
+  const finish = () => {
+    localStorage.setItem('shopOnboardingDone', '1');
+    unhighlightAll();
+    header?.classList.remove('ob-elevate');
+    tooltip.classList.remove('ob-show');
+    overlay.style.display = 'none';
+  };
+
+  let cur = 0;
+  const show = (i) => {
+    if (i >= OB_STEPS.length) { finish(); return; }
+    const stepDef = OB_STEPS[i];
+    const target = stepDef.getTarget();
+    // 找不到目標（例如切版時元素不存在）就跳到下一步
+    if (!target) { show(i + 1); return; }
+    cur = i;
+
+    unhighlightAll();
+    highlight(target);
+    header?.classList.toggle('ob-elevate', !!target.closest('.header'));
+
+    stepEl.textContent  = `${i + 1} / ${OB_STEPS.length}`;
+    iconEl.innerHTML    = `<i class="ti ${stepDef.icon}"></i>`;
+    titleEl.textContent = stepDef.title;
+    descEl.textContent  = stepDef.desc;
+    nextBtn.textContent = i === OB_STEPS.length - 1 ? '完成' : '下一步';
+    overlay.style.display = 'block';
+    tooltip.classList.remove('ob-show');
+
+    const place = () => {
+      const rect = target.getBoundingClientRect();
+      const TW = 250;
+      const left = Math.max(8, Math.min(rect.left + rect.width / 2 - TW / 2, window.innerWidth - TW - 8));
+      const arrowDown = rect.top > window.innerHeight / 2; // 目標在下半螢幕 → tooltip 放上面，箭頭朝下指
+      tooltip.className = `ob-tooltip arrow-${arrowDown ? 'down' : 'up'}`;
+      tooltip.style.left = left + 'px';
+      if (arrowDown) {
+        tooltip.style.top = 'auto';
+        tooltip.style.bottom = (window.innerHeight - rect.top + 12) + 'px';
+      } else {
+        tooltip.style.bottom = 'auto';
+        tooltip.style.top = (rect.bottom + 12) + 'px';
+      }
+      const arrowLeft = Math.max(12, Math.min(rect.left + rect.width / 2 - left - 8, TW - 28));
+      tooltip.style.setProperty('--ob-arrow-left', arrowLeft + 'px');
+      tooltip.classList.add('ob-show');
+    };
+
+    // chaticon／底部導覽列／navbar 都是 fixed 或 sticky，滾動頁面對它們的
+    // 螢幕位置沒有意義，硬呼叫 scrollIntoView 反而會讓頁面亂跳、位置算錯
+    // （這正是聊天室步驟先前跑版的原因）。只有真的在文件流中的目標才需要捲動。
+    const targetPosition = getComputedStyle(target).position;
+    if (targetPosition === 'fixed' || targetPosition === 'sticky') {
+      place();
+    } else {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(place, 260);
+    }
+  };
+
+  nextBtn.onclick = () => show(cur + 1);
+  skipBtn.onclick = finish;
+
+  show(cur);
+}
+
+async function initShopOnboarding() {
+  await window._authReady;
+  if (!window.isLoggedIn) return;
+  if (localStorage.getItem('shopOnboardingDone')) return;
+  setTimeout(startShopOnboarding, 500); // 讓頁面內容（商品卡片等）先渲染穩定
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initShopOnboarding();
 });

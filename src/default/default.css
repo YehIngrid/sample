@@ -1501,6 +1501,35 @@ html.skip-loader #whatcontent { display: block !important; }
 .search-drop-trend li:nth-child(3) .search-drop-rank { color: #7eb8d8; }
 .search-drop-trend li:nth-child(n+4) .search-drop-rank { color: #abdad5; }
 
+/* ── 大家都在搜 / 搜尋排行榜：橫向膠囊排列，排名數字保留在膠囊內 ── */
+.search-drop-trend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.search-drop-trend .search-drop-item {
+  flex: 0 0 auto;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #d6e2ec;
+  background: aliceblue;
+}
+.search-drop-trend .search-drop-item:hover {
+  background: rgba(0, 75, 151, 0.1);
+}
+/* 前三名膠囊配色跟排名數字對齊，讓熱門排行更明顯 */
+.search-drop-trend li.search-drop-item:nth-child(1) { border-color: #004b97; background: rgba(0, 75, 151, 0.1); }
+.search-drop-trend li.search-drop-item:nth-child(2) { border-color: #4a85c4; background: rgba(74, 133, 196, 0.1); }
+.search-drop-trend li.search-drop-item:nth-child(3) { border-color: #7eb8d8; background: rgba(126, 184, 216, 0.1); }
+.search-drop-trend li.search-drop-item:nth-child(n+4) { border-color: #abdad5; background: rgba(171, 218, 213, 0.14); }
+.search-drop-trend .search-drop-text {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+}
+
 /* ===== 搜尋 Offcanvas 動畫效果 ===== */
 #searchOffcanvas { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important; }
 #searchOffcanvas.showing, #searchOffcanvas.show { transform: translateY(0) !important; }
