@@ -23,6 +23,9 @@ async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
 let _handlingExpiry = false;
 const _SKIP_401 = ['/api/account/login', '/api/account/signup', '/api/whoami'];
 
+// ── 全域 422 攔截：前端版本落後（網站已偷偷更新過）時提示重新整理 ────────────
+let _handling422 = false;
+
 // ── 網路逾時 / 離線 提示 ────────────
 let _networkBannerShown = false;
 const _BANNER_PAGES = [
@@ -94,6 +97,19 @@ function _attach401Handler(instance) {
 
             // 逾時或網路中斷（banner 由全域 interceptor 處理，這裡直接跳過）
             if (err.code === 'ECONNABORTED' || err.message === 'Network Error' || !err.response) {
+                return Promise.reject(err);
+            }
+
+            if (status === 422 && !_handling422) {
+                _handling422 = true;
+                AppModal.fire({
+                    icon: 'warning',
+                    title: '疑似網站有偷偷更新過了',
+                    text: '請重新整理頁面以取得最新版本。',
+                    confirmButtonText: '重新整理',
+                    allowOutsideClick: false,
+                    showCancelButton: false,
+                }).then(() => location.reload());
                 return Promise.reject(err);
             }
 
