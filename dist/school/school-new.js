@@ -426,54 +426,38 @@ function attachLikeButtons() {
   const AUTH_KEY = 'th_cg_auth';
   const USERNAME_KEY = 'th_cg_username';
 
-  // 創建下拉選單
+  // 創建下拉選單（版面比照校園攻略站下拉選單 .drop-menu，樣式定義在 school.css）
   const dropdown = document.createElement('div');
   dropdown.className = 'user-dropdown';
   dropdown.innerHTML = `
     <a href="school-profile.html" class="user-dropdown-item">我的資訊</a>
+    <button type="button" class="user-dropdown-item theme-toggle-trigger" id="themeToggleAvatar" title="切換深色模式">
+      <span class="theme-toggle-label">深色模式</span>
+      <i class="ti ti-moon theme-toggle-icon"></i>
+    </button>
+    <div class="user-dropdown-sep"></div>
     <a href="#" class="user-dropdown-item" id="logoutLink">登出</a>
-  `;
-  dropdown.style.cssText = `
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: white;
-    border: 1px solid #d6e2ec;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    min-width: 140px;
-    display: none;
-    z-index: 100;
-    margin-top: 8px;
   `;
 
   userChip.style.position = 'relative';
   userChip.appendChild(dropdown);
 
-  // 設定樣式
-  const style = document.createElement('style');
-  style.textContent = `
-    .user-dropdown-item {
-      display: block;
-      padding: 10px 16px;
-      color: #0f2745;
-      text-decoration: none;
-      font-size: 13px;
-      transition: background 0.2s;
-    }
-    .user-dropdown-item:hover {
-      background: #f0f5f9;
-    }
-    .user-dropdown-item:first-child {
-      border-bottom: 1px solid #d6e2ec;
-    }
-  `;
-  document.head.appendChild(style);
+  // 下拉選單是動態插入的，套用當下的深色模式狀態（school-theme.js 在它出現前就先套過主題了）
+  const avatarThemeIcon = dropdown.querySelector('.theme-toggle-icon');
+  const avatarThemeLabel = dropdown.querySelector('.theme-toggle-label');
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (avatarThemeIcon) avatarThemeIcon.className = 'theme-toggle-icon ti ' + (isDark ? 'ti-sun' : 'ti-moon');
+  // 標籤顯示「切換後會變成的模式」，而不是目前所在的模式
+  if (avatarThemeLabel) avatarThemeLabel.textContent = isDark ? '淺色模式' : '深色模式';
+
+  // 登入時把深色模式切換鈕藏進頭像選單，登出時放回 nav 外層
+  const themeToggleOuter = document.getElementById('themeToggle');
 
   function applyAuth(loggedIn) {
     loginBtn.style.display = loggedIn ? 'none' : '';
     userChip.style.display = loggedIn ? 'block' : 'none';
-    dropdown.style.display = 'none';
+    dropdown.classList.remove('open');
+    if (themeToggleOuter) themeToggleOuter.style.display = loggedIn ? 'none' : '';
   }
 
   const isAuthed = localStorage.getItem(AUTH_KEY) === '1';
@@ -491,7 +475,7 @@ function attachLikeButtons() {
 
   userChip.addEventListener('click', function (e) {
     e.stopPropagation();
-    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    dropdown.classList.toggle('open');
   });
 
   document.getElementById('logoutLink').addEventListener('click', function (e) {
@@ -511,7 +495,7 @@ function attachLikeButtons() {
         localStorage.setItem(AUTH_KEY, '0');
         localStorage.removeItem(USERNAME_KEY);
         applyAuth(false);
-        dropdown.style.display = 'none';
+        dropdown.classList.remove('open');
         location.reload();
       }
     });
@@ -519,7 +503,7 @@ function attachLikeButtons() {
 
   document.addEventListener('click', function (e) {
     if (!userChip.contains(e.target)) {
-      dropdown.style.display = 'none';
+      dropdown.classList.remove('open');
     }
   });
 })();

@@ -5,7 +5,7 @@
             
         
         <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com js.sentry-cdn.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com https://o4511592734130176.ingest.us.sentry.io; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com js.sentry-cdn.com www.gstatic.com apis.google.com www.googleapis.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com identitytoolkit.googleapis.com securetoken.googleapis.com apis.google.com www.googleapis.com https://o4511592734130176.ingest.us.sentry.io; frame-src store-backend-75fea.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="/assets/manifest-5--vV4vC.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
@@ -56,12 +56,12 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-TNDMCCKZ');</script>
         
-      <script type="module" crossorigin src="/assets/account-account-ChQ2RcGg.js"></script>
+      <script type="module" crossorigin src="/assets/account-account-TiNmEqOt.js"></script>
       <link rel="modulepreload" crossorigin href="/assets/app-modal-qdw6XuZO.js">
-      <link rel="modulepreload" crossorigin href="/assets/sentry-init-CGHeyAUu.js">
-      <link rel="modulepreload" crossorigin href="/assets/default-Bd-QG1xa.js">
-      <link rel="stylesheet" crossorigin href="/assets/account-account-Bt6ykAYf.css">
-      <link rel="stylesheet" crossorigin href="/assets/default-DsYOyien.css">
+      <link rel="modulepreload" crossorigin href="/assets/sentry-init-DvO3oCIv.js">
+      <link rel="modulepreload" crossorigin href="/assets/default-CXnkZ2CK.js">
+      <link rel="stylesheet" crossorigin href="/assets/account-account-CyykYWxi.css">
+      <link rel="stylesheet" crossorigin href="/assets/default-BiN2GEx5.css">
       <link rel="stylesheet" crossorigin href="/assets/app-modal-4Hh6nOG3.css">
       <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
     </head>
@@ -163,8 +163,18 @@
           <div class="content">
             <div id="loginModal" class="auth-step">
               <div class="modalwhat glass-card">
+                <h2>登入</h2>
+                <button type="button" id="googleLoginBtn" class="google-btn">
+                  <svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true">
+                    <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/>
+                    <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+                    <path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.5l-6.5-5.5C29.5 34.9 26.9 36 24 36c-5.3 0-9.7-3.4-11.3-8l-6.6 5.1C9.6 39.6 16.2 44 24 44z"/>
+                    <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.5C39.8 37.4 44 31.2 44 24c0-1.3-.1-2.7-.4-3.5z"/>
+                  </svg>
+                  使用 Google 帳號登入
+                </button>
+                <div class="auth-divider"><span>或</span></div>
                 <form id="loginForm">
-                  <h2>登入</h2>
                   <div class="form-floating">
                     <input type="email" class="form-control form-control-lg" id="floatingInput" placeholder="s4113001001@mail.nchu.edu.tw">
                     <label for="floatingInput">請輸入您的電子信箱</label>
@@ -245,12 +255,14 @@
             
             <div id="signuppage" class="auth-step">
               <div id="signupModal" class="modalwhat glass-card" >
-                <form id="signupForm">
-                  <a class="backlogin" id="backlogin">返回登入頁</a>
+                <div class="auth-title-row">
                   <h2>註冊</h2>
+                  <a class="backlogin" id="backlogin">返回登入頁</a>
+                </div>
+                <form id="signupForm">
                   <div class="form-floating form-signemail">
-                  <input class="form-control" type="email" id="email" placeholder="請使用學校的電子郵件註冊">
-                  <label for="floatingInput">請使用學校的電子郵件註冊</label>
+                  <input class="form-control" type="email" id="email" placeholder="請輸入您的電子信箱">
+                  <label for="floatingInput">請輸入您的電子信箱</label>
                   </div>
                   <p class="field-error" id="err-signup-email"></p>
                   <div class="form-floating form-signpass pwd-wrap">
@@ -268,16 +280,27 @@
                   <label for="floatingInput" >請輸入您的暱稱</label>
                   </div>
                   <p class="field-error" id="err-signup-name"></p>
-                  <div class="form-floating form-signinvite">
-                  <input class="form-control" type="text" id="inviteCode" placeholder="邀請碼（選填）" maxlength="16" autocomplete="off">
-                  <label for="inviteCode">邀請碼（選填）</label>
-                  </div>
-                  <p class="field-error" id="err-signup-invite"></p>
                   <div class="terms-agree-row">
                     <input type="checkbox" id="agreeTerms" disabled>
                     <span class="terms-agree-text">我已閱讀並同意<button type="button" class="terms-open-btn" id="openTermsModal">服務條款與隱私權政策</button></span>
                   </div>
-                  <button type="submit" id="sign" class="signbtn css-button-gradient--4" disabled>註冊</button><span id="sign-hint" class="sign-hint">（請閱讀服務條款才可以註冊）</span>
+                  <p id="sign-hint" class="sign-hint">（請先閱讀並同意服務條款才能註冊，無論使用 Google 或電子信箱）</p>
+                  <div class="form-floating form-signinvite">
+                  <input class="form-control" type="text" id="inviteCode" placeholder="邀請碼（選填，Google 註冊也適用）" maxlength="16" autocomplete="off">
+                  <label for="inviteCode">邀請碼（選填，Google 註冊也適用）</label>
+                  </div>
+                  <p class="field-error" id="err-signup-invite"></p>
+                  <button type="submit" id="sign" class="signbtn css-button-gradient--4" disabled>註冊</button>
+                  <div class="auth-divider"><span>或</span></div>
+                  <button type="button" id="googleSignupBtn" class="google-btn" disabled>
+                    <svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true">
+                      <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/>
+                      <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+                      <path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.5l-6.5-5.5C29.5 34.9 26.9 36 24 36c-5.3 0-9.7-3.4-11.3-8l-6.6 5.1C9.6 39.6 16.2 44 24 44z"/>
+                      <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.5C39.8 37.4 44 31.2 44 24c0-1.3-.1-2.7-.4-3.5z"/>
+                    </svg>
+                    使用 Google 帳號註冊
+                  </button>
                   <p class="remind">註冊後系統將寄送<strong>認證連結</strong>至您的信箱，請<strong>點擊郵件連結</strong>開通帳號後即可登入。</p>
                   <p class="remind" style="font-size:0.82rem; color:#888; margin-top:6px;">有任何疑問？請參見<a href="../questions/questions.html#帳號與註冊" style="color:#004b97;">常見問題</a></p>
                 </form>
