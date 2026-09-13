@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
-import { formatTaipeiTime, requireLogin } from '../default/default.js';
+import { formatTaipeiTime, requireLogin, requireEduEmailVerified } from '../default/default.js';
 import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewerModal.js';
 import { AppModal } from '../default/app-modal.js';
 
@@ -35,7 +35,6 @@ const SELLER_PER_PAGE = 6;
 
 // ── 目前瀏覽的商品（傳給聊天室用）──
 let _currentProduct = null;
-let _currentSellerId = null;
 
 function _renderSellerPage(page) {
   const container = document.getElementById('otherProducts');
@@ -315,6 +314,17 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
   minusBtn?.addEventListener('click', () => { qtyInput.textContent = clampQty(num(qtyInput.textContent) - 1); });
 })();
 
+/* ---------- 2a) 瀏覽數 badge ── */
+(function renderViewCountBadge() {
+  const badgeEl = document.getElementById('productViewBadge');
+  if (!badgeEl) return;
+  const viewCount = num(product?.viewCount, 0);
+  if (viewCount > 0) {
+    badgeEl.innerHTML = `<i class="ti ti-eye"></i> ${viewCount}`;
+    badgeEl.classList.remove('d-none');
+  }
+})();
+
 /* ---------- 2) 規格／屬性（使用 <dl>） ---------- */
 (function renderMeta() {
   const wrap = document.getElementById('product-category');
@@ -518,10 +528,12 @@ const fmt = (v) => new Intl.NumberFormat('zh-Hant-TW').format(num(v, 0));
           }
         }).catch(() => {});
         backendService.getUserReviews(sellerId).then(res => {
-          const stats = res?.data?.data?.stats;
+          const d = res?.data?.data;
+          const stats = d?.stats;
           const countEl = document.getElementById('sellerReviewCount');
           if (countEl && stats?.reviewCount != null) countEl.textContent = stats.reviewCount;
-        }).catch(() => {});
+          renderSellerReviews(d);
+        }).catch(() => renderSellerReviews(null, true));
     } else {
       // 沒有 owner：可隱藏整張卡
       document.getElementById('sellerInfo')?.classList.add('d-none');
@@ -586,9 +598,9 @@ function renderSellerInfo(data) {
   const nameEl    = document.getElementById('sellerName');
   const introEl   = document.getElementById('sellerIntro');
   const scoreEl   = document.getElementById('sellerRate');
-  const chatBtn   = document.getElementById('sellerChat'); // 與賣家聊聊
-  const rateBtn   = root.querySelector('#sellerRatebtn');               // 查看賣家評價
-  const reportBtn = root.querySelector('#sellerBad');            // 檢舉賣家
+  const chatBtn      = document.getElementById('sellerChat'); // 與賣家聊聊
+  const goProfileBtn = root.querySelector('#sellerGoProfile');          // 前往賣家主頁
+  const reportBtn    = root.querySelector('#sellerBad');            // 檢舉賣家
 
   // 灌資料（含預設值）
   if (img) {
@@ -625,21 +637,20 @@ function renderSellerInfo(data) {
   if (scoreEl) scoreEl.textContent = Number.isFinite(+data.score) ? +data.score : 0;
 
   // 綁事件（依你的路由調整）
-  _currentSellerId = data.id ?? null;
-  if (chatBtn)   chatBtn.onclick   = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
-  if (rateBtn)   rateBtn.onclick   = () => toggleSellerReviews();
-  if (reportBtn) reportBtn.onclick = () => reportSeller(data.id, data.name);
+  if (chatBtn)      chatBtn.onclick      = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
+  if (goProfileBtn) goProfileBtn.onclick = () => openReviewerProfileModal(data.id, data.name, data.photoUrl);
+  if (reportBtn)    reportBtn.onclick    = () => reportSeller(data.id, data.name);
 
   // 快速聊聊按鈕（價格旁桌機版 + 手機底部列）
   const quickChatDesktop = document.getElementById('quickChatBtnDesktop');
   const quickChatMobile  = document.getElementById('quickChatBtnMobile');
   if (quickChatDesktop) {
     quickChatDesktop.classList.remove('d-none');
-    quickChatDesktop.onclick = () => openChatWithSeller(data.id);
+    quickChatDesktop.onclick = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
   }
   if (quickChatMobile) {
     quickChatMobile.classList.remove('d-none');
-    quickChatMobile.onclick = () => openChatWithSeller(data.id);
+    quickChatMobile.onclick = (e) => { e.stopPropagation(); openChatWithSeller(data.id); };
   }
 }
 
@@ -699,57 +710,39 @@ async function openChatWithSeller(targetSellerId) {
   }
 }
 
-let _loadedReviewSellerId = null;
+// 直接呼叫評價 API 並渲染於「賣家評論」區塊（不需點擊展開）
+async function renderSellerReviews(data, failed = false) {
+  const listEl = document.getElementById('reviewerInfo');
+  if (!listEl) return;
 
-async function toggleSellerReviews() {
-  const reviewContainer = document.getElementById('sellerReviews');
-
-  if (reviewContainer.classList.contains('d-none')) {
-    const listEl = document.getElementById('reviewerInfo');
-    if (listEl && _currentSellerId && _loadedReviewSellerId !== _currentSellerId) {
-      listEl.innerHTML = `<div class="review-empty">載入中...</div>`;
-      try {
-        if (Object.keys(_tagMeaningCache).length === 0) {
-          try {
-            const tagRes = await backendService.getReviewTags();
-            (tagRes?.data?.data?.groups ?? []).forEach(g => {
-              (g.tags ?? []).forEach(t => {
-                _tagMeaningCache[t.tag]   = t.meaning;
-                _tagPositiveCache[t.tag]  = t.positive;
-                _tagDeltaCache[t.tag]     = t.delta;
-                _tagGroupNameCache[t.tag] = g.name;
-              });
-            });
-          } catch (e) { /* silent */ }
-        }
-        const res = await backendService.getUserReviews(_currentSellerId);
-        const d = res?.data?.data;
-        const stats = d?.stats;
-        const sellerReviews = d?.sellerReviews ?? [];
-        const buyerReviews  = d?.buyerReviews  ?? [];
-
-        const allCards = [
-          ...sellerReviews.map(r => renderReviewCard(r, 'seller')),
-          ...buyerReviews.map(r => renderReviewCard(r, 'buyer')),
-        ].join('');
-
-        listEl.innerHTML = allCards || `<div class="review-empty">目前尚無評價紀錄</div>`;
-        bindReviewerClicks(listEl);
-        _loadedReviewSellerId = _currentSellerId;
-      } catch (e) {
-        listEl.innerHTML = `<div class="review-empty">載入失敗，請稍後再試</div>`;
-      }
-    }
-
-    reviewContainer.classList.remove('d-none');
-    void reviewContainer.offsetWidth;
-    reviewContainer.classList.add('show');
-  } else {
-    reviewContainer.classList.remove('show');
-    setTimeout(() => {
-      reviewContainer.classList.add('d-none');
-    }, 300);
+  if (failed) {
+    listEl.innerHTML = `<div class="review-empty">載入失敗，請稍後再試</div>`;
+    return;
   }
+
+  if (Object.keys(_tagMeaningCache).length === 0) {
+    try {
+      const tagRes = await backendService.getReviewTags();
+      (tagRes?.data?.data?.groups ?? []).forEach(g => {
+        (g.tags ?? []).forEach(t => {
+          _tagMeaningCache[t.tag]   = t.meaning;
+          _tagPositiveCache[t.tag]  = t.positive;
+          _tagDeltaCache[t.tag]     = t.delta;
+          _tagGroupNameCache[t.tag] = g.name;
+        });
+      });
+    } catch (e) { /* silent */ }
+  }
+
+  const sellerReviews = data?.sellerReviews ?? [];
+  const buyerReviews  = data?.buyerReviews  ?? [];
+  const allCards = [
+    ...sellerReviews.map(r => renderReviewCard(r, 'seller')),
+    ...buyerReviews.map(r => renderReviewCard(r, 'buyer')),
+  ].join('');
+
+  listEl.innerHTML = allCards || `<div class="review-empty">還沒有評論</div>`;
+  bindReviewerClicks(listEl);
 }
 
 async function reportSeller(sellerId, sellerName) {
@@ -928,6 +921,7 @@ document.addEventListener('click', async (e) => {
   e.preventDefault();
 
   if (!(await requireLogin())) return;
+  if (!(await requireEduEmailVerified())) return;
 
   orderNow(e);
 });

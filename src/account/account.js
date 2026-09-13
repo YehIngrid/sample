@@ -1,6 +1,8 @@
 import BackendService from '../BackendService.js';
 import '../default/default.js';
 import { AppModal } from '../default/app-modal.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
 // ── URL ↔ 表單對應（account.html?page=login / signup / forgot）──
 const _PAGE_TO_STEP = {
@@ -130,7 +132,7 @@ window.onload = async function() {
     const pageParam = (params.get('page') || '').toLowerCase();
     const inviteParam = params.get('invite');
     if (inviteParam) {
-      // 邀請連結：自動帶入邀請碼
+      // 邀請連結：自動帶入邀請碼（一般註冊與 Google 註冊共用同一個欄位）
       const inviteInput = document.getElementById('inviteCode');
       if (inviteInput) inviteInput.value = inviteParam.trim();
     }
@@ -289,22 +291,7 @@ async function callLogin() {
       timer: 2100
     });
 
-    const params = new URLSearchParams(window.location.search);
-    const redirectUrl = params.get("redirect");
-    if (redirectUrl) {
-      try {
-        const target = new URL(redirectUrl, window.location.origin);
-        if (target.origin === window.location.origin) {
-          window.location.replace(target.href);
-        } else {
-          window.location.replace("../shop/shop.html");
-        }
-      } catch {
-        window.location.replace("../shop/shop.html");
-      }
-    } else {
-      window.location.replace("../shop/shop.html");
-    }
+    redirectAfterLogin();
   } catch (e) {
     console.error('登入錯誤：', e);
     if (e?.message === 'EMAIL_NOT_VERIFIED') {
@@ -329,6 +316,99 @@ async function callLogin() {
     loaderLogin.style.display = 'none';
   }
 }
+
+function redirectAfterLogin() {
+  const params = new URLSearchParams(window.location.search);
+  const redirectUrl = params.get("redirect");
+  if (redirectUrl) {
+    try {
+      const target = new URL(redirectUrl, window.location.origin);
+      if (target.origin === window.location.origin) {
+        window.location.replace(target.href);
+      } else {
+        window.location.replace("../shop/shop.html");
+      }
+    } catch {
+      window.location.replace("../shop/shop.html");
+    }
+  } else {
+    window.location.replace("../shop/shop.html");
+  }
+}
+
+// ── Google 登入/註冊 ──────────────────────────────────────
+// 頁面一載入就先準備好 Firebase Auth（而不是等使用者點擊才去打 API 拿設定），
+// 這樣點擊按鈕時 signInWithPopup 幾乎是同步呼叫、緊接在 click 事件之後，
+// 瀏覽器才會把它視為「使用者手勢觸發」而真的跳出彈出視窗；
+// 若中間夾了 await 才呼叫 signInWithPopup，瀏覽器可能不認帳，
+// 彈窗會被擋掉或退化成整頁導向 Google 頁面。
+let _firebaseAuth = null;
+let _firebaseAuthPromise = null;
+function getFirebaseAuth() {
+  if (_firebaseAuth) return Promise.resolve(_firebaseAuth);
+  if (_firebaseAuthPromise) return _firebaseAuthPromise;
+  _firebaseAuthPromise = (async () => {
+    const bs = new BackendService();
+    const res = await bs.getConfig();
+    const firebaseConfig = res?.data?.data?.firebaseConfig;
+    if (!firebaseConfig) throw new Error('無法取得 Google 登入設定，請稍後再試');
+    const app = initializeApp(firebaseConfig);
+    _firebaseAuth = getAuth(app);
+    return _firebaseAuth;
+  })();
+  return _firebaseAuthPromise;
+}
+// 預先在背景準備好，失敗就靜默略過，點擊當下 getFirebaseAuth() 會重試
+getFirebaseAuth().catch(() => {});
+
+async function handleGoogleAuth(btn, inviteCode) {
+  btn.disabled = true;
+  try {
+    if (!_firebaseAuth) {
+      // 理論上頁面載入時已經準備好；只有網路很慢或使用者手速極快才會走到這裡，
+      // 這種情況彈窗本來就可能被瀏覽器擋掉，屬於可接受的邊界情況
+      _firebaseAuth = await getFirebaseAuth();
+    }
+    const result = await signInWithPopup(_firebaseAuth, new GoogleAuthProvider());
+    const idToken = await result.user.getIdToken();
+
+    const bs = new BackendService();
+    const resp = await bs.loginWithGoogle(idToken, inviteCode);
+
+    await AppModal.fire({
+      icon: 'success',
+      title: resp.data?.data?.isNewAccount ? '註冊成功！' : '登入成功',
+      text: '歡迎回來！',
+      showConfirmButton: false,
+      timer: 2100,
+    });
+
+    redirectAfterLogin();
+  } catch (e) {
+    if (e?.code === 'auth/popup-closed-by-user' || e?.code === 'auth/cancelled-popup-request') return;
+    console.error('Google 登入錯誤：', e);
+    let msg;
+    if (e?.code === 'auth/popup-blocked') {
+      msg = '瀏覽器擋住了登入彈出視窗，請允許本網站的彈出視窗後再試一次';
+    } else if (e?.message === 'RATE_LIMIT') {
+      msg = '嘗試次數過多，請稍後再試';
+    } else {
+      msg = e?.message || 'Google 登入失敗，請稍後再試';
+    }
+    AppModal.fire({ icon: 'error', title: 'Oops...', text: msg });
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('googleLoginBtn')?.addEventListener('click', (e) => {
+  handleGoogleAuth(e.currentTarget);
+});
+document.getElementById('googleSignupBtn')?.addEventListener('click', (e) => {
+  if (!document.getElementById('agreeTerms')?.checked) return;
+  const inviteCode = document.getElementById('inviteCode')?.value.trim();
+  handleGoogleAuth(e.currentTarget, inviteCode);
+});
 
 // ── 密碼顯示／隱藏眼睛 ────────────────────────────────────
 document.querySelectorAll('.pwd-wrap').forEach(wrap => {
@@ -356,6 +436,7 @@ document.querySelectorAll('.pwd-wrap').forEach(wrap => {
   const openBtn   = document.getElementById('openTermsModal');
   const checkbox  = document.getElementById('agreeTerms');
   const signbtn   = document.getElementById('sign');
+  const googleSignupBtn = document.getElementById('googleSignupBtn');
 
   function openModal() {
     overlay.classList.add('active');
@@ -385,6 +466,7 @@ document.querySelectorAll('.pwd-wrap').forEach(wrap => {
     checkbox.disabled = false;
     checkbox.checked  = true;
     signbtn.disabled  = false;
+    if (googleSignupBtn) googleSignupBtn.disabled = false;
     const hint = document.getElementById('sign-hint');
     if (hint) hint.remove();
     closeModal();
@@ -400,6 +482,7 @@ document.querySelectorAll('.pwd-wrap').forEach(wrap => {
 
   checkbox.addEventListener('change', function() {
     signbtn.disabled = !this.checked;
+    if (googleSignupBtn) googleSignupBtn.disabled = !this.checked;
   });
 })();
 

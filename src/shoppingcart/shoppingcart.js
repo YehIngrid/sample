@@ -1,6 +1,6 @@
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
-import { requireLogin, requireEmailVerified } from '../default/default.js';
+import { requireLogin, requireEduEmailVerified } from '../default/default.js';
 import { AppModal } from '../default/app-modal.js';
 
 // ================== Service ==================
@@ -369,7 +369,7 @@ const checkoutBtn = document.getElementById('checkout-btn');
 if (checkoutBtn) {
   checkoutBtn.addEventListener('click', async () => {
 
-    if (!await requireEmailVerified()) return;
+    if (!await requireEduEmailVerified()) return;
 
     // ===== 防重複送單 =====
     if (isCheckingOut) return;

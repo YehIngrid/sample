@@ -226,10 +226,12 @@ document.getElementById('update-profile').addEventListener('click', async () => 
             // 更新 DOM
             mProfileName.textContent = localStorage.getItem("username") || "使用者名稱";
             mProfileInfo.textContent = localStorage.getItem("intro") || "使用者介紹";
-            mProfileAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.webp';
+            const _updatedAvatar = localStorage.getItem('avatar');
+            const _avatarSrc = (_updatedAvatar && _updatedAvatar !== 'null') ? _updatedAvatar : DEFAULT_AVATAR;
+            mProfileAvatar.src = _avatarSrc;
             profileName.textContent = localStorage.getItem("username") || "使用者名稱";
             profileInfo.textContent = localStorage.getItem("intro") || "使用者介紹";
-            profileAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.webp';
+            profileAvatar.src = _avatarSrc;
 
             window.location.reload(); // 重新載入頁面以顯示最新資料
           } catch (error) {
@@ -329,13 +331,13 @@ function doLogoutSwal() {
 });
 
 
-// ===== 常用帳號設定 =====
+// ===== 聯絡信箱設定 =====
 document.getElementById('setEmailBtn')?.addEventListener('click', async () => {
   const current = document.getElementById('showEmail')?.textContent?.trim();
   const currentVal = current === '尚未設定' ? '' : current;
 
   const { isConfirmed } = await Swal.fire({
-    title: '設定常用帳號',
+    title: '設定聯絡信箱',
     html: `<input id="swal-email-input" type="email" autocomplete="email" class="swal2-input" placeholder="輸入 Email" value="${currentVal}">`,
     showCancelButton: true,
     confirmButtonText: '儲存',
@@ -1022,40 +1024,12 @@ async function loadSettingsData() {
     const loginEmailEl = document.getElementById('showLoginEmail');
     if (loginEmailEl) loginEmailEl.textContent = d.account?.email || '—';
 
-    // 驗證徽章
-    const badgeEl = document.getElementById('emailVerifyBadge');
-    if (badgeEl) {
-      const verified = d.account?.emailVerify;
-      if (verified) {
-        badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:rgb(36,182,133);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-circle-check"></i>已驗證</span>`;
-      } else {
-        badgeEl.innerHTML = `<span id="unverifiedBadge" style="display:inline-flex;align-items:center;gap:4px;background:#e67e22;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;cursor:pointer;"><i class="ti ti-alert-circle"></i>未驗證</span>`;
-        document.getElementById('unverifiedBadge')?.addEventListener('click', async () => {
-          const result = await AppModal.fire({
-            icon: 'warning',
-            title: '信箱尚未驗證',
-            text: '是否立即發送驗證信至您的登入信箱？',
-            confirmButtonText: '發送驗證信',
-            cancelButtonText: '取消',
-            showCancelButton: true,
-          });
-          if (!result.isConfirmed) return;
-          try {
-            await backendService.resendVerificationEmail();
-            AppModal.fire({ icon: 'success', title: '驗證信已寄出', text: '請前往信箱點擊連結完成驗證', confirmButtonText: '確定' });
-          } catch (e) {
-            const msg = e?.message === 'RATE_LIMIT'
-              ? '發送過於頻繁，請 5 分鐘後再試'
-              : (e?.message || '發送失敗，請稍後再試');
-            AppModal.fire({ icon: 'error', title: '發送失敗', text: msg, confirmButtonText: '確定' });
-          }
-        });
-      }
-    }
-
     // 常用帳號（contactEmail）
     const showEmailEl = document.getElementById('showEmail');
     if (showEmailEl) showEmailEl.textContent = d.contactEmail || '尚未設定';
+
+    // 教育信箱驗證
+    renderEduEmailStatus(d.account?.eduEmail, d.account?.eduEmailVerified);
 
     // 個人資料同步更新
     const nameEl = document.getElementById('showName');
@@ -1067,6 +1041,110 @@ async function loadSettingsData() {
   }
 }
 
+// ===== 教育信箱驗證 =====
+function renderEduEmailStatus(eduEmail, verified) {
+  const showEl    = document.getElementById('showEduEmail');
+  const badgeEl   = document.getElementById('eduEmailBadge');
+  const formWrap  = document.getElementById('eduEmailFormWrap');
+  const submitBtn = document.getElementById('submit-edu-email-btn');
+  const resendBtn = document.getElementById('resend-edu-email-btn');
+  const editBtn   = document.getElementById('edit-edu-email-btn');
+  if (!showEl || !badgeEl) return;
+
+  if (!eduEmail) {
+    showEl.textContent = '尚未提交';
+    badgeEl.innerHTML = '';
+    formWrap?.classList.remove('d-none');
+    submitBtn?.classList.remove('d-none');
+    resendBtn?.classList.add('d-none');
+    editBtn?.classList.add('d-none');
+    return;
+  }
+
+  showEl.textContent = eduEmail;
+  if (verified) {
+    badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:rgb(36,182,133);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-circle-check"></i>已驗證</span>`;
+    formWrap?.classList.add('d-none');
+    submitBtn?.classList.add('d-none');
+    resendBtn?.classList.add('d-none');
+    editBtn?.classList.add('d-none');
+  } else {
+    badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:#e67e22;color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-alert-circle"></i>待驗證</span>`;
+    // 待驗證狀態：預設收合表單，但保留「修改信箱」入口，避免打錯信箱時卡死等不到驗證信
+    formWrap?.classList.add('d-none');
+    submitBtn?.classList.add('d-none');
+    resendBtn?.classList.remove('d-none');
+    editBtn?.classList.remove('d-none');
+  }
+}
+
+document.getElementById('edit-edu-email-btn')?.addEventListener('click', () => {
+  const formWrap  = document.getElementById('eduEmailFormWrap');
+  const submitBtn = document.getElementById('submit-edu-email-btn');
+  const resendBtn = document.getElementById('resend-edu-email-btn');
+  const editBtn   = document.getElementById('edit-edu-email-btn');
+  const input     = document.getElementById('edu-email');
+  const current   = document.getElementById('showEduEmail')?.textContent?.trim();
+  if (input) input.value = (current && current !== '尚未提交') ? current : '';
+  formWrap?.classList.remove('d-none');
+  submitBtn?.classList.remove('d-none');
+  resendBtn?.classList.add('d-none');
+  editBtn?.classList.add('d-none');
+});
+
+document.getElementById('eduVerifyBannerBtn')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  goToPage('settings', 'eduEmailFormWrap');
+});
+
+document.getElementById('submit-edu-email-btn')?.addEventListener('click', async () => {
+  const input = document.getElementById('edu-email');
+  const eduEmail = input?.value?.trim();
+  if (!eduEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(eduEmail)) {
+    AppModal.fire({ icon: 'warning', title: '請輸入有效的學校信箱' });
+    return;
+  }
+  try {
+    if (!backendService) backendService = new BackendService();
+    await backendService.submitEduEmail(eduEmail);
+    await AppModal.fire({ icon: 'success', title: '驗證信已發送', text: '請前往學校信箱點擊連結完成驗證', confirmButtonText: '確定' });
+    loadSettingsData();
+  } catch (e) {
+    const msg = e?.message === 'RATE_LIMIT' ? '提交過於頻繁，請稍後再試' : (e?.message || '提交失敗，請稍後再試');
+    AppModal.fire({ icon: 'error', title: '提交失敗', text: msg });
+  }
+});
+
+document.getElementById('resend-edu-email-btn')?.addEventListener('click', async () => {
+  try {
+    if (!backendService) backendService = new BackendService();
+    await backendService.resendEduEmailVerification();
+    AppModal.fire({ icon: 'success', title: '驗證信已重新發送', text: '請前往學校信箱點擊連結完成驗證', confirmButtonText: '確定' });
+  } catch (e) {
+    const msg = e?.message === 'RATE_LIMIT' ? '發送過於頻繁，請稍後再試' : (e?.message || '發送失敗，請稍後再試');
+    AppModal.fire({ icon: 'error', title: '發送失敗', text: msg });
+  }
+});
+
+// URL 帶入 edu_verify_token 時，直接呼叫驗證並導向個人中心
+(async function handleEduEmailVerifyToken() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('edu_verify_token');
+  if (!token) return;
+  const url = new URL(window.location.href);
+  url.searchParams.delete('edu_verify_token');
+  url.searchParams.set('page', 'settings');
+  history.replaceState(null, '', url);
+  try {
+    if (!backendService) backendService = new BackendService();
+    await backendService.verifyEduEmail(token);
+    await AppModal.fire({ icon: 'success', title: '教育信箱驗證成功！', confirmButtonText: '確定' });
+  } catch (e) {
+    AppModal.fire({ icon: 'error', title: '驗證失敗', text: e.message, confirmButtonText: '確定' });
+  }
+  handleRouting();
+})();
+
 // 合併 loadStatCards + loadOrderBadges，共用同一批 API response，省去重複請求
 async function loadDashboardData() {
   const elProducts = document.getElementById('statProducts');
@@ -1077,16 +1155,21 @@ async function loadDashboardData() {
   if (elScore) elScore.textContent = localStorage.getItem('rate') || '—';
 
   try {
-    const [itemRes, sellRes, buyRes] = await Promise.all([
+    const [itemRes, sellRes, buyRes, meRes] = await Promise.all([
       backendService.getMyItems({ page: 1, limit: 1 }),
       backendService.getSellerOrders(1),
       backendService.getBuyerOrders(1),
+      backendService.getMe().catch(() => null),
     ]);
 
     const sellList = sellRes?.data?.data?.orders ?? [];
     const buyList  = buyRes?.data?.data?.orders  ?? [];
     const sellPag  = sellRes?.data?.data?.pagination ?? {};
     const buyPag   = buyRes?.data?.data?.pagination  ?? {};
+
+    // 學生身分驗證引導 banner
+    const eduBanner = document.getElementById('eduVerifyBanner');
+    if (eduBanner) eduBanner.classList.toggle('d-none', !!meRes?.data?.data?.account?.eduEmailVerified);
 
     // stat cards
     if (elProducts) {
@@ -1604,6 +1687,7 @@ function renderCards(list = []) {
     const created = fmtDate(item.createdAt);
     const img     = esc(item.mainImage || item.imageUrl || '../image/placeholder.webp');
     const stock   = item.stock ?? 0;
+    const viewCount = item.viewCount ?? 0;
     const stockCls = stock === 0 ? ' pcard-stock-out' : '';
 
     return `
@@ -1618,6 +1702,7 @@ function renderCards(list = []) {
           <div class="ocard-product" style="flex:1;">
             <div class="ocard-thumb">
               <img src="${img}" alt="${name}">
+              ${viewCount > 0 ? `<span class="ocard-view-badge"><i class="ti ti-eye"></i> ${viewCount}</span>` : ''}
             </div>
             <div class="ocard-info">
               <div class="ocard-sub">庫存：<span class="pcard-stock${stockCls}">${stock}</span></div>
@@ -3012,12 +3097,16 @@ async function loadMyReviewStats() {
       } catch (e) { /* silent */ }
     }
 
-    const res = await backendService.getUserReviews(uid);
+    const [res, profileRes] = await Promise.all([
+      backendService.getUserReviews(uid),
+      backendService.getPublicUserProfile(uid).catch(() => null),
+    ]);
     const d = res?.data?.data;
     if (!d) return;
 
+    const pd = profileRes?.data?.data;
     const reviewCount = Number(d?.stats?.reviewCount ?? 0);
-    const accountScore = d?.stats?.accountScore ?? '-';
+    const rate = Number.isFinite(+pd?.rate) ? +pd.rate : '-';
     const sellerReviews = d?.sellerReviews ?? [];
     const buyerReviews  = d?.buyerReviews  ?? [];
 
@@ -3048,7 +3137,7 @@ async function loadMyReviewStats() {
         <div class="my-review-stat-divider"></div>
         <div class="my-review-stat-item">
           <i class="ti ti-shield-star my-review-stat-icon"></i>
-          <span class="my-review-stat-value">${accountScore}</span>
+          <span class="my-review-stat-value">${rate}</span>
           <span class="my-review-stat-label">信譽積分</span>
         </div>
       </div>

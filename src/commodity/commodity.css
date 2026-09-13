@@ -42,6 +42,22 @@
   height: 1px;
   background: var(--color-border);
 }
+.load-more-btn {
+  padding: 8px 28px;
+  border-radius: 999px;
+  border: 1px solid #004b97;
+  background: #fff;
+  color: #004b97;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+.load-more-btn:hover {
+  background: rgb(36, 182, 133);
+  border-color: rgb(36, 182, 133);
+  color: #fff;
+}
 #whatcontent {
     display: flex;
     flex-direction: column;
@@ -1038,4 +1054,21 @@ body:has(#searchOffcanvas.showing) .offcanvas-backdrop {
 @media (max-width: 575.98px) {
   .wish-cta { flex-direction: column; align-items: stretch; text-align: left; }
   .wish-cta-btn { width: 100%; }
+}
+
+/* ── 商品卡片瀏覽數 badge ── */
+.commodity-view-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.65rem;
+  color: #fff;
+  background: rgba(0, 75, 151, 0.75);
+  padding: 3px 6px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  z-index: 3;
 }

@@ -6,7 +6,7 @@
    ============================================================ */
 
 .article-body {
-  color: #28415e;
+  color: var(--body);
   font-size: 16px;
   line-height: 1.95;
   letter-spacing: 0.01em;
@@ -25,7 +25,7 @@
 .article-body > *:first-child { margin-top: 0; }
 
 /* 標題等字級用 em，隨容器 font-size 整體縮放 */
-.article-body h2 { font-size: 1.44em; font-weight: 800; color: var(--ink); letter-spacing: 0.02em; margin: 34px 0 14px; padding-left: 14px; border-left: 4px solid var(--navy); scroll-margin-top: 110px; }
+.article-body h2 { font-size: 1.44em; font-weight: 800; color: var(--ink); letter-spacing: 0.02em; margin: 34px 0 14px; padding-bottom: 10px; border-bottom: 2px solid var(--navy); scroll-margin-top: 110px; }
 .article-body h3 { font-size: 1.16em; font-weight: 800; color: var(--navy); margin: 24px 0 10px; scroll-margin-top: 110px; }
 .article-body h4 { font-size: 0.97em; font-weight: 800; color: var(--ink); margin: 18px 0 8px; letter-spacing: 0.02em; }
 .article-body p { margin-bottom: 16px; }
@@ -42,7 +42,7 @@
 .article-body hr { border: none; border-top: 1px solid var(--line); margin: 26px 0; }
 
 /* 摺疊區塊 */
-.article-body details.fold { position: relative; background: #fbfcfe; border: 1px solid var(--line); border-radius: 12px; padding: 4px 18px; margin: 20px 0; }
+.article-body details.fold { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 4px 18px; margin: 20px 0; }
 .article-body details.fold > summary { cursor: pointer; font-weight: 800; color: var(--ink); padding: 12px 0; font-size: 15px; list-style: none; display: flex; align-items: center; gap: 8px; }
 .article-body details.fold > summary::-webkit-details-marker { display: none; }
 .article-body details.fold > summary::before { content: "▸"; color: var(--navy); transition: transform 0.2s; }
@@ -88,7 +88,7 @@
 /* 重點框：blockquote.lead（編輯器）與 .callout（既有文章）等效 */
 .article-body .callout {
   background: var(--alice); border-left: 3px solid var(--navy); border-radius: 12px;
-  padding: 16px 20px; margin: 20px 0; font-size: 14.5px; color: #28415e;
+  padding: 16px 20px; margin: 20px 0; font-size: 14.5px; color: var(--body);
 }
 
 /* 步驟清單 ol.steps（既有文章沿用）*/

@@ -162,7 +162,7 @@
                 <!-- TODO 登入登出id -->
                 <a class="navbar-brand loginornot" href="#">登出</a>
               </div>
-              <a class="nav-link specialpadding ms-2" href="../shoppingcart/shoppingcart.html">
+              <a class="nav-link specialpadding ms-2" id="navCartLink" href="../shoppingcart/shoppingcart.html">
                 <img src="../svg/shoppingcart.svg" alt="購物車">
               </a>
             </div>
@@ -173,7 +173,7 @@
         <div class="container-fluid1">
           <div class="d-flex align-items-center">
             <form id="searchForm" class="form-search w-100 d-flex justify-content-center align-items-center">
-              <div class="search-input-wrap mh-search-wrap shop-search-wrap" style="position:relative;">
+              <div class="search-input-wrap mh-search-wrap shop-search-wrap" id="navSearchWrap" style="position:relative;">
                 <img src="../svg/searchicon.svg" class="search-icon-inner" alt="搜尋">
                 <input class="form-control" type="search" placeholder="搜尋商品..." aria-label="Search" id="searchInput">
                 <div id="mhHotTags" class="mh-hot-tags d-none d-lg-flex"></div>
@@ -242,10 +242,10 @@
       </div>
     </div>
   <main id="midcontent">
-  <div class="my-section">  
+  <div class="my-section">
   <div class="quick-actions">
 
-    <a class="qa-btn primary" href="shop.html?page=seller">
+    <a class="qa-btn primary" id="qaSellerBtn" href="shop.html?page=seller">
       <div class="qa-ic-wrap">
         <span class="qa-ic qa-ic-shop"><span class="qa-door"></span></span>
       </div>
@@ -256,7 +256,7 @@
       <span class="qa-arr">→</span>
     </a>
 
-    <a class="qa-btn aqua" href="../wishpool/wishpool.html#wishpool">
+    <a class="qa-btn aqua" id="qaWishBtn" href="../wishpool/wishpool.html#wishpool">
       <div class="qa-ic-wrap">
         <svg class="qa-ic" width="24" height="24" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14.7166 0.815217C14.81 0.546549 15.19 0.546548 15.2834 0.815216L18.4582 9.94871C18.4994 10.0672 18.61 10.1476 18.7354 10.1502L28.403 10.3472C28.6873 10.353 28.8048 10.7143 28.5781 10.8862L20.8727 16.728C20.7727 16.8038 20.7305 16.9338 20.7668 17.0539L23.5669 26.3092C23.6492 26.5814 23.3418 26.8048 23.1084 26.6423L15.1714 21.1192C15.0684 21.0476 14.9316 21.0476 14.8286 21.1192L6.89164 26.6423C6.65817 26.8048 6.35078 26.5814 6.43314 26.3092L9.23321 17.0539C9.26954 16.9338 9.2273 16.8038 9.12731 16.728L1.4219 10.8862C1.19524 10.7143 1.31266 10.353 1.59703 10.3472L11.2646 10.1502C11.39 10.1476 11.5006 10.0672 11.5418 9.94871L14.7166 0.815217Z" fill="#004B97"></path>
@@ -297,6 +297,16 @@
       <span class="qa-arr">→</span>
     </a>
 
+  </div>
+
+  <!-- 學生身分驗證提醒橫幅 -->
+  <div id="eduVerifyBanner" class="edu-verify-banner d-none">
+    <div class="evb-icon"><i class="ti ti-shield-check"></i></div>
+    <div class="evb-body">
+      <div class="evb-title">還沒有完成學生身分驗證</div>
+      <div class="evb-sub">驗證教育信箱後才能上架與購買商品，立即前往個人中心完成驗證！</div>
+    </div>
+    <a href="../person/person.html?page=settings&scroll=eduEmailFormWrap" class="evb-btn">立即驗證</a>
   </div>
 </div><!-- /.my-section -->
 
@@ -466,7 +476,7 @@
           <div class="fls-step-label">STEP 01</div>
           <div class="fls-card-icon"><i class="fa-solid fa-user-plus"></i></div>
           <div class="fls-card-title">快速註冊</div>
-          <div class="fls-card-desc">使用學校 <strong>Email</strong> 快速建立帳號，即可解鎖賣家權限。</div>
+          <div class="fls-card-desc">使用任何信箱或 <strong>Google</strong> 帳號快速註冊，完成<strong>學校信箱驗證</strong>後即可解鎖賣家權限。</div>
         </div>
         <div class="fls-card">
           <div class="fls-step-label">STEP 02</div>
@@ -1537,13 +1547,13 @@ const timer = setInterval(() => {
     <img class="nav-icon nav-icon-inactive" src="../svg/commoditypagenotactive.svg" alt="點擊前往購物商場">
     <span>購物商場</span>
   </a>
-  <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-tab-chat">
+  <a href="../chatroom/chatroom.html" class="bottom-nav-item nav-tab-chat" id="navTabChat">
     <img class="nav-icon nav-icon-active" src="../svg/chaticonmobile.svg" alt="正在聊天室">
     <img class="nav-icon nav-icon-inactive" src="../svg/chaticonmobilenotactive.svg" alt="前往聊天室">
     <span class="bottom-nav-badge" id="chatNavBadge"></span>
     <span>聊天室</span>
   </a>
-  <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item nav-tab-cart">
+  <a href="../shoppingcart/shoppingcart.html" class="bottom-nav-item nav-tab-cart" id="navTabCart">
     <img class="nav-icon nav-icon-active" src="../svg/shoppingcart.svg" alt="正在購物車頁">
     <img class="nav-icon nav-icon-inactive" src="../svg/shoppingcartnotactive.svg" alt="點擊前往購物車頁">
     <span>購物車</span>
@@ -2007,6 +2017,21 @@ const timer = setInterval(() => {
     </button>
     <iframe id="talkInterface" style="display:none;"></iframe>
 
+    <!-- 新手引導：帶使用者認識搜尋、通知、購物車、聊天室、賣家／許願專區 -->
+    <div id="shopOnboarding" class="shop-onboarding" style="display:none;">
+      <div class="ob-backdrop"></div>
+      <div class="ob-tooltip" id="obTooltip">
+        <div class="ob-step-label" id="obStep">1 / 6</div>
+        <div class="ob-icon" id="obIcon"></div>
+        <div class="ob-title" id="obTitle"></div>
+        <div class="ob-desc" id="obDesc"></div>
+        <div class="ob-actions">
+          <button class="ob-skip" id="obSkip" type="button">跳過引導</button>
+          <button class="ob-next" id="obNext" type="button">下一步</button>
+        </div>
+      </div>
+    </div>
+
     <script>
       window.addEventListener('chatUnread', () => {
         document.getElementById('chatUnreadDot').style.display = 'block';
@@ -2241,6 +2266,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 </script>
+
+  <!-- 許願池廣告彈跳視窗（開啟 shop.html 時顯示） -->
+  <div class="wp-ad-modal-backdrop" id="wpAdModalBackdrop" style="display:none;">
+    <div class="wp-ad-modal">
+      <button type="button" class="wp-ad-modal-close" id="wpAdModalClose" aria-label="關閉">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="wp-ad-square">
+        <div class="wp-ad-stage" id="wpAdStage"></div>
+      </div>
+      <div class="wp-ad-actions">
+        <button class="wp-ad-dismiss" id="wpAdDismiss">知道了</button>
+        <a class="wp-ad-cta" href="../wishpool/wishpool.html#wishpool">前往許願 →</a>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

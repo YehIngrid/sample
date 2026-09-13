@@ -465,19 +465,18 @@ export const formatTaipeiTime = (dateStr) => {
     minute: "2-digit"
   });
 };
-export async function requireEmailVerified() {
-  if (localStorage.getItem('emailVerify') !== 'false') return true;
+export async function requireEduEmailVerified() {
+  if (localStorage.getItem('eduEmailVerified') === 'true') return true;
   const result = await AppModal.fire({
     icon: 'warning',
-    title: '信箱尚未驗證',
-    text: '買賣商品前需完成電子信箱驗證，是否前往驗證？',
+    title: '尚未完成學生身分驗證',
+    text: '買賣商品前需完成教育信箱驗證，是否前往驗證？',
     confirmButtonText: '前往驗證',
     cancelButtonText: '取消',
     showCancelButton: true,
   });
   if (result.isConfirmed) {
-    const currentUrl = window.location.pathname + window.location.search;
-    window.location.href = `../account/account.html?redirect=${encodeURIComponent(currentUrl)}`;
+    window.location.href = '../person/person.html?page=settings&scroll=eduEmailFormWrap';
   }
   return false;
 }

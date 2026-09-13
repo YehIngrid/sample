@@ -6,6 +6,11 @@ const _tagMeaningCache = {};
 const _tagPositiveCache = {};
 const DEFAULT_AVATAR = '../webP/default-avatar.webp';
 
+function toBigImg(url) {
+  if (!url) return url;
+  return url.replace(/(\.(?:webp|jpe?g|png|gif))(\?|$)/i, '_big$1$2');
+}
+
 function esc(str) {
   if (str == null) return '';
   return String(str)
@@ -172,11 +177,15 @@ export async function openReviewerProfileModal(accountId, name, photo) {
   let intro = '';
   let suspensionLevel = 'NONE';
   let lowScoreStrikeCount = 0;
+  let joinDate = '';
+  let commodities = [];
+  let rate = null;
 
   try {
-    const [reviewRes, profileRes] = await Promise.all([
+    const [reviewRes, profileRes, commoditiesRes] = await Promise.all([
       _svc.getUserReviews(accountId),
       _svc.getPublicUserProfile(accountId).catch(() => null),
+      _svc.getUserCommodities(accountId).catch(() => null),
     ]);
     const d  = reviewRes?.data?.data;
     const pd = profileRes?.data?.data;
@@ -186,14 +195,20 @@ export async function openReviewerProfileModal(accountId, name, photo) {
     intro              = pd?.introduction ?? '';
     suspensionLevel    = pd?.suspensionLevel    ?? 'NONE';
     lowScoreStrikeCount = pd?.lowScoreStrikeCount ?? 0;
+    commodities        = commoditiesRes?.data?.data?.commodities ?? [];
+    rate               = Number.isFinite(+pd?.rate) ? +pd.rate : null;
+    if (pd?.createdAt) {
+      const jd = new Date(pd.createdAt);
+      joinDate = `${jd.getFullYear()}年${jd.getMonth() + 1}月加入`;
+    }
     if (!photo && pd?.photoURL) photo = pd.photoURL;
   } catch (_) {}
 
   const reviewCount  = Number(stats?.reviewCount ?? 0);
-  const accountScore = stats?.accountScore ?? '-';
+  const rateDisplay  = rate ?? '-';
   const statsLine = reviewCount > 0
-    ? `${reviewCount} 則評價 · 信譽積分 ${accountScore}`
-    : '尚無評價紀錄';
+    ? `${reviewCount} 則評價 · 信譽積分 ${rateDisplay}`
+    : `信譽積分 ${rateDisplay}`;
 
   const suspensionBadge = (suspensionLevel && suspensionLevel !== 'NONE')
     ? `<span class="rp-badge rp-badge--danger">可疑帳號</span>` : '';
@@ -207,6 +222,24 @@ export async function openReviewerProfileModal(accountId, name, photo) {
   const reviewHtml = allCards
     ? `<div class="review-list">${allCards}</div>`
     : `<div class="review-empty rp-empty"><i class="ti ti-message-circle" style="font-size:1.8rem;display:block;margin-bottom:6px;opacity:0.4;"></i>目前尚無評價紀錄</div>`;
+
+  const commodityCards = commodities.map(c => {
+    const cid   = c.id ?? c._id ?? '';
+    const cimg  = toBigImg(c.mainImage) || '';
+    const sold  = Number(c.stock) <= 0;
+    return `
+      <div class="rp-commodity-card" data-product-id="${esc(cid)}">
+        <div class="rp-commodity-thumb">
+          ${cimg ? `<img src="${esc(cimg)}" alt="${esc(c.name)}" onerror="this.parentElement.classList.add('rp-commodity-thumb--empty');this.remove();">` : ''}
+          ${sold ? `<span class="rp-commodity-sold">已售完</span>` : ''}
+        </div>
+        <div class="rp-commodity-name">${esc(c.name ?? '未命名商品')}</div>
+        <div class="rp-commodity-price">NT$ ${Number(c.price ?? 0).toLocaleString('zh-TW')}</div>
+      </div>`;
+  }).join('');
+  const commoditiesHtml = commodities.length
+    ? `<div class="rp-section-title">在售商品 · ${commodities.length}</div><div class="rp-commodities">${commodityCards}</div>`
+    : '';
 
   const myUid = localStorage.getItem('uid');
   const reportBtn = (accountId && String(accountId) !== String(myUid))
@@ -224,16 +257,24 @@ export async function openReviewerProfileModal(accountId, name, photo) {
           onerror="this.src='${DEFAULT_AVATAR}'">
         <div class="rp-info">
           <div class="rp-name">${esc(name)}${suspensionBadge}${lowScoreBadge}</div>
-          <div class="rp-stats">${statsLine}</div>
+          <div class="rp-stats">${statsLine}${joinDate ? ` · ${esc(joinDate)}` : ''}</div>
           ${intro ? `<div class="rp-intro">${esc(intro)}</div>` : ''}
         </div>
         ${reportBtn}
       </div>
+      ${commoditiesHtml}
       <div class="rp-divider"></div>
       <div class="rp-reviews">${reviewHtml}</div>
     `,
     confirmButtonText: '關閉',
     width: 520,
-    didOpen: popup => bindReviewerClicks(popup),
+    didOpen: popup => {
+      bindReviewerClicks(popup);
+      popup.querySelectorAll('[data-product-id]').forEach(card => {
+        const pid = card.dataset.productId;
+        if (!pid) return;
+        card.addEventListener('click', () => { location.href = `../product/product.html?id=${pid}`; });
+      });
+    },
   });
 }

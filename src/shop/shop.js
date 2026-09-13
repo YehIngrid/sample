@@ -1,6 +1,7 @@
 import BackendService from '../BackendService.js';
 import wpBackendService from '../wpBackendService.js';
-import { requireEmailVerified } from '../default/default.js';
+import ChatBackendService from '../chatroom/ChatBackendService.js';
+import { requireEduEmailVerified } from '../default/default.js';
 import { AppModal } from '../default/app-modal.js';
 window.AppModal = AppModal; // 給頁面內的 classic <script> 使用（抽獎輪盤、刊登表單驗證）
 
@@ -95,7 +96,7 @@ async function initWishTicker() {
   const wishAvatar = w =>
     (w.owner?.photoURL && w.owner.photoURL !== 'null') ? w.owner.photoURL : '../webP/default-avatar.webp';
   // 空狀態標語本身已經是完整句子（許個願望吧／告訴我們…／發起心願…），不該再疊加「想要」
-  const wishLabel = name => /^(想要|許|發|告)/.test(name) ? name : `想要${name}`;
+  const wishLabel = name => /^(想要|許|發|告|徵)/.test(name) ? name : `徵${name}`;
 
   let wishes;
   try {
@@ -202,6 +203,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById('mobileApiDocsItem').classList.remove('d-none');
     document.getElementById('mobileDesignSystemItem').classList.remove('d-none');
     document.getElementById('mobileSchoolGuideItem').classList.remove('d-none');
+  }
+
+  // 學生身分驗證提醒橫幅：已登入但尚未完成教育信箱驗證時顯示
+  const eduVerifyBanner = document.getElementById('eduVerifyBanner');
+  if (eduVerifyBanner) {
+    const eduVerified = localStorage.getItem('eduEmailVerified') === 'true';
+    eduVerifyBanner.classList.toggle('d-none', !window.isLoggedIn || eduVerified);
   }
 
   const params = new URLSearchParams(window.location.search);
@@ -347,11 +355,13 @@ function renderItems(items){
     const div = document.createElement("div");
       div.className = "hot-item";
       div.dataset.id = item.id;
+      const viewCount = item.viewCount ?? 0;
       div.innerHTML = `
         <div class="card">
           <div class="img-box">
             <img src="../svg/topicon.svg" class="hot-top-icon" alt="熱門商品標誌" width="46" height="46" decoding="async">
             <img class="main" src="${toBigImg(item.mainImage)}" alt="${esc(item.name)}" loading="lazy" decoding="async">
+            ${viewCount > 0 ? `<span class="hot-item-view-badge"><i class="ti ti-eye"></i> ${viewCount}</span>` : ''}
           </div>
           <div class="hot-item-footer">
             <div class="hotItemName">${esc(item.name)}</div>
@@ -454,7 +464,7 @@ nextHotBtn.addEventListener("click", () => {
 
  
   async function createCommodity() {
-  if (!await requireEmailVerified()) return;
+  if (!await requireEduEmailVerified()) return;
   // 1. 商品名稱
   const nameEl = document.getElementById('name');
   if (!nameEl.value.trim()) {
@@ -1702,4 +1712,527 @@ rightBtn.addEventListener("click", () => {
 
 leftBtn.addEventListener("click", () => {
   container.scrollLeft -= scrollAmount;
+});
+
+// ── 進站提醒 Pill：有未讀通知／待處理訂單／聊天室新訊息時，
+//    在進入 shop.html 時額外跳一個提醒（紅點之外的加強提示），每日僅一次 ──
+// 注意：chat.js 的帳號層級初始檢查只有在「有未讀」時才會 dispatch chatUnread，
+// 沒有未讀時不會 dispatch chatRead，所以不能用等事件的方式判斷（等不到只能死等 timeout，
+// 這正是先前彈窗延遲出現的主因）。改成直接打一次 /api/chat/rooms，跟 chat.js 平行進行。
+async function _getChatHasUnread() {
+  const dot = document.getElementById('chatUnreadDot');
+  if (dot?.style.display === 'block') return true;
+  try {
+    const myUsername = localStorage.getItem('username');
+    const rooms = await new ChatBackendService().listRooms();
+    let hasUnread = false;
+    rooms?.data?.items?.forEach(data => {
+      const isOfficial = data.type === 'OFFICIAL';
+      const myself = data.members?.find(m => m.name === myUsername);
+      const isMyMessage = data.lastMessage?.username === myself?.name;
+      const myLastRead = myself?.lastReadMessageId ?? data.lastReadMessageId ?? null;
+      if (data.lastMessageId != null && myLastRead !== data.lastMessageId && (isOfficial || !isMyMessage)) {
+        hasUnread = true;
+      }
+    });
+    return hasUnread;
+  } catch (_) {
+    return false;
+  }
+}
+
+function _entryReminderTodayKey() {
+  const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Taipei' }); // YYYY-MM-DD
+  return `th_entry_reminder_${today}`;
+}
+
+function _positionEntryReminderPill(pill) {
+  const header = document.querySelector('.header');
+  const rect = header?.getBoundingClientRect();
+  pill.style.top = `${rect ? rect.bottom + 12 : 76}px`;
+
+  // 手機版：寬度／水平位置對齊搜尋欄，視覺上像是搜尋欄下方彈出的提示
+  const searchBar = document.querySelector('.search-input-wrap');
+  const sRect = (window.innerWidth < 992 && searchBar) ? searchBar.getBoundingClientRect() : null;
+  if (sRect && sRect.width > 0) {
+    pill.style.setProperty('--erp-x', '0');
+    pill.style.left = `${sRect.left}px`;
+    pill.style.width = `${sRect.width}px`;
+    pill.style.maxWidth = `${sRect.width}px`;
+  } else {
+    pill.style.setProperty('--erp-x', '-50%');
+    pill.style.left = '50%';
+    pill.style.width = '';
+    pill.style.maxWidth = '';
+  }
+}
+
+function _showEntryReminderPill({ notifCount, orderPending, chatUnread }) {
+  if (document.getElementById('entryReminderPill')) return;
+
+  const parts = [];
+  if (notifCount > 0) parts.push(`<strong class="erp-num">${notifCount}</strong> 則新通知`);
+  if (orderPending > 0) parts.push(`<strong class="erp-num">${orderPending}</strong> 筆待處理訂單`);
+  if (chatUnread) parts.push('聊天室新訊息');
+  if (!parts.length) return;
+
+  const pill = document.createElement('div');
+  pill.className = 'entry-reminder-pill';
+  pill.id = 'entryReminderPill';
+  pill.setAttribute('role', 'status');
+  pill.innerHTML = `
+    <span class="erp-icon"><i class="ti ti-bell"></i></span>
+    <span class="erp-text">你有 ${parts.join('、')}</span>
+    <button class="erp-action" id="erpActionBtn" type="button">查看</button>
+    <button class="erp-close" id="erpCloseBtn" type="button" aria-label="關閉提醒"><i class="ti ti-x"></i></button>
+  `;
+  document.body.appendChild(pill);
+  _positionEntryReminderPill(pill);
+
+  const onResize = () => _positionEntryReminderPill(pill);
+  window.addEventListener('resize', onResize);
+  requestAnimationFrame(() => pill.classList.add('show'));
+
+  const dismiss = () => {
+    pill.classList.remove('show');
+    window.removeEventListener('resize', onResize);
+    setTimeout(() => pill.remove(), 300);
+  };
+
+  document.getElementById('erpCloseBtn').addEventListener('click', dismiss);
+  document.getElementById('erpActionBtn').addEventListener('click', () => {
+    if (notifCount === 0 && orderPending === 0 && chatUnread) {
+      window.toggleChatInterface?.();
+    } else {
+      window.location.href = '../person/person.html';
+    }
+    dismiss();
+  });
+}
+
+async function initEntryReminder() {
+  await window._authReady;
+  if (!window.isLoggedIn) return;
+  // 新手引導還沒跑過 → 這次先不跳提醒 pill，避免兩個彈出式 UI 疊在一起
+  if (!localStorage.getItem('shopOnboardingDone')) return;
+  if (localStorage.getItem(_entryReminderTodayKey())) return;
+  if (!backendService) backendService = new BackendService();
+
+  const [notifRes, sellRes, buyRes, chatUnread] = await Promise.all([
+    backendService.getNotifications(1, 20).catch(() => null),
+    backendService.getSellerOrders(1, 'pending').catch(() => null),
+    backendService.getBuyerOrders(1, 'pending').catch(() => null),
+    _getChatHasUnread(),
+  ]);
+
+  const notifItems = notifRes?.data?.data?.notifications ?? [];
+  const notifCount = notifRes?.data?.data?.unreadCount ?? notifItems.filter(n => !n.isRead).length;
+  const sellPending = sellRes?.data?.data?.pagination?.totalItems ?? sellRes?.data?.data?.orders?.length ?? 0;
+  const buyPending = buyRes?.data?.data?.pagination?.totalItems ?? buyRes?.data?.data?.orders?.length ?? 0;
+  const orderPending = sellPending + buyPending;
+
+  if (notifCount <= 0 && orderPending <= 0 && !chatUnread) return;
+
+  _showEntryReminderPill({ notifCount, orderPending, chatUnread });
+  localStorage.setItem(_entryReminderTodayKey(), '1');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initEntryReminder();
+});
+
+// ── 許願池廣告：shop.html 最上方的正方形循環動畫（6 個場景，共 20 秒一輪）──
+const WP_AD_DISMISSED_KEY = 'wpAdDismissed';
+const WP_AD_BUBBLES = ['徵 深色大衣 M', '徵 腳踏車', '徵 製圖尺組', '徵 宿舍小冰箱', '徵 微積分課本'];
+const WP_AD_AVATAR_ICONS = [
+  { src: '../svg/rabbit.svg', bg: 'rgba(171,218,213,0.4)' },
+  { src: '../svg/fox.svg',    bg: 'rgba(243,227,181,0.6)' },
+  { src: '../svg/tree.svg',   bg: 'rgba(126,184,216,0.4)' },
+];
+const wpAdAvatarIcon = (idx) => WP_AD_AVATAR_ICONS[idx % WP_AD_AVATAR_ICONS.length];
+
+function initWishpoolAdBanner() {
+  const backdrop = document.getElementById('wpAdModalBackdrop');
+  const stage     = document.getElementById('wpAdStage');
+  const dismiss   = document.getElementById('wpAdDismiss');
+  const closeBtn  = document.getElementById('wpAdModalClose');
+  if (!backdrop || !stage) return;
+
+  if (localStorage.getItem(WP_AD_DISMISSED_KEY)) return;
+
+  backdrop.style.display = 'flex';
+
+  let timers = [];
+  const after = (ms, fn) => { timers.push(setTimeout(fn, ms)); };
+  const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+
+  const typeInto = (el, text, msPerChar, done) => {
+    if (!el) return;
+    let i = 0;
+    el.classList.add('wp-ad-caret');
+    const tick = () => {
+      el.textContent = text.slice(0, i);
+      i++;
+      if (i <= text.length) { after(msPerChar, tick); }
+      else { el.classList.remove('wp-ad-caret'); done && done(); }
+    };
+    tick();
+  };
+
+  // 動畫游標：從按鈕右下方移過去、點下去，完成後呼叫 done()
+  const cursorClick = (targetEl, done) => {
+    if (!targetEl) { done && done(); return; }
+    const stageRect  = stage.getBoundingClientRect();
+    const targetRect = targetEl.getBoundingClientRect();
+    const endX = targetRect.left - stageRect.left + targetRect.width / 2;
+    const endY = targetRect.top - stageRect.top + targetRect.height / 2;
+    const startX = Math.min(endX + 70, stageRect.width - 10);
+    const startY = Math.min(endY + 60, stageRect.height - 10);
+    const cursor = document.createElement('div');
+    cursor.className = 'wp-ad-cursor';
+    cursor.style.left = startX + 'px';
+    cursor.style.top  = startY + 'px';
+    stage.appendChild(cursor);
+    after(20, () => {
+      cursor.style.left = endX + 'px';
+      cursor.style.top  = endY + 'px';
+    });
+    after(240, () => {
+      cursor.classList.add('wp-ad-cursor-click');
+      done && done();
+    });
+    after(560, () => cursor.remove());
+  };
+
+  // Scene 1（0–3.4s）：徵求訊息泡泡一個一個浮現
+  const sceneWishes = () => {
+    stage.innerHTML = `
+      <div class="wp-ad-scene1-root" id="wpAdScene1Root">
+        <div class="wp-ad-eyebrow">FOR STUDENTS · 校內互助</div>
+        <h3 class="wp-ad-headline">你是不是也有<br>找了很久卻找不到的東西？</h3>
+        <div class="wp-ad-bubbles" id="wpAdBubbles"></div>
+      </div>
+    `;
+    const list = document.getElementById('wpAdBubbles');
+    WP_AD_BUBBLES.forEach((text, idx) => {
+      const icon = wpAdAvatarIcon(idx);
+      const row = document.createElement('div');
+      row.className = 'wp-ad-bubble-row' + (idx % 2 ? ' wp-ad-flip' : '');
+      row.innerHTML = `<span class="wp-ad-avatar-dot" style="background:${icon.bg}"><img src="${icon.src}" alt=""></span><span class="wp-ad-bubble">${text}</span>`;
+      list.appendChild(row);
+      after(idx * 550, () => row.classList.add('wp-ad-in'));
+    });
+  };
+
+  // Scene 1→2 轉場（2.95–3.4s）：訊息們放大穿場，銜接下一幕
+  const sceneWishesExit = () => {
+    document.getElementById('wpAdScene1Root')?.classList.add('wp-ad-zoom-out');
+  };
+
+  // Scene 2a（3.4–4.5s）：「想許願？」獨立置中過場，字放大
+  // Scene 2b（4.5–5.8s）：標題定位到上方、表單卡淡入補位
+  const sceneAsk = () => {
+    stage.innerHTML = `
+      <div class="wp-ad-intro-center" id="wpAdIntroCenter">
+        <div class="wp-ad-eyebrow">WISH POOL · 心願媒合</div>
+        <h3 class="wp-ad-headline wp-ad-headline-lg">想許願？<span class="accent">來拾貨寶庫許願池</span></h3>
+      </div>
+    `;
+    after(1600, () => document.getElementById('wpAdIntroCenter')?.classList.add('wp-ad-fadeout'));
+    after(1800, () => {
+      stage.innerHTML = `
+        <div class="wp-ad-ask-heading" id="wpAdAskHeading">
+          <div class="wp-ad-eyebrow">WISH POOL · 心願媒合</div>
+          <h3 class="wp-ad-headline">想許願？<span class="accent">來拾貨寶庫許願池</span></h3>
+        </div>
+        <div class="wp-ad-card wp-ad-card-fadein" id="wpAdAskCard">
+          <div class="wp-ad-card-head"><span class="wp-ad-formtab">我要許願</span><span class="wp-ad-hint">限校內交易</span></div>
+          <div class="wp-ad-field d-flex gap-3"><label>想要什麼</label><span id="wpAdFName">&nbsp;</span></div>
+          <div class="wp-ad-field d-flex gap-3"><label>期望價格</label><span id="wpAdFPrice">&nbsp;</span></div>
+          <div class="wp-ad-field d-flex gap-3"><label>急迫度</label><span id="wpAdFUrgency">&nbsp;</span></div>
+          <button class="wp-ad-submit" id="wpAdSubmit">送出許願 ↗</button>
+        </div>
+      `;
+      requestAnimationFrame(() => document.getElementById('wpAdAskCard')?.classList.add('wp-ad-in'));
+    });
+  };
+
+  // Scene 3（5.8–10.2s）：品項、價格、急迫度逐字填入
+  const sceneFill = () => {
+    const nameEl = document.getElementById('wpAdFName');
+    const priceEl = document.getElementById('wpAdFPrice');
+    const urgEl = document.getElementById('wpAdFUrgency');
+    if (!nameEl) return;
+    typeInto(nameEl, '微積分課本（第八版）', 70, () => {
+      after(150, () => typeInto(priceEl, 'NT$ 300', 90, () => {
+        after(150, () => typeInto(urgEl, '下週小考要用', 90));
+      }));
+    });
+  };
+
+  // Scene 4（10.2–12.6s）：游標點擊送出鍵、轉綠並蓋上郵戳
+  const sceneSend = () => {
+    const btn  = document.getElementById('wpAdSubmit');
+    const card = document.getElementById('wpAdAskCard');
+    cursorClick(btn, () => {
+      btn?.classList.add('wp-ad-sent');
+      if (!card) return;
+      const stamp = document.createElement('img');
+      stamp.src = '../svg/wishink.svg';
+      stamp.alt = '';
+      stamp.className = 'wp-ad-stamp';
+      card.appendChild(stamp);
+      requestAnimationFrame(() => stamp.classList.add('wp-ad-in'));
+    });
+  };
+
+  // Scene 5（12.6–16.0s）：游標點擊「我也想要」後，其他同學頭像依序累加
+  const sceneWantToo = () => {
+    stage.innerHTML = `
+      <div class="wp-ad-eyebrow">WISH POOL · 同學也在等</div>
+      <div class="wp-ad-card wp-ad-card-sm">
+        <span class="wp-ad-tag">有人在許願</span>
+        <div class="wp-ad-item">微積分課本（第八版）</div>
+        <div class="wp-ad-price">NT$ 300</div>
+        <button class="wp-ad-wanttoo" id="wpAdWantBtn"><img src="../svg/wantToo.svg" alt="">我也想要</button>
+      </div>
+      <div class="wp-ad-avatars" id="wpAdAvatars"></div>
+      <div class="wp-ad-subcaption" id="wpAdSubcaption"></div>
+    `;
+    const avWrap = document.getElementById('wpAdAvatars');
+    const subEl  = document.getElementById('wpAdSubcaption');
+    cursorClick(document.getElementById('wpAdWantBtn'), () => {
+      WP_AD_AVATAR_ICONS.forEach((icon, idx) => {
+        const av = document.createElement('div');
+        av.className = 'wp-ad-avatar-plus';
+        av.style.background = icon.bg;
+        av.innerHTML = `<img src="${icon.src}" alt="">`;
+        avWrap.appendChild(av);
+        after(idx * 400, () => {
+          av.classList.add('wp-ad-in');
+          subEl.textContent = `${idx * 4 + 3} 位同學也想要，需求一次看見`;
+        });
+      });
+    });
+  };
+
+  // Scene 6（16.0–20.0s）：兩張卡片左右滑入 → 媒合成功 → 標語 → CTA／品牌
+  const sceneMatch = () => {
+    stage.innerHTML = `
+      <div class="wp-ad-match-cards">
+        <div class="wp-ad-card" id="wpAdCardA"><span class="wp-ad-tag">有人在許願</span><div class="wp-ad-item">微積分課本（第八版）</div></div>
+        <div class="wp-ad-card" id="wpAdCardB"><span class="wp-ad-tag aqua">同學供貨</span><div class="wp-ad-item">我的書架剛好有一本</div></div>
+      </div>
+      <div class="wp-ad-match-badge" id="wpAdMatchBadge">媒合成功 ✓</div>
+      <p class="wp-ad-tagline wp-ad-fadeup" id="wpAdMatchTagline">說出你缺的東西，讓同學幫你找</p>
+      <a class="wp-ad-cta-inline wp-ad-fadeup" id="wpAdMatchCta" href="../wishpool/wishpool.html#wishpool">立即許願 ↗</a>
+      <div class="wp-ad-footer-brand wp-ad-fadeup" id="wpAdMatchFooter">拾貨寶庫 · TREASURE HUB</div>
+    `;
+    after(100, () => {
+      document.getElementById('wpAdCardA')?.classList.add('wp-ad-in');
+      document.getElementById('wpAdCardB')?.classList.add('wp-ad-in');
+    });
+    after(700, () => document.getElementById('wpAdMatchBadge')?.classList.add('wp-ad-in'));
+    after(2300, () => {
+      document.getElementById('wpAdMatchTagline')?.classList.add('wp-ad-in');
+      document.getElementById('wpAdMatchCta')?.classList.add('wp-ad-in');
+      document.getElementById('wpAdMatchFooter')?.classList.add('wp-ad-in');
+    });
+  };
+
+  // 場景間硬切轉場：先讓整個 stage 淡出，內容換好後再淡回來
+  const runScene = (fn) => {
+    stage.classList.add('wp-ad-stage-fade');
+    after(200, () => {
+      fn();
+      requestAnimationFrame(() => stage.classList.remove('wp-ad-stage-fade'));
+    });
+  };
+
+  const WP_AD_TIMELINE = [
+    { t: 0,     run: () => runScene(sceneWishes) },
+    { t: 2950,  run: sceneWishesExit },
+    { t: 3400,  run: sceneAsk },
+    { t: 5800,  run: sceneFill },
+    { t: 8400,  run: sceneSend },
+    { t: 12600, run: () => runScene(sceneWantToo) },
+    { t: 16000, run: () => runScene(sceneMatch) },
+  ];
+  const WP_AD_LOOP_MS = 20000;
+
+  const playLoop = () => {
+    clearTimers();
+    WP_AD_TIMELINE.forEach(step => after(step.t, step.run));
+    after(WP_AD_LOOP_MS, playLoop);
+  };
+  playLoop();
+
+  const closeModal = () => {
+    clearTimers();
+    localStorage.setItem(WP_AD_DISMISSED_KEY, '1');
+    backdrop.style.display = 'none';
+  };
+  dismiss?.addEventListener('click', closeModal);
+  closeBtn?.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) closeModal();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initWishpoolAdBanner();
+});
+
+// ── 新手引導：第一次登入進入 shop.html 時，依序介紹搜尋／通知／購物車／聊天室／
+//    賣家專區／許願專區。只給登入使用者看，只跑一次（localStorage 記錄）──
+const OB_STEPS = [
+  {
+    getTarget: () => document.getElementById('navSearchWrap'),
+    icon: 'ti-search',
+    title: '搜尋商品',
+    desc: '想找什麼直接在這裡搜尋，也能看到熱門標籤跟搜尋紀錄。',
+  },
+  {
+    getTarget: () => document.getElementById('notificationBtn'),
+    icon: 'ti-bell',
+    title: '通知中心',
+    desc: '訂單更新、聊天新訊息、評價回覆都會顯示在這裡，記得常常來看看。',
+  },
+  {
+    getTarget: () => (window.innerWidth < 992
+      ? document.getElementById('navTabCart')
+      : document.getElementById('navCartLink')),
+    icon: 'ti-shopping-cart',
+    title: '購物車',
+    desc: '看中的商品可以先加進購物車，之後再一次結帳。',
+  },
+  {
+    getTarget: () => (window.innerWidth < 992
+      ? document.getElementById('navTabChat')
+      : document.getElementById('chaticon')),
+    icon: 'ti-message-circle',
+    title: '聯絡聊天室',
+    desc: '有任何問題都能直接在這裡跟賣家或買家聊聊。',
+  },
+  {
+    getTarget: () => document.getElementById('qaSellerBtn'),
+    icon: 'ti-door',
+    title: '賣家專區',
+    desc: '想出清東西嗎？點這裡上架你的二手寶物。',
+  },
+  {
+    getTarget: () => document.getElementById('qaWishBtn'),
+    icon: 'ti-wand',
+    title: '許願專區',
+    desc: '找不到想要的商品？發布一則許願，讓賣家主動找上你。',
+  },
+];
+
+function startShopOnboarding() {
+  const overlay  = document.getElementById('shopOnboarding');
+  const tooltip  = document.getElementById('obTooltip');
+  const stepEl   = document.getElementById('obStep');
+  const iconEl   = document.getElementById('obIcon');
+  const titleEl  = document.getElementById('obTitle');
+  const descEl   = document.getElementById('obDesc');
+  const nextBtn  = document.getElementById('obNext');
+  const skipBtn  = document.getElementById('obSkip');
+  const header   = document.querySelector('.header');
+  if (!overlay || !tooltip) return;
+
+  // chaticon 等目標本身是 position:fixed/sticky 定位，z-index 不需要（也不能）
+  // 靠強制 position:relative 才生效，否則會打斷它原本的定位方式，整個跳版。
+  // 只有 position:static 的元素才需要臨時補上 relative 讓 z-index 生效。
+  const unhighlightAll = () => {
+    document.querySelectorAll('.ob-highlight').forEach(el => {
+      el.classList.remove('ob-highlight');
+      if (el.dataset.obForcedRelative) {
+        el.style.position = '';
+        delete el.dataset.obForcedRelative;
+      }
+    });
+  };
+  const highlight = (el) => {
+    el.classList.add('ob-highlight');
+    if (getComputedStyle(el).position === 'static') {
+      el.style.position = 'relative';
+      el.dataset.obForcedRelative = '1';
+    }
+  };
+
+  const finish = () => {
+    localStorage.setItem('shopOnboardingDone', '1');
+    unhighlightAll();
+    header?.classList.remove('ob-elevate');
+    tooltip.classList.remove('ob-show');
+    overlay.style.display = 'none';
+  };
+
+  let cur = 0;
+  const show = (i) => {
+    if (i >= OB_STEPS.length) { finish(); return; }
+    const stepDef = OB_STEPS[i];
+    const target = stepDef.getTarget();
+    // 找不到目標（例如切版時元素不存在）就跳到下一步
+    if (!target) { show(i + 1); return; }
+    cur = i;
+
+    unhighlightAll();
+    highlight(target);
+    header?.classList.toggle('ob-elevate', !!target.closest('.header'));
+
+    stepEl.textContent  = `${i + 1} / ${OB_STEPS.length}`;
+    iconEl.innerHTML    = `<i class="ti ${stepDef.icon}"></i>`;
+    titleEl.textContent = stepDef.title;
+    descEl.textContent  = stepDef.desc;
+    nextBtn.textContent = i === OB_STEPS.length - 1 ? '完成' : '下一步';
+    overlay.style.display = 'block';
+    tooltip.classList.remove('ob-show');
+
+    const place = () => {
+      const rect = target.getBoundingClientRect();
+      const TW = 250;
+      const left = Math.max(8, Math.min(rect.left + rect.width / 2 - TW / 2, window.innerWidth - TW - 8));
+      const arrowDown = rect.top > window.innerHeight / 2; // 目標在下半螢幕 → tooltip 放上面，箭頭朝下指
+      tooltip.className = `ob-tooltip arrow-${arrowDown ? 'down' : 'up'}`;
+      tooltip.style.left = left + 'px';
+      if (arrowDown) {
+        tooltip.style.top = 'auto';
+        tooltip.style.bottom = (window.innerHeight - rect.top + 12) + 'px';
+      } else {
+        tooltip.style.bottom = 'auto';
+        tooltip.style.top = (rect.bottom + 12) + 'px';
+      }
+      const arrowLeft = Math.max(12, Math.min(rect.left + rect.width / 2 - left - 8, TW - 28));
+      tooltip.style.setProperty('--ob-arrow-left', arrowLeft + 'px');
+      tooltip.classList.add('ob-show');
+    };
+
+    // chaticon／底部導覽列／navbar 都是 fixed 或 sticky，滾動頁面對它們的
+    // 螢幕位置沒有意義，硬呼叫 scrollIntoView 反而會讓頁面亂跳、位置算錯
+    // （這正是聊天室步驟先前跑版的原因）。只有真的在文件流中的目標才需要捲動。
+    const targetPosition = getComputedStyle(target).position;
+    if (targetPosition === 'fixed' || targetPosition === 'sticky') {
+      place();
+    } else {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(place, 260);
+    }
+  };
+
+  nextBtn.onclick = () => show(cur + 1);
+  skipBtn.onclick = finish;
+
+  show(cur);
+}
+
+async function initShopOnboarding() {
+  await window._authReady;
+  if (!window.isLoggedIn) return;
+  if (localStorage.getItem('shopOnboardingDone')) return;
+  setTimeout(startShopOnboarding, 500); // 讓頁面內容（商品卡片等）先渲染穩定
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initShopOnboarding();
 });

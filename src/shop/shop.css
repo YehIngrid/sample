@@ -55,6 +55,428 @@
 ul{
     padding-left: 0rem !important;
 }
+/* ── 許願池廣告：開啟 shop.html 時彈出的正方形循環動畫 ── */
+.wp-ad-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10600;
+  background: rgba(15,39,69,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.wp-ad-modal {
+  position: relative;
+  width: min(400px, 100%);
+  background: #fff;
+  border-radius: 22px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 24px 60px -12px rgba(0,0,0,0.4);
+}
+.wp-ad-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: #f0f2f4;
+  color: #4a627a;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+.wp-ad-modal-close:hover { background: #e2e8ee; color: #0f2745; }
+.wp-ad-square {
+  position: relative;
+  width: min(360px, 84vw);
+  aspect-ratio: 1 / 1;
+  background: #004b97;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px -14px rgba(0,75,151,0.45);
+}
+.wp-ad-square::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 85%, rgba(171,218,213,0.12) 0, transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(126,184,216,0.1) 0, transparent 50%);
+  pointer-events: none;
+}
+.wp-ad-stage {
+  position: absolute;
+  inset: 0;
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.22s ease;
+}
+.wp-ad-stage.wp-ad-stage-fade { opacity: 0; }
+
+/* 共用元件 */
+.wp-ad-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #abdad5;
+  margin-bottom: 8px;
+}
+.wp-ad-headline {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+.wp-ad-headline .accent { color: #abdad5; display: block; }
+.wp-ad-card {
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  border-radius: 16px;
+  padding: 10px 14px;
+  box-shadow: 0 16px 32px -12px rgba(0,0,0,0.3);
+}
+
+/* Scene 1→2 轉場：訊息放大淡出，穿場銜接下一幕 */
+.wp-ad-scene1-root {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.45s cubic-bezier(.4,0,1,1), opacity 0.4s ease;
+  transform-origin: 50% 55%;
+}
+.wp-ad-scene1-root.wp-ad-zoom-out { transform: scale(4.5); opacity: 0; }
+
+/* Scene 2a：「想許願？」獨立置中過場，字放大 */
+.wp-ad-intro-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 22px;
+  transition: opacity 0.25s ease;
+}
+.wp-ad-intro-center.wp-ad-fadeout { opacity: 0; }
+.wp-ad-intro-center .wp-ad-eyebrow { margin-bottom: 10px; }
+.wp-ad-headline-lg { font-size: 26px; margin-bottom: 0; }
+
+/* Scene 2b：標題定位到上方，表單卡淡入補位 */
+.wp-ad-card-fadein {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.wp-ad-card-fadein.wp-ad-in { opacity: 1; transform: translateY(0); }
+
+/* 動畫游標：模擬點擊按鈕 */
+.wp-ad-cursor {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 6;
+  pointer-events: none;
+  transition: left 0.22s cubic-bezier(.4,0,.2,1), top 0.22s cubic-bezier(.4,0,.2,1);
+}
+.wp-ad-cursor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 16px 11px;
+  border-color: transparent transparent #fff transparent;
+  transform: rotate(-10deg);
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+}
+.wp-ad-cursor.wp-ad-cursor-click::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.55);
+  animation: wp-ad-cursor-ripple 0.45s ease-out;
+}
+@keyframes wp-ad-cursor-ripple {
+  from { transform: scale(0.3); opacity: 0.9; }
+  to   { transform: scale(2.4); opacity: 0; }
+}
+
+/* 送出後蓋上的許願池郵戳 */
+.wp-ad-stamp {
+  position: absolute;
+  top: 46px;
+  right: 6px;
+  width: 52px;
+  height: auto;
+  opacity: 0;
+  transform: scale(0.4) rotate(-25deg);
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  z-index: 3;
+}
+.wp-ad-stamp.wp-ad-in { opacity: 1; transform: scale(1) rotate(-12deg); }
+.wp-ad-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.wp-ad-formtab {
+  display: inline-block;
+  background: aliceblue;
+  color: #004b97;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+.wp-ad-hint { font-size: 10.5px; color: #6f87a0; }
+.wp-ad-field {
+  padding: 8px 0;
+  border-bottom: 1px solid #edf2f7;
+}
+.wp-ad-field:last-of-type { border-bottom: none; }
+.wp-ad-field label {
+  display: block;
+  font-size: 10.5px;
+  color: #6f87a0;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+.wp-ad-field span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f2745;
+}
+.wp-ad-field span.wp-ad-caret::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 14px;
+  margin-left: 2px;
+  background: #004b97;
+  vertical-align: -2px;
+  animation: wp-ad-caret-blink 0.9s steps(1) infinite;
+}
+@keyframes wp-ad-caret-blink { 50% { opacity: 0; } }
+.wp-ad-submit {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: none;
+  border-radius: 999px;
+  background: #004b97;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.3s ease;
+}
+.wp-ad-submit.wp-ad-sent { background: rgb(36, 182, 133); }
+
+/* Scene 1：徵求氣泡 */
+.wp-ad-bubbles { display: flex; flex-direction: column; gap: 10px; }
+.wp-ad-bubble-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.wp-ad-bubble-row.wp-ad-in { opacity: 1; transform: translateY(0); }
+.wp-ad-bubble-row.wp-ad-flip { flex-direction: row-reverse; align-self: flex-end; }
+.wp-ad-avatar-dot {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(171,218,213,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.wp-ad-avatar-dot img { width: 60%; height: 60%; object-fit: contain; }
+.wp-ad-bubble {
+  background: rgba(126,184,216,0.35);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Scene 4：我也想要 */
+.wp-ad-card-sm .wp-ad-item { font-size: 16px; font-weight: 700; color: #0f2745; margin: 4px 0 2px; }
+.wp-ad-card-sm .wp-ad-price { font-size: 14px; font-weight: 700; color: #004b97; margin-bottom: 12px; }
+.wp-ad-tag {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #6f87a0;
+  background: #f0f2f4;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.wp-ad-tag.aqua { color: #007568; background: rgba(171,218,213,0.45); }
+.wp-ad-wanttoo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px;
+  border: none;
+  border-radius: 999px;
+  background: #abdad5;
+  color: #004b97;
+  font-size: 14px;
+  font-weight: 700;
+}
+.wp-ad-wanttoo img { width: 18px; height: 18px; }
+.wp-ad-avatars { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
+.wp-ad-avatar-plus {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(171,218,213,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.wp-ad-avatar-plus img { width: 62%; height: 62%; object-fit: contain; }
+.wp-ad-avatar-plus.wp-ad-in { opacity: 1; transform: scale(1); }
+.wp-ad-avatar-plus::after {
+  content: "+1";
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  z-index: 2;
+  background: #f3e3b5;
+  color: #7a5c1e;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 999px;
+}
+.wp-ad-subcaption {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Scene 6：媒合成功 */
+.wp-ad-match-cards { display: flex; gap: 10px; }
+.wp-ad-match-cards .wp-ad-card {
+  flex: 1;
+  padding: 12px 14px;
+  opacity: 0;
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(.34,1.2,.64,1);
+}
+.wp-ad-match-cards .wp-ad-card:first-child { transform: translateX(-30px); }
+.wp-ad-match-cards .wp-ad-card:last-child { transform: translateX(30px); }
+.wp-ad-match-cards .wp-ad-card.wp-ad-in { opacity: 1; transform: translateX(0); }
+.wp-ad-match-cards .wp-ad-item { font-size: 13px; font-weight: 700; color: #0f2745; margin-top: 6px; }
+.wp-ad-match-badge {
+  align-self: center;
+  margin-top: 14px;
+  padding: 10px 20px;
+  background: rgba(171,218,213,0.9);
+  color: #004b97;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 999px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+.wp-ad-match-badge.wp-ad-in { opacity: 1; transform: scale(1); }
+.wp-ad-tagline {
+  text-align: center;
+  margin: 40px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+.wp-ad-fadeup {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.wp-ad-fadeup.wp-ad-in { opacity: 1; transform: translateY(0); }
+.wp-ad-cta-inline {
+  display: inline-block;
+  align-self: center;
+  margin-top: 12px;
+  padding: 9px 20px;
+  background: #abdad5;
+  color: #004b97 !important;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+.wp-ad-footer-brand {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.6);
+}
+
+/* 外部持續顯示的操作列 */
+.wp-ad-actions { display: flex; align-items: center; gap: 14px; }
+.wp-ad-dismiss {
+  background: none;
+  border: none;
+  color: #6f87a0;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+.wp-ad-dismiss:hover { color: #004b97; }
+.wp-ad-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 20px;
+  background: #004b97;
+  color: #fff !important;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none !important;
+  transition: background 0.22s ease, transform 0.22s ease;
+}
+.wp-ad-cta:hover { background: rgb(36, 182, 133); transform: translateY(-1px); }
+
 /* ── 三個入口快捷按鈕 ── */
 .quick-actions {
   display: flex;
@@ -690,6 +1112,57 @@ ul{
    賣家表單：多步驟 Wizard
 ══════════════════════════════════════ */
 
+/* 學生身分驗證提醒橫幅 */
+.edu-verify-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(243,227,181,0.35);
+  border: 1px solid rgba(243,227,181,0.9);
+  border-radius: 18px;
+  padding: 14px 18px;
+  box-sizing: border-box;
+  width: 80vw;
+  margin: 12px auto 0;
+}
+.evb-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: #004b97;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px;
+}
+.evb-body { flex: 1; min-width: 0; }
+.evb-title { font-size: 0.95rem; font-weight: 700; color: #a08540; margin-bottom: 2px; }
+.evb-sub { font-size: 0.82rem; color: #6f5a2a; }
+.evb-btn {
+  flex-shrink: 0;
+  background: #004b97;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 8px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.22s ease;
+}
+.evb-btn:hover { background: rgb(36,182,133); color: #fff; }
+@media (max-width: 768px) {
+  .edu-verify-banner { flex-wrap: wrap; }
+  .evb-btn { width: 100%; text-align: center; }
+}
+@media (max-width: 700px) {
+  .edu-verify-banner { width: 92vw; }
+}
+@media (max-width: 500px) {
+  .edu-verify-banner { width: auto; margin: 12px 4vw 0; }
+}
+
 /* 草稿恢復 banner */
 .sell-draft-banner {
   display: flex;
@@ -1298,7 +1771,7 @@ ul{
 }
 .login{
   text-align: right;
-  font-size: 14px;
+  font-size: 12px;
 }
 .footer-row li a{
   color: #fff;
@@ -2415,6 +2888,23 @@ tbody > tr:nth-of-type(even) {
 .hot-items-container.overflows {
   justify-content: flex-start;
 }
+
+/* ── 熱賣卡片瀏覽數 badge ── */
+.hot-item-view-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.65rem;
+  color: #fff;
+  background: rgba(0, 75, 151, 0.75);
+  padding: 3px 6px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  z-index: 3;
+}
   
   .hot-items-container::-webkit-scrollbar {
   display: none;
@@ -3258,4 +3748,242 @@ html{ scroll-behavior:smooth; }
 .modal-backdrop {
   opacity: 0 !important;
   pointer-events: none !important;
+}
+
+/* ── 進站提醒 Pill：通知／待處理訂單／聊天室新訊息（每日一次）── */
+.entry-reminder-pill {
+  --erp-x: -50%;
+  position: fixed;
+  left: 50%;
+  top: 76px;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  padding: 8px 10px 8px 16px;
+  max-width: min(92vw, 480px);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  box-shadow: 0 20px 44px -16px rgba(0, 75, 151, 0.45), 0 2px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(var(--erp-x)) translateY(-26px) scale(0.92);
+  transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.2s ease, width 0.2s ease;
+}
+.entry-reminder-pill.show {
+  opacity: 1;
+  transform: translateX(var(--erp-x)) translateY(0) scale(1);
+  pointer-events: auto;
+}
+.entry-reminder-pill .erp-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #004b97;
+  color: #fff;
+  font-size: 15px;
+  box-shadow: 0 0 0 4px rgba(0, 75, 151, 0.12);
+}
+.entry-reminder-pill.show .erp-icon i {
+  display: inline-block;
+  animation: erp-bell-ring 0.7s ease 0.35s 1;
+  transform-origin: top center;
+}
+@keyframes erp-bell-ring {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(18deg); }
+  40% { transform: rotate(-16deg); }
+  60% { transform: rotate(10deg); }
+  80% { transform: rotate(-6deg); }
+}
+.entry-reminder-pill .erp-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 14px;
+  color: #1a2840;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.entry-reminder-pill .erp-num {
+  font-weight: 700;
+  color: #004b97;
+}
+.entry-reminder-pill .erp-action {
+  flex-shrink: 0;
+  border: none;
+  background: #004b97;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.22s ease;
+}
+.entry-reminder-pill .erp-action:hover {
+  background: rgb(36, 182, 133);
+}
+.entry-reminder-pill .erp-close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #6f87a0;
+  cursor: pointer;
+  transition: background 0.22s ease;
+}
+.entry-reminder-pill .erp-close:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+@media (max-width: 480px) {
+  .entry-reminder-pill {
+    gap: 8px;
+    padding: 6px 8px 6px 12px;
+  }
+  .entry-reminder-pill .erp-text {
+    font-size: 13px;
+  }
+  .entry-reminder-pill .erp-action {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+/* ── 新手引導（Onboarding）：首次登入進入 shop.html 時，依序介紹幾個常用按鈕 ── */
+.shop-onboarding {
+  position: fixed;
+  inset: 0;
+  /* 這裡故意不設 z-index：一旦設了就會變成獨立疊層，backdrop／tooltip 會被
+     一起鎖在同一個天花板下，.header.ob-elevate 只要比這個天花板高，就會連
+     tooltip 一起蓋過去（2/6、3/6 文字被擋住正是這個原因）。拿掉之後
+     backdrop／tooltip／.header 三者各自用自己的 z-index 在同一層競爭。 */
+  pointer-events: none;
+}
+.shop-onboarding .ob-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1055;
+  background: rgba(15, 39, 69, 0.55);
+  pointer-events: all;
+}
+.shop-onboarding .ob-tooltip {
+  position: fixed;
+  width: 250px;
+  max-width: 86vw;
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+  pointer-events: all;
+  z-index: 1075;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.22s ease, transform 0.22s ease, left 0.25s ease, top 0.25s ease, bottom 0.25s ease;
+}
+.shop-onboarding .ob-tooltip.ob-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.shop-onboarding .ob-step-label {
+  font-size: 11px;
+  color: #6f87a0;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.shop-onboarding .ob-icon {
+  font-size: 22px;
+  color: #004b97;
+  margin-bottom: 6px;
+  line-height: 1;
+}
+.shop-onboarding .ob-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #0f2745;
+  margin-bottom: 5px;
+}
+.shop-onboarding .ob-desc {
+  font-size: 13px;
+  color: #4a627a;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.shop-onboarding .ob-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.shop-onboarding .ob-skip {
+  background: none;
+  border: none;
+  color: #b7c3d0;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+}
+.shop-onboarding .ob-skip:hover {
+  color: #6f87a0;
+}
+.shop-onboarding .ob-next {
+  background: #004b97;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.shop-onboarding .ob-next:hover {
+  background: rgb(36, 182, 133);
+}
+.shop-onboarding .ob-tooltip::after {
+  content: '';
+  position: absolute;
+  left: var(--ob-arrow-left, 24px);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+.shop-onboarding .ob-tooltip.arrow-down::after {
+  bottom: -8px;
+  border-top: 8px solid #fff;
+}
+.shop-onboarding .ob-tooltip.arrow-up::after {
+  top: -8px;
+  border-bottom: 8px solid #fff;
+}
+/* 目標元素高亮脈衝圈：position 交給 JS 判斷（fixed/sticky 的目標，
+   例如 chaticon，不能被強制改成 relative，否則會失去原本的定位方式） */
+.ob-highlight {
+  z-index: 1057 !important;
+  border-radius: 10px;
+  animation: ob-pulse 1.4s ease-in-out infinite;
+}
+@keyframes ob-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px #004b97, 0 0 0 7px rgba(0, 75, 151, 0.25); }
+  50%      { box-shadow: 0 0 0 3px #004b97, 0 0 0 14px rgba(0, 75, 151, 0); }
+}
+/* .header 是 position:sticky 的獨立疊層，z-index 只有 1000，
+   引導目標在裡面（搜尋欄／通知鈴鐺／購物車）時暫時把它拉高到剛好蓋過 backdrop，
+   但仍低於 ob-tooltip（1075），文字才不會被 header 蓋住 */
+.header.ob-elevate {
+  z-index: 1060 !important;
 }

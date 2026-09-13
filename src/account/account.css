@@ -97,7 +97,7 @@
   box-shadow: 0 8px 32px rgba(0,75,151,0.12);
   border: 1px solid rgba(255,255,255,0.7);
 }
-.modalwhat button:not(.terms-open-btn):not(.pwd-toggle){
+.modalwhat button:not(.terms-open-btn):not(.pwd-toggle):not(.google-btn){
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -110,7 +110,7 @@
   font-weight: 600;
   transition: background-color 0.2s ease;
 }
-.modalwhat button:not(.terms-open-btn):not(.pwd-toggle):hover{
+.modalwhat button:not(.terms-open-btn):not(.pwd-toggle):not(.google-btn):hover{
   background-color: rgb(36,182,133);
 }
 input::placeholder {
@@ -158,6 +158,20 @@ input::placeholder {
   cursor: pointer;
   color: #004b97;
   margin-bottom: 12px;
+}
+.auth-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.auth-title-row h2 {
+  margin: 0;
+}
+.auth-title-row .backlogin {
+  margin-bottom: 0;
+  white-space: nowrap;
 }
 /* ── 註冊表單：四欄連接 ── */
 .form-signemail input[type="email"] {
@@ -475,7 +489,7 @@ input::placeholder {
 .sign-hint {
   font-size: 0.78rem;
   color: #888;
-  margin-left: 6px;
+  margin: 6px 0 16px;
 }
 #signupLink {
   color: rgb(36,182,133);
@@ -507,4 +521,43 @@ input::placeholder {
 }
 .css-button-gradient--4:active {
   opacity: 0.9;
+}
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: #6f87a0;
+  font-size: 0.82rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #d6e2ec;
+}
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 40px;
+  margin-bottom: 16px;
+  background: transparent;
+  color: #1a2840;
+  font-weight: 600;
+  font-size: 0.92rem;
+  border: 1px solid #d6e2ec;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+.google-btn:hover {
+  border-color: #9aa8b8;
+}
+.google-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
 }

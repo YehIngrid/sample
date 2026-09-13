@@ -73,6 +73,8 @@ sortItems.forEach(el => {
 // 切換大分類
 function changeCategory(category) {
   currentCategory = category;
+  // 切換分類時捲動回頁面頂端，避免上次瀏覽商品時的捲動位置殘留造成版面錯位
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   // 切換分類時清除搜尋關鍵字，避免搜尋結果污染分類瀏覽
   activeKeyword = '';
   const si = document.getElementById('searchInput');
@@ -96,6 +98,10 @@ function setInfiniteStatus(mode) {
   } else if (mode === 'end') {
     infiniteStatusEl.innerHTML = `<span class="infinite-end">沒有更多商品了</span>`;
     infiniteStatusEl.classList.add('is-visible');
+  } else if (mode === 'more') {
+    infiniteStatusEl.innerHTML = `<button type="button" id="loadMoreBtn" class="load-more-btn">載入更多商品</button>`;
+    infiniteStatusEl.classList.add('is-visible');
+    document.getElementById('loadMoreBtn').addEventListener('click', () => loadProducts(true));
   } else {
     infiniteStatusEl.innerHTML = '';
     infiniteStatusEl.classList.remove('is-visible');
@@ -110,6 +116,22 @@ if (scrollSentinel) {
     }
   }, { rootMargin: '400px 0px' });
   observer.observe(scrollSentinel);
+
+  // 備援：部分桌機瀏覽器（寬螢幕、瀏覽器縮放等情況）下 IntersectionObserver
+  // 可能不會如預期觸發，加上 scroll/resize 監聽做保險，確保桌機版也能自動翻頁
+  let scrollFallbackTicking = false;
+  function checkScrollFallback() {
+    if (scrollFallbackTicking || !hasMore || isLoading) return;
+    scrollFallbackTicking = true;
+    requestAnimationFrame(() => {
+      scrollFallbackTicking = false;
+      if (hasMore && !isLoading && scrollSentinel.getBoundingClientRect().top < window.innerHeight + 400) {
+        loadProducts(true);
+      }
+    });
+  }
+  window.addEventListener('scroll', checkScrollFallback, { passive: true });
+  window.addEventListener('resize', checkScrollFallback);
 }
 
 // 載入商品；append=false 為換分類/篩選/搜尋的全新查詢，append=true 為捲動載入下一頁
@@ -196,7 +218,7 @@ async function loadProducts(append = false) {
     loadedCount += items.length;
     pageIndex += 1;
     hasMore = items.length > 0 && loadedCount < totalCount;
-    setInfiniteStatus(hasMore ? '' : (loadedCount > 0 ? 'end' : ''));
+    setInfiniteStatus(hasMore ? 'more' : (loadedCount > 0 ? 'end' : ''));
 
     if (items.length === 0 && keyword && !append) {
       showWishCta(keyword);
@@ -259,12 +281,14 @@ function renderProductsBootstrap(items) {
     const category = categoryMap[p.category] ?? '其他';
     const newOrOld = newOrOldMap[p.newOrOld] ?? '';
     const imgUrl   = toBigImg(p.mainImage) || '';
+    const viewCount = p.viewCount ?? 0;
     col.innerHTML = `
       <div class="product-card position-relative h-100" data-id="${escapeHtml(p.id)}">
         <div class="product-thumb">
           ${imgUrl
             ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(p.name)}" loading="lazy">`
             : `<div class="product-thumb-placeholder">${escapeHtml(p.name.slice(0,6))}</div>`}
+          ${viewCount > 0 ? `<span class="commodity-view-badge"><i class="ti ti-eye"></i> ${viewCount}</span>` : ''}
         </div>
         <div class="card-body">
           <div class="hotItemName ellipsis-text">${escapeHtml(p.name)}</div>
@@ -469,12 +493,14 @@ async function showYouMightLike() {
       const col = document.createElement('div');
       col.className = 'col';
       const imgUrl = toBigImg(p.mainImage) || '';
+      const viewCount = p.viewCount ?? 0;
       col.innerHTML = `
         <div class="product-card position-relative h-100" data-id="${escapeHtml(p.id)}">
           <div class="product-thumb">
             ${imgUrl
               ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(p.name)}" loading="lazy">`
               : `<div class="product-thumb-placeholder">${escapeHtml(p.name.slice(0,6))}</div>`}
+            ${viewCount > 0 ? `<span class="commodity-view-badge"><i class="ti ti-eye"></i> ${viewCount}</span>` : ''}
           </div>
           <div class="card-body">
             <div class="hotItemName ellipsis-text">${escapeHtml(p.name)}</div>

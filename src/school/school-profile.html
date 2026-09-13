@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
@@ -18,20 +18,21 @@
   <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
+  <script src="school-theme.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" integrity="sha384-6LFfkTKLRlzFtgx8xsWyBdKGpcMMQTkv+dB7rAbugeJAu1Ym2q1Aji1cjHBG12Xh" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
   <script type="module" src="../default/default.js"></script>
   <style>
     /* ===== profile scope ===== */
     html { overflow-x: hidden; }
-    body { background: #f6f9fc; }
+    body { background: var(--page); }
     .pf-container, .pf-side, .pf-main { max-width: 100%; }
     .pf-container { width: 80vw; margin: 0 auto; padding: 26px 0 96px; display: flex; gap: 24px; align-items: flex-start; justify-content: space-between; }
     .pf-crumb-wrap { width: 80vw; max-width: 80vw; margin: 16px auto 0; }
 
     /* ===== SIDEBAR ===== */
     .pf-side { width: 291px; flex-shrink: 0; position: sticky; top: 70px; display: flex; flex-direction: column; gap: 16px; }
-    .id-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+    .id-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
     .id-banner { height: 64px; background: linear-gradient(120deg, var(--navy), var(--mid) 70%, var(--aqua)); position: relative; }
     .id-banner::after { content: ""; position: absolute; right: -30px; top: -30px; width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.08); }
     .id-main { padding: 0 22px 20px; margin-top: -34px; position: relative; }
@@ -41,18 +42,18 @@
     /* 頭像裁切：Cropper.js 沒有原生圓形裁切，用 view-box/face 疊圓形遮罩模擬 */
     #pfCropModal .cropper-view-box { border-radius: 50%; }
     #pfCropModal .cropper-face { border-radius: 50%; }
-    .av-edit { position: absolute; right: -4px; bottom: -4px; width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--navy); cursor: pointer; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.22s ease; }
-    .av-edit:hover { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .av-edit { position: absolute; right: -4px; bottom: -4px; width: 24px; height: 24px; border-radius: 50%; background: var(--card); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--navy); cursor: pointer; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.22s ease; }
+    .av-edit:hover { background: var(--navy-solid); border-color: var(--navy); color: #fff; }
     .av-edit svg { width: 12px; height: 12px; }
     .id-name { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-top: 12px; }
     .id-titles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
     .id-titles .t { font-size: 10.5px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em; }
     .id-sub { font-size: 11.5px; color: var(--muted); margin-top: 9px; letter-spacing: 0.02em; }
     /* 帳號設定捷徑（名字卡右上齒輪按鈕） */
-    .id-gear { position: absolute; top: 42px; right: 18px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px 5px 9px; background: #fff; border: 1px solid var(--line); border-radius: 999px; color: var(--navy); font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; transition: all 0.22s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .id-gear { position: absolute; top: 42px; right: 18px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px 5px 9px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; color: var(--navy); font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; transition: all 0.22s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
     .id-gear svg { width: 15px; height: 15px; }
     .id-gear:hover { border-color: var(--navy); background: var(--alice); transform: translateY(-1px); box-shadow: 0 8px 18px -12px rgba(0,75,151,0.4); }
-    .id-edit { margin-top: 14px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 0; border-radius: 999px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; border: 1.5px solid var(--line); color: var(--ink); background: #fff; transition: all 0.2s; }
+    .id-edit { margin-top: 14px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 0; border-radius: 999px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; border: 1.5px solid var(--line); color: var(--ink); background: var(--card); transition: all 0.2s; }
     .id-edit:hover { border-color: var(--navy); color: var(--navy); }
     .id-edit svg { width: 13px; height: 13px; }
 
@@ -64,10 +65,10 @@
     .promo-link { display: inline-block; font-size: 12px; font-weight: 700; color: #fff; margin-top: 12px; letter-spacing: 0.03em; }
     .promo-link:hover { text-decoration: underline; }
 
-    .side-nav { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 8px; }
+    .side-nav { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 8px; }
     .side-nav button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; color: var(--muted); letter-spacing: 0.03em; transition: all 0.16s; }
     .side-nav button:hover { background: var(--alice); color: var(--navy); }
-    .side-nav button.on { background: var(--navy); color: #fff; }
+    .side-nav button.on { background: var(--navy-solid); color: #fff; }
     .side-nav button svg { width: 18px; height: 18px; flex-shrink: 0; }
     .side-nav .sep { height: 1px; background: var(--line); margin: 6px 8px; }
 
@@ -78,11 +79,11 @@
     .pane-head { font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-bottom: 18px; }
 
     .filters { display: flex; gap: 8px; margin-bottom: 16px; }
-    .filters .f { font-size: 12.5px; font-weight: 700; color: var(--muted); background: #fff; border: 1px solid var(--line); padding: 7px 15px; border-radius: 999px; letter-spacing: 0.03em; cursor: pointer; }
-    .filters .f.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .filters .f { font-size: 12.5px; font-weight: 700; color: var(--muted); background: var(--card); border: 1px solid var(--line); padding: 7px 15px; border-radius: 999px; letter-spacing: 0.03em; cursor: pointer; }
+    .filters .f.on { background: var(--navy-solid); color: #fff; border-color: var(--navy); }
 
     /* article rows */
-    .art-row { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; display: flex; align-items: center; gap: 16px; margin-bottom: 12px; transition: all 0.2s; }
+    .art-row { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; display: flex; align-items: center; gap: 16px; margin-bottom: 12px; transition: all 0.2s; }
     .art-row:hover { border-color: var(--navy); }
     .art-row .thumb { width: 84px; height: 60px; border-radius: 10px; flex-shrink: 0; }
     .art-row .thumb.a { background: linear-gradient(135deg, var(--navy), var(--mid)); }
@@ -107,7 +108,7 @@
 
     /* certifications */
     .cert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    .cert { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start; }
+    .cert { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start; }
     .cert .cic { width: 42px; height: 42px; border-radius: 11px; background: var(--alice); color: var(--navy); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .cert .cic svg { width: 20px; height: 20px; }
     .cert .cbody { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -115,7 +116,7 @@
     .cert .cdesc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
     .cert .cstatus { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; margin-top: auto; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.04em; align-self: flex-start; }
     .cert .cstatus.ok { background: #e7f4ee; color: var(--green, #2f9e6f); }
-    .cert .cstatus.pending { background: #fff6e8; color: var(--warn); }
+    .cert .cstatus.pending { background: var(--warn-tint); color: var(--warn); }
     .cert .cstatus.rejected { background: #faf0e6; color: var(--warn); }
     .cert .cstatus.hidden { background: #f0f2f4; color: var(--muted); }
     .cert .cstatus svg { width: 12px; height: 12px; }
@@ -128,20 +129,20 @@
     .cert-vis .tgl.on::after { left: 16px; }
     .cert-add { background: var(--alice); border: 1.5px dashed var(--sky); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 24px; cursor: pointer; transition: all 0.2s; }
     .cert-add:hover { border-color: var(--navy); }
-    .cert-add .pic { width: 40px; height: 40px; border-radius: 50%; background: #fff; color: var(--navy); display: flex; align-items: center; justify-content: center; }
+    .cert-add .pic { width: 40px; height: 40px; border-radius: 50%; background: var(--card); color: var(--navy); display: flex; align-items: center; justify-content: center; }
     .cert-add .pic svg { width: 18px; height: 18px; }
     .cert-add .ct { font-size: 13px; font-weight: 700; color: var(--navy); }
     .cert-add .cs { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
     /* 前台顯示名稱（半實名）設定 */
-    .nr-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 16px; }
+    .nr-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 16px; }
     .nr-card .nr-h { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
     .nr-card .nr-d { font-size: 12px; color: var(--muted); margin-top: 5px; line-height: 1.65; }
     .nr-tiles { display: flex; gap: 8px; margin: 16px 0 14px; }
     .nr-tile { width: 48px; height: 56px; border: 1.5px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; background: var(--alice); color: var(--muted); cursor: pointer; transition: all 0.15s; }
     .nr-tile .nr-ch { font-size: 22px; font-weight: 700; line-height: 1; }
     .nr-tile .nr-mark { font-size: 9px; font-weight: 700; letter-spacing: 0.04em; }
-    .nr-tile.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .nr-tile.on { background: var(--navy-solid); border-color: var(--navy); color: #fff; }
     .nr-preview { display: flex; align-items: center; font-size: 12.5px; color: var(--muted); }
     .nr-preview .nr-name { font-size: 17px; font-weight: 700; letter-spacing: 0.08em; color: var(--ink); }
     .nr-preview .nr-name .hid { color: var(--muted); font-weight: 600; }
@@ -149,7 +150,7 @@
     .nr-note.warn { color: var(--warn); font-weight: 700; }
 
     /* settings */
-    .set-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 4px 22px; }
+    .set-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 4px 22px; }
     .set-row { display: flex; align-items: center; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line); }
     .set-row:last-child { border-bottom: none; }
     .set-row .sic { width: 38px; height: 38px; border-radius: 10px; background: var(--alice); color: var(--navy); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -159,7 +160,7 @@
     .set-row .sdesc { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.6; }
     .pill-ok { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: var(--green, #2f9e6f); background: #e7f4ee; padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; }
     .pill-ok svg { width: 12px; height: 12px; }
-    .pill-pending { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: var(--warn); background: #fff6e8; padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; }
+    .pill-pending { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: var(--warn); background: var(--warn-tint); padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; }
     .pill-pending svg { width: 12px; height: 12px; }
     .pill-rejected { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: #fff; background: var(--warn); padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; }
     .pill-rejected svg { width: 12px; height: 12px; }
@@ -177,7 +178,7 @@
     .pane-back:hover { color: var(--navy); }
     .pane-back svg { width: 14px; height: 14px; }
     .tgl { position: relative; width: 40px; height: 22px; border-radius: 999px; background: var(--line); border: none; padding: 0; cursor: pointer; flex-shrink: 0; transition: all 0.22s ease; }
-    .tgl::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: all 0.22s ease; }
+    .tgl::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: all 0.22s ease; }
     .tgl.on { background: var(--navy); }
     .tgl.on::after { left: 21px; }
     .ntf-head { display: flex; justify-content: flex-end; gap: 26px; padding: 16px 0 0; font-size: 10.5px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; }
@@ -188,13 +189,13 @@
     .rec-row .rd { color: var(--muted); font-size: 12px; width: 84px; flex-shrink: 0; }
     .rec-row .rt { flex: 1; min-width: 0; }
     .rec-row .ra { font-weight: 700; color: var(--navy); flex-shrink: 0; }
-    .pill-done { font-size: 10.5px; font-weight: 700; background: var(--navy); color: #fff; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.06em; flex-shrink: 0; }
+    .pill-done { font-size: 10.5px; font-weight: 700; background: var(--navy-solid); color: #fff; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.06em; flex-shrink: 0; }
     .pill-gray { font-size: 10.5px; font-weight: 700; background: #f0f2f4; color: var(--muted); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.06em; flex-shrink: 0; }
     .set-add { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 12px 0; margin: 12px 0 16px; border: 1.5px dashed var(--line); border-radius: 12px; background: none; color: var(--muted); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.22s ease; }
     .set-add:hover { border-color: var(--navy); color: var(--navy); }
     .set-add svg { width: 14px; height: 14px; }
     .switch { width: 42px; height: 24px; border-radius: 999px; background: var(--navy); position: relative; transition: all 0.2s; flex-shrink: 0; cursor: pointer; }
-    .switch::after { content: ""; position: absolute; top: 2px; left: 20px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .switch::after { content: ""; position: absolute; top: 2px; left: 20px; width: 20px; height: 20px; border-radius: 50%; background: var(--card); transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
     .switch.off { background: var(--line); }
     .switch.off::after { left: 2px; }
 
@@ -202,7 +203,7 @@
     .an-range { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
     .an-rd { font-size: 12.5px; color: var(--muted); letter-spacing: 0.02em; }
     .an-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-    .an-m { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+    .an-m { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
     .an-m .an-lbl { font-size: 11.5px; color: var(--muted); letter-spacing: 0.08em; display: flex; align-items: center; gap: 6px; }
     .an-m .an-lbl svg { width: 13px; height: 13px; color: var(--navy); }
     .an-m .an-val { font-size: 24px; font-weight: 700; color: var(--ink); margin-top: 10px; letter-spacing: 0.01em; }
@@ -212,7 +213,7 @@
     .an-m .an-trend.flat { color: var(--muted); }
 
     .an-grid2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; margin-bottom: 20px; }
-    .an-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 32px; }
+    .an-chart-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 32px; }
     .an-ch-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 20px; }
     .an-ch-tot { color: var(--navy); font-weight: 700; font-size: 15px; }
     .an-bars { display: flex; align-items: flex-end; gap: 8px; height: 140px; }
@@ -225,7 +226,7 @@
     .an-bar .cap { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 10.5px; font-weight: 700; color: var(--ink); white-space: nowrap; }
     .an-hint { margin-top: 30px; font-size: 11px; color: var(--muted); letter-spacing: 0.02em; }
 
-    .an-mix-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; }
+    .an-mix-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; }
     .an-mix-head { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 18px; }
     .an-mix-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
     .an-mix-row:last-child { margin-bottom: 0; }
@@ -233,7 +234,7 @@
     .an-mix-lbl { font-size: 12.5px; color: var(--ink); flex: 1; }
     .an-mix-pct { font-size: 12.5px; font-weight: 700; color: var(--ink); }
 
-    .an-table-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+    .an-table-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
     .an-table-head { font-size: 13.5px; font-weight: 700; color: var(--ink); padding: 20px 24px 4px; }
     .an-thead, .an-trow { display: grid; grid-template-columns: 2.4fr 0.8fr 0.8fr 0.8fr 0.8fr; gap: 12px; padding: 13px 24px; align-items: center; }
     .an-thead { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; border-bottom: 1px solid var(--line); }
@@ -261,7 +262,7 @@
       .side-nav {
         display: flex; flex-direction: row; gap: 0; overflow-x: auto;
         padding: 0 8px; border-radius: 0; border: none; border-bottom: 1px solid var(--line);
-        background: #f6f9fc; position: sticky; top: 52px; z-index: 20;
+        background: var(--page); position: sticky; top: 52px; z-index: 20;
         scroll-margin-top: 60px; -webkit-overflow-scrolling: touch;
       }
       .side-nav::-webkit-scrollbar { display: none; }
@@ -309,7 +310,7 @@
     /* ===== Modal 基礎（申請新頭銜等共用） ===== */
     .pm-backdrop { position: fixed; inset: 0; z-index: 1200; background: rgba(15,39,69,0.45); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
     .pm-backdrop.open { opacity: 1; pointer-events: auto; }
-    .pm-dialog { width: min(440px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; background: #fff; border-radius: 22px; box-shadow: 0 24px 60px -18px rgba(0,40,80,0.5); transform: translateY(16px) scale(0.97); transition: transform 0.3s cubic-bezier(0.34,1.35,0.5,1); }
+    .pm-dialog { width: min(440px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; background: var(--card); border-radius: 22px; box-shadow: 0 24px 60px -18px rgba(0,40,80,0.5); transform: translateY(16px) scale(0.97); transition: transform 0.3s cubic-bezier(0.34,1.35,0.5,1); }
     .pm-backdrop.open .pm-dialog { transform: none; }
     .pm-step { display: none; padding: 20px 22px 22px; }
     .pm-step.on { display: block; animation: pmIn 0.28s ease both; }
@@ -317,7 +318,7 @@
     .pm-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
     .pm-title { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; flex: 1; }
     .pm-x, .pm-back { width: 30px; height: 30px; border-radius: 50%; border: none; background: var(--alice); color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: all 0.22s ease; padding: 0; }
-    .pm-x:hover, .pm-back:hover { background: var(--navy); color: #fff; }
+    .pm-x:hover, .pm-back:hover { background: var(--navy-solid); color: #fff; }
     .pm-x svg, .pm-back svg { width: 15px; height: 15px; }
     .pm-sub { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
 
@@ -327,13 +328,13 @@
     /* step 2: 表單 */
     .pm-field { margin-bottom: 13px; }
     .pm-field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
-    .pm-field input { width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: 14px; color: var(--ink); letter-spacing: 0.05em; background: #fff; outline: none; transition: all 0.22s ease; font-variant-numeric: tabular-nums; }
-    .pm-field input::placeholder { color: #b9c6d4; letter-spacing: 0.05em; }
+    .pm-field input { width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: 14px; color: var(--ink); letter-spacing: 0.05em; background: var(--card); outline: none; transition: all 0.22s ease; font-variant-numeric: tabular-nums; }
+    .pm-field input::placeholder { color: #4a5764; letter-spacing: 0.05em; }
     .pm-field input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,75,151,0.12); }
-    .pm-field.err input { border-color: var(--terracotta); box-shadow: 0 0 0 3px rgba(201,127,90,0.12); }
-    .pm-err { display: none; font-size: 11px; color: var(--terracotta); font-weight: 600; margin-top: 5px; letter-spacing: 0.02em; }
+    .pm-field.err input { border-color: var(--warn); box-shadow: 0 0 0 3px rgba(201,127,90,0.12); }
+    .pm-err { display: none; font-size: 11px; color: var(--warn); font-weight: 600; margin-top: 5px; letter-spacing: 0.02em; }
     .pm-field.err .pm-err { display: block; animation: pmIn 0.2s ease both; }
-    .pm-submit { width: 100%; margin-top: 6px; padding: 13px 0; border: none; border-radius: 999px; background: var(--navy); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; cursor: pointer; transition: all 0.22s ease; }
+    .pm-submit { width: 100%; margin-top: 6px; padding: 13px 0; border: none; border-radius: 999px; background: var(--navy-solid); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; cursor: pointer; transition: all 0.22s ease; }
     .pm-submit:hover { background: rgb(36,182,133); }
     .pm-submit:disabled { opacity: 0.55; cursor: default; }
     .pm-submit:disabled:hover { background: var(--navy); }
@@ -349,10 +350,10 @@
 
     /* ===== 申請新頭銜 Modal ===== */
     .ca-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .ca-t { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
+    .ca-t { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--card); color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
     .ca-t svg { width: 18px; height: 18px; }
     .ca-t:hover { border-color: var(--navy); color: var(--navy); }
-    .ca-t.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .ca-t.on { background: var(--navy-solid); border-color: var(--navy); color: #fff; }
     .ca-drop { border: 1.5px dashed var(--line); border-radius: 14px; padding: 20px 14px; text-align: center; cursor: pointer; transition: all 0.22s ease; }
     .ca-drop:hover, .ca-drop.drag { border-color: var(--navy); background: var(--alice); }
     .ca-drop .di { width: 36px; height: 36px; border-radius: 50%; background: var(--alice); color: var(--navy); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px; }
@@ -368,11 +369,11 @@
     .ca-fileRow .fname { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .ca-fileRow .fsize { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
     .ca-fileRow .fdel { width: 26px; height: 26px; border-radius: 50%; border: none; background: var(--alice); color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.22s ease; flex-shrink: 0; padding: 0; }
-    .ca-fileRow .fdel:hover { background: var(--terracotta); color: #fff; }
+    .ca-fileRow .fdel:hover { background: var(--warn); color: #fff; }
     .ca-fileRow .fdel svg { width: 13px; height: 13px; }
 
     /* ===== 就學證明實名認證 Modal ===== */
-    .pm-field select { width: 100%; -webkit-appearance: none; appearance: none; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: 14px; color: var(--ink); letter-spacing: 0.03em; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center/13px; outline: none; cursor: pointer; transition: all 0.22s ease; }
+    .pm-field select { width: 100%; -webkit-appearance: none; appearance: none; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; font-size: 14px; color: var(--ink); letter-spacing: 0.03em; background: var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center/13px; outline: none; cursor: pointer; transition: all 0.22s ease; }
     .pm-field select:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,75,151,0.12); }
     .ev-cam-frame { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 14px; overflow: hidden; background: #0f2745; display: flex; align-items: center; justify-content: center; }
     .ev-cam-frame video, .ev-cam-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -380,14 +381,14 @@
     .ev-cam-placeholder svg { width: 30px; height: 30px; }
     .ev-cam-placeholder div { font-size: 12.5px; letter-spacing: 0.03em; }
     .ev-cam-actions { display: flex; gap: 8px; margin-top: 10px; }
-    .ev-cam-btn { flex: 1; padding: 10px 0; border-radius: 999px; border: 1.5px solid var(--navy); background: var(--navy); color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
+    .ev-cam-btn { flex: 1; padding: 10px 0; border-radius: 999px; border: 1.5px solid var(--navy); background: var(--navy-solid); color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
     .ev-cam-btn:hover { background: var(--navy-d); }
-    .ev-cam-btn.ghost { background: #fff; color: var(--navy); }
+    .ev-cam-btn.ghost { background: var(--card); color: var(--navy); }
     .ev-cam-btn.ghost:hover { background: var(--alice); }
     .ev-cam-hint { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
 
     /* ===== 數據分析：期間選擇 / 圓餅圖 / 單篇分析 ===== */
-    .an-sel { -webkit-appearance: none; appearance: none; border: 1px solid var(--line); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/12px; border-radius: 999px; padding: 7px 32px 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--ink); letter-spacing: 0.03em; cursor: pointer; transition: all 0.22s ease; }
+    .an-sel { -webkit-appearance: none; appearance: none; border: 1px solid var(--line); background: var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/12px; border-radius: 999px; padding: 7px 32px 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--ink); letter-spacing: 0.03em; cursor: pointer; transition: all 0.22s ease; }
     .an-sel:hover { border-color: var(--navy); color: var(--navy); }
     .an-mix-body { display: flex; align-items: center; gap: 20px; }
     .an-donut { width: 128px; height: 128px; flex-shrink: 0; }
@@ -398,12 +399,12 @@
     .an-mix-rows .an-mix-row { margin: 0 -6px 6px; padding: 4px 6px; border-radius: 8px; transition: background 0.18s ease; }
     .an-mix-rows .an-mix-row:last-child { margin-bottom: 0; }
     .an-mix-rows .an-mix-row.hl { background: var(--alice); }
-    .an-tip { position: fixed; z-index: 1300; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 7px 11px; box-shadow: 0 10px 26px -10px rgba(0,40,80,0.3); pointer-events: none; font-size: 11.5px; color: var(--muted); letter-spacing: 0.02em; }
+    .an-tip { position: fixed; z-index: 1300; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 7px 11px; box-shadow: 0 10px 26px -10px rgba(0,40,80,0.3); pointer-events: none; font-size: 11.5px; color: var(--muted); letter-spacing: 0.02em; }
     .an-tip b { display: block; font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; }
     .an-table-sub { font-size: 11px; color: var(--muted); font-weight: 400; margin-left: 10px; letter-spacing: 0.02em; }
     #anRows .an-trow { cursor: pointer; transition: background 0.15s ease; }
     #anRows .an-trow:hover { background: var(--alice); }
-    .an-detail-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 40px; }
+    .an-detail-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px 40px; }
     .an-dt-cat { font-size: 11px; color: var(--navy); font-weight: 700; letter-spacing: 0.06em; }
     .an-dt-title { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-top: 5px; line-height: 1.4; }
     .an-dt-metrics { margin: 18px 0 22px; }
@@ -411,10 +412,27 @@
       .an-mix-body { flex-wrap: wrap; justify-content: center; }
       .an-dt-metrics { grid-template-columns: repeat(2, 1fr); }
     }
+
+    /* ── 深色模式：徽章 / 圖表配色 ── */
+    :root[data-theme="dark"] .pf-badge.pub,
+    :root[data-theme="dark"] .cert .cstatus.ok,
+    :root[data-theme="dark"] .pill-ok { background: rgba(36,182,133,0.16); }
+    :root[data-theme="dark"] .pf-badge.draft,
+    :root[data-theme="dark"] .cert .cstatus.hidden,
+    :root[data-theme="dark"] .pill-gray { background: rgba(255,255,255,0.08); }
+    :root[data-theme="dark"] .pf-badge.stale,
+    :root[data-theme="dark"] .cert .cstatus.rejected { background: var(--warn-tint); }
+    :root[data-theme="dark"] .pf-badge.contest { color: #6fe0c6; }
+    :root[data-theme="dark"] .pill-soon { color: #e0bd5a; background: rgba(232,210,154,0.14); }
+    :root[data-theme="dark"] .an-bar { background: var(--line-strong); }
+    :root[data-theme="dark"] .an-slot:hover .an-bar { background: #4a7ba8; }
+    :root[data-theme="dark"] .an-slot.on .an-bar { background: var(--navy); }
   </style>
 <style class="am-admin-gate-style">body{visibility:hidden}</style>
 </head>
 <body>
+
+<!-- Loader --><div id="campus-guide-loader" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--alice);font-family:'Zen Kaku Gothic New','Noto Sans TC',sans-serif;--dur:7.2s"><style>@keyframes pinDrop{0%,100%{transform:translateY(0)scale(1,1)}3%{transform:translateY(-24px)scale(.94,1.06)}7%{transform:translateY(0)scale(1.12,.88)}10%{transform:translateY(-6px)scale(.98,1.02)}14%{transform:translateY(0)scale(1,1)}}@keyframes signSwing{0%,100%{transform:rotate(0)}3%{transform:rotate(-11deg)}7%{transform:rotate(9deg)}11%{transform:rotate(-5deg)}14%{transform:rotate(0)}}@keyframes stir{0%,100%{transform:rotate(10deg)translateX(0)}4%{transform:rotate(-12deg)translateX(-3px)}8%{transform:rotate(14deg)translateX(3px)}11%{transform:rotate(-8deg)translateX(-3px)}14%{transform:rotate(10deg)translateX(0)}}@keyframes swirl{0%,100%{transform:translateX(0)scaleY(1)}5%{transform:translateX(-3px)scaleY(1.15)}10%{transform:translateX(3px)scaleY(.9)}}@keyframes cardFlip{0%{transform:rotateY(0)translateY(0)}1.5%{transform:rotateY(-90deg)translateY(-5px)}3%{transform:rotateY(-180deg)translateY(-5px)}4.5%{transform:rotateY(-270deg)translateY(-3px)}6%,100%{transform:rotateY(-360deg)translateY(0)}}@keyframes windowOn{0%,100%{background:var(--line)}5%,12%{background:var(--cream)}}@keyframes housePulse{0%,100%{transform:translateY(0)}6%{transform:translateY(-4px)}}@keyframes bagHop{0%,100%{transform:translateY(0)rotate(0)}3%{transform:translateY(-12px)rotate(-6deg)}6%{transform:translateY(0)rotate(0)}9%{transform:translateY(-7px)rotate(5deg)}13%{transform:translateY(0)rotate(0)}}@keyframes strapSway{0%,100%{transform:rotate(0)}4%{transform:rotate(-8deg)}10%{transform:rotate(6deg)}}@keyframes dash{0%{background-position:0 0}100%{background-position:14px 0}}</style><div style="display:flex;flex-direction:column;align-items:center;gap:24px"><div style="position:relative;width:300px;height:98px;display:flex;align-items:flex-end;justify-content:center;gap:12px;padding:0 8px 14px"><div style="position:absolute;left:0;right:0;bottom:8px;height:1.5px;border-radius:1px;background:repeating-linear-gradient(90deg,var(--line) 0 7px,transparent 7px 14px);background-size:14px 100%;animation:dash 1.1s linear infinite"></div><div style="position:relative;width:27px;height:38px"><div style="position:absolute;left:0;right:0;top:0;height:31px;transform-origin:bottom center;animation:pinDrop var(--dur) infinite cubic-bezier(.4,0,.2,1);animation-delay:0"><div style="position:absolute;left:1px;top:0;width:25px;height:25px;background:var(--navy);border-radius:50% 50% 50% 0;transform:rotate(-45deg)"><div style="position:absolute;left:7px;top:7px;width:11px;height:11px;border-radius:50%;background:var(--cream)"></div></div></div><div style="position:absolute;left:8px;bottom:0;width:11px;height:4px;border-radius:50%;background:var(--aqua)"></div></div><div style="position:relative;width:37px;height:63px;transform-origin:bottom center;animation:signSwing var(--dur) infinite cubic-bezier(.4,0,.2,1);animation-delay:calc(var(--dur)*0.08)"><div style="position:absolute;left:17px;top:5px;width:3px;height:58px;background:var(--navy);border-radius:1px"></div><div style="position:absolute;left:3px;top:5px;width:31px;height:11px;background:var(--cream);clip-path:polygon(0 0,82% 0,100% 50%,82% 100%,0 100%)"></div><div style="position:absolute;left:5px;top:23px;width:29px;height:11px;background:var(--aqua);clip-path:polygon(18% 0,100% 0,100% 100%,18% 100%,0 50%)"></div><div style="position:absolute;left:10px;bottom:0;width:17px;height:4px;background:var(--navy);border-radius:2px"></div></div><div style="position:relative;width:36px;height:45px;perspective:220px"><div style="position:absolute;inset:0;transform-style:preserve-3d;animation:cardFlip var(--dur) infinite cubic-bezier(.4,0,.2,1);animation-delay:calc(var(--dur)*0.20)"><div style="position:absolute;left:8px;top:-3px;width:3px;height:8px;border-radius:1px;background:var(--mid);backface-visibility:hidden"></div><div style="position:absolute;right:8px;top:-3px;width:3px;height:8px;border-radius:1px;background:var(--mid);backface-visibility:hidden"></div><div style="position:absolute;inset:0;background:var(--card);border:2px solid var(--navy);border-radius:5px;overflow:hidden;backface-visibility:hidden"><div style="height:11px;background:var(--navy)"></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:4px 4px 0"><div style="height:5px;border-radius:1px;background:var(--aqua)"></div><div style="height:5px;border-radius:1px;background:var(--line)"></div><div style="height:5px;border-radius:1px;background:var(--mid)"></div><div style="height:5px;border-radius:1px;background:var(--line)"></div><div style="height:5px;border-radius:1px;background:var(--aqua)"></div><div style="height:5px;border-radius:1px;background:var(--line)"></div></div></div><div style="position:absolute;inset:0;background:var(--navy);border:2px solid var(--navy);border-radius:5px;transform:rotateY(180deg);backface-visibility:hidden;display:flex;align-items:center;justify-content:center"><div style="width:15px;height:15px;border:2px solid var(--cream);border-radius:50%;position:relative"><div style="position:absolute;left:6px;top:2px;width:1px;height:5px;background:var(--cream);border-radius:0.5px"></div><div style="position:absolute;left:7px;top:6px;width:5px;height:1px;background:var(--cream);border-radius:0.5px"></div></div></div></div></div><div style="position:relative;width:50px;height:54px;transform-origin:bottom center;animation:housePulse var(--dur) infinite cubic-bezier(.4,0,.2,1);animation-delay:calc(var(--dur)*0.26)"><div style="position:absolute;left:0;top:0;width:50px;height:14px;background:var(--navy);clip-path:polygon(50% 0,100% 100%,0 100%)"></div><div style="position:absolute;left:5px;top:13px;right:5px;bottom:0;background:var(--mid);border-radius:2px 2px 3px 3px;display:flex;align-items:flex-start;justify-content:center;gap:3px;padding-top:6px"><div style="width:8px;height:8px;background:var(--line);border-radius:0.5px;animation:windowOn var(--dur) infinite steps(1,end);animation-delay:calc(var(--dur)*0.26)"></div><div style="width:8px;height:8px;background:var(--line);border-radius:0.5px;animation:windowOn var(--dur) infinite steps(1,end);animation-delay:calc(var(--dur)*0.26+0.18s)"></div><div style="width:8px;height:8px;background:var(--line);border-radius:0.5px;animation:windowOn var(--dur) infinite steps(1,end);animation-delay:calc(var(--dur)*0.26+0.36s)"></div></div><div style="position:absolute;left:50%;margin-left:-6px;bottom:0;width:12px;height:15px;background:var(--aqua);border-radius:6px 6px 0 0"></div></div><div style="position:relative;width:29px;height:51px"><div style="position:absolute;left:0;bottom:0;width:29px;height:44px"><div style="position:absolute;left:14px;bottom:19px;width:2px;height:37px;background:var(--navy);border-radius:1px;transform-origin:bottom center;animation:stir var(--dur) infinite cubic-bezier(.4,0,.2,1);animation-delay:calc(var(--dur)*0.38)"></div><div style="position:absolute;left:0;top:8px;width:29px;height:7px;background:var(--cream);border-radius:3px"></div><div style="position:absolute;left:2px;top:15px;width:25px;bottom:0;background:#7eb8d8;clip-path:polygon(0 0,100% 0,87% 100%,13% 100%);overflow:hidden"><div style="position:absolute;left:-3px;right:-3px;top:7px;height:6px;background:#f0f8ff;opacity:.85;animation:swirl var(--dur) infinite ease-in-out;animation-delay:calc(var(--dur)*0.38)"></div></div></div></div><div style="position:relative;width:37px;height:45px;transform-origin:bottom center;animation:bagHop var(--dur) infinite cubic-bezier(.34,1.3,.64,1);animation-delay:calc(var(--dur)*0.44)"><div style="position:absolute;left:8px;top:0;width:8px;height:13px;border:2px solid var(--mid);border-bottom:none;border-radius:5px 5px 0 0;transform-origin:bottom center;animation:strapSway var(--dur) infinite ease-in-out;animation-delay:calc(var(--dur)*0.44)"></div><div style="position:absolute;right:8px;top:0;width:8px;height:13px;border:2px solid var(--mid);border-bottom:none;border-radius:5px 5px 0 0;transform-origin:bottom center;animation:strapSway var(--dur) infinite ease-in-out;animation-delay:calc(var(--dur)*0.44+0.08s)"></div><div style="position:absolute;left:0;right:0;bottom:0;height:32px;background:var(--navy);border-radius:10px 10px 3px 3px"></div><div style="position:absolute;left:0;right:0;bottom:12px;height:12px;background:var(--aqua);border-radius:0 0 5px 5px"></div><div style="position:absolute;left:50%;margin-left:-4px;bottom:15px;width:7px;height:5px;background:var(--cream);border-radius:1px"></div></div></div><div style="text-align:center;color:var(--body)"><p style="margin:0 0 6px;font-size:16px;font-weight:700;letter-spacing:.14em;color:var(--navy)">校園攻略站</p><p style="margin:0;font-size:12px;letter-spacing:.05em;color:var(--muted)">正在為你探路<span id="loader-dots"></span></p></div></div></div><script>(function(){const dots=document.getElementById('loader-dots');if(dots){let count=0;setInterval(()=>{dots.textContent='.'.repeat(count%4);count++},350)}})();function hideLoader(){const loader=document.getElementById('campus-guide-loader');if(loader){loader.style.opacity='0';loader.style.pointerEvents='none';loader.style.transition='opacity 0.3s ease-out';setTimeout(()=>loader.remove(),300)}}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',hideLoader);window.addEventListener('load',hideLoader)}else{hideLoader()}</script>
 
 <!-- NAV -->
 <nav class="nav">
@@ -447,6 +465,7 @@
     <a href="../questions/questions.html">常見問題</a>
   </div>
   <div class="right">
+    <button class="theme-toggle" id="themeToggle" type="button" title="切換深色模式"><i class="ti ti-moon" id="themeIcon"></i></button>
     <a class="btn-sm navy d-none d-lg-inline-flex" href="school-studio.html" id="openOnboarding">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
       撰寫攻略
@@ -565,7 +584,7 @@
         <div class="a-mid">
           <div class="a-cat">研究所推甄</div>
           <h4>中興推台清交：備審修改前後對比＋面試真題還原</h4>
-          <div class="a-meta"><span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> 2,184</span><span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 96</span><span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> 31</span><span>適用 115 學年</span></div>
+          <div class="a-meta"><span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> 2,184</span><span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:var(--warn);"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 96</span><span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> 31</span><span>適用 115 學年</span></div>
         </div>
         <div class="a-right">
           <span class="pf-badge pub">已發佈</span>
@@ -579,7 +598,7 @@
         <div class="a-mid">
           <div class="a-cat">研究計畫申請</div>
           <h4>成功獲補助的研究計畫書撰寫架構＋如何找指導教授</h4>
-          <div class="a-meta"><span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> 1,402</span><span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 78</span><span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> 19</span><span>適用 115 學年</span></div>
+          <div class="a-meta"><span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> 1,402</span><span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:var(--warn);"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 78</span><span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> 19</span><span>適用 115 學年</span></div>
         </div>
         <div class="a-right">
           <span class="pf-badge pub">已發佈</span>
@@ -593,7 +612,7 @@
         <div class="a-mid">
           <div class="a-cat">通識指南</div>
           <h4>某通識「如何拿到 A+」報告範本＋分組避雷名單</h4>
-          <div class="a-meta"><span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> 1,456</span><span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 112</span><span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> 38</span><span>免費</span></div>
+          <div class="a-meta"><span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> 1,456</span><span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:var(--warn);"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 112</span><span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> 38</span><span>免費</span></div>
         </div>
         <div class="a-right">
           <span class="pf-badge stale">114 學年 · 已降價</span>
@@ -1998,7 +2017,7 @@ document.addEventListener('DOMContentLoaded', function() {
       t1.textContent = fmt(pick(TOT.reads));
       var t2 = document.createElementNS(NS, 'text');
       t2.setAttribute('x', 60); t2.setAttribute('y', 73); t2.setAttribute('text-anchor', 'middle');
-      t2.setAttribute('style', 'font-size:8.5px;fill:#6f87a0;letter-spacing:0.1em;');
+      t2.setAttribute('style', 'font-size:8.5px;fill:var(--muted);letter-spacing:0.1em;');
       t2.textContent = '總閱讀';
       svg.appendChild(t1); svg.appendChild(t2);
 
@@ -2068,3 +2087,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+

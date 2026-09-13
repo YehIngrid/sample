@@ -111,6 +111,24 @@ class ChatRoomList {
                     </div>`;
             }
             return;
+        } else if (this.userId && localStorage.getItem('eduEmailVerified') !== 'true') {
+            // 已登入、主信箱已驗證，但尚未完成教育信箱驗證
+            const loader = document.getElementById('chatLoader');
+            if (loader) loader.style.display = 'none';
+            const chatList = document.getElementById('chatList');
+            if (chatList) {
+                chatList.innerHTML = `
+                    <div style="padding:32px 16px;text-align:center;color:#888;">
+                        <i class="ti ti-shield-exclamation" style="font-size:2.2rem;display:block;margin-bottom:12px;color:#004b97;"></i>
+                        <p style="margin-bottom:4px;font-size:0.9rem;font-weight:600;color:#333;">尚未完成學生身分驗證</p>
+                        <p style="margin-bottom:16px;font-size:0.85rem;line-height:1.6;color:#888;">完成教育信箱驗證後<br>即可使用聊天室</p>
+                        <button onclick="location.replace('../person/person.html?page=settings&scroll=eduEmailFormWrap')"
+                           style="display:inline-block;padding:8px 24px;background:#004b97;color:#fff;border-radius:8px;border:none;font-size:0.85rem;cursor:pointer;">
+                            前往驗證
+                        </button>
+                    </div>`;
+            }
+            return;
         } else if (this.userId) {
             await this.loadRooms();
             this.connectSSE(); // 帳號層級 SSE，開啟一次即可

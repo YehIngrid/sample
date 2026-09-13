@@ -1157,6 +1157,27 @@ a.specialpadding[href*="shoppingcart"] {
 .bottom-nav-badge.show {
   display: block;
 }
+
+/* ── 深色模式（僅在 data-theme="dark" 頁面生效，例如校園攻略站）── */
+:root[data-theme="dark"] .bottom-nav {
+  background: rgba(39,46,55,0.85);
+  border-color: rgba(255,255,255,0.08);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.35),
+    0 2px 8px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+:root[data-theme="dark"] .bottom-nav-item { color: var(--muted, #8ea6bf); }
+:root[data-theme="dark"] .bottom-nav-item:hover { color: var(--navy, #6aa9e8); }
+:root[data-theme="dark"] .bottom-nav-item.active { color: var(--navy, #6aa9e8); }
+:root[data-theme="dark"] .bottom-nav-item.active::before,
+:root[data-theme="dark"] .bottom-nav-item.active::after,
+:root[data-theme="dark"] .bottom-nav-item.active .bottom-nav-indicator { background: var(--navy, #6aa9e8); }
+:root[data-theme="dark"] .nav-center-circle { border-color: var(--card, #272e37); }
+:root[data-theme="dark"] .bottom-nav-badge { border-color: var(--card, #272e37); }
+:root[data-theme="dark"] .bottom-nav-item .nav-icon:not(.nav-center .nav-icon) { filter: brightness(0) invert(0.85); opacity: 1 !important; }
+:root[data-theme="dark"] .bottom-nav-item.active .nav-icon:not(.nav-center .nav-icon) { filter: brightness(0) invert(1); }
+
 /* ── 安全提示跑馬燈 ── */
 .safety-ticker {
   display: flex;
@@ -1479,6 +1500,35 @@ html.skip-loader #whatcontent { display: block !important; }
 .search-drop-trend li:nth-child(2) .search-drop-rank { color: #4a85c4; }
 .search-drop-trend li:nth-child(3) .search-drop-rank { color: #7eb8d8; }
 .search-drop-trend li:nth-child(n+4) .search-drop-rank { color: #abdad5; }
+
+/* ── 大家都在搜 / 搜尋排行榜：橫向膠囊排列，排名數字保留在膠囊內 ── */
+.search-drop-trend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.search-drop-trend .search-drop-item {
+  flex: 0 0 auto;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #d6e2ec;
+  background: aliceblue;
+}
+.search-drop-trend .search-drop-item:hover {
+  background: rgba(0, 75, 151, 0.1);
+}
+/* 前三名膠囊配色跟排名數字對齊，讓熱門排行更明顯 */
+.search-drop-trend li.search-drop-item:nth-child(1) { border-color: #004b97; background: rgba(0, 75, 151, 0.1); }
+.search-drop-trend li.search-drop-item:nth-child(2) { border-color: #4a85c4; background: rgba(74, 133, 196, 0.1); }
+.search-drop-trend li.search-drop-item:nth-child(3) { border-color: #7eb8d8; background: rgba(126, 184, 216, 0.1); }
+.search-drop-trend li.search-drop-item:nth-child(n+4) { border-color: #abdad5; background: rgba(171, 218, 213, 0.14); }
+.search-drop-trend .search-drop-text {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+}
 
 /* ===== 搜尋 Offcanvas 動畫效果 ===== */
 #searchOffcanvas { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important; }
@@ -1821,6 +1871,41 @@ html.skip-loader #whatcontent { display: block !important; }
 .rp-divider { border: none; border-top: 1px solid #e8f0f8; margin: 8px 0; }
 .rp-reviews { max-height: 340px; overflow-y: auto; }
 .rp-empty { font-size: 13px; color: #aaa; text-align: center; padding: 16px 0; }
+.rp-section-title {
+  font-size: 12px; font-weight: 700; color: #6f87a0;
+  text-transform: uppercase; letter-spacing: 0.08em; margin: 4px 0 8px;
+}
+.rp-commodities {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px; max-height: 220px; overflow-y: auto; margin-bottom: 4px;
+}
+.rp-commodity-card {
+  border: 1px solid #d6e2ec; border-radius: 12px; padding: 6px;
+  cursor: pointer; transition: all 0.22s ease;
+}
+.rp-commodity-card:hover {
+  transform: translateY(-2px); border-color: #004b97;
+  box-shadow: 0 16px 36px -22px rgba(0, 75, 151, 0.3);
+}
+.rp-commodity-thumb {
+  position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 8px;
+  overflow: hidden; background: aliceblue; margin-bottom: 6px;
+}
+.rp-commodity-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rp-commodity-thumb--empty::before {
+  content: "\f03e"; font-family: "Font Awesome 6 Free"; font-weight: 900;
+  color: #d6e2ec; font-size: 20px;
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+}
+.rp-commodity-sold {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 39, 69, 0.55); color: #fff; font-size: 11px; font-weight: 700;
+}
+.rp-commodity-name {
+  font-size: 12px; color: #1a2840; line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rp-commodity-price { font-size: 12px; font-weight: 700; color: #004b97; margin-top: 2px; }
 
 /* ── Konami Code Terminal Easter Egg ── */
 #konami-overlay {
@@ -2169,6 +2254,31 @@ html.skip-loader #whatcontent { display: block !important; }
   border: 1px solid #abdad5;
 }
 .notif-action-btn--product:hover { background: rgb(36,182,133); color: #fff; }
+
+/* ── 深色模式（僅在 data-theme="dark" 頁面生效，例如校園攻略站）── */
+:root[data-theme="dark"] .notif-bell-btn { color: var(--navy, #6aa9e8); }
+:root[data-theme="dark"] .notif-bell-btn:hover { color: var(--aqua, #7fc9c0); background: rgba(127,201,192,0.14); }
+:root[data-theme="dark"] .notif-badge { background: var(--cream, #e8d29a); color: #4a3c1e; border-color: var(--page, #1e242c); }
+:root[data-theme="dark"] .notif-panel { background: var(--card, #272e37); box-shadow: -4px 0 32px rgba(0,0,0,0.4); }
+:root[data-theme="dark"] .notif-header { background: var(--navy-solid, #2f74c4); }
+:root[data-theme="dark"] .notif-item { border-bottom-color: var(--line, #3d4650); }
+:root[data-theme="dark"] .notif-item:hover { background: var(--raise, #3c4650); }
+:root[data-theme="dark"] .notif-item.notif-unread { background: rgba(106,169,232,0.1); }
+:root[data-theme="dark"] .notif-item.notif-unread:hover { background: rgba(106,169,232,0.16); }
+:root[data-theme="dark"] .notif-item.notif-unread::after { background: var(--navy, #6aa9e8); }
+:root[data-theme="dark"] .notif-empty { color: var(--muted, #8ea6bf); }
+:root[data-theme="dark"] .notif-text { color: var(--ink, #eaf1f9); }
+:root[data-theme="dark"] .notif-content { color: var(--muted, #8ea6bf); }
+:root[data-theme="dark"] .notif-time { color: var(--muted, #8ea6bf); }
+:root[data-theme="dark"] .notif-footer { border-top-color: var(--line, #3d4650); }
+:root[data-theme="dark"] .notif-load-more { border-color: var(--aqua, #7fc9c0); color: var(--navy, #6aa9e8); }
+:root[data-theme="dark"] .notif-load-more:hover { background: var(--aqua, #7fc9c0); color: #1e242c; }
+:root[data-theme="dark"] .notif-chip--wish { background: rgba(106,169,232,0.14); color: var(--navy, #6aa9e8); border-color: rgba(106,169,232,0.35); }
+:root[data-theme="dark"] .notif-chip--product { background: rgba(127,201,192,0.14); color: var(--aqua, #7fc9c0); border-color: rgba(127,201,192,0.35); }
+:root[data-theme="dark"] .notif-action-btn--chat { background: rgba(106,169,232,0.14); color: var(--navy, #6aa9e8); border-color: rgba(106,169,232,0.35); }
+:root[data-theme="dark"] .notif-action-btn--chat:hover { background: var(--navy-solid, #2f74c4); color: #fff; }
+:root[data-theme="dark"] .notif-action-btn--product { background: rgba(127,201,192,0.14); color: var(--aqua, #7fc9c0); border-color: rgba(127,201,192,0.35); }
+:root[data-theme="dark"] .notif-action-btn--product:hover { background: rgb(36,182,133); color: #fff; }
 
 /* ════════════════════════════════════════════════════════════
    共用 Section 標題元件

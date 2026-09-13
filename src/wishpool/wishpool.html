@@ -219,18 +219,18 @@
       <section id="wishpool" class="page">
         <!-- Hero -->
         <div class="wp-hero">
-          <div class="wp-hero-text">
+          <div class="wp-hero-heading">
             <span class="wp-hero-eyebrow">WISH POOL · 心願媒合</span>
-            <h1 class="wp-hero-title">將心願投進<br><span class="wp-hero-accent">拾貨寶庫許願池</span></h1>
-            <div class="wp-hero-feats">
-              <span class="wp-hero-feat">✦ 同學互助</span>
-              <span class="wp-hero-feat">✦ 免費刊登</span>
-              <span class="wp-hero-feat">✦ 安心交易</span>
-            </div>
-            <div class="wp-hero-btns">
-              <a href="#makewish" data-spa class="wp-btn-primary">↗ 前往許願</a>
-              <button class="wp-btn-secondary" id="exploreBtn">探索心願</button>
-            </div>
+            <h1 class="wp-hero-title">將心願投進<span class="wp-hero-accent">拾貨寶庫許願池</span></h1>
+          </div>
+          <div class="wp-hero-feats">
+            <span class="wp-hero-feat">✦ 同學互助</span>
+            <span class="wp-hero-feat">✦ 免費刊登</span>
+            <span class="wp-hero-feat">✦ 安心交易</span>
+          </div>
+          <div class="wp-hero-btns">
+            <a href="#makewish" data-spa class="wp-btn-primary">↗ 前往許願</a>
+            <button class="wp-btn-secondary" id="exploreBtn">探索心願</button>
           </div>
           <div class="wp-hero-img">
             <span class="wp-spark k1"></span>
@@ -274,6 +274,15 @@
               <button class="tag" data-tag="thousand">1000 元以上</button>
               <button class="tag" data-tag="trithou">3000 元以上</button>
             </div>
+            <div class="tag-list" style="margin-top: 10px;">
+              <span class="wp-filter-label">分　　類</span>
+              <button class="tag" data-tag="cat-education">課業學習</button>
+              <button class="tag" data-tag="cat-electronics">3C 電子</button>
+              <button class="tag" data-tag="cat-living">住宿生活</button>
+              <button class="tag" data-tag="cat-sports">運動休閒</button>
+              <button class="tag" data-tag="cat-accessories">服飾配件</button>
+              <button class="tag" data-tag="cat-other">二手好物</button>
+            </div>
           </div>
         </div>
 
@@ -298,6 +307,7 @@
           <div class="mw-card mw-form">
             <h6 class="cardTitle mw-card-title">許願表單</h6>
             <p class="mw-login-hint" id="mwLoginHint" style="display:none">請先<span class="loginfirst">登入會員</span>才可提交許願表單！</p>
+            <p class="mw-quota-hint" id="wishQuotaHint" style="display:none"></p>
             <div class="formwish">
               <form id="wishForm">
 
@@ -326,11 +336,31 @@
 
                 <div class="mb-3">
                   <div class="mw-field-label">
+                    <label for="wishCategory" class="form-label">分類 <span class="mw-required">*</span></label>
+                  </div>
+                  <select id="wishCategory" class="form-select">
+                    <option value="" selected disabled>請選擇分類</option>
+                    <option value="education">課業學習</option>
+                    <option value="electronics">3C 電子</option>
+                    <option value="living">住宿生活</option>
+                    <option value="sports">運動休閒</option>
+                    <option value="accessories">服飾配件</option>
+                    <option value="other">二手好物</option>
+                  </select>
+                  <div class="invalid-feedback">請選擇願望分類</div>
+                </div>
+
+                <div class="mb-3">
+                  <div class="mw-field-label">
                     <label for="budgetMax" class="form-label">預算上限 <span class="mw-required">*</span></label>
                     <small class="mw-hint">單位：元</small>
                   </div>
                   <input type="number" id="budgetMax" class="form-control" placeholder="0">
                   <div class="invalid-feedback"></div>
+                  <div class="form-check mt-2">
+                    <input type="checkbox" class="form-check-input" id="noBudgetCap">
+                    <label class="form-check-label" for="noBudgetCap">沒有預算上限</label>
+                  </div>
                 </div>
 
                 <div class="mb-3">
@@ -354,6 +384,18 @@
                     <option value="1">不急</option>
                   </select>
                   <div class="invalid-feedback"></div>
+                </div>
+
+                <div class="mb-4">
+                  <div class="mw-field-label">
+                    <label for="wishDuration" class="form-label">願望展示期限</label>
+                  </div>
+                  <select id="wishDuration" class="form-select">
+                    <option value="" selected>依帳號預設（7 天）</option>
+                    <option value="1_week">一週</option>
+                    <option value="1_month">一個月</option>
+                    <option value="3_months">三個月</option>
+                  </select>
                 </div>
 
                 <div class="form-actions">
@@ -428,8 +470,8 @@
             <h6 class="cardTitle mw-card-title">注意事項</h6>
             <ul class="mw-notice-list">
               <li><i class="ti ti-lock"></i>需登入才可提交表單</li>
-              <li><i class="ti ti-calendar-time"></i>7 天內只可以許 1 個願望</li>
-              <li><i class="ti ti-clock-off"></i>1 個願望展示 7 天後過期</li>
+              <li><i class="ti ti-stack"></i>最多同時可有 3 個進行中的願望，額滿需等到期、刪除或媒合成功才能再許願</li>
+              <li><i class="ti ti-clock-off"></i>展示期限可選一週／一個月／三個月，不選則預設 7 天</li>
             </ul>
           </div>
 

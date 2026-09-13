@@ -151,6 +151,7 @@
                   <button class="img-nav-btn img-nav-prev" id="imgPrev" aria-label="上一張">&#8249;</button>
                   <button class="img-nav-btn img-nav-next" id="imgNext" aria-label="下一張">&#8250;</button>
                   <span class="img-counter d-none" id="imgCounter"></span>
+                  <span class="product-view-badge d-none" id="productViewBadge"></span>
                 </div>
               </div>
               <!-- 縮圖容器（主圖下方、分享上方） -->
@@ -191,9 +192,10 @@
 
           <hr style="margin: 0 auto;">
 
-          <!-- 分類屬性 -->
+          <!-- 分類屬性 + 瀏覽數 -->
           <div class="meta mobilesetting">
             <dl class="row" id="product-category"></dl>
+            <!-- 瀏覽數會由 JS 動態插入 -->
           </div>
 
           <!-- 庫存 + 數量 -->
@@ -284,21 +286,25 @@
           </div>
           <!-- 按鈕列 -->
           <div class="seller-card-actions">
-            <button class="seller-action-btn seller-action-primary" id="sellerChat">
-              <i class="fa-regular fa-comment-dots"></i> 與賣家聊聊
+            <button class="seller-action-btn seller-action-primary" id="sellerGoProfile">
+              <i class="fa-regular fa-id-card"></i> 前往賣家主頁
             </button>
-            <button class="seller-action-btn seller-action-secondary" id="sellerRatebtn">
-              <i class="fa-regular fa-star"></i> 查看評價
+            <button class="seller-action-btn seller-action-secondary" id="sellerChat">
+              <i class="fa-regular fa-comment-dots"></i> 與賣家聊聊
             </button>
             <button class="seller-action-btn seller-action-report" id="sellerBad">
               <i class="fa-regular fa-flag"></i> 檢舉
             </button>
           </div>
-          <!-- 評價展開區 -->
-          <div class="d-none fade-down" id="sellerReviews">
-            <div class="seller-card-divider"></div>
-            <!-- 評價卡片列表（JS 動態渲染至此） -->
-            <div id="reviewerInfo"></div>
+        </div>
+      </div>
+
+      <!-- 賣家評論（直接呼叫 API 顯示，不需點擊展開） -->
+      <div class="typeofcommodity">
+        <h5 class="topic">賣家評論</h5>
+        <div id="sellerReviews" class="seller-card">
+          <div id="reviewerInfo">
+            <div class="review-empty">載入中...</div>
           </div>
         </div>
       </div>
@@ -352,7 +358,7 @@
               <div class="fls-step-label">STEP 01</div>
               <div class="fls-card-icon"><i class="fa-solid fa-user-plus"></i></div>
               <div class="fls-card-title">快速註冊</div>
-              <div class="fls-card-desc">使用學校 <strong>Email</strong> 快速建立帳號，即可解鎖賣家權限。</div>
+              <div class="fls-card-desc">使用任何信箱或 <strong>Google</strong> 帳號快速註冊，完成<strong>學校信箱驗證</strong>後即可解鎖賣家權限。</div>
             </div>
             <div class="fls-card">
               <div class="fls-step-label">STEP 02</div>

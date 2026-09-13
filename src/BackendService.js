@@ -23,6 +23,9 @@ async function withRetry(fn, maxRetries = 3, baseDelay = 800) {
 let _handlingExpiry = false;
 const _SKIP_401 = ['/api/account/login', '/api/account/signup', '/api/whoami'];
 
+// ── 全域 422 攔截：前端版本落後（網站已偷偷更新過）時提示重新整理 ────────────
+let _handling422 = false;
+
 // ── 網路逾時 / 離線 提示 ────────────
 let _networkBannerShown = false;
 const _BANNER_PAGES = [
@@ -94,6 +97,19 @@ function _attach401Handler(instance) {
 
             // 逾時或網路中斷（banner 由全域 interceptor 處理，這裡直接跳過）
             if (err.code === 'ECONNABORTED' || err.message === 'Network Error' || !err.response) {
+                return Promise.reject(err);
+            }
+
+            if (status === 422 && !_handling422) {
+                _handling422 = true;
+                AppModal.fire({
+                    icon: 'warning',
+                    title: '疑似網站有偷偷更新過了',
+                    text: '請重新整理頁面以取得最新版本。',
+                    confirmButtonText: '重新整理',
+                    allowOutsideClick: false,
+                    showCancelButton: false,
+                }).then(() => location.reload());
                 return Promise.reject(err);
             }
 
@@ -257,6 +273,49 @@ export default class BackendService {
             throw new Error('登入失敗，請稍後再試');
         }
         }
+    async getConfig() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/config`);
+            return response;
+        } catch (error) {
+            console.error('取得前端設定失敗：', error);
+            captureException(error);
+            throw new Error('系統發生錯誤，請稍後再試');
+        }
+    }
+    async loginWithGoogle(idToken, inviteCode) {
+        try {
+            const payload = { idToken };
+            if (inviteCode) payload.inviteCode = inviteCode;
+            const response = await axios.post(
+                `${this.baseUrl}/api/account/login/google`,
+                payload,
+                { withCredentials: true, headers: { 'Content-Type': 'application/json' } }
+            );
+
+            const d = response?.data?.data;
+            if (d?.uid)          localStorage.setItem('uid', d.uid);
+            if (d?.role)         localStorage.setItem('role', d.role);
+            if (d?.emailVerify != null) localStorage.setItem('emailVerify', String(d.emailVerify));
+
+            if (typeof this.whoami === 'function') {
+                try { await this.whoami(); } catch (_) {}
+            }
+
+            return response;
+        } catch (error) {
+            console.error('Google 登入錯誤：', error);
+            const status = error?.response?.status;
+            const msg    = error?.response?.data?.message;
+
+            if (status === 403) throw new Error(msg || '此信箱已有帳號但尚未驗證，請先使用密碼登入完成驗證');
+            if (status === 422) throw new Error(msg || 'Google 登入失敗，請重新嘗試');
+            if (status === 401) throw new Error(msg || '身分驗證失敗，請重新嘗試');
+            if (status === 429) throw new Error('RATE_LIMIT');
+            captureException(error);
+            throw new Error(msg || '登入失敗，請稍後再試');
+        }
+    }
     async logout() {
         try {
             const response = await axios.post(`${this.baseUrl}/api/account/logout`);
@@ -268,6 +327,7 @@ export default class BackendService {
             localStorage.removeItem('rate');
             localStorage.removeItem('role');
             localStorage.removeItem('emailVerify');
+            localStorage.removeItem('eduEmailVerified');
             localStorage.removeItem('loginEmail');
             return response;
         } catch (error) {
@@ -290,7 +350,8 @@ export default class BackendService {
             const d = response.data.data;
             localStorage.setItem('username', d.name);
             localStorage.setItem('intro', d.introduction);
-            localStorage.setItem('avatar', d.photoURL);
+            if (d.photoURL) localStorage.setItem('avatar', d.photoURL);
+            else            localStorage.removeItem('avatar');
             localStorage.setItem('rate', d.rate);
             if (d.contactEmail != null) {
                 localStorage.setItem('contractEmail', d.contactEmail);
@@ -356,11 +417,13 @@ export default class BackendService {
                 if (d.role)             localStorage.setItem('role', d.role);
                 if (d.name)             localStorage.setItem('username', d.name);
                 if (d.introduction != null) localStorage.setItem('intro', d.introduction);
-                if (d.photoURL)         localStorage.setItem('avatar', d.photoURL);
+                if (d.photoURL) localStorage.setItem('avatar', d.photoURL);
+                else            localStorage.removeItem('avatar');
                 if (d.rate != null)     localStorage.setItem('rate', d.rate);
                 if (d.contactEmail != null) localStorage.setItem('contractEmail', d.contactEmail);
                 if (d.account?.email)   localStorage.setItem('loginEmail', d.account.email);
                 if (d.account?.emailVerify != null) localStorage.setItem('emailVerify', String(d.account.emailVerify));
+                if (d.account?.eduEmailVerified != null) localStorage.setItem('eduEmailVerified', String(d.account.eduEmailVerified));
             }
             return response;
         } catch (error) {
@@ -417,6 +480,45 @@ export default class BackendService {
             const status = error?.response?.status;
             const msg = error?.response?.data?.message;
             if (status === 429) throw new Error('RATE_LIMIT');
+            captureException(error);
+            throw new Error(msg || '發送失敗，請稍後再試');
+        }
+    }
+    async submitEduEmail(eduEmail) {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/account/edu-email`, { eduEmail }, { withCredentials: true });
+            return response;
+        } catch (error) {
+            console.error('提交教育信箱錯誤：', error);
+            const status = error?.response?.status;
+            const msg = error?.response?.data?.message;
+            if (status === 429) throw new Error('RATE_LIMIT');
+            if (status === 409) throw new Error(msg || '此教育信箱已被其他帳號驗證過');
+            if (status === 422) throw new Error(msg || '網域不在允許清單內或格式錯誤');
+            if (status === 400 || status === 403) throw new Error(msg || '提交失敗，請確認帳號狀態');
+            captureException(error);
+            throw new Error(msg || '系統發生錯誤，請稍後再試');
+        }
+    }
+    async verifyEduEmail(token) {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/account/edu-email/verify/${encodeURIComponent(token)}`);
+            return response;
+        } catch (error) {
+            console.error('驗證教育信箱錯誤：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '驗證失敗，連結可能已過期');
+        }
+    }
+    async resendEduEmailVerification() {
+        try {
+            const response = await axios.post(`${this.baseUrl}/api/account/edu-email/resend`, {}, { withCredentials: true });
+            return response;
+        } catch (error) {
+            const status = error?.response?.status;
+            const msg = error?.response?.data?.message;
+            if (status === 429) throw new Error('RATE_LIMIT');
+            if (status === 404) throw new Error(msg || '尚未提交教育信箱');
             captureException(error);
             throw new Error(msg || '發送失敗，請稍後再試');
         }
