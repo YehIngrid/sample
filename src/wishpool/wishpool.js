@@ -19,6 +19,8 @@ document.addEventListener('load', e => {
 // ── Constants ──
 const PRIORITY_LABEL = { LOW:'不急', MEDIUM:'一般', HIGH:'緊急', 1:'不急', 2:'一般', 3:'急需' };
 const PRIORITY_COLOR  = { LOW:'#6bb56b', MEDIUM:'#e6a817', HIGH:'#e05353', 1:'#6bb56b', 2:'#e6a817', 3:'#e05353' };
+const CATEGORY_LABEL = { education:'課業學習', electronics:'3C 電子', living:'住宿生活', sports:'運動休閒', accessories:'服飾配件', other:'二手好物' };
+const MAX_ACTIVE_WISHES = 3;
 
 // ── Skeleton helper（形狀對齊新版糖果紋願望卡）──
 function wishSkeletonHTML(n = 6) {
@@ -177,6 +179,8 @@ async function showPage(hash) {
         title: '請先登入會員',
         text: '需登入會員才可送出許願清單歐！'
       });
+    } else {
+      await refreshWishQuota();
     }
   }
   if(hash === '#about') {
@@ -208,7 +212,7 @@ window.addEventListener('popstate', () => {
 async function checkLogin() {
   backendService = new BackendService();
   try {
-    const response = await backendService.whoami(); 
+    const response = await backendService.whoami();
     return response.data;
   } catch (error) {
     console.error('Error checking login status:', error);
@@ -216,14 +220,35 @@ async function checkLogin() {
   }
 }
 
+async function refreshWishQuota() {
+  const hint = document.getElementById('wishQuotaHint');
+  const submitBtn = document.getElementById('wishFormbtn');
+  if (!hint) return;
+  try {
+    wpbackendService = wpbackendService || new wpBackendService();
+    const res = await wpbackendService.myWishes(1, 1); // status=1 進行中
+    const activeCount = res?.data?.pagination?.total ?? 0;
+    const isFull = activeCount >= MAX_ACTIVE_WISHES;
+    hint.textContent = `目前進行中願望：${activeCount} / ${MAX_ACTIVE_WISHES}${isFull ? '（已額滿，請等待到期、刪除或媒合成功後再許願）' : ''}`;
+    hint.style.display = '';
+    hint.classList.toggle('full', isFull);
+    if (submitBtn) submitBtn.disabled = isFull;
+  } catch (error) {
+    console.error('Error loading wish quota:', error);
+    hint.style.display = 'none';
+  }
+}
+
 const _TAG_URGENCY = { necessary: 'high', normal: 'medium', nonecessary: 'low' };
 const _TAG_BUDGET  = { hundred: '0_100', fiveh: '100_500', tothous: '500_1000', thousand: '1000_plus', trithou: '3000_plus' };
+const _TAG_CATEGORY = { 'cat-education': 'education', 'cat-electronics': 'electronics', 'cat-living': 'living', 'cat-sports': 'sports', 'cat-accessories': 'accessories', 'cat-other': 'other' };
 
 function _getActiveFilters() {
   const active = Array.from(document.querySelectorAll('.tag.active')).map(t => t.dataset.tag);
-  const urgency = active.filter(t => _TAG_URGENCY[t]).map(t => _TAG_URGENCY[t]);
-  const budget  = active.filter(t => _TAG_BUDGET[t]).map(t => _TAG_BUDGET[t]);
-  return { urgency, budget };
+  const urgency  = active.filter(t => _TAG_URGENCY[t]).map(t => _TAG_URGENCY[t]);
+  const budget   = active.filter(t => _TAG_BUDGET[t]).map(t => _TAG_BUDGET[t]);
+  const category = active.filter(t => _TAG_CATEGORY[t]).map(t => _TAG_CATEGORY[t]);
+  return { urgency, budget, category };
 }
 
 async function listAll(page = 1) {
@@ -231,9 +256,9 @@ async function listAll(page = 1) {
   const wishGrid = document.getElementById('wishGrid');
   if (wishGrid) wishGrid.innerHTML = wishSkeletonHTML();
     wpbackendService = new wpBackendService();
-    const { urgency, budget } = _getActiveFilters();
+    const { urgency, budget, category } = _getActiveFilters();
     try {
-      const res = await wpbackendService.listWishes(page, urgency, budget);
+      const res = await wpbackendService.listWishes(page, urgency, budget, category);
       currentPage = page;
       showInfo(res.data);
       if (res.data.pagination.totalPages) {
@@ -343,13 +368,21 @@ async function resendWish(wish) {
   await new Promise(r => setTimeout(r, 80));
 
   // 填入文字欄位
-  const nameEl    = document.getElementById('wishName');
-  const budgetEl  = document.getElementById('budgetMax');
-  const descEl    = document.getElementById('wishDesc');
-  const urgencyEl = document.getElementById('urgency');
-  if (nameEl)    nameEl.value    = wish.itemName    || '';
-  if (budgetEl)  budgetEl.value  = wish.maxPrice    || '';
-  if (descEl)    descEl.value    = wish.description || '';
+  const nameEl     = document.getElementById('wishName');
+  const budgetEl   = document.getElementById('budgetMax');
+  const descEl     = document.getElementById('wishDesc');
+  const urgencyEl  = document.getElementById('urgency');
+  const categoryEl = document.getElementById('wishCategory');
+  const noCapEl = document.getElementById('noBudgetCap');
+  if (nameEl)     nameEl.value     = wish.itemName    || '';
+  if (descEl)     descEl.value     = wish.description || '';
+  if (categoryEl) categoryEl.value = wish.category    || '';
+  if (budgetEl && noCapEl) {
+    const hasNoCap = wish.maxPrice === null || wish.maxPrice === undefined;
+    noCapEl.checked = hasNoCap;
+    budgetEl.disabled = hasNoCap;
+    budgetEl.value = hasNoCap ? '' : wish.maxPrice;
+  }
   const priorityToValue = { HIGH: '3', MEDIUM: '2', LOW: '1', 3: '3', 2: '2', 1: '1' };
   if (urgencyEl) urgencyEl.value = priorityToValue[wish.priority] || '';
 
@@ -449,12 +482,15 @@ if (!wishForm) {
   console.log('[wish] 元素載入完成，開始綁定事件');
 }
 
-const fileInput = document.getElementById('wish-image');
-const preview   = document.getElementById('imgPreview');
-const imgEl     = document.getElementById('imgPreviewImg');
-const budgetMax = document.getElementById('budgetMax');
+const fileInput    = document.getElementById('wish-image');
+const preview      = document.getElementById('imgPreview');
+const imgEl        = document.getElementById('imgPreviewImg');
+const budgetMax    = document.getElementById('budgetMax');
+const noBudgetCap  = document.getElementById('noBudgetCap');
 // const expireDate = document.getElementById('expireDate');
-const urgency   = document.getElementById('urgency');
+const urgency      = document.getElementById('urgency');
+const wishCategory = document.getElementById('wishCategory');
+const wishDuration = document.getElementById('wishDuration');
 
 // --- 小工具：設/清錯 ---
 function setErr(el, msg) {
@@ -512,11 +548,22 @@ const toNum = v => (v === '' ? NaN : Number(v));
 // }
 function validateBudgetMax() {
   clearErr(budgetMax);
+  if (noBudgetCap.checked) return true;
   const v = toNum(budgetMax.value);
   if (Number.isNaN(v)) { setErr(budgetMax, '請填最高預算'); return false; }
   if (v <= 0)          { setErr(budgetMax, '最高預算需大於 0'); return false; }
   return true;
 }
+
+// --- 沒有預算上限：勾選時停用輸入框 ---
+noBudgetCap.addEventListener('change', () => {
+  budgetMax.disabled = noBudgetCap.checked;
+  if (noBudgetCap.checked) {
+    clearErr(budgetMax);
+  } else {
+    validateBudgetMax();
+  }
+});
 
 
 // --- 驗證：急迫度必選 ---
@@ -526,11 +573,19 @@ function validateUrgency() {
   return true;
 }
 
+// --- 驗證：分類必選 ---
+function validateCategory() {
+  clearErr(wishCategory);
+  if (!wishCategory.value) { setErr(wishCategory, '請選擇願望分類'); return false; }
+  return true;
+}
+
 // --- 即時驗證（使用者輸入就檢查） ---
 fileInput.addEventListener('change', validatePhoto);
 // expireDate.addEventListener('input', () => { validexpireDate();});
 budgetMax.addEventListener('input', () => { validateBudgetMax(); });
 urgency.addEventListener('change', validateUrgency);
+wishCategory.addEventListener('change', validateCategory);
 
 
 // ---- 圖片壓縮 helper ----
@@ -641,6 +696,8 @@ document.getElementById('wishForm').addEventListener('reset', () => {
   preview.classList.remove('has-image');
   imgEl.removeAttribute('src');
   imgFilename.textContent = '';
+  budgetMax.disabled = false;
+  clearErr(budgetMax);
 });
 
 // ---- 拖曳上傳 ----
@@ -680,8 +737,9 @@ wishFormbig.addEventListener("click", async function (e) {
   // const okDate  = validexpireDate();
   const okMax   = validateBudgetMax();
   const okUrg   = validateUrgency();
+  const okCat   = validateCategory();
 
-  isValid = isValid && okPhoto && okMax && okUrg;
+  isValid = isValid && okPhoto && okMax && okUrg && okCat;
 
   // 商品名稱
   const wishName = document.getElementById("wishName");
@@ -695,7 +753,7 @@ wishFormbig.addEventListener("click", async function (e) {
   }
   //預算最高
   const budgetMax = document.getElementById("budgetMax");
-  if (!budgetMax.value.trim() || budgetMax.value <= 0) {
+  if (!noBudgetCap.checked && (!budgetMax.value.trim() || budgetMax.value <= 0)) {
     budgetMax.classList.add("is-invalid");
     budgetMax.classList.remove("is-valid");
     isValid = false;
@@ -748,8 +806,10 @@ async function submit() {
     const result = await wpbackendService.createWish(
       wishName.value,
       wishDesc.value,
+      wishCategory.value,
       urgency.value,
-      budgetMax.value,
+      noBudgetCap.checked ? -1 : budgetMax.value,
+      wishDuration.value,
       photo
     );
     console.log('願望建立成功：', result);
@@ -814,6 +874,15 @@ function animateCountUp(id, target, duration = 2000) {
 //  Wish card system
 // ════════════════════════════════════════════════════
 
+function formatExpiryInfo(expiresAt) {
+  if (!expiresAt) return null;
+  const expireDate = new Date(expiresAt);
+  const dateLabel = `${expireDate.getFullYear()}/${String(expireDate.getMonth() + 1).padStart(2, '0')}/${String(expireDate.getDate()).padStart(2, '0')}`;
+  const daysLeft = Math.ceil((expireDate.getTime() - Date.now()) / 86400000);
+  const text = daysLeft <= 0 ? `已於 ${dateLabel} 到期` : `到期：${dateLabel}（剩 ${daysLeft} 天）`;
+  return { text, soon: daysLeft <= 3 };
+}
+
 function relativeTime(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const minutes = Math.floor(diff / 60000);
@@ -823,6 +892,65 @@ function relativeTime(dateStr) {
   if (hours < 24) return `${hours} 小時前`;
   const days = Math.floor(hours / 24);
   return `${days} 天前`;
+}
+
+/**
+ * 「我也喜歡」區塊：左邊是總數（唯讀），右邊是可點擊的「我也想要」按鈕。
+ * 自己的願望只顯示總數，不顯示按鈕。
+ */
+function likeButtonHTML(wish, isMyWish) {
+  const liked = !!wish.isLiked;
+  const count = wish.likeCount || 0;
+  const countHtml = `<span class="wn-like-count-badge">也有 <span class="wn-like-count-num">${count}</span> 人想要</span>`;
+  if (isMyWish) return `<div class="wn-like-wrap">${countHtml}</div>`;
+  const likedClass = liked ? ' liked' : '';
+  const btnHtml = `<button class="wn-like-btn${likedClass}" data-liked="${liked}">
+      <img class="wn-like-icon" src="../svg/wantToo.svg" alt="" aria-hidden="true">我也想要
+    </button>`;
+  return `<div class="wn-like-wrap">${countHtml}${btnHtml}</div>`;
+}
+
+function bindLikeButton(btn, wishId, isMyWish) {
+  if (!btn || isMyWish) return;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleLikeToggle(wishId, btn);
+  });
+}
+
+async function handleLikeToggle(wishId, btn) {
+  if (!btn || btn.dataset.busy) return;
+  const loggedIn = await requireLogin();
+  if (!loggedIn) return;
+
+  const countEl = btn.previousElementSibling?.classList.contains('wn-like-count-badge')
+    ? btn.previousElementSibling
+    : btn.parentElement.querySelector('.wn-like-count-badge');
+
+  const wasLiked = btn.dataset.liked === 'true';
+  btn.dataset.busy = '1';
+  btn.disabled = true;
+  try {
+    wpbackendService = wpbackendService || new wpBackendService();
+    const res = wasLiked ? await wpbackendService.unlikeWish(wishId) : await wpbackendService.likeWish(wishId);
+    const { liked, likeCount } = res.data ?? res;
+    btn.dataset.liked = String(!!liked);
+    btn.classList.toggle('liked', !!liked);
+    btn.innerHTML = `<img class="wn-like-icon" src="../svg/wantToo.svg" alt="" aria-hidden="true">我也想要`;
+    if (countEl) countEl.querySelector('.wn-like-count-num').textContent = likeCount ?? 0;
+    if (liked) {
+      btn.classList.remove('wn-like-pop');
+      void btn.offsetWidth; // 強制 reflow，讓動畫可以重新觸發
+      btn.classList.add('wn-like-pop');
+      btn.addEventListener('animationend', () => btn.classList.remove('wn-like-pop'), { once: true });
+    }
+  } catch (error) {
+    console.error('Error toggling like:', error);
+    AppModal.fire({ icon: 'error', title: '操作失敗', text: error?.response?.data?.message || '請稍後再試。' });
+  } finally {
+    delete btn.dataset.busy;
+    btn.disabled = false;
+  }
 }
 
 /**
@@ -845,6 +973,10 @@ function createWishCard(wish, isMyWish) {
   const priorityPillHtml = priorityLabel
     ? `<span class="wn-priority-pill" style="--pill-c:${priorityColor};">${priorityLabel}</span>`
     : '';
+  const categoryLabel = CATEGORY_LABEL[wish.category] || '';
+  const categoryPillHtml = categoryLabel
+    ? `<span class="wn-category-pill">${categoryLabel}</span>`
+    : '';
 
   const hasPhoto = !!wish.photoURL;
   const mediaHtml = hasPhoto
@@ -854,7 +986,10 @@ function createWishCard(wish, isMyWish) {
   const ownerAvatar = wish.owner?.photoURL || '../webP/default-avatar.webp';
   const ownerName = wish.owner?.name || '許願者';
   const dateText = wish.createdAt ? relativeTime(wish.createdAt) : '';
-  const priceFormatted = Number(wish.maxPrice || 0).toLocaleString();
+  const expiryInfo = isMyWish ? formatExpiryInfo(wish.expiresAt) : null;
+  const priceFormatted = (wish.maxPrice === null || wish.maxPrice === undefined)
+    ? '不限'
+    : `NT$ ${Number(wish.maxPrice).toLocaleString()}`;
 
   const actionHtml = isMyWish
     ? (wish.status === 'EXPIRED' || wish.status === 'DELETED')
@@ -868,7 +1003,7 @@ function createWishCard(wish, isMyWish) {
       <div class="wn-body">
         <div class="wn-head">
           <div class="wn-title">${wish.itemName}</div>
-          ${statusBadgeHtml}${priorityPillHtml}
+          <div class="wn-badges">${statusBadgeHtml}${categoryPillHtml}${priorityPillHtml}</div>
         </div>
         ${wish.description ? `<div class="wn-desc">${wish.description}</div>` : ''}
         <div class="wn-user">
@@ -876,14 +1011,18 @@ function createWishCard(wish, isMyWish) {
           <span class="wn-username">${ownerName}</span>
           ${dateText ? `<span class="wn-dot"></span><span class="wn-date">${dateText}</span>` : ''}
         </div>
+        ${expiryInfo ? `<div class="wn-expiry${expiryInfo.soon ? ' wn-expiry-soon' : ''}">${expiryInfo.text}</div>` : ''}
         <div class="wn-footer">
           <div class="wn-budget-col">
             <span class="wn-budget-label">預算</span>
-            <span class="wn-budget">NT$ ${priceFormatted}</span>
+            <span class="wn-budget">${priceFormatted}</span>
           </div>
           <div class="wn-side">
             <img class="wn-ink" src="../svg/wishink.svg" alt="" aria-hidden="true">
-            <div class="wn-actions">${actionHtml}</div>
+            <div class="wn-side-actions">
+              <div class="wn-actions">${actionHtml}</div>
+              ${likeButtonHTML(wish, isMyWish)}
+            </div>
           </div>
         </div>
       </div>
@@ -898,6 +1037,8 @@ function createWishCard(wish, isMyWish) {
       AppModal.fire({ imageUrl: wnPhoto.src, imageAlt: wnPhoto.alt || '許願圖片', showConfirmButton: false, showCloseButton: true, width: 'auto', padding: '0.5rem', background: '#111' });
     });
   }
+
+  bindLikeButton(wrapper.querySelector('.wn-like-btn'), wish.id, isMyWish);
 
   if (isActive) {
     const btn = wrapper.querySelector('.wn-action-js');
@@ -993,7 +1134,9 @@ function renderCardBack(backScrollEl, d, wishId, isMyWish, inner) {
       <div class="wb-title">${d.itemName || '無標題'}</div>
       <div class="wb-meta">
         <span class="wb-priority-badge" style="background:${priorityColor};">${priorityLabel}</span>
-        <span class="wb-price">收購 NT$${d.maxPrice || 0}</span>
+        ${CATEGORY_LABEL[d.category] ? `<span class="wb-priority-badge" style="background:#6f87a0;">${CATEGORY_LABEL[d.category]}</span>` : ''}
+        <span class="wb-price">收購 ${(d.maxPrice === null || d.maxPrice === undefined) ? '不限' : `NT$${Number(d.maxPrice).toLocaleString()}`}</span>
+        ${likeButtonHTML(d, isMyWish)}
       </div>
       <div class="wb-wisher">
         <img class="wb-wisher-avatar" src="${ownerAvatar}" alt="許願者頭像"
@@ -1008,6 +1151,8 @@ function renderCardBack(backScrollEl, d, wishId, isMyWish, inner) {
     e.stopPropagation();
     inner.classList.remove('flipped');
   });
+
+  bindLikeButton(backScrollEl.querySelector('.wn-like-btn'), wishId, isMyWish);
 
   if (!isMyWish) {
     const contactBtn = backScrollEl.querySelector('.wb-contact-js');
@@ -1197,7 +1342,9 @@ async function handleAutoFocus() {
         photoURL:  d.photoURL,
         priority:  d.priority,
         createdAt: d.createdAt,
-        owner:     d.owner
+        owner:     d.owner,
+        likeCount: d.likeCount,
+        isLiked:   d.isLiked
       };
       const _myUid = String(localStorage.getItem('uid') || '');
       const _ownerUid = String(wishObj.owner?.accountId || wishObj.owner?.id || wishObj.owner?._id || '');

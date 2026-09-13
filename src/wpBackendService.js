@@ -21,13 +21,15 @@ export default class wpBackendService {
         this.baseUrl = `${import.meta.env.VITE_API_BASE_URL}/api/wishpool`;
         this.http = axios.create({ baseURL: this.baseUrl });
     }
-    async createWish(itemName, description, priority, maxPrice, photo) {
+    async createWish(itemName, description, category, priority, maxPrice, duration, photo) {
         try {
             const formData = new FormData();
             formData.append('itemName', itemName);
             formData.append('description', description);
+            formData.append('category', category);
             formData.append('priority', String(priority));
             formData.append('maxPrice', maxPrice);
+            if (duration) formData.append('duration', duration);
             formData.append('photo', photo);
             const response = await axios.post(
                 `${this.baseUrl}/create`,
@@ -35,17 +37,20 @@ export default class wpBackendService {
             );
             return response.data;
         } catch (error) {
-            if (error?.response?.status === 403) throw new Error('一個禮拜只能許一個願望，請下週再來許願喔！');
+            if (error?.response?.status === 403) {
+                throw new Error(error?.response?.data?.message || '已達到願望上限（最多同時 3 個進行中的願望），請等待到期、刪除或媒合成功後再許願！');
+            }
             console.error('Error posting wish:', error);
             return Promise.reject(error);
         }
     }
     // List wishes with pagination and filter
-    async listWishes(page, urgency, budget) {
+    async listWishes(page, urgency, budget, category) {
         try {
             const params = { page, limit: 12 };
-            if (urgency?.length) params.urgency = urgency.length === 1 ? urgency[0] : urgency;
-            if (budget?.length)  params.budget  = budget.length  === 1 ? budget[0]  : budget;
+            if (urgency?.length)  params.urgency  = urgency.length  === 1 ? urgency[0]  : urgency;
+            if (budget?.length)   params.budget   = budget.length   === 1 ? budget[0]   : budget;
+            if (category?.length) params.category = category.length === 1 ? category[0] : category;
             const response = await withRetry(() => axios.get(
                 `${this.baseUrl}`,
                 { params }
@@ -90,6 +95,28 @@ export default class wpBackendService {
             return response.data;
         } catch (error) {
             console.error('Error fetching my wishes:', error);
+            return Promise.reject(error);
+        }
+    }
+    async likeWish(id) {
+        try {
+            const response = await axios.post(
+                `${this.baseUrl}/${id}/like`
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error liking wish:', error);
+            return Promise.reject(error);
+        }
+    }
+    async unlikeWish(id) {
+        try {
+            const response = await axios.delete(
+                `${this.baseUrl}/${id}/like`
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error unliking wish:', error);
             return Promise.reject(error);
         }
     }
