@@ -158,7 +158,7 @@ body {
 /* ── Login / username ── */
 .loginornot, .username {
     color: var(--brand-color);
-    font-size: 14px;
+    font-size: 14px !important;
     text-decoration: none;
 }
 
@@ -1061,7 +1061,7 @@ body {
         gap: 14px;
     }
     .wp-hero-title { font-size: 1.3rem; white-space: normal; }
-    .wp-hero-feat { font-size: 0.76rem; padding: 3px 10px; }
+    .wp-hero-feats { display: none; }
     .wp-hero-btns { margin-left: 0; }
 }
 @media (max-width: 575px) {
@@ -1533,8 +1533,9 @@ body {
 
 @media (max-width: 991px) {
     .wn-card { padding: 14px; gap: 12px; }
+    .wn-card.wn-has-photo { flex-direction: column; }
     .wn-card.wn-no-photo { padding: 14px; }
-    .wn-media { width: 68px; height: 68px; border-radius: 10px; }
+    .wn-media { width: 100%; height: auto; aspect-ratio: 1.9 / 1; border-radius: 14px; }
     .wn-body { gap: 8px; }
     .wn-title { font-size: 14px; line-height: 1.3; }
     .wn-desc {

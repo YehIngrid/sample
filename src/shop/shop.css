@@ -55,6 +55,428 @@
 ul{
     padding-left: 0rem !important;
 }
+/* ── 許願池廣告：開啟 shop.html 時彈出的正方形循環動畫 ── */
+.wp-ad-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10600;
+  background: rgba(15,39,69,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.wp-ad-modal {
+  position: relative;
+  width: min(400px, 100%);
+  background: #fff;
+  border-radius: 22px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 24px 60px -12px rgba(0,0,0,0.4);
+}
+.wp-ad-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: #f0f2f4;
+  color: #4a627a;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+.wp-ad-modal-close:hover { background: #e2e8ee; color: #0f2745; }
+.wp-ad-square {
+  position: relative;
+  width: min(360px, 84vw);
+  aspect-ratio: 1 / 1;
+  background: #004b97;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px -14px rgba(0,75,151,0.45);
+}
+.wp-ad-square::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 85%, rgba(171,218,213,0.12) 0, transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(126,184,216,0.1) 0, transparent 50%);
+  pointer-events: none;
+}
+.wp-ad-stage {
+  position: absolute;
+  inset: 0;
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.22s ease;
+}
+.wp-ad-stage.wp-ad-stage-fade { opacity: 0; }
+
+/* 共用元件 */
+.wp-ad-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #abdad5;
+  margin-bottom: 8px;
+}
+.wp-ad-headline {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+.wp-ad-headline .accent { color: #abdad5; display: block; }
+.wp-ad-card {
+  position: relative;
+  z-index: 1;
+  background: #fff;
+  border-radius: 16px;
+  padding: 10px 14px;
+  box-shadow: 0 16px 32px -12px rgba(0,0,0,0.3);
+}
+
+/* Scene 1→2 轉場：訊息放大淡出，穿場銜接下一幕 */
+.wp-ad-scene1-root {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.45s cubic-bezier(.4,0,1,1), opacity 0.4s ease;
+  transform-origin: 50% 55%;
+}
+.wp-ad-scene1-root.wp-ad-zoom-out { transform: scale(4.5); opacity: 0; }
+
+/* Scene 2a：「想許願？」獨立置中過場，字放大 */
+.wp-ad-intro-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 22px;
+  transition: opacity 0.25s ease;
+}
+.wp-ad-intro-center.wp-ad-fadeout { opacity: 0; }
+.wp-ad-intro-center .wp-ad-eyebrow { margin-bottom: 10px; }
+.wp-ad-headline-lg { font-size: 26px; margin-bottom: 0; }
+
+/* Scene 2b：標題定位到上方，表單卡淡入補位 */
+.wp-ad-card-fadein {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.wp-ad-card-fadein.wp-ad-in { opacity: 1; transform: translateY(0); }
+
+/* 動畫游標：模擬點擊按鈕 */
+.wp-ad-cursor {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: 6;
+  pointer-events: none;
+  transition: left 0.22s cubic-bezier(.4,0,.2,1), top 0.22s cubic-bezier(.4,0,.2,1);
+}
+.wp-ad-cursor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 16px 11px;
+  border-color: transparent transparent #fff transparent;
+  transform: rotate(-10deg);
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+}
+.wp-ad-cursor.wp-ad-cursor-click::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.55);
+  animation: wp-ad-cursor-ripple 0.45s ease-out;
+}
+@keyframes wp-ad-cursor-ripple {
+  from { transform: scale(0.3); opacity: 0.9; }
+  to   { transform: scale(2.4); opacity: 0; }
+}
+
+/* 送出後蓋上的許願池郵戳 */
+.wp-ad-stamp {
+  position: absolute;
+  top: 46px;
+  right: 6px;
+  width: 52px;
+  height: auto;
+  opacity: 0;
+  transform: scale(0.4) rotate(-25deg);
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  z-index: 3;
+}
+.wp-ad-stamp.wp-ad-in { opacity: 1; transform: scale(1) rotate(-12deg); }
+.wp-ad-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.wp-ad-formtab {
+  display: inline-block;
+  background: aliceblue;
+  color: #004b97;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+.wp-ad-hint { font-size: 10.5px; color: #6f87a0; }
+.wp-ad-field {
+  padding: 8px 0;
+  border-bottom: 1px solid #edf2f7;
+}
+.wp-ad-field:last-of-type { border-bottom: none; }
+.wp-ad-field label {
+  display: block;
+  font-size: 10.5px;
+  color: #6f87a0;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+.wp-ad-field span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f2745;
+}
+.wp-ad-field span.wp-ad-caret::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 14px;
+  margin-left: 2px;
+  background: #004b97;
+  vertical-align: -2px;
+  animation: wp-ad-caret-blink 0.9s steps(1) infinite;
+}
+@keyframes wp-ad-caret-blink { 50% { opacity: 0; } }
+.wp-ad-submit {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: none;
+  border-radius: 999px;
+  background: #004b97;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.3s ease;
+}
+.wp-ad-submit.wp-ad-sent { background: rgb(36, 182, 133); }
+
+/* Scene 1：徵求氣泡 */
+.wp-ad-bubbles { display: flex; flex-direction: column; gap: 10px; }
+.wp-ad-bubble-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.wp-ad-bubble-row.wp-ad-in { opacity: 1; transform: translateY(0); }
+.wp-ad-bubble-row.wp-ad-flip { flex-direction: row-reverse; align-self: flex-end; }
+.wp-ad-avatar-dot {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(171,218,213,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.wp-ad-avatar-dot img { width: 60%; height: 60%; object-fit: contain; }
+.wp-ad-bubble {
+  background: rgba(126,184,216,0.35);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Scene 4：我也想要 */
+.wp-ad-card-sm .wp-ad-item { font-size: 16px; font-weight: 700; color: #0f2745; margin: 4px 0 2px; }
+.wp-ad-card-sm .wp-ad-price { font-size: 14px; font-weight: 700; color: #004b97; margin-bottom: 12px; }
+.wp-ad-tag {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #6f87a0;
+  background: #f0f2f4;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+.wp-ad-tag.aqua { color: #007568; background: rgba(171,218,213,0.45); }
+.wp-ad-wanttoo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px;
+  border: none;
+  border-radius: 999px;
+  background: #abdad5;
+  color: #004b97;
+  font-size: 14px;
+  font-weight: 700;
+}
+.wp-ad-wanttoo img { width: 18px; height: 18px; }
+.wp-ad-avatars { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
+.wp-ad-avatar-plus {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(171,218,213,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.wp-ad-avatar-plus img { width: 62%; height: 62%; object-fit: contain; }
+.wp-ad-avatar-plus.wp-ad-in { opacity: 1; transform: scale(1); }
+.wp-ad-avatar-plus::after {
+  content: "+1";
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  z-index: 2;
+  background: #f3e3b5;
+  color: #7a5c1e;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 999px;
+}
+.wp-ad-subcaption {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Scene 6：媒合成功 */
+.wp-ad-match-cards { display: flex; gap: 10px; }
+.wp-ad-match-cards .wp-ad-card {
+  flex: 1;
+  padding: 12px 14px;
+  opacity: 0;
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(.34,1.2,.64,1);
+}
+.wp-ad-match-cards .wp-ad-card:first-child { transform: translateX(-30px); }
+.wp-ad-match-cards .wp-ad-card:last-child { transform: translateX(30px); }
+.wp-ad-match-cards .wp-ad-card.wp-ad-in { opacity: 1; transform: translateX(0); }
+.wp-ad-match-cards .wp-ad-item { font-size: 13px; font-weight: 700; color: #0f2745; margin-top: 6px; }
+.wp-ad-match-badge {
+  align-self: center;
+  margin-top: 14px;
+  padding: 10px 20px;
+  background: rgba(171,218,213,0.9);
+  color: #004b97;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 999px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+.wp-ad-match-badge.wp-ad-in { opacity: 1; transform: scale(1); }
+.wp-ad-tagline {
+  text-align: center;
+  margin: 40px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+.wp-ad-fadeup {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.wp-ad-fadeup.wp-ad-in { opacity: 1; transform: translateY(0); }
+.wp-ad-cta-inline {
+  display: inline-block;
+  align-self: center;
+  margin-top: 12px;
+  padding: 9px 20px;
+  background: #abdad5;
+  color: #004b97 !important;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+.wp-ad-footer-brand {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.6);
+}
+
+/* 外部持續顯示的操作列 */
+.wp-ad-actions { display: flex; align-items: center; gap: 14px; }
+.wp-ad-dismiss {
+  background: none;
+  border: none;
+  color: #6f87a0;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 6px 4px;
+}
+.wp-ad-dismiss:hover { color: #004b97; }
+.wp-ad-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 20px;
+  background: #004b97;
+  color: #fff !important;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none !important;
+  transition: background 0.22s ease, transform 0.22s ease;
+}
+.wp-ad-cta:hover { background: rgb(36, 182, 133); transform: translateY(-1px); }
+
 /* ── 三個入口快捷按鈕 ── */
 .quick-actions {
   display: flex;
@@ -1349,7 +1771,7 @@ ul{
 }
 .login{
   text-align: right;
-  font-size: 14px;
+  font-size: 12px;
 }
 .footer-row li a{
   color: #fff;

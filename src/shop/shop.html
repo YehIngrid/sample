@@ -242,7 +242,7 @@
       </div>
     </div>
   <main id="midcontent">
-  <div class="my-section">  
+  <div class="my-section">
   <div class="quick-actions">
 
     <a class="qa-btn primary" id="qaSellerBtn" href="shop.html?page=seller">
@@ -2266,6 +2266,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })();
 </script>
+
+  <!-- 許願池廣告彈跳視窗（開啟 shop.html 時顯示） -->
+  <div class="wp-ad-modal-backdrop" id="wpAdModalBackdrop" style="display:none;">
+    <div class="wp-ad-modal">
+      <button type="button" class="wp-ad-modal-close" id="wpAdModalClose" aria-label="關閉">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="wp-ad-square">
+        <div class="wp-ad-stage" id="wpAdStage"></div>
+      </div>
+      <div class="wp-ad-actions">
+        <button class="wp-ad-dismiss" id="wpAdDismiss">知道了</button>
+        <a class="wp-ad-cta" href="../wishpool/wishpool.html#wishpool">前往許願 →</a>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

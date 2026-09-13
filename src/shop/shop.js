@@ -1841,6 +1841,248 @@ document.addEventListener('DOMContentLoaded', () => {
   initEntryReminder();
 });
 
+// ── 許願池廣告：shop.html 最上方的正方形循環動畫（6 個場景，共 20 秒一輪）──
+const WP_AD_DISMISSED_KEY = 'wpAdDismissed';
+const WP_AD_BUBBLES = ['徵 深色大衣 M', '徵 腳踏車', '徵 製圖尺組', '徵 宿舍小冰箱', '徵 微積分課本'];
+const WP_AD_AVATAR_ICONS = [
+  { src: '../svg/rabbit.svg', bg: 'rgba(171,218,213,0.4)' },
+  { src: '../svg/fox.svg',    bg: 'rgba(243,227,181,0.6)' },
+  { src: '../svg/tree.svg',   bg: 'rgba(126,184,216,0.4)' },
+];
+const wpAdAvatarIcon = (idx) => WP_AD_AVATAR_ICONS[idx % WP_AD_AVATAR_ICONS.length];
+
+function initWishpoolAdBanner() {
+  const backdrop = document.getElementById('wpAdModalBackdrop');
+  const stage     = document.getElementById('wpAdStage');
+  const dismiss   = document.getElementById('wpAdDismiss');
+  const closeBtn  = document.getElementById('wpAdModalClose');
+  if (!backdrop || !stage) return;
+
+  if (localStorage.getItem(WP_AD_DISMISSED_KEY)) return;
+
+  backdrop.style.display = 'flex';
+
+  let timers = [];
+  const after = (ms, fn) => { timers.push(setTimeout(fn, ms)); };
+  const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+
+  const typeInto = (el, text, msPerChar, done) => {
+    if (!el) return;
+    let i = 0;
+    el.classList.add('wp-ad-caret');
+    const tick = () => {
+      el.textContent = text.slice(0, i);
+      i++;
+      if (i <= text.length) { after(msPerChar, tick); }
+      else { el.classList.remove('wp-ad-caret'); done && done(); }
+    };
+    tick();
+  };
+
+  // 動畫游標：從按鈕右下方移過去、點下去，完成後呼叫 done()
+  const cursorClick = (targetEl, done) => {
+    if (!targetEl) { done && done(); return; }
+    const stageRect  = stage.getBoundingClientRect();
+    const targetRect = targetEl.getBoundingClientRect();
+    const endX = targetRect.left - stageRect.left + targetRect.width / 2;
+    const endY = targetRect.top - stageRect.top + targetRect.height / 2;
+    const startX = Math.min(endX + 70, stageRect.width - 10);
+    const startY = Math.min(endY + 60, stageRect.height - 10);
+    const cursor = document.createElement('div');
+    cursor.className = 'wp-ad-cursor';
+    cursor.style.left = startX + 'px';
+    cursor.style.top  = startY + 'px';
+    stage.appendChild(cursor);
+    after(20, () => {
+      cursor.style.left = endX + 'px';
+      cursor.style.top  = endY + 'px';
+    });
+    after(240, () => {
+      cursor.classList.add('wp-ad-cursor-click');
+      done && done();
+    });
+    after(560, () => cursor.remove());
+  };
+
+  // Scene 1（0–3.4s）：徵求訊息泡泡一個一個浮現
+  const sceneWishes = () => {
+    stage.innerHTML = `
+      <div class="wp-ad-scene1-root" id="wpAdScene1Root">
+        <div class="wp-ad-eyebrow">FOR STUDENTS · 校內互助</div>
+        <h3 class="wp-ad-headline">你是不是也有<br>找了很久卻找不到的東西？</h3>
+        <div class="wp-ad-bubbles" id="wpAdBubbles"></div>
+      </div>
+    `;
+    const list = document.getElementById('wpAdBubbles');
+    WP_AD_BUBBLES.forEach((text, idx) => {
+      const icon = wpAdAvatarIcon(idx);
+      const row = document.createElement('div');
+      row.className = 'wp-ad-bubble-row' + (idx % 2 ? ' wp-ad-flip' : '');
+      row.innerHTML = `<span class="wp-ad-avatar-dot" style="background:${icon.bg}"><img src="${icon.src}" alt=""></span><span class="wp-ad-bubble">${text}</span>`;
+      list.appendChild(row);
+      after(idx * 550, () => row.classList.add('wp-ad-in'));
+    });
+  };
+
+  // Scene 1→2 轉場（2.95–3.4s）：訊息們放大穿場，銜接下一幕
+  const sceneWishesExit = () => {
+    document.getElementById('wpAdScene1Root')?.classList.add('wp-ad-zoom-out');
+  };
+
+  // Scene 2a（3.4–4.5s）：「想許願？」獨立置中過場，字放大
+  // Scene 2b（4.5–5.8s）：標題定位到上方、表單卡淡入補位
+  const sceneAsk = () => {
+    stage.innerHTML = `
+      <div class="wp-ad-intro-center" id="wpAdIntroCenter">
+        <div class="wp-ad-eyebrow">WISH POOL · 心願媒合</div>
+        <h3 class="wp-ad-headline wp-ad-headline-lg">想許願？<span class="accent">來拾貨寶庫許願池</span></h3>
+      </div>
+    `;
+    after(1600, () => document.getElementById('wpAdIntroCenter')?.classList.add('wp-ad-fadeout'));
+    after(1800, () => {
+      stage.innerHTML = `
+        <div class="wp-ad-ask-heading" id="wpAdAskHeading">
+          <div class="wp-ad-eyebrow">WISH POOL · 心願媒合</div>
+          <h3 class="wp-ad-headline">想許願？<span class="accent">來拾貨寶庫許願池</span></h3>
+        </div>
+        <div class="wp-ad-card wp-ad-card-fadein" id="wpAdAskCard">
+          <div class="wp-ad-card-head"><span class="wp-ad-formtab">我要許願</span><span class="wp-ad-hint">限校內交易</span></div>
+          <div class="wp-ad-field d-flex gap-3"><label>想要什麼</label><span id="wpAdFName">&nbsp;</span></div>
+          <div class="wp-ad-field d-flex gap-3"><label>期望價格</label><span id="wpAdFPrice">&nbsp;</span></div>
+          <div class="wp-ad-field d-flex gap-3"><label>急迫度</label><span id="wpAdFUrgency">&nbsp;</span></div>
+          <button class="wp-ad-submit" id="wpAdSubmit">送出許願 ↗</button>
+        </div>
+      `;
+      requestAnimationFrame(() => document.getElementById('wpAdAskCard')?.classList.add('wp-ad-in'));
+    });
+  };
+
+  // Scene 3（5.8–10.2s）：品項、價格、急迫度逐字填入
+  const sceneFill = () => {
+    const nameEl = document.getElementById('wpAdFName');
+    const priceEl = document.getElementById('wpAdFPrice');
+    const urgEl = document.getElementById('wpAdFUrgency');
+    if (!nameEl) return;
+    typeInto(nameEl, '微積分課本（第八版）', 70, () => {
+      after(150, () => typeInto(priceEl, 'NT$ 300', 90, () => {
+        after(150, () => typeInto(urgEl, '下週小考要用', 90));
+      }));
+    });
+  };
+
+  // Scene 4（10.2–12.6s）：游標點擊送出鍵、轉綠並蓋上郵戳
+  const sceneSend = () => {
+    const btn  = document.getElementById('wpAdSubmit');
+    const card = document.getElementById('wpAdAskCard');
+    cursorClick(btn, () => {
+      btn?.classList.add('wp-ad-sent');
+      if (!card) return;
+      const stamp = document.createElement('img');
+      stamp.src = '../svg/wishink.svg';
+      stamp.alt = '';
+      stamp.className = 'wp-ad-stamp';
+      card.appendChild(stamp);
+      requestAnimationFrame(() => stamp.classList.add('wp-ad-in'));
+    });
+  };
+
+  // Scene 5（12.6–16.0s）：游標點擊「我也想要」後，其他同學頭像依序累加
+  const sceneWantToo = () => {
+    stage.innerHTML = `
+      <div class="wp-ad-eyebrow">WISH POOL · 同學也在等</div>
+      <div class="wp-ad-card wp-ad-card-sm">
+        <span class="wp-ad-tag">有人在許願</span>
+        <div class="wp-ad-item">微積分課本（第八版）</div>
+        <div class="wp-ad-price">NT$ 300</div>
+        <button class="wp-ad-wanttoo" id="wpAdWantBtn"><img src="../svg/wantToo.svg" alt="">我也想要</button>
+      </div>
+      <div class="wp-ad-avatars" id="wpAdAvatars"></div>
+      <div class="wp-ad-subcaption" id="wpAdSubcaption"></div>
+    `;
+    const avWrap = document.getElementById('wpAdAvatars');
+    const subEl  = document.getElementById('wpAdSubcaption');
+    cursorClick(document.getElementById('wpAdWantBtn'), () => {
+      WP_AD_AVATAR_ICONS.forEach((icon, idx) => {
+        const av = document.createElement('div');
+        av.className = 'wp-ad-avatar-plus';
+        av.style.background = icon.bg;
+        av.innerHTML = `<img src="${icon.src}" alt="">`;
+        avWrap.appendChild(av);
+        after(idx * 400, () => {
+          av.classList.add('wp-ad-in');
+          subEl.textContent = `${idx * 4 + 3} 位同學也想要，需求一次看見`;
+        });
+      });
+    });
+  };
+
+  // Scene 6（16.0–20.0s）：兩張卡片左右滑入 → 媒合成功 → 標語 → CTA／品牌
+  const sceneMatch = () => {
+    stage.innerHTML = `
+      <div class="wp-ad-match-cards">
+        <div class="wp-ad-card" id="wpAdCardA"><span class="wp-ad-tag">有人在許願</span><div class="wp-ad-item">微積分課本（第八版）</div></div>
+        <div class="wp-ad-card" id="wpAdCardB"><span class="wp-ad-tag aqua">同學供貨</span><div class="wp-ad-item">我的書架剛好有一本</div></div>
+      </div>
+      <div class="wp-ad-match-badge" id="wpAdMatchBadge">媒合成功 ✓</div>
+      <p class="wp-ad-tagline wp-ad-fadeup" id="wpAdMatchTagline">說出你缺的東西，讓同學幫你找</p>
+      <a class="wp-ad-cta-inline wp-ad-fadeup" id="wpAdMatchCta" href="../wishpool/wishpool.html#wishpool">立即許願 ↗</a>
+      <div class="wp-ad-footer-brand wp-ad-fadeup" id="wpAdMatchFooter">拾貨寶庫 · TREASURE HUB</div>
+    `;
+    after(100, () => {
+      document.getElementById('wpAdCardA')?.classList.add('wp-ad-in');
+      document.getElementById('wpAdCardB')?.classList.add('wp-ad-in');
+    });
+    after(700, () => document.getElementById('wpAdMatchBadge')?.classList.add('wp-ad-in'));
+    after(2300, () => {
+      document.getElementById('wpAdMatchTagline')?.classList.add('wp-ad-in');
+      document.getElementById('wpAdMatchCta')?.classList.add('wp-ad-in');
+      document.getElementById('wpAdMatchFooter')?.classList.add('wp-ad-in');
+    });
+  };
+
+  // 場景間硬切轉場：先讓整個 stage 淡出，內容換好後再淡回來
+  const runScene = (fn) => {
+    stage.classList.add('wp-ad-stage-fade');
+    after(200, () => {
+      fn();
+      requestAnimationFrame(() => stage.classList.remove('wp-ad-stage-fade'));
+    });
+  };
+
+  const WP_AD_TIMELINE = [
+    { t: 0,     run: () => runScene(sceneWishes) },
+    { t: 2950,  run: sceneWishesExit },
+    { t: 3400,  run: sceneAsk },
+    { t: 5800,  run: sceneFill },
+    { t: 8400,  run: sceneSend },
+    { t: 12600, run: () => runScene(sceneWantToo) },
+    { t: 16000, run: () => runScene(sceneMatch) },
+  ];
+  const WP_AD_LOOP_MS = 20000;
+
+  const playLoop = () => {
+    clearTimers();
+    WP_AD_TIMELINE.forEach(step => after(step.t, step.run));
+    after(WP_AD_LOOP_MS, playLoop);
+  };
+  playLoop();
+
+  const closeModal = () => {
+    clearTimers();
+    localStorage.setItem(WP_AD_DISMISSED_KEY, '1');
+    backdrop.style.display = 'none';
+  };
+  dismiss?.addEventListener('click', closeModal);
+  closeBtn?.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) closeModal();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initWishpoolAdBanner();
+});
+
 // ── 新手引導：第一次登入進入 shop.html 時，依序介紹搜尋／通知／購物車／聊天室／
 //    賣家專區／許願專區。只給登入使用者看，只跑一次（localStorage 記錄）──
 const OB_STEPS = [
