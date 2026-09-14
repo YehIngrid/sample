@@ -783,10 +783,17 @@ wishFormbig.addEventListener("click", async function (e) {
     });
     return;
   }
+  const durationLabels = {
+    '': '7 天（帳號預設）',
+    '1_week': '一週',
+    '1_month': '一個月',
+    '3_months': '三個月'
+  };
+  const durationLabel = durationLabels[wishDuration.value] ?? '7 天（帳號預設）';
   AppModal.fire({
     icon: 'warning',
     title: '確定送出？請詳閱下方規則',
-    text: '願望送出後，7天後過期刪除，並且7天後才能許下一個願望。',
+    text: `願望展示期限為${durationLabel}，到期後自動刪除。最多可同時有 3 個進行中的願望，額滿需等到期、刪除或媒合成功才能再許願。`,
     showCancelButton: true,
     confirmButtonText: '確定送出',
     cancelButtonText: '再想想'
