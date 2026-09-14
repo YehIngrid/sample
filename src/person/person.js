@@ -1047,7 +1047,7 @@ async function loadSettingsData() {
 }
 
 // ===== 教育信箱驗證 =====
-function renderEduEmailStatus(eduEmail, verified) {
+function renderEduEmailStatus(eduEmail, eduEmailVerified) {
   const showEl    = document.getElementById('showEduEmail');
   const badgeEl   = document.getElementById('eduEmailBadge');
   const formWrap  = document.getElementById('eduEmailFormWrap');
@@ -1056,7 +1056,10 @@ function renderEduEmailStatus(eduEmail, verified) {
   const editBtn   = document.getElementById('edit-edu-email-btn');
   if (!showEl || !badgeEl) return;
 
-  if (!eduEmail) {
+  // eduEmail 和 eduEmailVerified 是 API 回傳的兩個獨立欄位（見 GET /api/account/me schema），
+  // 不能只憑 eduEmail 是否有值就判斷「尚未提交」——已驗證帳號理論上一定有 eduEmail，
+  // 但仍以 eduEmailVerified 為準，避免資料異常時把已驗證誤判成尚未提交
+  if (!eduEmail && !eduEmailVerified) {
     showEl.textContent = '尚未提交';
     badgeEl.innerHTML = '';
     formWrap?.classList.remove('d-none');
@@ -1066,8 +1069,8 @@ function renderEduEmailStatus(eduEmail, verified) {
     return;
   }
 
-  showEl.textContent = eduEmail;
-  if (verified) {
+  showEl.textContent = eduEmail || '—';
+  if (eduEmailVerified) {
     badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:rgb(36,182,133);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-circle-check"></i>已驗證</span>`;
     formWrap?.classList.add('d-none');
     submitBtn?.classList.add('d-none');
