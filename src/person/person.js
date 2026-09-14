@@ -3,6 +3,8 @@ import ChatBackendService from '../chatroom/ChatBackendService.js';
 import wpBackendService from '../wpBackendService.js';
 import { openReviewerProfileModal, bindReviewerClicks } from '../shared/reviewerModal.js';
 import { AppModal } from '../default/app-modal.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
 let backendService;
 let chatService;
@@ -1031,6 +1033,9 @@ async function loadSettingsData() {
     // 教育信箱驗證
     renderEduEmailStatus(d.account?.eduEmail, d.account?.eduEmailVerified);
 
+    // Google 帳號連結狀態
+    renderGoogleLinkStatus(d.account?.linkedProviders);
+
     // 個人資料同步更新
     const nameEl = document.getElementById('showName');
     const introEl = document.getElementById('showIntro');
@@ -1075,6 +1080,108 @@ function renderEduEmailStatus(eduEmail, verified) {
     submitBtn?.classList.add('d-none');
     resendBtn?.classList.remove('d-none');
     editBtn?.classList.remove('d-none');
+  }
+}
+
+// ===== Google 帳號連結 =====
+function renderGoogleLinkStatus(linkedProviders) {
+  const badgeEl = document.getElementById('googleLinkBadge');
+  const btn = document.getElementById('linkGoogleBtn');
+  if (!badgeEl || !btn) return;
+
+  const linked = Array.isArray(linkedProviders) && linkedProviders.includes('GOOGLE');
+  if (linked) {
+    badgeEl.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;background:rgb(36,182,133);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;"><i class="ti ti-circle-check"></i>已連結</span>`;
+    btn.classList.add('d-none');
+  } else {
+    badgeEl.innerHTML = '';
+    btn.classList.remove('d-none');
+  }
+}
+
+// 頁面載入就先準備好 Firebase Auth，讓點擊按鈕時 signInWithPopup 能被視為
+// 使用者手勢觸發（做法與 account.js 的 getFirebaseAuth 一致）
+let _firebaseAuth = null;
+let _firebaseAuthPromise = null;
+function getFirebaseAuth() {
+  if (_firebaseAuth) return Promise.resolve(_firebaseAuth);
+  if (_firebaseAuthPromise) return _firebaseAuthPromise;
+  _firebaseAuthPromise = (async () => {
+    const bs = backendService || new BackendService();
+    const res = await bs.getConfig();
+    const firebaseConfig = res?.data?.data?.firebaseConfig;
+    if (!firebaseConfig) throw new Error('無法取得 Google 連結設定，請稍後再試');
+    const app = initializeApp(firebaseConfig);
+    _firebaseAuth = getAuth(app);
+    return _firebaseAuth;
+  })();
+  return _firebaseAuthPromise;
+}
+getFirebaseAuth().catch(() => {});
+
+document.getElementById('linkGoogleBtn')?.addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  btn.disabled = true;
+  try {
+    if (!_firebaseAuth) {
+      _firebaseAuth = await getFirebaseAuth();
+    }
+    const result = await signInWithPopup(_firebaseAuth, new GoogleAuthProvider());
+    const idToken = await result.user.getIdToken();
+
+    if (!backendService) backendService = new BackendService();
+    await backendService.linkGoogle(idToken);
+
+    await AppModal.fire({ icon: 'success', title: '連結成功', text: '已成功連結 Google 帳號', confirmButtonText: '確定' });
+    await loadSettingsData();
+    await maybeOfferContactEmailUpdate(result.user.email);
+  } catch (err) {
+    if (err?.code === 'auth/popup-closed-by-user' || err?.code === 'auth/cancelled-popup-request') return;
+    console.error('連結 Google 帳號錯誤：', err);
+    let msg;
+    if (err?.code === 'auth/popup-blocked') {
+      msg = '瀏覽器擋住了登入彈出視窗，請允許本網站的彈出視窗後再試一次';
+    } else if (err?.message === 'RATE_LIMIT') {
+      msg = '嘗試次數過多，請稍後再試';
+    } else {
+      msg = err?.message || '連結失敗，請稍後再試';
+    }
+    AppModal.fire({ icon: 'error', title: 'Oops...', text: msg });
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+// 連結 Google 成功後，若該 Google 帳號的 email 與目前聯絡信箱不同，詢問是否要一併更新
+async function maybeOfferContactEmailUpdate(googleEmail) {
+  if (!googleEmail) return;
+  const showEmailEl = document.getElementById('showEmail');
+  if (!showEmailEl) return;
+  const currentContact = showEmailEl.textContent?.trim();
+  const currentContactVal = currentContact === '尚未設定' ? '' : currentContact;
+  if (googleEmail === currentContactVal) return;
+
+  const { isConfirmed } = await AppModal.fire({
+    icon: 'question',
+    title: '要更新聯絡信箱嗎？',
+    text: currentContactVal
+      ? `目前聯絡信箱與 Google 帳號（${googleEmail}）不同，是否要更新聯絡信箱？`
+      : `是否要將聯絡信箱設定為此 Google 帳號（${googleEmail}）？`,
+    confirmButtonText: '更新聯絡信箱',
+    cancelButtonText: '不用了',
+    showCancelButton: true,
+  });
+  if (!isConfirmed) return;
+
+  try {
+    const formData = new FormData();
+    formData.append('contactEmail', googleEmail);
+    await backendService.updateProfile(formData);
+    localStorage.setItem('contractEmail', googleEmail);
+    showEmailEl.textContent = googleEmail;
+    AppModal.fire({ icon: 'success', title: '聯絡信箱已更新', timer: 1500, showConfirmButton: false });
+  } catch {
+    AppModal.fire({ icon: 'error', title: '更新失敗', text: '請稍後再試' });
   }
 }
 
