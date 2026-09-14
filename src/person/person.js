@@ -1250,6 +1250,10 @@ document.getElementById('resend-edu-email-btn')?.addEventListener('click', async
     AppModal.fire({ icon: 'error', title: '驗證失敗', text: e.message, confirmButtonText: '確定' });
   }
   handleRouting();
+  // 儀表板的 #eduVerifyBanner 只在初次載入時抓過一次資料，
+  // handleRouting() 切到 settings 只會刷新 loadSettingsData()，
+  // 這裡要一起刷新才能讓使用者切回「帳戶總覽」時看到最新的已驗證狀態
+  loadDashboardData();
 })();
 
 // 合併 loadStatCards + loadOrderBadges，共用同一批 API response，省去重複請求
