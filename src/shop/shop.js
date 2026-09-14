@@ -206,10 +206,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 學生身分驗證提醒橫幅：已登入但尚未完成教育信箱驗證時顯示
+  // 直接用 /api/account/me 最新結果判斷，不吃 localStorage 快取
+  // （whoami() 只在 uid/username 缺漏時才會連帶刷新 eduEmailVerified 快取，可能是舊值）
   const eduVerifyBanner = document.getElementById('eduVerifyBanner');
   if (eduVerifyBanner) {
-    const eduVerified = localStorage.getItem('eduEmailVerified') === 'true';
-    eduVerifyBanner.classList.toggle('d-none', !window.isLoggedIn || eduVerified);
+    if (!window.isLoggedIn) {
+      eduVerifyBanner.classList.add('d-none');
+    } else {
+      try {
+        if (!backendService) backendService = new BackendService();
+        const meRes = await backendService.getMe();
+        const eduVerified = !!meRes?.data?.data?.account?.eduEmailVerified;
+        eduVerifyBanner.classList.toggle('d-none', eduVerified);
+      } catch (_) {
+        eduVerifyBanner.classList.add('d-none');
+      }
+    }
   }
 
   const params = new URLSearchParams(window.location.search);
