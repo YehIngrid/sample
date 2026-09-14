@@ -5,7 +5,7 @@
   <title>帳戶管理中心 | 拾貨寶庫</title>
     <!-- meta部分 -->
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com js.sentry-cdn.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com https://o4511592734130176.ingest.us.sentry.io; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com js.sentry-cdn.com www.gstatic.com apis.google.com www.googleapis.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com identitytoolkit.googleapis.com securetoken.googleapis.com apis.google.com www.googleapis.com https://o4511592734130176.ingest.us.sentry.io; frame-src store-backend-75fea.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
@@ -530,13 +530,23 @@
                 <span class="info-value" id="showLoginEmail">—</span>
               </div>
             </div>
-            <div class="info-row" style="border-bottom: none;">
+            <div class="info-row">
               <span class="info-label"><i class="ti ti-mail"></i>聯絡信箱</span>
               <div class="info-row-right">
                 <span class="info-value" id="showEmail">尚未設定</span>
                 <button class="checkInfoBtn" id="setEmailBtn">
                   <img src="../svg/settingicon.svg" alt="設定聯絡信箱icon">
                   <div>設定</div>
+                </button>
+              </div>
+            </div>
+            <div class="info-row" style="border-bottom: none;">
+              <span class="info-label"><i class="ti ti-brand-google"></i>Google 帳號</span>
+              <div class="info-row-right">
+                <span id="googleLinkBadge"></span>
+                <button class="checkInfoBtn" id="linkGoogleBtn">
+                  <i class="ti ti-link"></i>
+                  <div>連結</div>
                 </button>
               </div>
             </div>

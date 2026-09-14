@@ -316,6 +316,24 @@ export default class BackendService {
             throw new Error(msg || '登入失敗，請稍後再試');
         }
     }
+    async linkGoogle(idToken) {
+        try {
+            const response = await this.http.post('/api/account/link/google', { idToken });
+            return response;
+        } catch (error) {
+            console.error('連結 Google 帳號錯誤：', error);
+            const status = error?.response?.status;
+            const msg    = error?.response?.data?.message;
+
+            if (status === 403) throw new Error(msg || '帳號已停用或信箱尚未驗證，請先完成驗證');
+            if (status === 409) throw new Error(msg || '這個 Google 帳號已連結到其他帳號，或目前帳號已連結過 Google');
+            if (status === 422) throw new Error(msg || '連結失敗，請重新嘗試');
+            if (status === 401) throw new Error(msg || '身分驗證失敗，請重新登入');
+            if (status === 429) throw new Error('RATE_LIMIT');
+            captureException(error);
+            throw new Error(msg || '連結失敗，請稍後再試');
+        }
+    }
     async logout() {
         try {
             const response = await axios.post(`${this.baseUrl}/api/account/logout`);
