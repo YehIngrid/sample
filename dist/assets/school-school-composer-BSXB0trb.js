@@ -1,1 +1,0 @@
-import{A as i}from"./app-modal-qdw6XuZO.js";/* empty css                *//* empty css                  *//* empty css                     *//* empty css               *//* empty css                     */import{r as o}from"./default-rSO7I2Lw.js";import"./sentry-init-DdRA0Dvi.js";window.AppModal=i;(async()=>await o()&&(document.body.style.visibility="visible"))();
