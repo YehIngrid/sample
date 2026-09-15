@@ -752,7 +752,7 @@
   transition: color 0.15s;
 }
 .review-report-btn:hover { color: #c0392b; }
-.reviewText { padding: 8px 0 0 8px; font-size: 0.88rem; color: #4a627a; line-height: 1.6; }
+.reviewText { font-size: 0.88rem; color: #4a627a; line-height: 1.6; }
 .review-card { padding: 12px 0; border-bottom: var(--divider); }
 .review-card:last-child { border-bottom: none; }
 .reviewer-avatar-wrap { position: relative; flex-shrink: 0; width: 40px; height: 40px; }
@@ -768,12 +768,12 @@
 .review-commodity-name { font-size: 11px; color: #6f87a0; font-weight: 400; margin-left: 2px; }
 .review-card__header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .review-card__meta { flex: 1; min-width: 0; }
-.review-card__chips { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
-.review-tag-row { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.review-card__chips { display: flex; }
+.review-tag-row { display: flex; align-items: center; flex-wrap: wrap; }
 .review-tag-row__label { font-size: 12.5px; color: #6f87a0; white-space: nowrap; flex-shrink: 0; }
 .review-display-chip {
   display: inline-block; padding: 4px 11px; border-radius: 999px;
-  font-size: 12px; font-weight: 600;
+  font-size: 10px; font-weight: 600;
 }
 .review-display-chip.positive { background: #004b97; color: #fff; }
 .review-display-chip.negative { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }

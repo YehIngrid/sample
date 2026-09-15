@@ -555,6 +555,24 @@ const _NOTIF_TYPE_LABELS = {
   system:            '系統通知',
 };
 
+const _ORDER_NOTIF_TYPES = new Set(['order_placed', 'order_update', 'order_completed', 'order_cancelled', 'product_sold']);
+function _isOrderNotif(n) {
+  return n.meta?.orderId != null || _ORDER_NOTIF_TYPES.has(n.type);
+}
+
+// 手機版底部導覽列「我的帳戶」紅點：有未讀的訂單相關通知時顯示
+function _setAccountNavBadge(show) {
+  document.querySelectorAll('.bottom-nav-item.nav-tab-account').forEach(link => {
+    let badge = link.querySelector('.bottom-nav-badge');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'bottom-nav-badge';
+      link.appendChild(badge);
+    }
+    badge.classList.toggle('show', show);
+  });
+}
+
 function _notifRelativeTime(dateStr) {
   if (!dateStr) return '';
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -668,6 +686,9 @@ function _initNotifSystem() {
           if (next === 0) badge.classList.add('d-none');
           else badge.textContent = next > 99 ? '99+' : next;
         }
+        const stillHasOrderUnread = [...document.querySelectorAll('#notifList .notif-item.notif-unread')]
+          .some(el => (el.dataset.notifHref || '').includes('OrderDetail'));
+        _setAccountNavBadge(stillHasOrderUnread);
       } catch (_) {}
     }
 
@@ -749,6 +770,7 @@ async function _loadNotifications(page = 1, append = false) {
 
     const unreadCount = items.filter(n => !n.isRead).length;
     _updateNotifBadge(unreadCount);
+    _setAccountNavBadge(items.some(n => !n.isRead && _isOrderNotif(n)));
   } catch (_) {
     if (panelOpen && !append) list.innerHTML = '<div class="notif-empty"><i class="ti ti-alert-circle" style="font-size:1.6rem;display:block;margin-bottom:6px;opacity:0.4;"></i>載入失敗</div>';
   } finally {
@@ -786,6 +808,7 @@ async function _markAllNotifRead() {
     await backendService.markAllNotificationsRead();
     document.querySelectorAll('#notifList .notif-item.notif-unread').forEach(el => el.classList.remove('notif-unread'));
     _updateNotifBadge(0);
+    _setAccountNavBadge(false);
   } catch (_) {}
 }
 

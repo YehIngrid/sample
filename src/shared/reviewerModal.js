@@ -27,9 +27,11 @@ async function _loadTags() {
   if (Object.keys(_tagMeaningCache).length > 0) return;
   try {
     const res = await _svc.getReviewTags();
-    (res?.data?.data?.tags ?? []).forEach(t => {
-      _tagMeaningCache[t.tag] = t.description ?? t.meaning;
-      _tagPositiveCache[t.tag] = t.positive;
+    (res?.data?.data?.groups ?? []).forEach(g => {
+      (g.tags ?? []).forEach(t => {
+        _tagMeaningCache[t.tag] = t.meaning;
+        _tagPositiveCache[t.tag] = t.positive;
+      });
     });
   } catch (_) {}
 }
