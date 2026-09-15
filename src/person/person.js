@@ -477,7 +477,8 @@ async function handleAction(action, id, el) {
     if (isConfirmed) {
       try {
         await backendService.cancelMyOrder(id);
-        showOrderSwal('cancel').then(() => handleRouting()).then(() => window.location.reload());
+        await showOrderSwal('cancel');
+        goToOrderTab(sectionId === 'sellProducts', 'cancelled');
       } catch (error) {
         AppModal.fire({ title: '訂單取消失敗', icon: 'error', text: error });
       }
@@ -485,7 +486,8 @@ async function handleAction(action, id, el) {
   } else if(action === '接受訂單') {
     try {
       await backendService.sellerAcceptOrders(id);
-      showOrderSwal('accept').then(() => handleRouting()).then(() => window.location.reload());
+      await showOrderSwal('accept');
+      goToOrderTab(true, 'preparing');
     } catch (error) {
       AppModal.fire({ title: '訂單同意失敗', icon: 'error', text: error });
     }
@@ -505,7 +507,8 @@ async function handleAction(action, id, el) {
     }
     try {
       await backendService.sellerDeliveredOrders(id);
-      showOrderSwal('deliver').then(() => handleRouting()).then(() => window.location.reload());
+      await showOrderSwal('deliver');
+      goToOrderTab(true, 'delivered');
     } catch (error) {
       AppModal.fire({ title: '系統登記出貨失敗', icon: 'error', text: error });
     }
@@ -551,7 +554,8 @@ async function handleAction(action, id, el) {
     if (!isConfirmed) return;
     try {
       await backendService.sellerCompletedOrders(id, pin);
-      showOrderSwal('completed').then(() => handleRouting()).then(() => window.location.reload());
+      await showOrderSwal('completed');
+      goToOrderTab(true, 'review');
     } catch (error) {
       AppModal.fire({ title: '確認交貨失敗', icon: 'error', text: error?.response?.data?.message || String(error) });
     }
@@ -588,7 +592,8 @@ async function handleAction(action, id, el) {
 // 3. 核心路由處理 (handleRouting)
 // ==========================================
 // 核心路由與資料載入
-async function handleRouting() {
+// opts.sellStatus / opts.buyStatus：進入列表時要顯示的狀態 tab（預設 'pending'）
+async function handleRouting(opts = {}) {
   const params = new URLSearchParams(window.location.search);
   const page = params.get('page') || 'account';
   const orderId = params.get('orderId');
@@ -676,54 +681,52 @@ async function handleRouting() {
   try {
     if (page === 'sellProducts') {
       window.currentOrder = null;
-      currentSellStatus = 'pending';
+      currentSellStatus = opts.sellStatus || 'pending';
       const sellTabs = document.querySelectorAll('#sellFilter .filter-tab');
-      sellTabs.forEach(t => t.classList.remove('active'));
-      sellTabs[0]?.classList.add('active');
+      sellTabs.forEach(t => t.classList.toggle('active', t.dataset.status === currentSellStatus));
       document.querySelector('#sellProducts tbody').innerHTML =
         `<tr><td colspan="4" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('sell-product').innerHTML =
         `<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
-      // 同時發 pending（顯示用）和 all（建立快取 + 各 tab 數量）
-      const [sellPendingRes, sellAllRes] = await Promise.all([
-        backendService.getSellerOrders(1, 'pending').catch(() => null),
+      // 同時發目前 tab 狀態（顯示用）和 all（建立快取 + 各 tab 數量）
+      const [sellStatusRes, sellAllRes] = await Promise.all([
+        backendService.getSellerOrders(1, TAB_TO_API_STATUS[currentSellStatus] ?? null).catch(() => null),
         backendService.getSellerOrders(1, null).catch(() => null),
       ]);
-      const sellPendingList = sellPendingRes?.data?.data?.orders ?? [];
-      const sellPendingPage = sellPendingRes?.data?.data?.pagination ?? {};
+      const sellStatusList = sellStatusRes?.data?.data?.orders ?? [];
+      const sellStatusPage = sellStatusRes?.data?.data?.pagination ?? {};
       const sellAllList = sellAllRes?.data?.data?.orders ?? [];
       const sellAllPage = sellAllRes?.data?.data?.pagination ?? {};
       goodsOrder = sellAllList;
-      renderSellerOrders(sellPendingList);
-      renderSellerCards(sellPendingList);
-      renderOrderPagination('sellPagination', sellPendingPage, loadSellerOrders);
+      renderSellerOrders(sellStatusList);
+      renderSellerCards(sellStatusList);
+      renderOrderPagination('sellPagination', sellStatusPage, loadSellerOrders);
       updateFilterTabCounts(sellAllList, 'sellFilter', sellAllPage, 'all');
-      updateFilterTabCounts(sellPendingList, 'sellFilter', sellPendingPage, 'pending');
+      updateFilterTabCounts(sellStatusList, 'sellFilter', sellStatusPage, currentSellStatus);
     } else if (page === 'buyProducts') {
       window.currentOrder = null;
-      currentBuyStatus = 'pending';
+      currentBuyStatus = opts.buyStatus || 'pending';
       const buyTabs = document.querySelectorAll('#buyFilter .filter-tab');
-      buyTabs.forEach(t => t.classList.remove('active'));
-      buyTabs[0]?.classList.add('active');
+      buyTabs.forEach(t => t.classList.toggle('active', t.dataset.status === currentBuyStatus));
       document.querySelector('#buyProducts tbody').innerHTML =
         `<tr><td colspan="5" class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></td></tr>`;
       document.getElementById('buy-product').innerHTML =
         `<div class="text-center py-4"><div class="spinner-border spinner-border-sm text-secondary" role="status"></div></div>`;
-      // 同時發 pending（顯示用）和 all（建立快取 + 各 tab 數量）
-      const [buyPendingRes, buyAllRes] = await Promise.all([
-        backendService.getBuyerOrders(1, 'pending').catch(() => null),
+      // 同時發目前 tab 狀態（顯示用）和 all（建立快取 + 各 tab 數量）
+      const [buyStatusRes, buyAllRes] = await Promise.all([
+        backendService.getBuyerOrders(1, TAB_TO_API_STATUS[currentBuyStatus] ?? null).catch(() => null),
         backendService.getBuyerOrders(1, null).catch(() => null),
       ]);
-      const buyPendingList = buyPendingRes?.data?.data?.orders ?? [];
-      const buyPendingPage = buyPendingRes?.data?.data?.pagination ?? {};
+      const buyStatusList = buyStatusRes?.data?.data?.orders ?? [];
+      const buyStatusPage = buyStatusRes?.data?.data?.pagination ?? {};
       const buyAllList = buyAllRes?.data?.data?.orders ?? [];
       const buyAllPage = buyAllRes?.data?.data?.pagination ?? {};
       goodsOrder = buyAllList;
-      renderBuyerOrders(buyPendingList);
-      renderBuyerCards(buyPendingList);
-      renderOrderPagination('buyPagination', buyPendingPage, loadBuyerOrders);
+      renderBuyerOrders(buyStatusList);
+      renderBuyerCards(buyStatusList);
+      renderOrderPagination('buyPagination', buyStatusPage, loadBuyerOrders);
       updateFilterTabCounts(buyAllList, 'buyFilter', buyAllPage, 'all');
-      updateFilterTabCounts(buyPendingList, 'buyFilter', buyPendingPage, 'pending');
+      updateFilterTabCounts(buyStatusList, 'buyFilter', buyStatusPage, currentBuyStatus);
     } else if (page === 'products') {
       myItemsPage = 1;
       await loadMyItems(1);
@@ -748,6 +751,43 @@ async function handleRouting() {
       window.scrollTo({ top, behavior: 'smooth' });
     }, delay);
   }
+}
+
+// 訂單狀態切換完成後，自動跳去顯示該訂單新狀態所在的 tab（免得使用者還要手動切換）
+function goToOrderTab(isSell, tabStatus) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', isSell ? 'sellProducts' : 'buyProducts');
+  url.searchParams.delete('orderId');
+  history.pushState({}, '', url);
+  handleRouting(isSell ? { sellStatus: tabStatus } : { buyStatus: tabStatus });
+}
+
+// 使用者完成「第一筆」訂單（買家或賣家角色皆算）後，邀請對方幫忙推廣，只跳一次
+async function maybeShowFirstOrderShareModal() {
+  if (localStorage.getItem('th_first_order_share_shown')) return;
+  if (!backendService) return;
+
+  let totalCompleted;
+  try {
+    const [sellRes, buyRes] = await Promise.all([
+      backendService.getSellerOrders(1, 'completed').catch(() => null),
+      backendService.getBuyerOrders(1, 'completed').catch(() => null),
+    ]);
+    const sellCompleted = sellRes?.data?.data?.pagination?.totalItems ?? sellRes?.data?.data?.orders?.length ?? 0;
+    const buyCompleted  = buyRes?.data?.data?.pagination?.totalItems  ?? buyRes?.data?.data?.orders?.length  ?? 0;
+    totalCompleted = sellCompleted + buyCompleted;
+  } catch {
+    return;
+  }
+  if (totalCompleted !== 1) return;
+
+  localStorage.setItem('th_first_order_share_shown', '1');
+  AppModal.fire({
+    icon: 'success',
+    title: '完成第一筆交易！',
+    text: '恭喜完成在拾貨寶庫的第一筆交易！如果喜歡這次的使用體驗，歡迎跟同學朋友分享拾貨寶庫，讓更多人一起加入二手交易的行列。',
+    confirmButtonText: '知道了',
+  });
 }
 
 // 賣家/買家 返回列表按鈕改為：
@@ -3039,7 +3079,8 @@ async function openReviewModal(orderId, targetId, targetRole) {
     if (!result.isConfirmed) return;
     if (result.value?.ok) {
       await showOrderSwal('review');
-      window.location.reload();
+      goToOrderTab(isRatingBuyer, 'completed');
+      maybeShowFirstOrderShareModal();
     } else {
       AppModal.fire({
         icon: 'error',
