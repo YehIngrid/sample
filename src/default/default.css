@@ -1805,7 +1805,7 @@ html.skip-loader #whatcontent { display: block !important; }
 .review-card:last-child { border-bottom: none; }
 .review-card__header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
 .review-card__meta { flex: 1; min-width: 0; }
-.review-card__chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.review-card__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
 .review-card__actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .reviewer-avatar-wrap { position: relative; flex-shrink: 0; width: 38px; height: 38px; }
 .reviewer-avatar {
@@ -1825,7 +1825,7 @@ html.skip-loader #whatcontent { display: block !important; }
 .reviewerName.reviewer-avatar--clickable { cursor: pointer; }
 .reviewerName.reviewer-avatar--clickable:hover { color: #004b97; text-decoration: underline dotted #abdad5; }
 .reviewTime { font-size: 0.76rem; color: #bbb; white-space: nowrap; }
-.reviewText { font-size: 13px; color: #4a627a; line-height: 1.55; padding-top: 4px; padding-left: 8px; }
+.reviewText { font-size: 13px; color: #4a627a; line-height: 1.55; padding: 8px; background: aliceblue; border-radius: 4px; margin-top: 4px; margin-bottom: 8px; }
 .review-commodity-name { font-size: 11px; color: #6f87a0; font-weight: 400; margin-left: 2px; }
 .review-report-btn {
   background: none; border: none; cursor: pointer;

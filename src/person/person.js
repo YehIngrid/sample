@@ -830,6 +830,35 @@ async function loadSellerOrders(page) {
   }
 }
 
+// 買家 PIN 碼提醒：訂單一進入待面交狀態就主動提示，避免買家拿了商品卻忘記交付 PIN 碼
+const _BUYER_PIN_SEEN_KEY = 'th_buyer_pin_reminder_seen';
+function _checkBuyerPinReminder(list) {
+  if (localStorage.getItem('th_no_buyer_pin_reminder')) return;
+  const seen = new Set(JSON.parse(localStorage.getItem(_BUYER_PIN_SEEN_KEY) || '[]'));
+  const pending = (list || []).filter(o => {
+    const st = (o.status ?? '').toLowerCase();
+    return (st === 'delivered' || st === 'shipping') && !seen.has(o.id);
+  });
+  if (!pending.length) return;
+
+  pending.forEach(o => seen.add(o.id));
+  localStorage.setItem(_BUYER_PIN_SEEN_KEY, JSON.stringify([...seen]));
+
+  AppModal.fire({
+    icon: 'info',
+    title: 'PIN 碼提醒',
+    text: pending.length > 1
+      ? `您有 ${pending.length} 筆訂單已可面交，記得面交時將 PIN 碼提供給賣家，由賣家輸入確認完成交貨`
+      : '賣家已出貨，面交時記得將 PIN 碼提供給賣家，由賣家輸入確認完成交貨',
+    confirmButtonText: '我知道了',
+    input: 'checkbox',
+    inputValue: 0,
+    inputPlaceholder: '以後不要再提醒',
+  }).then(res => {
+    if (res.value) localStorage.setItem('th_no_buyer_pin_reminder', '1');
+  });
+}
+
 async function loadBuyerOrders(page) {
   try {
     const apiStatus = TAB_TO_API_STATUS[currentBuyStatus] ?? null;
@@ -837,6 +866,7 @@ async function loadBuyerOrders(page) {
     const list = res?.data?.data?.orders ?? [];
     const pagination = res?.data?.data?.pagination ?? {};
     goodsOrder = list;
+    _checkBuyerPinReminder(list);
     renderBuyerOrders(list);
     renderBuyerCards(list);
     renderOrderPagination('buyPagination', pagination, loadBuyerOrders);
