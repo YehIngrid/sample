@@ -1825,7 +1825,7 @@ html.skip-loader #whatcontent { display: block !important; }
 .reviewerName.reviewer-avatar--clickable { cursor: pointer; }
 .reviewerName.reviewer-avatar--clickable:hover { color: #004b97; text-decoration: underline dotted #abdad5; }
 .reviewTime { font-size: 0.76rem; color: #bbb; white-space: nowrap; }
-.reviewText { font-size: 13px; color: #4a627a; line-height: 1.55; padding: 8px; background: aliceblue; border-radius: 4px; margin-top: 4px; margin-bottom: 8px; }
+.reviewText { font-size: 13px; color: #4a627a; line-height: 1.55; padding: 8px; background: aliceblue; border-radius: 4px; margin-top: 8px; margin-bottom: 8px; }
 .review-commodity-name { font-size: 11px; color: #6f87a0; font-weight: 400; margin-left: 2px; }
 .review-report-btn {
   background: none; border: none; cursor: pointer;
