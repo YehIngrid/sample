@@ -229,7 +229,7 @@
                 <h3>3-1　研究動機段：把熱情換成證據</h3>
                 <p>以下是我自傳第二頁「研究動機」的<strong>改版前 vs 改版後</strong>，重點不在文筆，而在「把抽象熱情換成可驗證的證據」<sup class="ref">1</sup>。</p>
                 <div class="callout">改版前：「我對使用者研究充滿熱情，希望能在貴所繼續深造。」→ 改版後：「大三專題我以 12 場使用者訪談重做校務系統流程，將表單完成率從 46% 提到 78%，這正是我想在貴所延伸的題目。」</div>
-                <h4>小提醒：一句話就要見證據</h4>
+                <p><strong>小提醒：一句話就要見證據</strong></p>
                 <p>差別在於：後者讓教授<strong>三秒內</strong>知道你會做什麼、做過什麼、跟他的實驗室有沒有關係<sup class="ref">2</sup>。</p>
                 <h2>四、三場面試提問逐字稿與我的回答思路</h2>
                 <ol class="steps">
@@ -522,6 +522,17 @@ document.addEventListener('DOMContentLoaded', function() {
   if (hamburger) hamburger.addEventListener('click', toggleMenu);
   if (backdrop) backdrop.addEventListener('click', closeMenu);
   menuLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+  // ── 套用讀者在「帳號設定 → 閱讀偏好」設定的字級／行距（school-profile.html 寫入 localStorage）──
+  (function () {
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem('th-reader-typography')) || {}; } catch (e) {}
+    if (!saved.fontSize && !saved.lineHeight) return;
+    document.querySelectorAll('.article-body').forEach(function (b) {
+      if (saved.fontSize) b.style.fontSize = saved.fontSize + 'px';
+      if (saved.lineHeight) b.style.lineHeight = saved.lineHeight;
+    });
+  })();
 
   // ── 讀者浮水印（防外流示意）──
   const label = '創產系 大二 范同學 · 校外生 · TREASURE HUB';

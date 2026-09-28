@@ -380,8 +380,50 @@ document.querySelectorAll('[data-target]').forEach(item => {
     newUrl.searchParams.set('page', target);
     newUrl.searchParams.delete('orderId'); // 切換大分頁時移除訂單ID
     window.history.pushState({ page: target }, '', newUrl);
-    
+
     handleRouting();
+  });
+});
+// 個人中心側欄子選單：箭頭獨立負責展開/收合，不觸發頁面切換
+document.getElementById('settingsSubNavToggle')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  document.getElementById('settingsSubNav')?.classList.toggle('open');
+  document.getElementById('settingsNavLink')?.classList.toggle('submenu-open');
+});
+// 個人中心子選單（桌機側欄 + 手機快速跳轉 tabs）：點擊跳到設定頁對應區塊
+document.querySelectorAll('.new-sub-link[data-scroll], .settings-quick-tab[data-scroll]').forEach(item => {
+  item.addEventListener('click', function (e) {
+    e.preventDefault();
+    const scrollId = this.dataset.scroll;
+
+    const scrollToTarget = () => {
+      const el = document.getElementById(scrollId);
+      if (!el) return;
+      const navbarH = document.querySelector('.navbar')?.offsetHeight || 0;
+      const top = el.getBoundingClientRect().top + window.scrollY - navbarH - 12;
+      window.scrollTo({ top, behavior: 'smooth' });
+    };
+
+    const newUrl = new URL(window.location.href);
+    const alreadyOnSettings = newUrl.searchParams.get('page') === 'settings';
+    newUrl.searchParams.set('page', 'settings');
+    newUrl.searchParams.set('scroll', scrollId);
+    newUrl.searchParams.delete('orderId');
+
+    document.querySelectorAll('.new-sub-link[data-scroll], .settings-quick-tab[data-scroll]').forEach(l => {
+      l.classList.toggle('active', l.dataset.scroll === scrollId);
+    });
+
+    if (alreadyOnSettings) {
+      // 已經在個人中心頁面：不需要重跑一次路由，直接捲動即可
+      window.history.replaceState({ page: 'settings' }, '', newUrl);
+      scrollToTarget();
+    } else {
+      window.history.pushState({ page: 'settings' }, '', newUrl);
+      handleRouting();
+      setTimeout(scrollToTarget, 300);
+    }
   });
 });
 // ==========================================
@@ -676,6 +718,10 @@ async function handleRouting(opts = {}) {
     link.classList.toggle('active', link.dataset.target === page);
   });
 
+  // 個人中心子選單：進入 settings 頁時自動展開，離開時收合（頁面內仍可用箭頭手動收合/展開）
+  document.getElementById('settingsSubNav')?.classList.toggle('open', page === 'settings');
+  document.getElementById('settingsNavLink')?.classList.toggle('submenu-open', page === 'settings');
+
   // 載入資料
   if (!backendService) backendService = new BackendService();
   try {
@@ -739,8 +785,13 @@ async function handleRouting(opts = {}) {
     console.error(err);
   }
 
-  // 捲動到指定錨點
+  // 個人中心子選單（桌機側欄 + 手機快速跳轉 tabs）active 狀態（依目前 page + scroll 參數）
   const scrollTarget = params.get('scroll');
+  document.querySelectorAll('.new-sub-link[data-scroll], .settings-quick-tab[data-scroll]').forEach(link => {
+    link.classList.toggle('active', page === 'settings' && link.dataset.scroll === scrollTarget);
+  });
+
+  // 捲動到指定錨點
   if (scrollTarget) {
     const delay = page === 'settings' ? 400 : 100;
     setTimeout(() => {
