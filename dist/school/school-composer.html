@@ -67,14 +67,6 @@
     .swatch-custom { position: relative; overflow: hidden; background: conic-gradient(from 90deg, #ff5b5b, #ffd35b, #5bff9d, #5bd7ff, #8f5bff, #ff5bd0, #ff5b5b); display: inline-block; }
     .swatch-custom input { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); opacity: 0; cursor: pointer; padding: 0; border: none; }
 
-    /* 全文排版群組（整篇套用，與選取式工具用底色＋標籤區隔）*/
-    .doc-grp { background: var(--alice); border: 1px solid var(--line); border-radius: 10px; padding: 3px 6px; }
-    .doc-tag { font-size: 10px; font-weight: 800; letter-spacing: .1em; color: var(--navy); background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 3px 7px; }
-    .doc-step { min-width: 30px; height: 30px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--ink); background: var(--card); border: 1px solid var(--line); font-size: 14px; transition: all .15s; }
-    .doc-step:hover { border-color: var(--navy); color: var(--navy); }
-    .doc-step:disabled { opacity: .4; cursor: not-allowed; }
-    .doc-step .pm { font-size: 11px; margin-left: 1px; }
-    .doc-size-val { font-size: 11.5px; font-weight: 800; color: var(--navy); min-width: 30px; text-align: center; letter-spacing: .04em; }
 
     /* ===== layout ===== */
     .ce-wrap { width: 80vw; margin: 0 auto; padding: 16px 16px 96px; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 26px; align-items: start; }
@@ -500,11 +492,11 @@
     :root[data-theme="dark"] .sel-bar button:hover { background: rgba(255,255,255,.1); }
   </style>
 <style class="am-admin-gate-style">body{visibility:hidden}</style>
-  <script type="module" crossorigin src="/assets/school-school-composer-B8hjOm3V.js"></script>
+  <script type="module" crossorigin src="/assets/school-school-composer-Fv0RA4WG.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/app-modal-qdw6XuZO.js">
-  <link rel="modulepreload" crossorigin href="/assets/sentry-init-BEEDGje5.js">
-  <link rel="modulepreload" crossorigin href="/assets/default-Dr0RXYL0.js">
-  <link rel="stylesheet" crossorigin href="/assets/default-BY2sUebv.css">
+  <link rel="modulepreload" crossorigin href="/assets/sentry-init-BkMZAGvR.js">
+  <link rel="modulepreload" crossorigin href="/assets/default-ORq8lG2n.js">
+  <link rel="stylesheet" crossorigin href="/assets/default-8RDmm-7w.css">
   <link rel="stylesheet" crossorigin href="/assets/app-modal-4Hh6nOG3.css">
   <link rel="stylesheet" crossorigin href="/assets/default-font-DKjB8qq0.css">
   <link rel="stylesheet" crossorigin href="/assets/school-uoSsJejE.css">
@@ -587,8 +579,7 @@
     <select class="tsel" id="blockStyle" title="段落樣式">
       <option value="p">內文</option>
       <option value="h2">大標題</option>
-      <option value="h3">中標題</option>
-      <option value="h4">小標題</option>
+      <option value="h3">標題</option>
       <option value="lead">引言框</option>
     </select>
   </div>
@@ -598,19 +589,6 @@
       <option value="'Microsoft JhengHei', '微軟正黑體', 'PingFang TC', 'Noto Sans TC', sans-serif">微軟正黑體</option>
       <option value="'標楷體', 'DFKai-SB', 'BiauKai', 'Kaiti TC', 'KaiTi', 'Kaiti', serif">標楷體</option>
       <option value="'Noto Serif TC', 'PMingLiU', 'Songti TC', serif">思源宋體</option>
-    </select>
-  </div>
-  <div class="ce-sep"></div>
-  
-  <div class="grp doc-grp" title="全文排版（套用到整篇文章）">
-    <span class="doc-tag">全文</span>
-    <button class="doc-step" data-docsize="dec" type="button" title="整體字級縮小">A<span class="pm">−</span></button>
-    <span class="doc-size-val" id="docSizeVal">一般</span>
-    <button class="doc-step" data-docsize="inc" type="button" title="整體字級放大">A<span class="pm">＋</span></button>
-    <select class="tsel" id="lineHeight" title="行距（整篇）" style="min-width:88px">
-      <option value="1.6">行距 緊</option>
-      <option value="1.95" selected>行距 標準</option>
-      <option value="2.4">行距 寬</option>
     </select>
   </div>
   <div class="ce-sep"></div>
@@ -663,7 +641,7 @@
 
     <div class="editor article-body" id="editor" contenteditable="true" spellcheck="false" data-placeholder="開始撰寫你的攻略，把你親身走過一遍的經驗整理出來…">
       <p>開始撰寫你的攻略。把你<strong>親身走過一遍</strong>的經驗整理出來，讀者少走冤枉路，你也能把用心換成回報。</p>
-      <blockquote class="lead">傳承的不是「知識」，是「經驗」。用上方工具列加入大／中／小標題、引言框、清單、圖片、表格與來源標註。</blockquote>
+      <blockquote class="lead">傳承的不是「知識」，是「經驗」。用上方工具列加入大標題／標題、引言框、清單、圖片、表格與來源標註。</blockquote>
       <h2>一、先寫下你的核心結論</h2>
       <p>教授、學弟妹的時間有限，把最有力的重點放最前面。</p>
       <h3>1-1　用可驗證的細節取代形容詞</h3>
@@ -709,7 +687,7 @@
 
     <div class="ce-card">
       <div class="h">目錄 <span style="font-weight:600;text-transform:none;letter-spacing:0">自動生成</span></div>
-      <div class="toc-list" id="tocList"><div class="toc-empty">加入「大標題／中標題」後會自動出現。</div></div>
+      <div class="toc-list" id="tocList"><div class="toc-empty">加入「大標題／標題」後會自動出現。</div></div>
     </div>
 
     <div class="ce-card">
@@ -1082,30 +1060,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (targetIsField()) { activeTarget.style.fontFamily = this.value; scheduleSave(); return; }
     restoreEditorRange(); document.execCommand('fontName', false, this.value); scheduleSave();
   });
-  document.getElementById('lineHeight').addEventListener('change', function () {
-    editor.style.lineHeight = this.value;
-  });
-
-  /* ---------- 全文字級：整體加大／縮小（非選取式）---------- */
-  var DOC_SIZES = [14, 15, 16, 17, 18, 20];
-  var DOC_LABELS = ['最小', '小', '一般', '大', '特大', '超大'];
-  var docSizeIdx = 2; // 預設 16px = 一般
-  function applyDocSize() {
-    editor.style.fontSize = DOC_SIZES[docSizeIdx] + 'px';
-    var lbl = document.getElementById('docSizeVal'); if (lbl) lbl.textContent = DOC_LABELS[docSizeIdx];
-    var dec = document.querySelector('.doc-step[data-docsize=dec]'), inc = document.querySelector('.doc-step[data-docsize=inc]');
-    if (dec) dec.disabled = docSizeIdx <= 0;
-    if (inc) inc.disabled = docSizeIdx >= DOC_SIZES.length - 1;
-  }
-  document.querySelectorAll('.doc-step').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      if (btn.dataset.docsize === 'inc') docSizeIdx = Math.min(DOC_SIZES.length - 1, docSizeIdx + 1);
-      else docSizeIdx = Math.max(0, docSizeIdx - 1);
-      applyDocSize(); scheduleSave();
-    });
-  });
-  applyDocSize();
 
   /* ---------- block style ---------- */
   var blockStyleSel = document.getElementById('blockStyle');
@@ -2170,8 +2124,6 @@ document.addEventListener('DOMContentLoaded', function() {
         subtitleStyle: document.getElementById('subtitleInput').getAttribute('style') || '',
         bodyHTML: clone.innerHTML,
         refsHTML: refsEl ? refsEl.innerHTML : '',
-        fontSize: editor.style.fontSize || '16px',
-        lineHeight: editor.style.lineHeight || '',
         cover: cover,
         category: catSel ? catSel.value : '',
         anchorFields: anchorFieldsForTopic(catSel ? catSel.value : ''),
