@@ -5,7 +5,7 @@
   <title>帳戶管理中心 | 拾貨寶庫</title>
     <!-- meta部分 -->
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com js.sentry-cdn.com www.gstatic.com apis.google.com www.googleapis.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com identitytoolkit.googleapis.com securetoken.googleapis.com apis.google.com www.googleapis.com https://o4511592734130176.ingest.us.sentry.io; frame-src store-backend-75fea.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com www.googletagmanager.com www.google-analytics.com js.sentry-cdn.com www.gstatic.com apis.google.com www.googleapis.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com cdn.jsdelivr.net www.googletagmanager.com www.google-analytics.com www.google.com google-analytics.com identitytoolkit.googleapis.com securetoken.googleapis.com apis.google.com www.googleapis.com https://o4511592734130176.ingest.us.sentry.io; frame-src 'self' store-backend-75fea.firebaseapp.com; object-src 'none'; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="manifest" href="../manifest.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/image/icon-192.png">
@@ -131,7 +131,7 @@
         </nav>
     </div>
 
-<div class="container-fluid py-3" id="mainContent" style="font-size: 1.2rem;">
+<div class="container-fluid py-lg-3" id="mainContent" style="font-size: 1.2rem;">
     <div class="row g-3">
       <!-- Desktop Sidebar -->
       <aside class="col-lg-3 d-none d-lg-block">
@@ -172,10 +172,20 @@
               <span>消費訂單</span>
             </a>
             <hr class="new-nav-hr" />
-            <a class="new-nav-link" href="#" data-target="settings">
+            <a class="new-nav-link" href="#" data-target="settings" id="settingsNavLink">
               <img src="../svg/settingicon.svg" alt="帳號設定icon" class="new-nav-icon">
               <span>個人中心</span>
+              <i class="ti ti-chevron-down new-nav-caret" id="settingsSubNavToggle"></i>
             </a>
+            <div class="new-sub-nav" id="settingsSubNav">
+              <a class="new-sub-link" href="#" data-scroll="accountInfoCard">帳號資訊</a>
+              <a class="new-sub-link" href="#" data-scroll="eduEmailCard">教育信箱驗證</a>
+              <a class="new-sub-link" href="#" data-scroll="profile-edit-section">個人資料更改</a>
+              <a class="new-sub-link" href="#" data-scroll="changePasswordCard">修改密碼</a>
+              <a class="new-sub-link" href="#" data-scroll="reviewsContainer">我的評價</a>
+              <a class="new-sub-link" href="#" data-scroll="reportsBody">我的檢舉</a>
+              <a class="new-sub-link" href="#" data-scroll="receivedReportsBody">被檢舉紀錄</a>
+            </div>
             <a class="new-nav-link new-nav-danger" href="#" id="logout">
               <img src="../svg/logouticon.svg" alt="登出按鍵" class="new-nav-icon">
               <span>登出</span>
@@ -501,6 +511,15 @@
 
       <!-- section settings -->
       <section class="col-lg-9 d-none content-section" id="settings">
+        <div class="settings-quick-tabs d-lg-none" id="settingsQuickTabs">
+          <a class="settings-quick-tab" href="#" data-scroll="accountInfoCard">帳號資訊</a>
+          <a class="settings-quick-tab" href="#" data-scroll="eduEmailCard">教育信箱驗證</a>
+          <a class="settings-quick-tab" href="#" data-scroll="profile-edit-section">個人資料更改</a>
+          <a class="settings-quick-tab" href="#" data-scroll="changePasswordCard">修改密碼</a>
+          <a class="settings-quick-tab" href="#" data-scroll="reviewsContainer">我的評價</a>
+          <a class="settings-quick-tab" href="#" data-scroll="reportsBody">我的檢舉</a>
+          <a class="settings-quick-tab" href="#" data-scroll="receivedReportsBody">被檢舉紀錄</a>
+        </div>
         <a href="#" class="mobile-back-btn d-lg-none" data-target="account">← 帳戶管理中心</a>
         <div class="page-head">
           <div class="ph-left">
@@ -508,7 +527,7 @@
             <p class="ph-sub">修改個人資料、密碼與帳號設定</p>
           </div>
         </div>
-        <div class="profile-info-card col-12">
+        <div class="profile-info-card col-12" id="accountInfoCard">
           <div class="profile-info-header">
             <i class="ti ti-id-badge-2"></i>
             <span>帳號資訊</span>
@@ -553,7 +572,7 @@
           </div>
         </div>
 
-        <div class="profile-edit-card mt-3">
+        <div class="profile-edit-card mt-3" id="eduEmailCard">
           <div class="profile-edit-header">
             <i class="ti ti-school"></i>
             <span>教育信箱驗證</span>
@@ -632,7 +651,7 @@
 
           </div>
         </div>
-        <div class="profile-edit-card mt-3">
+        <div class="profile-edit-card mt-3" id="changePasswordCard">
           <div class="profile-edit-header">
             <i class="ti ti-lock"></i>
             <span>修改密碼</span>

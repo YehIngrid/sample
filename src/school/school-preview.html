@@ -213,11 +213,9 @@
     document.getElementById('authorName').textContent = d.author || '創作者';
     if (d.titles && d.titles.length) document.getElementById('authorTitles').innerHTML = d.titles.map(function (t) { return '<span class="t">' + esc(t) + '</span>'; }).join('');
 
-    // 本文（article-body.css 提供排版）＋ 全文字級／行距
+    // 本文（article-body.css 提供排版）
     var body = document.getElementById('body');
     body.className = 'article-body';
-    if (d.fontSize) body.style.fontSize = d.fontSize;
-    if (d.lineHeight) body.style.lineHeight = d.lineHeight;
     body.innerHTML = (d.bodyHTML || '') + (d.refsHTML ? '<div class="art-refs">' + d.refsHTML + '</div>' : '');
 
     // 購買卡

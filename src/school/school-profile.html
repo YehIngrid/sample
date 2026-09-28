@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
+  <link rel="stylesheet" href="article-body.css">
   <script src="school-theme.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" integrity="sha384-6LFfkTKLRlzFtgx8xsWyBdKGpcMMQTkv+dB7rAbugeJAu1Ym2q1Aji1cjHBG12Xh" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
@@ -76,7 +77,7 @@
     .pf-main { flex: 1; min-width: 0; }
     .pane { display: none; }
     .pane.on { display: block; }
-    .pane-head { font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-bottom: 18px; }
+    .pane-head { font-size: 20px; font-weight: 700; line-height: 1.2; color: var(--ink); letter-spacing: 0.02em; margin-bottom: 18px; }
 
     .filters { display: flex; gap: 8px; margin-bottom: 16px; }
     .filters .f { font-size: 12.5px; font-weight: 700; color: var(--muted); background: var(--card); border: 1px solid var(--line); padding: 7px 15px; border-radius: 999px; letter-spacing: 0.03em; cursor: pointer; }
@@ -181,6 +182,17 @@
     .tgl::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: all 0.22s ease; }
     .tgl.on { background: var(--navy); }
     .tgl.on::after { left: 21px; }
+    /* 閱讀偏好：字級增減按鈕 */
+    .rp-step-ctl { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .rp-step { min-width: 32px; height: 32px; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--ink); background: var(--alice); border: 1px solid var(--line); font-size: 14px; transition: all 0.22s ease; }
+    .rp-step:hover { border-color: var(--navy); color: var(--navy); }
+    .rp-step:disabled { opacity: 0.4; cursor: not-allowed; }
+    .rp-step .pm { font-size: 11px; margin-left: 1px; }
+    .rp-val { font-size: 12.5px; font-weight: 800; color: var(--navy); min-width: 32px; text-align: center; letter-spacing: 0.03em; }
+    .rp-preview-wrap { padding: 18px 0 4px; }
+    .rp-preview-label { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; }
+    .rp-preview { background: var(--alice); border-radius: 12px; padding: 16px 18px; transition: font-size 0.15s ease; }
+    .rp-preview p:last-child { margin-bottom: 0; }
     .ntf-head { display: flex; justify-content: flex-end; gap: 26px; padding: 16px 0 0; font-size: 10.5px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; }
     .ntf-head span { width: 40px; text-align: center; }
     .ntf-cols { display: flex; gap: 26px; flex-shrink: 0; }
@@ -865,6 +877,14 @@
           </div>
           <a class="pill-link" href="#" data-goto-pane="set-notify">管理 →</a>
         </div>
+        <div class="set-row">
+          <div class="sic" style="font-size:15px;font-weight:800;">Aa</div>
+          <div class="sbody">
+            <div class="stitle">閱讀偏好</div>
+            <div class="sdesc">調整攻略文章的字級與行距，設定只存在這台裝置。</div>
+          </div>
+          <a class="pill-link" href="#" data-goto-pane="set-reading">管理 →</a>
+        </div>
       </div>
     </div>
 
@@ -985,6 +1005,49 @@
             <div class="sdesc">平台功能更新、徵稿活動與優惠訊息。</div>
           </div>
           <div class="ntf-cols"><button class="tgl" type="button" aria-label="公告與活動推播"></button><button class="tgl on" type="button" aria-label="公告與活動 Email"></button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANE: 閱讀偏好（設定子頁） -->
+    <div class="pane" data-pane="set-reading">
+      <button class="pane-back" type="button" data-goto-pane="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
+        返回帳號設定
+      </button>
+      <div class="pane-head">閱讀偏好</div>
+
+      <div class="nr-card">
+        <div class="nr-h">文章字級與行距</div>
+        <div class="nr-d">調整後會套用到你瀏覽的所有攻略文章，設定值只存在這台裝置的瀏覽器，不影響其他讀者。</div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">字級</div>
+            <div class="sdesc">調整文章內文的文字大小。</div>
+          </div>
+          <div class="rp-step-ctl">
+            <button class="rp-step" type="button" data-readsize="dec" aria-label="字級縮小">A<span class="pm">−</span></button>
+            <span class="rp-val" id="readSizeVal">一般</span>
+            <button class="rp-step" type="button" data-readsize="inc" aria-label="字級放大">A<span class="pm">＋</span></button>
+          </div>
+        </div>
+        <div class="set-row">
+          <div class="sbody">
+            <div class="stitle">行距</div>
+            <div class="sdesc">文章段落之間的疏密程度。</div>
+          </div>
+          <select class="an-sel" id="readLineHeight" aria-label="行距">
+            <option value="1.6">行距 緊</option>
+            <option value="1.95" selected>行距 標準</option>
+            <option value="2.4">行距 寬</option>
+          </select>
+        </div>
+        <div class="rp-preview-wrap">
+          <div class="rp-preview-label">預覽</div>
+          <div class="article-body rp-preview" id="readPreview">
+            <p>教授、學弟妹的時間有限，把最有力的重點放最前面。與其說「我很努力」，不如寫下具體時程、模板與數字，讓對方一眼看懂你做過什麼。</p>
+            <p>傳承的不是「知識」，是「經驗」，讀者少走冤枉路，你也能把用心換成回報。</p>
+          </div>
         </div>
       </div>
     </div>
@@ -1410,6 +1473,40 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.tgl:not([data-cert-toggle])').forEach(function (t) {
     t.addEventListener('click', function () { t.classList.toggle('on'); });
   });
+
+  // 閱讀偏好：字級／行距（存在 localStorage，套用到 school-post.html 的文章內文）
+  (function () {
+    var READ_KEY = 'th-reader-typography';
+    var SIZES = [14, 15, 16, 17, 18, 20];
+    var LABELS = ['最小', '小', '一般', '大', '特大', '超大'];
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(READ_KEY)) || {}; } catch (e) {}
+    var sizeIdx = SIZES.indexOf(saved.fontSize);
+    if (sizeIdx === -1) sizeIdx = 2; // 預設 16px = 一般
+    var lineHeight = saved.lineHeight || '1.95';
+
+    var sizeVal = document.getElementById('readSizeVal');
+    var preview = document.getElementById('readPreview');
+    var lhSel = document.getElementById('readLineHeight');
+    var decBtn = document.querySelector('.rp-step[data-readsize=dec]');
+    var incBtn = document.querySelector('.rp-step[data-readsize=inc]');
+    if (!sizeVal || !lhSel) return;
+
+    function apply() {
+      sizeVal.textContent = LABELS[sizeIdx];
+      if (preview) { preview.style.fontSize = SIZES[sizeIdx] + 'px'; preview.style.lineHeight = lineHeight; }
+      if (decBtn) decBtn.disabled = sizeIdx <= 0;
+      if (incBtn) incBtn.disabled = sizeIdx >= SIZES.length - 1;
+      lhSel.value = lineHeight;
+    }
+    function save() {
+      try { localStorage.setItem(READ_KEY, JSON.stringify({ fontSize: SIZES[sizeIdx], lineHeight: lineHeight })); } catch (e) {}
+    }
+    if (decBtn) decBtn.addEventListener('click', function () { sizeIdx = Math.max(0, sizeIdx - 1); apply(); save(); });
+    if (incBtn) incBtn.addEventListener('click', function () { sizeIdx = Math.min(SIZES.length - 1, sizeIdx + 1); apply(); save(); });
+    lhSel.addEventListener('change', function () { lineHeight = this.value; apply(); save(); });
+    apply();
+  })();
 
   // 已認證頭銜：公開顯示切換（不影響審查中／已駁回的頭銜，僅供已認證的頭銜調整是否顯示在作者頁）
   document.querySelectorAll('[data-cert-toggle]').forEach(function (btn) {
