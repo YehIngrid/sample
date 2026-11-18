@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
+  <link rel="stylesheet" href="school-cart.css">
   <link rel="stylesheet" href="article-body.css">
   <script src="school-theme.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" integrity="sha384-6LFfkTKLRlzFtgx8xsWyBdKGpcMMQTkv+dB7rAbugeJAu1Ym2q1Aji1cjHBG12Xh" crossorigin="anonymous">
@@ -34,9 +35,7 @@
     /* ===== SIDEBAR ===== */
     .pf-side { width: 291px; flex-shrink: 0; position: sticky; top: 70px; display: flex; flex-direction: column; gap: 16px; }
     .id-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
-    .id-banner { height: 64px; background: linear-gradient(120deg, var(--navy), var(--mid) 70%, var(--aqua)); position: relative; }
-    .id-banner::after { content: ""; position: absolute; right: -30px; top: -30px; width: 140px; height: 140px; border-radius: 50%; background: rgba(255,255,255,0.08); }
-    .id-main { padding: 0 22px 20px; margin-top: -34px; position: relative; }
+    .id-main { padding: 20px 22px 20px; position: relative; }
     .id-av { width: 68px; height: 68px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 6px 20px -8px rgba(0,75,151,0.4); background: linear-gradient(135deg, var(--mid), var(--aqua)); position: relative; }
     .id-av img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
 
@@ -51,7 +50,7 @@
     .id-titles .t { font-size: 10.5px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em; }
     .id-sub { font-size: 11.5px; color: var(--muted); margin-top: 9px; letter-spacing: 0.02em; }
     /* 帳號設定捷徑（名字卡右上齒輪按鈕） */
-    .id-gear { position: absolute; top: 42px; right: 18px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px 5px 9px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; color: var(--navy); font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; transition: all 0.22s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .id-gear { position: absolute; top: 16px; right: 18px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px 5px 9px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; color: var(--navy); font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; transition: all 0.22s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
     .id-gear svg { width: 15px; height: 15px; }
     .id-gear:hover { border-color: var(--navy); background: var(--alice); transform: translateY(-1px); box-shadow: 0 8px 18px -12px rgba(0,75,151,0.4); }
     .id-edit { margin-top: 14px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 0; border-radius: 999px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.04em; border: 1.5px solid var(--line); color: var(--ink); background: var(--card); transition: all 0.2s; }
@@ -361,11 +360,7 @@
     .pm-done-d { font-size: 12px; color: var(--muted); margin-top: 6px; }
 
     /* ===== 申請新頭銜 Modal ===== */
-    .ca-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .ca-t { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 6px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--card); color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: all 0.22s ease; }
-    .ca-t svg { width: 18px; height: 18px; }
-    .ca-t:hover { border-color: var(--navy); color: var(--navy); }
-    .ca-t.on { background: var(--navy-solid); border-color: var(--navy); color: #fff; }
+    .ca-hint { font-size: 11.5px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
     .ca-drop { border: 1.5px dashed var(--line); border-radius: 14px; padding: 20px 14px; text-align: center; cursor: pointer; transition: all 0.22s ease; }
     .ca-drop:hover, .ca-drop.drag { border-color: var(--navy); background: var(--alice); }
     .ca-drop .di { width: 36px; height: 36px; border-radius: 50%; background: var(--alice); color: var(--navy); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 8px; }
@@ -517,7 +512,6 @@
   <!-- ===== SIDEBAR ===== -->
   <div class="pf-side">
     <div class="id-card">
-      <div class="id-banner"></div>
       <div class="id-main">
         <button class="id-gear" id="idGear" type="button" title="帳號設定" aria-label="前往帳號設定">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15 a1.65 1.65 0 0 0 .33 1.82 l.06.06 a2 2 0 1 1-2.83 2.83 l-.06-.06 a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51 V21 a2 2 0 0 1-4 0 v-.09 A1.65 1.65 0 0 0 9 19.4 a1.65 1.65 0 0 0-1.82.33 l-.06.06 a2 2 0 1 1-2.83-2.83 l.06-.06 a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1 H3 a2 2 0 0 1 0-4 h.09 A1.65 1.65 0 0 0 4.6 9 a1.65 1.65 0 0 0-.33-1.82 l-.06-.06 a2 2 0 1 1 2.83-2.83 l.06.06 a1.65 1.65 0 0 0 1.82.33 H9 a1.65 1.65 0 0 0 1-1.51 V3 a2 2 0 0 1 4 0 v.09 a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33 l.06-.06 a2 2 0 1 1 2.83 2.83 l-.06.06 a1.65 1.65 0 0 0-.33 1.82 V9 a1.65 1.65 0 0 0 1.51 1 H21 a2 2 0 0 1 0 4 h-.09 a1.65 1.65 0 0 0-1.51 1Z"/></svg>
@@ -786,28 +780,9 @@
     <div class="pane" data-pane="cert">
       <div class="pane-head">認證與頭銜</div>
       <div class="cert-grid">
-        <div class="cert" data-cert-status="ok">
-          <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg></div>
-          <div class="cbody">
-            <div class="cname">台大碩士 升學認證</div>
-            <div class="cdesc">已上傳台大研究所正取通知，經人工審查通過，顯示於文章作者頭銜。</div>
-            <div class="cfoot">
-              <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
-              <label class="cert-vis"><button class="tgl on" type="button" data-cert-toggle aria-label="是否公開顯示於作者頭銜"></button><span>公開顯示</span></label>
-            </div>
-          </div>
-        </div>
-        <div class="cert" data-cert-status="ok">
-          <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg></div>
-          <div class="cbody">
-            <div class="cname">書卷獎 獎項認證</div>
-            <div class="cdesc">已上傳系上書卷獎證明，經人工審查通過，提升文章觸及率。</div>
-            <div class="cfoot">
-              <span class="cstatus ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>
-              <label class="cert-vis"><button class="tgl on" type="button" data-cert-toggle aria-label="是否公開顯示於作者頭銜"></button><span>公開顯示</span></label>
-            </div>
-          </div>
-        </div>
+        <!-- Already-approved achievements are rendered here at runtime from
+             GET /api/account/me (data.titles) — see the module <script>
+             near the top of this page (loadApprovedAchievements). -->
         <div class="cert" data-cert-status="pending">
           <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg></div>
           <div class="cbody">
@@ -864,8 +839,8 @@
         <div class="set-row">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5 v6 c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10 V5Z"/></svg></div>
           <div class="sbody">
-            <div class="stitle">隱私與安全</div>
-            <div class="sdesc">敏感字詞過濾、檢舉處置紀錄、付費內容浮水印偏好設定。</div>
+            <div class="stitle">檢舉處置紀錄</div>
+            <div class="sdesc">查看你送出的檢舉，以及你的內容被檢舉後的處理結果。</div>
           </div>
           <a class="pill-link" href="#" data-goto-pane="set-privacy">管理 →</a>
         </div>
@@ -918,32 +893,13 @@
       </div>
     </div>
 
-    <!-- PANE: 隱私與安全（設定子頁） -->
+    <!-- PANE: 檢舉處置紀錄（設定子頁） -->
     <div class="pane" data-pane="set-privacy">
       <button class="pane-back" type="button" data-goto-pane="settings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12 H5"/><path d="m12 19-7-7 7-7"/></svg>
         返回帳號設定
       </button>
-      <div class="pane-head">隱私與安全</div>
-
-      <div class="nr-card">
-        <div class="nr-h">內容安全</div>
-        <div class="nr-d">保護你的攻略內容與留言區。</div>
-        <div class="set-row">
-          <div class="sbody">
-            <div class="stitle">敏感字詞過濾</div>
-            <div class="sdesc">自動遮蔽留言中的人身攻擊與敏感字詞，被遮蔽的留言僅留言者本人可見。</div>
-          </div>
-          <button class="tgl on" type="button" aria-label="敏感字詞過濾"></button>
-        </div>
-        <div class="set-row">
-          <div class="sbody">
-            <div class="stitle">付費內容浮水印</div>
-            <div class="sdesc">在付費章節加上購買者的半匿名浮水印，截圖外流時可追溯來源。</div>
-          </div>
-          <button class="tgl on" type="button" aria-label="付費內容浮水印"></button>
-        </div>
-      </div>
+      <div class="pane-head">檢舉處置紀錄</div>
 
       <div class="nr-card">
         <div class="nr-h">檢舉處置紀錄</div>
@@ -1069,28 +1025,17 @@
       </div>
       <div class="pm-sub">上傳證照、獎項或升學證明，人工審查通過後將顯示於你的作者頭銜。</div>
 
-      <div class="pm-field">
-        <label>認證類型</label>
-        <div class="ca-types" id="caTypes">
-          <button class="ca-t on" type="button" data-type="證照">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg>
-            證照
-          </button>
-          <button class="ca-t" type="button" data-type="獎項">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg>
-            獎項
-          </button>
-          <button class="ca-t" type="button" data-type="升學">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg>
-            升學
-          </button>
-        </div>
-      </div>
-
       <div class="pm-field" id="caFName">
         <label for="caName">頭銜名稱</label>
         <input id="caName" placeholder="例如：多益 935、書卷獎、台大碩士" maxlength="12">
         <div class="pm-err">請輸入頭銜名稱</div>
+      </div>
+
+      <div class="pm-field" id="caFShort">
+        <label for="caShortName">顯示簡稱</label>
+        <input id="caShortName" placeholder="例如：多益935" maxlength="6">
+        <div class="ca-hint">顯示於作者頭銜等空間有限處，建議 6 字以內，避免被截斷顯示「…」</div>
+        <div class="pm-err">請輸入顯示簡稱</div>
       </div>
 
       <div class="pm-field" id="caFFile">
@@ -1278,13 +1223,98 @@
 <script type="module">
 import { AppModal } from "../default/app-modal.js";
 import { requireAdminPage } from "../default/default.js";
+import SchoolBackendService from "./schoolBackendService.js";
 window.AppModal = AppModal;
+// Exposed on window so the classic (non-module) <script> blocks further down
+// this page — the "申請新頭銜" and "就學證明實名認證" modals — can call it
+// from their click handlers. Those handlers only ever run after user
+// interaction, i.e. well after this module has finished executing, so there
+// is no startup race (see schoolBackendService.js for the API methods).
+const schoolBackendService = new SchoolBackendService();
+window.schoolBackendService = schoolBackendService;
+
 (async () => {
   const ok = await requireAdminPage();
   if (ok) document.body.style.visibility = "visible";
 })();
+
+// ── Approved achievements (已認證頭銜)：render from real account data ──
+// Only APPROVED achievements are available via GET /api/account/me
+// (data.titles); there is no tag-1 endpoint that returns the caller's
+// PENDING/REJECTED achievement history, so those two states can't be
+// rendered from live data yet (see memory: school_api_doc_gaps.md #2).
+const CERT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg>';
+const CERT_OK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證';
+const CERT_HIDDEN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8Z"/><path d="m4 4 16 16"/></svg>不顯示';
+
+function renderCertCard(title) {
+  const cert = document.createElement('div');
+  cert.className = 'cert';
+  cert.dataset.certStatus = 'ok';
+  cert.dataset.achievementId = title.id;
+  cert.innerHTML =
+    '<div class="cic">' + CERT_ICON + '</div>' +
+    '<div class="cbody">' +
+      '<div class="cname"></div>' +
+      '<div class="cdesc">已核准頭銜，由人工審查通過。</div>' +
+      '<div class="cfoot">' +
+        '<span class="cstatus ok">' + CERT_OK_ICON + '</span>' +
+        '<label class="cert-vis"><button class="tgl' + (title.enabled ? ' on' : '') + '" type="button" data-cert-toggle aria-label="是否公開顯示於作者頭銜"></button><span>公開顯示</span></label>' +
+      '</div>' +
+    '</div>';
+  // Use textContent (never innerHTML) for server-provided text to avoid
+  // reflecting stored XSS back into the page.
+  cert.querySelector('.cname').textContent = title.shortName || title.name || '';
+  return cert;
+}
+
+async function loadApprovedAchievements() {
+  const certAddBtn = document.getElementById('certAddBtn');
+  if (!certAddBtn) return;
+  try {
+    const res = await schoolBackendService.getAccountMe();
+    const titles = res?.data?.titles || [];
+    titles.forEach((title) => {
+      const card = renderCertCard(title);
+      certAddBtn.parentNode.insertBefore(card, certAddBtn);
+      wireCertToggle(card, title.id);
+    });
+  } catch (error) {
+    // Silent failure matches the rest of the app's "degrade gracefully"
+    // convention for read-only widgets (see memory: person_recent_notifications.md)
+    console.error('載入已認證頭銜失敗：', error);
+  }
+}
+
+function wireCertToggle(cardEl, achievementId) {
+  const btn = cardEl.querySelector('[data-cert-toggle]');
+  const statusEl = cardEl.querySelector('.cstatus');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    const nextEnabled = !btn.classList.contains('on');
+    btn.disabled = true;
+    try {
+      await schoolBackendService.setAchievementEnabled(achievementId, nextEnabled);
+      btn.classList.toggle('on', nextEnabled);
+      if (nextEnabled) {
+        statusEl.className = 'cstatus ok';
+        statusEl.innerHTML = CERT_OK_ICON;
+      } else {
+        statusEl.className = 'cstatus hidden';
+        statusEl.innerHTML = CERT_HIDDEN_ICON;
+      }
+    } catch (error) {
+      AppModal.fire({ icon: 'error', title: '切換失敗', text: error.message || '請稍後再試' });
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
+loadApprovedAchievements();
 </script>
 <script defer src="school-new.js"></script>
+<script defer src="school-cart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const hamburger = document.querySelector('.mobile-hamburger');
@@ -1508,21 +1538,9 @@ document.addEventListener('DOMContentLoaded', function() {
     apply();
   })();
 
-  // 已認證頭銜：公開顯示切換（不影響審查中／已駁回的頭銜，僅供已認證的頭銜調整是否顯示在作者頁）
-  document.querySelectorAll('[data-cert-toggle]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var visible = !btn.classList.contains('on');
-      btn.classList.toggle('on', visible);
-      var statusEl = btn.closest('.cert').querySelector('.cstatus');
-      if (visible) {
-        statusEl.className = 'cstatus ok';
-        statusEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證';
-      } else {
-        statusEl.className = 'cstatus hidden';
-        statusEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8Z"/><path d="m4 4 16 16"/></svg>不顯示';
-      }
-    });
-  });
+  // 已認證頭銜公開顯示切換：改由 wireCertToggle() 處理（見本頁最上方的 module
+  // script），因為卡片現在是從 GET /api/account/me 動態渲染出來的，toggle 需要
+  // 即時呼叫 PATCH /api/school/achievements/{id}/enabled，不能只是純前端 class 切換。
 
   /* ---------- 前台顯示名稱（半實名）：只公開一個字＋同學，不透露位置 ---------- */
   (function () {
@@ -1571,8 +1589,8 @@ document.addEventListener('DOMContentLoaded', function() {
   (function () {
     var backdrop = document.getElementById('caBackdrop');
     var steps = backdrop.querySelectorAll('.pm-step');
-    var typesEl = document.getElementById('caTypes');
     var nameIn = document.getElementById('caName');
+    var shortIn = document.getElementById('caShortName');
     var fileIn = document.getElementById('caFile');
     var drop = document.getElementById('caDrop');
     var fileRow = document.getElementById('caFileRow');
@@ -1581,21 +1599,16 @@ document.addEventListener('DOMContentLoaded', function() {
     var fnameEl = document.getElementById('caFileName');
     var fsizeEl = document.getElementById('caFileSize');
     var submitBtn = document.getElementById('caSubmit');
-    var curType = '證照';
     var curFile = null;
     var closeTimer = null;
 
-    var TYPE_ICONS = {
-      '證照': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg>',
-      '獎項': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg>',
-      '升學': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg>'
-    };
+    var CERT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg>';
 
     function goStep(name) {
       steps.forEach(function (s) { s.classList.toggle('on', s.dataset.step === name); });
     }
     function setErr(id, on) { document.getElementById(id).classList.toggle('err', on); }
-    function refreshReady() { submitBtn.disabled = !(nameIn.value.trim() && curFile); }
+    function refreshReady() { submitBtn.disabled = !(nameIn.value.trim() && shortIn.value.trim() && curFile); }
 
     function clearFile() {
       curFile = null;
@@ -1608,10 +1621,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     function resetForm() {
       nameIn.value = '';
+      shortIn.value = '';
       clearFile();
-      setErr('caFName', false); setErr('caFFile', false);
-      typesEl.querySelectorAll('.ca-t').forEach(function (b, i) { b.classList.toggle('on', i === 0); });
-      curType = '證照';
+      setErr('caFName', false); setErr('caFShort', false); setErr('caFFile', false);
     }
     function openModal() {
       resetForm();
@@ -1635,15 +1647,8 @@ document.addEventListener('DOMContentLoaded', function() {
       if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
     });
 
-    /* 認證類型 */
-    typesEl.addEventListener('click', function (e) {
-      var b = e.target.closest('.ca-t'); if (!b) return;
-      typesEl.querySelectorAll('.ca-t').forEach(function (x) { x.classList.remove('on'); });
-      b.classList.add('on');
-      curType = b.dataset.type;
-    });
-
     nameIn.addEventListener('input', function () { setErr('caFName', false); refreshReady(); });
+    shortIn.addEventListener('input', function () { setErr('caFShort', false); refreshReady(); });
 
     /* 檔案上傳：點擊 / 拖曳 */
     drop.addEventListener('click', function () { fileIn.click(); });
@@ -1687,63 +1692,92 @@ document.addEventListener('DOMContentLoaded', function() {
       clearFile();
     });
 
-    /* 送出 → 成功動畫 → 插入審查中卡片 */
+    /* 送出 → 呼叫 POST /api/school/achievements → 成功動畫 → 插入審查中卡片 */
     submitBtn.addEventListener('click', function () {
       setErr('caFName', !nameIn.value.trim());
+      setErr('caFShort', !shortIn.value.trim());
       setErr('caFFile', !curFile);
-      if (!nameIn.value.trim() || !curFile) return;
+      if (!nameIn.value.trim() || !shortIn.value.trim() || !curFile) return;
 
       var title = nameIn.value.trim();
-      document.getElementById('caDoneD').textContent = title + ' ' + curType + '認證 · 審查通常 1–3 個工作天完成';
-      goStep('done');
+      var shortTitle = shortIn.value.trim();
 
-      var cert = document.createElement('div');
-      cert.className = 'cert';
-      cert.innerHTML =
-        '<div class="cic">' + TYPE_ICONS[curType] + '</div>' +
-        '<div class="cbody">' +
-          '<div class="cname"></div>' +
-          '<div class="cdesc">證明文件審查中，通常 1–3 個工作天完成。通過後將自動加上頭銜。</div>' +
-          '<span class="cstatus pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審查中</span>' +
-        '</div>';
-      cert.querySelector('.cname').textContent = title + ' ' + curType + '認證';
-      var addCard = document.getElementById('certAddBtn');
-      addCard.parentNode.insertBefore(cert, addCard);
+      // Guard against double submission while the request is in flight.
+      submitBtn.disabled = true;
+      // NOTE: categoryId is intentionally not sent — see schoolBackendService.js
+      // for why (no API to list valid achievement categories yet).
+      window.schoolBackendService.submitAchievement({
+        name: title,
+        shortName: shortTitle,
+        proof: curFile
+      }).then(function (res) {
+        var achievementId = res && res.data && res.data.id;
+        document.getElementById('caDoneD').textContent = title + ' 認證 · 審查通常 1–3 個工作天完成';
+        goStep('done');
 
-      closeTimer = setTimeout(closeModal, 1600);
+        var cert = document.createElement('div');
+        cert.className = 'cert';
+        if (achievementId) cert.dataset.achievementId = achievementId;
+        cert.dataset.certStatus = 'pending';
+        cert.innerHTML =
+          '<div class="cic">' + CERT_ICON + '</div>' +
+          '<div class="cbody">' +
+            '<div class="cname"></div>' +
+            '<div class="cdesc">證明文件審查中，通常 1–3 個工作天完成。通過後將自動加上頭銜。</div>' +
+            '<span class="cstatus pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審查中</span>' +
+          '</div>';
+        var cnameEl = cert.querySelector('.cname');
+        cnameEl.textContent = shortTitle + ' 認證';
+        cnameEl.title = title;
+        var addCard = document.getElementById('certAddBtn');
+        addCard.parentNode.insertBefore(cert, addCard);
+
+        closeTimer = setTimeout(closeModal, 1600);
+      }).catch(function (error) {
+        window.AppModal.fire({ icon: 'error', title: '送出失敗', text: error.message || '請稍後再試' });
+      }).finally(function () {
+        submitBtn.disabled = false;
+      });
     });
   })();
 </script>
 
 <script>
-  /* ---------- 就學證明實名認證 ---------- */
+  /* ---------- 就學證明實名認證 ----------
+     串接 POST/GET /api/account/identity-verifications。
+     這支 Modal 原本收「就學狀態」「入學年度」兩個欄位，但 API 沒有對應欄位
+     （目前只有 realName/schoolName/proof），依決定先保留在畫面上、不送出也
+     不從伺服器回填，等之後跟後端確認要不要擴充欄位（見 memory:
+     school_api_doc_gaps.md #4）。另外：之前版本會把拍下的證件照存進
+     localStorage 以便「沿用原檔」，這次拿掉了——身分證明文件是敏感個資，
+     不應該長期留在瀏覽器本地儲存；現在每次送出都必須重新拍照。
+  */
   (function () {
-    var STATE_KEY = 'th_cg_enroll_verify';
-    var ENROLL_LABELS = { enrolled: '在學', transfer: '轉學', graduated: '畢業', withdrawn: '肄業' };
+    // 最近一次送審紀錄（來自 GET /api/account/identity-verifications 的第一筆，
+    // 該 API 已依建立時間新到舊排序）。null 代表尚未送過件。
+    var latest = null;
 
-    function getState() {
-      try {
-        var raw = localStorage.getItem(STATE_KEY);
-        if (raw) return JSON.parse(raw);
-      } catch (e) {}
-      // 預設種入一筆已審核通過的示範資料
-      var seed = {
-        status: 'approved',
-        schoolName: '國立中興大學',
-        enrollStatus: 'enrolled',
-        admissionYear: '113',
-        realName: '葉潔頤',
-        documentUrl: '',
-        rejectReason: '',
-        submittedAt: Date.now()
-      };
-      localStorage.setItem(STATE_KEY, JSON.stringify(seed));
-      return seed;
+    function dataUrlToFile(dataUrl, filename) {
+      var parts = dataUrl.split(',');
+      var mimeMatch = /data:(.*?);base64/.exec(parts[0]);
+      var mime = (mimeMatch && mimeMatch[1]) || 'image/webp';
+      var binary = atob(parts[1]);
+      var bytes = new Uint8Array(binary.length);
+      for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new File([bytes], filename, { type: mime });
     }
-    function setState(patch) {
-      var next = Object.assign({}, getState(), patch);
-      localStorage.setItem(STATE_KEY, JSON.stringify(next));
-      return next;
+
+    async function loadLatestVerification() {
+      try {
+        var res = await window.schoolBackendService.getMyIdentityVerifications();
+        var list = (res && res.data) || [];
+        latest = list[0] || null;
+      } catch (error) {
+        // 讀取失敗就當作「尚未送件」處理，不擋住整個頁面渲染
+        console.error('載入就學證明審核紀錄失敗：', error);
+        latest = null;
+      }
+      renderCard();
     }
 
     var backdrop = document.getElementById('evBackdrop');
@@ -1844,31 +1878,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* ── 開關 Modal ── */
     function openModal() {
-      var s = getState();
       resetCam();
       setErr('evFSchool', false); setErr('evFYear', false); setErr('evFName', false);
 
-      schoolIn.value = s.schoolName || '';
-      statusSel.value = s.enrollStatus || 'enrolled';
-      yearIn.value = s.admissionYear || '';
-      nameIn.value = s.realName || '';
-      document.getElementById('evSub').textContent = s.status === 'unverified'
+      schoolIn.value = (latest && latest.schoolName) || '';
+      statusSel.value = 'enrolled'; // API 不支援此欄位，維持預設值（見檔案開頭說明）
+      yearIn.value = '';
+      nameIn.value = (latest && latest.realName) || '';
+      document.getElementById('evSub').textContent = !latest
         ? '提交就學資料，人工審核通過後即完成實名認證。'
-        : '重新確認以下資料，如證明文件不需更換可維持原檔，送出後將重新進入審核排隊。';
+        : '重新確認以下資料並重新拍攝證明文件，送出後將重新進入審核排隊。';
 
-      // 已有先前送出的證明文件：先顯示出來，使用者若不重拍就沿用原檔
-      if (s.documentUrl) {
-        photoDataUrl = s.documentUrl;
-        camPlaceholder.style.display = 'none';
-        camPhoto.src = s.documentUrl;
-        camPhoto.style.display = '';
-        camStartBtn.style.display = 'none';
-        camShootBtn.style.display = 'none';
-        camRetakeBtn.style.display = '';
-      }
-
-      if (s.status === 'rejected' && s.rejectReason) {
-        rejectNote.textContent = '上次審核未通過原因：' + s.rejectReason;
+      if (latest && latest.status === 'REJECTED' && latest.rejectReason) {
+        rejectNote.textContent = '上次審核未通過原因：' + latest.rejectReason;
         rejectNote.style.display = '';
       } else {
         rejectNote.style.display = 'none';
@@ -1905,57 +1927,69 @@ document.addEventListener('DOMContentLoaded', function() {
       setErr('evFCam', !photoDataUrl);
       if (schoolMissing || yearMissing || nameMissing || !photoDataUrl) return;
 
-      setState({
-        status: 'pending',
-        schoolName: schoolIn.value.trim(),
-        enrollStatus: statusSel.value,
-        admissionYear: yearIn.value.trim(),
+      var proofFile = dataUrlToFile(photoDataUrl, 'student-id-proof.webp');
+
+      // Guard against double submission while the request is in flight.
+      submitBtn.disabled = true;
+      window.schoolBackendService.submitIdentityVerification({
         realName: nameIn.value.trim(),
-        documentUrl: photoDataUrl,
-        rejectReason: '',
-        submittedAt: Date.now()
+        schoolName: schoolIn.value.trim(),
+        proof: proofFile
+      }).then(function (res) {
+        latest = {
+          id: res && res.data && res.data.id,
+          realName: nameIn.value.trim(),
+          schoolName: schoolIn.value.trim(),
+          status: 'PENDING',
+          rejectReason: null
+        };
+        renderCard();
+        goStep('done');
+        setTimeout(closeModal, 1600);
+      }).catch(function (error) {
+        window.AppModal.fire({ icon: 'error', title: '送出失敗', text: error.message || '請稍後再試' });
+      }).finally(function () {
+        submitBtn.disabled = false;
       });
-      renderCard();
-      goStep('done');
-      setTimeout(closeModal, 1600);
     });
 
-    /* ── 卡片渲染 ── */
+    /* ── 卡片渲染（依伺服器回傳的最新一筆審核紀錄） ── */
     function renderCard() {
-      var s = getState();
       var desc = document.getElementById('evDesc');
       var pillWrap = document.getElementById('evPillWrap');
-      var label = ENROLL_LABELS[s.enrollStatus] || '';
-      var yearLabel = s.admissionYear ? s.admissionYear + '級' : '';
-      var identity = [s.schoolName, yearLabel, label].filter(Boolean).join('・');
+      var identity = latest && latest.schoolName ? latest.schoolName : '';
 
-      if (s.status === 'approved') {
-        desc.textContent = '後台真實身分：' + s.realName + '（' + identity + '）· 就學證明經人工審核通過 · 僅你本人可見';
+      if (!latest) {
+        desc.textContent = '尚未完成身分驗證，請提交就學資料以完成實名認證。';
+        pillWrap.innerHTML = '<button class="pill-cta" type="button" data-ev-action="edit">前往認證 →</button>';
+      } else if (latest.status === 'APPROVED') {
+        desc.textContent = '後台真實身分：' + latest.realName + '（' + identity + '）· 就學證明經人工審核通過 · 僅你本人可見';
         pillWrap.innerHTML =
           '<span class="pill-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證</span>' +
-          '<button class="pill-cta" type="button" data-ev-action="edit">編輯</button>';
-      } else if (s.status === 'pending') {
-        desc.textContent = '已提交審核：' + s.realName + '（' + identity + '）· 審核通常 1–3 個工作天完成';
+          '<button class="pill-cta" type="button" data-ev-action="edit">重新驗證</button>';
+      } else if (latest.status === 'PENDING') {
+        desc.textContent = '已提交審核：' + latest.realName + '（' + identity + '）· 審核通常 1–3 個工作天完成';
         pillWrap.innerHTML =
-          '<span class="pill-pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審核中</span>' +
-          '<button class="pill-cta" type="button" data-ev-action="edit">重新繳交</button>';
-      } else if (s.status === 'rejected') {
-        desc.textContent = '審核未通過：' + (s.rejectReason || '請確認資料與證明文件是否清晰正確');
+          '<span class="pill-pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審核中</span>';
+      } else if (latest.status === 'REJECTED') {
+        desc.textContent = '審核未通過：' + (latest.rejectReason || '請確認資料與證明文件是否清晰正確');
         pillWrap.innerHTML =
           '<span class="pill-rejected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>已駁回</span>' +
           '<button class="pill-cta" type="button" data-ev-action="edit">重新送出</button>';
-      } else {
-        desc.textContent = '尚未完成身分驗證，請提交就學資料以完成實名認證。';
-        pillWrap.innerHTML = '<button class="pill-cta" type="button" data-ev-action="edit">前往認證 →</button>';
       }
     }
     document.getElementById('evPillWrap').addEventListener('click', function (e) {
       var b = e.target.closest('[data-ev-action]'); if (!b) return;
-      var action = b.dataset.evAction;
-      openModal(action === 'doc-only' ? 'doc-only' : 'full');
+      openModal();
     });
 
-    renderCard();
+    // Classic (non-module) <script> tags run synchronously while the HTML is
+    // still being parsed — BEFORE the deferred `type="module"` script near the
+    // top of this page has executed and set window.schoolBackendService.
+    // Calling loadLatestVerification() directly here would hit it while still
+    // undefined, so defer the initial load to DOMContentLoaded, which always
+    // fires after every deferred/module script has run.
+    document.addEventListener('DOMContentLoaded', loadLatestVerification);
   })();
 </script>
 

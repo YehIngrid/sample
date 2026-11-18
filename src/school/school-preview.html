@@ -108,7 +108,7 @@
     <!-- MAIN -->
     <div>
       <article class="article-card">
-        <div class="sp-hero" id="hero"><span class="cat-pill" id="catPill">攻略</span></div>
+        <div class="sp-hero" id="hero"></div>
         <div class="post-body">
           <div class="post-head">
             <h1 id="title">（未命名攻略）</h1>
@@ -181,8 +181,8 @@
     function esc(s) { var x = document.createElement('div'); x.textContent = s || ''; return x.innerHTML; }
     function fmtDate(ts) { var t = new Date(ts || Date.now()); function p(n){return ('0'+n).slice(-2);} return t.getFullYear() + ' / ' + p(t.getMonth()+1) + ' / ' + p(t.getDate()); }
 
-    // 分類
-    if (d.category) { document.getElementById('catPill').textContent = d.category; document.getElementById('crumbCat').textContent = d.category; }
+    // 分類（只顯示於麵包屑導覽列）
+    if (d.category) { document.getElementById('crumbCat').textContent = d.category; }
     // 封面（有的話覆蓋 hero 漸層）
     if (d.cover) { var hero = document.getElementById('hero'); hero.style.backgroundImage = d.cover; hero.style.backgroundSize = 'cover'; hero.style.backgroundPosition = 'center'; }
     // 標題／副標

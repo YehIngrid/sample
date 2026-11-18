@@ -1,0 +1,172 @@
+/* ===== 校園攻略站購物車（與二手商場購物車分開，付費文章專用）===== */
+
+/* 固定在畫面右側邊緣的購物車標籤（桌機、手機共用，非圓形） */
+.scart-tab {
+  position: fixed;
+  top: auto;
+  bottom: 120px;
+  right: 0;
+  z-index: 10500;
+  width: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 14px 6px;
+  background: var(--navy-solid);
+  color: #fff;
+  border: none;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -4px 0 18px rgba(0,75,151,0.28);
+  cursor: pointer;
+  transition: width 0.18s ease, box-shadow 0.18s ease;
+}
+.scart-tab:hover { width: 38px; box-shadow: -6px 0 22px rgba(0,75,151,0.36); }
+.scart-tab-chevron { width: 11px; height: 11px; flex-shrink: 0; opacity: 0.85; }
+.scart-tab-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.scart-badge { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: var(--cream); color: var(--cream-ink, #8a6d2a); font-size: 0.65rem; font-weight: 700; line-height: 18px; text-align: center; border: 2px solid var(--card); pointer-events: none; }
+.scart-badge.d-none { display: none; }
+
+/* 背景遮罩 */
+.scart-backdrop { display: none; position: fixed; inset: 0; background: rgba(15,39,69,0.4); z-index: 10999; backdrop-filter: blur(2px); }
+.scart-backdrop.open { display: block; }
+
+/* 面板本體（桌機從右側滑出大面板） */
+.scart-panel { position: fixed; top: 0; bottom: 0; right: 0; width: min(1200px, 94vw); background: var(--page); z-index: 11000; display: flex; flex-direction: column; overflow: hidden; box-shadow: -8px 0 40px rgba(0,75,151,0.18); border-radius: 20px 0 0 20px; transform: translateX(100%); transition: transform 0.32s cubic-bezier(0.4,0,0.2,1); }
+.scart-panel.open { transform: translateX(0); }
+
+.scart-head { flex-shrink: 0; padding: 22px 32px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.scart-head-title { display: flex; flex-direction: column; gap: 6px; }
+.scart-eyebrow { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.scart-h1 { font-size: 24px; font-weight: 800; letter-spacing: 0.03em; color: var(--ink); }
+.scart-sub { font-size: 13px; color: var(--muted); }
+.scart-close { position: absolute; top: 18px; right: 20px; width: 32px; height: 32px; border-radius: 50%; background: var(--alice); color: var(--navy); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.18s ease; }
+.scart-close:hover { background: var(--navy-solid); color: #fff; }
+.scart-close svg { width: 15px; height: 15px; }
+
+.scart-steps { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--muted); }
+.scart-step { display: flex; align-items: center; gap: 7px; }
+.scart-step-dot { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line); color: var(--muted); display: grid; place-items: center; font-size: 10.5px; font-weight: 700; box-sizing: border-box; }
+.scart-step.on .scart-step-dot { background: var(--navy-solid); border-color: var(--navy); color: #fff; }
+.scart-step.on { color: var(--navy); font-weight: 700; }
+.scart-step-sep { width: 22px; border-top: 1px dashed var(--sky); }
+
+.scart-body { flex: 1; min-height: 0; overflow-y: auto; padding: 24px 32px 32px; display: flex; gap: 28px; align-items: flex-start; }
+
+/* 左側：依作者分組的文章清單 */
+.scart-left { flex: 1 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+.scart-left-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 2px; }
+.scart-selectall { display: flex; align-items: center; gap: 9px; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; font-size: 13.5px; color: var(--ink); font-weight: 700; }
+.scart-count-txt { font-size: 12.5px; color: var(--muted); }
+
+.scart-check { width: 19px; height: 19px; border-radius: 6px; border: 1.5px solid var(--sky); background: var(--card); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-sizing: border-box; transition: all 0.15s ease; }
+.scart-check.on { background: var(--navy-solid); border-color: var(--navy); color: #fff; }
+.scart-check svg { width: 12px; height: 12px; opacity: 0; transition: opacity 0.1s ease; }
+.scart-check.on svg { opacity: 1; }
+
+.scart-group { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px 20px 6px; }
+.scart-group-head { display: flex; align-items: center; gap: 13px; padding-bottom: 14px; border-bottom: 1px dashed var(--line); }
+.scart-group-av { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--mid), var(--aqua)); flex-shrink: 0; }
+.scart-group-name { font-size: 14.5px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+.scart-group-handle { font-size: 11.5px; color: var(--muted); font-family: SFMono-Regular, ui-monospace, monospace; }
+.scart-group-link { font-size: 12.5px; font-weight: 600; color: var(--navy); flex-shrink: 0; }
+.scart-group-link:hover { color: rgb(36,182,133); }
+
+.scart-item { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.scart-item:last-of-type { border-bottom: none; }
+.scart-thumb { width: 60px; height: 60px; flex-shrink: 0; border-radius: 10px; background: linear-gradient(135deg, var(--navy), var(--mid)); display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 18px; letter-spacing: 0.04em; }
+.scart-item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.scart-tags { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.scart-tag { font-size: 10px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 2px 9px; border-radius: 999px; letter-spacing: 0.03em; }
+.scart-tag.scart-tag-featured { color: var(--cream-ink, #8a6d2a); background: rgba(243,227,181,0.55); }
+.scart-item-title { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.5; }
+.scart-item-meta { font-size: 11.5px; color: var(--muted); }
+.scart-item-side { display: flex; flex-direction: column; align-items: flex-end; gap: 7px; flex-shrink: 0; }
+.scart-item-price { font-size: 15px; font-weight: 700; color: var(--navy); letter-spacing: 0.02em; }
+.scart-remove { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; font-size: 11.5px; color: var(--muted); }
+.scart-remove:hover { color: var(--terracotta); }
+
+.scart-group-foot { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0 10px; font-size: 12.5px; color: var(--muted); }
+.scart-group-foot b { color: var(--navy); font-size: 14px; margin-left: 5px; }
+
+.scart-empty { background: var(--card); border: 1px dashed var(--line); border-radius: 18px; padding: 54px 28px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.scart-empty h3 { font-size: 17px; color: var(--ink); letter-spacing: 0.03em; }
+.scart-empty p { font-size: 13px; color: var(--muted); }
+.scart-restore { font-size: 12.5px; font-weight: 700; color: var(--navy); border: 1.5px solid var(--line); padding: 8px 18px; border-radius: 999px; transition: all 0.18s ease; }
+.scart-restore:hover { border-color: var(--navy); background: var(--alice); }
+
+/* 右側：收據樣式結帳卡 */
+.scart-right { flex: 1 1 340px; max-width: 400px; min-width: 0; position: sticky; top: 0; }
+.scart-receipt { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 26px 24px; display: flex; flex-direction: column; gap: 16px; position: relative; overflow: hidden; }
+.scart-receipt-head { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; }
+.scart-receipt-no { font-family: SFMono-Regular, ui-monospace, monospace; font-size: 11.5px; color: var(--muted); }
+.scart-receipt-divider { border-top: 1.5px dashed var(--sky); }
+
+.scart-lines { display: flex; flex-direction: column; gap: 13px; }
+.scart-line-head { display: flex; align-items: baseline; gap: 8px; font-size: 13.5px; }
+.scart-line-name { font-weight: 700; color: var(--ink); }
+.scart-line-fill { flex: 1; border-bottom: 1px dotted var(--sky); transform: translateY(-3px); }
+.scart-line-total { font-weight: 700; color: var(--navy); }
+.scart-line-sub { display: flex; justify-content: space-between; gap: 10px; font-size: 11.5px; color: var(--muted); padding-left: 11px; border-left: 1px solid var(--line); margin-top: 5px; }
+.scart-line-sub span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scart-nolines { font-size: 12.5px; color: var(--muted); text-align: center; padding: 6px 0; }
+
+.scart-coupon-row { display: flex; gap: 8px; align-items: flex-end; }
+.scart-coupon-field { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.scart-coupon-field label { font-size: 11px; color: var(--muted); font-weight: 600; }
+.scart-coupon-field input { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; color: var(--ink); }
+.scart-coupon-field input:focus { outline: none; border-color: var(--navy); }
+.scart-coupon-apply { flex-shrink: 0; padding: 9px 16px; border-radius: 10px; border: 1.5px solid var(--navy); color: var(--navy); font-size: 12.5px; font-weight: 700; background: none; transition: all 0.18s ease; }
+.scart-coupon-apply:hover { background: var(--navy-solid); color: #fff; }
+.scart-coupon-msg { font-size: 11.5px; margin-top: -8px; }
+.scart-coupon-msg.ok { color: rgb(36,182,133); }
+.scart-coupon-msg.bad { color: var(--terracotta); }
+
+.scart-pay-label { font-size: 12.5px; font-weight: 600; color: var(--body); }
+.scart-pay-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-top: 7px; }
+.scart-pay-opt { font-size: 12.5px; padding: 10px 4px; border-radius: 10px; cursor: pointer; border: 1px solid var(--line); background: var(--alice); color: var(--navy); font-weight: 600; transition: all 0.18s ease; }
+.scart-pay-opt.on { border-color: var(--navy); background: var(--navy-solid); color: #fff; }
+
+.scart-totals { display: flex; flex-direction: column; gap: 7px; font-size: 13px; color: var(--muted); padding-top: 13px; border-top: 1px solid var(--line); }
+.scart-totals-row { display: flex; justify-content: space-between; }
+.scart-totals-row.discount span:last-child { color: rgb(36,182,133); }
+
+.scart-grand { display: flex; justify-content: space-between; align-items: baseline; padding: 13px 0 2px; border-top: 3px double var(--navy); }
+.scart-grand-label { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: 0.05em; }
+.scart-grand-val { font-size: 25px; font-weight: 800; color: var(--navy); letter-spacing: 0.02em; }
+
+.scart-place-btn { width: 100%; padding: 13px 0; border-radius: 999px; background: var(--navy-solid); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.03em; text-align: center; transition: all 0.2s ease; }
+.scart-place-btn:hover:not(:disabled) { background: var(--navy-d); }
+.scart-place-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.scart-unplace { width: 100%; text-align: center; font-size: 12.5px; color: var(--muted); padding-top: 2px; }
+.scart-unplace:hover { color: var(--navy); }
+
+.scart-stub { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 4px; }
+.scart-stub-bar { width: 100%; height: 34px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 4px, var(--ink) 4px 5px, transparent 5px 9px, var(--ink) 9px 12px, transparent 12px 14px); opacity: 0.85; }
+.scart-stub-no { font-family: SFMono-Regular, ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.3em; color: var(--muted); }
+.scart-footnote { margin: 0; font-size: 11.5px; line-height: 1.7; color: var(--muted); text-align: center; }
+
+@keyframes scartStampIn { 0% { opacity: 0; transform: rotate(-14deg) scale(1.6); } 70% { opacity: 1; transform: rotate(-14deg) scale(0.94); } 100% { opacity: 1; transform: rotate(-14deg) scale(1); } }
+.scart-stamp { position: absolute; top: 64px; right: 16px; width: 96px; height: 96px; border-radius: 50%; border: 2px solid var(--navy); display: grid; place-items: center; color: var(--navy); animation: scartStampIn 0.45s ease-out both; pointer-events: none; background: rgba(240,248,255,0.65); }
+.scart-stamp-in { width: 80px; height: 80px; border-radius: 50%; border: 1px dashed var(--navy); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.scart-stamp-in span:first-child { font-size: 8.5px; letter-spacing: 0.2em; font-weight: 700; }
+.scart-stamp-in span:nth-child(2) { font-size: 15px; font-weight: 800; letter-spacing: 0.06em; }
+.scart-stamp-in span:last-child { font-size: 8.5px; font-family: SFMono-Regular, ui-monospace, monospace; }
+
+/* 手機版：只保留右半部「訂單模式」，不顯示左側文章清單 */
+@media (max-width: 900px) {
+  .scart-panel { width: 100vw; border-radius: 0; }
+  .scart-head { padding: 18px 18px 14px; }
+  .scart-h1 { font-size: 19px; }
+  .scart-steps { display: none; }
+  .scart-body { padding: 18px 16px 28px; display: block; }
+  .scart-left { display: none; }
+  .scart-right { max-width: none; position: static; }
+}
+
+:root[data-theme="dark"] .scart-panel { background: var(--page); }
+:root[data-theme="dark"] .scart-group,
+:root[data-theme="dark"] .scart-receipt,
+:root[data-theme="dark"] .scart-empty { background: var(--card); border-color: var(--line); }
+:root[data-theme="dark"] .scart-badge { border-color: var(--card); }

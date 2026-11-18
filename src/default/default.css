@@ -2152,8 +2152,8 @@ html.skip-loader #whatcontent { display: block !important; }
 }
 
 .notif-avatar {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
