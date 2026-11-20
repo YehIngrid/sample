@@ -597,6 +597,22 @@
     </nav>
   </div><!-- /#whatcontent -->
 
+    <!-- 聊天室 -->
+    <button class="chaticon d-none d-lg-flex" id="chaticon" title="開啟聊天室">
+      <img src="../svg/chaticon.svg" alt="聊天室icon點擊開啟聊天室">
+      <span id="chatUnreadDot" style="display:none;position:absolute;top:0;right:0;width:12px;height:12px;background:red;border-radius:50%;border:2px solid white;pointer-events:none;"></span>
+    </button>
+    <iframe id="talkInterface" style="display:none;"></iframe>
+
+    <script>
+      window.addEventListener('chatUnread', () => {
+        document.getElementById('chatUnreadDot').style.display = 'block';
+      });
+      window.addEventListener('chatRead', () => {
+        document.getElementById('chatUnreadDot').style.display = 'none';
+      });
+    </script>
+
     <!-- Crop Modal -->
     <div class="modal fade" id="wishCropModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -621,6 +637,7 @@
 
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" integrity="sha384-jrOgQzBlDeUNdmQn3rUt/PZD+pdcRBdWd/HWRqRo+n2OR2QtGyjSaJC0GiCeH+ir" crossorigin="anonymous"></script>
     <script type="module" src="../questions/questions.js"></script>
+    <script type="module" src="../chatroom/chat.js"></script>
     <script type="module" src="wishpool.js"></script>
     <script type="module" src="wish.js"></script>
 </body>
