@@ -368,45 +368,44 @@ async function openCloseChatInterface() {
 const checkoutBtn = document.getElementById('checkout-btn');
 if (checkoutBtn) {
   checkoutBtn.addEventListener('click', async () => {
-
-    if (!await requireEduEmailVerified()) return;
-
-    // ===== 防重複送單 =====
+    // ===== 防重複送單：從第一時間就鎖住按鈕，避免連點/ghost click 在彈窗跳出前疊出第二個送單流程 =====
     if (isCheckingOut) return;
-
-    const selected = cartItems.filter(i => i.checked);
-    if (selected.length === 0) {
-      AppModal.fire('請先勾選要結帳的商品');
-      return;
-    }
-
-    const confirm = await AppModal.fire({
-      icon: 'question',
-      title: '確認送出訂單？',
-      text: `共 ${selected.length} 件商品，送出後將通知賣家。`,
-      showCancelButton: true,
-      confirmButtonText: '確認送出',
-      cancelButtonText: '再想想'
-    });
-    if (!confirm.isConfirmed) return;
-
-    // 面交提醒（可關閉）
-    if (!localStorage.getItem('th_no_meeting_reminder')) {
-      const remind = await AppModal.fire({
-        icon: 'info',
-        title: '面交提醒',
-        text: '請與賣家討論面交地點與時間等相關事宜',
-        confirmButtonText: '我知道了',
-        input: 'checkbox',
-        inputValue: 0,
-        inputPlaceholder: '以後不要再提醒',
-      });
-      if (remind.value) localStorage.setItem('th_no_meeting_reminder', '1');
-    }
+    isCheckingOut = true;
+    checkoutBtn.disabled = true;
 
     try {
-      isCheckingOut = true;
-      checkoutBtn.disabled = true;
+      if (!await requireEduEmailVerified()) return;
+
+      const selected = cartItems.filter(i => i.checked);
+      if (selected.length === 0) {
+        AppModal.fire('請先勾選要結帳的商品');
+        return;
+      }
+
+      const confirm = await AppModal.fire({
+        icon: 'question',
+        title: '確認送出訂單？',
+        text: `共 ${selected.length} 件商品，送出後將通知賣家。`,
+        showCancelButton: true,
+        confirmButtonText: '確認送出',
+        cancelButtonText: '再想想'
+      });
+      if (!confirm.isConfirmed) return;
+
+      // 面交提醒（可關閉）
+      if (!localStorage.getItem('th_no_meeting_reminder')) {
+        const remind = await AppModal.fire({
+          icon: 'info',
+          title: '面交提醒',
+          text: '請與賣家討論面交地點與時間等相關事宜',
+          confirmButtonText: '我知道了',
+          input: 'checkbox',
+          inputValue: 0,
+          inputPlaceholder: '以後不要再提醒',
+        });
+        if (remind.value) localStorage.setItem('th_no_meeting_reminder', '1');
+      }
+
       showCheckoutLoading();
 
       await backendService.createOrder(
