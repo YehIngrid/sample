@@ -524,12 +524,9 @@
           </button>
           <input type="file" id="pfAvatarFile" accept="image/*" hidden>
         </div>
-        <div class="id-name">創產系 114級 范同學</div>
-        <div class="id-titles">
-          <span class="t">台大碩士</span>
-          <span class="t">書卷獎</span>
-        </div>
-        <div class="id-sub">加入於 2025 / 09 · 半匿名顯示</div>
+        <div class="id-name"></div>
+        <div class="id-titles" style="display:none"></div>
+        <div class="id-sub"></div>
       </div>
     </div>
 
@@ -1268,21 +1265,50 @@ function renderCertCard(title) {
   return cert;
 }
 
-async function loadApprovedAchievements() {
+// 半實名顯示模式的中文標籤（對應 PUT /api/school/me/settings 的 displayNameMode）
+const DISPLAY_NAME_MODE_LABEL = { NICKNAME: '暱稱顯示', SEMI_REAL: '半實名顯示' };
+
+function renderIdCard(data) {
+  const avatarImg = document.getElementById('pfAvatarImg');
+  if (avatarImg && data.photoURL) avatarImg.src = data.photoURL;
+
+  const nameEl = document.querySelector('.id-card .id-name');
+  if (nameEl) nameEl.textContent = data.name || '';
+
+  const titlesEl = document.querySelector('.id-card .id-titles');
+  if (titlesEl) {
+    const visibleTitles = (data.titles || []).filter((t) => t.enabled);
+    titlesEl.innerHTML = '';
+    visibleTitles.forEach((t) => {
+      const span = document.createElement('span');
+      span.className = 't';
+      span.textContent = t.shortName || t.name || '';
+      titlesEl.appendChild(span);
+    });
+    titlesEl.style.display = visibleTitles.length ? '' : 'none';
+  }
+
+  const subEl = document.querySelector('.id-card .id-sub');
+  if (subEl) subEl.textContent = DISPLAY_NAME_MODE_LABEL[data.displayNameMode] || '';
+}
+
+async function loadAccountProfile() {
   const certAddBtn = document.getElementById('certAddBtn');
-  if (!certAddBtn) return;
   try {
     const res = await schoolBackendService.getAccountMe();
-    const titles = res?.data?.titles || [];
-    titles.forEach((title) => {
-      const card = renderCertCard(title);
-      certAddBtn.parentNode.insertBefore(card, certAddBtn);
-      wireCertToggle(card, title.id);
-    });
+    const data = res?.data || {};
+    renderIdCard(data);
+    if (certAddBtn) {
+      (data.titles || []).forEach((title) => {
+        const card = renderCertCard(title);
+        certAddBtn.parentNode.insertBefore(card, certAddBtn);
+        wireCertToggle(card, title.id);
+      });
+    }
   } catch (error) {
     // Silent failure matches the rest of the app's "degrade gracefully"
     // convention for read-only widgets (see memory: person_recent_notifications.md)
-    console.error('載入已認證頭銜失敗：', error);
+    console.error('載入帳號資料失敗：', error);
   }
 }
 
@@ -1311,7 +1337,7 @@ function wireCertToggle(cardEl, achievementId) {
   });
 }
 
-loadApprovedAchievements();
+loadAccountProfile();
 </script>
 <script defer src="school-new.js"></script>
 <script defer src="school-cart.js"></script>
