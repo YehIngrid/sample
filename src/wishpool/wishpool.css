@@ -1196,6 +1196,12 @@ body {
     position: relative;
     -webkit-user-select: none;
     user-select: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.wish-card-wrapper.wish-removing {
+    opacity: 0;
+    transform: scale(0.92);
+    pointer-events: none;
 }
 
 /* ── New wish card（糖果紋邊框、有照片/無照片兩種版型）── */

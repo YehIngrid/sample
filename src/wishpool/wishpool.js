@@ -421,12 +421,21 @@ async function deleteWish(id) {
   if (!confirm.isConfirmed) return;
   try {
     await wpbackendService.deleteWish(id);
-    const wrapper = document.querySelector(`[data-id="${id}"]`);
-    if (wrapper) {
+    AppModal.fire({ icon: 'success', title: '刪除成功', timer: 1500, showConfirmButton: false });
+
+    // 許願池：對外已不可見，淡出動畫後直接移除卡片
+    document.querySelectorAll(`#wishGrid [data-id="${id}"]`).forEach(wrapper => {
+      wrapper.addEventListener('transitionend', () => wrapper.remove(), { once: true });
+      wrapper.classList.add('wish-removing');
+      const total = document.getElementById('total');
+      if (total) total.textContent = Math.max(0, Number(total.textContent) - 1);
+    });
+
+    // 我的願望：卡片仍保留（可查看/重新發送），重抓列表取得最新狀態
+    document.querySelectorAll(`#myWishGrid [data-id="${id}"]`).forEach(wrapper => {
       wrapper.querySelector('.wish-card')?.classList.remove('flipped');
       wrapper.classList.add('wish-disabled');
-    }
-    AppModal.fire({ icon: 'success', title: '刪除成功', timer: 1500, showConfirmButton: false });
+    });
     setTimeout(() => listMyWishes(mycurrentPage), 1600);
   } catch (error) {
     AppModal.fire({ icon: 'error', title: 'Oops...刪除失敗', text: error.message });
