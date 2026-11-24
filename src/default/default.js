@@ -481,7 +481,10 @@ export async function requireEduEmailVerified() {
   return false;
 }
 
-// 整頁級的管理員守衛：用在「管理後台、設計文件、校園攻略站」這類整頁都只給 admin 看的頁面。
+// 整頁級的管理員守衛：用在「管理後台、設計文件、校園攻略站」這類整頁都只給
+// MODERATOR/ADMIN 看的頁面。跟 shop.js/school-new.js 顯示「管理後台」「校園攻略站」
+// 入口按鈕的判斷（['MODERATOR','ADMIN'].includes(role)）保持一致，避免 MODERATOR
+// 點了按鈕卻被這裡擋下來、導回首頁的死路（曾經只放行 ADMIN，是個不一致的 bug）。
 // 跟 requireLogin() 不同——這裡沒有「確定/取消」給使用者選，未通過就直接導走。
 // 呼叫端請先把 <body> 藏起來（例如 opacity:0），等這個 resolve 為 true 再顯示，避免內容閃一下。
 export async function requireAdminPage() {
@@ -499,7 +502,7 @@ export async function requireAdminPage() {
     return false;
   }
 
-  if (localStorage.getItem('role') !== 'ADMIN') {
+  if (!['MODERATOR', 'ADMIN'].includes(localStorage.getItem('role'))) {
     await AppModal.fire({
       icon: 'error',
       title: '沒有存取權限',
