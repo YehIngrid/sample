@@ -768,6 +768,8 @@ function _getDateParams() {
 }
 
 // ── Chart 管理 ──
+// chartjs-chart-funnel（CDN，見 official.html）需要先註冊才能用 type:'funnel'
+Chart.register(ChartFunnel.FunnelController, ChartFunnel.TrapezoidElement);
 const _statsCharts = {};
 
 function _makeChart(id, config) {
@@ -803,6 +805,30 @@ function _doughnutCfg(labels, data) {
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } },
+    },
+  };
+}
+
+function _funnelCfg(labels, data) {
+  const base = data[0] || 1;
+  return {
+    type: 'funnel',
+    data: { labels, datasets: [{ data, backgroundColor: _PALETTE.slice(0, labels.length) }] },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const v = ctx.parsed.x ?? ctx.parsed;
+              const pct = ((v / base) * 100).toFixed(1);
+              return `${ctx.label}：${v.toLocaleString()}（${pct}%）`;
+            },
+          },
+        },
+      },
     },
   };
 }
@@ -930,6 +956,12 @@ async function _loadDashboard(params) {
 
 async function _loadUserStats(params) {
   try {
+    const funnel = await _fetchStats('/api/admin/stats/funnel', params);
+    const steps = funnel?.steps ?? [];
+    _makeChart('chart-user-funnel', _funnelCfg(steps.map(s => s.name), steps.map(s => s.count)));
+  } catch { /* 漏斗圖載入失敗不擋其他用戶統計 */ }
+
+  try {
     const d = await _fetchStats('/api/admin/stats/users', params);
 
     // 註冊趨勢
@@ -1035,7 +1067,7 @@ async function _loadOrderStats(params) {
       { label: '總營收',    value: d?.totalRevenue != null ? `NT$ ${Number(d.totalRevenue).toLocaleString()}` : null, color: 'rgb(36, 182, 133)' },
       { label: '平均客單價', value: d?.averageOrderAmount != null ? `NT$ ${Number(d.averageOrderAmount).toLocaleString(undefined,{maximumFractionDigits:0})}` : null },
       { label: '取消率',    value: pct(cancelRate), color: '#c97f5a' },
-      { label: '完成訂單',  value: d?.completedOrders ?? d?.completed },
+      { label: '完成訂單',  value: (d?.statusDistribution ?? []).find(s => s.status === 'completed')?.count },
     ]);
 
     document.getElementById('order-top-buyers').innerHTML  = _listRows(d?.topBuyers  ?? [], i => i.name ?? i.username ?? '–');
@@ -1110,9 +1142,9 @@ async function _loadWishpoolStats(params) {
 async function _loadSearchStats(params) {
   try {
     const d = await _fetchStats('/api/admin/stats/search', params);
-    const { labels: tL, values: tV } = _parseTrend(d?.searchTrend ?? d?.trend ?? []);
+    const { labels: tL, values: tV } = _parseTrend(d?.searchTrend ?? []);
     _makeChart('chart-search-trend', _trendCfg(tL, tV, '搜尋次數', '#4a85c4'));
-    const kws = d?.popularKeywords ?? d?.topKeywords ?? d?.keywords ?? [];
+    const kws = d?.topKeywords ?? [];
     const kwEl = document.getElementById('search-keywords-cloud');
     if (kwEl) {
       if (!kws.length) {
