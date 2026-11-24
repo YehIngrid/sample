@@ -1305,12 +1305,27 @@ function renderCertCard(title) {
 // 半實名顯示模式的中文標籤（對應 PUT /api/school/me/settings 的 displayNameMode）
 const DISPLAY_NAME_MODE_LABEL = { NICKNAME: '暱稱顯示', SEMI_REAL: '半實名顯示' };
 
+// sidebar id-card 的姓名顯示：NICKNAME 顯示暱稱，SEMI_REAL 顯示半實名選字結果。
+// displayNameMode/暱稱來自 /api/account/me（這裡），選字結果來自「前台顯示名稱」
+// 那段獨立的 <script>（半實名選字 IIFE，透過 window.__publicSemiRealName 暴露），
+// 兩邊各自非同步載入、順序不保證，所以共用這支函式、誰後載完誰負責重繪一次。
+window.__schoolDisplayNameMode = undefined;
+window.__schoolAccountName = '';
+window.updateIdCardNameDisplay = function () {
+  const nameEl = document.querySelector('.id-card .id-name');
+  if (!nameEl) return;
+  nameEl.textContent = (window.__schoolDisplayNameMode === 'SEMI_REAL' && typeof window.__publicSemiRealName === 'function')
+    ? window.__publicSemiRealName()
+    : (window.__schoolAccountName || '');
+};
+
 function renderIdCard(data) {
   const avatarImg = document.getElementById('pfAvatarImg');
   if (avatarImg && data.photoURL) avatarImg.src = data.photoURL;
 
-  const nameEl = document.querySelector('.id-card .id-name');
-  if (nameEl) nameEl.textContent = data.name || '';
+  window.__schoolAccountName = data.name || '';
+  window.__schoolDisplayNameMode = data.displayNameMode;
+  window.updateIdCardNameDisplay();
 
   const titlesEl = document.querySelector('.id-card .id-titles');
   if (titlesEl) {
@@ -1830,21 +1845,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* ---------- 前台顯示名稱（半實名）：只公開一個字＋同學，不透露位置 ---------- */
   (function () {
-    // TODO: 半實名選字功能目前仍是純前端 mock（FULL 不是真實姓名，後端也沒有存這個索引的
-    // 欄位），見 memory: school_api_doc_gaps.md #3，待後端補欄位後再串接。
+    // TODO: 選字來源的「全名」仍是前端 mock（FULL 不是真實姓名——目前沒有任何 API
+    // 會回傳使用者真實姓名，見 memory: school_api_doc_gaps.md #3）。但 nameRevealIndex
+    // 本身已經是 PUT /api/school/me/settings 的真實欄位，這裡會正確讀回/送出。
     var FULL = '葉潔頤';
     var SUFFIX = '同學';
-    var KEY = 'th_cg_namePublicIdx';
     var tiles = document.getElementById('nrTiles');
     var preview = document.getElementById('nrPreview');
     if (!tiles) return;
 
     var chars = FULL.split('');
-    var idx = parseInt(localStorage.getItem(KEY), 10);
-    if (isNaN(idx) || idx < 0 || idx >= chars.length) idx = 0; // 預設公開第一個字
+    var idx = 0; // 載入 /me/settings 前的預設值，稍後由 DOMContentLoaded 區塊校正
 
     // 共用：給定全名＋公開字索引 → 前台顯示（單字＋同學，不含位置資訊）
     function publicName() { return chars[idx] + SUFFIX; }
+    // 讓 renderIdCard()（另一支 module script）能即時同步 sidebar 姓名顯示
+    window.__publicSemiRealName = publicName;
 
     function render() {
       tiles.innerHTML = '';
@@ -1854,10 +1870,23 @@ document.addEventListener('DOMContentLoaded', function() {
         b.className = 'nr-tile' + (i === idx ? ' on' : '');
         b.innerHTML = '<span class="nr-ch">' + ch + '</span>' +
           '<span class="nr-mark">' + (i === idx ? '公開' : '隱藏') + '</span>';
-        b.addEventListener('click', function () {
+        b.addEventListener('click', async function () {
+          if (b.disabled || i === idx) return;
+          var prevIdx = idx;
           idx = i;
-          try { localStorage.setItem(KEY, String(idx)); } catch (e) {}
           render();
+          window.updateIdCardNameDisplay();
+          tiles.querySelectorAll('.nr-tile').forEach(function (t) { t.disabled = true; });
+          try {
+            await window.schoolBackendService.updateMySettings({ nameRevealIndex: idx });
+          } catch (error) {
+            idx = prevIdx;
+            render();
+            window.updateIdCardNameDisplay();
+            AppModal.fire({ icon: 'error', title: '更新失敗', text: error.message || '請稍後再試' });
+          } finally {
+            tiles.querySelectorAll('.nr-tile').forEach(function (t) { t.disabled = false; });
+          }
         });
         tiles.appendChild(b);
       });
@@ -1875,12 +1904,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (wmToggle) {
       wmToggle.addEventListener('click', async function () {
-        var nextOn = !wmToggle.classList.contains('on');
+        if (wmToggle.disabled) return;
+        var prevOn = wmToggle.classList.contains('on');
+        var nextOn = !prevOn;
+        // 樂觀更新：先假設成功、立刻切換畫面，失敗才退回，開關才不會感覺卡頓
+        setToggle(wmToggle, nextOn);
         wmToggle.disabled = true;
         try {
           await window.schoolBackendService.updateMySettings({ watermarkPreference: nextOn });
-          setToggle(wmToggle, nextOn);
         } catch (error) {
+          setToggle(wmToggle, prevOn);
           AppModal.fire({ icon: 'error', title: '更新失敗', text: error.message || '請稍後再試' });
         } finally {
           wmToggle.disabled = false;
@@ -1890,13 +1923,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (dnmToggle) {
       dnmToggle.addEventListener('click', async function () {
-        var nextMode = dnmToggle.classList.contains('on') ? 'NICKNAME' : 'SEMI_REAL';
+        if (dnmToggle.disabled) return;
+        var prevOn = dnmToggle.classList.contains('on');
+        var nextMode = prevOn ? 'NICKNAME' : 'SEMI_REAL';
+        // 樂觀更新：先假設成功、立刻切換畫面＋sidebar 姓名，失敗才退回
+        setToggle(dnmToggle, nextMode === 'SEMI_REAL');
+        showSemiRealBlock(nextMode === 'SEMI_REAL');
+        window.__schoolDisplayNameMode = nextMode;
+        window.updateIdCardNameDisplay();
         dnmToggle.disabled = true;
         try {
           await window.schoolBackendService.updateMySettings({ displayNameMode: nextMode });
-          setToggle(dnmToggle, nextMode === 'SEMI_REAL');
-          showSemiRealBlock(nextMode === 'SEMI_REAL');
         } catch (error) {
+          var revertMode = prevOn ? 'SEMI_REAL' : 'NICKNAME';
+          setToggle(dnmToggle, prevOn);
+          showSemiRealBlock(prevOn);
+          window.__schoolDisplayNameMode = revertMode;
+          window.updateIdCardNameDisplay();
           AppModal.fire({ icon: 'error', title: '更新失敗', text: error.message || '請稍後再試' });
         } finally {
           dnmToggle.disabled = false;
@@ -1914,6 +1957,12 @@ document.addEventListener('DOMContentLoaded', function() {
         var isSemiReal = data.displayNameMode === 'SEMI_REAL';
         setToggle(dnmToggle, isSemiReal);
         showSemiRealBlock(isSemiReal);
+        if (typeof data.nameRevealIndex === 'number' && data.nameRevealIndex >= 0 && data.nameRevealIndex < chars.length) {
+          idx = data.nameRevealIndex;
+          render();
+        }
+        window.__schoolDisplayNameMode = data.displayNameMode;
+        window.updateIdCardNameDisplay();
       } catch (error) {
         console.error('載入偏好設定失敗：', error);
       }

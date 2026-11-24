@@ -312,11 +312,12 @@ export default class SchoolBackendService {
     }
 
     // PUT /api/school/me/settings
-    async updateMySettings({ watermarkPreference, displayNameMode } = {}) {
+    async updateMySettings({ watermarkPreference, displayNameMode, nameRevealIndex } = {}) {
         try {
             const payload = {};
             if (watermarkPreference != null) payload.watermarkPreference = !!watermarkPreference;
             if (displayNameMode != null) payload.displayNameMode = displayNameMode;
+            if (nameRevealIndex != null) payload.nameRevealIndex = nameRevealIndex;
             const response = await this.http.put('/api/school/me/settings', payload);
             return response.data;
         } catch (error) {
