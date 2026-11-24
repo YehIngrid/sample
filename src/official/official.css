@@ -966,6 +966,29 @@ body {
 #analyticsTabNav .nav-link:hover:not(.active) { color: #004b97; background: aliceblue; border-radius: 4px 4px 0 0; }
 .stats-quick-btn { font-size: 0.8rem; padding: 3px 10px; }
 
+/* ── 桌機版：側邊欄預設收起，游標靠近左邊緣才滑出 ── */
+@media (min-width: 641px) {
+  .official-sidebar {
+    transform: translateX(calc(-1 * var(--sidebar-w) + 10px));
+    transition: transform 0.22s ease;
+    z-index: 500;
+    box-shadow: 6px 0 24px rgba(0,0,0,0.12);
+  }
+  .official-sidebar:hover,
+  .official-sidebar:focus-within {
+    transform: translateX(0);
+  }
+  .official-main {
+    margin-left: 10px;
+    transition: margin-left 0.22s ease;
+  }
+  /* 側邊欄滑出時，主內容跟著讓出空間，不要被蓋住 */
+  .official-sidebar:hover + .official-main,
+  .official-sidebar:focus-within + .official-main {
+    margin-left: var(--sidebar-w);
+  }
+}
+
 /* ── RWD ── */
 @media (max-width: 640px) {
   .mobile-topbar { display: flex; }

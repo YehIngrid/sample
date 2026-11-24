@@ -998,14 +998,6 @@ async function _loadUserStats(params) {
       { label: '信箱已驗證',    value: verified },
       { label: '信箱未驗證',    value: unverified, color: unverified > 0 ? '#c97f5a' : undefined },
     ]);
-
-    // 信箱驗證狀態圓餅圖
-    if (emailStats.length) {
-      _makeChart('chart-user-email-verify', _doughnutCfg(
-        ['已驗證', '未驗證'],
-        [verified, unverified]
-      ));
-    }
   } catch { /* silent */ }
 }
 

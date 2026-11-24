@@ -802,7 +802,7 @@
       <div class="pane-head">帳號設定</div>
 
       <div class="nr-card">
-        <div class="set-row" id="dnmRow" style="padding-top:0;border-bottom:1px solid var(--line);margin-bottom:16px;">
+        <div class="set-row" id="dnmRow" style="padding-top:0;">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21 v-2 a4 4 0 0 0-4-4 H8 a4 4 0 0 0-4 4 v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <div class="sbody">
             <div class="stitle">半實名顯示</div>
@@ -1900,7 +1900,14 @@ document.addEventListener('DOMContentLoaded', function() {
     var wmToggle = document.getElementById('wmToggle');
 
     function setToggle(btn, on) { if (btn) btn.classList.toggle('on', !!on); }
-    function showSemiRealBlock(show) { if (semiRealBlock) semiRealBlock.style.display = show ? '' : 'none'; }
+    var dnmRow = document.getElementById('dnmRow');
+    function showSemiRealBlock(show) {
+      if (semiRealBlock) semiRealBlock.style.display = show ? '' : 'none';
+      // 關閉半實名顯示時，下面的選字區塊整個隱藏，分隔線留著會變成一條懸空的線，一併藏起來
+      if (dnmRow) dnmRow.style.cssText = 'padding-top:0;' + (show
+        ? 'border-bottom:1px solid var(--line);margin-bottom:16px;'
+        : 'border-bottom:none;margin-bottom:0;padding-bottom:0;');
+    }
 
     if (wmToggle) {
       wmToggle.addEventListener('click', async function () {
