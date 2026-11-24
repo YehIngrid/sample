@@ -133,6 +133,13 @@
     .cert-add .pic svg { width: 18px; height: 18px; }
     .cert-add .ct { font-size: 13px; font-weight: 700; color: var(--navy); }
     .cert-add .cs { font-size: 11px; color: var(--muted); line-height: 1.5; }
+    /* 還沒有任何頭銜/審核紀錄時，「申請新頭銜」是 .cert-grid 裡唯一的卡片，
+       桌機版放大成滿版，不要卡在雙欄 grid 的半欄裡顯得又小又空 */
+    .cert-grid .cert-add:only-child { grid-column: 1 / -1; padding: 48px 24px; }
+    .cert-grid .cert-add:only-child .pic { width: 56px; height: 56px; }
+    .cert-grid .cert-add:only-child .pic svg { width: 24px; height: 24px; }
+    .cert-grid .cert-add:only-child .ct { font-size: 15px; }
+    .cert-grid .cert-add:only-child .cs { font-size: 12.5px; max-width: 380px; }
 
     /* 前台顯示名稱（半實名）設定 */
     .nr-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 16px; }
@@ -319,7 +326,10 @@
     }
 
     /* ===== Modal 基礎（申請新頭銜等共用） ===== */
-    .pm-backdrop { position: fixed; inset: 0; z-index: 1200; background: rgba(15,39,69,0.45); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+    /* z-index 要高於 default.css 的 .bottom-nav（4000）—— 否則手機版浮動的底部
+       導覽列會蓋在這個 modal 上面，擋住送出按鈕（.bottom-nav 不是 Bootstrap
+       .modal，打開這個自製 modal 不會自動觸發 body.modal-open 降低它的 z-index）。 */
+    .pm-backdrop { position: fixed; inset: 0; z-index: 4500; background: rgba(15,39,69,0.45); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
     .pm-backdrop.open { opacity: 1; pointer-events: auto; }
     .pm-dialog { width: min(440px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; background: var(--card); border-radius: 22px; box-shadow: 0 24px 60px -18px rgba(0,40,80,0.5); transform: translateY(16px) scale(0.97); transition: transform 0.3s cubic-bezier(0.34,1.35,0.5,1); }
     .pm-backdrop.open .pm-dialog { transform: none; }
@@ -465,7 +475,7 @@
         <a href="school.html">攻略首頁</a>
         <a href="school-about.html">攻略介紹</a>
         <a href="school-article.html">全部文章</a>
-        <a href="school-studio.html">撰寫攻略</a>
+        <a href="school-studio.html" data-publish-entry>撰寫攻略</a>
         <a href="school-contests.html">全部競賽</a>
       </div>
     </div>
@@ -473,7 +483,7 @@
   </div>
   <div class="right">
     <button class="theme-toggle" id="themeToggle" type="button" title="切換深色模式"><i class="ti ti-moon" id="themeIcon"></i></button>
-    <a class="btn-sm navy d-none d-lg-inline-flex" href="school-studio.html" id="openOnboarding">
+    <a class="btn-sm navy d-none d-lg-inline-flex" href="school-studio.html" id="openOnboarding" data-publish-entry>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
       撰寫攻略
     </a>
@@ -777,25 +787,8 @@
     <div class="pane" data-pane="cert">
       <div class="pane-head">認證與頭銜</div>
       <div class="cert-grid">
-        <!-- Already-approved achievements are rendered here at runtime from
-             GET /api/account/me (data.titles) — see the module <script>
-             near the top of this page (loadApprovedAchievements). -->
-        <div class="cert" data-cert-status="pending">
-          <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg></div>
-          <div class="cbody">
-            <div class="cname">多益 935 證照認證</div>
-            <div class="cdesc">成績單審查中，通常 1–3 個工作天完成。通過後將自動加上頭銜。</div>
-            <span class="cstatus pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審查中</span>
-          </div>
-        </div>
-        <div class="cert" data-cert-status="rejected">
-          <div class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg></div>
-          <div class="cbody">
-            <div class="cname">系排前 5% 獎項認證</div>
-            <div class="cdesc">審核未通過：上傳的成績單截圖不清楚，請重新上傳完整成績單。</div>
-            <span class="cstatus rejected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>已駁回</span>
-          </div>
-        </div>
+        <!-- 已核准頭銜 / 審查中 / 已駁回 皆於 runtime 動態渲染，見本頁最上方的
+             module <script>（loadAccountProfile → renderCertCard / renderCertHistoryCard）。 -->
         <div class="cert cert-add" id="certAddBtn">
           <div class="pic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg></div>
           <div class="ct">申請新頭銜</div>
@@ -809,11 +802,21 @@
       <div class="pane-head">帳號設定</div>
 
       <div class="nr-card">
-        <div class="nr-h">前台顯示名稱（半實名）</div>
-        <div class="nr-d">選一個要公開的字（不一定是姓）。前台只顯示「<b>該字 ＋ 同學</b>」，<b>不會透露它在姓名中的位置</b>——別人無法得知你的姓名順序。系級與年級固定顯示。</div>
-        <div class="nr-tiles" id="nrTiles"></div>
-        <div class="nr-preview">前台顯示為&nbsp;<span class="nr-name" id="nrPreview"></span></div>
-        <div class="nr-note" id="nrNote">後台真實姓名僅本人與審查可見。</div>
+        <div class="set-row" id="dnmRow" style="padding-top:0;border-bottom:1px solid var(--line);margin-bottom:16px;">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21 v-2 a4 4 0 0 0-4-4 H8 a4 4 0 0 0-4 4 v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="sbody">
+            <div class="stitle">半實名顯示</div>
+            <div class="sdesc">關閉時前台只顯示暱稱；開啟後額外公開真實姓名其中一字＋「同學」。</div>
+          </div>
+          <button class="tgl" type="button" id="dnmToggle" data-api-toggle aria-label="是否開啟半實名顯示"></button>
+        </div>
+        <div id="nrSemiRealBlock">
+          <div class="nr-h">選一個要公開的字</div>
+          <div class="nr-d">選一個要公開的字（不一定是姓）。前台只顯示「<b>該字 ＋ 同學</b>」，<b>不會透露它在姓名中的位置</b>——別人無法得知你的姓名順序。系級與年級固定顯示。</div>
+          <div class="nr-tiles" id="nrTiles"></div>
+          <div class="nr-preview">前台顯示為&nbsp;<span class="nr-name" id="nrPreview"></span></div>
+          <div class="nr-note" id="nrNote">後台真實姓名僅本人與審查可見。</div>
+        </div>
       </div>
 
       <div class="set-card">
@@ -824,6 +827,14 @@
             <div class="sdesc" id="evDesc"></div>
           </div>
           <span class="pill-wrap" id="evPillWrap"></span>
+        </div>
+        <div class="set-row" id="wmRow">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5 v6 c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10 V5Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <div class="sbody">
+            <div class="stitle">圖片浮水印保護</div>
+            <div class="sdesc">攻略內文的圖片加上浮水印，降低被截圖盜用的風險。</div>
+          </div>
+          <button class="tgl" type="button" id="wmToggle" data-api-toggle aria-label="是否開啟圖片浮水印保護"></button>
         </div>
         <div class="set-row">
           <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10 h20"/></svg></div>
@@ -1235,14 +1246,40 @@ window.schoolBackendService = schoolBackendService;
   if (ok) document.body.style.visibility = "visible";
 })();
 
-// ── Approved achievements (已認證頭銜)：render from real account data ──
-// Only APPROVED achievements are available via GET /api/account/me
-// (data.titles); there is no tag-1 endpoint that returns the caller's
-// PENDING/REJECTED achievement history, so those two states can't be
-// rendered from live data yet (see memory: school_api_doc_gaps.md #2).
+// ── Achievements/titles (認證與頭銜)：render from real account data ──
+// Approved titles come from GET /api/account/me (data.titles); PENDING/
+// REJECTED history comes from GET /api/school/me/certifications
+// (data.achievements), which also includes APPROVED entries — those are
+// filtered out below since the account/me titles already cover them.
 const CERT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg>';
 const CERT_OK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>已認證';
 const CERT_HIDDEN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8Z"/><path d="m4 4 16 16"/></svg>不顯示';
+const CERT_PENDING_CIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg>';
+const CERT_PENDING_STATUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>審查中';
+const CERT_REJECTED_CIC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8.2 13.9 7 22 l5-3 5 3-1.2-8.1"/></svg>';
+const CERT_REJECTED_STATUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>已駁回';
+
+// PENDING/REJECTED 頭銜申請：GET /api/school/me/certifications 的 data.achievements[]
+// （/api/account/me 的 data.titles 只有已核准項目，見上方註解）。這支回應沒有逐筆的
+// rejectReason，所以駁回卡片只能顯示通用文案。
+function renderCertHistoryCard(item) {
+  const isRejected = String(item.status).toUpperCase() === 'REJECTED';
+  const cert = document.createElement('div');
+  cert.className = 'cert';
+  cert.dataset.certStatus = isRejected ? 'rejected' : 'pending';
+  cert.innerHTML =
+    '<div class="cic">' + (isRejected ? CERT_REJECTED_CIC : CERT_PENDING_CIC) + '</div>' +
+    '<div class="cbody">' +
+      '<div class="cname"></div>' +
+      '<div class="cdesc"></div>' +
+      '<span class="cstatus ' + (isRejected ? 'rejected' : 'pending') + '">' + (isRejected ? CERT_REJECTED_STATUS : CERT_PENDING_STATUS) + '</span>' +
+    '</div>';
+  cert.querySelector('.cname').textContent = item.shortName || item.name || '';
+  cert.querySelector('.cdesc').textContent = isRejected
+    ? '審核未通過，請確認資料後重新申請。'
+    : '成績單／證明審查中，通常 1–3 個工作天完成。通過後將自動加上頭銜。';
+  return cert;
+}
 
 function renderCertCard(title) {
   const cert = document.createElement('div');
@@ -1290,7 +1327,37 @@ function renderIdCard(data) {
 
   const subEl = document.querySelector('.id-card .id-sub');
   if (subEl) subEl.textContent = DISPLAY_NAME_MODE_LABEL[data.displayNameMode] || '';
+
+  // data.writable 只有在「就學證明實名認證」通過審核後，後端才會在同一筆 transaction
+  // 裡設成 true（見 admin 審核 identity-verification 的 API 說明）。false 時攔截所有
+  // 「撰寫攻略／去發佈」入口（含之後 school.js 的 renderList 動態產生的按鈕，用
+  // document 層級委派監聽，兩邊不用互相等對方的非同步載入完成）。
+  window.__schoolWritable = data.writable;
 }
+
+function showPublishGateModal() {
+  AppModal.fire({
+    icon: 'info',
+    title: '尚未完成就學驗證',
+    text: '需要先完成「就學證明實名認證」並通過審核，才能發佈攻略。',
+    confirmButtonText: '前往驗證',
+    showCancelButton: true,
+    cancelButtonText: '關閉'
+  }).then((result) => {
+    if (result.isConfirmed && typeof window.activatePane === 'function') {
+      window.activatePane('settings');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+}
+
+document.addEventListener('click', (e) => {
+  if (window.__schoolWritable !== false) return;
+  const entry = e.target.closest('[data-publish-entry]');
+  if (!entry) return;
+  e.preventDefault();
+  showPublishGateModal();
+});
 
 async function loadAccountProfile() {
   const certAddBtn = document.getElementById('certAddBtn');
@@ -1309,6 +1376,20 @@ async function loadAccountProfile() {
     // Silent failure matches the rest of the app's "degrade gracefully"
     // convention for read-only widgets (see memory: person_recent_notifications.md)
     console.error('載入帳號資料失敗：', error);
+  }
+
+  if (certAddBtn) {
+    try {
+      const certRes = await schoolBackendService.getMyCertifications();
+      const achievements = certRes?.data?.achievements || [];
+      achievements
+        .filter((a) => String(a.status).toUpperCase() !== 'APPROVED')
+        .forEach((item) => {
+          certAddBtn.parentNode.insertBefore(renderCertHistoryCard(item), certAddBtn);
+        });
+    } catch (error) {
+      console.error('載入頭銜審核狀態失敗：', error);
+    }
   }
 }
 
@@ -1400,7 +1481,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (isValid) activatePane(initial);
   })();
 
-  // 「我的攻略／已購買／收藏」先鋪一輪骨架屏，讓使用者知道內容正在載入
+  // 「我的攻略／已購買／收藏」：先鋪骨架屏，再打真實 API 取代 mock 內容
   (function () {
     function skeletonRowHTML() {
       return '<div class="art-row">' +
@@ -1415,16 +1496,193 @@ document.addEventListener('DOMContentLoaded', function() {
         '</div>' +
       '</div>';
     }
-    ['mine', 'bought', 'saved'].forEach(function (name) {
+
+    var EMPTY_TEXT = { mine: '你還沒有發佈任何攻略', bought: '還沒有購買任何攻略', saved: '還沒有收藏任何攻略' };
+    var THUMB_LETTERS = ['a', 'b', 'c', 'd'];
+    var READ_ICON = '<img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀">';
+    var LIKE_ICON = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:var(--warn);"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>';
+    var REVIEW_ICON = '<img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論">';
+
+    function priceText(article) {
+      return article.type === 'FREE' || !article.price ? '免費' : ('NT$ ' + Number(article.price).toLocaleString());
+    }
+
+    function metaSpan(iconHTML, count) {
+      var span = document.createElement('span');
+      span.innerHTML = iconHTML; // icon markup is a constant, never user data
+      span.appendChild(document.createTextNode(' ' + Number(count || 0).toLocaleString()));
+      return span;
+    }
+
+    function textSpan(text) {
+      var span = document.createElement('span');
+      span.textContent = text;
+      return span;
+    }
+
+    function badge(cls, text) {
+      var span = document.createElement('span');
+      span.className = 'pf-badge ' + cls;
+      span.textContent = text;
+      return span;
+    }
+
+    function actionLink(href, text) {
+      var a = document.createElement('a');
+      a.className = 'row-act';
+      a.href = href;
+      a.textContent = text;
+      return a;
+    }
+
+    function buildRow(article, variant, index) {
+      var row = document.createElement('div');
+      row.className = 'art-row' + (article.coverUrl ? '' : ' no-thumb');
+
+      if (article.coverUrl) {
+        var thumb = document.createElement('div');
+        thumb.className = 'thumb ' + THUMB_LETTERS[index % THUMB_LETTERS.length];
+        thumb.style.backgroundImage = 'url(' + article.coverUrl + ')';
+        thumb.style.backgroundSize = 'cover';
+        thumb.style.backgroundPosition = 'center';
+        row.appendChild(thumb);
+      }
+
+      var mid = document.createElement('div');
+      mid.className = 'a-mid';
+      var cat = document.createElement('div');
+      cat.className = 'a-cat';
+      cat.textContent = article.categoryName || '';
+      var h4 = document.createElement('h4');
+      h4.textContent = article.title || '';
+      var meta = document.createElement('div');
+      meta.className = 'a-meta';
+      mid.appendChild(cat);
+      mid.appendChild(h4);
+
+      var right = document.createElement('div');
+      right.className = 'a-right';
+
+      if (variant === 'mine') {
+        meta.appendChild(metaSpan(READ_ICON, article.viewCount));
+        meta.appendChild(metaSpan(LIKE_ICON, article.likeCount));
+        meta.appendChild(metaSpan(REVIEW_ICON, article.reviewCount));
+        if (article.applicableYear) meta.appendChild(textSpan('適用 ' + article.applicableYear + ' 學年'));
+        else if (article.type === 'FREE' || !article.price) meta.appendChild(textSpan('免費'));
+
+        if (article.status === 'draft') {
+          right.appendChild(badge('draft', '草稿'));
+          right.appendChild(actionLink('school-composer.html?id=' + encodeURIComponent(article.id), '繼續撰寫 →'));
+        } else {
+          right.appendChild(badge(article.status === 'archived' ? 'stale' : 'pub', article.status === 'archived' ? '已下架' : '已發佈'));
+          var priceEl = document.createElement('span');
+          priceEl.className = 'a-price' + ((article.type === 'FREE' || !article.price) ? ' free' : '');
+          priceEl.textContent = priceText(article);
+          right.appendChild(priceEl);
+          right.appendChild(actionLink('school-post.html?id=' + encodeURIComponent(article.id), '查看 →'));
+        }
+      } else if (variant === 'bought') {
+        meta.appendChild(textSpan('作者 ' + (article.author?.name || '未知')));
+        meta.appendChild(textSpan('已解鎖 · 永久閱讀'));
+        right.appendChild(badge('pub', '已解鎖'));
+        right.appendChild(actionLink('school-post.html?id=' + encodeURIComponent(article.id), '閱讀 →'));
+      } else { // saved
+        meta.appendChild(textSpan('作者 ' + (article.author?.name || '未知')));
+        var priceEl2 = document.createElement('span');
+        priceEl2.className = 'a-price' + ((article.type === 'FREE' || !article.price) ? ' free' : '');
+        priceEl2.textContent = priceText(article);
+        right.appendChild(priceEl2);
+        right.appendChild(actionLink(
+          'school-post.html?id=' + encodeURIComponent(article.id),
+          article.unlocked ? '閱讀 →' : '前往購買 →'
+        ));
+      }
+
+      mid.appendChild(meta);
+      row.appendChild(mid);
+      row.appendChild(right);
+      return row;
+    }
+
+    function renderList(rowsEl, items, variant) {
+      rowsEl.innerHTML = '';
+      if (!items.length) {
+        var empty = document.createElement('div');
+        empty.style.cssText = 'text-align:center;color:var(--muted);font-size:14px;padding:32px 0;';
+        empty.textContent = EMPTY_TEXT[variant] || '目前沒有資料';
+        rowsEl.appendChild(empty);
+        if (variant === 'mine') {
+          var goPublish = document.createElement('a');
+          goPublish.className = 'btn-sm navy';
+          goPublish.href = 'school-studio.html';
+          goPublish.setAttribute('data-publish-entry', '');
+          goPublish.style.cssText = 'display:inline-flex;margin-top:16px;';
+          goPublish.textContent = '去發佈';
+          empty.style.display = 'flex';
+          empty.style.flexDirection = 'column';
+          empty.style.alignItems = 'center';
+          empty.appendChild(goPublish);
+        }
+        return;
+      }
+      items.forEach(function (article, i) { rowsEl.appendChild(buildRow(article, variant, i)); });
+    }
+
+    async function loadMine(status) {
+      var skeletonEl = document.getElementById('mineSkeleton');
+      var rowsEl = document.getElementById('mineRows');
+      if (!rowsEl) return;
+      skeletonEl.style.display = '';
+      rowsEl.style.display = 'none';
+      try {
+        var res = await window.schoolBackendService.getMyArticles({ limit: 50, status: status || undefined });
+        renderList(rowsEl, res?.data?.items || [], 'mine');
+      } catch (error) {
+        console.error('載入我的攻略失敗：', error);
+        renderList(rowsEl, [], 'mine');
+      } finally {
+        skeletonEl.style.display = 'none';
+        rowsEl.style.display = '';
+      }
+    }
+
+    async function loadSimpleList(name, fetcher, variant) {
       var skeletonEl = document.getElementById(name + 'Skeleton');
       var rowsEl = document.getElementById(name + 'Rows');
       if (!skeletonEl || !rowsEl) return;
-      skeletonEl.innerHTML = skeletonRowHTML() + skeletonRowHTML();
-      requestAnimationFrame(function () {
+      try {
+        var res = await fetcher({ limit: 50 });
+        renderList(rowsEl, res?.data?.items || [], variant);
+      } catch (error) {
+        console.error('載入' + name + '清單失敗：', error);
+        renderList(rowsEl, [], variant);
+      } finally {
         skeletonEl.style.display = 'none';
         rowsEl.style.display = '';
-      });
+      }
+    }
+
+    // 跟本頁其他「點擊才呼叫 window.schoolBackendService」的地方不同，這三支是頁面一載入就要
+    // 打的 API，module script 要到文件解析完才會跑完並設好 window.schoolBackendService，
+    // 所以得等 DOMContentLoaded（module/defer script 執行完畢後才會觸發）才能呼叫，
+    // 否則會是 undefined（這支 script 不是 module，會比 module script 先同步執行）。
+    document.addEventListener('DOMContentLoaded', function () {
+      loadMine();
+      loadSimpleList('bought', window.schoolBackendService.getMyPurchases.bind(window.schoolBackendService), 'bought');
+      loadSimpleList('saved', window.schoolBackendService.getMyBookmarks.bind(window.schoolBackendService), 'saved');
     });
+
+    // 「我的攻略」篩選 chip：全部／已發佈／草稿 → 對應 /me/articles 的 status 參數
+    var FILTER_STATUS = { '全部': undefined, '已發佈': 'published', '草稿': 'draft' };
+    var mineFilters = document.querySelector('[data-pane="mine"] .filters');
+    if (mineFilters) {
+      mineFilters.addEventListener('click', function (e) {
+        var chip = e.target.closest('.f');
+        if (!chip) return;
+        mineFilters.querySelectorAll('.f').forEach(function (f) { f.classList.toggle('on', f === chip); });
+        loadMine(FILTER_STATUS[chip.textContent.trim()]);
+      });
+    }
   })();
 
   // 名字卡右上齒輪 → 直接跳到「帳號設定」分頁
@@ -1525,8 +1783,10 @@ document.addEventListener('DOMContentLoaded', function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // 設定開關
-  document.querySelectorAll('.tgl:not([data-cert-toggle])').forEach(function (t) {
+  // 設定開關（純前端 mock，尚無對應 API 的開關，例如通知偏好）。有打真實 API 的開關
+  // （data-api-toggle，例如半實名顯示／浮水印保護）有自己的 click handler，不能套這段
+  // 純 class toggle，否則兩個 listener 會互相打架，見下方「半實名顯示模式」那段的 IIFE。
+  document.querySelectorAll('.tgl:not([data-cert-toggle]):not([data-api-toggle])').forEach(function (t) {
     t.addEventListener('click', function () { t.classList.toggle('on'); });
   });
 
@@ -1570,13 +1830,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* ---------- 前台顯示名稱（半實名）：只公開一個字＋同學，不透露位置 ---------- */
   (function () {
-    var FULL = '葉潔頤';        // 後台真實姓名（示範，正式由後端提供）
-    var DEPT = '創產系 大二';    // 系級／年級（固定顯示）
+    // TODO: 半實名選字功能目前仍是純前端 mock（FULL 不是真實姓名，後端也沒有存這個索引的
+    // 欄位），見 memory: school_api_doc_gaps.md #3，待後端補欄位後再串接。
+    var FULL = '葉潔頤';
     var SUFFIX = '同學';
     var KEY = 'th_cg_namePublicIdx';
     var tiles = document.getElementById('nrTiles');
     var preview = document.getElementById('nrPreview');
-    var idName = document.querySelector('.id-name');
     if (!tiles) return;
 
     var chars = FULL.split('');
@@ -1602,9 +1862,62 @@ document.addEventListener('DOMContentLoaded', function() {
         tiles.appendChild(b);
       });
       preview.textContent = publicName();
-      if (idName) idName.textContent = DEPT + ' ' + publicName();
     }
     render();
+
+    // ---- 半實名顯示模式 / 浮水印偏好：PUT /api/school/me/settings ----
+    var semiRealBlock = document.getElementById('nrSemiRealBlock');
+    var dnmToggle = document.getElementById('dnmToggle');
+    var wmToggle = document.getElementById('wmToggle');
+
+    function setToggle(btn, on) { if (btn) btn.classList.toggle('on', !!on); }
+    function showSemiRealBlock(show) { if (semiRealBlock) semiRealBlock.style.display = show ? '' : 'none'; }
+
+    if (wmToggle) {
+      wmToggle.addEventListener('click', async function () {
+        var nextOn = !wmToggle.classList.contains('on');
+        wmToggle.disabled = true;
+        try {
+          await window.schoolBackendService.updateMySettings({ watermarkPreference: nextOn });
+          setToggle(wmToggle, nextOn);
+        } catch (error) {
+          AppModal.fire({ icon: 'error', title: '更新失敗', text: error.message || '請稍後再試' });
+        } finally {
+          wmToggle.disabled = false;
+        }
+      });
+    }
+
+    if (dnmToggle) {
+      dnmToggle.addEventListener('click', async function () {
+        var nextMode = dnmToggle.classList.contains('on') ? 'NICKNAME' : 'SEMI_REAL';
+        dnmToggle.disabled = true;
+        try {
+          await window.schoolBackendService.updateMySettings({ displayNameMode: nextMode });
+          setToggle(dnmToggle, nextMode === 'SEMI_REAL');
+          showSemiRealBlock(nextMode === 'SEMI_REAL');
+        } catch (error) {
+          AppModal.fire({ icon: 'error', title: '更新失敗', text: error.message || '請稍後再試' });
+        } finally {
+          dnmToggle.disabled = false;
+        }
+      });
+    }
+
+    // 頁面一載入就要打的 API：要等 module script 執行完、設好
+    // window.schoolBackendService 後才能呼叫（同樣的時序問題見「我的攻略」那段註解）。
+    document.addEventListener('DOMContentLoaded', async function () {
+      try {
+        var res = await window.schoolBackendService.getMySettings();
+        var data = res && res.data || {};
+        setToggle(wmToggle, data.watermarkPreference);
+        var isSemiReal = data.displayNameMode === 'SEMI_REAL';
+        setToggle(dnmToggle, isSemiReal);
+        showSemiRealBlock(isSemiReal);
+      } catch (error) {
+        console.error('載入偏好設定失敗：', error);
+      }
+    });
   })();
 </script>
 

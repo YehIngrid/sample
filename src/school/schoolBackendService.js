@@ -244,6 +244,103 @@ export default class SchoolBackendService {
         }
     }
 
+    // ── Profile side-panes (個人檔案頁：我的攻略／已購買／收藏／數據分析／設定) ──
+
+    // GET /api/school/me/articles — my own articles (any status)
+    async getMyArticles({ page = 1, limit = 20, status } = {}) {
+        try {
+            const params = { page, limit };
+            if (status) params.status = status;
+            const response = await this.http.get('/api/school/me/articles', { params });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('取得我的攻略失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/school/me/purchases — articles I've bought
+    async getMyPurchases({ page = 1, limit = 20 } = {}) {
+        try {
+            const response = await this.http.get('/api/school/me/purchases', { params: { page, limit } });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('取得已購買清單失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/school/me/bookmarks — articles I've bookmarked
+    async getMyBookmarks({ page = 1, limit = 20 } = {}) {
+        try {
+            const response = await this.http.get('/api/school/me/bookmarks', { params: { page, limit } });
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('取得收藏清單失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/school/me/analytics — creator trend data (viewTrend/likeTrend/
+    // bookmarkTrend/revenueTrend/totalRevenue). NOTE: no per-article breakdown
+    // and no reader-source breakdown exist in this response (see memory:
+    // school_api_doc_gaps.md #2/#6) — callers must not fabricate those.
+    async getMyAnalytics() {
+        try {
+            const response = await this.http.get('/api/school/me/analytics');
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('取得創作者數據失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/school/me/settings — my display/watermark preferences
+    async getMySettings() {
+        try {
+            const response = await this.http.get('/api/school/me/settings');
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('取得偏好設定失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // PUT /api/school/me/settings
+    async updateMySettings({ watermarkPreference, displayNameMode } = {}) {
+        try {
+            const payload = {};
+            if (watermarkPreference != null) payload.watermarkPreference = !!watermarkPreference;
+            if (displayNameMode != null) payload.displayNameMode = displayNameMode;
+            const response = await this.http.put('/api/school/me/settings', payload);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('更新偏好設定失敗：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '更新失敗，請稍後再試');
+        }
+    }
+
+    // GET /api/school/me/certifications — aggregated status of my identity
+    // verification + education records + achievements (incl. PENDING/REJECTED,
+    // unlike /api/account/me which only exposes already-approved titles).
+    async getMyCertifications() {
+        try {
+            const response = await this.http.get('/api/school/me/certifications');
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('取得審核狀態失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
     // ── Admin (後台審核) ─────────────────────────────────────────────
     // No back-office page in this repo wires these up yet (there is no
     // admin UI for school identity/education/achievement review at the
