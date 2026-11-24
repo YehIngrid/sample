@@ -385,6 +385,23 @@ body { background: var(--alice); }
 .ubuy .rate-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; border-radius: 999px; margin-top: 14px; background: var(--navy-solid); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; }
 .ubuy .rate-btn:hover { background: var(--navy-d); }
 
+/* ===== 評分 Modal ===== */
+#ratingModal .modal-content { border-radius: 20px; border: none; overflow: hidden; box-shadow: 0 24px 60px -18px rgba(0,40,80,0.35); }
+#ratingModal .modal-header { border-bottom: 1px solid var(--line); padding: 20px 24px 16px; }
+#ratingModal .modal-title { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+#ratingModal .modal-body { padding: 28px 24px 24px; text-align: center; }
+#ratingModal .rate-prompt { font-size: 13.5px; color: var(--muted); margin-bottom: 14px; letter-spacing: 0.02em; }
+#ratingModal .star-rating { font-size: 38px; letter-spacing: 10px; line-height: 1; cursor: pointer; color: var(--gold); }
+#ratingModal .star-rating .star { display: inline-block; transition: transform 0.15s ease; }
+#ratingModal .star-rating .star:hover { transform: scale(1.15); }
+#ratingModal .rate-label { height: 18px; margin: 10px 0 18px; font-size: 12.5px; font-weight: 700; color: var(--navy); letter-spacing: 0.04em; }
+#ratingModal textarea { width: 100%; height: 96px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; font-size: 13.5px; font-family: inherit; color: var(--body); background: var(--alice); resize: none; margin-bottom: 18px; transition: border-color 0.15s, background 0.15s; }
+#ratingModal textarea:focus { outline: none; border-color: var(--navy); background: var(--card); }
+#ratingModal .btn-submit-rating { width: 100%; padding: 13px 0; border: none; border-radius: 999px; background: var(--navy-solid); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer; transition: background 0.2s ease, opacity 0.2s ease; }
+#ratingModal .btn-submit-rating:hover { background: var(--navy-d); }
+#ratingModal .btn-submit-rating:disabled { opacity: 0.5; cursor: default; }
+#ratingModal .btn-submit-rating:disabled:hover { background: var(--navy-solid); }
+
 .toc { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px; }
 .toc .head { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
 .toc a { display: block; font-size: 13px; color: var(--ink); padding: 7px 0; border-bottom: 1px dashed var(--line); letter-spacing: 0.02em; }

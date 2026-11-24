@@ -465,25 +465,24 @@
 
 <!-- ============ 評分模態框 ============ -->
 <div class="modal fade" id="ratingModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header" style="border-bottom: 1px solid var(--line);">
-        <h5 class="modal-title" style="font-weight: 700;">為這篇攻略評分</h5>
+      <div class="modal-header">
+        <h5 class="modal-title">為這篇攻略評分</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" style="padding: 32px 24px; text-align: center;">
-        <div style="margin-bottom: 24px;">
-          <div style="font-size: 14px; color: var(--muted); margin-bottom: 12px;">你覺得這篇攻略如何？</div>
-          <div class="star-rating" style="font-size: 40px; letter-spacing: 8px; cursor: pointer;">
-            <span class="star" data-value="1">☆</span>
-            <span class="star" data-value="2">☆</span>
-            <span class="star" data-value="3">☆</span>
-            <span class="star" data-value="4">☆</span>
-            <span class="star" data-value="5">☆</span>
-          </div>
+      <div class="modal-body">
+        <div class="rate-prompt">你覺得這篇攻略如何？</div>
+        <div class="star-rating">
+          <span class="star" data-value="1">☆</span>
+          <span class="star" data-value="2">☆</span>
+          <span class="star" data-value="3">☆</span>
+          <span class="star" data-value="4">☆</span>
+          <span class="star" data-value="5">☆</span>
         </div>
-        <textarea id="ratingComment" placeholder="選填：分享你的看法（可留言或評分作者）..." style="width: 100%; height: 100px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; resize: none; margin-bottom: 16px; font-family: inherit;"></textarea>
-        <button id="submitRating" class="btn btn-primary" style="width: 100%; background-color: var(--navy); border: none; padding: 10px; border-radius: 10px; color: white; font-weight: 700;">送出評分</button>
+        <div class="rate-label" id="rateLabel">&nbsp;</div>
+        <textarea id="ratingComment" placeholder="選填：分享你的看法（可留言或評分作者）..."></textarea>
+        <button id="submitRating" class="btn-submit-rating" type="button" disabled>送出評分</button>
       </div>
     </div>
   </div>
@@ -565,26 +564,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // 星號互動
+  // 星號互動（hover 預覽、點擊才真的選定）
   const stars = document.querySelectorAll('.star-rating .star');
+  const rateLabel = document.getElementById('rateLabel');
+  const submitRatingBtn = document.getElementById('submitRating');
+  const RATE_LABELS = { 1: '不推薦', 2: '普通', 3: '還不錯', 4: '推薦', 5: '大推神文' };
   let selectedRating = 0;
+
+  function paintStars(value) {
+    stars.forEach((s, idx) => { s.textContent = idx < value ? '★' : '☆'; });
+  }
+  function renderSelected() {
+    paintStars(selectedRating);
+    rateLabel.textContent = RATE_LABELS[selectedRating] || '';
+    submitRatingBtn.disabled = selectedRating === 0;
+  }
   stars.forEach(star => {
+    star.addEventListener('mouseenter', () => paintStars(parseInt(star.dataset.value, 10)));
     star.addEventListener('click', () => {
-      selectedRating = parseInt(star.dataset.value);
-      stars.forEach((s, idx) => {
-        if (idx < selectedRating) s.textContent = '★';
-        else s.textContent = '☆';
-      });
+      selectedRating = parseInt(star.dataset.value, 10);
+      renderSelected();
     });
+  });
+  document.querySelector('.star-rating').addEventListener('mouseleave', () => paintStars(selectedRating));
+  document.getElementById('ratingModal').addEventListener('hidden.bs.modal', () => {
+    selectedRating = 0;
+    document.getElementById('ratingComment').value = '';
+    renderSelected();
   });
 
   // 提交評分
-  document.getElementById('submitRating').addEventListener('click', () => {
-    if (selectedRating === 0) {
-      alert('請先選擇評分');
-      return;
-    }
-    alert(`感謝你的 ${selectedRating} 星評分！`);
+  submitRatingBtn.addEventListener('click', () => {
+    if (selectedRating === 0) return;
+    AppModal.fire({ icon: 'success', title: '感謝你的回饋！', text: `已送出 ${selectedRating} 星評分`, timer: 1500, showConfirmButton: false });
     ratingModal.hide();
   });
 });
