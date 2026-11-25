@@ -23,6 +23,8 @@
   <script type="module" src="../default/default.js"></script>
   <script type="module">
     import { requireAdminPage } from "../default/default.js";
+    import SchoolBackendService from "./schoolBackendService.js";
+    window.schoolBackendService = new SchoolBackendService();
     (async () => {
       const ok = await requireAdminPage();
       if (ok) document.body.style.visibility = "visible";
@@ -405,23 +407,30 @@
     el.querySelector('.name').textContent = name;
   })();
 
-  /* ---------- 讀取草稿，決定「繼續」卡的樣貌 ---------- */
-  (function () {
-    var KEY = 'cg-composer-draft';
+  /* ---------- 讀取草稿，決定「繼續」卡的樣貌 ----------
+     改接真實 API：GET /api/school/me/articles?status=DRAFT 先找出最新一筆草稿的
+     id，再用 GET /api/school/drafts/{id} 拿完整內容（含 content 全文，/me/articles
+     列表本身不含正文）。REJECTED 狀態的文章不算在「未完成的草稿」卡片裡——那是已
+     經審過被退回、語意跟「寫到一半」不同，使用者要處理那個另外走「我的攻略」列表。
+
+     這支 <script> 是同步載入（不是 defer/module），解析到這裡就立刻執行——這時候
+     設定 window.schoolBackendService 的 <script type="module"> 還沒跑（module 一律
+     要等文件解析完才執行，一定比同步 script 晚），直接呼叫一定拿不到
+     schoolBackendService，所以要包進 DOMContentLoaded 等它就緒（同一個坑見
+     school-composer.html / school-profile.html 開頭註解）。 */
+  document.addEventListener('DOMContentLoaded', function () {
     var slot = document.getElementById('draftSlot');
     var card = document.getElementById('draftCard');
     var desc = document.getElementById('draftDesc');
-    var raw = null;
-    try { raw = localStorage.getItem(KEY); } catch (e) {}
 
     function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
     function textFromHtml(html) {
       var d = document.createElement('div'); d.innerHTML = html || '';
-      return (d.textContent || '').replace(/ /g, ' ').trim();
+      return (d.textContent || '').replace(/ /g, ' ').trim();
     }
-    function relTime(ts) {
-      if (!ts) return null;
-      var diff = Date.now() - ts;
+    function relTime(iso) {
+      if (!iso) return null;
+      var diff = Date.now() - new Date(iso).getTime();
       if (diff < 0) diff = 0;
       var m = Math.floor(diff / 60000);
       if (m < 1) return '剛剛';
@@ -430,40 +439,55 @@
       if (hr < 24) return hr + ' 小時前';
       var day = Math.floor(hr / 24);
       if (day < 7) return day + ' 天前';
-      var dt = new Date(ts);
+      var dt = new Date(iso);
       return (dt.getMonth() + 1) + '/' + dt.getDate();
     }
 
-    var d = null;
-    if (raw) { try { d = JSON.parse(raw); } catch (e) {} }
-
-    var text = d ? textFromHtml(d.html) : '';
-    var title = d && d.title && d.title.trim() ? d.title.trim() : '';
-    var hasDraft = !!(d && (title || text));
-
-    if (!hasDraft) {
+    function showEmpty() {
       card.classList.add('is-disabled');
       card.removeAttribute('href');
       card.setAttribute('aria-disabled', 'true');
       desc.textContent = '目前還沒有草稿。先從右邊開一篇新的吧！';
       slot.innerHTML = '<div class="draft-empty">這裡會保留你上次寫到一半的攻略，方便下次回來續寫。</div>';
-      return;
     }
 
-    var words = text.replace(/\s+/g, '').length;
-    var snippet = (d.subtitle && d.subtitle.trim()) ? d.subtitle.trim() : text;
-    var when = relTime(d.savedAt);
+    if (!window.schoolBackendService) { showEmpty(); return; }
 
-    slot.innerHTML =
-      '<div class="draft-peek">' +
-        '<div class="dt">' + esc(title || '（未命名草稿）') + '</div>' +
-        '<div class="dsnip">' + esc(snippet.slice(0, 90) || '尚無內文…') + '</div>' +
-        '<div class="dmeta">' +
-          '<span class="di"><svg viewBox="0 0 24 24"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>' + words.toLocaleString() + ' 字</span>' +
-          (when ? '<span class="di"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' + when + '</span>' : '') +
-        '</div>' +
-      '</div>';
-  })();
+    // 注意：/api/school/me/articles 的 status 篩選參數吃小寫（draft/pending/rejected/
+    // published/archived），跟 GET /api/school/articles/{id} 單篇 metadata 回傳的
+    // status 是大寫（"DRAFT"）不一樣，兩支端點對同一個概念的大小寫沒有對齊，親測
+    // 送大寫 DRAFT 會被 422："status must be one of: draft, pending, rejected, published, archived"。
+    window.schoolBackendService.getMyArticles({ status: 'draft', page: 1, limit: 1 }).then(function (res) {
+      var items = (res && res.data && (res.data.items || res.data)) || [];
+      var latest = items[0];
+      if (!latest) { showEmpty(); return; }
+
+      return window.schoolBackendService.getDraft(latest.id).then(function (draftRes) {
+        var d = draftRes.data || {};
+        var text = textFromHtml(d.content);
+        var title = (d.title || '').trim();
+        if (!title && !text) { showEmpty(); return; }
+
+        var words = text.replace(/\s+/g, '').length;
+        var snippet = (d.subtitle && d.subtitle.trim()) ? d.subtitle.trim() : text;
+        var when = relTime(d.updatedAt);
+
+        card.href = 'school-composer.html?id=' + encodeURIComponent(latest.id);
+        slot.innerHTML =
+          '<div class="draft-peek">' +
+            '<div class="dt">' + esc(title || '（未命名草稿）') + '</div>' +
+            '<div class="dsnip">' + esc(snippet.slice(0, 90) || '尚無內文…') + '</div>' +
+            '<div class="dmeta">' +
+              '<span class="di"><svg viewBox="0 0 24 24"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>' + words.toLocaleString() + ' 字</span>' +
+              (when ? '<span class="di"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>' + when + '</span>' : '') +
+            '</div>' +
+          '</div>';
+      });
+    }).catch(function (e) {
+      console.error('讀取最新草稿失敗：', e);
+      showEmpty();
+    });
+  });
 
   /* ---------- 近期比賽：只列進行中／即將開始，鼓勵順手投稿 ---------- */
   (function () {

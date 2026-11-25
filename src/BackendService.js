@@ -451,10 +451,19 @@ export default class BackendService {
     }
     async disableAccount() {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/account/disable`);
+            const response = await axios.patch(`${this.baseUrl}/api/account/disable`);
             return response;
         } catch (error) {
             console.error("停用帳號錯誤：", error);
+            throw new Error("系統發生錯誤，請稍後再試");
+        }
+    }
+    async enableAccount() {
+        try {
+            const response = await axios.patch(`${this.baseUrl}/api/account/enable`);
+            return response;
+        } catch (error) {
+            console.error("啟用帳號錯誤：", error);
             throw new Error("系統發生錯誤，請稍後再試");
         }
     }
@@ -817,16 +826,6 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
-    async getOrderStatus() {
-        try {
-            const response = await axios.get(`${this.baseUrl}/api/order`, { headers: { "Cache-Control": "no-cache" } });
-            return response;
-        } catch (error) {
-            this._forbidden(error);
-            console.error("發生錯誤", error);
-            return Promise.reject(error);
-        }
-    }
     async createOrder(cartItems) {
         try {
             const payload = {
@@ -952,16 +951,6 @@ export default class BackendService {
             return Promise.reject(error);
         }
     }
-    async buyerCompletedOrders(id) {
-        try {
-            const response = await axios.post(`${this.baseUrl}/api/order/${id}/completed`);
-            return response;
-        } catch (error) {
-            console.error("發生錯誤", error);
-            captureException(error);
-            return Promise.reject(error);
-        }
-    }
     async sellerCompletedOrders(id, pin) {
         try {
             const response = await axios.post(
@@ -976,23 +965,13 @@ export default class BackendService {
     }
     async reportSeller(userId, payload) {
         try {
-            const response = await axios.post(`${this.baseUrl}/api/reports`, { reportedUserId: userId, ...payload });
-            return response;
-        } catch (error) {
-            console.error("檢舉失敗", error);
-            captureException(error);
-            return Promise.reject(error);
-        }
-    }
-    async reportReview(reviewId, payload) {
-        try {
             const fd = new FormData();
-            fd.append('reviewId', reviewId);
+            fd.append('reportedUserId', userId);
             if (payload) Object.entries(payload).forEach(([k, v]) => { if (v != null) fd.append(k, v); });
             const response = await axios.post(`${this.baseUrl}/api/reports`, fd);
             return response;
         } catch (error) {
-            console.error("檢舉評價失敗", error);
+            console.error("檢舉失敗", error);
             captureException(error);
             return Promise.reject(error);
         }
@@ -1013,6 +992,15 @@ export default class BackendService {
             return response;
         } catch (error) {
             console.error("取得通知失敗", error);
+            return Promise.reject(error);
+        }
+    }
+    async getUnreadNotificationCount() {
+        try {
+            const response = await axios.get(`${this.baseUrl}/api/notifications/unread-count`);
+            return response;
+        } catch (error) {
+            console.error("取得未讀通知數量失敗", error);
             return Promise.reject(error);
         }
     }

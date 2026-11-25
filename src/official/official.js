@@ -2,6 +2,7 @@ import { requireAdminPage } from '../default/default.js';
 import BackendService from '../BackendService.js';
 import ChatBackendService from '../chatroom/ChatBackendService.js';
 import wpBackendService from '../wpBackendService.js';
+import SchoolBackendService from '../school/schoolBackendService.js';
 import { AppModal } from '../default/app-modal.js';
 
 const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -9,6 +10,7 @@ const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 const chatSvc = new ChatBackendService();
 const backendSvc = new BackendService();
 const wpSvc = new wpBackendService();
+const schoolSvc = new SchoolBackendService();
 
 // ── 管理員權限驗證（整頁只給 ADMIN 看，非管理員直接導走）──────
 (async () => {
@@ -74,6 +76,8 @@ function switchPanel(panelId) {
   if (panelId === 'panel-report-categories') loadReportCategories();
   if (panelId === 'panel-review-tags') { loadReviewTagGroups(); loadReviewTags(); }
   if (panelId === 'panel-tickets') loadAdminTickets(1);
+  if (panelId === 'panel-school-verify') loadSchoolVerify();
+  if (panelId === 'panel-admin-articles') loadAdminArticles(1);
   closeSidebar();
 }
 window.switchPanel = switchPanel;
@@ -1218,6 +1222,77 @@ document.querySelectorAll('.stats-quick-btn').forEach(btn => {
 
 _initDateRange();
 
+// ── 數據分析一鍵匯出 PDF（jsPDF + html2canvas，CDN 見 official.html）──
+const STATS_TABS = [
+  { id: 'tab-dashboard',    label: '總覽' },
+  { id: 'tab-users',        label: '用戶' },
+  { id: 'tab-commodities',  label: '商品' },
+  { id: 'tab-orders',       label: '訂單' },
+  { id: 'tab-stat-reports', label: '檢舉' },
+  { id: 'tab-wishpool',     label: '願望池' },
+  { id: 'tab-search',       label: '搜尋' },
+];
+
+async function exportAnalyticsPdf() {
+  const btn = document.getElementById('exportAnalyticsPdfBtn');
+  if (!btn || btn.disabled) return;
+  const originalTab = _activeStatsTab;
+  const originalHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>匯出中...';
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const margin = 32;
+    const dateRange = `${document.getElementById('statsStartDate')?.value || ''} ~ ${document.getElementById('statsEndDate')?.value || ''}`;
+    const exportedAt = new Date().toLocaleString('zh-TW');
+
+    for (let i = 0; i < STATS_TABS.length; i++) {
+      const { id, label } = STATS_TABS[i];
+      _switchStatsTab(id);
+      await _loadStatsTab(id); // 每次都重抓，確保匯出的是最新資料，不要信任 cache flag
+      await new Promise((r) => setTimeout(r, 400)); // 等圖表動畫結束、畫面穩定再截圖
+
+      const el = document.getElementById(id);
+      // jsPDF 內建字型沒有中文字形，pdf.text() 畫中文會變亂碼/缺字；
+      // 改成把標題暫時插入畫面一起用 html2canvas 截圖，直接用瀏覽器字型渲染中文
+      const header = document.createElement('div');
+      header.style.cssText = 'padding:0 0 16px;font-family:inherit;';
+      header.innerHTML = `
+        <div style="font-size:20px;font-weight:700;color:#004b97;letter-spacing:0.04em;">拾貨寶庫後台數據分析 — ${label}</div>
+        <div style="font-size:12px;color:#6f87a0;margin-top:4px;">期間：${dateRange || '全部'}　匯出時間：${exportedAt}</div>
+      `;
+      el.insertBefore(header, el.firstChild);
+      let canvas;
+      try {
+        canvas = await html2canvas(el, { scale: 1.5, backgroundColor: '#ffffff', useCORS: true });
+      } finally {
+        header.remove();
+      }
+
+      if (i > 0) pdf.addPage();
+      const imgW = pageW - margin * 2;
+      const imgH = (imgW * canvas.height) / canvas.width;
+      const maxH = pageH - margin * 2;
+      const drawH = Math.min(imgH, maxH);
+      const drawW = drawH === imgH ? imgW : imgW * (drawH / imgH);
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.85), 'JPEG', margin, margin, drawW, drawH);
+    }
+
+    _switchStatsTab(originalTab);
+    pdf.save(`數據分析報告_${new Date().toISOString().slice(0, 10)}.pdf`);
+  } catch (e) {
+    AppModal.fire({ icon: 'error', title: '匯出失敗', text: e?.message || '請稍後再試' });
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+  }
+}
+document.getElementById('exportAnalyticsPdfBtn')?.addEventListener('click', exportAnalyticsPdf);
+
 // ════════════════════════════════════════════════════
 //  檢舉管理
 // ════════════════════════════════════════════════════
@@ -1263,7 +1338,7 @@ async function loadAllReports(page = 1) {
           }).join('')}
         </div>` : '';
       return `
-        <div class="news-admin-item mb-2" style="cursor:default;">
+        <div class="admin-review-card mb-2" style="cursor:default;">
           <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
             <div>
               <span class="${bc}" style="font-size:0.75rem;">${st}</span>
@@ -1393,6 +1468,425 @@ async function submitReview(status) {
 
 document.getElementById('reviewApproveBtn')?.addEventListener('click', () => submitReview('approved'));
 document.getElementById('reviewRejectBtn')?.addEventListener('click',  () => submitReview('rejected'));
+
+// ════════════════════════════════════════════════════
+//  就學審核（學生證審核 / 學籍異動 / 頭銜申請）
+//  schoolBackendService.adminGet*/adminReview* 已實作但從未被任何後台頁面呼叫過，
+//  下面補上這三個審核佇列的 UI。回應欄位命名以 /api/admin/users 的慣例
+//  （res.data.data.items/total/totalPages）為優先猜測，同時相容 reports 那種
+//  res.data.{list,pagination} 命名，實測後再收斂。
+// ════════════════════════════════════════════════════
+const SV_STATUS_LABEL = { PENDING: '審核中', APPROVED: '已通過', REJECTED: '已駁回' };
+const SV_STATUS_BADGE = { PENDING: 'badge bg-warning text-dark', APPROVED: 'badge bg-success', REJECTED: 'badge bg-secondary' };
+const SV_EDU_TYPE_LABEL = {
+  TRANSFER_SCHOOL: '轉學', TRANSFER_MAJOR: '轉系', DOUBLE_MAJOR: '雙主修',
+  MINOR: '輔系', EXCHANGE: '交換', OTHER: '其他'
+};
+
+const SV_TYPES = {
+  identity: {
+    listEl: 'svIdentityList', pagerEl: 'svIdentityPager',
+    get: p => schoolSvc.adminGetIdentityVerifications(p),
+    review: (id, body) => schoolSvc.adminReviewIdentityVerification(id, body),
+    render: renderSvIdentityItem,
+  },
+  education: {
+    listEl: 'svEducationList', pagerEl: 'svEducationPager',
+    get: p => schoolSvc.adminGetEducationRecords(p),
+    review: (id, body) => schoolSvc.adminReviewEducationRecord(id, body),
+    render: renderSvEducationItem,
+  },
+  achievement: {
+    listEl: 'svAchievementList', pagerEl: 'svAchievementPager',
+    get: p => schoolSvc.adminGetAchievements(p),
+    review: (id, body) => schoolSvc.adminReviewAchievement(id, body),
+    render: renderSvAchievementItem,
+  },
+};
+
+function _svProofHtml(proofUrl) {
+  const url = proofUrl ? esc(proofUrl) : '';
+  if (!url) return '';
+  const isPdf = /\.pdf($|\?)/i.test(url);
+  if (isPdf) {
+    return `<a href="${url}" target="_blank" class="report-att-file"><i class="fa fa-file-pdf-o me-1"></i>PDF 證明文件</a>`;
+  }
+  return `<a href="${url}" target="_blank" class="report-att-img-wrap" title="點擊查看原圖">
+    <img src="${url}" class="report-att-img" alt="證明文件" onerror="this.closest('a').style.display='none'">
+  </a>`;
+}
+
+// 列表項目不含 proofUrl（短效簽名連結只在 detail 端點回傳），
+// 所以「查看證明文件」要點擊時才現抓 detail，不能預先快取
+const SV_DETAIL_FN = {
+  identity: id => schoolSvc.adminGetIdentityVerificationDetail(id),
+  education: id => schoolSvc.adminGetEducationRecordDetail(id),
+  achievement: id => schoolSvc.adminGetAchievementDetail(id),
+};
+
+function _svProofBtnHtml(type, id) {
+  return `<button class="btn btn-sm btn-outline-primary mt-2 sv-view-proof-btn" data-sv-proof-type="${type}" data-sv-proof-id="${esc(id)}">
+    <i class="fa fa-file-image-o me-1"></i>查看證明文件
+  </button>`;
+}
+
+async function _svViewProof(btn) {
+  const type = btn.dataset.svProofType;
+  const id = btn.dataset.svProofId;
+  const fn = SV_DETAIL_FN[type];
+  if (!fn) return;
+  const original = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>載入中...';
+  try {
+    const res = await fn(id);
+    const data = res?.data?.data ?? res?.data ?? {};
+    if (!data.proofUrl) throw new Error('找不到證明文件連結');
+    window.open(data.proofUrl, '_blank');
+  } catch (e) {
+    const msg = e?.response?.data?.message || e?.message || '請稍後再試';
+    AppModal.fire({ icon: 'error', title: '取得證明文件失敗', text: msg });
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  }
+}
+
+function _svApplicantHtml(item) {
+  const uid = item.accountId ?? item.userId ?? item.user?.id ?? item.account?.id ?? '';
+  const name = item.nickname ?? item.user?.name ?? item.account?.name ?? item.applicantName ?? item.userName ?? '';
+  if (!uid) return name ? esc(name) : '—';
+  return `<button class="report-user-btn" data-uid="${esc(uid)}" data-name="${esc(name)}">${esc(name || uid)}</button>`;
+}
+
+function _svDate(v) {
+  return v ? new Date(v).toLocaleString('zh-TW') : '';
+}
+
+function renderSvIdentityItem(item) {
+  const st = SV_STATUS_LABEL[item.status] ?? item.status;
+  const bc = SV_STATUS_BADGE[item.status] ?? 'badge bg-secondary';
+  const proofUrl = item.proofUrl ?? item.proof ?? item.proofURL ?? '';
+  const canReview = item.status === 'PENDING';
+  return `
+    <div class="admin-review-card mb-2" style="cursor:default;">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+          <span class="${bc}" style="font-size:0.75rem;">${st}</span>
+          <strong class="ms-2">${esc(item.realName ?? '')}</strong>
+          ${item.schoolName ? `<span class="text-muted ms-2 small">（${esc(item.schoolName)}）</span>` : ''}
+        </div>
+        <small class="text-muted">${_svDate(item.createdAt)}</small>
+      </div>
+      <div class="text-muted small mt-1 d-flex flex-wrap gap-2 align-items-center">
+        <span>申請人：${_svApplicantHtml(item)}</span>
+        ${item.studentStatus ? `<span>就學狀態：${esc(item.studentStatus)}</span>` : ''}
+        ${item.enrollYear ? `<span>入學年度：${esc(String(item.enrollYear))}</span>` : ''}
+      </div>
+      ${item.status === 'REJECTED' && item.rejectReason ? `<div class="text-danger small mt-1">駁回原因：${esc(item.rejectReason)}</div>` : ''}
+      <div class="mt-2 d-flex flex-wrap gap-2 align-items-center">${_svProofHtml(proofUrl)}${_svProofBtnHtml('identity', item.id)}</div>
+      ${canReview ? `<button class="btn btn-sm btn-outline-danger mt-2" onclick="openSvReviewModal('identity','${esc(item.id)}','${esc(item.realName ?? '')}')"><i class="fa fa-gavel me-1"></i>審核</button>` : ''}
+    </div>`;
+}
+
+function renderSvEducationItem(item) {
+  const st = SV_STATUS_LABEL[item.status] ?? item.status;
+  const bc = SV_STATUS_BADGE[item.status] ?? 'badge bg-secondary';
+  const proofUrl = item.proofUrl ?? item.proof ?? item.proofURL ?? '';
+  const canReview = item.status === 'PENDING';
+  const typeLabel = SV_EDU_TYPE_LABEL[item.type] ?? item.type ?? '';
+  const period = (item.startedAt || item.endedAt)
+    ? `${_svDate(item.startedAt) || '—'} ～ ${_svDate(item.endedAt) || '—'}` : '';
+  return `
+    <div class="admin-review-card mb-2" style="cursor:default;">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+          <span class="${bc}" style="font-size:0.75rem;">${st}</span>
+          <strong class="ms-2">${esc(typeLabel)}</strong>
+          ${item.schoolName ? `<span class="text-muted ms-2 small">（${esc(item.schoolName)}）</span>` : ''}
+        </div>
+        <small class="text-muted">${_svDate(item.createdAt)}</small>
+      </div>
+      <div class="text-muted small mt-1 d-flex flex-wrap gap-2 align-items-center">
+        <span>申請人：${_svApplicantHtml(item)}</span>
+        ${item.department ? `<span>系所：${esc(item.department)}</span>` : ''}
+        ${item.fromSchool ? `<span>原學校：${esc(item.fromSchool)}</span>` : ''}
+        ${period ? `<span>期間：${period}</span>` : ''}
+      </div>
+      ${item.status === 'REJECTED' && item.rejectReason ? `<div class="text-danger small mt-1">駁回原因：${esc(item.rejectReason)}</div>` : ''}
+      <div class="mt-2 d-flex flex-wrap gap-2 align-items-center">${_svProofHtml(proofUrl)}${_svProofBtnHtml('education', item.id)}</div>
+      ${canReview ? `<button class="btn btn-sm btn-outline-danger mt-2" onclick="openSvReviewModal('education','${esc(item.id)}','${esc(typeLabel)}')"><i class="fa fa-gavel me-1"></i>審核</button>` : ''}
+    </div>`;
+}
+
+function renderSvAchievementItem(item) {
+  const st = SV_STATUS_LABEL[item.status] ?? item.status;
+  const bc = SV_STATUS_BADGE[item.status] ?? 'badge bg-secondary';
+  const proofUrl = item.proofUrl ?? item.proof ?? item.proofURL ?? '';
+  const canReview = item.status === 'PENDING';
+  return `
+    <div class="admin-review-card mb-2" style="cursor:default;">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+          <span class="${bc}" style="font-size:0.75rem;">${st}</span>
+          <strong class="ms-2">${esc(item.name ?? '')}</strong>
+          ${item.shortName ? `<span class="text-muted ms-2 small">（${esc(item.shortName)}）</span>` : ''}
+        </div>
+        <small class="text-muted">${_svDate(item.createdAt)}</small>
+      </div>
+      <div class="text-muted small mt-1 d-flex flex-wrap gap-2 align-items-center">
+        <span>申請人：${_svApplicantHtml(item)}</span>
+        ${item.competitionName ? `<span>競賽/來源：${esc(item.competitionName)}</span>` : ''}
+        ${item.organizer ? `<span>頒發單位：${esc(item.organizer)}</span>` : ''}
+        ${item.year ? `<span>年度：${esc(String(item.year))}</span>` : ''}
+        ${item.prizeAmount ? `<span>獎金：${esc(String(item.prizeAmount))}</span>` : ''}
+      </div>
+      ${item.status === 'REJECTED' && item.rejectReason ? `<div class="text-danger small mt-1">駁回原因：${esc(item.rejectReason)}</div>` : ''}
+      <div class="mt-2 d-flex flex-wrap gap-2 align-items-center">${_svProofHtml(proofUrl)}${_svProofBtnHtml('achievement', item.id)}</div>
+      ${canReview ? `<button class="btn btn-sm btn-outline-danger mt-2" onclick="openSvReviewModal('achievement','${esc(item.id)}','${esc(item.name ?? '')}')"><i class="fa fa-gavel me-1"></i>審核</button>` : ''}
+    </div>`;
+}
+
+const _svCurrentPage = { identity: 1, education: 1, achievement: 1 };
+
+async function loadSvTab(type, page = 1) {
+  const cfg = SV_TYPES[type];
+  if (!cfg) return;
+  _svCurrentPage[type] = page;
+  const list = document.getElementById(cfg.listEl);
+  const pager = document.getElementById(cfg.pagerEl);
+  if (!list) return;
+  const status = document.querySelector(`.sv-status-filter[data-sv-type="${type}"]`)?.value || '';
+  list.innerHTML = '<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>';
+  if (pager) pager.innerHTML = '';
+  try {
+    const res = await cfg.get({ page, limit: 20, status: status || undefined });
+    const d = res?.data?.data ?? res?.data ?? {};
+    const items = d.items ?? d.verifications ?? d.records ?? d.achievements ?? d.list ?? [];
+    const total = d.total ?? d.pagination?.total ?? items.length;
+    const totalPages = d.totalPages ?? d.pagination?.totalPages ?? Math.max(1, Math.ceil(total / 20));
+    if (!items.length) {
+      list.innerHTML = '<div class="text-muted text-center py-4">目前沒有符合條件的申請</div>';
+      return;
+    }
+    list.innerHTML = items.map(cfg.render).join('');
+    if (pager && totalPages > 1) {
+      let html = '';
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="btn btn-sm ${i === page ? 'btn-primary' : 'btn-outline-secondary'} mx-1" onclick="loadSvTab('${type}',${i})">${i}</button>`;
+      }
+      pager.innerHTML = html;
+    }
+  } catch (e) {
+    list.innerHTML = `<div class="text-muted text-center py-4">載入失敗：${esc(e?.response?.data?.message || e?.message || '請稍後再試')}</div>`;
+  }
+}
+window.loadSvTab = loadSvTab;
+
+let _svActiveTab = 'tab-sv-identity';
+const _loadedSvTabs = new Set();
+const SV_TAB_TYPE = { 'tab-sv-identity': 'identity', 'tab-sv-education': 'education', 'tab-sv-achievement': 'achievement' };
+
+function _switchSvTab(tabId) {
+  document.querySelectorAll('.sv-tab').forEach(t => t.classList.add('d-none'));
+  document.querySelectorAll('[data-sv-tab]').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId)?.classList.remove('d-none');
+  document.querySelector(`[data-sv-tab="${tabId}"]`)?.classList.add('active');
+  _svActiveTab = tabId;
+  if (!_loadedSvTabs.has(tabId)) {
+    _loadedSvTabs.add(tabId);
+    loadSvTab(SV_TAB_TYPE[tabId], 1);
+  }
+}
+
+function loadSchoolVerify() {
+  _loadedSvTabs.clear();
+  _loadedSvTabs.add(_svActiveTab);
+  loadSvTab(SV_TAB_TYPE[_svActiveTab], 1);
+}
+window.loadSchoolVerify = loadSchoolVerify;
+
+document.querySelectorAll('[data-sv-tab]').forEach(btn => {
+  btn.addEventListener('click', () => _switchSvTab(btn.dataset.svTab));
+});
+
+document.getElementById('refreshSchoolVerifyBtn')?.addEventListener('click', () => {
+  _loadedSvTabs.delete(_svActiveTab);
+  loadSvTab(SV_TAB_TYPE[_svActiveTab], _svCurrentPage[SV_TAB_TYPE[_svActiveTab]] || 1);
+});
+
+document.querySelectorAll('.sv-status-filter').forEach(sel => {
+  sel.addEventListener('change', () => loadSvTab(sel.dataset.svType, 1));
+});
+
+let _svModal = null;
+let _svReviewTarget = null; // { type, id }
+function openSvReviewModal(type, id, title) {
+  _svReviewTarget = { type, id };
+  document.getElementById('svReviewBody').innerHTML = `
+    <p class="mb-3">申請項目：<strong>${esc(title)}</strong></p>
+    <div class="mb-3">
+      <label class="form-label fw-bold">審核決定</label>
+      <p class="text-muted small mb-0">點擊下方「通過」或「駁回」按鈕送出審核結果。</p>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">駁回原因 <span class="text-muted">（駁回時建議填寫，會顯示給申請人）</span></label>
+      <textarea id="svRejectReason" class="form-control" rows="3" placeholder="例：證明文件模糊無法辨識，請重新上傳"></textarea>
+    </div>
+  `;
+  if (!_svModal) {
+    _svModal = new bootstrap.Modal(document.getElementById('svReviewModal'));
+  }
+  _svModal.show();
+}
+window.openSvReviewModal = openSvReviewModal;
+
+async function submitSvReview(status) {
+  if (!_svReviewTarget) return;
+  const { type, id } = _svReviewTarget;
+  const rejectReason = document.getElementById('svRejectReason')?.value.trim() ?? '';
+  try {
+    await SV_TYPES[type].review(id, { status, rejectReason: rejectReason || undefined });
+    _svModal?.hide();
+    _svReviewTarget = null;
+    AppModal.fire({ icon: 'success', title: '審核完成', timer: 1500, showConfirmButton: false });
+    loadSvTab(type, _svCurrentPage[type] || 1);
+  } catch (e) {
+    const msg = e?.response?.data?.message || e?.message || '請稍後再試';
+    AppModal.fire({ icon: 'error', title: '審核失敗', text: msg });
+  }
+}
+
+document.getElementById('svReviewApproveBtn')?.addEventListener('click', () => submitSvReview('APPROVED'));
+document.getElementById('svReviewRejectBtn')?.addEventListener('click',  () => submitSvReview('REJECTED'));
+
+['svIdentityList', 'svEducationList', 'svAchievementList'].forEach(id => {
+  document.getElementById(id)?.addEventListener('click', e => {
+    const proofBtn = e.target.closest('.sv-view-proof-btn');
+    if (proofBtn) { _svViewProof(proofBtn); return; }
+    const btn = e.target.closest('.report-user-btn');
+    if (!btn || !btn.dataset.uid) return;
+    viewUserProfile(btn.dataset.uid, btn.dataset.name);
+  });
+});
+
+// ════════════════════════════════════════════════════
+//  文章審核（校園攻略站）
+//  矛盾未解：/api/admin/articles 的存在暗示文章要先進 PENDING 審核佇列才能
+//  發佈，但 School 標籤自己的文件寫 POST /api/school/articles/{id}/submit
+//  「一律直接 PUBLISHED，不經審核」。沒去跟後端求證，先照 Admin 端點實作；
+//  如果這個佇列一直是空的，不是前端串錯，是兩邊文件本來就互相矛盾。
+// ════════════════════════════════════════════════════
+const ARTICLE_STATUS_LABEL = { DRAFT: '草稿', PENDING: '審核中', PUBLISHED: '已發佈', REJECTED: '已駁回', ARCHIVED: '已封存' };
+const ARTICLE_STATUS_BADGE = {
+  DRAFT: 'badge bg-secondary', PENDING: 'badge bg-warning text-dark',
+  PUBLISHED: 'badge bg-success', REJECTED: 'badge bg-danger', ARCHIVED: 'badge bg-secondary',
+};
+
+function renderAdminArticleItem(item) {
+  const st = ARTICLE_STATUS_LABEL[item.status] ?? item.status;
+  const bc = ARTICLE_STATUS_BADGE[item.status] ?? 'badge bg-secondary';
+  const canReview = item.status === 'PENDING';
+  const cover = item.coverUrl
+    ? `<img src="${esc(item.coverUrl)}" alt="封面" style="width:60px;height:60px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1.5px solid #d6e2ec;" onerror="this.style.display='none'">`
+    : '';
+  return `
+    <div class="admin-review-card mb-2" style="cursor:default;">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div class="d-flex align-items-start gap-2">
+          ${cover}
+          <div>
+            <span class="${bc}" style="font-size:0.75rem;">${st}</span>
+            <strong class="ms-2">${esc(item.title ?? '')}</strong>
+            ${item.categoryName ? `<span class="text-muted ms-2 small">（${esc(item.categoryName)}）</span>` : ''}
+          </div>
+        </div>
+        <small class="text-muted">${_svDate(item.publishedAt ?? item.createdAt)}</small>
+      </div>
+      <div class="text-muted small mt-1 d-flex flex-wrap gap-2 align-items-center">
+        <span>作者：${esc(item.author?.nickname ?? item.author?.displayName ?? '')}</span>
+        ${item.type ? `<span>類型：${esc(item.type)}</span>` : ''}
+      </div>
+      ${item.status === 'REJECTED' && item.rejectReason ? `<div class="text-danger small mt-1">駁回原因：${esc(item.rejectReason)}</div>` : ''}
+      ${canReview ? `<button class="btn btn-sm btn-outline-danger mt-2" onclick="openArticleReviewModal('${esc(item.id)}','${esc(item.title ?? '')}')"><i class="fa fa-gavel me-1"></i>審核</button>` : ''}
+    </div>`;
+}
+
+let _articlesCurrentPage = 1;
+async function loadAdminArticles(page = 1) {
+  _articlesCurrentPage = page;
+  const list = document.getElementById('adminArticlesList');
+  const pager = document.getElementById('adminArticlesPager');
+  if (!list) return;
+  const status = document.getElementById('adminArticlesStatusFilter')?.value || '';
+  list.innerHTML = '<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>';
+  if (pager) pager.innerHTML = '';
+  try {
+    const res = await schoolSvc.adminGetArticles({ page, limit: 20, status: status || undefined });
+    const d = res?.data?.data ?? res?.data ?? {};
+    const items = d.items ?? [];
+    const total = d.total ?? items.length;
+    const totalPages = d.totalPages ?? Math.max(1, Math.ceil(total / 20));
+    if (!items.length) {
+      list.innerHTML = '<div class="text-muted text-center py-4">目前沒有符合條件的文章</div>';
+      return;
+    }
+    list.innerHTML = items.map(renderAdminArticleItem).join('');
+    if (pager && totalPages > 1) {
+      let html = '';
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="btn btn-sm ${i === page ? 'btn-primary' : 'btn-outline-secondary'} mx-1" onclick="loadAdminArticles(${i})">${i}</button>`;
+      }
+      pager.innerHTML = html;
+    }
+  } catch (e) {
+    list.innerHTML = `<div class="text-muted text-center py-4">載入失敗：${esc(e?.response?.data?.message || e?.message || '請稍後再試')}</div>`;
+  }
+}
+window.loadAdminArticles = loadAdminArticles;
+
+document.getElementById('refreshAdminArticlesBtn')?.addEventListener('click', () => loadAdminArticles(_articlesCurrentPage || 1));
+document.getElementById('adminArticlesStatusFilter')?.addEventListener('change', () => loadAdminArticles(1));
+
+let _articleModal = null;
+let _articleReviewTargetId = null;
+function openArticleReviewModal(id, title) {
+  _articleReviewTargetId = id;
+  document.getElementById('articleReviewBody').innerHTML = `
+    <p class="mb-3">文章標題：<strong>${esc(title)}</strong></p>
+    <div class="mb-3">
+      <label class="form-label fw-bold">審核決定</label>
+      <p class="text-muted small mb-0">點擊下方「通過」或「駁回」按鈕送出審核結果。</p>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">駁回原因 <span class="text-muted">（駁回時建議填寫，會顯示給作者）</span></label>
+      <textarea id="articleRejectReason" class="form-control" rows="3" placeholder="例：內容與校園無關，請修改後重新送審"></textarea>
+    </div>
+  `;
+  if (!_articleModal) {
+    _articleModal = new bootstrap.Modal(document.getElementById('articleReviewModal'));
+  }
+  _articleModal.show();
+}
+window.openArticleReviewModal = openArticleReviewModal;
+
+async function submitArticleReview(status) {
+  if (!_articleReviewTargetId) return;
+  const rejectReason = document.getElementById('articleRejectReason')?.value.trim() ?? '';
+  try {
+    await schoolSvc.adminReviewArticle(_articleReviewTargetId, { status, rejectReason: rejectReason || undefined });
+    _articleModal?.hide();
+    _articleReviewTargetId = null;
+    AppModal.fire({ icon: 'success', title: '審核完成', timer: 1500, showConfirmButton: false });
+    loadAdminArticles(_articlesCurrentPage || 1);
+  } catch (e) {
+    const msg = e?.response?.data?.message || e?.message || '請稍後再試';
+    AppModal.fire({ icon: 'error', title: '審核失敗', text: msg });
+  }
+}
+
+document.getElementById('articleReviewApproveBtn')?.addEventListener('click', () => submitArticleReview('PUBLISHED'));
+document.getElementById('articleReviewRejectBtn')?.addEventListener('click',  () => submitArticleReview('REJECTED'));
 
 // ════════════════════════════════════════════════════
 //  評論標籤群組管理

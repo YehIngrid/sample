@@ -254,7 +254,7 @@
     .anchor-fld { margin-bottom: 12px; }
     .anchor-fld:last-child { margin-bottom: 0; }
     .anchor-fld .field-label { margin-bottom: 5px; }
-    .anchor-input { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 9px; padding: 0 12px; font-size: 13.5px; color: var(--ink); outline: none; box-sizing: border-box; }
+    .anchor-input { width: 100%; height: 38px; border: 1px solid var(--line); border-radius: 9px; padding: 0 12px; font-size: 13.5px; color: var(--ink); background: var(--card); outline: none; box-sizing: border-box; }
     .anchor-input:focus { border-color: var(--navy); }
     .anchor-input.empty-required { border-color: var(--warn); }
 
@@ -382,7 +382,12 @@
       .ce-mobilebar .mb-save { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); margin-right: auto; white-space: nowrap; }
       .ce-mobilebar .mb-save .d { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
       .ce-mobilebar .mb-save.saving .d { background: var(--cream); }
-      .ce-mobilebar .mb-btn { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 15px; border-radius: 999px; font-size: 13px; font-weight: 700; letter-spacing: .03em; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); }
+      .ce-mobilebar .mb-btn { position: relative; display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 15px; border-radius: 999px; font-size: 13px; font-weight: 700; letter-spacing: .03em; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); }
+      .ce-mobilebar .mb-btn.has-warning::after {
+        content: '!'; position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; border-radius: 50%;
+        background: var(--warn); color: #fff; font-size: 11px; font-weight: 800; line-height: 16px; text-align: center;
+        box-shadow: 0 0 0 2px var(--page);
+      }
       .ce-mobilebar .mb-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
       .ce-mobilebar .mb-btn.primary { background: var(--navy-solid); color: #fff; border-color: var(--navy); }
       .ce-mobilebar .mb-btn.primary:disabled { background: var(--line-strong); border-color: var(--line-strong); }
@@ -708,9 +713,9 @@
       <div id="yearWrap">
         <select class="cat-sel" id="yearSel">
           <option value="" selected disabled>請選擇年度</option>
-          <option>適用 115 學年</option>
-          <option>適用 114 學年</option>
-          <option>適用 113 學年</option>
+          <option value="115">適用 115 學年</option>
+          <option value="114">適用 114 學年</option>
+          <option value="113">適用 113 學年</option>
         </select>
       </div>
       <label class="longterm" id="longtermToggle">
@@ -878,10 +883,37 @@
 <script type="module">
 import { AppModal } from "../default/app-modal.js";
 import { requireAdminPage } from "../default/default.js";
+import SchoolBackendService from "./schoolBackendService.js";
 window.AppModal = AppModal;
+window.schoolBackendService = new SchoolBackendService();
 (async () => {
   const ok = await requireAdminPage();
-  if (ok) document.body.style.visibility = "visible";
+  if (!ok) return;
+  document.body.style.visibility = "visible";
+
+  // 直接打網址進這支編輯器也要擋：data.writable 只有「就學證明實名認證」通過審核
+  // 後端才會設成 true（跟 school-profile.html 攔截「撰寫攻略」入口按鈕用同一個
+  // 欄位、同一句文案）。這裡不是攔按鈕，而是整頁直接擋，所以關閉後導回首頁。
+  try {
+    const res = await window.schoolBackendService.getAccountMe();
+    const writable = res?.data?.writable;
+    if (writable === false) {
+      const result = await AppModal.fire({
+        icon: "info",
+        title: "尚未完成就學驗證",
+        text: "需要先完成「就學證明實名認證」並通過審核，才能撰寫與發佈攻略。",
+        confirmButtonText: "前往驗證",
+        showCancelButton: true,
+        cancelButtonText: "返回首頁",
+        allowOutsideClick: false,
+      });
+      window.location.href = result.isConfirmed
+        ? "school-profile.html?pane=settings"
+        : "school.html";
+    }
+  } catch (e) {
+    console.error("檢查就學驗證狀態失敗：", e);
+  }
 })();
 </script>
 <script defer src="school-new.js"></script>
@@ -960,6 +992,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
   var editor = document.getElementById('editor');
+
+  /* 真實 API 串接用的共用狀態（建立/更新/發佈文章）。coverUrl 由下面「封面圖上傳」
+     那段 IIFE 在上傳成功後寫入；currentArticleId/currentArticleStatus 由
+     createArticle/載入既有文章時寫入。 */
+  var coverUrl = '';
+  var currentArticleId = null;
+  var currentArticleStatus = null; // 'DRAFT' | 'REJECTED' | 'PUBLISHED' | ...
+  var categoriesList = [];
 
   /* 讓 execCommand 以行內 CSS 樣式套用（字體/大小/顏色才蓋得過頁面 CSS，不會沒作用） */
   try { document.execCommand('styleWithCSS', false, true); } catch (e) {}
@@ -1400,6 +1440,7 @@ document.addEventListener('DOMContentLoaded', function() {
           savedAt: Date.now()
         }));
       } catch (e) {}
+      saveArticleRemote();
       var t = new Date();
       setSaveState(false, '草稿已儲存 · ' + ('0' + t.getHours()).slice(-2) + ':' + ('0' + t.getMinutes()).slice(-2));
     }, 900);
@@ -1664,6 +1705,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (pubTop) pubTop.disabled = !ready;
     if (mbPublish) mbPublish.disabled = !ready;
     if (lockNote) lockNote.style.display = ready ? 'none' : 'flex';
+    // 手機版必填資訊都收在「設定」抽屜裡，不像桌機版清單隨時可見，所以用驚嘆號
+    // 提醒使用者還有必填項目沒填，點了才會自動展開抽屜並捲到對應欄位。
+    var mbSettingsBtn = document.getElementById('mbSettings');
+    if (mbSettingsBtn) mbSettingsBtn.classList.toggle('has-warning', !ready);
   }
   checks.forEach(function (c) { c.addEventListener('click', function () { c.classList.toggle('on'); refreshPub(); }); });
   renderAnchorFields(); // 這裡才呼叫：refreshPub 依賴的變數已就緒
@@ -1935,13 +1980,22 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!file) return;
       var reader = new FileReader();
       reader.onload = function () {
+        // 先用本地 data URL 立即預覽，不等上傳完成；實際送出的 coverUrl 要等
+        // uploadSchoolImage() 回傳真實 Firebase Storage 網址才算數。
         slot.style.backgroundImage = 'url("' + reader.result + '")';
         slot.classList.add('has-cover');
-        setLabel('更換封面圖');
+        setLabel('上傳中…');
         removeBtn.style.display = '';
-        scheduleSave();
       };
       reader.readAsDataURL(file);
+      window.schoolBackendService.uploadSchoolImage(file).then(function (res) {
+        coverUrl = (res && res.data && res.data.url) || '';
+        setLabel('更換封面圖');
+        scheduleSave();
+      }).catch(function (e) {
+        console.error('封面圖上傳失敗：', e);
+        setLabel('上傳失敗，點擊重試');
+      });
     });
     removeBtn.addEventListener('click', function (e) {
       e.stopPropagation();
@@ -1949,6 +2003,7 @@ document.addEventListener('DOMContentLoaded', function() {
       slot.classList.remove('has-cover');
       setLabel('加入封面圖（選填）');
       removeBtn.style.display = 'none';
+      coverUrl = '';
       scheduleSave();
     });
   })();
@@ -2155,6 +2210,212 @@ document.addEventListener('DOMContentLoaded', function() {
   })();
 
   update();
+
+  /* ---------- 真實 API：建立/更新/發佈/讀取文章 ---------- */
+  // GET /api/school/categories 的 name 跟 school-data.js 的 TOPICS 鍵值一字不差
+  // （2026-11-24 用 dev 環境實測確認過），所以分類用「名稱比對」換成真正的 categoryId；
+  // questions 陣列也跟 TOPICS[x].anchorFields 的 label 逐一對應，answers 直接照
+  // anchorFields 的順序把 anchorValues 攤平送出即可，不用另外設計欄位。
+  function getArticleIdFromUrl() {
+    return new URLSearchParams(window.location.search).get('id');
+  }
+
+  function buildArticlePayload() {
+    var topic = catSel ? catSel.value : '';
+    var cat = categoriesList.find(function (c) { return c.name === topic; });
+    var fields = anchorFieldsForTopic(topic);
+    var paid = isPaidNow();
+    var ltOn = longtermToggleForPub && longtermToggleForPub.classList.contains('on');
+    var tagsEl = document.getElementById('tags');
+    var tags = tagsEl ? Array.prototype.slice.call(tagsEl.querySelectorAll('.tag:not(.tag-add)')).map(function (el) {
+      return el.textContent.trim().replace('×', '').trim();
+    }) : [];
+    var refs = Array.prototype.slice.call(editor.querySelectorAll('sup.fn')).map(function (fn) {
+      return { label: fn.dataset.src || '', url: fn.dataset.url || '' };
+    });
+
+    var payload = {
+      title: document.getElementById('titleInput').value.trim(),
+      subtitle: document.getElementById('subtitleInput').value.trim(),
+      content: editor.innerHTML,
+      type: paid ? 'PAID' : 'FREE'
+    };
+    if (coverUrl) payload.coverUrl = coverUrl;
+    if (cat) payload.categoryId = cat.id;
+    if (tags.length) payload.tags = tags;
+    if (paid) payload.price = parseInt(priceIn.value, 10) || 0;
+    if (!ltOn && yearSelForPub && yearSelForPub.value) payload.applicableYear = yearSelForPub.value;
+    if (refs.length) payload.references = refs;
+    if (fields.length) payload.answers = fields.map(function (f) { return anchorValues[f.key] || ''; });
+    return payload;
+  }
+
+  // 每次 autosave 都呼叫：還沒建立過文章就 createArticle()，建立過就依目前狀態
+  // 走 updateDraft()（DRAFT/REJECTED）或 updateArticle()（PUBLISHED，已發佈的文章
+  // 編輯後維持 PUBLISHED，不會重新送審）。失敗只記 log，不打斷使用者打字。
+  function saveArticleRemote() {
+    var payload = buildArticlePayload();
+    if (!payload.title) return; // 標題都還沒打，不急著建文章
+    if (!window.schoolBackendService) return;
+
+    if (!currentArticleId) {
+      window.schoolBackendService.createArticle(payload).then(function (res) {
+        currentArticleId = res.data.id;
+        currentArticleStatus = res.data.status || 'DRAFT';
+        var url = new URL(window.location.href);
+        url.searchParams.set('id', currentArticleId);
+        window.history.replaceState(null, '', url);
+      }).catch(function (e) { console.error('建立文章失敗：', e); });
+    } else if (currentArticleStatus === 'PUBLISHED') {
+      window.schoolBackendService.updateArticle(currentArticleId, payload).catch(function (e) {
+        console.error('更新文章失敗：', e);
+      });
+    } else {
+      window.schoolBackendService.updateDraft(currentArticleId, payload).catch(function (e) {
+        console.error('自動儲存草稿失敗：', e);
+      });
+    }
+  }
+
+  // 用既有文章/草稿資料回填畫面（從 ?id= 進來的編輯模式）
+  function populateFromArticle(data, content) {
+    document.getElementById('titleInput').value = data.title || '';
+    document.getElementById('subtitleInput').value = data.subtitle || '';
+    if (content != null) editor.innerHTML = content;
+
+    if (data.coverUrl) {
+      coverUrl = data.coverUrl;
+      var slot = document.getElementById('coverSlot');
+      var removeBtn = document.getElementById('coverRemove');
+      if (slot) {
+        slot.style.backgroundImage = 'url("' + data.coverUrl + '")';
+        slot.classList.add('has-cover');
+        var lbl = slot.querySelector('.cover-label');
+        if (lbl) lbl.childNodes[lbl.childNodes.length - 1].nodeValue = '更換封面圖';
+      }
+      if (removeBtn) removeBtn.style.display = '';
+    }
+
+    if (data.categoryId && catSel) {
+      var cat = categoriesList.find(function (c) { return c.id === data.categoryId; });
+      if (cat) {
+        catSel.value = cat.name;
+        catSel.dispatchEvent(new Event('change'));
+      }
+    }
+
+    var tagsEl = document.getElementById('tags');
+    var tagAddEl = document.getElementById('tagAdd');
+    if (Array.isArray(data.tags) && data.tags.length && tagsEl && tagAddEl) {
+      Array.prototype.slice.call(tagsEl.querySelectorAll('.tag:not(.tag-add)')).forEach(function (el) { el.remove(); });
+      data.tags.forEach(function (tag) {
+        var tagEl = document.createElement('span');
+        tagEl.className = 'tag';
+        tagEl.innerHTML = tag + ' <span class="x">×</span>';
+        tagEl.querySelector('.x').addEventListener('click', function () { tagEl.remove(); });
+        tagsEl.insertBefore(tagEl, tagAddEl);
+      });
+    }
+
+    if (data.applicableYear && yearSelForPub) {
+      yearSelForPub.value = data.applicableYear;
+    } else if (longtermToggleForPub) {
+      longtermToggleForPub.classList.add('on');
+    }
+
+    if (data.type === 'PAID' && priceIn && data.price != null) {
+      priceIn.value = data.price;
+    }
+
+    if (Array.isArray(data.answers) && data.answers.length) {
+      renderAnchorFields();
+      var fields = anchorFieldsForTopic(catSel ? catSel.value : '');
+      fields.forEach(function (f, i) { if (data.answers[i]) anchorValues[f.key] = data.answers[i]; });
+      savedAnchorValues = anchorValues;
+      anchorFieldsList.querySelectorAll('[data-anchor-key]').forEach(function (input) {
+        var v = anchorValues[input.dataset.anchorKey];
+        if (v) input.value = v;
+      });
+    }
+
+    update(); countWords(); buildTOC(); renumberFootnotes();
+    refreshPub();
+  }
+
+  // 這支 <script> 是同步載入（不是 defer/module），解析到這裡就會立刻執行——這時候
+  // 設定 window.schoolBackendService 的 <script type="module"> 還沒跑（module 一律要
+  // 等文件解析完才執行，一定比同步 script 晚），所以不能直接呼叫，要包進
+  // DOMContentLoaded，等全部 defer/module script 都跑完再執行（這裡踩的坑跟
+  // school-profile.html 的 eager-load 計時問題一樣，見該檔案開頭註解）。
+  document.addEventListener('DOMContentLoaded', initFromServer);
+  function initFromServer() {
+    if (!window.schoolBackendService) return;
+    window.schoolBackendService.getCategories().then(function (res) {
+      categoriesList = (res && res.data) || [];
+    }).catch(function (e) {
+      console.error('取得文章分類失敗：', e);
+    }).then(function () {
+      var id = getArticleIdFromUrl();
+      if (!id) return;
+      currentArticleId = id;
+      // 先當作還在審核中的草稿試讀；不是 DRAFT/REJECTED（例如已經 PUBLISHED）
+      // 的話這支會失敗，改走 metadata + content 兩支組出同樣的欄位。
+      window.schoolBackendService.getDraft(id).then(function (res) {
+        currentArticleStatus = 'DRAFT';
+        populateFromArticle(res.data, res.data.content);
+      }).catch(function () {
+        Promise.all([
+          window.schoolBackendService.getArticle(id),
+          window.schoolBackendService.getArticleContent(id)
+        ]).then(function (results) {
+          var meta = results[0].data;
+          var contentData = results[1].data;
+          currentArticleStatus = meta.status;
+          populateFromArticle(meta, contentData.locked ? contentData.previewContent : contentData.content);
+        }).catch(function (e) {
+          console.error('載入文章失敗：', e);
+        });
+      });
+    });
+  }
+
+  // 發佈：沒有文章就先建立，再把最新內容存一次，最後呼叫 submit 把狀態轉成 PUBLISHED
+  function doPublish() {
+    var payload = buildArticlePayload();
+    if (!payload.title) {
+      if (window.AppModal) window.AppModal.fire({ icon: 'warning', title: '請先填寫標題' });
+      return;
+    }
+    var ensureCreated = currentArticleId
+      ? Promise.resolve()
+      : window.schoolBackendService.createArticle(payload).then(function (res) {
+          currentArticleId = res.data.id;
+          currentArticleStatus = res.data.status || 'DRAFT';
+        });
+
+    ensureCreated.then(function () {
+      return currentArticleStatus === 'PUBLISHED'
+        ? window.schoolBackendService.updateArticle(currentArticleId, payload)
+        : window.schoolBackendService.updateDraft(currentArticleId, payload);
+    }).then(function () {
+      return window.schoolBackendService.submitArticle(currentArticleId);
+    }).then(function () {
+      currentArticleStatus = 'PUBLISHED';
+      if (window.AppModal) {
+        window.AppModal.fire({ icon: 'success', title: '發佈成功！', timer: 1600, showConfirmButton: false }).then(function () {
+          window.location.href = 'school-post.html?id=' + encodeURIComponent(currentArticleId);
+        });
+      } else {
+        window.location.href = 'school-post.html?id=' + encodeURIComponent(currentArticleId);
+      }
+    }).catch(function (e) {
+      var msg = (e && e.message) || '請稍後再試';
+      if (window.AppModal) window.AppModal.fire({ icon: 'error', title: '發佈失敗', text: msg });
+      else console.error('發佈失敗：', e);
+    });
+  }
+  if (pubBtn) pubBtn.addEventListener('click', doPublish);
+  if (pubTop) pubTop.addEventListener('click', doPublish);
 </script>
 </body>
 </html>

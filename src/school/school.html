@@ -141,9 +141,9 @@
         <p>全台首創結合校園二手市集的「經驗變現平台」——把學長姐的真實經驗變成你的捷徑。半實名制 + 人工認證，告別 AI 內容與業配雜訊。</p>
       </div>
       <div class="stats">
-        <div class="stat"><div class="num">316</div><div class="lbl">文章</div></div>
-        <div class="stat"><div class="num">74</div><div class="lbl">已認證作者</div></div>
-        <div class="stat"><div class="num">5,180</div><div class="lbl">本月閱讀</div></div>
+        <div class="stat"><div class="num" id="schoolStatArticles">—</div><div class="lbl">文章</div></div>
+        <div class="stat"><div class="num" id="schoolStatAuthors">—</div><div class="lbl">已認證作者</div></div>
+        <div class="stat"><div class="num" id="schoolStatReads">—</div><div class="lbl">本月閱讀</div></div>
       </div>
     </div>
 
@@ -279,20 +279,10 @@
       <!-- Featured -->
       <article class="featured" id="featuredWrap"></article>
 
-      <div class="sec-label">最新攻略 <span class="pill">316 篇 · 依發佈時間</span></div>
+      <div class="sec-label" id="articlesSecLabel">最新攻略 <span class="pill" id="articlesCountPill">依發佈時間</span></div>
 
       <!-- Article grid -->
       <div class="articles-grid" id="articleList"></div>
-
-      <!-- Pagination -->
-      <div class="pagination" id="paginationWrap">
-        <button class="pg-btn">←</button>
-        <button class="pg-num on">1</button>
-        <button class="pg-num">2</button>
-        <button class="pg-num">3</button>
-        <button class="pg-num">4</button>
-        <button class="pg-btn">→</button>
-      </div>
 
     </main>
 
@@ -447,7 +437,14 @@
 <script type="module">
 import { AppModal } from "../default/app-modal.js";
 import { requireAdminPage } from "../default/default.js";
+import SchoolBackendService from "./schoolBackendService.js";
+import wpBackendService from "../wpBackendService.js";
 window.AppModal = AppModal;
+// Exposed on window so the classic deferred <script src="school-new.js"> below
+// can call it. school-new.js uses `defer`, so per spec it executes after this
+// module script (both are deferred, document order preserved) — no startup race.
+window.schoolBackendService = new SchoolBackendService();
+window.wpBackendServiceInstance = new wpBackendService();
 (async () => {
   const ok = await requireAdminPage();
   if (ok) document.body.style.visibility = "visible";

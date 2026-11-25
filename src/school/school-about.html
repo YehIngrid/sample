@@ -492,11 +492,15 @@
     <h1>把學長姐的真實經驗，<br>變成你的校園捷徑</h1>
     <p>校園攻略站是拾貨寶庫為中興大學打造的「經驗變現平台」。選課策略、推甄備審、實習面試、宿舍與美食——這些真正有用卻散落各處的經驗，在這裡被整理、認證，並讓分享者獲得應得的回報。</p>
     <div class="hero-stats">
-      <div><div class="n">316</div><div class="l">篇攻略</div></div>
-      <div><div class="n">74</div><div class="l">位已認證作者</div></div>
-      <div><div class="n">5,180</div><div class="l">本月閱讀</div></div>
+      <div><div class="n" id="schoolStatArticles">—</div><div class="l">篇攻略</div></div>
+      <div><div class="n" id="schoolStatAuthors">—</div><div class="l">位已認證作者</div></div>
+      <div><div class="n" id="schoolStatReads">—</div><div class="l">本月閱讀</div></div>
     </div>
   </section>
+
+  <!-- 本週精選：跟 school.html 共用同一個 #featuredWrap + .featured 排版，
+       由 school-new.js 裡同一支渲染函式負責填內容，沒有精選時會自動整塊隱藏 -->
+  <article class="featured" id="featuredWrap" data-reveal></article>
 
   <!-- 什麼是校園攻略站 -->
   <section class="about-sec reveal-right" data-reveal data-bg="1">
@@ -818,7 +822,13 @@
 <script type="module">
 import { AppModal } from "../default/app-modal.js";
 import { requireAdminPage } from "../default/default.js";
+import SchoolBackendService from "./schoolBackendService.js";
+import wpBackendService from "../wpBackendService.js";
 window.AppModal = AppModal;
+// school-new.js（下面的 defer script）是共用檔案，首頁/攻略介紹頁都要用，
+// 所以這裡要比照 school.html 把同一組 service 實例掛到 window 上。
+window.schoolBackendService = new SchoolBackendService();
+window.wpBackendServiceInstance = new wpBackendService();
 (async () => {
   const ok = await requireAdminPage();
   if (ok) document.body.style.visibility = "visible";

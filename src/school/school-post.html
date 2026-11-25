@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="school-post.css">
   <link rel="stylesheet" href="article-body.css">
   <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js" integrity="sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a" crossorigin="anonymous"></script>
   <script type="module" src="../default/default.js"></script>
 <style class="am-admin-gate-style">body{visibility:hidden}</style>
 </head>
@@ -113,26 +114,36 @@
 
     <!-- ============ MAIN ARTICLE ============ -->
     <div>
-      <article class="article-card">
+      <!-- 骨架屏：先顯示文章內容的佔位動畫，資料回來後才換成真正的卡片，
+           避免整頁一次全部彈出來、也讓使用者先看到最重要的內文 -->
+      <div class="skel-card" id="spSkelArticle">
+        <div class="skel-hero"></div>
+        <div class="skel-body">
+          <div class="skel-line skel-line-lg"></div>
+          <div class="skel-line skel-line-md"></div>
+          <div class="skel-line"></div>
+          <div class="skel-line"></div>
+          <div class="skel-line skel-line-sm"></div>
+        </div>
+      </div>
+      <article class="article-card" id="spArticleCard" style="display:none;">
         <div class="sp-hero"></div>
 
         <div class="post-body">
           <div class="post-head">
-            <h1>中興推台清交：我的備審「修改前後對比」＋面試當天教授提問真題還原</h1>
-            <p class="post-sub">逐頁拆解備審改版前後差在哪、自傳每一段教授想看什麼——附三場面試的提問逐字稿與我的回答思路。</p>
+            <h1 id="spTitle">中興推台清交：我的備審「修改前後對比」＋面試當天教授提問真題還原</h1>
+            <p class="post-sub" id="spSubtitle">逐頁拆解備審改版前後差在哪、自傳每一段教授想看什麼——附三場面試的提問逐字稿與我的回答思路。</p>
             <div class="meta-row">
-              <span>2026 / 05 / 22 發佈</span>
+              <span id="spMetaDate">2026 / 05 / 22 發佈</span>
               <span class="dot"></span>
-              <span>2026 / 06 / 10 編輯</span>
+              <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> <span id="spMetaViews">0</span> 次閱讀</span>
               <span class="dot"></span>
-              <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> 2,184 次閱讀</span>
+              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:var(--warn);"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span id="spMetaLikes">0</span> 喜歡</span>
               <span class="dot"></span>
-              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:var(--warn);"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> 96 喜歡</span>
-              <span class="dot"></span>
-              <span>約 18 分鐘</span>
-              <span class="valid-tag">
+              <span id="spMetaReadTime">約 1 分鐘</span>
+              <span class="valid-tag" id="spMetaYearTag">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7 V12 L15 14"/></svg>
-                適用 115 學年
+                <span id="spMetaYear">長期適用</span>
               </span>
             </div>
           </div>
@@ -140,51 +151,27 @@
           <!-- 錨點資訊：手機版補在作者資訊上面（電腦版顯示在右側欄，見 aside .anchor-box） -->
           <div class="anchor-box d-lg-none">
             <div class="ab-title">錨點資訊</div>
-            <div class="ab-row"><span class="ab-k">錄取校系所</span><span class="ab-v">台灣大學創新設計研究所</span></div>
-            <div class="ab-row"><span class="ab-k">推甄年度</span><span class="ab-v">115 學年度</span></div>
-            <div class="ab-row"><span class="ab-k">面試方式</span><span class="ab-v">口試＋書面審查</span></div>
           </div>
 
           <!-- author -->
           <div class="author-block">
-            <div class="av"></div>
+            <img class="av" id="spAuthorAvatar" src="../image/default-avatar.webp" alt="作者頭像">
             <div class="info">
-              <div class="name">創產系 大四 范同學</div>
+              <div class="name" id="spAuthorName">—</div>
               <div class="author-rating">
-                <span class="stars">★★★★★</span>
-                <span class="score">4.8</span>
-                <span class="cnt">96 則評分</span>
-                <span class="cnt">· 1,204 位追蹤者</span>
+                <span class="cnt" id="spAuthorFollowers">0 位追蹤者</span>
               </div>
-              <div class="titles">
-                <span class="t">台大碩士</span>
-                <span class="t">書卷獎</span>
-                <span class="t">推甄正取 ×3</span>
-              </div>
+              <div class="titles" id="spAuthorTitles"></div>
             </div>
-            <a class="follow" href="#">＋ 追蹤</a>
+            <a class="follow" href="#" id="spFollowBtn">＋ 追蹤</a>
+            <a class="follow edit-self" href="#" id="spEditLink" style="display:none;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M11 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>編輯攻略</a>
           </div>
 
           <!-- free preview -->
-          <div class="preview-flag">免費預覽 · 前 20% 內容</div>
+          <div class="preview-flag" id="spPreviewFlag">免費預覽</div>
 
-          <div class="article-body">
-            <p>大三下的我，書審拿出去三次、被打槍兩次。這篇不講雞湯，只把<strong>「我改了什麼、為什麼改」</strong>攤開來給你看——因為我當初最想看到的，就是別人備審「改版前後」長什麼樣子。</p>
-
-            <h2>一、先講結論：教授不是在讀你的人生，是在找風險</h2>
-            <p>我面了台大、清大、交大三場，回頭看，所有提問都圍繞同一件事：<strong>「這個學生進來，會不會做不完、做不出來、然後跑掉。」</strong>備審與面試的每一句話，都該在回答這個隱藏問題。</p>
-
-            <div class="callout">
-              傳承的不是「知識」，是「經驗」。以下時程、模板、提問都來自我自己的申請過程，僅供參考，請依你的科系與當年度簡章自行調整。
-            </div>
-
-            <h2>二、自傳改版：第一段我砍掉了 60%</h2>
-            <p>初版我花了整整一段寫「我從小就對設計有熱情」。第二版我全刪掉，改成<strong>一句話講清楚我要做什麼研究、為什麼是我</strong>。教授一天看上百份，前三行決定要不要繼續。</p>
-            <ol class="steps">
-              <li>第一句：研究方向 + 你已具備的具體成果（不是形容詞）。</li>
-              <li>第二句：你跟這位教授／實驗室的連結點。</li>
-              <li>第三句：可被驗證的證據（作品、競賽、GPA、專題）。</li>
-            </ol>
+          <div class="article-body" id="spPreviewBody">
           </div>
 
           <!-- ===== LOCKED: 預覽 paywall ===== -->
@@ -198,22 +185,15 @@
                   <svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="url(#thLockGrad)"/><path d="M17 21V16a7 7 0 0 1 14 0v5" stroke="url(#thLockGrad)" stroke-linecap="round"/></svg>
                 </div>
                 <h3>解鎖完整攻略</h3>
-                <p>剩餘 80% 包含：備審修改前後逐頁對比、三場面試提問逐字稿與我的回答思路、教授最在意的 5 個地雷。</p>
-                <div class="social-proof"><span class="gold">★ 4.8</span> · 96 人已解鎖 · 12 人收藏</div>
-                <div class="price-row">
-                  <span class="price">$129 <span class="unit">NT$</span></span>
-                  <span class="strike">$169</span>
+                <p>剩餘內容需解鎖後才能閱讀。</p>
+                <div class="social-proof" id="spSocialProofMain">—</div>
+                <div class="price-row" id="spPriceRowMain">
+                  <span class="price" id="spPriceMain">—</span>
                 </div>
                 <button class="btn-buy" type="button" id="unlockBtn">
                   <svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="currentColor"/><path d="M17 21V16a7 7 0 0 1 14 0v5" stroke="currentColor" stroke-linecap="round"/></svg>
                   立即解鎖閱讀
                 </button>
-                <div class="pay-methods">
-                  支援
-                  <span class="m">信用卡</span>
-                  <span class="m">LINE Pay</span>
-                  <span class="m">超商代碼</span>
-                </div>
               </div>
             </div>
           </div>
@@ -223,39 +203,13 @@
           <div class="unlocked-only">
             <div class="protected">
               <div class="watermark" aria-hidden="true" id="wm2"></div>
-              <div class="article-body" style="position:relative;z-index:2">
-                <h2>三、備審修改前後逐頁對比</h2>
-                <h3>3-1　研究動機段：把熱情換成證據</h3>
-                <p>以下是我自傳第二頁「研究動機」的<strong>改版前 vs 改版後</strong>，重點不在文筆，而在「把抽象熱情換成可驗證的證據」<sup class="ref">1</sup>。</p>
-                <div class="callout">改版前：「我對使用者研究充滿熱情，希望能在貴所繼續深造。」→ 改版後：「大三專題我以 12 場使用者訪談重做校務系統流程，將表單完成率從 46% 提到 78%，這正是我想在貴所延伸的題目。」</div>
-                <p><strong>小提醒：一句話就要見證據</strong></p>
-                <p>差別在於：後者讓教授<strong>三秒內</strong>知道你會做什麼、做過什麼、跟他的實驗室有沒有關係<sup class="ref">2</sup>。</p>
-                <h2>四、三場面試提問逐字稿與我的回答思路</h2>
-                <ol class="steps">
-                  <li>「你這個專題，換成別人也做得出來嗎？」——別急著防衛，先承認可複製的部分，再講你獨有的判斷。</li>
-                  <li>「如果資料拿不到，你的研究還成立嗎？」——考的是你有沒有 Plan B，我準備了兩個替代資料來源。</li>
-                  <li>「你為什麼選我們，不選台大？」——具體到某位教授的某篇論文，不要講排名。</li>
-                </ol>
-                <h2>五、教授最在意的 5 個地雷</h2>
-                <p>依我三場面試的觀察，最容易被扣分的是<strong>「講不清楚自己做過什麼」</strong>與<strong>「動機和科系對不上」</strong>。其餘三個地雷與逐頁批註，都整理在下方附件模板。</p>
-                <div class="art-refs">
-                  <h4>參考資料 <span class="cnt">2</span></h4>
-                  <ol>
-                    <li>面試經驗整理，2024 年台清交研究所推甄口試現場筆記。</li>
-                    <li>教育部《大學校院推薦甄選入學招生作業要點》 — <a href="https://www.edu.tw" target="_blank" rel="noopener">https://www.edu.tw</a></li>
-                  </ol>
-                </div>
+              <div class="article-body" style="position:relative;z-index:2" id="spFullBody">
               </div>
             </div>
           </div>
 
           <!-- tags -->
-          <div class="post-tags">
-            <a href="school-article.html">#頂大推甄</a>
-            <a href="school-article.html">#備審資料</a>
-            <a href="school-article.html">#面試實錄</a>
-            <a href="school-article.html">#教授評價</a>
-          </div>
+          <div class="post-tags" id="spTags"></div>
 
           <!-- promises + 聲明 -->
           <div class="promises">
@@ -271,7 +225,12 @@
       </article>
 
       <!-- ============ RATING + COMMENTS ============ -->
-      <section class="panel">
+      <div class="skel-card" id="spSkelComments">
+        <div class="skel-line skel-line-md"></div>
+        <div class="skel-line"></div>
+        <div class="skel-line skel-line-sm"></div>
+      </div>
+      <section class="panel" id="spCommentsPanel" style="display:none;">
         <div class="panel-head">
           <h3>評分與留言</h3>
           <span class="spoiler-note">
@@ -280,154 +239,101 @@
           </span>
         </div>
 
-        <div class="rating-summary">
-          <div class="big">
-            <div class="score">4.8</div>
-            <div class="stars">★★★★★</div>
-            <div class="cnt">96 則評分</div>
+        <div class="rating-summary" id="spRatingSummary">
+          <div class="big" id="spRatingBig">
+            <div class="score" id="spRatingScore">—</div>
+            <div class="stars" id="spRatingStars"></div>
+            <div class="cnt" id="spRatingCount">0 則評分</div>
           </div>
-          <div class="bars">
-            <div class="bar-row"><span class="lbl">5★</span><div class="track"><div class="fill" style="width:84%"></div></div><span>84%</span></div>
-            <div class="bar-row"><span class="lbl">4★</span><div class="track"><div class="fill" style="width:11%"></div></div><span>11%</span></div>
-            <div class="bar-row"><span class="lbl">3★</span><div class="track"><div class="fill" style="width:3%"></div></div><span>3%</span></div>
-            <div class="bar-row"><span class="lbl">2★</span><div class="track"><div class="fill" style="width:1%"></div></div><span>1%</span></div>
-            <div class="bar-row"><span class="lbl">1★</span><div class="track"><div class="fill" style="width:1%"></div></div><span>1%</span></div>
+          <div class="rating-empty" id="spRatingEmpty" style="display:none;">
+            <svg viewBox="0 -0.79 24 24"><path d="M12 1.5l3.09 6.58 7.16.83-5.3 4.94 1.42 7.07L12 17.4l-6.37 3.52 1.42-7.07-5.3-4.94 7.16-.83L12 1.5z"/></svg>
+            <span>尚無評分，成為第一個為這篇攻略評分的人吧！</span>
           </div>
         </div>
 
-        <div class="comment">
-          <div class="av"></div>
-          <div class="c-body">
-            <div class="c-top">
-              <span class="c-name">資工系 大三 王同學</span>
-              <span class="c-grade">已購買 · 同校生</span>
-              <span class="c-stars">★★★★★</span>
-              <span class="c-date">3 天前</span>
-            </div>
-            <div class="c-text">備審改版前後對比真的太實用，第一段砍掉形容詞那段我直接照做。面試逐字稿也很還原，謝謝學姊！</div>
-            <div class="c-actions"><a href="#"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>有幫助 (42)</a><a href="#">回覆</a></div>
-          </div>
-        </div>
-
-        <div class="comment">
-          <div class="av"></div>
-          <div class="c-body">
-            <div class="c-top">
-              <span class="c-name">電機系 大四 周同學</span>
-              <span class="c-grade">已購買 · 校外生</span>
-              <span class="c-stars">★★★★☆</span>
-              <span class="c-date">1 週前</span>
-            </div>
-            <div class="c-text">經驗很扎實，雖然我不是創產但思路通用。希望之後能補一篇交大的版本～</div>
-            <div class="c-actions"><a href="#"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>有幫助 (18)</a><a href="#">回覆</a></div>
-          </div>
-        </div>
-
-        <div class="comment reply">
-          <div class="av"></div>
-          <div class="c-body">
-            <div class="c-top">
-              <span class="c-name">范同學</span>
-              <span class="author-tag">作者</span>
-              <span class="c-date">2 天前</span>
-            </div>
-            <div class="c-text">@周同學 交大版本我整理中，預計下個月上架，追蹤我就會在通知收到提醒！</div>
-            <div class="c-actions"><a href="#"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>有幫助 (9)</a></div>
+        <div class="comment-list-head">
+          <div class="comment-list-title">留言 <span id="spCommentCount">0</span> 則</div>
+          <div class="sort-toggle" id="spCommentSortToggle">
+            <button type="button" class="on" data-sort="latest">最新</button>
+            <button type="button" data-sort="helpful">最有幫助</button>
           </div>
         </div>
 
         <div class="comment-box">
-          <input type="text" placeholder="留下你的回饋（請勿暴雷攻略內容）..." />
-          <button class="send">送出</button>
+          <img class="cb-avatar" id="spCommentBoxAvatar" src="../image/default-avatar.webp" alt="">
+          <input type="text" id="spCommentInput" placeholder="留下你的回饋（請勿暴雷攻略內容）..." />
+          <button class="send" id="spCommentSubmitBtn">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9z"/></svg>
+            送出</button>
         </div>
+
+        <div id="spCommentsList"></div>
       </section>
 
       <!-- ============ RELATED ============ -->
       <section class="related">
         <div class="sec-label">同作者與相關攻略</div>
-        <div class="rel-grid">
-          <a class="rel-card" href="#">
-            <div class="cv a"><span class="p">研究計畫申請</span></div>
-            <div class="rb">
-              <h4>成功獲補助的研究計畫書撰寫架構 ＋ 如何找指導教授</h4>
-              <div class="rfoot"><span class="ra">范同學</span><span class="rp">NT$ 99</span></div>
-            </div>
-          </a>
-          <a class="rel-card" href="#">
-            <div class="cv b"><span class="p">研究所推甄</span></div>
-            <div class="rb">
-              <h4>推甄面試最常被問的 12 題與我的回答框架</h4>
-              <div class="rfoot"><span class="ra">林同學</span><span class="rp free">免費閱讀</span></div>
-            </div>
-          </a>
-          <a class="rel-card" href="#">
-            <div class="cv c"><span class="p">轉學考 / 內轉</span></div>
-            <div class="rb">
-              <h4>轉系面試＋轉學考：經濟學與微積分準備時程表</h4>
-              <div class="rfoot"><span class="ra">張同學</span><span class="rp">NT$ 69</span></div>
-            </div>
-          </a>
-          <a class="rel-card nocover" href="#">
-            <div class="rb">
-              <span class="p-line">研究所推甄</span>
-              <h4>推甄備取遞補全流程：意願序怎麼填最不吃虧</h4>
-              <div class="rfoot"><span class="ra">范同學</span><span class="rp">NT$ 59</span></div>
-            </div>
-          </a>
-        </div>
+        <div class="rel-grid" id="spRelatedGrid"></div>
       </section>
     </div>
 
     <!-- ============ SIDEBAR（電腦版） ============ -->
-    <aside class="side">
+    <!-- 外面包一層：.sp-layout 是雙欄 grid，骨架屏跟真正的 aside 要共用同一個欄位，
+         不能各自直接當 grid 的第三個 item，不然版面會跑掉 -->
+    <div>
+      <div class="skel-card skel-side" id="spSkelSide">
+        <div class="skel-line skel-line-md"></div>
+        <div class="skel-line"></div>
+        <div class="skel-line"></div>
+        <div class="skel-line skel-line-sm"></div>
+      </div>
+      <aside class="side" id="spSideAside" style="display:none;">
       <div class="buy-card">
-        <div class="unlocked-only ubuy">
-          <span class="done"><svg viewBox="0 0 48 48" width="18" height="18"><rect x="10" y="21" width="28" height="18" rx="4" stroke="currentColor"/><path d="M17 21V16a7 7 0 0 1 14 0" transform="rotate(25 31 21)" stroke="currentColor" stroke-linecap="round"/></svg>已解鎖 · 永久閱讀</span>
-          <button class="rate-btn" type="button">為這篇攻略評分</button>
+        <div class="ubuy unlocked-only">
+          <span class="done" id="spUnlockedPill">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>
+            <span id="spUnlockedPillText">已解鎖 · 永久閱讀</span>
+          </span>
         </div>
         <div class="locked-only">
-          <div class="price-top">
-            <span class="price">$129</span>
-            <span class="unit">NT$</span>
+          <div class="price-top" id="spPriceTopWrap">
+            <span class="price" id="spPriceSide">—</span>
           </div>
-          <div class="preview-line"><strong>前 20%</strong> 免費 · 已解鎖即可永久閱讀</div>
-          <div class="social-proof"><span class="gold">★ 4.8</span> · 96 人已解鎖</div>
+          <div class="preview-line">解鎖後即可永久閱讀</div>
+          <div class="social-proof" id="spSocialProofSide">—</div>
           <button class="btn-buy" type="button" id="unlockBtnSide">
             <svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="currentColor"/><path d="M17 21V16a7 7 0 0 1 14 0v5" stroke="currentColor" stroke-linecap="round"/></svg>
             解鎖完整攻略
           </button>
         </div>
-        <div class="buy-actions">
-          <button class="side-like" type="button" id="sideLikeBtn" title="喜歡這篇攻略">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            喜歡
+        <div class="buy-actions buy-actions-icons">
+          <button class="ad-btn" type="button" id="sideLikeBtn" title="喜歡這篇攻略" aria-label="喜歡這篇攻略">
+            <span class="ad-ring"></span>
+            <span class="ad-pt ad-p1"></span><span class="ad-pt ad-p2"></span><span class="ad-pt ad-p3"></span><span class="ad-pt ad-p4"></span><span class="ad-pt ad-p5"></span><span class="ad-pt ad-p6"></span><span class="ad-pt ad-p7"></span><span class="ad-pt ad-p8"></span>
+            <span class="ad-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
           </button>
-          <a class="btn-ghost" href="#">
-            加入收藏
-            <svg viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M6 3 h12 a1 1 0 0 1 1 1 v17 l-7-4 -7 4 V4 a1 1 0 0 1 1-1 Z"/></svg>
+          <a class="ad-btn" href="#" id="spBookmarkBtnSide" title="加入收藏" aria-label="加入收藏">
+            <span class="ad-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4z"/></svg></span>
           </a>
-        </div>
-        <div class="ledger">
-          <div class="li"><svg viewBox="0 0 24 24"><path d="M20 6 9 17 4 12"/></svg>後台校園信箱實名認證</div>
-          <div class="li"><svg viewBox="0 0 24 24"><path d="M20 6 9 17 4 12"/></svg>付費內容含讀者浮水印防外流</div>
-          <div class="li"><svg viewBox="0 0 24 24"><path d="M20 6 9 17 4 12"/></svg>非業配 · 平台禁止販賣廣告文</div>
+          <button class="ad-btn ad-gold unlocked-only" type="button" id="spRateBtnSide" title="為這篇攻略評分" aria-label="為這篇攻略評分">
+            <span class="ad-ring"></span>
+            <span class="ad-pt ad-p1"></span><span class="ad-pt ad-p2"></span><span class="ad-pt ad-p3"></span><span class="ad-pt ad-p4"></span><span class="ad-pt ad-p5"></span><span class="ad-pt ad-p6"></span><span class="ad-pt ad-p7"></span><span class="ad-pt ad-p8"></span>
+            <span class="ad-ic"><svg viewBox="0 -0.79 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1.5l3.09 6.58 7.16.83-5.3 4.94 1.42 7.07L12 17.4l-6.37 3.52 1.42-7.07-5.3-4.94 7.16-.83L12 1.5z"/></svg></span>
+          </button>
+          <a class="ad-btn ad-chat" href="#spCommentsPanel" id="spCommentScrollBtnSide" title="查看評論" aria-label="查看評論">
+            <span class="ad-ring"></span>
+            <span class="ad-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+          </a>
         </div>
       </div>
 
       <div class="anchor-box">
         <div class="ab-title">錨點資訊</div>
-        <div class="ab-row"><span class="ab-k">錄取校系所</span><span class="ab-v">台灣大學創新設計研究所</span></div>
-        <div class="ab-row"><span class="ab-k">推甄年度</span><span class="ab-v">115 學年度</span></div>
-        <div class="ab-row"><span class="ab-k">面試方式</span><span class="ab-v">口試＋書面審查</span></div>
       </div>
 
-      <div class="toc">
+      <div class="toc" id="spTocPanel">
         <div class="head">本文章節</div>
-        <a href="#">一、教授不是在讀人生，是在找風險</a>
-        <a href="#">二、自傳改版：第一段砍掉 60%</a>
-        <a href="#">三、備審修改前後逐頁對比 <span class="locked"><svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="url(#thLockGrad)"/><path d="M17 21V16a7 7 0 0 1 14 0v5" stroke="url(#thLockGrad)" stroke-linecap="round"/></svg></span><span class="unlocked-mark"><svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="currentColor"/><path d="M17 21V16a7 7 0 0 1 14 0" transform="rotate(25 31 21)" stroke="currentColor" stroke-linecap="round"/></svg></span></a>
-        <a href="#">四、三場面試提問逐字稿 <span class="locked"><svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="url(#thLockGrad)"/><path d="M17 21V16a7 7 0 0 1 14 0v5" stroke="url(#thLockGrad)" stroke-linecap="round"/></svg></span><span class="unlocked-mark"><svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="currentColor"/><path d="M17 21V16a7 7 0 0 1 14 0" transform="rotate(25 31 21)" stroke="currentColor" stroke-linecap="round"/></svg></span></a>
-        <a href="#">五、教授最在意的 5 個地雷 <span class="locked"><svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="url(#thLockGrad)"/><path d="M17 21V16a7 7 0 0 1 14 0v5" stroke="url(#thLockGrad)" stroke-linecap="round"/></svg></span><span class="unlocked-mark"><svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="currentColor"/><path d="M17 21V16a7 7 0 0 1 14 0" transform="rotate(25 31 21)" stroke="currentColor" stroke-linecap="round"/></svg></span></a>
+        <div id="spTocList"></div>
       </div>
 
       <div class="report">
@@ -437,6 +343,7 @@
         </a>
       </div>
     </aside>
+    </div>
 
   </div>
 </div>
@@ -446,12 +353,11 @@
   <button class="ico" id="barLikeBtn" aria-label="喜歡這篇攻略" type="button">
     <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
   </button>
-  <button class="ico" aria-label="加入收藏" type="button">
+  <button class="ico" id="spBookmarkBtnBar" aria-label="加入收藏" type="button">
     <svg viewBox="0 0 24 24"><path d="M6 3 h12 a1 1 0 0 1 1 1 v17 l-7-4 -7 4 V4 a1 1 0 0 1 1-1 Z"/></svg>
   </button>
   <div class="priceb locked-only">
-    <div class="p">NT$ 129</div>
-    <div class="s">前 20% 免費</div>
+    <div class="p" id="spPriceBar">—</div>
   </div>
   <button class="cta locked-only" type="button" id="unlockBtnBar">
     <svg viewBox="0 0 48 48"><rect x="10" y="21" width="28" height="18" rx="4" stroke="currentColor"/><path d="M17 21V16a7 7 0 0 1 14 0v5" stroke="currentColor" stroke-linecap="round"/></svg>
@@ -492,7 +398,9 @@
 <script type="module">
 import { AppModal } from "../default/app-modal.js";
 import { requireAdminPage } from "../default/default.js";
+import SchoolBackendService from "./schoolBackendService.js";
 window.AppModal = AppModal;
+window.schoolBackendService = new SchoolBackendService();
 (async () => {
   const ok = await requireAdminPage();
   if (ok) document.body.style.visibility = "visible";
@@ -540,29 +448,33 @@ document.addEventListener('DOMContentLoaded', function() {
   for (let i = 0; i < 16; i++) wmHtml += '<div class="row">' + rowText + '</div>';
   ['wm', 'wm2'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = wmHtml; });
 
-  // ── 解鎖 / 上鎖切換：點「立即解鎖」解開，再點一次鎖回去 ──
-  function toggleUnlock() {
-    document.body.classList.toggle('unlocked');
-    if (document.body.classList.contains('unlocked')) {
-      // 解鎖後捲到剛解開的內文
-      const target = document.querySelector('.unlocked-only h2');
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
+  // ── 「立即解鎖」：付款功能後端還沒開放（/me/purchases 固定回空），
+  // 誠實提示使用者，不要假裝點一下就解鎖——真正的 locked/unlocked 狀態
+  // 是從 GET /api/school/articles/{id}/content 的 data.locked 決定的。
   ['unlockBtn', 'unlockBtnSide', 'unlockBtnBar'].forEach(id => {
     const btn = document.getElementById(id);
-    if (btn) btn.addEventListener('click', toggleUnlock);
+    if (btn) btn.addEventListener('click', () => {
+      AppModal.fire({ icon: 'info', title: '付款功能尚未開放', text: '解鎖閱讀付費攻略的功能還在建置中，敬請期待。' });
+    });
   });
   // ── 評分功能 ──
   const ratingModal = new bootstrap.Modal(document.getElementById('ratingModal'));
-  document.querySelectorAll('.ubuy .rate-btn, .sp-actionbar .rate').forEach(btn => {
+  document.querySelectorAll('.ubuy .rate-btn, .sp-actionbar .rate, #spRateBtnSide').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      if (btn.id === 'spRateBtnSide') playAdAnim(btn, ['ad-anim-star', 'ad-anim-ring', 'ad-anim-burst']);
       ratingModal.show();
     });
   });
+
+  // ── 側欄操作按鈕的點擊動畫（光環＋八方飛散的小圓點／圖示彈跳），純視覺回饋 ──
+  function playAdAnim(btn, classes) {
+    classes.forEach((c) => btn.classList.remove(c));
+    void btn.offsetWidth; // 強制 reflow，讓同一組 class 可以重新觸發 CSS animation
+    classes.forEach((c) => btn.classList.add(c));
+  }
+  const chatBtnSide = document.getElementById('spCommentScrollBtnSide');
+  if (chatBtnSide) chatBtnSide.addEventListener('click', () => playAdAnim(chatBtnSide, ['ad-anim-chat', 'ad-anim-ring']));
 
   // 星號互動（hover 預覽、點擊才真的選定）
   const stars = document.querySelectorAll('.star-rating .star');
@@ -593,12 +505,568 @@ document.addEventListener('DOMContentLoaded', function() {
     renderSelected();
   });
 
-  // 提交評分
+  // 提交評分：POST /api/school/articles/{id}/reviews（頂層評論，一人一篇一則）
   submitRatingBtn.addEventListener('click', () => {
-    if (selectedRating === 0) return;
-    AppModal.fire({ icon: 'success', title: '感謝你的回饋！', text: `已送出 ${selectedRating} 星評分`, timer: 1500, showConfirmButton: false });
-    ratingModal.hide();
+    if (selectedRating === 0 || !articleId) return;
+    const body = document.getElementById('ratingComment').value.trim();
+    window.schoolBackendService.createArticleReview(articleId, {
+      rating: selectedRating,
+      body: body || `給了 ${selectedRating} 星評分`,
+    }).then(() => {
+      AppModal.fire({ icon: 'success', title: '感謝你的回饋！', text: `已送出 ${selectedRating} 星評分`, timer: 1500, showConfirmButton: false });
+      ratingModal.hide();
+      loadReviews();
+    }).catch((err) => {
+      AppModal.fire({ icon: 'error', title: '送出失敗', text: err.message || '請稍後再試' });
+    });
   });
+
+  // 留言框左側頭像：用目前登入者自己的頭像（跟 navbar 同一組 localStorage）
+  var commentBoxAvatar = document.getElementById('spCommentBoxAvatar');
+  if (commentBoxAvatar) commentBoxAvatar.src = localStorage.getItem('avatar') || '../image/default-avatar.webp';
+
+  // ── 以下全部改接真實 API，取代原本整頁寫死的 MOCK 內容 ──
+  var articleId = new URLSearchParams(window.location.search).get('id');
+  var currentArticle = null;
+  var currentCategories = [];
+
+  function escHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function setText(id, text) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  // 骨架屏換成真正內容：隱藏佔位動畫、顯示真正的區塊。
+  function revealSection(skelId, realId) {
+    var skel = document.getElementById(skelId);
+    var real = document.getElementById(realId);
+    if (skel) skel.style.display = 'none';
+    if (real) real.style.display = '';
+  }
+  // 跟 setText 一樣，但數字真的變了才觸發一次脈衝動畫（見 school-post.css 的 .stat-pulse），
+  // 值沒變就不要每次輪詢都閃一下，會很煩。
+  function setTextAnimated(id, text) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.textContent === String(text)) return;
+    el.textContent = text;
+    el.classList.remove('stat-pulse');
+    void el.offsetWidth; // 強制 reflow，讓同一個 class 可以重新觸發動畫
+    el.classList.add('stat-pulse');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return d.getFullYear() + ' / ' + String(d.getMonth() + 1).padStart(2, '0') + ' / ' + String(d.getDate()).padStart(2, '0');
+  }
+  function timeAgo(iso) {
+    if (!iso) return '';
+    var diff = Date.now() - new Date(iso).getTime();
+    var m = Math.floor(diff / 60000);
+    if (m < 60) return Math.max(m, 1) + ' 分鐘前';
+    var h = Math.floor(m / 60);
+    if (h < 24) return h + ' 小時前';
+    var day = Math.floor(h / 24);
+    if (day < 7) return day + ' 天前';
+    var w = Math.floor(day / 7);
+    if (w < 5) return w + ' 週前';
+    return fmtDate(iso);
+  }
+
+  // 評分摘要：完全沒有人評分過時，大大的「—」分數跟空星星很醜，改顯示一行邀請文案。
+  function renderRatingSummary(art, animated) {
+    var hasRating = !!(art.ratingCount > 0);
+    var summary = document.getElementById('spRatingSummary');
+    var big = document.getElementById('spRatingBig');
+    var empty = document.getElementById('spRatingEmpty');
+    if (summary) summary.classList.toggle('is-empty', !hasRating);
+    if (big) big.style.display = hasRating ? '' : 'none';
+    if (empty) empty.style.display = hasRating ? 'none' : '';
+    if (!hasRating) return;
+    var set = animated ? setTextAnimated : setText;
+    set('spRatingScore', art.ratingAvg ? art.ratingAvg.toFixed(1) : '—');
+    set('spRatingCount', (art.ratingCount || 0) + ' 則評分');
+    var starsEl = document.getElementById('spRatingStars');
+    if (starsEl) {
+      var full = Math.round(art.ratingAvg || 0);
+      var nextStars = '★★★★★'.slice(0, full) + '☆☆☆☆☆'.slice(0, 5 - full);
+      if (starsEl.textContent !== nextStars) {
+        starsEl.textContent = nextStars;
+        if (animated) { starsEl.classList.remove('stat-pulse'); void starsEl.offsetWidth; starsEl.classList.add('stat-pulse'); }
+      }
+    }
+  }
+
+  // 「錨點資訊」：分類的 questions 跟文章的 answers 依索引一一對應（兩邊皆來自
+  // GET /api/school/categories，跟撰寫器 anchorFields 用的是同一組資料）。
+  function renderAnchorBoxes(answers, questions) {
+    var rows = (questions || []).map(function (label, i) {
+      return (label && answers && answers[i]) ?
+        '<div class="ab-row"><span class="ab-k">' + escHtml(label) + '</span><span class="ab-v">' + escHtml(answers[i]) + '</span></div>' : '';
+    }).join('');
+    document.querySelectorAll('.anchor-box').forEach(function (box) {
+      var title = box.querySelector('.ab-title');
+      box.style.display = rows ? '' : 'none';
+      box.innerHTML = '';
+      if (title) box.appendChild(title);
+      box.insertAdjacentHTML('beforeend', rows);
+    });
+  }
+
+  async function loadArticle() {
+    if (!articleId || !window.schoolBackendService) return;
+    try {
+      var results = await Promise.all([
+        window.schoolBackendService.getArticle(articleId),
+        window.schoolBackendService.getCategories().catch(function () { return { data: [] }; })
+      ]);
+      currentArticle = results[0].data;
+      currentCategories = results[1].data || [];
+    } catch (e) {
+      console.error('取得文章失敗：', e);
+      var layout = document.querySelector('.sp-layout');
+      if (layout) layout.innerHTML = '<div class="sp-not-found"><h2>找不到這篇攻略</h2><p>可能已被移除，或連結有誤</p><a href="school.html">回到攻略站</a></div>';
+      return;
+    }
+
+    var art = currentArticle;
+    document.title = art.title + ' | TreasureHub 校園攻略站';
+    var hero = document.querySelector('.sp-hero');
+    if (hero && art.coverUrl) {
+      hero.style.backgroundImage = "url('" + art.coverUrl.replace(/'/g, "%27") + "')";
+      hero.style.backgroundSize = 'cover';
+      hero.style.backgroundPosition = 'center';
+    }
+    setText('spTitle', art.title);
+    setText('spSubtitle', art.subtitle || '');
+    setText('spCrumb', art.categoryName || '');
+    setText('spMetaDate', art.publishedAt ? fmtDate(art.publishedAt) + ' 發佈' : '尚未發佈');
+    setText('spMetaViews', (art.viewCount || 0).toLocaleString());
+    setText('spMetaLikes', (art.likeCount || 0).toLocaleString());
+    setText('spMetaReadTime', '約 ' + Math.max(1, Math.round((art.wordCount || 0) / 500)) + ' 分鐘');
+    var yearTag = document.getElementById('spMetaYearTag');
+    if (art.applicableYear) {
+      // 舊資料（撰寫器 value 屬性修好以前存的）applicableYear 本身就含「適用」字樣，
+      // 這裡先去掉舊的前綴再補一次，新舊資料都不會重複顯示。
+      var yearClean = String(art.applicableYear).replace(/^適用\s*/, '');
+      setText('spMetaYear', '適用 ' + yearClean);
+      if (yearTag) yearTag.style.display = '';
+    }
+    else if (yearTag) yearTag.style.display = 'none';
+
+    var author = art.author || {};
+    var authorAvatar = document.getElementById('spAuthorAvatar');
+    if (authorAvatar) authorAvatar.src = author.avatarUrl || '../image/default-avatar.webp';
+    setText('spAuthorName', author.displayName || author.nickname || '匿名作者');
+    setText('spAuthorFollowers', (author.followerCount || 0).toLocaleString() + ' 位追蹤者');
+    var titlesEl = document.getElementById('spAuthorTitles');
+    if (titlesEl) titlesEl.innerHTML = (author.titles || []).map(function (t) { return '<span class="t">' + escHtml(t.shortName) + '</span>'; }).join('');
+    var followBtn = document.getElementById('spFollowBtn');
+    var editLink = document.getElementById('spEditLink');
+    var isOwner = !!(author.accountId && localStorage.getItem('uid') === String(author.accountId));
+    if (isOwner) {
+      // 作者本人瀏覽自己的文章：不需要追蹤自己，改顯示編輯入口
+      if (followBtn) followBtn.style.display = 'none';
+      if (editLink) {
+        editLink.style.display = '';
+        editLink.href = 'school-composer.html?id=' + encodeURIComponent(articleId);
+      }
+    } else if (followBtn && author.accountId) {
+      var following = !!author.isFollowing;
+      var paintFollow = function () {
+        followBtn.textContent = following ? '✓ 已追蹤' : '＋ 追蹤';
+        followBtn.classList.toggle('on', following);
+      };
+      paintFollow();
+      followBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var action = following
+          ? window.schoolBackendService.unfollowAuthor(author.accountId)
+          : window.schoolBackendService.followAuthor(author.accountId);
+        action.then(function () { following = !following; paintFollow(); })
+          .catch(function (err) { console.error('追蹤失敗：', err); });
+      });
+    }
+
+    var tagsEl = document.getElementById('spTags');
+    if (tagsEl) tagsEl.innerHTML = (art.tags || []).map(function (t) { return '<a href="school-article.html">#' + escHtml(t) + '</a>'; }).join('');
+
+    var isFree = art.type === 'FREE';
+    var priceText = isFree ? '免費閱讀' : ('NT$ ' + (art.price || 0));
+    setText('spPriceMain', priceText);
+    setText('spPriceSide', priceText);
+    setText('spPriceBar', priceText);
+    setText('spUnlockedPillText', isFree ? '免費閱讀' : '已解鎖 · 永久閱讀');
+    var ratingTxt = art.ratingAvg ? ('★ ' + art.ratingAvg.toFixed(1)) : '尚無評分';
+    setText('spSocialProofMain', ratingTxt + ' · ' + (art.purchaseCount || 0) + ' 人已解鎖 · ' + (art.bookmarkCount || 0) + ' 人收藏');
+    setText('spSocialProofSide', ratingTxt + ' · ' + (art.purchaseCount || 0) + ' 人已解鎖');
+
+    var cat = currentCategories.find(function (c) { return c.id === art.categoryId; });
+    renderAnchorBoxes(art.answers, cat ? cat.questions : null);
+
+    renderRatingSummary(art, false);
+
+    // 分階段揭露骨架屏：先文章內容，再右側資訊，最後才是評分與留言——
+    // 資料其實大多已經在手上了，但分批出現比較不會讓整頁一次彈出來。
+    await loadContent();
+    revealSection('spSkelArticle', 'spArticleCard');
+
+    await sleep(180);
+    revealSection('spSkelSide', 'spSideAside');
+    setupLikeBookmark();
+    loadRecommended();
+
+    await loadReviews();
+    revealSection('spSkelComments', 'spCommentsPanel');
+  }
+
+  // 每隔一段時間重新讀一次文章 metadata，只更新閱讀/喜歡/評分這幾個會變動的數字
+  // （標題/內文/分類等不會自己變，不用整頁重撈），數字真的變了才會有脈衝動畫。
+  var STATS_POLL_MS = 20000;
+  var statsPollTimer = null;
+  async function pollArticleStats() {
+    if (!articleId || document.hidden) return;
+    try {
+      var res = await window.schoolBackendService.getArticle(articleId);
+      var art = res.data;
+      currentArticle = art;
+      setTextAnimated('spMetaViews', (art.viewCount || 0).toLocaleString());
+      setTextAnimated('spMetaLikes', (art.likeCount || 0).toLocaleString());
+      renderRatingSummary(art, true);
+    } catch (e) {
+      console.error('輪詢文章數據失敗：', e);
+    }
+  }
+  function startStatsPolling() {
+    if (statsPollTimer) return;
+    statsPollTimer = setInterval(pollArticleStats, STATS_POLL_MS);
+  }
+
+  async function loadContent() {
+    var content;
+    try {
+      var res = await window.schoolBackendService.getArticleContent(articleId);
+      content = res.data;
+    } catch (e) {
+      console.error('取得文章內文失敗：', e);
+      content = { locked: true, previewContent: '<p>內容載入失敗，請稍後再試。</p>' };
+    }
+    var locked = !!content.locked;
+    document.body.classList.toggle('unlocked', !locked);
+
+    var previewFlag = document.getElementById('spPreviewFlag');
+    var previewBody = document.getElementById('spPreviewBody');
+    var fullBody = document.getElementById('spFullBody');
+
+    if (locked) {
+      if (previewFlag) {
+        previewFlag.style.display = '';
+        previewFlag.textContent = '免費預覽' + (content.previewWordCount ? '（約 ' + content.previewWordCount + ' 字）' : '');
+      }
+      if (previewBody) previewBody.innerHTML = DOMPurify.sanitize(content.previewContent || '');
+      if (fullBody) fullBody.innerHTML = '';
+    } else {
+      if (previewFlag) previewFlag.style.display = 'none';
+      if (previewBody) previewBody.innerHTML = '';
+      if (fullBody) fullBody.innerHTML = DOMPurify.sanitize(content.content || '');
+    }
+
+    // TOC：從目前顯示的內容重新產生章節清單
+    var tocList = document.getElementById('spTocList');
+    var tocPanel = document.getElementById('spTocPanel');
+    if (tocList) {
+      var sourceEl = locked ? previewBody : fullBody;
+      var headings = sourceEl ? Array.prototype.slice.call(sourceEl.querySelectorAll('h2, h3')) : [];
+      tocList.innerHTML = '';
+      headings.forEach(function (h, i) {
+        if (!h.id) h.id = 'sp-h-' + i;
+        var a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = h.textContent;
+        a.addEventListener('click', function (e) { e.preventDefault(); h.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+        tocList.appendChild(a);
+      });
+      if (tocPanel) tocPanel.style.display = headings.length ? '' : 'none';
+    }
+  }
+
+  async function loadRecommended() {
+    var grid = document.getElementById('spRelatedGrid');
+    var section = document.querySelector('.related');
+    if (!grid) return;
+    try {
+      var res = await window.schoolBackendService.getRecommendedArticles(articleId);
+      var items = res.data || [];
+      if (!items.length) { if (section) section.style.display = 'none'; return; }
+      if (section) section.style.display = '';
+      grid.innerHTML = items.slice(0, 4).map(function (r) {
+        var priceTxt = r.type === 'FREE' ? '<span class="rp free">免費閱讀</span>' : ('<span class="rp">NT$ ' + (r.price || 0) + '</span>');
+        return '<a class="rel-card nocover" href="school-post.html?id=' + encodeURIComponent(r.id) + '">' +
+          '<div class="rb">' +
+            '<span class="p-line">' + escHtml(r.categoryName || '') + '</span>' +
+            '<h4>' + escHtml(r.title) + '</h4>' +
+            '<div class="rfoot"><span class="ra">' + escHtml((r.author && (r.author.displayName || r.author.nickname)) || '') + '</span>' + priceTxt + '</div>' +
+          '</div></a>';
+      }).join('');
+    } catch (e) {
+      console.error('取得推薦文章失敗：', e);
+      if (section) section.style.display = 'none';
+    }
+  }
+
+  // reply=true 時縮排顯示（回覆永遠只縮一層，即使是「回覆的回覆」也一樣縮在
+  // 最外層留言下面——API 本身用 parentId 可以組出無限深的樹，但多一層視覺縮排
+  // 使用者不會感受到差別，不值得做遞迴縮排的複雜度）。
+  // replyToName：這則留言是回覆給誰（只有 isReply 才有意義）。
+  // replyCount：只有頂層留言才會傳，>0 時才會多畫一顆「收合回覆」切換鈕。
+  function renderReviewItem(r, isReply, replyToName, replyCount) {
+    var name = r.displayMode === 'ANONYMOUS' || !r.author ? '匿名同學' : (r.author.displayName || r.author.nickname || '匿名同學');
+    var isAuthorComment = !!(currentArticle && currentArticle.author && r.author && r.author.accountId === currentArticle.author.accountId);
+    var gradeTxt = (r.isPurchased ? '已購買' : '') + (r.isPurchased && r.isSameSchool ? ' · ' : '') + (r.isSameSchool ? '同校生' : '');
+    var badge = isAuthorComment ? '<span class="c-grade c-grade-author">作者</span>' : (gradeTxt ? '<span class="c-grade">' + escHtml(gradeTxt) + '</span>' : '');
+    var replyToHtml = (isReply && replyToName) ?
+      '<span class="c-reply-to"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/></svg>@' + escHtml(replyToName) + '</span>' : '';
+    var stars = r.rating ? '<span class="c-stars">' + '★★★★★'.slice(0, r.rating) + '☆☆☆☆☆'.slice(0, 5 - r.rating) + '</span>' : '';
+    var avatarSrc = (r.author && r.author.avatarUrl) || '../image/default-avatar.webp';
+    var toggleHtml = (!isReply && replyCount > 0) ?
+      '<a href="#" class="sp-toggle-replies" data-group="' + escHtml(r.id) + '" data-count="' + replyCount + '">' +
+        '<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15 12 9 6 15"/></svg>' +
+        '<span class="txt">收合回覆</span></a>' : '';
+    return '<div class="comment' + (isReply ? ' reply' : '') + '" data-review-id="' + escHtml(r.id) + '">' +
+      '<img class="av" src="' + escHtml(avatarSrc) + '" alt="">' +
+      '<div class="c-body">' +
+        '<div class="c-top">' +
+          '<span class="c-name">' + escHtml(name) + '</span>' +
+          badge +
+          replyToHtml +
+          stars +
+          '<span class="c-date">' + timeAgo(r.createdAt) + '</span>' +
+        '</div>' +
+        '<div class="c-text">' + escHtml(r.body) + '</div>' +
+        '<div class="c-actions">' +
+          '<a href="#" class="sp-review-like' + (r.likedByMe ? ' liked' : '') + '" data-review-id="' + escHtml(r.id) + '"' + (r.likedByMe ? ' data-liked="1"' : '') + '>' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="' + (r.likedByMe ? 'var(--warn)' : 'none') + '" stroke="var(--warn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>' +
+            (r.likeCount || 0) + '</a>' +
+          '<a href="#" class="sp-review-reply-toggle" data-review-id="' + escHtml(r.id) + '">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/></svg>回覆</a>' +
+          toggleHtml +
+        '</div>' +
+        '<div class="sp-reply-form" id="sp-reply-form-' + escHtml(r.id) + '" style="display:none;">' +
+          '<input type="text" class="sp-reply-input" placeholder="回覆' + escHtml(name) + '..." />' +
+          '<button type="button" class="sp-reply-submit" data-review-id="' + escHtml(r.id) + '">送出</button>' +
+        '</div>' +
+      '</div></div>';
+  }
+
+  // 平鋪的留言陣列（含頂層與回覆，見 API 文件「平鋪,以 parentId 組樹」）在這裡
+  // 組成一層樹：頂層依排序模式排序，各自的回覆依時間排序接在底下，並包成一個
+  // .comment-group 讓「收合回覆」可以整組回覆一起藏起來。
+  function buildReviewTree(items, sortMode) {
+    var byId = {};
+    var nameById = {};
+    items.forEach(function (it) {
+      byId[it.id] = it;
+      nameById[it.id] = (it.displayMode === 'ANONYMOUS' || !it.author) ? '匿名同學' : (it.author.displayName || it.author.nickname || '匿名同學');
+    });
+    var topLevel = [];
+    var repliesByParent = {};
+    items.forEach(function (it) {
+      if (it.parentId && byId[it.parentId]) {
+        (repliesByParent[it.parentId] = repliesByParent[it.parentId] || []).push(it);
+      } else {
+        topLevel.push(it);
+      }
+    });
+    if (sortMode === 'helpful') {
+      topLevel.sort(function (a, b) { return (b.likeCount || 0) - (a.likeCount || 0) || new Date(b.createdAt) - new Date(a.createdAt); });
+    } else {
+      topLevel.sort(function (a, b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+    }
+    var html = '';
+    topLevel.forEach(function (top) {
+      // 「回覆的回覆」沒有獨立的頂層容器，直接也攤平接在同一層底下，依時間排序即可
+      var allDescendants = [];
+      (function collect(parentId) {
+        (repliesByParent[parentId] || []).forEach(function (child) {
+          allDescendants.push(child);
+          collect(child.id);
+        });
+      })(top.id);
+      allDescendants.sort(function (a, b) { return new Date(a.createdAt) - new Date(b.createdAt); });
+      html += '<div class="comment-group">';
+      html += renderReviewItem(top, false, null, allDescendants.length);
+      html += '<div class="comment-replies" id="cr-' + escHtml(top.id) + '">';
+      allDescendants.forEach(function (child) { html += renderReviewItem(child, true, nameById[child.parentId]); });
+      html += '</div></div>';
+    });
+    return html;
+  }
+
+  function wireReviewActions(list) {
+    list.querySelectorAll('.sp-review-like').forEach(function (a) {
+      // 留言按讚目前後端只有 POST（冪等），沒有對應的取消讚 DELETE，所以已經讚過的
+      // 就不要再掛點擊事件，避免使用者以為可以點一下取消。
+      if (a.dataset.liked === '1') return;
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.schoolBackendService.likeReview(a.dataset.reviewId).then(loadReviews).catch(function (err) { console.error('留言按讚失敗：', err); });
+      });
+    });
+    list.querySelectorAll('.sp-review-reply-toggle').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var form = document.getElementById('sp-reply-form-' + a.dataset.reviewId);
+        if (!form) return;
+        var showing = form.style.display !== 'none';
+        list.querySelectorAll('.sp-reply-form').forEach(function (f) { f.style.display = 'none'; });
+        if (!showing) {
+          form.style.display = 'flex';
+          var input = form.querySelector('.sp-reply-input');
+          if (input) input.focus();
+        }
+      });
+    });
+    list.querySelectorAll('.sp-reply-submit').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var form = btn.closest('.sp-reply-form');
+        var input = form ? form.querySelector('.sp-reply-input') : null;
+        var text = input ? input.value.trim() : '';
+        if (!text) return;
+        window.schoolBackendService.createArticleReview(articleId, { body: text, parentId: btn.dataset.reviewId }).then(function () {
+          loadReviews();
+        }).catch(function (err) {
+          AppModal.fire({ icon: 'error', title: '回覆失敗', text: err.message || '請稍後再試' });
+        });
+      });
+    });
+    list.querySelectorAll('.sp-toggle-replies').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var replies = document.getElementById('cr-' + a.dataset.group);
+        if (!replies) return;
+        var collapsed = replies.style.display === 'none';
+        replies.style.display = collapsed ? '' : 'none';
+        a.classList.toggle('collapsed', !collapsed);
+        a.querySelector('.txt').textContent = collapsed ? '收合回覆' : ('展開回覆 (' + a.dataset.count + ')');
+      });
+    });
+  }
+
+  var reviewSortMode = 'latest';
+  var lastReviewItems = [];
+
+  function renderReviewList() {
+    var list = document.getElementById('spCommentsList');
+    if (!list) return;
+    setText('spCommentCount', String(lastReviewItems.length));
+    if (!lastReviewItems.length) { list.innerHTML = '<p class="sp-comment-empty">還沒有留言，來當第一個吧！</p>'; return; }
+    list.innerHTML = buildReviewTree(lastReviewItems, reviewSortMode);
+    wireReviewActions(list);
+  }
+
+  var sortToggle = document.getElementById('spCommentSortToggle');
+  if (sortToggle) {
+    sortToggle.querySelectorAll('button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (btn.dataset.sort === reviewSortMode) return;
+        reviewSortMode = btn.dataset.sort;
+        sortToggle.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
+        renderReviewList();
+      });
+    });
+  }
+
+  async function loadReviews() {
+    var list = document.getElementById('spCommentsList');
+    if (!list) return;
+    try {
+      var res = await window.schoolBackendService.getArticleReviews(articleId, { page: 1, limit: 50 });
+      lastReviewItems = (res.data && res.data.items) || [];
+      renderReviewList();
+    } catch (e) {
+      console.error('取得留言失敗：', e);
+      list.innerHTML = '<p class="sp-comment-empty">留言載入失敗</p>';
+    }
+  }
+
+  // 底部純文字留言框：跟上面星星評分 Modal 其實是同一個 API（頂層評論一人一篇一則），
+  // 兩邊搶著送出時後端的 409 會自然擋下重複，不用前端自己另外判斷。
+  var commentSubmitBtn = document.getElementById('spCommentSubmitBtn');
+  var commentInput = document.getElementById('spCommentInput');
+  if (commentSubmitBtn && commentInput) {
+    commentSubmitBtn.addEventListener('click', function () {
+      var text = commentInput.value.trim();
+      if (!text || !articleId) return;
+      window.schoolBackendService.createArticleReview(articleId, { body: text }).then(function () {
+        commentInput.value = '';
+        loadReviews();
+      }).catch(function (err) {
+        AppModal.fire({ icon: 'error', title: '送出失敗', text: err.message || '請稍後再試' });
+      });
+    });
+  }
+
+  function setupLikeBookmark() {
+    var art = currentArticle;
+    if (!art) return;
+    var liked = false; // 文章列表/詳情 API 目前沒有回傳「我有沒有按過讚」，只能從這次互動本身樂觀更新
+    var bookmarked = false;
+
+    // 側欄按鈕（#sideLikeBtn / #spBookmarkBtnSide）是新的 ad-btn 樣式，選中態用 .on；
+    // 手機 sticky 操作列（#barLikeBtn / #spBookmarkBtnBar）維持原本 .liked 樣式，互不影響。
+    function paintLike() {
+      var side = document.getElementById('sideLikeBtn');
+      if (side) side.classList.toggle('on', liked);
+      var bar = document.getElementById('barLikeBtn');
+      if (bar) bar.classList.toggle('liked', liked);
+    }
+    function paintBookmark() {
+      var side = document.getElementById('spBookmarkBtnSide');
+      if (side) side.classList.toggle('on', bookmarked);
+      var bar = document.getElementById('spBookmarkBtnBar');
+      if (bar) bar.classList.toggle('liked', bookmarked);
+    }
+
+    document.querySelectorAll('#sideLikeBtn, #barLikeBtn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var action = liked ? window.schoolBackendService.unlikeArticle(articleId) : window.schoolBackendService.likeArticle(articleId);
+        action.then(function () {
+          liked = !liked;
+          paintLike();
+          if (liked && btn.id === 'sideLikeBtn') playAdAnim(btn, ['ad-anim-pop', 'ad-anim-ring', 'ad-anim-burst']);
+        }).catch(function (err) {
+          console.error('喜歡文章失敗：', err);
+          AppModal.fire({ icon: 'error', title: '操作失敗', text: err.message || '請稍後再試' });
+        });
+      });
+    });
+
+    document.querySelectorAll('#spBookmarkBtnSide, #spBookmarkBtnBar').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var action = bookmarked ? window.schoolBackendService.unbookmarkArticle(articleId) : window.schoolBackendService.bookmarkArticle(articleId);
+        action.then(function () {
+          bookmarked = !bookmarked;
+          paintBookmark();
+          if (bookmarked && btn.id === 'spBookmarkBtnSide') playAdAnim(btn, ['ad-anim-save']);
+        }).catch(function (err) {
+          console.error('收藏文章失敗：', err);
+          AppModal.fire({ icon: 'error', title: '操作失敗', text: err.message || '請稍後再試' });
+        });
+      });
+    });
+  }
+
+  if (!articleId) {
+    var layoutEmpty = document.querySelector('.sp-layout');
+    if (layoutEmpty) layoutEmpty.innerHTML = '<div class="sp-not-found"><h2>找不到這篇攻略</h2><p>網址缺少文章 id</p><a href="school.html">回到攻略站</a></div>';
+  } else {
+    loadArticle().then(startStatsPolling);
+  }
 });
 </script>
 </body>

@@ -51,7 +51,9 @@ export default class SchoolBackendService {
 
     // POST /api/account/identity-verifications — submit a student-ID verification request.
     // Only one PENDING request is allowed per account at a time (enforced server-side).
-    async submitIdentityVerification({ realName, schoolName, proof } = {}) {
+    // studentStatus/enrollYear are optional per the live spec (confirmed 2026-11-24 via
+    // dev.treasurehub.tw/api/api-docs/#/School — not in the older downloaded doc).
+    async submitIdentityVerification({ realName, schoolName, studentStatus, enrollYear, proof } = {}) {
         try {
             if (!realName?.trim()) throw new Error('請輸入真實姓名');
             this._validateProofFile(proof);
@@ -59,6 +61,8 @@ export default class SchoolBackendService {
             const formData = new FormData();
             formData.append('realName', realName.trim());
             if (schoolName?.trim()) formData.append('schoolName', schoolName.trim());
+            if (studentStatus) formData.append('studentStatus', studentStatus);
+            if (enrollYear != null && enrollYear !== '') formData.append('enrollYear', String(enrollYear));
             formData.append('proof', proof);
 
             const response = await this.http.post('/api/account/identity-verifications', formData);
@@ -182,6 +186,336 @@ export default class SchoolBackendService {
             console.error('切換頭銜顯示狀態失敗：', error);
             const msg = error?.response?.data?.message;
             throw new Error(msg || '切換失敗，請稍後再試');
+        }
+    }
+
+    // PUT /api/school/achievements/{id} — edit a PENDING/REJECTED application.
+    // Treated server-side as a resubmission: goes back to PENDING and re-queues;
+    // 409 if the application has already been APPROVED.
+    async updateAchievement(id, { name, shortName, competitionName, organizer, year, prizeAmount, proof } = {}) {
+        if (!id) return Promise.reject(new Error('Achievement id is required'));
+        try {
+            const formData = new FormData();
+            if (name?.trim()) formData.append('name', name.trim());
+            if (shortName?.trim()) formData.append('shortName', shortName.trim());
+            if (competitionName?.trim()) formData.append('competitionName', competitionName.trim());
+            if (organizer?.trim()) formData.append('organizer', organizer.trim());
+            if (year != null && year !== '') formData.append('year', String(year));
+            if (prizeAmount != null && prizeAmount !== '') formData.append('prizeAmount', String(prizeAmount));
+            if (proof) {
+                this._validateProofFile(proof, { allowPdf: true });
+                formData.append('proof', proof);
+            }
+            const response = await this.http.put(`/api/school/achievements/${encodeURIComponent(id)}`, formData);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('修改頭銜申請失敗：', error);
+            const status = error?.response?.status;
+            const msg = error?.response?.data?.message;
+            if (status === 409) throw new Error(msg || '此申請已核准，無法再修改');
+            if (status) captureException(error);
+            throw new Error(msg || '修改失敗，請稍後再試');
+        }
+    }
+
+    // ── Articles (校園攻略站文章：列表/詳情/草稿/互動) ──────────────
+    // `/api/school/articles/{id}/*` 互動類端點（reviews/bookmark/like）共用一組
+    // 403：讀者讀不到全文時（例如他校讀者看同校限定文章）不能操作，一律回傳
+    // 同一句中文訊息，不特別分流。
+
+    _forbiddenArticleAction(error) {
+        if (error?.response?.status === 403) {
+            throw new Error(error?.response?.data?.message || '目前沒有權限操作這篇文章');
+        }
+    }
+
+    // GET /api/school/categories — 文章分類（含每類三道題）
+    async getCategories() {
+        try {
+            const response = await this.http.get('/api/school/categories');
+            return response.data;
+        } catch (error) {
+            console.error('取得文章分類失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/school/tags — hashtag 搜尋/熱門
+    async getTags({ q, limit = 20 } = {}) {
+        try {
+            const params = { limit };
+            if (q) params.q = q;
+            const response = await this.http.get('/api/school/tags', { params });
+            return response.data;
+        } catch (error) {
+            console.error('取得 hashtag 失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/school/stats — 文章總數、已認證作者數、本月閱讀數
+    async getSchoolStats() {
+        try {
+            const response = await this.http.get('/api/school/stats');
+            return response.data;
+        } catch (error) {
+            console.error('取得校園攻略站統計失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // POST /api/school/articles — 建立文章（DRAFT），需 writable；目前只開放
+    // type=FREE，送 PAID 回 422（見 school_api_doc_gaps.md）。
+    async createArticle(payload = {}) {
+        try {
+            const response = await this.http.post('/api/school/articles', payload);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('建立文章失敗：', error);
+            const status = error?.response?.status;
+            const msg = error?.response?.data?.message;
+            if (status === 403) throw new Error(msg || '尚未通過就學證明實名認證，無法發佈文章');
+            if (status === 422) throw new Error(msg || '目前僅開放免費文章');
+            if (status) captureException(error);
+            throw new Error(msg || '建立文章失敗，請稍後再試');
+        }
+    }
+
+    // GET /api/school/articles/{id} — 單篇 metadata（不含正文）
+    async getArticle(id) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.get(`/api/school/articles/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (error) {
+            console.error('取得文章詳情失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // PUT /api/school/articles/{id} — 編輯（已發佈的文章編輯後維持 PUBLISHED，不送審）
+    async updateArticle(id, payload = {}) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.put(`/api/school/articles/${encodeURIComponent(id)}`, payload);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('更新文章失敗：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '更新文章失敗，請稍後再試');
+        }
+    }
+
+    // DELETE /api/school/articles/{id} — 軟刪除（ARCHIVED）
+    async deleteArticle(id) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.delete(`/api/school/articles/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('刪除文章失敗：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '刪除文章失敗，請稍後再試');
+        }
+    }
+
+    // GET /api/school/articles/{id}/content — 內文。登入且已解鎖回全文，否則回
+    // 純文字預覽；付費文章僅作者可讀，同校限定文章需讀者已認證學校與文章相同。
+    async getArticleContent(id) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.get(`/api/school/articles/${encodeURIComponent(id)}/content`);
+            return response.data;
+        } catch (error) {
+            this._forbiddenArticleAction(error);
+            console.error('取得文章內文失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/school/articles/{id}/recommended — 同作者或同分類推薦
+    async getRecommendedArticles(id) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.get(`/api/school/articles/${encodeURIComponent(id)}/recommended`);
+            return response.data;
+        } catch (error) {
+            console.error('取得推薦文章失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // POST /api/school/articles/{id}/submit — 發佈（一律直接 PUBLISHED，不經審核；
+    // 分類有設題則 answers 必填，須先透過 updateArticle/createArticle 送入）
+    async submitArticle(id) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.post(`/api/school/articles/${encodeURIComponent(id)}/submit`);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('發佈文章失敗：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '發佈失敗，請稍後再試');
+        }
+    }
+
+    // GET /api/school/articles/{id}/reviews — 留言/評分/回覆（平鋪，以 parentId
+    // 組樹；匿名留言 author 為 null）
+    async getArticleReviews(id, { page = 1, limit = 20 } = {}) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.get(`/api/school/articles/${encodeURIComponent(id)}/reviews`, { params: { page, limit } });
+            return response.data;
+        } catch (error) {
+            console.error('取得文章留言失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // POST /api/school/articles/{id}/reviews — 留言/評分（頂層可帶 rating 1-5，
+    // 回覆用 parentId 不可帶 rating；一人一篇一則頂層）
+    async createArticleReview(id, { body, rating, parentId, displayMode } = {}) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            if (!body?.trim()) throw new Error('請輸入留言內容');
+            const payload = { body: body.trim() };
+            if (rating != null && !parentId) payload.rating = rating;
+            if (parentId) payload.parentId = parentId;
+            if (displayMode) payload.displayMode = displayMode;
+            const response = await this.http.post(`/api/school/articles/${encodeURIComponent(id)}/reviews`, payload);
+            return response.data;
+        } catch (error) {
+            this._forbiddenArticleAction(error);
+            console.error('送出留言失敗：', error);
+            const status = error?.response?.status;
+            const msg = error?.response?.data?.message;
+            if (status === 409) throw new Error(msg || '每篇文章只能留一則頂層評論');
+            throw error instanceof Error && !status ? error : new Error(msg || '送出留言失敗，請稍後再試');
+        }
+    }
+
+    // DELETE /api/school/reviews/{id} — 軟刪除留言（本人或後台；頂層留言連同回覆）
+    async deleteReview(id) {
+        if (!id) return Promise.reject(new Error('Review id is required'));
+        try {
+            const response = await this.http.delete(`/api/school/reviews/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('刪除留言失敗：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '刪除留言失敗，請稍後再試');
+        }
+    }
+
+    // POST /api/school/reviews/{id}/like — 留言按讚（冪等）
+    async likeReview(id) {
+        if (!id) return Promise.reject(new Error('Review id is required'));
+        try {
+            const response = await this.http.post(`/api/school/reviews/${encodeURIComponent(id)}/like`);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('留言按讚失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // POST /api/school/articles/{id}/bookmark — 收藏（冪等）
+    async bookmarkArticle(id) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.post(`/api/school/articles/${encodeURIComponent(id)}/bookmark`);
+            return response.data;
+        } catch (error) {
+            this._forbiddenArticleAction(error);
+            console.error('收藏文章失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // DELETE /api/school/articles/{id}/bookmark — 取消收藏（冪等）
+    async unbookmarkArticle(id) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.delete(`/api/school/articles/${encodeURIComponent(id)}/bookmark`);
+            return response.data;
+        } catch (error) {
+            console.error('取消收藏失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // POST /api/school/articles/{id}/like — 喜歡（冪等）
+    async likeArticle(id) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.post(`/api/school/articles/${encodeURIComponent(id)}/like`);
+            return response.data;
+        } catch (error) {
+            this._forbiddenArticleAction(error);
+            console.error('喜歡文章失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // DELETE /api/school/articles/{id}/like — 取消喜歡（冪等）
+    async unlikeArticle(id) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const response = await this.http.delete(`/api/school/articles/${encodeURIComponent(id)}/like`);
+            return response.data;
+        } catch (error) {
+            console.error('取消喜歡失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/school/drafts/{id} — 取草稿（本人的 DRAFT/REJECTED 文章）
+    async getDraft(id) {
+        if (!id) return Promise.reject(new Error('Draft id is required'));
+        try {
+            const response = await this.http.get(`/api/school/drafts/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('取得草稿失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // PUT /api/school/drafts/{id} — 自動儲存草稿（欄位皆可省略）
+    async updateDraft(id, payload = {}) {
+        if (!id) return Promise.reject(new Error('Draft id is required'));
+        try {
+            const response = await this.http.put(`/api/school/drafts/${encodeURIComponent(id)}`, payload);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('自動儲存草稿失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // POST /api/school/upload — 封面/內文圖片上傳（公開物件；文章內文只允許
+    // 嵌入本站 Firebase Storage 圖片，不可貼外部圖片網址）
+    async uploadSchoolImage(file) {
+        if (!file) return Promise.reject(new Error('請選擇圖片'));
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            const response = await this.http.post('/api/school/upload', formData);
+            return response.data;
+        } catch (error) {
+            this._forbidden(error);
+            console.error('圖片上傳失敗：', error);
+            const msg = error?.response?.data?.message;
+            throw new Error(msg || '圖片上傳失敗，請稍後再試');
         }
     }
 
@@ -362,6 +696,19 @@ export default class SchoolBackendService {
         }
     }
 
+    // GET /api/admin/identity-verifications/{id} — 列表不含 proofUrl，只有這個
+    // detail 端點會回簽過名的 proofUrl（10 分鐘內有效），要查看證明文件時才現抓
+    async adminGetIdentityVerificationDetail(id) {
+        if (!id) return Promise.reject(new Error('Verification id is required'));
+        try {
+            const response = await this.http.get(`/api/admin/identity-verifications/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (error) {
+            console.error('取得學生證審核詳情失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
     // PATCH /api/admin/identity-verifications/{id}
     async adminReviewIdentityVerification(id, { status, rejectReason } = {}) {
         if (!id) return Promise.reject(new Error('Verification id is required'));
@@ -388,6 +735,18 @@ export default class SchoolBackendService {
             return response.data;
         } catch (error) {
             console.error('取得學習經歷申請列表失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/admin/education-records/{id} — 同上，列表不含 proofUrl，查看證明文件要現抓 detail
+    async adminGetEducationRecordDetail(id) {
+        if (!id) return Promise.reject(new Error('Education record id is required'));
+        try {
+            const response = await this.http.get(`/api/admin/education-records/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (error) {
+            console.error('取得學籍異動申請詳情失敗：', error);
             return Promise.reject(error);
         }
     }
@@ -422,6 +781,18 @@ export default class SchoolBackendService {
         }
     }
 
+    // GET /api/admin/achievements/{id} — 同上，列表不含 proofUrl，查看證明文件要現抓 detail
+    async adminGetAchievementDetail(id) {
+        if (!id) return Promise.reject(new Error('Achievement id is required'));
+        try {
+            const response = await this.http.get(`/api/admin/achievements/${encodeURIComponent(id)}`);
+            return response.data;
+        } catch (error) {
+            console.error('取得頭銜申請詳情失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
     // PATCH /api/admin/achievements/{id}
     async adminReviewAchievement(id, { status, rejectReason } = {}) {
         if (!id) return Promise.reject(new Error('Achievement id is required'));
@@ -435,6 +806,71 @@ export default class SchoolBackendService {
             return response.data;
         } catch (error) {
             console.error('審核頭銜申請失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // ── Admin 文章審核佇列 ───────────────────────────────────────
+    // 矛盾未解：Admin 端點（下面兩個）暗示文章要先進 PENDING 審核佇列才能發佈，
+    // 但 School 標籤自己的文件寫 POST /api/school/articles/{id}/submit
+    // 「一律直接 PUBLISHED，不經審核」。沒去跟後端求證，先照 Admin 端點實作；
+    // 如果這個佇列一直是空的，不是前端串錯，是兩邊文件本來就互相矛盾。
+
+    // GET /api/admin/articles
+    async adminGetArticles({ page = 1, limit = 20, status = 'PENDING' } = {}) {
+        try {
+            const params = { page, limit };
+            if (status) params.status = status;
+            const response = await this.http.get('/api/admin/articles', { params });
+            return response.data;
+        } catch (error) {
+            console.error('取得文章審核列表失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // PATCH /api/admin/articles/{id}
+    async adminReviewArticle(id, { status, rejectReason } = {}) {
+        if (!id) return Promise.reject(new Error('Article id is required'));
+        try {
+            const payload = { status };
+            if (rejectReason) payload.rejectReason = rejectReason;
+            const response = await this.http.patch(
+                `/api/admin/articles/${encodeURIComponent(id)}`,
+                payload
+            );
+            return response.data;
+        } catch (error) {
+            console.error('審核文章失敗：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    async getFeature() {
+        try {
+            const response = await this.http.get('/api/school/featured');
+            return response.data;
+        } catch (error) {
+            console.error('讀取失敗 ：', error);
+            return Promise.reject(error);
+        }
+    }
+
+    // GET /api/school/articles — 文章列表（首頁、搜尋頁共用）
+    async getArticles({ category, q, tag, sort, year, type, schoolOnly, page = 1, limit = 20 } = {}) {
+        try {
+            const params = { page, limit };
+            if (category) params.category = category;
+            if (q) params.q = q;
+            if (tag) params.tag = tag;
+            if (sort) params.sort = sort;
+            if (year) params.year = year;
+            if (type) params.type = type;
+            if (schoolOnly != null) params.schoolOnly = schoolOnly;
+            const response = await this.http.get('/api/school/articles', { params });
+            return response.data;
+        } catch (error) {
+            console.error('取得文章列表失敗：', error);
             return Promise.reject(error);
         }
     }

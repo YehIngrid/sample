@@ -16,7 +16,7 @@
   <meta property="og:image" content="https://treasurehub.tw/webP/treasurehub.webp">
   <link rel="shortcut icon" href="../treasurehubIcon.ico">
   <style>body { visibility: hidden; }</style>
-  <link rel="stylesheet" href="official.css?v=20261124b">
+  <link rel="stylesheet" href="official.css?v=20261124c">
   <link rel="stylesheet" href="../default/default.css?v=20260616">
   <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css?v=20260616">
@@ -29,6 +29,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js" integrity="sha384-e6cc9LaIG7xZ3XD5B+jtr1NhTWPQGQdRCh6xiZ+ZFUtWCpg4ycv3Sh+SkZoopvUY" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-funnel@4.2.5/build/index.umd.min.js" integrity="sha384-OAkEG6GFOO2U/XFI1e4SNhr1c1h7qUjgdGj3hFG1ESOJ3mWsEr2PuH1Z+IK+iB1f" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js" integrity="sha384-qovJwSBbRDPP5cEjCp8S0UP66wrvnjaa60XMOGzTNanrThcrGfXfnZkvgY8N1KT3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-45PQ6ND9EY"></script>
   <script>
@@ -119,6 +121,12 @@
             <button class="nav-btn nav-sub" data-panel="panel-review-tags">
               <i class="fa fa-tags"></i> 評論標籤
             </button>
+            <button class="nav-btn nav-sub" data-panel="panel-school-verify">
+              <i class="fa fa-graduation-cap"></i> 就學審核
+            </button>
+            <button class="nav-btn nav-sub" data-panel="panel-admin-articles">
+              <i class="fa fa-file-text"></i> 文章審核
+            </button>
           </div>
         </div>
 
@@ -180,30 +188,12 @@
         </div>
 
         <div class="dashboard-grid">
-          <div class="dashboard-card" onclick="switchPanel('panel-analytics')">
-            <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
-              <i class="fa fa-bar-chart" style="color:var(--color-primary);"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">數據分析</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
           <div class="dashboard-card" onclick="switchPanel('panel-users')">
             <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
               <i class="fa fa-users" style="color:var(--color-primary);"></i>
             </div>
             <div class="dashboard-card-body">
               <div class="dashboard-card-title">用戶管理</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
-          <div class="dashboard-card" onclick="switchPanel('panel-tickets')">
-            <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
-              <i class="fa fa-headphones" style="color:var(--color-primary);"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">客服單管理</div>
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
@@ -234,15 +224,6 @@
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
-          <div class="dashboard-card" onclick="switchPanel('panel-review-tags')">
-            <div class="dashboard-card-icon" style="background:rgba(171,218,213,0.35);">
-              <i class="fa fa-tags" style="color:#007568;"></i>
-            </div>
-            <div class="dashboard-card-body">
-              <div class="dashboard-card-title">評論標籤</div>
-            </div>
-            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
-          </div>
           <div class="dashboard-card" onclick="switchPanel('panel-report-categories')">
             <div class="dashboard-card-icon" style="background:rgba(201,127,90,0.14);">
               <i class="fa fa-list-alt" style="color:#c97f5a;"></i>
@@ -267,6 +248,59 @@
             </div>
             <div class="dashboard-card-body">
               <div class="dashboard-card-title">建立頻道</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+        </div>
+
+        <h3 class="dashboard-section-title">購物網站</h3>
+        <div class="dashboard-grid">
+          <div class="dashboard-card" onclick="switchPanel('panel-analytics')">
+            <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
+              <i class="fa fa-bar-chart" style="color:var(--color-primary);"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">數據分析</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-tickets')">
+            <div class="dashboard-card-icon" style="background:var(--color-primary-light);">
+              <i class="fa fa-headphones" style="color:var(--color-primary);"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">客服單管理</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-review-tags')">
+            <div class="dashboard-card-icon" style="background:rgba(171,218,213,0.35);">
+              <i class="fa fa-tags" style="color:#007568;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">評論標籤</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+        </div>
+
+        <h3 class="dashboard-section-title">校園攻略站</h3>
+        <div class="dashboard-grid">
+          <div class="dashboard-card" onclick="switchPanel('panel-school-verify')">
+            <div class="dashboard-card-icon" style="background:rgba(171,218,213,0.35);">
+              <i class="fa fa-graduation-cap" style="color:#007568;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">就學審核</div>
+            </div>
+            <i class="fa fa-chevron-right dashboard-card-arrow"></i>
+          </div>
+          <div class="dashboard-card" onclick="switchPanel('panel-admin-articles')">
+            <div class="dashboard-card-icon" style="background:rgba(171,218,213,0.35);">
+              <i class="fa fa-file-text" style="color:#007568;"></i>
+            </div>
+            <div class="dashboard-card-body">
+              <div class="dashboard-card-title">文章審核</div>
             </div>
             <i class="fa fa-chevron-right dashboard-card-arrow"></i>
           </div>
@@ -471,9 +505,14 @@
         <!-- Header -->
         <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
           <h2 class="panel-title mb-0"><i class="fa fa-bar-chart me-2"></i>數據分析</h2>
-          <button class="btn btn-sm btn-outline-primary" id="refreshAnalyticsBtn">
-            <i class="fa fa-refresh me-1"></i>重新整理
-          </button>
+          <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-outline-primary" id="exportAnalyticsPdfBtn">
+              <i class="fa fa-file-pdf-o me-1"></i>匯出 PDF
+            </button>
+            <button class="btn btn-sm btn-outline-primary" id="refreshAnalyticsBtn">
+              <i class="fa fa-refresh me-1"></i>重新整理
+            </button>
+          </div>
         </div>
 
         <!-- Date range -->
@@ -888,6 +927,138 @@
           </div>
         </div>
       </div>
+
+      <!-- Panel: 就學審核 -->
+      <section id="panel-school-verify" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <h2 class="panel-title mb-0"><i class="fa fa-graduation-cap me-2"></i>就學審核</h2>
+          <button class="btn btn-sm btn-outline-primary" id="refreshSchoolVerifyBtn">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+
+        <!-- Sub-tabs -->
+        <ul class="nav nav-tabs mb-3" id="schoolVerifyTabNav" style="flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;">
+          <li class="nav-item"><button class="nav-link active" data-sv-tab="tab-sv-identity">學生證審核</button></li>
+          <li class="nav-item"><button class="nav-link" data-sv-tab="tab-sv-education">學籍異動</button></li>
+          <li class="nav-item"><button class="nav-link" data-sv-tab="tab-sv-achievement">頭銜申請</button></li>
+        </ul>
+
+        <!-- Tab: 學生證審核 -->
+        <div id="tab-sv-identity" class="sv-tab">
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+            <select class="form-select form-select-sm sv-status-filter" data-sv-type="identity" style="width:auto;">
+              <option value="PENDING" selected>審核中</option>
+              <option value="APPROVED">已通過</option>
+              <option value="REJECTED">已駁回</option>
+              <option value="">全部</option>
+            </select>
+          </div>
+          <div id="svIdentityList">
+            <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+          </div>
+          <div id="svIdentityPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+        </div>
+
+        <!-- Tab: 學籍異動 -->
+        <div id="tab-sv-education" class="sv-tab d-none">
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+            <select class="form-select form-select-sm sv-status-filter" data-sv-type="education" style="width:auto;">
+              <option value="PENDING" selected>審核中</option>
+              <option value="APPROVED">已通過</option>
+              <option value="REJECTED">已駁回</option>
+              <option value="">全部</option>
+            </select>
+          </div>
+          <div id="svEducationList">
+            <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+          </div>
+          <div id="svEducationPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+        </div>
+
+        <!-- Tab: 頭銜申請 -->
+        <div id="tab-sv-achievement" class="sv-tab d-none">
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+            <select class="form-select form-select-sm sv-status-filter" data-sv-type="achievement" style="width:auto;">
+              <option value="PENDING" selected>審核中</option>
+              <option value="APPROVED">已通過</option>
+              <option value="REJECTED">已駁回</option>
+              <option value="">全部</option>
+            </select>
+          </div>
+          <div id="svAchievementList">
+            <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+          </div>
+          <div id="svAchievementPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+        </div>
+
+        <!-- 審核 Modal -->
+        <div class="modal fade" id="svReviewModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">審核申請</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body" id="svReviewBody"></div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="svReviewRejectBtn">駁回</button>
+                <button type="button" class="btn btn-success" id="svReviewApproveBtn">通過</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel: 文章審核 -->
+      <section id="panel-admin-articles" class="panel">
+        <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <h2 class="panel-title mb-0"><i class="fa fa-file-text me-2"></i>文章審核</h2>
+          <button class="btn btn-sm btn-outline-primary" id="refreshAdminArticlesBtn">
+            <i class="fa fa-refresh me-1"></i>重新載入
+          </button>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+          <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+          <select class="form-select form-select-sm" id="adminArticlesStatusFilter" style="width:auto;">
+            <option value="PENDING" selected>審核中</option>
+            <option value="DRAFT">草稿</option>
+            <option value="PUBLISHED">已發佈</option>
+            <option value="REJECTED">已駁回</option>
+            <option value="ARCHIVED">已封存</option>
+          </select>
+        </div>
+
+        <div id="adminArticlesList">
+          <div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>
+        </div>
+        <div id="adminArticlesPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+
+        <!-- 審核 Modal -->
+        <div class="modal fade" id="articleReviewModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">審核文章</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body" id="articleReviewBody"></div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="articleReviewRejectBtn">駁回</button>
+                <button type="button" class="btn btn-success" id="articleReviewApproveBtn">通過</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- Panel: 檢舉管理 -->
       <section id="panel-reports" class="panel">

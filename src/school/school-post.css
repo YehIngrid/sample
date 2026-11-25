@@ -19,6 +19,7 @@
   border-color: rgba(226,150,109,0.4);
 }
 :root[data-theme="dark"] .social-proof .gold { color: #e0bd5a; }
+:root[data-theme="dark"] .comment .c-grade-author { color: #ffd98a; background: rgba(192,149,74,0.3); }
 :root[data-theme="dark"] .ubuy .done { background: rgba(36,182,133,0.16); }
 :root[data-theme="dark"] .sp-actionbar { background: rgba(30,36,44,0.94); }
 
@@ -41,6 +42,27 @@ body { background: var(--alice); }
   gap: 28px;
   align-items: start;
 }
+
+/* ============ 骨架屏 ============
+   分三階段揭露：文章內容 → 右側資訊 → 評分與留言（見 school-post.html 的 revealSection） */
+.skel-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 20px; overflow: hidden; padding: 24px;
+}
+.skel-side { padding: 22px; }
+.skel-hero { height: 240px; margin: -24px -24px 24px; border-radius: 0; }
+.skel-body { display: flex; flex-direction: column; gap: 14px; }
+.skel-line, .skel-hero {
+  background: linear-gradient(90deg, var(--alice) 25%, var(--line) 50%, var(--alice) 75%);
+  background-size: 200% 100%;
+  animation: skelShimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+.skel-line { height: 14px; width: 100%; }
+.skel-line-lg { height: 26px; width: 70%; }
+.skel-line-md { height: 18px; width: 45%; }
+.skel-line-sm { width: 55%; }
+@keyframes skelShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* ============ ARTICLE ============ */
 .article-card {
@@ -83,6 +105,14 @@ body { background: var(--alice); }
   letter-spacing: 0.04em;
   margin-bottom: 22px;
 }
+
+/* 數字輪詢更新時的微動畫（閱讀/喜歡/評分，見 school-post.html 的 pollArticleStats） */
+@keyframes statPulse {
+  0% { transform: scale(1); color: inherit; }
+  35% { transform: scale(1.3); color: var(--navy); }
+  100% { transform: scale(1); color: inherit; }
+}
+.stat-pulse { display: inline-block; animation: statPulse 0.5s ease; }
 .meta-row .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--line); }
 .meta-row .valid-tag {
   display: inline-flex; align-items: center; gap: 5px;
@@ -147,25 +177,60 @@ body { background: var(--alice); }
 }
 .author-block .follow:hover { background: var(--navy-solid); color: #fff; }
 
-/* 側欄喜歡按鈕 */
-/* 「喜歡」「加入收藏」並排（桌機）：外層 flex row，兩顆按鈕各佔一半 */
-.buy-actions { display: flex; gap: 8px; margin-top: 14px; margin-bottom: 8px; }
-.buy-actions .side-like,
-.buy-actions .btn-ghost { flex: 1; width: auto; min-width: 0; margin: 0; }
+/* 側欄操作列（喜歡／收藏／評分／留言）：Option D 動畫按鈕
+   尺寸/顏色照參考稿原樣：52px 高、22px icon、按鈕間 16px、選中態背景 var(--alice)
+   （淺色模式下 aliceblue #f0f8ff 跟參考稿的 #e8f0fe 幾乎同一個淡藍，深色模式會自動換成對應的深色版本）。 */
+.buy-actions { display: flex; gap: 16px; margin-top: 14px; margin-bottom: 8px; }
 
-.side-like {
-  width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px;
-  padding: 10px 0; margin-bottom: 8px; border-radius: 999px;
-  border: 1.5px solid var(--line); background: var(--card); color: var(--ink);
-  font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
-  cursor: pointer; transition: all 0.22s;
+.buy-actions-icons .ad-btn {
+  position: relative;
+  flex: 1; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
-.side-like svg { width: 15px; height: 15px; stroke: #e63946; flex-shrink: 0; }
-.side-like:hover { border-color: #e63946; color: #e63946; transform: translateY(-1px); }
-.side-like.liked { border-color: #e63946; color: #e63946; background: rgba(230,57,70,0.08); }
-.side-like.liked svg { fill: #e63946; }
+.buy-actions-icons .ad-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 36px -18px rgba(0,75,151,0.45); }
+.buy-actions-icons .ad-btn:active { transform: translateY(0) scale(0.94); }
+.buy-actions-icons .ad-ic { display: flex; pointer-events: none; }
+.buy-actions-icons .ad-btn svg { width: 18px; height: 18px; fill: none; pointer-events: none; }
+.buy-actions-icons .ad-btn.on { border-color: var(--navy); background: var(--alice); color: var(--navy); }
+.buy-actions-icons .ad-btn.on svg { fill: currentColor; }
+.buy-actions-icons .ad-chat { flex: 1.5; border-color: var(--navy); background: var(--navy-solid); color: #fff; }
+.buy-actions-icons .ad-chat:hover { background: var(--navy-d); }
 
-/* 手機操作列喜歡按鈕 */
+/* 點擊回饋：光環一圈淡出 + 八個小圓點往外飛散（喜歡／評分才有，收藏跟留言用別的動畫） */
+.buy-actions-icons .ad-ring { position: absolute; inset: -2px; border-radius: 9999px; border: 2px solid var(--navy); opacity: 0; pointer-events: none; }
+.buy-actions-icons .ad-chat .ad-ring { border-color: #fff; }
+.buy-actions-icons .ad-pt { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; opacity: 0; pointer-events: none; }
+.buy-actions-icons .ad-p1 { --dx: 0px;   --dy: -40px; background: var(--navy); }
+.buy-actions-icons .ad-p2 { --dx: 30px;  --dy: -28px; background: rgb(36,182,133); }
+.buy-actions-icons .ad-p3 { --dx: 44px;  --dy: 0px;   background: var(--sky); }
+.buy-actions-icons .ad-p4 { --dx: 30px;  --dy: 28px;  background: var(--mid); }
+.buy-actions-icons .ad-p5 { --dx: 0px;   --dy: 40px;  background: var(--navy); }
+.buy-actions-icons .ad-p6 { --dx: -30px; --dy: 28px;  background: rgb(36,182,133); }
+.buy-actions-icons .ad-p7 { --dx: -44px; --dy: 0px;   background: var(--sky); }
+.buy-actions-icons .ad-p8 { --dx: -30px; --dy: -28px; background: var(--mid); }
+.buy-actions-icons .ad-gold .ad-pt { background: #a08540; }
+.buy-actions-icons .ad-gold .ad-p2, .buy-actions-icons .ad-gold .ad-p6 { background: #c9a94e; }
+
+.buy-actions-icons .ad-anim-ring .ad-ring { animation: adRing 0.6s ease-out; }
+@keyframes adRing { 0% { opacity: .7; transform: scale(.9); } 100% { opacity: 0; transform: scale(1.35,1.7); } }
+.buy-actions-icons .ad-anim-burst .ad-pt { animation: adBurst 0.7s cubic-bezier(.1,.7,.3,1); }
+@keyframes adBurst { 0% { opacity: 1; transform: translate(0,0) scale(1.2); } 100% { opacity: 0; transform: translate(var(--dx),var(--dy)) scale(.2); } }
+.buy-actions-icons .ad-anim-pop .ad-ic { animation: adPop 0.65s cubic-bezier(.2,.8,.2,1); }
+@keyframes adPop { 0% { transform: scale(1); } 20% { transform: scale(.55); } 55% { transform: scale(1.4); } 75% { transform: scale(.9); } 100% { transform: scale(1); } }
+.buy-actions-icons .ad-anim-save .ad-ic { animation: adSave 0.6s cubic-bezier(.3,1.4,.5,1); }
+@keyframes adSave { 0% { transform: translateY(-18px) scaleY(1.2); opacity: 0; } 45% { transform: translateY(3px) scaleY(.85); opacity: 1; } 70% { transform: translateY(-3px) scaleY(1.05); } 100% { transform: translateY(0) scaleY(1); } }
+.buy-actions-icons .ad-anim-star .ad-ic { animation: adStar 0.7s cubic-bezier(.2,.8,.2,1); }
+@keyframes adStar { 0% { transform: rotate(0) scale(1); } 50% { transform: rotate(200deg) scale(1.45); } 100% { transform: rotate(360deg) scale(1); } }
+.buy-actions-icons .ad-anim-chat .ad-ic { animation: adChat 0.6s ease-in-out; }
+@keyframes adChat { 0%,100% { transform: rotate(0); } 15% { transform: rotate(-16deg) scale(1.15); } 35% { transform: rotate(12deg) scale(1.15); } 55% { transform: rotate(-8deg); } 75% { transform: rotate(4deg); } }
+
+/* 手機操作列喜歡按鈕（跟側欄的 ad-btn 是兩套獨立樣式） */
 .sp-actionbar .ico.liked { border-color: #e63946; color: #e63946; }
 .sp-actionbar .ico.liked svg { fill: #e63946; stroke: #e63946; }
 
@@ -251,7 +316,8 @@ body { background: var(--alice); }
   font-size: 15px; font-weight: 700; letter-spacing: 0.06em;
   transition: all 0.22s; cursor: pointer;
 }
-.unlock .btn-buy:hover { background: var(--green-d); transform: translateY(-1px); }
+.unlock .btn-buy:hover { background: var(--green-d); transform: translateY(-3px); box-shadow: 0 16px 36px -18px rgba(0,75,151,0.45); }
+.unlock .btn-buy:active { transform: translateY(0) scale(0.96); }
 .unlock .btn-buy svg { width: 19px; height: 19px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .unlock .pay-methods {
   display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -296,6 +362,7 @@ body { background: var(--alice); }
   padding: 20px; background: var(--alice); border-radius: 14px;
   margin-bottom: 24px;
 }
+.rating-summary.is-empty { padding: 14px 20px; }
 .rating-summary .big { text-align: center; }
 .rating-summary .big .score { font-size: 42px; font-weight: 700; color: var(--navy); line-height: 1; }
 .rating-summary .big .stars { color: var(--gold); font-size: 14px; margin-top: 6px; letter-spacing: 2px; }
@@ -305,20 +372,54 @@ body { background: var(--alice); }
 .rating-summary .bar-row .lbl { width: 28px; }
 .rating-summary .track { flex: 1; height: 6px; background: var(--card); border-radius: 999px; overflow: hidden; }
 .rating-summary .fill { height: 100%; background: var(--navy-solid); border-radius: 999px; }
+.rating-empty { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; letter-spacing: 0.02em; }
+.rating-empty svg { width: 20px; height: 20px; color: var(--gold); flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* 留言區：標題 + 排序切換 */
+.comment-list-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.comment-list-title { font-size: 15px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; }
+.comment-list-title span { color: var(--navy); font-weight: 800; }
+.sort-toggle { display: inline-flex; background: var(--alice); border-radius: 999px; padding: 3px; gap: 2px; flex-shrink: 0; }
+.sort-toggle button {
+  border: none; background: transparent; padding: 7px 16px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 700; color: var(--muted); letter-spacing: 0.02em;
+  transition: all 0.2s ease; cursor: pointer;
+}
+.sort-toggle button.on { background: var(--navy-solid); color: #fff; }
+.sort-toggle button:not(.on):hover { color: var(--navy); }
+
+.comment-group { padding: 18px 0; border-top: 1px solid var(--line); }
+.comment-group:first-child { border-top: none; padding-top: 0; }
+.comment-replies { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+.comment-replies:empty { margin-top: 0; }
 
 .comment {
   display: flex; gap: 14px;
-  padding: 18px 0;
-  border-top: 1px solid var(--line);
 }
 .comment .av {
   width: 38px; height: 38px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--sky), var(--aqua));
+  object-fit: cover;
   border: 1.5px solid #fff; box-shadow: 0 0 0 1px var(--aqua);
   flex-shrink: 0;
 }
-.comment.reply { margin-left: 30px; background: var(--alice); border-radius: 12px; padding: 14px 16px; border-top: none; }
-.comment.reply .av { background: linear-gradient(135deg, var(--mid), var(--aqua)); }
+.comment.reply {
+  margin-left: 30px;
+  padding-left: 16px;
+  border-left: 2px solid var(--line);
+  gap: 12px;
+}
+.comment.reply .av { width: 30px; height: 30px; }
+.sp-reply-form { gap: 8px; margin-top: 10px; }
+.sp-reply-form .sp-reply-input {
+  flex: 1; padding: 9px 14px; border: 1.5px solid var(--line); border-radius: 999px;
+  font-size: 13px; color: var(--ink); background: var(--card); outline: none;
+}
+.sp-reply-form .sp-reply-input:focus { border-color: var(--navy); }
+.sp-reply-form .sp-reply-submit {
+  padding: 9px 18px; border-radius: 999px; background: var(--navy-solid); color: #fff;
+  font-size: 13px; font-weight: 600;
+}
+.sp-reply-form .sp-reply-submit:hover { background: var(--navy-d); }
 .comment .c-body { flex: 1; min-width: 0; }
 .comment .c-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
 .comment .c-name { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; }
@@ -326,25 +427,41 @@ body { background: var(--alice); }
   font-size: 10px; font-weight: 700; color: var(--navy);
   background: var(--alice); padding: 1px 8px; border-radius: 999px; letter-spacing: 0.06em;
 }
+.comment .c-grade-author { color: #a08540; background: rgba(243,227,181,0.55); }
 .comment .author-tag { font-size: 10px; font-weight: 800; color: #fff; background: var(--navy-solid); padding: 1px 8px; border-radius: 999px; letter-spacing: 0.06em; }
+.comment .c-reply-to { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; color: var(--navy); opacity: 0.75; }
 .comment .c-stars { color: var(--gold); font-size: 12px; letter-spacing: 1px; }
 .comment .c-date { font-size: 11px; color: var(--muted); margin-left: auto; }
-.comment .c-text { font-size: 14px; color: var(--body); line-height: 1.7; }
-.comment .c-actions { display: flex; gap: 16px; margin-top: 8px; font-size: 11.5px; color: var(--muted); }
+.comment .c-text { font-size: 14px; color: var(--body); line-height: 1.7; margin-bottom: 2px; }
+.comment .c-actions { display: flex; align-items: center; gap: 16px; margin-top: 8px; font-size: 11.5px; color: var(--muted); }
+.comment .c-actions a { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; transition: color 0.18s ease; }
 .comment .c-actions a:hover { color: var(--navy); }
+.comment .c-actions a.sp-review-like.liked { color: var(--warn); cursor: default; }
+.comment .c-actions a.sp-review-like.liked:hover { color: var(--warn); }
+.comment .c-actions .sp-toggle-replies { margin-left: auto; color: var(--muted); }
+.comment .c-actions .sp-toggle-replies .chev { transition: transform 0.2s ease; }
+.comment .c-actions .sp-toggle-replies.collapsed .chev { transform: rotate(180deg); }
 
 .comment-box {
   display: flex; gap: 12px; align-items: center;
-  margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line);
+  margin: 0 0 22px; padding-bottom: 22px; border-bottom: 1px solid var(--line);
+}
+.comment-box .cb-avatar {
+  width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
+  border: 1.5px solid var(--line); flex-shrink: 0;
 }
 .comment-box input {
   flex: 1; padding: 13px 18px;
   border: 1.5px solid var(--line); border-radius: 999px;
-  font-size: 14px; color: var(--ink); outline: none;
+  font-size: 14px; color: var(--ink); background: var(--card); outline: none;
   transition: all 0.2s; font-family: inherit;
 }
 .comment-box input:focus { border-color: var(--navy); box-shadow: 0 0 0 4px rgba(0,75,151,0.08); }
-.comment-box .send { padding: 13px 24px; border-radius: 999px; background: var(--navy-solid); color: #fff; font-size: 14px; font-weight: 600; letter-spacing: 0.06em; }
+.comment-box .send {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+  padding: 13px 24px; border-radius: 999px; background: var(--navy-solid); color: #fff;
+  font-size: 14px; font-weight: 600; letter-spacing: 0.06em;
+}
 .comment-box .send:hover { background: var(--navy-d); }
 
 /* ============ SIDEBAR (desktop) ============ */
@@ -365,28 +482,21 @@ body { background: var(--alice); }
   font-size: 14.5px; font-weight: 700; letter-spacing: 0.06em;
   transition: all 0.22s; cursor: pointer;
 }
-.buy-card .btn-buy:hover { background: var(--green-d); }
+.buy-card .btn-buy:hover { background: var(--green-d); transform: translateY(-3px); box-shadow: 0 16px 36px -18px rgba(0,75,151,0.45); }
+.buy-card .btn-buy:active { transform: translateY(0) scale(0.96); }
 .buy-card .btn-buy svg { width: 19px; height: 19px; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-.buy-card .btn-ghost {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 11px; border-radius: 999px;
-  border: 1.5px solid var(--navy); color: var(--navy);
-  font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
-  transition: all 0.2s;
-}
-.buy-card .btn-ghost svg { fill: currentColor; flex-shrink: 0; }
-.buy-card .btn-ghost:hover { border-color: var(--navy-d); color: var(--navy-d); }
 .buy-card .ledger { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
 .buy-card .ledger .li { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--muted); letter-spacing: 0.02em; }
 .buy-card .ledger .li svg { width: 14px; height: 14px; color: var(--navy); flex-shrink: 0; fill:none; stroke: currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-.ubuy { text-align: center; margin-bottom: 4px; }
-.ubuy .done { display: inline-flex; width:100%; justify-content: center; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; color: var(--green-d); background: #e2f3ea; padding: 12px; border-radius: 999px; letter-spacing: 0.04em; }
-.ubuy .done svg { fill:none; stroke: currentColor; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
-.ubuy .rate-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; border-radius: 999px; margin-top: 14px; background: var(--navy-solid); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: 0.04em; }
-.ubuy .rate-btn:hover { background: var(--navy-d); }
+/* 文章「免費閱讀／已解鎖」狀態小標籤：單純的按鈕列上面放一個小標籤當作卡片標頭，
+   不然純粹只有操作列會讓這張卡片看起來空空的、像漏了東西。 */
+.ubuy { text-align: center; margin-bottom: 14px; }
+.ubuy .done { display: inline-flex; justify-content: center; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--green-d); background: rgba(36,182,133,0.12); padding: 8px 16px; border-radius: 999px; letter-spacing: 0.04em; }
+.ubuy .done svg { width: 15px; height: 15px; fill:none; stroke: currentColor; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
 
 /* ===== 評分 Modal ===== */
-#ratingModal .modal-content { border-radius: 20px; border: none; overflow: hidden; box-shadow: 0 24px 60px -18px rgba(0,40,80,0.35); }
+#ratingModal .modal-content { border-radius: 20px; border: none; overflow: hidden; box-shadow: 0 24px 60px -18px rgba(0,40,80,0.35); background: var(--card); color: var(--ink); }
+:root[data-theme="dark"] #ratingModal .btn-close { filter: invert(1) grayscale(1); } /* Bootstrap 的 .btn-close 預設是深色線條圖示，深色模式背景也深，疊在一起看不到 */
 #ratingModal .modal-header { border-bottom: 1px solid var(--line); padding: 20px 24px 16px; }
 #ratingModal .modal-title { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
 #ratingModal .modal-body { padding: 28px 24px 24px; text-align: center; }

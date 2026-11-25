@@ -2140,14 +2140,18 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   /* ---------- 就學證明實名認證 ----------
      串接 POST/GET /api/account/identity-verifications。
-     這支 Modal 原本收「就學狀態」「入學年度」兩個欄位，但 API 沒有對應欄位
-     （目前只有 realName/schoolName/proof），依決定先保留在畫面上、不送出也
-     不從伺服器回填，等之後跟後端確認要不要擴充欄位（見 memory:
-     school_api_doc_gaps.md #4）。另外：之前版本會把拍下的證件照存進
-     localStorage 以便「沿用原檔」，這次拿掉了——身分證明文件是敏感個資，
-     不應該長期留在瀏覽器本地儲存；現在每次送出都必須重新拍照。
+     「就學狀態」「入學年度」兩個欄位 2026-11-24 已確認 API 支援（studentStatus/
+     enrollYear，皆為選填），畫面上的選單/輸入框現在會實際送出並從伺服器回填。
+     之前版本會把拍下的證件照存進 localStorage 以便「沿用原檔」，這次拿掉了——
+     身分證明文件是敏感個資，不應該長期留在瀏覽器本地儲存；現在每次送出都必須
+     重新拍照。
   */
   (function () {
+    // 畫面上的就學狀態選項 ↔ API enum（studentStatus）對照。UI 目前沒有「留職停學／
+    // 休學」選項，故不提供 ON_LEAVE 的對應值。
+    var EV_STATUS_TO_API = { enrolled: 'ENROLLED', transfer: 'TRANSFERRING', graduated: 'GRADUATED', withdrawn: 'DROPPED_OUT' };
+    var EV_STATUS_FROM_API = { ENROLLED: 'enrolled', TRANSFERRING: 'transfer', GRADUATED: 'graduated', DROPPED_OUT: 'withdrawn' };
+
     // 最近一次送審紀錄（來自 GET /api/account/identity-verifications 的第一筆，
     // 該 API 已依建立時間新到舊排序）。null 代表尚未送過件。
     var latest = null;
@@ -2277,8 +2281,8 @@ document.addEventListener('DOMContentLoaded', function() {
       setErr('evFSchool', false); setErr('evFYear', false); setErr('evFName', false);
 
       schoolIn.value = (latest && latest.schoolName) || '';
-      statusSel.value = 'enrolled'; // API 不支援此欄位，維持預設值（見檔案開頭說明）
-      yearIn.value = '';
+      statusSel.value = (latest && EV_STATUS_FROM_API[latest.studentStatus]) || 'enrolled';
+      yearIn.value = (latest && latest.enrollYear) || '';
       nameIn.value = (latest && latest.realName) || '';
       document.getElementById('evSub').textContent = !latest
         ? '提交就學資料，人工審核通過後即完成實名認證。'
@@ -2329,12 +2333,16 @@ document.addEventListener('DOMContentLoaded', function() {
       window.schoolBackendService.submitIdentityVerification({
         realName: nameIn.value.trim(),
         schoolName: schoolIn.value.trim(),
+        studentStatus: EV_STATUS_TO_API[statusSel.value],
+        enrollYear: parseInt(yearIn.value.trim(), 10) || undefined,
         proof: proofFile
       }).then(function (res) {
         latest = {
           id: res && res.data && res.data.id,
           realName: nameIn.value.trim(),
           schoolName: schoolIn.value.trim(),
+          studentStatus: EV_STATUS_TO_API[statusSel.value],
+          enrollYear: parseInt(yearIn.value.trim(), 10) || null,
           status: 'PENDING',
           rejectReason: null
         };

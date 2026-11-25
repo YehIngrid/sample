@@ -1,3 +1,7 @@
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
 // ── Token 驗證（私密 URL）──
 window.isTokenValid = true;
 (function () {
@@ -8,6 +12,27 @@ window.isTokenValid = true;
   if (token !== VALID_TOKEN) {
     window.isTokenValid = false;
   }
+})();
+
+// ── 校園攻略站統計（文章總數/已認證作者數/本月閱讀數）──
+// 這支檔案同時被 school.html（攻略首頁）和 school-about.html（攻略介紹）共用，
+// 兩邊的 DOM 結構不一樣（class 不同），所以共用同一組 id 當橋接點，
+// 哪個頁面沒有對應元素就直接跳過，不會噴錯。
+(function () {
+  const elArticles = document.getElementById('schoolStatArticles');
+  const elAuthors = document.getElementById('schoolStatAuthors');
+  const elReads = document.getElementById('schoolStatReads');
+  if (!elArticles && !elAuthors && !elReads) return;
+  if (!window.schoolBackendService) return;
+
+  window.schoolBackendService.getSchoolStats().then(res => {
+    const d = (res && res.data) || {};
+    if (elArticles) elArticles.textContent = (d.articleCount || 0).toLocaleString();
+    if (elAuthors) elAuthors.textContent = (d.verifiedAuthorCount || 0).toLocaleString();
+    if (elReads) elReads.textContent = (d.monthlyReadCount || 0).toLocaleString();
+  }).catch(e => {
+    console.error('取得校園攻略站統計失敗：', e);
+  });
 })();
 
 // ── 預覽用：預設為「已模擬登入」狀態（僅在尚未設定過時種入；登出後不覆蓋）──
@@ -48,6 +73,7 @@ function attachSaveButtons() {
     btn.setAttribute('aria-pressed', saved[id] ? 'true' : 'false');
     btn.addEventListener('click', function (e) {
       e.preventDefault();
+      e.stopPropagation(); // 卡片整個包了 <a href> 導去文章頁，按鈕點擊不該跟著跳轉
       var on = !btn.classList.contains('saved');
       btn.classList.toggle('saved', on);
       btn.innerHTML = (on ? bmFilled : bmOutline) + '<span>' + (on ? '已儲存' : '儲存') + '</span>';
@@ -117,55 +143,69 @@ function attachLikeButtons() {
 })();
 
 // ── Render featured article ──
-(function () {
+// GET /api/school/featured — 目前 weeklyPicks 在真實環境一律是空陣列（後端
+// 尚未實作每週精選的篩選邏輯），所以下面同時處理「有資料」與「目前必為空」
+// 兩種情況：沒有精選就直接把整個 #featuredWrap 隱藏，不要留一個空殼。
+(async function () {
   const featuredWrap = document.getElementById('featuredWrap');
   if (!featuredWrap) return;
 
-  // Sample featured data - replace with actual API data
-  const featured = {
-    id: 1,
-    title: '中興推台清交：我的備審「修改前後對比」＋面試當天教授提問真題還原',
-    excerpt: '逐頁拆解備審改版前後差在哪、自傳每一段教授想看什麼，附三場面試的提問逐字稿與我的回答思路。傳承的不是知識，是踩過的雷。',
-    category: '研究所推甄',
-    date: '2026 / 05 / 22',
-    year: '115 學年',
-    author: '創產系 112級 范同學',
-    verified: true,
-    tags: ['台大碩士', '書卷獎'],
-    reads: '2,184 次閱讀',
-    price: '$129',
-    currency: 'NT$',
-    preview: '前 20%'
-  };
+  let pick = null;
+  try {
+    const res = await window.schoolBackendService.getFeature();
+    const picks = (res && res.data && res.data.weeklyPicks) || [];
+    pick = picks[0] || null;
+  } catch (error) {
+    console.error('取得本週精選失敗：', error);
+  }
+
+  if (!pick) {
+    featuredWrap.style.display = 'none';
+    return;
+  }
+
+  // weeklyPicks 的單篇物件形狀目前沒有實例可核對，先用跟 /articles 列表同樣的
+  // 欄位名稱做防禦性讀取（article 可能包一層、也可能跟列表一樣是平的）。
+  const art = pick.article || pick;
+  const author = art.author || {};
+  const titles = author.titles || [];
+  const title = art.title || '';
+  const excerpt = art.subtitle || '';
+  const category = art.categoryName || '';
+  const year = art.applicableYear || '長期適用';
+  const authorName = author.displayName || author.nickname || '匿名作者';
+  const tags = titles.map(t => t.shortName).filter(Boolean);
+  const reads = (art.viewCount || 0).toLocaleString() + ' 次閱讀';
+  const isFree = art.type === 'FREE';
+  const price = isFree ? '免費閱讀' : ('NT$ ' + (art.price || 0));
+  const publishedDate = art.publishedAt ? new Date(art.publishedAt).toLocaleDateString('zh-TW').replace(/\//g, ' / ') : '';
 
   const html = `
     <span class="badge">本週精選</span>
     <div class="cover" style="display:none;"></div>
     <div class="copy">
       <div class="meta-top">
-        <span class="cat-pill">${featured.category}</span>
-        <span>${featured.date}</span>
-        <span>·</span>
-        <span>適用 ${featured.year}</span>
+        <span class="cat-pill">${category}</span>
+        ${publishedDate ? `<span>${publishedDate}</span><span>·</span>` : ''}
+        <span>適用 ${year}</span>
       </div>
-      <h2>${featured.title}</h2>
-      <p class="excerpt">${featured.excerpt}</p>
+      <h2>${title}</h2>
+      <p class="excerpt">${excerpt}</p>
       <div class="author-row">
         <div class="av"></div>
         <div class="author-info">
-          <div class="author-name">${featured.author}</div>
+          <div class="author-name">${authorName}</div>
           <div class="author-tags">
-            ${featured.tags.map(tag => `<span class="tag">${tag.replace(/\*/g, '')}</span>`).join('')}
+            ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
           </div>
         </div>
         <div class="read-meta">
-          <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${featured.reads}</span>
+          <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${reads}</span>
         </div>
       </div>
       <div class="price-box">
-        <div class="price">${featured.price} <span class="unit">${featured.currency}</span></div>
-        <div class="preview-tag"><strong>${featured.preview}</strong> 內容可免費預覽</div>
-        <a class="btn-read" href="school-post.html?id=${featured.id}">立即閱讀 →</a>
+        <div class="price">${isFree ? '免費閱讀' : price}</div>
+        <a class="btn-read" href="school-post.html?id=${art.id}">立即閱讀 →</a>
       </div>
     </div>
   `;
@@ -173,95 +213,94 @@ function attachLikeButtons() {
   featuredWrap.innerHTML = html;
 })();
 
-// ── Sample article data and rendering ──
+// ── Article data and rendering ──
 (function () {
-  const ARTICLES = [
-    {
-      id: 2, title: '【中興資工】微積分 王教授通關筆記 ＋ 考古題手寫詳解',
-      excerpt: '期中期末必考題型整理、給分習慣、最容易被當的章節，附我自己手寫的考古題逐題詳解。',
-      category: '學分攻略', gradient: 'g1', tag: '同校生限定', year: '115 學年',
-      author: '資工系 114級 李同學', verified: true, badge: '書卷獎', time: '2 天前', price: 'NT$ 99',
-      views: '1,182', likes: '96', comments: '31',
-      anchorValues: { courseName: '微積分（一）', instructor: '王大明', semester: '115 學年度上學期' }
-    },
-    {
-      id: 3, title: '拿到台積電實習的英文履歷怎麼寫 ＋ 三輪面試心態與提問心法',
-      excerpt: '附 STAR 法則範例與我面試的提問清單，從投遞到拿到 offer 的整個流程與每一關的準備。',
-      category: '實習與面試', gradient: 'g2', year: '115 學年',
-      author: '電機系 112級 王同學', verified: true, badge: '台積電實習', time: '5 天前', price: 'NT$ 149',
-      views: '1,604', likes: '128', comments: '44',
-      anchorValues: { companyName: '台灣積體電路', positionName: '軟體工程實習生', applyYear: '115 年暑期' }
-    },
-    {
-      id: 4, title: '多益一個月 500 → 850：我的刷題進度表與聽力閱讀破題技巧',
-      excerpt: '低成本速過畢業門檻指南。完整公開我一個月內的每日進度表...',
-      category: '證照檢定', nocover: true, year: '長期適用',
-      author: '外文系 113級 黃同學', verified: true, badge: '多益 935', time: '1 週前', price: 'NT$ 89',
-      views: '968', likes: '74', comments: '20',
-      anchorValues: { certName: '多益 TOEIC', examDate: '2026/04/12', score: '850 分' }
-    },
-    {
-      id: 5, title: '交換生讀書計畫與自傳怎麼寫 ＋ 姊妹校性價比分析',
-      excerpt: '如何向學校評審推銷自己，哪間姊妹校補助多、學分好抵免，附我的申請文件範本。',
-      category: '交換學生', gradient: 'g4', year: '115 學年',
-      author: '日文系 112級 林同學', verified: true, badge: 'JLPT N1', time: '1 週前', price: 'NT$ 149',
-      views: '932', likes: '64', comments: '22',
-      anchorValues: { exchangeSchool: '日本早稻田大學', exchangeSemester: '115 學年度上學期', applyChannel: '校級交換生甄選' }
-    },
-    {
-      id: 6, title: '某通識「如何拿到 A+」報告範本 ＋ 分組避雷名單與隱藏加分',
-      excerpt: '想刷高 GPA 推甄、申獎學金必看。期末報告架構、潛規則與哪些組員千萬別碰。',
-      category: '學分攻略', gradient: 'g5', tag: '免費', year: '115 學年',
-      author: '創產系 113級 范同學', verified: true, time: '2 週前', price: '免費閱讀',
-      views: '1,456', likes: '112', comments: '38',
-      anchorValues: { courseName: '性別與社會通識', instructor: '林美惠', semester: '115 學年度上學期' }
-    },
-    {
-      id: 7, title: 'ATCC / 梅竹黑客松 得獎企劃書範本 ＋ 跨領域組隊分工框架',
-      excerpt: '商管＋技術怎麼組隊、評審看什麼、企劃書架構與簡報節奏，附我們的得獎作品拆解。',
-      category: '專題研究', gradient: 'g6', year: '長期適用',
-      author: '資管系 112級 陳同學', verified: true, badge: 'ATCC 全國前八強', time: '3 週前', price: 'NT$ 119',
-      views: '742', likes: '58', comments: '16',
-      anchorValues: { projectName: 'ATCC 全國創新創業競賽企劃', advisor: '陳建宏', toolsUsed: 'Figma＋Notion 專案管理' }
-    },
-    {
-      id: 8, title: 'CPE 程式能力檢定：兩題／三題通關常用程式碼樣板整理',
-      excerpt: '考前一週救急用，把最常考的題型與可直接套用的 C++ 樣板都整理進來了。',
-      category: '證照檢定', gradient: 'g3', year: '長期適用',
-      author: '資工系 113級 吳同學', verified: true, badge: 'CPE 5 題', time: '3 週前', price: 'NT$ 79',
-      views: '624', likes: '47', comments: '11',
-      anchorValues: { certName: 'CPE 程式能力檢定', examDate: '2026/01/10', score: '5 題通過' }
-    },
-    {
-      id: 9, title: '轉系面試＋轉學考：經濟學與微積分準備時程表與錯題本',
-      excerpt: '大一不滿意想翻身必看。獨家準備時程、專業科目錯題本與面試常被問的問題。',
-      category: '轉學/轉系', gradient: 'g1', stale: true, year: '114 學年 · 已降價',
-      author: '財金系 114級 張同學', verified: true, time: '1 個月前', price: 'NT$ 69',
-      views: '538', likes: '33', comments: '14',
-      anchorValues: { fromSchool: '中興大學財金系', toSchool: '中興大學經濟系', transferYear: '115 學年度' }
-    },
-    {
-      id: 10, title: '中興周邊高 CP 值美食 30 家 ＋ 聚餐口袋名單與隱藏學生優惠',
-      excerpt: '從平日獨食到系上聚餐分級整理，附各店招牌、預算帶與出示學生證的獨家折扣清單。',
-      category: '美食地圖', gradient: 'g6', year: '長期適用',
-      author: '食科系 113級 周同學', verified: true, badge: '在地老饕', time: '4 天前', price: '免費閱讀',
-      views: '2,038', likes: '174', comments: '52'
-    }
-  ];
+  let ARTICLES = [];
 
-  function anchorRowHTML(art) {
-    var fields = (typeof TOPICS !== 'undefined' && TOPICS[art.category] && TOPICS[art.category].anchorFields) || [];
-    var values = art.anchorValues || {};
-    var parts = fields.filter(function (f) { return values[f.key]; })
-      .map(function (f) { return '<span class="ar-item"><span class="ar-k">' + f.label + '</span><span class="ar-v">' + values[f.key] + '</span></span>'; });
-    if (!parts.length) return '';
-    return '<div class="anchor-row">' + parts.join('<span class="ar-sep">·</span>') + '</div>';
+  // 粗略相對時間（跟 mock 資料原本用的「X 天前／X 週前」風格一致）
+  function timeAgo(iso) {
+    if (!iso) return '';
+    const diffMs = Date.now() - new Date(iso).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 60) return Math.max(mins, 1) + ' 分鐘前';
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return hours + ' 小時前';
+    const days = Math.floor(hours / 24);
+    if (days < 7) return days + ' 天前';
+    const weeks = Math.floor(days / 7);
+    if (weeks < 5) return weeks + ' 週前';
+    const months = Math.floor(days / 30);
+    if (months < 12) return months + ' 個月前';
+    return Math.floor(days / 365) + ' 年前';
+  }
+
+  const GRADIENTS = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6'];
+
+  // 把 GET /api/school/articles 回傳的單篇物件轉成這支檔案原本卡片渲染
+  // （articleCardHTML／anchorRowHTML）期待的欄位命名。API 目前沒有 gradient／
+  // anchorValues 這類純裝飾或分類專屬結構化欄位，只能合理地簡化/省略，不是漏接。
+  function mapArticle(item, idx) {
+    const author = item.author || {};
+    const titles = author.titles || [];
+    // 這些欄位現在是真實使用者輸入（標題/副標/標籤/作者暱稱都來自撰寫器），
+    // 直接塞進 articleCardHTML 的樣板字串當 innerHTML 用，一定要先跳脫，
+    // 不然是存儲型 XSS（CLAUDE.md 明確要求注意這塊）。
+    return {
+      id: item.id,
+      title: esc(item.title),
+      excerpt: esc(item.subtitle || ''),
+      category: esc(item.categoryName || ''),
+      coverUrl: item.coverUrl || '',
+      gradient: GRADIENTS[idx % GRADIENTS.length],
+      tag: item.schoolOnly ? '同校生限定' : (item.type === 'FREE' ? '免費' : ''),
+      year: esc(item.applicableYear || '長期適用'),
+      author: esc(author.displayName || author.nickname || '匿名作者'),
+      verified: !!titles.length || author.studentStatus === 'ENROLLED',
+      badge: titles[0] && esc(titles[0].shortName),
+      tags: (item.tags || []).map(t => esc(t)),
+      time: timeAgo(item.publishedAt),
+      price: item.type === 'FREE' ? '免費閱讀' : ('NT$ ' + item.price),
+      views: (item.viewCount || 0).toLocaleString(),
+      likes: (item.likeCount || 0).toLocaleString(),
+      comments: (item.reviewCount || 0).toLocaleString(),
+    };
+  }
+
+  let ARTICLES_TOTAL = 0;
+  let currentCategoryId = ''; // 空字串 = 全部文章，點側邊欄分類會換成真正的 categoryId
+  let currentTagName = ''; // 空字串 = 不篩標籤，點側邊欄「熱門標籤」會換成真正的標籤名稱
+
+  async function fetchArticles() {
+    try {
+      const params = { limit: 20, sort: 'latest' };
+      if (currentCategoryId) params.category = currentCategoryId;
+      if (currentTagName) params.tag = currentTagName;
+      const res = await window.schoolBackendService.getArticles(params);
+      const items = (res && res.data && res.data.items) || [];
+      ARTICLES_TOTAL = (res && res.data && res.data.total) || items.length;
+      ARTICLES = items.map(mapArticle);
+    } catch (error) {
+      console.error('取得文章列表失敗：', error);
+      ARTICLES = [];
+      ARTICLES_TOTAL = 0;
+    }
+  }
+
+  // 錨點資訊：文章列表 API（GET /api/school/articles）每篇文章實際回傳的
+  // tags（撰寫時選的 hashtag），不是 school-composer.html 那套「主題必填錨點
+  // 欄位」（answers/anchorValues，只有單篇文章詳情 GET /api/school/articles/{id}
+  // 才有，列表 API 沒有，逐篇另外打一次詳情 API 會是 N+1，不值得），所以列表卡片
+  // 上能穩定呈現的「錨點」只有這組 tags。
+  function tagRowHTML(art) {
+    if (!art.tags || !art.tags.length) return '';
+    return '<div class="tag-row">' + art.tags.map(function (t) { return '<span class="tag-chip">#' + t + '</span>'; }).join('') + '</div>';
   }
 
   function articleCardHTML(art) {
     if (art.nocover) {
       return `
-        <article class="article nocover">
+        <a class="article-card-link" href="school-post.html?id=${art.id}">
+        <article class="article nocover" data-article-id="${art.id}">
           <div class="body">
             <div class="meta-row">
               <span class="cat-pill-inline">${art.category}</span>
@@ -272,7 +311,7 @@ function attachLikeButtons() {
             </div>
             <h2>${art.title}</h2>
             <p class="excerpt">${art.excerpt}</p>
-            ${anchorRowHTML(art)}
+            ${tagRowHTML(art)}
             <div class="author-row">
               <div class="av-sm"></div>
               <div class="author-meta">
@@ -282,18 +321,20 @@ function attachLikeButtons() {
               <div class="price">${art.price}</div>
             </div>
             <div class="read-stats">
-              <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${art.views}</span>
+              <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> <span class="views-num">${art.views}</span></span>
               <span class="like-count-display"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span class="likes-num">${art.likes}</span></span>
-              <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> ${art.comments}</span>
+              <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> <span class="comments-num">${art.comments}</span></span>
             </div>
           </div>
         </article>
+        </a>
       `;
     }
 
     return `
-      <article class="article">
-        <div class="cover ${art.gradient || 'g1'}">
+      <a class="article-card-link" href="school-post.html?id=${art.id}">
+      <article class="article" data-article-id="${art.id}">
+        <div class="cover ${art.gradient || 'g1'}" ${art.coverUrl ? `style="background-image:url('${art.coverUrl}');background-size:cover;background-position:center;"` : ''}>
           <span class="cat-pill-cover">${art.category}</span>
           ${art.tag ? `<span class="${art.tag === '免費' ? 'free-tag' : 'biz-tag'}">${art.tag}</span>` : ''}
         </div>
@@ -304,7 +345,7 @@ function attachLikeButtons() {
           </span>
           <h2>${art.title}</h2>
           <p class="excerpt">${art.excerpt}</p>
-          ${anchorRowHTML(art)}
+          ${tagRowHTML(art)}
           <div class="author-row">
             <div class="av-sm"></div>
             <div class="author-meta">
@@ -314,9 +355,9 @@ function attachLikeButtons() {
             <div class="price ${art.price === '免費閱讀' ? 'free' : ''}">${art.price}</div>
           </div>
           <div class="read-stats">
-            <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> ${art.views}</span>
+            <span><img src="../svg/read.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;" alt="閱讀"> <span class="views-num">${art.views}</span></span>
             <span class="like-count-display"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;display:inline-block;color:#c97f5a;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span class="likes-num">${art.likes}</span></span>
-            <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> ${art.comments}</span>
+            <span><img src="../svg/comment_school.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;" alt="評論"> <span class="comments-num">${art.comments}</span></span>
           </div>
         </div>
       </article>
@@ -369,32 +410,196 @@ function attachLikeButtons() {
     });
   }
 
-  function renderArticles() {
+  const SKELETON_COUNT = 6;
+
+  async function renderArticles() {
     const container = document.getElementById('articleList');
     if (!container) return;
 
     // 先鋪一輪骨架屏，讓使用者知道內容正在載入
-    layoutMasonry(container, ARTICLES.map(articleSkeletonHTML), true);
+    layoutMasonry(container, Array(SKELETON_COUNT).fill(0).map(articleSkeletonHTML), true);
 
-    // ARTICLES 目前是本地假資料，之後接上真的清單 API 時，把下面這段搬進 fetch 的 then/await 之後即可
-    requestAnimationFrame(() => {
-      layoutMasonry(container, ARTICLES.map(articleCardHTML), false);
-      attachSaveButtons();
-      attachLikeButtons();
-    });
+    await fetchArticles();
+
+    const secLabel = document.getElementById('articlesSecLabel');
+
+    if (!ARTICLES.length) {
+      if (secLabel) secLabel.style.display = 'none';
+      container.innerHTML = `
+        <div class="article-empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2 H6 a2 2 0 0 0-2 2 V20 a2 2 0 0 0 2 2 H18 a2 2 0 0 0 2-2 V8 Z"/>
+            <path d="M14 2 V8 H20"/>
+          </svg>
+          <p>${currentCategoryId ? '這個分類目前還沒有文章，換個分類看看吧！' : '目前還沒有攻略文章，成為第一個發佈的人吧！'}</p>
+        </div>
+      `;
+      return;
+    }
+
+    if (secLabel) secLabel.style.display = '';
+    const countPill = document.getElementById('articlesCountPill');
+    if (countPill) countPill.textContent = ARTICLES_TOTAL.toLocaleString() + ' 篇 · 依發佈時間';
+
+    layoutMasonry(container, ARTICLES.map(articleCardHTML), false);
+    attachSaveButtons();
+    attachLikeButtons();
   }
+
+  // 數字變動時「由下往上」滾動替換：舊數字往上滑出＋淡出，新數字從正下方滑進定位，
+  // 取代直接覆蓋文字造成的突兀跳動。el 必須是只包含純文字數字/逗號的 inline 元素
+  // （views-num/likes-num/comments-num），動畫進行中若又收到新值，直接跳過動畫
+  // 改成立即覆蓋，避免同一顆卡片在短時間內被疊加觸發兩次滾動動畫互相打架。
+  function rollNumberTo(el, newValue) {
+    if (!el || el.textContent === newValue) return;
+    if (el.dataset.rolling === '1') { el.textContent = newValue; return; }
+    el.dataset.rolling = '1';
+
+    const oldValue = el.textContent;
+    const height = el.offsetHeight || 16;
+    el.classList.add('roll-wrap');
+    el.style.height = height + 'px';
+    el.style.lineHeight = height + 'px';
+    el.innerHTML = '<span class="roll-old">' + oldValue + '</span><span class="roll-new">' + newValue + '</span>';
+
+    requestAnimationFrame(() => el.classList.add('animating'));
+
+    setTimeout(() => {
+      el.textContent = newValue;
+      el.classList.remove('roll-wrap', 'animating');
+      el.style.height = '';
+      el.style.lineHeight = '';
+      delete el.dataset.rolling;
+    }, 450);
+  }
+
+  // 每 10 秒重打一次文章列表，比對每篇文章的閱讀/按讚/留言數，有變動的用
+  // rollNumberTo() 做滾動動畫；只更新卡片裡的數字節點，不重建整個 masonry
+  // （避免整批卡片重新渲染打斷使用者正在操作的收藏/喜歡按鈕狀態）。
+  async function pollArticleStats() {
+    if (!window.schoolBackendService || !document.getElementById('articleList')) return;
+    try {
+      const params = { limit: 20, sort: 'latest' };
+      if (currentCategoryId) params.category = currentCategoryId;
+      if (currentTagName) params.tag = currentTagName;
+      const res = await window.schoolBackendService.getArticles(params);
+      const items = (res && res.data && res.data.items) || [];
+      items.forEach(item => {
+        const card = document.querySelector('.article[data-article-id="' + CSS.escape(item.id) + '"]');
+        if (!card) return;
+        rollNumberTo(card.querySelector('.views-num'), (item.viewCount || 0).toLocaleString());
+        rollNumberTo(card.querySelector('.likes-num'), (item.likeCount || 0).toLocaleString());
+        rollNumberTo(card.querySelector('.comments-num'), (item.reviewCount || 0).toLocaleString());
+      });
+    } catch (error) {
+      console.error('輪詢文章數據失敗：', error);
+    }
+  }
+  setInterval(pollArticleStats, 10000);
 
   let _resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(_resizeTimer);
     _resizeTimer = setTimeout(() => {
       const container = document.getElementById('articleList');
-      if (!container) return;
+      if (!container || !ARTICLES.length) return;
       layoutMasonry(container, ARTICLES.map(articleCardHTML), false);
       attachSaveButtons();
       attachLikeButtons();
     }, 200);
   });
+
+  // ── 側邊欄／手機版「文章分類」列表 ──
+  // 原本 .cat-list / .mobile-cat-bar 是寫死的分類名稱 + 假數字，改成讀
+  // GET /api/school/categories 拿真正的分類與 id，每個分類的篇數則用
+  // GET /api/school/articles?category=X&limit=1 的 total 欄位湊出來（分類 API
+  // 本身不回傳篇數，只能逐一問文章列表）。點擊會換成真正的分類篩選，重新打
+  // getArticles({category}) 篩文章列表，不是純裝飾的連結。
+  async function renderCategorySidebar() {
+    const desktopList = document.querySelector('.cat-list');
+    const mobileList = document.querySelector('.mobile-cat-bar');
+    if (!desktopList && !mobileList) return;
+    if (!window.schoolBackendService) return;
+
+    let categories = [];
+    try {
+      const res = await window.schoolBackendService.getCategories();
+      categories = (res && res.data) || [];
+    } catch (e) {
+      console.error('取得文章分類失敗：', e);
+      return;
+    }
+
+    const entries = [{ id: '', name: '全部文章' }, ...categories.map(c => ({ id: c.id, name: c.name }))];
+    const counts = await Promise.all(entries.map(async e => {
+      try {
+        const res = await window.schoolBackendService.getArticles(e.id ? { category: e.id, limit: 1 } : { limit: 1 });
+        return (res && res.data && res.data.total) || 0;
+      } catch {
+        return 0;
+      }
+    }));
+
+    const html = entries.map((e, i) =>
+      `<a href="#" data-cat-id="${esc(e.id)}" class="${e.id === currentCategoryId ? 'on' : ''}">${esc(e.name)} <span class="count">${counts[i].toLocaleString()}</span></a>`
+    ).join('');
+
+    if (desktopList) desktopList.innerHTML = html;
+    if (mobileList) mobileList.innerHTML = html;
+
+    [desktopList, mobileList].forEach(list => {
+      if (!list) return;
+      list.addEventListener('click', e => {
+        const a = e.target.closest('[data-cat-id]');
+        if (!a) return;
+        e.preventDefault();
+        currentCategoryId = a.dataset.catId;
+        list.parentElement.querySelectorAll('[data-cat-id]').forEach(el => el.classList.toggle('on', el === a));
+        document.querySelectorAll('.cat-list [data-cat-id], .mobile-cat-bar [data-cat-id]').forEach(el => {
+          el.classList.toggle('on', el.dataset.catId === currentCategoryId);
+        });
+        renderArticles();
+      });
+    });
+  }
+  document.addEventListener('DOMContentLoaded', renderCategorySidebar);
+
+  // ── 側邊欄「熱門標籤」── 原本 .tag-list 是寫死的假標籤連結，改讀
+  // GET /api/school/tags（依 useCount 由高到低排序），點擊比照分類篩選，
+  // 加上 tag 條件重新打 getArticles({tag})。school.html 跟 school-article.html
+  // 都有同一份 .tag-list 側欄結構，這裡一次處理兩邊。
+  async function renderTagSidebar() {
+    const lists = document.querySelectorAll('.tag-list');
+    if (!lists.length || !window.schoolBackendService) return;
+
+    let tags = [];
+    try {
+      const res = await window.schoolBackendService.getTags({ limit: 20 });
+      tags = ((res && res.data) || []).slice().sort((a, b) => (b.useCount || 0) - (a.useCount || 0));
+    } catch (e) {
+      console.error('取得熱門標籤失敗：', e);
+      return;
+    }
+
+    const html = tags.map(t =>
+      `<a href="#" data-tag-name="${esc(t.name)}" class="${t.name === currentTagName ? 'on' : ''}">#${esc(t.name)}</a>`
+    ).join('');
+
+    lists.forEach(list => {
+      list.innerHTML = html;
+      list.addEventListener('click', e => {
+        const a = e.target.closest('[data-tag-name]');
+        if (!a) return;
+        e.preventDefault();
+        currentTagName = currentTagName === a.dataset.tagName ? '' : a.dataset.tagName;
+        document.querySelectorAll('.tag-list [data-tag-name]').forEach(el => {
+          el.classList.toggle('on', el.dataset.tagName === currentTagName);
+        });
+        renderArticles();
+      });
+    });
+  }
+  document.addEventListener('DOMContentLoaded', renderTagSidebar);
 
   document.addEventListener('DOMContentLoaded', renderArticles);
 })();
@@ -430,6 +635,14 @@ function attachLikeButtons() {
   const dropdown = document.createElement('div');
   dropdown.className = 'user-dropdown';
   dropdown.innerHTML = `
+    <div class="user-dropdown-identity">
+      <div class="user-dropdown-name" id="dropdownUserName">載入中…</div>
+      <div class="user-dropdown-mode-row">
+        <span class="user-dropdown-mode-label">半實名顯示</span>
+        <button class="tgl" type="button" id="dropdownModeToggle" aria-label="是否開啟半實名顯示" disabled></button>
+      </div>
+    </div>
+    <div class="user-dropdown-sep"></div>
     <a href="school-profile.html" class="user-dropdown-item">我的資訊</a>
     <button type="button" class="user-dropdown-item theme-toggle-trigger" id="themeToggleAvatar" title="切換深色模式">
       <span class="theme-toggle-label">深色模式</span>
@@ -453,15 +666,99 @@ function attachLikeButtons() {
   // 登入時把深色模式切換鈕藏進頭像選單，登出時放回 nav 外層
   const themeToggleOuter = document.getElementById('themeToggle');
 
+  const isAuthed = localStorage.getItem(AUTH_KEY) === '1';
+  const username = localStorage.getItem(USERNAME_KEY) || '王同學';
+
+  // ── 姓名身份顯示 + 半實名/暱稱切換 ──
+  // 跟 school-profile.html 的 id-card 共用同一組跨 script 全域狀態慣例（見該頁
+  // 「前台顯示名稱」那段 IIFE：window.__schoolAccountName/__schoolDisplayNameMode/
+  // updateIdCardNameDisplay/__publicSemiRealName）。這裡包一層 updateIdCardNameDisplay，
+  // 讓 profile 頁與這個下拉選單互相同步；profile 頁本身仍會各自呼叫一次 getAccountMe/
+  // getMySettings，所以只有「同時在 school-profile.html」這一種情況會重複打 API 兩次，
+  // 其餘頁面都只有這裡打一次。
+  const dropdownNameEl = dropdown.querySelector('#dropdownUserName');
+  const dropdownModeBtn = dropdown.querySelector('#dropdownModeToggle');
+
+  // school-profile.html 沒有串「真實姓名」欄位的 API，半實名目前仍是前端 mock
+  // 佔位字（見 memory: school_api_doc_gaps.md #3）。這裡複製同一套規則，只在
+  // window.__publicSemiRealName（profile 頁才有，含使用者實際選字結果）不存在時
+  // 當作 fallback。
+  function computeSemiRealName(nameRevealIndex) {
+    const FULL = '葉潔頤';
+    const SUFFIX = '同學';
+    const chars = FULL.split('');
+    const idx = (typeof nameRevealIndex === 'number' && nameRevealIndex >= 0 && nameRevealIndex < chars.length) ? nameRevealIndex : 0;
+    return chars[idx] + SUFFIX;
+  }
+
+  function renderDropdownIdentity() {
+    if (!dropdownNameEl) return;
+    const mode = window.__schoolDisplayNameMode;
+    dropdownNameEl.textContent = mode === 'SEMI_REAL'
+      ? (typeof window.__publicSemiRealName === 'function' ? window.__publicSemiRealName() : computeSemiRealName(window.__schoolNameRevealIndex))
+      : (window.__schoolAccountName || username);
+    if (dropdownModeBtn) {
+      dropdownModeBtn.disabled = !mode;
+      dropdownModeBtn.classList.toggle('on', mode === 'SEMI_REAL');
+    }
+  }
+
+  const prevUpdateIdCard = typeof window.updateIdCardNameDisplay === 'function' ? window.updateIdCardNameDisplay : null;
+  window.updateIdCardNameDisplay = function () {
+    if (prevUpdateIdCard) prevUpdateIdCard();
+    renderDropdownIdentity();
+  };
+
+  if (dropdownModeBtn) {
+    dropdownModeBtn.addEventListener('click', async function (e) {
+      e.stopPropagation();
+      if (dropdownModeBtn.disabled) return;
+      const prevMode = window.__schoolDisplayNameMode;
+      const nextMode = prevMode === 'SEMI_REAL' ? 'NICKNAME' : 'SEMI_REAL';
+      // 樂觀更新：先切畫面，失敗才退回（跟 school-profile.html 的 dnmToggle 同一套模式）
+      window.__schoolDisplayNameMode = nextMode;
+      window.updateIdCardNameDisplay();
+      dropdownModeBtn.disabled = true;
+      try {
+        await window.schoolBackendService.updateMySettings({ displayNameMode: nextMode });
+      } catch (error) {
+        window.__schoolDisplayNameMode = prevMode;
+        window.updateIdCardNameDisplay();
+        AppModal.fire({ icon: 'error', title: '更新失敗', text: error.message || '請稍後再試' });
+      } finally {
+        dropdownModeBtn.disabled = !window.__schoolDisplayNameMode;
+      }
+    });
+  }
+
+  let identityLoaded = false;
+  async function loadIdentity() {
+    if (identityLoaded || !window.schoolBackendService) return;
+    identityLoaded = true;
+    try {
+      const [meRes, settingsRes] = await Promise.all([
+        window.schoolBackendService.getAccountMe(),
+        window.schoolBackendService.getMySettings()
+      ]);
+      const me = (meRes && meRes.data) || {};
+      const settings = (settingsRes && settingsRes.data) || {};
+      window.__schoolAccountName = me.name || username;
+      window.__schoolNameRevealIndex = settings.nameRevealIndex;
+      window.__schoolDisplayNameMode = settings.displayNameMode || me.displayNameMode || 'NICKNAME';
+      window.updateIdCardNameDisplay();
+    } catch (error) {
+      identityLoaded = false;
+      console.error('載入身份資訊失敗：', error);
+    }
+  }
+
   function applyAuth(loggedIn) {
     loginBtn.style.display = loggedIn ? 'none' : '';
     userChip.style.display = loggedIn ? 'block' : 'none';
     dropdown.classList.remove('open');
     if (themeToggleOuter) themeToggleOuter.style.display = loggedIn ? 'none' : '';
+    if (loggedIn) loadIdentity();
   }
-
-  const isAuthed = localStorage.getItem(AUTH_KEY) === '1';
-  const username = localStorage.getItem(USERNAME_KEY) || '王同學';
 
   applyAuth(isAuthed);
 
@@ -508,95 +805,114 @@ function attachLikeButtons() {
   });
 })();
 
-// ── Wishpool with real data (commented out) ──
-// (function () {
-//   function initWishpool() {
-//     const container = document.querySelector('.wp-stage-school');
-//     if (!container) return;
-//
-//     let wishes = [];
-//     if (window.backendService && typeof window.backendService.getWishlist === 'function') {
-//       window.backendService.getWishlist().then(response => {
-//         wishes = (response.data || []).slice(0, 20);
-//         renderWishpool(wishes);
-//       }).catch(e => {
-//         console.warn('Failed to load wishpool:', e);
-//         renderWishpool([]);
-//       });
-//     } else {
-//       renderWishpool([]);
-//     }
-//
-//     function renderWishpool(wishes) {
-//       const SLOGANS = [
-//         { _isSlogan: true, id: 's1', _sloganText: '快來許願！', _sloganBg: '#004b97', _sloganColor: '#fff' },
-//         { _isSlogan: true, id: 's2', _sloganText: '賣家等你', _sloganBg: '#f3e3b5', _sloganColor: '#004b97' },
-//         { _isSlogan: true, id: 's3', _sloganText: '說出你的需求', _sloganBg: '#4a85c4', _sloganColor: '#fff' },
-//         { _isSlogan: true, id: 's4', _sloganText: '找到好物', _sloganBg: '#abdad5', _sloganColor: '#004b97' },
-//         { _isSlogan: true, id: 's5', _sloganText: '許個願吧', _sloganBg: '#7eb8d8', _sloganColor: '#fff' },
-//       ].map(s => ({ ...s, _size: Math.floor(Math.random() * 25) + 65, _marginTop: Math.floor(Math.random() * 160) - 80 }));
-//
-//       const displayWishes = wishes.length <= 3
-//         ? SLOGANS.flatMap((s, i) => [s, ...(wishes[i % wishes.length] ? [wishes[i % wishes.length]] : [])])
-//         : wishes;
-//
-//       const track = container.querySelector('.track-school');
-//       if (!track) return;
-//
-//       track.innerHTML = '';
-//       [...displayWishes, ...displayWishes, ...displayWishes, ...displayWishes].forEach((wish) => {
-//         const b = document.createElement('div');
-//         b.className = 'bub-school';
-//         b.style.setProperty('--y', wish._marginTop + 'px');
-//         b.style.animationDelay = (Math.random() * -5).toFixed(2) + 's';
-//         b.style.animationDuration = (4.4 + Math.random() * 1.6).toFixed(2) + 's';
-//
-//         if (wish._isSlogan) {
-//           const disc = document.createElement('div');
-//           disc.className = 'disc-school msg';
-//           disc.style.setProperty('--d', wish._size + 'px');
-//           disc.style.background = wish._sloganBg;
-//           disc.style.color = wish._sloganColor;
-//           disc.style.fontSize = (wish._size >= 92 ? 15 : 13) + 'px';
-//           disc.textContent = wish._sloganText;
-//           b.appendChild(disc);
-//         } else {
-//           const disc = document.createElement('div');
-//           disc.className = 'disc-school icon';
-//           disc.style.setProperty('--d', wish._size + 'px');
-//           const img = document.createElement('img');
-//           img.src = wish.photoURL || '../svg/bigwish.svg';
-//           img.alt = wish.itemName || '許願';
-//           img.style.width = wish._size + 'px';
-//           img.style.height = wish._size + 'px';
-//           img.onerror = function() { this.src = '../svg/bigwish.svg'; };
-//           disc.appendChild(img);
-//           b.appendChild(disc);
-//
-//           const cap = document.createElement('span');
-//           cap.className = 'cap-school';
-//           cap.textContent = wish.itemName || '新許願';
-//           b.appendChild(cap);
-//         }
-//
-//         b.addEventListener('click', () => {
-//           if (!wish._isSlogan && wish.id) {
-//             sessionStorage.setItem('focusWishId', String(wish.id));
-//           }
-//           location.href = '../wishpool/wishpool.html#wishpool';
-//         });
-//
-//         track.appendChild(b);
-//       });
-//     }
-//   }
-//
-//   if (document.readyState === 'loading') {
-//     document.addEventListener('DOMContentLoaded', initWishpool);
-//   } else {
-//     initWishpool();
-//   }
-// })();
+// ── Wishpool with real data ──
+// 跟 shop.js 首頁「猜你喜歡的願望」同一支 API：wpBackendService.listWishes(1)
+// → res.data.wishes，欄位是 itemName／owner.photoURL（不是扁平的 wish.photoURL）。
+(function () {
+  function initWishpool() {
+    const container = document.querySelector('.wp-stage-school');
+    if (!container) return;
+
+    let wishes = [];
+    if (window.wpBackendServiceInstance) {
+      window.wpBackendServiceInstance.listWishes(1).then(response => {
+        wishes = (response.data?.wishes || []).filter(w => w.itemName).slice(0, 20);
+        renderWishpool(wishes);
+      }).catch(e => {
+        console.warn('Failed to load wishpool:', e);
+        renderWishpool([]);
+      });
+    } else {
+      renderWishpool([]);
+    }
+
+    function renderWishpool(wishes) {
+      const SLOGANS = [
+        { _isSlogan: true, id: 's1', _sloganText: '快來許願！', _sloganBg: '#004b97', _sloganColor: '#fff' },
+        { _isSlogan: true, id: 's2', _sloganText: '賣家等你', _sloganBg: '#f3e3b5', _sloganColor: '#004b97' },
+        { _isSlogan: true, id: 's3', _sloganText: '說出你的需求', _sloganBg: '#4a85c4', _sloganColor: '#fff' },
+        { _isSlogan: true, id: 's4', _sloganText: '找到好物', _sloganBg: '#abdad5', _sloganColor: '#004b97' },
+        { _isSlogan: true, id: 's5', _sloganText: '許個願吧', _sloganBg: '#7eb8d8', _sloganColor: '#fff' },
+      ].map(s => ({ ...s, _size: Math.floor(Math.random() * 25) + 65, _marginTop: Math.floor(Math.random() * 160) - 80 }));
+
+      // 真實願望物件本身沒有 _size/_marginTop，一定要在這裡補上：.disc-school 的
+      // width/height 是 var(--d, 84px)，--d 若被設成 "undefinedpx" 這種無法解析的
+      // 值，CSS 會直接判定整條 width 宣告失效、retreat 回 auto，而不是吃到 84px
+      // 這個 fallback（fallback 只在「完全沒設定這個自訂屬性」時才生效）。auto 寬高
+      // 疊上 img 的 54% 百分比寬高又解不出基準，最後整張原圖會用原始像素尺寸撐開，
+      // 也就是願望照片「跑版、超大」的真正原因。
+      const sizedWishes = wishes.map(w => ({
+        ...w,
+        _size: Math.floor(Math.random() * 25) + 65,
+        _marginTop: Math.floor(Math.random() * 160) - 80,
+      }));
+
+      const displayWishes = sizedWishes.length <= 3
+        ? SLOGANS.flatMap((s, i) => [s, ...(sizedWishes[i % sizedWishes.length] ? [sizedWishes[i % sizedWishes.length]] : [])])
+        : sizedWishes;
+
+      const track = container.querySelector('.track-school');
+      if (!track) return;
+
+      track.innerHTML = '';
+      [...displayWishes, ...displayWishes, ...displayWishes, ...displayWishes].forEach((wish) => {
+        const b = document.createElement('div');
+        b.className = 'bub-school';
+        b.style.setProperty('--y', wish._marginTop + 'px');
+        b.style.animationDelay = (Math.random() * -5).toFixed(2) + 's';
+        b.style.animationDuration = (4.4 + Math.random() * 1.6).toFixed(2) + 's';
+
+        if (wish._isSlogan) {
+          const disc = document.createElement('div');
+          disc.className = 'disc-school msg';
+          disc.style.setProperty('--d', wish._size + 'px');
+          disc.style.background = wish._sloganBg;
+          disc.style.color = wish._sloganColor;
+          disc.style.fontSize = (wish._size >= 92 ? 15 : 13) + 'px';
+          disc.textContent = wish._sloganText;
+          b.appendChild(disc);
+        } else {
+          const hasPhoto = !!(wish.photoURL && wish.photoURL !== 'null');
+          const disc = document.createElement('div');
+          disc.className = 'disc-school icon' + (hasPhoto ? ' has-photo' : '');
+          disc.style.setProperty('--d', wish._size + 'px');
+          const img = document.createElement('img');
+          // 願望本身的照片是扁平欄位 wish.photoURL（跟 wishpool.js 的 wn-photo/wb-photo
+          // 用同一個欄位），不是 wish.owner.photoURL——owner.photoURL 是許願者的大頭貼，
+          // 用在 shop.js 首頁那個完全不同的「許願跑馬燈」widget，兩者不能混用。
+          img.src = hasPhoto ? wish.photoURL : '../svg/bigwish.svg';
+          img.alt = wish.itemName || '許願';
+          // 有真實照片時用 .has-photo 滿版鋪滿圓形泡泡（object-fit:cover）；
+          // 沒有照片用預設 fallback 圖示時維持原本縮在中間 54% 的小圖示排版，
+          // 兩者用不同 class 區分，不要用 inline style 蓋掉 CSS 比例。
+          img.onerror = function() { this.src = '../svg/bigwish.svg'; };
+          disc.appendChild(img);
+          b.appendChild(disc);
+
+          const cap = document.createElement('span');
+          cap.className = 'cap-school';
+          cap.textContent = wish.itemName || '新許願';
+          b.appendChild(cap);
+        }
+
+        b.addEventListener('click', () => {
+          if (!wish._isSlogan && wish.id) {
+            sessionStorage.setItem('focusWishId', String(wish.id));
+          }
+          location.href = '../wishpool/wishpool.html#wishpool';
+        });
+
+        track.appendChild(b);
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWishpool);
+  } else {
+    initWishpool();
+  }
+})();
 
 // ── Advertisement Carousel（桌機 .ad-carousel 與手機 .ad-carousel-mobile 各自獨立輪播）──
 (function () {

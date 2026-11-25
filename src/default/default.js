@@ -143,12 +143,18 @@ async function renderAuthUI() {
       _applyLoggedInUI();
 
 
+      // 校園攻略站是獨立的站（沒有購物車、也還沒有自己的通知系統），
+      // navbar 共用同一支 default.js，但這兩支 API 現在先不要在 /school/ 底下打。
+      const onSchoolSite = window.location.pathname.includes('/school/');
+
       // 登入後立即更新購物車數量
-      refreshCartBadge();
+      if (!onSchoolSite) refreshCartBadge();
 
       // 通知系統
-      _initNotifSystem();
-      _loadNotifications();
+      if (!onSchoolSite) {
+        _initNotifSystem();
+        _loadNotifications();
+      }
 
       // 邀請好友（聊天室 icon 上方的浮動按鈕）
       _initInviteFab();

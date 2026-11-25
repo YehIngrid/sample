@@ -252,10 +252,21 @@ body {
 }
 .dashboard-grid {
   margin-top: 14px;
+  margin-bottom: 14px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
 }
+.dashboard-section-title {
+  margin-top: 28px !important;
+  margin-bottom: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #6f87a0;
+  text-transform: uppercase;
+}
+.dashboard-section-title:first-of-type { margin-top: 20px; }
 .dashboard-card {
   display: flex;
   align-items: center;
@@ -1019,6 +1030,21 @@ body {
   }
 }
 
+/* ── 審核類卡片（檢舉管理／就學審核）：多段內容要直向堆疊，
+   不能沿用 .news-admin-item 的橫向單行排版（那個是給純文字列表用的） ── */
+.admin-review-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  background: #fff;
+  border: 1.5px solid #d6e2ec;
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: border-color 0.15s;
+}
+.admin-review-card:hover { border-color: var(--brand); }
+
 /* ── 檢舉：用戶連結按鈕 ── */
 .report-user-btn {
   background: none;
@@ -1030,6 +1056,7 @@ body {
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 2px;
+  overflow-wrap: anywhere;
 }
 .report-user-btn:hover { color: rgb(36, 182, 133); }
 

@@ -320,7 +320,13 @@
 <script type="module">
 import { AppModal } from "../default/app-modal.js";
 import { requireAdminPage } from "../default/default.js";
+import SchoolBackendService from "./schoolBackendService.js";
 window.AppModal = AppModal;
+// 跟 school.html 同一套慣例：school-new.js 用 defer，會在這支 module script
+// 之後才執行（兩者都是 deferred，document order 會保留），不用等 DOMContentLoaded。
+// 這支頁面原本缺了這一行，導致 window.schoolBackendService 一直是 undefined，
+// 側邊欄分類/標籤與文章列表全部打不到真實 API，一路 fallback 成寫死的 mock。
+window.schoolBackendService = new SchoolBackendService();
 (async () => {
   const ok = await requireAdminPage();
   if (ok) document.body.style.visibility = "visible";

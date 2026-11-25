@@ -38,13 +38,14 @@ input, select { font-family: inherit; }
 }
 
 :root[data-theme="dark"] {
-  --page:  #1e242c;   --card:  #272e37;
-  --alice: #313a44;   --raise: #3c4650;
+  /* 背景改用偏冷、帶藍調的深灰（不是中性灰），跟 navy 色票 C 搭配更協調 */
+  --page:  #141b24;   --card:  #1c2530;
+  --alice: #242f3d;   --raise: #2b3747;
   --ink:   #eaf1f9;   --body:  #c3d3e4;   --muted: #8ea6bf;
-  --navy:  #6aa9e8;   --navy-solid: #2f74c4;  --navy-d: #245da3;
+  --navy:  #3d82d1;   --navy-solid: #184d8a;  --navy-d: #0f3a69;
   --aqua:  #7fc9c0;   --cream: #e8d29a;   --cream-ink: #6b5320;   --warn:  #e2966d;
-  --hover-fill: #e8f1fa;  --hover-ink: #1e242c;
-  --line:  #3d4650;   --line-strong: #4f5a66;
+  --hover-fill: #e8f1fa;  --hover-ink: #141b24;
+  --line:  #2f3b4a;   --line-strong: #3d4b5c;
   --warn-tint: rgba(226,150,109,0.16);
 }
 
@@ -142,6 +143,36 @@ input, select { font-family: inherit; }
 .nav .right .user-dropdown-item:hover { background: var(--alice); color: var(--navy); }
 .nav .right .user-dropdown-item i { font-size: 14px; }
 .nav .right .user-dropdown-sep { height: 1px; background: var(--line); margin: 4px 6px; }
+
+/* 頭像選單：姓名身份 + 半實名/暱稱切換 */
+.nav .right .user-dropdown-identity {
+  padding: 8px 14px 10px; display: flex; flex-direction: column; gap: 8px;
+}
+.nav .right .user-dropdown-name {
+  font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.nav .right .user-dropdown-mode-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.nav .right .user-dropdown-mode-label {
+  font-size: 12.5px; font-weight: 500; color: var(--muted); letter-spacing: 0.02em;
+}
+
+/* 通用 pill 開關（跟 school-profile.html 帳號設定分頁的 .tgl 同一套樣式） */
+.tgl {
+  position: relative; width: 36px; height: 20px; border-radius: 999px;
+  background: var(--line); border: none; padding: 0; cursor: pointer;
+  flex-shrink: 0; transition: all 0.22s ease;
+}
+.tgl::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px;
+  border-radius: 50%; background: var(--card); box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: all 0.22s ease;
+}
+.tgl.on { background: var(--navy); }
+.tgl.on::after { left: 19px; }
+.tgl:disabled { opacity: 0.55; cursor: default; }
 
 /* 深色模式切換 */
 .theme-toggle {
@@ -364,6 +395,7 @@ input, select { font-family: inherit; }
   letter-spacing: 0.02em;
 }
 .tag-list a:hover { background: var(--navy-solid); color: #ffffff; }
+.tag-list a.on { background: var(--navy-solid); color: #ffffff; }
 
 /* topic-vote card */
 .vote-card {
@@ -719,6 +751,25 @@ input, select { font-family: inherit; }
 .anchor-row .ar-k { color: var(--muted); }
 .anchor-row .ar-v { color: var(--navy); }
 .anchor-row .ar-sep { display: none; }
+
+/* 文章卡片數字（閱讀/按讚/留言）輪詢更新時的滾動動畫 */
+.roll-wrap { position: relative; display: inline-block; overflow: hidden; vertical-align: middle; }
+.roll-wrap .roll-old,
+.roll-wrap .roll-new {
+  display: block;
+  transition: transform 0.4s cubic-bezier(.4,0,.2,1), opacity 0.4s ease;
+}
+.roll-wrap .roll-new { position: absolute; top: 100%; left: 0; }
+.roll-wrap.animating .roll-old { transform: translateY(-100%); opacity: 0; }
+.roll-wrap.animating .roll-new { transform: translateY(-100%); }
+
+/* 文章卡片上的錨點（hashtag）列 */
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.tag-chip {
+  padding: 3px 9px; background: var(--alice); color: var(--navy);
+  border-radius: 999px; font-size: 11px; font-weight: 500; letter-spacing: 0.02em;
+  white-space: nowrap;
+}
 .article .author-row {
   display: flex; align-items: center; gap: 10px;
   padding-top: 14px;
@@ -913,6 +964,11 @@ input, select { font-family: inherit; }
   font-size: 11px; font-weight: 600; color: var(--muted);
   letter-spacing: 0.04em;
 }
+
+/* 文章列表目前沒有資料時的空狀態（跟 school-search.html 的 .empty-state 同款式） */
+.article-empty-state { width: 100%; text-align: center; padding: 60px 20px; color: var(--muted); }
+.article-empty-state svg { width: 64px; height: 64px; margin-bottom: 16px; opacity: 0.3; }
+.article-empty-state p { font-size: 14px; }
 
 /* seed card */
 .seed-card {
@@ -1303,6 +1359,15 @@ input, select { font-family: inherit; }
   width: 54%; height: 54%; object-fit: contain;
 }
 
+/* 真實願望照片：滿版鋪滿整個圓形泡泡，不要像預設圖示那樣縮在中間一小塊 */
+.disc-school.icon.has-photo {
+  background: none;
+  overflow: hidden;
+}
+.disc-school.icon.has-photo img {
+  width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+}
+
 .disc-school.msg {
   font-weight: 700; letter-spacing: 0.04em; padding: 10px;
   box-shadow: 0 12px 26px -12px rgba(0,75,151,0.45);
@@ -1314,10 +1379,14 @@ input, select { font-family: inherit; }
 .disc-school.sky   { background: var(--sky);   color: #0f3a59; }
 
 .bub-school .cap-school {
-  font-size: 12.5px; font-weight: 600; color: var(--muted);
+  font-size: 12.5px; font-weight: 600; color: var(--ink);
   letter-spacing: 0.04em; max-width: 110px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  background: rgba(255,255,255,0.85);
+  padding: 3px 10px; border-radius: 999px;
+  box-shadow: 0 2px 8px -4px rgba(0,75,151,0.3);
 }
+:root[data-theme="dark"] .bub-school .cap-school { color: #0f2745; }
 
 @media (max-width: 900px) {
   .wishpool-school { width: 90vw; max-width: 90vw; }
