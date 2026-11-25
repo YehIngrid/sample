@@ -237,8 +237,10 @@ function attachLikeButtons() {
   const GRADIENTS = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6'];
 
   // 把 GET /api/school/articles 回傳的單篇物件轉成這支檔案原本卡片渲染
-  // （articleCardHTML／anchorRowHTML）期待的欄位命名。API 目前沒有 gradient／
-  // anchorValues 這類純裝飾或分類專屬結構化欄位，只能合理地簡化/省略，不是漏接。
+  // （articleCardHTML）期待的欄位命名。API 目前沒有 gradient 這類純裝飾欄位，
+  // 只能合理地簡化/省略，不是漏接。錨點資訊（分類 questions 對應的 answers）
+  // 列表 API 本身沒有這兩個欄位，等後端直接把它們加進 article list response
+  // 之後再接，先不要逐篇另外打詳情 API 湊（N+1，使用者已要求移除）。
   function mapArticle(item, idx) {
     const author = item.author || {};
     const titles = author.titles || [];
@@ -270,6 +272,24 @@ function attachLikeButtons() {
   let currentCategoryId = ''; // 空字串 = 全部文章，點側邊欄分類會換成真正的 categoryId
   let currentTagName = ''; // 空字串 = 不篩標籤，點側邊欄「熱門標籤」會換成真正的標籤名稱
 
+  // GET /api/school/categories 回傳的分類清單同時被側邊欄分類列表跟這裡的錨點
+  // 問題（questions）共用，快取「進行中的 promise」本身（不是只快取結果），
+  // 避免 renderCategorySidebar() 跟 fetchArticles() 在同一次 DOMContentLoaded
+  // 裡幾乎同時呼叫、都看到快取還是空的，各自重打一次一樣的 API。
+  let categoriesPromise = null;
+  function getCategoriesCached() {
+    if (!categoriesPromise) {
+      categoriesPromise = window.schoolBackendService.getCategories()
+        .then(res => (res && res.data) || [])
+        .catch(e => {
+          console.error('取得文章分類失敗：', e);
+          categoriesPromise = null;
+          return [];
+        });
+    }
+    return categoriesPromise;
+  }
+
   async function fetchArticles() {
     try {
       const params = { limit: 20, sort: 'latest' };
@@ -286,11 +306,6 @@ function attachLikeButtons() {
     }
   }
 
-  // 錨點資訊：文章列表 API（GET /api/school/articles）每篇文章實際回傳的
-  // tags（撰寫時選的 hashtag），不是 school-composer.html 那套「主題必填錨點
-  // 欄位」（answers/anchorValues，只有單篇文章詳情 GET /api/school/articles/{id}
-  // 才有，列表 API 沒有，逐篇另外打一次詳情 API 會是 N+1，不值得），所以列表卡片
-  // 上能穩定呈現的「錨點」只有這組 tags。
   function tagRowHTML(art) {
     if (!art.tags || !art.tags.length) return '';
     return '<div class="tag-row">' + art.tags.map(function (t) { return '<span class="tag-chip">#' + t + '</span>'; }).join('') + '</div>';
@@ -521,14 +536,8 @@ function attachLikeButtons() {
     if (!desktopList && !mobileList) return;
     if (!window.schoolBackendService) return;
 
-    let categories = [];
-    try {
-      const res = await window.schoolBackendService.getCategories();
-      categories = (res && res.data) || [];
-    } catch (e) {
-      console.error('取得文章分類失敗：', e);
-      return;
-    }
+    const categories = await getCategoriesCached();
+    if (!categories.length) return;
 
     const entries = [{ id: '', name: '全部文章' }, ...categories.map(c => ({ id: c.id, name: c.name }))];
     const counts = await Promise.all(entries.map(async e => {

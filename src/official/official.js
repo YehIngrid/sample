@@ -72,7 +72,7 @@ function switchPanel(panelId) {
   if (panelId === 'panel-news') loadNewsAdmin();
   if (panelId === 'panel-analytics') loadAnalytics();
   if (panelId === 'panel-users') loadAdminUsers(1);
-  if (panelId === 'panel-reports') loadAllReports(1);
+  if (panelId === 'panel-reports') _loadActiveRptTab();
   if (panelId === 'panel-report-categories') loadReportCategories();
   if (panelId === 'panel-review-tags') { loadReviewTagGroups(); loadReviewTags(); }
   if (panelId === 'panel-tickets') loadAdminTickets(1);
@@ -956,6 +956,84 @@ async function _loadDashboard(params) {
     ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '–'; });
     document.getElementById('stat-total-error')?.classList.remove('d-none');
   }
+
+  await Promise.all([_loadRetentionStats(_activeRetentionDays), _loadIdentityStats()]);
+}
+
+// ── 回訪率（N 日），身分層級分布 ──
+let _activeRetentionDays = 7;
+
+async function _loadRetentionStats(days) {
+  const el = document.getElementById('dashboard-retention-stats');
+  if (!el) return;
+  el.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+  try {
+    const d = await _fetchStats('/api/admin/stats/retention', { days });
+    const pct = d?.rate != null ? `${(Number(d.rate) * 100).toFixed(1)}%` : null;
+    el.innerHTML = _statBlock([
+      { label: `${days} 日回訪率`, value: pct, color: 'rgb(36, 182, 133)' },
+      { label: '同期群組人數', value: d?.cohortSize },
+    ]);
+  } catch {
+    el.innerHTML = _errHtml();
+  }
+}
+
+document.querySelectorAll('[data-retention-days]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-retention-days]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    _activeRetentionDays = Number(btn.dataset.retentionDays);
+    _loadRetentionStats(_activeRetentionDays);
+  });
+});
+
+async function _loadIdentityStats() {
+  const el = document.getElementById('dashboard-identity-stats');
+  if (!el) return;
+  el.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+  try {
+    const d = await _fetchStats('/api/admin/stats/identity');
+    el.innerHTML = _statBlock([
+      { label: '帳號總數',        value: d?.tier1Total },
+      { label: '可瀏覽（信箱驗證）', value: d?.tier2Viewer },
+      { label: '學校信箱已驗證',   value: d?.tier3EduVerified },
+      { label: '可發文（就學驗證通過）', value: d?.tier4Writable, color: 'rgb(36, 182, 133)' },
+    ]);
+  } catch {
+    el.innerHTML = _errHtml();
+  }
+}
+
+// ── 攻略文章數據 ──
+async function _loadArticleStats() {
+  try {
+    const d = await _fetchStats('/api/admin/stats/articles');
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val != null ? Number(val).toLocaleString() : '–'; };
+    set('stat-article-count',            d?.articleCount);
+    set('stat-article-verified-authors', d?.verifiedAuthorCount);
+    set('stat-article-monthly-reads',    d?.monthlyReadCount);
+
+    const series = d?.series ?? [];
+    _makeChart('chart-article-trend', {
+      type: 'line',
+      data: {
+        labels: series.map(s => s.date),
+        datasets: [
+          { label: '閱讀數', data: series.map(s => s.reads), borderColor: '#004b97', backgroundColor: '#004b9722', fill: true, tension: 0.4, pointRadius: 3 },
+          { label: '發文數', data: series.map(s => s.publishes), borderColor: '#c97f5a', backgroundColor: '#c97f5a22', fill: true, tension: 0.4, pointRadius: 3 },
+        ],
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: true, labels: { boxWidth: 12, font: { size: 11 } } } },
+        scales: {
+          y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#d6e2ec' } },
+          x: { grid: { display: false }, ticks: { maxTicksLimit: 10, maxRotation: 0 } },
+        },
+      },
+    });
+  } catch { /* silent */ }
 }
 
 async function _loadUserStats(params) {
@@ -1191,6 +1269,7 @@ async function _loadStatsTab(tabId) {
     case 'tab-stat-reports': await _loadReportStats(p);   break;
     case 'tab-wishpool':     await _loadWishpoolStats(p); break;
     case 'tab-search':       await _loadSearchStats(p);   break;
+    case 'tab-articles':     await _loadArticleStats();   break;
   }
 }
 
@@ -1375,6 +1454,94 @@ document.getElementById('refreshReportsBtn')?.addEventListener('click', () => lo
 document.getElementById('reportsStatusFilter')?.addEventListener('change', () => loadAllReports(1));
 
 document.getElementById('reportsAdminList')?.addEventListener('click', e => {
+  const btn = e.target.closest('.report-user-btn');
+  if (!btn || !btn.dataset.uid) return;
+  viewUserProfile(btn.dataset.uid, btn.dataset.name);
+});
+
+// ── 檢舉管理：商城檢舉／校園攻略檢舉 sub-tab 切換 ──
+let _rptActiveTab = 'tab-rpt-shop';
+function _loadActiveRptTab() {
+  if (_rptActiveTab === 'tab-rpt-shop') loadAllReports(1);
+  else loadAdminReports(1);
+}
+function _switchRptTab(tabId) {
+  document.querySelectorAll('.rpt-tab').forEach(t => t.classList.add('d-none'));
+  document.querySelectorAll('[data-rpt-tab]').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId)?.classList.remove('d-none');
+  document.querySelector(`[data-rpt-tab="${tabId}"]`)?.classList.add('active');
+  _rptActiveTab = tabId;
+  _loadActiveRptTab();
+}
+document.querySelectorAll('[data-rpt-tab]').forEach(btn => {
+  btn.addEventListener('click', () => _switchRptTab(btn.dataset.rptTab));
+});
+
+// ── 校園攻略檢舉（GET /api/admin/reports，對象是攻略文章/留言/用戶）──
+// 目前文件只有 GET，沒有對應的審核/駁回 PATCH 端點，先做唯讀列表，
+// 不要加審核按鈕（沒有 API 可以打，加了也只是假按鈕）。
+const RPT_TARGET_TYPE_LABEL = { USER: '用戶', ARTICLE: '攻略文章', ARTICLE_REVIEW: '文章留言' };
+
+async function loadAdminReports(page = 1) {
+  const list  = document.getElementById('rptSchoolList');
+  const pager = document.getElementById('rptSchoolPager');
+  if (!list) return;
+  const targetType = document.getElementById('rptSchoolTargetFilter')?.value || '';
+  const status     = document.getElementById('rptSchoolStatusFilter')?.value || '';
+  list.innerHTML = '<div class="text-muted text-center py-3 small"><span class="spinner-border spinner-border-sm me-1"></span>載入中...</div>';
+  pager.innerHTML = '';
+  try {
+    const params = { page, limit: 20 };
+    if (targetType) params.targetType = targetType;
+    if (status) params.status = status;
+    const res = await backendSvc.http.get('/api/admin/reports', { params });
+    const data = res.data?.data ?? {};
+    const items = data.items ?? [];
+    if (!items.length) {
+      list.innerHTML = '<div class="text-muted text-center py-4">目前沒有符合條件的檢舉紀錄</div>';
+      return;
+    }
+    list.innerHTML = items.map(r => {
+      const st = REPORT_STATUS_LABEL[r.status] ?? r.status;
+      const bc = REPORT_STATUS_BADGE[r.status] ?? 'badge bg-secondary';
+      const date = r.createdAt ? new Date(r.createdAt).toLocaleString('zh-TW') : '';
+      return `
+        <div class="admin-review-card mb-2" style="cursor:default;">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+              <span class="${bc}" style="font-size:0.75rem;">${st}</span>
+              <strong class="ms-2">${RPT_TARGET_TYPE_LABEL[r.targetType] ?? r.targetType}</strong>
+            </div>
+            <small class="text-muted">${date}</small>
+          </div>
+          <div class="text-muted small mt-1 d-flex flex-wrap gap-2 align-items-center">
+            <span>類型：${esc(r.category ?? '')}</span>
+            ${r.targetId ? `<span>對象 ID：${esc(r.targetId)}</span>` : ''}
+            <span>被檢舉人：<button class="report-user-btn" data-uid="${esc(r.reportedUserId ?? '')}" data-name="">${esc(r.reportedUserId ?? '—')}</button></span>
+          </div>
+          ${r.description ? `<div class="text-muted small mt-1" style="white-space:pre-wrap;">${esc(r.description)}</div>` : ''}
+        </div>`;
+    }).join('');
+
+    const total = data.totalPages ?? Math.ceil((data.total ?? items.length) / (data.limit ?? 20)) ?? 1;
+    if (total > 1) {
+      let html = '';
+      for (let i = 1; i <= total; i++) {
+        html += `<button class="btn btn-sm ${i === page ? 'btn-primary' : 'btn-outline-secondary'} mx-1" onclick="loadAdminReports(${i})">${i}</button>`;
+      }
+      pager.innerHTML = html;
+    }
+  } catch (e) {
+    list.innerHTML = `<div class="text-muted text-center py-4">載入失敗：${esc(e?.message || '請稍後再試')}</div>`;
+  }
+}
+window.loadAdminReports = loadAdminReports;
+
+document.getElementById('refreshRptSchoolBtn')?.addEventListener('click', () => loadAdminReports(1));
+document.getElementById('rptSchoolTargetFilter')?.addEventListener('change', () => loadAdminReports(1));
+document.getElementById('rptSchoolStatusFilter')?.addEventListener('change', () => loadAdminReports(1));
+
+document.getElementById('rptSchoolList')?.addEventListener('click', e => {
   const btn = e.target.closest('.report-user-btn');
   if (!btn || !btn.dataset.uid) return;
   viewUserProfile(btn.dataset.uid, btn.dataset.name);

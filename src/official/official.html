@@ -538,6 +538,7 @@
           <li class="nav-item"><button class="nav-link" data-stats-tab="tab-stat-reports">檢舉</button></li>
           <li class="nav-item"><button class="nav-link" data-stats-tab="tab-wishpool">願望池</button></li>
           <li class="nav-item"><button class="nav-link" data-stats-tab="tab-search">搜尋</button></li>
+          <li class="nav-item"><button class="nav-link" data-stats-tab="tab-articles">攻略文章</button></li>
         </ul>
 
         <!-- Tab: 總覽 -->
@@ -576,6 +577,26 @@
           <div class="analytics-block mt-3">
             <div class="analytics-block-header"><i class="fa fa-line-chart me-1"></i> 用戶活躍趨勢</div>
             <div style="position:relative;height:220px;"><canvas id="chart-dashboard-trend"></canvas></div>
+          </div>
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header d-flex align-items-center justify-content-between">
+                  <span><i class="fa fa-repeat me-1"></i> 回訪率</span>
+                  <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-secondary active" data-retention-days="7">7 日</button>
+                    <button class="btn btn-outline-secondary" data-retention-days="30">30 日</button>
+                  </div>
+                </div>
+                <div id="dashboard-retention-stats" class="p-3"></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="analytics-block mb-0 h-100">
+                <div class="analytics-block-header"><i class="fa fa-id-card me-1"></i> 身分層級分布</div>
+                <div id="dashboard-identity-stats" class="p-3"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -743,6 +764,28 @@
                 <div style="position:relative;height:200px;"><canvas id="chart-search-auth"></canvas></div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Tab: 攻略文章 -->
+        <div id="tab-articles" class="stats-tab d-none">
+          <div class="stats-grid mb-3">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:rgba(171,218,213,0.35);"><i class="fa fa-book" style="color:#007568;"></i></div>
+              <div class="stat-body"><div class="stat-label">攻略文章總數</div><div class="stat-value" id="stat-article-count">–</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-check-circle" style="color:var(--color-primary);"></i></div>
+              <div class="stat-body"><div class="stat-label">已認證作者數</div><div class="stat-value" id="stat-article-verified-authors">–</div></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:var(--color-primary-light);"><i class="fa fa-eye" style="color:var(--color-primary);"></i></div>
+              <div class="stat-body"><div class="stat-label">本月閱讀數</div><div class="stat-value" id="stat-article-monthly-reads">–</div></div>
+            </div>
+          </div>
+          <div class="analytics-block">
+            <div class="analytics-block-header"><i class="fa fa-line-chart me-1"></i> 發文 / 閱讀趨勢</div>
+            <div style="position:relative;height:220px;"><canvas id="chart-article-trend"></canvas></div>
           </div>
         </div>
 
@@ -1065,29 +1108,68 @@
         <button class="panel-back-btn" onclick="switchPanel('panel-dashboard')"><i class="fa fa-arrow-left"></i> 返回總覽</button>
         <h2 class="panel-title"><i class="fa fa-flag me-2"></i>檢舉管理</h2>
 
-        <!-- 篩選 -->
-        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
-          <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
-          <select id="reportsStatusFilter" class="form-select form-select-sm" style="width:auto;">
-            <option value="">全部</option>
-            <option value="pending">審核中</option>
-            <option value="approved">已通過</option>
-            <option value="rejected">已駁回</option>
-          </select>
-          <button class="btn btn-sm btn-outline-primary" id="refreshReportsBtn">
-            <i class="fa fa-refresh me-1"></i>重新載入
-          </button>
-        </div>
+        <!-- Sub-tabs -->
+        <ul class="nav nav-tabs mb-3" id="reportsTabNav">
+          <li class="nav-item"><button class="nav-link active" data-rpt-tab="tab-rpt-shop">商城檢舉</button></li>
+          <li class="nav-item"><button class="nav-link" data-rpt-tab="tab-rpt-school">校園攻略檢舉</button></li>
+        </ul>
 
-        <!-- 列表 -->
-        <div id="reportsAdminList">
-          <div class="text-muted text-center py-3 small">
-            <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+        <!-- Tab: 商城檢舉（舊版 /api/reports，賣家/買家交易糾紛） -->
+        <div id="tab-rpt-shop" class="rpt-tab">
+          <!-- 篩選 -->
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+            <select id="reportsStatusFilter" class="form-select form-select-sm" style="width:auto;">
+              <option value="">全部</option>
+              <option value="pending">審核中</option>
+              <option value="approved">已通過</option>
+              <option value="rejected">已駁回</option>
+            </select>
+            <button class="btn btn-sm btn-outline-primary" id="refreshReportsBtn">
+              <i class="fa fa-refresh me-1"></i>重新載入
+            </button>
           </div>
-        </div>
-        <div id="reportsAdminPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
 
-        <!-- 審核 Modal -->
+          <!-- 列表 -->
+          <div id="reportsAdminList">
+            <div class="text-muted text-center py-3 small">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+            </div>
+          </div>
+          <div id="reportsAdminPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+        </div>
+
+        <!-- Tab: 校園攻略檢舉（GET /api/admin/reports，對象是攻略文章/留言/用戶，唯讀） -->
+        <div id="tab-rpt-school" class="rpt-tab d-none">
+          <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+            <label class="fw-bold mb-0" style="color:#333;">對象類型</label>
+            <select id="rptSchoolTargetFilter" class="form-select form-select-sm" style="width:auto;">
+              <option value="">全部</option>
+              <option value="USER">用戶</option>
+              <option value="ARTICLE">攻略文章</option>
+              <option value="ARTICLE_REVIEW">文章留言</option>
+            </select>
+            <label class="fw-bold mb-0" style="color:#333;">狀態篩選</label>
+            <select id="rptSchoolStatusFilter" class="form-select form-select-sm" style="width:auto;">
+              <option value="">全部</option>
+              <option value="pending">審核中</option>
+              <option value="approved">已通過</option>
+              <option value="rejected">已駁回</option>
+            </select>
+            <button class="btn btn-sm btn-outline-primary" id="refreshRptSchoolBtn">
+              <i class="fa fa-refresh me-1"></i>重新載入
+            </button>
+          </div>
+
+          <div id="rptSchoolList">
+            <div class="text-muted text-center py-3 small">
+              <span class="spinner-border spinner-border-sm me-1"></span>載入中...
+            </div>
+          </div>
+          <div id="rptSchoolPager" class="d-flex justify-content-center flex-wrap gap-1 mt-3"></div>
+        </div>
+
+        <!-- 審核 Modal（商城檢舉用） -->
         <div class="modal fade" id="reviewReportModal" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
