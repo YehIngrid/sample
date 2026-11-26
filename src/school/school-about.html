@@ -22,378 +22,277 @@
   <script src="school-theme.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
   <script type="module" src="../default/default.js"></script>
-  <style>
-    .about-wrap { width: 80vw; max-width: 80vw; margin: 0 auto; padding: 24px 40px 60px; overflow-x: clip; }
+  <style id="about-fp-style">
+html.ab-fp, html.ab-fp body{height:100%;overflow:hidden;overscroll-behavior:none}
 
-    /* hero */
-    .about-hero {
-      border-radius: 22px; padding: 40px 44px; position: relative; overflow: hidden;
-      margin-bottom: 30px;
-    }
-    .about-hero::before { content:""; position:absolute; right:-60px; bottom:-60px; width:260px; height:260px;background:rgba(255,255,255,0.00); }
-    .about-hero .eyebrow { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--navy); font-weight: 700; margin-bottom: 14px; }
-    .about-hero h1 { font-size: 40px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.3; margin-bottom: 16px; text-wrap: pretty; }
-    .about-hero p { font-size: 15.5px; line-height: 1.8; max-width: 620px; }
-    .about-hero .hero-stats { display: flex; gap: 40px; margin-top: 30px; }
-    .about-hero .hero-stats .n { font-size: 30px; font-weight: 800; color: var(--navy); }
-    .about-hero .hero-stats .l { font-size: 12px; letter-spacing: 0.06em; margin-top: 2px; }
+.ab{
+  --nav-h:64px; --bottom-nav-h:0px;
+  --ink:#14213a; --ink-2:#46536b; --ink-3:#8590a3;
+  --brand:#0d4c9b; --brand-2:#2f7de1; --gold:#e0a230;
+  --bg:#f5f8fd; --line:rgba(20,33,58,.10); --line-2:rgba(20,33,58,.18);
+  --ease:cubic-bezier(.65,0,.25,1);
+  font-family:"Helvetica Neue",Helvetica,"PingFang TC","Noto Sans TC","Hiragino Sans",Arial,sans-serif;
+  color:var(--ink); line-height:1.75; letter-spacing:.01em; -webkit-font-smoothing:antialiased;
+  position:fixed; left:0; right:0; bottom:var(--bottom-nav-h); top:var(--nav-h); overflow:hidden; background:var(--bg);
+}
+:root[data-theme="dark"] .ab{
+  --ink:#e8eefb; --ink-2:#b4c0d6; --ink-3:#7d8ba5;
+  --brand:#7cb3ff; --brand-2:#a5ccff; --gold:#f2c260;
+  --bg:#0c1424; --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.18);
+}
+.ab *,.ab *::before,.ab *::after{box-sizing:border-box}
+.ab h1,.ab h2,.ab h3,.ab p,.ab ul,.ab ol{margin:0}
+.ab ul,.ab ol{padding:0;list-style:none}
+.ab a{color:inherit;text-decoration:none}
+.ab button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.ab :focus-visible{outline:2px solid var(--brand-2);outline-offset:4px;border-radius:4px}
 
-    /* section（透明，min-height 讓每區佔更多螢幕高度、內容垂直置中） */
-    .about-sec {
-      padding: 48px 0;
-      min-height: 60vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-    }
-    /* 區塊分界：頂端全寬細線，中深兩端淡；捲入時從中央劃開 */
-    .about-sec::before {
-      content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 1px;
-      background: linear-gradient(90deg, transparent 0%, rgba(0,75,151,0.38) 50%, transparent 100%);
-      transform: scaleX(1); transform-origin: center;
-      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    html.reveal-on .about-sec::before { transform: scaleX(0); }
-    html.reveal-on .about-sec.revealed::before { transform: scaleX(1); }
-    @media (prefers-reduced-motion: reduce) {
-      html.reveal-on .about-sec::before { transition: none !important; }
-    }
-    .about-sec .sec-eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 10px; }
-    .about-sec .sec-eyebrow::before { content: ""; width: 24px; height: 2px; border-radius: 2px; background: var(--navy); }
-    .about-sec h2 { font-size: 28px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; margin-bottom: 14px; }
-    .about-sec .lead { font-size: 15.5px; line-height: 1.85; color: var(--body); max-width: 760px; }
+/* ---------- 格子背景（全站固定，換頁時微微位移） ---------- */
+.ab-grid{position:absolute;inset:-60px;pointer-events:none;z-index:0;transition:transform 1.1s var(--ease)}
+.ab-grid::before{content:"";position:absolute;inset:0;
+  background:
+   radial-gradient(640px 440px at 85% 12%,rgba(47,125,225,.20),transparent 70%),
+   radial-gradient(520px 380px at 8% 40%,rgba(242,181,68,.14),transparent 70%)}
+.ab-grid::after{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:48px 48px;
+  -webkit-mask-image:radial-gradient(ellipse 75% 70% at 50% 45%,#000 35%,transparent 85%);
+          mask-image:radial-gradient(ellipse 75% 70% at 50% 45%,#000 35%,transparent 85%)}
 
-    /* feature cards */
-    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
-    .feat-card {
-      background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.22s;
-    }
-    .feat-card:hover { transform: translateY(-3px); border-color: var(--navy); box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3); }
-    .feat-card .ic { width: 48px; height: 48px; border-radius: 13px; background: var(--alice); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-    .feat-card .ic svg { width: 24px; height: 24px; fill: none; stroke: var(--navy); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .feat-card h3 { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-bottom: 8px; }
-    .feat-card p { font-size: 13.5px; line-height: 1.75; color: var(--muted); }
+/* ---------- 分頁 ---------- */
+.ab-page{position:absolute;inset:0;z-index:1;visibility:hidden;opacity:0;transform:translateY(60px);
+  transition:opacity .7s var(--ease),transform .9s var(--ease),visibility 0s .9s}
+.ab-page.is-active{visibility:visible;opacity:1;transform:none;transition:opacity .7s var(--ease) .15s,transform .9s var(--ease),visibility 0s}
+.ab-page.is-above{transform:translateY(-60px)}
+.ab-scroll{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;display:flex;flex-direction:column}
+.ab-scroll::-webkit-scrollbar{display:none}
+.ab-in{width:min(1120px,100% - 160px);margin:auto;padding:56px 0 96px}
 
-    /* steps */
-    .step-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 24px; }
-    .step-card { background: var(--alice); border-radius: 16px; padding: 22px 20px; position: relative; }
-    .step-card .num { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--navy); letter-spacing: 0.1em; margin-bottom: 10px; }
-    .step-card h4 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-    .step-card p { font-size: 12.5px; line-height: 1.7; color: var(--muted); }
+/* 進場逐行出現 */
+.ab-page .st{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .8s var(--ease)}
+.ab-page.is-active .st{opacity:1;transform:none;transition-delay:calc(.25s + var(--i,0) * .07s)}
 
-    /* CTA */
-    .about-cta {
-      background: var(--alice); border: 1px solid var(--line); border-radius: 20px;
-      padding: 30px; text-align: center; margin-top: 40px;
-    }
-    .about-cta h2 { font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: 0.03em; margin-bottom: 8px; }
-    .about-cta p { font-size: 14.5px; color: var(--muted); margin-bottom: 22px; }
-    .cta-type { min-height: 1.6em; }
-    .cta-caret { display: inline-block; width: 2px; height: 1.05em; background: currentColor; margin-left: 3px; vertical-align: -0.15em; animation: cta-blink 0.9s steps(1) infinite; }
-    @keyframes cta-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+/* ---------- 字級 ---------- */
+.ab-eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--brand)}
+.ab-eyebrow::before{content:"";width:28px;height:1.5px;background:currentColor}
+.ab-h1{font-size:clamp(38px,5.6vw,72px);line-height:1.16;font-weight:900;letter-spacing:-.02em;margin-top:22px}
+.ab-h2{font-size:clamp(30px,4vw,52px);line-height:1.24;font-weight:900;letter-spacing:-.015em;margin-top:18px}
+.ab-lead{font-size:17px;color:var(--ink-2);max-width:620px;margin-top:20px}
+.ab-hl{color:var(--brand)}
+.ab-crumb{font-size:13px;color:var(--ink-3);margin-bottom:36px;display:flex;gap:10px}
+.ab-crumb a:hover{color:var(--brand)}
 
-    /* 回到最上面按鈕 */
-    .back-to-top {
-      position: fixed; right: 24px; bottom: 28px; z-index: 900;
-      width: 48px; height: 48px; border-radius: 999px; border: none;
-      background: var(--navy-solid); color: #fff; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 12px 28px -12px rgba(0,75,151,0.6);
-      opacity: 0; visibility: hidden; transform: translateY(14px);
-      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s, background 0.2s ease;
-    }
-    .back-to-top.show { opacity: 1; visibility: visible; transform: none; }
-    .back-to-top:hover { background: rgb(36,182,133); transform: translateY(-2px); }
-    .back-to-top svg { width: 22px; height: 22px; }
-    @media (max-width: 991px) {
-      .back-to-top { right: 16px; bottom: 84px; } /* 避開手機底部導覽列 */
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .back-to-top { transition: opacity 0.2s ease, visibility 0.2s; transform: none; }
-      .back-to-top.show { transform: none; }
-    }
-    .about-cta .btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .about-cta .btn-primary-cta {
-      display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 999px;
-      background: var(--navy-solid); color: #fff; font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em;
-      text-decoration: none; transition: all 0.22s; border: 1.5px solid var(--navy);
-    }
-    .about-cta .btn-primary-cta:hover { background: var(--navy-d); }
-    .about-cta .btn-ghost-cta {
-      display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 999px;
-      background: var(--card); color: var(--navy); font-size: 14.5px; font-weight: 700; letter-spacing: 0.04em;
-      text-decoration: none; transition: all 0.22s; border: 1.5px solid var(--navy);
-    }
-    .about-cta .btn-ghost-cta:hover { background: var(--navy-solid); color: #fff; }
+/* 文字連結按鈕 */
+.ab-actions{display:flex;flex-wrap:wrap;gap:28px;align-items:center;margin-top:40px}
+#wish .ab-actions{justify-content:flex-end}
+.ab-btn{display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 26px;border-radius:999px;background:var(--ink);color:var(--bg) !important;font-weight:700;font-size:15px;transition:background .25s}
+.ab-btn:hover{background:var(--brand)}
+.ab-tlink{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;padding-bottom:3px;border-bottom:1.5px solid var(--line-2);transition:border-color .25s,color .25s}
+.ab-tlink:hover{color:var(--brand);border-color:var(--brand)}
+.ab-tlink i,.ab-btn i{transition:transform .25s}
+.ab-tlink:hover i,.ab-btn:hover i{transform:translateX(3px)}
 
-    /* categories */
-    .cat-chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-    .cat-chip { display: inline-flex; align-items: center; gap: 11px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 9px 20px 9px 11px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: all 0.2s; }
-    .cat-chip:hover { border-color: var(--navy); transform: translateY(-2px); box-shadow: 0 12px 26px -18px rgba(0,75,151,0.35); }
-    .cat-chip .ic { width: 34px; height: 34px; border-radius: 10px; background: var(--alice); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .cat-chip .ic svg { width: 19px; height: 19px; fill: none; stroke: var(--navy); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-    .cat-chip .t { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
-    .cat-note { margin-top: 18px; font-size: 13px; color: var(--muted); }
-    .cat-layout { display: flex; align-items: center; gap: 48px; margin-top: 24px; }
-    .cat-copy { flex: 1; min-width: 0; }
-    .cat-copy .sec-eyebrow, .cat-copy h2, .cat-copy .lead { margin-top: 0; }
-    .cat-copy .cat-note { margin-top: 22px; }
-    .cat-cloud { flex-shrink: 0; text-align: center; }
-    .cat-cloud img { display: inline-block; width: 240px; max-width: 100%; height: auto; }
+/* ---------- 01 Hero ---------- */
+.ab-stats{display:flex;gap:0;margin-top:56px;max-width:620px}
+.ab-stat{flex:1;padding:20px 0 0}
+.ab-stat + .ab-stat{padding-left:28px;border-left:1px solid var(--line)}
+.ab-stat .n{display:block;font-size:34px;font-weight:900;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ab-stat .n.empty{color:var(--ink-3)}
+.ab-stat .l{font-size:13px;color:var(--ink-3);font-weight:600}
 
-    /* protection */
-    .prot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 24px; }
-    .prot-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px 20px; transition: all 0.22s; }
-    .prot-card:hover { transform: translateY(-3px); border-color: var(--navy); box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3); }
-    .prot-card .ic { width: 46px; height: 46px; border-radius: 12px; background: var(--navy); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
-    .prot-card .ic svg { width: 23px; height: 23px; fill: none; stroke: #fff; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-    .prot-card h3 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-    .prot-card p { font-size: 12.5px; line-height: 1.65; color: var(--muted); }
+/* ---------- 02 What ---------- */
+.ab-quote{font-size:clamp(18px,2vw,26px);line-height:1.75;font-weight:700;color:var(--ink-3);max-width:960px;margin-top:80px;letter-spacing:.05em}
+.ab-quote b{color:var(--ink);font-weight:800}
+.ab-quote s{text-decoration-color:var(--ink-3);text-decoration-thickness:1.5px}
+/* 打字機效果：每個字預設隱藏，進這頁時（.typed）依序一個一個淡入，
+   transition-delay 是每個字自己的 --ti 乘上固定間隔，純 CSS 不用 JS 跑迴圈。 */
+.ab-quote .tc{opacity:0;transition:opacity .01s linear;transition-delay:0s}
+.ab-quote.typed .tc{opacity:1;transition-delay:calc(var(--ti,0) * 50ms)}
+@media (prefers-reduced-motion:reduce){
+  .ab-quote .tc{opacity:1;transition:none}
+}
+/* 「理念」這頁只有內文（引言段落）這個區塊要置中擺在中間，標題/eyebrow 維持
+   置左；區塊內的文字本身也還是置左，只是整個區塊的「位置」置中，不是文字置中 */
+#what .ab-quote{margin-left:auto;margin-right:auto}
 
-    /* disclaimer */
-    .disc-grid { display: grid; gap: 12px; margin-top: 24px; }
-    .disc { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: box-shadow 0.2s; }
-    .disc:hover { box-shadow: 0 10px 26px -18px rgba(0,40,80,0.28); }
-    .disc summary { list-style: none; cursor: pointer; padding: 18px 22px; display: flex; align-items: center; gap: 16px; }
-    .disc summary::-webkit-details-marker { display: none; }
-    .disc .dn { font-family: monospace; font-size: 13px; font-weight: 700; color: #fff; background: var(--navy-solid); width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .disc .dt { flex: 1; font-size: 15.5px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
-    .disc .chev { color: var(--muted); transition: transform 0.25s; flex-shrink: 0; }
-    .disc .chev svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .disc[open] .chev { transform: rotate(180deg); }
-    .disc .dbody { padding: 0 22px 20px 68px; }
-    .disc .dbody p { font-size: 13.5px; line-height: 1.8; color: var(--body); }
-    .disc .dbody p b { color: var(--navy); font-weight: 700; }
-    .disc .dmore { display: inline-flex; align-items: center; gap: 4px; margin-top: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--navy); background: none; border: none; padding: 0; cursor: pointer; }
-    .disc .dmore:hover { color: var(--navy-d); text-decoration: underline; }
-    .disc .dmore svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.25s; }
-    .disc .dmore.open svg { transform: rotate(180deg); }
-    .disc .dfull { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
-    .disc .dfull.open { display: block; }
-    .disc .dfull ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
-    .disc .dfull li { font-size: 13px; line-height: 1.8; color: var(--body); }
-    .disc .dbody ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 8px; }
-    .disc .dbody li { font-size: 13px; line-height: 1.8; color: var(--body); }
+/* ---------- 共用：分欄 ---------- */
+.ab-cols{display:grid;grid-template-columns:repeat(var(--c,3),1fr);margin-top:64px;border-top:1px solid var(--line-2)}
+#protect .ab-cols{border-top:none}
+.ab-col{padding:30px 32px 0 0}
+.ab-col + .ab-col{padding-left:32px;border-left:1px solid var(--line)}
+.ab-col .no{font-size:13px;font-weight:800;letter-spacing:.12em;color:var(--brand);font-variant-numeric:tabular-nums}
+.ab-col .ic{font-size:26px;color:var(--brand);display:block}
+.ab-col h3{font-size:22px;font-weight:800;margin:14px 0 10px;line-height:1.4}
+.ab-col p{font-size:15.5px;color:var(--ink-2)}
+.ab-col p em{font-style:normal;font-weight:800;color:var(--ink)}
 
-    @media (max-width: 991px) {
-      .about-wrap { width: 100%; max-width: 100%; padding: 20px 16px 96px; }
-      .about-sec { padding: 48px 0; min-height: 60vh; }
-      .prot-grid { grid-template-columns: 1fr 1fr; }
-      .prot-grid .prot-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
-      .disc .dbody { padding: 0 20px 18px 20px; }
-      .about-hero { padding: 48px 24px; border-radius: 18px; }
-      .about-hero h1 { font-size: 27px; }
-      .about-hero .hero-stats { gap: 26px; }
-      .about-sec h2 { font-size: 22px; }
-      .feat-grid { grid-template-columns: 1fr; }
-      .step-grid { grid-template-columns: 1fr 1fr; }
-      .about-cta { padding: 30px 20px; }
-      .cat-layout { flex-direction: column; align-items: flex-start; gap: 20px; }
-      .cat-cloud { align-self: center; }
-    }
-    @media (max-width: 480px) {
-      .step-grid { grid-template-columns: 1fr; }
-      .prot-grid { grid-template-columns: 1fr; }
-    }
+/* ---------- 04 主題 ---------- */
+.ab-topics{display:grid;grid-template-columns:1fr 1fr;column-gap:64px;margin-top:48px;border-top:1px solid var(--line-2)}
+.ab-topic{display:flex;align-items:baseline;gap:22px;padding:22px 0;border-bottom:1px solid var(--line);font-size:clamp(24px,2.8vw,36px);font-weight:900;letter-spacing:-.01em;transition:color .25s,padding .35s var(--ease)}
+.ab-topic span{font-size:13px;font-weight:700;color:var(--ink-3);letter-spacing:.1em;font-variant-numeric:tabular-nums}
+.ab-topic i{margin-left:auto;font-size:22px;opacity:0;transform:translateX(-8px);transition:.3s var(--ease)}
+.ab-topic:hover{color:var(--brand);padding-left:10px}
+.ab-topic:hover i{opacity:1;transform:none}
 
-    /* ── body 漸層背景（隨捲動在不同區塊間變色）── */
-    html { background: var(--page); }
-    body { background: transparent; min-height: 100vh; }
-    .bg-stage { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-    .about-wrap { position: relative; z-index: 2; }
-    .bg-stage .bg-layer { position: absolute; inset: -20%; opacity: 0; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); filter: blur(120px) contrast(1.2) saturate(1.1); }
-    .bg-stage .bg-layer.active { opacity: 1; animation: watercolor-flow 12s ease-in-out infinite; }
+/* ---------- 06 步驟 ---------- */
+.ab-steps{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:72px}
+.ab-steps::before{content:"";position:absolute;left:0;right:0;top:7px;height:1.5px;background:var(--line-2)}
+.ab-steps::after{content:"";position:absolute;left:0;right:0;top:7px;height:1.5px;background:var(--brand);transform-origin:left;transform:scaleX(0);transition:transform 1.4s var(--ease) .5s}
+.ab-page.is-active .ab-steps::after{transform:scaleX(1)}
+.ab-step{position:relative;padding-top:44px}
+.ab-step::before{content:"";position:absolute;left:0;top:0;width:16px;height:16px;border-radius:50%;background:var(--bg);border:1.5px solid var(--brand);z-index:1}
+.ab-step .no{font-size:44px;font-weight:900;line-height:1;color:var(--line-2);letter-spacing:-.03em}
+.ab-step h3{font-size:21px;font-weight:800;margin:14px 0 8px}
+.ab-step p{font-size:15px;color:var(--ink-2)}
 
-    @keyframes watercolor-flow {
-      0%, 100% { transform: translate(0, 0) scale(1); filter: blur(60px); }
-      50% { transform: translate(20px, -20px) scale(1.05); filter: blur(80px); }
-    }
+/* ---------- 07 許願池 ---------- */
+.ab-flow{display:flex;align-items:center;flex-wrap:wrap;gap:18px 26px;margin-top:52px;font-size:clamp(20px,2.4vw,30px);font-weight:900}
+.ab-flow i{color:var(--ink-3);font-size:.8em}
+.ab-flow span:nth-of-type(2){color:var(--brand)}
 
-    /* 點擊漣漪效果 */
-    .ripple {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: ripple-expand 0.8s ease-out forwards;
-    }
+/* ---------- 08/09 清單 + 內容 ---------- */
+.ab-split{display:grid;grid-template-columns:340px 1fr;gap:64px;margin-top:44px;align-items:start}
+.ab-tabs{border-top:1px solid var(--line-2)}
+#disclaimer .ab-tabs{border-top:none}
+.ab-tab{width:100%;display:flex;gap:16px;align-items:baseline;padding:15px 0 15px 16px;border-bottom:1px solid var(--line);position:relative;font-weight:700;font-size:15.5px;color:var(--ink-3);transition:color .25s}
+.ab-tab::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:2px;background:var(--brand);transform:scaleY(0);transition:transform .35s var(--ease)}
+.ab-tab span{padding-left:8px;font-size:12px;font-weight:800;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.ab-tab:hover{color:var(--ink)}
+.ab-tab[aria-selected="true"]{color:var(--ink)}
+.ab-tab[aria-selected="true"]::before{transform:scaleY(1)}
+.ab-tab[aria-selected="true"] span{color:var(--brand)}
+.ab-panel{animation:ab-panel .5s var(--ease)}
+.ab-panel[hidden]{display:none}
+@keyframes ab-panel{from{opacity:0;transform:translateY(10px)}}
+.ab-panel .pno{font-size:72px;font-weight:900;line-height:1;color:var(--line-2);letter-spacing:-.04em}
+.ab-panel h3{font-size:clamp(24px,2.4vw,32px);font-weight:900;margin:14px 0 6px;line-height:1.35}
+.ab-key{display:inline-block;font-size:14px;font-weight:800;color:var(--gold);margin-bottom:16px}
+.ab-panel .sum{font-size:17px;color:var(--ink);font-weight:500;line-height:1.85}
+.ab-panel .sum b{color:var(--brand)}
+.ab-clauses{margin-top:26px !important;padding-top:22px;border-top:1px solid var(--line);display:grid;gap:12px;counter-reset:c}
+.ab-clauses li{position:relative;padding-left:34px;font-size:14.5px;color:var(--ink-2);line-height:1.9}
+.ab-clauses li::before{counter-increment:c;content:counter(c,decimal-leading-zero);position:absolute;left:0;top:2px;font-size:12px;font-weight:800;color:var(--ink-3)}
+.ab-clauses.x li::before{content:"✕";color:#d9534f;counter-increment:none}
+.ab-clauses.ok li::before{content:"✓";color:#1f9d6b;counter-increment:none}
+.ab-clauses li b{color:var(--ink)}
 
-    @keyframes ripple-expand {
-      0% {
-        transform: scale(0);
-        background: radial-gradient(circle, rgba(207,224,244,0.85) 0%, rgba(126,184,216,0.45) 60%, transparent 100%);
-        box-shadow: 0 0 50px rgba(126,184,216,0.5);
-      }
-      100% {
-        transform: scale(1);
-        background: radial-gradient(circle, rgba(207,224,244,0) 0%, rgba(126,184,216,0) 60%, transparent 100%);
-        box-shadow: 0 0 100px rgba(126,184,216,0);
-      }
-    }
+/* ---------- 10 CTA ---------- */
+.ab-center{text-align:center}
+.ab-center .ab-actions{justify-content:center}
 
-    /* hero：藍（深色，柔和暈開） */
-    .bg-layer[data-bg="0"] {
-      background:
-        radial-gradient(1200px 700px at 10% 5%, rgba(78,144,200,0.6) 0%, transparent 65%),
-        radial-gradient(1100px 750px at 95% 120%, rgba(126,184,216,0.45) 0%, transparent 58%),
-        linear-gradient(135deg, #d4e5f5 0%, #b8d2ec 50%, #a0c5e6 100%);
-    }
-    /* What：藍淡柔和 */
-    .bg-layer[data-bg="1"] {
-      background:
-        radial-gradient(1150px 700px at 85% -10%, rgba(126,184,216,0.45) 0%, transparent 62%),
-        radial-gradient(1000px 650px at 5% 110%, rgba(74,133,196,0.28) 0%, transparent 60%),
-        linear-gradient(120deg, #e5f0f9 0%, #d0e4f5 100%);
-    }
-    /* Why us：淺藍白 */
-    .bg-layer[data-bg="2"] {
-      background:
-        radial-gradient(1000px 650px at 15% -5%, rgba(126,184,216,0.32) 0%, transparent 65%),
-        linear-gradient(140deg, #f0f7fc 0%, #e2eff8 100%);
-    }
-    /* Categories：幾乎白（微微藍） */
-    .bg-layer[data-bg="3"] {
-      background:
-        radial-gradient(1000px 600px at 50% 10%, rgba(126,184,216,0.15) 0%, transparent 70%),
-        linear-gradient(180deg, #fafbfc 0%, #f5f9fc 100%);
-    }
-    /* Protection：淺藍白 */
-    .bg-layer[data-bg="4"] {
-      background:
-        radial-gradient(1050px 650px at 80% -5%, rgba(126,184,216,0.28) 0%, transparent 68%),
-        linear-gradient(135deg, #f0f7fc 0%, #e8f3fa 100%);
-    }
-    /* How：藍回來柔和 */
-    .bg-layer[data-bg="5"] {
-      background:
-        radial-gradient(1150px 700px at 12% 5%, rgba(126,184,216,0.42) 0%, transparent 62%),
-        radial-gradient(1050px 700px at 105% 95%, rgba(74,133,196,0.25) 0%, transparent 60%),
-        linear-gradient(125deg, #e8f2fa 0%, #d5e8f5 100%);
-    }
-    /* Wishpool：深藍暈開 */
-    .bg-layer[data-bg="6"] {
-      background:
-        radial-gradient(1250px 750px at 88% -5%, rgba(126,184,216,0.5) 0%, transparent 60%),
-        radial-gradient(1100px 700px at 0% 115%, rgba(74,133,196,0.35) 0%, transparent 58%),
-        linear-gradient(130deg, #d8e9f7 0%, #c0ddf2 50%, #a8d0ed 100%);
-    }
-    /* Disclaimer：深藍收尾 */
-    .bg-layer[data-bg="7"] {
-      background:
-        radial-gradient(1200px 750px at 20% 10%, rgba(126,184,216,0.55) 0%, transparent 62%),
-        radial-gradient(1150px 800px at 98% 105%, rgba(78,144,200,0.4) 0%, transparent 60%),
-        linear-gradient(140deg, #d0e3f3 0%, #b8d7ee 50%, #a0cceb 100%);
-    }
-    /* Rules：深藍延續 */
-    .bg-layer[data-bg="8"] {
-      background:
-        radial-gradient(1200px 750px at 82% 8%, rgba(78,144,200,0.5) 0%, transparent 62%),
-        radial-gradient(1100px 750px at 5% 110%, rgba(126,184,216,0.45) 0%, transparent 58%),
-        linear-gradient(135deg, #d4e5f5 0%, #bcd8ef 50%, #a6cfec 100%);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .bg-stage .bg-layer { transition: none; }
-    }
+/* ---------- 導覽 ---------- */
+.ab-dots{position:absolute;left:32px;top:50%;transform:translateY(-50%);z-index:5;display:grid;gap:4px}
+.ab-dot{display:flex;align-items:center;gap:12px;height:24px;font-size:12px;font-weight:700;color:var(--ink-3)}
+.ab-dot i{display:block;width:8px;height:1.5px;background:var(--line-2);transition:width .35s var(--ease),background .35s}
+.ab-dot em{font-style:normal;opacity:0;transform:translateX(-6px);transition:.3s var(--ease);white-space:nowrap}
+.ab-dot:hover em{opacity:1;transform:none}
+.ab-dots:hover{background:color-mix(in srgb,var(--bg) 85%,transparent);border-radius:12px}
+.ab-dot:hover i{width:18px;background:var(--ink-3)}
+.ab-dot.is-active{color:var(--ink)}
+.ab-dot.is-active i{width:28px;background:var(--brand)}
+.ab-hint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--ink-3);transition:opacity .4s}
+.ab-hint::after{content:"";width:1.5px;height:34px;background:linear-gradient(var(--ink-3),transparent);animation:ab-hint 1.8s var(--ease) infinite}
+@keyframes ab-hint{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.ab.on-last .ab-hint,.ab.not-first .ab-hint{opacity:0}
+.ab-arrows{position:absolute;right:32px;bottom:24px;z-index:5;display:flex;gap:6px}
+.ab-arrows button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;font-size:18px;transition:border-color .25s,color .25s,opacity .25s;text-align:center}
+.ab-arrows button:hover{border-color:var(--ink);}
+.ab-arrows button:disabled{opacity:.3;cursor:default}
 
-    /* ── 深色模式：把柔霧漸層背景換成夜間版本 ── */
-    :root[data-theme="dark"] .bg-layer[data-bg="0"] {
-      background:
-        radial-gradient(1200px 700px at 10% 5%, rgba(78,144,200,0.28) 0%, transparent 65%),
-        radial-gradient(1100px 750px at 95% 120%, rgba(126,184,216,0.2) 0%, transparent 58%),
-        linear-gradient(135deg, #17202c 0%, #1a2836 50%, #1d2f42 100%);
-    }
-    :root[data-theme="dark"] .bg-layer[data-bg="1"] {
-      background:
-        radial-gradient(1150px 700px at 85% -10%, rgba(126,184,216,0.2) 0%, transparent 62%),
-        radial-gradient(1000px 650px at 5% 110%, rgba(74,133,196,0.14) 0%, transparent 60%),
-        linear-gradient(120deg, #1a2029 0%, #1e2733 100%);
-    }
-    :root[data-theme="dark"] .bg-layer[data-bg="2"] {
-      background:
-        radial-gradient(1000px 650px at 15% -5%, rgba(126,184,216,0.15) 0%, transparent 65%),
-        linear-gradient(140deg, #1c222b 0%, #202834 100%);
-    }
-    :root[data-theme="dark"] .bg-layer[data-bg="3"] {
-      background:
-        radial-gradient(1000px 600px at 50% 10%, rgba(126,184,216,0.07) 0%, transparent 70%),
-        linear-gradient(180deg, #1e242c 0%, #1b2029 100%);
-    }
-    :root[data-theme="dark"] .bg-layer[data-bg="4"] {
-      background:
-        radial-gradient(1050px 650px at 80% -5%, rgba(126,184,216,0.13) 0%, transparent 68%),
-        linear-gradient(135deg, #1c222b 0%, #202834 100%);
-    }
-    :root[data-theme="dark"] .bg-layer[data-bg="5"] {
-      background:
-        radial-gradient(1150px 700px at 12% 5%, rgba(126,184,216,0.2) 0%, transparent 62%),
-        radial-gradient(1050px 700px at 105% 95%, rgba(74,133,196,0.12) 0%, transparent 60%),
-        linear-gradient(125deg, #1a2029 0%, #1e2733 100%);
-    }
-    :root[data-theme="dark"] .bg-layer[data-bg="6"] {
-      background:
-        radial-gradient(1250px 750px at 88% -5%, rgba(126,184,216,0.24) 0%, transparent 60%),
-        radial-gradient(1100px 700px at 0% 115%, rgba(74,133,196,0.16) 0%, transparent 58%),
-        linear-gradient(130deg, #16212f 0%, #1a2b3f 50%, #1d3349 100%);
-    }
-    :root[data-theme="dark"] .bg-layer[data-bg="7"] {
-      background:
-        radial-gradient(1200px 750px at 20% 10%, rgba(126,184,216,0.26) 0%, transparent 62%),
-        radial-gradient(1150px 800px at 98% 105%, rgba(78,144,200,0.18) 0%, transparent 60%),
-        linear-gradient(140deg, #141d29 0%, #182839 50%, #1b3045 100%);
-    }
-    :root[data-theme="dark"] .bg-layer[data-bg="8"] {
-      background:
-        radial-gradient(1200px 750px at 82% 8%, rgba(78,144,200,0.24) 0%, transparent 62%),
-        radial-gradient(1100px 750px at 5% 110%, rgba(126,184,216,0.2) 0%, transparent 58%),
-        linear-gradient(135deg, #16212f 0%, #1a2b3f 50%, #1d3349 100%);
-    }
+/* ---------- 04 文字雲 ---------- */
+.ab-cloud-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:center}
+.ab-cloud{position:relative;container-type:inline-size;width:100%;aspect-ratio:1/.82}
+.ab-cloud .w{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);white-space:nowrap;line-height:1;
+  font-size:calc(var(--s) * 1cqw);font-weight:900;letter-spacing:-.02em;color:var(--c);transition:opacity .35s,color .35s}
+.ab-cloud .w.v{writing-mode:vertical-rl;letter-spacing:.06em}
+.ab-cloud .w span{display:block;transform:translate(calc(var(--mx,0) * var(--d) + var(--rx,0px)),calc(var(--my,0) * var(--d) + var(--ry,0px)));
+  transition:transform .6s cubic-bezier(.2,.7,.2,1);animation:ab-float 7s ease-in-out infinite;animation-delay:calc(var(--k) * -1.1s)}
+@keyframes ab-float{50%{translate:0 -6px}}
+.ab-cloud:hover .w{opacity:.28}
+.ab-cloud .w:hover,.ab-cloud .w:focus-visible{opacity:1;color:var(--brand)}
+.ab-cloud .w::after{content:"";position:absolute;left:0;right:0;bottom:-.18em;height:.06em;min-height:2px;background:currentColor;transform:scaleX(0);transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.ab-cloud .w.v::after{left:auto;top:0;bottom:0;right:-.2em;width:.06em;min-width:2px;height:auto;transform:scaleY(0)}
+.ab-cloud .w:hover::after{transform:none}
+.ab-cloud .dot{position:absolute;left:var(--x);top:var(--y);width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.7}
+.ab-page .ab-cloud.st{opacity:1;transform:none}
+.ab-page .ab-cloud .w{opacity:0;filter:blur(8px)}
+.ab-page.is-active .ab-cloud .w{opacity:1;filter:none;transition:opacity .8s,filter .8s,color .35s;transition-delay:calc(.45s + var(--k) * .09s),calc(.45s + var(--k) * .09s),0s}
+.ab-page.is-active .ab-cloud:hover .w{opacity:.28;transition-delay:0s}
+.ab-page.is-active .ab-cloud .w:hover{opacity:1}
+@media (max-width:760px){.ab-cloud-wrap{grid-template-columns:1fr;gap:12px}}
 
-    /* ── 返回上一頁按鈕 ── */
-    .back-arrow { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--navy); cursor: pointer; transition: all 0.2s; margin-right: 8px; }
-    .back-arrow:hover { border-color: var(--navy); background: var(--alice); }
-    .back-arrow svg { width: 20px; height: 20px; }
+/* ---------- 游標互動 ---------- */
+.ab-glow{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .5s}
+.ab.has-pointer .ab-glow{opacity:1}
+.ab-glow::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(420px circle at var(--cx,50%) var(--cy,50%),rgba(47,125,225,.10),transparent 70%)}
+.ab-glow::after{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(47,125,225,.55) 1px,transparent 1px),linear-gradient(90deg,rgba(47,125,225,.55) 1px,transparent 1px);
+  background-size:48px 48px;
+  -webkit-mask-image:radial-gradient(180px circle at var(--cx,50%) var(--cy,50%),#000,transparent 75%);
+          mask-image:radial-gradient(180px circle at var(--cx,50%) var(--cy,50%),#000,transparent 75%)}
+.ab-grid::before{transform:translate(var(--px,0),var(--py,0));transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.ab-cursor{position:fixed;left:0;top:0;z-index:3000;pointer-events:none;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
+  border:1.5px solid var(--brand);opacity:0;transition:width .3s cubic-bezier(.2,.7,.2,1),height .3s cubic-bezier(.2,.7,.2,1),margin .3s cubic-bezier(.2,.7,.2,1),background .3s,opacity .3s,border-color .3s}
+.ab.has-pointer .ab-cursor{opacity:.55}
+.ab-cursor.is-link{width:64px;height:64px;margin:-32px 0 0 -32px;background:rgba(47,125,225,.10);border-color:transparent;opacity:1 !important}
+.ab-cursor.is-down{width:22px;height:22px;margin:-11px 0 0 -11px}
+.ab-cursor.is-text{width:3px;height:30px;margin:-15px 0 0 -1.5px;border-radius:2px;background:var(--brand);border-color:transparent}
+.ab [data-depth]{display:inline-block;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform:translate(calc(var(--mx,0) * var(--depth)),calc(var(--my,0) * var(--depth)))}
+.ab .ab-mag{transition:transform .35s cubic-bezier(.2,.7,.2,1),background .25s,border-color .25s}
+.ab-topic{position:relative}
+.ab-topic::after{content:"";position:absolute;left:0;bottom:-1px;height:1.5px;width:100%;background:var(--brand);transform:scaleX(0);transform-origin:var(--ox,left);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.ab-topic:hover::after{transform:scaleX(1)}
+@media (hover:none),(pointer:coarse){.ab-cursor,.ab-glow{display:none}}
+@media (prefers-reduced-motion:reduce){.ab-cursor{display:none}.ab [data-depth]{transform:none}}
 
-    /* ── 捲動進場動畫（初始隱藏狀態只在 JS 啟用時套用，確保無 JS 也能看到內容）── */
-    /* 區塊本身只淡入，位移與交錯交給內部元素，避免 transform 疊加 */
-    html.reveal-on [data-reveal] {
-      opacity: 0;
-      transition: opacity 0.6s ease;
-    }
-    html.reveal-on [data-reveal].revealed { opacity: 1; }
-
-    /* 內部元素（文字、卡片）各自上浮＋淡入；delay 由 JS 依順序設定做接力交錯 */
-    html.reveal-on [data-reveal] .anim {
-      opacity: 0;
-      transform: translateY(26px);
-      transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-      will-change: opacity, transform;
-    }
-    html.reveal-on [data-reveal].revealed .anim {
-      opacity: 1;
-      transform: none;
-    }
-    /* 標題進場時字距由寬收合，增加一點「聚焦」感（transform 已處理位移，這裡只動字距不影響排版流） */
-    html.reveal-on [data-reveal] .anim.is-title { letter-spacing: 0.16em; }
-    html.reveal-on [data-reveal].revealed .anim.is-title { letter-spacing: 0.03em; }
-
-    /* 由右而左滑入的變體（覆寫上浮方向） */
-    html.reveal-on [data-reveal].reveal-right .anim { transform: translateX(56px); }
-    html.reveal-on [data-reveal].reveal-right.revealed .anim { transform: none; }
-
-    /* 只讓區塊內的卡片由右滑入（時間差由 JS 的遞增 delay 提供），標題文字維持上浮 */
-    html.reveal-on [data-reveal].cards-right .feat-card.anim { transform: translateX(60px); }
-    html.reveal-on [data-reveal].cards-right.revealed .feat-card.anim { transform: none; }
-
-    @media (prefers-reduced-motion: reduce) {
-      html.reveal-on [data-reveal],
-      html.reveal-on [data-reveal] .anim {
-        opacity: 1 !important;
-        transform: none !important;
-        letter-spacing: inherit !important;
-        transition: none !important;
-      }
-    }
+/* ---------- RWD ---------- */
+@media (max-width:1100px){
+  .ab-in{width:calc(100% - 120px)}
+  .ab-split{grid-template-columns:260px 1fr;gap:40px}
+}
+@media (max-width:991px){
+  /* 跟 school.html 其他頁一樣，手機版有浮動的 bottom-nav 貼在螢幕底部，
+     這支頁面是自己獨立的 fixed 全螢幕捲動容器，要讓出底部空間不然會疊在一起 */
+  .ab{--bottom-nav-h:78px}
+}
+@media (max-width:760px){
+  .ab{--nav-h:56px}
+  .ab-in{width:calc(100% - 44px);padding:36px 0 96px}
+  .ab-dots{display:none}
+  .ab-arrows{right:16px;bottom:16px}
+  .ab-lead{font-size:16px}
+  .ab-cols,.ab-steps{grid-template-columns:1fr;gap:0}
+  .ab-col,.ab-col + .ab-col{padding:22px 0;border-left:0;border-bottom:1px solid var(--line)}
+  .ab-col h3{margin-top:6px}
+  .ab-cols{margin-top:36px}
+  .ab-topics{grid-template-columns:1fr}
+  .ab-topic{padding:16px 0}
+  .ab-steps{margin-top:40px;padding-left:28px}
+  .ab-steps::before,.ab-steps::after{left:7px;right:auto;top:0;bottom:0;width:1.5px;height:auto}
+  .ab-steps::after{transform-origin:top;transform:scaleY(0)}
+  .ab-page.is-active .ab-steps::after{transform:scaleY(1)}
+  .ab-step{padding:0 0 26px}
+  .ab-step::before{left:-28px;top:4px}
+  .ab-step .no{font-size:30px}
+  .ab-step h3{margin-top:6px}
+  .ab-split{grid-template-columns:1fr;gap:28px;margin-top:28px}
+  .ab-tabs{display:flex;overflow-x:auto;border-top:0;border-bottom:1px solid var(--line-2);scrollbar-width:none;margin-inline:-22px;padding-inline:22px}
+  .ab-tabs::-webkit-scrollbar{display:none}
+  .ab-tab{width:auto;flex:none;padding:10px 14px 12px;border-bottom:0;white-space:nowrap}
+  .ab-tab::before{left:14px;right:14px;top:auto;bottom:-1px;width:auto;height:2px;transform:scaleX(0)}
+  .ab-tab[aria-selected="true"]::before{transform:scaleX(1)}
+  .ab-panel .pno{font-size:48px}
+  .ab-stat + .ab-stat{padding-left:16px}
+  .ab-stat .n{font-size:26px}
+  .ab-hint{display:none}
+  .ab-h1{font-size:clamp(28px,8vw,40px)}
+  .ab-tabs{gap:8px}
+  .ab::after{content:"";position:absolute;left:0;right:0;bottom:0;height:76px;z-index:4;pointer-events:none;background:linear-gradient(transparent,var(--bg) 70%)}
+}
+@media (prefers-reduced-motion:reduce){
+  .ab *,.ab *::before,.ab *::after{transition-duration:.01s !important;animation:none !important;transition-delay:0s !important}
+}
   </style>
 <style class="am-admin-gate-style">body{visibility:hidden}</style>
 </head>
@@ -478,310 +377,520 @@
   </div>
 </div>
 
-<div class="about-wrap">
+<main class="ab" id="about" aria-roledescription="分頁簡報">
+  <div class="ab-grid" aria-hidden="true"><div class="ab-glow"></div></div>
+  <div class="ab-cursor" aria-hidden="true"></div>
 
-  <div class="breadcrumb">
-    <a href="school.html">校園攻略站</a>
-    <span class="sep">/</span>
-    <span class="cur">攻略站介紹</span>
-  </div>
-
-  <!-- HERO -->
-  <section class="about-hero" data-reveal data-bg="0">
-    <div class="eyebrow">About · 校園攻略站</div>
-    <h1>把學長姐的真實經驗，<br>變成你的校園捷徑</h1>
-    <p>校園攻略站是拾貨寶庫為中興大學打造的「經驗變現平台」。選課策略、推甄備審、實習面試、宿舍與美食——這些真正有用卻散落各處的經驗，在這裡被整理、認證，並讓分享者獲得應得的回報。</p>
-    <div class="hero-stats">
-      <div><div class="n" id="schoolStatArticles">—</div><div class="l">篇攻略</div></div>
-      <div><div class="n" id="schoolStatAuthors">—</div><div class="l">位已認證作者</div></div>
-      <div><div class="n" id="schoolStatReads">—</div><div class="l">本月閱讀</div></div>
-    </div>
+  <!-- 01 -->
+  <section class="ab-page" id="intro" data-title="開始">
+    <div class="ab-scroll"><div class="ab-in">
+      <nav class="ab-crumb st" aria-label="麵包屑"><a href="school.html">校園攻略站</a><span>/</span><span aria-current="page">攻略站介紹</span></nav>
+      <span class="ab-eyebrow st">About · 校園攻略站</span>
+      <h1 class="ab-h1 st">把學長姐的真實經驗，<br>變成你的<span class="ab-hl" data-depth style="--depth:10px">校園捷徑</span></h1>
+      <p class="ab-lead st">校園攻略站是拾貨寶庫為中興大學打造的「經驗變現平台」。選課策略、推甄備審、實習面試、宿舍與美食——這些真正有用卻散落各處的經驗，在這裡被整理、認證，並讓分享者獲得應得的回報。</p>
+      <div class="ab-stats st" aria-live="polite">
+        <div class="ab-stat"><span class="n empty" data-stat="articles">—</span><span class="l">篇攻略</span></div>
+        <div class="ab-stat"><span class="n empty" data-stat="authors">—</span><span class="l">位已認證作者</span></div>
+        <div class="ab-stat"><span class="n empty" data-stat="reads">—</span><span class="l">本月閱讀</span></div>
+      </div>
+    </div></div>
   </section>
 
-  <!-- 本週精選：跟 school.html 共用同一個 #featuredWrap + .featured 排版，
-       由 school-new.js 裡同一支渲染函式負責填內容，沒有精選時會自動整塊隱藏 -->
-  <article class="featured" id="featuredWrap" data-reveal></article>
-
-  <!-- 什麼是校園攻略站 -->
-  <section class="about-sec reveal-right" data-reveal data-bg="1">
-    <div class="sec-eyebrow">What</div>
-    <h2>不只是文章平台，是經驗的傳承</h2>
-    <p class="lead">網路上的心得文，不是被業配淹沒，就是被 AI 生成的空話稀釋。校園攻略站相信：真正值錢的是「親身走過一遍」的經驗。我們用半實名認證確保每篇攻略背後都是真實的人與真實的經歷，並讓讀者以合理的價格解鎖——分享者得到回報，讀者少走冤枉路。</p>
+  <!-- 02 -->
+  <section class="ab-page" id="what" data-title="理念">
+    <div class="ab-scroll"><div class="ab-in">
+      <span class="ab-eyebrow st">What</span>
+      <h2 class="ab-h2 st" style="padding-bottom: 20px;">不只是文章平台，是經驗的傳承</h2>
+      <p class="ab-quote st">網路上的心得文，不是<s>被業配淹沒</s>，就是<s>被 AI 生成的空話稀釋</s>。校園攻略站相信：真正值錢的是<b>「親身走過一遍」</b>的經驗。我們用<b>半實名認證</b>確保每篇攻略背後都是真實的人與真實的經歷，並讓讀者以合理的價格解鎖——<b>分享者得到回報，讀者少走冤枉路：）。</b></p>
+    </div></div>
   </section>
 
-  <!-- 三大特色 -->
-  <section class="about-sec cards-right" data-reveal data-bg="2">
-    <div class="sec-eyebrow">Why us</div>
-    <h2>我們和其他平台不一樣</h2>
-    <div class="feat-grid">
-      <div class="feat-card">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-        <h3>經驗變現</h3>
-        <p>把你的備審模板、面試逐字稿、選課心得上架，讀者付費解鎖，你就能把辛苦累積的經驗變成實際收入。每筆數位交易，平台將抽取 20% 服務費</p>
+  <!-- 03 -->
+  <section class="ab-page" id="why" data-title="特色">
+    <div class="ab-scroll"><div class="ab-in">
+      <span class="ab-eyebrow st">Why us</span>
+      <h2 class="ab-h2 st">我們和其他平台不一樣</h2>
+      <div class="d-flex">
+        <div class="ab-col st"><span class="no">01</span><h3>經驗變現</h3><p>把你的備審模板、面試逐字稿、選課心得上架，讀者付費解鎖，你就能把辛苦累積的經驗變成實際收入。每筆數位交易，平台將抽取 <em>20% 服務費</em></p></div>
+        <div class="ab-col st"><span class="no">02</span><h3>半實名認證</h3><p>後台以校園信箱完全實名審查身分、獎項與升學證明；前台保留半匿名顯示，防肉搜也防詐騙。</p></div>
+        <div class="ab-col st"><span class="no">03</span><h3>拒絕 AI 與業配</h3><p>平台禁止販賣廣告文，內容須為原創或已取得授權。查證屬實的抄襲、AI 灌水或業配一律下架停權。</p></div>
       </div>
-      <div class="feat-card">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
-        <h3>半實名認證</h3>
-        <p>後台以校園信箱完全實名審查身分、獎項與升學證明；前台保留半匿名顯示，防肉搜也防詐騙。</p>
-      </div>
-      <div class="feat-card">
-        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/><path d="M8 11h6"/></svg></div>
-        <h3>拒絕 AI 與業配</h3>
-        <p>平台禁止販賣廣告文，內容須為原創或已取得授權。查證屬實的抄襲、AI 灌水或業配一律下架停權。</p>
-      </div>
-    </div>
+    </div></div>
   </section>
 
-  <!-- 分類架構 -->
-  <section class="about-sec" data-reveal data-bg="3">
-    <div class="cat-layout">
-      <div class="cat-copy">
-        <div class="sec-eyebrow">Categories</div>
-        <h2>熱門攻略主題</h2>
-        <p class="lead">從升學、實習到宿舍生活，這些是同學最常搜尋的方向。找不到想看的，也能到許願池提名。</p>
+  <!-- 04 -->
+  <section class="ab-page" id="topics" data-title="熱門主題">
+    <div class="ab-scroll"><div class="ab-in ab-cloud-wrap">
+      <div>
+        <span class="ab-eyebrow st">Categories</span>
+        <h2 class="ab-h2 st">熱門攻略主題</h2>
+        <p class="ab-lead st">從升學、實習到宿舍生活，這些是同學最常搜尋的方向。找不到想看的，也能到許願池提名。</p>
+        <div class="ab-actions st"><a class="ab-tlink" href="../wishpool/wishpool.html#wishpool">到許願池提名<i class="ti ti-arrow-right"></i></a></div>
       </div>
-      <div class="cat-cloud">
-        <img src="../svg/cloud.svg" alt="熱門攻略主題文字雲：研究所推甄、學分攻略、實習與面試、證照檢定、交換學生、生活指南等">
+      <div class="ab-cloud st" role="list" aria-label="熱門攻略主題文字雲：研究所推甄、學分攻略、實習與面試、證照檢定、交換學生、生活指南、校園資源、美食地圖、轉學/轉系、專題研究">
+        <a role="listitem" class="w" href="school-article.html?category=cat_grad-admission" style="--x:50%;--y:47%;--s:12;--d:16px;--c:var(--brand);--k:0"><span>研究所推甄</span></a>
+        <a role="listitem" class="w" href="school-article.html?category=cat_credit-guide" style="--x:40%;--y:24%;--s:9;--d:10px;--c:var(--ink);--k:1"><span>學分攻略</span></a>
+        <a role="listitem" class="w" href="school-article.html?category=cat_internship-interview" style="--x:65%;--y:10%;--s:6;--d:6px;--c:var(--ink-2);--k:2"><span>實習與面試</span></a>
+        <a role="listitem" class="w" href="school-article.html?category=cat_certifications" style="--x:63%;--y:70%;--s:7.5;--d:12px;--c:var(--ink);--k:3"><span>證照檢定</span></a>
+        <a role="listitem" class="w v" href="school-article.html?category=cat_exchange-student" style="--x:88%;--y:40%;--s:5;--d:8px;--c:var(--brand);--k:4"><span>交換學生</span></a>
+        <a role="listitem" class="w v" href="school-article.html?category=cat_life-guide" style="--x:12%;--y:52%;--s:5.4;--d:9px;--c:var(--ink-2);--k:5"><span>生活指南</span></a>
+        <a role="listitem" class="w" href="school-article.html?category=cat_campus-resources" style="--x:30%;--y:84%;--s:4.4;--d:5px;--c:var(--ink-3);--k:6"><span>校園資源</span></a>
+        <a role="listitem" class="w" href="school-article.html?category=cat_food-map" style="--x:78%;--y:84%;--s:5.5;--d:9px;--c:var(--ink);--k:7"><span>美食地圖</span></a>
+        <a role="listitem" class="w" href="school-article.html?category=cat_transfer" style="--x:20%;--y:10%;--s:4.8;--d:7px;--c:var(--ink-2);--k:8"><span>轉學/轉系</span></a>
+        <a role="listitem" class="w v" href="school-article.html?category=cat_capstone-project" style="--x:80%;--y:16%;--s:4.6;--d:6px;--c:var(--ink-3);--k:9"><span>專題研究</span></a>
+        <span class="dot" style="--x:22%;--y:18%"></span><span class="dot" style="--x:84%;--y:82%"></span><span class="dot" style="--x:90%;--y:12%"></span><span class="dot" style="--x:8%;--y:88%"></span>
       </div>
-    </div>
+    </div></div>
   </section>
 
-  <!-- 防盜保護 -->
-  <section class="about-sec" data-reveal data-bg="4">
-    <div class="sec-eyebrow">Protection</div>
-    <h2>讓創作者安心上架、內容不被盜用</h2>
-    <div class="prot-grid">
-      <div class="prot-card">
-        <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H4z"/><path d="M4 20h16"/><path d="M8 9l3 6 2-4 3 4" opacity=".5"/></svg></div>
-        <h3>動態浮水印</h3>
-        <p>付費內容自動疊加買家帳號，外流可追溯來源。</p>
+  <!-- 05 -->
+  <section class="ab-page" id="protect" data-title="內容保護">
+    <div class="ab-scroll"><div class="ab-in">
+      <span class="ab-eyebrow st">Protection</span>
+      <h2 class="ab-h2 st">讓創作者安心上架、<br>內容不被盜用</h2>
+      <div class="ab-cols">
+        <div class="ab-col st"><i class="ti ti-droplet-half-2 ic"></i><h3>動態浮水印</h3><p>付費內容自動疊加買家帳號，外流可追溯來源。</p></div>
+        <div class="ab-col st"><i class="ti ti-eye-off ic"></i><h3>預覽限制</h3><p>購買前僅開放局部預覽，完整內容付費解鎖。</p></div>
+        <div class="ab-col st"><i class="ti ti-copy-off ic"></i><h3>防複製與截圖</h3><p>停用選取、右鍵與下載，並偵測截圖行為。</p></div>
       </div>
-      <div class="prot-card">
-        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><path d="M4 4l16 16" opacity=".6"/></svg></div>
-        <h3>預覽限制</h3>
-        <p>購買前僅開放局部預覽，完整內容付費解鎖。</p>
-      </div>
-      <div class="prot-card">
-        <div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/></svg></div>
-        <h3>防複製與截圖</h3>
-        <p>停用選取、右鍵與下載，並偵測截圖行為。</p>
-      </div>
-    </div>
+    </div></div>
   </section>
 
-  <!-- 運作流程 -->
-  <section class="about-sec" data-reveal data-bg="5">
-    <div class="sec-eyebrow">How it works</div>
-    <h2>四步就開始</h2>
-    <div class="step-grid">
-      <div class="step-card">
-        <div class="num">01</div>
-        <h4>瀏覽攻略</h4>
-        <p>依分類、標籤或搜尋找到你要的主題，每篇都有前 20% 免費預覽。</p>
+  <!-- 06 -->
+  <section class="ab-page" id="how" data-title="使用流程">
+    <div class="ab-scroll"><div class="ab-in">
+      <span class="ab-eyebrow st">How it works</span>
+      <h2 class="ab-h2 st">四步就開始</h2>
+      <div class="ab-steps">
+        <div class="ab-step st"><span class="no" data-depth style="--depth:12px">01</span><h3>瀏覽攻略</h3><p>依分類、標籤或搜尋找到你要的主題，每篇都有前 20% 免費預覽。</p></div>
+        <div class="ab-step st"><span class="no" data-depth style="--depth:12px">02</span><h3>解鎖閱讀</h3><p>付費解鎖後永久閱讀，內容含讀者浮水印，防止外流。</p></div>
+        <div class="ab-step st"><span class="no" data-depth style="--depth:12px">03</span><h3>評分回饋</h3><p>閱讀後留下評分與留言，幫助其他同學判斷，也回饋給作者。</p></div>
+        <div class="ab-step st"><span class="no" data-depth style="--depth:12px">04</span><h3>換你分享</h3><p>通過創作者認證後，將你的經驗變現，讓文章持續為你賺錢</p></div>
       </div>
-      <div class="step-card">
-        <div class="num">02</div>
-        <h4>解鎖閱讀</h4>
-        <p>付費解鎖後永久閱讀，內容含讀者浮水印，防止外流。</p>
-      </div>
-      <div class="step-card">
-        <div class="num">03</div>
-        <h4>評分回饋</h4>
-        <p>閱讀後留下評分與留言，幫助其他同學判斷，也回饋給作者。</p>
-      </div>
-      <div class="step-card">
-        <div class="num">04</div>
-        <h4>換你分享</h4>
-        <p>通過創作者認證後，將你的經驗變現，讓文章持續為你賺錢</p>
-      </div>
-    </div>
+    </div></div>
   </section>
 
-  <!-- 許願開站 -->
-  <section class="about-sec" data-reveal data-bg="6">
-    <div class="sec-eyebrow">Wishpool</div>
-    <h2>找不到想看的主題？許願吧</h2>
-    <p class="lead">到許願池提出你想看的攻略主題，越多人按「我也想要」、熱度越高，我們就優先邀稿開站。買家許願、賣家實現——需求與供給在這裡對上。</p>
+  <!-- 07 -->
+  <section class="ab-page" id="wish" data-title="許願池">
+    <div class="ab-scroll"><div class="ab-in">
+      <span class="ab-eyebrow st">Wishpool</span>
+      <h2 class="ab-h2 st">找不到想看的主題？許願吧</h2>
+      <p class="ab-lead st">到許願池提出你想看的攻略主題，越多人按「我也想要」、熱度越高，我們就優先邀稿開站。買家許願、賣家實現——需求與供給在這裡對上。</p>
+      <div class="ab-flow st" aria-hidden="true"><span>買家許願</span><i class="ti ti-arrow-right"></i><span>我也想要</span><i class="ti ti-arrow-right"></i><span>賣家實現</span></div>
+      <div class="ab-actions st"><a class="ab-btn" href="../wishpool/wishpool.html#wishpool">前往許願池<i class="ti ti-arrow-right"></i></a></div>
+    </div></div>
   </section>
 
-  <!-- 免責聲明 -->
-  <section class="about-sec" data-reveal data-bg="7">
-    <div class="sec-eyebrow">Disclaimer</div>
-    <h2>五大免責重點，先看清楚</h2>
-    <p class="lead">本平台為涉及數位內容付費瀏覽、知識產權與學術誠信之交易媒介。上架即代表你已閱讀並同意下列條款，點擊各區塊可展開完整說明。</p>
-    <div class="disc-grid">
-      <details class="disc">
-        <summary><span class="dn">01</span><span class="dt">智慧財產權與侵權免責</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p>平台僅提供刊登與交易媒介，<b>不做實質內容審查</b>。內容須為原創或已取得授權，嚴禁複製教授講義／PPT／考題、掃描教科書、盜錄課程。查證屬實即下架停權，法律責任由上傳者承擔。</p>
-          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-          <div class="dfull">
-            <ul>
+  <!-- 08 -->
+  <section class="ab-page" id="disclaimer" data-title="免責重點">
+    <div class="ab-scroll"><div class="ab-in">
+      <span class="ab-eyebrow st">Disclaimer</span>
+      <h2 class="ab-h2 st">五大免責重點，先看清楚</h2>
+      <p class="ab-lead st">本平台為涉及數位內容付費瀏覽、知識產權與學術誠信之交易媒介。上架即代表你已閱讀並同意下列條款，點擊各區塊可展開完整說明。</p>
+      <div class="ab-split st" data-tabs>
+        <div class="ab-tabs" role="tablist" aria-label="免責條款">
+          <button class="ab-tab" role="tab"><span>01</span>智慧財產權與侵權免責</button>
+          <button class="ab-tab" role="tab"><span>02</span>學術誠信與校規免責</button>
+          <button class="ab-tab" role="tab"><span>03</span>數位商品價值與退費免責</button>
+          <button class="ab-tab" role="tab"><span>04</span>內容時效性與準確性免責</button>
+          <button class="ab-tab" role="tab"><span>05</span>個人隱私與資料調閱聲明</button>
+        </div>
+        <div>
+          <div class="ab-panel" role="tabpanel">
+            <div class="pno"><span data-depth style="--depth:18px">01</span></div><h3>智慧財產權與侵權免責</h3><span class="ab-key">不做實質內容審查</span>
+            <p class="sum">平台僅提供刊登與交易媒介，<b>不做實質內容審查</b>。內容須為原創或已取得授權，嚴禁複製教授講義／PPT／考題、掃描教科書、盜錄課程。查證屬實即下架停權，法律責任由上傳者承擔。</p>
+            <ol class="ab-clauses">
               <li>本平台僅提供數位內容之刊登與交易媒介，不對用戶上架之內容進行實質內容審查。</li>
               <li>用戶保證其上架之筆記、攻略、報告等數位商品皆為個人原創內容或已取得合法授權。</li>
               <li>嚴禁上傳、重製、散布任何侵害他人著作權之內容（例如：直接複製教授之課堂講義／PPT／考題、掃描教科書、盜錄課程音檔或影片等）。若經權利人檢舉並查證屬實，平台有權不經通知直接下架該商品，並對違規帳號進行限制或永久停權；一切法律責任由上傳用戶自行承擔，概與本平台無涉。</li>
-            </ul>
+            </ol>
           </div>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">02</span><span class="dt">學術誠信與校規免責</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p>所有內容<b>僅供學術交流與個人學習參考</b>，不得用於集體舞弊、抄襲計分作業或任何違反校規之行為。因不當使用導致校方懲戒，平台不負連帶責任。</p>
-          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-          <div class="dfull">
-            <ul>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">02</span></div><h3>學術誠信與校規免責</h3><span class="ab-key">僅供學術交流與個人學習參考</span>
+            <p class="sum">所有內容<b>僅供學術交流與個人學習參考</b>，不得用於集體舞弊、抄襲計分作業或任何違反校規之行為。因不當使用導致校方懲戒，平台不負連帶責任。</p>
+            <ol class="ab-clauses">
               <li>本平台所有上架之期末筆記、考題詳解、報告模板及推甄心得，僅供學術交流與個人學習參考之用。</li>
               <li>用戶不得利用本平台內容進行集體舞弊、直接抄襲作為學校計分作業、或任何違反所屬學校學術誠信及校規之行為。若用戶因不當使用本平台資源而導致校方懲戒（如：記過、開除學籍或學期成績零分），本平台不負任何連帶責任。</li>
-            </ul>
+            </ol>
           </div>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">03</span><span class="dt">數位商品價值與退費免責</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p>屬「非以有形媒介提供之數位內容」，依消保法<b>不適用 7 天鑑賞期</b>，付費完成原則上不退費。品質由賣家負責，購買前請參考評價與預覽頁。</p>
-          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-          <div class="dfull">
-            <ul>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">03</span></div><h3>數位商品價值與退費免責</h3><span class="ab-key">不適用 7 天鑑賞期</span>
+            <p class="sum">屬「非以有形媒介提供之數位內容」，依消保法<b>不適用 7 天鑑賞期</b>，付費完成原則上不退費。品質由賣家負責，購買前請參考評價與預覽頁。</p>
+            <ol class="ab-clauses">
               <li>依據《消費者保護法》通訊交易解除權合理例外情事適用準則，本平台銷售之校園攻略、筆記等屬於「非以有形媒介提供之數位內容，一經提供即為完成之線上服務」，不適用 7 天鑑賞期，一經付費完成，原則上不予退費。</li>
               <li>數位商品之品質、字體清晰度、內容準確性等皆由賣家自行負責。買家於購買前應審慎評估（如參考賣家評價、預覽頁面）。若發生品質嚴重不符之消費糾紛，平台僅協助內部申訴調解，不承擔商品瑕疵擔保責任。</li>
-            </ul>
+            </ol>
           </div>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">04</span><span class="dt">內容時效性與準確性免責</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p>課堂資訊具時效性（教授異動、評分變更、教材改版），<b>不保證 100% 適用當前學期</b>。因課程變更導致之失利，平台與作者不負補償責任。</p>
-          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-          <div class="dfull">
-            <ul>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">04</span></div><h3>內容時效性與準確性免責</h3><span class="ab-key">不保證 100% 適用當前學期</span>
+            <p class="sum">課堂資訊具時效性（教授異動、評分變更、教材改版），<b>不保證 100% 適用當前學期</b>。因課程變更導致之失利，平台與作者不負補償責任。</p>
+            <ol class="ab-clauses">
               <li>校園課堂資訊具有時效性（如授課教授異動、評分標準變更、教材改版等）。本平台所有攻略與筆記不保證 100% 適用於當前學期之課程要求。</li>
               <li>因課程內容變更導致之考試失利或分數未達預期，本平台及原創作者不承擔任何補償或法律責任。</li>
-            </ul>
+            </ol>
           </div>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">05</span><span class="dt">個人隱私與資料調閱聲明</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p>為交易安全暫存互動與交易紀錄，<b>絕不無故調閱</b>；惟重大違規、檢舉侵權或配合司法調查時依需求調閱。註冊綁定之學校信箱作為身分驗證與責任追溯依據。</p>
-          <button type="button" class="dmore"><span>展開更多</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
-          <div class="dfull">
-            <ul>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">05</span></div><h3>個人隱私與資料調閱聲明</h3><span class="ab-key">絕不無故調閱</span>
+            <p class="sum">為交易安全暫存互動與交易紀錄，<b>絕不無故調閱</b>；惟重大違規、檢舉侵權或配合司法調查時依需求調閱。註冊綁定之學校信箱作為身分驗證與責任追溯依據。</p>
+            <ol class="ab-clauses">
               <li>為維護校園交易安全、預防不法詐騙及處理消費糾紛，平台會暫存買賣雙方之互動與交易紀錄。平台管理團隊絕不無故調閱用戶隱私，惟當發生重大違規、惡意騷擾、侵害智財權遭檢舉、或配合司法機關調查時，平台有權依據營運與仲裁需求調閱相關紀錄。</li>
               <li>用戶註冊所綁定之學校信箱將作為身分驗證與責任追溯之依據。若情節嚴重涉及違法犯罪，平台將依法提供相關資訊予校方或司法警察機關處理。</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- 09 -->
+  <section class="ab-page" id="rules" data-title="平台版規">
+    <div class="ab-scroll"><div class="ab-in">
+      <span class="ab-eyebrow st">Rules</span>
+      <h2 class="ab-h2 st">平台版規</h2>
+      <p class="ab-lead st">為維護內容品質與交易安全，所有用戶皆須遵守以下版規。違規行為依情節輕重處置，平台保留最終認定與處置權。</p>
+      <div class="ab-split st" data-tabs>
+        <div class="ab-tabs" role="tablist" aria-label="平台版規">
+          <button class="ab-tab" role="tab"><span>01</span>智慧財產權／抄襲類</button>
+          <button class="ab-tab" role="tab"><span>02</span>學術誠信類</button>
+          <button class="ab-tab" role="tab"><span>03</span>人身攻擊／誹謗類</button>
+          <button class="ab-tab" role="tab"><span>04</span>內容時效性／準確性揭露</button>
+          <button class="ab-tab" role="tab"><span>05</span>消費糾紛／惡意退費防範</button>
+          <button class="ab-tab" role="tab"><span>06</span>隱私／防肉搜類</button>
+          <button class="ab-tab" role="tab"><span>07</span>業配／商業置入</button>
+          <button class="ab-tab" role="tab"><span>08</span>檢舉與違規處置機制</button>
+        </div>
+        <div>
+          <div class="ab-panel" role="tabpanel">
+            <div class="pno"><span data-depth style="--depth:18px">01</span></div><h3>智慧財產權／抄襲類</h3>
+            <p class="sum">一經檢舉查證屬實，不經通知即可<b>下架＋帳號停權</b>。</p>
+            <ul class="ab-clauses x"><li>禁止直接複製教授的課堂講義、PPT、考題、教科書掃描檔。</li><li>禁止盜錄課程音檔或影片後上架販售。</li></ul>
+          </div>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">02</span></div><h3>學術誠信類</h3>
+            <p class="sum">因使用平台內容而違反校規遭懲處，平台<b>不負連帶責任</b>。</p>
+            <ul class="ab-clauses x"><li>禁止販售可直接抄襲繳交的完整作業、報告成品。</li><li>禁止協助集體舞弊。</li></ul>
+          </div>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">03</span></div><h3>人身攻擊／誹謗類</h3>
+            <p class="sum">涉及誹謗或人身攻擊時，平台會配合校方／司法調閱後台實名資料，並可<b>永久停權</b>。</p>
+            <ul class="ab-clauses x"><li>禁止針對特定教授、同學、店家的人身攻擊、公開羞辱、人肉搜索。</li></ul>
+          </div>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">04</span></div><h3>內容時效性／準確性揭露</h3>
+            <p class="sum">平台<b>不保證內容 100% 適用於當下學期</b>。</p>
+            <ul class="ab-clauses ok"><li>創作者需標示適用學年度、學期。</li><li>過期內容需標註或自動降價提示。</li></ul>
+          </div>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">05</span></div><h3>消費糾紛／惡意退費防範</h3>
+            <p class="sum">數位內容「一經解鎖即完成服務」，<b>不適用七天鑑賞期</b>。</p>
+            <ul class="ab-clauses x"><li>禁止「買完後，進行截圖（或其他任何留存文章之形式），並惡意差評逼退費」，違者列入黑名單禁止再消費。</li><li>評分、留言禁止暴雷。</li></ul>
+          </div>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">06</span></div><h3>隱私／防肉搜類</h3>
+            <ul class="ab-clauses x"><li>禁止公開他人真實姓名、學號、聯絡方式。</li><li>禁止利用平台功能（如私訊、留言）進行騷擾或起底。</li></ul>
+          </div>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">07</span></div><h3>業配／商業置入</h3>
+            <ul class="ab-clauses x"><li>禁止提及商家名稱、地址、優惠碼等置入性內容。</li></ul>
+          </div>
+          <div class="ab-panel" role="tabpanel" hidden>
+            <div class="pno"><span data-depth style="--depth:18px">08</span></div><h3>檢舉與違規處置機制</h3>
+            <ul class="ab-clauses">
+              <li><b>檢舉流程</b>：用戶檢舉 → 平台要求雙方提出訴求及舉證 → 平台確認最終判決。</li>
+              <li><b>違規分級</b>（依情節是否重大而定）：警告 → 下架 → 停權。</li>
+              <li><b>違規處置</b>：若營利文章涉及業配或詐騙，除了下架或停權處置外，還需歸還文章營利所得，並且賠償平台的名譽損失。</li>
+              <li>平台保留最終認定與處置權。</li>
             </ul>
           </div>
         </div>
-      </details>
-    </div>
+      </div>
+    </div></div>
   </section>
 
-  <!-- 版規 -->
-  <section class="about-sec" data-reveal data-bg="8">
-    <div class="sec-eyebrow">Rules</div>
-    <h2>平台版規</h2>
-    <p class="lead">為維護內容品質與交易安全，所有用戶皆須遵守以下版規。違規行為依情節輕重處置，平台保留最終認定與處置權。</p>
-    <div class="disc-grid">
-      <details class="disc">
-        <summary><span class="dn">01</span><span class="dt">智慧財產權／抄襲類</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p><b>一經檢舉查證屬實，不經通知即可下架＋帳號停權。</b></p>
-          <ul>
-            <li>禁止直接複製教授的課堂講義、PPT、考題、教科書掃描檔。</li>
-            <li>禁止盜錄課程音檔或影片後上架販售。</li>
-          </ul>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">02</span><span class="dt">學術誠信類</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p><b>因使用平台內容而違反校規遭懲處，平台不負連帶責任。</b></p>
-          <ul>
-            <li>禁止販售可直接抄襲繳交的完整作業、報告成品。</li>
-            <li>禁止協助集體舞弊。</li>
-          </ul>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">03</span><span class="dt">人身攻擊／誹謗類</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p><b>涉及誹謗或人身攻擊時，平台會配合校方／司法調閱後台實名資料，並可永久停權。</b></p>
-          <ul>
-            <li>禁止針對特定教授、同學、店家的人身攻擊、公開羞辱、人肉搜索。</li>
-          </ul>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">04</span><span class="dt">內容時效性／準確性揭露</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p><b>平台不保證內容 100% 適用於當下學期。</b></p>
-          <ul>
-            <li>創作者需標示適用學年度、學期。</li>
-            <li>過期內容需標註或自動降價提示。</li>
-          </ul>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">05</span><span class="dt">消費糾紛／惡意退費防範</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <p><b>數位內容「一經解鎖即完成服務」，不適用七天鑑賞期。</b></p>
-          <ul>
-            <li>禁止「買完後，進行截圖（或其他任何留存文章之形式），並惡意差評逼退費」，違者列入黑名單禁止再消費。</li>
-            <li>評分、留言禁止暴雷。</li>
-          </ul>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">06</span><span class="dt">隱私／防肉搜類</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <ul>
-            <li>禁止公開他人真實姓名、學號、聯絡方式。</li>
-            <li>禁止利用平台功能（如私訊、留言）進行騷擾或起底。</li>
-          </ul>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">07</span><span class="dt">業配／商業置入</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <ul>
-            <li>禁止提及商家名稱、地址、優惠碼等置入性內容。</li>
-          </ul>
-        </div>
-      </details>
-      <details class="disc">
-        <summary><span class="dn">08</span><span class="dt">檢舉與違規處置機制</span><span class="chev"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-        <div class="dbody">
-          <ul>
-            <li><b>檢舉流程</b>：用戶檢舉 → 平台要求雙方提出訴求及舉證 → 平台確認最終判決。</li>
-            <li><b>違規分級</b>（依情節是否重大而定）：警告 → 下架 → 停權。</li>
-            <li><b>違規處置</b>：若營利文章涉及業配或詐騙，除了下架或停權處置外，還需歸還文章營利所得，並且賠償平台的名譽損失。</li>
-            <li>平台保留最終認定與處置權。</li>
-          </ul>
-        </div>
-      </details>
-    </div>
+  <!-- 10 -->
+  <section class="ab-page" id="start" data-title="開始使用">
+    <div class="ab-scroll"><div class="ab-in ab-center">
+      <h2 class="ab-h1 st">準備好把經驗<br><span class="ab-hl" data-depth style="--depth:10px">變成現金</span>了嗎？</h2>
+      <div class="ab-actions st">
+        <a class="ab-btn" href="school-studio.html">撰寫我的攻略<i class="ti ti-arrow-right"></i></a>
+        <a class="ab-tlink" href="school-article.html">瀏覽全部攻略<i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div></div>
   </section>
 
-  <!-- CTA -->
-  <section class="about-cta" data-reveal data-bg="0">
-    <h2>準備好把經驗變成現金了嗎？</h2>
-    <p class="cta-type">現在就開始閱讀，或分享你的第一篇攻略。</p>
-    <div class="btns">
-      <a class="btn-primary-cta" href="school-article.html">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
-        瀏覽全部攻略
-      </a>
-      <a class="btn-ghost-cta" href="school-studio.html">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
-        撰寫我的攻略
-      </a>
-    </div>
-  </section>
+  <nav class="ab-dots" aria-label="頁面導覽"></nav>
+  <div class="ab-hint" aria-hidden="true">向下滑動</div>
+  <div class="ab-arrows">
+    <button type="button" data-go="-1" aria-label="上一頁"><i class="ti ti-chevron-up"></i></button>
+    <button type="button" data-go="1" aria-label="下一頁"><i class="ti ti-chevron-down"></i></button>
+  </div>
+</main>
 
-</div>
+<script id="about-fp-script">
+(() => {
+  const root = document.getElementById('about');
+  if (!root) return;
+  document.documentElement.classList.add('ab-fp');
+  const pages = [...root.querySelectorAll('.ab-page')];
+  const grid = root.querySelector('.ab-grid');
+  const dotsNav = root.querySelector('.ab-dots');
+  const [prevBtn, nextBtn] = root.querySelectorAll('.ab-arrows button');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pad = n => String(n).padStart(2, '0');
+  const LOCK = reduce ? 200 : 950;
+  let cur = -1, locked = false;
+  const tabsBoxes = []; // 每一頁（依 pages 索引）對應的分頁籤 { step(d) } API，沒有分頁籤的頁是 undefined
+
+  // 逐行進場的延遲
+  pages.forEach(p => p.querySelectorAll('.st').forEach((el, i) => el.style.setProperty('--i', i)));
+
+  // 打字機效果：把 .ab-quote 裡的每個字包成一個 span.tc（保留原本的 <b>/<s>
+  // 標籤結構，粗體/刪除線照樣生效），每個字記下自己的順序 --ti，給 CSS 的
+  // transition-delay 用。進頁時切換 .typed class 讓它們依序淡入。
+  function wrapTypewriter(root) {
+    root.querySelectorAll('.ab-quote').forEach(q => {
+      let i = 0;
+      const walk = node => {
+        [...node.childNodes].forEach(child => {
+          if (child.nodeType === 3) {
+            const frag = document.createDocumentFragment();
+            [...child.textContent].forEach(ch => {
+              if (ch.trim() === '') { frag.appendChild(document.createTextNode(ch)); return; }
+              const span = document.createElement('span');
+              span.className = 'tc';
+              span.style.setProperty('--ti', i++);
+              span.textContent = ch;
+              frag.appendChild(span);
+            });
+            node.replaceChild(frag, child);
+          } else if (child.nodeType === 1) {
+            walk(child);
+          }
+        });
+      };
+      walk(q);
+    });
+  }
+  wrapTypewriter(root);
+  function retypeQuote(page) {
+    const q = page.querySelector('.ab-quote');
+    if (!q) return;
+    q.classList.remove('typed');
+    void q.offsetWidth; // 強制 reflow，讓重新加回 class 時 transition 會重新跑一次
+    requestAnimationFrame(() => q.classList.add('typed'));
+  }
+
+  // 側邊導覽
+  const dots = pages.map((p, i) => {
+    const a = document.createElement('a');
+    a.href = '#' + p.id; a.className = 'ab-dot';
+    a.innerHTML = `<i></i><em>${pad(i + 1)}　${p.dataset.title}</em>`;
+    a.addEventListener('click', e => { e.preventDefault(); go(i); });
+    dotsNav.appendChild(a);
+    return a;
+  });
+
+  function go(i, instant) {
+    i = Math.max(0, Math.min(pages.length - 1, i));
+    if (i === cur) return;
+    pages.forEach((p, k) => {
+      p.classList.toggle('is-active', k === i);
+      p.classList.toggle('is-above', k < i);
+      p.setAttribute('aria-hidden', k !== i);
+      p.inert = k !== i;
+    });
+    retypeQuote(pages[i]);
+    const sc = pages[i].querySelector('.ab-scroll');
+    sc.scrollTop = i > cur ? 0 : sc.scrollHeight;  // 往上回到上一頁時，從底部接續
+    if (cur === -1 || instant) sc.scrollTop = 0;
+    cur = i;
+    dots.forEach((d, k) => d.classList.toggle('is-active', k === i));
+    prevBtn.disabled = i === 0; nextBtn.disabled = i === pages.length - 1;
+    root.classList.toggle('not-first', i > 0);
+    grid.style.transform = `translateY(${-(i % 2) * 24}px) translateX(${-(i % 3) * 16}px)`;
+    history.replaceState(null, '', '#' + pages[i].id);
+    locked = true; setTimeout(() => locked = false, LOCK);
+  }
+  const step = d => { if (!locked) go(cur + d); };
+
+  // 該頁內容比螢幕長時，先捲完再換頁
+  const canScroll = (d) => {
+    const sc = pages[cur].querySelector('.ab-scroll');
+    return d > 0 ? sc.scrollTop + sc.clientHeight < sc.scrollHeight - 2 : sc.scrollTop > 2;
+  };
+
+  // 滑鼠滾輪 / 觸控板
+  let acc = 0, lastWheel = 0;
+  root.addEventListener('wheel', e => {
+    if (e.ctrlKey) return;
+    const d = Math.sign(e.deltaY);
+    if (!d) return;
+    // 免責／版規這兩頁：游標在左側分頁籤列表上滾動，只切分頁籤（在第一/最後一項
+    // 就不動了，不會因此換頁）；游標在其他地方滾動，維持原本的換頁／原生捲動邏輯，
+    // 不會因為滾輪手勢而意外跳分頁籤。
+    const box = tabsBoxes[cur];
+    const overTabs = box && e.target.closest && e.target.closest('.ab-tabs');
+    // 游標在左側分頁籤列表上時，滾輪整個交給分頁籤切換用，不看頁面內容還有沒有
+    // 捲動空間；游標在其他地方才照舊看 canScroll() 決定要不要先捲完原生內容。
+    if (!overTabs && canScroll(d)) { acc = 0; return; }
+    e.preventDefault();
+    const now = performance.now();
+    if (now - lastWheel > 200) acc = 0;      // 新的手勢
+    lastWheel = now;
+    acc += e.deltaY;
+    if (Math.abs(acc) <= 400) return;        // 累積到一定量才算一格，不然一個手勢的一大串
+    acc = 0;                                 // wheel 事件會一次把分頁籤/頁面跳好幾格
+    if (overTabs) {
+      if (box.step(d)) pages[cur].querySelector('.ab-scroll').scrollTop = 0;
+      return;
+    }
+    if (locked) return;
+    step(d);
+  }, { passive: false });
+
+  // 觸控滑動
+  let ty = 0, tEdge = { up: false, down: false };
+  root.addEventListener('touchstart', e => {
+    ty = e.touches[0].clientY;
+    tEdge = { down: !canScroll(1), up: !canScroll(-1) };
+  }, { passive: true });
+  root.addEventListener('touchend', e => {
+    const dy = ty - e.changedTouches[0].clientY;
+    if (Math.abs(dy) < 60) return;
+    if (dy > 0 && tEdge.down) step(1);
+    if (dy < 0 && tEdge.up) step(-1);
+  }, { passive: true });
+
+  // 鍵盤（分頁籤本身的 ArrowUp/Down/Left/Right 另外處理，見下面 [data-tabs] 那段；
+  // 這裡只負責「沒有聚焦在分頁籤上」時的整頁換頁，呼應滑鼠滾輪版本「其他區域才換頁」）
+  addEventListener('keydown', e => {
+    if (e.target.closest('input,textarea,select,[contenteditable],[role=tablist]')) return;
+    const k = e.key;
+    if (['ArrowDown', 'PageDown', ' '].includes(k)) { if (!canScroll(1)) { e.preventDefault(); step(1); } }
+    else if (['ArrowUp', 'PageUp'].includes(k)) { if (!canScroll(-1)) { e.preventDefault(); step(-1); } }
+    else if (k === 'Home') { e.preventDefault(); go(0); }
+    else if (k === 'End') { e.preventDefault(); go(pages.length - 1); }
+  });
+  root.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => go(cur + +b.dataset.go)));
+
+  // 分頁籤（免責 / 版規）
+  root.querySelectorAll('[data-tabs]').forEach((box, b) => {
+    const tabs = [...box.querySelectorAll('[role=tab]')];
+    const panels = [...box.querySelectorAll('[role=tabpanel]')];
+    let curTab = 0;
+    const sel = (i, focus) => {
+      curTab = i;
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', k === i); t.tabIndex = k === i ? 0 : -1; });
+      panels.forEach((p, k) => p.hidden = k !== i);
+      if (focus) tabs[i].focus();
+      tabs[i].scrollIntoView({ block: 'nearest', inline: 'center' });
+    };
+    tabs.forEach((t, i) => {
+      t.id = `ab-t${b}-${i}`; panels[i].id = `ab-p${b}-${i}`;
+      t.setAttribute('aria-controls', panels[i].id); panels[i].setAttribute('aria-labelledby', t.id);
+      t.addEventListener('click', () => sel(i));
+      t.addEventListener('keydown', e => {
+        const n = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+        if (n) { e.preventDefault(); sel((i + n + tabs.length) % tabs.length, true); }
+      });
+    });
+    sel(0);
+    // 滾輪切換：還沒到第一/最後一項就把滾輪「吃掉」只切分頁籤，回傳 true 代表
+    // 已處理（留在這一頁）；已經到底再回傳 false，交給外層去換頁。
+    const pageIdx = pages.indexOf(box.closest('.ab-page'));
+    if (pageIdx > -1) {
+      tabsBoxes[pageIdx] = {
+        step(d) {
+          const next = curTab + d;
+          if (next < 0 || next >= tabs.length) return false;
+          sel(next);
+          return true;
+        }
+      };
+    }
+  });
+
+  // 游標互動（僅限滑鼠）
+  if (matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce) {
+    const ring = root.querySelector('.ab-cursor');
+    let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y, raf;
+    const loop = () => {
+      rx += (x - rx) * .2; ry += (y - ry) * .2;
+      ring.style.transform = `translate(${rx}px,${ry}px)`;
+      raf = Math.abs(x - rx) + Math.abs(y - ry) > .1 ? requestAnimationFrame(loop) : 0;
+    };
+    root.addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse') return;
+      x = e.clientX; y = e.clientY;
+      const r = root.getBoundingClientRect();
+      const lx = x - r.left, ly = y - r.top;
+      root.classList.add('has-pointer');
+      const g = grid.getBoundingClientRect();
+      grid.style.setProperty('--cx', (x - g.left) + 'px');
+      grid.style.setProperty('--cy', (y - g.top) + 'px');
+      const nx = lx / r.width - .5, ny = ly / r.height - .5;   // -0.5 ~ 0.5
+      root.style.setProperty('--mx', nx.toFixed(3));
+      root.style.setProperty('--my', ny.toFixed(3));
+      root.style.setProperty('--px', (-nx * 40).toFixed(1) + 'px');
+      root.style.setProperty('--py', (-ny * 40).toFixed(1) + 'px');
+      if (!raf) raf = requestAnimationFrame(loop);
+      const t = e.target;
+      ring.classList.toggle('is-link', !!t.closest('a,button,[role=tab]'));
+      ring.classList.toggle('is-text', !t.closest('a,button,[role=tab]') && !!t.closest('.ab-quote,.ab-clauses,.sum'));
+    });
+    root.addEventListener('pointerleave', () => root.classList.remove('has-pointer'));
+    root.addEventListener('pointerdown', () => ring.classList.add('is-down'));
+    addEventListener('pointerup', () => ring.classList.remove('is-down'));
+
+    // 磁吸按鈕
+    root.querySelectorAll('.ab-btn,.ab-tlink,.ab-arrows button').forEach(b => {
+      b.classList.add('ab-mag');
+      b.addEventListener('pointermove', e => {
+        const r = b.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+        b.style.transform = `translate(${dx * .25}px,${dy * .35}px)`;
+      });
+      b.addEventListener('pointerleave', () => b.style.transform = '');
+    });
+
+    // 文字雲：字會被游標推開
+    const cloudWords = [...root.querySelectorAll('.ab-cloud .w')];
+    root.querySelector('.ab-cloud')?.addEventListener('pointermove', e => {
+      cloudWords.forEach(w => {
+        const r = w.getBoundingClientRect();
+        const dx = r.left + r.width / 2 - e.clientX, dy = r.top + r.height / 2 - e.clientY;
+        const dist = Math.hypot(dx, dy), R = Math.max(r.width, r.height) / 2 + 90;
+        const f = dist < R ? (1 - dist / R) * 26 : 0;
+        w.style.setProperty('--rx', (dx / (dist || 1) * f).toFixed(1) + 'px');
+        w.style.setProperty('--ry', (dy / (dist || 1) * f).toFixed(1) + 'px');
+      });
+    });
+    root.querySelector('.ab-cloud')?.addEventListener('pointerleave', () => cloudWords.forEach(w => { w.style.removeProperty('--rx'); w.style.removeProperty('--ry'); }));
+
+    // 主題列：底線從游標進入的那一側長出來
+    root.querySelectorAll('.ab-topic').forEach(a => a.addEventListener('pointerenter', e => {
+      const r = a.getBoundingClientRect();
+      a.style.setProperty('--ox', e.clientX - r.left < r.width / 2 ? 'left' : 'right');
+    }));
+  }
+
+  // 起始頁（支援 #rules 這類網址）
+  const start = pages.findIndex(p => '#' + p.id === location.hash);
+  go(start < 0 ? 0 : start, true);
+
+  // 統計數字
+  const fmt = n => n.toLocaleString('zh-TW');
+  window.setAboutStats = (data = {}) => Object.entries(data).forEach(([k, v]) => {
+    const el = root.querySelector(`[data-stat="${k}"]`);
+    if (!el || typeof v !== 'number') return;
+    el.classList.remove('empty');
+    if (reduce) return el.textContent = fmt(v);
+    const t0 = performance.now();
+    const tick = now => { const t = Math.min(1, (now - t0) / 1400); el.textContent = fmt(Math.round(v * (1 - (1 - t) ** 4))); if (t < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  });
+})();
+</script>
 
 <!-- ── Bottom nav (mobile) ── -->
 <script>if(window !== window.parent) document.write('<style>.bottom-nav{display:none!important}</style>');</script>
@@ -813,11 +922,6 @@
     </a>
 </nav>
 
-<!-- 回到最上面 -->
-<button id="backToTop" class="back-to-top" type="button" aria-label="回到最上面">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
-</button>
-
 <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 <script type="module">
 import { AppModal } from "../default/app-modal.js";
@@ -833,6 +937,21 @@ window.wpBackendServiceInstance = new wpBackendService();
   const ok = await requireAdminPage();
   if (ok) document.body.style.visibility = "visible";
 })();
+
+// 首頁那三個統計數字（篇攻略／已認證作者／本月閱讀）接上真實 API，
+// window.setAboutStats() 是 about-fp-script 曝露出來的跑數字動畫入口。
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res = await window.schoolBackendService.getSchoolStats();
+    window.setAboutStats?.({
+      articles: res.data.articleCount,
+      authors: res.data.verifiedAuthorCount,
+      reads: res.data.monthlyReadCount
+    });
+  } catch (error) {
+    console.error('取得校園攻略站統計失敗：', error);
+  }
+});
 </script>
 <script defer src="school-new.js"></script>
 <script defer src="school-cart.js"></script>
@@ -856,186 +975,10 @@ document.addEventListener('DOMContentLoaded', function() {
   if (hamburger) hamburger.addEventListener('click', toggleMenu);
   if (backdrop) backdrop.addEventListener('click', closeMenu);
   menuLinks.forEach(link => link.addEventListener('click', closeMenu));
-
-  // 免責聲明「展開更多」完整條文
-  document.querySelectorAll('.disc .dmore').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const full = btn.nextElementSibling;
-      const open = full.classList.toggle('open');
-      btn.classList.toggle('open', open);
-      btn.querySelector('span').textContent = open ? '收合' : '展開更多';
-    });
-  });
 });
 </script>
-
-<!-- ── 捲動進場動畫 ── -->
-<script>
-(function () {
-  const els = document.querySelectorAll('[data-reveal]');
-  // 每個區塊內要接力進場的元素（文字＋卡片），依 DOM 順序給遞增 delay
-  const ANIM_SEL = [
-    ':scope > .eyebrow', ':scope > h1', ':scope > p', ':scope > .hero-stats',   // hero
-    ':scope > .sec-eyebrow', ':scope > h2', ':scope > .lead',                    // 一般區塊標題文字
-    ':scope > .btns',                                                            // CTA 按鈕
-    ':scope > .feat-grid > .feat-card',
-    ':scope > .prot-grid > .prot-card',
-    ':scope > .step-grid > .step-card',
-    ':scope > .disc-grid > .disc',
-    ':scope > .cat-layout > .cat-copy > .sec-eyebrow',
-    ':scope > .cat-layout > .cat-copy > h2',
-    ':scope > .cat-layout > .cat-copy > .lead',
-    ':scope > .cat-layout > .cat-cloud'
-  ].join(',');
-  els.forEach(sec => {
-    sec.querySelectorAll(ANIM_SEL).forEach((el, i) => {
-      if (el.classList.contains('cta-type')) return; // 打字機另外處理，不套上浮淡入
-      el.classList.add('anim');
-      if (el.tagName === 'H1' || el.tagName === 'H2') el.classList.add('is-title');
-      el.style.transitionDelay = (i * 90) + 'ms';
-    });
-  });
-
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // 無 IntersectionObserver 或使用者偏好減少動態 → 直接全部顯示
-  if (reduce || !('IntersectionObserver' in window)) {
-    els.forEach(el => el.classList.add('revealed'));
-    return;
-  }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('revealed');
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-  els.forEach(el => io.observe(el));
-})();
-
-// ── body 漸層隨捲動變色 ──
-(function () {
-  const layers = document.querySelectorAll('.bg-layer');
-  const secs = document.querySelectorAll('section[data-bg]');
-  if (!layers.length || !secs.length || !('IntersectionObserver' in window)) return;
-  const setBg = (idx) => layers.forEach(l => l.classList.toggle('active', l.dataset.bg === String(idx)));
-  // 當區塊通過視窗中央帶時，切換到該區塊對應的背景色
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) setBg(e.target.dataset.bg); });
-  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
-  secs.forEach(s => io.observe(s));
-})();
-
-// ── hero 數字跑動（count-up）──
-(function () {
-  const nums = document.querySelectorAll('.about-hero .hero-stats .n');
-  if (!nums.length) return;
-  const fmt = (v) => v.toLocaleString('en-US'); // 千分位（例：5,180）
-  // 先記住目標值
-  nums.forEach(el => { el.dataset.target = el.textContent.replace(/[^\d]/g, ''); });
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce) return; // 保留原始數字，不跑動
-  nums.forEach(el => { el.textContent = '0'; });
-  const run = (el) => {
-    const target = parseInt(el.dataset.target, 10);
-    if (!isFinite(target)) { el.textContent = el.dataset.target; return; }
-    const dur = 1500, start = performance.now();
-    const ease = (t) => 1 - Math.pow(1 - t, 3); // easeOutCubic
-    (function tick(now) {
-      const p = Math.min((now - start) / dur, 1);
-      el.textContent = fmt(Math.round(target * ease(p)));
-      if (p < 1) requestAnimationFrame(tick);
-      else el.textContent = fmt(target);
-    })(start);
-  };
-  if (!('IntersectionObserver' in window)) { nums.forEach(run); return; }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } });
-  }, { threshold: 0.4 });
-  nums.forEach(n => io.observe(n));
-})();
-
-// ── CTA 文字打字機效果（等該區塊進場動畫跑完再開始）──
-(function () {
-  const el = document.querySelector('.about-cta .cta-type');
-  if (!el) return;
-  const full = el.textContent;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce || !('IntersectionObserver' in window)) return; // 保留原文字，不做動畫
-  el.textContent = '';
-  const caret = document.createElement('span');
-  caret.className = 'cta-caret';
-  let started = false;
-  const type = () => {
-    if (started) return;
-    started = true;
-    el.appendChild(caret);
-    let i = 0;
-    (function step() {
-      if (i < full.length) {
-        caret.insertAdjacentText('beforebegin', full[i++]); // 逐字插在游標前
-        setTimeout(step, 80);
-      } else {
-        setTimeout(() => caret.remove(), 1600); // 打完後游標再閃一下就移除
-      }
-    })();
-  };
-  const cta = el.closest('[data-reveal]') || el;
-  // 依該區塊 .anim 的最大交錯 delay + transition 時長，算出「整區出現完」的等待時間
-  let maxDelay = 0;
-  cta.querySelectorAll('.anim').forEach(a => {
-    const d = parseFloat(getComputedStyle(a).transitionDelay) || 0; // 秒
-    if (d > maxDelay) maxDelay = d;
-  });
-  const startDelay = maxDelay * 1000 + 850;
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { io.unobserve(e.target); setTimeout(type, startDelay); }
-    });
-  }, { threshold: 0.35 });
-  io.observe(cta);
-})();
-
-
-// ── 點擊漣漪效果 ──
-(function () {
-  const createRipple = (x, y) => {
-    const ripple = document.createElement('div');
-    ripple.className = 'ripple';
-    const size = Math.random() * 100 + 150; // 150-250px
-    ripple.style.width = size + 'px';
-    ripple.style.height = size + 'px';
-    ripple.style.left = (x - size / 2) + 'px';
-    ripple.style.top = (y - size / 2) + 'px';
-    document.body.appendChild(ripple);
-
-    // 動畫結束後移除元素
-    setTimeout(() => ripple.remove(), 800);
-  };
-
-  const handleClick = (e) => {
-    createRipple(e.clientX, e.clientY);
-  };
-
-  window.addEventListener('click', handleClick, { passive: true });
-})();
-
-// ── 回到最上面按鈕（捲到接近底部才出現）──
-(function () {
-  const btn = document.getElementById('backToTop');
-  if (!btn) return;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const onScroll = () => {
-    const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 160;
-    btn.classList.toggle('show', nearBottom);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-  onScroll();
-  btn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-  });
-})();
-</script>
+<!-- 捲動進場動畫／hero 數字跑動／CTA 打字機／點擊漣漪／回到最上面：舊版 about-wrap
+     排版自己的互動腳本，新版 .ab 全頁式排版（about-fp-script）已經有自己的一套
+     進場動畫跟統計數字動畫，這些綁定舊 class 的腳本拿掉，不要留著當死代碼。 -->
 </body>
 </html>

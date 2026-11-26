@@ -153,13 +153,20 @@
                                 <a class="nav-link" href="../news/news.html" data-i18n="nav.news">最新資訊</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="../school/school.html">校園攻略站</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="../questions/questions.html" data-i18n="nav.faq.link">常見問題</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="../communication/communication.html" data-i18n="nav.contact">客服諮詢</a>
                             </li>
                         </ul>
-                        <button id="langToggle" class="lang-toggle-btn" onclick="toggleLang()">EN</button>
+                        <div class="login ms-3">
+                            <a class="username" href="../person/person.html"></a>
+                            <a class="navbar-brand loginornot" href="../account/account.html?page=login" data-i18n="nav.login">登入</a>
+                        </div>
+                        <button id="langToggle" class="lang-toggle-btn ms-2" onclick="toggleLang()">EN</button>
                     </div>
                     <!-- 側邊抽屜連結來源（隱藏，供 default.js _initMobileDrawer 使用） -->
                     <ul class="navbar-nav mobileNav d-none">
@@ -168,6 +175,7 @@
                         <li class="nav-item"><a class="nav-link" href="../commodity/commodity.html" data-i18n="nav.market">購物商場</a></li>
                         <li class="nav-item"><a class="nav-link" href="../wishpool/wishpool.html#wishpool" data-i18n="nav.wishpool">許願專區</a></li>
                         <li class="nav-item"><a class="nav-link" href="../news/news.html" data-i18n="nav.news">最新資訊</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../school/school.html">校園攻略站</a></li>
                         <li class="nav-item"><a class="nav-link" href="../questions/questions.html" data-i18n="nav.faq.link">常見問題</a></li>
                         <li class="nav-item"><a class="nav-link" href="../communication/communication.html" data-i18n="nav.contact">客服諮詢</a></li>
                     </ul>
@@ -180,7 +188,7 @@
                     <h4 style="color: #abdad5; font-weight: 700; letter-spacing: 0.06em;" data-i18n="hero.subtitle">免費的二手交易平台</h4>
                     <div class="buttontwo d-flex">
                         <button class="hvr-sweep-to-right shopbtn" onclick="window.location.href='../shop/shop.html'" data-i18n="hero.btn.shop">立即開始購物</button>
-                        <button class="hvr-sweep-to-right lookbtn" onclick="window.location.href='../account/account.html?page=login'" data-i18n="hero.btn.browse">立即註冊／登入</button>
+                        <button class="hvr-sweep-to-right lookbtn" onclick="window.location.href='../school/school.html'" data-i18n="hero.btn.guide">立即閱覽攻略</button>
                     </div>
                 </div>
                 <div class="hero-right">
@@ -231,6 +239,27 @@
         </div>
         </div>
     </div>
+        <!-- 封面下方跑馬燈：核心分類關鍵字 + 國立中興大學限定標語，無限循環捲動 -->
+        <div class="nh-marquee" aria-hidden="true">
+          <div class="nh-marquee-track">
+            <span class="nh-marquee-item hl">生活用品</span>
+            <span class="nh-marquee-item">電器</span>
+            <span class="nh-marquee-item hl">許願池</span>
+            <span class="nh-marquee-item">校園攻略</span>
+            <span class="nh-marquee-item hl">限校面交</span>
+            <span class="nh-marquee-item">免抽成</span>
+            <span class="nh-marquee-item hl">二手書</span>
+            <span class="nh-marquee-item">國立中興大學</span>
+            <span class="nh-marquee-item hl">生活用品</span>
+            <span class="nh-marquee-item">電器</span>
+            <span class="nh-marquee-item hl">許願池</span>
+            <span class="nh-marquee-item">校園攻略</span>
+            <span class="nh-marquee-item hl">限校面交</span>
+            <span class="nh-marquee-item">免抽成</span>
+            <span class="nh-marquee-item hl">二手書</span>
+            <span class="nh-marquee-item">國立中興大學</span>
+          </div>
+        </div>
         <section id="next-section" class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center halfsection">
             <div class="friend mx-auto col-md-5 d-flex flex-column justify-content-center" data-aos="fade-right">
                 <span class="nh-eyebrow-sec">SECONDHAND TRADING</span>
@@ -299,19 +328,11 @@
                 <div class="col-md-6 col-lg-4 text-center" data-aos="fade-up" data-aos-delay="200">
                     <div class="reason-card">
                         <img src="../svg/star.svg" alt="校園專屬icon" class="icon" loading="lazy">
-                        <h5 style="color: #004b97;" data-i18n="reason.campus.title">校園專屬</h5>
-                        <p data-i18n="reason.campus.desc">精準社群定位，讓交易與資訊更即時貼近。</p>
+                        <h5 style="color: #004b97;" data-i18n="reason.campus.title">校園專屬經驗變現</h5>
+                        <p data-i18n="reason.campus.desc">精準社群定位，讓交易與資訊更即時貼近。經驗有價，一篇懶人包也能幫你賺零用錢。</p>
                     </div>
                 </div>
-                <!-- 校園攻略站上線前暫時隱藏
-                <div class="col-md-6 col-lg-3 text-center" data-aos="fade-up" data-aos-delay="300">
-                    <div class="reason-card">
-                        <img src="../webP/experience.webp" alt="經驗變現icon" loading="lazy" class="icon" style="width: 240px; height: auto; margin-top: 20px;">
-                        <h3 data-i18n="reason.exp.title">經驗變現</h3>
-                        <p data-i18n="reason.exp.desc">經驗有價，一篇懶人包也能幫你賺零用錢。</p>
-                    </div>
-                </div>
-                -->
+
             </div>
         </section>
         <section class="trade">
@@ -385,13 +406,14 @@
                 <a class="nh-svc-more" href="../wishpool/wishpool.html#wishpool">前往許願池</a>
               </div>
               <div class="nh-svc-card" data-aos="fade-up" data-aos-delay="160">
-                <div class="nh-svc-num">03 / SOON</div>
+                <span class="nh-svc-badge-new">新功能</span>
+                <div class="nh-svc-num">03 / GUIDE</div>
                 <div class="nh-svc-ic">
-                  <svg viewBox="0 0 24 24" stroke="#004b97" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4H17a2 2 0 012 2V14a2 2 0 01-2 2H11L7 20V16H5a2 2 0 01-2-2V6a2 2 0 012-2Z"/><path d="M9 9a2 2 0 113 2v1"/><path d="M11 14h.01"/></svg>
+                  <svg viewBox="0 0 24 24" stroke="#004b97" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg>
                 </div>
-                <h3>新功能即將推出</h3>
-                <p>我們正在打造更多實用功能，讓校園生活更完整、更便利，敬請期待！</p>
-                <span class="nh-svc-more nh-svc-soon">敬請期待</span>
+                <h3 data-i18n="service.school.title">校園攻略站</h3>
+                <p data-i18n="service.school.desc">學長姐實戰經驗整理成攻略文章，涵蓋推甄、證照、實習、選課等主題，付費解鎖完整內容，讓校園生活少走冤枉路。</p>
+                <a class="nh-svc-more" href="../school/school.html" data-i18n="nav.schoolMore">前往校園攻略站</a>
               </div>
             </div>
 

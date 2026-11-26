@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>作者主頁 · 校園攻略站</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net unpkg.com cdnjs.cloudflare.com cdn.quilljs.com static.cloudflareinsights.com js.sentry-cdn.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com cdn.quilljs.com; font-src 'self' fonts.gstatic.com cdn.jsdelivr.net cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' static.cloudflareinsights.com https://treasurehub.tw wss://treasurehub.tw https://o4511592734130176.ingest.us.sentry.io; object-src 'none'; base-uri 'self'; form-action 'self' https://treasurehub.tw;">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="manifest" href="../manifest.json">
+  <link rel="shortcut icon" href="../treasurehubIcon.ico">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
+  <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/app-modal.css">
+  <link rel="stylesheet" href="../default/default-font.css">
+  <link rel="stylesheet" href="school.css">
+  <link rel="stylesheet" href="school-cart.css">
+  <link rel="stylesheet" href="school-post.css">
+  <script src="school-theme.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
+  <script type="module" src="../default/default.js"></script>
+  <style>
+    .au-container { width: min(860px, 92vw); margin: 32px auto 80px; }
+    .au-skeleton { display: flex; flex-direction: column; gap: 16px; }
+    .au-header { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 32px; display: flex; gap: 22px; align-items: center; margin-bottom: 24px; }
+    .au-avatar { width: 84px; height: 84px; border-radius: 50%; background: linear-gradient(135deg, var(--mid), var(--aqua)); border: 2px solid #fff; box-shadow: 0 0 0 1.5px var(--aqua); flex-shrink: 0; object-fit: cover; }
+    .au-id { flex: 1; min-width: 0; }
+    .au-name { font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .au-status { font-size: 11.5px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.04em; }
+    .au-counts { display: flex; gap: 18px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+    .au-counts b { color: var(--ink); font-weight: 700; }
+    .au-header .titles { margin-top: 10px; }
+    .au-header .follow { align-self: center; }
+
+    .au-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 24px; }
+    .au-stat-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; text-align: center; }
+    .au-stat-val { font-size: 22px; font-weight: 700; color: var(--navy); }
+    .au-stat-lbl { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 0.03em; }
+
+    .au-section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; margin-bottom: 20px; }
+    .au-section-head { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .au-edu-row { display: flex; justify-content: space-between; gap: 14px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 13.5px; }
+    .au-edu-row:first-of-type { border-top: none; }
+    .au-edu-type { color: var(--navy); font-weight: 700; flex-shrink: 0; }
+    .au-edu-school { color: var(--ink); text-align: right; }
+    .au-empty { color: var(--muted); font-size: 13px; text-align: center; padding: 10px 0; }
+
+    .pill-soon { display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 700; color: #a08540; background: rgba(243,227,181,0.55); padding: 5px 12px; border-radius: 999px; letter-spacing: 0.04em; flex-shrink: 0; margin-left: 8px; }
+    .au-soon-body { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 18px 6px 4px; color: var(--muted); }
+    .au-soon-body svg { width: 34px; height: 34px; color: var(--sky); flex-shrink: 0; }
+    .au-soon-body p { margin: 0; font-size: 12.5px; line-height: 1.7; max-width: 420px; }
+
+    @media (max-width: 560px) {
+      .au-header { flex-direction: column; text-align: center; padding: 24px 20px; }
+      .au-header .follow { width: 100%; }
+      .au-counts { justify-content: center; }
+    }
+    :root[data-theme="dark"] .au-status { color: var(--cream); }
+  </style>
+<style class="am-admin-gate-style">body{visibility:hidden}</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="d-flex gap-2">
+    <button class="mobile-hamburger d-lg-none" type="button">
+      <img src="../svg/navbar.svg" alt="" style="width: 20px;">
+    </button>
+    <a class="logo" href="../newhome/newhome.html" title="回拾貨寶庫平台首頁">
+      <img src="../svg/TREASUREHUBCHEN.svg" alt="">
+    </a>
+  </div>
+  <div class="tabs">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <div class="tab-drop">
+      <a href="school.html" class="on">校園攻略站
+        <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="drop-menu">
+        <a href="school.html">攻略首頁</a>
+        <a href="school-about.html">攻略介紹</a>
+        <a href="school-article.html">全部文章</a>
+        <a href="school-studio.html">撰寫攻略</a>
+        <a href="school-contests.html">全部競賽</a>
+      </div>
+    </div>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+  <div class="right">
+    <button class="theme-toggle" id="themeToggle" type="button" title="切換深色模式"><i class="ti ti-moon" id="themeIcon"></i></button>
+    <a class="btn-sm navy d-none d-lg-inline-flex" href="school-studio.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5 V19"/><path d="M5 12 H19"/></svg>
+      撰寫攻略
+    </a>
+    <button class="login-btn" id="loginBtn" type="button" title="點此模擬登入">登入</button>
+    <div class="user-chip" id="userChip" style="display:none;" title="點此查看選單">
+      <img class="nav-username-avatar" src="../image/default-avatar.webp" alt="頭像">
+    </div>
+  </div>
+</nav>
+
+<!-- 手機版側面菜單 -->
+<div class="mobile-menu-backdrop"></div>
+<div class="mobile-menu-wrapper" id="navbarMenu">
+  <div class="mobile-menu">
+    <a href="../newhome/newhome.html">購物首頁</a>
+    <a href="../commodity/commodity.html">購物商場</a>
+    <a href="../wishpool/wishpool.html#wishpool">許願專區</a>
+    <a href="school.html" class="on">校園攻略站</a>
+    <a href="../questions/questions.html">常見問題</a>
+  </div>
+</div>
+
+<div class="au-container">
+  <div class="sp-breadcrumb" style="margin-bottom:16px;">
+    <a href="school.html">校園攻略站</a>
+    <span class="sep">/</span>
+    <span class="cur">作者主頁</span>
+  </div>
+
+  <div id="auSkeleton" class="au-skeleton">
+    <div class="au-header">
+      <div class="skeleton" style="width:84px;height:84px;border-radius:50%;flex-shrink:0;"></div>
+      <div style="flex:1;">
+        <div class="skeleton skeleton-text" style="width:160px;height:22px;"></div>
+        <div class="skeleton skeleton-text" style="width:220px;margin-top:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="auContent" style="display:none;">
+    <div class="au-header">
+      <img class="au-avatar" id="auAvatar" src="../image/default-avatar.webp" alt="作者頭像">
+      <div class="au-id">
+        <div class="au-name">
+          <span id="auName">—</span>
+          <span class="au-status" id="auStatus" style="display:none;"></span>
+        </div>
+        <div class="au-counts">
+          <span><b id="auFollowers">0</b> 位追蹤者</span>
+          <span><b id="auFollowing">0</b> 追蹤中</span>
+        </div>
+        <div class="titles" id="auTitles"></div>
+      </div>
+      <a class="follow" href="#" id="auFollowBtn">＋ 追蹤</a>
+    </div>
+
+    <div class="au-stats">
+      <div class="au-stat-card">
+        <div class="au-stat-val" id="auArticleCount">0</div>
+        <div class="au-stat-lbl">發佈過的攻略</div>
+      </div>
+      <div class="au-stat-card">
+        <div class="au-stat-val" id="auLikeCount">0</div>
+        <div class="au-stat-lbl">累積獲得的讚</div>
+      </div>
+    </div>
+
+    <div class="au-section">
+      <div class="au-section-head">已認證學習經歷</div>
+      <div id="auEduList"><div class="au-empty">目前沒有已認證的學習經歷</div></div>
+    </div>
+
+    <div class="au-section">
+      <div class="au-section-head">發佈過的攻略<span class="pill-soon">敬請期待</span></div>
+      <div class="au-soon-body">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2 H6 a2 2 0 0 0-2 2 v16 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2-2 V8Z"/><path d="M14 2 v6 h6"/></svg>
+        <p>目前文章列表 API 還沒有「依作者篩選」的參數，沒辦法在這裡列出這位作者發佈過的其他攻略，等後端補上這個參數後會補上這個區塊。</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="auNotFound" class="au-section" style="display:none; text-align:center; color:var(--muted);">
+    找不到這位作者的資料。
+  </div>
+</div>
+
+<script type="module">
+import { AppModal } from "../default/app-modal.js";
+import { requireAdminPage } from "../default/default.js";
+import SchoolBackendService from "./schoolBackendService.js";
+window.AppModal = AppModal;
+window.schoolBackendService = new SchoolBackendService();
+(async () => {
+  // 跟其他 /school 頁面一致：整個校園攻略站目前還在 MODERATOR/ADMIN 限定的
+  // 內測階段，這裡沒有理由放寬，不然就是這個頁面獨漏的安全性不一致。
+  const ok = await requireAdminPage();
+  if (ok) document.body.style.visibility = "visible";
+})();
+</script>
+<script defer src="school-new.js"></script>
+<script defer src="school-cart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // ── 手機版漢堡選單 ──
+  var hamburger = document.querySelector('.mobile-hamburger');
+  var menuWrapper = document.getElementById('navbarMenu');
+  var backdrop = document.querySelector('.mobile-menu-backdrop');
+  var menuLinks = document.querySelectorAll('.mobile-menu a');
+  function toggleMenu() { menuWrapper.classList.toggle('show'); backdrop.classList.toggle('active'); hamburger.classList.toggle('active'); }
+  function closeMenu() { menuWrapper.classList.remove('show'); backdrop.classList.remove('active'); hamburger.classList.remove('active'); }
+  if (hamburger) hamburger.addEventListener('click', toggleMenu);
+  if (backdrop) backdrop.addEventListener('click', closeMenu);
+  menuLinks.forEach(function (link) { link.addEventListener('click', closeMenu); });
+
+  var STATUS_LABEL = { ENROLLED: '在學', TRANSFERRING: '轉學', GRADUATED: '畢業', DROPPED_OUT: '肄業', ON_LEAVE: '休學' };
+  var EDU_TYPE_LABEL = { TRANSFER_SCHOOL: '轉校', TRANSFER_MAJOR: '轉系', DOUBLE_MAJOR: '雙主修', MINOR: '輔系', EXCHANGE: '交換生', OTHER: '其他' };
+
+  function $(id) { return document.getElementById(id); }
+
+  async function load() {
+    var accountId = new URLSearchParams(window.location.search).get('id');
+    if (!accountId) { $('auSkeleton').style.display = 'none'; $('auNotFound').style.display = ''; return; }
+
+    try {
+      var res = await window.schoolBackendService.getAuthorProfile(accountId);
+      var data = res.data;
+
+      var displayName = formatSemiRealName(data.displayName || '匿名作者');
+      $('auAvatar').src = data.avatarUrl || '../image/default-avatar.webp';
+      $('auName').textContent = displayName;
+      document.title = displayName + ' 的作者主頁 · 校園攻略站';
+
+      var statusEl = $('auStatus');
+      if (data.studentStatus && STATUS_LABEL[data.studentStatus]) {
+        statusEl.textContent = STATUS_LABEL[data.studentStatus];
+        statusEl.style.display = '';
+      }
+
+      $('auFollowers').textContent = (data.followerCount || 0).toLocaleString();
+      $('auFollowing').textContent = (data.followingCount || 0).toLocaleString();
+      $('auArticleCount').textContent = (data.articleCount || 0).toLocaleString();
+      $('auLikeCount').textContent = (data.totalLikeCount || 0).toLocaleString();
+
+      var titlesEl = $('auTitles');
+      (data.titles || []).forEach(function (t) {
+        var span = document.createElement('span');
+        span.className = 't';
+        span.textContent = t.shortName || t.name || '';
+        titlesEl.appendChild(span);
+      });
+
+      var eduListEl = $('auEduList');
+      if ((data.educationRecords || []).length) {
+        eduListEl.innerHTML = '';
+        data.educationRecords.forEach(function (rec) {
+          var row = document.createElement('div');
+          row.className = 'au-edu-row';
+          var typeEl = document.createElement('span');
+          typeEl.className = 'au-edu-type';
+          typeEl.textContent = EDU_TYPE_LABEL[rec.type] || rec.type;
+          var schoolEl = document.createElement('span');
+          schoolEl.className = 'au-edu-school';
+          schoolEl.textContent = [rec.schoolName, rec.department].filter(Boolean).join(' ‧ ');
+          row.appendChild(typeEl);
+          row.appendChild(schoolEl);
+          eduListEl.appendChild(row);
+        });
+      }
+
+      // 本人瀏覽自己的作者主頁：不需要追蹤自己
+      var followBtn = $('auFollowBtn');
+      var isOwner = localStorage.getItem('uid') === String(accountId);
+      if (isOwner) {
+        followBtn.style.display = 'none';
+      } else {
+        var following = !!data.isFollowing;
+        var paintFollow = function () {
+          followBtn.textContent = following ? '✓ 已追蹤' : '＋ 追蹤';
+          followBtn.classList.toggle('on', following);
+        };
+        paintFollow();
+        followBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var action = following
+            ? window.schoolBackendService.unfollowAuthor(accountId)
+            : window.schoolBackendService.followAuthor(accountId);
+          action.then(function () { following = !following; paintFollow(); })
+            .catch(function (err) { console.error('追蹤失敗：', err); });
+        });
+      }
+
+      $('auSkeleton').style.display = 'none';
+      $('auContent').style.display = '';
+    } catch (error) {
+      console.error('載入作者主頁失敗：', error);
+      $('auSkeleton').style.display = 'none';
+      $('auNotFound').style.display = '';
+    }
+  }
+
+  load();
+});
+</script>
+</body>
+</html>

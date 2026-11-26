@@ -178,6 +178,10 @@
 
     @media (max-width: 980px) {
       .ct-wrap { width: 100%; padding: 14px 16px 96px; }
+      /* 手機版拿掉整頁卡片殼（border/圓角），但底色維持白色（--card），不要透出
+         body 的 --page 淺藍底，跟 school-post.html 的 .article-card 同款處理一致 */
+      .ct-hero { border: none; border-radius: 0; background: var(--card); }
+      .ct-head { padding: 18px 0 20px; }
       .ct-stats { grid-template-columns: repeat(2, 1fr); }
       .ct-prizes { grid-template-columns: 1fr; }
       .ct-prize.wide { grid-column: auto; }

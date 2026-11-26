@@ -2,6 +2,25 @@ function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+// 後端半實名遮罩回傳的是「姓＋○○」（圈圈數跟著剩餘字數走，例：葉○○），但站內其他
+// 半實名顯示（school-profile.html 的「選一個要公開的字」預覽）一律是「該字＋同學」
+// （例：葉同學），兩邊格式不一致。這裡統一轉成「X同學」格式，只處理含「○」的遮罩字串，
+// 真實暱稱（不含「○」）不受影響。
+function formatSemiRealName(name) {
+  const s = String(name ?? '');
+  return s.includes('○') ? s.charAt(0) + '同學' : s;
+}
+window.formatSemiRealName = formatSemiRealName;
+
+// applicableYear 後端現在存純數字（例：「114」），舊資料可能還是全文字「適用 114 學年」，
+// 兩種都先拔掉「適用」/「學年」再統一補回去，避免卡片只顯示裸數字（同款處理見
+// school-post.html/school-profile.html 既有的 applicableYear 格式化邏輯）。
+function formatApplicableYear(raw) {
+  if (!raw) return '長期適用';
+  const clean = String(raw).replace(/^適用\s*/, '').replace(/\s*學年$/, '');
+  return '適用 ' + esc(clean) + ' 學年';
+}
+
 // ── Token 驗證（私密 URL）──
 window.isTokenValid = true;
 (function () {
@@ -172,8 +191,8 @@ function attachLikeButtons() {
   const title = art.title || '';
   const excerpt = art.subtitle || '';
   const category = art.categoryName || '';
-  const year = art.applicableYear || '長期適用';
-  const authorName = author.displayName || author.nickname || '匿名作者';
+  const year = formatApplicableYear(art.applicableYear);
+  const authorName = formatSemiRealName(author.displayName || author.nickname || '匿名作者');
   const tags = titles.map(t => t.shortName).filter(Boolean);
   const reads = (art.viewCount || 0).toLocaleString() + ' 次閱讀';
   const isFree = art.type === 'FREE';
@@ -187,7 +206,7 @@ function attachLikeButtons() {
       <div class="meta-top">
         <span class="cat-pill">${category}</span>
         ${publishedDate ? `<span>${publishedDate}</span><span>·</span>` : ''}
-        <span>適用 ${year}</span>
+        <span>${year}</span>
       </div>
       <h2>${title}</h2>
       <p class="excerpt">${excerpt}</p>
@@ -255,8 +274,9 @@ function attachLikeButtons() {
       coverUrl: item.coverUrl || '',
       gradient: GRADIENTS[idx % GRADIENTS.length],
       tag: item.schoolOnly ? '同校生限定' : (item.type === 'FREE' ? '免費' : ''),
-      year: esc(item.applicableYear || '長期適用'),
-      author: esc(author.displayName || author.nickname || '匿名作者'),
+      year: formatApplicableYear(item.applicableYear),
+      author: esc(formatSemiRealName(author.displayName || author.nickname || '匿名作者')),
+      authorAvatar: esc(author.avatarUrl || ''),
       verified: !!titles.length || author.studentStatus === 'ENROLLED',
       badge: titles[0] && esc(titles[0].shortName),
       tags: (item.tags || []).map(t => esc(t)),
@@ -269,12 +289,16 @@ function attachLikeButtons() {
   }
 
   let ARTICLES_TOTAL = 0;
-  let currentCategoryId = ''; // 空字串 = 全部文章，點側邊欄分類會換成真正的 categoryId
+  // 空字串 = 全部文章；支援從外部連結帶 ?category=cat_xxx 深連結進來（例如
+  // school-about.html 的熱門主題文字雲），點側邊欄分類一樣會覆蓋掉這個初始值
+  let currentCategoryId = new URLSearchParams(window.location.search).get('category') || '';
   let currentTagName = ''; // 空字串 = 不篩標籤，點側邊欄「熱門標籤」會換成真正的標籤名稱
+  let currentQuery = '';   // 空字串 = 不篩關鍵字，school-article.html 工具列的搜尋框會帶入
+  let currentSort = 'latest'; // school-article.html 工具列的排序下拉選單，值對應後端 sort enum
 
   // GET /api/school/categories 回傳的分類清單同時被側邊欄分類列表跟這裡的錨點
   // 問題（questions）共用，快取「進行中的 promise」本身（不是只快取結果），
-  // 避免 renderCategorySidebar() 跟 fetchArticles() 在同一次 DOMContentLoaded
+  // 避免 renderCategorySidebar() 跟 renderArticles() 在同一次 DOMContentLoaded
   // 裡幾乎同時呼叫、都看到快取還是空的，各自重打一次一樣的 API。
   let categoriesPromise = null;
   function getCategoriesCached() {
@@ -290,20 +314,21 @@ function attachLikeButtons() {
     return categoriesPromise;
   }
 
-  async function fetchArticles() {
-    try {
-      const params = { limit: 20, sort: 'latest' };
-      if (currentCategoryId) params.category = currentCategoryId;
-      if (currentTagName) params.tag = currentTagName;
-      const res = await window.schoolBackendService.getArticles(params);
-      const items = (res && res.data && res.data.items) || [];
-      ARTICLES_TOTAL = (res && res.data && res.data.total) || items.length;
-      ARTICLES = items.map(mapArticle);
-    } catch (error) {
-      console.error('取得文章列表失敗：', error);
-      ARTICLES = [];
-      ARTICLES_TOTAL = 0;
-    }
+  // 無限捲動／看更多：固定每批 12 篇，用 page 累加，不再一次撈 20 篇就結束。
+  const ARTICLES_PAGE_SIZE = 12;
+  let articlesPage = 1;
+  let articlesHasMore = true;
+  let articlesLoadingMore = false;
+
+  async function fetchArticlesPage(pageNum, limit) {
+    const params = { limit: limit || ARTICLES_PAGE_SIZE, sort: currentSort, page: pageNum };
+    if (currentCategoryId) params.category = currentCategoryId;
+    if (currentTagName) params.tag = currentTagName;
+    if (currentQuery) params.q = currentQuery;
+    const res = await window.schoolBackendService.getArticles(params);
+    const items = (res && res.data && res.data.items) || [];
+    ARTICLES_TOTAL = (res && res.data && res.data.total) || items.length;
+    return items;
   }
 
   function tagRowHTML(art) {
@@ -328,7 +353,7 @@ function attachLikeButtons() {
             <p class="excerpt">${art.excerpt}</p>
             ${tagRowHTML(art)}
             <div class="author-row">
-              <div class="av-sm"></div>
+              <div class="av-sm" ${art.authorAvatar ? `style="background-image:url('${art.authorAvatar}');background-size:cover;background-position:center;"` : ''}></div>
               <div class="author-meta">
                 <div class="name">${art.author}</div>
                 <div class="sub">${art.badge ? `<span class="badge-pill">${art.badge.replace(/\*/g, '')}</span> · ` : ''}${art.time}</div>
@@ -362,7 +387,7 @@ function attachLikeButtons() {
           <p class="excerpt">${art.excerpt}</p>
           ${tagRowHTML(art)}
           <div class="author-row">
-            <div class="av-sm"></div>
+            <div class="av-sm" ${art.authorAvatar ? `style="background-image:url('${art.authorAvatar}');background-size:cover;background-position:center;"` : ''}></div>
             <div class="author-meta">
               <div class="name">${art.author}</div>
               <div class="sub">${art.badge ? `<span class="badge-pill">${art.badge.replace(/\*/g, '')}</span> · ` : ''}${art.time}</div>
@@ -400,16 +425,23 @@ function attachLikeButtons() {
   }
 
   // ── Masonry：卡片各自高度、不強制拉齊（跟蝦皮等電商的商品牆一樣），
-  // 依序把下一張卡放進目前最短的欄位，盡量保留原本的新舊排序 ──
-  function layoutMasonry(container, htmlList, evenSplit) {
+  // 依序把下一張卡放進目前最短的欄位，盡量保留原本的新舊排序。append=true 時
+  // 沿用既有欄位繼續往下疊加（無限捲動/看更多用），不整個砍掉重建 ──
+  function layoutMasonry(container, htmlList, evenSplit, append) {
     const colCount = window.matchMedia('(max-width: 1000px)').matches ? 1 : 2;
-    container.innerHTML = '';
-    const cols = [];
-    for (let i = 0; i < colCount; i++) {
-      const col = document.createElement('div');
-      col.className = 'masonry-col';
-      container.appendChild(col);
-      cols.push(col);
+    let cols;
+    if (append && container.dataset.masonryCols === String(colCount)) {
+      cols = Array.from(container.children);
+    } else {
+      container.innerHTML = '';
+      cols = [];
+      for (let i = 0; i < colCount; i++) {
+        const col = document.createElement('div');
+        col.className = 'masonry-col';
+        container.appendChild(col);
+        cols.push(col);
+      }
+      container.dataset.masonryCols = String(colCount);
     }
     htmlList.forEach((html, idx) => {
       const wrap = document.createElement('div');
@@ -427,26 +459,188 @@ function attachLikeButtons() {
 
   const SKELETON_COUNT = 6;
 
+  // ── 篩選麵包屑：分類／標籤／搜尋關鍵字其中任一有值，就把 sec-label 的主標題
+  // 換成「分類 > #標籤 > 「關鍵字」」這樣的軌跡，全部清空時還原預設標題文字 ──
+  let defaultSecLabelText = null;
+  function getDefaultSecLabelText() {
+    if (defaultSecLabelText === null) {
+      const el = document.getElementById('articlesSecLabelText');
+      defaultSecLabelText = el ? el.textContent : '';
+    }
+    return defaultSecLabelText;
+  }
+  async function updateFilterTrail() {
+    const labelTextEl = document.getElementById('articlesSecLabelText');
+    if (!labelTextEl) return;
+    getDefaultSecLabelText();
+    const parts = [];
+    if (currentCategoryId) {
+      try {
+        const categories = await getCategoriesCached();
+        const cat = categories.find(c => c.id === currentCategoryId);
+        if (cat) parts.push(esc(cat.name));
+      } catch { /* 分類名稱拿不到就不顯示這段，不影響文章列表本身 */ }
+    }
+    if (currentTagName) parts.push('#' + esc(currentTagName));
+    if (currentQuery) parts.push('「' + esc(currentQuery) + '」');
+    labelTextEl.textContent = parts.length ? parts.join(' > ') : getDefaultSecLabelText();
+  }
+
+  // ── 無限捲動 / 看更多 共用的載入狀態 UI：school-article.html 用
+  // #articlesSentinel + #articlesInfiniteStatus（捲到底自動載入），
+  // school.html 用 #articlesLoadMore + #articlesLoadMoreBtn（點擊才展開）──
+  function updateLoadMoreUIState(state) {
+    const statusEl = document.getElementById('articlesInfiniteStatus');
+    if (statusEl) {
+      if (state === 'loading') {
+        statusEl.style.display = 'flex';
+        statusEl.innerHTML = '<span class="articles-spinner"></span> 載入更多攻略中…';
+      } else if (state === 'done') {
+        const relevant = ARTICLES_TOTAL > ARTICLES_PAGE_SIZE;
+        statusEl.style.display = relevant ? 'flex' : 'none';
+        statusEl.textContent = '已經到底囉，沒有更多攻略了';
+      } else {
+        statusEl.style.display = 'none';
+      }
+    }
+
+    const loadMoreWrap = document.getElementById('articlesLoadMore');
+    const loadMoreBtn = document.getElementById('articlesLoadMoreBtn');
+    if (loadMoreWrap && loadMoreBtn) {
+      if (!articlesHasMore) {
+        loadMoreWrap.style.display = 'none';
+      } else {
+        loadMoreWrap.style.display = 'flex';
+        loadMoreBtn.disabled = state === 'loading';
+        loadMoreBtn.textContent = state === 'loading' ? '載入中…' : '看更多';
+      }
+    }
+  }
+
+  async function loadMoreArticles() {
+    if (articlesLoadingMore || !articlesHasMore) return;
+    const container = document.getElementById('articleList');
+    if (!container) return;
+    articlesLoadingMore = true;
+    updateLoadMoreUIState('loading');
+    try {
+      const nextPage = articlesPage + 1;
+      const items = await fetchArticlesPage(nextPage);
+      const mapped = items.map((item, i) => mapArticle(item, ARTICLES.length + i));
+      ARTICLES = ARTICLES.concat(mapped);
+      articlesPage = nextPage;
+      articlesHasMore = items.length > 0 && ARTICLES.length < ARTICLES_TOTAL;
+      layoutMasonry(container, mapped.map(articleCardHTML), false, true);
+      attachSaveButtons();
+      attachLikeButtons();
+    } catch (error) {
+      console.error('載入更多文章失敗：', error);
+      articlesHasMore = false;
+    } finally {
+      articlesLoadingMore = false;
+      updateLoadMoreUIState(articlesHasMore ? 'idle' : 'done');
+    }
+  }
+
+  let infiniteObserverSetup = false;
+  function setupInfiniteScroll() {
+    const sentinel = document.getElementById('articlesSentinel');
+    if (!sentinel || infiniteObserverSetup) return;
+    infiniteObserverSetup = true;
+    new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) loadMoreArticles();
+    }, { rootMargin: '600px 0px' }).observe(sentinel);
+  }
+
+  let loadMoreBtnSetup = false;
+  function setupLoadMoreButton() {
+    const btn = document.getElementById('articlesLoadMoreBtn');
+    if (!btn || loadMoreBtnSetup) return;
+    loadMoreBtnSetup = true;
+    btn.addEventListener('click', loadMoreArticles);
+  }
+
+  // ── 從文章內文頁按「上一頁」回列表頁時，保留原本捲動到的位置跟已載入筆數，
+  // 不要整頁縮回第一批 12 篇再把捲動位置彈回頂部。用 sessionStorage 記住「這個
+  // 網址（含篩選條件）上次捲到哪」，只有在瀏覽器上一頁/下一頁導覽
+  // （performance navigation type 是 back_forward）才還原，一般重新整理、
+  // 換分類/標籤/關鍵字都當全新載入，不套用舊的捲動位置 ──
+  function scrollStateKey() {
+    return 'schoolArticlesScroll:' + location.pathname + location.search;
+  }
+  function saveScrollState() {
+    if (!ARTICLES.length) return;
+    try {
+      sessionStorage.setItem(scrollStateKey(), JSON.stringify({ loadedCount: ARTICLES.length, scrollY: window.scrollY }));
+    } catch { /* sessionStorage 不可用（例如無痕模式擋住）就不保留，不影響主要功能 */ }
+  }
+  function readScrollState() {
+    try {
+      const raw = sessionStorage.getItem(scrollStateKey());
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+  function isBackForwardNavigation() {
+    const nav = performance.getEntriesByType('navigation')[0];
+    return !!nav && nav.type === 'back_forward';
+  }
+  window.addEventListener('pagehide', saveScrollState);
+
+  let articlesIsFirstLoad = true;
+
   async function renderArticles() {
     const container = document.getElementById('articleList');
     if (!container) return;
 
+    updateFilterTrail();
+
+    const savedState = (articlesIsFirstLoad && isBackForwardNavigation()) ? readScrollState() : null;
+    articlesIsFirstLoad = false;
+
     // 先鋪一輪骨架屏，讓使用者知道內容正在載入
     layoutMasonry(container, Array(SKELETON_COUNT).fill(0).map(articleSkeletonHTML), true);
 
-    await fetchArticles();
+    articlesPage = 1;
+    let items = [];
+    try {
+      if (savedState && savedState.loadedCount > ARTICLES_PAGE_SIZE) {
+        // 還原上次瀏覽的筆數：依序補回每一批，page/limit 語意維持跟平常一樣固定 12 篇一批
+        const pagesToLoad = Math.ceil(savedState.loadedCount / ARTICLES_PAGE_SIZE);
+        const pages = await Promise.all(
+          Array.from({ length: pagesToLoad }, (_, i) => fetchArticlesPage(i + 1))
+        );
+        items = pages.flat();
+        articlesPage = pagesToLoad;
+      } else {
+        items = await fetchArticlesPage(1);
+      }
+    } catch (error) {
+      console.error('取得文章列表失敗：', error);
+      items = [];
+      ARTICLES_TOTAL = 0;
+    }
+    ARTICLES = items.map((item, i) => mapArticle(item, i));
+    articlesHasMore = ARTICLES.length < ARTICLES_TOTAL;
 
     const secLabel = document.getElementById('articlesSecLabel');
 
     if (!ARTICLES.length) {
-      if (secLabel) secLabel.style.display = 'none';
+      const hasFilter = currentCategoryId || currentTagName || currentQuery;
+      // 有篩選條件時仍保留 sec-label（讓使用者看得到自己篩了什麼才 0 篇），
+      // 只有完全沒篩選又真的沒文章時才整個隱藏
+      if (secLabel) secLabel.style.display = hasFilter ? '' : 'none';
+      const countPill = document.getElementById('articlesCountPill');
+      if (hasFilter && countPill) countPill.textContent = '0 篇 · 依發佈時間';
+      updateLoadMoreUIState('idle');
       container.innerHTML = `
         <div class="article-empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2 H6 a2 2 0 0 0-2 2 V20 a2 2 0 0 0 2 2 H18 a2 2 0 0 0 2-2 V8 Z"/>
             <path d="M14 2 V8 H20"/>
           </svg>
-          <p>${currentCategoryId ? '這個分類目前還沒有文章，換個分類看看吧！' : '目前還沒有攻略文章，成為第一個發佈的人吧！'}</p>
+          <p>${hasFilter ? '沒有符合條件的文章，換個分類、標籤或關鍵字試試看！' : '目前還沒有攻略文章，成為第一個發佈的人吧！'}</p>
         </div>
       `;
       return;
@@ -459,7 +653,56 @@ function attachLikeButtons() {
     layoutMasonry(container, ARTICLES.map(articleCardHTML), false);
     attachSaveButtons();
     attachLikeButtons();
+    setupInfiniteScroll();
+    setupLoadMoreButton();
+    updateLoadMoreUIState(articlesHasMore ? 'idle' : 'done');
+
+    if (savedState) {
+      requestAnimationFrame(() => window.scrollTo(0, savedState.scrollY));
+    }
   }
+
+  // ── school-article.html 工具列的搜尋框：輸入防抖 400ms 後重新打 getArticles({q})，
+  // 按 Enter 立即套用。school.html 沒有這顆輸入框，呼叫時直接 no-op ──
+  function setupSearchInput() {
+    const input = document.getElementById('schoolSearchInput');
+    if (!input || input.dataset.wired) return;
+    input.dataset.wired = '1';
+    input.value = currentQuery;
+    let debounceTimer;
+    const applySearch = () => {
+      const val = input.value.trim();
+      if (val === currentQuery) return;
+      currentQuery = val;
+      renderArticles();
+    };
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(applySearch, 400);
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      clearTimeout(debounceTimer);
+      applySearch();
+    });
+  }
+  document.addEventListener('DOMContentLoaded', setupSearchInput);
+
+  // school-article.html 工具列的排序下拉選單，value 對應後端 sort enum，
+  // school.html 沒有這顆選單，呼叫時直接 no-op
+  function setupSortSelect() {
+    const select = document.getElementById('sortSelect');
+    if (!select || select.dataset.wired) return;
+    select.dataset.wired = '1';
+    select.value = currentSort;
+    select.addEventListener('change', () => {
+      if (select.value === currentSort) return;
+      currentSort = select.value;
+      renderArticles();
+    });
+  }
+  document.addEventListener('DOMContentLoaded', setupSortSelect);
 
   // 數字變動時「由下往上」滾動替換：舊數字往上滑出＋淡出，新數字從正下方滑進定位，
   // 取代直接覆蓋文字造成的突兀跳動。el 必須是只包含純文字數字/逗號的 inline 元素
@@ -494,9 +737,12 @@ function attachLikeButtons() {
   async function pollArticleStats() {
     if (!window.schoolBackendService || !document.getElementById('articleList')) return;
     try {
-      const params = { limit: 20, sort: 'latest' };
+      // limit 跟著目前已載入的筆數走（無限捲動/看更多會累加超過 20 篇），
+      // 不然超過第一批的卡片就輪詢不到最新數字
+      const params = { limit: Math.max(ARTICLES_PAGE_SIZE, ARTICLES.length), sort: currentSort, page: 1 };
       if (currentCategoryId) params.category = currentCategoryId;
       if (currentTagName) params.tag = currentTagName;
+      if (currentQuery) params.q = currentQuery;
       const res = await window.schoolBackendService.getArticles(params);
       const items = (res && res.data && res.data.items) || [];
       items.forEach(item => {
@@ -550,7 +796,7 @@ function attachLikeButtons() {
     }));
 
     const html = entries.map((e, i) =>
-      `<a href="#" data-cat-id="${esc(e.id)}" class="${e.id === currentCategoryId ? 'on' : ''}">${esc(e.name)} <span class="count">${counts[i].toLocaleString()}</span></a>`
+      `<a href="#" data-cat-id="${esc(e.id)}" class="${e.id === currentCategoryId ? 'on' : ''}">${esc(e.name)}${counts[i] ? ` <span class="count">${counts[i].toLocaleString()}</span>` : ''}</a>`
     ).join('');
 
     if (desktopList) desktopList.innerHTML = html;
@@ -755,6 +1001,20 @@ function attachLikeButtons() {
       window.__schoolNameRevealIndex = settings.nameRevealIndex;
       window.__schoolDisplayNameMode = settings.displayNameMode || me.displayNameMode || 'NICKNAME';
       window.updateIdCardNameDisplay();
+
+      // navbar 頭像：這顆 chip 是校園攻略站獨立的模擬登入 UI（跟 default.js 的
+      // .username/renderAuthUI 不是同一套，選取器也對不到），localStorage 的 avatar
+      // 又只在上傳當下那一頁被直接改 DOM，其他頁/重新整理都看不到，所以這裡直接用
+      // getAccountMe() 拿到的 photoURL 當權威來源更新頭像，同時同步回 localStorage
+      // 讓其他頁面（shop/newhome 等共用 default.js 的頁）也能跟著換新
+      const avatarImg = userChip.querySelector('.nav-username-avatar');
+      if (me.photoURL) {
+        localStorage.setItem('avatar', me.photoURL);
+        if (avatarImg) avatarImg.src = me.photoURL;
+      } else {
+        localStorage.removeItem('avatar');
+        if (avatarImg) avatarImg.src = '../image/default-avatar.webp';
+      }
     } catch (error) {
       identityLoaded = false;
       console.error('載入身份資訊失敗：', error);
@@ -766,7 +1026,16 @@ function attachLikeButtons() {
     userChip.style.display = loggedIn ? 'block' : 'none';
     dropdown.classList.remove('open');
     if (themeToggleOuter) themeToggleOuter.style.display = loggedIn ? 'none' : '';
-    if (loggedIn) loadIdentity();
+    if (loggedIn) {
+      // 先樂觀套用上次同步下來的頭像，避免 loadIdentity() 的 API 還沒回來前
+      // 閃一下預設頭像；真正準確的頭像會在 loadIdentity() 裡用 photoURL 覆蓋
+      const avatarImg = userChip.querySelector('.nav-username-avatar');
+      if (avatarImg) {
+        const stored = localStorage.getItem('avatar');
+        avatarImg.src = (stored && stored !== 'null') ? stored : '../image/default-avatar.webp';
+      }
+      loadIdentity();
+    }
   }
 
   applyAuth(isAuthed);

@@ -861,36 +861,40 @@ input, select { font-family: inherit; }
 /* 無封面卡片：沒有封面/內文交界，改貼齊卡片右上角 */
 .article.nocover .like-fab { top: 14px; }
 
-/* Pagination */
-.pagination {
+/* 無限捲動（school-article.html 全部文章）：取代原本的分頁按鈕，捲到底部附近
+   自動載入下一批，#articlesSentinel 是給 IntersectionObserver 盯的隱形錨點 */
+.articles-sentinel { height: 1px; }
+.articles-infinite-status {
   display: flex; align-items: center; justify-content: center;
   gap: 8px;
-  padding: 16px;
-  flex-wrap: wrap;
+  padding: 24px 16px;
+  color: var(--muted);
+  font-size: 13px;
 }
-.pg-btn {
-  width: 36px; height: 36px;
+.articles-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--line);
+  border-top-color: var(--navy);
   border-radius: 50%;
-  background: var(--card);
-  border: 1.5px solid var(--line);
-  font-size: 12px; color: var(--ink);
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
-  letter-spacing: 0.04em;
-  padding: 0;
+  animation: articlesSpin 0.7s linear infinite;
 }
-.pg-btn:hover { border-color: var(--navy); color: var(--navy); }
-.pg-num {
-  width: 36px; height: 36px;
-  border-radius: 50%;
+@keyframes articlesSpin { to { transform: rotate(360deg); } }
+
+/* 看更多（school.html 攻略首頁）：點擊才展開下一批，不是自動捲動 */
+.articles-loadmore { display: flex; justify-content: center; padding: 28px 0 8px; }
+.load-more-btn {
+  padding: 10px 32px;
+  border-radius: 999px;
+  border: 1px solid var(--navy);
   background: var(--card);
-  border: 1.5px solid var(--line);
-  font-size: 13px; color: var(--ink);
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
 }
-.pg-num.on { background: var(--navy-solid); color: #ffffff; border-color: var(--navy); }
-.pg-num:not(.on):hover { border-color: var(--navy); color: var(--navy); }
+.load-more-btn:hover { background: rgb(36, 182, 133); border-color: rgb(36, 182, 133); color: #fff; }
+.load-more-btn:disabled { opacity: 0.6; cursor: default; }
 
 /* validity / school-year tag */
 .article .valid-tag {

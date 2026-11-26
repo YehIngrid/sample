@@ -105,11 +105,11 @@
     <div class="d-flex" style="gap: 12px;">
       <div class="select-wrap">
         <select id="sortSelect">
-          <option>排序：最新發佈</option>
-          <option>排序：最多閱讀</option>
-          <option>排序：價格由低到高</option>
-          <option>排序：本學年適用優先</option>
-          <option>排序：作者認證等級</option>
+          <option value="latest">排序：最新發佈</option>
+          <option value="most-read">排序：最多閱讀</option>
+          <option value="price-low">排序：價格由低到高</option>
+          <option value="this-year">排序：本學年適用優先</option>
+          <option value="author-tier">排序：作者認證等級</option>
         </select>
       </div>
       <div class="tag-picker">
@@ -159,17 +159,17 @@
 
   <!-- Mobile Category Bar -->
   <div class="mobile-cat-bar">
-    <a href="#" class="on">全部文章 <span class="count">316</span></a>
-    <a href="#">研究所推甄 <span class="count">42</span></a>
-    <a href="#">學分攻略 <span class="count">88</span></a>
-    <a href="#">證照檢定 <span class="count">37</span></a>
-    <a href="#">實習與面試 <span class="count">29</span></a>
-    <a href="#">美食地圖 <span class="count">24</span></a>
-    <a href="#">校園資源 <span class="count">31</span></a>
-    <a href="#">轉學 / 轉系 <span class="count">18</span></a>
-    <a href="#">交換學生 <span class="count">21</span></a>
-    <a href="#">專題研究 <span class="count">16</span></a>
-    <a href="#">生活指南 <span class="count">10</span></a>
+    <a href="#" class="on">全部文章</a>
+    <a href="#">研究所推甄</a>
+    <a href="#">學分攻略</a>
+    <a href="#">證照檢定</a>
+    <a href="#">實習與面試</a>
+    <a href="#">美食地圖</a>
+    <a href="#">校園資源</a>
+    <a href="#">轉學 / 轉系</a>
+    <a href="#">交換學生</a>
+    <a href="#">專題研究</a>
+    <a href="#">生活指南</a>
   </div>
 
   <!-- Body grid -->
@@ -181,17 +181,17 @@
       <div class="side-panel">
         <div class="head">文章分類</div>
         <div class="cat-list">
-          <a href="#" class="on">全部文章 <span class="count">316</span></a>
-          <a href="#">研究所推甄 <span class="count">42</span></a>
-          <a href="#">學分攻略 <span class="count">88</span></a>
-          <a href="#">證照檢定 <span class="count">37</span></a>
-          <a href="#">實習與面試 <span class="count">29</span></a>
-          <a href="#">美食地圖 <span class="count">24</span></a>
-          <a href="#">校園資源 <span class="count">31</span></a>
-          <a href="#">轉學 / 轉系 <span class="count">18</span></a>
-          <a href="#">交換學生 <span class="count">21</span></a>
-          <a href="#">專題研究 <span class="count">16</span></a>
-          <a href="#">生活指南 <span class="count">10</span></a>
+          <a href="#" class="on">全部文章</a>
+          <a href="#">研究所推甄</a>
+          <a href="#">學分攻略</a>
+          <a href="#">證照檢定</a>
+          <a href="#">實習與面試</a>
+          <a href="#">美食地圖</a>
+          <a href="#">校園資源</a>
+          <a href="#">轉學 / 轉系</a>
+          <a href="#">交換學生</a>
+          <a href="#">專題研究</a>
+          <a href="#">生活指南</a>
         </div>
       </div>
 
@@ -265,20 +265,14 @@
     <!-- MAIN -->
     <main class="main">
 
-      <div class="sec-label">全部文章 <span class="pill">316 篇 · 依發佈時間</span></div>
+      <div class="sec-label" id="articlesSecLabel"><span id="articlesSecLabelText">全部文章</span> <span class="pill" id="articlesCountPill">316 篇 · 依發佈時間</span></div>
 
       <!-- Article grid -->
       <div class="articles-grid" id="articleList"></div>
 
-      <!-- Pagination -->
-      <div class="pagination" id="paginationWrap">
-        <button class="pg-btn">←</button>
-        <button class="pg-num on">1</button>
-        <button class="pg-num">2</button>
-        <button class="pg-num">3</button>
-        <button class="pg-num">4</button>
-        <button class="pg-btn">→</button>
-      </div>
+      <!-- 無限捲動：捲到底部附近自動載入下一批，取代原本的分頁按鈕 -->
+      <div class="articles-sentinel" id="articlesSentinel"></div>
+      <div class="articles-infinite-status" id="articlesInfiniteStatus" style="display:none;"></div>
 
     </main>
 

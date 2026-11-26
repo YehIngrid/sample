@@ -155,9 +155,11 @@
 
           <!-- author -->
           <div class="author-block">
-            <img class="av" id="spAuthorAvatar" src="../image/default-avatar.webp" alt="作者頭像">
+            <a id="spAuthorLink" href="#">
+              <img class="av" id="spAuthorAvatar" src="../image/default-avatar.webp" alt="作者頭像">
+            </a>
             <div class="info">
-              <div class="name" id="spAuthorName">—</div>
+              <a class="name" id="spAuthorName" href="#">—</a>
               <div class="author-rating">
                 <span class="cnt" id="spAuthorFollowers">0 位追蹤者</span>
               </div>
@@ -264,7 +266,7 @@
           <input type="text" id="spCommentInput" placeholder="留下你的回饋（請勿暴雷攻略內容）..." />
           <button class="send" id="spCommentSubmitBtn">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9z"/></svg>
-            送出</button>
+            <span class="send-label">送出</span></button>
         </div>
 
         <div id="spCommentsList"></div>
@@ -661,8 +663,15 @@ document.addEventListener('DOMContentLoaded', function() {
     var author = art.author || {};
     var authorAvatar = document.getElementById('spAuthorAvatar');
     if (authorAvatar) authorAvatar.src = author.avatarUrl || '../image/default-avatar.webp';
-    setText('spAuthorName', author.displayName || author.nickname || '匿名作者');
+    setText('spAuthorName', formatSemiRealName(author.displayName || author.nickname || '匿名作者'));
     setText('spAuthorFollowers', (author.followerCount || 0).toLocaleString() + ' 位追蹤者');
+    if (author.accountId) {
+      var authorHref = 'school-author.html?id=' + encodeURIComponent(author.accountId);
+      var authorLinkEl = document.getElementById('spAuthorLink');
+      var authorNameEl = document.getElementById('spAuthorName');
+      if (authorLinkEl) authorLinkEl.href = authorHref;
+      if (authorNameEl) authorNameEl.href = authorHref;
+    }
     var titlesEl = document.getElementById('spAuthorTitles');
     if (titlesEl) titlesEl.innerHTML = (author.titles || []).map(function (t) { return '<span class="t">' + escHtml(t.shortName) + '</span>'; }).join('');
     var followBtn = document.getElementById('spFollowBtn');
@@ -809,7 +818,7 @@ document.addEventListener('DOMContentLoaded', function() {
           '<div class="rb">' +
             '<span class="p-line">' + escHtml(r.categoryName || '') + '</span>' +
             '<h4>' + escHtml(r.title) + '</h4>' +
-            '<div class="rfoot"><span class="ra">' + escHtml((r.author && (r.author.displayName || r.author.nickname)) || '') + '</span>' + priceTxt + '</div>' +
+            '<div class="rfoot"><span class="ra">' + escHtml(formatSemiRealName((r.author && (r.author.displayName || r.author.nickname)) || '')) + '</span>' + priceTxt + '</div>' +
           '</div></a>';
       }).join('');
     } catch (e) {
@@ -824,28 +833,31 @@ document.addEventListener('DOMContentLoaded', function() {
   // replyToName：這則留言是回覆給誰（只有 isReply 才有意義）。
   // replyCount：只有頂層留言才會傳，>0 時才會多畫一顆「收合回覆」切換鈕。
   function renderReviewItem(r, isReply, replyToName, replyCount) {
-    var name = r.displayMode === 'ANONYMOUS' || !r.author ? '匿名同學' : (r.author.displayName || r.author.nickname || '匿名同學');
+    var name = r.displayMode === 'ANONYMOUS' || !r.author ? '匿名同學' : formatSemiRealName(r.author.displayName || r.author.nickname || '匿名同學');
     var isAuthorComment = !!(currentArticle && currentArticle.author && r.author && r.author.accountId === currentArticle.author.accountId);
     var gradeTxt = (r.isPurchased ? '已購買' : '') + (r.isPurchased && r.isSameSchool ? ' · ' : '') + (r.isSameSchool ? '同校生' : '');
     var badge = isAuthorComment ? '<span class="c-grade c-grade-author">作者</span>' : (gradeTxt ? '<span class="c-grade">' + escHtml(gradeTxt) + '</span>' : '');
+    // 獨立成一行、用醒目的底色 pill，不要塞進 .c-top 跟名字/評分/時間擠在一起
+    // ——擠在一起時太不顯眼，使用者分不出這則回覆是回給誰的
     var replyToHtml = (isReply && replyToName) ?
-      '<span class="c-reply-to"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/></svg>@' + escHtml(replyToName) + '</span>' : '';
+      '<div class="c-reply-to"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/></svg>回覆 @' + escHtml(replyToName) + '</div>' : '';
     var stars = r.rating ? '<span class="c-stars">' + '★★★★★'.slice(0, r.rating) + '☆☆☆☆☆'.slice(0, 5 - r.rating) + '</span>' : '';
     var avatarSrc = (r.author && r.author.avatarUrl) || '../image/default-avatar.webp';
+    // 預設收合：回覆內容不會一載入就全部攤開，使用者點了才展開
     var toggleHtml = (!isReply && replyCount > 0) ?
-      '<a href="#" class="sp-toggle-replies" data-group="' + escHtml(r.id) + '" data-count="' + replyCount + '">' +
+      '<a href="#" class="sp-toggle-replies collapsed" data-group="' + escHtml(r.id) + '" data-count="' + replyCount + '">' +
         '<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15 12 9 6 15"/></svg>' +
-        '<span class="txt">收合回覆</span></a>' : '';
+        '<span class="txt">展開回覆 (' + replyCount + ')</span></a>' : '';
     return '<div class="comment' + (isReply ? ' reply' : '') + '" data-review-id="' + escHtml(r.id) + '">' +
       '<img class="av" src="' + escHtml(avatarSrc) + '" alt="">' +
       '<div class="c-body">' +
         '<div class="c-top">' +
           '<span class="c-name">' + escHtml(name) + '</span>' +
           badge +
-          replyToHtml +
           stars +
           '<span class="c-date">' + timeAgo(r.createdAt) + '</span>' +
         '</div>' +
+        replyToHtml +
         '<div class="c-text">' + escHtml(r.body) + '</div>' +
         '<div class="c-actions">' +
           '<a href="#" class="sp-review-like' + (r.likedByMe ? ' liked' : '') + '" data-review-id="' + escHtml(r.id) + '"' + (r.likedByMe ? ' data-liked="1"' : '') + '>' +
@@ -870,7 +882,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var nameById = {};
     items.forEach(function (it) {
       byId[it.id] = it;
-      nameById[it.id] = (it.displayMode === 'ANONYMOUS' || !it.author) ? '匿名同學' : (it.author.displayName || it.author.nickname || '匿名同學');
+      nameById[it.id] = (it.displayMode === 'ANONYMOUS' || !it.author) ? '匿名同學' : formatSemiRealName(it.author.displayName || it.author.nickname || '匿名同學');
     });
     var topLevel = [];
     var repliesByParent = {};
@@ -888,18 +900,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     var html = '';
     topLevel.forEach(function (top) {
-      // 「回覆的回覆」沒有獨立的頂層容器，直接也攤平接在同一層底下，依時間排序即可
+      // 「回覆的回覆」沒有獨立的頂層容器，攤平接在同一層底下，但順序要用深度優先
+      // 走訪（每則回覆緊接在它所回覆的對象後面），不能單純依時間排序——否則「回覆
+      // 給 A」可能排到「回覆給 B」後面，看起來像是回覆錯對象，使用者會誤會。
       var allDescendants = [];
       (function collect(parentId) {
-        (repliesByParent[parentId] || []).forEach(function (child) {
+        var children = (repliesByParent[parentId] || []).slice()
+          .sort(function (a, b) { return new Date(a.createdAt) - new Date(b.createdAt); });
+        children.forEach(function (child) {
           allDescendants.push(child);
           collect(child.id);
         });
       })(top.id);
-      allDescendants.sort(function (a, b) { return new Date(a.createdAt) - new Date(b.createdAt); });
       html += '<div class="comment-group">';
       html += renderReviewItem(top, false, null, allDescendants.length);
-      html += '<div class="comment-replies" id="cr-' + escHtml(top.id) + '">';
+      html += '<div class="comment-replies" id="cr-' + escHtml(top.id) + '"' + (allDescendants.length ? ' style="display:none"' : '') + '>';
       allDescendants.forEach(function (child) { html += renderReviewItem(child, true, nameById[child.parentId]); });
       html += '</div></div>';
     });

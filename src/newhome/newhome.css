@@ -113,6 +113,41 @@ border: 1.5px solid #fff
   width: 100%;
   height: 90px;
 }
+
+/* 封面下方跑馬燈：核心分類關鍵字 + 國立中興大學限定標語，無限循環捲動 */
+.nh-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #ffffff;
+  padding: 18px 0;
+}
+.nh-marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  gap: 48px;
+  padding: 0 24px;
+  animation: nhMarqueeScroll 24s linear infinite;
+}
+.nh-marquee:hover .nh-marquee-track { animation-play-state: paused; }
+.nh-marquee-item {
+  font-size: 22px;
+  font-weight: 700;
+  color: #6f87a0;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.nh-marquee-item.hl { color: #004b97; }
+@keyframes nhMarqueeScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (max-width: 768px) {
+  .nh-marquee { padding: 12px 0; }
+  .nh-marquee-item { font-size: 16px; }
+  .nh-marquee-track { gap: 28px; }
+}
 #next-section {
   margin-top: 0 !important;
   position: relative;
@@ -159,6 +194,14 @@ border: 1.5px solid #fff
     font-weight: 500;
 }
 .titlepage .navbar .nav-link:hover {
+    color: #abdad5 !important;
+}
+/* 登入/登出：跟 .nav-link 用同一套白字配色，不然在深色 hero 底上看不清楚 */
+.titlepage .navbar .loginornot,
+.titlepage .navbar .username {
+    color: rgba(255,255,255,0.88) !important;
+}
+.titlepage .navbar .loginornot:hover {
     color: #abdad5 !important;
 }
 /* 首頁不顯示「首頁」連結 */
@@ -1499,6 +1542,12 @@ right: 0;
   box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3);
 }
 .nh-svc-num { font-size: 11px; color: #6f87a0; letter-spacing: 0.22em; font-family: monospace; margin-bottom: 20px; }
+.nh-svc-badge-new {
+  position: absolute; top: 20px; right: 20px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;
+  color: #a08540; background: rgba(243,227,181,0.55);
+  padding: 3px 10px; border-radius: 999px;
+}
 .nh-svc-ic {
   width: 52px; height: 52px; background: aliceblue; border-radius: 14px;
   display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
@@ -1516,8 +1565,6 @@ right: 0;
 }
 .nh-svc-more::after { content: "→"; transition: transform 0.22s ease; }
 .nh-svc-card:hover .nh-svc-more::after { transform: translateX(3px); }
-.nh-svc-soon { color: #6f87a0; cursor: default; }
-.nh-svc-soon::after { content: none; }
 
 /* FAQ teaser */
 .nh-faq-teaser {

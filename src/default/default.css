@@ -45,6 +45,7 @@ body.modal-open #whatcontent {
 }
 .navbar .nav-link {
     color: #4a627a !important;
+    font-size: 14px; /* 跟校園攻略站 navbar 的 .nav .tabs a 一致 */
 }
 .navbar .nav-link:hover,
 .navbar .nav-link.active {
@@ -307,8 +308,8 @@ ul{
     }
 }
 
-  #loginornot {
-    font-size: var(--font-size-lg);
+  #loginornot, .loginornot {
+    font-size: var(--font-size-sm);
   }
 
   /* ── 搜尋欄共用樣式（手機 + 桌面相同外觀） ── */

@@ -40,7 +40,6 @@ body { background: var(--alice); }
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 28px;
-  align-items: start;
 }
 
 /* ============ 骨架屏 ============
@@ -429,7 +428,13 @@ body { background: var(--alice); }
 }
 .comment .c-grade-author { color: #a08540; background: rgba(243,227,181,0.55); }
 .comment .author-tag { font-size: 10px; font-weight: 800; color: #fff; background: var(--navy-solid); padding: 1px 8px; border-radius: 999px; letter-spacing: 0.06em; }
-.comment .c-reply-to { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; color: var(--navy); opacity: 0.75; }
+.comment .c-reply-to {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11.5px; font-weight: 700; color: var(--navy);
+  background: var(--alice); padding: 3px 10px; border-radius: 999px;
+  margin-bottom: 7px;
+}
+:root[data-theme="dark"] .comment .c-reply-to { background: rgba(74,133,196,0.18); }
 .comment .c-stars { color: var(--gold); font-size: 12px; letter-spacing: 1px; }
 .comment .c-date { font-size: 11px; color: var(--muted); margin-left: auto; }
 .comment .c-text { font-size: 14px; color: var(--body); line-height: 1.7; margin-bottom: 2px; }
@@ -576,7 +581,11 @@ body.unlocked .unlocked-only { display: block; }
 /* ============ 手機版 sticky 購買列（預設隱藏，窄螢幕才顯示） ============ */
 .sp-actionbar { display: none; }
 .sp-mobile-back { display: none; }
-
+@media (max-width: 450px) {
+  .sp-container {
+    background: white;
+  }
+}
 /* ============ RESPONSIVE：切換成手機版 ============ */
 @media (max-width: 991px) {
   .sp-container { padding: 16px 16px 30px; width: 100%; }
@@ -584,8 +593,15 @@ body.unlocked .unlocked-only { display: block; }
   .side { display: none; }              /* 手機版隱藏側欄，改用底部 sticky 購買列 */
   .post-like { display: none; }         /* 手機版隱藏文末喜歡按鈕，已有 sticky 操作列的喜歡圖示 */
   .anchor-box { border: none; border-radius: 0; padding: 16px 0; }
-  .post-body { padding: 22px 18px 26px; }
-  .sp-hero { height: 168px; }
+  .post-body { padding: 22px 0 26px; }
+  .sp-hero { height: 168px; border-radius: 16px; }
+  /* 手機版拿掉整篇文章的卡片殼（邊框/圓角/陰影），但底色維持白色（--card），
+     不要透出 body 的 --alice 淺藍底，只保留 hero banner 本身的圓角。 */
+  .article-card { background: var(--card); border: none; border-radius: 0; overflow: visible; }
+  /* 卡片殼拿掉後，裡面原本用來跟白色卡片做區隔的淺藍色色塊（作者資訊／承諾保證／
+     評分摘要）反而會變成跟頁面背景一樣的顏色，看起來像沒對齊的色塊，手機版統一
+     跟著改成白色，維持整頁一致的全白底 */
+  .author-block, .promises, .rating-summary { background: var(--card); }
   .post-head h1 { font-size: 22px; }
   .post-head .post-sub { font-size: 14px; margin-bottom: 12px; }
   .panel { padding: 20px 18px; border-radius: 16px; }
@@ -644,8 +660,11 @@ body.unlocked .unlocked-only { display: block; }
 @media (max-width: 560px) {
   .promises { flex-direction: column; gap: 9px; }
   .meta-row { gap: 6px 12px; font-size: 11.5px; }
+  /* 留言輸入框在手機版太窄，送出鈕只留圖示，把寬度還給輸入框 */
+  .comment-box .send { padding: 11px; gap: 0; }
+  .comment-box .send .send-label { display: none; }
   /* 追蹤鈕換行成整寬按鈕，作者資訊與頭銜才有完整寬度可排 */
-  .author-block { padding: 14px; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+  .author-block { padding: 14px; gap: 12px; flex-wrap: wrap; align-items: flex-start; background: aliceblue }
   .author-block .follow {
     flex: 1 0 100%;
     text-align: center;

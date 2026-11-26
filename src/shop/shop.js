@@ -197,12 +197,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     apiDocsBtn.href = apiDocsUrl;
     apiDocsBtn.style.display = 'block';
     document.getElementById('designSystemBtn').style.display = 'block';
-    document.getElementById('schoolGuideBtn').style.display = 'block';
 
     document.getElementById('mobileApiDocsLink').href = apiDocsUrl;
     document.getElementById('mobileApiDocsItem').classList.remove('d-none');
     document.getElementById('mobileDesignSystemItem').classList.remove('d-none');
-    document.getElementById('mobileSchoolGuideItem').classList.remove('d-none');
   }
 
   // 學生身分驗證提醒橫幅：已登入但尚未完成教育信箱驗證時顯示

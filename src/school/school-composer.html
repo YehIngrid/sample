@@ -2301,6 +2301,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (cat) {
         catSel.value = cat.name;
         catSel.dispatchEvent(new Event('change'));
+        if (catSel._pselSync) catSel._pselSync();
       }
     }
 
@@ -2318,13 +2319,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (data.applicableYear && yearSelForPub) {
-      yearSelForPub.value = data.applicableYear;
+      // 後端回傳的可能是舊格式的全文字「適用 114 學年」，也可能是這次改版後存的純數字
+      // 「114」（<option value> 已經改成純數字，見 #yearSel），兩種都要能正確回填，
+      // 不然 <select>.value 對不到任何 <option value>，會整個被重設成空白。
+      yearSelForPub.value = String(data.applicableYear).replace(/^適用\s*/, '').replace(/\s*學年$/, '');
+      if (yearSelForPub._pselSync) yearSelForPub._pselSync();
     } else if (longtermToggleForPub) {
       longtermToggleForPub.classList.add('on');
     }
 
-    if (data.type === 'PAID' && priceIn && data.price != null) {
-      priceIn.value = data.price;
+    var segP = document.querySelector('.seg[data-seg=ptype]');
+    if (segP) {
+      var paidBtnForPub = segP.querySelector('[data-v=paid]'), freeBtnForPub = segP.querySelector('[data-v=free]');
+      var paidNow = data.type === 'PAID';
+      segP.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+      (paidNow ? paidBtnForPub : freeBtnForPub).classList.add('on');
+      setPaid(paidNow);
+      if (paidNow && priceIn && data.price != null) priceIn.value = data.price;
     }
 
     if (Array.isArray(data.answers) && data.answers.length) {

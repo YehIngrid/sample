@@ -415,8 +415,12 @@ export default class BackendService {
             // 缺漏時才補（否則已登入使用者被後台升級權限後，若沒有重新登入，
             // localStorage 裡的舊 role 永遠不會更新，導致明明有權限卻一直被擋）
             if (d?.role) localStorage.setItem('role', d.role);
-            // 已登入但 localStorage 缺少使用者資料（如清除快取後）→ 自動補充
-            if (!localStorage.getItem('username') || !localStorage.getItem('uid')) {
+            // 已登入但 localStorage 缺少使用者資料（如清除快取後）→ 自動補充；
+            // /api/whoami 本身不會回傳 photoURL/暱稱，只有 getMe() 會更新，所以就算
+            // uid/username 都還在，每個分頁也至少補打一次 getMe()，不然頭像在別頁
+            // 上傳更新後，這一頁（或下次導覽過來的頁面）永遠看到舊的 localStorage 快取
+            if (!localStorage.getItem('username') || !localStorage.getItem('uid') || !this._profileSynced) {
+                this._profileSynced = true;
                 try { await this.getMe(); } catch (_) {}
             }
             return response.data;

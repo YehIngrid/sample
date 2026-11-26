@@ -49,6 +49,7 @@
     .id-titles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
     .id-titles .t { font-size: 10.5px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em; }
     .id-sub { font-size: 11.5px; color: var(--muted); margin-top: 9px; letter-spacing: 0.02em; }
+    .id-intro { font-size: 12px; color: var(--body); margin-top: 10px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     /* 帳號設定捷徑（名字卡右上齒輪按鈕） */
     .id-gear { position: absolute; top: 16px; right: 18px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px 5px 9px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; color: var(--navy); font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; transition: all 0.22s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
     .id-gear svg { width: 15px; height: 15px; }
@@ -103,8 +104,9 @@
     .pf-badge.contest { background: rgba(171,218,213,0.45); color: #007568; }
     .art-row .a-price { font-size: 15px; font-weight: 700; color: var(--navy); }
     .art-row .a-price.free { color: var(--muted); font-weight: 600; font-size: 13px; }
-    .row-act { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+    .row-act { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); background: none; border: none; padding: 0; cursor: pointer; }
     .row-act:hover { color: var(--navy); }
+    .row-act-del:hover { color: var(--terracotta); }
 
     /* certifications */
     .cert-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -145,6 +147,14 @@
     .nr-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 16px; }
     .nr-card .nr-h { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
     .nr-card .nr-d { font-size: 12px; color: var(--muted); margin-top: 5px; line-height: 1.65; }
+    .pi-field { margin-top: 14px; }
+    .pi-field label { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink); margin-bottom: 6px; letter-spacing: 0.03em; }
+    .pi-field input, .pi-field textarea {
+      width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 13px;
+      font-size: 14px; color: var(--ink); background: var(--card); outline: none;
+      transition: all 0.22s ease; font-family: inherit; resize: vertical;
+    }
+    .pi-field input:focus, .pi-field textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,75,151,0.12); }
     .nr-tiles { display: flex; gap: 8px; margin: 16px 0 14px; }
     .nr-tile { width: 48px; height: 56px; border: 1.5px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; background: var(--alice); color: var(--muted); cursor: pointer; transition: all 0.15s; }
     .nr-tile .nr-ch { font-size: 22px; font-weight: 700; line-height: 1; }
@@ -246,11 +256,10 @@
 
     .an-mix-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; }
     .an-mix-head { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 18px; }
-    .an-mix-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-    .an-mix-row:last-child { margin-bottom: 0; }
-    .an-mix-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-    .an-mix-lbl { font-size: 12.5px; color: var(--ink); flex: 1; }
-    .an-mix-pct { font-size: 12.5px; font-weight: 700; color: var(--ink); }
+    .an-mix-head .pill-soon, .an-ch-head .pill-soon { margin-left: 8px; vertical-align: 1px; }
+    .an-soon-body { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 18px 6px 4px; color: var(--muted); }
+    .an-soon-body svg { width: 34px; height: 34px; color: var(--sky); flex-shrink: 0; }
+    .an-soon-body p { margin: 0; font-size: 12.5px; line-height: 1.7; max-width: 320px; }
 
     .an-table-card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
     .an-table-head { font-size: 13.5px; font-weight: 700; color: var(--ink); padding: 20px 24px 4px; }
@@ -404,18 +413,7 @@
     .ev-cam-btn.ghost:hover { background: var(--alice); }
     .ev-cam-hint { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
 
-    /* ===== 數據分析：期間選擇 / 圓餅圖 / 單篇分析 ===== */
-    .an-sel { -webkit-appearance: none; appearance: none; border: 1px solid var(--line); background: var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236f87a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/12px; border-radius: 999px; padding: 7px 32px 7px 14px; font-size: 12.5px; font-weight: 600; color: var(--ink); letter-spacing: 0.03em; cursor: pointer; transition: all 0.22s ease; }
-    .an-sel:hover { border-color: var(--navy); color: var(--navy); }
-    .an-mix-body { display: flex; align-items: center; gap: 20px; }
-    .an-donut { width: 128px; height: 128px; flex-shrink: 0; }
-    .an-donut .sl { fill: none; stroke-width: 15; transition: stroke-width 0.18s ease; cursor: pointer; }
-    .an-donut .sl.hl { stroke-width: 19; }
-    .an-donut text { fill: var(--ink); }
-    .an-mix-rows { flex: 1; min-width: 0; }
-    .an-mix-rows .an-mix-row { margin: 0 -6px 6px; padding: 4px 6px; border-radius: 8px; transition: background 0.18s ease; }
-    .an-mix-rows .an-mix-row:last-child { margin-bottom: 0; }
-    .an-mix-rows .an-mix-row.hl { background: var(--alice); }
+    /* ===== 數據分析：趨勢圖 / 單篇分析 ===== */
     .an-tip { position: fixed; z-index: 1300; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 7px 11px; box-shadow: 0 10px 26px -10px rgba(0,40,80,0.3); pointer-events: none; font-size: 11.5px; color: var(--muted); letter-spacing: 0.02em; }
     .an-tip b { display: block; font-size: 13px; color: var(--ink); font-variant-numeric: tabular-nums; }
     .an-table-sub { font-size: 11px; color: var(--muted); font-weight: 400; margin-left: 10px; letter-spacing: 0.02em; }
@@ -426,7 +424,6 @@
     .an-dt-title { font-size: 17px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-top: 5px; line-height: 1.4; }
     .an-dt-metrics { margin: 18px 0 22px; }
     @media (max-width: 980px) {
-      .an-mix-body { flex-wrap: wrap; justify-content: center; }
       .an-dt-metrics { grid-template-columns: repeat(2, 1fr); }
     }
 
@@ -537,6 +534,7 @@
         <div class="id-name"></div>
         <div class="id-titles" style="display:none"></div>
         <div class="id-sub"></div>
+        <div class="id-intro" id="idIntro" style="display:none"></div>
       </div>
     </div>
 
@@ -715,7 +713,7 @@
     <div class="pane" data-pane="analytics">
       <div class="an-range">
         <div class="pane-head" style="margin-bottom:0">數據分析</div>
-        <select class="an-sel" id="anRange" aria-label="選擇資料期間"></select>
+        <span class="an-rd">近 30 天</span>
       </div>
 
       <div class="an-metrics">
@@ -743,15 +741,14 @@
 
       <div class="an-grid2">
         <div class="an-chart-card">
-          <div class="an-ch-head"><span>近 6 個月收益趨勢</span><span class="an-ch-tot" id="anChTot"></span></div>
+          <div class="an-ch-head"><span>近 30 天閱讀趨勢</span><span class="an-ch-tot" id="anChTot"></span></div>
           <div class="an-bars" id="anBars"></div>
-          <div class="an-hint">點擊柱條可切換至該月份的數據</div>
         </div>
         <div class="an-mix-card">
-          <div class="an-mix-head">讀者來源分佈</div>
-          <div class="an-mix-body">
-            <svg class="an-donut" id="anDonut" viewBox="0 0 120 120" role="img" aria-label="讀者來源分佈圓餅圖"></svg>
-            <div class="an-mix-rows" id="anMixRows"></div>
+          <div class="an-mix-head">讀者來源分佈 <span class="pill-soon">敬請期待</span></div>
+          <div class="an-soon-body">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10 l10 5 10-5Z"/><path d="M6 12 v5 c0 1 3 3 6 3 s6-2 6-3 v-5"/></svg>
+            <p>讀者來源分析需要追蹤讀者的瀏覽路徑資料，這部分後端還沒有對應欄位，等資料備齊後會補上這張圖。</p>
           </div>
         </div>
       </div>
@@ -777,8 +774,10 @@
             <div class="an-m"><div class="an-lbl">收益</div><div class="an-val" id="anDtRev"></div></div>
             <div class="an-m"><div class="an-lbl">平均評分</div><div class="an-val" id="anDtRate"></div></div>
           </div>
-          <div class="an-ch-head"><span>各月閱讀數</span></div>
-          <div class="an-bars" id="anDtBars" style="margin-bottom:30px;"></div>
+          <div class="an-ch-head"><span>各月閱讀數 <span class="pill-soon">敬請期待</span></span></div>
+          <div class="an-soon-body" style="margin-bottom:10px;">
+            <p>單篇文章的歷史閱讀趨勢需要後端記錄逐篇的時間序列資料，目前 API 只回傳累計總量，等後端補上這塊資料後會補上這張圖。</p>
+          </div>
         </div>
       </div>
     </div>
@@ -800,6 +799,25 @@
     <!-- PANE: 帳號設定 -->
     <div class="pane" data-pane="settings">
       <div class="pane-head">帳號設定</div>
+
+      <div class="nr-card">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div class="nr-h">個人資料</div>
+          <button class="btn-sm navy" id="piSave" type="button">儲存變更</button>
+        </div>
+        <div class="pi-field">
+          <label for="piName">暱稱</label>
+          <input id="piName" maxlength="20" placeholder="這是其他人會看到的名字">
+        </div>
+        <div class="pi-field">
+          <label for="piIntro">自我介紹</label>
+          <textarea id="piIntro" maxlength="150" rows="3" placeholder="介紹一下自己（選填）"></textarea>
+        </div>
+        <div class="pi-field">
+          <label for="piEmail">常用信箱</label>
+          <input id="piEmail" type="email" placeholder="方便買家／讀者聯絡你（選填）">
+        </div>
+      </div>
 
       <div class="nr-card">
         <div class="set-row" id="dnmRow" style="padding-top:0;">
@@ -1232,6 +1250,7 @@
 import { AppModal } from "../default/app-modal.js";
 import { requireAdminPage } from "../default/default.js";
 import SchoolBackendService from "./schoolBackendService.js";
+import BackendService from "../BackendService.js";
 window.AppModal = AppModal;
 // Exposed on window so the classic (non-module) <script> blocks further down
 // this page — the "申請新頭銜" and "就學證明實名認證" modals — can call it
@@ -1240,6 +1259,11 @@ window.AppModal = AppModal;
 // is no startup race (see schoolBackendService.js for the API methods).
 const schoolBackendService = new SchoolBackendService();
 window.schoolBackendService = schoolBackendService;
+// PATCH /api/account/update（暱稱／自我介紹／頭像／常用信箱）是帳號層級的欄位，
+// 住在根目錄的 BackendService，不是 schoolBackendService——跟購物站共用同一支
+// GET /api/account/me，只是這支頁面之前只拿來讀，沒有拿來寫，見下面「個人資料」卡片。
+const backendService = new BackendService();
+window.backendService = backendService;
 
 (async () => {
   const ok = await requireAdminPage();
@@ -1267,12 +1291,18 @@ function renderCertHistoryCard(item) {
   const cert = document.createElement('div');
   cert.className = 'cert';
   cert.dataset.certStatus = isRejected ? 'rejected' : 'pending';
+  if (item.id) cert.dataset.achievementId = item.id;
+  cert.dataset.achievementName = item.name || '';
+  cert.dataset.achievementShort = item.shortName || '';
   cert.innerHTML =
     '<div class="cic">' + (isRejected ? CERT_REJECTED_CIC : CERT_PENDING_CIC) + '</div>' +
     '<div class="cbody">' +
       '<div class="cname"></div>' +
       '<div class="cdesc"></div>' +
-      '<span class="cstatus ' + (isRejected ? 'rejected' : 'pending') + '">' + (isRejected ? CERT_REJECTED_STATUS : CERT_PENDING_STATUS) + '</span>' +
+      '<div class="cfoot">' +
+        '<span class="cstatus ' + (isRejected ? 'rejected' : 'pending') + '">' + (isRejected ? CERT_REJECTED_STATUS : CERT_PENDING_STATUS) + '</span>' +
+        (isRejected ? '<button class="pill-cta" type="button" data-resubmit-achievement>重新申請</button>' : '') +
+      '</div>' +
     '</div>';
   cert.querySelector('.cname').textContent = item.shortName || item.name || '';
   cert.querySelector('.cdesc').textContent = isRejected
@@ -1343,12 +1373,61 @@ function renderIdCard(data) {
   const subEl = document.querySelector('.id-card .id-sub');
   if (subEl) subEl.textContent = DISPLAY_NAME_MODE_LABEL[data.displayNameMode] || '';
 
+  const introEl = document.getElementById('idIntro');
+  if (introEl) {
+    introEl.textContent = data.introduction || '';
+    introEl.style.display = data.introduction ? '' : 'none';
+  }
+
   // data.writable 只有在「就學證明實名認證」通過審核後，後端才會在同一筆 transaction
   // 裡設成 true（見 admin 審核 identity-verification 的 API 說明）。false 時攔截所有
   // 「撰寫攻略／去發佈」入口（含之後 school.js 的 renderList 動態產生的按鈕，用
   // document 層級委派監聽，兩邊不用互相等對方的非同步載入完成）。
   window.__schoolWritable = data.writable;
 }
+
+// 「個人資料」卡（帳號設定分頁最上方）：跟購物站共用 /api/account/me|update，
+// 這裡只負責預填 + 存檔，不重複 renderIdCard() 已經在做的 sidebar 顯示邏輯。
+function renderPersonalInfoForm(data) {
+  const nameEl = document.getElementById('piName');
+  const introEl = document.getElementById('piIntro');
+  const emailEl = document.getElementById('piEmail');
+  if (!nameEl) return;
+  nameEl.value = data.name || '';
+  introEl.value = data.introduction || '';
+  emailEl.value = data.contactEmail || '';
+}
+
+document.getElementById('piSave')?.addEventListener('click', async () => {
+  const btn = document.getElementById('piSave');
+  const name = document.getElementById('piName').value.trim();
+  const introduction = document.getElementById('piIntro').value.trim();
+  const contactEmail = document.getElementById('piEmail').value.trim();
+  if (!name) {
+    AppModal.fire({ icon: 'warning', title: '請輸入暱稱', text: '暱稱不能留空。' });
+    return;
+  }
+  btn.disabled = true;
+  try {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('introduction', introduction);
+    if (contactEmail) formData.append('contactEmail', contactEmail);
+    await window.backendService.updateProfile(formData);
+    window.__schoolAccountName = name;
+    window.updateIdCardNameDisplay();
+    const introEl = document.getElementById('idIntro');
+    if (introEl) {
+      introEl.textContent = introduction;
+      introEl.style.display = introduction ? '' : 'none';
+    }
+    AppModal.fire({ icon: 'success', title: '已儲存', text: '個人資料已更新。' });
+  } catch (error) {
+    AppModal.fire({ icon: 'error', title: '儲存失敗', text: error.message || '請稍後再試' });
+  } finally {
+    btn.disabled = false;
+  }
+});
 
 function showPublishGateModal() {
   AppModal.fire({
@@ -1380,6 +1459,7 @@ async function loadAccountProfile() {
     const res = await schoolBackendService.getAccountMe();
     const data = res?.data || {};
     renderIdCard(data);
+    renderPersonalInfoForm(data);
     if (certAddBtn) {
       (data.titles || []).forEach((title) => {
         const card = renderCertCard(title);
@@ -1550,6 +1630,16 @@ document.addEventListener('DOMContentLoaded', function() {
       return a;
     }
 
+    function deleteButton(article) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'row-act row-act-del';
+      btn.textContent = '刪除';
+      btn.dataset.deleteArticleId = article.id;
+      btn.dataset.deleteArticleTitle = article.title || '';
+      return btn;
+    }
+
     function buildRow(article, variant, index) {
       var row = document.createElement('div');
       row.className = 'art-row' + (article.coverUrl ? '' : ' no-thumb');
@@ -1585,17 +1675,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (article.applicableYear) meta.appendChild(textSpan('適用 ' + article.applicableYear + ' 學年'));
         else if (article.type === 'FREE' || !article.price) meta.appendChild(textSpan('免費'));
 
-        if (article.status === 'draft') {
+        // /me/articles 回傳的 status 是大寫（DRAFT/PUBLISHED/...），query 參數 status
+        // 卻要求小寫（見 FILTER_STATUS），兩邊大小寫不同，這裡一律轉小寫再比對。
+        var statusLc = String(article.status || '').toLowerCase();
+        if (statusLc === 'draft') {
           right.appendChild(badge('draft', '草稿'));
           right.appendChild(actionLink('school-composer.html?id=' + encodeURIComponent(article.id), '繼續撰寫 →'));
         } else {
-          right.appendChild(badge(article.status === 'archived' ? 'stale' : 'pub', article.status === 'archived' ? '已下架' : '已發佈'));
+          right.appendChild(badge(statusLc === 'archived' ? 'stale' : 'pub', statusLc === 'archived' ? '已下架' : '已發佈'));
           var priceEl = document.createElement('span');
           priceEl.className = 'a-price' + ((article.type === 'FREE' || !article.price) ? ' free' : '');
           priceEl.textContent = priceText(article);
           right.appendChild(priceEl);
           right.appendChild(actionLink('school-post.html?id=' + encodeURIComponent(article.id), '查看 →'));
         }
+        right.appendChild(deleteButton(article));
       } else if (variant === 'bought') {
         meta.appendChild(textSpan('作者 ' + (article.author?.name || '未知')));
         meta.appendChild(textSpan('已解鎖 · 永久閱讀'));
@@ -1698,6 +1792,33 @@ document.addEventListener('DOMContentLoaded', function() {
         loadMine(FILTER_STATUS[chip.textContent.trim()]);
       });
     }
+
+    // 刪除攻略（草稿／已發佈皆可）：確認後打 DELETE /articles/{id}，成功就直接從列表移除該列
+    document.getElementById('mineRows').addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-delete-article-id]');
+      if (!btn) return;
+      var id = btn.dataset.deleteArticleId;
+      var title = btn.dataset.deleteArticleTitle;
+      // DELETE 實際上是軟刪除（下架為 ARCHIVED），不是永久銷毀，文案要如實反映
+      window.AppModal.fire({
+        icon: 'warning',
+        title: '確定要刪除這篇攻略？',
+        text: (title ? '「' + title + '」' : '這篇攻略') + '下架後，其他讀者將無法再搜尋或購買，但已購買的讀者仍可繼續閱讀。',
+        showCancelButton: true,
+        confirmButtonText: '刪除',
+        cancelButtonText: '取消'
+      }).then(function (result) {
+        if (!result.isConfirmed) return;
+        btn.disabled = true;
+        window.schoolBackendService.deleteArticle(id).then(function () {
+          var row = btn.closest('.art-row');
+          if (row) row.remove();
+        }).catch(function (error) {
+          window.AppModal.fire({ icon: 'error', title: '刪除失敗', text: error.message || '請稍後再試' });
+          btn.disabled = false;
+        });
+      });
+    });
   })();
 
   // 名字卡右上齒輪 → 直接跳到「帳號設定」分頁
@@ -1709,18 +1830,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  /* ---------- 更換頭像（僅前端預覽，無後端上傳）---------- */
+  /* ---------- 更換頭像（PATCH /api/account/update 的 photo 欄位） ---------- */
   // 等 DOMContentLoaded：bootstrap.bundle.min.js / cropper.min.js 都是 defer 載入，
   // 此區塊本身沒有 defer，若立即執行會早於它們，導致 bootstrap/Cropper 尚未定義
   document.addEventListener('DOMContentLoaded', function () {
-    var AVATAR_KEY = 'th_cg_profile_avatar';
+    // 頭像現在是真的存進後端了（見下面 pfCropConfirm），這個 key 只是改版前
+    // 「僅前端預覽」那版留下的舊快取，清掉避免蓋掉 renderIdCard() 載入的真實 photoURL。
+    localStorage.removeItem('th_cg_profile_avatar');
     var avEditBtn = document.querySelector('.av-edit');
     var avatarFile = document.getElementById('pfAvatarFile');
     var avatarImg = document.getElementById('pfAvatarImg');
     if (!avEditBtn || !avatarFile || !avatarImg) return;
-
-    var saved = localStorage.getItem(AVATAR_KEY);
-    if (saved) avatarImg.src = saved;
 
     var pfCropper = null;
     var pfCropModalEl = document.getElementById('pfCropModal');
@@ -1760,12 +1880,28 @@ document.addEventListener('DOMContentLoaded', function() {
       var canvas = pfCropper.getCroppedCanvas({ width: 300, height: 300 });
       pfCropModal.hide();
       canvas.toBlob(function (blob) {
+        // 樂觀更新預覽，再背景打真正的 PATCH；失敗就提示並把圖復原，
+        // 不留一個「看起來換好了、其實後端沒存到」的假象。
+        var prevSrc = avatarImg.src;
         var reader = new FileReader();
-        reader.onload = function (ev) {
-          avatarImg.src = ev.target.result;
-          localStorage.setItem(AVATAR_KEY, ev.target.result);
-        };
+        reader.onload = function (ev) { avatarImg.src = ev.target.result; };
         reader.readAsDataURL(blob);
+
+        var formData = new FormData();
+        formData.append('photo', blob, 'avatar.webp');
+        window.backendService.updateProfile(formData).then(function (res) {
+          // navbar 的 user-chip 頭像是從 localStorage 的 avatar 快取渲染的（見
+          // default.js 的 _applyLoggedInUI），不會因為這裡存檔就自動刷新；
+          // 直接更新快取＋這一頁上看得到的 navbar 頭像，不用整頁重新整理。
+          var newUrl = res?.data?.photoURL;
+          if (newUrl) {
+            localStorage.setItem('avatar', newUrl);
+            document.querySelectorAll('.nav-username-avatar').forEach(function (img) { img.src = newUrl; });
+          }
+        }).catch(function (error) {
+          avatarImg.src = prevSrc;
+          window.AppModal.fire({ icon: 'error', title: '頭像更新失敗', text: error.message || '請稍後再試' });
+        });
       }, 'image/webp', 0.85);
     });
   });
@@ -1994,8 +2130,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var fnameEl = document.getElementById('caFileName');
     var fsizeEl = document.getElementById('caFileSize');
     var submitBtn = document.getElementById('caSubmit');
+    var titleEl = document.getElementById('caTitle');
     var curFile = null;
     var closeTimer = null;
+    var editId = null; // null = 申請新頭銜；有值 = 重新送出既有申請（PUT /achievements/{id}）
 
     var CERT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11 l3 3 L22 4"/><path d="M21 12 v7 a2 2 0 0 1-2 2 H5 a2 2 0 0 1-2-2 V5 a2 2 0 0 1 2-2 h11"/></svg>';
 
@@ -2003,7 +2141,8 @@ document.addEventListener('DOMContentLoaded', function() {
       steps.forEach(function (s) { s.classList.toggle('on', s.dataset.step === name); });
     }
     function setErr(id, on) { document.getElementById(id).classList.toggle('err', on); }
-    function refreshReady() { submitBtn.disabled = !(nameIn.value.trim() && shortIn.value.trim() && curFile); }
+    // 重新送出時證明文件選填（後端沒收到新檔案就沿用原本的）
+    function refreshReady() { submitBtn.disabled = !(nameIn.value.trim() && shortIn.value.trim() && (curFile || editId)); }
 
     function clearFile() {
       curFile = null;
@@ -2020,8 +2159,16 @@ document.addEventListener('DOMContentLoaded', function() {
       clearFile();
       setErr('caFName', false); setErr('caFShort', false); setErr('caFFile', false);
     }
-    function openModal() {
+    function openModal(editItem) {
       resetForm();
+      editId = editItem ? editItem.id : null;
+      titleEl.textContent = editItem ? '重新送出頭銜申請' : '申請新頭銜';
+      submitBtn.textContent = editItem ? '重新送出' : '送出申請';
+      if (editItem) {
+        nameIn.value = editItem.name || '';
+        shortIn.value = editItem.shortName || '';
+      }
+      refreshReady();
       goStep('form');
       backdrop.classList.add('open');
       backdrop.setAttribute('aria-hidden', 'false');
@@ -2034,7 +2181,17 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.style.overflow = '';
     }
 
-    document.getElementById('certAddBtn').addEventListener('click', openModal);
+    document.getElementById('certAddBtn').addEventListener('click', function () { openModal(); });
+    document.addEventListener('click', function (e) {
+      var resubmitBtn = e.target.closest('[data-resubmit-achievement]');
+      if (!resubmitBtn) return;
+      var cert = resubmitBtn.closest('.cert');
+      openModal({
+        id: cert.dataset.achievementId,
+        name: cert.dataset.achievementName,
+        shortName: cert.dataset.achievementShort
+      });
+    });
     backdrop.addEventListener('click', function (e) {
       if (e.target === backdrop || e.target.closest('[data-ca-close]')) closeModal();
     });
@@ -2087,32 +2244,34 @@ document.addEventListener('DOMContentLoaded', function() {
       clearFile();
     });
 
-    /* 送出 → 呼叫 POST /api/school/achievements → 成功動畫 → 插入審查中卡片 */
+    /* 送出 → 新申請打 POST /achievements，重新送出打 PUT /achievements/{id} → 成功動畫 → 更新/插入卡片 */
     submitBtn.addEventListener('click', function () {
       setErr('caFName', !nameIn.value.trim());
       setErr('caFShort', !shortIn.value.trim());
-      setErr('caFFile', !curFile);
-      if (!nameIn.value.trim() || !shortIn.value.trim() || !curFile) return;
+      setErr('caFFile', !curFile && !editId);
+      if (!nameIn.value.trim() || !shortIn.value.trim() || (!curFile && !editId)) return;
 
       var title = nameIn.value.trim();
       var shortTitle = shortIn.value.trim();
+      var curEditId = editId;
 
       // Guard against double submission while the request is in flight.
       submitBtn.disabled = true;
       // NOTE: categoryId is intentionally not sent — see schoolBackendService.js
       // for why (no API to list valid achievement categories yet).
-      window.schoolBackendService.submitAchievement({
-        name: title,
-        shortName: shortTitle,
-        proof: curFile
-      }).then(function (res) {
-        var achievementId = res && res.data && res.data.id;
+      var action = curEditId
+        ? window.schoolBackendService.updateAchievement(curEditId, { name: title, shortName: shortTitle, proof: curFile || undefined })
+        : window.schoolBackendService.submitAchievement({ name: title, shortName: shortTitle, proof: curFile });
+      action.then(function (res) {
+        var achievementId = (res && res.data && res.data.id) || curEditId;
         document.getElementById('caDoneD').textContent = title + ' 認證 · 審查通常 1–3 個工作天完成';
         goStep('done');
 
-        var cert = document.createElement('div');
+        var cert = (curEditId && document.querySelector('.cert[data-achievement-id="' + curEditId + '"]')) || document.createElement('div');
         cert.className = 'cert';
         if (achievementId) cert.dataset.achievementId = achievementId;
+        cert.dataset.achievementName = title;
+        cert.dataset.achievementShort = shortTitle;
         cert.dataset.certStatus = 'pending';
         cert.innerHTML =
           '<div class="cic">' + CERT_ICON + '</div>' +
@@ -2124,8 +2283,10 @@ document.addEventListener('DOMContentLoaded', function() {
         var cnameEl = cert.querySelector('.cname');
         cnameEl.textContent = shortTitle + ' 認證';
         cnameEl.title = title;
-        var addCard = document.getElementById('certAddBtn');
-        addCard.parentNode.insertBefore(cert, addCard);
+        if (!cert.isConnected) {
+          var addCard = document.getElementById('certAddBtn');
+          addCard.parentNode.insertBefore(cert, addCard);
+        }
 
         closeTimer = setTimeout(closeModal, 1600);
       }).catch(function (error) {
@@ -2397,41 +2558,19 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-  /* ---------- 數據分析：期間篩選 / 圓餅圖 / 單篇分析 ---------- */
+  /* ---------- 數據分析：/me/analytics（近 30 天趨勢）+ /me/articles（逐篇全期總量）----------
+     讀者來源分佈、單篇文章的歷史趨勢後端目前沒有對應欄位，先標示「敬請期待」，
+     其餘都已改接真實 API（缺口細節見 memory: school_api_doc_gaps.md #2）。 */
   (function () {
-    /* 經 dataviz 驗證的藍綠光譜分類色（固定順序，色彩跟著來源走） */
-    var PAL = ['#1560ab', '#6fb1e8', '#0e8a78', '#3fbf8f'];
-    var MONTHS = ['1月', '2月', '3月', '4月', '5月', '6月'];
-    var TOT = {
-      reads: [2050, 2480, 2260, 3120, 3890, 4620],
-      rev:   [860, 1176, 995, 1538, 1809, 2262],
-      rate:  [4.7, 4.7, 4.8, 4.8, 4.8, 4.9],
-      rateN: [9, 11, 13, 17, 21, 25],
-      pub:   [7, 8, 9, 10, 11, 12]
-    };
-    var SRC = [
-      [40, 34, 17, 9], [42, 33, 16, 9], [44, 32, 15, 9],
-      [45, 31, 16, 8], [47, 30, 15, 8], [48, 29, 15, 8]
-    ];
-    var SRC_ALL = [46, 31, 15, 8];
-    var SRC_NAMES = ['攻略站首頁推薦', '搜尋 / 分類瀏覽', '站外分享連結', '作者主頁'];
-    var ARTS = [
-      { cat: '研究所推甄', title: '中興推台清交：備審修改前後對比＋面試真題還原', price: 129, rating: 4.9,
-        reads: [220, 260, 300, 380, 460, 564], favs: [8, 11, 14, 17, 21, 25], sales: [2, 3, 3, 4, 3, 4] },
-      { cat: '通識指南', title: '某通識「如何拿到 A+」報告範本＋分組避雷名單', price: 0, rating: 4.7,
-        reads: [150, 190, 230, 270, 300, 316], favs: [12, 15, 18, 20, 22, 25], sales: [0, 0, 0, 0, 0, 0] },
-      { cat: '研究計畫申請', title: '成功獲補助的研究計畫書撰寫架構＋如何找指導教授', price: 99, rating: 4.8,
-        reads: [180, 200, 220, 240, 270, 292], favs: [7, 10, 12, 15, 16, 18], sales: [2, 2, 3, 3, 4, 4] }
-    ];
-
-    var sel = 'all';   // 'all' 或月份 index
-    var curArt = null; // null = 排行表；否則為單篇文章
-
     var $ = function (id) { return document.getElementById(id); };
     function fmt(n) { return n.toLocaleString('en-US'); }
     function nt(n) { return 'NT$ ' + fmt(n); }
     function sumArr(a) { return a.reduce(function (x, y) { return x + y; }, 0); }
-    function pick(a) { return sel === 'all' ? sumArr(a) : a[sel]; }
+    function articleRevenue(a) { return a.price * a.purchaseCount; }
+
+    var published = []; // /me/articles 裡 status === 'PUBLISHED' 的文章（全期總量，非近 30 天）
+    var draftCount = 0;
+    var curArt = null;  // null = 排行表；否則為單篇文章
 
     /* 共用 tooltip（值為主、名稱為輔，只用 textContent） */
     var tip = document.createElement('div');
@@ -2447,176 +2586,133 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     function hideTip() { tip.hidden = true; }
 
-    /* 期間選單 */
-    var rangeSel = $('anRange');
-    var optAll = document.createElement('option');
-    optAll.value = 'all'; optAll.textContent = '近 6 個月';
-    rangeSel.appendChild(optAll);
-    MONTHS.forEach(function (m, i) {
-      var o = document.createElement('option');
-      o.value = String(i); o.textContent = '2026 年 ' + m;
-      rangeSel.appendChild(o);
-    });
-    rangeSel.addEventListener('change', function () {
-      sel = rangeSel.value === 'all' ? 'all' : +rangeSel.value;
-      render();
-    });
-
-    /* 指標卡 */
-    function trendTxt(el, arr) {
-      if (sel === 'all') { el.textContent = '近 6 個月累計'; el.className = 'an-trend flat'; return; }
-      if (sel === 0) { el.textContent = '無前期資料'; el.className = 'an-trend flat'; return; }
-      var p = (arr[sel] - arr[sel - 1]) / arr[sel - 1] * 100;
-      el.textContent = (p >= 0 ? '↑ ' : '↓ ') + Math.abs(p).toFixed(1) + '% 較上月';
-      el.className = 'an-trend ' + (p >= 0 ? 'up' : 'flat');
+    /* 把 /me/analytics 回傳的 30 筆逐日資料分成 6 段（每段 5 天）加總，
+       沿用原本「6 根柱狀圖」的版面，但每一根柱子對應的都是真實日期區間。 */
+    function bucketTrend(trend, key, bucketCount) {
+      var size = Math.ceil(trend.length / bucketCount);
+      var buckets = [];
+      for (var i = 0; i < trend.length; i += size) {
+        var slice = trend.slice(i, i + size);
+        buckets.push({
+          value: sumArr(slice.map(function (d) { return d[key] || 0; })),
+          from: slice[0].date,
+          to: slice[slice.length - 1].date
+        });
+      }
+      return buckets;
     }
-    function renderMetrics() {
-      $('anReads').textContent = fmt(pick(TOT.reads));
-      $('anRev').textContent = nt(pick(TOT.rev));
-      $('anRate').innerHTML = (sel === 'all' ? 4.8 : TOT.rate[sel]).toFixed(1) + '<span class="u">/5</span>';
-      $('anPub').textContent = sel === 'all' ? 12 : TOT.pub[sel];
-      trendTxt($('anReadsT'), TOT.reads);
-      trendTxt($('anRevT'), TOT.rev);
-      $('anRateT').textContent = '共 ' + (sel === 'all' ? 96 : TOT.rateN[sel]) + ' 則評價';
-      $('anRateT').className = 'an-trend flat';
-      $('anPubT').textContent = sel === 'all' ? '1 篇草稿中' : '截至當月累計';
-      $('anPubT').className = 'an-trend flat';
-    }
+    function shortDate(d) { return d.slice(5).replace('-', '/'); }
 
-    /* 柱狀圖（月份柱條，點擊跳到該月） */
-    function buildBars(host, values, clickable, fmtVal) {
+    /* 近 30 天柱狀圖（純展示用，單篇文章沒有逐日資料，所以柱子不可點擊/不可下鑽） */
+    function buildBars(host, buckets, fmtVal) {
       host.innerHTML = '';
-      var max = Math.max.apply(null, values);
-      values.forEach(function (v, i) {
+      var max = Math.max.apply(null, buckets.map(function (b) { return b.value; }).concat([1]));
+      buckets.forEach(function (b) {
         var slot = document.createElement('div');
-        slot.className = 'an-slot' + (clickable ? '' : ' static') + (sel === i ? ' on' : '');
+        slot.className = 'an-slot static';
         var bar = document.createElement('div');
         bar.className = 'an-bar';
-        bar.style.height = Math.max(4, v / max * 100) + '%';
-        if (sel === i) {
-          var cap = document.createElement('span');
-          cap.className = 'cap'; cap.textContent = fmtVal(v);
-          bar.appendChild(cap);
-        }
+        bar.style.height = Math.max(4, b.value / max * 100) + '%';
         var mo = document.createElement('span');
-        mo.className = 'mo'; mo.textContent = MONTHS[i];
+        mo.className = 'mo'; mo.textContent = shortDate(b.to);
         slot.appendChild(bar); slot.appendChild(mo);
-        slot.addEventListener('pointermove', function (e) { showTip(e, fmtVal(v), '2026 年 ' + MONTHS[i]); });
+        var rangeLabel = b.from === b.to ? b.from : (b.from + ' ~ ' + b.to);
+        slot.addEventListener('pointermove', function (e) { showTip(e, fmtVal(b.value), rangeLabel); });
         slot.addEventListener('pointerleave', hideTip);
-        if (clickable) {
-          slot.addEventListener('click', function () {
-            sel = (sel === i) ? 'all' : i;   // 再點一次取消，回到近 6 個月
-            rangeSel.value = String(sel);
-            hideTip();
-            render();
-          });
-        }
         host.appendChild(slot);
       });
     }
 
-    /* 讀者來源圓餅圖（donut，2px surface gap） */
-    var NS = 'http://www.w3.org/2000/svg';
-    function hlSlice(i, on) {
-      $('anDonut').querySelectorAll('.sl').forEach(function (c) {
-        c.classList.toggle('hl', on && +c.dataset.i === i);
-      });
-      $('anMixRows').querySelectorAll('.an-mix-row').forEach(function (r, j) {
-        r.classList.toggle('hl', on && j === i);
-      });
-    }
-    function renderDonut() {
-      var src = sel === 'all' ? SRC_ALL : SRC[sel];
-      var svg = $('anDonut');
-      svg.innerHTML = '';
-      var C = 2 * Math.PI * 44, GAP = 2.5, start = 0;
-      src.forEach(function (p, i) {
-        var len = Math.max(0, p / 100 * C - GAP);
-        var c = document.createElementNS(NS, 'circle');
-        c.setAttribute('class', 'sl');
-        c.setAttribute('cx', 60); c.setAttribute('cy', 60); c.setAttribute('r', 44);
-        c.setAttribute('stroke', PAL[i]);
-        c.setAttribute('stroke-dasharray', len + ' ' + (C - len));
-        c.setAttribute('stroke-dashoffset', String(-(start + GAP / 2)));
-        c.setAttribute('transform', 'rotate(-90 60 60)');
-        c.dataset.i = i;
-        c.addEventListener('pointermove', function (e) { hlSlice(i, true); showTip(e, p + '%', SRC_NAMES[i]); });
-        c.addEventListener('pointerleave', function () { hlSlice(i, false); hideTip(); });
-        svg.appendChild(c);
-        start += p / 100 * C;
-      });
-      var t1 = document.createElementNS(NS, 'text');
-      t1.setAttribute('x', 60); t1.setAttribute('y', 58); t1.setAttribute('text-anchor', 'middle');
-      t1.setAttribute('style', 'font-size:14px;font-weight:700;');
-      t1.textContent = fmt(pick(TOT.reads));
-      var t2 = document.createElementNS(NS, 'text');
-      t2.setAttribute('x', 60); t2.setAttribute('y', 73); t2.setAttribute('text-anchor', 'middle');
-      t2.setAttribute('style', 'font-size:8.5px;fill:var(--muted);letter-spacing:0.1em;');
-      t2.textContent = '總閱讀';
-      svg.appendChild(t1); svg.appendChild(t2);
-
-      var rows = $('anMixRows');
-      rows.innerHTML = '';
-      src.forEach(function (p, i) {
-        var row = document.createElement('div');
-        row.className = 'an-mix-row';
-        var dot = document.createElement('span'); dot.className = 'an-mix-dot'; dot.style.background = PAL[i];
-        var lbl = document.createElement('span'); lbl.className = 'an-mix-lbl'; lbl.textContent = SRC_NAMES[i];
-        var pc = document.createElement('span'); pc.className = 'an-mix-pct'; pc.textContent = p + '%';
-        row.appendChild(dot); row.appendChild(lbl); row.appendChild(pc);
-        row.addEventListener('pointerenter', function () { hlSlice(i, true); });
-        row.addEventListener('pointerleave', function () { hlSlice(i, false); });
-        rows.appendChild(row);
-      });
-    }
-
-    /* 熱門排行表（依期間重算、點擊進單篇） */
+    /* 熱門排行表（全期總量排序、點擊進單篇） */
     function renderTable() {
       var host = $('anRows');
       host.innerHTML = '';
-      ARTS.map(function (a) {
-        return { a: a, reads: pick(a.reads), favs: pick(a.favs), rev: pick(a.sales) * a.price };
-      }).sort(function (x, y) { return y.reads - x.reads; })
-        .forEach(function (it) {
+      if (!published.length) {
+        var empty = document.createElement('div');
+        empty.style.cssText = 'text-align:center;color:var(--muted);font-size:14px;padding:32px 24px;';
+        empty.textContent = '還沒有已發佈的攻略，發佈後這裡會顯示每篇的數據。';
+        host.appendChild(empty);
+        return;
+      }
+      published.slice().sort(function (x, y) { return y.viewCount - x.viewCount; })
+        .forEach(function (a) {
           var row = document.createElement('div');
           row.className = 'an-trow';
-          var tt = document.createElement('span'); tt.className = 'tt'; tt.textContent = it.a.title;
-          var r1 = document.createElement('span'); r1.className = 'tn'; r1.textContent = fmt(it.reads);
-          var r2 = document.createElement('span'); r2.className = 'tn'; r2.textContent = fmt(it.favs);
-          var r3 = document.createElement('span'); r3.className = 'tn'; r3.textContent = it.a.rating.toFixed(1);
-          var r4 = document.createElement('span'); r4.className = 'rev'; r4.textContent = it.a.price ? nt(it.rev) : '免費';
+          var tt = document.createElement('span'); tt.className = 'tt'; tt.textContent = a.title;
+          var r1 = document.createElement('span'); r1.className = 'tn'; r1.textContent = fmt(a.viewCount);
+          var r2 = document.createElement('span'); r2.className = 'tn'; r2.textContent = fmt(a.bookmarkCount);
+          var r3 = document.createElement('span'); r3.className = 'tn'; r3.textContent = a.ratingCount ? a.ratingAvg.toFixed(1) : '–';
+          var r4 = document.createElement('span'); r4.className = 'rev'; r4.textContent = a.type === 'FREE' ? '免費' : nt(articleRevenue(a));
           [tt, r1, r2, r3, r4].forEach(function (el) { row.appendChild(el); });
-          row.addEventListener('click', function () { curArt = it.a; render(); });
+          row.addEventListener('click', function () { curArt = a; render(); });
           host.appendChild(row);
         });
     }
 
-    /* 單篇文章分析 */
+    /* 單篇文章分析（沒有逐篇歷史趨勢，detail 區塊的「各月閱讀數」已改成敬請期待卡片） */
     function renderDetail() {
       var a = curArt;
-      $('anDtCat').textContent = a.cat;
+      $('anDtCat').textContent = a.categoryName || '';
       $('anDtTitle').textContent = a.title;
-      $('anDtReads').textContent = fmt(pick(a.reads));
-      $('anDtFavs').textContent = fmt(pick(a.favs));
-      $('anDtRev').textContent = a.price ? nt(pick(a.sales) * a.price) : '免費';
-      $('anDtRate').innerHTML = a.rating.toFixed(1) + '<span class="u">/5</span>';
-      buildBars($('anDtBars'), a.reads, false, fmt);
+      $('anDtReads').textContent = fmt(a.viewCount);
+      $('anDtFavs').textContent = fmt(a.bookmarkCount);
+      $('anDtRev').textContent = a.type === 'FREE' ? '免費' : nt(articleRevenue(a));
+      $('anDtRate').innerHTML = a.ratingCount ? (a.ratingAvg.toFixed(1) + '<span class="u">/5</span>') : '–';
     }
     $('anDetailBack').addEventListener('click', function () { curArt = null; render(); });
 
-    function render() {
-      renderMetrics();
-      $('anChTot').textContent = sel === 'all'
-        ? nt(sumArr(TOT.rev))
-        : nt(TOT.rev[sel]) + '（' + MONTHS[sel] + '）';
-      buildBars($('anBars'), TOT.rev, true, nt);
-      renderDonut();
+    function render(trend) {
+      if (trend) {
+        $('anChTot').textContent = fmt(sumArr(trend.viewTrend.map(function (d) { return d.count; }))) + ' 次';
+        buildBars($('anBars'), bucketTrend(trend.viewTrend, 'count', 6), fmt);
+
+        var totalViews = sumArr(published.map(function (a) { return a.viewCount; }));
+        var rated = published.filter(function (a) { return a.ratingCount > 0; });
+        var totalRatingCount = sumArr(rated.map(function (a) { return a.ratingCount; }));
+        var weightedRating = totalRatingCount
+          ? sumArr(rated.map(function (a) { return a.ratingAvg * a.ratingCount; })) / totalRatingCount
+          : null;
+
+        $('anReads').textContent = fmt(totalViews);
+        $('anReadsT').textContent = '近 30 天 ' + fmt(sumArr(trend.viewTrend.map(function (d) { return d.count; }))) + ' 次閱讀';
+        $('anReadsT').className = 'an-trend flat';
+
+        $('anRev').textContent = nt(trend.totalRevenue);
+        $('anRevT').textContent = '近 30 天 ' + nt(sumArr(trend.revenueTrend.map(function (d) { return d.amount; })));
+        $('anRevT').className = 'an-trend flat';
+
+        $('anRate').innerHTML = weightedRating != null ? (weightedRating.toFixed(1) + '<span class="u">/5</span>') : '–';
+        $('anRateT').textContent = totalRatingCount ? ('共 ' + fmt(totalRatingCount) + ' 則評價') : '尚無評價';
+        $('anRateT').className = 'an-trend flat';
+
+        $('anPub').textContent = fmt(published.length);
+        $('anPubT').textContent = draftCount ? (draftCount + ' 篇草稿中') : '目前沒有草稿';
+        $('anPubT').className = 'an-trend flat';
+      }
       var detail = curArt !== null;
       $('anTableCard').style.display = detail ? 'none' : '';
       $('anDetail').hidden = !detail;
       if (detail) renderDetail(); else renderTable();
     }
-    render();
+
+    async function load() {
+      try {
+        var articlesRes = await window.schoolBackendService.getMyArticles({ limit: 100 });
+        var items = (articlesRes && articlesRes.data && articlesRes.data.items) || [];
+        published = items.filter(function (a) { return a.status === 'PUBLISHED'; });
+        draftCount = items.filter(function (a) { return a.status === 'DRAFT'; }).length;
+
+        var analyticsRes = await window.schoolBackendService.getMyAnalytics();
+        render(analyticsRes.data);
+      } catch (error) {
+        console.error('載入創作者數據失敗：', error);
+        render({ viewTrend: [], revenueTrend: [], totalRevenue: 0 });
+      }
+    }
+
+    // 跟本頁其他「一載入就要打」的 API 一樣，要等 DOMContentLoaded（module script 執行完
+    // window.schoolBackendService 才會存在），見本頁上方「我的攻略／已購買／收藏」那段註解。
+    document.addEventListener('DOMContentLoaded', load);
   })();
 </script>
 </body>

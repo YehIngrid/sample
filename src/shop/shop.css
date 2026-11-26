@@ -524,11 +524,17 @@ ul{
   .qwl-bubble { border: 1px solid #d6e2ec; }
 }
 
-/* 輔助 — 常見問題 */
+/* 輔助 — 校園攻略站 */
 .qa-btn.secondary { background: aliceblue; color: #004b97; border-color: transparent; }
 .qa-btn.secondary:hover { background: #d9e9f6; }
 .qa-btn.secondary .qa-ic-wrap { background: #ffffff; border: 1.5px solid #004b97; }
 .qa-btn.secondary .qa-s { color: #4a627a; }
+.qa-badge-new {
+  display: inline-flex; align-items: center; margin-left: 8px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  color: #a08540; background: rgba(243,227,181,0.55);
+  padding: 2px 8px; border-radius: 999px; vertical-align: middle;
+}
 
 .qa-ic-wrap {
   width: 44px; height: 44px;
