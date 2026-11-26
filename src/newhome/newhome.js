@@ -316,10 +316,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.nh-faq-topic').forEach(t => t.classList.add('open'));
   });
 
-  document.querySelectorAll('.nh-member-more').forEach((btn) => {
+  document.querySelectorAll('.nh-member-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const card = btn.closest('.nh-member');
-      const isOpen = card.classList.toggle('open');
+      const row = btn.closest('.nh-member-row');
+      const isOpen = row.classList.toggle('open');
       btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
   });
@@ -357,4 +357,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, { threshold: 0.4 });
   nums.forEach(el => io.observe(el));
+});
+
+/* ── 游標環：仿校園攻略站「攻略介紹」頁（school-about.html）的 .ab-cursor，
+   只在滑鼠裝置、且使用者沒關閉動畫效果時啟用，整頁都有（不只「關於我們」區塊） ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const ring = document.querySelector('.nh-cursor');
+  if (!ring) return;
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y, raf = 0;
+  const loop = () => {
+    rx += (x - rx) * 0.2; ry += (y - ry) * 0.2;
+    ring.style.transform = `translate(${rx}px,${ry}px)`;
+    raf = Math.abs(x - rx) + Math.abs(y - ry) > 0.1 ? requestAnimationFrame(loop) : 0;
+  };
+  document.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    x = e.clientX; y = e.clientY;
+    document.body.classList.add('has-pointer');
+    if (!raf) raf = requestAnimationFrame(loop);
+    ring.classList.toggle('is-link', !!e.target.closest('.nh-member-btn, a, button'));
+  });
+  document.addEventListener('pointerleave', () => document.body.classList.remove('has-pointer'));
+});
+
+/* ── 校園攻略站 spotlight 區塊的格子背景，游標移動到哪、透光範圍跟到哪
+   （仿 school-about.html .ab-grid 的 --cx/--cy 做法） ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const section = document.querySelector('.nh-sec-guide');
+  const bg = document.querySelector('.nh-guide-bg');
+  if (!section || !bg) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  section.addEventListener('pointermove', (e) => {
+    const r = section.getBoundingClientRect();
+    bg.style.setProperty('--cx', (e.clientX - r.left) + 'px');
+    bg.style.setProperty('--cy', (e.clientY - r.top) + 'px');
+  });
 });

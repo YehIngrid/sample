@@ -78,6 +78,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="newhome.css">
     <link rel="stylesheet" href="../default/default.css">
+    <link rel="stylesheet" href="../default/footer.css">
   <link rel="stylesheet" href="../default/app-modal.css">
     <link rel="stylesheet" href="../default/default-font.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" integrity="sha384-/rJKQnzOkEo+daG0jMjU1IwwY9unxt1NBw3Ef2fmOJ3PW/TfAg2KXVoWwMZQZtw9" crossorigin="anonymous">
@@ -258,6 +259,22 @@
             <span class="nh-marquee-item">免抽成</span>
             <span class="nh-marquee-item hl">二手書</span>
             <span class="nh-marquee-item">國立中興大學</span>
+              <span class="nh-marquee-item hl">生活用品</span>
+              <span class="nh-marquee-item">電器</span>
+              <span class="nh-marquee-item hl">許願池</span>
+              <span class="nh-marquee-item">校園攻略</span>
+              <span class="nh-marquee-item hl">限校面交</span>
+              <span class="nh-marquee-item">免抽成</span>
+              <span class="nh-marquee-item hl">二手書</span>
+              <span class="nh-marquee-item">國立中興大學</span>
+              <span class="nh-marquee-item hl">生活用品</span>
+              <span class="nh-marquee-item">電器</span>
+              <span class="nh-marquee-item hl">許願池</span>
+              <span class="nh-marquee-item">校園攻略</span>
+              <span class="nh-marquee-item hl">限校面交</span>
+              <span class="nh-marquee-item">免抽成</span>
+              <span class="nh-marquee-item hl">二手書</span>
+              <span class="nh-marquee-item">國立中興大學</span>
           </div>
         </div>
         <section id="next-section" class="slide-in section-full-mobile d-flex align-items-center partner justify-content-center halfsection">
@@ -748,6 +765,10 @@
                 <div class="nh-stat-num" data-count="70">0+</div>
                 <div class="nh-stat-label" data-i18n="about.stats.items">商品個數</div>
               </div>
+              <div class="nh-stat">
+                <div class="nh-stat-num" data-count="300">0+</div>
+                <div class="nh-stat-label" data-i18n="about.stats.reads">攻略站閱讀量</div>
+              </div>
             </div>
 
             <!-- team head -->
@@ -756,190 +777,187 @@
               <p data-i18n="about.members.desc">一支跨領域的年輕創業團隊，來自資訊工程、創新產業經營、護理管理。我們相信跨領域才能解決真正的問題。</p>
             </div>
 
-            <!-- team grid -->
-            <div class="nh-team-grid">
-              <div class="nh-member nh-m1" data-aos="zoom-in" data-aos-delay="0">
-                <span class="nh-member-num">01</span>
-                <div class="nh-member-top">
-                  <div class="nh-member-avatar"><img src="../image/ceo.png" alt="Aria Fan" loading="lazy"></div>
-                  <div class="nh-member-info">
-                    <div class="nh-member-name">Aria Fan</div>
-                    <div class="nh-member-title-text">執行長兼創辦人 <span class="nh-title-en">CEO &amp; Founder</span></div>
-                  </div>
-                </div>
-                <button class="nh-member-more" type="button" aria-expanded="false">
-                  <span data-i18n="about.more">了解更多</span><span class="nh-more-arrow">›</span>
+            <!-- team list：每列點擊展開，游標靠近姓名時會放大成環狀（仿校園攻略站「攻略介紹」頁的游標效果） -->
+            <div class="nh-cursor" aria-hidden="true"></div>
+            <div class="nh-team-list">
+              <div class="nh-member-row nh-m1" data-aos="fade-up" data-aos-delay="0">
+                <button class="nh-member-btn" type="button" aria-expanded="false">
+                  <span class="nh-member-no">01</span>
+                  <span class="nh-member-nm">Aria Fan</span>
+                  <span class="nh-member-rl">執行長兼創辦人 <span class="nh-title-en">CEO &amp; Founder</span></span>
+                  <span class="nh-member-pl">+</span>
                 </button>
-                <div class="nh-member-detail">
-                  <div class="nh-member-school">國立中興大學　創新產業經營學系</div>
-                  <div class="nh-detail-block">
-                    <div class="nh-detail-label">專長</div>
-                    <ul class="nh-skill-list">
-                      <li>痛點洞察與問題定義</li>
-                      <li>市場敏銳度與需求挖掘</li>
-                      <li>商業企劃與策略規劃</li>
-                      <li>產品營運與方案撰寫</li>
-                      <li>公眾表達與簡報Pitch</li>
-                      <li>跨域管理與商業模式設計</li>
-                    </ul>
+                <div class="nh-member-body"><div><div class="nh-member-in">
+                  <div class="nh-member-photo"><img src="../image/ceo.png" alt="Aria Fan" loading="lazy"></div>
+                  <div class="nh-member-info">
+                    <div class="nh-member-school">國立中興大學　創新產業經營學系</div>
+                    <div class="nh-detail-block">
+                      <div class="nh-detail-label">專長</div>
+                      <ul class="nh-skill-list">
+                        <li>痛點洞察與問題定義</li>
+                        <li>市場敏銳度與需求挖掘</li>
+                        <li>商業企劃與策略規劃</li>
+                        <li>產品營運與方案撰寫</li>
+                        <li>公眾表達與簡報Pitch</li>
+                        <li>跨域管理與商業模式設計</li>
+                      </ul>
+                    </div>
+                    <div class="nh-detail-block">
+                      <div class="nh-detail-label">經歷</div>
+                      <ul class="nh-member-exp">
+                        <li>2019年臺北市教育局 生涯學習檔案 競賽 4項特優</li>
+                        <li>2021年和黃半導體實習生</li>
+                        <li>2022年邁樂科技(原民樂科技)共同創辦人</li>
+                        <li>2023年台積電實習生</li>
+                        <li>2023年臺北市立第一女子高級中學 社團老師</li>
+                        <li>2023年臺北市立建國高級中學 社團老師</li>
+                        <li>2023年考取 TCSOL證照</li>
+                        <li>2024年鴻海希望小學永齡基金會 輔導老師</li>
+                        <li>2025年參與教育部 U-start 創新創業工作坊</li>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="nh-detail-block">
-                    <div class="nh-detail-label">經歷</div>
-                    <ul class="nh-member-exp">
-                      <li>2019年臺北市教育局 生涯學習檔案 競賽 4項特優</li>
-                      <li>2021年和黃半導體實習生</li>
-                      <li>2022年邁樂科技(原民樂科技)共同創辦人</li>
-                      <li>2023年台積電實習生</li>
-                      <li>2023年臺北市立第一女子高級中學 社團老師</li>
-                      <li>2023年臺北市立建國高級中學 社團老師</li>
-                      <li>2023年考取 TCSOL證照</li>
-                      <li>2024年鴻海希望小學永齡基金會 輔導老師</li>
-                      <li>2025年參與教育部 U-start 創新創業工作坊</li>
-                    </ul>
-                  </div>
-                </div>
+                </div></div></div>
               </div>
-              <div class="nh-member nh-m2" data-aos="zoom-in" data-aos-delay="80">
-                <span class="nh-member-num">02</span>
-                <div class="nh-member-top">
-                    <div class="nh-member-avatar">張</div>
-                  <div class="nh-member-info">
-                    <div class="nh-member-name">Harley Chang</div>
-                    <div class="nh-member-title-text">營運長兼共同創辦人 <span class="nh-title-en">COO &amp; CO-founder</span></div>
-                  </div>
-                </div>
-                <button class="nh-member-more" type="button" aria-expanded="false">
-                  <span data-i18n="about.more">了解更多</span><span class="nh-more-arrow">›</span>
+
+              <div class="nh-member-row nh-m2" data-aos="fade-up" data-aos-delay="40">
+                <button class="nh-member-btn" type="button" aria-expanded="false">
+                  <span class="nh-member-no">02</span>
+                  <span class="nh-member-nm">Harley Chang</span>
+                  <span class="nh-member-rl">營運長兼共同創辦人 <span class="nh-title-en">COO &amp; CO-founder</span></span>
+                  <span class="nh-member-pl">+</span>
                 </button>
-                <div class="nh-member-detail">
-                  <div class="nh-member-school">私立崇仁醫護管理專科學校　護理學系</div>
-                  <div class="nh-detail-block">
-                    <div class="nh-detail-label">專長</div>
-                    <ul class="nh-skill-list">
-                      <li>營運管理與跨領域溝通</li>
-                      <li>平台法律風控與合規規劃</li>
-                      <li>商業文案與內容企劃</li>
-                      <li>醫療行政與健康管理</li>
-                    </ul>
+                <div class="nh-member-body"><div><div class="nh-member-in">
+                  <div class="nh-member-photo">張</div>
+                  <div class="nh-member-info">
+                    <div class="nh-member-school">私立崇仁醫護管理專科學校　護理學系</div>
+                    <div class="nh-detail-block">
+                      <div class="nh-detail-label">專長</div>
+                      <ul class="nh-skill-list">
+                        <li>營運管理與跨領域溝通</li>
+                        <li>平台法律風控與合規規劃</li>
+                        <li>商業文案與內容企劃</li>
+                        <li>醫療行政與健康管理</li>
+                      </ul>
+                    </div>
+                    <div class="nh-detail-block">
+                      <div class="nh-detail-label">經歷</div>
+                      <ul class="nh-member-exp">
+                        <li>2020年醫護英文 口說競賽 亞軍</li>
+                        <li>2021年考取 ACLS、BLS專業證照</li>
+                        <li>2022年臨床 個案報告競賽 優選</li>
+                        <li>2022年護理行政與醫療體系管理實務研習</li>
+                        <li>2022年完成臺大醫院、嘉義基督教醫院、聖馬爾定醫院、若瑟醫院、高雄小港醫院、彰濱秀傳醫院及竹崎衛生所等多家醫療機構臨床實習</li>
+                        <li>2023年考取 國家護理師證照</li>
+                        <li>2024年仁心堂中醫診所 約聘護理師</li>
+                        <li>2024年台中葳格國際學校小學部 全科輔導家教</li>
+                        <li>2024年一品堂中醫診所 護理師</li>
+                        <li>2025年福懋毛公館動物醫院 獸醫助理</li>
+                        <li>2025年伊美美容教育機構 微刺青專業技術培訓 研習結業</li>
+                        <li>2025年參與教育部 U-start 創新創業工作坊</li>
+                        <li>2026年哈魯木刺青（Harumu Tattoo）品牌創辦人 主理刺青師</li>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="nh-detail-block">
-                    <div class="nh-detail-label">經歷</div>
-                    <ul class="nh-member-exp">
-                      <li>2020年醫護英文 口說競賽 亞軍</li>
-                      <li>2021年考取 ACLS、BLS專業證照</li>
-                      <li>2022年臨床 個案報告競賽 優選</li>
-                      <li>2022年護理行政與醫療體系管理實務研習</li>
-                      <li>2022年完成臺大醫院、嘉義基督教醫院、聖馬爾定醫院、若瑟醫院、高雄小港醫院、彰濱秀傳醫院及竹崎衛生所等多家醫療機構臨床實習</li>
-                      <li>2023年考取 國家護理師證照</li>
-                      <li>2024年仁心堂中醫診所 約聘護理師</li>
-                      <li>2024年台中葳格國際學校小學部 全科輔導家教</li>
-                      <li>2024年一品堂中醫診所 護理師</li>
-                      <li>2025年福懋毛公館動物醫院 獸醫助理</li>
-                      <li>2025年伊美美容教育機構 微刺青專業技術培訓 研習結業</li>
-                      <li>2025年參與教育部 U-start 創新創業工作坊</li>
-                      <li>2026年哈魯木刺青（Harumu Tattoo）品牌創辦人 主理刺青師</li>
-                    </ul>
-                  </div>
-                </div>
+                </div></div></div>
               </div>
-              <div class="nh-member nh-m3" data-aos="zoom-in" data-aos-delay="160">
-                <span class="nh-member-num">03</span>
-                <div class="nh-member-top">
-                  <div class="nh-member-avatar"><img src="../image/cto.ico" alt="Lee" loading="lazy"></div>
-                  <div class="nh-member-info">
-                    <div class="nh-member-name">Lee</div>
-                    <div class="nh-member-title-text">技術長兼共同創辦人 <span class="nh-title-en">CTO &amp; CO-founder</span></div>
-                  </div>
-                </div>
-                <button class="nh-member-more" type="button" aria-expanded="false">
-                  <span data-i18n="about.more">了解更多</span><span class="nh-more-arrow">›</span>
+
+              <div class="nh-member-row nh-m3" data-aos="fade-up" data-aos-delay="80">
+                <button class="nh-member-btn" type="button" aria-expanded="false">
+                  <span class="nh-member-no">03</span>
+                  <span class="nh-member-nm">Lee</span>
+                  <span class="nh-member-rl">技術長兼共同創辦人 <span class="nh-title-en">CTO &amp; CO-founder</span></span>
+                  <span class="nh-member-pl">+</span>
                 </button>
-                <div class="nh-member-detail">
-                  <div class="nh-member-school">國立中興大學　資訊工程學系</div>
-                  <div class="nh-detail-block">
-                    <div class="nh-detail-label">經歷</div>
-                    <ul class="nh-member-exp">
-                      <li>2024年AIS3 暑期課程</li>
-                      <li>2024年iPAS 資安工程師 初級</li>
-                      <li>2024年SITCON 會眾</li>
-                      <li>2024年HITCON 社群攤位</li>
-                    </ul>
+                <div class="nh-member-body"><div><div class="nh-member-in">
+                  <div class="nh-member-photo"><img src="../image/cto.ico" alt="Lee" loading="lazy"></div>
+                  <div class="nh-member-info">
+                    <div class="nh-member-school">國立中興大學　資訊工程學系</div>
+                    <div class="nh-detail-block">
+                      <div class="nh-detail-label">經歷</div>
+                      <ul class="nh-member-exp">
+                        <li>2024年AIS3 暑期課程</li>
+                        <li>2024年iPAS 資安工程師 初級</li>
+                        <li>2024年SITCON 會眾</li>
+                        <li>2024年HITCON 社群攤位</li>
+                        <li>2026年興程式競賽 佳作</li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
+                </div></div></div>
               </div>
-              <div class="nh-member nh-m4" data-aos="zoom-in" data-aos-delay="240">
-                <span class="nh-member-num">04</span>
-                <div class="nh-member-top">
-                  <div class="nh-member-avatar"><img src="../image/cpo.jpg" alt="Ingrid Yeh" loading="lazy"></div>
-                  <div class="nh-member-info">
-                    <div class="nh-member-name">Ingrid Yeh</div>
-                    <div class="nh-member-title-text">產品設計長兼共同創辦人 <span class="nh-title-en">CPO &amp; CO-founder</span></div>
-                  </div>
-                </div>
-                <button class="nh-member-more" type="button" aria-expanded="false">
-                  <span data-i18n="about.more">了解更多</span><span class="nh-more-arrow">›</span>
+
+              <div class="nh-member-row nh-m4" data-aos="fade-up" data-aos-delay="120">
+                <button class="nh-member-btn" type="button" aria-expanded="false">
+                  <span class="nh-member-no">04</span>
+                  <span class="nh-member-nm">Ingrid Yeh</span>
+                  <span class="nh-member-rl">產品設計長兼共同創辦人 <span class="nh-title-en">CPO &amp; CO-founder</span></span>
+                  <span class="nh-member-pl">+</span>
                 </button>
-                <div class="nh-member-detail">
-                  <div class="nh-member-school">國立中興大學　資訊工程學系</div>
-                  <div class="nh-detail-block">
-                    <div class="nh-detail-label">專長</div>
-                    <ul class="nh-skill-list">
-                      <li>人際溝通與團隊協作</li>
-                      <li>英語與跨語言溝通</li>
-                      <li>程式與技術學習</li>
-                    </ul>
+                <div class="nh-member-body"><div><div class="nh-member-in">
+                  <div class="nh-member-photo"><img src="../image/cpo.jpg" alt="Ingrid Yeh" loading="lazy"></div>
+                  <div class="nh-member-info">
+                    <div class="nh-member-school">國立中興大學　資訊工程學系</div>
+                    <div class="nh-detail-block">
+                      <div class="nh-detail-label">專長</div>
+                      <ul class="nh-skill-list">
+                        <li>人際溝通與團隊協作</li>
+                        <li>英語與跨語言溝通</li>
+                        <li>程式與技術學習</li>
+                      </ul>
+                    </div>
+                    <div class="nh-detail-block">
+                      <div class="nh-detail-label">經歷</div>
+                      <ul class="nh-member-exp">
+                        <li>2016年南部 英語讀劇比賽 特優</li>
+                        <li>2023年多益 TOEIC 825分</li>
+                        <li>2026年興程式競賽 佳作</li>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="nh-detail-block">
-                    <div class="nh-detail-label">經歷</div>
-                    <ul class="nh-member-exp">
-                      <li>2016年南部 英語讀劇比賽 特優</li>
-                      <li>2023年多益 TOEIC 825分</li>
-                    </ul>
-                  </div>
-                </div>
+                </div></div></div>
               </div>
-              <div class="nh-member nh-m5" data-aos="zoom-in" data-aos-delay="320">
-                <span class="nh-member-num">05</span>
-                <div class="nh-member-top">
-                  <div class="nh-member-avatar nh-avatar-rect"><img src="../image/mentor.jpg" alt="謝蕙雯" loading="lazy"></div>
-                  <div class="nh-member-info">
-                    <div class="nh-member-name">謝蕙雯 <span class="nh-name-en">HUEI-WUN SIE</span></div>
-                    <div class="nh-member-title-text">企業導師 <span class="nh-title-en">Industry Mentor</span></div>
-                  </div>
-                </div>
-                <button class="nh-member-more" type="button" aria-expanded="false">
-                  <span data-i18n="about.more">了解更多</span><span class="nh-more-arrow">›</span>
+
+              <div class="nh-member-row nh-m5" data-aos="fade-up" data-aos-delay="160">
+                <button class="nh-member-btn" type="button" aria-expanded="false">
+                  <span class="nh-member-no">05</span>
+                  <span class="nh-member-nm">謝蕙雯 <span class="nh-name-en">HUEI-WUN SIE</span></span>
+                  <span class="nh-member-rl">企業導師 <span class="nh-title-en">Industry Mentor</span></span>
+                  <span class="nh-member-pl">+</span>
                 </button>
-                <div class="nh-member-detail">
-                  <div class="nh-member-school">和曜生技股份有限公司　創辦人/技術長</div>
-                  <div class="nh-detail-block">
-                    <a class="nh-member-link" href="https://hoyao.tw/about/" target="_blank" rel="noopener noreferrer">
-                      和曜生技官網
-                      <svg class="nh-link-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg>
-                    </a>
+                <div class="nh-member-body"><div><div class="nh-member-in">
+                  <div class="nh-member-photo nh-avatar-rect"><img src="../image/mentor.jpg" alt="謝蕙雯" loading="lazy"></div>
+                  <div class="nh-member-info">
+                    <div class="nh-member-school">和曜生技股份有限公司　創辦人/技術長</div>
+                    <div class="nh-detail-block">
+                      <a class="nh-member-link" href="https://hoyao.tw/about/" target="_blank" rel="noopener noreferrer">
+                        和曜生技官網
+                        <svg class="nh-link-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg>
+                      </a>
+                    </div>
+                    <div class="nh-detail-block">
+                      <div class="nh-detail-label">專長</div>
+                      <ul class="nh-skill-list">
+                        <li>植物組織培養技術開發與量產</li>
+                        <li>台灣原生植物之植萃原料開發與應用</li>
+                        <li>農業生技商品化與精準保健應用設計</li>
+                      </ul>
+                    </div>
+                    <div class="nh-detail-block">
+                      <div class="nh-detail-label">經歷</div>
+                      <ul class="nh-member-exp">
+                        <li>2021年行政院農委會 青農及農業科研技術傑出人員獎</li>
+                        <li>2024年國立台灣大學 科技農企業經營管理菁英班 第十屆</li>
+                        <li>2024年農業部 第七屆 百大青農</li>
+                        <li>2024年淨零碳規劃管理師 能力鑑定 初級認證通過</li>
+                        <li>2024年食農教育專業人員（農業生物技術領域）</li>
+                        <li>2025年宜蘭縣 第7屆 青年事務委員會 青年委員</li>
+                        <li>2025年國立政治大學 農業科技跨領域人才培訓進階班 AMMOT+</li>
+                        <li>相關領域研究SCI期刊發表3篇/國內外5項專利發明人</li>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="nh-detail-block">
-                    <div class="nh-detail-label">專長</div>
-                    <ul class="nh-skill-list">
-                      <li>植物組織培養技術開發與量產</li>
-                      <li>台灣原生植物之植萃原料開發與應用</li>
-                      <li>農業生技商品化與精準保健應用設計</li>
-                    </ul>
-                  </div>
-                  <div class="nh-detail-block">
-                    <div class="nh-detail-label">經歷</div>
-                    <ul class="nh-member-exp">
-                      <li>2021年行政院農委會 青農及農業科研技術傑出人員獎</li>
-                      <li>2024年國立台灣大學 科技農企業經營管理菁英班 第十屆</li>
-                      <li>2024年農業部 第七屆 百大青農</li>
-                      <li>2024年淨零碳規劃管理師 能力鑑定 初級認證通過</li>
-                      <li>2024年食農教育專業人員（農業生物技術領域）</li>
-                      <li>2025年宜蘭縣 第7屆 青年事務委員會 青年委員</li>
-                      <li>2025年國立政治大學 農業科技跨領域人才培訓進階班 AMMOT+</li>
-                      <li>相關領域研究SCI期刊發表3篇/國內外5項專利發明人</li>
-                    </ul>
-                  </div>
-                </div>
+                </div></div></div>
               </div>
             </div>
 
@@ -962,6 +980,78 @@
           </div><!-- /.nh-section-inner -->
         </section>
 
+        <!-- ══ 校園攻略站 ══（部分文案取自 school-about.html 的攻略介紹頁） -->
+        <section class="nh-sec-guide" id="guide">
+          <div class="nh-guide-bg" aria-hidden="true"></div>
+          <div class="nh-section-inner">
+            <div class="nh-guide-intro">
+              <div class="nh-guide-left" data-aos="fade-right">
+                <span class="nh-eyebrow-sec">CAMPUS GUIDE STATION</span>
+                <h2 class="nh-sec-h2">把學長姐的真實經驗，<br>變成你的校園捷徑</h2>
+                <p class="nh-guide-lead">校園攻略站是拾貨寶庫為中興大學打造的「經驗變現平台」。選課策略、推甄備審、實習面試、宿舍與美食——這些真正有用卻散落各處的經驗，在這裡被整理、認證，並讓分享者獲得應得的回報。</p>
+                <a class="nh-btn-solid" href="../school/school.html">立即閱覽攻略 →</a>
+              </div>
+              <div class="nh-guide-stats" data-aos="fade-left">
+                <div class="nh-stat">
+                  <div class="nh-stat-num" data-count="60">0+</div>
+                  <div class="nh-stat-label">篇攻略</div>
+                </div>
+                <div class="nh-stat">
+                  <div class="nh-stat-num" data-count="15">0+</div>
+                  <div class="nh-stat-label">位已認證作者</div>
+                </div>
+                <div class="nh-stat">
+                  <div class="nh-stat-num" data-count="300">0+</div>
+                  <div class="nh-stat-label">本月閱讀</div>
+                </div>
+              </div>
+            </div>
+            <div class="nh-guide-grid">
+              <div class="nh-guide-card" data-aos="fade-up" data-aos-delay="0">
+                <span class="nh-guide-no">01</span>
+                <h3>經驗變現</h3>
+                <p>把你的備審模板、面試逐字稿、選課心得上架，讀者付費解鎖，你就能把辛苦累積的經驗變成實際收入。</p>
+              </div>
+              <div class="nh-guide-card" data-aos="fade-up" data-aos-delay="80">
+                <span class="nh-guide-no">02</span>
+                <h3>半實名認證</h3>
+                <p>後台以校園信箱完全實名審查身分、獎項與升學證明；前台保留半匿名顯示，防肉搜也防詐騙。</p>
+              </div>
+              <div class="nh-guide-card" data-aos="fade-up" data-aos-delay="160">
+                <span class="nh-guide-no">03</span>
+                <h3>拒絕 AI 與業配</h3>
+                <p>平台禁止販賣廣告文，內容須為原創或已取得授權。查證屬實的抄襲、AI 灌水或業配一律下架停權。</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══ 你還在等什麼？ ══ -->
+        <section class="nh-sec-final">
+          <div class="nh-section-inner nh-final-grid">
+            <div class="nh-final-left">
+              <span class="nh-eyebrow-sec" style="color:#f3e3b5;">GET STARTED</span>
+              <h2 class="nh-final-h2">你還在等什麼<span class="nh-final-q">？</span></h2>
+              <p class="nh-final-lead">免費註冊帳號，三秒鐘加入校園生活圈。</p>
+              <a class="nh-final-btn-primary" href="../account/account.html?page=signup">註冊帳號</a>
+            </div>
+            <div class="nh-final-list">
+              <a class="nh-final-item" href="../shop/shop.html">
+                <span class="nh-final-label">二手買賣</span>
+                <span class="nh-final-caption">免費刊登</span>
+              </a>
+              <a class="nh-final-item" href="../wishpool/wishpool.html#wishpool">
+                <span class="nh-final-label">許願專區</span>
+                <span class="nh-final-caption">說出你想要的</span>
+              </a>
+              <a class="nh-final-item" href="../school/school.html">
+                <span class="nh-final-label">校園攻略站</span>
+                <span class="nh-final-caption">學長姐經驗</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
         <!-- History Modal -->
         <div class="nh-history-modal" id="nhHistoryModal" aria-hidden="true">
           <div class="nh-history-modal-inner">
@@ -970,46 +1060,93 @@
             <img src="../svg/historyphone.svg" loading="lazy" alt="團隊比賽經歷" class="d-block d-lg-none" style="width:100%;border-radius:8px;">
           </div>
         </div>
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-col footer-brand">
-      <a href="../newhome/newhome.html"><img src="../svg/TREASUREHUBwhite.svg" alt="拾貨寶庫" loading="lazy"></a>
-      <p class="footer-tagline" data-i18n="footer.tagline">專為大學生打造的校園二手拍賣市集</p>
+<footer class="thf" id="thf">
+  <div class="thf-dots" aria-hidden="true"></div>
+  <div class="thf-wrap thf-main">
+    <div>
+      <a class="thf-logo" href="../newhome/newhome.html" aria-label="拾貨寶庫首頁"><img src="../svg/TREASUREHUBwhite.svg" alt="拾貨寶庫" loading="lazy"></a>
+      <p class="thf-tag" data-i18n="footer.tagline">專為大學生打造的校園二手拍賣市集</p>
     </div>
-    <div class="footer-links-row">
-    <div class="footer-col">
-      <h4 class="footer-heading" data-i18n="footer.quicklinks">快速連結</h4>
-      <ul class="footer-links">
+    <div class="thf-col">
+      <h4 data-i18n="footer.quicklinks">快速連結</h4>
+      <ul>
         <li><a href="../shop/shop.html" data-i18n="nav.shop">購物首頁</a></li>
         <li><a href="../commodity/commodity.html" data-i18n="nav.market">購物商場</a></li>
         <li><a href="../shop/shop.html?page=seller">賣家專區</a></li>
         <li><a href="../wishpool/wishpool.html#wishpool" data-i18n="nav.wish">許願專區</a></li>
+        <li><a href="../school/school.html">校園攻略站</a></li>
       </ul>
     </div>
-    <div class="footer-col">
-      <h4 class="footer-heading" data-i18n="footer.help">幫助中心</h4>
-      <ul class="footer-links">
+    <div class="thf-col">
+      <h4 data-i18n="footer.help">幫助中心</h4>
+      <ul>
         <li><a href="../questions/questions.html" data-i18n="footer.faq">常見問題</a></li>
         <li><a href="../communication/communication.html" data-i18n="footer.contact.link">客服諮詢</a></li>
         <li><a href="../policy/policy.html#privacy" data-i18n="footer.policy">隱私權政策</a></li>
         <li><a href="../policy/policy.html#terms" data-i18n="footer.terms">服務條款</a></li>
       </ul>
     </div>
-    </div>
-    <div class="footer-col">
-      <h4 class="footer-heading" data-i18n="footer.contact">聯絡我們</h4>
-      <p class="footer-email"><a href="mailto:help@treasurehub.tw">help@treasurehub.tw</a></p>
-      <div class="footer-social">
-        <a href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://lin.ee/U7uZmHV" target="_blank" aria-label="Line"><i class="fa-brands fa-line"></i></a>
-        <a href="https://www.threads.com/@treasurehub.tw?igshid=NTc4MTIwNjQ2YQ==" target="_blank" aria-label="Threads"><img src="../svg/threadslogo.avif" alt="Threads" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;border-radius:50%;"></a>
-        <a href="https://www.dcard.tw/@treasurehub?cid=266cb62d-37e6-4d89-ae26-5b4ac1ee5d96" target="_blank" aria-label="Dcard"><img src="../svg/dcardlogo.png" alt="Dcard" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;"></a>
+    <div class="thf-col">
+      <h4 data-i18n="footer.contact">聯絡我們</h4>
+      <div class="thf-mail"><i class="fa-solid fa-envelope"></i><a href="mailto:help@treasurehub.tw">help@treasurehub.tw</a><button type="button" data-copy="help@treasurehub.tw">複製</button></div>
+      <div class="thf-social">
+        <a href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://lin.ee/U7uZmHV" target="_blank" rel="noopener" aria-label="Line"><i class="fa-brands fa-line"></i></a>
+        <a href="https://www.threads.com/@treasurehub.tw?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener" aria-label="Threads"><img src="../svg/threadslogo.avif" alt="Threads" style="filter:none;border-radius:50%;"></a>
+        <a href="https://www.dcard.tw/@treasurehub?cid=266cb62d-37e6-4d89-ae26-5b4ac1ee5d96" target="_blank" rel="noopener" aria-label="Dcard"><img src="../svg/dcardlogo.png" alt="Dcard" style="filter:none;"></a>
       </div>
     </div>
   </div>
-  <div class="footer-bottom">
-    <span data-i18n="footer.copyright">Copyright &copy; 2026 拾貨寶庫｜All Rights Reserved.</span>
+
+  <!-- 水獺吉祥物 -->
+  <div class="thf-wrap">
+    <div class="thf-scene">
+      <div class="thf-ground" aria-hidden="true"></div>
+      <p class="thf-say">讓寶物，找到新的歸屬</p>
+      <div class="thf-otter" role="img" aria-label="拾貨寶庫的水獺吉祥物" title="摸摸我">
+        <svg viewBox="0 0 160 160">
+          <path class="tail" d="M112 132 q34 6 38 -22 q2 -12 -8 -10 q-6 22 -34 20 z" fill="#7e5236"/>
+          <ellipse cx="80" cy="122" rx="44" ry="34" fill="#946243"/>
+          <ellipse cx="80" cy="128" rx="28" ry="24" fill="#f3dcbc"/>
+          <ellipse cx="58" cy="152" rx="14" ry="6" fill="#7e5236"/>
+          <ellipse cx="102" cy="152" rx="14" ry="6" fill="#7e5236"/>
+          <g class="head">
+            <circle cx="42" cy="40" r="11" fill="#946243"/><circle cx="42" cy="41" r="5.5" fill="#6b4430"/>
+            <circle cx="118" cy="40" r="11" fill="#946243"/><circle cx="118" cy="41" r="5.5" fill="#6b4430"/>
+            <ellipse cx="80" cy="66" rx="46" ry="38" fill="#946243"/>
+            <ellipse cx="80" cy="84" rx="34" ry="20" fill="#f3dcbc"/>
+            <ellipse cx="62" cy="80" rx="16" ry="14" fill="#f3dcbc"/>
+            <ellipse cx="98" cy="80" rx="16" ry="14" fill="#f3dcbc"/>
+            <g class="blink">
+              <g class="eye"><circle cx="60" cy="62" r="7.5" fill="#2b1a10"/><circle cx="62.5" cy="59.5" r="2.4" fill="#fff"/></g>
+              <g class="eye"><circle cx="100" cy="62" r="7.5" fill="#2b1a10"/><circle cx="102.5" cy="59.5" r="2.4" fill="#fff"/></g>
+            </g>
+            <ellipse cx="50" cy="84" rx="7" ry="4" fill="#ff9fb8" opacity=".75"/>
+            <ellipse cx="110" cy="84" rx="7" ry="4" fill="#ff9fb8" opacity=".75"/>
+            <path d="M73 72 q7 -4 14 0 q-2 7 -7 8 q-5 -1 -7 -8 z" fill="#3a2418"/>
+            <path d="M80 80 v4 M80 84 q-5 6 -10 1 M80 84 q5 6 10 1" stroke="#3a2418" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <g stroke="#b88a68" stroke-width="1.6" stroke-linecap="round"><path d="M44 80 l-14 -3 M44 86 l-14 2"/><path d="M116 80 l14 -3 M116 86 l14 2"/></g>
+          </g>
+          <g class="coin">
+            <circle cx="80" cy="112" r="13" fill="#abdad5" stroke="#5a9e94" stroke-width="3"/>
+            <path d="M80 104 l2.4 5 5.4 .6 -4 3.7 1.1 5.3 -4.9 -2.7 -4.9 2.7 1.1 -5.3 -4 -3.7 5.4 -.6z" fill="#fff6d8"/>
+          </g>
+          <ellipse cx="65" cy="114" rx="9" ry="11" fill="#7e5236"/>
+          <ellipse cx="95" cy="114" rx="9" ry="11" fill="#7e5236"/>
+          <g class="spark" fill="#abdad5"><path d="M38 100 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z"/></g>
+          <g class="spark" fill="#fff" style="transition-delay:.06s"><path d="M124 96 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4z"/></g>
+          <g class="spark" fill="#abdad5" style="transition-delay:.12s"><circle cx="80" cy="92" r="3.5"/></g>
+        </svg>
+      </div>
+    </div>
   </div>
+
+  <div class="thf-wrap thf-bottom">
+    <p data-i18n="footer.copyright">Copyright &copy; 2026 拾貨寶庫｜All Rights Reserved.</p>
+    <button class="thf-top" type="button">回到頂部<i class="fa-solid fa-arrow-up"></i></button>
+  </div>
+
+  <div class="thf-toast" role="status" aria-live="polite"></div>
 </footer>
     <!-- 放在 body 結尾或 head 中 -->
     <script src="https://cdn.jsdelivr.net/npm/axios@1.16.1/dist/axios.min.js" integrity="sha384-LEhCeSYMzzIZgXNDqOnt039uBFADh2Yf9gaWTpae2Da9UHXEkW6C95emO9aEKIlp" crossorigin="anonymous"></script>
@@ -1018,5 +1155,6 @@
     <script defer src="https://unpkg.com/aos@2.3.1/dist/aos.js" integrity="sha384-wziAfh6b/qT+3LrqebF9WeK4+J5sehS6FA10J1t3a866kJ/fvU5UwofWnQyzLtwu" crossorigin="anonymous"></script>
     <script type="module" src="../default/default.js"></script>
     <script type="module" src="newhome.js"></script>
+<script defer src="../default/footer.js"></script>
 </body>
 </html>

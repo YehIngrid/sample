@@ -100,6 +100,9 @@
     <div class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16 16"/></svg>
       <input type="text" placeholder="搜尋課程、教授、科系、關鍵字..." id="schoolSearchInput" />
+      <button type="button" class="search-clear" id="schoolSearchClear" aria-label="清除搜尋" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="M6 6 18 18"/></svg>
+      </button>
       <span class="scope">全部</span>
     </div>
     <div class="d-flex" style="gap: 12px;">
@@ -151,9 +154,6 @@
           <button type="button">#商家推薦</button>
         </div>
       </div>
-      <a class="btn-toolbar" href="#">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 H20"/><path d="M7 12 H17"/><path d="M10 18 H14"/></svg>
-      </a>
     </div>
   </div>
 
@@ -265,7 +265,7 @@
     <!-- MAIN -->
     <main class="main">
 
-      <div class="sec-label" id="articlesSecLabel"><span id="articlesSecLabelText">全部文章</span> <span class="pill" id="articlesCountPill">316 篇 · 依發佈時間</span></div>
+      <div class="sec-label" id="articlesSecLabel"><span id="articlesSecLabelText">全部文章</span> <span class="pill" id="articlesCountPill">依發佈時間</span></div>
 
       <!-- Article grid -->
       <div class="articles-grid" id="articleList"></div>

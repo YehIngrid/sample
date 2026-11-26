@@ -45,10 +45,10 @@
     .av-edit { position: absolute; right: -4px; bottom: -4px; width: 24px; height: 24px; border-radius: 50%; background: var(--card); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; color: var(--navy); cursor: pointer; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.22s ease; }
     .av-edit:hover { background: var(--navy-solid); border-color: var(--navy); color: #fff; }
     .av-edit svg { width: 12px; height: 12px; }
-    .id-name { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-top: 12px; }
+    .id-name { font-size: 16px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; margin-top: 12px; display: inline-block; margin-right: 8px; vertical-align: baseline; }
     .id-titles { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
     .id-titles .t { font-size: 10.5px; font-weight: 700; color: var(--navy); background: var(--alice); padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em; }
-    .id-sub { font-size: 11.5px; color: var(--muted); margin-top: 9px; letter-spacing: 0.02em; }
+    .id-sub { font-size: 11.5px; color: var(--muted); letter-spacing: 0.02em; display: inline-block; margin-top: 12px; vertical-align: baseline; }
     .id-intro { font-size: 12px; color: var(--body); margin-top: 10px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     /* 帳號設定捷徑（名字卡右上齒輪按鈕） */
     .id-gear { position: absolute; top: 16px; right: 18px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px 5px 9px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; color: var(--navy); font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; transition: all 0.22s ease; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
@@ -531,9 +531,8 @@
           </button>
           <input type="file" id="pfAvatarFile" accept="image/*" hidden>
         </div>
-        <div class="id-name"></div>
+        <div class="id-name"></div><div class="id-sub"></div>
         <div class="id-titles" style="display:none"></div>
-        <div class="id-sub"></div>
         <div class="id-intro" id="idIntro" style="display:none"></div>
       </div>
     </div>
@@ -2069,6 +2068,24 @@ document.addEventListener('DOMContentLoaded', function() {
         if (dnmToggle.disabled) return;
         var prevOn = dnmToggle.classList.contains('on');
         var nextMode = prevOn ? 'NICKNAME' : 'SEMI_REAL';
+
+        // 半實名顯示會把真實姓名（哪怕只露一個字）露出去，一定要先通過「就學證明
+        // 實名認證」（window.__schoolWritable，見 renderIdCard() 註解）才能開啟，
+        // 不然任何沒驗證過的帳號都能假裝自己有半實名資料，等於偽造身份
+        if (nextMode === 'SEMI_REAL' && !window.__schoolWritable) {
+          var goVerify = await AppModal.fire({
+            icon: 'warning',
+            title: '尚未通過身份認證',
+            text: '半實名顯示需要先完成「就學證明實名認證」，審核通過後才能開啟。要現在前往認證嗎？',
+            showCancelButton: true,
+            confirmButtonText: '前往認證',
+            cancelButtonText: '取消',
+          });
+          if (goVerify.isConfirmed) {
+            document.querySelector('#sideNav button[data-pane="cert"]')?.click();
+          }
+          return;
+        }
         // 樂觀更新：先假設成功、立刻切換畫面＋sidebar 姓名，失敗才退回
         setToggle(dnmToggle, nextMode === 'SEMI_REAL');
         showSemiRealBlock(nextMode === 'SEMI_REAL');
@@ -2098,6 +2115,12 @@ document.addEventListener('DOMContentLoaded', function() {
         var data = res && res.data || {};
         setToggle(wmToggle, data.watermarkPreference);
         var isSemiReal = data.displayNameMode === 'SEMI_REAL';
+        // 防呆：帳號還沒通過認證卻存著 SEMI_REAL（例如認證過了又被後台撤銷），
+        // 前台一律先當暱稱顯示處理，不要把假的半實名資料露出去
+        if (isSemiReal && window.__schoolWritable === false) {
+          isSemiReal = false;
+          data.displayNameMode = 'NICKNAME';
+        }
         setToggle(dnmToggle, isSemiReal);
         showSemiRealBlock(isSemiReal);
         if (typeof data.nameRevealIndex === 'number' && data.nameRevealIndex >= 0 && data.nameRevealIndex < chars.length) {

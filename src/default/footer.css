@@ -1,0 +1,101 @@
+/* ================= 拾貨寶庫 Footer（全站共用） =================
+   取代各頁原本的 <footer class="footer">，所有 class 都以 thf 開頭，
+   不會影響頁面其他地方。顏色沿用網站既有色票（navy/cream），不是外部參考稿自己的配色。
+   ================================================================ */
+.thf{
+  --main:#004b97; --deep:#003f80;
+  --warm:#abdad5; --mint:#abdad5;
+  --t1:#fff; --t2:rgba(255,255,255,.8); --t3:rgba(255,255,255,.55);
+  --line:rgba(255,255,255,.16);
+  --bounce:cubic-bezier(.34,1.56,.64,1); --ease:cubic-bezier(.2,.7,.2,1);
+  position:relative; isolation:isolate;
+  font-family:"Helvetica Neue",Helvetica,"PingFang TC","Noto Sans TC","Hiragino Sans",Arial,sans-serif;
+  color:var(--t1); line-height:1.7; letter-spacing:.02em; -webkit-font-smoothing:antialiased;
+  background:var(--main);
+}
+.thf *,.thf *::before,.thf *::after{box-sizing:border-box}
+:where(.thf) :is(h4,p,ul){margin:0}
+:where(.thf) ul{padding:0;list-style:none}
+.thf a{color:inherit;text-decoration:none}
+:where(.thf) button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+.thf :focus-visible{outline:3px solid var(--warm);outline-offset:3px;border-radius:10px}
+.thf-wrap{position:relative;width:min(1160px,100% - 56px);margin-inline:auto}
+
+/* 圓點背景：拿掉了，.thf-dots 留著空殼不影響版面 */
+.thf-dots{display:none}
+
+/* ---------- 主要內容 ---------- */
+.thf-main{display:grid;grid-template-columns:1.35fr 1fr 1fr 1.25fr;gap:44px;padding:56px 0 32px}
+.thf-logo{display:inline-block}
+.thf-logo img{height:42px;width:auto;display:block}
+.thf-tag{margin-top:18px;font-size:15px;color:var(--t2);max-width:260px}
+
+.thf-col h4{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;letter-spacing:.14em;color:var(--t1);margin-bottom:18px}
+.thf-col h4::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--warm)}
+.thf-col li + li{margin-top:10px}
+.thf-col li a{position:relative;font-size:15px;font-weight:500;color:var(--t2);transition:color .25s}
+.thf-col li a::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1.5px;border-radius:2px;background:var(--warm);transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease)}
+.thf-col li a:hover{color:#fff}
+.thf-col li a:hover::after{transform:scaleX(1);transform-origin:left}
+
+.thf-mail{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;font-size:15.5px;font-weight:700}
+.thf-mail i{font-size:19px;color:var(--warm)}
+.thf-mail a:hover{text-decoration:underline;text-underline-offset:4px}
+.thf-mail button{flex:none;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.35);color:var(--t2);transition:border-color .2s,color .2s}
+.thf-mail button:hover{border-color:#fff;color:#fff}
+.thf-social{display:flex;gap:10px;margin-top:20px}
+.thf-social a{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:18px;border:1.5px solid rgba(255,255,255,.3);transition:background .25s,border-color .25s,color .25s,transform .3s var(--ease)}
+.thf-social a:hover{background:#fff;border-color:#fff;color:var(--main);transform:translateY(-3px)}
+.thf-social img{width:20px;height:20px;object-fit:contain;filter:brightness(0) invert(1);transition:filter .25s}
+.thf-social a:hover img{filter:none}
+
+/* ---------- 寶箱吉祥物 ---------- */
+.thf-scene{position:relative;display:flex;align-items:flex-end;justify-content:flex-end;gap:14px;height:150px;margin-top:-40px;pointer-events:none}
+.thf-scene > *{pointer-events:auto}
+.thf-ground{position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(255,255,255,.18)}
+.thf-say{position:relative;align-self:center;margin-bottom:46px;padding:9px 16px;border-radius:14px;background:#fff;color:var(--main);font-weight:700;font-size:14px;white-space:nowrap;
+  box-shadow:0 10px 24px -10px rgba(0,0,0,.35);}
+.thf-say::after{content:"";position:absolute;right:-7px;bottom:12px;border:8px solid transparent;border-left-color:#fff;border-right:0}
+.thf-otter{position:relative;width:104px;height:104px;cursor:pointer;transform-origin:50% 100%;animation:thf-breathe 3.6s ease-in-out infinite}
+.thf-otter svg{width:100%;height:100%;overflow:visible}
+@keyframes thf-breathe{50%{transform:scaleY(.975) scaleX(1.015)}}
+.thf-otter .tail{transform-origin:112px 132px;animation:thf-tail 2.4s ease-in-out infinite}
+@keyframes thf-tail{50%{transform:rotate(-12deg)}}
+.thf-otter .head{transform-origin:80px 100px;transition:transform .5s var(--bounce)}
+.thf-otter:hover .head{transform:rotate(-5deg)}
+.thf-otter .coin{transform-box:fill-box;transform-origin:center;transition:transform .5s var(--bounce)}
+.thf-otter:hover .coin,.thf-otter.happy .coin{transform:translateY(-8px) rotate(-12deg) scale(1.1)}
+.thf-otter .eye{transition:transform .15s}
+.thf-otter .blink{transform-origin:80px 62px;animation:thf-blink 4.2s infinite}
+@keyframes thf-blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.thf-otter .spark{opacity:0;transform-box:fill-box;transform-origin:center;transition:opacity .3s,transform .5s var(--bounce)}
+.thf-otter:hover .spark,.thf-otter.happy .spark{opacity:1;transform:translateY(-12px) scale(1.25)}
+
+.thf-otter.jump{animation:thf-jump .6s var(--bounce)}
+@keyframes thf-jump{30%{transform:translateY(-28px) scaleY(1.05)}60%{transform:translateY(0) scaleY(.9) scaleX(1.08)}100%{transform:none}}
+
+/* ---------- 底列 ---------- */
+.thf-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:20px 0 26px;font-size:13px;color:var(--t3)}
+.thf-top{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;color:var(--t2);transition:color .25s}
+.thf-top i{width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:grid;place-items:center;font-size:14px;transition:transform .3s var(--ease),border-color .25s}
+.thf-top:hover{color:#fff}
+.thf-top:hover i{transform:translateY(-3px);border-color:#fff}
+
+.thf-toast{position:fixed;left:50%;bottom:28px;translate:-50% 16px;z-index:3000;padding:12px 18px;border-radius:16px;background:#fff;color:#004b97;font:800 14px/1 "PingFang TC","Noto Sans TC",sans-serif;box-shadow:0 20px 40px -14px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.35s var(--bounce)}
+.thf-toast.show{opacity:1;translate:-50% 0}
+
+/* ---------- RWD ---------- */
+@media (max-width:1000px){
+  .thf-main{grid-template-columns:1fr 1fr;gap:36px 24px}
+  .thf-main > :first-child,.thf-main > :last-child{grid-column:1/-1}
+}
+@media (max-width:600px){
+  .thf-wrap{width:calc(100% - 36px)}
+  .thf-otter{width:112px;height:112px}
+  .thf-scene{margin-top:0;height:124px}
+  .thf-say{font-size:13.5px;padding:10px 14px}
+  .thf-bottom{flex-direction:column-reverse;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  .thf *,.thf *::before,.thf *::after{animation:none!important;transition:none!important}
+}

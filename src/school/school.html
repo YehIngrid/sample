@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-5e2ESR8Ycmos6g3gAKr1Jvwye8sW4U1u/cAKulfVJnkakCcMqhOudbtPnvJ+nbv7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" integrity="sha384-ccZHbezhtZWmNy0cg8odL0D/jFU5k5HIls9y78Qd6lWor7rpvFIZtK0fTFG4z456" crossorigin="anonymous">
   <link rel="stylesheet" href="../default/default.css">
+  <link rel="stylesheet" href="../default/footer.css">
   <link rel="stylesheet" href="../default/app-modal.css">
   <link rel="stylesheet" href="../default/default-font.css">
   <link rel="stylesheet" href="school.css">
@@ -276,6 +277,12 @@
     <!-- MAIN -->
     <main class="main">
 
+      <!-- 首頁搜尋：輸入後按 Enter 直接跳到「全部文章」頁面搜尋，不在首頁本地篩選 -->
+      <div class="search" id="homeSearchBox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16 16"/></svg>
+        <input type="text" placeholder="搜尋課程、教授、科系、關鍵字..." id="homeSearchInput" />
+      </div>
+
       <!-- Featured -->
       <article class="featured" id="featuredWrap"></article>
 
@@ -365,46 +372,92 @@
 </section>
 
 <!-- ============ BRAND FOOTER ============ -->
-<footer style="background-color: #004b97; color: rgba(255,255,255,0.85);">
-  <div style="display:grid; grid-template-columns:1.4fr 2fr 1fr; gap:24px; width:80vw; margin:0 auto; padding:48px 0 36px;">
+<footer class="thf" id="thf">
+  <div class="thf-dots" aria-hidden="true"></div>
+  <div class="thf-wrap thf-main">
     <div>
-      <img src="../svg/TREASUREHUBwhite.svg" alt="拾貨寶庫 TreasureHub" style="max-width:120px; margin-bottom:12px; display:block;">
-      <p style="font-size:13px; color:rgba(255,255,255,0.55); line-height:1.6; margin:0; max-width:280px;">專為大學生打造的校園二手拍賣市集</p>
+      <a class="thf-logo" href="../newhome/newhome.html" aria-label="拾貨寶庫首頁"><img src="../svg/TREASUREHUBwhite.svg" alt="拾貨寶庫" loading="lazy"></a>
+      <p class="thf-tag">專為大學生打造的校園二手拍賣市集</p>
     </div>
-    <div style="display:flex; gap:24px;">
-      <div style="flex:1;">
-        <h5 style="font-size:14px; font-weight:700; color:#abdad5; letter-spacing:0.5px; margin-bottom:10px; margin-top:0;">快速連結</h5>
-        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0;">
-          <li><a href="../shop/shop.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">購物首頁</a></li>
-          <li><a href="../commodity/commodity.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">購物商場</a></li>
-          <li><a href="../shop/shop.html?page=seller" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">賣家專區</a></li>
-          <li><a href="../wishpool/wishpool.html#wishpool" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">許願專區</a></li>
-        </ul>
-      </div>
-      <div style="flex:1;">
-        <h5 style="font-size:14px; font-weight:700; color:#abdad5; letter-spacing:0.5px; margin-bottom:10px; margin-top:0;">幫助中心</h5>
-        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0;">
-          <li><a href="../questions/questions.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">常見問題</a></li>
-          <li><a href="../communication/communication.html" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">客服諮詢</a></li>
-          <li><a href="../policy/policy.html#privacy" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">隱私權政策</a></li>
-          <li><a href="#" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">服務條款</a></li>
-        </ul>
-      </div>
+    <div class="thf-col">
+      <h4>快速連結</h4>
+      <ul>
+        <li><a href="../shop/shop.html">購物首頁</a></li>
+        <li><a href="../commodity/commodity.html">購物商場</a></li>
+        <li><a href="../shop/shop.html?page=seller">賣家專區</a></li>
+        <li><a href="../wishpool/wishpool.html#wishpool">許願專區</a></li>
+      </ul>
     </div>
-    <div>
-      <h5 style="font-size:14px; font-weight:700; color:#abdad5; letter-spacing:0.5px; margin-bottom:10px; margin-top:0;">聯絡我們</h5>
-      <p style="margin:0 0 4px;"><a href="mailto:help@treasurehub.tw" style="color:rgba(255,255,255,0.72); text-decoration:none; font-size:14px; line-height:1; transition:color 0.2s; display:block; padding:4px 0;">help@treasurehub.tw</a></p>
-      <div style="display:flex; gap:14px; margin-top:14px;">
-        <a href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" aria-label="Instagram" target="_blank" style="color:rgba(255,255,255,0.72); font-size:18px; transition:color 0.2s; text-decoration:none;" onmouseover="this.style.color='#abdad5';" onmouseout="this.style.color='rgba(255,255,255,0.72)';"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://lin.ee/U7uZmHV" aria-label="LINE" target="_blank" style="color:rgba(255,255,255,0.72); font-size:18px; transition:color 0.2s; text-decoration:none;" onmouseover="this.style.color='#abdad5';" onmouseout="this.style.color='rgba(255,255,255,0.72)';"><i class="fa-brands fa-line"></i></a>
-        <a href="https://www.threads.com/@treasurehub.tw?igshid=NTc4MTIwNjQ2YQ==" aria-label="Threads" target="_blank" style="color:rgba(255,255,255,0.72); font-size:18px; transition:color 0.2s; text-decoration:none;" onmouseover="this.style.color='#abdad5';" onmouseout="this.style.color='rgba(255,255,255,0.72)';"><img src="../svg/threadslogo.avif" alt="Threads" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;border-radius:50%;"></a>
-        <a href="https://www.dcard.tw/@treasurehub?cid=266cb62d-37e6-4d89-ae26-5b4ac1ee5d96" aria-label="Dcard" target="_blank" style="color:rgba(255,255,255,0.72); font-size:18px; transition:color 0.2s; text-decoration:none;" onmouseover="this.style.color='#abdad5';" onmouseout="this.style.color='rgba(255,255,255,0.72)';"><img src="../svg/dcardlogo.png" alt="Dcard" style="width:1.1em;height:1.1em;vertical-align:-0.15em;object-fit:contain;"></a>
+    <div class="thf-col">
+      <h4>幫助中心</h4>
+      <ul>
+        <li><a href="../questions/questions.html">常見問題</a></li>
+        <li><a href="../communication/communication.html">客服諮詢</a></li>
+        <li><a href="../policy/policy.html#privacy">隱私權政策</a></li>
+        <li><a href="../policy/policy.html#terms">服務條款</a></li>
+      </ul>
+    </div>
+    <div class="thf-col">
+      <h4>聯絡我們</h4>
+      <div class="thf-mail"><i class="fa-solid fa-envelope"></i><a href="mailto:help@treasurehub.tw">help@treasurehub.tw</a><button type="button" data-copy="help@treasurehub.tw">複製</button></div>
+      <div class="thf-social">
+        <a href="https://www.instagram.com/treasurehub.tw?igsh=cXd0djYxNGk5OWsy&utm_source=qr" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://lin.ee/U7uZmHV" target="_blank" rel="noopener" aria-label="Line"><i class="fa-brands fa-line"></i></a>
+        <a href="https://www.threads.com/@treasurehub.tw?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener" aria-label="Threads"><img src="../svg/threadslogo.avif" alt="Threads" style="filter:none;border-radius:50%;"></a>
+        <a href="https://www.dcard.tw/@treasurehub?cid=266cb62d-37e6-4d89-ae26-5b4ac1ee5d96" target="_blank" rel="noopener" aria-label="Dcard"><img src="../svg/dcardlogo.png" alt="Dcard" style="filter:none;"></a>
       </div>
     </div>
   </div>
-  <div style="border-top: 1px solid rgba(255,255,255,0.12); text-align: center; padding: 14px 0; font-size: 13px; color: rgba(255,255,255,0.45); width:80vw; margin:0 auto;">
-    <span>Copyright © 2026 拾貨寶庫｜All Rights Reserved.</span>
+
+  <!-- 水獺吉祥物 -->
+  <div class="thf-wrap">
+    <div class="thf-scene">
+      <div class="thf-ground" aria-hidden="true"></div>
+      <p class="thf-say">讓寶物，找到新的歸屬</p>
+      <div class="thf-otter" role="img" aria-label="拾貨寶庫的水獺吉祥物" title="摸摸我">
+        <svg viewBox="0 0 160 160">
+          <path class="tail" d="M112 132 q34 6 38 -22 q2 -12 -8 -10 q-6 22 -34 20 z" fill="#7e5236"/>
+          <ellipse cx="80" cy="122" rx="44" ry="34" fill="#946243"/>
+          <ellipse cx="80" cy="128" rx="28" ry="24" fill="#f3dcbc"/>
+          <ellipse cx="58" cy="152" rx="14" ry="6" fill="#7e5236"/>
+          <ellipse cx="102" cy="152" rx="14" ry="6" fill="#7e5236"/>
+          <g class="head">
+            <circle cx="42" cy="40" r="11" fill="#946243"/><circle cx="42" cy="41" r="5.5" fill="#6b4430"/>
+            <circle cx="118" cy="40" r="11" fill="#946243"/><circle cx="118" cy="41" r="5.5" fill="#6b4430"/>
+            <ellipse cx="80" cy="66" rx="46" ry="38" fill="#946243"/>
+            <ellipse cx="80" cy="84" rx="34" ry="20" fill="#f3dcbc"/>
+            <ellipse cx="62" cy="80" rx="16" ry="14" fill="#f3dcbc"/>
+            <ellipse cx="98" cy="80" rx="16" ry="14" fill="#f3dcbc"/>
+            <g class="blink">
+              <g class="eye"><circle cx="60" cy="62" r="7.5" fill="#2b1a10"/><circle cx="62.5" cy="59.5" r="2.4" fill="#fff"/></g>
+              <g class="eye"><circle cx="100" cy="62" r="7.5" fill="#2b1a10"/><circle cx="102.5" cy="59.5" r="2.4" fill="#fff"/></g>
+            </g>
+            <ellipse cx="50" cy="84" rx="7" ry="4" fill="#ff9fb8" opacity=".75"/>
+            <ellipse cx="110" cy="84" rx="7" ry="4" fill="#ff9fb8" opacity=".75"/>
+            <path d="M73 72 q7 -4 14 0 q-2 7 -7 8 q-5 -1 -7 -8 z" fill="#3a2418"/>
+            <path d="M80 80 v4 M80 84 q-5 6 -10 1 M80 84 q5 6 10 1" stroke="#3a2418" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+            <g stroke="#b88a68" stroke-width="1.6" stroke-linecap="round"><path d="M44 80 l-14 -3 M44 86 l-14 2"/><path d="M116 80 l14 -3 M116 86 l14 2"/></g>
+          </g>
+          <g class="coin">
+            <circle cx="80" cy="112" r="13" fill="#abdad5" stroke="#5a9e94" stroke-width="3"/>
+            <path d="M80 104 l2.4 5 5.4 .6 -4 3.7 1.1 5.3 -4.9 -2.7 -4.9 2.7 1.1 -5.3 -4 -3.7 5.4 -.6z" fill="#fff6d8"/>
+          </g>
+          <ellipse cx="65" cy="114" rx="9" ry="11" fill="#7e5236"/>
+          <ellipse cx="95" cy="114" rx="9" ry="11" fill="#7e5236"/>
+          <g class="spark" fill="#abdad5"><path d="M38 100 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z"/></g>
+          <g class="spark" fill="#fff" style="transition-delay:.06s"><path d="M124 96 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4z"/></g>
+          <g class="spark" fill="#abdad5" style="transition-delay:.12s"><circle cx="80" cy="92" r="3.5"/></g>
+        </svg>
+      </div>
+    </div>
   </div>
+
+  <div class="thf-wrap thf-bottom">
+    <p>Copyright &copy; 2026 拾貨寶庫｜All Rights Reserved.</p>
+    <button class="thf-top" type="button">回到頂部<i class="fa-solid fa-arrow-up"></i></button>
+  </div>
+
+  <div class="thf-toast" role="status" aria-live="polite"></div>
 </footer>
 
 <!-- ── Bottom nav (mobile) ── -->
@@ -481,5 +534,6 @@ document.addEventListener('DOMContentLoaded', function() {
   menuLinks.forEach(link => link.addEventListener('click', closeMenu));
 });
 </script>
+<script defer src="../default/footer.js"></script>
 </body>
 </html>

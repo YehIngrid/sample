@@ -292,8 +292,11 @@ function attachLikeButtons() {
   // 空字串 = 全部文章；支援從外部連結帶 ?category=cat_xxx 深連結進來（例如
   // school-about.html 的熱門主題文字雲），點側邊欄分類一樣會覆蓋掉這個初始值
   let currentCategoryId = new URLSearchParams(window.location.search).get('category') || '';
+  // 支援從 school.html 首頁搜尋框帶 ?q=關鍵字 深連結進來，由 setupSearchInput() 讀出來預填
   let currentTagName = ''; // 空字串 = 不篩標籤，點側邊欄「熱門標籤」會換成真正的標籤名稱
-  let currentQuery = '';   // 空字串 = 不篩關鍵字，school-article.html 工具列的搜尋框會帶入
+  // 空字串 = 不篩關鍵字；school-article.html 工具列的搜尋框會帶入，也支援從
+  // school.html 首頁搜尋框帶 ?q=關鍵字 深連結進來
+  let currentQuery = new URLSearchParams(window.location.search).get('q') || '';
   let currentSort = 'latest'; // school-article.html 工具列的排序下拉選單，值對應後端 sort enum
 
   // GET /api/school/categories 回傳的分類清單同時被側邊欄分類列表跟這裡的錨點
@@ -664,21 +667,61 @@ function attachLikeButtons() {
 
   // ── school-article.html 工具列的搜尋框：輸入防抖 400ms 後重新打 getArticles({q})，
   // 按 Enter 立即套用。school.html 沒有這顆輸入框，呼叫時直接 no-op ──
+  // 搜尋紀錄：最多留 8 筆，最新的在前面，重複搜尋同一個字只會把舊的移到最前面
+  const SEARCH_HISTORY_KEY = 'schoolSearchHistory';
+  const SEARCH_HISTORY_MAX = 8;
+  function getSearchHistory() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY) || '[]');
+      return Array.isArray(raw) ? raw : [];
+    } catch { return []; }
+  }
+  function addSearchHistory(term) {
+    if (!term) return;
+    const list = getSearchHistory().filter(t => t !== term);
+    list.unshift(term);
+    try { localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(list.slice(0, SEARCH_HISTORY_MAX))); } catch { /* 存不進去就算了 */ }
+  }
+
   function setupSearchInput() {
     const input = document.getElementById('schoolSearchInput');
     if (!input || input.dataset.wired) return;
     input.dataset.wired = '1';
     input.value = currentQuery;
+
+    const clearBtn = document.getElementById('schoolSearchClear');
+    const updateClearBtn = () => { if (clearBtn) clearBtn.style.display = input.value ? 'flex' : 'none'; };
+    updateClearBtn();
+
+    const historyBox = document.createElement('div');
+    historyBox.className = 'search-history';
+    historyBox.style.display = 'none';
+    input.closest('.search').appendChild(historyBox);
+
+    function renderHistory() {
+      const list = getSearchHistory();
+      if (!list.length) { historyBox.style.display = 'none'; return; }
+      historyBox.innerHTML =
+        '<div class="search-history-head"><span>最近搜尋</span><button type="button" class="search-history-clear">清除紀錄</button></div>' +
+        list.map(t => `<button type="button" class="search-history-item" data-term="${esc(t)}">${esc(t)}</button>`).join('');
+      historyBox.style.display = 'block';
+    }
+
     let debounceTimer;
-    const applySearch = () => {
-      const val = input.value.trim();
+    const applySearch = (term) => {
+      const val = (term !== undefined ? term : input.value).trim();
+      input.value = val;
+      updateClearBtn();
+      historyBox.style.display = 'none';
       if (val === currentQuery) return;
       currentQuery = val;
+      if (val) addSearchHistory(val);
       renderArticles();
     };
     input.addEventListener('input', () => {
+      updateClearBtn();
       clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(applySearch, 400);
+      debounceTimer = setTimeout(() => applySearch(), 400);
     });
     input.addEventListener('keydown', (e) => {
       if (e.key !== 'Enter') return;
@@ -686,8 +729,45 @@ function attachLikeButtons() {
       clearTimeout(debounceTimer);
       applySearch();
     });
+    input.addEventListener('focus', () => { if (!input.value) renderHistory(); });
+    document.addEventListener('click', (e) => {
+      if (!input.closest('.search').contains(e.target)) historyBox.style.display = 'none';
+    });
+    historyBox.addEventListener('click', (e) => {
+      const clearAll = e.target.closest('.search-history-clear');
+      if (clearAll) {
+        try { localStorage.removeItem(SEARCH_HISTORY_KEY); } catch { /* 清不掉就算了 */ }
+        historyBox.style.display = 'none';
+        return;
+      }
+      const item = e.target.closest('.search-history-item');
+      if (item) applySearch(item.dataset.term);
+    });
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        clearTimeout(debounceTimer);
+        input.value = '';
+        input.focus();
+        applySearch('');
+      });
+    }
   }
   document.addEventListener('DOMContentLoaded', setupSearchInput);
+
+  // school.html 首頁的搜尋框：不在首頁本地篩選，直接帶 ?q= 跳到「全部文章」頁面搜尋
+  function setupHomeSearchInput() {
+    const input = document.getElementById('homeSearchInput');
+    if (!input || input.dataset.wired) return;
+    input.dataset.wired = '1';
+    input.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const val = input.value.trim();
+      if (!val) return;
+      window.location.href = 'school-article.html?q=' + encodeURIComponent(val);
+    });
+  }
+  document.addEventListener('DOMContentLoaded', setupHomeSearchInput);
 
   // school-article.html 工具列的排序下拉選單，value 對應後端 sort enum，
   // school.html 沒有這顆選單，呼叫時直接 no-op
@@ -840,6 +920,16 @@ function attachLikeButtons() {
       `<a href="#" data-tag-name="${esc(t.name)}" class="${t.name === currentTagName ? 'on' : ''}">#${esc(t.name)}</a>`
     ).join('');
 
+    function syncTagSelectionUI() {
+      document.querySelectorAll('.tag-list [data-tag-name], .tag-bubble [data-tag-name]').forEach(el => {
+        el.classList.toggle('on', el.dataset.tagName === currentTagName);
+      });
+      const countEl = document.getElementById('tagCount');
+      const btn = document.getElementById('tagPickerBtn');
+      if (countEl) countEl.textContent = currentTagName ? '1' : '';
+      if (btn) btn.classList.toggle('has-sel', !!currentTagName);
+    }
+
     lists.forEach(list => {
       list.innerHTML = html;
       list.addEventListener('click', e => {
@@ -847,12 +937,39 @@ function attachLikeButtons() {
         if (!a) return;
         e.preventDefault();
         currentTagName = currentTagName === a.dataset.tagName ? '' : a.dataset.tagName;
-        document.querySelectorAll('.tag-list [data-tag-name]').forEach(el => {
-          el.classList.toggle('on', el.dataset.tagName === currentTagName);
-        });
+        syncTagSelectionUI();
         renderArticles();
       });
     });
+
+    // school-article.html 工具列的「標籤」彈出泡泡（手機版），跟桌機側欄「熱門標籤」
+    // 共用同一份真實標籤資料，點擊一樣是單選篩選（後端 getArticles({tag}) 只吃單一
+    // 標籤字串，不支援多選），選到的標籤會跟側欄同步高亮
+    const bubble = document.getElementById('tagBubble');
+    const pickerBtn = document.getElementById('tagPickerBtn');
+    if (bubble && pickerBtn && !pickerBtn.dataset.wired) {
+      pickerBtn.dataset.wired = '1';
+      bubble.innerHTML = tags.map(t =>
+        `<button type="button" data-tag-name="${esc(t.name)}" class="${t.name === currentTagName ? 'on' : ''}">#${esc(t.name)}</button>`
+      ).join('');
+      pickerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        bubble.classList.toggle('open');
+      });
+      bubble.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-tag-name]');
+        if (!b) return;
+        currentTagName = currentTagName === b.dataset.tagName ? '' : b.dataset.tagName;
+        syncTagSelectionUI();
+        renderArticles();
+        bubble.classList.remove('open');
+      });
+      document.addEventListener('click', (e) => {
+        if (!pickerBtn.contains(e.target) && !bubble.contains(e.target)) bubble.classList.remove('open');
+      });
+    }
+
+    syncTagSelectionUI();
   }
   document.addEventListener('DOMContentLoaded', renderTagSidebar);
 
@@ -970,6 +1087,18 @@ function attachLikeButtons() {
       if (dropdownModeBtn.disabled) return;
       const prevMode = window.__schoolDisplayNameMode;
       const nextMode = prevMode === 'SEMI_REAL' ? 'NICKNAME' : 'SEMI_REAL';
+      if (nextMode === 'SEMI_REAL' && !window.__schoolWritable) {
+        const goVerify = await AppModal.fire({
+          icon: 'warning',
+          title: '尚未通過身份認證',
+          text: '半實名顯示需要先完成「就學證明實名認證」，審核通過後才能開啟。要現在前往認證嗎？',
+          showCancelButton: true,
+          confirmButtonText: '前往認證',
+          cancelButtonText: '取消',
+        });
+        if (goVerify.isConfirmed) window.location.href = 'school-profile.html?pane=cert';
+        return;
+      }
       // 樂觀更新：先切畫面，失敗才退回（跟 school-profile.html 的 dnmToggle 同一套模式）
       window.__schoolDisplayNameMode = nextMode;
       window.updateIdCardNameDisplay();
@@ -999,7 +1128,13 @@ function attachLikeButtons() {
       const settings = (settingsRes && settingsRes.data) || {};
       window.__schoolAccountName = me.name || username;
       window.__schoolNameRevealIndex = settings.nameRevealIndex;
-      window.__schoolDisplayNameMode = settings.displayNameMode || me.displayNameMode || 'NICKNAME';
+      // writable 只有通過「就學證明實名認證」才會是 true（見 school-profile.html
+      // renderIdCard() 同一段註解）；半實名顯示會露出真實姓名，沒通過認證的帳號
+      // 一律強制當暱稱顯示，不能讓人假裝有半實名資料
+      window.__schoolWritable = me.writable;
+      let mode = settings.displayNameMode || me.displayNameMode || 'NICKNAME';
+      if (mode === 'SEMI_REAL' && !me.writable) mode = 'NICKNAME';
+      window.__schoolDisplayNameMode = mode;
       window.updateIdCardNameDisplay();
 
       // navbar 頭像：這顆 chip 是校園攻略站獨立的模擬登入 UI（跟 default.js 的

@@ -264,6 +264,7 @@ input, select { font-family: inherit; }
   margin-bottom: 22px;
 }
 .search {
+  position: relative;
   display: flex; align-items: center;
   background: var(--card);
   border: 1.5px solid var(--line);
@@ -271,6 +272,29 @@ input, select { font-family: inherit; }
   padding: 0 6px 0 18px;
   transition: all 0.22s;
 }
+.search-history {
+  position: absolute; left: 0; right: 0; top: calc(100% + 8px);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 16px 36px -22px rgba(0,75,151,0.3);
+  padding: 8px;
+  z-index: 40;
+}
+.search-history-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 10px 8px;
+  font-size: 11px; color: var(--muted); letter-spacing: 0.08em;
+}
+.search-history-clear { color: var(--navy); font-size: 11px; font-weight: 600; }
+.search-history-clear:hover { color: var(--navy-d); }
+.search-history-item {
+  display: block; width: 100%; text-align: left;
+  padding: 9px 10px; border-radius: 10px;
+  font-size: 13.5px; color: var(--ink);
+  transition: background 0.15s;
+}
+.search-history-item:hover { background: var(--alice); }
 .search:focus-within {
   border-color: var(--navy);
   box-shadow: 0 0 0 4px rgba(0,75,151,0.08);
@@ -286,6 +310,15 @@ input, select { font-family: inherit; }
   letter-spacing: 0.04em;
 }
 .search input::placeholder { color: var(--muted); }
+.search-clear {
+  width: 26px; height: 26px; flex-shrink: 0;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted);
+  transition: all 0.18s;
+}
+.search-clear svg { width: 13px; height: 13px; }
+.search-clear:hover { background: var(--alice); color: var(--navy); }
 .search .scope {
   padding: 6px 14px;
   background: var(--alice);
@@ -316,18 +349,6 @@ input, select { font-family: inherit; }
   letter-spacing: 0.04em;
 }
 .select-wrap select:hover { border-color: var(--navy); }
-.btn-toolbar {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 11px 18px;
-  background: var(--navy-solid);
-  color: #ffffff;
-  border-radius: 999px;
-  font-size: 13px; font-weight: 600;
-  letter-spacing: 0.06em;
-  transition: all 0.22s;
-}
-.btn-toolbar:hover { background: var(--navy-d); transform: translateY(-1px); }
-.btn-toolbar svg { width: 14px; height: 14px; }
 
 /* 標籤選單（訊息泡泡）：桌機已有側欄「熱門標籤」，僅手機顯示 */
 .tag-picker { display: none; }
@@ -1887,7 +1908,6 @@ input, select { font-family: inherit; }
   .toolbar .select-wrap { min-width: 0; flex: 1; }
   .toolbar .select-wrap select { padding: 11px 26px 11px 12px; }
   .toolbar .select-wrap::after { right: 10px; }
-  .btn-toolbar { flex-shrink: 0; }
 
   /* ── 標籤選單：點按鈕彈出訊息泡泡，可多選 ── */
   .tag-picker { display: block; flex-shrink: 0; }
